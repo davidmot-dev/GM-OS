@@ -1884,3 +1884,33 @@ describe('la santé que la fiche porte, les seuils et la fin de scène', () => {
         expect(constats).toEqual([['gestesDesHeros.finDeScene[1]', 'avertissement']]);
     });
 });
+
+/** **Les seuils de la Corruption et l'Avantage tactique** (Symbaroum S3/S4, 2026-10-22). */
+describe('seuils lus sur la fiche, Avantage tactique', () => {
+    it('un seuil lu sur la fiche, des champs ajoutés, un dé et un rappel seul passent', () => {
+        const constats = controlerLePilote({
+            franchissements: [{ id: 'abomination', champ: 'combat', ajouter: ['determination'], aPartirDe: { champ: 'combat' }, rappel: 'Abomination', mouvements: [],
+                jet: { faces: 4, champ: 'determination' } }],
+        } as never, fiche);
+        expect(constats).toEqual([]);
+    });
+
+    it('un champ de seuil ou un champ ajouté absents se disent ; un dé sans faces est une erreur', () => {
+        const constats = controlerLePilote({
+            franchissements: [{ id: 's', champ: 'combat', ajouter: ['inconnu'], aPartirDe: { champ: 'absent' }, mouvements: [], jet: { faces: 0, champ: 'combat' } }],
+        } as never, fiche).map(c => [c.ou, c.gravite]);
+        expect(constats).toEqual([
+            ['franchissements[0].aPartirDe', 'avertissement'],
+            ['franchissements[0].champ', 'avertissement'],
+            ['franchissements[0].jet', 'erreur'],
+        ]);
+    });
+
+    it('un Avantage tactique sans nombre est une erreur', () => {
+        const constats = controlerLePilote({ jet: {
+            seuil: [{ id: 'a', label: 'A', sectionId: 'competences' }], reserve: { base: 1, max: 1, faces: 20 }, sens: 'sous-ou-egal',
+            modificateurDuSeuil: { min: -5, max: 5, defaut: 0, avantage: { seuil: 'deux' } },
+        } } as never, fiche).filter(c => c.ou.startsWith('jet.modificateurDuSeuil')).map(c => [c.ou, c.gravite]);
+        expect(constats).toEqual([['jet.modificateurDuSeuil.avantage', 'erreur']]);
+    });
+});

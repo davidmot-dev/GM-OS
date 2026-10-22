@@ -6,7 +6,8 @@ import { useJournalStore } from '../journal/useJournalStore';
 import type { Franchissement } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 import { herosDeLaCampagne } from './gestesDesHeros';
-import { franchissementsEnAttente, rearmer, type FranchissementEnAttente } from './franchissements';
+import { franchissementsEnAttente, noterLeFranchissement, rearmer, type FranchissementEnAttente } from './franchissements';
+import { DiceEngine } from '../dice/DiceEngine';
 import { avecOrigine } from '../session/logic/origineDesModifications';
 
 const CLASSE_DU_BOUTON = 'px-3 py-1 rounded-lg border text-ui-9 font-black uppercase tracking-widest transition-colors';
@@ -50,16 +51,18 @@ const AlertesDeFranchissement: React.FC<{
     if (enAttente.length === 0) return null;
 
     const ecrire = (a: FranchissementEnAttente, noter: boolean) => {
-        // La séquelle notée se dit déjà au journal, ci-dessous : l'historique des fiches se tait (H1).
+        // Le dé du seuil (le 1D4 de Corruption de Symbaroum) se lance ici, au geste.
+        const note = noter ? noterLeFranchissement(a, faces => DiceEngine.roll(faces), nom) : { maj: a.ecarter, lignes: [] };
+        // Ce qui est noté se dit au journal, ci-dessous : l'historique des fiches se tait (H1).
         avecOrigine('silencieuse', () =>
-            updateCharacter(a.heros.joueurId, a.heros.id, { sheetData: { ...a.heros.valeurs, ...(noter ? a.noter : a.ecarter) } }));
+            updateCharacter(a.heros.joueurId, a.heros.id, { sheetData: { ...a.heros.valeurs, ...note.maj } }));
         const quoi = `${a.heros.nom} — ${a.franchissement.label ?? nom(a.franchissement.champ)} ${a.valeur}`;
         if (noter) {
-            gmToast(`${quoi} : ${a.lignes.join(', ') || 'noté'}.`, 'info');
+            gmToast(`${quoi} : ${note.lignes.join(', ') || a.franchissement.rappel || 'noté'}.`, 'info');
             useJournalStore.getState().addEvent({
                 type: 'SYSTEM',
-                title: `Séquelle — ${quoi}`,
-                content: [a.franchissement.rappel, ...a.lignes].filter(Boolean).join('\n'),
+                title: `Seuil franchi — ${quoi}`,
+                content: [a.franchissement.rappel, ...note.lignes].filter(Boolean).join('\n'),
             });
         }
     };

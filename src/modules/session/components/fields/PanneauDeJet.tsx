@@ -68,6 +68,12 @@ import type { ApportDuGroupe, DiceConfig } from '../../../../types/drivers';
  */
 /** Ce que le sélecteur affiche, et ce que le journal de séance retient. */
 const LIBELLES = { avantage: 'Avantage', desavantage: 'Désavantage' } as const;
+/**
+ * **Quand le jeu a un Avantage tactique, le tirage ne s'appelle plus « Avantage »**
+ * (Symbaroum, S3, 2026-10-22) : lancer deux d20 sert à la cécité et à certains
+ * Talents, et l'Avantage du jeu est +2 au seuil. Deux choses, deux noms.
+ */
+const LIBELLES_DU_DOUBLE_LANCER = { avantage: 'Deux dés, le meilleur', desavantage: 'Deux dés, le pire' } as const;
 
 interface PanneauDeJetProps {
     descripteur: DescripteurDeJet;
@@ -130,8 +136,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      */
     const seuilDeplacable = descripteur.sens === 'sous-ou-egal' && !descripteur.cible && !descripteur.desEchelonnes
         && !descripteur.tableDeBonus && !descripteur.destin ? descripteur.modificateurDuSeuil : undefined;
+    const libellesDuTirage = seuilDeplacable?.avantage ? LIBELLES_DU_DOUBLE_LANCER : LIBELLES;
     const [modificateurDuSeuil, setModificateurDuSeuil] = useState(descripteur.modificateurDuSeuil?.defaut ?? 0);
     const [valeurAdverse, setValeurAdverse] = useState('');
+    /** L'Avantage tactique de Symbaroum (+2, +1D4 aux dégâts) — S3, 2026-10-22. */
+    const [avantageTactique, setAvantageTactique] = useState(false);
     const [resultat, setResultat] = useState<RollResult | null>(null);
     const [avantPanique, setAvantPanique] = useState<RollResult | null>(null);
     const [folieMeurtriere, setFolieMeurtriere] = useState(false);
@@ -317,6 +326,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 ajustementDeDifficulte: ajustementDeDifficulte + degresPuises, specialisation,
                 modificateurDuSeuil,
                 valeurAdverse: valeurAdverse.trim() === '' ? undefined : Number(valeurAdverse),
+                avantageTactique,
                 /*
                   Sur un jeu à dés échelonnés, avantage et désavantage ajoutent
                   ou retirent un DÉ : c'est `preparerLeJet` qui les applique à la
@@ -349,7 +359,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
+        [descripteur, valeurs, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
     );
 
     /*
@@ -594,7 +604,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
          * séance et y trouver une Impulsion tombée de quatre à un sans savoir
          * pourquoi ne renseigne sur rien.
          */
-        const dit = modificateur === 'aucun' ? '' : ` avec ${LIBELLES[modificateur]}`;
+        const dit = modificateur === 'aucun' ? '' : ` avec ${libellesDuTirage[modificateur]}`;
         /*
           Une poignée échelonnée se dit dé par dé — « D10 + D6 » —, jamais
           « 2d10 » : les deux dés n'ont pas la même taille, et c'est justement
@@ -851,13 +861,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 ? ` · ${jet.modificationDuSeuil.opposition.label} ${jet.modificationDuSeuil.opposition.adverse}` : '')
             + (jet.modificationDuSeuil?.situation
                 ? ` · ${jet.modificationDuSeuil.situation > 0 ? '+' : '−'}${Math.abs(jet.modificationDuSeuil.situation)}` : '')
+            + (jet.modificationDuSeuil?.avantage ? ` · ${jet.modificationDuSeuil.avantage.label}` : '')
             // Ce qu'on a puisé dans le groupe se relit avec le jet.
             + (engagesDuGroupe.length > 0
                 ? ` · ${engagesDuGroupe.map(d => `${d.apport.label}${d.apport.stocks.length > 1 ? ` (${d.stock!.label})` : ''} ×${d.points}`).join(', ')}`
                 : '');
         const seconde = jet.composantesDeLaSecondeReserve[0];
         setDernierLancer({
-            titre: titreDuJet + (modificateur !== 'aucun' ? ` · ${LIBELLES[modificateur]}` : ''),
+            titre: titreDuJet + (modificateur !== 'aucun' ? ` · ${libellesDuTirage[modificateur]}` : ''),
             choix: { ...choix },
             seconde: seconde ? { champ: seconde.champ, label: seconde.label } : undefined,
         });
@@ -873,7 +884,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             window.dispatchEvent(new CustomEvent('fiche:resultat', {
                 detail: {
                     characterId: personnageId,
-                    titre: titreDuJet + (modificateur !== 'aucun' ? ` · ${LIBELLES[modificateur]}` : ''),
+                    titre: titreDuJet + (modificateur !== 'aucun' ? ` · ${libellesDuTirage[modificateur]}` : ''),
                     total: res.total,
                     modifier: res.modifier,
                     /* Le seuil voyage avec le total, comme le journal l'écrit ici. */
@@ -942,6 +953,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             if (!consomme.conservee) ecrireSurLaFiche?.({ [consomme.champ]: consomme.apres });
             dits.push(direLaConsommation(consomme));
         }
+
+        // L'Avantage tactique ajoute aux dégâts : le jet ne les lance pas, il le rappelle (S3).
+        const avantage = jet.modificationDuSeuil?.avantage;
+        if (avantage?.degats) dits.push(`${avantage.label} : +${avantage.degats.toUpperCase()} aux dégâts.`);
 
         setMouvements(dits);
     };
@@ -1819,6 +1834,21 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             </span>
                         </label>
                     )}
+                    {seuilDeplacable?.avantage && (
+                        <label className="flex items-center gap-2" title="Encerclement, attaque surprise… : les avantages ne se cumulent pas">
+                            <input
+                                type="checkbox"
+                                checked={avantageTactique}
+                                onChange={e => setAvantageTactique(e.target.checked)}
+                                data-avantage-tactique
+                                className="accent-current"
+                            />
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
+                                {seuilDeplacable.avantage.label ?? 'Avantage tactique'}
+                                {` (+${seuilDeplacable.avantage.seuil}${seuilDeplacable.avantage.degats ? `, +${seuilDeplacable.avantage.degats.toUpperCase()} aux dégâts` : ''})`}
+                            </span>
+                        </label>
+                    )}
                 </Etape>
             )}
 
@@ -1924,8 +1954,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 }`}
                             >
                                 <option value="aucun">Normal</option>
-                                <option value="avantage">Avantage</option>
-                                <option value="desavantage">Désavantage</option>
+                                <option value="avantage">{libellesDuTirage.avantage}</option>
+                                <option value="desavantage">{libellesDuTirage.desavantage}</option>
                             </select>
                         </label>
                     )}

@@ -393,13 +393,30 @@ export interface Franchissement {
     id: string;
     /** La jauge surveillée : `blessures`. */
     champ: string;
+    /**
+     * Des champs qui s'y ajoutent : la Corruption **totale** de Symbaroum,
+     * temporaire + permanente (S4, 2026-10-22).
+     */
+    ajouter?: string[];
     /** Le nom dit au meneur ; à défaut, celui du champ. */
     label?: string;
-    aPartirDe: number;
+    /**
+     * Le seuil : un nombre, ou lu sur la fiche — `fois × champ + plus`, arrondi
+     * au-dessus. Le Seuil de Corruption de Symbaroum : la moitié de la Volonté.
+     * Un seuil lu à zéro ou moins n'est jamais franchi : une fiche pas encore
+     * remplie ne déclenche rien.
+     */
+    aPartirDe: number | { champ: string; fois?: number; plus?: number };
     /** Ce que le livre dit à ce seuil : « Blessure lourde : un point devient une séquelle ». */
     rappel?: string;
-    /** Ce que « Noter » écrit sur la fiche : la séquelle +1. */
+    /** Ce que « Noter » écrit sur la fiche : la séquelle +1. Vide : « Noter » consigne le rappel. */
     mouvements: MouvementDeFiche[];
+    /**
+     * Un dé lancé à « Noter », ajouté au champ : 1D4 de Corruption permanente au
+     * Seuil de Corruption (Symbaroum, S4). Lancé une fois, au geste — jamais à
+     * l'aperçu, qui se redessine.
+     */
+    jet?: { faces: number; champ: string; label?: string };
 }
 
 /** La fiche du groupe — voir `GameDriver.ficheDeGroupe`. */

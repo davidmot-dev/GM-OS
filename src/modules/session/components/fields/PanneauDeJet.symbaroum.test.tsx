@@ -78,3 +78,33 @@ describe('l\'opposition explicite au panneau de jet', () => {
         expect(screen.getByText(/12 \/ 12/)).toBeTruthy();
     });
 });
+
+/** **L'Avantage tactique au panneau** (S3, 2026-10-22). */
+describe('l\'Avantage tactique au panneau de jet', () => {
+    const AVEC_AVANTAGE: DescripteurDeJet = {
+        ...JET,
+        modificateurDuSeuil: { ...JET.modificateurDuSeuil!, avantage: { label: 'Avantage tactique', seuil: 2, degats: '1d4' } },
+    };
+    const monterAvecAvantage = () => {
+        const { container } = render(<PanneauDeJet descripteur={AVEC_AVANTAGE} dice={DICE} template={FICHE} valeurs={{ precision: 12 }} />);
+        fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: 'precision' } });
+        return container;
+    };
+
+    it('coché : +2 au seuil, un seul d20, et +1D4 aux dégâts rappelé après le lancer', () => {
+        const panneau = monterAvecAvantage();
+        fireEvent.click(panneau.querySelector('[data-avantage-tactique]')!);
+        expect(screen.getByText(/= 12 \+ 2 \(Avantage tactique\)/)).toBeTruthy();
+        faces(14);
+        lancer();
+        expect(screen.getByText(/14 \/ 14/)).toBeTruthy();
+        expect(screen.getByText('Avantage tactique : +1D4 aux dégâts.')).toBeTruthy();
+        expect((consigner.mock.calls[0][0] as { titre: string }).titre).toBe('Attribut · Avantage tactique');
+    });
+
+    it('le double lancer ne s\'appelle plus « Avantage »', () => {
+        monterAvecAvantage();
+        expect(screen.getByRole('option', { name: 'Deux dés, le meilleur' })).toBeTruthy();
+        expect(screen.queryByRole('option', { name: 'Avantage' })).toBeNull();
+    });
+});

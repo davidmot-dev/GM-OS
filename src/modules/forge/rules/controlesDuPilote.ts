@@ -596,6 +596,9 @@ export function controlerLePilote(
                 'Symbaroum, de −5 à +5, défaut 0.',
             );
         }
+        if (deplace.avantage && !(typeof deplace.avantage.seuil === 'number' && Number.isFinite(deplace.avantage.seuil))) {
+            erreur('jet.modificateurDuSeuil.avantage', 'L’Avantage tactique ajoute un nombre au seuil : +2 chez Symbaroum.');
+        }
         if (deplace.opposition && !(typeof deplace.opposition.reference === 'number' && Number.isFinite(deplace.opposition.reference))) {
             erreur('jet.modificateurDuSeuil.opposition', 'L’opposition retire la valeur adverse d’une « reference » : un nombre, 10 chez Symbaroum.');
         }
@@ -1890,9 +1893,19 @@ export function controlerLePilote(
         const ou = `franchissements[${i}]`;
         if (!f.id || seuilsVus.has(f.id)) erreur(`${ou}.id`, `Chaque seuil porte un identifiant unique (« ${f.id ?? ''} »).`);
         seuilsVus.add(f.id);
-        if (!(typeof f.aPartirDe === 'number' && Number.isFinite(f.aPartirDe))) erreur(`${ou}.aPartirDe`, `Le seuil de « ${f.label ?? f.champ} » doit être un nombre.`);
-        if (!tousLesChamps.has(f.champ)) avertir(`${ou}.champ`, `Le seuil surveille « ${f.champ} », absent de la fiche : il ne sera jamais franchi.`);
-        if (!f.mouvements?.length) erreur(`${ou}.mouvements`, `« ${f.label ?? f.champ} » ne propose rien à noter.`);
+        const seuil = f.aPartirDe;
+        if (typeof seuil === 'object' && seuil !== null) {
+            if (!tousLesChamps.has(seuil.champ)) avertir(`${ou}.aPartirDe`, `Le seuil de « ${f.label ?? f.champ} » se lit dans « ${seuil.champ} », absent de la fiche : il ne sera jamais franchi.`);
+        } else if (!(typeof seuil === 'number' && Number.isFinite(seuil))) {
+            erreur(`${ou}.aPartirDe`, `Le seuil de « ${f.label ?? f.champ} » doit être un nombre, ou un champ de la fiche.`);
+        }
+        for (const champ of [f.champ, ...(f.ajouter ?? [])]) {
+            if (!tousLesChamps.has(champ)) avertir(`${ou}.champ`, `Le seuil surveille « ${champ} », absent de la fiche : il ne sera jamais franchi.`);
+        }
+        if (f.jet && !(Number.isInteger(f.jet.faces) && f.jet.faces > 1)) erreur(`${ou}.jet`, `Le dé de « ${f.label ?? f.champ} » doit avoir un nombre de faces.`);
+        if (f.jet && !tousLesChamps.has(f.jet.champ)) avertir(`${ou}.jet`, `Le dé de « ${f.label ?? f.champ} » s'ajoute à « ${f.jet.champ} », absent de la fiche.`);
+        // « Noter » sans mouvement consigne le rappel (l'Abomination) : il lui faut au moins de quoi dire.
+        if (!f.mouvements?.length && !f.jet && !f.rappel) erreur(`${ou}.mouvements`, `« ${f.label ?? f.champ} » ne propose rien à noter ni à dire.`);
         controlerLesMouvements(f.mouvements, `${ou}.mouvements`);
     });
 

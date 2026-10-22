@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { CLE_DES_FRANCHISSEMENTS, franchissementsEnAttente, rearmer } from './franchissements';
+import { CLE_DES_FRANCHISSEMENTS, franchissementsEnAttente, noterLeFranchissement, rearmer } from './franchissements';
 import type { Franchissement } from '../../types/drivers';
 import type { HerosDeLaTable } from './gestesDesHeros';
 
@@ -51,5 +51,52 @@ describe('un seuil qui laisse une trace', () => {
 
     it('une marque illisible ne vaut rien', () => {
         expect(franchissementsEnAttente([SEQUELLE], [heros({ blessures: 8, [CLE_DES_FRANCHISSEMENTS]: 'oui' })])).toHaveLength(1);
+    });
+});
+
+/**
+ * **La Corruption de Symbaroum** (S4, 2026-10-22) : la Corruption *totale*
+ * (temporaire + permanente), au Seuil de Corruption (Volonté ÷ 2, arrondi
+ * au-dessus) puis à la Volonté.
+ */
+describe('un seuil lu sur la fiche, sur une somme de jauges', () => {
+    const STIGMATE: Franchissement = {
+        id: 'stigmate', champ: 'corruption_temporaire', ajouter: ['corruption_permanente'], label: 'Corruption totale',
+        aPartirDe: { champ: 'volonte', fois: 0.5 }, rappel: 'Choisir un Stigmate', mouvements: [],
+        jet: { faces: 4, champ: 'corruption_permanente', label: 'Corruption permanente' },
+    };
+    const ABOMINATION: Franchissement = {
+        id: 'abomination', champ: 'corruption_temporaire', ajouter: ['corruption_permanente'], label: 'Corruption totale',
+        aPartirDe: { champ: 'volonte' }, rappel: 'Abomination', mouvements: [],
+    };
+    const elena = (valeurs: Record<string, unknown>) => heros({ volonte: 11, ...valeurs });
+
+    it('Volonté 11 : le seuil vaut 6 — 4 temporaires et 2 permanents le franchissent', () => {
+        expect(franchissementsEnAttente([STIGMATE], [elena({ corruption_temporaire: 3, corruption_permanente: 2 })])).toEqual([]);
+        const [a] = franchissementsEnAttente([STIGMATE], [elena({ corruption_temporaire: 4, corruption_permanente: 2 })]);
+        expect(a.valeur).toBe(6);
+        expect(a.lignes).toEqual(['Corruption permanente +1D4']);
+    });
+
+    it('« Noter » lance le dé au geste, et pas avant', () => {
+        const [a] = franchissementsEnAttente([STIGMATE], [elena({ corruption_temporaire: 4, corruption_permanente: 2 })]);
+        const { maj, lignes } = noterLeFranchissement(a, () => 3);
+        expect(maj).toEqual({ corruption_permanente: 5, [CLE_DES_FRANCHISSEMENTS]: { stigmate: true } });
+        expect(lignes).toEqual(['Corruption permanente 2 → 5 (1D4 : 3)']);
+    });
+
+    it('à la Volonté, l\'Abomination : un rappel, rien à écrire que la marque', () => {
+        const [a] = franchissementsEnAttente([ABOMINATION], [elena({ corruption_temporaire: 5, corruption_permanente: 6 })]);
+        expect(a.noter).toEqual({ [CLE_DES_FRANCHISSEMENTS]: { abomination: true } });
+        expect(noterLeFranchissement(a, () => 4).lignes).toEqual([]);
+    });
+
+    it('une Volonté pas encore remplie ne déclenche rien', () => {
+        expect(franchissementsEnAttente([STIGMATE, ABOMINATION], [heros({ corruption_temporaire: 3 })])).toEqual([]);
+    });
+
+    it('la fin de scène vide la temporaire : la totale redescend, le seuil se réarme', () => {
+        const traite = { volonte: 11, corruption_temporaire: 0, corruption_permanente: 5, [CLE_DES_FRANCHISSEMENTS]: { stigmate: true } };
+        expect(rearmer([STIGMATE], traite)).toEqual({ [CLE_DES_FRANCHISSEMENTS]: {} });
     });
 });

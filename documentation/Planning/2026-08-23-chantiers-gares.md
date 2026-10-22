@@ -12146,7 +12146,8 @@ sur les Tablettes Joueurs. »* (Claude Code).
   refaites. Manuel `54-Jeu-Reves-de-Dragons.md` mis à jour.
 - **Synthèse des pilotes consolidée le 22/10** ([document vivant](2026-10-20-ameliorations-tous-les-pilotes.md)) :
   onglet commun, RdD, Symbaroum (§ 145) et défaut de la Forge reportés ; Dune (§ 143) déjà conforme.
-- **Reste** : l'essai de David à l'écran (meneur et tablette).
+- **Essayé et validé par David le 22/10** (meneur et tablette) : *« j'ai fait le test de l'onglet
+  Lancer un test c'est bon »*.
 - **Constaté** : sur la fiche du meneur, la bascule « Fiche du jeu » rendait le jet inaccessible
   (le panneau vit dans le formulaire) ; l'onglet le règle.
 - **Ensuite** : lancer les prompts dans Stitch, rendre les exports, choix de David ; puis le
@@ -12291,8 +12292,9 @@ choix : « Moteur commun + Dune D2 » (sujet 6 ; Dune reste garé pour le reste)
   pupitre ne paie ni ne crédite l'Impulsion). **Rien n'est corrigé : David choisit.**
 - **Vérifié** : `tsc -b` propre ; essais nouveaux (ventilation et dépense 2, panneau de Dune 4,
   action de la tablette 3) ; suite complète **8 662 essais verts** ; capture de Dune verte.
-- **Reste** : réimport du pilote Dune corrigé et essai de David ; son choix sur les constats de
-  l'audit (je propose S1+S2+S5 d'abord) ; son choix pour Star Trek et pour le pupitre (C1).
+- **Essayé et validé par David le 22/10**, pilote Dune corrigé réimporté : *« et aussi les essais
+  du pilote de dune »*. Les constats de l'audit sont traités aux § 152 à 154.
+- **Reste** : son choix pour Star Trek (paiement au choix ou non).
 
 ### 152 · Les secrets du meneur ne partent plus vers la table (S1, S2, S5) — 22/10/2026
 
@@ -12371,6 +12373,31 @@ Constats de [l'audit](2026-10-22-audit-fiches-tablettes-journal.md).
 - **Reste** : l'essai de David (une modification depuis une tablette, puis le journal ; un jet de
   Dune au pupitre). Limite H1 : une écriture asynchrone d'une tablette (après un `await`) perdrait
   son origine et se dirait « meneur » — aucune n'est connue aujourd'hui.
+
+### 155 · Symbaroum S3 et S4 — l'Avantage tactique, la Corruption au seuil — 22/10/2026
+
+David, le 22/10 : *« on va faire S3 et S4 après le push »* ; GM-OS confirmé éteint (Claude Code).
+S3 et S4 de [l'audit de Codex](2026-10-20-symbaroum-propositions.md).
+
+- **Fait — S3** : `modificateurDuSeuil.avantage` (`{ label, seuil, degats }`) ; le joueur coche
+  `avantageTactique` ; le seuil gagne +2, le calcul le dit (`12 + 2 (Avantage tactique)`), un seul
+  d20 ; le résultat rappelle « +1D4 aux dégâts », le titre du jet au journal aussi. Le sélecteur
+  générique (deux d20) s'appelle alors « Deux dés, le meilleur / le pire ».
+- **Fait — S4** : `franchissements` étendus — `ajouter` (une somme de jauges), `aPartirDe` lu sur
+  la fiche (`fois × champ`, arrondi au-dessus ; lu à zéro, jamais franchi), `jet` (un dé lancé à
+  « Noter », `noterLeFranchissement`) ; « Noter » sans mouvement consigne le rappel ; titre du
+  journal « Seuil franchi — … ». Symbaroum : **Stigmate** au Seuil de Corruption (Volonté ÷ 2) avec
+  **1D4 de Corruption permanente** (p. 179–180, règle de l'audit), **Abomination** à la Volonté.
+  Convention documentée : la fin de scène réarme le premier seuil.
+- **Fait — pilote** : `outils/symbaroum/ajouter_avantage_et_corruption.py` →
+  `Export Dirvers/corriges/Symbaroum_driver_gmos_s3-s4.gmos-driver` (aucun constat de la Forge) ;
+  `relier_fiche_symbaroum.py` l'écrit aussi. Contrôles de la Forge étendus.
+- **Fait — manuel** : guide 53, page Symbaroum (« L'Avantage tactique », « La Corruption au
+  seuil »), captures `jeu-symbaroum-avantage` et `jeu-symbaroum-stigmate` ; recette Symbaroum verte.
+- **Vérifié** : `tsc -b` et lint propres ; essais (moteur 3, franchissements 5, panneau 2,
+  contrôles 3) ; suite complète **8 712 essais verts**.
+- **Reste** : réimport du pilote et essai de David. Hors lot : quel Stigmate et sa durée, les coûts
+  de Corruption des pouvoirs, l'agonie, la cécité (trois cas, p. 165).
 
 ## La vue d'un coup d'œil
 
@@ -12459,14 +12486,15 @@ Constats de [l'audit](2026-10-22-audit-fiches-tablettes-journal.md).
 | 80 | **Crimes — pilote et fiche HTML** | § 144 ; fiche `crimes-fr` intégrée au moteur v13, fiche GM-OS refaite sur la fiche HTML, correspondance complète ; pilote corrigé réimporté, fiche validée par David le 19/10 | Le jet « Potentiel GARDE Compétence » ; trancher les Potentiels (10 cases ou 0 à 5) et les pistes sans règle | Le moteur de dés ne sait pas « garder » des dés |
 | 81 | **Symbaroum — pilote, fiche HTML et jet** | § 145 ; fiche `symbaroum-fr` intégrée au moteur v14, correspondance complète, page du manuel (`712f70c1`, `34404411`) ; jet corrigé — un seul attribut, plus de `difficulte` qui faisait tout réussir ; pilote réimporté par David le 21/10 | S1 fait le 22/10 (§ 149) : modificateur du seuil et opposition explicite, au panneau et à la Forge ; pilote corrigé dans `corriges/` | Le réimport par David, puis son essai à l'écran ; ensuite S2/S3 de [l'audit de Codex](2026-10-20-symbaroum-propositions.md) |
 | 82 | **Import qui ne se refermait plus, campagne forgée invisible** | § 146 ; bilan d'import fermé seul après 8 s sauf s'il alerte (`NexusHUD.tsx`) ; campagne créée à la première fiche publiée dans l'Atelier (`AtelierDeCampagne.tsx`) — faits et commités le 22/10 | L'essai de David à l'écran ; recueillir le troisième défaut annoncé | Rien |
-| 83 | **L'onglet « Lancer un test »** | § 147 ; maquettes Stitch retenues le 22/10 ; **onglets et refonte de la partie commune faits et commités le 22/10** ; suite unitaire, `capturesDesJeux` (dix jeux, 96 captures du manuel refaites) et sept essais du Voyageur verts | L'essai de David à l'écran | Rien |
+| 83 | **L'onglet « Lancer un test »** | § 147 ; maquettes Stitch retenues le 22/10 ; **onglets et refonte de la partie commune faits et commités le 22/10** ; suite unitaire, `capturesDesJeux` (dix jeux, 96 captures du manuel refaites) et sept essais du Voyageur verts | Rien : essai de David validé le 22/10 | Rien |
 | 84 | **Forge : `jet.difficulte` compte des réussites** | § 148 ; consigne corrigée et contrôle du pilote au plafond de la réserve, faits le 22/10 ; 721 essais de la Forge verts ; sur les exports réels, seul Crimes est signalé (C1, connu) | Relire le corpus de la Forge | Rien |
 | 85 | **Symbaroum S1 — modificateur du seuil, opposition explicite** | § 149 ; moteur, panneau (fiche et tablette), journal, Forge, pilote corrigé, manuel et captures — faits le 22/10 | Réimport du pilote corrigé et essai de David | Rien |
 | 86 | **Santé et séquelles, fin de scène** | § 150 ; fiche qui naît pleine, contrôle de la santé courante, `finDeScene` et « vide », seuils qui laissent une trace (une fois par passage) ; Symbaroum S2-raccord/S4-fin de scène et NOC point 1 par script — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
-| 87 | **Paiement au choix (Dune D2) ; audit fiches, tablettes, journal** | § 151 ; « dont en Menace », Impulsion du jet hors réserve, motif des tablettes — faits le 22/10 ; audit rendu : S1, S2, S5 (secrets du meneur sur les tablettes et les fenêtres de la table), S3, S4, H1, C1 | Réimport du pilote Dune corrigé et essai ; corrections de l'audit | Le choix de David parmi les constats ; Star Trek ; le pupitre |
+| 87 | **Paiement au choix (Dune D2) ; audit fiches, tablettes, journal** | § 151 ; « dont en Menace », Impulsion du jet hors réserve, motif des tablettes — faits le 22/10 ; audit rendu : S1, S2, S5 (secrets du meneur sur les tablettes et les fenêtres de la table), S3, S4, H1, C1 | Rien : essai Dune validé le 22/10, constats traités (§ 152–154) | Le choix de David pour Star Trek |
 | 88 | **Les secrets du meneur ne partent plus vers la table** | § 152 ; `caviarderPourLesJoueurs` à l'émission, au serveur et pour les fenêtres locales : trame du meneur, `gmNotes`, secrets des combattants (diffusion sans rôle) — faits le 22/10 | Essai de David ; S3, S4, H1, C1 | Rien |
 | 89 | **Indices non révélés, notes du meneur écrites par un joueur** | § 153 ; seuls les indices révélés partent vers la table ; `gmNotes` retiré des actions des joueurs au serveur — faits le 22/10 | H1, C1 de l'audit | Le choix de David pour C1 |
 | 90 | **Historique des fiches (H1), réserves au pupitre (C1)** | § 154 ; chaque modification de fiche au journal avec son origine ; le pupitre et la télécommande règlent les réserves d'un jet 2d20 (personnage ou PNJ) — faits le 22/10 | Essai de David | Rien |
+| 91 | **Symbaroum S3 et S4 — Avantage tactique, Corruption au seuil** | § 155 ; case Avantage tactique (+2, +1D4 aux dégâts, un seul d20) ; Stigmate et 1D4 permanent au Seuil de Corruption, Abomination à la Volonté — faits le 22/10 | Réimport du pilote et essai de David | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

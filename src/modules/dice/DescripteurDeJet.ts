@@ -283,6 +283,12 @@ export interface DescripteurDeJet {
         defaut: number;
         /** La valeur adverse se retire de `reference` : 10 chez Symbaroum. */
         opposition?: { reference: number; label?: string };
+        /**
+         * **L'Avantage tactique** — Symbaroum, S3 de l'audit (2026-10-22) : +2 à
+         * l'Attribut et +1D4 aux dégâts, *sans* lancer un second d20 (p. 166).
+         * Une case, pas un compte : les avantages ne se cumulent pas.
+         */
+        avantage?: { label?: string; seuil: number; degats?: string };
     };
     /**
      * **Le dé se convertit en bonus par la table du jeu** — Torg Eternity,
@@ -437,6 +443,8 @@ export interface ChoixDuJoueur {
     modificateurDuSeuil?: number;
     /** La valeur de l'adversaire, quand le jet s'oppose à lui. Absente : pas d'opposition. */
     valeurAdverse?: number;
+    /** L'Avantage tactique est coché (`modificateurDuSeuil.avantage`). */
+    avantageTactique?: boolean;
     /**
      * Valeur sous laquelle un dé compte double, quand elle diffère du critique
      * ordinaire — chez Dune, la compétence seule avec la spécialisation.
@@ -475,7 +483,12 @@ export interface JetPrepare {
      * Ce qui a déplacé le seuil (`modificateurDuSeuil`), pour le titre du jet
      * au journal. Absent quand rien ne l'a déplacé.
      */
-    modificationDuSeuil?: { situation: number; opposition?: { adverse: number; modificateur: number; label: string } };
+    modificationDuSeuil?: {
+        situation: number;
+        opposition?: { adverse: number; modificateur: number; label: string };
+        /** L'Avantage tactique retenu : ce qu'il ajoute au seuil, et le rappel des dégâts. */
+        avantage?: { label: string; seuil: number; degats?: string };
+    };
     /**
      * Les bornes des six degrés, quand le jeu gradue ses réussites.
      *
@@ -989,15 +1002,19 @@ export function preparerLeJet(
         const opposition = regle.opposition && adverse !== undefined
             ? { adverse, modificateur: regle.opposition.reference - adverse, label: regle.opposition.label ?? 'Opposition' }
             : undefined;
-        if (situation !== 0 || opposition) {
+        const avantage = regle.avantage && choix.avantageTactique
+            ? { label: regle.avantage.label ?? 'Avantage tactique', seuil: regle.avantage.seuil, degats: regle.avantage.degats }
+            : undefined;
+        if (situation !== 0 || opposition || avantage) {
             const signe = (n: number) => (n < 0 ? `− ${-n}` : `+ ${n}`);
             explicationDuSeuil = [
                 composantes.map(c => `${c.valeur}`).join(' + '),
                 ...(opposition ? [`+ (${regle.opposition!.reference} − ${opposition.adverse})`] : []),
                 ...(situation !== 0 ? [signe(situation)] : []),
+                ...(avantage ? [`${signe(avantage.seuil)} (${avantage.label})`] : []),
             ].join(' ');
-            seuil += (opposition?.modificateur ?? 0) + situation;
-            modificationDuSeuil = { situation, opposition };
+            seuil += (opposition?.modificateur ?? 0) + situation + (avantage?.seuil ?? 0);
+            modificationDuSeuil = { situation, opposition, ...(avantage ? { avantage } : {}) };
         }
     }
 

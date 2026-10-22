@@ -168,6 +168,10 @@ Pour un ennemi bénéficiant d'effets, traduire la situation dans le jet du joue
 valeurs fixes du PNJ. Les deux mécanismes peuvent interagir : l'un ne doit pas remplacer
 l'autre.
 
+**Livré le 22/10/2026 (Claude Code, registre général § 155)** : case Avantage tactique, +2 au seuil,
++1D4 aux dégâts rappelé, un seul d20 ; le double lancer s'appelle « Deux dés, le meilleur / le pire ».
+Cécité et cible à terre : à la main.
+
 **Acceptation :** Précision 12 avec Avantage tactique devient 14 et ajoute 1D4 aux dégâts,
 sans deuxième d20. Une cible à terre donne cet Avantage en mêlée, pas au tir ; p. 166.
 La cécité suit les trois cas p. 165. Le cumul de plusieurs causes doit être documenté comme
@@ -202,6 +206,10 @@ même scène. Documenter cette limite avant automatisation ; ne pas déclencher 
 **Fin de scène livrée le 22/10/2026 (registre général § 150)** : le geste « Fin de scène » remet la
 seule temporaire à 0, après aperçu. Le reste de S4 (total, Stigmate, 1D4 au seuil, abomination)
 n'est pas commencé ; `franchissements` donne le « une seule fois par événement » demandé ici.
+**Puis livré le 22/10 (registre § 155)** : Stigmate et 1D4 de Corruption permanente au Seuil de
+Corruption (Volonté ÷ 2, arrondi au-dessus, Volonté impaire comprise), Abomination à la Volonté
+(« atteinte ou dépassée », le critère retenu ici). Restent quel Stigmate et sa durée, les coûts
+contextualisés des pouvoirs.
 
 **Acceptation :** Volonté impaire correctement traitée, permanente conservée en fin de scène,
 gain au seuil tracé une seule fois pour un événement donné, transformation signalée avec

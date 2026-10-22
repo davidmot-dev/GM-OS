@@ -211,6 +211,18 @@ pilote['combat']['statsToTrack'] = [
 pilote.setdefault('gestesDesHeros', {})['finDeScene'] = [
     {'champ': 'corruption_temporaire', 'label': 'Corruption temporaire', 'delta': 'vide'},
 ]
+# L'Avantage tactique et les seuils de la Corruption (S3, S4 ; 2026-10-22, ajouter_avantage_et_corruption.py).
+pilote['jet']['modificateurDuSeuil']['avantage'] = {'label': 'Avantage tactique', 'seuil': 2, 'degats': '1d4'}
+_corruption = {'champ': 'corruption_temporaire', 'ajouter': ['corruption_permanente'], 'label': 'Corruption totale'}
+pilote['franchissements'] = [
+    {'id': 'stigmate', **_corruption, 'aPartirDe': {'champ': 'volonte', 'fois': 0.5},
+     'rappel': 'Seuil de Corruption : choisir un Stigmate ; la Corruption permanente gagne 1D4 (p. 179–180)',
+     'mouvements': [], 'jet': {'faces': 4, 'champ': 'corruption_permanente', 'label': 'Corruption permanente'}},
+    {'id': 'abomination', **_corruption, 'aPartirDe': {'champ': 'volonte'},
+     'rappel': "Corruption totale à la Volonté : le personnage devient une Abomination (p. 180) — "
+               "il passe au meneur, sauf accord du groupe pour la jouer (p. 184)",
+     'mouvements': []},
+]
 
 os.makedirs(os.path.dirname(sortie) or '.', exist_ok=True)
 with zipfile.ZipFile(sortie, 'w', zipfile.ZIP_DEFLATED) as z:

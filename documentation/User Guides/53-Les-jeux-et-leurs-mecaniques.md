@@ -138,7 +138,7 @@ appareil. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
 | **Critique, complication** (`critique`, `complication`) | Les faces qui comptent double, ou qui compliquent | 2d20 : 1 et 20 |
 | **Spécialisation** (`specialisation`) | Une case au jet : cochée, **chaque dé inférieur ou égal** à la composante nommée (la Fonction) compte double, comme le critique. C’est le joueur qui sait si la tâche entre dans une de ses spécialisations | Star Trek : le Focus de l’édition anglaise |
 | **Difficulté** (`difficulte`) | Le nombre de réussites à atteindre, réglable avant de lancer. **Jamais sur un jet d'un seul dé** : à 0 tout réussirait, à 2 tout échouerait — la revue de la Forge le refuse | Dune : de 0 à 5 |
-| **Modificateur du seuil** (`modificateurDuSeuil`) | Sur un seuil qu'on jette **dessous**, à l'étape « Préparer » : un curseur **Modificateur** qui s'ajoute au seuil, et avec `opposition` une case pour la **valeur adverse**, retirée de la référence. Les deux s'additionnent, et le calcul se lit sous « Seuil » ; le journal les redit avec le jet | Symbaroum : de −5 à +5, et 10 moins l'Attribut adverse — `12 + (10 − 13) = 9` |
+| **Modificateur du seuil** (`modificateurDuSeuil`) | Sur un seuil qu'on jette **dessous**, à l'étape « Préparer » : un curseur **Modificateur** qui s'ajoute au seuil, et avec `opposition` une case pour la **valeur adverse**, retirée de la référence. Les deux s'additionnent, et le calcul se lit sous « Seuil » ; le journal les redit avec le jet. Avec `avantage`, une case **Avantage tactique** ajoute au seuil et rappelle ses dégâts après le lancer, **sans second dé** ; le sélecteur « Tirage » s'appelle alors « Deux dés, le meilleur / le pire » | Symbaroum : de −5 à +5, et 10 moins l'Attribut adverse — `12 + (10 − 13) = 9` ; Avantage tactique +2 et +1D4 aux dégâts |
 | **Sens** (`sens`) | Réussir **sous** le seuil, ou **au-dessus** | Cthulhu Hack : sous ; NOC : au-dessus |
 
 **Avantage / Désavantage** n'apparaît que là où un seul dé décide : sur une réserve, il n'y a pas
@@ -248,7 +248,7 @@ suivant se propose de nouveau. Rien ne s'écrit sans le meneur.
 
 | Réglage | Ce qu'il change | Exemple |
 | :--- | :--- | :--- |
-| **Seuils** (`franchissements`) | Un identifiant stable, la jauge (`champ`), le seuil (`aPartirDe`), le rappel du livre, et les mouvements de « Noter » | NOC : à 8 sur Blessures, Trauma, Traque ou Noirceur, séquelle +1 |
+| **Seuils** (`franchissements`) | Un identifiant stable, la jauge (`champ`) et ce qui s'y ajoute (`ajouter`), le seuil (`aPartirDe` : un nombre, ou lu sur la fiche — `fois × champ`, arrondi au-dessus ; lu à zéro, jamais franchi), le rappel du livre, les mouvements de « Noter », et un **dé** lancé au geste (`jet`). Sans mouvement ni dé, « Noter » consigne le rappel | NOC : à 8 sur Blessures, Trauma, Traque ou Noirceur, séquelle +1 · Symbaroum : Corruption totale à la moitié de la Volonté, Stigmate et 1D4 permanent ; à la Volonté, l'Abomination |
 
 Une case cochée compte comme **un point de jauge de péril** : Fatigué (−1 aux Talents) se déclare
 comme une jauge à un seuil. Un seuil peut ne valoir **que pour un champ retenu** (`seulementSi`) :

@@ -675,6 +675,32 @@ async function scenesDeSymbaroum(c: ContexteDeScene): Promise<void> {
     await photographier(panneau, 'jeu-symbaroum-opposition');
     await fenetre.evaluate(w => w.setContentSize(1440, 900));
 
+    // L'Avantage tactique (S3, 2026-10-22) : +2 au seuil, +1D4 aux dégâts rappelé, sans second d20.
+    if ((c.pilote.gameDriver as { jet?: { modificateurDuSeuil?: { avantage?: unknown } } }).jet?.modificateurDuSeuil?.avantage) {
+        await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+        await panneau.locator('[data-valeur-adverse]').fill('');
+        await panneau.locator('[data-modificateur-du-seuil]').fill('0');
+        await panneau.locator('[data-avantage-tactique]').check();
+        await expect(panneau.getByText(/15 \+ 2 \(Avantage tactique\)/)).toBeVisible();
+        await fenetre.evaluate(w => w.setContentSize(1440, 1800));
+        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+        await expect(panneau.getByText('Avantage tactique : +1D4 aux dégâts.')).toBeVisible();
+        await photographier(panneau, 'jeu-symbaroum-avantage');
+        await panneau.locator('[data-avantage-tactique]').uncheck();
+        await fenetre.evaluate(w => w.setContentSize(1440, 900));
+    }
+
+    // Le Seuil de Corruption (S4) : Volonté 10 → seuil 5 ; 4 temporaires + 1 permanente le franchissent.
+    if ((c.pilote.gameDriver as { franchissements?: unknown[] }).franchissements?.length) {
+        await ecrireLaFiche(c, { corruption_temporaire: 4, corruption_permanente: 1 });
+        await vue(c.campagne, 'cockpit');
+        const seuils = f.locator('[data-alertes-de-franchissement]');
+        await expect(seuils).toBeVisible({ timeout: 15_000 });
+        await photographier(seuils, 'jeu-symbaroum-stigmate');
+        await seuils.getByRole('button', { name: 'Écarter', exact: true }).click();
+        await ecrireLaFiche(c, { corruption_temporaire: 2, corruption_permanente: 1 });
+    }
+
     // La fin de scène (2026-10-22) : la Corruption temporaire revient à 0 — l'aperçu, puis Annuler.
     if ((c.pilote.gameDriver as { gestesDesHeros?: { finDeScene?: unknown[] } }).gestesDesHeros?.finDeScene?.length) {
         await vue(c.campagne, 'cockpit');

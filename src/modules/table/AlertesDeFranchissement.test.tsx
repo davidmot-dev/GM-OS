@@ -42,7 +42,7 @@ describe('les seuils franchis, proposés au meneur', () => {
         expect(updateCharacter).toHaveBeenCalledWith('j', 'ilya', { sheetData: {
             blessures: 8, sequelles_blessures: 1, [CLE_DES_FRANCHISSEMENTS]: { 'sequelle-blessures': true },
         } });
-        expect(addEvent.mock.calls[0][0].title).toBe('Séquelle — Ilya Vorn — Blessures 8');
+        expect(addEvent.mock.calls[0][0].title).toBe('Seuil franchi — Ilya Vorn — Blessures 8');
     });
 
     it('« Écarter » marque sans rien écrire d\'autre, et ne consigne rien', () => {

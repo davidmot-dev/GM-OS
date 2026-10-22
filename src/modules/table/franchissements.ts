@@ -27,6 +27,26 @@ const nombre = (brut: unknown) => {
     return Number.isFinite(n) ? Math.floor(n) : 0;
 };
 
+/** La valeur surveillée : la jauge, et ce qui s'y ajoute (la Corruption totale). */
+export function valeurSurveillee(f: Pick<Franchissement, 'champ' | 'ajouter'>, valeurs: Record<string, unknown>): number {
+    return [f.champ, ...(f.ajouter ?? [])].reduce((total, champ) => total + nombre(valeurs[champ]), 0);
+}
+
+/**
+ * Le seuil, pour cette fiche — `undefined` quand il ne se lit pas : un seuil lu
+ * à zéro ou moins (une Volonté pas encore remplie) n'est jamais franchi.
+ */
+export function seuilDuFranchissement(f: Pick<Franchissement, 'aPartirDe'>, valeurs: Record<string, unknown>): number | undefined {
+    if (typeof f.aPartirDe === 'number') return f.aPartirDe;
+    const lu = Math.ceil((f.aPartirDe.fois ?? 1) * nombre(valeurs[f.aPartirDe.champ]) + (f.aPartirDe.plus ?? 0));
+    return lu > 0 ? lu : undefined;
+}
+
+const franchi = (f: Franchissement, valeurs: Record<string, unknown>) => {
+    const seuil = seuilDuFranchissement(f, valeurs);
+    return seuil !== undefined && valeurSurveillee(f, valeurs) >= seuil;
+};
+
 /** Les seuils déjà traités sur cette fiche. */
 export function franchissementsTraites(valeurs: Record<string, unknown>): Record<string, true> {
     const brut = valeurs[CLE_DES_FRANCHISSEMENTS];
@@ -58,7 +78,7 @@ export function franchissementsEnAttente(
     return heros.flatMap(h => {
         const traites = franchissementsTraites(h.valeurs);
         return franchissements
-            .filter(f => !traites[f.id] && nombre(h.valeurs[f.champ]) >= f.aPartirDe)
+            .filter(f => !traites[f.id] && franchi(f, h.valeurs))
             .map(f => {
                 const valeurs = { ...h.valeurs };
                 const maj: Record<string, unknown> = {};
@@ -69,9 +89,11 @@ export function franchissementsEnAttente(
                     lignes.push(r.ligne);
                     if (r.valeur !== r.avant) { maj[m.champ] = r.valeur; valeurs[m.champ] = r.valeur; }
                 }
+                // Le dé se lance au geste, jamais ici : l'aperçu se redessine.
+                if (f.jet) lignes.push(`${f.jet.label ?? nom(f.jet.champ)} +1D${f.jet.faces}`);
                 const marque = { [CLE_DES_FRANCHISSEMENTS]: { ...traites, [f.id]: true } };
                 return {
-                    heros: h, franchissement: f, valeur: nombre(h.valeurs[f.champ]),
+                    heros: h, franchissement: f, valeur: valeurSurveillee(f, h.valeurs),
                     noter: { ...maj, ...marque }, ecarter: marque, lignes,
                 };
             });
@@ -91,8 +113,28 @@ export function rearmer(
     if (ids.length === 0) return null;
     const gardes = ids.filter(id => {
         const f = franchissements?.find(x => x.id === id);
-        return !!f && nombre(valeurs[f.champ]) >= f.aPartirDe;
+        return !!f && franchi(f, valeurs);
     });
     if (gardes.length === ids.length) return null;
     return { [CLE_DES_FRANCHISSEMENTS]: Object.fromEntries(gardes.map(id => [id, true])) };
+}
+
+/**
+ * Ce que « Noter » écrit, **dé lancé** : le 1D4 de Corruption permanente du
+ * Seuil de Corruption (Symbaroum, S4). `de` lance un dé de tant de faces —
+ * `DiceEngine.roll` au geste, un dé fixe aux essais.
+ */
+export function noterLeFranchissement(
+    a: FranchissementEnAttente,
+    de: (faces: number) => number,
+    nom: Libelle = champ => champ,
+): { maj: Record<string, unknown>; lignes: string[] } {
+    const jet = a.franchissement.jet;
+    if (!jet) return { maj: a.noter, lignes: a.lignes };
+    const tire = de(jet.faces);
+    const champ = jet.champ;
+    const avant = typeof a.noter[champ] === 'number' ? a.noter[champ] as number : nombre(a.heros.valeurs[champ]);
+    const lignes = a.lignes.filter(l => !l.endsWith(`+1D${jet.faces}`));
+    lignes.push(`${jet.label ?? nom(champ)} ${avant} → ${avant + tire} (1D${jet.faces} : ${tire})`);
+    return { maj: { ...a.noter, [champ]: avant + tire }, lignes };
 }

@@ -1,6 +1,6 @@
 # 🌑 Jeu — Symbaroum
 
-> **Pilote décrit :** « Symbaroum », exporté le 2026-10-20 et corrigé le 2026-10-21 (un seul attribut au jet, plus de « difficulté » qui faisait tout réussir, santé de départ sur l'Endurance, fiche HTML reliée), puis le 2026-10-22 (modificateur et opposition au seuil ; Endurance raccordée et fin de scène : `Export Dirvers/corriges/Symbaroum_driver_gmos_s2-endurance.gmos-driver`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Symbaroum », exporté le 2026-10-20 et corrigé le 2026-10-21 (un seul attribut au jet, plus de « difficulté » qui faisait tout réussir, santé de départ sur l'Endurance, fiche HTML reliée), puis le 2026-10-22 (modificateur et opposition au seuil ; Endurance raccordée et fin de scène ; Avantage tactique et Corruption au seuil : `Export Dirvers/corriges/Symbaroum_driver_gmos_s3-s4.gmos-driver`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Un seul geste : le **test**, un d20 sous un attribut. Autour de lui, la fiche de personnage HTML,
 reliée champ par champ, et la **Corruption**, suivie en jauges.
@@ -33,7 +33,7 @@ reliée champ par champ, et la **Corruption**, suivie en jauges.
   cet Attribut** : un adversaire à 13 donne −3, un adversaire à 7 donne +3. Case vide, pas
   d'opposition.
 - **Modificateur** : la difficulté de la tâche, de **+5** (très facile) à **−5** (très complexe),
-  et les bonus de situation — l'**Avantage** vaut +2, même contre un adversaire.
+  et les bonus de situation.
 
 Le calcul se lit sous **Seuil** : `15 + (10 − 13) + 2`, soit 14. Le dé se juge contre ce seuil, et
 le journal redit l'opposition et le modificateur avec le jet (« Attribut · Attribut adverse 13 ·
@@ -46,6 +46,19 @@ curseur à 0 quand l'adversaire change.
 > jet d'un seul dé.
 
 > Au **pupitre** de Dice-OS, qui ne lit pas de fiche, le seuil se saisit déjà calculé.
+
+### L'Avantage tactique
+
+![L'Avantage tactique coché : seuil 15 + 2 = 17, et le rappel « +1D4 aux dégâts » après le lancer](captures/jeu-symbaroum-avantage.jpg)
+
+Encerclement, attaque surprise, cible à terre en mêlée… : la case **Avantage tactique** ajoute
+**+2** au seuil et rappelle **+1D4 aux dégâts** après le lancer (p. 166). **Un seul d20** : ce
+n'est pas un double lancer. Les avantages ne se cumulent pas : une case, pas un compteur. Elle
+s'ajoute à l'opposition et au modificateur.
+
+Le sélecteur **« Tirage »** lance, lui, deux d20 et garde le meilleur ou le pire : pour la
+cécité, certains Talents, l'option des dégâts critiques. Il s'appelle ici « Deux dés, le
+meilleur / le pire », pour ne plus se confondre avec l'Avantage du jeu.
 
 ---
 
@@ -99,6 +112,24 @@ Le bouton **« Fin de scène »** du bandeau ouvre un aperçu, personnage par pe
 ne détecte la fin d'une scène — ni la fin d'un combat, ni un changement de lieu : c'est vous qui la
 déclarez.
 
+### La Corruption au seuil
+
+![Sous le bandeau : Éléna des Brumes, Corruption totale 5 — Seuil de Corruption : choisir un Stigmate, Corruption permanente +1D4](captures/jeu-symbaroum-stigmate.jpg)
+
+GM-OS surveille la **Corruption totale** (temporaire + permanente) :
+
+- au **Seuil de Corruption** — la moitié de la Volonté, arrondie au-dessus — une ligne paraît
+  sous le bandeau : **choisir un Stigmate**. **« Noter »** lance **1D4** et l'ajoute à la
+  Corruption permanente (p. 179–180), et le consigne au journal ; **« Écarter »** le laisse ;
+- à la **Volonté**, l'**Abomination** (p. 180) : un rappel, que « Noter » consigne. Le
+  personnage passe au meneur, sauf accord du groupe pour le jouer (p. 184).
+
+Une fois par passage : ni un rechargement, ni une tablette qui se reconnecte ne la reproposent.
+La **fin de scène**, qui vide la Corruption temporaire, fait redescendre la totale : le seuil se
+réarme, et un nouveau franchissement se proposera — *le livre n'explicite pas les réentrées
+dans une même scène ; c'est la convention retenue.* Une Volonté pas encore remplie ne déclenche
+rien. Le Stigmate lui-même (lequel, sa description) s'écrit sur la fiche.
+
 ---
 
 ## Ce qui reste à la main
@@ -106,8 +137,8 @@ déclarez.
 - L'**égalité d'initiative** : la Vigilance départage, puis un d20.
 - La **Résistance à la douleur** : un coup qui l'atteint fait tomber la victime ou ouvre une
   Attaque gratuite, au choix de l'attaquant.
-- Le **Stigmate** et le **1D4 permanent** quand la Corruption totale atteint le Seuil de Corruption ;
-  l'abomination quand elle atteint la Volonté.
+- **Quel** Stigmate, et sa durée (un jour s'il est temporaire, jusqu'à un rituel s'il est permanent).
+- Les **coûts en Corruption** des pouvoirs, rituels et artéfacts, selon les traditions.
 - L'**agonie** à 0 d'Endurance : les tests de mort se lancent et se comptent à la main.
 - Les **relances** optionnelles contre un point d'Expérience ou de Corruption permanente.
 - Les **attributs secondaires**, que ni la fiche ni GM-OS ne calculent.

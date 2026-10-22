@@ -1075,3 +1075,35 @@ describe('le seuil que le meneur déplace', () => {
         expect(preparerLeJet(dessus, fiche, { champs: { attribut: 'precision' }, modificateurDuSeuil: 3 }).seuil).toBe(12);
     });
 });
+
+/** **L'Avantage tactique de Symbaroum** (S3, 2026-10-22) : +2 au seuil, sans second d20. */
+describe('l\'Avantage tactique', () => {
+    const symbaroum: DescripteurDeJet = {
+        seuil: [{ id: 'attribut', label: 'Attribut', sectionId: 'attributs' }],
+        reserve: { base: 1, max: 1, faces: 20 },
+        sens: 'sous-ou-egal',
+        modificateurDuSeuil: {
+            min: -5, max: 5, defaut: 0, opposition: { reference: 10 },
+            avantage: { label: 'Avantage tactique', seuil: 2, degats: '1d4' },
+        },
+    };
+    const preparer = (choix: Partial<Parameters<typeof preparerLeJet>[2]>) =>
+        preparerLeJet(symbaroum, { precision: 12 }, { champs: { attribut: 'precision' }, ...choix });
+
+    it('Précision 12 avec l\'Avantage tactique devient 14, et le calcul le dit', () => {
+        const jet = preparer({ avantageTactique: true });
+        expect(jet.seuil).toBe(14);
+        expect(jet.explicationDuSeuil).toBe('12 + 2 (Avantage tactique)');
+        expect(jet.modificationDuSeuil?.avantage).toEqual({ label: 'Avantage tactique', seuil: 2, degats: '1d4' });
+        expect(jet.nombreDeDes, 'un seul d20 : ce n\'est pas un double lancer').toBe(1);
+    });
+
+    it('s\'ajoute à l\'opposition et au modificateur, sans les écraser', () => {
+        expect(preparer({ avantageTactique: true, valeurAdverse: 13, modificateurDuSeuil: -1 }).explicationDuSeuil)
+            .toBe('12 + (10 − 13) − 1 + 2 (Avantage tactique)');
+    });
+
+    it('non coché, il ne compte pas', () => {
+        expect(preparer({}).seuil).toBe(12);
+    });
+});
