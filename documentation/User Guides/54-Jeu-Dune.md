@@ -1,7 +1,9 @@
 # 🏜️ Jeu — Dune
 
 > **Pilote décrit :** « Dune », exporté le 2026-10-13. C'est aussi le **pilote de référence** livré
-> avec GM-OS. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> avec GM-OS. Le 2026-10-22, le paiement au choix (lot D2) : pilote de référence à jour, export
+> corrigé `Export Dirvers/corriges/Dune_driver_gmos_d2-paiement.gmos-driver`. Le reste de Dune
+> reste garé. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Le système 2d20 de Modiphius : un seuil fait d'une Compétence et d'un Principe, deux réserves
 partagées, ni points de vie ni initiative individuelle.
@@ -14,8 +16,8 @@ partagées, ni points de vie ni initiative individuelle.
 
 | Réserve | Ce qu'elle fait dans GM-OS |
 | :--- | :--- |
-| **Impulsion** (0 à 6, aux joueurs) | Chaque **réussite excédentaire** d'un jet l'alimente, **automatiquement**. Elle paie les dés achetés. **« Fin de scène »** lui retire un point. Les joueurs la voient et la dépensent depuis leur tablette |
-| **Menace** (sans plafond, au meneur) | Elle monte quand l'Impulsion manque : **un dé acheté sans Impulsion se paie en Menace**. Elle se dépense pour compliquer, hausser une difficulté ou déclencher un danger |
+| **Impulsion** (0 à 6, aux joueurs) | Chaque **réussite excédentaire** d'un jet l'alimente, **automatiquement** — jusqu'à six : ce qui ne tient plus reste **sur le test** (voir *Le jet*). Elle paie les dés achetés. **« Fin de scène »** lui retire un point. Les joueurs la voient et la dépensent depuis leur tablette |
+| **Menace** (sans plafond, au meneur) | Elle monte quand l'Impulsion manque — **un dé acheté sans Impulsion se paie en Menace** — ou **par choix** du joueur, même avec de l'Impulsion. Elle se dépense pour compliquer, hausser une difficulté ou déclencher un danger |
 
 ---
 
@@ -28,8 +30,13 @@ partagées, ni points de vie ni initiative individuelle.
   **20** est une complication.
 - **Acheter des dés** (jusqu'à 5) : le premier coûte 1 point, le deuxième 2, le troisième 3. Le
   panneau **annonce avant de lancer** d'où sortent les points : « 1 Impulsion + 2 Menace ».
+- **« Dont en Menace »** : le joueur peut payer **tout ou partie** des dés en Menace, même quand
+  l'Impulsion suffirait (livre p. 149–152). À 0, l'Impulsion d'abord et le manque en Menace. Le
+  journal dit « payés en Menace par choix ». Depuis la tablette aussi : le meneur applique la Menace.
 - La **difficulté** (0 à 5) est le nombre de réussites à atteindre ; l'excédent part dans
-  l'Impulsion.
+  l'Impulsion. **Réserve pleine**, ce qui ne tient pas reste sur le test : « 2 Impulsion hors
+  réserve » — **« Dépenser un point »** (informations, trait…) ou **« Verser à la réserve »** quand
+  elle a fait de la place. Sinon il est perdu, et c'est dit.
 
 ![Après le lancer](captures/jeu-dune-jet-lance.jpg)
 

@@ -1737,6 +1737,13 @@ export function controlerLePilote(
                 `« ${ressource.label} » se déverse dans elle-même.`,
             );
         }
+        // Payer sur le report par choix (Dune, 2026-10-22) suppose un report.
+        if (ressource.paiementAuChoix && !report) {
+            avertir(
+                `ressourcesDeTable[${i}].paiementAuChoix`,
+                `« ${ressource.label} » laisse choisir de payer sur son report, mais n'en déclare aucun : il n'y a rien à choisir.`,
+            );
+        }
 
         /*
           **Un plafond est un nombre** (Nephilim, 2026-10-17) : le pilote livré

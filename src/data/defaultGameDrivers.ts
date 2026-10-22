@@ -174,6 +174,9 @@ const DUNE: GameDriver = {
             // « À zéro, l'achat de d20 coûte de la Menace » : le manque ne bloque
             // pas la dépense, il alimente la réserve du meneur.
             reportSurEpuisement: 'menace',
+            // Et par choix, même quand l'Impulsion suffirait : tout ou partie de
+            // l'achat en Menace (livre p. 149–152, lot D2 de l'audit, 2026-10-22).
+            paiementAuChoix: true,
             description: "Réserve commune aux joueurs. Chaque réussite excédentaire l'alimente ; elle paie les dés supplémentaires, les informations et les traits.",
         },
         {

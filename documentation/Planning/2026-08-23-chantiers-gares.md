@@ -12260,6 +12260,40 @@ David, le 22/10 : *« J'ai réimporté. on va faire le sujet 3 et 4 »*, puis le
   Hors lot : agonie de Symbaroum, Stigmate et 1D4 permanent (S4, reste), Blade Runner
   (stabilisation, audit d'abord), Cthulhu Hack (Hors Jeu → Sauvegardes), Crimes C2.
 
+### 151 · Paiement au choix et Impulsion du jet (Dune D2) ; audit fiches, tablettes et journal — 22/10/2026
+
+David, le 22/10 : *« J'ai réimporté. on va faire le sujet 5 et 6, gm-os est fermé »*, puis ses deux
+choix : « Moteur commun + Dune D2 » (sujet 6 ; Dune reste garé pour le reste) et « Audit d'abord »
+(sujet 5) (Claude Code).
+
+- **Fait — le paiement au choix** (sujet 6) : `RessourceDeTable.paiementAuChoix` ; `ventilerLaDepense`
+  et `depenser` reçoivent la part payée sur le report par choix et le disent (« 2 points payés en
+  Menace par choix »). Le panneau de jet propose **« dont en Menace »** à côté du coût ventilé ; un
+  seul débit, que la tablette transmet au meneur (`table:ajuster` porte `enReport`) — la Menace
+  reste au meneur, c'est lui qui l'applique. Élision corrigée au passage (« d'Impulsion »).
+- **Fait — l'Impulsion du jet** : l'excédent n'entre plus que dans la place que la réserve a ; le
+  reste attend **sur le test** (« 2 Impulsion hors réserve » : « Dépenser un point » ou « Verser à
+  la réserve »), au lieu d'être détruit au plafond sans un mot.
+- **Fait — le motif des tablettes** : l'action du meneur reprend le motif d'un mouvement venu d'une
+  tablette, qui s'y perdait — le journal dit de nouveau quel jet a dépensé (constat A1 de l'audit).
+- **Fait — pilotes** : Dune de référence (`defaultGameDrivers.ts`) et export corrigé
+  `Export Dirvers/corriges/Dune_driver_gmos_d2-paiement.gmos-driver` (`outils/dune/ajouter_paiement_au_choix.py`).
+  **Star Trek pas activé** : son corpus dit « Impulsion **ou** Menace » pour l'aide, mais « si la
+  réserve est vide » pour l'achat de dés — à trancher par David.
+- **Fait — contrôle de la Forge** (paiement au choix sans report : avertissement), guide 53
+  (`paiementAuChoix`, l'excédent hors réserve), page `54-Jeu-Dune.md`, capture `jeu-dune-jet` refaite.
+- **Fait — l'audit du sujet 5** : [rapport](2026-10-22-audit-fiches-tablettes-journal.md). Constats
+  majeurs, lus dans le code et pas encore reproduits : **S1** le segment `lectureDuMeneur` (notes du
+  meneur des actes et scènes, wiki, indices non révélés) part sur chaque tablette de joueur ; **S2**
+  les `gmNotes` des lieux, campagnes et personnages aussi ; **S5** la fenêtre Hub et les projecteurs
+  locaux reçoivent la charge non caviardée. Puis S3 (indices non révélés), S4 (un joueur peut écrire
+  les notes du meneur de son personnage), H1 (modifications de fiche jamais historisées), C1 (le
+  pupitre ne paie ni ne crédite l'Impulsion). **Rien n'est corrigé : David choisit.**
+- **Vérifié** : `tsc -b` propre ; essais nouveaux (ventilation et dépense 2, panneau de Dune 4,
+  action de la tablette 3) ; suite complète **8 662 essais verts** ; capture de Dune verte.
+- **Reste** : réimport du pilote Dune corrigé et essai de David ; son choix sur les constats de
+  l'audit (je propose S1+S2+S5 d'abord) ; son choix pour Star Trek et pour le pupitre (C1).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12351,6 +12385,7 @@ David, le 22/10 : *« J'ai réimporté. on va faire le sujet 3 et 4 »*, puis le
 | 84 | **Forge : `jet.difficulte` compte des réussites** | § 148 ; consigne corrigée et contrôle du pilote au plafond de la réserve, faits le 22/10 ; 721 essais de la Forge verts ; sur les exports réels, seul Crimes est signalé (C1, connu) | Relire le corpus de la Forge | Rien |
 | 85 | **Symbaroum S1 — modificateur du seuil, opposition explicite** | § 149 ; moteur, panneau (fiche et tablette), journal, Forge, pilote corrigé, manuel et captures — faits le 22/10 | Réimport du pilote corrigé et essai de David | Rien |
 | 86 | **Santé et séquelles, fin de scène** | § 150 ; fiche qui naît pleine, contrôle de la santé courante, `finDeScene` et « vide », seuils qui laissent une trace (une fois par passage) ; Symbaroum S2-raccord/S4-fin de scène et NOC point 1 par script — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
+| 87 | **Paiement au choix (Dune D2) ; audit fiches, tablettes, journal** | § 151 ; « dont en Menace », Impulsion du jet hors réserve, motif des tablettes — faits le 22/10 ; audit rendu : S1, S2, S5 (secrets du meneur sur les tablettes et les fenêtres de la table), S3, S4, H1, C1 | Réimport du pilote Dune corrigé et essai ; corrections de l'audit | Le choix de David parmi les constats ; Star Trek ; le pupitre |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

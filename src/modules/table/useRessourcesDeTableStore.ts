@@ -59,7 +59,8 @@ interface RessourcesDeTableState {
      * un mouvement causé par un jet doit le dire, sans quoi une Impulsion qui
      * passe de quatre à un ne veut plus rien dire à la relecture.
      */
-    depenser: (campaignId: string, ressources: RessourceDeTable[], id: string, montant: number, motif?: string) => ResultatDeMouvement;
+    /** `enReport` : la part payée sur le report par choix (Dune, `paiementAuChoix`). */
+    depenser: (campaignId: string, ressources: RessourceDeTable[], id: string, montant: number, motif?: string, enReport?: number) => ResultatDeMouvement;
     gagner: (campaignId: string, ressources: RessourceDeTable[], id: string, montant: number, motif?: string) => ResultatDeMouvement;
     fixer: (campaignId: string, ressources: RessourceDeTable[], id: string, valeur: number, motif?: string) => ResultatDeMouvement;
     /** L'érosion de fin de scène, déclenchée par le meneur — lui seul sait qu'une scène s'achève. */
@@ -83,7 +84,7 @@ interface RessourcesDeTableState {
      * une divergence entre les deux se corrige d'elle-même à la diffusion
      * suivante.
      */
-    ajusterDepuisLaTablette: (campaignId: string, ressources: RessourceDeTable[], id: string, delta: number, motif?: string) => ResultatDeMouvement;
+    ajusterDepuisLaTablette: (campaignId: string, ressources: RessourceDeTable[], id: string, delta: number, motif?: string, enReport?: number) => ResultatDeMouvement;
 }
 
 export const useRessourcesDeTableStore = create<RessourcesDeTableState>()(
@@ -170,8 +171,8 @@ export const useRessourcesDeTableStore = create<RessourcesDeTableState>()(
 
                 valeur: (campaignId, ressources, id) => valeurDe(ressources, lire(campaignId, ressources), id),
 
-                depenser: (campaignId, ressources, id, montant, motif) =>
-                    appliquer(campaignId, depenserPur(ressources, lire(campaignId, ressources), id, montant), ressources, motif),
+                depenser: (campaignId, ressources, id, montant, motif, enReport) =>
+                    appliquer(campaignId, depenserPur(ressources, lire(campaignId, ressources), id, montant, enReport), ressources, motif),
 
                 gagner: (campaignId, ressources, id, montant, motif) =>
                     appliquer(campaignId, gagnerPur(ressources, lire(campaignId, ressources), id, montant), ressources, motif),
@@ -192,11 +193,11 @@ export const useRessourcesDeTableStore = create<RessourcesDeTableState>()(
                     set(state => ({ reserves: { ...state.reserves, [campaignId]: etatInitial(ressources) } }));
                 },
 
-                ajusterDepuisLaTablette: (campaignId, ressources, id, delta, motif) => {
+                ajusterDepuisLaTablette: (campaignId, ressources, id, delta, motif, enReport) => {
                     if (!delta) return { etat: {}, mouvements: [], perdu: 0, avertissements: [] };
                     const etat = lire(campaignId, ressources);
                     const resultat = appliquer(campaignId, delta < 0
-                        ? depenserPur(ressources, etat, id, -delta)
+                        ? depenserPur(ressources, etat, id, -delta, enReport)
                         : gagnerPur(ressources, etat, id, delta),
                         ressources, motif ?? 'depuis la tablette');
 
@@ -210,7 +211,7 @@ export const useRessourcesDeTableStore = create<RessourcesDeTableState>()(
                       pas : elle diverge en silence.* (2026-09-09)
                     */
                     window.dispatchEvent(new CustomEvent('table:ajuster', {
-                        detail: { ressourceId: id, delta, motif },
+                        detail: { ressourceId: id, delta, motif, ...(enReport ? { enReport } : {}) },
                     }));
                     return resultat;
                 },

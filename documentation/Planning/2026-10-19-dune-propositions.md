@@ -101,6 +101,11 @@ du même jet doivent partager un seul bilan, afin de ne créditer ni dépenser d
 
 **Portée :** moteur de jet et réserves communes, pas seulement un changement du JSON du pilote.
 
+**Livré le 22/10/2026 (Claude Code, registre général § 151)**, à la demande de David — Dune reste
+garé pour le reste : `paiementAuChoix` sur l'Impulsion (« dont en Menace », fiche et tablette) ;
+l'excédent n'entre que dans la place libre, le reste se dépense sur le test ou se verse. Pas fait :
+les dépenses contextualisées (informations, traits, atouts) et l'Impulsion bonus.
+
 ## D3 — Faire jouer Détermination, Principes et maximes
 
 **Constat :** la Détermination se suit comme une jauge, les cinq Principes comme des nombres ;

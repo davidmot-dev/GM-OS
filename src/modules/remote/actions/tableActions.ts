@@ -44,7 +44,7 @@ function reservesDeLaCampagne(campaignId: string | null): RessourceDeTable[] {
  * avertissements : *la règle ne change pas selon qui l'applique.*
  */
 const ajusterUneReserve = (payload: unknown, ctx: ActionContext) => {
-    const { ressourceId, delta } = (payload ?? {}) as { ressourceId?: string; delta?: number };
+    const { ressourceId, delta, motif, enReport } = (payload ?? {}) as { ressourceId?: string; delta?: number; motif?: unknown; enReport?: unknown };
     const campaignId = ctx.activeCampaignId;
 
     if (!ressourceId || typeof delta !== 'number' || !Number.isFinite(delta) || delta === 0) {
@@ -66,10 +66,20 @@ const ajusterUneReserve = (payload: unknown, ctx: ActionContext) => {
         return;
     }
 
+    /*
+      **Le motif voyage jusqu'au journal du meneur** (2026-10-22). Il partait de
+      la tablette et s'arrêtait ici : le journal disait « Réserves de table »
+      sans le jet qui avait dépensé. La part payée par choix sur le report
+      (Dune, `paiementAuChoix`) suit le même chemin — la Menace reste au meneur,
+      c'est lui qui l'applique.
+    */
+    const dit = typeof motif === 'string' && motif.trim() ? motif.slice(0, 300) : 'depuis la tablette';
+    const choisi = typeof enReport === 'number' && Number.isFinite(enReport) && enReport > 0 && ressource.paiementAuChoix
+        ? Math.floor(enReport) : 0;
     const store = useRessourcesDeTableStore.getState();
     const resultat = delta < 0
-        ? store.depenser(campaignId!, ressources, ressourceId, -delta)
-        : store.gagner(campaignId!, ressources, ressourceId, delta);
+        ? store.depenser(campaignId!, ressources, ressourceId, -delta, dit, choisi)
+        : store.gagner(campaignId!, ressources, ressourceId, delta, dit);
 
     for (const dit of resultat.avertissements) console.log(`[Actions] table:ajuster — ${dit}`);
 };

@@ -128,3 +128,36 @@ describe('un joueur puise dans les dés de la Cabale', () => {
         expect(useRessourcesDeTableStore.getState().reserves[CAMPAGNE]?.['groupe:domains.action']).toBe(1);
     });
 });
+
+/**
+ * **Le motif et le paiement au choix, de la tablette au meneur** (2026-10-22).
+ * Le motif s'arrêtait à l'action : le journal du meneur ne disait pas quel jet
+ * avait dépensé. La part payée en Menace par choix (Dune, lot D2) suit le même
+ * chemin — la Menace reste au meneur, c'est lui qui l'applique.
+ */
+describe('le jet de la tablette arrive avec son motif et son choix', () => {
+    const AU_CHOIX = { ...IMPULSION, reportSurEpuisement: 'menace', paiementAuChoix: true };
+
+    it('la part choisie part en Menace, appliquée par le meneur', () => {
+        poserLeJeu([AU_CHOIX, MENACE]);
+        ajuster({ ressourceId: 'impulsion', delta: -3, motif: 'Jet : Combat + Devoir, 2 dés achetés', enReport: 2 }, ctx);
+        expect(valeur('impulsion', [AU_CHOIX, MENACE])).toBe(2);
+        expect(valeur('menace', [AU_CHOIX, MENACE])).toBe(4);
+    });
+
+    it('sans paiement au choix déclaré, la part demandée est ignorée', () => {
+        const AVEC_REPORT = { ...IMPULSION, reportSurEpuisement: 'menace' };
+        poserLeJeu([AVEC_REPORT, MENACE]);
+        ajuster({ ressourceId: 'impulsion', delta: -3, enReport: 2 }, ctx);
+        expect(valeur('impulsion', [AVEC_REPORT, MENACE])).toBe(0);
+        expect(valeur('menace', [AVEC_REPORT, MENACE])).toBe(2);
+    });
+
+    it('le motif atteint le magasin, donc le journal', () => {
+        poserLeJeu([IMPULSION, MENACE]);
+        const depenser = vi.spyOn(useRessourcesDeTableStore.getState(), 'depenser');
+        ajuster({ ressourceId: 'impulsion', delta: -1, motif: 'Jet : Combat + Devoir' }, ctx);
+        expect(depenser).toHaveBeenCalledWith(CAMPAGNE, expect.anything(), 'impulsion', 1, 'Jet : Combat + Devoir', 0);
+        depenser.mockRestore();
+    });
+});

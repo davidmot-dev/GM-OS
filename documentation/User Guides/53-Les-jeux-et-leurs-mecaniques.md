@@ -147,6 +147,10 @@ de « meilleur dé ».
 **Le résultat** dit le nombre de réussites sur une réserve, et **le calcul** sur un jet qui se
 tranche d'un seul dé (Sauvegarde, pourcentage, Table des Bonus).
 
+**L'excédent** d'un jet réussi alimente la réserve qui paie les dés (l'Impulsion de Dune). Ce que
+la réserve, **pleine**, ne peut pas garder reste sur le test : « **Dépenser un point** » sur ce test,
+ou « **Verser à la réserve** » quand elle a fait de la place — sinon il est perdu, et c'est dit.
+
 ---
 
 ## Les réserves de table (`ressourcesDeTable`)
@@ -165,6 +169,7 @@ chaque mouvement s'inscrit au journal de séance avec ce qui l'a causé.
 | **Début de séance** (`erosionDebutDeSeance`) | Ce qu'elle perd quand vous appuyez sur **« Début de séance »** — la soirée de jeu, pas le temps du récit |
 | **Nouveau scénario** (`remiseAuDepartParScenario`) | Elle revient à son départ quand vous appuyez sur **« Nouveau scénario »** (une confirmation dit ce qui sera remis) |
 | **Report du manque** (`reportSurEpuisement`) | Ce qu'elle ne peut pas payer **alimente une autre réserve** : à zéro d'Impulsion, un dé acheté se paie en Menace |
+| **Paiement au choix** (`paiementAuChoix`) | Avec un report : à l'étape « Lancer les dés », **« dont en Menace »** fait payer tout ou partie des dés achetés sur le report, même quand la réserve suffirait. À zéro, la règle d'avant. Le journal dit « payés en Menace par choix » |
 | **Plafond lu sur une autre réserve** (`maxSur`) | Le plafond est la valeur courante d'une autre réserve de table : la Jauge de Traque de Nephilim plafonne au **Seuil RK** du lieu, que le meneur règle au bandeau en changeant de lieu |
 | **Débordement** (`debordement`) | À son plafond, elle **se vide** et une autre réserve monte : à cinq gouttes, le Fiel passe en Menace. Le reste d'un gain continue de remplir la jauge vidée |
 

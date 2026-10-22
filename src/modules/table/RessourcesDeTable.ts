@@ -58,6 +58,15 @@ export interface RessourceDeTable {
      */
     reportSurEpuisement?: string;
     /**
+     * **Payer sur le report par choix, pas seulement par manque** — Dune,
+     * 2026-10-22 (lot D2 de l'audit, p. 149–152) : les dés achetés se paient
+     * en Impulsion, en Menace ou en mélangeant les deux, même quand l'Impulsion
+     * suffirait. Le panneau de jet propose alors « dont en Menace ». Sans
+     * `reportSurEpuisement`, il n'y a rien à choisir : ignoré, et la Forge le
+     * dit.
+     */
+    paiementAuChoix?: boolean;
+    /**
      * Où va ce qui **déborde** — le contraire du report, qui porte le manque.
      *
      * **NOC, 2026-10-13** : « à cinq gouttes, la jauge de Fiel se vide pour
@@ -218,6 +227,8 @@ export interface VentilationDeDepense {
     ressourceDeReport?: string;
     /** Le manque, quand aucun report n'est déclaré : la dépense sera partielle. */
     impaye: number;
+    /** La part du report payée **par choix** (`paiementAuChoix`), comprise dans `reporte`. */
+    choisi?: number;
 }
 
 /**
@@ -233,18 +244,25 @@ export function ventilerLaDepense(
     etat: EtatDesRessources,
     id: string,
     montant: number,
+    /**
+     * Ce que le joueur **choisit** de payer sur le report (`paiementAuChoix`,
+     * Dune 2026-10-22) : la Menace d'abord pour cette part, l'Impulsion pour le
+     * reste — et son manque, comme toujours, en Menace. Ignoré sans report.
+     */
+    enReport = 0,
 ): VentilationDeDepense {
     const demande = Math.max(0, Math.floor(montant));
     const ressource = ressources.find(r => r.id === id);
     if (!ressource) return { surLaReserve: 0, reporte: 0, impaye: demande };
 
+    const choisi = ressource.reportSurEpuisement ? Math.min(demande, Math.max(0, Math.floor(enReport))) : 0;
     const disponible = Math.max(0, valeurDe(ressources, etat, id) - ressource.min);
-    const surLaReserve = Math.min(disponible, demande);
-    const manque = demande - surLaReserve;
+    const surLaReserve = Math.min(disponible, demande - choisi);
+    const manque = demande - choisi - surLaReserve;
 
-    if (manque === 0) return { surLaReserve, reporte: 0, impaye: 0 };
+    if (manque === 0 && choisi === 0) return { surLaReserve, reporte: 0, impaye: 0 };
     if (ressource.reportSurEpuisement) {
-        return { surLaReserve, reporte: manque, ressourceDeReport: ressource.reportSurEpuisement, impaye: 0 };
+        return { surLaReserve, reporte: choisi + manque, ressourceDeReport: ressource.reportSurEpuisement, impaye: 0, ...(choisi ? { choisi } : {}) };
     }
     return { surLaReserve, reporte: 0, impaye: manque };
 }
@@ -261,8 +279,10 @@ export function depenser(
     etat: EtatDesRessources,
     id: string,
     montant: number,
+    /** La part payée sur le report par choix — voir `ventilerLaDepense`. */
+    enReport = 0,
 ): ResultatDeMouvement {
-    const ventilation = ventilerLaDepense(ressources, etat, id, montant);
+    const ventilation = ventilerLaDepense(ressources, etat, id, montant, enReport);
     const suivant = { ...etat };
     const mouvements: MouvementDeReserve[] = [];
     const avertissements: string[] = [];
@@ -287,9 +307,15 @@ export function depenser(
         // en Impulsion, le meneur l'encaisse en Menace.
         const report = gagner(ressources, suivant, ventilation.ressourceDeReport, ventilation.reporte);
         const cible = ressources.find(r => r.id === ventilation.ressourceDeReport);
-        avertissements.push(
-            `${ventilation.reporte} point${ventilation.reporte > 1 ? 's' : ''} de ${ressource.label} manquant${ventilation.reporte > 1 ? 's' : ''} : ${cible?.label ?? ventilation.ressourceDeReport} augmente d'autant.`,
-        );
+        const nomDuReport = cible?.label ?? ventilation.ressourceDeReport;
+        const choisi = ventilation.choisi ?? 0;
+        const manque = ventilation.reporte - choisi;
+        const pts = (n: number) => `${n} point${n > 1 ? 's' : ''}`;
+        // « d'Impulsion », pas « de Impulsion ».
+        const deLa = /^[aeiouyhàâéèêëîïôöùûü]/i.test(ressource.label) ? `d'${ressource.label}` : `de ${ressource.label}`;
+        avertissements.push(choisi > 0
+            ? `${pts(choisi)} payé${choisi > 1 ? 's' : ''} en ${nomDuReport} par choix${manque > 0 ? `, ${pts(manque)} ${deLa} manquant${manque > 1 ? 's' : ''}` : ''} : ${nomDuReport} augmente de ${ventilation.reporte}.`
+            : `${pts(ventilation.reporte)} ${deLa} manquant${ventilation.reporte > 1 ? 's' : ''} : ${nomDuReport} augmente d'autant.`);
         return {
             etat: report.etat,
             mouvements: [...mouvements, ...report.mouvements],

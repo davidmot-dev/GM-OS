@@ -132,6 +132,25 @@ describe('ventiler — annoncer le coût avant de s\'engager', () => {
         });
     });
 
+    it('paie par choix sur le report, et le manque par-dessus', () => {
+        // Dune, lot D2 (2026-10-22) : trois points, dont deux en Menace par choix.
+        expect(ventilerLaDepense(DUNE, { impulsion: 4, menace: 0 }, 'impulsion', 3, 2)).toEqual({
+            surLaReserve: 1, reporte: 2, ressourceDeReport: 'menace', impaye: 0, choisi: 2,
+        });
+        // Une seule Impulsion : un point choisi, un payé, un manquant.
+        expect(ventilerLaDepense(DUNE, { impulsion: 1, menace: 0 }, 'impulsion', 3, 1)).toEqual({
+            surLaReserve: 1, reporte: 2, ressourceDeReport: 'menace', impaye: 0, choisi: 1,
+        });
+        // Plus que le coût : borné au coût.
+        expect(ventilerLaDepense(DUNE, { impulsion: 4 }, 'impulsion', 3, 9).reporte).toBe(3);
+    });
+
+    it('la dépense dit ce qui est choisi, et ce qui manque', () => {
+        const r = depenser(DUNE, { impulsion: 1, menace: 0 }, 'impulsion', 3, 1);
+        expect(r.etat).toEqual({ impulsion: 0, menace: 2 });
+        expect(r.avertissements[0]).toBe('1 point payé en Menace par choix, 1 point d\'Impulsion manquant : Menace augmente de 2.');
+    });
+
     it('ne touche à rien — c\'est tout son intérêt', () => {
         const etat = { impulsion: 2, menace: 2 };
         ventilerLaDepense(DUNE, etat, 'impulsion', 3);

@@ -7,7 +7,7 @@ import {
     preparerLeJet, sectionsDeLaComposante, verdict,
     type ComposanteDeJet, type DescripteurDeJet,
 } from '../../../dice/DescripteurDeJet';
-import { ventilerLaDepense, type RessourceDeTable } from '../../../table/RessourcesDeTable';
+import { plafondDe, valeurDe, ventilerLaDepense, type RessourceDeTable } from '../../../table/RessourcesDeTable';
 import { useRessourcesDeTableStore } from '../../../table/useRessourcesDeTableStore';
 import { apportsDisponibles, effetDesApports, idDeReserveDuGroupe, niveauDuGroupe, type ApportDisponible } from '../../../table/reservesDuGroupe';
 import { malusDePeril, resoudreLeDestin } from '../../../dice/systemes/nocturne';
@@ -195,6 +195,18 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [specialisation, setSpecialisation] = useState(false);
     /** Ce que le dernier lancer a fait aux réserves de la table. */
     const [mouvements, setMouvements] = useState<string[]>([]);
+    /**
+     * **Payer en Menace par choix** — Dune, lot D2 (2026-10-22) : la part des dés
+     * achetés que le joueur met sur le report, même avec de l'Impulsion en
+     * réserve. Seulement si la réserve le déclare (`paiementAuChoix`).
+     */
+    const [enReport, setEnReport] = useState(0);
+    /**
+     * **L'Impulsion du jet que la réserve pleine ne peut pas garder** — lot D2.
+     * Le livre la laisse dépenser sur le test avant de conserver le reliquat
+     * (p. 151) ; la verser d'office au plafond la détruisait sans un mot.
+     */
+    const [impulsionDuJet, setImpulsionDuJet] = useState<{ reste: number; enTete: string } | null>(null);
 
     const { etatDe, depenser, gagner, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
     const monnaie = useMemo(
@@ -268,13 +280,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * Impulsion qui passe de quatre à un ne veut rien dire sans le jet qui l'a
      * dépensée.*
      */
-    const mouvoir = (id: string, delta: number, motif: string) => {
+    const mouvoir = (id: string, delta: number, motif: string, enReportChoisi = 0) => {
         if (!monnaie) return { avertissements: [] as string[] };
         if (pourLesJoueurs) {
-            return ajusterDepuisLaTablette(monnaie.campaignId, monnaie.ressourcesDeTable, id, delta, motif);
+            return ajusterDepuisLaTablette(monnaie.campaignId, monnaie.ressourcesDeTable, id, delta, motif, enReportChoisi);
         }
         return delta < 0
-            ? depenser(monnaie.campaignId, monnaie.ressourcesDeTable, id, -delta, motif)
+            ? depenser(monnaie.campaignId, monnaie.ressourcesDeTable, id, -delta, motif, enReportChoisi)
             : gagner(monnaie.campaignId, monnaie.ressourcesDeTable, id, delta, motif);
     };
 
@@ -532,11 +544,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * Menace : la dépense alimente la réserve du meneur. Ce n'est jamais une
      * surprise acceptable — donc on l'annonce, et le joueur décide ensuite.
      */
+    const reserveDuCout = monnaie?.ressourcesDeTable.find(r => r.id === jet.cout.ressource);
+    const reportAuChoix = reserveDuCout?.paiementAuChoix ? reserveDuCout.reportSurEpuisement : undefined;
+    const choisiEnReport = reportAuChoix ? Math.min(enReport, jet.cout.total) : 0;
     const ventilation = useMemo(() => {
         if (!monnaie || !jet.cout.ressource || jet.cout.total === 0) return null;
         const etat = etatDe(monnaie.campaignId, monnaie.ressourcesDeTable);
-        return ventilerLaDepense(monnaie.ressourcesDeTable, etat, jet.cout.ressource, jet.cout.total);
-    }, [monnaie, jet.cout.ressource, jet.cout.total, etatDe]);
+        return ventilerLaDepense(monnaie.ressourcesDeTable, etat, jet.cout.ressource, jet.cout.total, choisiEnReport);
+    }, [monnaie, jet.cout.ressource, jet.cout.total, etatDe, choisiEnReport]);
 
     const nomDe = (id?: string) =>
         ressourcesDeTable?.find(r => r.id === id)?.label ?? id ?? '';
@@ -567,6 +582,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setDernierLancer(null);
         setReussiParLaFortune(false);
         setARelancerAussi([]);
+        setImpulsionDuJet(null);
 
         // Le coût se prélève au moment où l'on s'engage, pas pendant qu'on
         // tourne les boutons : régler avant de lancer ferait payer les
@@ -634,6 +650,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             dits.push(...mouvoir(
                 jet.cout.ressource, -jet.cout.total,
                 `${enTete}, ${jet.desAchetes} dé${jet.desAchetes > 1 ? 's' : ''} acheté${jet.desAchetes > 1 ? 's' : ''}`,
+                choisiEnReport,
             ).avertissements);
         }
 
@@ -890,11 +907,28 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
          */
         if (monnaie && jet.cout.ressource) {
             const excedent = verdict(res.successes ?? 0, jet.reussitesRequises).excedent;
-            if (excedent > 0) {
+            /*
+              **Ce que la réserve peut garder entre, le reste attend sur le test**
+              (lot D2, 2026-10-22). Créditer tout l'excédent sur une réserve
+              pleine le détruisait aussitôt ; le livre le laisse dépenser sur le
+              test, puis conserver le reliquat. Le plafond se lit après le
+              paiement des dés — l'état du magasin est déjà à jour.
+            */
+            const etatApres = etatDe(monnaie.campaignId, monnaie.ressourcesDeTable);
+            const plafond = reserveDuCout ? plafondDe(monnaie.ressourcesDeTable, etatApres, reserveDuCout) : undefined;
+            const place = plafond === undefined ? excedent
+                : Math.max(0, plafond - valeurDe(monnaie.ressourcesDeTable, etatApres, jet.cout.ressource));
+            const verse = Math.min(excedent, place);
+            if (verse > 0) {
                 dits.push(...mouvoir(
-                    jet.cout.ressource, excedent,
+                    jet.cout.ressource, verse,
                     `${enTete}, ${excedent} réussite${excedent > 1 ? 's' : ''} excédentaire${excedent > 1 ? 's' : ''}`,
                 ).avertissements);
+            }
+            if (excedent > verse) {
+                const n = excedent - verse;
+                setImpulsionDuJet({ reste: n, enTete });
+                dits.push(`${n} ${nomDe(jet.cout.ressource)} hors réserve, pleine : à dépenser sur ce test, sinon perdu${n > 1 ? 's' : ''}.`);
             }
         }
 
@@ -1837,6 +1871,30 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     )}
 
                     {/*
+                        **« Dont en Menace »** (Dune, lot D2) : le joueur paie tout ou
+                        partie en Menace, même avec de l'Impulsion en réserve. À zéro,
+                        la règle d'avant : l'Impulsion d'abord, le manque en Menace.
+                    */}
+                    {reportAuChoix && jet.cout.total > 0 && (
+                        <span data-paiement-au-choix className="flex items-center gap-1.5">
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
+                                dont en {nomDe(reportAuChoix)}
+                            </span>
+                            <button
+                                onClick={() => setEnReport(Math.max(0, choisiEnReport - 1))}
+                                aria-label={`Un point de moins en ${nomDe(reportAuChoix)}`}
+                                className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
+                            ><Minus size={12} /></button>
+                            <span className="font-mono text-sm font-black w-5 text-center">{choisiEnReport}</span>
+                            <button
+                                onClick={() => setEnReport(Math.min(jet.cout.total, choisiEnReport + 1))}
+                                aria-label={`Un point de plus en ${nomDe(reportAuChoix)}`}
+                                className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
+                            ><Plus size={12} /></button>
+                        </span>
+                    )}
+
+                    {/*
                         **Avantage / Désavantage — la règle de Dice OS, à l'identique.**
 
                         Deux dés, on garde le meilleur ou le moins bon. Le sélecteur
@@ -2016,6 +2074,41 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             <span className="ml-auto text-app-text/25 font-mono text-ui-10">sous {seuilDuLancer}</span>
                         )}
                     </div>
+
+                    {/*
+                        **L'Impulsion du jet que la réserve pleine ne garde pas** (Dune,
+                        lot D2) : elle se dépense sur ce test, ou se verse quand la
+                        réserve a fait de la place — sinon elle est perdue, et c'est dit.
+                    */}
+                    {impulsionDuJet && monnaie && jet.cout.ressource && (
+                        <div data-impulsion-du-jet className="flex flex-wrap items-center gap-2 text-xs">
+                            <span className="font-bold text-etat-alerte">
+                                {impulsionDuJet.reste} {nomDe(jet.cout.ressource)} hors réserve
+                            </span>
+                            <span className="text-app-text/50">
+                                la réserve est pleine : à dépenser sur ce test, sinon perdu{impulsionDuJet.reste > 1 ? 's' : ''}.
+                            </span>
+                            <button type="button"
+                                onClick={() => {
+                                    const reste = impulsionDuJet.reste - 1;
+                                    setImpulsionDuJet(reste > 0 ? { ...impulsionDuJet, reste } : null);
+                                    setMouvements(m => [...m, `1 ${nomDe(jet.cout.ressource)} du jet dépensé sur le test.`]);
+                                }}
+                                className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors">
+                                Dépenser un point
+                            </button>
+                            <button type="button"
+                                onClick={() => {
+                                    const dits = mouvoir(jet.cout.ressource!, impulsionDuJet.reste,
+                                        `${impulsionDuJet.enTete}, reliquat de l'Impulsion du jet`).avertissements;
+                                    setImpulsionDuJet(null);
+                                    setMouvements(m => [...m, `Reliquat versé à la réserve.`, ...dits]);
+                                }}
+                                className="px-3 py-1 rounded-lg border border-app-border/40 text-ui-10 font-bold hover:border-accent/40 transition-colors">
+                                Verser à la réserve
+                            </button>
+                        </div>
+                    )}
 
                     {/*
                         **Compléter le test de Torg.** Chaque geste ne sert qu'une fois ; la
