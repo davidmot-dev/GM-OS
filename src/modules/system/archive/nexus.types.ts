@@ -360,7 +360,7 @@ export interface NexusProgress {
     /** Nombre d'URLs distantes détectées */
     remoteUrlCount?: number;
     error?: string;
-    /** À la fin d'un import : ce qui est entré. L'écran reste ouvert pour qu'on le lise (lot E6). */
+    /** À la fin d'un import : ce qui est entré. Le HUD le garde ouvert le temps de le lire, jusqu'au bout s'il alerte (lot E6). */
     bilan?: string[];
 }
 

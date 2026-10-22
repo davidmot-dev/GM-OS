@@ -144,7 +144,7 @@ const TemplateDashboard: React.FC = () => {
 
         const resultat = await nexusService.importBundle(onConflict);
         setConflictState(null);
-        // Un bilan se lit : l'écran reste ouvert jusqu'à « Fermer » (lot E6).
+        // Un bilan se lit : le HUD le garde ouvert, le temps de le lire (lot E6).
         if (!resultat.bilan?.length) setTimeout(() => setNexusProgress(null), 3000);
     };
 

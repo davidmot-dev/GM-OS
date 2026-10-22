@@ -38,7 +38,7 @@ type FicheAffichee = FicheDeCampagne | FicheReprise;
  * La revue est une *publication*, à froid, plus tard.
  */
 const AtelierDeCampagne: React.FC = () => {
-    const { campaigns, customGameDrivers } = useSessionOSStore();
+    const { campaigns, customGameDrivers, addCampaign } = useSessionOSStore();
     const pilotes = React.useMemo(() => tousLesPilotes(customGameDrivers), [customGameDrivers]);
 
     /**
@@ -247,6 +247,20 @@ const AtelierDeCampagne: React.FC = () => {
         if (!publiee) { gmToast("La fiche n'a pas pu être écrite sur le disque.", 'error'); return; }
         setPubliees(p => new Set(p).add(slug));
         gmToast(`« ${fiche.sujet} » publiée.`, 'success');
+        /*
+          **La campagne naît à la première publication.** David, le 2026-10-22 :
+          *« quand je la publie elle n'apparaît pas dans mes campagnes, elle
+          n'apparaît que lorsque j'ai fini de forger la trame »*. Seule l'écriture
+          de la Trame la créait. Elle part maintenant avec son nom et son jeu ;
+          la Trame la trouvera existante et n'en remplira que les champs vides.
+          Un homonyme à la casse près n'est pas doublé — le défaut des deux
+          « Secret de Milo » — et on ne bascule pas dessus : son chemin déclaré
+          pourrait désigner un autre corpus que celui où la fiche vient d'aller.
+        */
+        if (!campagneExistante) {
+            const homonyme = campaigns.find(c => c.name.trim().toLowerCase() === nomCible.toLowerCase());
+            if (!homonyme) setCampagneId(addCampaign({ name: nomCible, system: jeuCible, activeLocationIds: [] }));
+        }
         /*
           **Un écartement se dit.** Une fiche du même sujet et du même acte,
           publiée sous un autre nom, vient de sortir du corpus vivant. C'est

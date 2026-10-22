@@ -34,7 +34,8 @@ export interface CampaignSliceState {
 
 export interface CampaignSliceActions {
     setActiveCampaign: (id: string | null) => void;
-    addCampaign: (campaign: Omit<Campaign, 'id'>) => void;
+    /** Rend l'identifiant de la campagne créée. */
+    addCampaign: (campaign: Omit<Campaign, 'id'>) => string;
     updateCampaign: (id: string, updates: Partial<Campaign>) => void;
     /**
      * **Ce que la fiche du groupe impose, depuis la tablette d'un joueur** — la
@@ -101,6 +102,7 @@ export const createCampaignSlice: CreateurDeSlice<CampaignSlice> = (set, get) =>
         };
         set((state) => ({ campaigns: [...state.campaigns, newCampaign] }));
         gmToast(`Campagne "${newCampaign.name}" créée.`, 'success');
+        return newCampaign.id;
     },
 
     updateCampaign: (id, updates) => {

@@ -3479,6 +3479,8 @@
         "auto_close": "Automatic closing in 3 seconds...",
         "bilan_title": "What came in",
         "close": "Close",
+        "close_in": "Close — closing automatically in {{count}} s",
+        "close_paused": "Close — automatic closing paused",
         "error_prefix": "Error: ",
         "interaction": {
           "title": "Portability Optimization",

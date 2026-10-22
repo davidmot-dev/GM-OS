@@ -28,7 +28,7 @@ Une fenêtre plein écran, le **Nexus HUD**, suit le travail. Il traverse ces é
 | **Vérification des liens distants** | Les images qui vivent sur le web sont repérées — **le HUD s'arrête ici s'il en trouve** |
 | **Moissonnage des médias** | Les fichiers sont récupérés depuis le Media Hub |
 | **Compression du bundle** | L'archive `.gmos` est écrite |
-| **Opération terminée** | Le **bilan** s'affiche et reste jusqu'à « Fermer » |
+| **Opération terminée** | Le **bilan** s'affiche ; il se ferme seul après 8 s, sauf s'il signale un manque |
 
 Un sélecteur vous demande où poser le fichier.
 
@@ -96,10 +96,12 @@ Puis, une fois votre choix fait :
    s'arrête sans rien toucher** et dit pourquoi. Sur un poste sans aucune campagne, il n'y a rien à
    sauver : l'import passe, et le bilan le dit.
 2. Les médias entrent, puis la campagne.
-3. **Le bilan s'affiche et reste à l'écran jusqu'à « Fermer »** : la sauvegarde préalable, ce que
-   vous avez choisi (et, en cas de remplacement, le nom de la version écrasée), ce qui est entré
-   compté, et les médias entrés ou en échec. Il est aussi écrit dans le journal de l'application,
-   pour être relu plus tard.
+3. **Le bilan s'affiche** : la sauvegarde préalable, ce que vous avez choisi (et, en cas de
+   remplacement, le nom de la version écrasée), ce qui est entré compté, et les médias entrés ou en
+   échec. **Il se ferme seul après 8 secondes** (le bouton « Fermer » affiche le décompte) ; garder
+   la souris sur l'écran suspend le décompte. **S'il signale un manque** — média introuvable ou en
+   échec, import sans sauvegarde préalable — il reste jusqu'à « Fermer ». Il est aussi écrit dans
+   le journal de l'application, pour être relu plus tard.
 
 Un **pilote** (`.gmos-driver`) passe par la même sauvegarde préalable et le même bilan.
 

@@ -24,6 +24,7 @@ import {
     ArrowDownToLine,
 } from 'lucide-react';
 import type { NexusProgress, NexusOperationPhase } from './nexus.types';
+import { bilanQuiAlerte, DELAI_DE_LECTURE_DU_BILAN } from './bilanDeNexus';
 
 // ─────────────────────────────────────────────
 // CONFIGURATION DES PHASES
@@ -278,6 +279,27 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
         logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [logs]);
 
+    // Fermeture automatique d'un bilan sans alerte ; le survol la suspend.
+    const [secondesRestantes, setSecondesRestantes] = useState<number | null>(null);
+    const [survole, setSurvole] = useState(false);
+    const onCloseRef = useRef(onClose);
+    onCloseRef.current = onClose;
+    const fermetureAutomatique = progress?.phase === 'done'
+        && !!progress.bilan?.length
+        && !!onClose
+        && !bilanQuiAlerte(progress.bilan);
+
+    useEffect(() => {
+        setSecondesRestantes(fermetureAutomatique ? DELAI_DE_LECTURE_DU_BILAN : null);
+    }, [fermetureAutomatique, progress?.bilan]);
+
+    useEffect(() => {
+        if (secondesRestantes === null || survole) return;
+        if (secondesRestantes <= 0) { onCloseRef.current?.(); return; }
+        const minuteur = setTimeout(() => setSecondesRestantes(s => (s === null ? s : s - 1)), 1000);
+        return () => clearTimeout(minuteur);
+    }, [secondesRestantes, survole]);
+
     if (!visible) return null;
 
     const phase = progress?.phase ?? 'idle';
@@ -300,6 +322,8 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                 className={`relative w-[520px] max-w-[95vw] transition-all duration-500 ${
                     isExiting ? 'scale-95 opacity-0 translate-y-4' : 'scale-100 opacity-100 translate-y-0'
                 }`}
+                onMouseEnter={() => setSurvole(true)}
+                onMouseLeave={() => setSurvole(false)}
             >
                 {/* Glow ambiant */}
                 <div
@@ -493,7 +517,7 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                         </div>
                     )}
 
-                    {/* Lot E6 : le bilan de ce qui est entré — l'écran reste ouvert pour qu'on le lise. */}
+                    {/* Lot E6 : le bilan de ce qui est entré — ouvert le temps de le lire, jusqu'au bout s'il alerte. */}
                     {isDone && !!progress?.bilan?.length && (
                         <div className="mx-6 mb-6 space-y-3">
                             <ul className="space-y-1.5 text-ui-11 text-app-text/70 leading-relaxed">
@@ -510,7 +534,11 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                                     onClick={onClose}
                                     className="w-full py-2 px-4 bg-app-text/5 hover:bg-app-text/10 text-app-text/70 text-ui-11 font-bold rounded-lg transition-colors border border-app-text/10"
                                 >
-                                    {t('modules:system.nexus.hud.close')}
+                                    {secondesRestantes === null
+                                        ? t('modules:system.nexus.hud.close')
+                                        : survole
+                                        ? t('modules:system.nexus.hud.close_paused')
+                                        : t('modules:system.nexus.hud.close_in', { count: secondesRestantes })}
                                 </button>
                             )}
                         </div>

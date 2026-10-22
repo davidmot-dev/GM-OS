@@ -86,7 +86,7 @@ const CampaignLibrary: React.FC = () => {
 
         const resultat = await nexusService.importBundle(onConflict);
         setConflictState(null);
-        // Un bilan se lit : l'écran reste ouvert jusqu'à « Fermer » (lot E6).
+        // Un bilan se lit : le HUD le garde ouvert, le temps de le lire (lot E6).
         if (!resultat.bilan?.length) setTimeout(() => setNexusProgress(null), 3000);
     };
 
@@ -113,7 +113,7 @@ const CampaignLibrary: React.FC = () => {
         nexusService.onProgress(setNexusProgress);
         setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
         const resultat = await nexusService.exportBundle(id, { includeAssets: true });
-        // Un bilan se lit : l'écran reste ouvert jusqu'à « Fermer ».
+        // Un bilan se lit : le HUD le garde ouvert, le temps de le lire.
         if (!resultat.bilan?.length) setTimeout(() => setNexusProgress(null), 3000);
     };
 
@@ -122,7 +122,7 @@ const CampaignLibrary: React.FC = () => {
         nexusService.onProgress(setNexusProgress);
         setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
         const resultat = await nexusService.exportMediasBundle(id);
-        // Réussi, l'export laisse un bilan à lire : l'écran reste ouvert jusqu'à « Fermer ».
+        // Réussi, l'export laisse un bilan à lire : le HUD le garde ouvert, le temps de le lire.
         if (!resultat.success) setTimeout(() => setNexusProgress(null), 3000);
     };
 

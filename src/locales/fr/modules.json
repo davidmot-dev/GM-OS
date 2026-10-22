@@ -3479,6 +3479,8 @@
         "auto_close": "Fermeture automatique dans 3 secondes...",
         "bilan_title": "Ce qui est entré",
         "close": "Fermer",
+        "close_in": "Fermer — fermeture automatique dans {{count}} s",
+        "close_paused": "Fermer — fermeture automatique en pause",
         "error_prefix": "Erreur : ",
         "interaction": {
           "title": "Optimisation de la portabilité",

@@ -103,6 +103,12 @@ brouillon n'engage rien.* La relecture devient alors une **publication**, à fro
 ⚠️ Les brouillons sont **exclus de l'index de l'Oracle** : une fiche non relue ne doit pas être
 citée comme une source.
 
+**La première fiche publiée crée la campagne.** *Depuis le 2026-10-22.* Pour une nouvelle campagne,
+la première fiche publiée crée la campagne avec son nom et le jeu choisi : elle apparaît tout de
+suite dans vos campagnes, sans attendre la Forge de la trame. La trame la retrouve ensuite et ne
+remplit que ce qui est encore vide, comme la description ou le synopsis. Si une campagne du même nom
+existe déjà, sans tenir compte des majuscules, aucune seconde campagne n'est créée.
+
 ---
 
 ## 7. Les titres en lettres espacées

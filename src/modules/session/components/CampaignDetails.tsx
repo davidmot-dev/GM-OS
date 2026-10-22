@@ -49,7 +49,7 @@ const CampaignDetails: React.FC = () => {
         nexusService.onProgress(setNexusProgress);
         setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
         const resultat = await nexusService.exportBundle(activeCampaignId, { includeAssets: emporterLesMedias });
-        // Un bilan se lit : l'écran reste ouvert jusqu'à « Fermer ».
+        // Un bilan se lit : le HUD le garde ouvert, le temps de le lire.
         if (!resultat.bilan?.length) setTimeout(() => setNexusProgress(null), 3000);
     };
 
@@ -77,7 +77,7 @@ const CampaignDetails: React.FC = () => {
 
         const resultat = await nexusService.importBundle(onConflict);
         setConflictState(null);
-        // Un bilan se lit : l'écran reste ouvert jusqu'à « Fermer » (lot E6).
+        // Un bilan se lit : le HUD le garde ouvert, le temps de le lire (lot E6).
         if (!resultat.bilan?.length) setTimeout(() => setNexusProgress(null), 3000);
     };
 
