@@ -31,7 +31,14 @@ registre (§ 3). Il dit **comment** travailler et se passer la main sans rien pe
 
 ## 2 · L'état au 2026-10-04
 
-- **Branche** : `feature/tablet-hub-pwa` (la branche principale est `main`), **poussée jusqu'à
+> ⭐ **Depuis le 2026-10-22, la branche de travail est `pre_prod`** — décision de David, créée au
+> commit `c67d18ef`. `feature/tablet-hub-pwa`, devenue la vraie ligne de développement (1 279
+> commits depuis `main`), est **gelée comme repère** : ne plus y commiter. `main` ne reçoit que
+> les sauvegardes automatiques (la dernière le 2026-03-25) ; son sort reste à décider par David.
+> ⛔ Pas de branche par chantier : les deux agents partagent le même dossier, et changer de
+> branche changerait les fichiers sous les pieds de l'autre et de GM-OS en cours d'exécution.
+
+- **Branche** (historique) : `feature/tablet-hub-pwa` (la branche principale est `main`), **poussée jusqu'à
   `215a1738`**, puis le commit qui range ce document.
 - **Base saine** : `npx tsc -b` propre, **6 755 tests au vert** (519 fichiers, 1 ignoré), la série des
   captures du manuel passe (61 sur 61).
