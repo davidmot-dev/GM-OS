@@ -29,6 +29,9 @@ ou **lu dans le code** (chemin cité, pas encore éprouvé).
 > **Corrigés le 22/10 (registre § 152) : S1, S2 et S5**, par une seule fonction de caviardage
 > appliquée à l'émission, au serveur et aux fenêtres locales. En corrigeant, un cas de plus : la
 > diffusion rapide du **combat** partait sans rôle, donc sans aucun filtre — couverte par le serveur.
+>
+> **Corrigés le 22/10 (registre § 153) : S3 et S4.** Seuls les indices révélés partent ; le serveur
+> retire `gmNotes` des actions des joueurs. Restent H1 et C1.
 
 ## Les constats
 

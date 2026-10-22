@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateAction, isPrivilegedRole, PLAYER_ALLOWED_ACTIONS } from './actionPolicy';
+import { retirerCeQuiRevientAuMeneur, evaluateAction, isPrivilegedRole, PLAYER_ALLOWED_ACTIONS } from './actionPolicy';
 
 const CHAR = 'perso-alice';
 
@@ -337,5 +337,30 @@ describe('evaluateAction — appartenance du personnage', () => {
     it('ne contrôle pas l\'appartenance sur le retour de session', () => {
         // submit-feedback ne désigne pas de personnage.
         expect(evaluateAction('session:submit-feedback', { sessionId: 's1' }, 'hub', CHAR).allowed).toBe(true);
+    });
+});
+
+/**
+ * **Les notes du meneur ne s'écrivent pas depuis une tablette de joueur** — S4
+ * de l'audit du 2026-10-22 : l'action de narration acceptait `gmNotes`.
+ */
+describe('ce qui revient au meneur', () => {
+    const narration = { playerId: 'j', characterId: 'pj', updates: { playerNotes: 'Mes notes', gmNotes: 'Réécrit par le joueur' } };
+
+    it('un joueur garde ses champs, perd les notes du meneur', () => {
+        for (const role of ['player', 'hub', undefined] as const) {
+            expect(retirerCeQuiRevientAuMeneur('session:update-character-narrative', narration, role))
+                .toEqual({ playerId: 'j', characterId: 'pj', updates: { playerNotes: 'Mes notes' } });
+        }
+    });
+
+    it('le meneur et sa tablette appairée les écrivent', () => {
+        expect(retirerCeQuiRevientAuMeneur('session:update-character-narrative', narration, 'remote')).toBe(narration);
+        expect(retirerCeQuiRevientAuMeneur('session:update-character-narrative', narration, 'gm')).toBe(narration);
+    });
+
+    it('les autres actions passent telles quelles', () => {
+        const fiche = { playerId: 'j', characterId: 'pj', updates: { sheetData: { force: 3 } } };
+        expect(retirerCeQuiRevientAuMeneur('session:update-character-sheet-data', fiche, 'player')).toBe(fiche);
     });
 });

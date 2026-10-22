@@ -11,7 +11,7 @@ import { CLE_PROGRESSION_ALIEN } from '../../dice/systemes/progressionAlien';
 const SECRETS = [
     'SECRET-NOTE-PRIVEE', 'SECRET-MESSAGE', 'SECRET-AVIS', 'SECRET-ACTE', 'SECRET-SCENE',
     'SECRET-INDICE-CACHE', 'SECRET-WIKI', 'SECRET-LIEU', 'SECRET-CAMPAGNE', 'SECRET-PERSONNAGE',
-    'SECRET-ENTITE', 'SECRET-JEU-ENTITE', 'SECRET-COMBATTANT', 'SECRET-OBJECTIF-ALIEN',
+    'SECRET-ENTITE', 'SECRET-JEU-ENTITE', 'SECRET-COMBATTANT', 'SECRET-OBJECTIF-ALIEN', 'SECRET-INDICE-NON-REVELE',
 ];
 
 const CHARGE = {
@@ -25,6 +25,10 @@ const CHARGE = {
     },
     session: {
         sessions: [{ id: 'se1', title: 'Séance 1', feedbacks: [{ texte: 'SECRET-AVIS' }] }],
+        clues: [
+            { id: 'i1', title: 'La lettre', content: 'Indice trouvé', isRevealed: true },
+            { id: 'i2', title: 'Le registre', content: 'SECRET-INDICE-NON-REVELE', isRevealed: false },
+        ],
         campaigns: [{ id: 'camp', name: 'La campagne', notes: 'Notes de campagne', gmNotes: 'SECRET-CAMPAGNE' }],
         atlasMaps: [{ id: 'lieu', name: 'Le port', narrativeDescription: 'Un port gris', gmNotes: 'SECRET-LIEU' }],
         players: [{ id: 'j', characters: [{ id: 'pj', name: 'Ilya', playerNotes: 'Mes notes', gmNotes: 'SECRET-PERSONNAGE',
@@ -55,6 +59,7 @@ describe('ce que la table des joueurs ne reçoit jamais', () => {
         expect(c.session.players[0].characters[0].playerNotes).toBe('Mes notes');
         expect(c.session.entities[0]).toMatchObject({ description: 'Un homme pâle', gmSecretInfo: MASQUE, roleplayingNotes: MASQUE });
         expect(c.session.sessions[0]).toEqual({ id: 'se1', title: 'Séance 1' });
+        expect(c.session.clues).toEqual([{ id: 'i1', title: 'La lettre', content: 'Indice trouvé', isRevealed: true }]);
         expect(c.combat.round).toBe(2);
     });
 

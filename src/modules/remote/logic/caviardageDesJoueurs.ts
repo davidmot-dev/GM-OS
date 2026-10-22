@@ -1,13 +1,14 @@
 import { caviarderObjectifsAlien } from '../../dice/systemes/progressionAlien';
 
 /**
- * **Ce que la table des joueurs ne reçoit jamais** — S1, S2, S5 de l'audit du
- * 2026-10-22 (`documentation/Planning/2026-10-22-audit-fiches-tablettes-journal.md`).
+ * **Ce que la table des joueurs ne reçoit jamais** — S1, S2, S3, S5 de l'audit
+ * du 2026-10-22 (`documentation/Planning/2026-10-22-audit-fiches-tablettes-journal.md`).
  *
  * Le caviardage vivait en ligne dans `useNexusSynchronizer`, clé par clé, et il
  * en manquait : la trame du meneur (`lectureDuMeneur` — notes des actes et des
  * scènes, wiki, indices non révélés), les `gmNotes` des lieux, des campagnes et
- * des personnages, partaient sur chaque tablette. La diffusion rapide du combat
+ * des personnages, les indices non révélés de la séance, partaient sur chaque
+ * tablette. La diffusion rapide du combat
  * partait sans rôle, donc sans aucun filtre. Et la fenêtre Hub et les
  * projecteurs locaux recevaient même la copie destinée au meneur.
  *
@@ -60,17 +61,26 @@ export function caviarderPourLesJoueurs<T>(charge: T): T {
         racine.notes = { ...notes, private: MASQUE };
     }
 
-    // Les avis de séance laissés par les joueurs ne repartent pas vers les autres.
-    const session = racine.session as { sessions?: unknown } | undefined;
-    if (session && typeof session === 'object' && Array.isArray(session.sessions)) {
-        racine.session = {
-            ...session,
-            sessions: session.sessions.map(s => {
+    const session = racine.session as { sessions?: unknown; clues?: unknown } | undefined;
+    if (session && typeof session === 'object') {
+        const suivante: Record<string, unknown> = { ...session };
+        // Les avis de séance laissés par les joueurs ne repartent pas vers les autres.
+        if (Array.isArray(session.sessions)) {
+            suivante.sessions = session.sessions.map(s => {
                 if (!s || typeof s !== 'object') return s;
                 const { feedbacks: _avis, ...reste } = s as Record<string, unknown>;
                 return reste;
-            }),
-        };
+            });
+        }
+        /*
+          **Seuls les indices révélés partent** (S3, 2026-10-22). La tablette ne
+          les filtrait qu'à l'affichage (`HubArchives`) : l'indice que le meneur
+          garde pour l'acte trois était déjà sur l'appareil de chaque joueur.
+        */
+        if (Array.isArray(session.clues)) {
+            suivante.clues = session.clues.filter(c => !!c && typeof c === 'object' && (c as { isRevealed?: unknown }).isRevealed === true);
+        }
+        racine.session = suivante;
     }
 
     return caviarderObjectifsAlien(caviarder(racine)) as T;

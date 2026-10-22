@@ -18,7 +18,7 @@ import { filtrerAstrologieDistante } from '../src/modules/session/logic/astrolog
 import { caviarderPourLesJoueurs } from '../src/modules/remote/logic/caviardageDesJoueurs';
 import { mediaAccess } from './MediaAccess';
 import { pairingManager } from './PairingManager';
-import { evaluateAction } from './actionPolicy';
+import { evaluateAction, retirerCeQuiRevientAuMeneur } from './actionPolicy';
 import { auditDenied } from './auditLog';
 import { lecteurDuRole, messagePourLeLecteur, type MessageAchemine } from './destinatairesDesMessages';
 import {
@@ -685,7 +685,9 @@ export class SyncServer {
         }
 
         if (this.mainWindow && !this.mainWindow.isDestroyed()) {
-            this.mainWindow.webContents.send('remote:action', data);
+            // Les notes du meneur ne s'écrivent pas depuis une tablette de joueur (S4, 2026-10-22).
+            const permis = retirerCeQuiRevientAuMeneur(data.type, data.payload, ws.role);
+            this.mainWindow.webContents.send('remote:action', permis === data.payload ? data : { ...data, payload: permis });
         }
     }
 

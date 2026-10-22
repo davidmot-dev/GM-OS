@@ -191,6 +191,32 @@ const ALLOWED: PolicyVerdict = { allowed: true };
  * @param characterId Personnage associé au client dans le registre de session,
  *                    ou undefined s'il n'en a pas choisi.
  */
+/**
+ * **Ce qu'un joueur ne peut pas écrire, même sur son propre personnage** — S4
+ * de l'audit du 2026-10-22. `evaluateAction` vérifie qu'un joueur agit sur SON
+ * personnage, mais `session:update-character-narrative` acceptait aussi les
+ * **notes du meneur** (`gmNotes`) : une tablette pouvait les réécrire. Aucun
+ * écran ne l'envoie ; un message forgé suffisait. On retire le champ ici, à la
+ * seule porte d'entrée des joueurs — le rôle en amont, le champ en aval.
+ */
+const CHAMPS_DU_MENEUR: Record<string, readonly string[]> = {
+    'session:update-character-narrative': ['gmNotes'],
+};
+
+export function retirerCeQuiRevientAuMeneur(
+    type: string,
+    payload: unknown,
+    role: ClientRole | undefined,
+): unknown {
+    const champs = CHAMPS_DU_MENEUR[type];
+    if (!champs || isPrivilegedRole(role)) return payload;
+    if (!payload || typeof payload !== 'object') return payload;
+    const { updates } = payload as { updates?: unknown };
+    if (!updates || typeof updates !== 'object') return payload;
+    const permis = Object.fromEntries(Object.entries(updates).filter(([cle]) => !champs.includes(cle)));
+    return { ...payload, updates: permis };
+}
+
 export function evaluateAction(
     type: string,
     payload: unknown,

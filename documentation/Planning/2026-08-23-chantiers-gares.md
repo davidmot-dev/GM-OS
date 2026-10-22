@@ -12322,6 +12322,28 @@ confirmé fermé (Claude Code). Constats de [l'audit](2026-10-22-audit-fiches-ta
 - **Reste** : S3 (indices non révélés dans `session.clues` — la trame qui les portait aussi ne part
   plus), S4, H1, C1 de l'audit ; l'essai de David (une tablette de joueur et la tablette du meneur).
 
+### 153 · Indices non révélés et notes du meneur écrites par un joueur (S3, S4) — 22/10/2026
+
+David, le 22/10 : *« ok commit, après on fera S3 et S4, gm-os est fermé »* (Claude Code).
+Constats de [l'audit](2026-10-22-audit-fiches-tablettes-journal.md).
+
+- **Fait — S3** : `caviarderPourLesJoueurs` ne laisse partir que les indices **révélés**
+  (`session.clues`). La tablette ne les filtrait qu'à l'affichage (`HubArchives`) ; elle ne montre
+  un indice que depuis ses archives, donc rien ne manque à l'écran.
+- **Fait — S4** : `retirerCeQuiRevientAuMeneur` (`electron/actionPolicy.ts`) retire `gmNotes` de
+  `session:update-character-narrative` pour tout rôle non appairé ; `SyncServer.forwardToGM`
+  l'applique avant de transmettre au meneur — la seule porte d'entrée des joueurs. Le meneur et
+  sa tablette appairée l'écrivent toujours.
+- **Vérifié** : `tsc -b` et lint propres ; essais (`caviardageDesJoueurs.test.ts` : l'indice non
+  révélé ne sort pas, le révélé reste ; `actionPolicy.test.ts` : 3 essais) ; suite complète
+  **8 685 essais verts**. Recette des tablettes de joueurs (`tabletteJoueursT0`, `J1T4`, `J2T4`) :
+  42 échecs sur 80 en un seul passage. Écartés : « consulter un indice révélé » échoue de même sur
+  la version d'avant S1 (`2e0491d7`) ; « ouvrir et fermer sa fiche » repasse seul avec ces
+  changements (échec en cascade dans l'instance partagée). **J1 et J2 : comparaison en cours au
+  moment du commit**, à reporter ici.
+- **Reste** : H1 (historique des modifications de fiche), C1 (le pupitre et les réserves, à
+  trancher), la pastille de messages de la tablette du meneur (§ 152, antérieur).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12415,6 +12437,7 @@ confirmé fermé (Claude Code). Constats de [l'audit](2026-10-22-audit-fiches-ta
 | 86 | **Santé et séquelles, fin de scène** | § 150 ; fiche qui naît pleine, contrôle de la santé courante, `finDeScene` et « vide », seuils qui laissent une trace (une fois par passage) ; Symbaroum S2-raccord/S4-fin de scène et NOC point 1 par script — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
 | 87 | **Paiement au choix (Dune D2) ; audit fiches, tablettes, journal** | § 151 ; « dont en Menace », Impulsion du jet hors réserve, motif des tablettes — faits le 22/10 ; audit rendu : S1, S2, S5 (secrets du meneur sur les tablettes et les fenêtres de la table), S3, S4, H1, C1 | Réimport du pilote Dune corrigé et essai ; corrections de l'audit | Le choix de David parmi les constats ; Star Trek ; le pupitre |
 | 88 | **Les secrets du meneur ne partent plus vers la table** | § 152 ; `caviarderPourLesJoueurs` à l'émission, au serveur et pour les fenêtres locales : trame du meneur, `gmNotes`, secrets des combattants (diffusion sans rôle) — faits le 22/10 | Essai de David ; S3, S4, H1, C1 | Rien |
+| 89 | **Indices non révélés, notes du meneur écrites par un joueur** | § 153 ; seuls les indices révélés partent vers la table ; `gmNotes` retiré des actions des joueurs au serveur — faits le 22/10 | H1, C1 de l'audit | Le choix de David pour C1 |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
