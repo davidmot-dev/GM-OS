@@ -47,7 +47,7 @@ cas de doute, demande à David avant d'agir.**
 
 ## Travailler à côté de Claude Code
 
-**Branche de travail : `pre_prod`** (depuis le 22/10/2026, décision de David).
+**Branche de travail : `production`** (depuis le 22/10/2026, décision de David).
 `feature/tablet-hub-pwa` est gelée comme repère : n'y commite plus. Ne crée pas de branche par
 chantier — Claude Code travaille dans le même dossier.
 
