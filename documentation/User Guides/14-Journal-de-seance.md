@@ -37,6 +37,18 @@ Trente-six endroits de GM-OS consignent au journal. Chaque ligne porte **un type
 | `NOTE` | Ce que vous écrivez vous-même. |
 | `SYSTEM` | Le reste — dons d'objets, changements d'état. |
 
+### Les modifications de fiche s'écrivent aussi (22/10/2026)
+
+Toute modification d'une fiche de personnage joueur — par vous, par une tablette, par un geste de
+table (fin de scène, moment de calme), par un jet — s'inscrit en `PJ`, nature **trace** : « Fiche —
+Ilya Vorn (tablette) : Force 3 → 4 ». Les changements d'un même personnage et d'une même origine
+se **regroupent** : la ligne s'écrit après cinq secondes de calme, et un curseur qu'on fait glisser
+donne une ligne, pas dix ; une valeur revenue à son point de départ ne s'écrit pas. Sans origine
+précisée, c'est vous. Ne s'écrivent **pas** : ce que le journal dit déjà (coups, soins, séquelles
+notées), les mécanismes internes de la fiche, et un chargement entier (une reprise ou un import
+qui réécrit plus de vingt champs d'un coup). Comme le reste, seulement pendant une séance
+enregistrée.
+
 ### Ouvrir et terminer une scène s'écrivent aussi
 
 Depuis le 2026-09-12, **ouvrir une scène dépose une entrée**, et la terminer une autre. Ce sont des

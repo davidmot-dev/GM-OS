@@ -24,6 +24,12 @@ export interface RollRecord extends RollResult {
     /** NOC : à qui les 1 de ce jet de destin ont été attribués au pupitre — voir `fielAuPupitre`. */
     fielAttribue?: 'heros' | 'rouage';
     /**
+     * 2d20 : à qui les réserves de ce jet ont été réglées au pupitre — dés
+     * achetés payés, excédent versé (C1, 2026-10-22, `reservesAuPupitre`). Une
+     * fois réglé, le jet ne se règle plus : on ne paie pas deux fois.
+     */
+    reservesReglees?: 'personnage' | 'pnj';
+    /**
      * Le jet d'une fiche — une Sauvegarde ou un dé d'usure (Cthulhu Hack,
      * 2026-10-16) : à qui, sur quel champ. Le pupitre en a besoin pour proposer
      * la Fortune ou la Folie passagère, et pour écrire sur la bonne fiche.
@@ -58,7 +64,7 @@ interface DiceState {
     styleDesDes: StyleDeDes;
     setLastRoll: (roll: RollRecord) => void;
     /** Annote un jet déjà consigné, sans le consigner de nouveau. */
-    annoterLeJet: (id: string, annotation: Partial<Pick<RollRecord, 'fielAttribue' | 'suite' | 'deFiche'>>) => void;
+    annoterLeJet: (id: string, annotation: Partial<Pick<RollRecord, 'fielAttribue' | 'reservesReglees' | 'suite' | 'deFiche'>>) => void;
     setIsDiceProjected: (projected: boolean) => void;
     setEnable3D: (enabled: boolean) => void;
     setStyleDesDes: (style: StyleDeDes) => void;

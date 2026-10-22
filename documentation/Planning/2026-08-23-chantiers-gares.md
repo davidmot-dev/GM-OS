@@ -12339,10 +12339,38 @@ Constats de [l'audit](2026-10-22-audit-fiches-tablettes-journal.md).
   **8 685 essais verts**. Recette des tablettes de joueurs (`tabletteJoueursT0`, `J1T4`, `J2T4`) :
   42 échecs sur 80 en un seul passage. Écartés : « consulter un indice révélé » échoue de même sur
   la version d'avant S1 (`2e0491d7`) ; « ouvrir et fermer sa fiche » repasse seul avec ces
-  changements (échec en cascade dans l'instance partagée). **J1 et J2 : comparaison en cours au
-  moment du commit**, à reporter ici.
+  changements (échec en cascade dans l'instance partagée). **J1 et J2 (comparés après le commit)** :
+  24 échecs sur 41 en un passage ; isolés, « Archives » et « Fiche J1 » échouent en 1180 px et
+  passent en 390 px — **à l'identique sur la version d'avant S1** (`2e0491d7`, extraite et construite
+  à part). Antérieurs, non traités ; le reste suit la même cascade (« Nel Varga » absent de l'accueil).
 - **Reste** : H1 (historique des modifications de fiche), C1 (le pupitre et les réserves, à
   trancher), la pastille de messages de la tablette du meneur (§ 152, antérieur).
+
+### 154 · L'historique des fiches au journal (H1) ; les réserves au pupitre (C1) — 22/10/2026
+
+David, le 22/10 : *« ok commit, après on fera H1 et C1, gm-os est fermé »*, puis ses choix :
+« Toutes, avec leur origine » (H1) et « Le pupitre gère les réserves » (C1) (Claude Code).
+Constats de [l'audit](2026-10-22-audit-fiches-tablettes-journal.md).
+
+- **Fait — H1** : `useHistoriqueDesFiches` (monté au poste du meneur, `App.tsx`) écoute les
+  personnages, compare les fiches (`historiqueDesFiches.ts`, pur) et écrit au journal, en `PJ`
+  nature `trace`, une ligne par personnage et par origine après cinq secondes de calme. L'origine
+  (`origineDesModifications.ts`, `avecOrigine`) est posée par la porte des tablettes
+  (`dispatchRemoteAction` : « tablette », « tablette du meneur »), les gestes de table
+  (`ecrireLesHeros`), les jets de la fiche du meneur (`CharacterSheetEditor`) ; **silencieuse**
+  pour ce que le journal dit déjà (`handleApplyImpact`, la séquelle notée). Ignorés : clés
+  internes (`_…`), valeurs composées, chargements de plus de vingt champs. Guide `14-Journal-de-seance.md`.
+- **Fait — C1** : `reservesAuPupitre.ts` règle le dernier jet 2d20 du pupitre — **un personnage**
+  paie en Impulsion (« dont en Menace » si le jeu le permet) et remplit l'Impulsion de l'excédent
+  dans la place libre, **un PNJ** paie en Menace et la nourrit de son excédent ; le jet est marqué
+  réglé (`RollRecord.reservesReglees`). Pupitre : bloc « qui a lancé ? » avec la difficulté
+  (`DiceBoard.tsx`). Télécommande : deux boutons, action `remote:dice:reserves`, indicateur
+  `reservesAuPupitre` dans la synchronisation. Guide `34-Dice-OS-le-pupitre.md`.
+- **Vérifié** : `tsc -b` et lint propres ; essais H1 (7) et C1 (7), registre des actions à jour ;
+  suite complète **8 699 essais verts**.
+- **Reste** : l'essai de David (une modification depuis une tablette, puis le journal ; un jet de
+  Dune au pupitre). Limite H1 : une écriture asynchrone d'une tablette (après un `await`) perdrait
+  son origine et se dirait « meneur » — aucune n'est connue aujourd'hui.
 
 ## La vue d'un coup d'œil
 
@@ -12438,6 +12466,7 @@ Constats de [l'audit](2026-10-22-audit-fiches-tablettes-journal.md).
 | 87 | **Paiement au choix (Dune D2) ; audit fiches, tablettes, journal** | § 151 ; « dont en Menace », Impulsion du jet hors réserve, motif des tablettes — faits le 22/10 ; audit rendu : S1, S2, S5 (secrets du meneur sur les tablettes et les fenêtres de la table), S3, S4, H1, C1 | Réimport du pilote Dune corrigé et essai ; corrections de l'audit | Le choix de David parmi les constats ; Star Trek ; le pupitre |
 | 88 | **Les secrets du meneur ne partent plus vers la table** | § 152 ; `caviarderPourLesJoueurs` à l'émission, au serveur et pour les fenêtres locales : trame du meneur, `gmNotes`, secrets des combattants (diffusion sans rôle) — faits le 22/10 | Essai de David ; S3, S4, H1, C1 | Rien |
 | 89 | **Indices non révélés, notes du meneur écrites par un joueur** | § 153 ; seuls les indices révélés partent vers la table ; `gmNotes` retiré des actions des joueurs au serveur — faits le 22/10 | H1, C1 de l'audit | Le choix de David pour C1 |
+| 90 | **Historique des fiches (H1), réserves au pupitre (C1)** | § 154 ; chaque modification de fiche au journal avec son origine ; le pupitre et la télécommande règlent les réserves d'un jet 2d20 (personnage ou PNJ) — faits le 22/10 | Essai de David | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

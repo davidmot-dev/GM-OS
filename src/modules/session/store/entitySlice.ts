@@ -7,6 +7,7 @@
  * @module session/store/entitySlice
  */
 
+import { avecOrigine } from '../logic/origineDesModifications';
 import type { CreateurDeSlice } from './contratDesSlices';
 import type { Scene } from '../../../types/trame.types';
 import { premiereFoisVu } from '../logic/ecranDeScene';
@@ -849,7 +850,8 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
 
     // ─── Health / Impact System ───────────────────
 
-    handleApplyImpact: (targetId, targetType, impactSaisi) => {
+    // Un coup ou un soin se dit déjà au journal : l'historique des fiches se tait (H1, 2026-10-22).
+    handleApplyImpact: (targetId, targetType, impactSaisi) => avecOrigine('silencieuse', () => {
         const { entities, players } = get();
         // Même lecture du magasin entier que `santeSelonLeJeu` plus haut : la tranche ne connaît que ses champs.
         const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null; scenes?: Scene[] };
@@ -1034,7 +1036,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                 });
             }
         }
-    },
+    }),
 
     addPersistenceBadge: (targetId, targetType, badge) => {
         const newBadge: PersistenceBadge = { ...badge, id: `badge-${Date.now()}` };

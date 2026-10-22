@@ -7,6 +7,7 @@ import type { Franchissement } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 import { herosDeLaCampagne } from './gestesDesHeros';
 import { franchissementsEnAttente, rearmer, type FranchissementEnAttente } from './franchissements';
+import { avecOrigine } from '../session/logic/origineDesModifications';
 
 const CLASSE_DU_BOUTON = 'px-3 py-1 rounded-lg border text-ui-9 font-black uppercase tracking-widest transition-colors';
 
@@ -49,7 +50,9 @@ const AlertesDeFranchissement: React.FC<{
     if (enAttente.length === 0) return null;
 
     const ecrire = (a: FranchissementEnAttente, noter: boolean) => {
-        updateCharacter(a.heros.joueurId, a.heros.id, { sheetData: { ...a.heros.valeurs, ...(noter ? a.noter : a.ecarter) } });
+        // La séquelle notée se dit déjà au journal, ci-dessous : l'historique des fiches se tait (H1).
+        avecOrigine('silencieuse', () =>
+            updateCharacter(a.heros.joueurId, a.heros.id, { sheetData: { ...a.heros.valeurs, ...(noter ? a.noter : a.ecarter) } }));
         const quoi = `${a.heros.nom} — ${a.franchissement.label ?? nom(a.franchissement.champ)} ${a.valeur}`;
         if (noter) {
             gmToast(`${quoi} : ${a.lignes.join(', ') || 'noté'}.`, 'info');

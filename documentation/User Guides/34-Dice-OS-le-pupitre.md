@@ -97,6 +97,20 @@ Ne perdez plus de temps à configurer vos sorts ou attaques récurrentes :
 - **Lancement** : Un clic sur le favori déclenche le jet instantanément.
 - **Organisation** : Supprimez les favoris inutiles via la croix rouge.
 
+## 🪙 Les réserves d'un jet 2d20 (Dune, Star Trek) — 22/10/2026
+
+Sur un jeu dont les dés achetés se paient sur une réserve de table, un jet lancé au pupitre — ou à
+la télécommande — se règle comme depuis la fiche. Sous le dernier jet, **« qui a lancé ? »** :
+
+- **Un personnage** : les dés au-delà des deux de base se paient en Impulsion (le manque en
+  Menace ; **« dont en Menace »** si le jeu laisse choisir), puis l'**excédent** du jet remplit
+  l'Impulsion jusqu'à six. Ce qui ne tient pas est dit : à dépenser sur ce test, sinon perdu.
+- **Un PNJ** : les dés se paient en **Menace**, et son excédent **va à la Menace**.
+
+La **difficulté** (les réussites exigées) se règle à côté, celle du jeu par défaut. Un jet réglé ne
+se règle plus : on ne paie pas deux fois. La télécommande propose les deux mêmes boutons, avec la
+difficulté par défaut.
+
 ## 📜 Historique et Analyse
 
 Chaque jet est archivé dans l'historique :

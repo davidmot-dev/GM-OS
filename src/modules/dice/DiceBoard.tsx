@@ -18,6 +18,7 @@ import { Panneau, Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 import { estUnJetYearZero, forcerLeDernierJet, pourquoiNePasForcerAuPupitre } from './forcerAuPupitre';
 import { attribuerLeFielDuDernierJet, jetDeDestinAAttribuer, unsDuJetDeDestin } from './fielAuPupitre';
+import { jetARegler, lireLeJetAuPupitre, reglerLesReservesDuDernierJet } from './reservesAuPupitre';
 import { gmToast } from '../../stores/useToastStore';
 import { placerLaFortune, suitesProposees, tirerLaSuiteDuDeclin } from './suitesDuJetDeFiche';
 
@@ -167,6 +168,9 @@ const DiceBoard: React.FC = () => {
     const [niveauEquipement, setNiveauEquipement] = useState('');
     const [modificateurEchelonne, setModificateurEchelonne] = useState<ModificateurDeDes>('aucun');
     const [modificateurSauvegarde, setModificateurSauvegarde] = useState<ModificateurDeSauvegarde>('aucun');
+    /** 2d20 : la difficulté du dernier jet et la part payée en Menace par choix, au moment de régler (C1). */
+    const [difficulteAuPupitre, setDifficulteAuPupitre] = useState<number | null>(null);
+    const [enReportAuPupitre, setEnReportAuPupitre] = useState(0);
 
     /*
       **Le dé de ressource d'un personnage** — Cthulhu Hack, étape 4
@@ -1314,6 +1318,63 @@ const DiceBoard: React.FC = () => {
                                     </div>
                                 </div>
                             )}
+                            {/*
+                              **Les réserves d'un jet 2d20** — C1 de l'audit, 2026-10-22. Le pupitre
+                              ne sait pas qui lance : un personnage paie en Impulsion et la remplit
+                              de son excédent, un PNJ paie en Menace et la nourrit du sien.
+                            */}
+                            {jetARegler(dernier, activeDriver?.jet) && (() => {
+                                const descripteur = activeDriver!.jet!;
+                                const { desAchetes, cout } = lireLeJetAuPupitre(dernier!, descripteur);
+                                const bornes = descripteur.difficulte;
+                                const difficulte = difficulteAuPupitre ?? bornes?.defaut ?? 1;
+                                const auChoix = (activeDriver?.ressourcesDeTable ?? [])
+                                    .some(r => r.id === descripteur.reserve?.ressource && r.paiementAuChoix && r.reportSurEpuisement);
+                                const choisi = Math.min(enReportAuPupitre, cout);
+                                const regler = (qui: 'personnage' | 'pnj') => {
+                                    for (const d of reglerLesReservesDuDernierJet(qui, { difficulte, enReport: choisi })) gmToast(d, 'info');
+                                    setEnReportAuPupitre(0);
+                                };
+                                return (
+                                    <div className="mt-3 flex flex-col items-center gap-2" data-reserves-au-pupitre>
+                                        <span className="text-ui-10 text-app-muted text-center">
+                                            {dernier!.successes} réussite{(dernier!.successes ?? 0) > 1 ? 's' : ''}
+                                            {desAchetes > 0 ? ` · ${desAchetes} dé${desAchetes > 1 ? 's' : ''} acheté${desAchetes > 1 ? 's' : ''} : ${cout} point${cout > 1 ? 's' : ''}` : ''}
+                                            {' '}— qui a lancé ?
+                                        </span>
+                                        <div className="flex flex-wrap items-center justify-center gap-3 text-ui-10">
+                                            {bornes && (
+                                                <label className="flex items-center gap-1.5">
+                                                    <span className="font-black uppercase tracking-widest text-app-text/40">Difficulté</span>
+                                                    <input type="number" min={bornes.min} max={bornes.max} value={difficulte}
+                                                        onChange={e => setDifficulteAuPupitre(Number(e.target.value))}
+                                                        className="w-12 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 font-mono font-bold" />
+                                                </label>
+                                            )}
+                                            {auChoix && cout > 0 && (
+                                                <label className="flex items-center gap-1.5">
+                                                    <span className="font-black uppercase tracking-widest text-app-text/40">dont en Menace</span>
+                                                    <input type="number" min={0} max={cout} value={choisi}
+                                                        onChange={e => setEnReportAuPupitre(Math.max(0, Number(e.target.value)))}
+                                                        className="w-12 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 font-mono font-bold" />
+                                                </label>
+                                            )}
+                                        </div>
+                                        <div className="flex gap-2">
+                                            {(['personnage', 'pnj'] as const).map(qui => (
+                                                <button
+                                                    key={qui}
+                                                    type="button"
+                                                    onClick={() => regler(qui)}
+                                                    className="px-3 py-1.5 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-black uppercase tracking-widest hover:bg-accent/20 transition-colors"
+                                                >
+                                                    {qui === 'personnage' ? 'Un personnage' : 'Un PNJ'}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })()}
                             {/*
                               **Les suites d'un jet de fiche** — Cthulhu Hack, 2026-10-16 : la
                               Fortune après un jet raté, la Folie passagère ou le Choc après un déclin.

@@ -20,6 +20,7 @@ export type SessionDuHub = Partial<Pick<Session,
     activeDiceConfig?: NonNullable<RemoteSyncData['session']>['activeDiceConfig'];
     desEchelonnes?: boolean;
     jetForcable?: boolean;
+    reservesAuPupitre?: boolean;
 };
 
 /** JSON transforme Date en chaîne ; IPC peut encore transmettre la Date. */

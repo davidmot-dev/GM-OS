@@ -223,6 +223,8 @@ export interface RemoteSyncData {
         desEchelonnes?: boolean;
         /** Le jeu fait forcer ses jets (Year Zero) : la télécommande propose « Forcer le dernier jet ». */
         jetForcable?: boolean;
+        /** Le jeu paie ses dés achetés sur une réserve (2d20) : la télécommande règle le dernier jet (C1, 2026-10-22). */
+        reservesAuPupitre?: boolean;
     };
 }
 
@@ -232,6 +234,7 @@ export type RemoteActionType =
     | 'remote:dice:roll' 
     | 'remote:dice:clear'
     | 'remote:dice:forcer'
+    | 'remote:dice:reserves'
     | 'remote:sound:trigger' 
     | 'remote:sound:volume' 
     | 'remote:sound:stop-all'

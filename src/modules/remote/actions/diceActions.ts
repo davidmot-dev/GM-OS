@@ -6,6 +6,7 @@ import { useDiceStore } from '../../../stores/useDiceStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import type { ActionRegistry } from './types';
 import { forcerLeDernierJet } from '../../dice/forcerAuPupitre';
+import { reglerLesReservesDuDernierJet } from '../../dice/reservesAuPupitre';
 
 interface DiceRollPayload {
     sides?: number;
@@ -211,4 +212,10 @@ export const diceActions: ActionRegistry = {
     'remote:dice:clear-dice': clear,
     // Year Zero : la télécommande force le dernier jet du pupitre (2026-10-14).
     'remote:dice:forcer': () => { forcerLeDernierJet(); },
+    // 2d20 : la télécommande règle les réserves du dernier jet, difficulté par défaut (C1, 2026-10-22).
+    'remote:dice:reserves': (payload: unknown) => {
+        const qui = (payload as { qui?: unknown } | null)?.qui;
+        if (qui !== 'personnage' && qui !== 'pnj') return;
+        for (const dit of reglerLesReservesDuDernierJet(qui)) console.log(`[Actions] remote:dice:reserves — ${dit}`);
+    },
 };

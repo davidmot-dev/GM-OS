@@ -36,6 +36,8 @@ import type { SheetField } from '../../../data/defaultSheetTemplates';
 import type { PlayerCharacter } from '../store/types';
 import { PanneauRepriseVoyageur } from './PanneauRepriseVoyageur';
 import { estUneFicheDeVoyageur, lireFicheDeVoyageur, calculDeVoyageurHorsTable, CALCULS_DU_VOYAGEUR, CLE_REPRISE } from '../logic/ficheDeVoyageur';
+import { avecOrigine } from '../logic/origineDesModifications';
+
 
 // --- Sub-components ---
 const FieldFormula: React.FC<{
@@ -308,9 +310,11 @@ const CharacterSheetEditor: React.FC = () => {
                             // Le Vécu, l'Espoir, la Singularité dépensés au jet se décomptent sur la fiche.
                             ecrireSurLaFiche={maj => {
                                 if (editor.character && editor.selectedPlayer) {
-                                    updateCharacter(editor.selectedPlayer.id, editor.character.id, {
-                                        sheetData: { ...editor.character.sheetData, ...maj },
-                                    });
+                                    // Le journal dit « (jet) » pour ce que le jet écrit (H1, 2026-10-22).
+                                    const { character, selectedPlayer } = editor;
+                                    avecOrigine('jet', () => updateCharacter(selectedPlayer.id, character.id, {
+                                        sheetData: { ...character.sheetData, ...maj },
+                                    }));
                                 }
                             }}
                         />}

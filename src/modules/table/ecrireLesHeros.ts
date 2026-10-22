@@ -1,6 +1,7 @@
 import { HealthInterpreter } from '../session/logic/HealthInterpreter';
 import type { HealthSystem } from '../../types/entity.types';
 import type { ChangementDuHeros } from './gestesDesHeros';
+import { avecOrigine } from '../session/logic/origineDesModifications';
 
 /**
  * **Écrire les changements d'un geste sur les fiches** — NOC, 2026-10-16.
@@ -27,7 +28,12 @@ function champDesCases(sante: HealthSystem | undefined): string | undefined {
     return sante?.type === 'boxes' && typeof sante.data.champ === 'string' && sante.data.champ ? sante.data.champ : undefined;
 }
 
+/** Le journal dit « (geste de table) » pour ce que ces gestes écrivent (H1, 2026-10-22). */
 export function ecrireLesHeros(changements: ChangementDuHeros[], ecrivain: EcrivainDesHeros): number {
+    return avecOrigine('geste de table', () => ecrireLesHerosSansOrigine(changements, ecrivain));
+}
+
+function ecrireLesHerosSansOrigine(changements: ChangementDuHeros[], ecrivain: EcrivainDesHeros): number {
     let ecrites = 0;
     for (const c of changements) {
         if (Object.keys(c.maj).length === 0) continue;

@@ -557,6 +557,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                         || piloteActif?.dice?.engine === 'yze-echelonne',
                     // Year Zero : le dernier jet du pupitre se force depuis la télécommande (2026-10-14).
                     jetForcable: !!piloteActif?.jet?.forcer,
+                    // 2d20 : la télécommande règle les réserves du dernier jet (C1, 2026-10-22).
+                    reservesAuPupitre: !!piloteActif?.jet?.reserve?.ressource && !!piloteActif?.jet?.reserve?.cout?.length,
                     /*
                       **Les cartes tenues en main — décidé par David le 2026-08-30.**
 

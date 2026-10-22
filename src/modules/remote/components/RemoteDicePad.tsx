@@ -38,6 +38,8 @@ interface RemoteDicePadProps {
     onClear: () => void;
     /** Year Zero : forcer le dernier jet du pupitre. Absent : le jeu ne fait pas forcer. */
     onForcer?: () => void;
+    /** 2d20 : régler les réserves du dernier jet — qui l'a lancé (C1, 2026-10-22). Absent : le jeu n'en a pas. */
+    onReglerLesReserves?: (qui: 'personnage' | 'pnj') => void;
 }
 
 const DICE_MODES = [
@@ -54,7 +56,7 @@ const DICE_MODES = [
     { id: 'rolemaster', label: 'Rolemaster' },
 ];
 
-const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEchelonnes, onRoll, onClear, onForcer }) => {
+const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEchelonnes, onRoll, onClear, onForcer, onReglerLesReserves }) => {
     const [diceCount, setDiceCount] = useState(1);
     const [diceModifier, setDiceModifier] = useState(0);
     const [diceMode, setDiceMode] = useState<string>('standard');
@@ -466,6 +468,24 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                 >
                     <span className="text-[14px] uppercase tracking-widest">Forcer le dernier jet</span>
                 </Bouton>
+            )}
+
+            {/*
+                2d20 : régler les réserves du dernier jet du pupitre (C1, 2026-10-22). Un personnage
+                paie en Impulsion et la remplit de son excédent, un PNJ paie en Menace et la nourrit ;
+                la difficulté est celle du jeu par défaut — le pupitre permet de la changer.
+            */}
+            {onReglerLesReserves && (
+                <div className="flex gap-2" data-reserves-du-dernier-jet>
+                    {(['personnage', 'pnj'] as const).map(qui => (
+                        <Bouton key={qui} habillage="libre" cibleTactile
+                            onClick={() => onReglerLesReserves(qui)}
+                            className="flex-1 p-4 bg-accent/10 border border-accent/30 text-accent rounded-2xl flex items-center justify-center active:scale-95 transition-all font-black hover:bg-accent/20"
+                        >
+                            <span className="text-[14px] uppercase tracking-widest">{qui === 'personnage' ? 'Dernier jet : un personnage' : 'Dernier jet : un PNJ'}</span>
+                        </Bouton>
+                    ))}
+                </div>
             )}
 
             {/* Dice Buttons */}

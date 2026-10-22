@@ -11,6 +11,7 @@ import { ulanziActions } from './ulanziActions';
 import { ficheActions } from './ficheActions';
 import { groupeActions } from './groupeActions';
 import { HIGH_FREQUENCY_ACTIONS, type ActionContext, type ActionRegistry } from './types';
+import { avecOrigine } from '../../session/logic/origineDesModifications';
 
 export type { ActionContext, ActionRegistry } from './types';
 export { HIGH_FREQUENCY_ACTIONS } from './types';
@@ -82,7 +83,12 @@ export function dispatchRemoteAction(
     console.log(`[Actions] [RemoteAction] type: ${type}`, payload);
 
     try {
-        actionRegistry[type](payload, ctx);
+        /*
+          **Ce qu'une tablette écrit porte son origine** (H1, 2026-10-22) : le
+          journal dit « Fiche — Ilya Vorn (tablette) ». Les types `remote:` sont
+          ceux de la tablette du meneur.
+        */
+        avecOrigine(type.startsWith('remote:') ? 'tablette du meneur' : 'tablette', () => actionRegistry[type](payload, ctx));
     } catch (err) {
         // Un handler qui échoue ne doit pas emporter la boucle de réception.
         console.error(`[Actions] Handler en échec pour "${type}":`, err);

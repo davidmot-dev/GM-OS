@@ -33,6 +33,7 @@ import { dispatchRemoteAction } from './modules/remote/actions';
 import { useThemeDuJeu } from './theme/useThemeDuJeu';
 import { isMainWindow } from './utils/windowRole';
 import { useSuiviSanteVoyageur } from './modules/session/hooks/useSuiviSanteVoyageur';
+import { useHistoriqueDesFiches } from './modules/session/hooks/useHistoriqueDesFiches';
 import { useSuiviOuvragesEtRepos } from './modules/session/hooks/useSuiviOuvragesEtRepos';
 import type { SessionMessage } from './types/session.types';
 import { filDuLecteur, lecteurDuRole } from '../electron/destinatairesDesMessages';
@@ -129,6 +130,8 @@ function App() {
   const isAppReady = isHydrated && (isMainPC ? isSystemReady : true);
   useHoteDesModules(isMainPC && isAppReady);
   useSuiviSanteVoyageur(isMainPC && isAppReady);
+  // H1 (2026-10-22) : chaque modification de fiche s'inscrit au journal, avec son origine.
+  useHistoriqueDesFiches(isMainPC && isAppReady);
   useSuiviOuvragesEtRepos(isMainPC && isAppReady);
   /* De quoi peupler l'écran d'attente — voir la garde plus bas. */
   const etapeDeDemarrage = useDemarrageStore(state => state.etapeEnCours);

@@ -32,6 +32,10 @@ ou **lu dans le code** (chemin cité, pas encore éprouvé).
 >
 > **Corrigés le 22/10 (registre § 153) : S3 et S4.** Seuls les indices révélés partent ; le serveur
 > retire `gmNotes` des actions des joueurs. Restent H1 et C1.
+>
+> **Corrigés le 22/10 (registre § 154) : H1 et C1**, choix de David : toutes les modifications de
+> fiche au journal avec leur origine ; le pupitre et la télécommande règlent les réserves d'un jet
+> 2d20, pour un personnage ou un PNJ. **Tous les constats de l'audit sont traités.**
 
 ## Les constats
 
