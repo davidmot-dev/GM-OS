@@ -76,7 +76,7 @@ La Cabale est **un personnage de plus, commun à toute la table** (règle :
 
 - **Chez vous :** le bouton **Cabale** de la carte de campagne, dans le cockpit, ouvre sa feuille.
   La première fois, **« Créer une fiche pour Cabale »**.
-- **Sur une tablette :** le bouton **Cabale**, à côté de « Ma fiche ». Ce que le joueur y écrit
+- **Sur une tablette :** l'onglet **Cabale**, à côté de « Ma fiche ». Ce que le joueur y écrit
   remonte chez vous.
 - Son **nom** est celui qu'on écrit dans le champ « Nom » de la feuille.
 

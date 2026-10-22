@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import AdmZip from 'adm-zip';
-import { lancerGmOs, attendreLHydratation, ouvrirLeModule } from './lancerGmOs';
+import { lancerGmOs, attendreLHydratation, ouvrirLeModule, ongletDeLaFiche, carteDe } from './lancerGmOs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 type Fenetre = {useSessionOSStore: typeof useSessionOSStore};
 const racine = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -44,6 +44,8 @@ test('fatigue R1 : activation, dépense, jet, tablette et rechargement sans doub
             s.setActiveCampaign('r1');s.setSelectedPlayer('joueur-r1');s.setSelectedCharacter('voyageuse-r1');s.setCurrentView('players');
         });
         const lire = () => f.evaluate(() => (window as unknown as Fenetre).useSessionOSStore.getState().players[0].characters[0]);
+        // Les mécaniques du Voyageur sont dans l'onglet du test depuis le 2026-10-22.
+        await ongletDeLaFiche(f,'Lancer un test');
         const fatigue = f.getByRole('region',{name:'Fatigue et état général'});
         await fatigue.getByRole('button',{name:'Activer le suivi de fatigue'}).click();
         await expect.poll(async () => (await lire()).sheetData.__rddFatigue231).toBe(1);
@@ -54,11 +56,13 @@ test('fatigue R1 : activation, dépense, jet, tablette et rechargement sans doub
         await fatigue.getByRole('button',{name:'Appliquer le mouvement'}).click();
         await expect.poll(async () => (await lire()).sheetData.fatigue).toBe(12);
         await expect(fatigue).toContainText('État général -1');
+        await ongletDeLaFiche(f,'Formulaire');
         await f.locator('input#endurance').fill('20');
         await f.getByRole('button',{name:/Sauvegarder/i}).first().click();
         await expect.poll(async () => (await lire()).sheetData.fatigue).toBe(15);
         await f.locator('input#vie').fill('8');
         await f.getByRole('button',{name:/Sauvegarder/i}).first().click();
+        await ongletDeLaFiche(f,'Lancer un test');
         await expect(fatigue).toContainText('État général -4');
         const jet = f.getByRole('region',{name:'Jet du Voyageur'});
         await jet.locator('select').nth(0).selectOption('agilite');
@@ -70,8 +74,8 @@ test('fatigue R1 : activation, dépense, jet, tablette et rechargement sans doub
         await expect(jet).toContainText('54 %');
         await jet.getByRole('button',{name:'Lancer',exact:true}).click();
         await expect(jet.getByLabel('Dernier jet du Voyageur')).toContainText('seuil 54');
-        await fatigue.screenshot({path:path.join(sortie,'fatigue-mj.jpg')});
         await jet.screenshot({path:path.join(sortie,'jet-etat-mj.jpg')});
+        await carteDe(fatigue).screenshot({path:path.join(sortie,'fatigue-mj.jpg')});
         await f.reload();await attendreLHydratation(app);
         expect((await lire()).sheetData).toMatchObject({fatigue:15,endurance:20,vie:8,__rddFatigue231:1});
         await f.evaluate(() => {
@@ -87,6 +91,7 @@ test('fatigue R1 : activation, dépense, jet, tablette et rechargement sans doub
             await tablette.getByRole('button',{name:/Nitouche — fatigue fictive/}).click();
             await expect(tablette.getByText('Connecté',{exact:true})).toBeVisible();
             await tablette.getByTitle('Fiche Personnage',{exact:true}).click();
+            await ongletDeLaFiche(tablette,'Lancer un test');
             const fatigueT = tablette.getByRole('region',{name:'Fatigue et état général'});
             await expect(fatigueT).toContainText('15 / 46');
             await fatigueT.getByLabel('Effort ou récupération').selectOption('endurance');
@@ -101,7 +106,7 @@ test('fatigue R1 : activation, dépense, jet, tablette et rechargement sans doub
                 const panneau = tablette.getByRole('region',{name:nom});
                 expect(await panneau.evaluate(e => e.scrollWidth <= e.clientWidth + 1)).toBe(true);
             }
-            await tablette.getByRole('region',{name:'Fatigue et état général'}).screenshot({path:path.join(sortie,'fatigue-telephone.jpg')});
+            await carteDe(tablette.getByRole('region',{name:'Fatigue et état général'})).screenshot({path:path.join(sortie,'fatigue-telephone.jpg')});
             await tablette.setViewportSize({width:820,height:1180});
             const jetT = tablette.getByRole('region',{name:'Jet du Voyageur'});
             await jetT.locator('select').nth(0).selectOption('agilite');
@@ -114,11 +119,12 @@ test('fatigue R1 : activation, dépense, jet, tablette et rechargement sans doub
                 return d.state?.lastRoll?.title ?? '';
             })).toContain('Nitouche — fatigue fictive');
             expect(await f.evaluate(() => JSON.parse(localStorage.getItem('gmos-dice-storage')!).state.lastRoll.totalDisplay)).toContain('seuil 54');
-            await fatigueT.screenshot({path:path.join(sortie,'fatigue-tablette.jpg')});
             await jetT.screenshot({path:path.join(sortie,'jet-etat-tablette.jpg')});
+            await carteDe(fatigueT).screenshot({path:path.join(sortie,'fatigue-tablette.jpg')});
             await tablette.reload();
             await expect(tablette.getByText('Connecté',{exact:true})).toBeVisible();
             await tablette.getByTitle('Fiche Personnage',{exact:true}).click();
+            await ongletDeLaFiche(tablette,'Lancer un test');
             await expect(tablette.getByRole('region',{name:'Fatigue et état général'})).toContainText('17 / 46');
             await expect.poll(async () => (await lire()).sheetData.fatigue).toBe(17);
             expect((await lire()).sheetData.__rddMouvementsFatigue).toHaveLength(2);

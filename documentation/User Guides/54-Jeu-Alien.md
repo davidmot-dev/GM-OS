@@ -277,7 +277,7 @@ se joue de même, avec le Stress déjà monté.
 
 ## Stress et Panique — suivi A1
 
-Dans le formulaire de personnage, sous **Lancer un test**, le panneau **Stress et Panique**
+Dans l'onglet **Lancer un test** de la fiche, la carte **Stress et Panique**
 conserve l'effet et son rappel. Les variations personnelles de Stress des résultats 7, 9–13
 s'appliquent une seule fois. Tremblement retire deux dés aux tests d'Agilité, d'abord sur
 la base puis sur le Stress. Nerfs d'acier réduit le test de Panique de deux. Avec Folie

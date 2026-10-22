@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Dices, Flame, Send } from 'lucide-react';
-import { caracteristiquesDeSauvegarde, type DemandeDeJetDeFiche } from '../../modules/dice/jetDepuisLaFiche';
-import { deCourant, ressourcesDUsure } from '../../modules/dice/ressourcesDUsure';
+import { type DemandeDeJetDeFiche } from '../../modules/dice/jetDepuisLaFiche';
+import { lireLesJetsDeLaFiche } from './lectureDesJetsDeLaFiche';
 import type { ModificateurDeSauvegarde } from '../../modules/dice/DiceEngine';
 import type { GameDriver } from '../../types/drivers';
 import { Bouton, Panneau } from '../socle';
@@ -37,11 +37,7 @@ export const JetsDeLaFiche: React.FC<JetsDeLaFicheProps> = ({ playerId, characte
     const [modificateur, setModificateur] = useState<ModificateurDeSauvegarde>('aucun');
     const [envoye, setEnvoye] = useState<string | null>(null);
 
-    const sauvegardes = caracteristiquesDeSauvegarde(pilote, gabarit)
-        .map(c => ({ ...c, valeur: Number(sheetData[c.fieldId]) }))
-        .filter(c => Number.isFinite(c.valeur));
-    const ressources = ressourcesDUsure(pilote, sheetData)
-        .map(r => ({ ...r, de: deCourant(sheetData[r.fieldId]) }));
+    const { sauvegardes, ressources } = lireLesJetsDeLaFiche(pilote, gabarit, sheetData);
 
     if (sauvegardes.length === 0 && ressources.length === 0) return null;
 

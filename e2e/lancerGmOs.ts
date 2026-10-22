@@ -1,4 +1,4 @@
-import { _electron as electron, type ElectronApplication, type Page } from '@playwright/test';
+import { _electron as electron, type ElectronApplication, type Locator, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -269,6 +269,26 @@ export async function attendreLHydratation(gmos: GmOsLance): Promise<void> {
 export async function ouvrirLeModule(gmos: GmOsLance, nom: string | RegExp): Promise<void> {
     const motif = typeof nom === 'string' ? new RegExp(`^${nom}$`) : nom;
     await gmos.fenetre.getByRole('button', { name: motif }).first().click();
+}
+
+/**
+ * Ouvre un onglet de la fiche de personnage — chez le meneur (« Formulaire »,
+ * « Lancer un test », « Fiche du jeu ») ou sur la tablette (« Vue
+ * synthétique », « Lancer un test », « Ma fiche »).
+ *
+ * Le test vit dans son onglet depuis le 2026-10-22 : masqué, son panneau ne se
+ * clique plus. Comme pour les modules, on passe par l'onglet, pas par l'état.
+ */
+export async function ongletDeLaFiche(page: Page, nom: string): Promise<void> {
+    await page.getByRole('tab', { name: nom, exact: true }).click();
+}
+
+/**
+ * La carte repliable qui range un panneau dans l'onglet du test. On la
+ * photographie plutôt que le panneau : c'est elle qui porte le titre.
+ */
+export function carteDe(panneau: Locator): Locator {
+    return panneau.locator('xpath=ancestor::details[@data-carte-du-jeu][1]');
 }
 
 /**

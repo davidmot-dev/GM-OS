@@ -45,8 +45,15 @@ Les exports R0 antérieurs restent utilisables pour les suivis R1–R7 ; ils ne 
 tous les champs nécessaires au nouveau livret.
 
 Dans la fiche du personnage, **Fiche du jeu** ouvre le modèle **Rêve de Dragon — Livret du
-voyageur**. Créez ou reliez la fiche proposée. **Formulaire** ramène aux champs GM-OS et aux
-panneaux du Voyageur. Sur la tablette, la fiche du jeu reprend le même gabarit.
+voyageur**. Créez ou reliez la fiche proposée. **Formulaire** ramène aux champs GM-OS et à la
+reprise. Sur la tablette, la fiche du jeu reprend le même gabarit.
+
+**Les mécaniques du Voyageur sont dans l'onglet « Lancer un test »** (*depuis le 22/10/2026*),
+chez vous comme sur la tablette : sous le jet, en cartes repliables, **Fatigue et état
+général**, **Encaissement et blessures**, **Stress, expérience et Archétype**, **Chance,
+destinée et moral**, **Astrologie et heures draconiques**, **Ouvrages et points de tâche**,
+**Repos et Château Dormant**. Une carte refermée le reste sur cet appareil. La reprise de la
+fiche reste dans le formulaire : c'est elle qui fait apparaître l'onglet.
 
 Les champs numériques gardent toute leur largeur pour les chiffres : les petites flèches
 natives ont été retirées. Tapez la valeur, utilisez **↑ / ↓**, ou la molette quand le champ

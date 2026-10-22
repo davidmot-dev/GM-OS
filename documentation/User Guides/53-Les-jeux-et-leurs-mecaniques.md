@@ -34,9 +34,9 @@ fait.
 | Écran | Ce qu'on y trouve |
 | :--- | :--- |
 | **Le bandeau des réserves**, en tête de Session-OS | Les réserves de table (Impulsion, Menace, Fiel…), leurs boutons + / −, et les gestes « Fin de scène », « Début de séance », « Nouveau scénario » — et, si le jeu les déclare, « Moment de calme » et « Effets du … » |
-| **Le panneau « Lancer un test »**, sur la fiche d'un personnage (formulaire, pas « Fiche du jeu ») et sur la tablette (vue synthétique) | Le jet du jeu : ce qu'on retient sur la fiche, les dés achetés, ce qu'on puise dans le groupe, le résultat |
+| **L'onglet « Lancer un test »** de la fiche d'un personnage, chez vous (à côté de « Formulaire » et « Fiche du jeu ») et sur la tablette (à côté de « Vue synthétique » et « Ma fiche ») | Le jet du jeu : ce qu'on retient sur la fiche, les dés achetés, ce qu'on puise dans le groupe, le résultat, puis les blocs du jeu |
 | **La carte de campagne**, dans le cockpit | Le bouton de la **fiche du groupe** (la Cabale), quand le jeu en a une |
-| **La tablette d'un joueur** | Les mêmes réserves et le même jet, et le bouton du groupe à côté de « Ma fiche » |
+| **La tablette d'un joueur** | Les mêmes réserves et le même jet, et l'onglet du groupe à côté de « Ma fiche » |
 | **Combat-OS** | L'ordre du tour, la santé, la défaite — voir [Combat-OS](./30-Combat-OS.md) |
 | **Dice-OS** | Le pupitre, et les dés d'usure — voir [Dice-OS](./34-Dice-OS-le-pupitre.md) |
 
@@ -96,7 +96,20 @@ complètes et exports de campagne les emportent, à garder entre meneurs.
 ## Le jet (`jet`)
 
 Le panneau « Lancer un test » lit sur la fiche ce que le jeu demande, et ne lance que quand chaque
-choix est fait. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
+choix est fait. *Depuis le 22/10/2026*, il a son propre onglet sur la fiche, et il se lit en étapes
+numérotées :
+
+1. **Composer** : les valeurs que l'on retient sur la fiche, puis le calcul — d'où sortent le seuil
+   et la réserve. Ce qui manque s'écrit dessous.
+2. **Préparer**, seulement si le jeu y a quelque chose : la difficulté, les réserves où puiser, la
+   préparation d'Alien, la spécialisation…
+3. **Lancer les dés** : les dés achetés, le tirage, et le bouton **Lancer**.
+4. **Résultat**, après le lancer : le verdict à droite du titre, les dés — nommés sous chacun quand
+   le code sait ce qu'ils sont (Stress, Panique, Écarté, Critique, Complication ; Succès sur une
+   réserve sans seuil) —, puis les gestes qui suivent (forcer, dépenser, Fortune, Possibilités…).
+
+Les blocs propres à un jeu suivent, en **cartes repliables** : une carte refermée le reste sur cet
+appareil. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
 
 | Pièce | Ce que c'est | Exemple |
 | :--- | :--- | :--- |
@@ -167,7 +180,7 @@ panneau de jet, mais chacun le voit et le remplit.
 
 - **Chez vous :** la carte de campagne du cockpit porte un bouton **« Fiche du groupe »**. Il ouvre
   la fiche HTML du groupe, branchée comme celle d'un personnage (« Relier » ou « Créer une fiche »).
-- **Sur une tablette :** un bouton au nom du groupe, à côté de « Ma fiche ». Ce que le joueur y
+- **Sur une tablette :** un onglet au nom du groupe, à côté de « Ma fiche ». Ce que le joueur y
   écrit remonte chez vous.
 - **Son nom** est celui qu'on écrit dans le champ « Nom » de sa feuille.
 

@@ -1,5 +1,5 @@
 import React, { useState, memo } from 'react';
-import { ChevronLeft, Package, BookOpen, PenTool, Shield, Layout, FileText, Users2 } from 'lucide-react';
+import { ChevronLeft, Package, BookOpen, PenTool, Shield, Layout, FileText, Users2, Dices } from 'lucide-react';
 import { pointsDeVieApres } from '../../modules/combat/logic/SanteDuCombattant';
 import EtatDeSante from '../../modules/combat/components/EtatDeSante';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
@@ -30,12 +30,17 @@ import { PanneauRepriseVoyageur } from '../../modules/session/components/Panneau
 import { estUneFicheDeVoyageur, lireFicheDeVoyageur, CLE_REPRISE } from '../../modules/session/logic/ficheDeVoyageur';
 import type { GameDriver } from '../../types/drivers';
 import JetsDeLaFiche from './JetsDeLaFiche';
+import { lireLesJetsDeLaFiche } from './lectureDesJetsDeLaFiche';
+import OngletsDeLaFiche from '../../modules/session/components/OngletsDeLaFiche';
+import { CarteDuJeu } from '../../modules/session/components/fields/EtapesDuJet';
 import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
 import { estUneSauvegarde, decrireLeJetDuPilote } from '../../modules/dice/lectureDuPilote';
 import ChampDuReferentiel from '../../modules/session/components/fields/ChampDuReferentiel';
 import { useSheetCalculator } from '../../modules/session/hooks/useSheetCalculator';
 import { plafondDuChamp } from '../../modules/session/logic/plafondDuChamp';
 import { useSaisieDifferee } from './useSaisieDifferee';
+
+type OngletDuJoueur = 'synthese' | 'test' | 'fiche' | 'groupe';
 
 interface HubCharacterSheetProps {
     onClose: () => void;
@@ -147,7 +152,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
      * la tablette la redessine* — et ce que le joueur y écrit remonte au meneur.
      */
     const correspondance = useCorrespondanceDuJeu(character);
-    const [surLaFiche, setSurLaFiche] = useState(false);
+    const [onglet, setOnglet] = useState<OngletDuJoueur>('synthese');
     const [ficheDejaOuverte, setFicheDejaOuverte] = useState(false);
 
     /**
@@ -162,7 +167,6 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
         : undefined;
     const correspondanceDuGroupe = useCorrespondanceDuGroupe(campagneDeLaTable, piloteDeLaTable);
     const ficheDeGroupe = piloteDeLaTable?.ficheDeGroupe;
-    const [surLeGroupe, setSurLeGroupe] = useState(false);
     const [groupeDejaOuvert, setGroupeDejaOuvert] = useState(false);
     const remoteEcrireLeGroupe = useSessionOSStore(s => s.remoteEcrireLeGroupe);
     const nomDeLaCabale = ficheDeGroupe
@@ -184,6 +188,30 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
         if (newHP !== null && newHP !== character.hp) {
             remoteUpdateCharacterVitals(playerId, character.id, { hp: newHP });
         }
+    };
+
+    /*
+      **Les onglets de la tablette** — David, 2026-10-22 : le test quitte la vue
+      synthétique pour son onglet, avec tout ce qui lance (les Sauvegardes de
+      Cthulhu Hack comprises) et les mécaniques du Voyageur de Rêve de Dragon. La vue synthétique reste l'onglet d'arrivée.
+    */
+    const jetDuJoueur = !!pilote?.jet && !estUneSauvegarde(decrireLeJetDuPilote(pilote))
+        && (!estUneFicheDeVoyageur(template) || character.sheetData?.[CLE_REPRISE] === 1);
+    const jetsDemandes = lireLesJetsDeLaFiche(pilote, template, character.sheetData ?? {});
+    const voyageurRepris = estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1;
+    const testDisponible = jetDuJoueur || voyageurRepris || jetsDemandes.sauvegardes.length > 0 || jetsDemandes.ressources.length > 0;
+    const groupeDisponible = !!ficheDeGroupe && !!campagneDeLaTable;
+    const onglets = [
+        { id: 'synthese' as const, libelle: 'Vue synthétique', icone: <Layout size={13} /> },
+        ...(testDisponible ? [{ id: 'test' as const, libelle: 'Lancer un test', icone: <Dices size={13} /> }] : []),
+        ...(correspondance ? [{ id: 'fiche' as const, libelle: 'Ma fiche', icone: <FileText size={13} /> }] : []),
+        ...(groupeDisponible ? [{ id: 'groupe' as const, libelle: ficheDeGroupe!.libelle, icone: <Users2 size={13} /> }] : []),
+    ];
+    const ongletVu: OngletDuJoueur = onglets.some(o => o.id === onglet) ? onglet : 'synthese';
+    const choisirLOnglet = (choix: OngletDuJoueur) => {
+        setOnglet(choix);
+        if (choix === 'fiche') setFicheDejaOuverte(true);
+        if (choix === 'groupe') setGroupeDejaOuvert(true);
     };
 
     const saveNarrative = () => {
@@ -209,35 +237,6 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                     <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Retour
                 </Bouton>
 
-                {/* La bascule n'apparaît que si le jeu a une fiche branchable. */}
-                {correspondance && (
-                    <Bouton habillage="libre" cibleTactile
-                        onClick={() => { setSurLaFiche(v => !v); setFicheDejaOuverte(true); setSurLeGroupe(false); }}
-                        title={surLaFiche ? 'Revenir à la vue synthétique' : 'Afficher ma fiche'}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-ui-10 font-black uppercase tracking-widest transition-all ${
-                            surLaFiche
-                                ? 'bg-accent/20 border-accent/40 text-accent'
-                                : 'bg-app-surface/40 border-app-border text-app-text/40 hover:text-app-text'
-                        }`}
-                    >
-                        <FileText size={14} />
-                        {surLaFiche ? 'Vue synthétique' : 'Ma fiche'}
-                    </Bouton>
-                )}
-                {ficheDeGroupe && campagneDeLaTable && (
-                    <Bouton habillage="libre" cibleTactile
-                        onClick={() => { setSurLeGroupe(v => !v); setGroupeDejaOuvert(true); setSurLaFiche(false); }}
-                        title={surLeGroupe ? 'Revenir à la vue synthétique' : `Afficher la fiche de la ${ficheDeGroupe.libelle}`}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-ui-10 font-black uppercase tracking-widest transition-all ${
-                            surLeGroupe
-                                ? 'bg-accent/20 border-accent/40 text-accent'
-                                : 'bg-app-surface/40 border-app-border text-app-text/40 hover:text-app-text'
-                        }`}
-                    >
-                        <Users2 size={14} />
-                        {surLeGroupe ? 'Vue synthétique' : ficheDeGroupe.libelle}
-                    </Bouton>
-                )}
                 <div className="min-w-0 text-right">
                     <h2 className="text-[24px] font-bold text-app-text leading-tight mb-1 break-words">{character.name}</h2>
                     <div className="flex flex-wrap items-center justify-end gap-2">
@@ -250,6 +249,16 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                     </div>
                 </div>
             </EnTeteDeModule>
+
+            {onglets.length > 1 && (
+                <OngletsDeLaFiche
+                    onglets={onglets}
+                    actif={ongletVu}
+                    onChoisir={choisirLOnglet}
+                    idDuPanneau="fiche-joueur"
+                    className="mb-4 flex-shrink-0 flex-wrap [&>button]:min-h-[44px] [&>button]:flex-1 [&>button]:justify-center [&>button]:px-3 [&>button]:tracking-wider"
+                />
+            )}
 
             {/*
                 **Les réserves communes, sous les yeux des joueurs.**
@@ -279,7 +288,8 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 l'iframe charge sept mégaoctets de fonds de page.
             */}
             {ficheDejaOuverte && (
-                <div className={`flex-1 overflow-hidden pb-4 ${surLaFiche ? '' : 'hidden'}`}>
+                <div id="fiche-joueur-fiche" role="tabpanel" aria-labelledby="fiche-joueur-onglet-fiche"
+                    className={`flex-1 overflow-hidden pb-4 ${ongletVu === 'fiche' ? '' : 'hidden'}`}>
                     <FicheHote
                         personnage={{
                             id: character.id,
@@ -307,7 +317,8 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 meneur par `remoteEcrireLeGroupe`.
             */}
             {groupeDejaOuvert && ficheDeGroupe && campagneDeLaTable && (
-                <div className={`flex-1 overflow-hidden pb-4 ${surLeGroupe ? '' : 'hidden'}`}>
+                <div id="fiche-joueur-groupe" role="tabpanel" aria-labelledby="fiche-joueur-onglet-groupe"
+                    className={`flex-1 overflow-hidden pb-4 ${ongletVu === 'groupe' ? '' : 'hidden'}`}>
                     <FicheHote
                         personnage={groupePourLHote(campagneDeLaTable, campagneDeLaTable.groupe, nomDeLaCabale)}
                         table={correspondanceDuGroupe}
@@ -319,7 +330,100 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 </div>
             )}
 
-            <div className={`flex-1 overflow-y-auto custom-scrollbar pr-2 pb-12 ${surLaFiche || surLeGroupe ? 'hidden' : ''}`}>
+            {testDisponible && (
+                <div id="fiche-joueur-test" role="tabpanel" aria-labelledby="fiche-joueur-onglet-test"
+                    className={`flex-1 overflow-y-auto custom-scrollbar pr-2 pb-12 ${ongletVu === 'test' ? '' : 'hidden'}`}>
+                    <div className="max-w-4xl mx-auto space-y-6">
+                        {/*
+                            **Lancer depuis sa propre fiche**, à côté des
+                            valeurs qui composent le seuil. Chez Dune il vaut
+                            une compétence plus un principe : le joueur seul
+                            sait lequel il invoque, et jusqu'ici il devait tout
+                            dicter au meneur pour qu'il lance à sa place.
+
+                            Le panneau est celui de l'écran du meneur, sans
+                            adaptation : mêmes dés, même seuil, même débit sur
+                            la réserve commune. *Un jet qui change de règle
+                            selon l'écran d'où on le lance n'est pas le même
+                            jet.*
+
+                            Il ne s'affiche que si le pilote décrit ses jets —
+                            un système sans descripteur garde sa fiche telle
+                            quelle, plutôt qu'un bouton qui lancerait n'importe
+                            quoi.
+                        */}
+                        {/*
+                            **Sauvegardes et ressources, lancées par le meneur**
+                            (Cthulhu Hack, 2026-09-30). La tablette dit quoi ;
+                            le meneur lit la fiche et lance — voir `JetsDeLaFiche`.
+                        */}
+                        <JetsDeLaFiche
+                            playerId={playerId}
+                            characterId={character.id}
+                            sheetData={character.sheetData ?? {}}
+                            pilote={pilote}
+                            gabarit={template}
+                        />
+
+                        {/*
+                            ⚠️ **Pour un jeu à Sauvegarde, ce panneau s'efface
+                            devant le précédent.** Il lance CHEZ LE JOUEUR, et
+                            son jet n'atteint pas le meneur : deux façons de
+                            lancer la même Sauvegarde, dont une invisible pour
+                            la table, ce serait pire qu'une seule.
+                        */}
+                        {jetDuJoueur && pilote?.jet && (
+                            <PanneauDeJet
+                                descripteur={pilote.jet}
+                                dice={pilote.dice}
+                                template={template}
+                                valeurs={valeursVues}
+                                campaignId={campaignId ?? undefined}
+                                ressourcesDeTable={ressourcesDeLaTable(pilote, campagneDeLaTable)}
+                                // La réserve dépensée remonte au meneur, comme ce que la fiche HTML impose.
+                                ecrireSurLaFiche={maj => remoteUpdateCharacterSheetData(playerId, character.id, { sheetData: maj })}
+                                pourLesJoueurs
+                                personnageId={character.id}
+                            />
+                        )}
+
+                        {/*
+                            **Les mécaniques du Voyageur, avec le test** (David,
+                            2026-10-22) : elles quittent la vue synthétique, comme
+                            chez le meneur. Ce qui se valide chez lui reste en lecture.
+                        */}
+                        {voyageurRepris && <>
+                            <CarteDuJeu id="fatigue-voyageur" titre="Fatigue et état général">
+                                <PanneauFatigueVoyageur key={`fatigue-${character.id}`} donnees={valeursVues}
+                                    appliquer={maj => remoteUpdateCharacterSheetData(playerId, character.id, {sheetData: maj})} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="sante-voyageur" titre="Encaissement et blessures">
+                                <PanneauSanteVoyageur key={`sante-${character.id}`} donnees={valeursVues}
+                                    appliquer={maj => remoteUpdateCharacterSheetData(playerId,character.id,{sheetData:maj})} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="progression-voyageur" titre="Stress, expérience et Archétype">
+                                <PanneauProgressionVoyageur fiche={template} donnees={valeursVues} lectureSeule appliquer={() => { /* Validation MJ. */ }} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="recours-voyageur" titre="Chance, destinée et moral">
+                                <PanneauRecoursVoyageur donnees={valeursVues} lectureSeule appliquer={() => { /* Validation MJ. */ }} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="astrologie-voyageur" titre="Astrologie et heures draconiques">
+                                <PanneauAstrologieVoyageur campagneId={campaignId} personnageId={character.id} donnees={valeursVues} lectureSeule />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="taches-voyageur" titre="Ouvrages et points de tâche">
+                                <PanneauTachesVoyageur key={`taches-${character.id}`} nom={character.name} donnees={valeursVues}
+                                    appliquer={maj => remoteUpdateCharacterSheetData(playerId,character.id,{sheetData:maj})} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="repos-voyageur" titre="Repos et Château Dormant">
+                                <PanneauReposVoyageur key={`repos-${character.id}`} donnees={valeursVues} lectureSeule appliquer={() => { /* Validation du repos réservée au MJ. */ }} />
+                            </CarteDuJeu>
+                        </>}
+                    </div>
+                </div>
+            )}
+
+            <div id="fiche-joueur-synthese" role="tabpanel" aria-labelledby="fiche-joueur-onglet-synthese"
+                className={`flex-1 overflow-y-auto custom-scrollbar pr-2 pb-12 ${ongletVu === 'synthese' ? '' : 'hidden'}`}>
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto">
                     
                     {/* Portrait & Vitals */}
@@ -366,76 +470,6 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                 vieCombat={character.hp} maxVieCombat={character.maxHp}
                                 appliquer={donnees => remoteUpdateCharacterSheetData(playerId, character.id, { sheetData: donnees })} />
                         )}
-
-                        {/*
-                            **Lancer depuis sa propre fiche**, à côté des
-                            valeurs qui composent le seuil. Chez Dune il vaut
-                            une compétence plus un principe : le joueur seul
-                            sait lequel il invoque, et jusqu'ici il devait tout
-                            dicter au meneur pour qu'il lance à sa place.
-
-                            Le panneau est celui de l'écran du meneur, sans
-                            adaptation : mêmes dés, même seuil, même débit sur
-                            la réserve commune. *Un jet qui change de règle
-                            selon l'écran d'où on le lance n'est pas le même
-                            jet.*
-
-                            Il ne s'affiche que si le pilote décrit ses jets —
-                            un système sans descripteur garde sa fiche telle
-                            quelle, plutôt qu'un bouton qui lancerait n'importe
-                            quoi.
-                        */}
-                        {/*
-                            **Sauvegardes et ressources, lancées par le meneur**
-                            (Cthulhu Hack, 2026-09-30). La tablette dit quoi ;
-                            le meneur lit la fiche et lance — voir `JetsDeLaFiche`.
-                        */}
-                        <JetsDeLaFiche
-                            playerId={playerId}
-                            characterId={character.id}
-                            sheetData={character.sheetData ?? {}}
-                            pilote={pilote}
-                            gabarit={template}
-                        />
-
-                        {/*
-                            ⚠️ **Pour un jeu à Sauvegarde, ce panneau s'efface
-                            devant le précédent.** Il lance CHEZ LE JOUEUR, et
-                            son jet n'atteint pas le meneur : deux façons de
-                            lancer la même Sauvegarde, dont une invisible pour
-                            la table, ce serait pire qu'une seule.
-                        */}
-                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && (
-                            <PanneauFatigueVoyageur key={`fatigue-${character.id}`} donnees={valeursVues}
-                                appliquer={maj => remoteUpdateCharacterSheetData(playerId, character.id, {sheetData: maj})} />
-                        )}
-                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && (
-                            <PanneauSanteVoyageur key={`sante-${character.id}`} donnees={valeursVues}
-                                appliquer={maj => remoteUpdateCharacterSheetData(playerId,character.id,{sheetData:maj})} />
-                        )}
-                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && <>
-                            <PanneauProgressionVoyageur fiche={template} donnees={valeursVues} lectureSeule appliquer={() => { /* Validation MJ. */ }} />
-                            <PanneauRecoursVoyageur donnees={valeursVues} lectureSeule appliquer={() => { /* Validation MJ. */ }} />
-                            <PanneauAstrologieVoyageur campagneId={campaignId} personnageId={character.id} donnees={valeursVues} lectureSeule />
-                            <PanneauTachesVoyageur key={`taches-${character.id}`} nom={character.name} donnees={valeursVues}
-                                appliquer={maj => remoteUpdateCharacterSheetData(playerId,character.id,{sheetData:maj})} />
-                            <PanneauReposVoyageur key={`repos-${character.id}`} donnees={valeursVues} lectureSeule appliquer={() => { /* Validation du repos réservée au MJ. */ }} />
-                        </>}
-                        {pilote?.jet && !estUneSauvegarde(decrireLeJetDuPilote(pilote)) && (!estUneFicheDeVoyageur(template) || character.sheetData?.[CLE_REPRISE] === 1) && (
-                            <PanneauDeJet
-                                descripteur={pilote.jet}
-                                dice={pilote.dice}
-                                template={template}
-                                valeurs={valeursVues}
-                                campaignId={campaignId ?? undefined}
-                                ressourcesDeTable={ressourcesDeLaTable(pilote, campagneDeLaTable)}
-                                // La réserve dépensée remonte au meneur, comme ce que la fiche HTML impose.
-                                ecrireSurLaFiche={maj => remoteUpdateCharacterSheetData(playerId, character.id, { sheetData: maj })}
-                                pourLesJoueurs
-                                personnageId={character.id}
-                            />
-                        )}
-
                         {template.sections.map((section: SheetSection) => (
                             <section key={section.id} className="space-y-4">
                                 <div className="flex items-center gap-4">

@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import AdmZip from 'adm-zip';
-import { lancerGmOs, attendreLHydratation, ouvrirLeModule } from './lancerGmOs';
+import { lancerGmOs, attendreLHydratation, ouvrirLeModule, ongletDeLaFiche, carteDe } from './lancerGmOs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { useCombatStore } from '../src/modules/combat/useCombatStore';
 import type { useJournalStore } from '../src/modules/journal/useJournalStore';
@@ -46,6 +46,8 @@ test('R2 : encaisser, sonné, soins, critique sur tablette et coma dans Combat-O
             w.useCombatStore.getState().addCombatant({name:'Brucelin — blessures fictives',init:12,isPlayer:true,faction:'player',sourcePlayerId:'brucelin-r2',statuses:[]});
         });
         const lire = () => f.evaluate(() => (window as unknown as Fenetre).useSessionOSStore.getState().players[0].characters[0]);
+        // Les mécaniques du Voyageur sont dans l'onglet du test depuis le 2026-10-22.
+        await ongletDeLaFiche(f,'Lancer un test');
         const sante = f.getByRole('region',{name:'Blessures et encaissement RdD'});
         await sante.getByRole('button',{name:'Activer le suivi des blessures'}).click();
         await sante.getByText('Encaisser une agression',{exact:true}).click();
@@ -85,7 +87,7 @@ test('R2 : encaisser, sonné, soins, critique sur tablette et coma dans Combat-O
         await sante.getByRole('button',{name:'Proposer les soins complets'}).click();
         await sante.getByRole('button',{name:'Appliquer les conséquences'}).click();
         await expect(sante).toContainText('soins complets, bonus guérison +1');
-        await sante.screenshot({path:path.join(sortie,'blessures-et-soins-mj.jpg')});
+        await carteDe(sante).screenshot({path:path.join(sortie,'blessures-et-soins-mj.jpg')});
         await f.evaluate(() => {
             const s = (window as unknown as Fenetre).useSessionOSStore;
             s.setState(etat => ({sessions:[{...etat.sessions[0],id:'seance-r2',campaignId:'r2',status:'active',sessionEntityIds:['brucelin-r2'],publicSummary:''}]}));
@@ -99,6 +101,7 @@ test('R2 : encaisser, sonné, soins, critique sur tablette et coma dans Combat-O
             await tablette.getByRole('button',{name:/Brucelin — blessures fictives/}).click();
             await expect(tablette.getByText('Connecté',{exact:true})).toBeVisible();
             await tablette.getByTitle('Fiche Personnage',{exact:true}).click();
+            await ongletDeLaFiche(tablette,'Lancer un test');
             const st = tablette.getByRole('region',{name:'Blessures et encaissement RdD'});
             await st.getByText('Encaisser une agression',{exact:true}).click();
             await st.getByLabel('Dés de table déjà tirés (facultatif, dans l’ordre)').fill('10, 10');
@@ -109,10 +112,10 @@ test('R2 : encaisser, sonné, soins, critique sur tablette et coma dans Combat-O
             await expect.poll(async () => (await lire()).sheetData.endurance).toBe(0);
             expect(await lire()).toMatchObject({hp:6,healthSystem:{state:'critical',data:{rdd:{inconscient:true,mort:false}}}});
             await expect(tablette.getByRole('region',{name:'Jet du Voyageur'}).getByRole('button',{name:'Lancer',exact:true})).toBeDisabled();
-            await st.screenshot({path:path.join(sortie,'critique-tablette.jpg')});
+            await carteDe(st).screenshot({path:path.join(sortie,'critique-tablette.jpg')});
             await tablette.setViewportSize({width:360,height:900});
             expect(await st.evaluate(e => e.scrollWidth <= e.clientWidth+1)).toBe(true);
-            await st.screenshot({path:path.join(sortie,'critique-telephone.jpg')});
+            await carteDe(st).screenshot({path:path.join(sortie,'critique-telephone.jpg')});
             const historique = (await lire()).sheetData.__rddHistoriqueSante231;
             await tablette.reload();
             await expect(tablette.getByText('Connecté',{exact:true})).toBeVisible();

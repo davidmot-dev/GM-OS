@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import AdmZip from 'adm-zip';
-import { lancerGmOs, attendreLHydratation, ouvrirLeModule } from './lancerGmOs';
+import { lancerGmOs, attendreLHydratation, ouvrirLeModule, ongletDeLaFiche } from './lancerGmOs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 
 const racine = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -71,6 +71,7 @@ test('reprendre un ancien Voyageur, modifier ses caractéristiques et relire sa 
         await f.getByRole('button', {name: /Sauvegarder/i}).first().click();
         await expect.poll(async () => (await lire()).sheetData.melee).toBe(13);
         personnage = await lire();expect(personnage.sheetData).toMatchObject({force: 15, lancer: 13, vie: 9, endurance: 8});
+        await ongletDeLaFiche(f, 'Lancer un test');
         const jet = f.locator('[data-panneau-de-jet]').first();
         await expect(jet).toBeVisible();
         await jet.locator('select').nth(0).selectOption('melee');
@@ -80,6 +81,7 @@ test('reprendre un ancien Voyageur, modifier ses caractéristiques et relire sa 
         await jet.screenshot({path: path.join(sortie, 'jeu-reves-de-dragons-jet.jpg')});
         await jet.getByRole('button', {name: 'Lancer', exact: true}).click();
         await jet.screenshot({path: path.join(sortie, 'jeu-reves-de-dragons-jet-lance.jpg')});
+        await ongletDeLaFiche(f, 'Formulaire');
         await f.locator('body').screenshot({path: path.join(sortie, 'fiche-apres.jpg')});
         await f.evaluate(() => (window as unknown as Fenetre).useSessionOSStore.getState().setSelectedCharacter('neuf-r0'));
         await expect(reprise).toBeVisible();
@@ -118,6 +120,7 @@ test('reprendre un ancien Voyageur, modifier ses caractéristiques et relire sa 
             expect(await lireMira()).toMatchObject({hp: 5, maxHp: 11,
                 sheetData: {vie: 5, reve_pts: 18, reve_seuil: 11, reve_eclatement: 33, melee: 13,
                     __rddAvantReprise231: {points_de_vie: 5, points_de_reve: 18}}});
+            await ongletDeLaFiche(tablette, 'Lancer un test');
             const jetTablette = tablette.locator('[data-panneau-de-jet]').first();
             await jetTablette.locator('select').nth(0).selectOption('melee');
             await jetTablette.locator('select').nth(1).selectOption('discretion');

@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import AdmZip from 'adm-zip';
-import {lancerGmOs,attendreLHydratation,ouvrirLeModule} from './lancerGmOs';
+import {lancerGmOs,attendreLHydratation,ouvrirLeModule,ongletDeLaFiche,carteDe} from './lancerGmOs';
 import {initialiserSanteVoyageur} from '../src/modules/session/logic/santeDuVoyageur';
 import type {useSessionOSStore} from '../src/modules/session/useSessionOSStore';
 import type {useClockStore} from '../src/store/useClockStore';
@@ -40,6 +40,8 @@ test('R5–R7 : progression, recours, nuit et astrologie privée PC/deux tablett
         const lire=()=>f.evaluate(()=>(window as unknown as Fenetre).useSessionOSStore.getState().players[0].characters[0].sheetData!);
         const region=(nom:string)=>f.getByRole('region',{name:nom,exact:true});
         const valider=async(p:ReturnType<typeof region>)=>{await p.getByRole('button',{name:'Valider cette opération',exact:true}).click();await expect(p.getByLabel('Aperçu de l’opération RdD')).toHaveCount(0);};
+        // Les mécaniques du Voyageur sont dans l'onglet du test depuis le 2026-10-22.
+        await ongletDeLaFiche(f,'Lancer un test');
         const repos=region('Repos et Château Dormant RdD'),prog=region('Progression et Archétype RdD'),recours=region('Chance destinée et moral RdD'),astro=region('Astrologie et heures draconiques RdD'),jet=region('Jet du Voyageur');
         await repos.getByText('Bilan de fin du Château Dormant',{exact:true}).click();
         await repos.getByLabel('Nuit ou date de jeu (unique)',{exact:true}).fill('5 Dragon');
@@ -52,7 +54,7 @@ test('R5–R7 : progression, recours, nuit et astrologie privée PC/deux tablett
         await prog.getByLabel('Points de progression',{exact:true}).fill('20');await prog.getByRole('button',{name:'Allouer les XP de stress',exact:true}).click();await valider(prog);
         await prog.getByRole('button',{name:'Préparer l’augmentation d’un niveau',exact:true}).click();await valider(prog);
         expect((await lire()).navigation).toBe(1);await prog.getByText('Carnet d’expérience et potentiel',{exact:true}).click();
-        await prog.screenshot({path:path.join(sortie,'jeu-reves-de-dragons-progression.jpg'),type:'jpeg',quality:85});
+        await carteDe(prog).screenshot({path:path.join(sortie,'jeu-reves-de-dragons-progression.jpg'),type:'jpeg',quality:85});
         await jet.locator('select').nth(0).selectOption('agilite');await jet.locator('select').nth(1).selectOption('discretion');
         await jet.getByLabel('Engager le moral avant cette action admissible (+1)',{exact:true}).check();
         await f.evaluate(()=>{(window as unknown as {ancienHasard:()=>number}).ancienHasard=Math.random;Math.random=()=>0.99;});
@@ -62,13 +64,13 @@ test('R5–R7 : progression, recours, nuit et astrologie privée PC/deux tablett
         expect((await lire()).points_de_chance).toBe(9);
         await recours.getByLabel('Dé du recours',{exact:true}).fill('10');await recours.getByRole('button',{name:'Préparer l’unique relance',exact:true}).click();await valider(recours);
         expect((await lire()).moral).toBe(1);await expect(recours.getByRole('button',{name:'Préparer l’appel à la chance',exact:true})).toHaveCount(0);
-        await recours.screenshot({path:path.join(sortie,'jeu-reves-de-dragons-recours.jpg'),type:'jpeg',quality:85});
+        await carteDe(recours).screenshot({path:path.join(sortie,'jeu-reves-de-dragons-recours.jpg'),type:'jpeg',quality:85});
         await recours.getByRole('button',{name:'Accepter le résultat définitif',exact:true}).click();await valider(recours);
         await astro.getByText('Préparation astrologique du MJ',{exact:true}).click();await astro.getByLabel('Jour astral',{exact:true}).fill('1');
         await astro.getByLabel('Étoiles visibles pour cette observation nocturne',{exact:true}).check();await astro.getByLabel('Vingt minutes d’observation ont été jouées',{exact:true}).check();
         await astro.getByLabel('Visibilité des étoiles',{exact:true}).fill('-2');await astro.getByLabel('Dé secret d’astrologie',{exact:true}).fill('30');await astro.getByLabel('Faux nombre astral',{exact:true}).fill('8');
         await astro.getByRole('button',{name:'Préparer la prédiction de ce personnage',exact:true}).click();await astro.getByRole('button',{name:'Valider l’astrologie',exact:true}).click();
-        await astro.screenshot({path:path.join(sortie,'astrologie-mj-privee.jpg'),type:'jpeg',quality:85});
+        await carteDe(astro).screenshot({path:path.join(sortie,'astrologie-mj-privee.jpg'),type:'jpeg',quality:85});
         const tablettes:Page[]=[];const charges:unknown[][]=[];
         for(const [id,nom] of [['a','Nitouche — progression fictive'],['b','Brucelin — astres fictifs']]){
             const c=await browser.newContext({viewport:{width:820,height:1600},serviceWorkers:'block'});contextes.push(c);
@@ -77,13 +79,13 @@ test('R5–R7 : progression, recours, nuit et astrologie privée PC/deux tablett
             p.on('websocket',ws=>ws.on('framereceived',e=>{try{const v=JSON.parse(String(e.payload));if(v.type==='sync')envois.push(v.payload);}catch{ /* Les messages non JSON ne servent pas à cette assertion. */ }}));
             await p.route('**/*',r=>{const u=new URL(r.request().url());return u.hostname==='127.0.0.1'||['data:','blob:'].includes(u.protocol)?r.continue():r.abort();});
             await p.goto(`http://127.0.0.1:${app.ports.sync}/?window=tablet&sync=${app.ports.sync}`);await p.getByRole('button',{name:new RegExp(nom)}).click();
-            await expect(p.getByText('Connecté',{exact:true})).toBeVisible();await p.getByTitle('Fiche Personnage',{exact:true}).click();
+            await expect(p.getByText('Connecté',{exact:true})).toBeVisible();await p.getByTitle('Fiche Personnage',{exact:true}).click();await ongletDeLaFiche(p,'Lancer un test');
             const a=p.getByRole('region',{name:'Astrologie et heures draconiques RdD',exact:true});await a.getByText('Mes prédictions annoncées',{exact:true}).click();
             await expect(a).toContainText(`nombre annoncé ${id==='a'?'3':'8'}`);await expect(a).not.toContainText('Nombres fixés');
             await expect(p.getByRole('region',{name:'Progression et Archétype RdD',exact:true}).getByRole('button')).toHaveCount(0);
         }
         const p=tablettes[0],aPJ=p.getByRole('region',{name:'Astrologie et heures draconiques RdD',exact:true});
-        await aPJ.screenshot({path:path.join(sortie,'jeu-reves-de-dragons-astrologie.jpg'),type:'jpeg',quality:85});
+        await carteDe(aPJ).screenshot({path:path.join(sortie,'jeu-reves-de-dragons-astrologie.jpg'),type:'jpeg',quality:85});
         const jetPJ=p.getByRole('region',{name:'Jet du Voyageur',exact:true});await jetPJ.getByLabel('Nature du jet',{exact:true}).selectOption('chance');
         await expect(jetPJ.getByRole('button',{name:'Lancer',exact:true})).toBeDisabled();await expect(jetPJ).toContainText('nombre astral réel');
         await p.setViewportSize({width:360,height:900});for(const nom of ['Progression et Archétype RdD','Chance destinée et moral RdD','Astrologie et heures draconiques RdD'])expect(await p.getByRole('region',{name:nom,exact:true}).evaluate(e=>e.scrollWidth<=e.clientWidth+1)).toBe(true);

@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo, useRef, useState } from 'react';
-import { Dices, AlertTriangle, Info, Plus, Minus, Coins } from 'lucide-react';
+import { AlertTriangle, Info, Plus, Minus, Coins } from 'lucide-react';
 import { EtiquetteDuDegre } from '../../../dice/EtiquetteDuDegre';
 import { consignerLeJet } from '../../../journal/consignerLeJet';
 import { DiceEngine, type RollResult } from '../../../dice/DiceEngine';
@@ -47,6 +47,7 @@ import { useSessionOSStore } from '../../useSessionOSStore';
 import { tousLesPilotes } from '../../store/tousLesPilotes';
 import { appliquerAuGroupe } from '../../logic/groupeDeLaCampagne';
 import ApportsDuGroupe from './ApportsDuGroupe';
+import { CarteDuJeu, Etape } from './EtapesDuJet';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
 import type { ApportDuGroupe, DiceConfig } from '../../../../types/drivers';
 
@@ -1262,670 +1263,570 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ).length
         : 0;
 
+    /*
+      **Les étapes du test** (maquette du 2026-10-22). « Préparer » n'existe que
+      si le jeu y a quelque chose : une difficulté, des réserves où puiser, la
+      préparation d'Alien… — une étape vide numérotée mentirait sur l'ordre.
+    */
+    const aPreparer = !!descripteur.cible || torg || !!destin || disponiblesPerso.length > 0
+        || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
+        || !!(combatAlien && equipementAlien?.proprietes?.munitions)
+        || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible);
+    const numeros = { composer: 1, preparer: 2, lancer: aPreparer ? 3 : 2, resultat: aPreparer ? 4 : 3 };
+    /*
+      **Le septième lecteur, et il écrivait lui aussi son propre mot.** Le degré
+      l'emporte quand le jeu en gradue ; sinon c'est le verdict du compte de
+      réussites, qui reste l'autorité sur une réserve. Il se lit en tête du
+      résultat, à droite du titre.
+    */
+    const verdictDuResultat = resultat && !paniqueEnAttente
+        && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
+        ? <EtiquetteDuDegre
+            resultat={{ degre: resultat.degre, tagSuccess: v.reussi }}
+            classes={reussi => 'font-black uppercase tracking-widest ' + (reussi ? 'text-etat-succes' : 'text-etat-danger')}
+        />
+        : null;
+
     return (
-        <div data-panneau-de-jet className="space-y-3 rounded-2xl border border-accent/20 bg-accent/5 p-4">
-            <h3 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent">
-                <Dices size={14} /> Lancer un test
-            </h3>
+        <div data-panneau-de-jet className="space-y-4">
+            <h3 className="sr-only">Lancer un test</h3>
 
-            {/*
-                Les composantes que le joueur retient sur sa fiche : celles du
-                seuil, et **celles de la réserve**.
+            <Etape numero={numeros.composer} titre="Composer">
+                {/*
+                    Les composantes que le joueur retient sur sa fiche : celles du
+                    seuil, et **celles de la réserve**.
 
-                Chez Alien le nombre de dés vaut un attribut plus une compétence
-                — le pilote ne savait offrir qu'un nombre fixe, et tous les
-                personnages lançaient la même poignée. Les deux familles se
-                choisissent au même endroit parce que c'est le même geste : le
-                joueur désigne ce qu'il invoque, avant de lancer.
-            */}
-            <div className="grid grid-cols-2 gap-3">
+                    Chez Alien le nombre de dés vaut un attribut plus une compétence
+                    — le pilote ne savait offrir qu'un nombre fixe, et tous les
+                    personnages lançaient la même poignée. Les deux familles se
+                    choisissent au même endroit parce que c'est le même geste : le
+                    joueur désigne ce qu'il invoque, avant de lancer.
+                */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                    {composantesARetenir.map(composante => {
+                      const sousGroupes = sousGroupesDe(composante);
+                      return (
+                        <label key={composante.id} className="flex flex-col gap-1">
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
+                                {composante.label}
+                            </span>
+                            <select
+                                value={choix[composante.id] ?? ''}
+                                onChange={e => setChoix(c => ({ ...c, [composante.id]: e.target.value }))}
+                                className="bg-app-bg/60 border border-app-border/40 rounded-lg px-3 py-2 text-xs font-bold focus:outline-none focus:border-accent/50"
+                            >
+                                {/* Facultative : la laisser vide est un choix (Torg, compétence non entraînée). */}
+                                <option value="">{composante.facultative ? '— aucune —' : '— choisir —'}</option>
+                                {/*
+                                    **Un seul sous-groupe ne s'annonce pas.** Coiffer
+                                    une liste unique du nom de sa section ajouterait
+                                    une ligne qui ne distingue rien — l'`optgroup` ne
+                                    sert que là où il y a un choix de sous-groupe à
+                                    faire, et c'est le cas de Rêves de Dragons, pas
+                                    celui de Dune.
+                                */}
+                                {sousGroupes.map(section => {
+                                    /*
+                                      **Un nom n'est pas une valeur** (Nephilim, 2026-10-17) :
+                                      le champ qu'un autre désigne par `libelleSur` le nomme,
+                                      il ne se lance pas. Et une ligne sans nom saisi —
+                                      un Vécu vide — n'a rien à proposer.
+                                    */
+                                    const noms = new Set(section.fields.map(f => f.libelleSur).filter(Boolean));
+                                    // Le motif de la composante : le degré d'une formule, pas son aire (Nephilim).
+                                    const motif = (() => { try { return composante.motif ? new RegExp(composante.motif) : null; } catch { return null; } })();
+                                    const options = section.fields
+                                        .filter(f => !noms.has(f.id))
+                                        .filter(f => !motif || motif.test(f.id))
+                                        .filter(f => !f.libelleSur || String(valeurs[f.libelleSur] ?? '').trim() !== '')
+                                        .map(f => (
+                                            <option key={f.id} value={f.id}>
+                                                {(f.libelleSur && String(valeurs[f.libelleSur] ?? '').trim()) || f.label} ({String(valeurs[f.id] ?? f.defaultValue)})
+                                            </option>
+                                        ));
+                                    return sousGroupes.length > 1
+                                        ? <optgroup key={section.id} label={section.label || section.id}>{options}</optgroup>
+                                        : <Fragment key={section.id}>{options}</Fragment>;
+                                })}
+                            </select>
+                        </label>
+                      );
+                    })}
+                </div>
+
+                {/*
+                    **Le Vécu retenu, relié à sa liste** (Nephilim, 2026-10-17) : quand le
+                    champ choisi tire son nom d'un champ relié à un référentiel, ce que le
+                    corpus dit de ce nom s'affiche ici.
+                */}
                 {composantesARetenir.map(composante => {
-                  const sousGroupes = sousGroupesDe(composante);
-                  return (
-                    <label key={composante.id} className="flex flex-col gap-1">
-                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
-                            {composante.label}
-                        </span>
-                        <select
-                            value={choix[composante.id] ?? ''}
-                            onChange={e => setChoix(c => ({ ...c, [composante.id]: e.target.value }))}
-                            className="bg-app-bg/60 border border-app-border/40 rounded-lg px-3 py-2 text-xs font-bold focus:outline-none focus:border-accent/50"
-                        >
-                            {/* Facultative : la laisser vide est un choix (Torg, compétence non entraînée). */}
-                            <option value="">{composante.facultative ? '— aucune —' : '— choisir —'}</option>
-                            {/*
-                                **Un seul sous-groupe ne s'annonce pas.** Coiffer
-                                une liste unique du nom de sa section ajouterait
-                                une ligne qui ne distingue rien — l'`optgroup` ne
-                                sert que là où il y a un choix de sous-groupe à
-                                faire, et c'est le cas de Rêves de Dragons, pas
-                                celui de Dune.
-                            */}
-                            {sousGroupes.map(section => {
-                                /*
-                                  **Un nom n'est pas une valeur** (Nephilim, 2026-10-17) :
-                                  le champ qu'un autre désigne par `libelleSur` le nomme,
-                                  il ne se lance pas. Et une ligne sans nom saisi —
-                                  un Vécu vide — n'a rien à proposer.
-                                */
-                                const noms = new Set(section.fields.map(f => f.libelleSur).filter(Boolean));
-                                // Le motif de la composante : le degré d'une formule, pas son aire (Nephilim).
-                                const motif = (() => { try { return composante.motif ? new RegExp(composante.motif) : null; } catch { return null; } })();
-                                const options = section.fields
-                                    .filter(f => !noms.has(f.id))
-                                    .filter(f => !motif || motif.test(f.id))
-                                    .filter(f => !f.libelleSur || String(valeurs[f.libelleSur] ?? '').trim() !== '')
-                                    .map(f => (
-                                        <option key={f.id} value={f.id}>
-                                            {(f.libelleSur && String(valeurs[f.libelleSur] ?? '').trim()) || f.label} ({String(valeurs[f.id] ?? f.defaultValue)})
-                                        </option>
-                                    ));
-                                return sousGroupes.length > 1
-                                    ? <optgroup key={section.id} label={section.label || section.id}>{options}</optgroup>
-                                    : <Fragment key={section.id}>{options}</Fragment>;
-                            })}
-                        </select>
-                    </label>
-                  );
+                    const champ = template.sections.flatMap(sec => sec.fields).find(f => f.id === choix[composante.id]);
+                    const nomDuChamp = champ?.libelleSur ? template.sections.flatMap(sec => sec.fields).find(f => f.id === champ.libelleSur) : undefined;
+                    if (!nomDuChamp?.referentiel) return null;
+                    const pilote = tousLesPilotes(pilotesPerso).find(d => d.id === campagne?.system)
+                        ?? tousLesPilotes(pilotesPerso).find(d => d.templateId === template.id);
+                    return <LigneDuReferentiel key={composante.id} pilote={pilote} chemin={nomDuChamp.referentiel} nom={String(valeurs[nomDuChamp.id] ?? '')} />;
                 })}
-            </div>
 
-            {/*
-                **Le Vécu retenu, relié à sa liste** (Nephilim, 2026-10-17) : quand le
-                champ choisi tire son nom d'un champ relié à un référentiel, ce que le
-                corpus dit de ce nom s'affiche ici.
-            */}
-            {composantesARetenir.map(composante => {
-                const champ = template.sections.flatMap(sec => sec.fields).find(f => f.id === choix[composante.id]);
-                const nomDuChamp = champ?.libelleSur ? template.sections.flatMap(sec => sec.fields).find(f => f.id === champ.libelleSur) : undefined;
-                if (!nomDuChamp?.referentiel) return null;
-                const pilote = tousLesPilotes(pilotesPerso).find(d => d.id === campagne?.system)
-                    ?? tousLesPilotes(pilotesPerso).find(d => d.templateId === template.id);
-                return <LigneDuReferentiel key={composante.id} pilote={pilote} chemin={nomDuChamp.referentiel} nom={String(valeurs[nomDuChamp.id] ?? '')} />;
-            })}
+                {/* Le calcul, sous les choix : d'où sortent le seuil et la réserve. */}
+                {((descripteur.seuil ?? []).length > 0 || !!descripteur.cible || jet.desEchelonnes.length > 0
+                    || jet.desSecondaires > 0 || jet.composantesDeLaReserve.length > 0) && (
+                    <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 border-t border-app-border/40 pt-3">
+                        {/* Le seuil, décomposé — on doit voir d'où il sort. Un jeu à
+                            réserve pure n'en compose aucun : on ne montre pas un « Seuil 0 »
+                            qui se lirait comme une mesure. */}
+                        {((descripteur.seuil ?? []).length > 0 || descripteur.cible) && (
+                            <div className="flex items-baseline gap-2 text-xs">
+                                <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">
+                                    {descripteur.cible ? 'Chances' : descripteur.tableDeBonus || destin ? 'Niveau' : 'Seuil'}
+                                </span>
+                                <span className="font-mono text-lg font-black text-accent">
+                                    {jet.seuil}{descripteur.cible ? ' %' : ''}
+                                </span>
+                                {/*
+                                    **L'explication vient du calcul, jamais d'ici.** Joindre
+                                    les valeurs par « + » dit vrai sur un jeu qui additionne
+                                    et faux sur un jeu qui multiplie : il aurait montré
+                                    « 12 + 3 » sous une cible de 78.
+                                */}
+                                {jet.explicationDuSeuil ? (
+                                    <span className="text-app-text/30 font-mono">
+                                        = {jet.explicationDuSeuil}
+                                        {jet.composantes.length > 0 && (
+                                            <span className="ml-1 opacity-60">
+                                                ({jet.composantes.map(c => c.champ).join(', ')})
+                                            </span>
+                                        )}
+                                    </span>
+                                ) : jet.composantes.length > 0 && (
+                                    <span className="text-app-text/30 font-mono">
+                                        = {jet.composantes.map(c => `${c.valeur}`).join(' + ')}
+                                        <span className="ml-1 opacity-60">({jet.composantes.map(c => c.champ).join(' + ')})</span>
+                                    </span>
+                                )}
+                            </div>
+                        )}
 
-            {/* Le seuil, décomposé — on doit voir d'où il sort. Un jeu à
-                réserve pure n'en compose aucun : on ne montre pas un « Seuil 0 »
-                qui se lirait comme une mesure. */}
-            {((descripteur.seuil ?? []).length > 0 || descripteur.cible) && (
-                <div className="flex items-baseline gap-2 text-xs">
-                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">
-                        {descripteur.cible ? 'Chances' : descripteur.tableDeBonus || destin ? 'Niveau' : 'Seuil'}
-                    </span>
-                    <span className="font-mono text-lg font-black text-accent">
-                        {jet.seuil}{descripteur.cible ? ' %' : ''}
-                    </span>
+                        {/*
+                            **La poignée échelonnée se montre dé par dé.**
+
+                            Un nombre seul — « 2 dés » — ne dirait rien ici : deux D6 et deux
+                            D12 ne sont pas le même jet, et c'est la fiche qui décide. Le
+                            joueur doit voir « Attribut D10 + Compétence D6 » pour reconnaître
+                            son personnage dans ce qu'il lance.
+                        */}
+                        {jet.desEchelonnes.length > 0 && (
+                            <div className="flex items-baseline gap-2 text-xs flex-wrap">
+                                <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">Dés</span>
+                                {jet.desEchelonnes.map((d, i) => (
+                                    <span key={`${d.champ}-${i}`} className="font-mono">
+                                        {i > 0 && <span className="text-app-text/30 mr-2">+</span>}
+                                        <span className="text-lg font-black text-accent">D{d.faces}</span>
+                                        <span className="text-app-text/30 ml-1">({d.label})</span>
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* La réserve, décomposée pour la même raison : un joueur d'Alien
+                            doit voir que ses cinq dés sont « Force 4 + Pilotage 1 », et non
+                            un nombre tombé du ciel. */}
+                        {jet.composantesDeLaReserve.length > 0 && (
+                            <div className="flex items-baseline gap-2 text-xs">
+                                <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">{destin ? 'Domaine' : 'Réserve'}</span>
+                                <span className="font-mono text-lg font-black text-accent">{jet.nombreDeDes}</span>
+                                {regleJetAlien ? <span className="text-app-text/50">dés de base + {jet.desSecondaires} dés de Stress, après modificateurs</span> : <span className="text-app-text/30 font-mono">
+                                    = {[
+                                        ...(descripteur.reserve?.base ? [`${descripteur.reserve.base}`] : []),
+                                        ...jet.composantesDeLaReserve.map(c => `${c.valeur}`),
+                                        ...(jet.desAchetes > 0 ? [`${jet.desAchetes}`] : []),
+                                    ].join(' + ')}
+                                    <span className="ml-1 opacity-60">
+                                        ({[
+                                            ...(descripteur.reserve?.base ? ['base'] : []),
+                                            ...jet.composantesDeLaReserve.map(c => c.champ),
+                                            ...(jet.desAchetes > 0 ? ['achetés'] : []),
+                                        ].join(' + ')})
+                                    </span>
+                                </span>}
+                            </div>
+                        )}
+
+                        {/* La seconde poule, nommée par le jeu. Elle se montre à part parce
+                            qu'elle se compte à part : chez Alien, un 1 sur un dé de stress
+                            déclenche la Panique, ce qu'un dé de base ne fait jamais. */}
+                        {jet.desSecondaires > 0 && (
+                            <div className="flex items-baseline gap-2 text-xs">
+                                <span className="text-etat-alerte/60 font-bold uppercase tracking-widest text-ui-9">
+                                    {descripteur.reserve?.secondaire?.label ?? 'Seconde réserve'}
+                                </span>
+                                <span className="font-mono text-lg font-black text-etat-alerte">{jet.desSecondaires}</span>
+                                {jet.composantesDeLaSecondeReserve.length > 0 && (
+                                    <span className="text-app-text/30 font-mono">
+                                        ({jet.composantesDeLaSecondeReserve.map(c => c.champ).join(' + ')})
+                                    </span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/*
+                    Ce que le calcul a dû supposer — hors de la table du livre, borné
+                    à son dernier palier — s'affiche **avec les remarques du pilote**,
+                    plus bas, et pas ici : le panneau en a déjà un endroit, et deux
+                    listes de la même chose finissent par diverger.
+                */}
+
+                {/*
+                    Ce qui manque se dit. Un champ absent de la fiche est une erreur
+                    de configuration du pilote, et le joueur doit savoir pourquoi le
+                    bouton refuse plutôt que de le voir grisé sans explication.
+                */}
+                {jet.avertissements.length > 0 && (
+                    <ul className="space-y-1">
+                        {jet.avertissements.map((a, i) => (
+                            <li key={i} className="flex items-start gap-2 text-ui-11 text-etat-alerte/70">
+                                <AlertTriangle size={12} className="mt-0.5 shrink-0" /> {a}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+
+                {/*
+                    Ce qui s'est raccordé malgré une dérive du pilote. Plus discret
+                    que les avertissements — le jet est juste et part —, mais dit :
+                    un défaut silencieux finit toujours par coûter plus cher qu'une
+                    ligne de texte.
+                */}
+                {jet.remarques.length > 0 && (
+                    <ul className="space-y-1">
+                        {jet.remarques.map((r, i) => (
+                            <li key={i} className="flex items-start gap-2 text-ui-10 text-app-text/35">
+                                <Info size={11} className="mt-0.5 shrink-0" /> {r}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </Etape>
+
+            {aPreparer && (
+                <Etape numero={numeros.preparer} titre={regleJetAlien ? 'Préparer le test Alien' : 'Préparer'}
+                    className="[&>[data-preparation-alien]]:border-0 [&>[data-preparation-alien]]:p-0 [&>[data-preparation-alien]>p:first-child]:hidden">
                     {/*
-                        **L'explication vient du calcul, jamais d'ici.** Joindre
-                        les valeurs par « + » dit vrai sur un jeu qui additionne
-                        et faux sur un jeu qui multiplie : il aurait montré
-                        « 12 + 3 » sous une cible de 78.
+                        L'ajustement de difficulté, quand la cible se calcule. Il ne
+                        s'affiche que là : sur un jeu qui compte des réussites, il n'a
+                        aucun sens, et deux réglages nommés « difficulté » côte à côte
+                        seraient exactement le piège que ce chantier a défait.
                     */}
-                    {jet.explicationDuSeuil ? (
-                        <span className="text-app-text/30 font-mono">
-                            = {jet.explicationDuSeuil}
-                            {jet.composantes.length > 0 && (
-                                <span className="ml-1 opacity-60">
-                                    ({jet.composantes.map(c => c.champ).join(', ')})
+                    {descripteur.cible && (
+                        <div className="flex items-center gap-2 text-xs">
+                            <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">
+                                Difficulté
+                            </span>
+                            <input
+                                type="range"
+                                min={-10}
+                                max={7}
+                                value={ajustementDeDifficulte}
+                                onChange={e => setAjustementDeDifficulte(Number(e.target.value))}
+                                className="flex-1 accent-accent"
+                            />
+                            <span className="font-mono font-black text-accent w-8 text-right">
+                                {ajustementDeDifficulte > 0 ? `+${ajustementDeDifficulte}` : ajustementDeDifficulte}
+                            </span>
+                        </div>
+                    )}
+
+                    {/*
+                        **Les malus de péril, dits avant de lancer.** Ils retirent au
+                        Domaine (donc aux dés de destin) et au Talent ; on nomme les états
+                        qui les causent, pour que le joueur sache d'où vient le moins.
+                    */}
+                    {torg && (
+                        <div className="flex flex-wrap items-center gap-3 text-xs">
+                            <label className="flex items-center gap-2">
+                                <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Échec critique sur</span>
+                                <select
+                                    value={plageCritique}
+                                    onChange={e => setPlageCritique(Number(e.target.value))}
+                                    data-plage-critique
+                                    title="Le livre l'étend selon le risque : rafale, axiomes, certains Atouts et pouvoirs"
+                                    className="bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50"
+                                >
+                                    <option value={1}>1</option>
+                                    <option value={2}>1 – 2</option>
+                                    <option value={3}>1 – 3</option>
+                                    <option value={4}>1 – 4</option>
+                                </select>
+                            </label>
+                            <label className="flex items-center gap-2" title="Livre p. 122 : −2 par cible supplémentaire ; toutes les cibles touchées subissent les dommages">
+                                <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Cibles</span>
+                                <select
+                                    value={cibles}
+                                    onChange={e => setCibles(Number(e.target.value))}
+                                    data-cibles-multiples
+                                    className="bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50"
+                                >
+                                    {[1, 2, 3, 4, 5, 6].map(n => <option key={n} value={n}>{n}{n > 1 ? ` (−${malusDesCiblesMultiples(n)})` : ''}</option>)}
+                                </select>
+                            </label>
+                            {malusTorg > 0 && (
+                                <span className="text-etat-alerte/80" data-malus-de-torg>
+                                    Malus : −{malusTorg} au total d'action — {raisonsDuMalusTorg}
+                                </span>
+                            )}
+                            {unDePlusDeLaCarte && (
+                                <span className="text-etat-succes/80" data-un-de-plus-de-la-carte>
+                                    La carte d’Action accorde « Un de plus ! » aux Héros ce round.
+                                </span>
+                            )}
+                            {!entraine && <span className="text-app-text/40 italic">Sans compétence : seul le 10 explose, pas le 20.</span>}
+                            {champMagique && descripteur.torg?.choc && ecrireSurLaFiche && (
+                                <label className="flex items-center gap-2" data-loi-de-la-magie
+                                    title={`${loiMagie?.nom ?? 'Loi de la Magie'} : +1 par point de Choc, jusqu'aux rangs de la compétence (${rangsMagiques}). Annoncé avant le jet, il ne se récupère pas avant la fin du sort.`}>
+                                    <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Choc volontaire</span>
+                                    <input type="number" min={0} max={rangsMagiques} value={chocVolontaire}
+                                        onChange={e => setChocVolontaire(Math.max(0, Math.min(rangsMagiques, Number(e.target.value) || 0)))}
+                                        className="w-14 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-xs font-mono font-bold focus:outline-none focus:border-accent/50" />
+                                    <span className="text-app-text/40">max {rangsMagiques}</span>
+                                </label>
+                            )}
+                            {annulation && ecrireSurLaFiche && descripteur.torg?.possibilites && (
+                                <button
+                                    type="button"
+                                    disabled={possibilitesTorg <= 0}
+                                    onClick={annuler}
+                                    title="Une Possibilité, un test de Réalité contre ND 10 — avant que les dommages de l'attaque ne prennent effet"
+                                    className="ml-auto px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30"
+                                >
+                                    Annulation des dommages ({possibilitesTorg})
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {destin && (malus.domaines > 0 || malus.talents > 0) && (
+                        <p className="text-ui-11 text-etat-alerte/80">
+                            Malus : {malus.domaines > 0 && `−${malus.domaines} au Domaine`}
+                            {malus.domaines > 0 && malus.talents > 0 && ', '}
+                            {malus.talents > 0 && `−${malus.talents} au Talent`} — {malus.etats.join(', ')}
+                        </p>
+                    )}
+
+                    {destin && (
+                        <div data-destin className="flex flex-wrap items-center gap-2 text-xs">
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Provoquer le destin</span>
+                            <button
+                                type="button"
+                                onClick={() => setDesDeDestin(Math.max(0, desLances - 1))}
+                                aria-label="Un dé de destin de moins"
+                                className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
+                            ><Minus size={12} /></button>
+                            <span className="font-mono text-sm font-black w-6 text-center">{desLances}</span>
+                            <button
+                                type="button"
+                                disabled={desLances >= plafondDuDestin}
+                                onClick={() => setDesDeDestin(Math.min(plafondDuDestin, desLances + 1))}
+                                aria-label="Un dé de destin de plus"
+                                className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors disabled:opacity-30"
+                            ><Plus size={12} /></button>
+                            <span className="text-app-text/40">
+                                sur {plafondDuDestin} — niveau {niveauDuDestin}
+                                {desLances === 0 && ' : sans dé, le Talent seul contre la difficulté'}
+                            </span>
+                        </div>
+                    )}
+
+                    {disponiblesPerso.length > 0 && (
+                        <ApportsDuGroupe
+                            titre="Puiser dans ses réserves"
+                            disponibles={disponiblesPerso}
+                            choixDuJoueur={{}}
+                            onChoisir={() => { /* un seul stock par réserve */ }}
+                            onEngager={(id, points) => setEngagesPerso(e => ({ ...e, [id]: points }))}
+                            resteDe={(_id, champ) => Math.max(0, niveauDuGroupe(valeurs, champ))}
+                        />
+                    )}
+
+                    {apports.length > 0 && ficheDeGroupe && (
+                        <ApportsDuGroupe
+                            titre={`Puiser dans la ${ficheDeGroupe.libelle}`}
+                            disponibles={disponibles}
+                            choixDuJoueur={choixDesApports}
+                            onChoisir={(id, champ) => {
+                                setChoixDesApports(c => ({ ...c, [id]: champ }));
+                                setEngages(e => ({ ...e, [id]: 0 }));
+                            }}
+                            onEngager={(id, points) => setEngages(e => ({ ...e, [id]: points }))}
+                            resteDe={resteDe}
+                        />
+                    )}
+
+                    {regleJetAlien && <PreparationAlien reglages={reglagesAlien} changer={setReglagesAlien} equipements={equipements} tir={tirAlien} />}
+                    {combatAlien && equipementAlien?.proprietes?.munitions && <MunitionsAlien arme={equipementAlien} suivi={etatCombatAlien}
+                        rapide={String(valeursAlien[combatAlien.talents] ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes('rechargement rapide')}
+                        agir={(action,nombre,vide) => {
+                            const s = lireLeCombatAlien({ ...valeursAlien, ...(refAlien.current.base === valeurs ? refAlien.current.maj : {}) });
+                            const id = equipementAlien.id, a = s.armes[id];
+                            if (action === 'recharger') { const apres = rechargerUneArme(s,id); if (apres !== s) { ecrireAlien({ [CLE_COMBAT_ALIEN]: apres }); redire('Rechargement', { total: 0, modifier: 0, rolls: [], totalDisplay: `${equipementAlien.nom} rechargée : un chargeur complet consommé ; action ${String(valeursAlien[combatAlien.talents] ?? '').toLowerCase().includes('rechargement rapide') ? 'rapide' : 'lente'}.` }); } }
+                            else if (action === 'reserve' && a) ecrireAlien({ [CLE_COMBAT_ALIEN]: { ...s, armes: { ...s.armes, [id]: { ...a, chargeurs: nombre } } } });
+                            else if (action === 'initialiser' && !a) ecrireAlien({ [CLE_COMBAT_ALIEN]: { ...s, armes: { ...s.armes, [id]: { vide, chargeurs: nombre } } } });
+                        }} />}
+
+                    {/*
+                        Pas de champ pour ce que le jeu ne fixe pas : un sélecteur de
+                        difficulté sur un jeu qui n'en a pas invite à en inventer une.
+
+                        **Et pas non plus quand une cible est calculée.** Le
+                        commentaire de l'ajustement, plus haut, affirmait que « deux
+                        réglages nommés difficulté côte à côte » étaient le piège
+                        « que ce chantier a défait ». Il ne l'était pas : les deux
+                        gardes sont indépendants, et rien n'empêchait un pilote de
+                        déclarer `cible` **et** `difficulte`. Le pilote de Rêves de
+                        Dragons le faisait, et les deux s'affichaient — vu sur une
+                        capture de David le 2026-08-23.
+
+                        *L'exclusivité doit être écrite, pas supposée.* Ici la cible
+                        l'emporte, comme partout ailleurs.
+                    */}
+                    {/*
+                        **La spécialisation** (Star Trek) : cochée, chaque dé égal ou
+                        inférieur à la composante nommée vaut deux réussites. La borne
+                        se dit à côté, pour qu'on voie ce qu'elle change.
+                    */}
+                    {descripteur.specialisation && (
+                        <label className="flex items-center gap-2" title="Chaque dé inférieur ou égal à cette valeur vaut deux réussites">
+                            <input
+                                type="checkbox"
+                                checked={specialisation}
+                                onChange={e => setSpecialisation(e.target.checked)}
+                                className="accent-current"
+                            />
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
+                                {descripteur.specialisation.label}
+                                {specialisation && jet.doubleSous > (descripteur.critique ?? 0) && ` (critique ≤ ${jet.doubleSous})`}
+                            </span>
+                        </label>
+                    )}
+
+                    {descripteur.difficulte && !descripteur.cible && (
+                        <label className="flex items-center gap-2">
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Difficulté</span>
+                            <input
+                                type="number"
+                                min={descripteur.difficulte.min}
+                                max={descripteur.difficulte.max}
+                                value={difficulte}
+                                onChange={e => setDifficulte(Number(e.target.value))}
+                                className="w-14 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-xs font-mono font-bold focus:outline-none focus:border-accent/50"
+                            />
+                        </label>
+                    )}
+                </Etape>
+            )}
+
+            <Etape numero={numeros.lancer} titre="Lancer les dés">
+                {briseAlien && <p className="text-xs text-etat-danger">{synthetiqueAlien ? 'Arrêt du système : aucun test ordinaire ; réactivation et réparation par Comtech.' : `${etatCombatAlien.mort ? 'Mort' : 'Brisé'} : aucun test de compétence ordinaire. Les premiers soins et le Trépas ont leurs gestes séparés.`}</p>}
+                <div className="flex flex-wrap items-center gap-4">
+                    {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système. */}
+                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien ? 'hidden' : ''}`}>
+                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
+                        <button
+                            onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
+                            className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
+                        ><Minus size={12} /></button>
+                        <span className="font-mono text-sm font-black w-6 text-center">{jet.nombreDeDes}</span>
+                        <button
+                            /* Le plafond se compte à partir de la réserve RÉELLE du
+                               personnage, composantes comprises — sinon un joueur
+                               d'Alien à cinq dés pourrait en acheter dix de plus. */
+                            onClick={() => setDesAchetes(d => Math.min(
+                                (descripteur.reserve?.max ?? 0)
+                                    - (descripteur.reserve?.base ?? 0)
+                                    - jet.composantesDeLaReserve.reduce((s, c) => s + c.valeur, 0),
+                                d + 1,
+                            ))}
+                            className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
+                        ><Plus size={12} /></button>
+                    </div>
+
+                    {/*
+                        Le prix des dés achetés, ventilé. « 3 — 2 d'Impulsion,
+                        1 de Menace » : ce qui part chez le meneur se voit avant
+                        le lancer, pas après.
+                    */}
+                    {ventilation && (
+                        <span
+                            className="flex items-center gap-1.5 text-ui-10 font-bold text-etat-alerte/80"
+                            title="Coût des dés supplémentaires"
+                        >
+                            <Coins size={11} />
+                            {ventilation.surLaReserve > 0 && (
+                                <span>{ventilation.surLaReserve} {nomDe(jet.cout.ressource)}</span>
+                            )}
+                            {ventilation.reporte > 0 && (
+                                <span className="text-etat-danger/80">
+                                    {ventilation.surLaReserve > 0 && '+ '}
+                                    {ventilation.reporte} {nomDe(ventilation.ressourceDeReport)}
                                 </span>
                             )}
                         </span>
-                    ) : jet.composantes.length > 0 && (
-                        <span className="text-app-text/30 font-mono">
-                            = {jet.composantes.map(c => `${c.valeur}`).join(' + ')}
-                            <span className="ml-1 opacity-60">({jet.composantes.map(c => c.champ).join(' + ')})</span>
-                        </span>
                     )}
-                </div>
-            )}
 
-            {/*
-                L'ajustement de difficulté, quand la cible se calcule. Il ne
-                s'affiche que là : sur un jeu qui compte des réussites, il n'a
-                aucun sens, et deux réglages nommés « difficulté » côte à côte
-                seraient exactement le piège que ce chantier a défait.
-            */}
-            {descripteur.cible && (
-                <div className="flex items-center gap-2 text-xs">
-                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">
-                        Difficulté
-                    </span>
-                    <input
-                        type="range"
-                        min={-10}
-                        max={7}
-                        value={ajustementDeDifficulte}
-                        onChange={e => setAjustementDeDifficulte(Number(e.target.value))}
-                        className="flex-1 accent-accent"
-                    />
-                    <span className="font-mono font-black text-accent w-8 text-right">
-                        {ajustementDeDifficulte > 0 ? `+${ajustementDeDifficulte}` : ajustementDeDifficulte}
-                    </span>
-                </div>
-            )}
+                    {/*
+                        **Avantage / Désavantage — la règle de Dice OS, à l'identique.**
 
-            {/*
-                Ce que le calcul a dû supposer — hors de la table du livre, borné
-                à son dernier palier — s'affiche **avec les remarques du pilote**,
-                plus bas, et pas ici : le panneau en a déjà un endroit, et deux
-                listes de la même chose finissent par diverger.
-            */}
+                        Deux dés, on garde le meilleur ou le moins bon. Le sélecteur
+                        ne paraît que là où un seul dé tranche : sur une réserve, il
+                        n'y a pas de meilleur dé, et l'offrir inviterait à inventer
+                        une règle que le jeu n'a pas.
 
-            {/*
-                **La poignée échelonnée se montre dé par dé.**
-
-                Un nombre seul — « 2 dés » — ne dirait rien ici : deux D6 et deux
-                D12 ne sont pas le même jet, et c'est la fiche qui décide. Le
-                joueur doit voir « Attribut D10 + Compétence D6 » pour reconnaître
-                son personnage dans ce qu'il lance.
-            */}
-            {jet.desEchelonnes.length > 0 && (
-                <div className="flex items-baseline gap-2 text-xs flex-wrap">
-                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">Dés</span>
-                    {jet.desEchelonnes.map((d, i) => (
-                        <span key={`${d.champ}-${i}`} className="font-mono">
-                            {i > 0 && <span className="text-app-text/30 mr-2">+</span>}
-                            <span className="text-lg font-black text-accent">D{d.faces}</span>
-                            <span className="text-app-text/30 ml-1">({d.label})</span>
-                        </span>
-                    ))}
-                </div>
-            )}
-
-            {/* La seconde poule, nommée par le jeu. Elle se montre à part parce
-                qu'elle se compte à part : chez Alien, un 1 sur un dé de stress
-                déclenche la Panique, ce qu'un dé de base ne fait jamais. */}
-            {jet.desSecondaires > 0 && (
-                <div className="flex items-baseline gap-2 text-xs">
-                    <span className="text-etat-alerte/60 font-bold uppercase tracking-widest text-ui-9">
-                        {descripteur.reserve?.secondaire?.label ?? 'Seconde réserve'}
-                    </span>
-                    <span className="font-mono text-lg font-black text-etat-alerte">{jet.desSecondaires}</span>
-                    {jet.composantesDeLaSecondeReserve.length > 0 && (
-                        <span className="text-app-text/30 font-mono">
-                            ({jet.composantesDeLaSecondeReserve.map(c => c.champ).join(' + ')})
-                        </span>
-                    )}
-                </div>
-            )}
-
-            {/* La réserve, décomposée pour la même raison : un joueur d'Alien
-                doit voir que ses cinq dés sont « Force 4 + Pilotage 1 », et non
-                un nombre tombé du ciel. */}
-            {jet.composantesDeLaReserve.length > 0 && (
-                <div className="flex items-baseline gap-2 text-xs">
-                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">{destin ? 'Domaine' : 'Réserve'}</span>
-                    <span className="font-mono text-lg font-black text-accent">{jet.nombreDeDes}</span>
-                    {regleJetAlien ? <span className="text-app-text/50">dés de base + {jet.desSecondaires} dés de Stress, après modificateurs</span> : <span className="text-app-text/30 font-mono">
-                        = {[
-                            ...(descripteur.reserve?.base ? [`${descripteur.reserve.base}`] : []),
-                            ...jet.composantesDeLaReserve.map(c => `${c.valeur}`),
-                            ...(jet.desAchetes > 0 ? [`${jet.desAchetes}`] : []),
-                        ].join(' + ')}
-                        <span className="ml-1 opacity-60">
-                            ({[
-                                ...(descripteur.reserve?.base ? ['base'] : []),
-                                ...jet.composantesDeLaReserve.map(c => c.champ),
-                                ...(jet.desAchetes > 0 ? ['achetés'] : []),
-                            ].join(' + ')})
-                        </span>
-                    </span>}
-                </div>
-            )}
-
-            {/*
-                **Les malus de péril, dits avant de lancer.** Ils retirent au
-                Domaine (donc aux dés de destin) et au Talent ; on nomme les états
-                qui les causent, pour que le joueur sache d'où vient le moins.
-            */}
-            {torg && (
-                <div className="flex flex-wrap items-center gap-3 text-xs">
-                    <label className="flex items-center gap-2">
-                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Échec critique sur</span>
-                        <select
-                            value={plageCritique}
-                            onChange={e => setPlageCritique(Number(e.target.value))}
-                            data-plage-critique
-                            title="Le livre l'étend selon le risque : rafale, axiomes, certains Atouts et pouvoirs"
-                            className="bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50"
-                        >
-                            <option value={1}>1</option>
-                            <option value={2}>1 – 2</option>
-                            <option value={3}>1 – 3</option>
-                            <option value={4}>1 – 4</option>
-                        </select>
-                    </label>
-                    <label className="flex items-center gap-2" title="Livre p. 122 : −2 par cible supplémentaire ; toutes les cibles touchées subissent les dommages">
-                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Cibles</span>
-                        <select
-                            value={cibles}
-                            onChange={e => setCibles(Number(e.target.value))}
-                            data-cibles-multiples
-                            className="bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50"
-                        >
-                            {[1, 2, 3, 4, 5, 6].map(n => <option key={n} value={n}>{n}{n > 1 ? ` (−${malusDesCiblesMultiples(n)})` : ''}</option>)}
-                        </select>
-                    </label>
-                    {malusTorg > 0 && (
-                        <span className="text-etat-alerte/80" data-malus-de-torg>
-                            Malus : −{malusTorg} au total d'action — {raisonsDuMalusTorg}
-                        </span>
-                    )}
-                    {unDePlusDeLaCarte && (
-                        <span className="text-etat-succes/80" data-un-de-plus-de-la-carte>
-                            La carte d’Action accorde « Un de plus ! » aux Héros ce round.
-                        </span>
-                    )}
-                    {!entraine && <span className="text-app-text/40 italic">Sans compétence : seul le 10 explose, pas le 20.</span>}
-                    {champMagique && descripteur.torg?.choc && ecrireSurLaFiche && (
-                        <label className="flex items-center gap-2" data-loi-de-la-magie
-                            title={`${loiMagie?.nom ?? 'Loi de la Magie'} : +1 par point de Choc, jusqu'aux rangs de la compétence (${rangsMagiques}). Annoncé avant le jet, il ne se récupère pas avant la fin du sort.`}>
-                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Choc volontaire</span>
-                            <input type="number" min={0} max={rangsMagiques} value={chocVolontaire}
-                                onChange={e => setChocVolontaire(Math.max(0, Math.min(rangsMagiques, Number(e.target.value) || 0)))}
-                                className="w-14 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-xs font-mono font-bold focus:outline-none focus:border-accent/50" />
-                            <span className="text-app-text/40">max {rangsMagiques}</span>
+                        Il reste affiché après le lancer, et c'est délibéré — un
+                        modificateur qui se remettrait seul à zéro se rejouerait sans
+                        qu'on le voie, et un qui persiste se lit à l'écran.
+                    */}
+                    {avantagePossible && (
+                        <label className="flex items-center gap-2">
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Tirage</span>
+                            <select
+                                value={modificateur}
+                                onChange={e => setModificateur(e.target.value as typeof modificateur)}
+                                title={jet.sens === 'sous-ou-egal'
+                                    ? 'Deux dés : l’Avantage garde le plus BAS, le Désavantage le plus haut'
+                                    : 'Deux dés : l’Avantage garde le plus HAUT, le Désavantage le plus bas'}
+                                className={`bg-app-bg/60 border rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50 ${
+                                    modificateur === 'avantage'
+                                        ? 'border-etat-succes/50 text-etat-succes'
+                                        : modificateur === 'desavantage'
+                                            ? 'border-etat-danger/50 text-etat-danger'
+                                            : 'border-app-border/40 text-app-text/60'
+                                }`}
+                            >
+                                <option value="aucun">Normal</option>
+                                <option value="avantage">Avantage</option>
+                                <option value="desavantage">Désavantage</option>
+                            </select>
                         </label>
                     )}
-                    {annulation && ecrireSurLaFiche && descripteur.torg?.possibilites && (
-                        <button
-                            type="button"
-                            disabled={possibilitesTorg <= 0}
-                            onClick={annuler}
-                            title="Une Possibilité, un test de Réalité contre ND 10 — avant que les dommages de l'attaque ne prennent effet"
-                            className="ml-auto px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30"
-                        >
-                            Annulation des dommages ({possibilitesTorg})
-                        </button>
-                    )}
-                </div>
-            )}
 
-            {destin && (malus.domaines > 0 || malus.talents > 0) && (
-                <p className="text-ui-11 text-etat-alerte/80">
-                    Malus : {malus.domaines > 0 && `−${malus.domaines} au Domaine`}
-                    {malus.domaines > 0 && malus.talents > 0 && ', '}
-                    {malus.talents > 0 && `−${malus.talents} au Talent`} — {malus.etats.join(', ')}
-                </p>
-            )}
-
-            {destin && (
-                <div data-destin className="flex flex-wrap items-center gap-2 text-xs">
-                    <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Provoquer le destin</span>
                     <button
-                        type="button"
-                        onClick={() => setDesDeDestin(Math.max(0, desLances - 1))}
-                        aria-label="Un dé de destin de moins"
-                        className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
-                    ><Minus size={12} /></button>
-                    <span className="font-mono text-sm font-black w-6 text-center">{desLances}</span>
-                    <button
-                        type="button"
-                        disabled={desLances >= plafondDuDestin}
-                        onClick={() => setDesDeDestin(Math.min(plafondDuDestin, desLances + 1))}
-                        aria-label="Un dé de destin de plus"
-                        className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors disabled:opacity-30"
-                    ><Plus size={12} /></button>
-                    <span className="text-app-text/40">
-                        sur {plafondDuDestin} — niveau {niveauDuDestin}
-                        {desLances === 0 && ' : sans dé, le Talent seul contre la difficulté'}
-                    </span>
-                </div>
-            )}
-
-            {disponiblesPerso.length > 0 && (
-                <ApportsDuGroupe
-                    titre="Puiser dans ses réserves"
-                    disponibles={disponiblesPerso}
-                    choixDuJoueur={{}}
-                    onChoisir={() => { /* un seul stock par réserve */ }}
-                    onEngager={(id, points) => setEngagesPerso(e => ({ ...e, [id]: points }))}
-                    resteDe={(_id, champ) => Math.max(0, niveauDuGroupe(valeurs, champ))}
-                />
-            )}
-
-            {apports.length > 0 && ficheDeGroupe && (
-                <ApportsDuGroupe
-                    titre={`Puiser dans la ${ficheDeGroupe.libelle}`}
-                    disponibles={disponibles}
-                    choixDuJoueur={choixDesApports}
-                    onChoisir={(id, champ) => {
-                        setChoixDesApports(c => ({ ...c, [id]: champ }));
-                        setEngages(e => ({ ...e, [id]: 0 }));
-                    }}
-                    onEngager={(id, points) => setEngages(e => ({ ...e, [id]: points }))}
-                    resteDe={resteDe}
-                />
-            )}
-
-            {regleJetAlien && <PreparationAlien reglages={reglagesAlien} changer={setReglagesAlien} equipements={equipements} tir={tirAlien} />}
-            {combatAlien && equipementAlien?.proprietes?.munitions && <MunitionsAlien arme={equipementAlien} suivi={etatCombatAlien}
-                rapide={String(valeursAlien[combatAlien.talents] ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes('rechargement rapide')}
-                agir={(action,nombre,vide) => {
-                    const s = lireLeCombatAlien({ ...valeursAlien, ...(refAlien.current.base === valeurs ? refAlien.current.maj : {}) });
-                    const id = equipementAlien.id, a = s.armes[id];
-                    if (action === 'recharger') { const apres = rechargerUneArme(s,id); if (apres !== s) { ecrireAlien({ [CLE_COMBAT_ALIEN]: apres }); redire('Rechargement', { total: 0, modifier: 0, rolls: [], totalDisplay: `${equipementAlien.nom} rechargée : un chargeur complet consommé ; action ${String(valeursAlien[combatAlien.talents] ?? '').toLowerCase().includes('rechargement rapide') ? 'rapide' : 'lente'}.` }); } }
-                    else if (action === 'reserve' && a) ecrireAlien({ [CLE_COMBAT_ALIEN]: { ...s, armes: { ...s.armes, [id]: { ...a, chargeurs: nombre } } } });
-                    else if (action === 'initialiser' && !a) ecrireAlien({ [CLE_COMBAT_ALIEN]: { ...s, armes: { ...s.armes, [id]: { vide, chargeurs: nombre } } } });
-                }} />}
-            {briseAlien && <p className="text-xs text-etat-danger">{synthetiqueAlien ? 'Arrêt du système : aucun test ordinaire ; réactivation et réparation par Comtech.' : `${etatCombatAlien.mort ? 'Mort' : 'Brisé'} : aucun test de compétence ordinaire. Les premiers soins et le Trépas ont leurs gestes séparés.`}</p>}
-            <div className="flex items-center gap-6">
-                {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système. */}
-                <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien ? 'hidden' : ''}`}>
-                    <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
-                    <button
-                        onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
-                        className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
-                    ><Minus size={12} /></button>
-                    <span className="font-mono text-sm font-black w-6 text-center">{jet.nombreDeDes}</span>
-                    <button
-                        /* Le plafond se compte à partir de la réserve RÉELLE du
-                           personnage, composantes comprises — sinon un joueur
-                           d'Alien à cinq dés pourrait en acheter dix de plus. */
-                        onClick={() => setDesAchetes(d => Math.min(
-                            (descripteur.reserve?.max ?? 0)
-                                - (descripteur.reserve?.base ?? 0)
-                                - jet.composantesDeLaReserve.reduce((s, c) => s + c.valeur, 0),
-                            d + 1,
-                        ))}
-                        className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
-                    ><Plus size={12} /></button>
-                </div>
-
-                {/*
-                    Le prix des dés achetés, ventilé. « 3 — 2 d'Impulsion,
-                    1 de Menace » : ce qui part chez le meneur se voit avant
-                    le lancer, pas après.
-                */}
-                {ventilation && (
-                    <span
-                        className="flex items-center gap-1.5 text-ui-10 font-bold text-etat-alerte/80"
-                        title="Coût des dés supplémentaires"
+                        onClick={lancer}
+                        disabled={!pret || briseAlien}
+                        className={`ml-auto w-full sm:w-auto min-h-[44px] px-10 py-3 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all ${
+                            pret
+                                ? 'bg-accent text-app-on-accent hover:scale-105 active:scale-95'
+                                : 'bg-app-text/5 text-app-text/20 cursor-not-allowed'
+                        }`}
                     >
-                        <Coins size={11} />
-                        {ventilation.surLaReserve > 0 && (
-                            <span>{ventilation.surLaReserve} {nomDe(jet.cout.ressource)}</span>
-                        )}
-                        {ventilation.reporte > 0 && (
-                            <span className="text-etat-danger/80">
-                                {ventilation.surLaReserve > 0 && '+ '}
-                                {ventilation.reporte} {nomDe(ventilation.ressourceDeReport)}
-                            </span>
-                        )}
-                    </span>
-                )}
-
-                {/*
-                    **Avantage / Désavantage — la règle de Dice OS, à l'identique.**
-
-                    Deux dés, on garde le meilleur ou le moins bon. Le sélecteur
-                    ne paraît que là où un seul dé tranche : sur une réserve, il
-                    n'y a pas de meilleur dé, et l'offrir inviterait à inventer
-                    une règle que le jeu n'a pas.
-
-                    Il reste affiché après le lancer, et c'est délibéré — un
-                    modificateur qui se remettrait seul à zéro se rejouerait sans
-                    qu'on le voie, et un qui persiste se lit à l'écran.
-                */}
-                {avantagePossible && (
-                    <label className="flex items-center gap-2">
-                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Tirage</span>
-                        <select
-                            value={modificateur}
-                            onChange={e => setModificateur(e.target.value as typeof modificateur)}
-                            title={jet.sens === 'sous-ou-egal'
-                                ? 'Deux dés : l’Avantage garde le plus BAS, le Désavantage le plus haut'
-                                : 'Deux dés : l’Avantage garde le plus HAUT, le Désavantage le plus bas'}
-                            className={`bg-app-bg/60 border rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50 ${
-                                modificateur === 'avantage'
-                                    ? 'border-etat-succes/50 text-etat-succes'
-                                    : modificateur === 'desavantage'
-                                        ? 'border-etat-danger/50 text-etat-danger'
-                                        : 'border-app-border/40 text-app-text/60'
-                            }`}
-                        >
-                            <option value="aucun">Normal</option>
-                            <option value="avantage">Avantage</option>
-                            <option value="desavantage">Désavantage</option>
-                        </select>
-                    </label>
-                )}
-
-                {/*
-                    Pas de champ pour ce que le jeu ne fixe pas : un sélecteur de
-                    difficulté sur un jeu qui n'en a pas invite à en inventer une.
-
-                    **Et pas non plus quand une cible est calculée.** Le
-                    commentaire de l'ajustement, plus haut, affirmait que « deux
-                    réglages nommés difficulté côte à côte » étaient le piège
-                    « que ce chantier a défait ». Il ne l'était pas : les deux
-                    gardes sont indépendants, et rien n'empêchait un pilote de
-                    déclarer `cible` **et** `difficulte`. Le pilote de Rêves de
-                    Dragons le faisait, et les deux s'affichaient — vu sur une
-                    capture de David le 2026-08-23.
-
-                    *L'exclusivité doit être écrite, pas supposée.* Ici la cible
-                    l'emporte, comme partout ailleurs.
-                */}
-                {/*
-                    **La spécialisation** (Star Trek) : cochée, chaque dé égal ou
-                    inférieur à la composante nommée vaut deux réussites. La borne
-                    se dit à côté, pour qu'on voie ce qu'elle change.
-                */}
-                {descripteur.specialisation && (
-                    <label className="flex items-center gap-2" title="Chaque dé inférieur ou égal à cette valeur vaut deux réussites">
-                        <input
-                            type="checkbox"
-                            checked={specialisation}
-                            onChange={e => setSpecialisation(e.target.checked)}
-                            className="accent-current"
-                        />
-                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
-                            {descripteur.specialisation.label}
-                            {specialisation && jet.doubleSous > (descripteur.critique ?? 0) && ` (critique ≤ ${jet.doubleSous})`}
-                        </span>
-                    </label>
-                )}
-
-                {descripteur.difficulte && !descripteur.cible && (
-                    <label className="flex items-center gap-2">
-                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Difficulté</span>
-                        <input
-                            type="number"
-                            min={descripteur.difficulte.min}
-                            max={descripteur.difficulte.max}
-                            value={difficulte}
-                            onChange={e => setDifficulte(Number(e.target.value))}
-                            className="w-14 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-xs font-mono font-bold focus:outline-none focus:border-accent/50"
-                        />
-                    </label>
-                )}
-
-                <button
-                    onClick={lancer}
-                    disabled={!pret || briseAlien}
-                    className={`ml-auto px-6 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
-                        pret
-                            ? 'bg-accent text-app-on-accent hover:scale-105 active:scale-95'
-                            : 'bg-app-text/5 text-app-text/20 cursor-not-allowed'
-                    }`}
-                >
-                    Lancer
-                </button>
-            </div>
-
-            {/*
-                Ce qui manque se dit. Un champ absent de la fiche est une erreur
-                de configuration du pilote, et le joueur doit savoir pourquoi le
-                bouton refuse plutôt que de le voir grisé sans explication.
-            */}
-            {jet.avertissements.length > 0 && (
-                <ul className="space-y-1">
-                    {jet.avertissements.map((a, i) => (
-                        <li key={i} className="flex items-start gap-2 text-ui-11 text-etat-alerte/70">
-                            <AlertTriangle size={12} className="mt-0.5 shrink-0" /> {a}
-                        </li>
-                    ))}
-                </ul>
-            )}
-
-            {/*
-                Ce qui s'est raccordé malgré une dérive du pilote. Plus discret
-                que les avertissements — le jet est juste et part —, mais dit :
-                un défaut silencieux finit toujours par coûter plus cher qu'une
-                ligne de texte.
-            */}
-            {jet.remarques.length > 0 && (
-                <ul className="space-y-1">
-                    {jet.remarques.map((r, i) => (
-                        <li key={i} className="flex items-start gap-2 text-ui-10 text-app-text/35">
-                            <Info size={11} className="mt-0.5 shrink-0" /> {r}
-                        </li>
-                    ))}
-                </ul>
-            )}
-
-            {/*
-                **Compléter le test de Torg.** Chaque geste ne sert qu'une fois ; la
-                relance favorisée seulement avant les autres ; rien après un échec
-                critique — « aucune Possibilité ne peut modifier ce jet ».
-            */}
-            {torg && testDeTorg && resultat && !torgCritique && (
-                <div data-gestes-de-torg className="flex flex-wrap items-center gap-2">
-                    {!testDeTorg.des.relance && !testDeTorg.des.possibilite && !testDeTorg.des.unDePlus && (
-                        <button type="button" onClick={() => completerTorg('relance')}
-                            className="px-3 py-1 rounded-lg border border-app-border/40 text-ui-10 font-bold hover:border-accent/40 transition-colors">
-                            Relancer (compétence favorisée)
-                        </button>
-                    )}
-                    {!testDeTorg.des.possibilite && ecrireSurLaFiche && descripteur.torg?.possibilites && (
-                        <button type="button" disabled={possibilitesRestantes <= 0} onClick={() => completerTorg('possibilite')}
-                            className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30">
-                            Dépenser une Possibilité ({possibilitesRestantes})
-                        </button>
-                    )}
-                    {loiAction && testDeTorg.des.possibilite && !testDeTorg.des.possibiliteDeLAction && ecrireSurLaFiche && descripteur.torg?.possibilites && (
-                        <button type="button" disabled={possibilitesRestantes <= 0} onClick={() => completerTorg('action')}
-                            title={loiAction.texte}
-                            className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30">
-                            {loiAction.nom} : seconde Possibilité ({possibilitesRestantes})
-                        </button>
-                    )}
-                    {!testDeTorg.des.unDePlus && (
-                        <button type="button" onClick={() => completerTorg('unDePlus')}
-                            className={`px-3 py-1 rounded-lg border text-ui-10 font-bold hover:border-accent/40 transition-colors ${
-                                unDePlusDeLaCarte ? 'border-etat-succes/60 bg-etat-succes/10 text-etat-succes' : 'border-app-border/40'}`}>
-                            Un de plus !
-                        </button>
-                    )}
-                </div>
-            )}
-
-            {/*
-                **Forcer le jet, jouer la Panique** (Year Zero). Le bouton se grise
-                avec sa raison — une Panique, un forçage déjà fait, un androïde —,
-                jamais en silence.
-            */}
-            {/* **La Fortune** (Cthulhu Hack) : sous un jet raté, placer un jeton pour relancer, deux pour réussir. */}
-            {fortuneOfferte && fortune && (
-                <div data-fortune className="flex flex-wrap items-center gap-2">
-                    <span className="text-ui-10 text-app-text/50">{fortune.label ?? 'Fortune'} : {jetonsDeFortune} / {fortune.max}</span>
-                    <button type="button" onClick={() => placerLaFortune('relance')} disabled={jetonsDeFortune + fortune.relance > fortune.max}
-                        className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
-                        Relancer (+{fortune.relance} {fortune.label ?? 'Fortune'})
-                    </button>
-                    <button type="button" onClick={() => placerLaFortune('reussite')} disabled={jetonsDeFortune + fortune.reussite > fortune.max}
-                        className="px-3 py-1 rounded-lg border border-etat-succes/50 bg-etat-succes/10 text-etat-succes text-ui-10 font-bold hover:bg-etat-succes/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
-                        Réussir (+{fortune.reussite} {fortune.label ?? 'Fortune'})
+                        Lancer
                     </button>
                 </div>
-            )}
-
-            {resultat && dernierLancer && (regleDuForcage || paniqueDeclenchee || reussiteDepensee) && (
-                <div data-gestes-year-zero className="space-y-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                        {regleDuForcage && (
-                            <button type="button" onClick={forcer} disabled={!!raisonDeNePasForcer}
-                                className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
-                                Forcer le jet{forcage.fois > 0 ? ` (${forcage.fois + 1}e fois)` : ''}
-                            </button>
-                        )}
-                        {reussiteDepensee && compteDeReussites && (
-                            <button type="button" onClick={depenserUneReussite} disabled={briseAlien || pointsDisponibles <= 0 || paniqueEnAttente || actionAnnulee || (regleJetAlien && (suiviJetAlien?.eclats.length ?? 0) > 0)}
-                                className="px-3 py-1 rounded-lg border border-etat-succes/50 bg-etat-succes/10 text-etat-succes text-ui-10 font-bold hover:bg-etat-succes/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
-                                Dépenser un {reussiteDepensee.label} ({pointsDisponibles})
-                            </button>
-                        )}
-                        {paniqueDeclenchee && !paniqueJouee && (
-                            <button type="button" onClick={jouerLaPanique}
-                                className="px-3 py-1 rounded-lg border border-etat-alerte/60 bg-etat-alerte/10 text-etat-alerte text-ui-10 font-bold hover:bg-etat-alerte/20 transition-colors">
-                                Test de {libelleDuUn ?? 'Panique'}
-                            </button>
-                        )}
-                        {paniqueEnAttente && suitesAlien?.talents && String(valeursAlien[suitesAlien.talents] ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes('folie meurtriere') && (
-                            <label className="text-xs flex gap-2"><input type="checkbox" checked={folieMeurtriere} onChange={e => setFolieMeurtriere(e.target.checked)} />Ennemis en vue : Folie meurtrière remplace 11+</label>
-                        )}
-                        {(paniqueEnAttente || actionAnnulee) && <p className="text-etat-alerte">
-                            {paniqueEnAttente ? 'Résultat provisoire : résoudre la Panique avant les effets du test.' : 'Action annulée : les réussites et le Point de Récit ne contournent pas la Panique.'}
-                        </p>}
-                    </div>
-                    {/*
-                      **Relancer malgré une réussite** (Blade Runner, « Forcer un jet ») : un D10
-                      ou un D12 qui n'en montre qu'une peut viser deux — ou la perdre.
-                    */}
-                    {regleDuForcage?.relancerUneReussite && !raisonDeNePasForcer && resultat.rolls.some(relancableMalgreSaReussite) && (
-                        <div data-relancer-aussi className="flex flex-wrap items-center gap-2 text-ui-10 text-app-text/60">
-                            <span>Relancer aussi, au risque de perdre la réussite :</span>
-                            {resultat.rolls.map((d, i) => relancableMalgreSaReussite(d) && (
-                                <label key={i} className="flex items-center gap-1 rounded-md border border-app-border/40 px-2 py-0.5">
-                                    <input
-                                        type="checkbox"
-                                        checked={aRelancerAussi.includes(i)}
-                                        onChange={e => setARelancerAussi(a => e.target.checked ? [...a, i] : a.filter(x => x !== i))}
-                                    />
-                                    D{d.sides} ({d.val})
-                                </label>
-                            ))}
-                        </div>
-                    )}
-                    {regleDuForcage && raisonDeNePasForcer && (
-                        <p className="flex items-start gap-2 text-ui-10 text-app-text/40">
-                            <Info size={11} className="mt-0.5 shrink-0" /> {raisonDeNePasForcer}
-                        </p>
-                    )}
-                    {brises.map(b => {
-                        const effet = effetsDuBrise[b.champ];
-                        return (
-                            <div key={b.champ} data-brise={b.champ} className="space-y-1 rounded-lg border border-etat-danger/40 bg-etat-danger/10 p-2">
-                                <p className="text-ui-11 font-black uppercase tracking-widest text-etat-danger">{b.label}</p>
-                                <p className="text-ui-11 text-app-text/70">{b.rappel}</p>
-                                {b.de && !effet && (
-                                    <button type="button" onClick={() => jouerLeBrise(b)}
-                                        className="px-3 py-1 rounded-lg border border-etat-danger/60 text-etat-danger text-ui-10 font-bold hover:bg-etat-danger/20 transition-colors">
-                                        Lancer l’effet critique ({nomDuChamp(b.de)})
-                                    </button>
-                                )}
-                                {effet && (
-                                    <div className="text-ui-11">
-                                        <p className="font-bold text-etat-danger">
-                                            D{effet.faces} = {effet.de}{effet.entree ? ` — ${effet.entree.title}` : ''}
-                                        </p>
-                                        {effet.entree?.effect && <p className="text-app-text/80">{effet.entree.effect}</p>}
-                                        {!effet.entree && b.table && (
-                                            <p className="text-app-text/50">{pourLesJoueurs ? 'Le meneur lit la ligne dans la table.' : 'Cherchez ce résultat dans la table du jeu.'}</p>
-                                        )}
-                                        {effet.perte && <p className="font-bold text-etat-danger">{effet.perte}</p>}
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
+            </Etape>
 
             {resultat && (
-                <div className="rounded-xl border border-app-border/30 bg-app-bg/40 p-3 space-y-2">
-                    <div className="flex flex-wrap gap-1.5">
+                <Etape numero={numeros.resultat} titre="Résultat" droite={verdictDuResultat}>
+                    <div className="flex flex-wrap gap-2">
                         {resultat.rolls.map((d, i) => {
                             const val = typeof d.val === 'number' ? d.val : 0;
                             /*
@@ -1948,6 +1849,20 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             const seconde = d.source === 'gear';
                             const declenche = seconde && d.isCritMin;
                             const nomDuUn = descripteur.reserve?.secondaire?.libelleDuUn ?? 'Fléau';
+                            /*
+                              **Le nom sous le dé** (maquette du 2026-10-22) : on lit un dé sans
+                              dépendre de sa couleur. Seulement ce que le code sait : « Succès »
+                              n'est écrit que sur une réserve de dés égaux sans seuil (Year Zero),
+                              où le succès est la face maximale ; ailleurs, un 7 réussi sur un D10
+                              resterait sans nom à côté d'un 10 nommé.
+                            */
+                            const mention = ecarte ? 'Écarté'
+                                : declenche ? nomDuUn
+                                : seconde ? descripteur.reserve?.secondaire?.label
+                                : critique ? 'Critique'
+                                : complique ? 'Complication'
+                                : d.isCritMax && compteDeReussites && !(descripteur.seuil ?? []).length && jet.desEchelonnes.length === 0 ? 'Succès'
+                                : undefined;
                             return (
                                 <span
                                     key={i}
@@ -1956,7 +1871,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                         : seconde ? descripteur.reserve?.secondaire?.label
                                         : critique ? 'Deux réussites'
                                         : complique ? 'Complication' : undefined}
-                                    className={`w-9 h-9 rounded-lg flex items-center justify-center font-mono text-sm font-black border ${
+                                    className={`min-w-11 h-12 px-1 rounded-lg flex flex-col items-center justify-center font-mono text-base font-black border ${
                                         ecarte
                                             ? 'bg-transparent border-dashed border-app-border/30 text-app-text/25 line-through'
                                         : declenche
@@ -1973,23 +1888,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                     }${d.relance ? ' ring-2 ring-accent/50' : ''}${d.cssClass === 'reussite-depensee' ? ' ring-2 ring-etat-succes/60' : ''}`}
                                 >
                                     {val}
+                                    {mention && <span className="font-sans text-ui-8 font-black uppercase tracking-wide leading-none">{mention}</span>}
                                 </span>
                             );
                         })}
                     </div>
 
-                    <div className="flex items-center gap-4 text-xs">
-                        {/*
-                            **Le septième lecteur, et il écrivait lui aussi son
-                            propre mot.** Le degré l'emporte quand le jeu en
-                            gradue ; sinon c'est le verdict du compte de
-                            réussites, qui reste l'autorité sur une réserve.
-                        */}
-                        {!paniqueEnAttente && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined))) && <EtiquetteDuDegre
-                            resultat={{ degre: resultat.degre, tagSuccess: v.reussi }}
-                            classes={reussi => 'font-black uppercase tracking-widest '
-                                + (reussi ? 'text-etat-succes' : 'text-etat-danger')}
-                        />}
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
                         {/* « difficulté 0 » ne voulait rien dire sur un jeu qui
                             n'en gradue aucune : il en faut une, et c'est ça
                             qu'on annonce. */}
@@ -2049,6 +1954,144 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             <span className="ml-auto text-app-text/25 font-mono text-ui-10">sous {seuilDuLancer}</span>
                         )}
                     </div>
+
+                    {/*
+                        **Compléter le test de Torg.** Chaque geste ne sert qu'une fois ; la
+                        relance favorisée seulement avant les autres ; rien après un échec
+                        critique — « aucune Possibilité ne peut modifier ce jet ».
+                    */}
+                    {torg && testDeTorg && resultat && !torgCritique && (
+                        <div data-gestes-de-torg className="flex flex-wrap items-center gap-2">
+                            {!testDeTorg.des.relance && !testDeTorg.des.possibilite && !testDeTorg.des.unDePlus && (
+                                <button type="button" onClick={() => completerTorg('relance')}
+                                    className="px-3 py-1 rounded-lg border border-app-border/40 text-ui-10 font-bold hover:border-accent/40 transition-colors">
+                                    Relancer (compétence favorisée)
+                                </button>
+                            )}
+                            {!testDeTorg.des.possibilite && ecrireSurLaFiche && descripteur.torg?.possibilites && (
+                                <button type="button" disabled={possibilitesRestantes <= 0} onClick={() => completerTorg('possibilite')}
+                                    className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30">
+                                    Dépenser une Possibilité ({possibilitesRestantes})
+                                </button>
+                            )}
+                            {loiAction && testDeTorg.des.possibilite && !testDeTorg.des.possibiliteDeLAction && ecrireSurLaFiche && descripteur.torg?.possibilites && (
+                                <button type="button" disabled={possibilitesRestantes <= 0} onClick={() => completerTorg('action')}
+                                    title={loiAction.texte}
+                                    className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30">
+                                    {loiAction.nom} : seconde Possibilité ({possibilitesRestantes})
+                                </button>
+                            )}
+                            {!testDeTorg.des.unDePlus && (
+                                <button type="button" onClick={() => completerTorg('unDePlus')}
+                                    className={`px-3 py-1 rounded-lg border text-ui-10 font-bold hover:border-accent/40 transition-colors ${
+                                        unDePlusDeLaCarte ? 'border-etat-succes/60 bg-etat-succes/10 text-etat-succes' : 'border-app-border/40'}`}>
+                                    Un de plus !
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {/*
+                        **Forcer le jet, jouer la Panique** (Year Zero). Le bouton se grise
+                        avec sa raison — une Panique, un forçage déjà fait, un androïde —,
+                        jamais en silence.
+                    */}
+                    {/* **La Fortune** (Cthulhu Hack) : sous un jet raté, placer un jeton pour relancer, deux pour réussir. */}
+                    {fortuneOfferte && fortune && (
+                        <div data-fortune className="flex flex-wrap items-center gap-2">
+                            <span className="text-ui-10 text-app-text/50">{fortune.label ?? 'Fortune'} : {jetonsDeFortune} / {fortune.max}</span>
+                            <button type="button" onClick={() => placerLaFortune('relance')} disabled={jetonsDeFortune + fortune.relance > fortune.max}
+                                className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                                Relancer (+{fortune.relance} {fortune.label ?? 'Fortune'})
+                            </button>
+                            <button type="button" onClick={() => placerLaFortune('reussite')} disabled={jetonsDeFortune + fortune.reussite > fortune.max}
+                                className="px-3 py-1 rounded-lg border border-etat-succes/50 bg-etat-succes/10 text-etat-succes text-ui-10 font-bold hover:bg-etat-succes/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                                Réussir (+{fortune.reussite} {fortune.label ?? 'Fortune'})
+                            </button>
+                        </div>
+                    )}
+
+                    {resultat && dernierLancer && (regleDuForcage || paniqueDeclenchee || reussiteDepensee) && (
+                        <div data-gestes-year-zero className="space-y-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                                {regleDuForcage && (
+                                    <button type="button" onClick={forcer} disabled={!!raisonDeNePasForcer}
+                                        className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                                        Forcer le jet{forcage.fois > 0 ? ` (${forcage.fois + 1}e fois)` : ''}
+                                    </button>
+                                )}
+                                {reussiteDepensee && compteDeReussites && (
+                                    <button type="button" onClick={depenserUneReussite} disabled={briseAlien || pointsDisponibles <= 0 || paniqueEnAttente || actionAnnulee || (regleJetAlien && (suiviJetAlien?.eclats.length ?? 0) > 0)}
+                                        className="px-3 py-1 rounded-lg border border-etat-succes/50 bg-etat-succes/10 text-etat-succes text-ui-10 font-bold hover:bg-etat-succes/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                                        Dépenser un {reussiteDepensee.label} ({pointsDisponibles})
+                                    </button>
+                                )}
+                                {paniqueDeclenchee && !paniqueJouee && (
+                                    <button type="button" onClick={jouerLaPanique}
+                                        className="px-3 py-1 rounded-lg border border-etat-alerte/60 bg-etat-alerte/10 text-etat-alerte text-ui-10 font-bold hover:bg-etat-alerte/20 transition-colors">
+                                        Test de {libelleDuUn ?? 'Panique'}
+                                    </button>
+                                )}
+                                {paniqueEnAttente && suitesAlien?.talents && String(valeursAlien[suitesAlien.talents] ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes('folie meurtriere') && (
+                                    <label className="text-xs flex gap-2"><input type="checkbox" checked={folieMeurtriere} onChange={e => setFolieMeurtriere(e.target.checked)} />Ennemis en vue : Folie meurtrière remplace 11+</label>
+                                )}
+                                {(paniqueEnAttente || actionAnnulee) && <p className="text-etat-alerte">
+                                    {paniqueEnAttente ? 'Résultat provisoire : résoudre la Panique avant les effets du test.' : 'Action annulée : les réussites et le Point de Récit ne contournent pas la Panique.'}
+                                </p>}
+                            </div>
+                            {/*
+                              **Relancer malgré une réussite** (Blade Runner, « Forcer un jet ») : un D10
+                              ou un D12 qui n'en montre qu'une peut viser deux — ou la perdre.
+                            */}
+                            {regleDuForcage?.relancerUneReussite && !raisonDeNePasForcer && resultat.rolls.some(relancableMalgreSaReussite) && (
+                                <div data-relancer-aussi className="flex flex-wrap items-center gap-2 text-ui-10 text-app-text/60">
+                                    <span>Relancer aussi, au risque de perdre la réussite :</span>
+                                    {resultat.rolls.map((d, i) => relancableMalgreSaReussite(d) && (
+                                        <label key={i} className="flex items-center gap-1 rounded-md border border-app-border/40 px-2 py-0.5">
+                                            <input
+                                                type="checkbox"
+                                                checked={aRelancerAussi.includes(i)}
+                                                onChange={e => setARelancerAussi(a => e.target.checked ? [...a, i] : a.filter(x => x !== i))}
+                                            />
+                                            D{d.sides} ({d.val})
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                            {regleDuForcage && raisonDeNePasForcer && (
+                                <p className="flex items-start gap-2 text-ui-10 text-app-text/40">
+                                    <Info size={11} className="mt-0.5 shrink-0" /> {raisonDeNePasForcer}
+                                </p>
+                            )}
+                            {brises.map(b => {
+                                const effet = effetsDuBrise[b.champ];
+                                return (
+                                    <div key={b.champ} data-brise={b.champ} className="space-y-1 rounded-lg border border-etat-danger/40 bg-etat-danger/10 p-2">
+                                        <p className="text-ui-11 font-black uppercase tracking-widest text-etat-danger">{b.label}</p>
+                                        <p className="text-ui-11 text-app-text/70">{b.rappel}</p>
+                                        {b.de && !effet && (
+                                            <button type="button" onClick={() => jouerLeBrise(b)}
+                                                className="px-3 py-1 rounded-lg border border-etat-danger/60 text-etat-danger text-ui-10 font-bold hover:bg-etat-danger/20 transition-colors">
+                                                Lancer l’effet critique ({nomDuChamp(b.de)})
+                                            </button>
+                                        )}
+                                        {effet && (
+                                            <div className="text-ui-11">
+                                                <p className="font-bold text-etat-danger">
+                                                    D{effet.faces} = {effet.de}{effet.entree ? ` — ${effet.entree.title}` : ''}
+                                                </p>
+                                                {effet.entree?.effect && <p className="text-app-text/80">{effet.entree.effect}</p>}
+                                                {!effet.entree && b.table && (
+                                                    <p className="text-app-text/50">{pourLesJoueurs ? 'Le meneur lit la ligne dans la table.' : 'Cherchez ce résultat dans la table du jeu.'}</p>
+                                                )}
+                                                {effet.perte && <p className="font-bold text-etat-danger">{effet.perte}</p>}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
 
                     {/*
                         Ce que le lancer a fait aux réserves de la table : un
@@ -2111,29 +2154,39 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             </div>
                         );
                     })}
-                </div>
+                </Etape>
             )}
 
-            {/* **Le stress subi** (Blade Runner) : au meneur, sous le jet — un geste à part, sans lancer le test. */}
-            {regleJetAlien && suiviJetAlien && ecrireSurLaFiche && <SuitesDuJetAlien jet={suiviJetAlien} ecrire={(suite, texte) => {
-                // Une ancienne fermeture de rendu ne doit pas dépenser deux fois le même budget.
-                const actuel = lireLeJetAlien({ ...valeursAlien, ...(refAlien.current.base === valeurs ? refAlien.current.maj : {}) });
-                if (!actuel || actuel.id !== suite.id || actuel.eclats.length !== suiviJetAlien.eclats.length) return;
-                dernierJetAlien.current = suite;
-                ecrireAlien({ [CLE_JET_ALIEN]: suite });
-                const res = resultatDuJetAlien(resultat ?? { total: 0, modifier: 0, rolls: [], totalDisplay: '' }, suite);
-                if (resultat) setResultat(res);
-                redire(`Alien — ${suite.nomCompetence}`, { ...res, totalDisplay: `${res.totalDisplay} — ${texte}` });
-            }} />}
+            {regleJetAlien && suiviJetAlien && ecrireSurLaFiche && (
+                <CarteDuJeu id="dernier-test-alien" titre={`Dernier test Alien — ${suiviJetAlien.nomCompetence}`}>
+                    <SuitesDuJetAlien jet={suiviJetAlien} ecrire={(suite, texte) => {
+                        // Une ancienne fermeture de rendu ne doit pas dépenser deux fois le même budget.
+                        const actuel = lireLeJetAlien({ ...valeursAlien, ...(refAlien.current.base === valeurs ? refAlien.current.maj : {}) });
+                        if (!actuel || actuel.id !== suite.id || actuel.eclats.length !== suiviJetAlien.eclats.length) return;
+                        dernierJetAlien.current = suite;
+                        ecrireAlien({ [CLE_JET_ALIEN]: suite });
+                        const res = resultatDuJetAlien(resultat ?? { total: 0, modifier: 0, rolls: [], totalDisplay: '' }, suite);
+                        if (resultat) setResultat(res);
+                        redire(`Alien — ${suite.nomCompetence}`, { ...res, totalDisplay: `${res.totalDisplay} — ${texte}` });
+                    }} />
+                </CarteDuJeu>
+            )}
             {combatAlien?.actions&&<ActionsAlien personnageId={personnageId} joueur={pourLesJoueurs}/>}
             {combatAlien?.progression&&ecrireSurLaFiche&&<ProgressionAlien regle={combatAlien} valeurs={valeursAlien} ecrire={ecrireAlien} personnageId={personnageId} campaignId={campaignId} joueur={pourLesJoueurs}/>}
-            {combatAlien && ecrireSurLaFiche && <SanteAlien regle={combatAlien} valeurs={valeursAlien} ecrire={ecrireAlien}
-                personnageId={personnageId} campaignId={campaignId} pourLesJoueurs={pourLesJoueurs} consigner={redire} />}
-            {suitesAlien && ecrireSurLaFiche && (
-                <PaniqueAlien regle={suitesAlien} champPanique={descripteur.panique?.champ}
-                    valeurs={valeursAlien} ecrire={ecrireAlien} personnageId={personnageId}
-                    campaignId={campaignId} pourLesJoueurs={pourLesJoueurs} consigner={redire} />
+            {combatAlien && ecrireSurLaFiche && (
+                <CarteDuJeu id="sante-alien" titre="Blessures et soins">
+                    <SanteAlien regle={combatAlien} valeurs={valeursAlien} ecrire={ecrireAlien}
+                        personnageId={personnageId} campaignId={campaignId} pourLesJoueurs={pourLesJoueurs} consigner={redire} />
+                </CarteDuJeu>
             )}
+            {suitesAlien && ecrireSurLaFiche && (
+                <CarteDuJeu id="panique-alien" titre="Stress et Panique">
+                    <PaniqueAlien regle={suitesAlien} champPanique={descripteur.panique?.champ}
+                        valeurs={valeursAlien} ecrire={ecrireAlien} personnageId={personnageId}
+                        campaignId={campaignId} pourLesJoueurs={pourLesJoueurs} consigner={redire} />
+                </CarteDuJeu>
+            )}
+            {/* **Le stress subi** (Blade Runner) : au meneur, sous le jet — un geste à part, sans lancer le test. */}
             {descripteur.stressSubi && ecrireSurLaFiche && !pourLesJoueurs && (
                 <StressSubi
                     regle={descripteur.stressSubi}

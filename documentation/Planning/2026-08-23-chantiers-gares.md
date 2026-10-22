@@ -11979,6 +11979,110 @@ raccord »* (Claude Code).
   règle relue (`fortune_piste`, `team_track`) ; les compteurs des compétences et des styles non
   plus. Manuel des jeux : pas encore de page `54-Jeu-Crimes`.
 
+### 146 · Import qui ne se refermait plus, campagne forgée invisible — 22/10/2026
+
+David, le 22/10 : *« je voudrais revoir deux trois "bugs" »* (Claude Code). Deux choix de
+conception qui gênaient à l'usage, pas des régressions accidentelles. Commité le 22/10.
+
+- **Fait — l'écran d'import ou d'export se referme de nouveau seul.** *« lorsque j'importe un
+  driver, l'écran ne se referme plus automatiquement comme avant »*. Le lot E6 (§ 78, chantier des
+  archives) gardait ouvert **tout** bilan jusqu'à « Fermer » ; or un import en a toujours un, au
+  moins la ligne de la sauvegarde préalable : la fermeture à 3 s ne jouait plus jamais. Désormais
+  le bilan se ferme seul après **8 s** (`DELAI_DE_LECTURE_DU_BILAN`), décompte sur le bouton, mis
+  en pause au survol. **Il reste ouvert jusqu'à « Fermer » s'il alerte** (`bilanQuiAlerte` : une
+  ligne ⚠️, « en échec », ou « Aucune sauvegarde préalable »). Une seule règle,
+  `bilanDeNexus.ts`, lue par `NexusHUD.tsx` pour les trois écrans appelants (`TemplateDashboard`, `CampaignLibrary`,
+  `CampaignDetails`) ; libellés `close_in` / `close_paused` (fr, en). Le bilan reste écrit au
+  journal (`consignerLeBilan`). Essais : `NexusHUD.test.tsx` (5).
+- **Fait — une campagne neuve apparaît dès sa première fiche publiée.** *« lorsque je la publie
+  elle n'apparaît pas dans mes campagnes, elle n'apparaît que lorsque j'ai fini de forger la
+  trame »*. Seule l'écriture de la Trame (`handleAppliquerLaCampagneForgee`) créait la campagne.
+  L'Atelier la crée maintenant à la première publication, avec son nom et le jeu choisi, et la
+  sélectionne (`AtelierDeCampagne.tsx`, `publier`). La Trame la trouve existante et ne remplit que
+  les champs vides. **Un homonyme à la casse près n'est pas doublé**, et l'Atelier ne bascule pas
+  dessus : son chemin déclaré pourrait désigner un autre corpus. `addCampaign` rend désormais
+  l'identifiant créé (`campaignSlice.ts`). Essais : `AtelierDeCampagne.test.tsx` (2).
+- Vérifications : `npx tsc -b` propre ; 546 essais au vert sur les dossiers touchés (archives,
+  Forge de campagne, magasin et crochets de session, langues, surcouches). Manuel :
+  `90-Nexus-OS-emporter-une-campagne.md` et `12-Forge-de-campagne.md`.
+- **Reste : l'essai de David à l'écran** — importer un pilote et voir le décompte ; publier une
+  première fiche d'une campagne neuve et la retrouver dans ses campagnes. David annonçait « deux
+  trois » défauts : le troisième n'est pas encore dit.
+
+### 147 · L'onglet « Lancer un test », fiche du meneur et tablette — 22/10/2026
+
+David, le 22/10 : *« dans les fiches de personnages, je voudrais déporter la section "Lancer un
+Test" dans un onglet séparé, car cela prend de plus en plus de place sur la fiche. Je voudrais en
+profiter pour que tu réimagines le design de cet onglet avec Stitch. Cela doit aussi se reporter
+sur les Tablettes Joueurs. »* (Claude Code).
+
+- **Ses quatre choix (22/10)** : l'onglet prend **tout ce qui lance** (le panneau de jet et ses
+  blocs de jeu ; sur tablette, les Sauvegardes de Cthulhu Hack ; pas les panneaux du voyageur de
+  Rêve de Dragon) ; **la fiche s'ouvre par défaut** ; Stitch redessine **le cadre et la partie
+  commune**, les blocs de jeu rangés en cartes repliables ; dessin sur **Alien et Nephilim**.
+- **Fait** : [les prompts](2026-10-22-prompts-stitch-onglet-test.md), écrits depuis le code —
+  écran 1 poste du meneur (Alien puis Nephilim), écran 2 tablette (téléphone puis iPad paysage),
+  décor fictif des captures du manuel.
+- **Fait le 22/10 — quatre propositions Stitch, par l'API** (accord de David : *« 2 tu as mon
+  accord »*) : Alien et Nephilim au poste du meneur, Alien sur téléphone et iPad paysage.
+  Inventions retirées par correctif ou à la main ; détail, identifiants et leçons en fin des
+  prompts. Galerie locale `Stitch/onglet-test/index.html`. Aucun code écrit. **Attendu de
+  David** : son choix, dont la place des onglets (sous la barre de la fiche en 1a, dans la barre
+  en 1b) et les mentions « Succès » / « Stress » sous les dés.
+- **Choix de David (22/10)** : *« tout me convient passe au code »* — onglets sous la barre de la
+  fiche (1a), mentions sous les dés gardées. GM-OS confirmé fermé.
+- **Fait le 22/10 — les onglets** : chez le meneur *Formulaire / Lancer un test / Fiche du jeu*
+  (`CharacterSheetEditor.tsx`, l'ancienne bascule supprimée) ; sur la tablette *Vue synthétique /
+  Lancer un test / Ma fiche / groupe* (`HubCharacterSheet.tsx`, les deux bascules remplacées ; les
+  Sauvegardes de Cthulhu Hack partent dans l'onglet, `lectureDesJetsDeLaFiche.ts`). Composant
+  commun `OngletsDeLaFiche.tsx` (rôles `tablist`/`tab`). Le panneau reste monté et masqué ; la
+  fiche s'ouvre sur son premier onglet, et y revient à chaque changement de personnage.
+- **Fait le 22/10 — la refonte de la partie commune** (`PanneauDeJet.tsx`, `EtapesDuJet.tsx`) :
+  étapes numérotées *Composer* (choix, calcul en une rangée, avertissements), *Préparer*
+  (seulement si le jeu y a quelque chose), *Lancer les dés* (pas « Lancer » : 52 essais
+  cherchaient le bouton par son texte), *Résultat* (verdict à droite du titre, dés nommés,
+  gestes après le compte). Blocs Alien en **cartes repliables** ouvertes par défaut, état
+  retenu par appareil (Dernier test, Blessures et soins, Stress et Panique) ; « Cinéma et
+  Campagne » et « Actions » étaient déjà repliables, laissés tels quels. **Aucun fichier Alien de
+  Codex modifié.** ⚠️ Écarts à la maquette : sur téléphone, « Préparer » reste ouvert (le résumé
+  d'une ligne est propre à Alien) ; le jet du Voyageur de RdD (`PanneauJetVoyageur.tsx`) garde
+  son ancien habillage.
+- **Vérifié** : `tsc -b` propre ; suite complète 8 612 essais verts ; e2e mis à jour pour
+  ouvrir l'onglet (`ongletDeLaFiche`, `lancerGmOs.ts`) — `capturesDesJeux` vert avec les pilotes
+  corrigés Alien A8 et Symbaroum (deux échecs intermédiaires dus au hasard des dés, puis vert),
+  `consolidationVoyageur` et `fatigueVoyageur` verts avec le pilote RdD relié (extrait de git dans
+  le dossier de session : les exports RdD ont disparu de la copie de travail) ; `santeVoyageur`
+  bloque dans le panneau de santé du formulaire, non concerné, avec ce pilote de remplacement —
+  **non conclu** ; deux autres essais RdD sautés faute de leur export.
+- **Fait le 22/10, après les exports de David** (*« j'ai fait tous les exports »*, GM-OS fermé) :
+  les dix pilotes à la racine d'`Export Dirvers/` (l'ancien Symbaroum retiré) ; son export de RdD
+  copié en `corriges/RDD_driver_gmos_r0-consolide.gmos-driver`, avec son accord. **Captures du
+  manuel refaites** : `capturesDesJeux` vert sur les dix jeux, **96 captures** mises à jour (la
+  scène du Ka dominant de Nephilim passe sur « Formulaire » avant sa prise). **Les sept essais
+  du Voyageur verts**, `santeVoyageur` compris : son blocage venait du pilote de remplacement.
+  Manuel 53, 54-Alien, 54-NOC mis à jour (texte).
+- **Fait le 22/10 — les mécaniques du Voyageur de RdD dans l'onglet du test.** David : *« pour la
+  fiche Rêve de Dragon, que tu déportes tous les éléments mécaniques vers lancer un test, comme
+  Fatigue et état général, stress, chance, astrologie, etc »* ; GM-OS confirmé fermé. Sous le
+  jet, en cartes repliables, chez le meneur et sur la tablette, dans l'ordre de la tablette :
+  Fatigue, Encaissement et blessures, Stress/expérience/Archétype, Chance/destinée/moral,
+  Astrologie, Ouvrages, Repos. **La reprise et l'avertissement d'écart de jeu restent dans le
+  formulaire** ; l'onglet existe dès qu'un Voyageur est repris. La carte masque désormais aussi
+  le `h3` redit (`EtapesDuJet.tsx`) ; les étiquettes `aria-label` des panneaux sont intactes.
+  Les sept essais du Voyageur adaptés (onglet, et photo de la carte entière par `carteDe`) et
+  verts, `capturesDesJeux` vert sur les dix jeux. Sept captures RdD du manuel remplacées
+  (repos, château dormant, ouvrages, progression, recours, astrologie, critique) ; « fatigue »,
+  « blessures » et « jet-état » viennent d'une autre chaîne (1 212 px) et n'ont pas été
+  refaites. Manuel `54-Jeu-Reves-de-Dragons.md` mis à jour.
+- **Reste** : l'essai de David à l'écran (meneur et tablette).
+- **Constaté** : sur la fiche du meneur, la bascule « Fiche du jeu » rendait le jet inaccessible
+  (le panneau vit dans le formulaire) ; l'onglet le règle.
+- **Ensuite** : lancer les prompts dans Stitch, rendre les exports, choix de David ; puis le
+  déplacement en onglet (`CharacterSheetEditor.tsx`, `HubCharacterSheet.tsx`), la refonte de la
+  partie commune de `PanneauDeJet.tsx`, les captures du manuel refaites. ⛔ Codex travaille les
+  blocs Alien de `PanneauDeJet.tsx` : un seul écrivain, s'entendre avant d'y toucher. ⛔ Avant de
+  coder : « GM-OS tourne-t-il ? ».
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12063,6 +12167,8 @@ raccord »* (Claude Code).
 | 77 | **Nephilim — le jeu à la table** | § 142 ; Arts occultes et suites des critiques au jet, Stase et Effet Mnémos, Ka dominant, Alchimie au jet, 31 époques et 155 Vécus du livre, errata V1.3 dans les règles — commité et éprouvé le 18/10 ; captures du manuel refaites ; Vécus et époques saisis sur tablette ; MP consommées au lancer | Éprouver la tablette et la transmutation | Rien ; [reprise au § 15](2026-10-17-chantier-nephilim.md) |
 | 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ✅ **Codé et poussé le 19/10, lots E0 à E6** (`11cf56f1`…`934874b2`) : Obsidian filtré, registre des détenteurs complété, clonage juste, archive complète, « Rejouer », aperçu + sauvegarde avant import + bilan, archive des médias `.gmos-medias` avec Image-OS (ce que la campagne utilise). **Essayé par David le 19/10 sur l'instance de test, export et import : *« ok ça fonctionne »*** ; bilan d'export ajouté après le premier essai. ⛔ Décisions de David : cartes, tables, calendriers et bibliothèque commune **ne s'archivent pas** (pas liés à une campagne) ; **Deck-OS part avec le pilote** (`.gmos-driver`), plus avec la campagne ; Rejouer : toutes les réserves au départ, combats préparés et modules gardés | **David** : dire si l'archive des médias doit aussi prendre les médias que la campagne **utilise** sans les étiqueter (portraits, cartes…) ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
 | 80 | **Crimes — pilote et fiche HTML** | § 144 ; fiche `crimes-fr` intégrée au moteur v13, fiche GM-OS refaite sur la fiche HTML, correspondance complète ; pilote corrigé réimporté, fiche validée par David le 19/10 | Le jet « Potentiel GARDE Compétence » ; trancher les Potentiels (10 cases ou 0 à 5) et les pistes sans règle | Le moteur de dés ne sait pas « garder » des dés |
+| 82 | **Import qui ne se refermait plus, campagne forgée invisible** | § 146 ; bilan d'import fermé seul après 8 s sauf s'il alerte (`NexusHUD.tsx`) ; campagne créée à la première fiche publiée dans l'Atelier (`AtelierDeCampagne.tsx`) — faits et commités le 22/10 | L'essai de David à l'écran ; recueillir le troisième défaut annoncé | Rien |
+| 83 | **L'onglet « Lancer un test »** | § 147 ; maquettes Stitch retenues le 22/10 ; **onglets et refonte de la partie commune faits et commités le 22/10** ; suite unitaire, `capturesDesJeux` (dix jeux, 96 captures du manuel refaites) et sept essais du Voyageur verts | L'essai de David à l'écran | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import AdmZip from 'adm-zip';
-import {lancerGmOs,attendreLHydratation,ouvrirLeModule} from './lancerGmOs';
+import {lancerGmOs,attendreLHydratation,ouvrirLeModule,ongletDeLaFiche,carteDe} from './lancerGmOs';
 import {initialiserSanteVoyageur} from '../src/modules/session/logic/santeDuVoyageur';
 import {POINTS_DE_TACHE} from '../src/modules/session/logic/tachesDuVoyageur';
 import type {useSessionOSStore} from '../src/modules/session/useSessionOSStore';
@@ -39,6 +39,8 @@ test('R3/R4 : ouvrage collectif, jet tablette, repos, guérisons et rechargement
         await ouvrirLeModule(app,'Tableau de Bord');
         await f.evaluate(()=>{const w=window as unknown as Fenetre;const s=w.useSessionOSStore.getState();s.setSelectedPlayer('j34');s.setSelectedCharacter('p34');s.setCurrentView('players');w.useJournalStore.getState().startJournal({id:'r34',nom:'Ouvrages fictifs'},'Essai isolé R3/R4');});
         const lire=()=>f.evaluate(()=>(window as unknown as Fenetre).useSessionOSStore.getState().players[0].characters[0].sheetData);
+        // Les mécaniques du Voyageur sont dans l'onglet du test depuis le 2026-10-22.
+        await ongletDeLaFiche(f,'Lancer un test');
         const taches=f.getByRole('region',{name:'Points de tâche RdD'}),repos=f.getByRole('region',{name:'Repos et Château Dormant RdD'});
         const valider=async (p:typeof taches)=>{await p.getByRole('button',{name:'Valider cette opération',exact:true}).click();await expect(p.getByLabel('Aperçu de l’opération RdD')).toHaveCount(0);};
         await expect(taches).toBeVisible();await taches.getByText('Nouvel ouvrage',{exact:true}).click();
@@ -63,7 +65,7 @@ test('R3/R4 : ouvrage collectif, jet tablette, repos, guérisons et rechargement
         await repos.getByRole('button',{name:'Prévisualiser le repos',exact:true}).click();await valider(repos);
         await expect.poll(async()=>(await lire())!.reve_pts).toBe(16);
         expect(await lire()).toMatchObject({vie:8,endurance:16,fatigue:12});
-        await repos.screenshot({path:path.join(sortie,'jeu-reves-de-dragons-repos.jpg'),type:'jpeg',quality:85});
+        await carteDe(repos).screenshot({path:path.join(sortie,'jeu-reves-de-dragons-repos.jpg'),type:'jpeg',quality:85});
         await repos.getByText('Bilan de fin du Château Dormant',{exact:true}).click();
         await repos.getByLabel('Nuit ou date de jeu (unique)',{exact:true}).fill('5 Dragon');
         await repos.getByLabel('Famine traitée ou sans objet ; enchantements non permanents vérifiés',{exact:true}).check();
@@ -76,14 +78,14 @@ test('R3/R4 : ouvrage collectif, jet tablette, repos, guérisons et rechargement
         await repos.getByLabel('d20 de moral au matin',{exact:true}).fill('11');
         await repos.getByLabel('d100 de récupération de vie, si exigible',{exact:true}).fill('30');
         await repos.getByRole('button',{name:'Prévisualiser le bilan de nuit',exact:true}).click();
-        await repos.screenshot({path:path.join(sortie,'jeu-reves-de-dragons-chateau-dormant.jpg'),type:'jpeg',quality:85});
+        await carteDe(repos).screenshot({path:path.join(sortie,'jeu-reves-de-dragons-chateau-dormant.jpg'),type:'jpeg',quality:85});
         await valider(repos);expect(await lire()).toMatchObject({vie:9,endurance:18,fatigue:10,reve_pts:15});
         contexte=await browser.newContext({viewport:{width:820,height:1600},serviceWorkers:'block'});
         await contexte.addInitScript(()=>localStorage.setItem('gmos-tablet-uuid','r34-tablette'));
         const pj=await contexte.newPage();await pj.route('**/*',r=>{const u=new URL(r.request().url());return u.hostname==='127.0.0.1'||['data:','blob:'].includes(u.protocol)?r.continue():r.abort();});
         await pj.goto(`http://127.0.0.1:${app.ports.sync}/?window=tablet&sync=${app.ports.sync}`);
         await pj.getByRole('button',{name:/Nitouche — repos fictif/}).click();await expect(pj.getByText('Connecté',{exact:true})).toBeVisible();
-        await pj.getByTitle('Fiche Personnage',{exact:true}).click();
+        await pj.getByTitle('Fiche Personnage',{exact:true}).click();await ongletDeLaFiche(pj,'Lancer un test');
         const reposPJ=pj.getByRole('region',{name:'Repos et Château Dormant RdD'});
         await expect(reposPJ).toContainText('Journée de suivi 3');await expect(reposPJ.getByRole('button')).toHaveCount(0);
         const jet=pj.getByRole('region',{name:'Jet du Voyageur'});
@@ -100,10 +102,10 @@ test('R3/R4 : ouvrage collectif, jet tablette, repos, guérisons et rechargement
         await expect.poll(async()=>((await lire())!.__rddTaches231 as unknown as {taches:{periodes:number}[]}).taches[0].periodes).toBe(2);
         await expect(taches).toContainText(`${-3+POINTS_DE_TACHE[dernier.degre]+1}/6 points`);
         await expect(tachesPJ.getByRole('button',{name:'Utiliser le jet conservé pour Nitouche',exact:true})).toHaveCount(0);
-        await tachesPJ.screenshot({path:path.join(sortie,'jeu-reves-de-dragons-taches.jpg'),type:'jpeg',quality:85});
+        await carteDe(tachesPJ).screenshot({path:path.join(sortie,'jeu-reves-de-dragons-taches.jpg'),type:'jpeg',quality:85});
         await pj.setViewportSize({width:360,height:900});
         for(const p of [tachesPJ,reposPJ]) expect(await p.evaluate(e=>e.scrollWidth <= e.clientWidth+1)).toBe(true);
-        await tachesPJ.screenshot({path:path.join(sortie,'taches-telephone.jpg'),type:'jpeg',quality:85});
+        await carteDe(tachesPJ).screenshot({path:path.join(sortie,'taches-telephone.jpg'),type:'jpeg',quality:85});
         const traces=()=>f.evaluate(()=>(window as unknown as Fenetre).useJournalStore.getState().journals.flatMap(j=>j.events).filter(e=>e.metadata?.rddOperation).map(e=>e.metadata!.rddOperation));
         const recus=(await lire())!.__rddOperationsR34231 as unknown as string[];
         await expect.poll(async()=>(await traces()).length).toBe(recus.length);

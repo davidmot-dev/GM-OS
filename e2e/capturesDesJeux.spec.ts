@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { lancerGmOs, attendreLHydratation, ouvrirLeModule, type GmOsLance } from './lancerGmOs';
+import { lancerGmOs, attendreLHydratation, ouvrirLeModule, ongletDeLaFiche, type GmOsLance } from './lancerGmOs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { useRessourcesDeTableStore } from '../src/modules/table/useRessourcesDeTableStore';
 import type { useCombatStore } from '../src/modules/combat/useCombatStore';
@@ -304,7 +304,13 @@ async function photographier(cible: Locator, nom: string): Promise<void> {
     await cible.screenshot({ path: path.join(SORTIE, `${nom}.jpg`), type: 'jpeg', quality: 82, animations: 'disabled', caret: 'hide' });
 }
 
-async function vue(campagne: string, v: CurrentView, selection?: { joueur: string; personnage: string }): Promise<void> {
+/**
+ * Ouvre une vue ; sur une fiche, l'onglet demandé — « Lancer un test » par
+ * défaut, puisque presque toutes les scènes photographient le panneau de jet
+ * (dans son onglet depuis le 2026-10-22). Rien n'est cliqué si la fiche ne
+ * propose pas cet onglet : un Voyageur pas encore repris n'a pas de test.
+ */
+async function vue(campagne: string, v: CurrentView, selection?: { joueur: string; personnage: string }, onglet = 'Lancer un test'): Promise<void> {
     await ouvrirLeModule(gmos, 'Tableau de Bord');
     await gmos.fenetre.evaluate(({ campagne, v, selection }) => {
         const s = (window as unknown as Fenetre).useSessionOSStore.getState();
@@ -312,6 +318,11 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
         if (selection) { s.setSelectedPlayer(selection.joueur); s.setSelectedCharacter(selection.personnage); }
         s.setCurrentView(v);
     }, { campagne, v, selection });
+    if (v !== 'players' || !selection) return;
+    const onglets = gmos.fenetre.getByRole('tablist', { name: 'Vues de la fiche' });
+    if (!await onglets.waitFor({ timeout: 5_000 }).then(() => true, () => false)) return;
+    const choisi = onglets.getByRole('tab', { name: onglet, exact: true });
+    if (await choisi.count()) await choisi.click();
 }
 
 for (const { mise, pilote } of JEUX) {
@@ -380,6 +391,7 @@ for (const { mise, pilote } of JEUX) {
             // Personnage fictif sans valeurs contradictoires : la reprise reste un geste explicite.
             await reprise.getByRole('button', { name: 'Appliquer la reprise et les calculs' }).click();
             await expect(reprise).toHaveCount(0);
+            await ongletDeLaFiche(f, 'Lancer un test');
         }
         const panneau = f.locator('[data-panneau-de-jet]').first();
         await expect(panneau).toBeVisible({ timeout: 15_000 });
@@ -500,7 +512,7 @@ async function sceneArchetypeRdd(c: ContexteDeScene): Promise<void> {
     const f = gmos.fenetre;
     await ecrireLaFiche(c, { archetype_general_craft: 3, archetype_general_sing: 5,
         archetype_general_run: 7, archetype_general_cook: 2, archetype_general_dance: 4 });
-    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage }, 'Formulaire');
     const titre = f.getByRole('heading', { name: 'Archétype — niveaux', exact: true });
     await expect(titre).toBeVisible();
     await titre.evaluate(e => e.scrollIntoView({ block: 'start' }));
@@ -617,7 +629,8 @@ async function scenesDeNephilim(c: ContexteDeScene): Promise<void> {
         await ecrireLaFiche(c, { occult_magic_first: 4 });
     }
 
-    // Le Ka dominant et la Stase plafonnée, sur la fiche GM-OS.
+    // Le Ka dominant et la Stase plafonnée, sur la fiche GM-OS — dans le formulaire, pas dans le test.
+    await ongletDeLaFiche(f, 'Formulaire');
     const section = (titre: string) => f.locator('h3', { hasText: new RegExp(`^${titre}$`) }).first().locator('xpath=..');
     if (await section('Ka dominant').count() > 0) {
         await photographier(section('Ka dominant'), 'jeu-nephilim-ka-dominant');
@@ -802,7 +815,7 @@ async function sceneDeProgressionAlien(c:ContexteDeScene):Promise<void>{
         const ctx=await nav.newContext({viewport:{width:360,height:1200},isMobile:true,hasTouch:true,serviceWorkers:'block',reducedMotion:'reduce',storageState:stockageTabletteAlien});
         await ctx.route('**/*',route=>{const u=new URL(route.request().url());return u.hostname==='127.0.0.1'||['data:','blob:'].includes(u.protocol)?route.continue():route.abort();});
         const t=await ctx.newPage(),charges:string[]=[];t.on('websocket',ws=>ws.on('framereceived',evt=>charges.push(String(evt.payload))));
-        await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);await expect(t.getByText('Connecté',{exact:true})).toBeVisible();await t.getByTitle('Fiche Personnage',{exact:true}).click();
+        await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);await expect(t.getByText('Connecté',{exact:true})).toBeVisible();await t.getByTitle('Fiche Personnage',{exact:true}).click();await ongletDeLaFiche(t,'Lancer un test');
         const progression=t.locator('[data-progression-alien]');await progression.locator('summary').first().click();await expect(progression.getByText(/PX 7 ; Récit 3\/3/)).toBeVisible();await expect(progression.getByRole('button')).toHaveCount(0);
         for(const largeur of [360,768,1180]){await t.setViewportSize({width:largeur,height:1200});expect(await t.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await photographier(progression,`jeu-alien-a7-tablette-${largeur}`);}
         const publics=charges.filter(x=>{try{return JSON.parse(x).type==='sync';}catch{return false;}});expect(publics.length).toBeGreaterThan(0);expect(publics.join('')).not.toContain(secret);
@@ -859,7 +872,7 @@ async function sceneDeSurvieAlien(c:ContexteDeScene):Promise<void>{
     try{
         const ctx=await nav.newContext({viewport:{width:360,height:1200},isMobile:true,hasTouch:true,serviceWorkers:'block',reducedMotion:'reduce',storageState:stockageTabletteAlien});
         await ctx.route('**/*',route=>{const u=new URL(route.request().url());return u.hostname==='127.0.0.1'||['data:','blob:'].includes(u.protocol)?route.continue():route.abort();});
-        const t=await ctx.newPage();await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);await expect(t.getByText('Connecté',{exact:true})).toBeVisible();await t.getByTitle('Fiche Personnage',{exact:true}).click();
+        const t=await ctx.newPage();await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);await expect(t.getByText('Connecté',{exact:true})).toBeVisible();await t.getByTitle('Fiche Personnage',{exact:true}).click();await ongletDeLaFiche(t,'Lancer un test');
         const suivi=t.locator('[data-survie-alien]');await suivi.getByText('Survie Alien',{exact:true}).click();await expect(suivi.getByLabel('Déshydraté',{exact:true})).toBeChecked();await expect(suivi.getByText(/Total : 2 Rads, dont 1 permanents/)).toBeVisible();await expect(suivi.getByRole('button')).toHaveCount(0);
         for(const largeur of [360,768,1180]){await t.setViewportSize({width:largeur,height:1200});expect(await t.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await photographier(suivi.locator('[data-etats-survie]'),`jeu-alien-a5-tablette-${largeur}`);}
     }finally{await nav.close();}
@@ -913,7 +926,7 @@ async function sceneDuSynthetiqueAlien(c: ContexteDeScene): Promise<void> {
     try {
         const ctx=await nav.newContext({viewport:{width:360,height:1200},isMobile:true,hasTouch:true,serviceWorkers:'block',reducedMotion:'reduce',storageState:stockageTabletteAlien});
         await ctx.route('**/*',route=>{const u=new URL(route.request().url());return u.hostname==='127.0.0.1'||['data:','blob:'].includes(u.protocol)?route.continue():route.abort();});
-        const t=await ctx.newPage();await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);await expect(t.getByText('Connecté',{exact:true})).toBeVisible();await t.getByTitle('Fiche Personnage',{exact:true}).click();
+        const t=await ctx.newPage();await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);await expect(t.getByText('Connecté',{exact:true})).toBeVisible();await t.getByTitle('Fiche Personnage',{exact:true}).click();await ongletDeLaFiche(t,'Lancer un test');
         const suivi=t.locator('[data-synthetique-alien]'); await expect(suivi.getByText(/Réparation en cours/)).toBeVisible();
         await expect(suivi.getByText('6 — Arrêt du système')).toBeVisible();await expect(suivi.getByRole('button')).toHaveCount(0);
         for(const largeur of [360,768,1180]) {await t.setViewportSize({width:largeur,height:1200});expect(await t.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await photographier(suivi,`jeu-alien-a4-tablette-${largeur}`);}
@@ -1004,7 +1017,7 @@ async function sceneDuCombatAlien(c: ContexteDeScene): Promise<void> {
         // Reprendre l'identité ET son secret local de la scène A1, comme le même navigateur rouvert.
         const t=await ctx.newPage(); await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);
         await expect(t.getByText('Connecté',{exact:true})).toBeVisible();
-        await t.getByTitle('Fiche Personnage',{exact:true}).click(); const suivi=t.locator('[data-sante-alien]');
+        await t.getByTitle('Fiche Personnage',{exact:true}).click();await ongletDeLaFiche(t,'Lancer un test'); const suivi=t.locator('[data-sante-alien]');
         await expect(suivi.getByText('44 — Poumon perforé')).toBeVisible(); await expect(suivi.getByRole('button')).toHaveCount(0);
         for(const largeur of [360,768,1180]) {await t.setViewportSize({width:largeur,height:1000});expect(await t.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await photographier(suivi,`jeu-alien-a3-tablette-${largeur}`);}
     } finally {await nav.close();}
@@ -1083,6 +1096,7 @@ async function sceneDePaniqueAlienTablette(c: ContexteDeScene): Promise<void> {
         await tablette.getByRole('button', { name: new RegExp(c.nom) }).click();
         await expect(tablette.getByText('Connecté', { exact: true })).toBeVisible();
         await tablette.getByTitle('Fiche Personnage', { exact: true }).click();
+        await ongletDeLaFiche(tablette, 'Lancer un test');
         let panneau = tablette.locator('[data-panneau-de-jet]').first();
         for (const [i, champ] of ['force', 'combat_rapproche', 'niveau_de_stress'].entries()) await panneau.locator('select').nth(i).selectOption(champ);
         await tablette.evaluate(() => {
@@ -1111,6 +1125,7 @@ async function sceneDePaniqueAlienTablette(c: ContexteDeScene): Promise<void> {
         await tablette.reload();
         await expect(tablette.getByText('Connecté', { exact: true })).toBeVisible();
         await tablette.getByTitle('Fiche Personnage', { exact: true }).click();
+        await ongletDeLaFiche(tablette, 'Lancer un test');
         panneau = tablette.locator('[data-panneau-de-jet]').first();
         await expect(panneau.getByText('Figé (10)', { exact: true })).toBeVisible();
         expect((await lire()).niveau_de_stress).toBe(5);
@@ -1118,6 +1133,7 @@ async function sceneDePaniqueAlienTablette(c: ContexteDeScene): Promise<void> {
             await ecrireLaFiche(c, { niveau_de_stress: 0, panique_en_cours: 0, 'field-1786783108730': 'Pistolet de test', armes_bonus: '+2', armes_degats: '2', armes_portees: 'Moyenne' });
             await tablette.reload(); await expect(tablette.getByText('Connecté', { exact: true })).toBeVisible();
             await tablette.getByTitle('Fiche Personnage', { exact: true }).click();
+            await ongletDeLaFiche(tablette, 'Lancer un test');
             panneau = tablette.locator('[data-panneau-de-jet]').first();
             for (const [i, champ] of ['force', 'combat_rapproche', 'niveau_de_stress'].entries()) await panneau.locator('select').nth(i).selectOption(champ);
             await tablette.setViewportSize({ width: 360, height: 1000 });
@@ -1137,6 +1153,7 @@ async function sceneDePaniqueAlienTablette(c: ContexteDeScene): Promise<void> {
             }
             await tablette.reload(); await expect(tablette.getByText('Connecté', { exact: true })).toBeVisible();
             await tablette.getByTitle('Fiche Personnage', { exact: true }).click();
+            await ongletDeLaFiche(tablette, 'Lancer un test');
             panneau = tablette.locator('[data-panneau-de-jet]').first();
             await expect(panneau.getByText('Actions d’éclat disponibles : 0.')).toBeVisible();
             await expect(panneau.getByRole('button', { name: 'Dégâts +1', exact: true })).toBeDisabled();

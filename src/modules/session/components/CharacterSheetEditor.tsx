@@ -25,7 +25,9 @@ import ChampDuReferentiel from './fields/ChampDuReferentiel';
 import { EcartDeJeuDuPersonnage } from './EcartDeJeuDuPersonnage';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSheetCalculator } from '../hooks/useSheetCalculator';
-import { Calculator } from 'lucide-react';
+import { Calculator, Dices } from 'lucide-react';
+import OngletsDeLaFiche from './OngletsDeLaFiche';
+import { CarteDuJeu } from './fields/EtapesDuJet';
 import FicheHote from '../../fiches/FicheHote';
 import { useCorrespondanceDuJeu } from '../../fiches/useCorrespondanceDuJeu';
 import { ressourcesDeLaTable } from '../../table/reservesDuGroupe';
@@ -52,6 +54,8 @@ const FieldFormula: React.FC<{
         </div>
     </div>
 );
+
+type OngletDuMeneur = 'formulaire' | 'test' | 'fiche';
 
 // --- Main Component ---
 
@@ -94,20 +98,28 @@ const CharacterSheetEditor: React.FC = () => {
     const [newItemName, setNewItemName] = React.useState('');
 
     /**
-     * **La bascule vers la fiche HTML du jeu.**
+     * **Les onglets : le formulaire, le test, la fiche HTML du jeu.**
+     *
+     * Le test avait sa place en tête du formulaire, et la fiche du jeu le
+     * rendait inaccessible ; David l'a voulu dans un onglet (2026-10-22).
      *
      * Deux façons de voir le même personnage, jamais deux vérités : la fiche
      * fait foi, et ce qu'elle impose redescend dans `sheetData` par
      * `updateCharacter`. Le formulaire ci-dessous se réaligne tout seul —
      * `useCharacterEditor` relit ses valeurs quand le personnage change.
      */
-    const [surLaFiche, setSurLaFiche] = React.useState(false);
+    const [onglet, setOnglet] = React.useState<OngletDuMeneur>('formulaire');
     const [ficheDejaOuverte, setFicheDejaOuverte] = React.useState(false);
     const correspondance = useCorrespondanceDuJeu(editor.character as PlayerCharacter | null);
 
-    const basculer = () => {
+    // Une fiche s'ouvre sur son formulaire (choix de David, 2026-10-22).
+    const idDuPersonnage = editor.character?.id;
+    React.useEffect(() => { setOnglet('formulaire'); }, [idDuPersonnage]);
+
+    const choisirLOnglet = (choix: OngletDuMeneur) => {
+        if (choix !== 'fiche') { setOnglet(choix); return; }
         const ouvrir = () => {
-            setSurLaFiche(v => !v);
+            setOnglet('fiche');
             setFicheDejaOuverte(true);
         };
         /*
@@ -115,7 +127,7 @@ const CharacterSheetEditor: React.FC = () => {
           2026-10-17). On le propose au moment d'y aller, plutôt que de laisser
           croire à une fiche qui ne suit pas.
         */
-        if (!surLaFiche && editor.aDesChangements) {
+        if (onglet !== 'fiche' && editor.aDesChangements) {
             gmConfirm(
                 'Des changements de ce formulaire ne sont pas sauvegardés : la fiche du jeu ne les verra pas. Les sauvegarder avant de l’ouvrir ?',
                 () => { editor.handleSave(); ouvrir(); },
@@ -181,6 +193,18 @@ const CharacterSheetEditor: React.FC = () => {
     const gaugeFields = (section: typeof template.sections[0]) => section.fields.filter(f => f.type === 'gauge');
     const otherFields = (section: typeof template.sections[0]) => section.fields.filter(f => f.type !== 'gauge');
 
+    // Le test n'existe que si le pilote décrit ses jets (et qu'un voyageur a été repris).
+    const voyageurRepris = estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1;
+    const jetDisponible = !!piloteDeLaFiche?.jet && (!estUneFicheDeVoyageur(template) || voyageurRepris);
+    const testDisponible = jetDisponible || voyageurRepris;
+    const onglets = [
+        { id: 'formulaire' as const, libelle: 'Formulaire', icone: <PenTool size={13} /> },
+        ...(testDisponible ? [{ id: 'test' as const, libelle: 'Lancer un test', icone: <Dices size={13} /> }] : []),
+        ...(correspondance ? [{ id: 'fiche' as const, libelle: 'Fiche du jeu', icone: <FileText size={13} /> }] : []),
+    ];
+    // Un onglet qui disparaît (autre personnage, autre pilote) rend la main au formulaire.
+    const ongletVu: OngletDuMeneur = onglets.some(o => o.id === onglet) ? onglet : 'formulaire';
+
 
     return (
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -207,26 +231,6 @@ const CharacterSheetEditor: React.FC = () => {
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    {/*
-                        **La bascule.** Elle n'apparaît que si le jeu a une fiche
-                        HTML branchable : proposer un écran vide serait pire que
-                        ne rien proposer. Le formulaire reste le repli, et il
-                        reste vrai — c'est le même `sheetData` des deux côtés.
-                    */}
-                    {correspondance && (
-                        <button
-                            onClick={basculer}
-                            title={surLaFiche ? 'Revenir au formulaire' : 'Afficher la fiche du jeu'}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-black text-xs tracking-widest transition-all border ${
-                                surLaFiche
-                                    ? 'bg-accent/20 border-accent/40 text-accent'
-                                    : 'bg-app-surface/40 border-app-border text-app-text/40 hover:text-app-text'
-                            }`}
-                        >
-                            <FileText size={14} />
-                            {surLaFiche ? 'Formulaire' : 'Fiche du jeu'}
-                        </button>
-                    )}
                     <button
                         onClick={handleSave}
                         className={`flex items-center gap-2 px-5 py-2 rounded-xl font-black text-xs tracking-widest transition-all ${
@@ -242,6 +246,132 @@ const CharacterSheetEditor: React.FC = () => {
             </div>
 
             {/*
+                Les onglets n'apparaissent que s'il y a plus que le formulaire :
+                « Fiche du jeu » seulement si le jeu a une fiche HTML branchable
+                — proposer un écran vide serait pire que ne rien proposer.
+            */}
+            {onglets.length > 1 && (
+                <OngletsDeLaFiche
+                    onglets={onglets}
+                    actif={ongletVu}
+                    onChoisir={choisirLOnglet}
+                    idDuPanneau="fiche-meneur"
+                    className="px-8 bg-app-bg/40 flex-shrink-0"
+                />
+            )}
+
+            {/*
+                **Le test, dans son onglet** — monté avec la fiche et seulement
+                masqué : un réglage ou un résultat survit au passage par le
+                formulaire. Il lit les saisies non sauvegardées, comme avant.
+            */}
+            {testDisponible && (
+                <div
+                    id="fiche-meneur-test"
+                    role="tabpanel"
+                    aria-labelledby="fiche-meneur-onglet-test"
+                    className={`flex-1 overflow-y-auto custom-scrollbar ${ongletVu === 'test' ? '' : 'hidden'}`}
+                >
+                    <div className="max-w-[60rem] mx-auto p-8 space-y-6">
+                        <div className="flex items-center gap-4 p-4 rounded-xl border border-app-border bg-app-surface/40">
+                            <div className="w-14 h-14 rounded-lg overflow-hidden bg-app-bg border border-app-border flex items-center justify-center text-app-text/20 shrink-0">
+                                {portraitUrl
+                                    ? <img src={portraitUrl} alt={character.name} className="w-full h-full object-cover object-top" />
+                                    : <FolderOpen size={20} />}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <p className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Personnage</p>
+                                <h2 className="text-lg font-black text-app-text truncate">{character.name}</h2>
+                            </div>
+                            {(piloteDeLaFiche?.combat?.defaultHealthType ?? 'hp') === 'hp' && (
+                                <div className="px-4 py-2 rounded-lg border border-app-border bg-app-bg/60 flex items-baseline gap-2">
+                                    <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Points de vie</span>
+                                    <span className="font-mono font-black text-etat-succes">{character.hp} / {character.maxHp}</span>
+                                </div>
+                            )}
+                        </div>
+                        {/*
+                            Lancer depuis la fiche, avec les valeurs qui font le
+                            seuil. Chez Dune il vaut une compétence plus un
+                            principe : personne ne pouvait faire ce calcul à la
+                            place du joueur, et il fallait tout reporter à la
+                            main dans Dice OS.
+                        */}
+                        {jetDisponible && <PanneauDeJet
+                            descripteur={piloteDeLaFiche!.jet!}
+                            dice={piloteDeLaFiche!.dice}
+                            template={template}
+                            personnageId={character.id}
+                            valeurs={{...character.sheetData, ...editor.localData}}
+                            campaignId={activeCampaignId ?? undefined}
+                            ressourcesDeTable={ressourcesDeLaTable(piloteDeLaFiche!, campaigns.find(c => c.id === activeCampaignId))}
+                            // Le Vécu, l'Espoir, la Singularité dépensés au jet se décomptent sur la fiche.
+                            ecrireSurLaFiche={maj => {
+                                if (editor.character && editor.selectedPlayer) {
+                                    updateCharacter(editor.selectedPlayer.id, editor.character.id, {
+                                        sheetData: { ...editor.character.sheetData, ...maj },
+                                    });
+                                }
+                            }}
+                        />}
+
+                        {/*
+                            **Les mécaniques du Voyageur, avec le test** — David, le
+                            2026-10-22 : fatigue, blessures, stress, chance,
+                            astrologie, ouvrages, repos quittent le formulaire. La
+                            reprise y reste : c'est elle qui ouvre cet onglet.
+                        */}
+                        {voyageurRepris && editor.selectedPlayer && <>
+                            <CarteDuJeu id="fatigue-voyageur" titre="Fatigue et état général">
+                                <PanneauFatigueVoyageur key={`fatigue-${character.id}`} donnees={{...character.sheetData, ...editor.localData}}
+                                    avantOperation={() => {
+                                        if (!editor.aDesChangements) return true;
+                                        gmToast('Sauvegardez les saisies de la fiche avant d’appliquer un mouvement de fatigue.', 'warning');
+                                        return false;
+                                    }}
+                                    appliquer={maj => updateCharacter(editor.selectedPlayer!.id, character.id, {
+                                        sheetData: {...character.sheetData, ...maj},
+                                    })} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="sante-voyageur" titre="Encaissement et blessures">
+                                <PanneauSanteVoyageur key={`sante-${character.id}`} donnees={{...character.sheetData, ...editor.localData}}
+                                    avantOperation={() => {
+                                        if (!editor.aDesChangements) return true;
+                                        gmToast('Sauvegardez la fiche avant une opération de santé.', 'warning');return false;
+                                    }}
+                                    appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:{...character.sheetData,...maj}})} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="progression-voyageur" titre="Stress, expérience et Archétype">
+                                <PanneauProgressionVoyageur key={`progression-${character.id}`} fiche={template} donnees={{...character.sheetData,...editor.localData}}
+                                    avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant la progression.','warning');return false;}}
+                                    appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="recours-voyageur" titre="Chance, destinée et moral">
+                                <PanneauRecoursVoyageur key={`recours-${character.id}`} campagneId={character.campaignId} donnees={{...character.sheetData,...editor.localData}}
+                                    avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant un recours.','warning');return false;}}
+                                    appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="astrologie-voyageur" titre="Astrologie et heures draconiques">
+                                <PanneauAstrologieVoyageur key={`astrologie-${character.id}`} campagneId={character.campaignId} personnageId={character.id} donnees={{...character.sheetData,...editor.localData}}
+                                    appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})}
+                                    avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant une observation.','warning');return false;}} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="taches-voyageur" titre="Ouvrages et points de tâche">
+                                <PanneauTachesVoyageur key={`taches-${character.id}`} nom={character.name} donnees={{...character.sheetData,...editor.localData}}
+                                    avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant de traiter un ouvrage.','warning');return false;}}
+                                    appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="repos-voyageur" titre="Repos et Château Dormant">
+                                <PanneauReposVoyageur key={`repos-${character.id}`} donnees={{...character.sheetData,...editor.localData}}
+                                    avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant de traiter un repos.','warning');return false;}}
+                                    appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
+                            </CarteDuJeu>
+                        </>}
+                    </div>
+                </div>
+            )}
+
+            {/*
                 Montée à la première bascule, puis **gardée montée et masquée**.
                 L'iframe charge sept mégaoctets de fonds de page : la démonter à
                 chaque aller-retour les rechargerait, et rouvrirait le pont pour
@@ -249,7 +379,12 @@ const CharacterSheetEditor: React.FC = () => {
                 personnages ne seront jamais regardés par cet écran-là.
             */}
             {ficheDejaOuverte && (
-                <div className={`flex-1 overflow-hidden p-4 ${surLaFiche ? '' : 'hidden'}`}>
+                <div
+                    id="fiche-meneur-fiche"
+                    role="tabpanel"
+                    aria-labelledby="fiche-meneur-onglet-fiche"
+                    className={`flex-1 overflow-hidden p-4 ${ongletVu === 'fiche' ? '' : 'hidden'}`}
+                >
                     <FicheHote
                         personnage={{
                             id: character.id,
@@ -272,8 +407,13 @@ const CharacterSheetEditor: React.FC = () => {
                 </div>
             )}
 
-            {/* Main Content — masqué, pas démonté : la saisie en cours survit à la bascule. */}
-            <div className={`flex-1 overflow-y-auto custom-scrollbar ${surLaFiche ? 'hidden' : ''}`}>
+            {/* Main Content — masqué, pas démonté : la saisie en cours survit au changement d'onglet. */}
+            <div
+                id="fiche-meneur-formulaire"
+                role="tabpanel"
+                aria-labelledby="fiche-meneur-onglet-formulaire"
+                className={`flex-1 overflow-y-auto custom-scrollbar ${ongletVu === 'formulaire' ? '' : 'hidden'}`}
+            >
                 <div className="max-w-5xl mx-auto p-8 grid grid-cols-12 gap-8">
 
                     {/* Left Col: Visuals */}
@@ -488,72 +628,9 @@ const CharacterSheetEditor: React.FC = () => {
                                 })} />
                         )}
                         {/* Le jeu du personnage, quand ce n'est pas celui de sa campagne (2026-10-13). */}
-                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && (
-                            <PanneauFatigueVoyageur key={`fatigue-${character.id}`} donnees={{...character.sheetData, ...editor.localData}}
-                                avantOperation={() => {
-                                    if (!editor.aDesChangements) return true;
-                                    gmToast('Sauvegardez les saisies de la fiche avant d’appliquer un mouvement de fatigue.', 'warning');
-                                    return false;
-                                }}
-                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id, character.id, {
-                                    sheetData: {...character.sheetData, ...maj},
-                                })} />
-                        )}
-                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && <>
-                            <PanneauProgressionVoyageur key={`progression-${character.id}`} fiche={template} donnees={{...character.sheetData,...editor.localData}}
-                                avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant la progression.','warning');return false;}}
-                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
-                            <PanneauRecoursVoyageur key={`recours-${character.id}`} campagneId={character.campaignId} donnees={{...character.sheetData,...editor.localData}}
-                                avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant un recours.','warning');return false;}}
-                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
-                            <PanneauAstrologieVoyageur key={`astrologie-${character.id}`} campagneId={character.campaignId} personnageId={character.id} donnees={{...character.sheetData,...editor.localData}}
-                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})}
-                                avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant une observation.','warning');return false;}} />
-                            <PanneauTachesVoyageur key={`taches-${character.id}`} nom={character.name} donnees={{...character.sheetData,...editor.localData}}
-                                avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant de traiter un ouvrage.','warning');return false;}}
-                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
-                            <PanneauReposVoyageur key={`repos-${character.id}`} donnees={{...character.sheetData,...editor.localData}}
-                                avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant de traiter un repos.','warning');return false;}}
-                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
-                        </>}
                         {editor.character && editor.selectedPlayer && (
                             <EcartDeJeuDuPersonnage playerId={editor.selectedPlayer.id} personnage={editor.character as PlayerCharacter} />
                         )}
-                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && (
-                            <PanneauSanteVoyageur key={`sante-${character.id}`} donnees={{...character.sheetData, ...editor.localData}}
-                                avantOperation={() => {
-                                    if (!editor.aDesChangements) return true;
-                                    gmToast('Sauvegardez la fiche avant une opération de santé.', 'warning');return false;
-                                }}
-                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:{...character.sheetData,...maj}})} />
-                        )}
-                        {/*
-                            Lancer depuis la fiche, à côté des valeurs qui font
-                            le seuil. Chez Dune il vaut une compétence plus un
-                            principe : personne ne pouvait faire ce calcul à la
-                            place du joueur, et il fallait tout reporter à la
-                            main dans Dice OS.
-                        */}
-                        {piloteDeLaFiche?.jet && (!estUneFicheDeVoyageur(template) || character.sheetData?.[CLE_REPRISE] === 1) && (
-                            <PanneauDeJet
-                                descripteur={piloteDeLaFiche.jet}
-                                dice={piloteDeLaFiche.dice}
-                                template={template}
-                                personnageId={character.id}
-                                valeurs={{...character.sheetData, ...editor.localData}}
-                                campaignId={activeCampaignId ?? undefined}
-                                ressourcesDeTable={ressourcesDeLaTable(piloteDeLaFiche, campaigns.find(c => c.id === activeCampaignId))}
-                                // Le Vécu, l'Espoir, la Singularité dépensés au jet se décomptent sur la fiche.
-                                ecrireSurLaFiche={maj => {
-                                    if (editor.character && editor.selectedPlayer) {
-                                        updateCharacter(editor.selectedPlayer.id, editor.character.id, {
-                                            sheetData: { ...editor.character.sheetData, ...maj },
-                                        });
-                                    }
-                                }}
-                            />
-                        )}
-
                         {template.sections.map(section => {
                             const gauges = gaugeFields(section);
                             const others = otherFields(section);
