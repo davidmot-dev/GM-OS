@@ -31,7 +31,7 @@ import { idsDesCosmsCourants } from '../../session/logic/cosmsCourants';
 import { useOrdreDuTourStore } from '../../combat/useOrdreDuTourStore';
 import { effetsDuRound } from '../../combat/logic/paquetDAction';
 import { filDuLecteur } from '../../../../electron/destinatairesDesMessages';
-import { caviarderObjectifsAlien } from '../../dice/systemes/progressionAlien';
+import { caviarderPourLesJoueurs } from '../logic/caviardageDesJoueurs';
 
 /**
  * Intervalle minimal entre deux synchronisations **forcées**.
@@ -126,8 +126,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             if (Object.keys(payload).length > 0 && window.appBridge) {
                 window.appBridge.remote?.sendSync?.(payload, 'remote');
                 window.appBridge.remote?.sendSync?.(payload, 'gm');
-                window.appBridge.remote?.sendSync?.(caviarderObjectifsAlien(payload), 'player');
-                window.appBridge.remote?.sendSync?.(caviarderObjectifsAlien(payload), 'hub');
+                window.appBridge.remote?.sendSync?.(caviarderPourLesJoueurs(payload), 'player');
+                window.appBridge.remote?.sendSync?.(caviarderPourLesJoueurs(payload), 'hub');
             }
         } catch (e) {
             console.error(`[NexusSync] Fast-Sync Error (${segmentName}):`, e);
@@ -624,42 +624,15 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
 
                 // Copie de notre propre message typé, pas une entrée distante.
                 // JetTransmis accepte la chaîne produite par JSON pour Date.
-                const playerDiff = caviarderObjectifsAlien(JSON.parse(JSON.stringify(diffPayload))) as DonneesDuHub;
-                
-                // Sanitization for Player Role
-                if (playerDiff.notes) playerDiff.notes.private = '•••••';
-
                 /*
-                  ⛔ **Le fil du meneur ne part jamais aux joueurs** (2026-10-12).
-                  Les cent derniers messages voyageaient jusqu'à chaque tablette,
-                  privés compris — ignorés à la fusion, mais reçus. Un joueur
-                  reçoit ses messages un par un, par le serveur, et son fil à la
-                  reconnexion — les siens seulement.
+                  **Une seule fonction pour tout ce que la table ne reçoit pas**
+                  (S1, S2 de l'audit du 2026-10-22) : notes privées, fil du
+                  meneur (2026-10-12), avis de séance, secrets des entités et des
+                  combattants, objectifs Alien — et désormais la trame du meneur
+                  (`lectureDuMeneur`) et les `gmNotes` des lieux, des campagnes et
+                  des personnages, qui partaient sur chaque tablette.
                 */
-                delete playerDiff.messages;
-                
-                if (playerDiff.session?.sessions) {
-                    playerDiff.session.sessions = playerDiff.session.sessions.map((s) => {
-                        const { feedbacks, ...rest } = s;
-                        return rest;
-                    });
-                }
-
-                if (playerDiff.session?.entities) {
-                    playerDiff.session.entities = playerDiff.session.entities.map((e) => ({
-                        ...e,
-                        gmSecretInfo: '•••••',
-                        roleplayingNotes: '•••••'
-                    }));
-                }
-
-                if (playerDiff.combat?.combatants) {
-                    playerDiff.combat.combatants = playerDiff.combat.combatants.map((c) => ({
-                        ...c,
-                        gmSecretInfo: '•••••',
-                        roleplayingNotes: '•••••'
-                    }));
-                }
+                const playerDiff = caviarderPourLesJoueurs(JSON.parse(JSON.stringify(diffPayload))) as DonneesDuHub;
 
                 window.appBridge.remote?.sendSync?.(playerDiff, 'player');
                 window.appBridge.remote?.sendSync?.(playerDiff, 'hub'); // Ensuring Hubs get the player-sanitized data too

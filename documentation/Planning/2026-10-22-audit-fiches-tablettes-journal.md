@@ -26,6 +26,10 @@ ou **lu dans le code** (chemin cité, pas encore éprouvé).
   ne se raccorde pas, la correspondance des fiches HTML signale les clés inconnues. Pas de défaut
   trouvé sur cet axe dans le temps de l'audit — il a été survolé, pas épuisé.
 
+> **Corrigés le 22/10 (registre § 152) : S1, S2 et S5**, par une seule fonction de caviardage
+> appliquée à l'émission, au serveur et aux fenêtres locales. En corrigeant, un cas de plus : la
+> diffusion rapide du **combat** partait sans rôle, donc sans aucun filtre — couverte par le serveur.
+
 ## Les constats
 
 | # | Axe | Constat | Gravité | Preuve |

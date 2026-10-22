@@ -12294,6 +12294,34 @@ choix : « Moteur commun + Dune D2 » (sujet 6 ; Dune reste garé pour le reste)
 - **Reste** : réimport du pilote Dune corrigé et essai de David ; son choix sur les constats de
   l'audit (je propose S1+S2+S5 d'abord) ; son choix pour Star Trek et pour le pupitre (C1).
 
+### 152 · Les secrets du meneur ne partent plus vers la table (S1, S2, S5) — 22/10/2026
+
+David, le 22/10 : *« on va commit et poussé tous les sujets et puis on fera S1, S2, S5 »* ; GM-OS
+confirmé fermé (Claude Code). Constats de [l'audit](2026-10-22-audit-fiches-tablettes-journal.md).
+
+- **Fait — une seule fonction pure** (`src/modules/remote/logic/caviardageDesJoueurs.ts`,
+  `caviarderPourLesJoueurs`) : retire à la racine `lectureDuMeneur` (trame, notes des actes et des
+  scènes, wiki, indices non révélés) et `messages` ; masque les notes privées ; retire les avis de
+  séance ; masque `gmSecretInfo` et `roleplayingNotes`, vide `gmNotes` et `notesDuMeneur` **à toute
+  profondeur** (lieux, campagnes, personnages, entités, combattants) ; caviarde les objectifs Alien.
+  Ne modifie jamais la charge reçue.
+- **Appliquée à trois endroits** : à l'émission (`useNexusSynchronizer`, diffusion complète et
+  rapide, à la place du caviardage en ligne) ; **au serveur** pour toute synchronisation vers un
+  joueur ou un Hub (`SyncServer.broadcastAction`) — ce qui couvre la diffusion du **combat**, partie
+  sans rôle, donc sans filtre, trouvée en corrigeant ; dans **`electron/main.ts`**, la fenêtre Hub
+  et les projecteurs locaux ne reçoivent plus les copies du meneur (`remote`, `gm`) et tout ce qui
+  passe y est caviardé (S5).
+- **Vérifié** : `tsc -b` propre, lint propre ; essais : 14 secrets marqués cherchés dans la charge
+  sérialisée, aucun ne sort (`caviardageDesJoueurs.test.ts`, 19 essais) ; le serveur caviarde une
+  synchronisation sans rôle vers un joueur et laisse la tablette du meneur intacte
+  (`SyncServer.relais.test.ts`) ; suite complète **8 681 essais verts** ; recette Electron des
+  tablettes : `tabletteJoueursT0` vert ; `tabletteMeneurT0` et `tabletteM1T4` : 76 verts, 5 échecs —
+  **un seul test** (`tabletteM1T4`, « lecture complète, messages… », dans ses cinq formats : la
+  pastille « 1 message(s) non lu(s) » n'arrive pas sur la tablette du meneur). **Antérieur** : il
+  échoue de même avec les trois fichiers remis à leur état du commit `2e0491d7`. Non traité ici.
+- **Reste** : S3 (indices non révélés dans `session.clues` — la trame qui les portait aussi ne part
+  plus), S4, H1, C1 de l'audit ; l'essai de David (une tablette de joueur et la tablette du meneur).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12386,6 +12414,7 @@ choix : « Moteur commun + Dune D2 » (sujet 6 ; Dune reste garé pour le reste)
 | 85 | **Symbaroum S1 — modificateur du seuil, opposition explicite** | § 149 ; moteur, panneau (fiche et tablette), journal, Forge, pilote corrigé, manuel et captures — faits le 22/10 | Réimport du pilote corrigé et essai de David | Rien |
 | 86 | **Santé et séquelles, fin de scène** | § 150 ; fiche qui naît pleine, contrôle de la santé courante, `finDeScene` et « vide », seuils qui laissent une trace (une fois par passage) ; Symbaroum S2-raccord/S4-fin de scène et NOC point 1 par script — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
 | 87 | **Paiement au choix (Dune D2) ; audit fiches, tablettes, journal** | § 151 ; « dont en Menace », Impulsion du jet hors réserve, motif des tablettes — faits le 22/10 ; audit rendu : S1, S2, S5 (secrets du meneur sur les tablettes et les fenêtres de la table), S3, S4, H1, C1 | Réimport du pilote Dune corrigé et essai ; corrections de l'audit | Le choix de David parmi les constats ; Star Trek ; le pupitre |
+| 88 | **Les secrets du meneur ne partent plus vers la table** | § 152 ; `caviarderPourLesJoueurs` à l'émission, au serveur et pour les fenêtres locales : trame du meneur, `gmNotes`, secrets des combattants (diffusion sans rôle) — faits le 22/10 | Essai de David ; S3, S4, H1, C1 | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

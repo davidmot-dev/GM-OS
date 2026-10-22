@@ -8,6 +8,7 @@ import https from 'node:https'
 import os from 'node:os';
 import dns from 'node:dns';
 import { filtrerAstrologieDistante } from '../src/modules/session/logic/astrologiePartagee';
+import { caviarderPourLesJoueurs } from '../src/modules/remote/logic/caviardageDesJoueurs';
 
 // Fix pour les échecs de fetch sur Windows vers 127.0.0.1
 if (os.platform() === 'win32') {
@@ -838,9 +839,17 @@ ipcMain.on('image:sync-hub-data', (_event, type: string, imagePath: string) => {
     }
 });
 
-ipcMain.on('remote:broadcast-sync', (_event, data) => {
+ipcMain.on('remote:broadcast-sync', (_event, data, role?: string) => {
+    /*
+      **La fenêtre Hub et les projecteurs sont à la table, devant les joueurs**
+      (S5 de l'audit du 2026-10-22). Ils recevaient CHAQUE diffusion, y compris
+      les copies adressées au meneur et à sa tablette, non caviardées. Ces
+      copies-là ne leur sont plus transmises — la copie des joueurs suit
+      toujours —, et tout ce qui passe est caviardé comme pour une tablette.
+    */
+    if (role === 'remote' || role === 'gm') return;
     // R7 : les fenêtres projetées n'ont pas de personnage identifié.
-    const publicData = filtrerAstrologieDistante(data, null);
+    const publicData = caviarderPourLesJoueurs(filtrerAstrologieDistante(data, null));
     if (hubWindow && !hubWindow.isDestroyed()) {
         hubWindow.webContents.send('remote:broadcast-sync', publicData);
     }

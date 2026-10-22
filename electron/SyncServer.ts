@@ -15,7 +15,7 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import { sessionManager } from './SessionManager';
 import { filtrerAstrologieDistante } from '../src/modules/session/logic/astrologiePartagee';
-import { caviarderObjectifsAlien } from '../src/modules/dice/systemes/progressionAlien';
+import { caviarderPourLesJoueurs } from '../src/modules/remote/logic/caviardageDesJoueurs';
 import { mediaAccess } from './MediaAccess';
 import { pairingManager } from './PairingManager';
 import { evaluateAction } from './actionPolicy';
@@ -736,8 +736,15 @@ export class SyncServer {
                 if (!targetRole || client.role === targetRole) {
                     const a = action as {type?:string;payload?:unknown};
                     if (a?.type === 'sync' && (client.role === 'player' || client.role === 'hub')) {
+                        /*
+                          **Le dernier rempart avant la tablette d'un joueur** (S1, S2
+                          de l'audit du 2026-10-22). Le renderer caviarde déjà ce qu'il
+                          adresse aux joueurs, mais une diffusion partie SANS rôle — celle
+                          du combat — arrivait ici telle quelle, secrets des combattants
+                          compris. Le même caviardage, quoi qu'on ait reçu.
+                        */
                         const personnage = client.deviceId ? sessionManager.getClient(client.deviceId)?.characterId ?? null : null;
-                        client.send(JSON.stringify({...a,payload:caviarderObjectifsAlien(filtrerAstrologieDistante(a.payload,personnage))}));
+                        client.send(JSON.stringify({...a,payload:caviarderPourLesJoueurs(filtrerAstrologieDistante(a.payload,personnage))}));
                     } else client.send(message);
                 }
             }

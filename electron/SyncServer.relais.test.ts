@@ -273,4 +273,23 @@ describe('SyncServer — messages reçus et relais', () => {
         expect(mj.send).not.toHaveBeenCalled();
         expect(ferme.send).not.toHaveBeenCalled();
     });
+
+    /*
+      **Le combat partait sans rôle, donc sans filtre** (S1 de l'audit du
+      2026-10-22) : les secrets des combattants arrivaient sur la tablette d'un
+      joueur. Le serveur caviarde désormais toute synchronisation vers un joueur,
+      quel que soit le rôle visé à l'émission.
+    */
+    it('caviarde toute synchronisation vers un joueur, même diffusée sans rôle', () => {
+        emetteur.role = 'remote';
+        destinataire.role = 'player';
+        const mj = new SocketFictif();
+        mj.role = 'remote';
+        serveur.wss.clients.add(mj);
+        const action = { type: 'sync', payload: { combat: { combatants: [{ id: 'k', gmSecretInfo: 'SECRET-COMBATTANT' }] } } };
+        serveur.broadcastAction(action, emetteur);
+        expect(destinataire.send).toHaveBeenCalledOnce();
+        expect(String(destinataire.send.mock.calls[0][0])).not.toContain('SECRET-COMBATTANT');
+        expect(String(mj.send.mock.calls[0][0])).toContain('SECRET-COMBATTANT');
+    });
 });
