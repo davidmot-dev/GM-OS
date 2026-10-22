@@ -526,6 +526,89 @@ export function controlerLePilote(
         );
     }
 
+    /*
+      **Un compte de réussites que la réserve ne peut pas produire.**
+
+      *Le défaut de Symbaroum, trouvé le 2026-10-21 en écrivant sa page du
+      manuel : chaque test réussissait, un 20 compris.* La Forge avait rangé le
+      modificateur du livre dans `jet.difficulte` — qui compte des réussites à
+      atteindre — sur un jeu qui lance **un seul** d20 sous un seuil. Un dé ne
+      donne qu'une réussite : à zéro, tout réussit ; à deux, tout échoue. Le
+      pilote se chargeait, le panneau affichait son curseur, et le verdict était
+      faux sans qu'un écran le dise. Crimes, audité le 2026-10-19, en est l'autre
+      visage : un seuil par dé de 9 rangé là, sur une réserve plafonnée à zéro
+      dé — neuf réussites exigées de rien.
+
+      Le plafond se lit sur `reserve.max` ; un dé critique compte double. Torg,
+      NOC et les cibles calculées n'y entrent pas : ils comparent un total ou un
+      pourcentage, ils ne comptent pas de réussites. *Erreur et non avertissement :
+      ce pilote est jouable, et c'est bien le problème — il rend des verdicts.*
+    */
+    const jetCompte = driver.jet;
+    const reserveDuJet = jetCompte?.reserve;
+    if (jetCompte && reserveDuJet && !reserveDuJet.sansPlafond && !jetCompte.desEchelonnes && !jetCompte.tableDeBonus && !jetCompte.destin && !jetCompte.cible) {
+        // La réserve vide elle-même est signalée plus bas, en avertissement.
+        const difficulte = jetCompte.difficulte;
+        if (difficulte) {
+            const plafond = Math.max(0, reserveDuJet.max ?? 0) * (jetCompte.critique ? 2 : 1);
+            if (reserveDuJet.max === 1 && (difficulte.min < 1 || difficulte.defaut !== 1 || difficulte.max > plafond)) {
+                erreur(
+                    'jet.difficulte',
+                    `« jet.difficulte » compte des réussites à atteindre, et ce jet ne lance qu'un dé : ` +
+                    'à zéro, tous les jets réussissent ; au-delà d\'un, ils échouent tous. Un modificateur ' +
+                    'ou une opposition qui déplace le seuil va dans « jet.modificateurDuSeuil ». Retirer « jet.difficulte ».',
+                );
+            } else if (reserveDuJet.max === 1) {
+                avertir(
+                    'jet.difficulte',
+                    'Ce jet ne lance qu\'un dé et exige toujours une réussite : « jet.difficulte » ne règle ' +
+                    'rien, et un réglage inutile finit par être rempli. Le retirer.',
+                );
+            } else if (difficulte.defaut > plafond) {
+                erreur(
+                    'jet.difficulte',
+                    `La difficulté par défaut exige ${difficulte.defaut} réussites, et la réserve n'en produit ` +
+                    `jamais plus de ${plafond} : tous les jets échoueront. « jet.difficulte » compte des ` +
+                    'réussites ; la valeur que chaque dé doit atteindre se déclare dans « dice.successThreshold ».',
+                );
+            } else if (difficulte.max > plafond) {
+                avertir(
+                    'jet.difficulte',
+                    `La difficulté monte jusqu'à ${difficulte.max} réussites, et la réserve n'en produit jamais ` +
+                    `plus de ${plafond} : le haut du curseur condamne le jet d'avance.`,
+                );
+            }
+        }
+    }
+
+    /*
+      **Le seuil que le meneur déplace** (Symbaroum, 2026-10-22) : des bornes en
+      nombres, et seulement là où il s'applique — un seuil additionné qu'on jette
+      dessous. Ailleurs le moteur l'ignore : un réglage mort, qu'on signale.
+    */
+    const deplace = driver.jet?.modificateurDuSeuil;
+    if (deplace) {
+        const { min, max, defaut } = deplace;
+        if (![min, max, defaut].every(n => typeof n === 'number' && Number.isFinite(n)) || min > defaut || defaut > max) {
+            erreur(
+                'jet.modificateurDuSeuil',
+                'Le modificateur du seuil demande trois nombres, « min » ≤ « defaut » ≤ « max » — chez ' +
+                'Symbaroum, de −5 à +5, défaut 0.',
+            );
+        }
+        if (deplace.opposition && !(typeof deplace.opposition.reference === 'number' && Number.isFinite(deplace.opposition.reference))) {
+            erreur('jet.modificateurDuSeuil.opposition', 'L’opposition retire la valeur adverse d’une « reference » : un nombre, 10 chez Symbaroum.');
+        }
+        const jet = driver.jet!;
+        if (jet.sens !== 'sous-ou-egal' || !jet.seuil?.length || jet.cible || jet.desEchelonnes || jet.tableDeBonus || jet.destin) {
+            avertir(
+                'jet.modificateurDuSeuil',
+                'Le modificateur du seuil ne s’applique qu’à un seuil additionné qu’on jette dessous ' +
+                '(« sous-ou-egal ») : ici, le moteur l’ignore. Le retirer.',
+            );
+        }
+    }
+
     if (driver.jet?.sens && !SENS_CONNUS.includes(driver.jet.sens)) {
         erreur(
             'jet.sens',

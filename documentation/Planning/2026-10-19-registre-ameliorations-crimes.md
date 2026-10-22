@@ -31,7 +31,7 @@ Ces acquis sont à préserver ; la présence d'un champ ne signifie pas que sa r
 | Lot | Priorité proposée | Amélioration et résultat attendu | État |
 | --- | --- | --- | --- |
 | **C0** | 0 - préalable | **Corpus fiable** : relire les 19 fiches de règles, corriger les contradictions et retirer les traces d'outils ; distinguer règles, options et arbitrages du MJ. | À planifier |
-| **C1** | 0 | **Potentiel GARDE Compétence** : lancer les d10, choisir les dés conservés, garder les 1 obligatoires, appliquer les spécialisations et restituer les quatre bilans, dont la réussite mitigée. | À planifier |
+| **C1** | 0 | **Potentiel GARDE Compétence** : lancer les d10, choisir les dés conservés, garder les 1 obligatoires, appliquer les spécialisations et restituer les quatre bilans, dont la réussite mitigée. Depuis le 22/10, la revue de la Forge signale la difficulté de 9 réussites sur une réserve de 0 dé (registre général § 148). | À planifier |
 | **C2** | 1 | **Potentiels et atteintes** : distinguer base/actuel, fatigue/épuisement/blessures ; relier les valeurs actuelles aux jets, aux récupérations et aux soins. | À planifier |
 | **C3** | 1 | **Dépassement** : conserver des réussites supplémentaires obtenues, appliquer leur coût en fatigue et suivre l'usage par scène et les conditions narratives. | À planifier |
 | **C4** | 1 | **Psychologie** : relier seuils et événements d'Angoisse, Névrose, Psychose et Innocence ; préparer les tests psychotiques et les conséquences à valider. | À planifier |

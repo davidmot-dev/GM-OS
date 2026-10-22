@@ -44,7 +44,7 @@ conformément à la décision de David du 19/10.
 | [NOC](#noc) | Restes revérifiés dans le code le 19/10 | Séquelles et Singularité attribuée par un Rouage |
 | [Rêve de Dragon](#rêve-de-dragon) | Socle R0–R7 livré pour les PJ ; première boucle TMR livrée ; mécaniques du Voyageur dans l'onglet « Lancer un test » le 22/10 | Initiative complète et suites du Haut-Rêve |
 | [Star Trek Adventures](#star-trek-adventures) | Pilote et LCARS documentés ; audit mécanique détaillé à faire | Export actuel, règles de la deuxième édition et essais matériels LCARS |
-| [Symbaroum](#symbaroum) | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) | S1, modificateur du seuil : préparé, choix de David attendu (curseur seul ou opposition explicite) ; puis Endurance et Avantage tactique |
+| [Symbaroum](#symbaroum) | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 livré le 22/10** : modificateur et opposition explicite (§ 149) | Réimport du pilote corrigé et essai de David ; puis Endurance (S2) et Avantage tactique (S3) |
 | [Torg Eternity](#torg-eternity) | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
 | [Within](#within) | Export examiné sommairement ; aucune règle primaire auditée | Reprendre la référence et construire une configuration mécanique vérifiable |
 
@@ -163,6 +163,10 @@ L'audit porte sur *Crimes 2 — Manuel de l'Enquêteur* et l'export corrigé.
 
 **Déjà disponible :** fiche HTML `crimes-fr` intégrée et raccordée, 12 sections et 203 champs,
 compétences, spécialisations, styles, contacts et jauges. Le thème et l'identité existent.
+
+**Depuis le 22/10 (registre § 148)**, la revue de la Forge signale le défaut de C1 : une
+difficulté de 9 réussites sur une réserve plafonnée à 0 dé (erreur sur `jet.difficulte`). Le
+pilote n'a pas changé ; C1 reste à faire.
 
 | Lot | Priorité | Amélioration possible |
 | --- | --- | --- |
@@ -353,8 +357,16 @@ du pilote, réimporté par David le 21/10 ; le modificateur se compte depuis à 
 **S1 préparé, pas commencé (21/10) :** `DescripteurDeJet.modificateurDuSeuil` (−5 à +5) ajouté au
 seuil d'un jet sous le seuil et expliqué ; curseur « Modificateur » du panneau, pour la fiche et la
 tablette ; consigne et contrôle de la Forge ; script de raccord du pilote ; essais, guide 53 et
-page Symbaroum. **À trancher par David :** ce curseur seul, ou l'opposition explicite de l'audit
-(`12 + (10 − 13) = 9`). Avant de coder : « GM-OS tourne-t-il ? ».
+page Symbaroum. **Tranché par David le 22/10 : l'opposition explicite** de l'audit
+(`12 + (10 − 13) = 9`).
+
+**S1 livré le 22/10 (registre § 149) :** `jet.modificateurDuSeuil` (−5 à +5, et opposition
+`10 − Attribut adverse`) au moteur ; case « Attribut adverse » et curseur « Modificateur » au
+panneau, sur la fiche et la tablette, qui s'additionnent ; calcul lisible sous « Seuil » et
+redit au journal ; consigne, contrôle et revue de la Forge. Le contre-exemple de l'audit échoue
+(`10 / 9`). Pilote corrigé : `Export Dirvers/corriges/Symbaroum_driver_gmos_s1-opposition.gmos-driver`
+(script `outils/symbaroum/ajouter_modificateur_du_seuil.py`) ; page du manuel et trois captures
+refaites. **Reste : réimport par David et essai à l'écran.**
 
 | Lot | Priorité | Amélioration possible |
 | --- | --- | --- |
@@ -425,8 +437,8 @@ propres :
 
 | Sujet commun | Pilotes concernés | Résultat recherché |
 | --- | --- | --- |
-| Corpus et contrôles de la Forge | Tous, en priorité Crimes/Symbaroum/Dune/Within | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. ⚠️ **Constaté le 21/10, pas traité :** la consigne de la Forge dit au modèle que « la difficulté que le MENEUR fixe » se déclare dans `jet.difficulte` (`src/modules/forge/rules/GroupesDeChamps.ts`, vers la ligne 454) ; tout jeu au d20 sous un seuil peut refaire l'erreur de Symbaroum |
-| Modificateurs et contexte du jet | Symbaroum, Alien, puis audits des autres | Distinguer modificateur de seuil, nombre de dés, réussites exigées et meilleur/pire dé |
+| Corpus et contrôles de la Forge | Tous, en priorité Crimes/Symbaroum/Dune/Within | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. Sur les onze exports réels, seul Crimes est signalé (C1, déjà connu). **Reste :** relire le corpus, en priorité Crimes/Symbaroum/Dune/Within |
+| Modificateurs et contexte du jet | Symbaroum, Alien, puis audits des autres | Distinguer modificateur de seuil, nombre de dés, réussites exigées et meilleur/pire dé. **Livré le 22/10 (registre § 149) :** `jet.modificateurDuSeuil`, capacité commune du moteur (tout jeu jeté sous un seuil additionné), avec opposition explicite ; Symbaroum la déclare. Les réussites exigées restent `difficulte` (Dune), le nombre de dés la réserve, meilleur/pire dé « Tirage ». **Reste :** l'Avantage tactique de Symbaroum (S3) et les audits des autres jeux |
 | Choix du paiement et bilan du jet | Dune ; Star Trek à auditer séparément | Conserver coût, source, effets immédiats et reliquat, sans double dépense ni perte anticipée |
 | Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu |
 | Événements de scène, séance et temps de jeu | Corruption, Stress, soins, progression, voyages | Des déclencheurs nommés ; une reconnexion ne rejoue pas une dépense, un soin ou un franchissement |

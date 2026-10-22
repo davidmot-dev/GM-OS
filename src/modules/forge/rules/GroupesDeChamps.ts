@@ -450,10 +450,18 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             // Ce que « ce qui s'additionne » ne dit pas, et qui manquait : OÙ.
             // Voir le commentaire ci-dessus — troisième fois que la consigne
             // remontée en tête est vraie mais trop large.
-            'ET N\'Y METS QUE CE QUE LE JOUEUR LIT SUR SA PROPRE FICHE. La difficulté que le ' +
-            'MENEUR fixe n\'est pas une composante : elle se déclare dans "jet.difficulte" ' +
-            '({"min","max","defaut"}). Un malus qui SE CALCULE — état général, fatigue, ' +
-            'blessures, encombrement — n\'est pas une composante non plus, et ne se déclare NULLE ' +
+            'ET N\'Y METS QUE CE QUE LE JOUEUR LIT SUR SA PROPRE FICHE. Ce que le MENEUR fixe ' +
+            'n\'est pas une composante. ' +
+            // Symbaroum, 2026-10-21 : « la difficulté que le meneur fixe » a
+            // suffi au modèle pour y ranger le modificateur du livre, sur un
+            // jeu à un seul d20 — chaque test réussissait, un 20 compris.
+            // Crimes y avait rangé son seuil par dé. Le champ dit un COMPTE.
+            // Ce que le meneur AJOUTE au seuil a son champ depuis le 2026-10-22.
+            '"jet.difficulte" ({"min","max","defaut"}) COMPTE DES RÉUSSITES sur PLUSIEURS dés ' +
+            '(Dune : 0 à 5), JAMAIS sur UN SEUL dé ; le seuil de chaque dé va dans ' +
+            '"dice.successThreshold". Ce qui s\'ajoute au seuil (−5 à +5 ; 10 moins l\'adversaire) ' +
+            'va dans "jet.modificateurDuSeuil":{"min","max","defaut","opposition":{"reference":10}}. ' +
+            'Un malus qui SE CALCULE (fatigue, blessures…) n\'est pas une composante non plus, et ne se déclare NULLE ' +
             'PART : il se lit sur les jauges. Si une valeur qui s\'ajoute n\'a aucune section dans ' +
             'la liste des identifiants disponibles, c\'est le signe qu\'elle n\'a rien à faire ici : ' +
             'OMETS l\'entrée. N\'invente jamais un "sectionId" pour la loger. ' +

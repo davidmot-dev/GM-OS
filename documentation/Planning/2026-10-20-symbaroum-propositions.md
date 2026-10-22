@@ -109,6 +109,11 @@ et Nephilim. La plage usuelle −5…+5 ne doit pas écraser les bonus de Talent
 positif augmente les chances ; l'opposition ne provoque pas un second jet de PNJ. Vérifier
 fiche, pupitre, tablette et journal sur le même calcul.
 
+**Livré le 22/10/2026 (Claude Code, registre général § 149)**, en opposition explicite, choix de
+David : `jet.modificateurDuSeuil` ; l'exemple échoue (`10 / 9`). Le pupitre, sans fiche, garde sa
+case de caractéristique où le seuil se saisit calculé. Réimport du pilote corrigé et essai de
+David attendus.
+
 ## S2 — Raccorder l'Endurance et accompagner l'agonie (priorité 0)
 
 `combat.statsToTrack` ne désigne **aucun `isMainHP: true`**. Malgré les champs

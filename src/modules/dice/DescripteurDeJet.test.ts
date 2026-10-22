@@ -994,3 +994,84 @@ describe('la spécialisation élargit le critique', () => {
         expect(preparerLeJet(sans, fiche, { champs, specialisation: true }).doubleSous).toBe(1);
     });
 });
+
+/**
+ * **Le seuil que le meneur déplace** — Symbaroum, 2026-10-22 (S1 de l'audit de
+ * Codex, choix de David : l'opposition explicite). *« d20 ≤ Attribut +
+ * modificateur »*, et contre un adversaire, dix moins son Attribut.
+ *
+ * Le contre-exemple de l'audit : Précision 12 contre 13, dé 10. Le livre
+ * attend `10 / 9`, un **échec** ; le pilote d'alors rendait une réussite.
+ */
+describe('le seuil que le meneur déplace', () => {
+    const symbaroum: DescripteurDeJet = {
+        seuil: [{ id: 'attribut', label: 'Attribut', sectionId: 'attributs' }],
+        reserve: { base: 1, max: 1, faces: 20 },
+        sens: 'sous-ou-egal',
+        modificateurDuSeuil: { min: -5, max: 5, defaut: 0, opposition: { reference: 10, label: 'Attribut adverse' } },
+    };
+    const fiche = { precision: 12 };
+    const preparer = (choix: Partial<Parameters<typeof preparerLeJet>[2]> = {}) =>
+        preparerLeJet(symbaroum, fiche, { champs: { attribut: 'precision' }, ...choix });
+
+    it('l\'opposition se retire de la référence, et le calcul se lit', () => {
+        const jet = preparer({ valeurAdverse: 13 });
+        expect(jet.seuil).toBe(9);
+        expect(jet.explicationDuSeuil).toBe('12 + (10 − 13)');
+        expect(jet.modificationDuSeuil).toEqual({
+            situation: 0, opposition: { adverse: 13, modificateur: -3, label: 'Attribut adverse' },
+        });
+        expect(jet.reussitesRequises, 'un dé, une réussite : jamais −3').toBe(1);
+        expect(jet.avertissements).toEqual([]);
+    });
+
+    it('le dé 10 échoue contre 9, le dé 9 réussit', () => {
+        const { seuil, sens } = preparer({ valeurAdverse: 13 });
+        const vus = new Set<number>();
+        for (let i = 0; i < 2000 && !(vus.has(9) && vus.has(10)); i++) {
+            const r = DiceEngine.rollFromConfig(
+                { defaultDice: '1d20', logic: 'count-success', engine: 'standard', successThreshold: seuil, sens },
+                { baseCount: 1 },
+            );
+            const v = r.rolls[0].val as number;
+            vus.add(v);
+            // Un d20 seul sous un seuil passe par la Sauvegarde : le verdict est son booléen.
+            expect(r.tagSuccess, `dé ${v} contre ${seuil}`).toBe(v <= 9);
+            expect(r.totalDisplay.startsWith(`${v} / 9`)).toBe(true);
+        }
+        expect(vus.has(9) && vus.has(10), '9 et 10 tirés en 2 000 lancers').toBe(true);
+    });
+
+    it('le modificateur de situation s\'ajoute à l\'opposition au lieu de l\'écraser', () => {
+        const jet = preparer({ valeurAdverse: 13, modificateurDuSeuil: 2 });
+        expect(jet.seuil).toBe(11);
+        expect(jet.explicationDuSeuil).toBe('12 + (10 − 13) + 2');
+        expect(preparer({ modificateurDuSeuil: -4 }).explicationDuSeuil).toBe('12 − 4');
+        expect(preparer({ modificateurDuSeuil: -4 }).seuil).toBe(8);
+    });
+
+    it('un modificateur positif augmente les chances ; rien de choisi ne change rien', () => {
+        expect(preparer({ modificateurDuSeuil: 3 }).seuil).toBeGreaterThan(preparer().seuil);
+        const neutre = preparer();
+        expect(neutre.seuil).toBe(12);
+        expect(neutre.explicationDuSeuil).toBeUndefined();
+        expect(neutre.modificationDuSeuil).toBeUndefined();
+    });
+
+    it('hors bornes, la valeur est ramenée et dite, sans empêcher de lancer', () => {
+        const jet = preparer({ modificateurDuSeuil: 9 });
+        expect(jet.seuil).toBe(17);
+        expect(jet.remarques).toContain('Modificateur ramené entre -5 et 5.');
+        expect(jet.avertissements).toEqual([]);
+    });
+
+    it('sans opposition déclarée, la valeur adverse ne compte pas', () => {
+        const sans = { ...symbaroum, modificateurDuSeuil: { min: -5, max: 5, defaut: 0 } };
+        expect(preparerLeJet(sans, fiche, { champs: { attribut: 'precision' }, valeurAdverse: 13 }).seuil).toBe(12);
+    });
+
+    it('ne touche pas un jeu qui compte au-dessus, ni une cible calculée', () => {
+        const dessus = { ...symbaroum, sens: 'superieur-ou-egal' as const };
+        expect(preparerLeJet(dessus, fiche, { champs: { attribut: 'precision' }, modificateurDuSeuil: 3 }).seuil).toBe(12);
+    });
+});

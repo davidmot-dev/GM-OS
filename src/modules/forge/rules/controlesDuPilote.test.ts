@@ -1757,3 +1757,91 @@ describe('les pistes du groupe au nouveau scénario — 2026-10-16', () => {
         ]);
     });
 });
+
+/**
+ * **Un compte de réussites que la réserve ne peut pas produire** — Symbaroum,
+ * 2026-10-21 : le modificateur du livre rangé dans `jet.difficulte`, sur un
+ * seul d20 ; chaque test réussissait, un 20 compris. Crimes, audité le
+ * 2026-10-19 : son seuil par dé (9) rangé au même endroit, sur une réserve
+ * plafonnée à zéro dé. Ni l'un ni l'autre n'était signalé.
+ */
+describe('la difficulté se mesure à la réserve', () => {
+    const constatsDuJet = (jet: Record<string, unknown>) =>
+        controlerLePilote({ jet } as never, fiche)
+            .filter(c => c.ou === 'jet.difficulte' || c.ou === 'jet.reserve')
+            .map(c => [c.ou, c.gravite]);
+
+    it('refuse un modificateur rangé dans le compte d\'un jeu à un seul dé', () => {
+        expect(constatsDuJet({
+            seuil: [{ id: 'attribut', label: 'Attribut', sectionId: 'competences' }],
+            reserve: { base: 1, max: 1, faces: 20 }, sens: 'sous-ou-egal',
+            difficulte: { min: -5, max: 5, defaut: 0 },
+        })).toEqual([['jet.difficulte', 'erreur']]);
+    });
+
+    it('réclame seulement le retrait d\'un compte toujours égal à un', () => {
+        expect(constatsDuJet({
+            seuil: [{ id: 'attribut', label: 'Attribut', sectionId: 'competences' }],
+            reserve: { base: 1, max: 1, faces: 20 }, sens: 'sous-ou-egal',
+            difficulte: { min: 1, max: 1, defaut: 1 },
+        })).toEqual([['jet.difficulte', 'avertissement']]);
+    });
+
+    it('refuse une difficulté qu\'une réserve sans dé n\'atteindra jamais', () => {
+        expect(constatsDuJet({
+            seuil: [{ id: 'competence', label: 'Compétence', sectionId: 'competences' }],
+            reserve: { base: 0, max: 0, faces: 10 }, sens: 'superieur-ou-egal',
+            difficulte: { min: 9, max: 9, defaut: 9 },
+        })).toEqual([['jet.difficulte', 'erreur'], ['jet.reserve', 'avertissement']]);
+    });
+
+    it('signale le haut d\'un curseur que la réserve ne peut pas atteindre', () => {
+        expect(constatsDuJet({
+            reserve: { base: 2, max: 2, faces: 6 }, sens: 'superieur-ou-egal',
+            difficulte: { min: 0, max: 5, defaut: 1 },
+        })).toEqual([['jet.difficulte', 'avertissement']]);
+    });
+
+    it('laisse Dune tranquille : le critique compte double, cinq réussites sont à portée', () => {
+        expect(constatsDuJet(duneDriver.jet as never)).toEqual([]);
+    });
+
+    it('ne compte rien chez Torg, NOC ou une cible calculée : ils comparent un total', () => {
+        const unDe = { reserve: { base: 1, max: 1, faces: 20 }, difficulte: { min: 0, max: 30, defaut: 10 } };
+        expect(constatsDuJet({ ...unDe, tableDeBonus: 'torg', seuil: [{ id: 'a', label: 'A', sectionId: 'competences' }] })).toEqual([]);
+        expect(constatsDuJet({ ...unDe, destin: {}, seuil: [{ id: 'a', label: 'A', sectionId: 'competences' }] })).toEqual([]);
+        expect(constatsDuJet({
+            ...unDe,
+            cible: { mecanique: 'reves-de-dragons', caracteristique: { id: 'c', label: 'C', sectionId: 'competences' } },
+        }).filter(([ou]) => ou === 'jet.reserve')).toEqual([]);
+    });
+});
+
+/** **Le seuil que le meneur déplace** (Symbaroum, 2026-10-22). */
+describe('le modificateur du seuil', () => {
+    const constats = (jet: Record<string, unknown>) =>
+        controlerLePilote({ jet } as never, fiche)
+            .filter(c => c.ou.startsWith('jet.modificateurDuSeuil'))
+            .map(c => [c.ou, c.gravite]);
+    const symbaroum = {
+        seuil: [{ id: 'attribut', label: 'Attribut', sectionId: 'competences' }],
+        reserve: { base: 1, max: 1, faces: 20 }, sens: 'sous-ou-egal',
+    };
+
+    it('le réglage de Symbaroum passe sans un mot', () => {
+        expect(constats({ ...symbaroum, modificateurDuSeuil: { min: -5, max: 5, defaut: 0, opposition: { reference: 10 } } }))
+            .toEqual([]);
+    });
+
+    it('des bornes qui ne se tiennent pas sont une erreur', () => {
+        expect(constats({ ...symbaroum, modificateurDuSeuil: { min: 5, max: -5, defaut: 0 } }))
+            .toEqual([['jet.modificateurDuSeuil', 'erreur']]);
+        expect(constats({ ...symbaroum, modificateurDuSeuil: { min: -5, max: 5, defaut: 0, opposition: { reference: 'dix' } } }))
+            .toEqual([['jet.modificateurDuSeuil.opposition', 'erreur']]);
+    });
+
+    it('sur un jeu qui compte au-dessus, il est mort : on le dit', () => {
+        expect(constats({ ...symbaroum, sens: 'superieur-ou-egal', modificateurDuSeuil: { min: -5, max: 5, defaut: 0 } }))
+            .toEqual([['jet.modificateurDuSeuil', 'avertissement']]);
+    });
+});

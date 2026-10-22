@@ -155,6 +155,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
             corruption_temporaire: 2, corruption_permanente: 1, argent: 5,
         },
         composantes: ['precision'],
+        scenes: c => scenesDeSymbaroum(c),
     },
     {
         corpusId: 'reves de dragons', slug: 'reves-de-dragons', personnage: 'Aldaran le Voyageur',
@@ -640,6 +641,30 @@ async function scenesDeNephilim(c: ContexteDeScene): Promise<void> {
 }
 
 /** Cthulhu Hack : la Fortune sous une Sauvegarde ratée, la suite d'un déclin au pupitre, le Hors Jeu. */
+/**
+ * **L'opposition explicite** (2026-10-22) : Précision 15 contre un Attribut
+ * adverse de 13, avec l'Avantage (+2) — `15 + (10 − 13) + 2 = 14`.
+ */
+async function scenesDeSymbaroum(c: ContexteDeScene): Promise<void> {
+    const pilote = c.pilote.gameDriver as { jet?: { modificateurDuSeuil?: unknown } };
+    if (!pilote.jet?.modificateurDuSeuil) return;
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await panneau.locator('select').first().selectOption('precision');
+    await panneau.locator('[data-valeur-adverse]').fill('13');
+    await panneau.locator('[data-modificateur-du-seuil]').fill('2');
+    await expect(panneau.getByText(/15 \+ \(10 − 13\) \+ 2/)).toBeVisible();
+    const fenetre = await gmos.application.browserWindow(f);
+    await fenetre.evaluate(w => w.setContentSize(1440, 1800));
+    // Relancé contre 14 : le résultat du lancer précédent (contre 15) ne doit pas rester sous ce seuil.
+    await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    await expect(panneau.getByText(/ \/ 14/).first()).toBeVisible();
+    await photographier(panneau, 'jeu-symbaroum-opposition');
+    await fenetre.evaluate(w => w.setContentSize(1440, 900));
+}
+
 async function scenesDeCthulhuHack(c: ContexteDeScene): Promise<void> {
     const pilote = c.pilote.gameDriver as { jet?: { fortune?: unknown }; combat?: { horsJeu?: unknown } };
     const f = gmos.fenetre;

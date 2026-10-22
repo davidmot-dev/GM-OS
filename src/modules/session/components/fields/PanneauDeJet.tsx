@@ -123,6 +123,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * moyenne, et c'est pourquoi il est le défaut.
      */
     const [ajustementDeDifficulte, setAjustementDeDifficulte] = useState(0);
+    /**
+     * **Le seuil que le meneur déplace** (Symbaroum, 2026-10-22) : un
+     * modificateur de situation, et la valeur adverse d'une opposition —
+     * vide, pas d'opposition. Ni l'un ni l'autre n'est `difficulte`.
+     */
+    const seuilDeplacable = descripteur.sens === 'sous-ou-egal' && !descripteur.cible && !descripteur.desEchelonnes
+        && !descripteur.tableDeBonus && !descripteur.destin ? descripteur.modificateurDuSeuil : undefined;
+    const [modificateurDuSeuil, setModificateurDuSeuil] = useState(descripteur.modificateurDuSeuil?.defaut ?? 0);
+    const [valeurAdverse, setValeurAdverse] = useState('');
     const [resultat, setResultat] = useState<RollResult | null>(null);
     const [avantPanique, setAvantPanique] = useState<RollResult | null>(null);
     const [folieMeurtriere, setFolieMeurtriere] = useState(false);
@@ -294,6 +303,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             {
                 champs: choix, desSupplementaires: desAchetes, difficulte,
                 ajustementDeDifficulte: ajustementDeDifficulte + degresPuises, specialisation,
+                modificateurDuSeuil,
+                valeurAdverse: valeurAdverse.trim() === '' ? undefined : Number(valeurAdverse),
                 /*
                   Sur un jeu à dés échelonnés, avantage et désavantage ajoutent
                   ou retirent un DÉ : c'est `preparerLeJet` qui les applique à la
@@ -326,7 +337,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
+        [descripteur, valeurs, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
     );
 
     /*
@@ -818,6 +829,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             : jet.desEchelonnes.length > 0
                 ? jet.desEchelonnes.map(d => `${d.label} D${d.faces}`).join(' + ')
                 : `${jet.nombreDeDes}d${jet.faces}`)
+            // L'opposition et le modificateur se relisent avec le jet (Symbaroum).
+            + (jet.modificationDuSeuil?.opposition
+                ? ` · ${jet.modificationDuSeuil.opposition.label} ${jet.modificationDuSeuil.opposition.adverse}` : '')
+            + (jet.modificationDuSeuil?.situation
+                ? ` · ${jet.modificationDuSeuil.situation > 0 ? '+' : '−'}${Math.abs(jet.modificationDuSeuil.situation)}` : '')
             // Ce qu'on a puisé dans le groupe se relit avec le jet.
             + (engagesDuGroupe.length > 0
                 ? ` · ${engagesDuGroupe.map(d => `${d.apport.label}${d.apport.stocks.length > 1 ? ` (${d.stock!.label})` : ''} ×${d.points}`).join(', ')}`
@@ -1271,7 +1287,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const aPreparer = !!descripteur.cible || torg || !!destin || disponiblesPerso.length > 0
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
-        || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible);
+        || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable;
     const numeros = { composer: 1, preparer: 2, lancer: aPreparer ? 3 : 2, resultat: aPreparer ? 4 : 3 };
     /*
       **Le septième lecteur, et il écrivait lui aussi son propre mot.** Le degré
@@ -1721,6 +1737,52 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 onChange={e => setDifficulte(Number(e.target.value))}
                                 className="w-14 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-xs font-mono font-bold focus:outline-none focus:border-accent/50"
                             />
+                        </label>
+                    )}
+
+                    {/*
+                        **L'opposition et le modificateur, deux réglages qui s'ajoutent**
+                        (Symbaroum, 2026-10-22). La valeur adverse se saisit : le calcul
+                        `12 + (10 − 13)` se lit sous « Seuil », à l'étape Composer.
+                        L'Avantage (+2) passe par le modificateur, même contre un adversaire.
+                    */}
+                    {seuilDeplacable?.opposition && (
+                        <label className="flex items-center gap-2">
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
+                                {seuilDeplacable.opposition.label ?? 'Opposition'}
+                            </span>
+                            <input
+                                type="number"
+                                inputMode="numeric"
+                                value={valeurAdverse}
+                                placeholder="—"
+                                onChange={e => setValeurAdverse(e.target.value)}
+                                data-valeur-adverse
+                                className="w-14 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-xs font-mono font-bold focus:outline-none focus:border-accent/50"
+                            />
+                            {jet.modificationDuSeuil?.opposition && (
+                                <span className="font-mono text-ui-11 text-app-text/50">
+                                    {jet.modificationDuSeuil.opposition.modificateur > 0 ? '+' : jet.modificationDuSeuil.opposition.modificateur < 0 ? '−' : ''}
+                                    {Math.abs(jet.modificationDuSeuil.opposition.modificateur)}
+                                </span>
+                            )}
+                        </label>
+                    )}
+                    {seuilDeplacable && (
+                        <label className="flex items-center gap-2">
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Modificateur</span>
+                            <input
+                                type="range"
+                                min={seuilDeplacable.min}
+                                max={seuilDeplacable.max}
+                                value={modificateurDuSeuil}
+                                onChange={e => setModificateurDuSeuil(Number(e.target.value))}
+                                data-modificateur-du-seuil
+                                className="w-28 accent-accent"
+                            />
+                            <span className="font-mono font-black text-accent w-8 text-right">
+                                {modificateurDuSeuil > 0 ? `+${modificateurDuSeuil}` : modificateurDuSeuil < 0 ? `−${-modificateurDuSeuil}` : '0'}
+                            </span>
                         </label>
                     )}
                 </Etape>

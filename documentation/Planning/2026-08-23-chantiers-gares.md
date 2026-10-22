@@ -12003,7 +12003,7 @@ raccord »* (Claude Code).
   règle relue (`fortune_piste`, `team_track`) ; les compteurs des compétences et des styles non
   plus. Manuel des jeux : pas encore de page `54-Jeu-Crimes`.
 
-### 145 · Symbaroum — fiche HTML raccordée, jet corrigé, modificateur du seuil à construire — 20-21/10/2026
+### 145 · Symbaroum — fiche HTML raccordée, jet corrigé, modificateur du seuil construit (§ 149) — 20-22/10/2026
 
 David, le 20/10 : *« j'ai créé un nouveau Drivers Symbaroum, et j'ai créé la fiche HTML. Peux-tu
 la vérifier et la connecter ? »* (Claude Code).
@@ -12043,6 +12043,10 @@ la vérifier et la connecter ? »* (Claude Code).
   (`12 + (10 − 13) = 9`). **À trancher par David** : le curseur seul, ou l'opposition explicite. Son
   contre-exemple (`reussitesRequises: -3`) date d'avant le retrait de `difficulte`. S0 et S2–S9
   restent des propositions que David n'a pas choisies.
+- **Choix de David (22/10) : l'opposition explicite.** Le point 3 ci-dessus est en partie fait
+  au § 148 : la consigne de la Forge ne range plus un modificateur dans `difficulte`, et le
+  contrôle refuse ce champ sur un jet à un seul dé (une erreur, pas un avertissement).
+- **Fait le 22/10 — S1, l'opposition explicite** : voir le § 149.
 - ⛔ Avant de coder : demander à David *« GM-OS tourne-t-il ? »*.
 
 ### 146 · Import qui ne se refermait plus, campagne forgée invisible — 22/10/2026
@@ -12151,6 +12155,71 @@ sur les Tablettes Joueurs. »* (Claude Code).
   blocs Alien de `PanneauDeJet.tsx` : un seul écrivain, s'entendre avant d'y toucher. ⛔ Avant de
   coder : « GM-OS tourne-t-il ? ».
 
+### 148 · La Forge ne range plus un modificateur dans le compte de réussites — 22/10/2026
+
+David, le 22/10 : premier des sujets communs de [la synthèse des pilotes](2026-10-20-ameliorations-tous-les-pilotes.md),
+*« ok on commence par 1 »* (Claude Code) ; GM-OS confirmé fermé.
+
+- **Le défaut** : la consigne du groupe « Dés et composition du jet » disait que *« la difficulté
+  que le MENEUR fixe »* se déclare dans `jet.difficulte`. Ce champ **compte des réussites à
+  atteindre**. Sur Symbaroum (un d20 sous un seuil), la Forge y avait rangé le modificateur du
+  livre, et chaque test réussissait (§ 145). Crimes y avait rangé son seuil par dé : 9 réussites
+  exigées d'une réserve plafonnée à 0 dé ([audit C1](2026-10-19-crimes-propositions.md)). Ni l'un
+  ni l'autre n'était signalé.
+- **Fait — la consigne** (`GroupesDeChamps.ts`) : `jet.difficulte` compte des réussites sur
+  plusieurs dés (Dune : 0 à 5) ; jamais pour un seul dé ; un modificateur du seuil n'y va pas ; le
+  seuil de chaque dé va dans `dice.successThreshold`. Raccourcie pour tenir dans le budget
+  d'invite (`corpusDerivable.test.ts` : 21 024 caractères au plus, sur les corpus réels).
+- **Fait — le contrôle du pilote** (`controlesDuPilote.ts`) : la difficulté se mesure au plafond
+  de la réserve (`reserve.max`, doublé si un dé critique compte double). **Erreur** : une
+  difficulté sur un jet à un seul dé, sauf le cas inerte « toujours 1 » (avertissement : le
+  retirer) ; une difficulté par défaut que la réserve ne peut pas produire. **Avertissement** :
+  le haut du curseur hors d'atteinte. Torg, NOC et les cibles calculées n'y entrent pas : ils
+  comparent un total. La réserve vide garde son avertissement d'avant.
+- **Vérifié** : `tsc -b` propre ; 721 essais de la Forge verts, dont 7 nouveaux ; le contrôle
+  passé sur les onze exports réels d'`Export Dirvers/` : **seul Crimes est signalé** (erreur
+  sur `jet.difficulte`, le défaut C1 déjà connu) ; Symbaroum corrigé, Dune, Star Trek, Torg, NOC
+  et les autres ne reçoivent rien.
+- **Reste** : le corpus de la Forge (relire les fiches de règles de Crimes, Symbaroum, Dune,
+  Within) ; S1 de Symbaroum, l'opposition explicite (§ 145), au sujet commun suivant. Rien à
+  essayer à l'écran : la revue du pilote affiche le constat à la prochaine forge.
+
+### 149 · Symbaroum S1 — le modificateur du seuil et l'opposition explicite — 22/10/2026
+
+David, le 22/10 : *« ok on commence par 1 pour le 2 opposition explicite »*, puis *« enchaîne sur
+le sujet 2 »* (Claude Code) ; GM-OS confirmé fermé. Deuxième sujet commun de
+[la synthèse des pilotes](2026-10-20-ameliorations-tous-les-pilotes.md), S1 de
+[l'audit de Codex](2026-10-20-symbaroum-propositions.md).
+
+- **Fait — le moteur** (`DescripteurDeJet.ts`) : `modificateurDuSeuil`
+  (`{ min, max, defaut, opposition?: { reference, label } }`) ; le joueur choisit
+  `modificateurDuSeuil` et `valeurAdverse`. Le seuil devient `Attribut + (référence − adverse) +
+  modificateur`, expliqué (`12 + (10 − 13) = 9`), rendu dans `modificationDuSeuil`. Seulement sur un
+  seuil additionné jeté **dessous** (ni cible, ni dés échelonnés, ni Torg, ni NOC). Hors bornes :
+  ramené et **remarqué**, pas averti (un avertissement empêche de lancer). Le contre-exemple de
+  l'audit (Précision 12 contre 13, dé 10) **échoue** : `10 / 9` ; un dé égal au seuil réussit
+  (le d20 seul passe par la Sauvegarde, `≤`) ; l'opposition ne lance aucun dé de PNJ.
+- **Fait — le panneau** (`PanneauDeJet.tsx`, commun à la fiche et à la tablette) : à l'étape
+  *Préparer*, une case **Attribut adverse** (vide : pas d'opposition) et un curseur
+  **Modificateur** ; ils s'additionnent, l'Avantage (+2) n'est pas écrasé. Le titre du jet au
+  journal et le résultat remonté de la tablette les redisent (« Attribut · Attribut adverse 13 ·
+  +2 »). Le pupitre de Dice-OS, sans fiche, garde sa case de caractéristique : le seuil s'y saisit
+  calculé.
+- **Fait — la Forge** : consigne (le modificateur va dans `jet.modificateurDuSeuil`, tenue dans le
+  budget d'invite) ; contrôle (bornes en nombres, référence numérique ; avertissement s'il est mort,
+  sur un jeu qui compte au-dessus) ; l'erreur du § 148 renvoie à ce champ ; revue du pilote.
+- **Fait — le pilote** : `outils/symbaroum/ajouter_modificateur_du_seuil.py` sur l'export du 22/10 →
+  `Export Dirvers/corriges/Symbaroum_driver_gmos_s1-opposition.gmos-driver` (−5 à +5, défaut 0,
+  opposition 10 − « Attribut adverse ») ; `relier_fiche_symbaroum.py` l'écrit aussi.
+- **Fait — le manuel** : ligne `modificateurDuSeuil` au guide 53 (la garde l'exige) ; page
+  `54-Jeu-Symbaroum.md` réécrite (« Le modificateur et l'opposition ») ; trois captures refaites
+  par `capturesDesJeux` avec le pilote corrigé, dont `jeu-symbaroum-opposition.jpg` (10 sous 14).
+- **Vérifié** : `tsc -b` propre ; essais du moteur (7), du panneau (4,
+  `PanneauDeJet.symbaroum.test.tsx`), du contrôle (3), de la consigne ; suite complète **8 633
+  essais verts** ; `capturesDesJeux` vert sur Symbaroum.
+- **Reste** : **David réimporte** le pilote corrigé, puis l'essai à l'écran (fiche et tablette).
+  Ensuite, S3 (Avantage tactique +2 et +1D4 dégâts) et S2 (Endurance) restent proposés.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12236,9 +12305,11 @@ sur les Tablettes Joueurs. »* (Claude Code).
 | 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ✅ **Codé et poussé le 19/10, lots E0 à E6** (`11cf56f1`…`934874b2`) : Obsidian filtré, registre des détenteurs complété, clonage juste, archive complète, « Rejouer », aperçu + sauvegarde avant import + bilan, archive des médias `.gmos-medias` avec Image-OS (ce que la campagne utilise). **Essayé par David le 19/10 sur l'instance de test, export et import : *« ok ça fonctionne »*** ; bilan d'export ajouté après le premier essai. ⛔ Décisions de David : cartes, tables, calendriers et bibliothèque commune **ne s'archivent pas** (pas liés à une campagne) ; **Deck-OS part avec le pilote** (`.gmos-driver`), plus avec la campagne ; Rejouer : toutes les réserves au départ, combats préparés et modules gardés | **David** : dire si l'archive des médias doit aussi prendre les médias que la campagne **utilise** sans les étiqueter (portraits, cartes…) ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
 | 79 | **Dune — pilote, règles et conflits** | ⏸ **Projet futur, garé par David le 19/10** ; § 143 ; audit et propositions D0–D8 conservés, aucun développement | Attendre la demande de reprise de David ; alors choisir le premier lot et vérifier son export du pilote | [Audit et priorités](2026-10-19-dune-propositions.md) |
 | 80 | **Crimes — pilote et fiche HTML** | § 144 ; fiche `crimes-fr` intégrée au moteur v13, fiche GM-OS refaite sur la fiche HTML, correspondance complète ; pilote corrigé réimporté, fiche validée par David le 19/10 | Le jet « Potentiel GARDE Compétence » ; trancher les Potentiels (10 cases ou 0 à 5) et les pistes sans règle | Le moteur de dés ne sait pas « garder » des dés |
-| 81 | **Symbaroum — pilote, fiche HTML et jet** | § 145 ; fiche `symbaroum-fr` intégrée au moteur v14, correspondance complète, page du manuel (`712f70c1`, `34404411`) ; jet corrigé — un seul attribut, plus de `difficulte` qui faisait tout réussir ; pilote réimporté par David le 21/10 | Le modificateur du seuil (−5 à +5) : option du jet, curseur du panneau, consigne et contrôle de la Forge — préparé, non commencé | Le feu vert de David, et son choix entre le curseur seul et l'opposition explicite (S1 de [l'audit de Codex](2026-10-20-symbaroum-propositions.md)) |
+| 81 | **Symbaroum — pilote, fiche HTML et jet** | § 145 ; fiche `symbaroum-fr` intégrée au moteur v14, correspondance complète, page du manuel (`712f70c1`, `34404411`) ; jet corrigé — un seul attribut, plus de `difficulte` qui faisait tout réussir ; pilote réimporté par David le 21/10 | S1 fait le 22/10 (§ 149) : modificateur du seuil et opposition explicite, au panneau et à la Forge ; pilote corrigé dans `corriges/` | Le réimport par David, puis son essai à l'écran ; ensuite S2/S3 de [l'audit de Codex](2026-10-20-symbaroum-propositions.md) |
 | 82 | **Import qui ne se refermait plus, campagne forgée invisible** | § 146 ; bilan d'import fermé seul après 8 s sauf s'il alerte (`NexusHUD.tsx`) ; campagne créée à la première fiche publiée dans l'Atelier (`AtelierDeCampagne.tsx`) — faits et commités le 22/10 | L'essai de David à l'écran ; recueillir le troisième défaut annoncé | Rien |
 | 83 | **L'onglet « Lancer un test »** | § 147 ; maquettes Stitch retenues le 22/10 ; **onglets et refonte de la partie commune faits et commités le 22/10** ; suite unitaire, `capturesDesJeux` (dix jeux, 96 captures du manuel refaites) et sept essais du Voyageur verts | L'essai de David à l'écran | Rien |
+| 84 | **Forge : `jet.difficulte` compte des réussites** | § 148 ; consigne corrigée et contrôle du pilote au plafond de la réserve, faits le 22/10 ; 721 essais de la Forge verts ; sur les exports réels, seul Crimes est signalé (C1, connu) | Relire le corpus de la Forge | Rien |
+| 85 | **Symbaroum S1 — modificateur du seuil, opposition explicite** | § 149 ; moteur, panneau (fiche et tablette), journal, Forge, pilote corrigé, manuel et captures — faits le 22/10 | Réimport du pilote corrigé et essai de David | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

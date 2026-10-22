@@ -137,7 +137,8 @@ appareil. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
 | **Consommation** (`consommation`) | Au lancer, le jet **retire seul** de la fiche ce qu'il consomme — la quantité lue sur une composante, dans la jauge de l'élément lu sur la même ligne —, sauf sur un critique | Nephilim : les Materiae Primae d'une transmutation |
 | **Critique, complication** (`critique`, `complication`) | Les faces qui comptent double, ou qui compliquent | 2d20 : 1 et 20 |
 | **Spécialisation** (`specialisation`) | Une case au jet : cochée, **chaque dé inférieur ou égal** à la composante nommée (la Fonction) compte double, comme le critique. C’est le joueur qui sait si la tâche entre dans une de ses spécialisations | Star Trek : le Focus de l’édition anglaise |
-| **Difficulté** (`difficulte`) | Le nombre de réussites à atteindre, réglable avant de lancer | Dune : de 0 à 5 |
+| **Difficulté** (`difficulte`) | Le nombre de réussites à atteindre, réglable avant de lancer. **Jamais sur un jet d'un seul dé** : à 0 tout réussirait, à 2 tout échouerait — la revue de la Forge le refuse | Dune : de 0 à 5 |
+| **Modificateur du seuil** (`modificateurDuSeuil`) | Sur un seuil qu'on jette **dessous**, à l'étape « Préparer » : un curseur **Modificateur** qui s'ajoute au seuil, et avec `opposition` une case pour la **valeur adverse**, retirée de la référence. Les deux s'additionnent, et le calcul se lit sous « Seuil » ; le journal les redit avec le jet | Symbaroum : de −5 à +5, et 10 moins l'Attribut adverse — `12 + (10 − 13) = 9` |
 | **Sens** (`sens`) | Réussir **sous** le seuil, ou **au-dessus** | Cthulhu Hack : sous ; NOC : au-dessus |
 
 **Avantage / Désavantage** n'apparaît que là où un seul dé décide : sur une réserve, il n'y a pas

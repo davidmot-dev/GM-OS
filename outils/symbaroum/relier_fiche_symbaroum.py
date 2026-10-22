@@ -195,8 +195,13 @@ pilote['combat']['santeDeDepart'] = 'endurance'
 pilote['jet']['seuil'] = [{'id': 'attribut', 'label': 'Attribut', 'sectionId': 'attributs_primaires'}]
 # La Forge avait mis le modificateur du livre (−5 à +5) dans `difficulte` — qui, dans GM-OS, est un
 # NOMBRE DE RÉUSSITES à obtenir (Dune). À 0, chaque jet réussissait, un 20 compris (2026-10-21).
-# Sans `difficulte`, il en faut une : 1d20 sous l'attribut. Le modificateur se compte à la main.
+# Sans `difficulte`, il en faut une : 1d20 sous l'attribut.
 pilote['jet'].pop('difficulte', None)
+# Le modificateur va au seuil, et l'opposition se saisit (2026-10-22, ajouter_modificateur_du_seuil.py).
+pilote['jet']['modificateurDuSeuil'] = {
+    'min': -5, 'max': 5, 'defaut': 0,
+    'opposition': {'reference': 10, 'label': 'Attribut adverse'},
+}
 
 os.makedirs(os.path.dirname(sortie) or '.', exist_ok=True)
 with zipfile.ZipFile(sortie, 'w', zipfile.ZIP_DEFLATED) as z:

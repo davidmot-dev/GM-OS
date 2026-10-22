@@ -251,6 +251,12 @@ export const RevueDuPilote: React.FC<{
               {jet.difficulte.min} à {jet.difficulte.max}, défaut {jet.difficulte.defaut}
             </Ligne>
           )}
+          {jet?.modificateurDuSeuil && (
+            <Ligne clef="Modificateur du seuil">
+              {jet.modificateurDuSeuil.min} à {jet.modificateurDuSeuil.max}, défaut {jet.modificateurDuSeuil.defaut}
+              {jet.modificateurDuSeuil.opposition && ` ; opposition : ${jet.modificateurDuSeuil.opposition.reference} moins la valeur adverse`}
+            </Ligne>
+          )}
         </Bloc>
       </div>
 

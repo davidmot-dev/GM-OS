@@ -1,6 +1,6 @@
 # 🌑 Jeu — Symbaroum
 
-> **Pilote décrit :** « Symbaroum », exporté le 2026-10-20 et corrigé le 2026-10-21 (un seul attribut au jet, plus de « difficulté » qui faisait tout réussir, santé de départ sur l'Endurance, fiche HTML reliée). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Symbaroum », exporté le 2026-10-20 et corrigé le 2026-10-21 (un seul attribut au jet, plus de « difficulté » qui faisait tout réussir, santé de départ sur l'Endurance, fiche HTML reliée), puis le 2026-10-22 (modificateur et opposition au seuil, `Export Dirvers/corriges/Symbaroum_driver_gmos_s1-opposition.gmos-driver`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Un seul geste : le **test**, un d20 sous un attribut. Autour de lui, la fiche de personnage HTML,
 reliée champ par champ, et la **Corruption**, suivie en jauges.
@@ -23,14 +23,29 @@ reliée champ par champ, et la **Corruption**, suivie en jauges.
 
 ![Après le lancer : 13 sous 15, réussite](captures/jeu-symbaroum-jet-lance.jpg)
 
-> ⚠️ **Le modificateur du meneur ne passe pas par le panneau.** Le livre modifie le seuil de −5
-> (très complexe) à +5 (très facile), ou de « 10 moins l'attribut adverse » en opposition. GM-OS
-> ne sait pas encore déplacer le seuil d'un jet au d20 : le panneau juge contre l'attribut brut.
-> Annoncez le modificateur et lisez le dé à la main.
->
-> *Pourquoi le réglage « difficulté » a disparu* : la Forge y avait rangé ce −5 / +5. Or, dans
-> GM-OS, la difficulté est un **nombre de réussites à obtenir** (celui de Dune). À 0, chaque test
-> réussissait, un 20 compris.
+### Le modificateur et l'opposition
+
+![Précision 15 contre un Attribut adverse de 13, avec l'Avantage : seuil 14](captures/jeu-symbaroum-opposition.jpg)
+
+À l'étape **Préparer**, deux réglages déplacent le seuil, et ils **s'additionnent** :
+
+- **Attribut adverse** : contre un adversaire, saisissez son Attribut. Le livre retire **10 moins
+  cet Attribut** : un adversaire à 13 donne −3, un adversaire à 7 donne +3. Case vide, pas
+  d'opposition.
+- **Modificateur** : la difficulté de la tâche, de **+5** (très facile) à **−5** (très complexe),
+  et les bonus de situation — l'**Avantage** vaut +2, même contre un adversaire.
+
+Le calcul se lit sous **Seuil** : `15 + (10 − 13) + 2`, soit 14. Le dé se juge contre ce seuil, et
+le journal redit l'opposition et le modificateur avec le jet (« Attribut · Attribut adverse 13 ·
++2 »). Les deux réglages restent en place d'un jet à l'autre : remettez la case à vide et le
+curseur à 0 quand l'adversaire change.
+
+> *Pourquoi ce n'est pas la « difficulté »* : la Forge y avait rangé ce −5 / +5. Or, dans GM-OS,
+> la difficulté est un **nombre de réussites à obtenir** (celui de Dune). À 0, chaque test
+> réussissait, un 20 compris. Depuis le 2026-10-22, la revue de la Forge refuse ce réglage sur un
+> jet d'un seul dé.
+
+> Au **pupitre** de Dice-OS, qui ne lit pas de fiche, le seuil se saisit déjà calculé.
 
 ---
 
@@ -76,7 +91,6 @@ le formulaire de GM-OS.
 
 ## Ce qui reste à la main
 
-- Le **modificateur** de difficulté ou d'opposition (voir *Le test*).
 - L'**égalité d'initiative** : la Vigilance départage, puis un d20.
 - La **Résistance à la douleur** : un coup qui l'atteint fait tomber la victime ou ouvre une
   Attaque gratuite, au choix de l'attaquant.

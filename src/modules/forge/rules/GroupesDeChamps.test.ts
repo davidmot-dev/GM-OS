@@ -105,6 +105,21 @@ describe('l\'invite d\'un groupe', () => {
         expect(p).toContain('OMETS le champ');
     });
 
+    it('dit que « jet.difficulte » compte des réussites, et où va ce qui s\'ajoute au seuil', () => {
+        /**
+         * Symbaroum, 2026-10-21 : « la difficulté que le MENEUR fixe » a suffi
+         * pour y ranger le modificateur du livre, sur un jeu à un seul d20 —
+         * chaque test réussissait. La consigne nomme ce que le champ compte, et
+         * depuis le 2026-10-22 le champ où va le modificateur.
+         */
+        const p = promptDuGroupe(GROUPES.find(g => g.id === 'jet')!, CORPUS);
+        expect(p).toContain('COMPTE DES RÉUSSITES sur PLUSIEURS dés');
+        expect(p).toContain('JAMAIS sur UN SEUL dé');
+        expect(p).toContain('"dice.successThreshold"');
+        expect(p).toContain('"jet.modificateurDuSeuil"');
+        expect(p).not.toMatch(/MENEUR fixe n'est pas une composante : elle se déclare dans "jet\.difficulte"/);
+    });
+
     it('demande un JSON compact — le décodage se paie', () => {
         const p = promptDuGroupe(GROUPES.find(g => g.id === 'jet')!, CORPUS);
         expect(p).toContain('sans indentation');

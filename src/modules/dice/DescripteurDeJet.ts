@@ -264,6 +264,27 @@ export interface DescripteurDeJet {
      */
     difficulte?: { min: number; max: number; defaut: number };
     /**
+     * **Le seuil que le meneur déplace** — Symbaroum, 2026-10-22 (S1 de
+     * l'audit, choix de David : l'opposition explicite).
+     *
+     * *« d20 ≤ Attribut + modificateur »* : de +5 (très facile) à −5 (très
+     * complexe), et contre un adversaire **dix moins son Attribut**. Ce n'est
+     * pas `difficulte`, qui compte des réussites : y ranger ce modificateur
+     * faisait réussir chaque test, un 20 compris (registre, § 145).
+     *
+     * `opposition` fait saisir la valeur adverse, et le calcul se lit en
+     * entier — `12 + (10 − 13) = 9`. Le modificateur de situation s'y ajoute
+     * au lieu de l'écraser : l'Avantage (+2) vaut aussi contre un adversaire.
+     * Seulement sur un jet **sous** un seuil additionné.
+     */
+    modificateurDuSeuil?: {
+        min: number;
+        max: number;
+        defaut: number;
+        /** La valeur adverse se retire de `reference` : 10 chez Symbaroum. */
+        opposition?: { reference: number; label?: string };
+    };
+    /**
      * **Le dé se convertit en bonus par la table du jeu** — Torg Eternity,
      * 2026-10-13 (`systemes/torg.ts`).
      *
@@ -412,6 +433,10 @@ export interface ChoixDuJoueur {
      * une colonne déplacée, jamais deux réussites exigées.
      */
     ajustementDeDifficulte?: number;
+    /** Le modificateur de situation ajouté au seuil (`DescripteurDeJet.modificateurDuSeuil`). */
+    modificateurDuSeuil?: number;
+    /** La valeur de l'adversaire, quand le jet s'oppose à lui. Absente : pas d'opposition. */
+    valeurAdverse?: number;
     /**
      * Valeur sous laquelle un dé compte double, quand elle diffère du critique
      * ordinaire — chez Dune, la compétence seule avec la spécialisation.
@@ -446,6 +471,11 @@ export interface JetPrepare {
      * *un écran qui explique faux est pire qu'un écran qui n'explique rien.*
      */
     explicationDuSeuil?: string;
+    /**
+     * Ce qui a déplacé le seuil (`modificateurDuSeuil`), pour le titre du jet
+     * au journal. Absent quand rien ne l'a déplacé.
+     */
+    modificationDuSeuil?: { situation: number; opposition?: { adverse: number; modificateur: number; label: string } };
     /**
      * Les bornes des six degrés, quand le jeu gradue ses réussites.
      *
@@ -939,6 +969,38 @@ export function preparerLeJet(
         }
     }
 
+    /*
+      **Le seuil que le meneur déplace** (Symbaroum, 2026-10-22). Seulement sur
+      un seuil additionné qu'on jette dessous : une cible a sa colonne, Torg et
+      NOC leur difficulté, et sur un jeu qui compte « au-dessus » ajouter au
+      seuil rendrait le jet plus dur au lieu de plus facile.
+
+      Hors bornes, la valeur est ramenée et **remarquée, pas avertie** : un
+      avertissement empêche de lancer, et le jet reste juste.
+    */
+    const regle = descripteur.modificateurDuSeuil;
+    let modificationDuSeuil: JetPrepare['modificationDuSeuil'];
+    if (regle && descripteur.sens === 'sous-ou-egal' && composantes.length > 0
+        && !descripteur.cible && !descripteur.desEchelonnes && !descripteur.tableDeBonus && !descripteur.destin) {
+        const demande = choix.modificateurDuSeuil ?? regle.defaut;
+        const situation = Math.min(regle.max, Math.max(regle.min, demande));
+        if (situation !== demande) remarques.push(`Modificateur ramené entre ${regle.min} et ${regle.max}.`);
+        const adverse = regle.opposition && Number.isFinite(choix.valeurAdverse) ? choix.valeurAdverse! : undefined;
+        const opposition = regle.opposition && adverse !== undefined
+            ? { adverse, modificateur: regle.opposition.reference - adverse, label: regle.opposition.label ?? 'Opposition' }
+            : undefined;
+        if (situation !== 0 || opposition) {
+            const signe = (n: number) => (n < 0 ? `− ${-n}` : `+ ${n}`);
+            explicationDuSeuil = [
+                composantes.map(c => `${c.valeur}`).join(' + '),
+                ...(opposition ? [`+ (${regle.opposition!.reference} − ${opposition.adverse})`] : []),
+                ...(situation !== 0 ? [signe(situation)] : []),
+            ].join(' ');
+            seuil += (opposition?.modificateur ?? 0) + situation;
+            modificationDuSeuil = { situation, opposition };
+        }
+    }
+
     const deLaReserve = additionner(descripteur.reserve?.composantes ?? []);
     const deLaSeconde = additionner(descripteur.reserve?.secondaire?.composantes ?? []);
 
@@ -1057,6 +1119,7 @@ export function preparerLeJet(
         seuil,
         composantes,
         explicationDuSeuil,
+        modificationDuSeuil,
         echelle,
         /*
           Quand les dés sont échelonnés, c'est leur nombre qui fait foi : ils ne
