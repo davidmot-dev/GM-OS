@@ -1,0 +1,20 @@
+---
+sujet: Structure en actes
+campagne: les-agents-de-dune
+jeu: dune
+genere_par: notebooklm
+gabarit: v3
+relu: false
+---
+Ordre | Titre exact | Enjeu | Sections
+---|---|---|---
+1 | Act I, Part 1: Shuttle Simulation | Les personnages-joueurs effectuent un exercice de simulation virtuelle à bord d'une navette en perdition. L'enjeu est d'apprendre les bases du système à deux dés à vingt faces et d'évaluer la discipline de l'équipe sous la supervision de leurs instructeurs Harkonnens. | Scene 1: Seeking Discipline, Scene 2: From Hallway to Hallway, Scene 3: The Engine Room, Scene 4: Debriefing
+2 | Act I, Part 2: Ground Training Exercises | Les héritiers s'infiltrent dans un complexe militaire Harkonnen pour récupérer un film minimic contenant des données stratégiques. L'enjeu est de maîtriser les tâches extended et la gestion des traits tout en échappant à une tentative d'assassinat empoisonnée. | Scene 1: Setting Minds in Motion, Scene 2: Retrieval
+3 | Act I, Part 3 The True Task | Les personnages s'aventurent dans les taudis du Bas-Marché de Barony afin de contacter l'informateur Qu'shan. L'enjeu est d'enquêter sur la présence d'une cellule d'espionnage attribuée à la Maison rivale Vernius. | Scene 1: No More Practice (Interlude), Scene 2: Learn and Go, Scene 3: Epilogue
+4 | Act II, Part 1 The Merchandise | La Maison Nagara reçoit une importante cargaison de produits technologiques sur Giedi Prime. L'enjeu est d'inspecter la marchandise à la recherche de sabotages et de négocier un contrat commercial d'envergure avec Sabrya Zavr, déléguée du CHOM. | Scene 1: The Messenger, Scene 2: Nagaran Wares, Scene 3: Negotiation
+5 | Act II, Part 2 Harkonnen Management | Les personnages visitent une usine d'armement Harkonnen marquée par des conditions de travail extrêmement meurtrières. L'enjeu est de faire face à une mutinerie d'ouvriers menée par Callum Ruta, que ce soit par les armes ou par la négociation. | Scene 1: Sword and Shield, Scene 2: Rebellion, Scene 3: Factory Conflict, Scene 4: Return to Barony
+6 | Act II, Part 3 Sabotage | Un prototype expérimental d'extraction d'épice subit une panne majeure provoquée par un acte de sabotage au laboratoire. L'enjeu est d'enquêter sur la scène de crime, de démasquer la saboteuse Kira Jaro et de déterminer le véritable commanditaire. | Scene 1: Mining, Melange, and Malfunctions, Scene 2: Searching for Sabotage, Scene 3: Questioning Kira
+7 | Act II, Part 4 Assassination | La Comtesse Nagara arrive sur Giedi Prime avant que sa navette ne soit détruite lors du trajet vers le Long-courrier de la Guilde. L'enjeu est de survivre à l'attentat mortel, d'écouter les dernières volontés de la Comtesse et d'assumer la direction de la Maison Nagara. | Scene 1: Countess Nagara, Scene 2: On the Move, Scene 3: Heir of Nagara
+8 | Act III, Part 1 The Universal Fulcrum | Les nouveaux dirigeants de la Maison Nagara arrivent à Arrakeen pour prendre officiellement possession de leur fief sur Arrakis. L'enjeu est de survivre à une embuscade de guerriers Fremen Fedaykin et de statuer sur le sort du prisonnier Harun. | Scene 1: Arriving on Arrakis, Scene 2: Arrakeen Landing Field, Scene 3: The Marketplace, Scene 4: Death in Arrakeen
+9 | Act III, Part 2 The Spice Will Flow | La Maison Nagara prend le commandement des opérations d'extraction d'épice depuis la Résidence d'Arrakeen. L'enjeu est de gérer les exigences diplomatiques des représentants de l'Imperium et de lancer les premières récoltes dans le désert profond. | Scene 1: The Politics of Profit, Scene 2: Taking Command, Scene 3: “We Test Outsiders with Our Lives. Do not Doubt our Conviction.”, Scene 4: Wormsign, Scene 5: New Techniques, Scene 6: The Long Night
+10 | Act III, Part 3 Awakening | La vérité éclate sur la trahison de la Maison Harkonnen et la manipulation des armes Ixiens. L'enjeu est de réunir la preuve irréfutable du complot et de venger la Comtesse Nagara en éliminant le cerveau de la conspiration. | Scene 1: Stolen Technology, Scene 2: “I take what is mine”, Scene 3: “Enemies Strengthen You. Allies Weaken.”, Scene 4: Vengeance!
