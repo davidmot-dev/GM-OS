@@ -2,7 +2,7 @@ import { test, expect, type Page, type Locator } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { lancerGmOs, attendreLHydratation, type GmOsLance } from './lancerGmOs';
+import { lancerGmOs, attendreLHydratation, type GmOsLance, presenterLaTablette, retenirLaTablette } from './lancerGmOs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { useFavoriteStore } from '../src/modules/favorite/useFavoriteStore';
 import type { useClockStore } from '../src/store/useClockStore';
@@ -34,7 +34,7 @@ test.afterAll(async () => { await gmos?.fermer(); });
 
 async function rejoindre(page: Page, taille: typeof TAILLES[number]) {
     await page.setViewportSize(taille);
-    await page.addInitScript(() => localStorage.setItem('gmos-tablet-uuid', 't4-j1'));
+    await presenterLaTablette(page, 't4-j1');
     await gmos.fenetre.evaluate(semence => {
         const w = window as unknown as Magasins;
         const s = semence.modules.sessionOS;
@@ -63,6 +63,7 @@ async function rejoindre(page: Page, taille: typeof TAILLES[number]) {
     await page.getByRole('button', { name: /Nel Varga/ }).click();
     await expect(page.getByText('Synchronisation', { exact: true })).toHaveCount(0);
     await expect(page.getByText('Connecté', { exact: true })).toBeVisible();
+    await retenirLaTablette(page, 't4-j1');
 }
 async function capturer(page: Page, nom: string) {
     await page.evaluate(() => document.fonts.ready);
@@ -160,12 +161,13 @@ for (const taille of TAILLES) test(`Cartes T4 — pioche, dons et scellés à ${
     await expect(cartes.getByRole('button', { name: 'Carte 2', exact: true })).toHaveCount(0);
     const voisin = await browser.newContext({ viewport: taille, locale: 'fr-FR', timezoneId: 'Europe/Brussels', serviceWorkers: 'block' });
     try {
-        await voisin.addInitScript(() => localStorage.setItem('gmos-tablet-uuid', 't4-j1-idris'));
+        await presenterLaTablette(voisin, 't4-j1-idris');
         await voisin.route('**/assets/decks/generic/temoin-paquet/**', route => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="250" height="350"><rect width="250" height="350" fill="#142637"/><text x="125" y="175" text-anchor="middle" fill="white" font-size="22">STATION VARN</text></svg>' }));
         const idris = await voisin.newPage();
         await idris.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);
         await idris.getByRole('button', { name: /Idris Koa/ }).click();
         await expect(idris.getByText('Connecté', { exact: true })).toBeVisible();
+        await retenirLaTablette(idris, 't4-j1-idris');
         await idris.getByRole('navigation').getByTitle('Cartes', { exact: true }).click();
         const destinataire = idris.locator('[data-cartes-joueur]');
         const donner = cartes.getByLabel('Donner à', { exact: true }).first();

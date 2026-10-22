@@ -36,6 +36,9 @@ ou **lu dans le code** (chemin cité, pas encore éprouvé).
 > **Corrigés le 22/10 (registre § 154) : H1 et C1**, choix de David : toutes les modifications de
 > fiche au journal avec leur origine ; le pupitre et la télécommande règlent les réserves d'un jet
 > 2d20, pour un personnage ou un PNJ. **Tous les constats de l'audit sont traités.**
+>
+> **Et les deux défauts antérieurs relevés par les recettes** (registre § 156) : un appareil refusé
+> ne le disait pas — corrigé ; les recettes des tablettes, cassées depuis `a128c7af`, sont vertes.
 
 ## Les constats
 

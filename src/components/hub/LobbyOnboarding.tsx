@@ -12,7 +12,7 @@ interface LobbyOnboardingProps {
 }
 
 const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLatency }) => {
-    const { deviceId, setPseudo, setPlayerName, setCharacterId, completeOnboarding, logout, lastError, setLastError } = useClientStore();
+    const { deviceId, setPseudo, setPlayerName, setCharacterId, completeOnboarding, logout, lastError, lastErrorCode, setLastError, nouvelAppareil } = useClientStore();
     const { sessions, activeCampaignId, campaigns, activeCampaignWallpaper, activeCampaignName } = useSessionOSStore();
     const players = useSessionOSStore(state => state.players);
     const characterLocks = useSessionOSStore(state => state.connectedCharacters);
@@ -216,6 +216,47 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
         </div>
     );
 
+    // --- RENDER: ERROR (e.g., Collision) ---
+    // Avant l'attente d'une séance (2026-10-22) : un appareil refusé ne reçoit aucun état,
+    // et « Saisie du signal » aurait caché son refus pour toujours.
+    if (lastError) {
+        return (
+            <div className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-etat-danger/20 backdrop-blur-3xl p-6">
+                <div className="relative mb-12">
+                    <div className="absolute inset-0 bg-etat-danger/20 rounded-full blur-3xl animate-pulse" />
+                    <div className="relative w-48 h-48 bg-etat-danger/10 rounded-full flex items-center justify-center border-2 border-etat-danger/50">
+                        <AlertCircle className="text-etat-danger animate-bounce" size={80} strokeWidth={1.5} />
+                    </div>
+                </div>
+
+                <div className="text-center max-w-md">
+                    <h2 className="text-4xl font-black text-etat-danger uppercase tracking-tightest mb-4">
+                        Accès Refusé
+                    </h2>
+                    <p className="text-app-text/80 text-lg font-bold mb-12 leading-relaxed">
+                        {lastError}
+                    </p>
+                    
+                    {/*
+                        **Un identifiant connu revenu sans son jeton** (2026-10-22) : choisir un
+                        autre personnage n'y changerait rien, le serveur refuse l'appareil. On lui
+                        donne la seule sortie : se présenter comme une nouvelle tablette.
+                    */}
+                    <Bouton habillage="libre" cibleTactile
+                        onClick={() => {
+                            if (lastErrorCode === 'reprise_refusee') { nouvelAppareil(); setStep('SELECTION'); return; }
+                            setLastError(null);
+                            setStep('SELECTION');
+                        }}
+                        className="px-12 py-5 bg-etat-danger hover:brightness-110 text-app-bg rounded-full text-lg font-black uppercase tracking-widest shadow-glow-rose/40 transition-all active:scale-95"
+                    >
+                        {lastErrorCode === 'reprise_refusee' ? 'Se présenter comme une nouvelle tablette' : 'Choisir un autre signal'}
+                    </Bouton>
+                </div>
+            </div>
+        );
+    }
+
     // --- RENDER: SCANNING (No Session) ---
     if (step === 'SCANNING' || !activeSession) {
         return (
@@ -251,39 +292,6 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                             </p>
                         </div>
                     </Panneau>
-                </div>
-            </div>
-        );
-    }
-
-    // --- RENDER: ERROR (e.g., Collision) ---
-    if (lastError) {
-        return (
-            <div className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-etat-danger/20 backdrop-blur-3xl p-6">
-                <div className="relative mb-12">
-                    <div className="absolute inset-0 bg-etat-danger/20 rounded-full blur-3xl animate-pulse" />
-                    <div className="relative w-48 h-48 bg-etat-danger/10 rounded-full flex items-center justify-center border-2 border-etat-danger/50">
-                        <AlertCircle className="text-etat-danger animate-bounce" size={80} strokeWidth={1.5} />
-                    </div>
-                </div>
-
-                <div className="text-center max-w-md">
-                    <h2 className="text-4xl font-black text-etat-danger uppercase tracking-tightest mb-4">
-                        Accès Refusé
-                    </h2>
-                    <p className="text-app-text/80 text-lg font-bold mb-12 leading-relaxed">
-                        {lastError}
-                    </p>
-                    
-                    <Bouton habillage="libre" cibleTactile
-                        onClick={() => {
-                            setLastError(null);
-                            setStep('SELECTION');
-                        }}
-                        className="px-12 py-5 bg-etat-danger hover:brightness-110 text-app-bg rounded-full text-lg font-black uppercase tracking-widest shadow-glow-rose/40 transition-all active:scale-95"
-                    >
-                        Choisir un autre signal
-                    </Bouton>
                 </div>
             </div>
         );

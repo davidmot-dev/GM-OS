@@ -1,4 +1,4 @@
-import { _electron as electron, type ElectronApplication, type Locator, type Page } from '@playwright/test';
+import { _electron as electron, type BrowserContext, type ElectronApplication, type Locator, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -444,3 +444,31 @@ export const LES_PANNEAUX = [
     'Navigateur Web',
     'Tableau Blanc',
 ] as const;
+
+/**
+ * **Une tablette de recette qui revient, avec son jeton de reprise** — comme une
+ * vraie tablette rechargée (2026-10-22).
+ *
+ * Depuis le transport privé des modules (`a128c7af`), le serveur refuse un
+ * identifiant connu qui revient **sans** son jeton (`reprise_refusee`) : c'est
+ * ce qui empêche une autre tablette de se faire passer pour celle-ci. Les
+ * recettes T0/T4 reprenaient le même identifiant dans un stockage neuf à chaque
+ * essai : seul le premier passait, les suivants restaient sur « Aucun PJ
+ * détecté », sans l'état du meneur.
+ */
+const JETONS_DE_REPRISE = new Map<string, string>();
+
+export async function presenterLaTablette(cible: Page | BrowserContext, id: string): Promise<void> {
+    await cible.addInitScript(([appareil, jeton]) => {
+        localStorage.setItem('gmos-tablet-uuid', appareil);
+        if (jeton) localStorage.setItem(`gmos:reprise-modules:${appareil}`, jeton);
+    }, [id, JETONS_DE_REPRISE.get(id) ?? ''] as [string, string]);
+}
+
+/** Retient le jeton que le serveur vient de remettre à cette tablette, pour son prochain retour. */
+export async function retenirLaTablette(page: Page, id: string): Promise<void> {
+    const jeton = await page.waitForFunction(
+        appareil => localStorage.getItem(`gmos:reprise-modules:${appareil}`), id, { timeout: 10_000 },
+    ).then(h => h.jsonValue() as Promise<string | null>).catch(() => null);
+    if (jeton) JETONS_DE_REPRISE.set(id, jeton);
+}

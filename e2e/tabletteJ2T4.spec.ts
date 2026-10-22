@@ -2,7 +2,7 @@ import { test, expect, type Page, type Locator } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { lancerGmOs, attendreLHydratation, type GmOsLance } from './lancerGmOs';
+import { lancerGmOs, attendreLHydratation, type GmOsLance, presenterLaTablette, retenirLaTablette } from './lancerGmOs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { useFavoriteStore } from '../src/modules/favorite/useFavoriteStore';
 import type { useClockStore } from '../src/store/useClockStore';
@@ -40,7 +40,7 @@ test.afterAll(async () => { test.setTimeout(60_000); await gmos?.fermer(); });
 
 async function rejoindre(page: Page, taille: typeof TAILLES[number]) {
     await page.setViewportSize(taille);
-    await page.addInitScript(() => localStorage.setItem('gmos-tablet-uuid', 't4-j2'));
+    await presenterLaTablette(page, 't4-j2');
     await gmos.fenetre.evaluate(({ semence, plan }) => {
         const w = window as unknown as Magasins;
         const s = semence.modules.sessionOS;
@@ -80,6 +80,7 @@ async function rejoindre(page: Page, taille: typeof TAILLES[number]) {
     await page.getByRole('button', { name: /Nel Varga/ }).click();
     await expect(page.getByText('Connecté', { exact: true })).toBeVisible();
     await expect(page.getByText('Synchronisation', { exact: true })).toHaveCount(0);
+    await retenirLaTablette(page, 't4-j2');
 }
 async function capturer(page: Page, nom: string) {
     await page.evaluate(() => document.fonts.ready);
@@ -156,11 +157,12 @@ for (const taille of TAILLES) test(`Messagerie T4 J2 — canaux et saisie access
     await rejoindre(page, taille);
     const contexteDuVoisin = await browser.newContext({ viewport: taille, locale: 'fr-FR', serviceWorkers: 'block' });
     try {
-    await contexteDuVoisin.addInitScript(() => localStorage.setItem('gmos-tablet-uuid', 't4-j2-voisin'));
+    await presenterLaTablette(contexteDuVoisin, 't4-j2-voisin');
     const voisin = await contexteDuVoisin.newPage();
     await voisin.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);
     await voisin.getByRole('button', { name: /Idris Koa/ }).click();
     await expect(voisin.getByText('Connecté', { exact: true })).toBeVisible();
+    await retenirLaTablette(voisin, 't4-j2-voisin');
     await page.getByRole('navigation').getByTitle('Messages', { exact: true }).click();
     const dialogue = page.getByRole('dialog', { name: 'Messagerie', exact: true });
     for (const titre of ['Fermer la messagerie', 'Choisir le destinataire', 'Entrer un message', 'Envoyer le message']) await verifierDansLEcran(page, dialogue.getByTitle(titre));
@@ -192,13 +194,14 @@ for (const taille of TAILLES) test(`Messagerie T4 J2 — canaux et saisie access
     await dialogue.getByRole('button', { name: 'Idris Koa', exact: true }).click();
     await dialogue.getByTitle('Entrer un message').fill('Retrouvons-nous au relais.');
     await dialogue.getByTitle('Envoyer le message').click();
-    // Le privé joueur → joueur reste P2P : le meneur n'enregistre pas ce fil.
+    // Le privé joueur → joueur est remis à ses seuls lecteurs, et GARDÉ par le meneur avec la
+    // campagne, sans qu'il l'affiche (décision de David du 12/10 : « gardés mais cachés »).
     await voisin.getByRole('navigation').getByTitle('Messages', { exact: true }).click();
     const conversationDuVoisin = voisin.getByRole('dialog', { name: 'Messagerie', exact: true });
     await conversationDuVoisin.getByTitle('Choisir le destinataire').click();
     await conversationDuVoisin.getByRole('button', { name: 'Nel Varga', exact: true }).click();
     await expect(conversationDuVoisin.getByText('Retrouvons-nous au relais.', { exact: true })).toBeVisible();
-    expect(await gmos.fenetre.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().messages.some(m => m.content === 'Retrouvons-nous au relais.'))).toBe(false);
+    await expect.poll(() => gmos.fenetre.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().messages.some(m => m.content === 'Retrouvons-nous au relais.'))).toBe(true);
     await conversationDuVoisin.getByTitle('Entrer un message').fill('Je vous attends au relais.');
     await conversationDuVoisin.getByTitle('Envoyer le message').click();
     await expect(dialogue.getByText('Je vous attends au relais.', { exact: true })).toBeVisible();
@@ -274,10 +277,12 @@ for (const taille of TAILLES) test(`Notifications T4 J2 — message visible au-d
     await expect(notification).toHaveCount(0);
     await gmos.fenetre.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().sendDirectMessage('temoin-pj-1', 'Nel Varga', 'La relève arrive.'));
     await expect(notification).toBeVisible();
-    // Une mise à jour pour un autre joueur ne doit ni remplacer le signal ni
-    // annuler son échéance. Le flux réel transmet aussi ce message à la tablette.
+    // Un message pour un autre joueur ne doit ni remplacer le signal ni annuler son échéance —
+    // et, depuis le 12/10, il n'arrive même pas sur cette tablette : il n'est remis qu'à Idris.
     await gmos.fenetre.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().sendDirectMessage('temoin-pj-2', 'Idris Koa', 'Message privé pour Idris.'));
-    await expect.poll(() => page.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().messages.some(m => m.content === 'Message privé pour Idris.'))).toBe(true);
+    await expect.poll(() => gmos.fenetre.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().messages.some(m => m.content === 'Message privé pour Idris.'))).toBe(true);
+    await page.waitForTimeout(500);
+    expect(await page.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().messages.some(m => m.content === 'Message privé pour Idris.'))).toBe(false);
     await expect(notification).toBeVisible();
     await expect(notification).toContainText('Maître du Jeu');
     await expect(notification).toHaveCount(0, { timeout: 8_000 });

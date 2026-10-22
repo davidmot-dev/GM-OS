@@ -58,3 +58,31 @@ describe('LobbyOnboarding — après une reconnexion', () => {
         expect(screen.getByText('Saisie du Signal...')).toBeTruthy();
     });
 });
+
+/*
+  2026-10-22 : une tablette refusée (`reprise_refusee` — identifiant connu revenu
+  sans son jeton) restait sur « Aucun PJ détecté » : `logout()` effaçait le
+  refus juste après qu'il avait été posé, et rien ne permettait de changer
+  d'appareil comme le message le conseillait.
+*/
+describe('LobbyOnboarding — un appareil refusé', () => {
+    it('le refus reste affiché, et la tablette peut se présenter comme une nouvelle', () => {
+        const avant = useClientStore.getState().deviceId;
+        useClientStore.getState().logout();
+        useClientStore.getState().setLastError('Cet appareil est déjà enregistré.', 'reprise_refusee');
+        render(<LobbyOnboarding />);
+        expect(screen.getByText('Cet appareil est déjà enregistré.')).toBeTruthy();
+        act(() => { screen.getByText('Se présenter comme une nouvelle tablette').click(); });
+        const apres = useClientStore.getState();
+        expect(apres.deviceId).not.toBe(avant);
+        expect(apres.lastError).toBeNull();
+        expect(apres.lastErrorCode).toBeNull();
+        expect(localStorage.getItem('gmos-tablet-uuid')).toBe(apres.deviceId);
+    });
+
+    it('un autre refus garde son geste habituel', () => {
+        useClientStore.getState().setLastError('Ce personnage est déjà réservé.', 'character_taken');
+        render(<LobbyOnboarding />);
+        expect(screen.getByText('Choisir un autre signal')).toBeTruthy();
+    });
+});

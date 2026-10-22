@@ -2,7 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { lancerGmOs, attendreLHydratation, type GmOsLance } from './lancerGmOs';
+import { lancerGmOs, attendreLHydratation, type GmOsLance, presenterLaTablette, retenirLaTablette } from './lancerGmOs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { useFavoriteStore } from '../src/modules/favorite/useFavoriteStore';
 import type { useClockStore } from '../src/store/useClockStore';
@@ -60,8 +60,9 @@ for (const taille of TAILLES) {
 
         test.beforeEach(async ({ page }) => {
             // Un appareil qui revient reprend son verrou « ghost » côté serveur.
-            // Nouveau stockage par test, même identité matérielle dans ce lot.
-            await page.addInitScript(nom => localStorage.setItem('gmos-tablet-uuid', `t0-joueurs-${nom}`), taille.nom);
+            // Nouveau stockage par test, même identité matérielle dans ce lot —
+            // et son jeton de reprise, que le serveur exige depuis `a128c7af`.
+            await presenterLaTablette(page, `t0-joueurs-${taille.nom}`);
             // Le décor est remis sur le meneur. Les assertions lisent ses retours,
             // jamais un état injecté dans la tablette pour faire passer un geste.
             await gmos.fenetre.evaluate(({ semence, plan }) => {
@@ -97,6 +98,7 @@ for (const taille of TAILLES) {
             await page.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);
             expect(await page.evaluate(() => Boolean(window.appBridge)), 'une tablette ne dispose pas du pont Electron').toBe(false);
             await expect(page.getByRole('button', { name: /Nel Varga/ })).toBeVisible({ timeout: 20_000 });
+            await retenirLaTablette(page, `t0-joueurs-${taille.nom}`);
         });
 
         async function rejoindre(page: Page) {

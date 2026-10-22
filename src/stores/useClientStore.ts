@@ -11,6 +11,8 @@ interface ClientState {
     characterId: string | null;
     playerName: string;
     lastError: string | null;
+    /** Pourquoi le serveur a refusé : `reprise_refusee` propose de se présenter comme un nouvel appareil. */
+    lastErrorCode: string | null;
     
     // Actions
     setPseudo: (pseudo: string) => void;
@@ -19,8 +21,15 @@ interface ClientState {
     setRole: (role: ClientState['role']) => void;
     setStatus: (status: ClientState['status']) => void;
     completeOnboarding: () => void;
-    setLastError: (error: string | null) => void;
+    setLastError: (error: string | null, code?: string | null) => void;
     resetIdentity: () => void;
+    /**
+     * **Se présenter comme un nouvel appareil** (2026-10-22). Le serveur refuse un
+     * identifiant connu qui revient sans son jeton de reprise — la protection du
+     * transport privé (`a128c7af`). Le message disait « utilise un nouvel appareil »
+     * sans que rien ne permette d'en changer : la tablette restait bloquée.
+     */
+    nouvelAppareil: () => void;
     logout: () => void;
 }
 
@@ -73,6 +82,7 @@ export const useClientStore = create<ClientState>()(
             characterId: null,
             playerName: '',
             lastError: null,
+            lastErrorCode: null,
 
             setPseudo: (pseudo) => set({ pseudo }),
             setPlayerName: (playerName) => set({ playerName }),
@@ -80,7 +90,7 @@ export const useClientStore = create<ClientState>()(
             setRole: (role) => set({ role }),
             setStatus: (status) => set({ status }),
             completeOnboarding: () => set({ isOnboarded: true }),
-            setLastError: (lastError) => set({ lastError }),
+            setLastError: (lastError, lastErrorCode = null) => set({ lastError, lastErrorCode: lastError ? lastErrorCode : null }),
             resetIdentity: () => {
                 const stableId = getStableDeviceId(); // Keep existing if possible
                 set({
@@ -91,8 +101,15 @@ export const useClientStore = create<ClientState>()(
                     isOnboarded: false,
                     characterId: null,
                     playerName: '',
-                    lastError: null
+                    lastError: null,
+                    lastErrorCode: null
                 });
+            },
+            nouvelAppareil: () => {
+                const id = generateUUID();
+                try { localStorage.setItem('gmos-tablet-uuid', id); } catch { /* L'identifiant vaut pour cette session. */ }
+                // Un nouvel identifiant : la tablette se réinscrit d'elle-même (`useHubSync`).
+                set({ deviceId: id, pseudo: '', status: 'disconnected', isOnboarded: false, characterId: null, playerName: '', lastError: null, lastErrorCode: null });
             },
             logout: () => set({
                 // Keep deviceId!
@@ -101,7 +118,8 @@ export const useClientStore = create<ClientState>()(
                 isOnboarded: false,
                 characterId: null,
                 playerName: '',
-                lastError: null
+                lastError: null,
+                lastErrorCode: null
             }),
         }),
         {

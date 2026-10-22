@@ -314,7 +314,10 @@ for (const taille of TAILLES) {
                 const a = w.useAmbientStore.getState(); w.useAmbientStore.setState({ themeChargeId: a.presets[0].id, tracks: a.tracks.map((t,i) => ({ ...t, isPlaying: i === 0 })) });
                 const sons = w.useSoundStore.getState(); w.useSoundStore.setState({ atmospheres: sons.atmospheres.map((a,i) => i ? a : ({ ...a, pads: Object.fromEntries(Object.entries(a.pads).map(([id,p],n) => [id,{ ...p, isActive: n === 0 }])) })) });
                 w.useClockStore.setState({ timerRemaining: 95, timerIsRunning: true });
-                w.useSessionOSStore.setState({ messages: [{ id: 'm1-message', fromId: 'temoin-pj-1', fromName: 'Nel Varga', toId: 'GM', toName: 'MJ', content: 'Au relais.', timestamp: Date.now(), isRead: false }] });
+                // Par le vrai geste : il range le message dans la campagne active. Posé à la main, sans
+                // campagne, il n'appartenait à aucune — et n'était rendu à personne (règle du 12/10).
+                w.useSessionOSStore.setState({ messages: [] });
+                w.useSessionOSStore.getState().addSessionMessage({ id: 'm1-message', fromId: 'temoin-pj-1', fromName: 'Nel Varga', toId: 'GM', toName: 'MJ', content: 'Au relais.', timestamp: Date.now(), isRead: false });
             }, SILENCE);
             await page.getByRole('button', { name: 'Une musique au nom très long pendant la découverte de Station Varn', exact: true }).click();
             const header = page.locator('header').first();

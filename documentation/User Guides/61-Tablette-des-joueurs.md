@@ -219,6 +219,7 @@ qualité du signal.
 | Problème | Ce qu'il faut regarder |
 | :--- | :--- |
 | **« Accès refusé : personnage déjà connecté »** | Une autre tablette le tient. Le meneur libère depuis le lobby (*Éjecter tout*), ou le joueur d'avant clique sur *Quitter*. |
+| **« Accès refusé : cet appareil est déjà enregistré »** | La tablette porte l'identifiant d'un appareil déjà inscrit, mais pas son jeton de reprise (stockage du navigateur effacé, ou copié d'un autre appareil) : le serveur la refuse, pour qu'aucune tablette ne se fasse passer pour une autre. Touchez **« Se présenter comme une nouvelle tablette »** : elle prend un nouvel identifiant et se réinscrit. Avant le 2026-10-22, ce refus ne s'affichait pas : la tablette restait sur « Aucun PJ détecté ». |
 | **Le QR code ne mène nulle part** | Les deux appareils ne sont pas sur le même Wi-Fi. Vérifiez l'adresse affichée sous le code. |
 | **Pas d'horloge sur la tablette** | Le meneur a éteint la projection dans Clock-OS. C'est un interrupteur unique pour l'horloge, les jauges **et** l'afficheur de table. |
 | **Les images n'arrivent pas** | Elles passent par le port 3001. Une tablette connectée sur le port du serveur de développement ne les verra pas. |

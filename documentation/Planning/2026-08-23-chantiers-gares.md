@@ -12294,7 +12294,9 @@ choix : « Moteur commun + Dune D2 » (sujet 6 ; Dune reste garé pour le reste)
   action de la tablette 3) ; suite complète **8 662 essais verts** ; capture de Dune verte.
 - **Essayé et validé par David le 22/10**, pilote Dune corrigé réimporté : *« et aussi les essais
   du pilote de dune »*. Les constats de l'audit sont traités aux § 152 à 154.
-- **Reste** : son choix pour Star Trek (paiement au choix ou non).
+- **Choix de David pour Star Trek (22/10)** : *« pour Star Trek on va faire le paiement au choix »*.
+  `outils/star-trek/ajouter_paiement_au_choix.py` → `Export Dirvers/corriges/ST_driver_gmos_paiement.gmos-driver` ;
+  page `54-Jeu-Star-Trek.md`. Réimport et essai de David attendus.
 
 ### 152 · Les secrets du meneur ne partent plus vers la table (S1, S2, S5) — 22/10/2026
 
@@ -12344,7 +12346,8 @@ Constats de [l'audit](2026-10-22-audit-fiches-tablettes-journal.md).
   changements (échec en cascade dans l'instance partagée). **J1 et J2 (comparés après le commit)** :
   24 échecs sur 41 en un passage ; isolés, « Archives » et « Fiche J1 » échouent en 1180 px et
   passent en 390 px — **à l'identique sur la version d'avant S1** (`2e0491d7`, extraite et construite
-  à part). Antérieurs, non traités ; le reste suit la même cascade (« Nel Varga » absent de l'accueil).
+  à part). Antérieurs ; **cause trouvée et corrigée au § 156** (identifiant de tablette repris sans
+  son jeton).
 - **Reste** : H1 (historique des modifications de fiche), C1 (le pupitre et les réserves, à
   trancher), la pastille de messages de la tablette du meneur (§ 152, antérieur).
 
@@ -12398,6 +12401,34 @@ S3 et S4 de [l'audit de Codex](2026-10-20-symbaroum-propositions.md).
   contrôles 3) ; suite complète **8 712 essais verts**.
 - **Reste** : réimport du pilote et essai de David. Hors lot : quel Stigmate et sa durée, les coûts
   de Corruption des pouvoirs, l'agonie, la cécité (trois cas, p. 165).
+
+### 156 · Les défauts des tablettes : le refus muet, et les recettes cassées depuis `a128c7af` — 22/10/2026
+
+David, le 22/10 : *« corrige les défauts des tablettes »*, puis *« oui on finit le point 1 »*
+(Claude Code). Les deux défauts antérieurs relevés aux § 152–153.
+
+- **La cause** : depuis le transport privé des modules (`a128c7af`), le serveur refuse un
+  identifiant de tablette connu qui revient **sans son jeton de reprise** (`reprise_refusee`). Les
+  recettes T0/T4/T5 reprenaient le même identifiant dans un stockage neuf : seul leur premier essai
+  passait, les suivants restaient sur « Aucun PJ détecté » sans l'état du meneur (« Nel Varga »
+  introuvable, et la cascade qui suivait).
+- **Fait — un vrai défaut produit** : le refus ne se voyait pas. `useHubSync` posait l'erreur puis
+  appelait `logout()`, qui l'effaçait ; et l'accueil affichait « Saisie du signal » **avant**
+  l'écran d'erreur. Désormais : on sort d'abord, on dit ensuite (`lastErrorCode`) ; l'erreur passe
+  devant l'attente (`LobbyOnboarding`) ; « Accès refusé » propose **« Se présenter comme une
+  nouvelle tablette »** (`useClientStore.nouvelAppareil` : nouvel identifiant, réinscription
+  d'elle-même). Guide `61-Tablette-des-joueurs.md` (dépannage).
+- **Fait — les recettes** : `presenterLaTablette` / `retenirLaTablette` (`e2e/lancerGmOs.ts`) font
+  revenir la tablette de test **avec son jeton**, comme une vraie tablette rechargée ; appliquées à
+  T0 joueurs, J1, J2, Direct, Accueil, T5. M1 : le message passe par `addSessionMessage`, qui le
+  range dans la campagne active — posé à la main, sans campagne, il n'était rendu à personne
+  (règle du 12/10). J2 : deux attentes alignées sur les décisions du 12/10 (privé entre joueurs
+  **gardé** par le meneur ; message d'un autre joueur **pas remis** à cette tablette).
+- **Vérifié** : `tsc -b`, lint ; essais de l'accueil (2 nouveaux) ; recettes Electron des tablettes
+  **toutes vertes** — T0 joueurs, J1, J2, T0 meneur, M1 : 161/161 ; Direct, T5, M2, Accueil,
+  apparence T1 : 90/90.
+- **Aussi le 22/10 — Star Trek** : capture `jeu-star-trek-jet` refaite avec le pilote au paiement
+  au choix (« dont en Menace » visible).
 
 ## La vue d'un coup d'œil
 
@@ -12490,11 +12521,12 @@ S3 et S4 de [l'audit de Codex](2026-10-20-symbaroum-propositions.md).
 | 84 | **Forge : `jet.difficulte` compte des réussites** | § 148 ; consigne corrigée et contrôle du pilote au plafond de la réserve, faits le 22/10 ; 721 essais de la Forge verts ; sur les exports réels, seul Crimes est signalé (C1, connu) | Relire le corpus de la Forge | Rien |
 | 85 | **Symbaroum S1 — modificateur du seuil, opposition explicite** | § 149 ; moteur, panneau (fiche et tablette), journal, Forge, pilote corrigé, manuel et captures — faits le 22/10 | Réimport du pilote corrigé et essai de David | Rien |
 | 86 | **Santé et séquelles, fin de scène** | § 150 ; fiche qui naît pleine, contrôle de la santé courante, `finDeScene` et « vide », seuils qui laissent une trace (une fois par passage) ; Symbaroum S2-raccord/S4-fin de scène et NOC point 1 par script — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
-| 87 | **Paiement au choix (Dune D2) ; audit fiches, tablettes, journal** | § 151 ; « dont en Menace », Impulsion du jet hors réserve, motif des tablettes — faits le 22/10 ; audit rendu : S1, S2, S5 (secrets du meneur sur les tablettes et les fenêtres de la table), S3, S4, H1, C1 | Rien : essai Dune validé le 22/10, constats traités (§ 152–154) | Le choix de David pour Star Trek |
+| 87 | **Paiement au choix (Dune D2) ; audit fiches, tablettes, journal** | § 151 ; « dont en Menace », Impulsion du jet hors réserve, motif des tablettes — faits le 22/10 ; audit rendu : S1, S2, S5 (secrets du meneur sur les tablettes et les fenêtres de la table), S3, S4, H1, C1 | Réimport du pilote Star Trek (paiement au choix, décidé le 22/10) et essai | Rien |
 | 88 | **Les secrets du meneur ne partent plus vers la table** | § 152 ; `caviarderPourLesJoueurs` à l'émission, au serveur et pour les fenêtres locales : trame du meneur, `gmNotes`, secrets des combattants (diffusion sans rôle) — faits le 22/10 | Essai de David ; S3, S4, H1, C1 | Rien |
 | 89 | **Indices non révélés, notes du meneur écrites par un joueur** | § 153 ; seuls les indices révélés partent vers la table ; `gmNotes` retiré des actions des joueurs au serveur — faits le 22/10 | H1, C1 de l'audit | Le choix de David pour C1 |
 | 90 | **Historique des fiches (H1), réserves au pupitre (C1)** | § 154 ; chaque modification de fiche au journal avec son origine ; le pupitre et la télécommande règlent les réserves d'un jet 2d20 (personnage ou PNJ) — faits le 22/10 | Essai de David | Rien |
 | 91 | **Symbaroum S3 et S4 — Avantage tactique, Corruption au seuil** | § 155 ; case Avantage tactique (+2, +1D4 aux dégâts, un seul d20) ; Stigmate et 1D4 permanent au Seuil de Corruption, Abomination à la Volonté — faits le 22/10 | Réimport du pilote et essai de David | Rien |
+| 92 | **Défauts des tablettes** | § 156 ; le refus d'un appareil s'affiche et propose une nouvelle identité ; recettes T0/T4/T5 revenues avec leur jeton, M1 et J2 alignées sur le 12/10 — toutes vertes (251 essais) le 22/10 | Rien | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

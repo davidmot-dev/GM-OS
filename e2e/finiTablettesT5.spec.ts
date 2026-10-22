@@ -2,7 +2,7 @@ import { test, expect, type BrowserContext, type Page, type Locator } from '@pla
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { lancerGmOs, attendreLHydratation, type GmOsLance } from './lancerGmOs';
+import { lancerGmOs, attendreLHydratation, type GmOsLance, presenterLaTablette, retenirLaTablette } from './lancerGmOs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { useDiceStore } from '../src/stores/useDiceStore';
 
@@ -49,8 +49,9 @@ async function regler(theme: typeof THEMES[number], personnalites = true) {
     if ((await bouton.getAttribute('aria-checked')) !== String(personnalites)) await bouton.click();
 }
 async function ouvrir(context: BrowserContext, taille: { width: number; height: number }, leger = false, automatique = false, reduit = false) {
+    // La même tablette d'un essai à l'autre, avec son jeton de reprise (`a128c7af`).
+    await presenterLaTablette(context, 't5-client');
     await context.addInitScript(({ leger, automatique }) => {
-        localStorage.setItem('gmos-tablet-uuid', 't5-client');
         localStorage.setItem('gmos-performance-storage', JSON.stringify({ state: { isLowGraphics: leger, autoPerformanceEnabled: automatique }, version: 0 }));
     }, { leger, automatique });
     const joueur = await context.newPage(), meneur = await context.newPage();
@@ -64,6 +65,7 @@ async function ouvrir(context: BrowserContext, taille: { width: number; height: 
     await expect(joueur.getByRole('button', { name: /Nel Varga/ })).toBeVisible({ timeout: 20_000 });
     await joueur.getByRole('button', { name: /Nel Varga/ }).click();
     await expect(joueur.getByText('Connecté', { exact: true })).toBeVisible({ timeout: 20_000 });
+    await retenirLaTablette(joueur, 't5-client');
     // « Connecté » précède la fin de l'interlude : son écran recouvrait les
     // captures joueur malgré un focus mesurable sur la navigation dessous.
     await expect(joueur.getByText('Synchronisation', { exact: true })).toHaveCount(0);

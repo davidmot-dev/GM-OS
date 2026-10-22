@@ -408,9 +408,17 @@ export const useHubSync = () => {
                         if (code === 'character_taken' || code === 'reprise_refusee') {
                             const sClient = getStore('useClientStore');
                             if (sClient) {
-                                sClient.getState().setCharacterId(null);
-                                sClient.getState().setLastError(typeof message === 'string' && message ? message : 'Ce personnage est déjà connecté sur un autre appareil.');
+                                /*
+                                  **Le refus reste affiché** (2026-10-22). `logout()` venait APRÈS
+                                  l'erreur et l'effaçait : la tablette retombait sur « Aucun PJ
+                                  détecté », sans un mot du refus. On sort d'abord, on dit ensuite.
+                                */
                                 if (code === 'reprise_refusee') sClient.getState().logout();
+                                sClient.getState().setCharacterId(null);
+                                sClient.getState().setLastError(
+                                    typeof message === 'string' && message ? message : 'Ce personnage est déjà connecté sur un autre appareil.',
+                                    code,
+                                );
                             }
                         }
                     }

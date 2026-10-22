@@ -2,7 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { lancerGmOs, attendreLHydratation, type GmOsLance } from './lancerGmOs';
+import { lancerGmOs, attendreLHydratation, type GmOsLance, presenterLaTablette, retenirLaTablette } from './lancerGmOs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { useClockStore } from '../src/store/useClockStore';
 import type { useImageStore } from '../src/modules/image/useImageStore';
@@ -62,7 +62,7 @@ for (const taille of [
     { nom: 'paysage', width: 1180, height: 820 },
 ]) test(`Direct T4 — disposition et projections à ${taille.width} px`, async ({ page }) => {
     await page.setViewportSize(taille);
-    await page.addInitScript(() => localStorage.setItem('gmos-tablet-uuid', 't4-direct'));
+    await presenterLaTablette(page, 't4-direct');
     await gmos.fenetre.evaluate(semence => {
         const w = window as unknown as Magasins;
         w.useSessionOSStore.setState({ ...semence.modules.sessionOS, sessions: semence.modules.sessionOS.sessions.map((s: { id: string }) => ({ ...s, status: s.id === 'demo-seance-2' ? 'active' : 'done' })) });
@@ -82,6 +82,7 @@ for (const taille of [
     const direct = page.locator('[data-direct-joueur]');
     await expect(direct.getByRole('heading', { name: 'Le Silence de Varn', exact: true })).toBeVisible();
     await expect(direct.getByText('Connecté', { exact: true })).toBeVisible();
+    await retenirLaTablette(page, 't4-direct');
     // J1 complet : le snapshot initial et le segment suivant portent le même mode.
     await expect(direct.getByText('21:00', { exact: true })).toBeVisible();
     await gmos.fenetre.evaluate(() => (window as unknown as Magasins).useClockStore.setState({ mode: 'static', timestamp: Date.parse('2026-10-03T19:00:18Z') }));

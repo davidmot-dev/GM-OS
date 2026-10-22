@@ -1,6 +1,6 @@
 # 🖖 Jeu — Star Trek
 
-> **Pilote décrit :** « Star Trek », exporté le 2026-10-14 ; module LCARS 0.5.0 relu le 2026-10-16. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Star Trek », exporté le 2026-10-14 ; module LCARS 0.5.0 relu le 2026-10-16 ; paiement au choix le 2026-10-22 (`Export Dirvers/corriges/ST_driver_gmos_paiement.gmos-driver`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Star Trek Adventures, deuxième édition : le système 2d20, comme [Dune](./54-Jeu-Dune.md), avec un Attribut
 et une Fonction.
@@ -14,7 +14,7 @@ et une Fonction.
 | Réserve | Ce qu'elle fait dans GM-OS |
 | :--- | :--- |
 | **Impulsion** (0 à 6, aux joueurs) | Chaque **réussite excédentaire** l'alimente ; elle paie les dés achetés. **« Fin de scène »** lui retire un point. Les joueurs la voient et la dépensent depuis leur tablette |
-| **Menace** (au meneur, sans plafond) | Visible des joueurs. **Un dé acheté sans Impulsion se paie en Menace** |
+| **Menace** (au meneur, sans plafond) | Visible des joueurs. **Un dé acheté sans Impulsion se paie en Menace** — ou **par choix** du joueur, même avec de l'Impulsion |
 
 > La Menace de départ du livre est de **deux points par personnage joueur** ; le pilote en pose 2,
 > à ajuster à la main au début de la partie.
@@ -31,7 +31,14 @@ et une Fonction.
   (le *Focus* de l’édition anglaise). Chaque dé **inférieur ou égal à la Fonction** vaut alors deux
   réussites ; la borne s’affiche à côté de la case, « critique ≤ 4 ».
 - Les dés achetés coûtent 1, 2 puis 3 points d'Impulsion, jusqu'à 5 dés.
-- La **difficulté** (0 à 5) est le nombre de réussites à atteindre.
+- **« Dont en Menace »** : le joueur peut payer tout ou partie de ces dés en Menace, même quand
+  l'Impulsion suffirait (décision du 22/10 ; le livre le permet pour l'aide d'un équipier). À 0,
+  l'Impulsion d'abord et le manque en Menace. Le journal dit « payés en Menace par choix ».
+- La **difficulté** (0 à 5) est le nombre de réussites à atteindre. Ce que la réserve, pleine, ne
+  peut pas garder de l'excédent reste sur le test : « Dépenser un point » ou « Verser à la
+  réserve ».
+- Au **pupitre** et à la **télécommande**, le dernier jet se règle aussi : « un personnage » paie en
+  Impulsion et la remplit, « un PNJ » paie en Menace et la nourrit (voir le guide de Dice-OS).
 
 ![Après le lancer](captures/jeu-star-trek-jet-lance.jpg)
 
