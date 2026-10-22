@@ -35,7 +35,7 @@ conformément à la décision de David du 19/10.
 
 | Pilote | État de la connaissance | Première amélioration ou prochaine étape proposée |
 | --- | --- | --- |
-| [Alien](#alien) | A0–A5 validés par David ; A6/A7 livrés et contrôlés le 22/10 | Essai A6/A7 de David attendu ; A8 non engagé |
+| [Alien](#alien) | A0–A7 validés par David et poussés ; A8 livré et contrôlé le 22/10 | Essai A8 de David attendu ; combat spatial séparé |
 | [Blade Runner](#blade-runner) | Limites documentées ; audit complet à faire | Même choix de forçage au pupitre et sur la fiche ; suivi des blessures |
 | [Crimes](#crimes) | Audit du manuel et de l'export corrigé | Corpus puis résolution « Potentiel GARDE Compétence » |
 | [Cthulhu Hack](#cthulhu-hack) | Limites documentées ; audit complet à faire | Effets du Hors Jeu et usure reliés aux valeurs de la fiche |
@@ -102,7 +102,18 @@ Objectifs absents du flux public, remise privée retrouvée à la reconnexion ; 
 du bilan et achats conservés sans double attribution. Voir le
 [bilan A6/A7](2026-10-21-alien-a6-a7.md) et la
 [passation du 22/10](2026-10-22-etat-et-reprise-codex-alien-a6-a7.md).
-**Essai A6/A7 de David attendu.** A8 non engagé.
+**Essais A6/A7 validés par David le 22/10** : « ca marche pour A6 et A7, commit et pousse, après tu fais A8, GM-OS est fermé ». Commit `3cffff3d` poussé après typage, lint global, 8 590 tests et build réussis ; A8 engagé ensuite.
+
+**A8 livré et contrôlé le 22/10 :** mode discret optionnel du M314, zones et pions privés,
+déplacements par Tour, scan unique et batterie propre ; dossiers d'acte et objectifs privés
+dans MU/TH/UR. Export **1.8.0** incluant A0–A7, **49 champs et 46 liens** conservés.
+**173 tests/21 fichiers, 74 vérifications autonomes**, types/build/lint ciblé réussis ;
+recette réelle A8 et quatre parcours existants Electron/Hub réussis, six captures relues.
+Les Tours écoulés sont reportés explicitement dans A5 ; détection et combat restent arbitrés
+par Maman. Voir le [bilan A8](2026-10-22-alien-a8.md) et la
+[passation](2026-10-22-etat-et-reprise-codex-alien-a8.md). **Essai A8 de David attendu**,
+réalisation A8 incluse dans le présent commit, avec les exports corrigés A4–A8, à la demande
+de David du 22/10 : « commit tout ce qu'il reste sous ta responsabilité ». Aucun nouveau push demandé.
 
 **Déjà disponible :** réserve de base et Stress, forçage, test et cumul des paniques,
 Points de Récit, gestes de repos/objet fétiche, santé raccordée, initiative par cartes,
@@ -116,11 +127,11 @@ fiche HTML, MU/TH/UR et détecteur de mouvement. Ces outils ne sont pas à recon
 | A3 | Livré et essayé | Tir automatique et cibles secondaires, chargeurs/rechargement, protection avant dégâts, vrais D66 humains, Brisé, échéances de Trépas et soins séparés. Temps de jeu et résultats médicaux confirmés par Maman ; PNJ humain déclaré explicitement. Contrôlé et essai de David validé le 21/10 |
 | A4 | Livré et essayé | Aucun Stress/Panique/forçage ; D6 synthétiques persistants, avaries et activité, réactivation puis réparation Comtech, immunités et trauma conservé. 1 439 tests et recette Electron/Hub réussis le 21/10 ; essai de David validé le 21/10 |
 | A5 | Livré et essayé | Tests de Réserve sans Panique, stocks individuels/collectifs, échéances et reçus ; états HTML et restrictions, Rads permanents et surplus, charge sur masses confirmées. 1 460 tests et recette Electron/combat/Hub réussis le 21/10 ; huit captures relues ; essai de David validé le 21/10 |
-| A6 | Livré, essai attendu | Actions lentes/rapides, réactions et surveillance ; cartes selon la Vitesse avec une seule Santé ; attaques, critiques D6 et acide XX121. Contrôlé le 22/10 ; arbitrage narratif par Maman |
-| A7 | Livré, essai attendu | Objectifs remis en privé par acte, Récit Cinéma, bilan PX conservé, achats et apprentissage uniques, Camarade/Rival et fétiche par période. Contrôlé le 22/10 |
-| A8 | P3 | Raccord optionnel du détecteur aux zones, déplacements, Tour et Énergie ; dossiers d'acte dans MU/TH/UR. Combat spatial à cadrer séparément |
+| A6 | Livré et essayé | Actions lentes/rapides, réactions et surveillance ; cartes selon la Vitesse avec une seule Santé ; attaques, critiques D6 et acide XX121. Contrôlé le 22/10 ; arbitrage narratif par Maman |
+| A7 | Livré et essayé | Objectifs remis en privé par acte, Récit Cinéma, bilan PX conservé, achats et apprentissage uniques, Camarade/Rival et fétiche par période. Contrôlé le 22/10 |
+| A8 | Livré, essai attendu | Détecteur raccordé en option au plan privé, déplacements par Tour, mouvements à portée et batterie M314 ; dossiers d'acte et remise privée dans MU/TH/UR. Contrôlé le 22/10 ; combat spatial séparé |
 
-**Suite :** commit/push A4?A7, puis A8 demand? par David ; combat spatial s?par?.
+**Suite :** essai A8 de David ; combat spatial sur demande distincte.
 **Cas témoin :** des six suivis d'une Panique effective de 10 annulent l'action ; un Point
 de Récit ne doit pas contourner cette conséquence. L'export réel a été vérifié le 20/10.
 

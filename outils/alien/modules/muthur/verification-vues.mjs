@@ -192,7 +192,7 @@ test('le départ rejoint son temps restant, s’arrête à la restauration et c�
   let vue = installer(reyes, etat);
   assert.equal(vue.getByRole('log').style.getPropertyValue('--muthur-piratage-decalage'), '-2000ms');
   assert.ok(vue.getByRole('log').classList.contains('muthur-piratage-depart'));
-  vue.unmount(); vue = installer(reyes, moteur.migrerEtat(etat, 3));
+  vue.unmount(); vue = installer(reyes, moteur.migrerEtat(etat, 4));
   assert.equal(vue.getByRole('log').classList.contains('muthur-piratage'), false);
   vue.unmount(); vue = installer(mj, etat);
   await cliquer(vue.getByText('Repousser l’intrusion'));

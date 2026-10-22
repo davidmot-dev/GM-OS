@@ -31,7 +31,8 @@ export interface ProtocoleMuthur {
   minutes: number; actif: boolean; portee: 'operateur' | 'equipage';
 }
 export interface EtatMuthur {
-  version: 3;
+  version: 4;
+  actes: PreparationActe[];
   system: 'alien';
   revision: number;
   config: { vessel: string; status: string; adminPassword: string; crt: boolean; glitches: boolean };
@@ -44,8 +45,13 @@ export interface EtatMuthur {
   diffusionAlarme: string | null;
 }
 export type VueMuthurMJ = EtatMuthur & { diffusionAutorisee: boolean };
+export interface PreparationActe {
+  scenario:string; acte:number;
+  dossiers:{id:string;titre:string;contenu:string;acces:'equipage'|'code'|'administrateur';code:string;publie:boolean}[];
+  objectifs:{personnageId:string;texte:string;remis:boolean}[];
+}
 export interface VueMuthurJoueur {
-  version: 3;
+  version: 4;
   system: 'alien';
   revision: number;
   config: Pick<EtatMuthur['config'], 'vessel' | 'crt' | 'glitches'>;
@@ -58,6 +64,10 @@ export interface VueMuthurJoueur {
 }
 export type ContexteMuthur = ({ role: 'mj'; personnageId?: string } | { role: 'joueur'; personnageId: string }) & { appareilId?: string };
 export type CommandeMuthur =
+  | { id: 'dossier-acte'; charge: {scenario:string;acte:number;dossierId:string;titre:string;contenu:string;acces:'equipage'|'code'|'administrateur';code:string} }
+  | { id: 'objectif-acte'; charge: {scenario:string;acte:number;personnageId:string;texte:string} }
+  | { id: 'publier-dossier-acte'; charge: {scenario:string;acte:number;dossierId:string} }
+  | { id: 'remettre-objectif-acte'; charge: {scenario:string;acte:number;personnageId:string} }
   | { id: 'saisir'; charge: { texte: string; personnageId?: string } }
   | { id: 'choisir-diffusion'; charge: { actif: boolean } }
   | { id: 'enregistrer-protocole'; charge: { protocole: ProtocoleMuthur } }

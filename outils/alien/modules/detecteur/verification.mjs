@@ -39,7 +39,7 @@ test('aucune commande joueur ni identité/destinataire fournis dans la charge ne
 test('reprise et coupure conservent les réglages et effacent scan et faux écho', () => {
   let etat = agir(moteur.creerEtat(), 'configurer', { contacts: 7, parasites: 50, crt: false, effetsParasites: false });
   etat = agir(agir(etat, 'scanner', { actif: true }), 'faux-echo', {});
-  const restaure = moteur.migrerEtat(JSON.parse(JSON.stringify(etat)), 2);
+  const restaure = moteur.migrerEtat(JSON.parse(JSON.stringify(etat)), 3);
   assert.equal(restaure.tracker.power, false); assert.equal(restaure.tracker.anomalyUntil, 0);
   assert.equal(restaure.tracker.contacts, 7); assert.equal(restaure.tracker.noise, 50); assert.equal(restaure.config.crt, false);
   assert.deepEqual(moteur.arreterEffets(restaure), restaure);

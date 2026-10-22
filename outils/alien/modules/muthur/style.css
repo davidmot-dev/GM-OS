@@ -33,6 +33,7 @@
 .gmos-muthur button:disabled, .gmos-muthur input:disabled, .gmos-muthur textarea:disabled { opacity: .6; cursor: default; }
 .gmos-muthur :focus-visible { outline: 2px solid var(--muthur-encre); outline-offset: 3px; }
 .gmos-muthur label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.gmos-muthur fieldset { border:0; padding:0; min-width:0; }
 .gmos-muthur input[type="checkbox"] { width: 44px; accent-color: var(--muthur-encre); }
 .gmos-muthur textarea { resize: vertical; width: 100%; }
 .gmos-muthur .muthur-champ-code { margin-bottom: 12px; }

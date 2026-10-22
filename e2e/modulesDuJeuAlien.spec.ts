@@ -140,6 +140,97 @@ async function sansDebordement(page: Page) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 }
 
+/** Capture le panneau complet sans les masques des ancêtres défilants ; restaure avant toute assertion. */
+async function capturerPanneauA8(page:Page, cible:ReturnType<Page['locator']>, nom:string) {
+    await cible.evaluate(element=>{
+        const anciens:{element:HTMLElement;style:string|null}[]=[];
+        for(let parent=element.parentElement;parent;parent=parent.parentElement){
+            anciens.push({element:parent,style:parent.getAttribute('style')});
+            parent.style.setProperty('overflow','visible','important');parent.style.setProperty('height','auto','important');
+            parent.style.setProperty('max-height','none','important');parent.style.setProperty('contain','none','important');
+        }
+        element.setAttribute('data-capture-alien-a8','');
+        const ancienStyle=element.getAttribute('style'),module=element.closest('.gmos-muthur,.gmos-detecteur');
+        if(module)(element as HTMLElement).style.setProperty('background-color',getComputedStyle(module).backgroundColor,'important');
+        const style=document.createElement('style');style.textContent='body * { visibility:hidden!important; } [data-capture-alien-a8], [data-capture-alien-a8] * { visibility:visible!important; } [data-capture-alien-a8] .muthur-journal-contenu { max-height:none!important; overflow:visible!important; }';document.head.append(style);
+        (window as unknown as {restaurerCaptureA8:()=>void}).restaurerCaptureA8=()=>{
+            style.remove();element.removeAttribute('data-capture-alien-a8');
+            if(ancienStyle===null)element.removeAttribute('style');else element.setAttribute('style',ancienStyle);
+            for(const p of anciens)if(p.style===null)p.element.removeAttribute('style');else p.element.setAttribute('style',p.style);
+        };
+    });
+    try { await cible.screenshot({path:path.join(SORTIE,`${nom}.jpg`),quality:85,animations:'disabled'}); }
+    finally { await page.evaluate(()=>(window as unknown as {restaurerCaptureA8:()=>void}).restaurerCaptureA8()); }
+}
+
+test('A8 : plan privé, scan payé une fois, dossiers d’acte et remise au seul opérateur', async ({ browser }) => {
+    test.setTimeout(180_000);
+    const nel=await rejoindre(browser,'Nel Varga',360),idris=await rejoindre(browser,'Idris Koa',768);
+    for(const nom of ['Nel Varga','Idris Koa']) {
+        await autoriser('Détecteur de mouvement',nom); await autoriser('MU/TH/UR 6000',nom);
+    }
+    const commander=async(moduleId:string,id:string,charge:unknown)=>{
+        const vue=await vueMJ();
+        return gmos.fenetre.evaluate(async({vue,moduleId,id,charge})=>window.appBridge!.modulesDuJeu!.commander({
+            campagneId:vue.campagneId!,contexte:vue.contexte,requeteId:crypto.randomUUID(),moduleId,commande:{id,charge},
+        }),{vue,moduleId,id,charge});
+    };
+    const agir=async(id:string,charge:unknown)=>expect(await commander('alien-detecteur',id,charge)).toEqual({ok:true});
+    await agir('zone-discrete',{id:'sas',nom:'Sas',x:0,y:0,liens:[]});
+    await agir('zone-discrete',{id:'couloir',nom:'Couloir',x:25,y:0,liens:['sas']});
+    await agir('zone-discrete',{id:'soute',nom:'Soute',x:50,y:0,liens:['couloir']});
+    for(const [id,nom,zoneId,mobile] of [['nel','Nel Varga','sas',false],['menace-secrete','Rôdeur dissimulé','couloir',true],['immobile-secret','Créature immobile','soute',false]] as const)
+        await agir('pion-discret',{id,nom,zoneId,humain:id==='nel',limite:id==='nel'?2:3,mobile,detectable:true});
+    await agir('regler-discret',{terrain:'interieur',energie:5,porteurId:'nel'});await agir('mode-discret',{actif:true});
+    const poste=await pupitre('Détecteur de mouvement');
+    await poste.getByRole('button',{name:'Scanner ce Tour et tester l’Énergie',exact:true}).click();
+    await expect(poste.getByRole('button',{name:'Scanner ce Tour et tester l’Énergie',exact:true})).toBeDisabled();
+    await expect(poste.getByText(/Scan du Tour 1 · Énergie/)).toBeVisible();
+    await capturerPanneauA8(gmos.fenetre,poste.getByRole('region',{name:'Mode discret du détecteur'}),'jeu-alien-a8-plan-mj');
+    for(const appareil of [nel,idris]) {
+        await instrument(appareil.page,'Détecteur de mouvement');
+        await expect(appareil.page.getByText('Couloir : 1 écho',{exact:true})).toBeVisible();
+        await expect(appareil.page.getByText('Créature immobile',{exact:true})).toHaveCount(0);
+        const publicRecu=await appareil.page.evaluate(()=>JSON.stringify((window as FenetreSonde).sondeAlien.paquets.filter(p=>p.type==='modules:vue')));
+        expect(publicRecu).not.toMatch(/menace-secrete|Rôdeur dissimulé|immobile-secret|porteurId|"liens"/);
+    }
+    for(const largeur of [360,768,1180]) {
+        await nel.page.setViewportSize({width:largeur,height:1000}); await sansDebordement(nel.page);
+        await capturerPanneauA8(nel.page,nel.page.locator('.gmos-detecteur'),`jeu-alien-a8-detecteur-${largeur}`);
+    }
+    await nel.page.reload();await expect(nel.page.getByText('Connecté',{exact:true})).toBeVisible();await instrument(nel.page,'Détecteur de mouvement');
+    await expect(nel.page.getByText('Couloir : 1 écho',{exact:true})).toBeVisible();
+    expect(await commander('alien-detecteur','scanner-discret',{tour:1})).toMatchObject({ok:false});
+    const terminal=await pupitre('MU/TH/UR 6000');await terminal.getByRole('button',{name:'Actes',exact:true}).click();
+    await terminal.getByLabel('Scénario (nom unique)',{exact:true}).fill('Quarantaine');
+    await terminal.getByLabel('Destinataire de l’objectif',{exact:true}).selectOption({label:'Nel Varga'});
+    await terminal.getByLabel('Objectif secret (MJ uniquement)',{exact:true}).fill('Sauver les prélèvements avant l’évacuation.');
+    await terminal.getByRole('button',{name:'Conserver le brouillon de l’objectif',exact:true}).click();
+    await terminal.getByLabel('Identifiant pour READ',{exact:true}).fill('rapport-quarantaine');
+    await terminal.getByLabel('Titre du dossier d’acte',{exact:true}).fill('Rapport de quarantaine');
+    await terminal.getByLabel('Contenu du dossier d’acte',{exact:true}).fill('Le laboratoire attend les prélèvements.');
+    await terminal.getByLabel('Accès après publication',{exact:true}).selectOption('code');
+    await terminal.getByLabel('Code du dossier d’acte',{exact:true}).fill('0081');
+    await terminal.getByRole('button',{name:'Conserver le brouillon du dossier',exact:true}).click();
+    const avantRemise=await nel.page.evaluate(()=>JSON.stringify((window as FenetreSonde).sondeAlien.paquets.filter(p=>p.type==='modules:vue')));
+    expect(avantRemise).not.toContain('Sauver les prélèvements');expect(avantRemise).not.toContain('Rapport de quarantaine');
+    await terminal.getByRole('button',{name:'Publier ce dossier dans MU/TH/UR',exact:true}).click();
+    await terminal.getByRole('button',{name:'Remettre dans le terminal privé',exact:true}).click();
+    await expect(terminal.getByRole('button',{name:'Objectif déjà remis',exact:true})).toBeDisabled();
+    await capturerPanneauA8(gmos.fenetre,terminal.getByRole('region',{name:'Préparations des actes'}),'jeu-alien-a8-actes-mj');
+    await instrument(nel.page,'MU/TH/UR 6000');await instrument(idris.page,'MU/TH/UR 6000');
+    await expect(nel.page.getByText(/Sauver les prélèvements avant l’évacuation/)).toBeVisible();
+    await expect(idris.page.getByText(/Sauver les prélèvements avant l’évacuation/)).toHaveCount(0);
+    await saisir(nel.page,'CODE 0081');
+    const dossierId=((await vueMJ()).modules.find(m=>m.id==='alien-muthur')!.vue as VueMuthurMJ).actes[0].dossiers[0].id;
+    await saisir(nel.page,`READ ${dossierId}`);await expect(nel.page.getByText(/Le laboratoire attend les prélèvements\./).first()).toBeVisible();
+    expect(await idris.page.evaluate(()=>JSON.stringify((window as FenetreSonde).sondeAlien.paquets.filter(p=>p.type==='modules:vue')))).not.toContain('Le laboratoire attend');
+    await nel.page.reload();await expect(nel.page.getByText('Connecté',{exact:true})).toBeVisible();await instrument(nel.page,'MU/TH/UR 6000');
+    await expect(nel.page.getByText(/Sauver les prélèvements avant l’évacuation/)).toBeVisible();
+    await nel.page.setViewportSize({width:360,height:1000});await sansDebordement(nel.page);
+    await capturerPanneauA8(nel.page,nel.page.locator('.gmos-muthur'),'jeu-alien-a8-terminal-360');
+});
+
 for (const largeur of [390, 1024]) test(`HACK : animation effective dans le vrai Tablet Hub à ${largeur} px, puis expiration après cinq secondes`, async ({ browser }) => {
     const nel = await rejoindre(browser, 'Nel Varga', largeur, true);
     await nel.page.emulateMedia({ reducedMotion: 'no-preference' });

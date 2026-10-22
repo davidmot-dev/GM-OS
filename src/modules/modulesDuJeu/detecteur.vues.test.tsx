@@ -43,6 +43,26 @@ afterEach(() => { cleanup(); vi.useRealTimers(); vi.restoreAllMocks(); vi.unstub
 const cliquer = async (element: HTMLElement) => { await act(async () => fireEvent.click(element)); };
 
 describe('instrument du détecteur', () => {
+    it('prépare une zone et le porteur, puis conserve le scan payé dans le formulaire du mode discret', async () => {
+        let etat=moteur.creerEtat();
+        const props=()=>({vue:moteur.vuePour(etat,{role:'mj'}),envoyerCommande:async(commande:moteur.CommandeDetecteur)=>{
+            etat=moteur.appliquerCommande(etat,commande,{role:'mj'});vue.rerender(<PupitreMJ {...props()}/>);return {ok:true as const};
+        }});
+        const vue=render(<PupitreMJ {...props()}/>);
+        fireEvent.change(vue.getByLabelText('Nom de la zone'),{target:{value:'Sas'}});
+        await act(async()=>fireEvent.submit(vue.getByLabelText('Nom de la zone').closest('form')!));
+        expect(etat.discret.zones[0].nom).toBe('Sas');
+        fireEvent.change(vue.getByLabelText('Nom privé du pion'),{target:{value:'Porteur'}});
+        await act(async()=>fireEvent.submit(vue.getByLabelText('Nom privé du pion').closest('form')!));
+        expect(etat.discret.pions[0]).toMatchObject({nom:'Porteur',humain:true,limite:2,depense:0});
+        await cliquer(vue.getByLabelText('Raccorder le détecteur au plan et à sa batterie'));
+        await act(async()=>fireEvent.submit(vue.getByLabelText('Réserve propre à la batterie du M314').closest('form')!));
+        expect(etat.discret.porteurId).toBe(etat.discret.pions[0].id);
+        await cliquer(vue.getByRole('button',{name:'Scanner ce Tour et tester l’Énergie'}));
+        expect(etat.discret.dernierScan?.tour).toBe(1);
+        expect((vue.getByRole('button',{name:'Scanner ce Tour et tester l’Énergie'}) as HTMLButtonElement).disabled).toBe(true);
+        expect(JSON.stringify(moteur.vuePour(etat,{role:'joueur',personnageId:'alice'}))).not.toContain('Porteur');
+    });
     it('enregistre, rappelle en veille et supprime un préréglage après confirmation', async () => {
         let etat = actif();
         const commandes: moteur.CommandeDetecteur[] = [];
@@ -137,7 +157,7 @@ describe('instrument du détecteur', () => {
         const commandes = vi.fn(() => new Promise<{ ok: false; erreur: string }>(resolve => { finir = resolve; }));
         const vue = render(<PupitreMJ vue={moteur.creerEtat()} envoyerCommande={commandes} />);
         fireEvent.change(vue.getByLabelText('Contacts'), { target: { value: '8' } });
-        await act(async () => { fireEvent.submit(vue.getByRole('form')); fireEvent.submit(vue.getByRole('form')); });
+        await act(async () => { fireEvent.submit(vue.getByRole('form', { name: 'Réglages du détecteur' })); fireEvent.submit(vue.getByRole('form', { name: 'Réglages du détecteur' })); });
         expect(commandes).toHaveBeenCalledTimes(1);
         expect(commandes.mock.calls[0]).toEqual([{ id: 'configurer', charge: { contacts: 8, proximite: 45, intensite: 25, volume: 25, parasites: 10, crt: true, effetsParasites: true } }]);
         await act(async () => finir({ ok: false, erreur: 'Liaison perdue.' }));

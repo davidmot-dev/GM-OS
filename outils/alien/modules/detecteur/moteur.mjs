@@ -1,5 +1,6 @@
 /** Le radar réutilise les commandes et le tirage du cœur ; aucun dialogue MU/TH/UR. */
 import '../../core.js';
+import { creerDiscret, validerDiscret, commanderDiscret, lectureDiscrete } from './discret.mjs';
 const coeur = globalThis.AlienCore;
 const copier = valeur => JSON.parse(JSON.stringify(valeur));
 const exiger = condition => { if (!condition) throw new Error('Données du détecteur invalides.'); };
@@ -8,10 +9,11 @@ function forme(valeur, requis, facultatifs = []) {
   exiger(objet(valeur) && requis.every(cle => Object.hasOwn(valeur, cle))
     && Object.keys(valeur).every(cle => requis.includes(cle) || facultatifs.includes(cle)));
 }
-export function validerEtat(etat, version = 2) {
-  forme(etat, ['version', 'system', 'revision', 'config', 'tracker', ...(version === 2 ? ['prereglages'] : [])]);
+export function validerEtat(etat, version = 3) {
+  forme(etat, ['version', 'system', 'revision', 'config', 'tracker', ...(version >= 2 ? ['prereglages'] : []), ...(version >= 3 ? ['discret'] : [])]);
   exiger(etat.version === version && etat.system === 'alien' && Number.isSafeInteger(etat.revision) && etat.revision >= 0);
-  if (version === 2) coeur.validerPrereglages(etat.prereglages);
+  if (version >= 2) coeur.validerPrereglages(etat.prereglages);
+  if (version >= 3) validerDiscret(etat.discret);
   forme(etat.config, ['crt', 'glitches']); exiger(typeof etat.config.crt === 'boolean' && typeof etat.config.glitches === 'boolean');
   const t = etat.tracker;
   forme(t, ['power', 'intensity', 'volume', 'contacts', 'proximity', 'noise', 'target', 'seed', 'anomalyUntil']);
@@ -22,7 +24,7 @@ export function validerEtat(etat, version = 2) {
     && Number.isFinite(t.anomalyUntil) && t.anomalyUntil >= 0);
 }
 export function creerEtat() {
-  return { version: 2, system: 'alien', revision: 0, config: { crt: true, glitches: true }, tracker: coeur.initial().tracker, prereglages: [] };
+  return { version: 3, system: 'alien', revision: 0, config: { crt: true, glitches: true }, tracker: coeur.initial().tracker, prereglages: [], discret: creerDiscret() };
 }
 export function arreterEffets(etat) {
   validerEtat(etat);
@@ -30,16 +32,22 @@ export function arreterEffets(etat) {
   return suivant;
 }
 export function migrerEtat(donnees, versionDonnees) {
-  if (![1, 2].includes(versionDonnees)) throw new Error('Version du détecteur non prise en charge.');
+  if (![1, 2, 3].includes(versionDonnees)) throw new Error('Version du détecteur non prise en charge.');
   validerEtat(donnees, versionDonnees);
-  return arreterEffets(versionDonnees === 1 ? { ...copier(donnees), version: 2, prereglages: [] } : donnees);
+  return arreterEffets({ ...copier(donnees), version: 3, prereglages: donnees.prereglages ?? [], discret: donnees.discret ?? creerDiscret() });
 }
 export function vuePour(etat, lecteur) {
   validerEtat(etat);
   exiger(lecteur?.role === 'mj' || (lecteur?.role === 'joueur' && typeof lecteur.personnageId === 'string' && lecteur.personnageId.length > 0));
   // Le choix des destinataires appartient à l'hôte, indépendamment du terminal.
   const vue = copier(etat);
-  if (lecteur.role === 'joueur') delete vue.prereglages;
+  if (vue.discret.actif) {
+    vue.lectureDiscrete = lectureDiscrete(vue.discret);
+    vue.tracker.contacts = vue.lectureDiscrete.echos.length;
+    vue.tracker.positions = vue.lectureDiscrete.echos.map(({x,y}) => ({x,y}));
+    vue.tracker.anomalyUntil = 0;
+  }
+  if (lecteur.role === 'joueur') { delete vue.prereglages; delete vue.discret; }
   return vue;
 }
 export function appliquerCommande(etat, commande, contexte) {
@@ -47,6 +55,14 @@ export function appliquerCommande(etat, commande, contexte) {
   if (contexte?.role !== 'mj') throw new Error('Commande réservée au meneur.');
   forme(commande, ['id', 'charge']);
   const charge = commande.charge, suivant = copier(etat);
+  if (['mode-discret','regler-discret','zone-discrete','pion-discret','deplacer-discret','examiner-discret','tour-discret','scanner-discret'].includes(commande.id)) {
+    suivant.discret = commanderDiscret(etat.discret,commande);
+    if (commande.id === 'scanner-discret') suivant.tracker.power = true;
+    if (['mode-discret','tour-discret'].includes(commande.id)) suivant.tracker.power = false;
+    suivant.tracker.anomalyUntil = 0; suivant.revision++;
+    validerEtat(suivant); return suivant;
+  }
+  if (etat.discret.actif && (commande.id === 'faux-echo' || (commande.id === 'scanner' && charge?.actif))) throw new Error('Utilise le scan discret : une fois par Tour avec test d’Énergie.');
   const moteur = coeur.créer({ ...coeur.initial(), tracker: suivant.tracker, prereglagesDetecteur: suivant.prereglages });
   if (commande.id === 'configurer') {
     forme(charge, [], ['intensite', 'volume', 'contacts', 'proximite', 'parasites', 'crt', 'effetsParasites']);

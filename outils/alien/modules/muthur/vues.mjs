@@ -3,6 +3,7 @@ import { createElement as h, useCallback, useEffect, useId, useRef, useState } f
 import '../../alarme.js';
 import '../../video-alerte.js';
 import { videoAlerteUrl } from './medias.mjs';
+import { ActesMJ } from './actes-vues.mjs';
 
 const bouton = (texte, props = {}) => h('button', { type: 'button', ...props }, texte);
 const champ = (libelle, nom, props = {}) => h('label', null, h('span', null, libelle),
@@ -357,7 +358,7 @@ export function PupitreMJ({ vue, envoyerCommande }) {
   const dossier = dossierId === '' ? undefined : vue.documents.find(element => element.id === dossierId) || vue.documents[0];
   return h(Cadre, { vue, titre: 'MU/TH/UR · Poste meneur', erreur, operateur, envoyer,
     enfants: h('div', null,
-      h('nav', { className: 'muthur-actions', 'aria-label': 'Panneaux MU/TH/UR' }, [['terminal', 'Terminal'], ['dossiers', 'Dossiers'], ['protocoles', 'Protocoles'], ['reglages', 'Réglages']].map(([id, libelle]) =>
+      h('nav', { className: 'muthur-actions', 'aria-label': 'Panneaux MU/TH/UR' }, [['terminal', 'Terminal'], ['dossiers', 'Dossiers'], ['actes', 'Actes'], ['protocoles', 'Protocoles'], ['reglages', 'Réglages']].map(([id, libelle]) =>
         bouton(libelle, { key: id, 'aria-pressed': onglet === id, onClick: () => setOnglet(id) }))),
       onglet === 'terminal' && h('div', { className: 'muthur-terminal' },
         !operateur ? h('p', null, 'Les opérateurs apparaîtront lorsqu’ils utiliseront le terminal.') : h('div', null,
@@ -372,5 +373,6 @@ export function PupitreMJ({ vue, envoyerCommande }) {
         vue.documents.map(element => h('option', { value: element.id, key: element.id }, element.title || element.id)))),
       h(Dossier, { key: dossier ? JSON.stringify(dossier) : 'nouveau', dossier, documents: vue.documents, envoyer, occupe, enregistre: setDossierId })),
       onglet === 'protocoles' && h(Protocoles, { vue, envoyer, occupe }),
+      onglet === 'actes' && h(ActesMJ, { vue, envoyer, occupe }),
       onglet === 'reglages' && h(Reglages, { vue, envoyer, occupe })) });
 }

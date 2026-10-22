@@ -70,6 +70,13 @@ Le MJ peut classer/supprimer les dossiers MU/TH/UR et traiter plusieurs demandes
 Le détecteur propose des préréglages nommés par campagne : les charger arrête le scan, qui se
 relance volontairement. Voir le [guide Alien](54-Jeu-Alien.md).
 
+**Alien A8 :** le détecteur propose aussi un mode discret optionnel, avec plan privé de
+zones, déplacements par Tour et batterie propre au M314. Un scan par Tour teste l'Énergie
+et ne transmet que les zones des mouvements à portée. L'onglet **Actes** de MU/TH/UR garde
+les brouillons de dossiers au MJ jusqu'à publication et remet chaque objectif au seul
+opérateur, une fois par acte. Les conséquences narratives et l'entrée en combat restent
+arbitrées par Maman ; le suivi A7 conserve les gains de Récit.
+
 LCARS propose sept consoles attribuées aux personnages réels de la campagne. Les affectations
 se préparent au pupitre ; l’accès au module s’ouvre séparément pendant la séance. Ses 19 actions
 arrivent dans une file arbitrée par le MJ, avec réponses privées, partage autorisé, publications

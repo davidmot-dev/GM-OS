@@ -1,6 +1,6 @@
 # 👽 Jeu — Alien
 
-> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-20, corrigé A7 le 2026-10-22 (version 1.7.0, conserve A0–A6). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-20, corrigé A8 le 2026-10-22 (version 1.8.0, conserve A0–A7). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font monter la peur.
 
@@ -117,6 +117,76 @@ Une reconnexion pendant la même séance retrouve les droits toujours ouverts, a
 de l’identité de l’appareil. Les commandes interrompues ne sont jamais rejouées automatiquement.
 Après retour dans le détecteur, les bips nécessitent un nouveau clic local. Une coupure reste
 effective en mémoire si le disque échoue ; l’erreur est signalée au MJ.
+
+### Mode discret et batterie du M314 — A8
+
+Dans le pupitre du détecteur, déplie **Préparer les zones du plan**, puis **Préparer les
+pions cachés**. Donne un nom et des positions en mètres à chaque zone ; relie les passages
+adjacents et franchissables. Ce plan schématique reste au MJ. Place les humains, créatures
+et objets mobiles ; les noms et positions des pions ne sont jamais diffusés aux joueurs.
+
+Coche **Raccorder le détecteur au plan et à sa batterie**. Confirme le **Porteur du M314**,
+le terrain et sa réserve propre d'Énergie : **5 à pleine charge**. Cette batterie appartient
+à cet appareil, indépendamment de la réserve d'un autre équipement suivi sur la fiche.
+Décocher revient à la mise en scène habituelle, en conservant le suivi discret.
+
+Pendant un Tour, déplace d'abord les PJ puis les ennemis en secret. **Déplacer d'une zone**
+utilise un passage préparé et dépense un pas : **deux zones au maximum pour un humain**,
+limite de l'espèce confirmée par Maman pour une créature. **Examiner pendant ce Tour** exige
+de rester sur place pendant tout le Tour. Un déplacement rend le pion mobile ; pour un
+objet bougeant sur place, confirme **En mouvement actuellement** dans sa préparation.
+Décoche cette case si Maman décide qu'il s'immobilise avant le scan. **Objet de bonne taille
+détectable** écarte les mouvements trop petits pour l'appareil.
+
+**Scanner ce Tour et tester l'Énergie** ne s'utilise qu'une fois par Tour. Le M314 repère
+les objets en mouvement jusqu'à **quatre zones et 100 m en intérieur ou terrain obstrué**,
+ou **1 km en terrain découvert**. Le joueur reçoit les zones repérées et leurs échos,
+sans nom, nature ni emplacement des pions immobiles. **Un écho n'accorde aucune ligne de vue** :
+Maman arbitre l'Observation, les embuscades et le passage au combat.
+
+Après chaque utilisation, le suivi lance la réserve d'Énergie, **six dés au maximum** :
+chaque 1 retire un point, sans Stress ni Panique. Le scan qui épuise la dernière charge reste
+consultable ; une batterie vide interdit le suivant. Fermer, rouvrir, changer de mode ou se
+reconnecter ne permet pas de rescanner ou de repayer dans le même Tour.
+
+**Valider le Tour suivant** remet les déplacements à disposition et efface les mouvements
+du Tour précédent ; le scan attend une nouvelle utilisation. Ce compteur mesure l'exploration :
+dans **Survie Alien**, valide aussi le Tour réellement écoulé pour les réserves et privations
+concernées. Le temps réel et les alarmes n'avancent jamais ces compteurs.
+
+![Plan schématique privé et suivi des déplacements au poste MJ](captures/jeu-alien-a8-plan-mj.jpg)
+
+![Le Hub à 360 px ne reçoit que les échos des zones repérées et l'état de la batterie](captures/jeu-alien-a8-detecteur-360.jpg)
+
+Le détecteur est aussi vérifié à [768 px](captures/jeu-alien-a8-detecteur-768.jpg) et
+[1 180 px](captures/jeu-alien-a8-detecteur-1180.jpg).
+
+### Préparer les dossiers et objectifs d'un acte — A8
+
+Dans le pupitre **MU/TH/UR**, ouvre **Actes**. Renseigne un **Scénario (nom unique)** et
+l'acte 1, 2 ou 3 ; **Préparation existante** retrouve les brouillons à la reprise.
+Un dossier préparé reste invisible, même aux opérateurs administrateurs, jusqu'à
+**Publier ce dossier dans MU/TH/UR**. Après publication, il suit les accès **Équipage**,
+**Code** ou **Administrateur** choisis ; les modifications se font dans l'onglet **Dossiers**.
+Changer d'acte ne retire pas ce qui a déjà été publié ou lu.
+
+**Identifiant pour READ** donne un nom de lecture court au dossier, par exemple
+`rapport-quarantaine` : lettres minuscules sans accent, chiffres et tirets.
+
+Prépare l'**Objectif secret (MJ uniquement)** de son destinataire, puis **Remettre dans le
+terminal privé**. Il apparaît dans le fil MU/TH/UR de cet opérateur seulement et revient
+à sa reconnexion. La remise se conserve et ne se répète pas pour le même scénario, acte
+et personnage. Elle ne traite pas une question de l'opérateur qui attend encore une réponse.
+
+Les autres actes et objectifs restent privés. Piratages et protocoles ne publient pas
+automatiquement ces brouillons ; Maman décide des révélations. Pour lire un dossier autorisé,
+l'opérateur utilise **LIST**, puis **READ identifiant** ; un dossier protégé exige d'abord
+**CODE son_code**. Les gains de Récit restent dans **Cinéma et Campagne Alien** (A7).
+Choisis le canal de remise d'un objectif pour éviter de l'envoyer aussi par la messagerie A7.
+
+![Brouillons et remises par acte au poste de Maman](captures/jeu-alien-a8-actes-mj.jpg)
+
+![Objectif remis et dossier autorisé dans le terminal privé du Hub](captures/jeu-alien-a8-terminal-360.jpg)
 
 Les données privées sont stockées à part des campagnes diffusées aux tablettes. Les sauvegardes
 complètes et exports de campagne incluent les dossiers, codes et dialogues ; un export de pilote
@@ -699,3 +769,8 @@ David a validé son essai A0/A1 le 20/10, A2 à A5 le 21/10.
 Validation A4/A5 : « ok A4 et A5 tester c'est bon ».
 David a validé A6/A7 le 22/10 : « ca marche pour A6 et A7 ».
 Les huit parcours des accessoires du 16/10 ne sont pas rejoués par cette recette mécanique.*
+
+*Complété le 2026-10-22 pour A8 : mode discret du M314, plan privé et batterie ; dossiers
+et objectifs d'acte MU/TH/UR. Recette réelle A8 Electron/deux Hub Edge et quatre parcours
+existants de scan, reconnexion et import réussis ; six captures A8 relues, détecteur à
+360/768/1 180 px. L'essai A8 de David reste attendu.*

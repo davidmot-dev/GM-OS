@@ -184,7 +184,7 @@ test('arrêt et migration gardent les secrets et dialogues, arrêtent les effets
   assert.equal(arrete.players[reyes.personnageId].access, 'admin');
   assert.deepEqual(arrete.players[reyes.personnageId].messages, etat.players[reyes.personnageId].messages);
   assert.deepEqual(module.arreterEffets(arrete), arrete);
-  assert.deepEqual(module.migrerEtat(JSON.parse(JSON.stringify(etat)), 3), arrete);
+  assert.deepEqual(module.migrerEtat(JSON.parse(JSON.stringify(etat)), 4), arrete);
   assert.ok(etat.countdown); assert.ok(etat.players[reyes.personnageId].cue);
 });
 
@@ -206,7 +206,7 @@ test('l’état du prototype v1 est migré sans embarquer ou modifier son radar'
 
 test('la migration masque aussi les anciens codes ORDERS conservés en clair', () => {
   const ancien = saisir(module.creerEtat(), 'STATUS');
-  ancien.version = 2; for (const p of Object.values(ancien.players)) delete p.requests;
+  ancien.version = 2; delete ancien.actes; for (const p of Object.values(ancien.players)) delete p.requests;
   ancien.players[reyes.personnageId].messages[0].content = 'ORDERS 0042';
   const resultat = module.migrerEtat(ancien, 2);
   assert.equal(resultat.players[reyes.personnageId].messages[0].content, 'ORDERS ••••••••');

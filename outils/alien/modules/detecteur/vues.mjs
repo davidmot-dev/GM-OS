@@ -2,6 +2,7 @@
 import { createElement as h, useCallback, useEffect, useRef, useState } from 'react';
 import '../../core.js';
 import '../../detecteur.js';
+import { DiscretMJ, LectureDiscrete } from './discret-vues.mjs';
 
 const bouton = (texte, props = {}) => h('button', { type: 'button', ...props }, texte);
 function useMouvementsReduits() {
@@ -107,8 +108,8 @@ function Instrument({ vue, children, horloge }) {
   const reduit = useMouvementsReduits();
   return h('section', { className: 'gmos-detecteur' },
     h('header', null, h('p', { className: 'detecteur-sur-titre' }, 'INSTRUMENT PORTATIF · MODÈLE M314'),
-      h('h2', null, 'Détecteur de mouvement'), h('p', null, 'Signal scénarisé · aucune distance physique mesurée.')),
-    h('div', { className: children ? 'detecteur-grille' : '' }, h('div', null, h(Radar, { vue, reduit, horloge }), h(Son, { tracker: vue.tracker, horloge })), children));
+      h('h2', null, 'Détecteur de mouvement'), h('p', null, vue.lectureDiscrete ? 'M314 · échos du dernier scan de jeu.' : 'Signal scénarisé · aucune distance physique mesurée.')),
+    h('div', { className: children ? 'detecteur-grille' : '' }, h('div', null, h(Radar, { vue, reduit, horloge }), h(Son, { tracker: vue.tracker, horloge }),vue.lectureDiscrete&&h(LectureDiscrete,{lecture:vue.lectureDiscrete})), children));
 }
 export function VueJoueur({ vue, horloge }) { return h(Instrument, { vue, horloge }); }
 
@@ -123,7 +124,7 @@ function Reglages({ vue, envoyer, occupe }) {
   return h('form', { onSubmit: enregistrer, className: 'detecteur-reglages', 'aria-label': 'Réglages du détecteur' },
     h('h3', null, 'Mise en scène'),
     h('p', null, 'Ouvre les accès aux PJ depuis la liste des modules, puis démarre le scan. Un même tirage est partagé entre les destinataires.'),
-    h('fieldset', { disabled: occupe },
+    h('fieldset', { disabled: occupe || vue.discret?.actif },
       ...[['Contacts', 'contacts', 'contacts', 9], ['Proximité (0 loin · 100 près)', 'proximite', 'proximity', 100], ['Intensité', 'intensite', 'intensity', 100], ['Volume des bips', 'volume', 'volume', 100], ['Parasites', 'parasites', 'noise', 100]].map(([libelle, nom, cle, max]) =>
         h('label', { key: nom }, libelle, h('input', { type: 'number', name: nom, defaultValue: vue.tracker[cle], min: 0, max, step: 1, required: true }))),
       h('label', { className: 'detecteur-case' }, h('input', { type: 'checkbox', name: 'crt', defaultChecked: vue.config.crt }), 'Effet CRT'),
@@ -169,10 +170,11 @@ export function PupitreMJ({ vue, envoyerCommande }) {
   return h(Instrument, { vue }, h('aside', null,
     h('h3', null, 'Poste meneur'),
     h('div', { className: 'detecteur-actions' },
-      bouton(vue.tracker.power ? 'Arrêter le scan' : 'Démarrer le scan', { disabled: occupe, 'aria-pressed': vue.tracker.power, onClick: () => envoyer('scanner', { actif: !vue.tracker.power }) }),
-      bouton('Faux écho · 9 s', { disabled: occupe || !vue.tracker.power, onClick: () => envoyer('faux-echo', {}) })),
+      bouton(vue.tracker.power ? 'Arrêter le scan' : 'Démarrer le scan', { disabled: occupe || (vue.discret?.actif && !vue.tracker.power), 'aria-pressed': vue.tracker.power, onClick: () => envoyer('scanner', { actif: !vue.tracker.power }) }),
+      bouton('Faux écho · 9 s', { disabled: occupe || !vue.tracker.power || vue.discret?.actif, onClick: () => envoyer('faux-echo', {}) })),
     erreur && h('p', { role: 'alert' }, erreur),
     h(Reglages, { key: JSON.stringify([vue.config, vue.tracker.contacts, vue.tracker.proximity, vue.tracker.intensity, vue.tracker.volume, vue.tracker.noise]), vue, envoyer, occupe }),
     h(Prereglages, { vue, envoyer, occupe }),
+    h(DiscretMJ, { d:vue.discret, envoyer, occupe }),
     h('p', null, 'Arrêter le scan conserve les accès et les réglages. Aucun effet automatique sur le Stress.')));
 }

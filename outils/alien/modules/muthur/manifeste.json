@@ -3,12 +3,16 @@
   "id": "alien-muthur",
   "libelle": "MU/TH/UR 6000",
   "description": "Terminal de bord Alien : dossiers protégés, dialogues privés, piratage arbitré et effets contrôlés par le meneur.",
-  "version": "0.4.0",
-  "versionDonnees": 3,
+  "version": "0.5.0",
+  "versionDonnees": 4,
   "corpusCompatibles": [
     "alien"
   ],
   "commandes": [
+    {"id": "dossier-acte", "roles": ["mj"]},
+    {"id": "objectif-acte", "roles": ["mj"]},
+    {"id": "publier-dossier-acte", "roles": ["mj"]},
+    {"id": "remettre-objectif-acte", "roles": ["mj"]},
     {"id": "saisir", "roles": ["mj", "joueur"]},
     {"id": "choisir-diffusion", "roles": ["mj", "joueur"]},
     {"id": "enregistrer-protocole", "roles": ["mj"]},

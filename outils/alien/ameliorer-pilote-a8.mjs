@@ -1,0 +1,20 @@
+// Usage : node outils/alien/ameliorer-pilote-a8.mjs "Export Dirvers/corriges/Alien_driver_gmos_a7.gmos-driver"
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+import AdmZip from 'adm-zip';
+const source=process.argv[2];assert.ok(source,'Indiquer le pilote A7 à conserver.');
+const original=fs.readFileSync(source),archive=new AdmZip(original),state=JSON.parse(archive.readAsText('state.json'));
+const p=state.gameDriver,fiche=state.sheetTemplate;assert.equal(p.corpusId,'alien');assert.ok(p.combat.alien?.progression);
+const avant=structuredClone(fiche),ids=[p.id,fiche.id];
+p.version='1.8.0';p.modulesDuJeu??=[{id:'alien-muthur'},{id:'alien-detecteur'}];
+const manifest=JSON.parse(archive.readAsText('manifest.json'));manifest.exportedAt=new Date().toISOString();manifest.bundleId+='-a8';
+const zip=new AdmZip();for(const e of archive.getEntries())if(!['state.json','manifest.json'].includes(e.entryName))zip.addFile(e.entryName,e.getData());
+zip.addFile('state.json',Buffer.from(JSON.stringify(state,null,2)));zip.addFile('manifest.json',Buffer.from(JSON.stringify(manifest,null,2)));
+const sortie='Export Dirvers/corriges/Alien_driver_gmos_a8.gmos-driver';zip.writeZip(sortie);
+assert.deepEqual(JSON.parse(new AdmZip(sortie).readAsText('state.json')),state);assert.deepEqual(fs.readFileSync(source),original);
+assert.deepEqual(fiche,avant);assert.deepEqual([p.id,fiche.id],ids);
+fs.writeFileSync('Export Dirvers/corriges/alien_state_a8.json',JSON.stringify(state,null,2)+'\n');
+fs.mkdirSync('scratch/alien-a8/pilotes',{recursive:true});fs.copyFileSync(sortie,'scratch/alien-a8/pilotes/Alien.gmos-driver');
+const rapport={sortie,version:p.version,champs:fiche.sections.flatMap(s=>s.fields).length,ids,originalInchange:true,sha256Source:crypto.createHash('sha256').update(original).digest('hex')};
+fs.writeFileSync('scratch/alien-a8/export.json',JSON.stringify(rapport,null,2));console.log(JSON.stringify(rapport));

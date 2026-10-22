@@ -28,3 +28,7 @@
 .gmos-detecteur [role=alert] { color:#f1b9a5; }
 @media (max-width:760px) { .gmos-detecteur .detecteur-grille { grid-template-columns:minmax(0,1fr); } }
 .gmos-detecteur select { width: 100%; min-height: 44px; font: inherit; color: inherit; background: var(--detecteur-fond, #0b1711); border: 1px solid currentColor; border-radius: 4px; padding: 8px; }
+.gmos-detecteur .detecteur-plan { width:100%; max-height:360px; border:1px solid currentColor; margin:12px 0; }
+.gmos-detecteur summary { cursor:pointer; padding:12px 0; }
+.gmos-detecteur form { min-width:0; }
+.gmos-detecteur strong,.gmos-detecteur li,.gmos-detecteur figcaption { overflow-wrap:anywhere; }

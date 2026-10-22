@@ -35,6 +35,9 @@ import type { CurrentView } from '../src/types/campaign.types';
  * `e2e/modulesDuJeuStarTrek.spec.ts`, sur son pilote fictif et deux navigateurs.
  * Elles sortent dans `scratch/lcars-natif/jeu-star-trek-lcars-*.jpg`, puis sont
  * relues et copiées dans le manuel. Ce parcours ne lit aucun pilote personnel.
+ * Alien A8 (22/10) : `e2e/modulesDuJeuAlien.spec.ts`, scénario A8, capture les deux
+ * accessoires réels dans `scratch/modules-du-jeu-e2e/jeu-alien-a8-*.jpg`, puis relecture
+ * et copie dans le manuel. Le pilote 1.8.0 conserve les mécaniques et champs A0–A7.
  */
 
 const ICI = path.dirname(fileURLToPath(import.meta.url));

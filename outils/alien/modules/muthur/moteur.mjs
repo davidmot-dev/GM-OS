@@ -1,6 +1,7 @@
 /** Adaptateur v1 : une seule logique de terminal, celle du prototype autonome. */
 import '../../video-alerte.js';
 import '../../core.js';
+import { validerActes, preparerActe } from './actes.mjs';
 const coeur = globalThis.AlienCore;
 const copie = valeur => JSON.parse(JSON.stringify(valeur));
 const objet = valeur => valeur !== null && typeof valeur === 'object'
@@ -19,8 +20,9 @@ function forme(valeur, requis, facultatifs = []) {
   exiger(Object.keys(valeur).every(cle => requis.includes(cle) || facultatifs.includes(cle)));
 }
 
-export function validerEtat(etat, version = 3) {
-  forme(etat, ['version', 'system', 'revision', 'config', 'documents', 'players', 'countdown', 'protocoles', 'portes', 'autodestruction', 'diffusionAlarme']);
+export function validerEtat(etat, version = 4) {
+  forme(etat, ['version', 'system', 'revision', 'config', 'documents', 'players', 'countdown', 'protocoles', 'portes', 'autodestruction', 'diffusionAlarme', ...(version >= 4 ? ['actes'] : [])]);
+  if (version >= 4) validerActes(etat.actes);
   exiger(etat.version === version && etat.system === 'alien' && entier(etat.revision));
   forme(etat.config, ['vessel', 'status', 'adminPassword', 'crt', 'glitches']);
   exiger(chaine(etat.config.vessel, 64) && chaine(etat.config.status, 2000)
@@ -35,7 +37,7 @@ export function validerEtat(etat, version = 3) {
   }
   exiger(objet(etat.players) && Object.keys(etat.players).length <= 256);
   for (const [id, joueur] of Object.entries(etat.players)) {
-    forme(joueur, ['id', 'name', 'access', 'unlocked', 'messages', 'request', 'cue', ...(version === 3 ? ['requests'] : [])]);
+    forme(joueur, ['id', 'name', 'access', 'unlocked', 'messages', 'request', 'cue', ...(version >= 3 ? ['requests'] : [])]);
     exiger(identite(id) && joueur.id === id && chaine(joueur.name, 40, false) && acces.includes(joueur.access));
     exiger(Array.isArray(joueur.unlocked) && joueur.unlocked.every(cle => dossiers.has(cle))
       && new Set(joueur.unlocked).size === joueur.unlocked.length);
@@ -51,7 +53,7 @@ export function validerEtat(etat, version = 3) {
       forme(joueur.request, ['id', 'type', 'at']);
       exiger(identite(joueur.request.id) && ['message', 'hack'].includes(joueur.request.type) && date(joueur.request.at));
     }
-    if (version === 3) {
+    if (version >= 3) {
       exiger(Array.isArray(joueur.requests) && joueur.requests.length <= 128 && joueur.requests.filter(d => d.status === 'pending').length <= 32);
       const ids = new Set();
       for (const demande of joueur.requests) {
@@ -108,16 +110,18 @@ function sansRadar(etat) {
 }
 
 function moteurDe(etat) {
-  return coeur.créer({ ...etat, tracker: coeur.initial().tracker });
+  const { actes: _actes, ...terminal } = etat;
+  return coeur.créer({ ...terminal, version: Math.min(3,terminal.version), tracker: coeur.initial().tracker });
 }
+const enrichir = (terminal, actes = []) => ({ ...sansRadar(terminal), version:4, actes:copie(actes) });
 
 export function creerEtat() {
-  return sansRadar(coeur.initial());
+  return enrichir(coeur.initial());
 }
 
 /** Accepte aussi l'état v1 du prototype, en retirant uniquement son radar. */
 export function migrerEtat(donnees, versionDonnees) {
-  if (![1, 2, 3].includes(versionDonnees)) throw new Error('Version de données MU/TH/UR non prise en charge.');
+  if (![1, 2, 3, 4].includes(versionDonnees)) throw new Error('Version de données MU/TH/UR non prise en charge.');
   exiger(objet(donnees));
   let terminal = sansRadar(donnees);
   exiger(terminal.version === versionDonnees);
@@ -127,7 +131,7 @@ export function migrerEtat(donnees, versionDonnees) {
   }
   validerEtat(terminal, terminal.version);
   if (terminal.version === 2) terminal = sansRadar(moteurDe(terminal).sauvegarde());
-  const resultat = arreterEffets(terminal);
+  const resultat = arreterEffets(enrichir(terminal,donnees.actes));
   // Le prototype antérieur au 15/10 gardait l'alias ORDERS en clair dans le fil.
   for (const joueur of Object.values(resultat.players)) for (const message of joueur.messages) {
     const secret = message.kind === 'input' && message.content.match(/^(LOGIN|CODE|ORDERS)\s/i);
@@ -154,12 +158,13 @@ export function vuePour(etat, lecteur) {
   validerEtat(etat); verifierLecteur(lecteur);
   const moteur = moteurDe(etat);
   if (lecteur.role === 'mj') {
-    return sansRadar(moteur.snapshot('gm', '', lecteur.appareilId));
+    return enrichir(moteur.snapshot('gm', '', lecteur.appareilId),etat.actes);
   }
   // L'ouverture ne mute pas la sauvegarde. La première commande inscrit le PJ.
   if (!Object.hasOwn(etat.players, lecteur.personnageId)) moteur.inscrire(lecteur.personnageId, 'Opérateur');
   const { tracker: _radar, ...vue } = moteur.snapshot('player', lecteur.personnageId, lecteur.appareilId);
   vue.revision = etat.revision;
+  vue.version = 4;
   return vue;
 }
 
@@ -169,6 +174,12 @@ export function appliquerCommande(etat, commande, contexte) {
   const charge = commande.charge, moteur = moteurDe(etat);
   const mj = contexte.role === 'mj';
   if (!mj && !['saisir', 'choisir-diffusion'].includes(commande.id)) throw new Error('Commande réservée au meneur.');
+  if (['dossier-acte','objectif-acte','publier-dossier-acte','remettre-objectif-acte'].includes(commande.id)) {
+    const actes = preparerActe(etat.actes,commande,etat.players,
+      d => { exiger(!etat.documents.some(a=>a.id===d.id)); moteur.agir('gm','',{type:'creer-document',document:{id:d.id,title:d.titre,body:d.contenu,access:{equipage:'crew',code:'code',administrateur:'admin'}[d.acces],code:d.code}}); },
+      (o,a) => moteur.agir('gm','',{type:'reply',playerId:o.personnageId,text:`Objectif — ${a.scenario}, acte ${a.acte}\n${o.texte}`,requestId:null}));
+    const resultat=enrichir(moteur.sauvegarde(),actes); resultat.revision=etat.revision+1; validerEtat(resultat); return resultat;
+  }
   const cibler = () => { exiger(identite(charge.personnageId)); return charge.personnageId; };
   let action;
   if (commande.id === 'choisir-diffusion') {
@@ -185,7 +196,7 @@ export function appliquerCommande(etat, commande, contexte) {
     forme(charge, ['personnageId', 'nom']); const id = cibler();
     exiger(chaine(charge.nom, 40, false));
     moteur.inscrire(id, charge.nom);
-    const candidat = sansRadar(moteur.sauvegarde());
+    const candidat = enrichir(moteur.sauvegarde(),etat.actes);
     candidat.players[id].name = charge.nom;
     candidat.revision = etat.revision + 1;
     validerEtat(candidat); return candidat;
@@ -245,7 +256,7 @@ export function appliquerCommande(etat, commande, contexte) {
     forme(charge, []); action = { type: 'reset' };
   } else throw new Error('Commande MU/TH/UR inconnue.');
   if (action) moteur.agir('gm', '', action);
-  const resultat = sansRadar(moteur.sauvegarde());
+  const resultat = enrichir(moteur.sauvegarde(),commande.id === 'reinitialiser' ? [] : etat.actes);
   resultat.revision = etat.revision + 1;
   validerEtat(resultat);
   return resultat;

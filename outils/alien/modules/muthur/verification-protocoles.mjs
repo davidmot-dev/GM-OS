@@ -74,14 +74,15 @@ test('un seul appareil diffuse ; une charge ne choisit jamais l’identité d’
 test('la reprise v2 conserve les protocoles préparés, ferme la diffusion et arrête l’autodestruction', () => {
   let etat = saisir(moteur.creerEtat(), 'CODE OMEGA-10');
   etat = agir(etat, 'choisir-diffusion', { actif: true }, reyes);
-  const restaure = moteur.migrerEtat(etat, 3);
+  const restaure = moteur.migrerEtat(etat, 4);
   assert.deepEqual(restaure.protocoles, etat.protocoles);
   assert.equal(restaure.autodestruction, null); assert.equal(restaure.diffusionAlarme, null);
   const ancien = structuredClone({ ...etat, version: 1 });
+  delete ancien.actes;
   for (const p of Object.values(ancien.players)) delete p.requests;
   for (const cle of ['protocoles', 'portes', 'autodestruction', 'diffusionAlarme']) delete ancien[cle];
   const migre = moteur.migrerEtat(ancien, 1);
-  assert.deepEqual(migre.protocoles, []); assert.equal(migre.version, 3);
+  assert.deepEqual(migre.protocoles, []); assert.equal(migre.version, 4);
 });
 
 function installationAlarme({ locale = true, francaise = true } = {}) {

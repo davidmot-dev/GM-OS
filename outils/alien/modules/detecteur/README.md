@@ -1,6 +1,6 @@
 # Détecteur Alien — module du Tablet Hub
 
-Version 0.2.0, contrat v1, données v2. Ergonomie du 16/10/2026.
+Version 0.3.0, contrat v1, données v3. A8 du 22/10/2026.
 `alien-detecteur` réutilise `AlienCore` pour ses commandes et le tirage des contacts,
 et `detecteur.js` pour le dessin partagé avec le prototype autonome. Il est enregistré
 explicitement dans les registres natif et React, sans branche Alien dans le Hub.
@@ -25,7 +25,17 @@ Une erreur disque est signalée, mais n’empêche ni retrait ni coupure en mém
 Déconnexion, changement de PJ et démontage arrêtent sons et minuteries locaux.
 Au retour, les bips exigent un nouveau clic. Une page masquée se tait. Les mouvements
 réduits gardent le radar fixe, avec expiration du faux écho. Aucun Stress modifié,
-aucune distance réelle mesurée, aucun jet automatique.
+aucune distance physique mesurée. Ces réglages décrivent le mode de mise en scène.
+
+**Mode discret A8 :** `discret.mjs` conserve le plan de zones et les pions au MJ ;
+`lectureDiscrete` expose seulement les zones des mouvements repérés. Deux passages par
+Tour pour un humain, limite explicite par créature, scan une fois par Tour, portée M314
+de quatre zones/100 m en intérieur ou 1 km en terrain découvert. La batterie propre à
+l'appareil commence à cinq ; chaque scan teste au maximum six dés et retire les 1,
+sans Stress/Panique. Le dernier scan et son paiement survivent à la coupure du radar.
+La migration v1/v2 ajoute ce mode désactivé, sans perdre les anciens réglages.
+Le Tour d'exploration est confirmé par Maman ; les échéances personnelles A5 sont validées
+dans Survie Alien. Voir le [manuel Alien](../../../../documentation/User%20Guides/54-Jeu-Alien.md).
 
 ## Commandes et sauvegarde
 

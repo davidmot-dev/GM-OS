@@ -1,8 +1,15 @@
 # MU/TH/UR 6000 — adaptateur de module GM-OS v1
 
-**16/10/2026 — version du module 0.4.0, données v3, contrat v1.**
+**22/10/2026 — version du module 0.5.0, données v4, contrat v1.**
 Conforme au format du [contrat v1](../../../../documentation/Architecture/Contrat-des-modules-du-jeu.md).
 Ce dossier fournit le manifeste, le moteur et les composants React joueur/MJ.
+
+**A8 :** l'onglet **Actes** prépare des dossiers et objectifs par scénario nommé et acte 1–3.
+`actes.mjs` garde les brouillons hors du cœur et des projections joueur. Maman publie chaque
+dossier avec ses accès existants, ou remet un objectif une fois au seul opérateur dans son
+fil privé, sans traiter sa question en attente. Les reçus survivent à la reprise de campagne ;
+le suivi A7 conserve l'attribution des Points de Récit. Migration v1–v3 vers v4 avec les
+dialogues et codes conservés, effets arrêtés. Voir le [manuel Alien](../../../../documentation/User%20Guides/54-Jeu-Alien.md).
 **Le registre, les autorisations de table et le branchement au Tablet Hub sont livrés
 dans la deuxième tranche du 15/10.** Depuis **Cockpit › Modules du jeu**, le MJ prépare
 MU/TH/UR et, pendant une séance, ouvre l’accès aux personnages choisis. Le stockage

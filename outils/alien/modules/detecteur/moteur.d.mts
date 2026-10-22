@@ -1,11 +1,23 @@
 export interface EtatDetecteur {
-  version: 2; system: 'alien'; revision: number;
+  version: 3; system: 'alien'; revision: number;
+  discret: DiscretAlien;
   prereglages: { id: string; nom: string; reglages: Pick<EtatDetecteur['tracker'], 'intensity' | 'volume' | 'contacts' | 'proximity' | 'noise'> }[];
   config: { crt: boolean; glitches: boolean };
-  tracker: { power: boolean; intensity: number; volume: number; contacts: number; proximity: number; noise: number; target: 'all'; seed: number; anomalyUntil: number };
+  tracker: { power: boolean; intensity: number; volume: number; contacts: number; proximity: number; noise: number; target: 'all'; seed: number; anomalyUntil: number; positions?: {x:number;y:number}[] };
 }
+export interface ZoneDiscrete { id:string; nom:string; x:number; y:number; liens:string[] }
+export interface PionDiscret { id:string; nom:string; zoneId:string; humain:boolean; limite:number; depense:number; mobile:boolean; detectable:boolean }
+export interface EchoDiscret { zone:string; nombre:number; x:number; y:number }
+export interface DiscretAlien { actif:boolean; tour:number; terrain:'interieur'|'exterieur'; energie:number; zones:ZoneDiscrete[]; pions:PionDiscret[]; porteurId:string; dernierScan:null|{tour:number;avant:number;apres:number;des:number[];echos:EchoDiscret[]} }
 export type ContexteDetecteur = { role: 'mj' | 'joueur'; personnageId?: string; appareilId?: string };
 export type CommandeDetecteur =
+  | { id: 'mode-discret'; charge: {actif:boolean} }
+  | { id: 'regler-discret'; charge: Pick<DiscretAlien,'terrain'|'energie'|'porteurId'> }
+  | { id: 'zone-discrete'; charge: ZoneDiscrete }
+  | { id: 'pion-discret'; charge: Omit<PionDiscret,'depense'> }
+  | { id: 'deplacer-discret'; charge: {pionId:string;zoneId:string;tour:number} }
+  | { id: 'examiner-discret'; charge: {pionId:string;tour:number} }
+  | { id: 'tour-discret'|'scanner-discret'; charge: {tour:number} }
   | { id: 'configurer'; charge: { intensite?: number; volume?: number; contacts?: number; proximite?: number; parasites?: number; crt?: boolean; effetsParasites?: boolean } }
   | { id: 'enregistrer-prereglage'; charge: { prereglageId: string; nom: string } }
   | { id: 'rappeler-prereglage' | 'supprimer-prereglage'; charge: { prereglageId: string } }
@@ -15,6 +27,6 @@ export function creerEtat(): EtatDetecteur;
 export function validerEtat(etat: unknown): asserts etat is EtatDetecteur;
 export function migrerEtat(donnees: unknown, versionDonnees: number): EtatDetecteur;
 export function arreterEffets(etat: EtatDetecteur): EtatDetecteur;
-export type VueDetecteur = Omit<EtatDetecteur, 'prereglages'> & { prereglages?: EtatDetecteur['prereglages'] };
+export type VueDetecteur = Omit<EtatDetecteur, 'prereglages'|'discret'> & { prereglages?: EtatDetecteur['prereglages']; discret?: DiscretAlien; lectureDiscrete?: {tour:number;energie:number;scanneTour:number|null;echos:EchoDiscret[]} };
 export function vuePour(etat: EtatDetecteur, lecteur: ContexteDetecteur): VueDetecteur;
 export function appliquerCommande(etat: EtatDetecteur, commande: CommandeDetecteur, contexte: ContexteDetecteur): EtatDetecteur;

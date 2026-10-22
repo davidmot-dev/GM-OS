@@ -7,17 +7,18 @@ const copie = valeur => JSON.parse(JSON.stringify(valeur));
 
 export function extraireConfiguration(etat) {
   validerEtat(etat);
-  return copie({ format, version: 1, config: etat.config, documents: etat.documents, protocoles: etat.protocoles });
+  const actes=etat.actes.map(a=>({...a,dossiers:a.dossiers.map(d=>({...d,publie:etat.documents.some(doc=>doc.id===d.id)})),objectifs:a.objectifs.map(o=>({...o,remis:false}))}));
+  return copie({ format, version: 1, config: etat.config, documents: etat.documents, protocoles: etat.protocoles, ...(actes.length?{actes}:{}) });
 }
 
 export function etatDepuisConfiguration(configuration) {
   if (!configuration || typeof configuration !== 'object' || Array.isArray(configuration)
-    || Object.keys(configuration).length !== 5
+    || Object.keys(configuration).some(k=>!['format','version','config','documents','protocoles','actes'].includes(k))
     || !['format', 'version', 'config', 'documents', 'protocoles'].every(cle => Object.hasOwn(configuration, cle))
     || configuration.format !== format || configuration.version !== 1) {
     throw new Error('Format ou version de configuration MU/TH/UR non pris en charge.');
   }
-  const etat = { ...creerEtat(), ...copie({ config: configuration.config, documents: configuration.documents, protocoles: configuration.protocoles }) };
+  const etat = { ...creerEtat(), ...copie({ config: configuration.config, documents: configuration.documents, protocoles: configuration.protocoles, actes:configuration.actes??[] }) };
   // Vérifier avant d'enregistrer : un import ne doit jamais remplacer une préparation par des données invalides.
   validerEtat(etat);
   return etat;

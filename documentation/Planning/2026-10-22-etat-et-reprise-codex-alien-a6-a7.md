@@ -18,6 +18,9 @@ Script `outils/alien/ameliorer-pilote-a6-a7.mjs`.
 après tu fais A8, GM-OS est fermé ». Commit et push A4–A7 autorisés, puis A8 demandé.
 Le combat spatial reste un chantier séparé.
 
+Suite du 22/10 : commit `3cffff3d` poussé, puis A8 livré et contrôlé, essai de David
+attendu ; voir la [passation A8](2026-10-22-etat-et-reprise-codex-alien-a8.md).
+
 ## Ancres et décisions
 
 - `dice/systemes/actionsAlien.ts`, `combat/components/ActionsAlien.tsx` : paiements
