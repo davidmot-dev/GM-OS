@@ -157,3 +157,19 @@ describe('un Héros déjà Fatigué', () => {
         expect(changements[0].lignes).toEqual([]);
     });
 });
+
+/** **La fin de scène de Symbaroum** (2026-10-22) : la Corruption temporaire revient à zéro. */
+describe('remettre une jauge à son plancher', () => {
+    const vider = { champ: 'corruption_temporaire', label: 'Corruption temporaire', delta: 'vide' as const };
+
+    it('la temporaire revient à zéro, la permanente ne bouge pas', () => {
+        const [c] = recuperationDesHeros([vider], [{ joueurId: 'j', id: 'h', nom: 'Éléna', valeurs: { corruption_temporaire: 4, corruption_permanente: 1 } }]);
+        expect(c.maj).toEqual({ corruption_temporaire: 0 });
+        expect(c.lignes).toEqual(['Corruption temporaire 4 → 0 (remis à 0)']);
+    });
+
+    it('un plancher déclaré tient, et une jauge déjà dessous ne remonte pas', () => {
+        expect(appliquerLeMouvement({ ...vider, min: 2 }, { corruption_temporaire: 5 })?.valeur).toBe(2);
+        expect(appliquerLeMouvement({ ...vider, min: 2 }, { corruption_temporaire: 1 })?.valeur).toBe(1);
+    });
+});

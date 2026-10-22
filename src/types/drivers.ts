@@ -291,8 +291,12 @@ export interface MouvementDeFiche {
     champ: string;
     /** Le nom dit dans l'aperçu ; à défaut, celui du champ. */
     label?: string;
-    /** +1, −1, −2 ; `'plein'` remet le champ à son plafond (le Vécu d'un nouveau scénario). */
-    delta: number | 'plein';
+    /**
+     * +1, −1, −2 ; `'plein'` remet le champ à son plafond (le Vécu d'un nouveau
+     * scénario) ; `'vide'` le ramène à son plancher (la Corruption temporaire de
+     * Symbaroum en fin de scène, 2026-10-22).
+     */
+    delta: number | 'plein' | 'vide';
     /** Un champ dont la valeur s'ajoute au gain : l'Extase à l'Espoir regagné. */
     plus?: string;
     /**
@@ -356,6 +360,12 @@ export interface GestesDesHeros {
          */
         amputation?: { champ: string; label: string; seuils: { aPartirDe: number; points: number }[]; parmi?: string };
     };
+    /**
+     * Ce que chaque fiche perd ou regagne à « Fin de scène » — la Corruption
+     * temporaire de Symbaroum, remise à zéro (2026-10-22). Relu Héros par Héros
+     * avant d'écrire, comme le moment de calme.
+     */
+    finDeScene?: MouvementDeFiche[];
     /** Ce que chaque Héros regagne à « Début de séance » : le Vécu de NOC, +1. */
     debutDeSeance?: MouvementDeFiche[];
     /** Ce que chaque Héros regagne à « Nouveau scénario » : le Vécu de NOC, plein. */
@@ -366,6 +376,30 @@ export interface GestesDesHeros {
      * (la Menace), éventuellement le même plusieurs fois.
      */
     effetsDuDebordement?: { ressource: string; nombreSelon: string; effets: EffetDeDebordement[] };
+}
+
+/**
+ * **Un seuil qui laisse une trace** — la Séquelle de NOC, 2026-10-22 : quand une
+ * jauge de péril atteint 8, un point devient permanent. Voir
+ * `src/modules/table/franchissements.ts`.
+ *
+ * Proposé au meneur, **jamais écrit seul**, et une seule fois par passage : la
+ * fiche garde ce qui a été traité, si bien qu'un rechargement ou une tablette
+ * qui se reconnecte ne le repropose pas. Redescendue sous le seuil, la jauge le
+ * réarme.
+ */
+export interface Franchissement {
+    /** Stable : c'est sous lui que la fiche retient le passage traité. */
+    id: string;
+    /** La jauge surveillée : `blessures`. */
+    champ: string;
+    /** Le nom dit au meneur ; à défaut, celui du champ. */
+    label?: string;
+    aPartirDe: number;
+    /** Ce que le livre dit à ce seuil : « Blessure lourde : un point devient une séquelle ». */
+    rappel?: string;
+    /** Ce que « Noter » écrit sur la fiche : la séquelle +1. */
+    mouvements: MouvementDeFiche[];
 }
 
 /** La fiche du groupe — voir `GameDriver.ficheDeGroupe`. */
@@ -635,6 +669,11 @@ export interface GameDriver {
      * Absent : le bandeau ne propose que les gestes des réserves.
      */
     gestesDesHeros?: GestesDesHeros;
+    /**
+     * **Les seuils qui laissent une trace** — la Séquelle de NOC à 8 (2026-10-22).
+     * Proposés au meneur sous le bandeau, une fois par passage. Absent : rien.
+     */
+    franchissements?: Franchissement[];
     /** Outils proposés par le pilote ; [] désactive les propositions implicites du jeu. Aucun secret ici. */
     modulesDuJeu?: ReferenceDeModuleDuJeu[];
     /**

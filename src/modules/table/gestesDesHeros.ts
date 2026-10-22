@@ -4,7 +4,8 @@ import { valeurDeJauge } from '../dice/systemes/nocturne';
 /**
  * **Les gestes de table qui touchent chaque Héros** — NOC, 2026-10-16.
  *
- * Le moment de calme, le Vécu de la séance et du scénario, les effets du Fiel :
+ * Le moment de calme, le Vécu de la séance et du scénario, les effets du Fiel —
+ * et depuis le 2026-10-22 la fin de scène (la Corruption temporaire de Symbaroum) :
  * le meneur fait un geste, et chaque fiche bouge. Les règles viennent du carnet
  * NotebookLM « NOC » (sections « LES MOMENTS DE CALME », « Les effets du Fiel »,
  * « Fatigue », « Retrouver Espoir ») et de `docs/systems/noc/rules/`.
@@ -86,6 +87,12 @@ export function appliquerLeMouvement(
         // Un Vécu agrandi par le Développement n'est pas ramené au plafond commun.
         const plein = Math.max(avant, plafond);
         return { valeur: plein, avant, ligne: `${label} ${avant} → ${plein} (plein)` };
+    }
+    // Remis à son plancher — la Corruption temporaire de Symbaroum en fin de scène.
+    // Une jauge déjà sous son plancher n'est pas remontée : un geste de perte ne fait rien gagner.
+    if (m.delta === 'vide') {
+        const vide = Math.min(avant, plancher);
+        return { valeur: vide, avant, ligne: `${label} ${avant} → ${vide} (remis à ${plancher})` };
     }
 
     const precisions: string[] = [];

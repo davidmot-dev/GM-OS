@@ -258,9 +258,9 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'music-pad-edit' && 'Pastille'}
                                         {/* Littéral : un écran de refonte, pour un seul lecteur. */}
                                         {customVariant === 'vitrine-du-socle' && 'Vitrine du socle'}
-                                        {/* Littéral : deux gestes de NOC, pour un seul lecteur. */}
-                                        {customVariant === 'gestes-des-heros' && ((defaultValue as { geste?: GesteDesHeros } | undefined)?.geste === 'calme'
-                                            ? 'Moment de calme' : 'Effets du débordement')}
+                                        {/* Littéral : trois gestes de table, pour un seul lecteur. */}
+                                        {customVariant === 'gestes-des-heros' && ({ calme: 'Moment de calme', debordement: 'Effets du débordement', finDeScene: 'Fin de scène' } as const)[
+                                            (defaultValue as { geste?: GesteDesHeros } | undefined)?.geste ?? 'calme']}
                                         {/* Littéral : un écran pour un seul lecteur, le meneur. */}
                                         {customVariant === 'identite-visuelle' && 'Identité visuelle'}
                                     </h3>

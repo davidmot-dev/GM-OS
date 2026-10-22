@@ -79,6 +79,8 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
     const dansLeBandeau = ressources.filter(r => !r.horsDuBandeau);
     const montrees = pourLesJoueurs ? dansLeBandeau.filter(visiblePourUnJoueur) : dansLeBandeau;
     const erosionPossible = !pourLesJoueurs && ressources.some(r => r.erosionFinDeScene);
+    // La fin de scène qui touche aussi les fiches s'ouvre sur un aperçu, Héros par Héros.
+    const finDeSceneDesHeros = !!gestesDuMeneur?.finDeScene?.length;
     const seancePossible = !pourLesJoueurs && (ressources.some(r => r.erosionDebutDeSeance) || !!gestesDuMeneur?.debutDeSeance?.length);
     const scenarioPossible = !pourLesJoueurs && (ressources.some(r => r.remiseAuDepartParScenario)
         || !!gestesDuMeneur?.nouveauScenario?.length || !!rechargeDuMeneur?.length);
@@ -137,9 +139,11 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
             : gagner(campaignId, ressources, r.id, delta));
     };
 
-    // Un pilote sans réserve visible ne laisse pas une bande vide derrière lui,
-    // qui donnerait à croire à un oubli de configuration.
-    if (montrees.length === 0) return null;
+    const gestesPossibles = erosionPossible || finDeSceneDesHeros || seancePossible || scenarioPossible
+        || calmePossible || !!debordement;
+    // Un pilote sans réserve visible ni geste ne laisse pas une bande vide derrière
+    // lui, qui donnerait à croire à un oubli de configuration.
+    if (montrees.length === 0 && !gestesPossibles) return null;
 
     return (
         <div data-bandeau-des-reserves className={`flex items-center border-b border-app-border/20 bg-app-bg/40 ${pourLesJoueurs ? 'flex-wrap gap-3 p-3' : 'gap-6 px-6 py-2'}`}>
@@ -217,7 +221,7 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                 le meneur qui le décide. On lui donne le bouton plutôt que de
                 deviner à partir d'un combat ou d'un changement de carte.
             */}
-            {(erosionPossible || seancePossible || scenarioPossible || calmePossible || !!debordement) && (
+            {gestesPossibles && (
                 <div className="ml-auto flex items-center gap-2">
                     {/*
                         Le moment de calme et les effets du débordement écrivent sur
@@ -242,7 +246,16 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                             <Flame size={11} /> Effets du {nomDe(debordement.ressource)}
                         </button>
                     )}
-                    {erosionPossible && (
+                    {finDeSceneDesHeros && (
+                        <button
+                            onClick={() => gmCustom('gestes-des-heros', { geste: 'finDeScene' })}
+                            className={CLASSE_DU_GESTE}
+                            title={`Ce que la fin de scène change sur chaque fiche (${nomsDesMouvements(gestesDuMeneur?.finDeScene)}), à relire avant d'appliquer`}
+                        >
+                            <Hourglass size={11} /> Fin de scène
+                        </button>
+                    )}
+                    {erosionPossible && !finDeSceneDesHeros && (
                         <button
                             onClick={() => {
                                 const r = finDeScene(campaignId, ressources);

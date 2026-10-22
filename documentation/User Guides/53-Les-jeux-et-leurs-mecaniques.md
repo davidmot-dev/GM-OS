@@ -214,22 +214,36 @@ du scénario le nomme.
 ## Les gestes sur chaque Héros (`gestesDesHeros`)
 
 Certains gestes de table **écrivent sur la fiche de chaque Héros** de la campagne d'un seul clic.
-Le bandeau des réserves les propose au meneur ; les deux plus lourds ouvrent d'abord un **aperçu,
-Héros par Héros** (« Trauma 3 → 6 (+3, folie 1) »), puis **« Appliquer »**. Seules les fiches qui
+Le bandeau des réserves les propose au meneur — et il paraît pour eux seuls, même dans un jeu
+sans réserve de table ; les plus lourds ouvrent d'abord un **aperçu, Héros par Héros** (« Trauma 3 → 6 (+3, folie 1) »), puis **« Appliquer »**. Seules les fiches qui
 changent sont écrites.
 
 | Geste | Ce qu'il fait | Exemple |
 | :--- | :--- | :--- |
 | **Moment de calme** (`momentDeCalme`) | Un bouton au bandeau. Des réserves de table bougent, chaque Héros récupère dans l'ordre déclaré, des cases se décochent (`leve`). Une **récupération amputée** (`amputation`) se dit sans s'appliquer : le joueur choisit où la reprendre | NOC : −1 Fiel, Espoir +1 + Extase, −1 à chaque jauge de péril, Fatigué prend fin ; le Soupçon dit les 2, 4 ou 6 points à reprendre |
+| **Fin de scène** (`finDeScene`) | Le bouton « Fin de scène » ouvre un **aperçu**, puis écrit chaque fiche ; les réserves qui s'érodent en fin de scène s'érodent avec | Symbaroum : la Corruption temporaire revient à 0, la permanente reste |
 | **Début de séance**, **Nouveau scénario** (`debutDeSeance`, `nouveauScenario`) | Les boutons existants rendent aussi quelque chose à chaque fiche ; la confirmation du scénario le nomme | NOC : Vécu +1 par séance, plein à chaque scénario |
 | **Effets du débordement** (`effetsDuDebordement`) | Un bouton « Effets du … » au bandeau. Quand la réserve déborde, la Loi choisit **autant d'effets que vaut l'autre réserve** (la Menace), le même plusieurs fois si elle veut ; le compte est rappelé, pas imposé | NOC : Bouleversement administratif, Intervention de l'Artefact, Tension, Traque, Fatigue |
 
 Ce qu'un mouvement sait dire (`MouvementDeFiche`) : un gain ou une perte, un champ **ajouté**
 (l'Extase), un Talent de **résistance** qui réduit (la Folie contre la Tension — à −1 il
-aggrave), un **plafond** fixe ou lu sur la fiche (l'Espoir : 2 × Ferveur + 3, au plus 10), un
-**plancher** de séquelles, et la case qui se **coche** quand la réserve est déjà vide (l'Espoir à
+aggrave), un **plafond** fixe ou lu sur la fiche (l'Espoir : 2 × Ferveur + 3, au plus 10), un retour
+**« plein »** au plafond ou **« vide »** au plancher, un **plancher** de séquelles, et la case qui se **coche** quand la réserve est déjà vide (l'Espoir à
 zéro → Fatigué). **Un même effet choisi deux fois cumule ses pertes avant la résistance** : deux
 Tensions avec Folie 1 donnent 4 − 1 = 3 points de Trauma.
+
+### Les seuils qui laissent une trace (`franchissements`)
+
+Quand une jauge de la fiche **atteint un seuil**, une ligne paraît sous le bandeau : « Ilya Vorn —
+Blessures 8 : Blessure lourde ». **« Noter »** écrit ce que le pilote déclare (la séquelle +1, avec
+le même vocabulaire de mouvements) et le consigne au journal ; **« Écarter »** le laisse de côté.
+Dans les deux cas **la fiche s'en souvient** : ni un rechargement, ni une tablette qui se
+reconnecte ne le reproposent. Redescendue sous le seuil, la jauge le **réarme** — le passage
+suivant se propose de nouveau. Rien ne s'écrit sans le meneur.
+
+| Réglage | Ce qu'il change | Exemple |
+| :--- | :--- | :--- |
+| **Seuils** (`franchissements`) | Un identifiant stable, la jauge (`champ`), le seuil (`aPartirDe`), le rappel du livre, et les mouvements de « Noter » | NOC : à 8 sur Blessures, Trauma, Traque ou Noirceur, séquelle +1 |
 
 Une case cochée compte comme **un point de jauge de péril** : Fatigué (−1 aux Talents) se déclare
 comme une jauge à un seuil. Un seuil peut ne valoir **que pour un champ retenu** (`seulementSi`) :

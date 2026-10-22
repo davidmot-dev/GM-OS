@@ -12220,6 +12220,46 @@ le sujet 2 »* (Claude Code) ; GM-OS confirmé fermé. Deuxième sujet commun de
 - **Reste** : **David réimporte** le pilote corrigé, puis l'essai à l'écran (fiche et tablette).
   Ensuite, S3 (Avantage tactique +2 et +1D4 dégâts) et S2 (Endurance) restent proposés.
 
+### 150 · Santé et séquelles, fin de scène — Symbaroum S2/S4, NOC point 1 — 22/10/2026
+
+David, le 22/10 : *« J'ai réimporté. on va faire le sujet 3 et 4 »*, puis le périmètre recommandé
+(commun + Symbaroum + NOC) ; GM-OS confirmé fermé. Sujets communs 3 (santé et séquelles) et 4
+(événements de scène et de séance) de [la synthèse des pilotes](2026-10-20-ameliorations-tous-les-pilotes.md).
+
+- **Fait — la fiche naît pleine** (`jeuDuPersonnage.ts`, `naissanceDansLeJeu`) : le champ de santé
+  principale reçoit la santé de départ réellement lue (jamais le dix de secours), à la naissance
+  seulement — un blessé n'est jamais remis à neuf.
+- **Fait — contrôle de la Forge** : une santé de départ en points de vie sans champ courant
+  (`isMainHP`), sans cases ni horloge, s'avertit. Sur les exports réels : **Symbaroum** (corrigé
+  ici) et **Crimes** (« physique » : relève de C2, pas traité).
+- **Fait — la fin de scène sur les fiches** : `gestesDesHeros.finDeScene` et le mouvement
+  `delta: 'vide'` (retour au plancher) ; le bouton « Fin de scène » ouvre l'aperçu Héros par Héros
+  (`FenetreDesGestesDesHeros`), puis érode aussi les réserves qui le déclarent. Le bandeau paraît
+  pour ses seuls gestes, même sans réserve de table (`PanneauDesRessources`, `SessionDashboard`).
+- **Fait — les seuils qui laissent une trace** : `GameDriver.franchissements`
+  (`table/franchissements.ts`, `AlertesDeFranchissement.tsx`) ; sous le bandeau, « Noter » écrit
+  les mouvements et consigne au journal, « Écarter » laisse de côté ; **la fiche retient le
+  passage** (`__franchissements`) : ni rechargement ni reconnexion ne le reproposent ; redescendue
+  sous le seuil, la jauge le réarme. Limite : le réarmement se fait quand le tableau de bord de la
+  séance est ouvert — une jauge qui redescend et remonte entièrement ailleurs ne se repropose pas.
+- **Fait — les pilotes**, par script, dans `Export Dirvers/corriges/` :
+  `Symbaroum_driver_gmos_s2-endurance` (`outils/symbaroum/raccorder_endurance_et_fin_de_scene.py` :
+  Endurance actuelle = santé principale, max Endurance ; fin de scène : Corruption temporaire à 0) ;
+  `NOC_driver_gmos_sequelles` (`outils/noc/ajouter_sequelles.py` : quatre seuils à 8, séquelle +1).
+  Les deux passent tous les contrôles sans un constat.
+- **Fait — manuel** : guide 53 (fin de scène, « vide », section `franchissements`) ; pages NOC et
+  Symbaroum ; captures `jeu-noc-sequelle`, `jeu-symbaroum-fin-de-scene` et celles des deux jeux
+  refaites par `capturesDesJeux` avec les pilotes corrigés.
+- **Vérifié** : `tsc -b` propre ; essais nouveaux (franchissements 6, alertes et bandeau 5, « vide »
+  2, fin de scène 1, naissance 2, contrôles 4) ; suite complète **8 653 essais verts** (deux essais de
+  formule recentrés : le nouvel avertissement de santé n'était pas leur objet) ; captures vertes.
+- **Essayé et validé par David le 22/10**, les deux pilotes réimportés : *« c'est bon pour les deux »*
+  (un premier essai sans réimport ne montrait pas le bouton : la fin de scène vit dans le pilote).
+- **Reste** : ⚠️ Les personnages
+  Symbaroum existants gardent leur Endurance actuelle : si elle est restée à 0, la remplir.
+  Hors lot : agonie de Symbaroum, Stigmate et 1D4 permanent (S4, reste), Blade Runner
+  (stabilisation, audit d'abord), Cthulhu Hack (Hors Jeu → Sauvegardes), Crimes C2.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12310,6 +12350,7 @@ le sujet 2 »* (Claude Code) ; GM-OS confirmé fermé. Deuxième sujet commun de
 | 83 | **L'onglet « Lancer un test »** | § 147 ; maquettes Stitch retenues le 22/10 ; **onglets et refonte de la partie commune faits et commités le 22/10** ; suite unitaire, `capturesDesJeux` (dix jeux, 96 captures du manuel refaites) et sept essais du Voyageur verts | L'essai de David à l'écran | Rien |
 | 84 | **Forge : `jet.difficulte` compte des réussites** | § 148 ; consigne corrigée et contrôle du pilote au plafond de la réserve, faits le 22/10 ; 721 essais de la Forge verts ; sur les exports réels, seul Crimes est signalé (C1, connu) | Relire le corpus de la Forge | Rien |
 | 85 | **Symbaroum S1 — modificateur du seuil, opposition explicite** | § 149 ; moteur, panneau (fiche et tablette), journal, Forge, pilote corrigé, manuel et captures — faits le 22/10 | Réimport du pilote corrigé et essai de David | Rien |
+| 86 | **Santé et séquelles, fin de scène** | § 150 ; fiche qui naît pleine, contrôle de la santé courante, `finDeScene` et « vide », seuils qui laissent une trace (une fois par passage) ; Symbaroum S2-raccord/S4-fin de scène et NOC point 1 par script — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

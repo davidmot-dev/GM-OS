@@ -139,6 +139,10 @@ const JournalDesConstats: React.FC<{ constats: ConstatDuPilote[] }> = ({ constat
   );
 };
 
+/** Un mouvement de fiche, dit : « +1 », « −2 », « plein », « vide ». */
+const direLeDelta = (delta: number | 'plein' | 'vide') =>
+  typeof delta === 'number' ? `${delta > 0 ? '+' : ''}${delta}` : delta;
+
 export const RevueDuPilote: React.FC<{
   driver: Partial<GameDriver>;
   template: Partial<SheetTemplate>;
@@ -367,14 +371,14 @@ export const RevueDuPilote: React.FC<{
             <Ligne clef="Moment de calme">
               {[
                 ...(driver.gestesDesHeros.momentDeCalme.table ?? []).map(t => `${t.ressource} ${t.delta > 0 ? '+' : ''}${t.delta}`),
-                ...driver.gestesDesHeros.momentDeCalme.heros.map(m => `${m.label ?? m.champ} ${m.delta === 'plein' ? 'plein' : `${m.delta > 0 ? '+' : ''}${m.delta}`}${m.plus ? ` + ${m.plus}` : ''}`),
+                ...driver.gestesDesHeros.momentDeCalme.heros.map(m => `${m.label ?? m.champ} ${direLeDelta(m.delta)}${m.plus ? ` + ${m.plus}` : ''}`),
                 ...(driver.gestesDesHeros.momentDeCalme.leve ?? []).map(c => `${c} prend fin`),
               ].join(', ')}
             </Ligne>
           )}
-          {(['debutDeSeance', 'nouveauScenario'] as const).map(cle => (driver.gestesDesHeros![cle]?.length ?? 0) > 0 && (
-            <Ligne key={cle} clef={cle === 'debutDeSeance' ? 'Début de séance' : 'Nouveau scénario'}>
-              {driver.gestesDesHeros![cle]!.map(m => `${m.label ?? m.champ} ${m.delta === 'plein' ? 'plein' : `${m.delta > 0 ? '+' : ''}${m.delta}`}`).join(', ')}
+          {(['finDeScene', 'debutDeSeance', 'nouveauScenario'] as const).map(cle => (driver.gestesDesHeros![cle]?.length ?? 0) > 0 && (
+            <Ligne key={cle} clef={{ finDeScene: 'Fin de scène', debutDeSeance: 'Début de séance', nouveauScenario: 'Nouveau scénario' }[cle]}>
+              {driver.gestesDesHeros![cle]!.map(m => `${m.label ?? m.champ} ${direLeDelta(m.delta)}`).join(', ')}
             </Ligne>
           ))}
           {driver.gestesDesHeros.effetsDuDebordement && (

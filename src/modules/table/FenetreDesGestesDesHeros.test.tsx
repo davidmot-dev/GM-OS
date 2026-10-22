@@ -91,3 +91,19 @@ describe('les effets du Fiel', () => {
         expect(useRessourcesDeTableStore.getState().reserves.c.Fiel).toBe(2);
     });
 });
+
+/** **La fin de scène** (Symbaroum, 2026-10-22) : la Corruption temporaire revient à zéro, après l'aperçu. */
+describe('la fin de scène', () => {
+    it('montre la remise à zéro Héros par Héros, puis n\'écrit que les fiches qui changent', () => {
+        // Un seul objet : le sélecteur du magasin compare les références.
+        const symbaroum = { ...PILOTE, gestesDesHeros: { finDeScene: [{ champ: 'trauma', label: 'Trauma', delta: 'vide' }] } };
+        useSessionOSStore.setState({ getActiveDriver: () => symbaroum } as never);
+        const fermer = vi.fn();
+        render(<FenetreDesGestesDesHeros geste="finDeScene" onClose={fermer} />);
+        expect(screen.getByText('Trauma 3 → 0 (remis à 0)')).toBeTruthy();
+        fireEvent.click(screen.getByText('Appliquer'));
+        expect(updateCharacter).toHaveBeenCalledTimes(1);
+        expect(updateCharacter.mock.calls[0][2].sheetData.trauma).toBe(0);
+        expect(fermer).toHaveBeenCalled();
+    });
+});

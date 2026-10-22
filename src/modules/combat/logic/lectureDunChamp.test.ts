@@ -72,11 +72,19 @@ describe('lire un champ, quel que soit l\'habillage de son nom', () => {
 });
 
 describe('le contrôle du pilote ne condamne plus ce que le jeu sait jouer', () => {
+    /*
+      Ces pilotes n'ont aucun champ de santé courante : depuis le 2026-10-22, la
+      Forge l'avertit (`combat.statsToTrack`). Ce n'est pas ce qu'on vérifie ici —
+      on lit la formule seule.
+    */
+    const surLaFormule = (constats: ReturnType<typeof controlerLePilote>) =>
+        constats.filter(c => c.ou !== 'combat.statsToTrack');
+
     it('une formule écrite avec les libellés passe', () => {
-        const constats = controlerLePilote(
+        const constats = surLaFormule(controlerLePilote(
             { combat: { statsToTrack: [], initiativeFormula: '', santeDeDepart: '(Taille + Constitution) / 2' } } as Partial<GameDriver>,
             fiche,
-        );
+        ));
 
         expect(constats).toEqual([]);
     });
@@ -115,10 +123,10 @@ describe('le contrôle du pilote ne condamne plus ce que le jeu sait jouer', () 
     it('le type se juge sur le champ RÉEL, pas sur le nom invoqué', () => {
         // « Dé_de_vie » retrouve `de_de_vie`, qui est un `text` : la formule ne
         // s'évaluera jamais, et c'est ce qu'il faut dire.
-        const constats = controlerLePilote(
+        const constats = surLaFormule(controlerLePilote(
             { combat: { statsToTrack: [], initiativeFormula: '', santeDeDepart: 'Dé_de_vie + 8' } } as Partial<GameDriver>,
             fiche,
-        );
+        ));
 
         expect(constats).toHaveLength(1);
         expect(constats[0].message).toContain('« text »');

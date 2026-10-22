@@ -585,6 +585,17 @@ async function scenesDeNoc(c: ContexteDeScene): Promise<void> {
     const rouage = f.locator('[data-fiel-au-pupitre]');
     await expect(rouage).toBeVisible({ timeout: 15_000 });
     await photographier(panneauDuDernierJet(rouage), 'jeu-noc-rouage');
+
+    // La Séquelle à 8 (2026-10-22) : proposée sous le bandeau, puis écartée pour laisser la fiche intacte.
+    if ((c.pilote.gameDriver as { franchissements?: unknown[] }).franchissements?.length) {
+        await ecrireLaFiche(c, { trauma: 8, sequelles_trauma: 0 });
+        await vue(c.campagne, 'cockpit');
+        const seuils = f.locator('[data-alertes-de-franchissement]');
+        await expect(seuils).toBeVisible({ timeout: 15_000 });
+        await photographier(seuils, 'jeu-noc-sequelle');
+        await seuils.getByRole('button', { name: 'Écarter', exact: true }).click();
+        await ecrireLaFiche(c, { trauma: 2 });
+    }
 }
 
 /**
@@ -663,6 +674,17 @@ async function scenesDeSymbaroum(c: ContexteDeScene): Promise<void> {
     await expect(panneau.getByText(/ \/ 14/).first()).toBeVisible();
     await photographier(panneau, 'jeu-symbaroum-opposition');
     await fenetre.evaluate(w => w.setContentSize(1440, 900));
+
+    // La fin de scène (2026-10-22) : la Corruption temporaire revient à 0 — l'aperçu, puis Annuler.
+    if ((c.pilote.gameDriver as { gestesDesHeros?: { finDeScene?: unknown[] } }).gestesDesHeros?.finDeScene?.length) {
+        await vue(c.campagne, 'cockpit');
+        await f.getByRole('button', { name: /Fin de scène/ }).click();
+        const fin = f.locator('[data-gestes-des-heros="finDeScene"]');
+        await expect(fin).toBeVisible();
+        await expect(fin.getByText(/Corruption temporaire 2 → 0/)).toBeVisible();
+        await photographier(fin, 'jeu-symbaroum-fin-de-scene');
+        await fin.getByRole('button', { name: 'Annuler', exact: true }).click();
+    }
 }
 
 async function scenesDeCthulhuHack(c: ContexteDeScene): Promise<void> {

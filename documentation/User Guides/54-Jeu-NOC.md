@@ -1,6 +1,6 @@
 # 🌌 Jeu — NOC
 
-> **Pilote décrit :** « NOC », exporté le 2026-10-16 et corrigé le jour même (gestes des Héros). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « NOC », exporté le 2026-10-16 et corrigé le jour même (gestes des Héros), puis le 2026-10-22 (séquelle proposée à 8, `Export Dirvers/corriges/NOC_driver_gmos_sequelles.gmos-driver`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Les Héros résistent dans un monde enfermé dans l'Artefact. Trois choses rendent ce jeu différent
 dans GM-OS : les **dés de destin**, le **Fiel** qui déborde en **Menace**, et la **Cabale**, la
@@ -137,11 +137,21 @@ Au panneau de jet, la section **« Puiser dans la Cabale »** offre quatre appor
 1. le **Fiel** perd une goutte ;
 2. chaque Héros regagne **1 Espoir + son Extase**, sans dépasser le plafond de sa **Ferveur**
    (−1 → 1, 0 → 3, 1 → 5, 2 → 7, 3 → 9, 4 et plus → 10) ;
-3. chaque **jauge de péril** perd un point, jamais sous ses **Séquelles** : à 8 points, un
-   point devient permanent — ajoutez-le au champ « Séquelles » de la jauge ;
+3. chaque **jauge de péril** perd un point, jamais sous ses **Séquelles** (voir ci-dessous) ;
 4. **Fatigué** prend fin.
 
 ![La fenêtre du moment de calme : le Fiel perd une goutte ; Ilya Vorn regagne 2 Espoir (1 + son Extase), perd un point de Blessures et de Trauma, n'est plus Fatigué, et son Soupçon à 6 lui retire 2 points à reprendre](captures/jeu-noc-moment-de-calme.jpg)
+
+### La Séquelle, à 8 points
+
+![Sous le bandeau : Ilya Vorn, Trauma 8 — Traumatisé ; Séquelles (Trauma) 0 → 1, avec « Noter » et « Écarter »](captures/jeu-noc-sequelle.jpg)
+
+Quand une jauge de péril — Blessures, Trauma, Traque, Noirceur — **atteint 8**, une ligne paraît
+sous le bandeau : le Héros, l'état du livre (Blessure lourde, Traumatisé, Recherché, Possédé) et la
+séquelle qui serait notée. **« Noter »** ajoute le point au champ « Séquelles » de la jauge et le
+consigne au journal ; **« Écarter »** le laisse de côté. La ligne ne revient pas — ni au
+rechargement, ni quand une tablette se reconnecte — tant que la jauge ne redescend pas sous 8 :
+le passage suivant est un nouveau franchissement, et se propose de nouveau.
 
 Le **Soupçon** (Cabale Dykovienne) ampute la récupération : à 5, 8 et 10 points, le Héros
 récupère 2, 4 ou 6 points de moins, **au choix du joueur**. L'aperçu le dit ; reprenez ces points
@@ -180,8 +190,8 @@ reporter sur sa fiche.
 
 ## Ce qui manque encore
 
-- **Les Séquelles** ne se comptent pas seules : à 8 points d'une jauge, ajoutez le point permanent
-  au champ « Séquelles » ; le moment de calme le respecte ensuite.
+- La **Séquelle** se propose à 8, mais son **effet** (le trait Criminel, le second trait de
+  Noirceur) et son **traitement lourd** lors d'un Passage se reportent à la main.
 - Les **Blessures** passent par les dix cases de santé : le moment de calme en décoche une, comme
   « Soins ».
 - **La Singularité** gagnée par un Rouage, l'**Aura de lumière**, le **partage de l'Extase** et

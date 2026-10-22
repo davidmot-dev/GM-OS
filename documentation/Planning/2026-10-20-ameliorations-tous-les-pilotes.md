@@ -41,7 +41,7 @@ conformément à la décision de David du 19/10.
 | [Cthulhu Hack](#cthulhu-hack) | Limites documentées ; audit complet à faire | Effets du Hors Jeu et usure reliés aux valeurs de la fiche |
 | [Dune](#dune) | Audit détaillé ; projet futur garé | Spécialisations et paiements Impulsion/Menace lors d'une reprise |
 | [Nephilim Légende](#nephilim-légende) | Plusieurs anciens lots réalisés ; restes documentés | Conséquences/Chutes, Stase et pacte de Kabbale |
-| [NOC](#noc) | Restes revérifiés dans le code le 19/10 | Séquelles et Singularité attribuée par un Rouage |
+| [NOC](#noc) | Restes revérifiés dans le code le 19/10 ; **Séquelle proposée à 8 le 22/10** (registre § 150), essai de David validé | Singularité attribuée par un Rouage |
 | [Rêve de Dragon](#rêve-de-dragon) | Socle R0–R7 livré pour les PJ ; première boucle TMR livrée ; mécaniques du Voyageur dans l'onglet « Lancer un test » le 22/10 | Initiative complète et suites du Haut-Rêve |
 | [Star Trek Adventures](#star-trek-adventures) | Pilote et LCARS documentés ; audit mécanique détaillé à faire | Export actuel, règles de la deuxième édition et essais matériels LCARS |
 | [Symbaroum](#symbaroum) | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 livré le 22/10** : modificateur et opposition explicite (§ 149) | Réimport du pilote corrigé et essai de David ; puis Endurance (S2) et Avantage tactique (S3) |
@@ -270,7 +270,7 @@ Cabale, moment de calme, effets du Fiel et recharge de nouveau scénario.
 
 | Point | Priorité | Amélioration possible |
 | --- | --- | --- |
-| 1 | P1 | Proposer la Séquelle lorsqu'une jauge de péril atteint 8 ; le plancher de récupération existe mais pas son incrément |
+| 1 | **Livré le 22/10** | La Séquelle se propose sous le bandeau quand une jauge de péril atteint 8 ; « Noter » l'ajoute au champ Séquelles (registre § 150, `NOC_driver_gmos_sequelles`). Réimporté et essai de David validé le 22/10 |
 | 2 | P1 | Choisir le Héros désigné par la Loi et lui attribuer la Singularité restante d'un Rouage hostile quand le Fiel est vide |
 | 3 | P2 | Aider à répartir la récupération amputée par le Soupçon, actuellement annoncée dans l'aperçu |
 | 4–6 | P2 | Modéliser, si souhaité, Aura de lumière, partage de l'Extase et alliés de la Loi épargnés par certains effets |
@@ -372,9 +372,9 @@ refaites. **Reste : réimport par David et essai à l'écran.**
 | --- | --- | --- |
 | S0 | P0 | Corriger le corpus : choix du joueur après douleur, tests de mort qui continuent, cécité, asymétrie et gain permanent de Corruption |
 | S1 | P0 | Appliquer opposition et modificateurs au seuil du d20, avec explication du calcul |
-| S2 | P0 puis P1 | Déclarer l'Endurance courante comme santé principale ; initialiser les nouvelles fiches ; calculer les dérivées et accompagner l'agonie |
+| S2 | Raccord **livré le 22/10** ; reste P1 | Endurance courante = santé principale et fiche neuve initialisée : faits (registre § 150). Restent les dérivées calculées et l'agonie |
 | S3 | P0 | Distinguer Avantage tactique (+2 et +1D4 dégâts) des deux lancers utilisés par d'autres effets |
-| S4 | P1 | Total de Corruption, seuils, stigmates, gain permanent et fin de scène, avec gestion des événements déjà traités |
+| S4 | Fin de scène **livrée le 22/10** ; reste P1 | La Corruption temporaire revient à 0 au geste « Fin de scène » (registre § 150). Restent total, Stigmate, 1D4 permanent au seuil (les franchissements le permettront) et abomination |
 | S5 | P1 | Parcours attaque/défense du joueur ; dégâts/protection fixes des PNJ ; dégâts nets, douleur et effets particuliers |
 | S6 | P1 | Initiative départagée par Vigilance puis d20, choix de retard et rappels d'actions/réactions |
 | S7 | P2 | Création, budgets d'Attributs, effets des Talents et progression sur l'Expérience disponible |
@@ -440,8 +440,8 @@ propres :
 | Corpus et contrôles de la Forge | Tous, en priorité Crimes/Symbaroum/Dune/Within | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. Sur les onze exports réels, seul Crimes est signalé (C1, déjà connu). **Reste :** relire le corpus, en priorité Crimes/Symbaroum/Dune/Within |
 | Modificateurs et contexte du jet | Symbaroum, Alien, puis audits des autres | Distinguer modificateur de seuil, nombre de dés, réussites exigées et meilleur/pire dé. **Livré le 22/10 (registre § 149) :** `jet.modificateurDuSeuil`, capacité commune du moteur (tout jeu jeté sous un seuil additionné), avec opposition explicite ; Symbaroum la déclare. Les réussites exigées restent `difficulte` (Dune), le nombre de dés la réserve, meilleur/pire dé « Tirage ». **Reste :** l'Avantage tactique de Symbaroum (S3) et les audits des autres jeux |
 | Choix du paiement et bilan du jet | Dune ; Star Trek à auditer séparément | Conserver coût, source, effets immédiats et reliquat, sans double dépense ni perte anticipée |
-| Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu |
-| Événements de scène, séance et temps de jeu | Corruption, Stress, soins, progression, voyages | Des déclencheurs nommés ; une reconnexion ne rejoue pas une dépense, un soin ou un franchissement |
+| Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu. **Livré le 22/10 (registre § 150) :** la fiche naît à sa santé de départ ; la Forge avertit d'une santé sans champ courant (Symbaroum corrigé, Crimes signalé) ; `franchissements` propose la séquelle permanente une fois par passage (NOC). **Reste :** Crimes C2, Blade Runner (stabilisation), Cthulhu Hack (Hors Jeu), agonie de Symbaroum |
+| Événements de scène, séance et temps de jeu | Corruption, Stress, soins, progression, voyages | Des déclencheurs nommés ; une reconnexion ne rejoue pas une dépense, un soin ou un franchissement. **Livré le 22/10 (registre § 150) :** « Fin de scène » écrit aussi les fiches (`gestesDesHeros.finDeScene`, `delta: 'vide'`) après aperçu, même sans réserve de table ; un franchissement traité est retenu par la fiche. **Reste :** durées et échéances en temps de jeu (Cthulhu Hack, Blade Runner), Corruption au seuil (Symbaroum S4) |
 | Fiches, tablettes et journal | Tous | Même calcul et mêmes ressources ; clés stables, secrets filtrés et modifications historisées |
 | **Onglet « Lancer un test »** — livré le 22/10 (`6f709c79`, registre § 147) | Tous | Le test a son onglet sur la fiche du meneur (Formulaire / Lancer un test / Fiche du jeu) et sur la tablette (Vue synthétique / Lancer un test / Ma fiche / groupe), d'après les maquettes Stitch retenues : étapes Composer, Préparer, Lancer les dés, Résultat ; dés nommés ; blocs propres au jeu en cartes repliables (Alien : dernier test, blessures, Stress et Panique ; RdD : mécaniques du Voyageur). Aucun pilote modifié. Captures du manuel refaites pour les dix jeux. **Essai de David attendu** |
 | Documentation et recette | Tous | Page 53, page 54 du jeu et captures conformes aux fonctions réellement livrées |

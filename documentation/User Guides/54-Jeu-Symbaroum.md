@@ -1,6 +1,6 @@
 # 🌑 Jeu — Symbaroum
 
-> **Pilote décrit :** « Symbaroum », exporté le 2026-10-20 et corrigé le 2026-10-21 (un seul attribut au jet, plus de « difficulté » qui faisait tout réussir, santé de départ sur l'Endurance, fiche HTML reliée), puis le 2026-10-22 (modificateur et opposition au seuil, `Export Dirvers/corriges/Symbaroum_driver_gmos_s1-opposition.gmos-driver`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Symbaroum », exporté le 2026-10-20 et corrigé le 2026-10-21 (un seul attribut au jet, plus de « difficulté » qui faisait tout réussir, santé de départ sur l'Endurance, fiche HTML reliée), puis le 2026-10-22 (modificateur et opposition au seuil ; Endurance raccordée et fin de scène : `Export Dirvers/corriges/Symbaroum_driver_gmos_s2-endurance.gmos-driver`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Un seul geste : le **test**, un d20 sous un attribut. Autour de lui, la fiche de personnage HTML,
 reliée champ par champ, et la **Corruption**, suivie en jauges.
@@ -82,10 +82,22 @@ le formulaire de GM-OS.
 ## Combat et santé
 
 - **Initiative :** l'**Agilité**, du plus haut au plus bas.
-- **Santé :** points de vie ; un personnage **part de son Endurance maximale**.
+- **Santé :** l'**Endurance** de la fiche est la santé du combat, plafonnée par l'**Endurance
+  maximale** : un coup porté au combat s'écrit sur la fiche, une fiche blessée se lit au combat. Un
+  personnage **neuf naît à son Endurance maximale** ; un personnage existant garde la sienne —
+  vérifiez qu'elle n'est pas restée à 0 avant la première séance.
 - **Types de dégâts :** physique, poison, acide, alternatifs, chute.
 - **Ressources suivies**, en jauges segmentées : Corruption temporaire, Corruption permanente,
   Argent, Expérience.
+
+### La fin de scène
+
+![L'aperçu de la fin de scène : Éléna des Brumes, Corruption temporaire 2 → 0](captures/jeu-symbaroum-fin-de-scene.jpg)
+
+Le bouton **« Fin de scène »** du bandeau ouvre un aperçu, personnage par personnage : la
+**Corruption temporaire** revient à 0, la **permanente** reste. « Appliquer » écrit les fiches. Rien
+ne détecte la fin d'une scène — ni la fin d'un combat, ni un changement de lieu : c'est vous qui la
+déclarez.
 
 ---
 
@@ -94,6 +106,8 @@ le formulaire de GM-OS.
 - L'**égalité d'initiative** : la Vigilance départage, puis un d20.
 - La **Résistance à la douleur** : un coup qui l'atteint fait tomber la victime ou ouvre une
   Attaque gratuite, au choix de l'attaquant.
-- Le **Stigmate**, quand la Corruption totale dépasse le Seuil de Corruption.
+- Le **Stigmate** et le **1D4 permanent** quand la Corruption totale atteint le Seuil de Corruption ;
+  l'abomination quand elle atteint la Volonté.
+- L'**agonie** à 0 d'Endurance : les tests de mort se lancent et se comptent à la main.
 - Les **relances** optionnelles contre un point d'Expérience ou de Corruption permanente.
 - Les **attributs secondaires**, que ni la fiche ni GM-OS ne calculent.

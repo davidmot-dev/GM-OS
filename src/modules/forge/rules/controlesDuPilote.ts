@@ -1796,24 +1796,24 @@ export function controlerLePilote(
       donc dit ; une réserve de table manquante est une erreur.
     */
     const gestes = driver.gestesDesHeros;
+    const controlerLesMouvements = (mouvements: MouvementDeFiche[] | undefined, ou: string) => {
+        (mouvements ?? []).forEach((m, i) => {
+            const ici = `${ou}[${i}]`;
+            const nom = m.label ?? m.champ;
+            if (m.delta !== 'plein' && m.delta !== 'vide' && !(Number.isInteger(m.delta) && m.delta !== 0)) {
+                erreur(`${ici}.delta`, `« ${nom} » doit bouger d'un nombre entier non nul, ou revenir « plein » ou « vide ».`);
+            }
+            if (m.delta === 'plein' && m.max === undefined) {
+                erreur(`${ici}.max`, `« ${nom} » revient « plein » sans plafond : il ne bougerait jamais.`);
+            }
+            const lus = [m.champ, m.plus, m.resistance, m.plancher, m.aVideCoche,
+                typeof m.max === 'object' ? m.max.champ : undefined].filter((c): c is string => !!c);
+            for (const champ of lus) {
+                if (!tousLesChamps.has(champ)) avertir(ici, `« ${nom} » lit ou écrit « ${champ} », absent de la fiche.`);
+            }
+        });
+    };
     if (gestes) {
-        const controlerLesMouvements = (mouvements: MouvementDeFiche[] | undefined, ou: string) => {
-            (mouvements ?? []).forEach((m, i) => {
-                const ici = `${ou}[${i}]`;
-                const nom = m.label ?? m.champ;
-                if (m.delta !== 'plein' && !(Number.isInteger(m.delta) && m.delta !== 0)) {
-                    erreur(`${ici}.delta`, `« ${nom} » doit bouger d'un nombre entier non nul, ou revenir « plein ».`);
-                }
-                if (m.delta === 'plein' && m.max === undefined) {
-                    erreur(`${ici}.max`, `« ${nom} » revient « plein » sans plafond : il ne bougerait jamais.`);
-                }
-                const lus = [m.champ, m.plus, m.resistance, m.plancher, m.aVideCoche,
-                    typeof m.max === 'object' ? m.max.champ : undefined].filter((c): c is string => !!c);
-                for (const champ of lus) {
-                    if (!tousLesChamps.has(champ)) avertir(ici, `« ${nom} » lit ou écrit « ${champ} », absent de la fiche.`);
-                }
-            });
-        };
         const calme = gestes.momentDeCalme;
         if (calme) {
             controlerLesMouvements(calme.heros, 'gestesDesHeros.momentDeCalme.heros');
@@ -1826,6 +1826,7 @@ export function controlerLePilote(
                 if (!tousLesChamps.has(champ)) avertir('gestesDesHeros.momentDeCalme', `Le moment de calme lit « ${champ} », absent de la fiche.`);
             }
         }
+        controlerLesMouvements(gestes.finDeScene, 'gestesDesHeros.finDeScene');
         controlerLesMouvements(gestes.debutDeSeance, 'gestesDesHeros.debutDeSeance');
         controlerLesMouvements(gestes.nouveauScenario, 'gestesDesHeros.nouveauScenario');
         const effets = gestes.effetsDuDebordement;
@@ -1850,6 +1851,43 @@ export function controlerLePilote(
             });
         }
     }
+
+    /*
+      **Une santé en points de vie que la fiche ne porte pas** (S2 de l'audit de
+      Symbaroum, 2026-10-22). Le pilote dit d'où part la santé (`santeDeDepart`)
+      mais ne désigne aucun champ pour sa valeur courante (`isMainHP`) : le coup
+      porté au combat ne s'écrit pas sur la fiche, et une fiche blessée se lit
+      pleine au combat. Avertissement : le jeu se joue, la santé vit à part.
+    */
+    const combatDuPilote = driver.combat;
+    // Une santé de départ rédigée en phrase est déjà reprochée plus haut : un constat suffit.
+    if (combatDuPilote?.santeDeDepart && !estUnePhrase(combatDuPilote.santeDeDepart)
+        && (combatDuPilote.defaultHealthType ?? 'hp') === 'hp'
+        && !combatDuPilote.tacheDeDefaite && !combatDuPilote.casesDeSante
+        && !(combatDuPilote.statsToTrack ?? []).some(s => s.isMainHP)) {
+        avertir(
+            'combat.statsToTrack',
+            `La santé part de « ${combatDuPilote.santeDeDepart} », mais aucun champ de la fiche n'en porte la valeur ` +
+            'courante (« isMainHP ») : les coups du combat ne s’écrivent pas sur la fiche. Marquer le champ ' +
+            'de santé actuelle comme jauge principale.',
+        );
+    }
+
+    /*
+      **Les seuils qui laissent une trace** (la Séquelle de NOC, 2026-10-22). Un
+      identifiant en double ferait traiter deux seuils d'un seul geste ; une jauge
+      absente ne franchirait jamais rien.
+    */
+    const seuilsVus = new Set<string>();
+    (driver.franchissements ?? []).forEach((f, i) => {
+        const ou = `franchissements[${i}]`;
+        if (!f.id || seuilsVus.has(f.id)) erreur(`${ou}.id`, `Chaque seuil porte un identifiant unique (« ${f.id ?? ''} »).`);
+        seuilsVus.add(f.id);
+        if (!(typeof f.aPartirDe === 'number' && Number.isFinite(f.aPartirDe))) erreur(`${ou}.aPartirDe`, `Le seuil de « ${f.label ?? f.champ} » doit être un nombre.`);
+        if (!tousLesChamps.has(f.champ)) avertir(`${ou}.champ`, `Le seuil surveille « ${f.champ} », absent de la fiche : il ne sera jamais franchi.`);
+        if (!f.mouvements?.length) erreur(`${ou}.mouvements`, `« ${f.label ?? f.champ} » ne propose rien à noter.`);
+        controlerLesMouvements(f.mouvements, `${ou}.mouvements`);
+    });
 
     return constats;
 }

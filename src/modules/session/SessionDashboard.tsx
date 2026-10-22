@@ -5,6 +5,7 @@ import OraclePanel from './components/OraclePanel';
 import SessionSnapshotModal from './components/SessionSnapshotModal';
 import RemoteNotificationCenter from './components/RemoteNotificationCenter';
 import PanneauDesRessources from '../table/PanneauDesRessources';
+import AlertesDeFranchissement from '../table/AlertesDeFranchissement';
 import { useSessionOSStore } from './useSessionOSStore';
 import { useSessionStore } from '../../store/useSessionStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
@@ -83,15 +84,23 @@ const SessionDashboard: React.FC = () => {
                 chaque test : une réserve qu'il faut aller chercher n'est pas
                 tenue à jour, et une réserve fausse se lit comme une information.
 
-                Elle n'apparaît que si le pilote en déclare. Un système sans
-                monnaie de table garde son écran tel quel.
+                Elle n'apparaît que si le pilote en déclare — des réserves, ou des
+                gestes sur les fiches (la fin de scène de Symbaroum, 2026-10-22).
+                Un système qui n'a ni l'un ni l'autre garde son écran tel quel.
             */}
-            {activeCampaignId && (activeDriver?.ressourcesDeTable?.length ?? 0) > 0 && (
+            {activeCampaignId && ((activeDriver?.ressourcesDeTable?.length ?? 0) > 0 || !!activeDriver?.gestesDesHeros) && (
                 <PanneauDesRessources
                     campaignId={activeCampaignId}
                     ressources={ressourcesDeLaTable(activeDriver, activeCampaign)}
                     gestes={activeDriver?.gestesDesHeros}
                     rechargeDuGroupe={activeDriver?.ficheDeGroupe?.nouveauScenario}
+                />
+            )}
+            {activeCampaignId && !!activeDriver?.franchissements?.length && (
+                <AlertesDeFranchissement
+                    campaignId={activeCampaignId}
+                    franchissements={activeDriver.franchissements}
+                    gabarit={activeTemplate}
                 />
             )}
 

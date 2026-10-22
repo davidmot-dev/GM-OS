@@ -5,7 +5,7 @@ import { tousLesPilotes } from '../store/tousLesPilotes';
 import { piloteDuPersonnage, type CampagneDeJeu, type PersonnageDeJeu } from './piloteDuPersonnage';
 import { ficheNeuve } from './ficheNeuve';
 import { horlogeDeDefaite } from '../../combat/logic/TacheDeDefaite';
-import { santeDeDepart, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
+import { champDeSantePrincipale, santeDeDepart, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import { HealthInterpreter } from './HealthInterpreter';
 
 /**
@@ -24,12 +24,23 @@ export function naissanceDansLeJeu(
     gabarit: Pick<SheetTemplate, 'sections'> | undefined,
 ): Pick<PlayerCharacter, 'sheetData' | 'healthSystem' | 'hp' | 'maxHp'> {
     const valeurs = ficheNeuve(gabarit);
-    const depart = santeDeDepart(
+    const lue = santeDeDepart(
         pilote?.combat?.santeDeDepart,
         champ => valeurDuChamp(valeurs, champ),
-    ) ?? 10;
+    );
+    const depart = lue ?? 10;
 
     const modele = pilote?.combat?.defaultHealthType ?? 'hp';
+    /*
+      **La fiche naît pleine, elle aussi** (S2 de l'audit de Symbaroum,
+      2026-10-22). L'Endurance actuelle valait sa valeur par défaut, zéro, alors
+      que la santé du combat partait de l'Endurance maximale : marquée jauge
+      principale, elle aurait fait naître chaque personnage hors de combat. Seule
+      une santé de départ réellement lue l'écrit — jamais le dix de secours — et
+      seulement à la naissance : un personnage blessé n'est jamais remis à neuf.
+    */
+    const champDeSante = modele === 'hp' ? champDeSantePrincipale(pilote) : null;
+    if (champDeSante && lue !== null && lue !== undefined) valeurs[champDeSante] = lue;
     const tache = pilote?.combat?.tacheDeDefaite;
     const sante = tache
         ? horlogeDeDefaite(tache, valeurs).sante

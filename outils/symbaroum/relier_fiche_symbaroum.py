@@ -202,6 +202,15 @@ pilote['jet']['modificateurDuSeuil'] = {
     'min': -5, 'max': 5, 'defaut': 0,
     'opposition': {'reference': 10, 'label': 'Attribut adverse'},
 }
+# L'Endurance actuelle est la santé courante, et la fin de scène vide la Corruption temporaire
+# (2026-10-22, raccorder_endurance_et_fin_de_scene.py).
+pilote['combat']['statsToTrack'] = [
+    {'fieldId': 'endurance_actuelle', 'label': 'Endurance', 'isMainHP': True, 'isResource': False, 'max': 'endurance'},
+    *[s for s in pilote['combat']['statsToTrack'] if s['fieldId'] != 'endurance_actuelle'],
+]
+pilote.setdefault('gestesDesHeros', {})['finDeScene'] = [
+    {'champ': 'corruption_temporaire', 'label': 'Corruption temporaire', 'delta': 'vide'},
+]
 
 os.makedirs(os.path.dirname(sortie) or '.', exist_ok=True)
 with zipfile.ZipFile(sortie, 'w', zipfile.ZIP_DEFLATED) as z:

@@ -8,7 +8,7 @@ import { ecrireLesHeros } from './ecrireLesHeros';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 import { BoutonPrincipal, BoutonSecondaire } from '../../components/socle/CadreDeSurcouche';
 import {
-    changementsEffectifs, effetsDuDebordement, herosDeLaCampagne, momentDeCalme, nombreDEffetsAChoisir,
+    changementsEffectifs, effetsDuDebordement, herosDeLaCampagne, momentDeCalme, nombreDEffetsAChoisir, recuperationDesHeros,
     type ChangementDuHeros,
 } from './gestesDesHeros';
 
@@ -23,7 +23,7 @@ import {
  * plusieurs fois si la Loi le veut. Le compte est dit, pas imposé — c'est la Loi
  * qui décide, l'outil rappelle la règle.
  */
-export type GesteDesHeros = 'calme' | 'debordement';
+export type GesteDesHeros = 'calme' | 'debordement' | 'finDeScene';
 
 const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => void }> = ({ geste, onClose }) => {
     const players = useSessionOSStore(s => s.players);
@@ -33,7 +33,7 @@ const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => 
     const updateCharacterHealth = useSessionOSStore(s => s.updateCharacterHealth);
     const pilote = useSessionOSStore(s => s.getActiveDriver());
     const fichesPerso = useSessionOSStore(s => s.customSheetTemplates);
-    const { etatDe, gagner, depenser } = useRessourcesDeTableStore();
+    const { etatDe, gagner, depenser, finDeScene: eroderEnFinDeScene } = useRessourcesDeTableStore();
     const [choix, setChoix] = useState<Record<string, number>>({});
     // L'aperçu dit « Fatigué », « Extase » — les libellés de la fiche du jeu, pas les identifiants.
     const gabarit = [...(fichesPerso ?? []), ...DEFAULT_SHEET_TEMPLATES].find(t => t.id === pilote?.templateId);
@@ -46,32 +46,39 @@ const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => 
     const heros = herosDeLaCampagne(players, activeCampaignId);
     const calme = pilote?.gestesDesHeros?.momentDeCalme;
     const debordement = pilote?.gestesDesHeros?.effetsDuDebordement;
+    // La fin de scène (Symbaroum, 2026-10-22) : les fiches, puis l'érosion des réserves qui en déclarent une.
+    const finDeScene = pilote?.gestesDesHeros?.finDeScene;
+    const declare = { calme: !!calme, debordement: !!debordement, finDeScene: !!finDeScene?.length }[geste];
 
-    if (!activeCampaignId || (geste === 'calme' ? !calme : !debordement)) {
+    if (!activeCampaignId || !declare) {
         return <p className="px-5 py-4 text-app-muted">Le jeu de cette campagne ne déclare pas ce geste.</p>;
     }
 
     const nomDe = (id: string) => ressources.find(r => r.id === id)?.label ?? id;
     const aChoisir = debordement ? nombreDEffetsAChoisir(etat[debordement.nombreSelon]) : 0;
     const choisis = Object.values(choix).reduce((a, b) => a + b, 0);
+    const erosion = geste === 'finDeScene' && ressources.some(r => r.erosionFinDeScene);
     const apercu: { changements: ChangementDuHeros[]; aDire: string[] } = geste === 'calme'
         ? { changements: momentDeCalme(calme!, heros, nom), aDire: [] }
-        : effetsDuDebordement(debordement!.effets, choix, heros, nom);
+        : geste === 'finDeScene'
+            ? { changements: recuperationDesHeros(finDeScene, heros, nom), aDire: erosion ? ['Les réserves de table s’érodent aussi.'] : [] }
+            : effetsDuDebordement(debordement!.effets, choix, heros, nom);
     const effectifs = changementsEffectifs(apercu.changements);
     const tableQuiBouge = geste === 'calme' ? (calme!.table ?? []) : [];
 
     const appliquer = () => {
         ecrireLesHeros(effectifs, { players, updateCharacter, updateCharacterHealth });
-        const motif = geste === 'calme' ? 'moment de calme' : `effets du ${nomDe(debordement!.ressource)}`;
+        if (erosion) for (const a of eroderEnFinDeScene(activeCampaignId, ressources).avertissements) gmToast(a, 'info');
+        const motif = geste === 'calme' ? 'moment de calme' : geste === 'finDeScene' ? 'fin de scène' : `effets du ${nomDe(debordement!.ressource)}`;
         for (const t of tableQuiBouge) {
             const r = t.delta < 0
                 ? depenser(activeCampaignId, ressources, t.ressource, -t.delta, motif)
                 : gagner(activeCampaignId, ressources, t.ressource, t.delta, motif);
             for (const a of r.avertissements) gmToast(a, 'info');
         }
-        for (const a of apercu.aDire) gmToast(a, 'info');
+        if (geste !== 'finDeScene') for (const a of apercu.aDire) gmToast(a, 'info');
         gmToast(effectifs.length
-            ? `${geste === 'calme' ? 'Moment de calme' : 'Effets appliqués'} : ${effectifs.length} fiche${effectifs.length > 1 ? 's' : ''} mise${effectifs.length > 1 ? 's' : ''} à jour.`
+            ? `${{ calme: 'Moment de calme', debordement: 'Effets appliqués', finDeScene: 'Fin de scène' }[geste]} : ${effectifs.length} fiche${effectifs.length > 1 ? 's' : ''} mise${effectifs.length > 1 ? 's' : ''} à jour.`
             : 'Aucune fiche à changer.', 'success');
         onClose();
     };

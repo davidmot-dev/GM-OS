@@ -1845,3 +1845,42 @@ describe('le modificateur du seuil', () => {
             .toEqual([['jet.modificateurDuSeuil', 'avertissement']]);
     });
 });
+
+/** **Santé, séquelles et fin de scène** (sujets communs 3 et 4, 2026-10-22). */
+describe('la santé que la fiche porte, les seuils et la fin de scène', () => {
+    const lesCombats = (combat: Record<string, unknown>) =>
+        controlerLePilote({ combat: { statsToTrack: [], initiativeFormula: '', ...combat } } as never, fiche)
+            .filter(c => c.ou === 'combat.statsToTrack').map(c => c.gravite);
+
+    it('une santé de départ sans champ courant sur la fiche se signale', () => {
+        expect(lesCombats({ defaultHealthType: 'hp', santeDeDepart: 'combat' })).toEqual(['avertissement']);
+    });
+
+    it('mais ni avec une jauge principale, ni avec des cases, une horloge ou un autre modèle', () => {
+        expect(lesCombats({ santeDeDepart: 'combat', statsToTrack: [{ fieldId: 'determination', label: 'D', isMainHP: true }] })).toEqual([]);
+        expect(lesCombats({ santeDeDepart: 'combat', casesDeSante: { libelle: 'B', nombre: 10, champ: 'combat' } })).toEqual([]);
+        expect(lesCombats({ santeDeDepart: 'combat', defaultHealthType: 'clocks' })).toEqual([]);
+    });
+
+    it('un seuil sans identifiant, sans nombre ou sans rien à noter est une erreur ; une jauge absente se dit', () => {
+        const constats = controlerLePilote({
+            franchissements: [
+                { id: 'a', champ: 'combat', aPartirDe: 8, mouvements: [{ champ: 'determination', delta: 1 }] },
+                { id: 'a', champ: 'inconnue', aPartirDe: 'huit', mouvements: [] },
+            ],
+        } as never, fiche).map(c => [c.ou, c.gravite]);
+        expect(constats).toEqual([
+            ['franchissements[1].id', 'erreur'],
+            ['franchissements[1].aPartirDe', 'erreur'],
+            ['franchissements[1].champ', 'avertissement'],
+            ['franchissements[1].mouvements', 'erreur'],
+        ]);
+    });
+
+    it('la fin de scène accepte « vide », et se contrôle comme les autres gestes', () => {
+        const constats = controlerLePilote({
+            gestesDesHeros: { finDeScene: [{ champ: 'determination', delta: 'vide' }, { champ: 'absent', delta: 'vide' }] },
+        } as never, fiche).map(c => [c.ou, c.gravite]);
+        expect(constats).toEqual([['gestesDesHeros.finDeScene[1]', 'avertissement']]);
+    });
+});

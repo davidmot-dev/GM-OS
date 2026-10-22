@@ -148,6 +148,10 @@ action possible au tour suivant, mort sur 20, interruption par les soins adapté
 Les PNJ tombent à zéro selon la règle, avec latitude laissée au MJ. Le choix lié à la douleur
 porte sur les dégâts nets d'un seul coup et revient au joueur.
 
+**Raccord livré le 22/10/2026 (Claude Code, registre général § 150)** : `endurance_actuelle` est la
+santé principale, plafonnée par `endurance` ; une fiche neuve naît à son Endurance maximale. Dérivées
+calculées et agonie : pas commencées.
+
 **Acceptation :** 5/14 est identique sur fiche et combat ; Force 7 donne maximum 10 et douleur
 4 ; un 2–10 ne supprime pas les prochains tests ; trois résultats 11–19 déclenchent la mort.
 L'agonie complète nécessite une évolution du moteur, au-delà du simple raccord de jauge.
@@ -194,6 +198,10 @@ ce choix. Avec Volonté 11, le seuil vaut 6 et l'abomination survient à **11**,
 Le livre n'explicite pas ici toutes les réentrées possibles dans le seuil au cours d'une
 même scène. Documenter cette limite avant automatisation ; ne pas déclencher un nouveau
 1D4 à chaque rendu, synchronisation HTML ou restauration d'un état déjà traité.
+
+**Fin de scène livrée le 22/10/2026 (registre général § 150)** : le geste « Fin de scène » remet la
+seule temporaire à 0, après aperçu. Le reste de S4 (total, Stigmate, 1D4 au seuil, abomination)
+n'est pas commencé ; `franchissements` donne le « une seule fois par événement » demandé ici.
 
 **Acceptation :** Volonté impaire correctement traitée, permanente conservée en fin de scène,
 gain au seuil tracé une seule fois pour un événement donné, transformation signalée avec

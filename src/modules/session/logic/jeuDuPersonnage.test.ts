@@ -77,6 +77,28 @@ describe('naissanceDansLeJeu', () => {
         expect(n.healthSystem?.type).toBe('hp');
         expect(n.sheetData).toEqual({ action: 2, notes: '' });
     });
+
+    /**
+     * **La fiche naît pleine** (S2 de l'audit de Symbaroum, 2026-10-22) :
+     * l'Endurance actuelle valait zéro par défaut ; marquée santé principale,
+     * elle aurait fait naître chaque personnage hors de combat.
+     */
+    it('écrit la santé de départ dans le champ de santé principale', () => {
+        const symbaroum = pilote('symbaroum', 'tpl-s', {
+            defaultHealthType: 'hp', santeDeDepart: 'endurance',
+            statsToTrack: [{ fieldId: 'endurance_actuelle', label: 'Endurance', isMainHP: true, isResource: false }],
+        });
+        const n = naissanceDansLeJeu(symbaroum, gabarit('tpl-s', [['endurance', 'number', 12], ['endurance_actuelle', 'number', 0]]));
+        expect(n.sheetData).toEqual({ endurance: 12, endurance_actuelle: 12 });
+        expect(n.hp).toBe(12);
+    });
+
+    it('sans santé de départ lue, le champ garde sa valeur par défaut — jamais le dix de secours', () => {
+        const sansDepart = pilote('ch', 'tpl-ch', {
+            defaultHealthType: 'hp', statsToTrack: [{ fieldId: 'pv', label: 'PV', isMainHP: true, isResource: false }],
+        });
+        expect(naissanceDansLeJeu(sansDepart, gabarit('tpl-ch', [['pv', 'number', 9]])).sheetData).toEqual({ pv: 9 });
+    });
 });
 
 describe('lier à une campagne d’un autre jeu — 2026-10-16', () => {
