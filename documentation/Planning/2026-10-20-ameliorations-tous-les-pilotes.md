@@ -42,9 +42,9 @@ conformément à la décision de David du 19/10.
 | [Dune](#dune) | Audit détaillé ; projet futur garé | Spécialisations et paiements Impulsion/Menace lors d'une reprise |
 | [Nephilim Légende](#nephilim-légende) | Plusieurs anciens lots réalisés ; restes documentés | Conséquences/Chutes, Stase et pacte de Kabbale |
 | [NOC](#noc) | Restes revérifiés dans le code le 19/10 | Séquelles et Singularité attribuée par un Rouage |
-| [Rêve de Dragon](#rêve-de-dragon) | Socle R0–R7 livré pour les PJ ; première boucle TMR livrée | Initiative complète et suites du Haut-Rêve |
+| [Rêve de Dragon](#rêve-de-dragon) | Socle R0–R7 livré pour les PJ ; première boucle TMR livrée ; mécaniques du Voyageur dans l'onglet « Lancer un test » le 22/10 | Initiative complète et suites du Haut-Rêve |
 | [Star Trek Adventures](#star-trek-adventures) | Pilote et LCARS documentés ; audit mécanique détaillé à faire | Export actuel, règles de la deuxième édition et essais matériels LCARS |
-| [Symbaroum](#symbaroum) | Audit du livre et de l'export corrigé | Modificateurs, Endurance et Avantage tactique |
+| [Symbaroum](#symbaroum) | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) | S1, modificateur du seuil : préparé, choix de David attendu (curseur seul ou opposition explicite) ; puis Endurance et Avantage tactique |
 | [Torg Eternity](#torg-eternity) | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
 | [Within](#within) | Export examiné sommairement ; aucune règle primaire auditée | Reprendre la référence et construire une configuration mécanique vérifiable |
 
@@ -205,6 +205,7 @@ Les variantes et barèmes restent à vérifier dans l'édition utilisée.
 
 **Référence :** [projet futur D0–D8](2026-10-19-dune-propositions.md).
 **Statut conservé : garé**, sur demande de David du 19/10 ; aucune reprise engagée ici.
+Registre général : § 143 et ligne 79 de la vue d'un coup d'œil.
 L'audit concerne le pilote de référence du dépôt, le livre français et l'errata officiel,
 pas un export personnalisé récent.
 
@@ -291,6 +292,13 @@ privée raccordée à Clock-OS R7. La carte TMR, son carnet et une première bou
 avec débit sur la fiche sont livrés. Le livret HTML de cinq pages et ses champs numériques
 corrigés sont intégrés.
 
+**Livré le 22/10/2026 (`6f709c79`, registre § 147) :** à la demande de David, les mécaniques
+du Voyageur — fatigue, encaissement et blessures, stress/expérience/Archétype, recours,
+astrologie, ouvrages, repos — quittent le formulaire pour l'onglet **« Lancer un test »** de la
+fiche, sous le jet, en cartes repliables, chez le meneur et sur la tablette. La reprise R0 reste
+dans le formulaire et fait apparaître l'onglet. Vérifié : sept essais e2e du Voyageur verts,
+captures du manuel refaites. **Essai de David à l'écran attendu.**
+
 | Priorité | Amélioration encore possible |
 | --- | --- |
 | P1 | Initiative par arme, caractéristiques/compétence/dé et sept phases du round ; le simple tri actuel ne remplace pas cette procédure |
@@ -334,6 +342,19 @@ livre de base, avec NotebookLM limité à ce livre et vérifications déterminis
 **Déjà disponible :** fiche HTML `symbaroum-fr`, 182 zones et 158 clés, intégrée et raccordée ;
 pilote corrigé à 10 sections et 139 champs, huit Attributs, talents, armes, protections,
 artéfacts et compagnons. La fiche passe son validateur sans erreur ni avertissement.
+Registre général : § 145 et ligne 81.
+
+**Livré (registre § 145) :** le jet **additionnait les huit Attributs** — une seule composante
+désormais — et la santé de départ lit l'Endurance (`712f70c1`). En écrivant la page du manuel
+(`54-Jeu-Symbaroum.md`, `34404411`), **chaque test réussissait, un 20 compris** : la Forge avait
+rangé le modificateur du livre dans `jet.difficulte`, qui compte des réussites. Réglage retiré
+du pilote, réimporté par David le 21/10 ; le modificateur se compte depuis à la main.
+
+**S1 préparé, pas commencé (21/10) :** `DescripteurDeJet.modificateurDuSeuil` (−5 à +5) ajouté au
+seuil d'un jet sous le seuil et expliqué ; curseur « Modificateur » du panneau, pour la fiche et la
+tablette ; consigne et contrôle de la Forge ; script de raccord du pilote ; essais, guide 53 et
+page Symbaroum. **À trancher par David :** ce curseur seul, ou l'opposition explicite de l'audit
+(`12 + (10 − 13) = 9`). Avant de coder : « GM-OS tourne-t-il ? ».
 
 | Lot | Priorité | Amélioration possible |
 | --- | --- | --- |
@@ -404,12 +425,13 @@ propres :
 
 | Sujet commun | Pilotes concernés | Résultat recherché |
 | --- | --- | --- |
-| Corpus et contrôles de la Forge | Tous, en priorité Crimes/Symbaroum/Dune/Within | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés |
+| Corpus et contrôles de la Forge | Tous, en priorité Crimes/Symbaroum/Dune/Within | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. ⚠️ **Constaté le 21/10, pas traité :** la consigne de la Forge dit au modèle que « la difficulté que le MENEUR fixe » se déclare dans `jet.difficulte` (`src/modules/forge/rules/GroupesDeChamps.ts`, vers la ligne 454) ; tout jeu au d20 sous un seuil peut refaire l'erreur de Symbaroum |
 | Modificateurs et contexte du jet | Symbaroum, Alien, puis audits des autres | Distinguer modificateur de seuil, nombre de dés, réussites exigées et meilleur/pire dé |
 | Choix du paiement et bilan du jet | Dune ; Star Trek à auditer séparément | Conserver coût, source, effets immédiats et reliquat, sans double dépense ni perte anticipée |
 | Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu |
 | Événements de scène, séance et temps de jeu | Corruption, Stress, soins, progression, voyages | Des déclencheurs nommés ; une reconnexion ne rejoue pas une dépense, un soin ou un franchissement |
 | Fiches, tablettes et journal | Tous | Même calcul et mêmes ressources ; clés stables, secrets filtrés et modifications historisées |
+| **Onglet « Lancer un test »** — livré le 22/10 (`6f709c79`, registre § 147) | Tous | Le test a son onglet sur la fiche du meneur (Formulaire / Lancer un test / Fiche du jeu) et sur la tablette (Vue synthétique / Lancer un test / Ma fiche / groupe), d'après les maquettes Stitch retenues : étapes Composer, Préparer, Lancer les dés, Résultat ; dés nommés ; blocs propres au jeu en cartes repliables (Alien : dernier test, blessures, Stress et Panique ; RdD : mécaniques du Voyageur). Aucun pilote modifié. Captures du manuel refaites pour les dix jeux. **Essai de David attendu** |
 | Documentation et recette | Tous | Page 53, page 54 du jeu et captures conformes aux fonctions réellement livrées |
 
 **Pour choisir une prochaine intervention :** les anomalies de résultat déjà reproduites de
@@ -440,5 +462,6 @@ utiliser le document de chantier/référence indiqué. La synthèse suit ces mê
 La création initiale de cette synthèse ne modifiait aucun pilote ni code applicatif ; les
 livraisons ultérieures sont suivies dans les sections correspondantes. Avant tout travail
 dans `src/` ou `electron/`, demander **« GM-OS tourne-t-il ? »** et attendre la réponse,
-conformément à `AGENTS.md`. Le registre général, déjà modifié par un autre travail, reste
-intact ; cette synthèse peut y être référencée lors d'une mise à jour coordonnée.
+conformément à `AGENTS.md`. **Consolidé le 22/10 avec le registre général** (§ 143 Dune,
+§ 145 Symbaroum, § 146–147) : les deux documents disent le même état, et les audits qu'ils
+citent (Crimes, Dune, Symbaroum) sont versionnés.

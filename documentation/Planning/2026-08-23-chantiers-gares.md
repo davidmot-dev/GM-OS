@@ -11947,6 +11947,30 @@ Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim 
   Seuil RK (l'errata dit à l'aube) ; Alchimie sans débit automatique des MP.
 - Reste : captures du manuel, fiche sur tablette sans suggestions, débit des MP (option B).
 
+### 143 · Dune — audit du pilote et améliorations proposées — 19/10/2026
+
+**⏸ Projet futur, garé à la demande de David le 19/10/2026 : « sauve-moi cela comme projet
+futur ».** Propositions conservées pour une reprise sur sa demande explicite ; aucune date
+fixée, aucun développement lancé.
+
+David : « quelles sont les améliorations que l'on peut faire sur le drivers de dune », avec
+le livre sur CLOUDDAVID et « regarde aussi sur notebooklm ». **Analyse uniquement** par Codex :
+pilote de référence livré, PDF français, trois consultations du carnet Dune limitées au livre
+de base, errata français officiel 1.1. Aucun export personnalisé Dune récent trouvé ; les données
+de David n'ont pas été ouvertes.
+
+[Propositions et preuves](2026-10-19-dune-propositions.md) : D0 fiabilisation de la référence,
+D1 spécialisations (moteur prêt, déclaration absente du pilote), D2 choix Impulsion/Menace et
+Impulsion du jet avant conservation, D3 Détermination/maximes, D4 initiative et paiement des
+PNJ, D5 défaite/survie/récupération, D6 aide/oppositions/complications, D7 atouts/zones et cinq
+arènes, D8 Maison/progression. Vérifications de fonctions pures : double sur 1 au lieu de 6,
+paiement commun ponctionnant l'Impulsion même pour un PNJ, excédent perdu à réserve pleine,
+conservation refusée au PJ seul. Ne pas annoncer ces corrections comme développées.
+
+Ordre proposé : D0/D1 et paiements D2/D4, puis D3/D6, D5, D8 et D7 complet. **Ordre et périmètre
+à choisir par David ; aucun développement autorisé.** Aucun code applicatif ni donnée modifié,
+aucun commit/push. [Note de reprise](2026-10-19-etat-et-reprise-codex-dune.md).
+
 ### 144 · Crimes — fiche HTML raccordée au pilote — 19/10/2026
 
 David a créé le pilote **Crimes** dans la Forge (corpus `docs/systems/crime/`, 19 fiches de
@@ -11978,6 +12002,48 @@ raccord »* (Claude Code).
   pilote garde 5) ; la piste « Fortune » à 10 cases et la piste d'équipe à 5 cases n'ont pas de
   règle relue (`fortune_piste`, `team_track`) ; les compteurs des compétences et des styles non
   plus. Manuel des jeux : pas encore de page `54-Jeu-Crimes`.
+
+### 145 · Symbaroum — fiche HTML raccordée, jet corrigé, modificateur du seuil à construire — 20-21/10/2026
+
+David, le 20/10 : *« j'ai créé un nouveau Drivers Symbaroum, et j'ai créé la fiche HTML. Peux-tu
+la vérifier et la connecter ? »* (Claude Code).
+
+- **Fait, `712f70c1`** — même démarche que Crimes (§ 144) : fiche `symbaroum-fr` acceptée par le
+  validateur, intégrée au moteur (`BUILTIN_VERSION` 13 → 14) ; fiche GM-OS refaite sur la fiche
+  HTML par `outils/symbaroum/relier_fiche_symbaroum.py` (10 sections, 139 champs ; les champs que
+  citent le jet, l'initiative et les jauges gardent leur identifiant) ; correspondance de 157 clés,
+  le portrait absent motivé. Pilote corrigé au passage : le jet **additionnait les huit attributs**
+  (une seule composante désormais) ; la santé de départ lit l'**Endurance** et non la Force.
+  Réimporté ; David : *« tout est bon »*.
+- **Fait, `34404411`** — page `54-Jeu-Symbaroum.md`, deux captures. ⛔ **Défaut trouvé en écrivant
+  la page : chaque test réussissait, un 20 compris.** La Forge avait rangé le modificateur du livre
+  (−5 à +5) dans `jet.difficulte`, qui est dans GM-OS un **nombre de réussites** (Dune) ; à 0,
+  `verdict(0, 0)` rend « réussi » (vérifié sur `preparerLeJet`). Réglage retiré du pilote ; réimporté
+  par David le 21/10. Le modificateur se compte depuis **à la main**.
+- ⚠️ **Constaté, pas traité — la cause est dans la Forge, pas dans Symbaroum.** Sa consigne dit au
+  modèle : *« La difficulté que le MENEUR fixe […] se déclare dans "jet.difficulte" »*
+  (`src/modules/forge/rules/GroupesDeChamps.ts:454`). Tout jeu au d20 sous un seuil peut récidiver.
+  Parmi les pilotes exportés, seul Symbaroum l'avait ; Cthulhu Hack, non exporté, n'est pas vérifié.
+- **Préparé, pas commencé.** David, le 21/10 : *« oui prépare le »*, puis *« je voulais dire mets à
+  jour le registre des chantiers, pas que tu commences les dev »*. Le plan :
+  1. `DescripteurDeJet.modificateurDuSeuil` (`{ min, max, defaut }`) : la valeur choisie s'ajoute au
+     seuil, sur un jet sous le seuil seulement (ni pourcentage, ni dés échelonnés, ni Table des
+     Bonus) ; le panneau l'explique (« 15 − 2 (modificateur) ») ;
+  2. `PanneauDeJet` : un curseur « Modificateur » quand le pilote le déclare — le même composant sert
+     la fiche et la tablette ;
+  3. la Forge : la consigne sépare `difficulte` (réussites à obtenir) et `modificateurDuSeuil` (le
+     seuil que le meneur déplace) ; le contrôle du pilote avertit d'une `difficulte` sous 0 sur une
+     réserve d'un seul dé ;
+  4. le pilote Symbaroum : `modificateurDuSeuil` de −5 à +5 par le script de raccord, puis réimport ;
+  5. essais (calcul, panneau, contrôle), ligne `modificateurDuSeuil` au guide 53 (la garde du manuel
+     l'exige), page Symbaroum et capture refaites.
+  L'opposition (*« 10 moins l'Attribut adverse »*) passe par le même curseur : le meneur calcule.
+- **Recoupe l'audit de Codex du 20/10** ([S0–S9](2026-10-20-symbaroum-propositions.md)) : ce plan
+  est son **S1**, en plus court — S1 propose aussi une **opposition explicite** au calcul lisible
+  (`12 + (10 − 13) = 9`). **À trancher par David** : le curseur seul, ou l'opposition explicite. Son
+  contre-exemple (`reussitesRequises: -3`) date d'avant le retrait de `difficulte`. S0 et S2–S9
+  restent des propositions que David n'a pas choisies.
+- ⛔ Avant de coder : demander à David *« GM-OS tourne-t-il ? »*.
 
 ### 146 · Import qui ne se refermait plus, campagne forgée invisible — 22/10/2026
 
@@ -12074,6 +12140,8 @@ sur les Tablettes Joueurs. »* (Claude Code).
   (repos, château dormant, ouvrages, progression, recours, astrologie, critique) ; « fatigue »,
   « blessures » et « jet-état » viennent d'une autre chaîne (1 212 px) et n'ont pas été
   refaites. Manuel `54-Jeu-Reves-de-Dragons.md` mis à jour.
+- **Synthèse des pilotes consolidée le 22/10** ([document vivant](2026-10-20-ameliorations-tous-les-pilotes.md)) :
+  onglet commun, RdD, Symbaroum (§ 145) et défaut de la Forge reportés ; Dune (§ 143) déjà conforme.
 - **Reste** : l'essai de David à l'écran (meneur et tablette).
 - **Constaté** : sur la fiche du meneur, la bascule « Fiche du jeu » rendait le jet inaccessible
   (le panneau vit dans le formulaire) ; l'onglet le règle.
@@ -12166,7 +12234,9 @@ sur les Tablettes Joueurs. »* (Claude Code).
 | 76 | **Rêve de Dragon — règles, module TMR et fiche HTML** | § 141 ; R0/R1/R2/R8 (`94e0aaed`), R3/R4 (`ef659f35`), R5–R7 (`9e7df47a`) ; livret HTML (`5426215f`) et raccord au pilote étendu (`fef92b06`) ; retouche numérique intégrée v12, non commitée | Relancer pour recevoir le gabarit v12 et juger les chiffres ; réimporter le pilote relié si nécessaire ; R8 garde les maîtrises et sorts à arbitrer ; potentiel R5 à reporter explicitement depuis la page Archétype | [Retouche numérique](2026-10-19-etat-et-reprise-codex-rdd-champs-numeriques.md), [raccord](2026-10-19-raccord-fiche-rdd-claude.md) |
 | 77 | **Nephilim — le jeu à la table** | § 142 ; Arts occultes et suites des critiques au jet, Stase et Effet Mnémos, Ka dominant, Alchimie au jet, 31 époques et 155 Vécus du livre, errata V1.3 dans les règles — commité et éprouvé le 18/10 ; captures du manuel refaites ; Vécus et époques saisis sur tablette ; MP consommées au lancer | Éprouver la tablette et la transmutation | Rien ; [reprise au § 15](2026-10-17-chantier-nephilim.md) |
 | 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ✅ **Codé et poussé le 19/10, lots E0 à E6** (`11cf56f1`…`934874b2`) : Obsidian filtré, registre des détenteurs complété, clonage juste, archive complète, « Rejouer », aperçu + sauvegarde avant import + bilan, archive des médias `.gmos-medias` avec Image-OS (ce que la campagne utilise). **Essayé par David le 19/10 sur l'instance de test, export et import : *« ok ça fonctionne »*** ; bilan d'export ajouté après le premier essai. ⛔ Décisions de David : cartes, tables, calendriers et bibliothèque commune **ne s'archivent pas** (pas liés à une campagne) ; **Deck-OS part avec le pilote** (`.gmos-driver`), plus avec la campagne ; Rejouer : toutes les réserves au départ, combats préparés et modules gardés | **David** : dire si l'archive des médias doit aussi prendre les médias que la campagne **utilise** sans les étiqueter (portraits, cartes…) ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
+| 79 | **Dune — pilote, règles et conflits** | ⏸ **Projet futur, garé par David le 19/10** ; § 143 ; audit et propositions D0–D8 conservés, aucun développement | Attendre la demande de reprise de David ; alors choisir le premier lot et vérifier son export du pilote | [Audit et priorités](2026-10-19-dune-propositions.md) |
 | 80 | **Crimes — pilote et fiche HTML** | § 144 ; fiche `crimes-fr` intégrée au moteur v13, fiche GM-OS refaite sur la fiche HTML, correspondance complète ; pilote corrigé réimporté, fiche validée par David le 19/10 | Le jet « Potentiel GARDE Compétence » ; trancher les Potentiels (10 cases ou 0 à 5) et les pistes sans règle | Le moteur de dés ne sait pas « garder » des dés |
+| 81 | **Symbaroum — pilote, fiche HTML et jet** | § 145 ; fiche `symbaroum-fr` intégrée au moteur v14, correspondance complète, page du manuel (`712f70c1`, `34404411`) ; jet corrigé — un seul attribut, plus de `difficulte` qui faisait tout réussir ; pilote réimporté par David le 21/10 | Le modificateur du seuil (−5 à +5) : option du jet, curseur du panneau, consigne et contrôle de la Forge — préparé, non commencé | Le feu vert de David, et son choix entre le curseur seul et l'opposition explicite (S1 de [l'audit de Codex](2026-10-20-symbaroum-propositions.md)) |
 | 82 | **Import qui ne se refermait plus, campagne forgée invisible** | § 146 ; bilan d'import fermé seul après 8 s sauf s'il alerte (`NexusHUD.tsx`) ; campagne créée à la première fiche publiée dans l'Atelier (`AtelierDeCampagne.tsx`) — faits et commités le 22/10 | L'essai de David à l'écran ; recueillir le troisième défaut annoncé | Rien |
 | 83 | **L'onglet « Lancer un test »** | § 147 ; maquettes Stitch retenues le 22/10 ; **onglets et refonte de la partie commune faits et commités le 22/10** ; suite unitaire, `capturesDesJeux` (dix jeux, 96 captures du manuel refaites) et sept essais du Voyageur verts | L'essai de David à l'écran | Rien |
 
