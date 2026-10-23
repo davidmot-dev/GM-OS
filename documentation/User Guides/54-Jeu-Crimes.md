@@ -330,7 +330,7 @@ du test, Mental ou Social). La jauge à son seuil fait monter le niveau, à zér
 elle repart alors à la moitié du seuil.
 
 > Le livre ne chiffre pas le **seuil de la jauge** : le pilote retient **10**, la fin de la piste
-> imprimée. Il se change dans le pilote (`garde.fortune.seuil`).
+> imprimée (choix validé par David le 23/10). Il se change dans le pilote (`garde.fortune.seuil`).
 
 ## La création et la progression
 

@@ -47,7 +47,7 @@ conformément à la décision de David du 19/10.
 | --- | --- | --- | --- |
 | [Alien](#alien) | 🟢 8 · 🟠 1 · 🔴 0 | A0–A7 validés par David et poussés ; A8 livré et contrôlé le 22/10 | Essai A8 de David attendu ; combat spatial séparé |
 | [Blade Runner](#blade-runner) | 🟢 0 · 🟠 0 · 🔴 4 | Limites documentées ; audit complet à faire | Même choix de forçage au pupitre et sur la fiche ; suivi des blessures |
-| [Crimes](#crimes) | 🟢 12 · 🟠 1 · 🔴 0 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** ; **tous les lots livrés et essayés le 23/10** : circonstances, hermétiques, opposition, psychologie et seuils, manœuvres, contacts, fortune, création (registre § 157–161) | Confirmer le seuil de la jauge de fortune (10 retenu) ; le reste au meneur |
+| [Crimes](#crimes) | 🟢 13 · 🟠 0 · 🔴 0 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** ; **tous les lots livrés et essayés le 23/10** : circonstances, hermétiques, opposition, psychologie et seuils, manœuvres, contacts, fortune, création (registre § 157–161) | Rien : tous les lots faits ; tir multiple, intimider, rivalités et fortune commune restent au meneur |
 | [Cthulhu Hack](#cthulhu-hack) | 🟢 0 · 🟠 0 · 🔴 5 | Limites documentées ; audit complet à faire | Effets du Hors Jeu et usure reliés aux valeurs de la fiche |
 | [Dune](#dune) | 🟢 1 · 🟠 0 · 🔴 8 | Audit détaillé ; projet futur garé | Spécialisations et paiements Impulsion/Menace lors d'une reprise |
 | [Nephilim Légende](#nephilim-légende) | 🟢 0 · 🟠 1 · 🔴 5 | Plusieurs anciens lots réalisés ; restes documentés | Conséquences/Chutes, Stase et pacte de Kabbale |
@@ -215,8 +215,7 @@ Contacts (loyauté de base et appels séparés, influence, perte à +1 Psychose,
 fortune (niveau, jauge). Création (tempérament, budgets, spécialisations) et développement.
 Pilote `Export Dirvers/corriges/Crime_driver_gmos_complet.gmos-driver`
 (`outils/crime/completer_le_pilote.py`), page [Crimes](../User%20Guides/54-Jeu-Crimes.md) et quatre
-captures nouvelles. Réimporté ; **essai de David validé le 23/10** (*« ok tout est testé, c'est bon »*). **À confirmer par David :** le seuil de la
-jauge de fortune (10, le livre ne le chiffre pas), la jauge qui repart à la moitié quand le niveau
+captures nouvelles. Réimporté ; **essai de David validé le 23/10** (*« ok tout est testé, c'est bon »*). **Seuil de la jauge de fortune à 10 validé par David le 23/10** (le livre ne le chiffre pas) ; retenus à l’essai : la jauge qui repart à la moitié quand le niveau
 change, « 3 points par degré » lu comme 3 × degré visé. **Restent au meneur :** tir multiple,
 intimider, Névrose des rivalités entre styles, fortune commune, autres dépenses de développement.
 
@@ -229,7 +228,7 @@ intimider, Névrose des rivalités entre styles, fortune commune, autres dépens
 | 🟢 C4 | **Livré et essayé le 23/10** | Carte « Psychologie », test psychotique, Névrose du jet notée, seuils sous le bandeau (Névrose : moitié ou zéro au choix), psychose 6 et 10, angoisse 3 et plus, Innocence |
 | 🟢 C5 | **Livré et essayé le 22/10 et le 23/10** | Cinq styles, points, indices à seuils révélés à un seul puis partagés. Le 23/10 : l'affaire par lieu et par témoin, hypothèses |
 | 🟢 C6 | **Livré et essayé le 22/10 et le 23/10** | Armes, opposition, dégâts et blessures sur la cible, portées, protection, incidents. Le 23/10 : Physique actuel au combat, manœuvres et localisation, munitions, initiative narrative ; tir multiple au meneur |
-| 🟠 C7 | **Livré et essayé le 23/10** ; reste à confirmer le seuil de fortune | Contacts : loyauté de base et appels du scénario, influence, test Social GARDE X, perte à +1 Psychose, Nouveau scénario ; fortune : niveau et jauge. Seuil de la jauge à confirmer (10 retenu) |
+| 🟢 C7 | **Livré et essayé le 23/10** | Contacts : loyauté de base et appels du scénario, influence, test Social GARDE X, perte à +1 Psychose, Nouveau scénario ; fortune : niveau et jauge. Seuil de la jauge à 10, validé par David le 23/10 |
 | 🟢 C8 | **Livré et essayé le 23/10** | Tempérament et ses totaux, règles de création vérifiées (budgets selon l'âge, rangs, potentiels, spécialisations), points de développement dépensés |
 | 🟢 C0.1 | **Livré et essayé le 23/10** | Corrections proposées par la relecture (23/10) : **modificateur de seuil du jet gardé** au tir — distance, mobilité, taille de la cible de −1 à +1, angoisse du tireur au-dessus de 3 de −1 à −2 ; seuil de 9 non modifiable pour viser à 3 d'angoisse et plus (p. 389-390, 412) |
 | 🟢 C0.2 | **Livré et essayé le 23/10** | La carte des atteintes rappelle la **consigne de mort à −2** (implacable, logique ou évitée selon la conduite, p. 393), sans rien écrire |

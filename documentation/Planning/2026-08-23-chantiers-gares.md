@@ -12600,7 +12600,8 @@ avait été vidé et l'export frais du 22/10 précédait la réimportation).
 - **Vérifié** : `npx tsc -b` ; suite complète **8 822 essais verts** ; captures de Crimes
   refaites (quatre nouvelles : psychologie, seuil de névrose, contacts et fortune, création).
 - **Essai de David validé le 23/10** (*« ok tout est testé, c'est bon »*), pilote réimporté.
-- **Reste** : confirmer le seuil de la jauge de fortune (10 retenu).
+- **Seuil de la jauge de fortune** : 10, validé par David le 23/10 (*« le seuil de base est bon à 10 »*).
+- **Reste** : rien.
 
 ## La vue d'un coup d'œil
 
@@ -12703,7 +12704,7 @@ avait été vidé et l'export frais du 22/10 précédait la réimportation).
 | 94 | **Crimes C2 et C3 — atteintes, dépassement** | § 158 ; Potentiel actuel au jet, carte des atteintes, « Bonne nuit », dépassement annoncé une fois par scène ; fiche HTML (version 15), pilote `…_c2-c3`, manuel — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
 | 95 | **Crimes C5 et C6 — dossier d'enquête, armes** | § 159 ; points d'enquête par style, indices à seuils révélés à un seul enquêteur (sa seule tablette) puis partagés ; armes du livre, dégâts, portée, « Infliger » — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
 | 96 | **Crimes C0 — relecture du corpus** | § 160 ; 19 fiches relues contre le livre, corrigées, `relu: true` ; contradictions du livre exposées ; mort à −2 rendue à sa consigne (p. 393) — fait le 23/10 | Rien : rapport validé par David le 23/10 ; suites de code C0.1 à C0.4 dans la synthèse | Rien |
-| 97 | **Crimes C0.1 à C8 — le pilote complet** | § 161 ; circonstances, hermétiques, opposition, pupitre, psychologie et seuils, affaire et hypothèses, manœuvres et munitions, contacts, fortune, création et progression — livré et essayé le 23/10 | Confirmer le seuil de la jauge de fortune (10 retenu) | Rien |
+| 97 | **Crimes C0.1 à C8 — le pilote complet** | § 161 ; circonstances, hermétiques, opposition, pupitre, psychologie et seuils, affaire et hypothèses, manœuvres et munitions, contacts, fortune, création et progression — livré et essayé le 23/10 | Rien : seuil de fortune à 10 validé par David | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
