@@ -12656,6 +12656,22 @@ David fournit le livre français et engage les améliorations ; GM-OS confirmé 
 - **Reste** : rien sur ces cinq lots. Soins spéciaux, séquelles/récupération mentale et
   cartes Contrecoups restent des sujets d'audit séparés.
 
+### 165 · Nephilim — finir le pilote (N1 à N9) — 23/10/2026
+
+David, le 23/10 : *« je propose que l'on s'attaque à finir Nephilim Legend » ; GM-OS éteint ; périmètre complet N1–N9 ; cases de santé nommées ; lieu et conjonction réglés par le MJ au bandeau ; à partir de l'export du 22/10*.
+
+- **Fait** : malus des Conséquences au jet, encaissement sur des cases nommées, Chutes (paliers, forme
+  du Khaïba et ses interdits, mise en jeu), pacte de Kabbale en opposition, stase (test, recharge),
+  Sapience (Mnémos en tant que Vécu, Sacrifice, sort à retenter, Chute soignée, expérience), Œuvre au
+  blanc et assemblage, lieu magique et conjonction au bandeau, métamorphe et Seuil RK. Détail : chantier
+  Nephilim § 16.
+- **Pilote** : `Export Dirvers/corriges/Nephilim_driver_gmos_finir.gmos-driver`, 2.0.0, sur l'export du
+  22/10 ; zéro constat de la Forge.
+- **Vérifié** : 36 essais du module et du panneau, 1 du bandeau, contrôles de la Forge (zéro constat sur le pilote), jet réel composé avec le pilote ; captures réelles dans Electron (14, dont 5 nouvelles) ; suite complète 8 904 essais verts.
+- **Fiche HTML** : la consigne au Studio livrée le soir même ; validateur ACCEPTÉE, moteur 16.
+- **Essai de David validé le 23/10** (« ok tout est bon tu peux valider. Commit et pousse »).
+- **Reste** : rien.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12761,6 +12777,7 @@ David fournit le livre français et engage les améliorations ; GM-OS confirmé 
 | 98 | **Alien A9 — le combat spatial** | § 162 ; module, pupitre et tablette, pilote 1.9.0 — livré et essayé le 23/10 | Rien | Rien |
 | 99 | **Alien A10 — préréglages et remise à zéro** | § 163 ; MU/TH/UR, détecteur et combat spatial ; exemple du relais — livré et essayé le 23/10 | Rien | Rien |
 | 100 | **Cthulhu Hack — cinq améliorations** | § 164 ; blessures, armure, Fortune MJ, durées et Pulp — livré et essayé le 23/10 | Rien sur ces cinq lots | Rien |
+| 101 | **Nephilim — finir le pilote (N1 à N9)** | § 165 ; jet, santé, Chutes, pacte, stase, Sapience, Alchimie, lieux, métamorphe — livré et essayé le 23/10 | Rien | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

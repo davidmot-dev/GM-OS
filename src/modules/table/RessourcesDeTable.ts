@@ -46,6 +46,12 @@ export interface RessourceDeTable {
      * lu par `plafondDe`, seule lecture du plafond.
      */
     maxSur?: string;
+    /**
+     * **Une valeur se lit par son nom** — Nephilim, 2026-10-23 : le lieu magique
+     * (0 aucun, 1 Plexus de Feu… 6 Nexus) et la conjonction du jour. Le premier
+     * libellé est celui de `min`. Le bandeau montre le nom au lieu des segments.
+     */
+    libelles?: string[];
     /** Ce que la réserve perd à la fin de chaque scène. L'Impulsion : un point. */
     erosionFinDeScene?: number;
     /**

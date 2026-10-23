@@ -41,7 +41,7 @@ import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { LigneDuReferentiel } from './ChampDuReferentiel';
 import { champDeLaSuite, jetVientDe, suitesDuJet, valeurApresLaSuite, type SuiteDUnCritique } from '../../../dice/suitesDesCritiques';
-import { consommationDuJet, direLaConsommation } from '../../../dice/consommationAuJet';
+import { consommationsDuJet, direLaConsommation } from '../../../dice/consommationAuJet';
 import { effetsSurLaNevrose, potentielActuel, resoudreLaGarde, type JetGarde } from '../../../dice/systemes/potentielGarde';
 import AtteintesDesPotentiels from './AtteintesDesPotentiels';
 import PsychologieDeCrimes from './PsychologieDeCrimes';
@@ -62,6 +62,8 @@ import { tousLesPilotes } from '../../store/tousLesPilotes';
 import { appliquerAuGroupe } from '../../logic/groupeDeLaCampagne';
 import ApportsDuGroupe from './ApportsDuGroupe';
 import { CarteDuJeu, Etape } from './EtapesDuJet';
+import { ChutesNephilim, ExperienceNephilim, PreparationNephilim, SanteNephilim, StaseNephilim, SuitesNephilim } from './NephilimAuJet';
+import type { ChoixDeNephilim, JetDeNephilim } from '../../../dice/systemes/nephilimRegles';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
 import type { ApportDuGroupe, DiceConfig } from '../../../../types/drivers';
 
@@ -277,6 +279,22 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * (p. 151) ; la verser d'office au plafond la détruisait sans un mot.
      */
     const [impulsionDuJet, setImpulsionDuJet] = useState<{ reste: number; enTete: string } | null>(null);
+    /**
+     * **Nephilim jusqu'au bout** (2026-10-23) : les options du jet, ce que le
+     * dernier lancer savait, et les écritures des cartes — elles complètent la
+     * version de fiche qui les a produites, comme chez Alien.
+     */
+    const regleNephilim = descripteur.cible?.mecanique === 'nephilim' ? descripteur.nephilim : undefined;
+    const [choixNephilim, setChoixNephilim] = useState<ChoixDeNephilim>({ actionPhysique: true });
+    const [nephilimDuLancer, setNephilimDuLancer] = useState<{ jet: JetDeNephilim; degres: number } | null>(null);
+    const [ecritsNephilim, setEcritsNephilim] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const valeursNephilim = useMemo(() => ({ ...valeurs,
+        ...(ecritsNephilim.base === valeurs && ecritsNephilim.personnageId === personnageId ? ecritsNephilim.maj : {}),
+    }), [valeurs, ecritsNephilim, personnageId]);
+    const ecrireNephilim = (maj: Record<string, unknown>) => {
+        setEcritsNephilim(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche?.(maj);
+    };
 
     const { etatDe, depenser, gagner, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
     const monnaie = useMemo(
@@ -378,11 +396,18 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const sousGroupesDe = (composante: ComposanteDeJet) =>
         sectionsDeLaComposante(template.sections, composante).sections;
 
+    /** Le lieu magique, la conjonction et le Seuil RK, lus au bandeau pour le jet de Nephilim. */
+    const tableN = regleNephilim?.table;
+    const lieuN = tableN?.lieu ? etatDesReserves[tableN.lieu] : undefined;
+    const conjonctionN = tableN?.conjonction ? etatDesReserves[tableN.conjonction] : undefined;
+    const intensiteN = tableN?.intensite ? etatDesReserves[tableN.intensite] : undefined;
+    const seuilRKN = tableN?.seuilRK ? etatDesReserves[tableN.seuilRK] : undefined;
     const jet = useMemo(
         () => {
             const prepare = preparerLeJet(
-            descripteur, descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : valeurs,
+            descripteur, descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : regleNephilim ? valeursNephilim : valeurs,
             {
+                ...(regleNephilim ? { nephilim: { ...choixNephilim, lieu: lieuN, conjonction: conjonctionN, intensite: intensiteN, seuilRK: seuilRKN } } : {}),
                 champs: choix, desSupplementaires: desAchetes, difficulte,
                 ajustementDeDifficulte: ajustementDeDifficulte + degresPuises, specialisation,
                 modificateurDuSeuil,
@@ -425,7 +450,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
+        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN],
     );
 
     /*
@@ -733,6 +758,32 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         }
 
         /*
+          **Nephilim : ce que le jet coûte se paie en s'engageant** — les PS de
+          l'Effet Mnémos (d'abord ceux d'une Chute mise en jeu) et du Sacrifice,
+          le jeton de Traque d'Impressionner (p. 113, 119, 152, 183).
+        */
+        if (regleNephilim && jet.nephilim) {
+            const { sapience, traque, deChute } = jet.nephilim.couts;
+            const maj: Record<string, unknown> = {};
+            if (deChute > 0 && regleNephilim.chutes?.sapienceDeChute) {
+                const avant = Number(valeursNephilim[regleNephilim.chutes.sapienceDeChute]) || 0;
+                maj[regleNephilim.chutes.sapienceDeChute] = Math.max(0, avant - deChute);
+                dits.push(`PS de Chute −${deChute} → ${Math.max(0, avant - deChute)}`);
+            }
+            if (sapience > 0 && regleNephilim.sapience) {
+                const avant = Number(valeursNephilim[regleNephilim.sapience]) || 0;
+                maj[regleNephilim.sapience] = Math.max(0, avant - sapience);
+                dits.push(`Points de Sapience −${sapience} → ${Math.max(0, avant - sapience)}`);
+            }
+            if (Object.keys(maj).length) ecrireNephilim(maj);
+            if (traque > 0 && regleNephilim.table?.traque) {
+                dits.push(...mouvoir(regleNephilim.table.traque, traque, `${enTete}, Impressionner`).avertissements, `Jauge de Traque +${traque} (Impressionner)`);
+            }
+            setNephilimDuLancer({ jet: jet.nephilim, degres: Math.round(jet.seuil / 10) });
+            setChoixNephilim(c => ({ actionPhysique: c.actionPhysique }));
+        }
+
+        /*
           **La seconde poule part avec la première, et compte à part.**
 
           `rollYZE` distingue les deux depuis toujours — les 1 de la seconde
@@ -911,10 +962,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const resBrut: RollResult = bonusTotal > 0
             ? { ...brut, successes: (brut.successes ?? 0) + bonusTotal, totalDisplay: `${brut.totalDisplay} (+${bonusTotal})` }
             : brut;
-        setAvantPanique(resBrut);
-        const enAttente = !!suitesAlien && resBrut.rolls.some(d => d.source === 'gear' && d.val === 1);
-        const res = regleJetAlien ? enregistrerLeResultatAlien(resBrut, enAttente)
-            : enAttente ? resultatAvecPanique(resBrut) : resBrut;
+        // Le Sacrifice de Nephilim : le rituel réussit d'office, quels que soient les dés (p. 183).
+        const resDuJet: RollResult = regleNephilim && jet.nephilim?.sacrifice?.retenu
+            ? { ...resBrut, successes: 1, tagSuccess: true, degre: 'reussite-normale', totalDisplay: `${resBrut.totalDisplay} — réussi d’office (Sacrifice, 5 PS)` }
+            : resBrut;
+        setAvantPanique(resDuJet);
+        const enAttente = !!suitesAlien && resDuJet.rolls.some(d => d.source === 'gear' && d.val === 1);
+        const res = regleJetAlien ? enregistrerLeResultatAlien(resDuJet, enAttente)
+            : enAttente ? resultatAvecPanique(resDuJet) : resDuJet;
         setSeuilDuLancer(jet.seuil);
         setBonusDuLancer(bonusDuGroupe + bonusPerso);
         setResultat(res);
@@ -1038,8 +1093,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           Materiae Primae d'une transmutation, retirées au lancer — la règle ne
           laisse pas de choix (Quintessence p. 220) —, conservées sur un critique.
         */
-        const consomme = ecrireSurLaFiche ? consommationDuJet(descripteur.consommation, choix, valeurs, res.degre) : null;
-        if (consomme) {
+        // L'Œuvre au blanc consomme deux éléments (2026-10-23).
+        for (const consomme of ecrireSurLaFiche ? consommationsDuJet(descripteur.consommation, choix, valeurs, res.degre) : []) {
             if (!consomme.conservee) ecrireSurLaFiche?.({ [consomme.champ]: consomme.apres });
             dits.push(direLaConsommation(consomme));
         }
@@ -1974,6 +2029,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         la fiche coche pour la compétence retenue. Appropriée, elle baisse le
                         seuil de chaque dé à 7 ; c'est au meneur d'en juger.
                     */}
+                    {regleNephilim && (
+                        <PreparationNephilim jet={jet.nephilim} choix={choixNephilim} changer={c => setChoixNephilim(x => ({ ...x, ...c }))} />
+                    )}
                     {descripteur.garde?.specialisations && (
                         <label className="flex items-center gap-2">
                             <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Spécialisation</span>
@@ -2388,6 +2446,29 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             **La Névrose du jet, écrite** (Crimes, C4, p. 409) : ce que le panneau dit
                             sous les dés, le meneur le note d'un clic — une fois par lancer.
                         */}
+                        {regleNephilim && nephilimDuLancer && ecrireSurLaFiche && (() => {
+                            // Le PS du critique d'un Art occulte peut soigner une Chute : il ne se note plus alors (p. 149).
+                            const suiteDeSapience = suites.find(s => s.quand === 'critique' && s.ajouter?.champ === regleNephilim.sapience);
+                            const champSapience = regleNephilim.sapience;
+                            return (
+                                <SuitesNephilim regle={regleNephilim} jet={nephilimDuLancer.jet} degre={resultat.degre} degres={nephilimDuLancer.degres}
+                                    valeurs={valeursNephilim} sections={template.sections} ecrire={ecrireNephilim}
+                                    consigner={(titre, ligne) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })}
+                                    ajouterUnJetonDeTraque={regleNephilim.table?.traque ? () => setMouvements(m => [...m,
+                                        ...mouvoir(regleNephilim.table!.traque!, 1, `${dernierLancer?.titre ?? 'Jet'}, Traque`).avertissements, 'Jauge de Traque +1']) : undefined}
+                                    relancer={lancer}
+                                    sapienceDuCritique={suiteDeSapience && champSapience ? {
+                                        notee: !!suitesNotees[suiteDeSapience.label],
+                                        depenser: () => {
+                                            if (suitesNotees[suiteDeSapience.label]) {
+                                                const avant = Number(valeursNephilim[champSapience]) || 0;
+                                                ecrireNephilim({ [champSapience]: Math.max(0, avant - 1) });
+                                            }
+                                            setSuitesNotees(n => ({ ...n, [suiteDeSapience.label]: 'Point de Sapience dépensé pour soigner une Chute' }));
+                                        },
+                                    } : undefined} />
+                            );
+                        })()}
                         {gardeDuResultat && descripteur.garde?.psychologie && ecrireSurLaFiche && !pourLesJoueurs && (() => {
                             const d = nevroseDuJet(gardeDuResultat);
                             if (d === 0) return null;
@@ -2789,6 +2870,33 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         consigner={(titre, ligne) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
                 </CarteDuJeu>
             )}
+            {regleNephilim && ecrireSurLaFiche && (() => {
+                const consigner = (titre: string, ligne: string) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne });
+                return (
+                    <>
+                        {regleNephilim.sante && (
+                            <CarteDuJeu id="sante-nephilim" titre="Santé et dommages">
+                                <SanteNephilim regle={regleNephilim} valeurs={valeursNephilim} ecrire={ecrireNephilim} consigner={consigner} />
+                            </CarteDuJeu>
+                        )}
+                        {regleNephilim.chutes && (
+                            <CarteDuJeu id="chutes-nephilim" titre="Les Chutes">
+                                <ChutesNephilim regle={regleNephilim} valeurs={valeursNephilim} ecrire={ecrireNephilim} consigner={consigner} meneur={!pourLesJoueurs} />
+                            </CarteDuJeu>
+                        )}
+                        {regleNephilim.stase && (
+                            <CarteDuJeu id="stase-nephilim" titre="La stase">
+                                <StaseNephilim regle={regleNephilim} valeurs={valeursNephilim} ecrire={ecrireNephilim} consigner={consigner} />
+                            </CarteDuJeu>
+                        )}
+                        {regleNephilim.experience && !pourLesJoueurs && (
+                            <CarteDuJeu id="experience-nephilim" titre="Expérience">
+                                <ExperienceNephilim regle={regleNephilim} valeurs={valeursNephilim} sections={template.sections} ecrire={ecrireNephilim} consigner={consigner} />
+                            </CarteDuJeu>
+                        )}
+                    </>
+                );
+            })()}
             {combatAlien?.actions&&<ActionsAlien personnageId={personnageId} joueur={pourLesJoueurs}/>}
             {combatAlien?.progression&&ecrireSurLaFiche&&<ProgressionAlien regle={combatAlien} valeurs={valeursAlien} ecrire={ecrireAlien} personnageId={personnageId} campaignId={campaignId} joueur={pourLesJoueurs}/>}
             {combatAlien && ecrireSurLaFiche && (

@@ -23,6 +23,7 @@ import type { SheetSection } from '../../data/defaultSheetTemplates';
 import { modificateursCH } from './systemes/cthulhuHack';
 import { potentielActuel, quotaDeLaGarde, seuilDeLaGarde } from './systemes/potentielGarde';
 import type { RegleDesJetsAlien } from './systemes/jetsAlien';
+import { jetDeNephilim, type ChoixDeNephilim, type JetDeNephilim, type RegleDeNephilim } from './systemes/nephilimRegles';
 import { estUnAndroide } from './systemes/paniqueAlien';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 import type { EchelleDuJet } from './degresDeReussite';
@@ -477,6 +478,13 @@ export interface DescripteurDeJet {
      */
     suitesDesCritiques?: import('./suitesDesCritiques').SuiteDUnCritique[];
     /**
+     * **Nephilim Légende, jusqu'au bout** — 2026-10-23 (`systemes/nephilimRegles.ts`) :
+     * les malus des Conséquences, le lieu et la conjonction, le métamorphe, les
+     * interdits du Khaïba, l'Effet Mnémos en tant que Vécu et le Sacrifice. Lu
+     * seulement avec `cible`, sur la mécanique `nephilim`.
+     */
+    nephilim?: RegleDeNephilim;
+    /**
      * **La Fortune** — Cthulhu Hack, 2026-10-16 (règle optionnelle du livre) :
      * après un jet raté, le joueur **place** des jetons sur sa fiche (`champ`)
      * — `relance` pour relancer, `reussite` pour réussir —, sans jamais en avoir
@@ -538,6 +546,8 @@ export interface ChoixDuJoueur {
     ajustementDeDifficulte?: number;
     /** Le modificateur de situation ajouté au seuil (`DescripteurDeJet.modificateurDuSeuil`). */
     modificateurDuSeuil?: number;
+    /** Ce que le panneau règle pour Nephilim (`DescripteurDeJet.nephilim`), réserves de table comprises. */
+    nephilim?: ChoixDeNephilim;
     /** La valeur de l'adversaire, quand le jet s'oppose à lui. Absente : pas d'opposition. */
     valeurAdverse?: number;
     /** L'Avantage tactique est coché (`modificateurDuSeuil.avantage`). */
@@ -622,6 +632,8 @@ export interface JetPrepare {
         /** Le dépassement : annoncé, et encore permis dans la scène — ou pourquoi pas. */
         depassement?: { annonce: boolean; possible: boolean; raison?: string; champ: string };
     };
+    /** Ce que Nephilim a changé au jet, et ce que le lancer coûtera (`DescripteurDeJet.nephilim`). */
+    nephilim?: JetDeNephilim;
     modificationDuSeuil?: {
         situation: number;
         opposition?: { adverse: number; modificateur: number; label: string };
@@ -1089,6 +1101,7 @@ export function preparerLeJet(
     let composantes = additionnees.retenues;
     let explicationDuSeuil: string | undefined;
     let echelle: EchelleDuJet | undefined;
+    let nephilim: JetDeNephilim | undefined;
 
     /*
       **La cible calculée l'emporte sur le seuil additionné**, et les deux ne
@@ -1102,7 +1115,19 @@ export function preparerLeJet(
     if (descripteur.cible && !descripteur.desEchelonnes) {
         const caracteristique = additionner([descripteur.cible.caracteristique]);
         const depuisLaFiche = additionner(descripteur.cible.ajustement ?? []);
-        const ajustement = depuisLaFiche.total + (choix.ajustementDeDifficulte ?? 0);
+        let ajustement = depuisLaFiche.total + (choix.ajustementDeDifficulte ?? 0);
+        /*
+          **Nephilim** : le Vécu (ou l'Art) perd d'abord le malus des Conséquences,
+          ou cède la place à l'Effet Mnémos en tant que Vécu ; le lieu, la
+          conjonction et le métamorphe s'ajoutent ensuite aux degrés (p. 137, 160).
+        */
+        if (descripteur.nephilim && descripteur.cible.mecanique === 'nephilim') {
+            nephilim = jetDeNephilim(descripteur.nephilim, valeursDeLaFiche, choix.champs, choix.nephilim ?? {}, caracteristique.total, sections);
+            caracteristique.total = nephilim.vecu;
+            ajustement += nephilim.bonus;
+            remarques.push(...nephilim.remarques);
+            avertissements.push(...nephilim.avertissements);
+        }
 
         const mecanique = MECANIQUES_DE_CIBLE[descripteur.cible.mecanique];
         if (!mecanique) {
@@ -1371,6 +1396,7 @@ export function preparerLeJet(
         explicationDuSeuil,
         modificationDuSeuil,
         ...(garde ? { garde } : {}),
+        ...(nephilim ? { nephilim } : {}),
         echelle,
         /*
           Quand les dés sont échelonnés, c'est leur nombre qui fait foi : ils ne

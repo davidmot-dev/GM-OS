@@ -649,6 +649,44 @@ async function scenesDeNephilim(c: ContexteDeScene): Promise<void> {
         await ecrireLaFiche(c, { occult_magic_first: 4 });
     }
 
+    /*
+      **Finir Nephilim** (2026-10-23, N1 à N9) : un Plexus de Feu réglé au bandeau, une
+      Conséquence physique au jet du Templier, l'encaissement, les Chutes, le pacte de
+      Kabbale. Le bandeau revient à « aucun lieu » et la fiche à son état d'avant.
+    */
+    if ((jet as { nephilim?: unknown } | undefined)?.nephilim) {
+        await vue(c.campagne, 'cockpit');
+        await f.getByRole('button', { name: 'Ajouter un point de Lieu magique', exact: true }).click();
+        await expect(f.getByText('Plexus de Feu', { exact: true })).toBeVisible();
+        await photographier(f.locator('[data-bandeau-des-reserves]').first(), 'jeu-nephilim-lieu-magique');
+        await ecrireLaFiche(c, { consequences_physical_minor_active: true });
+        await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+        const p = f.locator('[data-panneau-de-jet]').first();
+        await p.locator('select').nth(0).selectOption('pastlives_0_degree');
+        await p.locator('select').nth(1).selectOption('ka_fire');
+        await expect(p.locator('[data-preparation-nephilim]')).toBeVisible();
+        await photographierLePanneau(p, 'jeu-nephilim-consequences-et-lieu');
+        await ecrireLaFiche(c, { consequences_physical_minor_active: false });
+
+        const sante = f.locator('[data-carte-du-jeu="sante-nephilim"]');
+        const physique = sante.locator('[data-piste="physique"]');
+        await physique.getByLabel('Dommages physique reçus').fill('5');
+        await physique.getByRole('button', { name: 'Proposer', exact: true }).click();
+        await expect(physique.locator('[data-options-d-encaissement]')).toBeVisible();
+        await photographier(sante, 'jeu-nephilim-encaisser');
+        await photographier(f.locator('[data-carte-du-jeu="chutes-nephilim"]'), 'jeu-nephilim-chutes');
+
+        await ecrireLaFiche(c, { occult_kabbalah_hod: 5, ka_water: 4, kabbalah_invocations_0_name: 'Les lutins au dos de nacre', kabbalah_invocations_0_degree: 2, kabbalah_invocations_0_element: 'Eau' });
+        const lance = await jeterJusqua(c, ['occult_kabbalah_hod', 'ka_water'], q => q.locator('[data-pacte-de-kabbale]'), 40);
+        await lance.getByRole('button', { name: 'Nouer le pacte', exact: true }).click();
+        await expect(lance.locator('[data-issue-du-pacte]')).toBeVisible();
+        await photographierLePanneau(lance, 'jeu-nephilim-pacte');
+        await ecrireLaFiche(c, { occult_kabbalah_hod: 0, ka_water: 4, kabbalah_invocations_0_name: '', kabbalah_invocations_0_degree: 0 });
+        await vue(c.campagne, 'cockpit');
+        await f.getByRole('button', { name: 'Retirer un point de Lieu magique', exact: true }).click();
+        await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    }
+
     // Le Ka dominant et la Stase plafonnée, sur la fiche GM-OS — dans le formulaire, pas dans le test.
     await ongletDeLaFiche(f, 'Formulaire');
     const section = (titre: string) => f.locator('h3', { hasText: new RegExp(`^${titre}$`) }).first().locator('xpath=..');
@@ -988,7 +1026,9 @@ async function jeterJusqua(c: ContexteDeScene, composantes: string[], voulu: (pa
 /** Le panneau photographié en entier : on agrandit la fenêtre le temps de la prise. */
 async function photographierLePanneau(panneau: Locator, nom: string): Promise<void> {
     const fenetre = await gmos.application.browserWindow(gmos.fenetre);
-    await fenetre.evaluate(w => w.setContentSize(1440, 1800));
+    // Le panneau porte aussi les cartes du jeu (Nephilim, 2026-10-23) : la fenêtre suit sa hauteur, sinon la capture déborde dans le noir.
+    const hauteur = Math.min(4000, Math.max(1800, Math.ceil((await panneau.boundingBox())?.height ?? 0) + 600));
+    await fenetre.evaluate((w, h) => w.setContentSize(1440, h), hauteur);
     await photographier(panneau, nom);
     await fenetre.evaluate(w => w.setContentSize(1440, 900));
 }

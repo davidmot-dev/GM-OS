@@ -1,9 +1,11 @@
 # ✨ Jeu — Nephilim Légende
 
-> **Pilote décrit :** « Nephilim », exporté le 2026-10-18 et corrigé le jour même — captures du 2026-10-18 (Arts occultes au
-> menu du jet, suites des maladresses et des critiques, rappels d'après l'errata V1.3, Stase et Effet
-> Mnémos au jet, Ka dominant, Alchimie au jet, Materiae Primae consommées au lancer et remplies à
-> « Début de séance »). Retour à
+> **Pilote décrit :** « Nephilim », exporté le 2026-10-22, **complété le 2026-10-23** (version 2.0.0,
+> `outils/nephilim-vecus/finir_nephilim.py`) : Conséquences au jet, lieu magique et conjonction,
+> métamorphe, Effet Mnémos en tant que Vécu, Sacrifice, interdits du Khaïba, pacte de Kabbale, santé en
+> cases nommées, Chutes, stase et expérience. Il conserve tout ce qu'apportait la version du 18/10
+> (Arts au jet, suites des critiques, Stase et Effet Mnémos de bonus, Ka dominant, Alchimie et
+> Materiae Primae). Captures du 2026-10-23. Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Un **d100 sous une cible en degrés** : le Vécu — ou l'Art occulte —, plus le Ka de l'approche,
@@ -37,9 +39,57 @@ passés** reliés aux **époques d'incarnation** du livre.
   du **construct** dans l'élément de la formule (sous-groupe « Alchimie — constructs » :
   « Cornue — Ka-Eau (3) »).
 - **Les chances** : (Vécu + Ka) × 10, dites sous les menus — `(4 + 5) × 10 = 90 %`.
+- **Sort (Magie)** : le menu des sortilèges de la fiche, sous leur nom. Le **degré du sort se retire**
+  seul de la cible : Art + Ka du sort − degré (p. 183). GM-OS dit si le Ka de l'approche n'est pas celui
+  du sort.
 - **Difficulté** : les **circonstances, en degrés**. Le livre va de −5 (difficulté extrême) à +5
-  (facilité extrême). Pour un **sort** ou une **formule**, retirez-y aussi le **degré du sort** :
-  Art + Ka − degré. Le curseur descend jusqu'à −10 pour cela.
+  (facilité extrême). Le curseur descend jusqu'à −10, pour un sort ou une formule notés hors des menus.
+
+### Ce que le jet sait de plus — 2026-10-23
+
+![Templier 4 avec une Conséquence mineure, au Ka-Feu 5, dans un Plexus de Feu : (2 + 6) × 10 = 80 %](captures/jeu-nephilim-consequences-et-lieu.jpg)
+
+| Ce qui joue | Ce que fait GM-OS | Livre |
+| :--- | :--- | :--- |
+| **Conséquences physiques** | Sur une **action physique** (case cochée d'office quand une Conséquence l'est), leur malus se retire du Vécu, jamais sous 0, **puis** l'approche s'ajoute | p. 137 |
+| **Conséquences magiques** | Leur malus se retire seul de tout **Art occulte** | p. 138 |
+| **Malus égal au Vécu** | GM-OS rappelle que chaque approche coûte alors un degré de dommages magiques, sans soins | p. 137 |
+| **Lieu magique** (bandeau) | Plexus : +1 au Ka du Plexus, −1 à ses opposés ; Nexus : +3. Seulement si le jet use d'un Ka (approche, Art) | p. 160 ; errata |
+| **Conjonction** (bandeau) | +1 au Ka de la conjonction ; une Grande conjonction de +2 à +5, et autant de malus aux Ka opposés | p. 160 |
+| **Métamorphe** | Sur une approche du **Ka dominant**, « Exprimer N degrés » : +1 par degré, sans les degrés devenus visibles — les métamorphoses cochées « permanente » (section Incarnations). Une maladresse propose d'en cocher une de plus | p. 112 |
+| **Impressionner** | +2 à une action sociale, un jeton de Traque payé au lancer | p. 113 |
+| **Effet Mnémos en tant que Vécu** | Quand aucun Vécu ne s'applique : N degrés pour N PS, au plus le degré du Vécu passé choisi. Les PS d'une Chute mise en jeu partent d'abord | p. 118-119, 152 |
+| **Sacrifice** | Sur un sort de Magie : 5 PS, le rituel **réussit d'office**, quels que soient les dés ; pas au-delà de l'Art | p. 183 |
+| **Interdits du Khaïba** (5 et plus) | Nanisme : pas de sort de degré 5 ou plus. Gigantisme : pas de Magie du Ka dominant. Éthérale : pas de formule du Ka dominant. Élémentaire : pas d'invocation du Ka dominant. **GM-OS refuse de lancer** | p. 150-151 |
+| **Seuil RK** | Sous les options : approche + métamorphe exprimé et visible + Khaïba et Narcose au-delà de 4, contre le Seuil RK | errata p. 146 |
+
+Après le lancer, sous le résultat :
+
+- **Un jeton de Traque** proposé d'un bouton : pour tout effet occulte (un par scène, errata p. 174) ou
+  quand le Seuil RK est dépassé.
+- **Sort raté** (pas une maladresse) : **Retenter (1 PS)** ou **Retenter (1 degré de stase)** paie et
+  relance aussitôt (p. 183). Pas depuis un focus : c'est à la table de le dire.
+- **Critique d'un Art occulte** : le Point de Sapience peut **soigner aussitôt un degré de Chute** (Khaïba,
+  Ombre ou Narcose −1) ; il ne se note plus alors (p. 149).
+
+### Le pacte de Kabbale
+
+![Une invocation de Hod réussie, puis le pacte noué en opposition contre la créature](captures/jeu-nephilim-pacte.jpg)
+
+Une invocation réussie propose **Nouer le pacte** (p. 198 ; errata). Choisissez l'invocation de la fiche,
+corrigez au besoin les **ordonnances** respectées (lues sur la fiche), puis le bouton : le kabbaliste
+(Art de la Sephirah + Ka, + ordonnances) et la créature (son degré) jettent chacun leur d100, lus sur la
+**table des actions opposées** (p. 123) :
+
+| Kabbaliste \ Créature | Critique | Succès | Échec | Maladresse |
+| :--- | :--- | :--- | :--- | :--- |
+| **Critique** | la plus haute marge | kabbaliste | kabbaliste | kabbaliste |
+| **Succès** | créature | la plus haute marge | kabbaliste | kabbaliste |
+| **Échec** | créature | créature | personne | kabbaliste |
+| **Maladresse** | créature | créature | créature | personne |
+
+Gagné : le pacte est noué. Perdu : des **dommages magiques égaux au degré** de la créature, à encaisser
+dans la carte Santé. Une maladresse **bannit** du fief jusqu'à un degré de plus dans la Sephirah.
 
 ### Une transmutation d'Alchimie
 
@@ -53,11 +103,14 @@ construct.
 
 Les **Materiae Primae** de l'élément de la formule — autant que son degré — **se retirent seules
 au lancer** sur une réussite, un échec ou une maladresse (« Materiae Primae Eau −4 → 2 » sous le
-résultat), et sont **conservées sur un critique**. Une jauge trop courte s'arrête à zéro, et GM-OS
+résultat), et sont **conservées sur un critique**. Une formule de l'**Œuvre au blanc** a un **second
+Ka-élément** sur la fiche : ses deux jauges perdent le degré de la formule (deux fois la même pour un
+« double Ka-Lune »), et le jet prend **le Ka le moins développé** des deux du construct (p. 220).
+La section **Alchimie — assemblage des constructs** note avec quelle Œuvre chacun est assemblé
+(errata p. 217) : GM-OS refuse une transmutation d'une Œuvre supérieure à l'assemblage. Une jauge trop courte s'arrête à zéro, et GM-OS
 dit ce qui manquait : à prendre sur le Ka du construct, du Pentacle ou de la stase (p. 218). La
 maladresse a deux cartes : +1 Khaïba, et « Construct abîmé » — **Noter −1** au Ka du construct
-retenu. Une formule de l'Œuvre au blanc, qui mêle deux éléments, se débite à la main : la fiche ne
-porte qu'un élément par formule.
+retenu.
 
 ### Puiser dans ses réserves : la Stase et l'Effet Mnémos
 
@@ -67,6 +120,7 @@ Sous les menus, « Puiser dans ses réserves » propose ce qui convient **au jet
 | :--- | :--- | :--- | :--- |
 | **Stase (sort de Magie)** | un cercle de **Magie** est retenu | **+1 degré** de Ka par degré de stase (p. 183) | les degrés engagés, sur la fiche |
 | **Effet Mnémos (1 PS : +2 degrés)** | un **Vécu** est retenu | **+2 degrés**, une fois par test (p. 119) | 1 Point de Sapience |
+| **Effet Mnémos, PS de Chute** | un **Vécu** est retenu | **+2 degrés**, une fois par test | 1 PS de Chute (une Chute mise en jeu, p. 152) |
 
 ![Un sort de Basse Magie 4 avec le Ka-Feu 5 et deux degrés de Stase puisés : (4 + 7) × 10 = 110 %](captures/jeu-nephilim-sort-et-stase.jpg)
 
@@ -116,13 +170,18 @@ jamais son maximum.
 
 ![Le bandeau : Seuil RK 4, Jauge de Traque 3 sur 4, Intensité de la Traque 2](captures/jeu-nephilim-reserves.jpg)
 
-Trois réserves au bandeau :
+![Le bandeau : le Seuil RK, la Traque et son Intensité, puis le Lieu magique et la Conjonction](captures/jeu-nephilim-lieu-magique.jpg)
+
+Six réserves au bandeau :
 
 | Réserve | À qui | Ce qu'elle fait |
 | :--- | :--- | :--- |
 | **Seuil RK** | au meneur, de 2 à 9 | La tolérance occulte du **lieu** : 2–3 zone surveillée, 8–9 zone sauvage. **Réglez-la en changeant de lieu** |
 | **Jauge de Traque** | aux joueurs | Elle a **autant de cases que le Seuil RK**. À ce seuil, GM-OS la vide et fait monter l'Intensité d'un cran **aussitôt** |
 | **Intensité de la Traque** | au meneur, de 1 à 5 | 1 : aucun interdit · 2 : un Vécu ou une approche sacrifiés · 3 : un élément interdit · 4 : une discipline bloquée · 5 : Pentacle interdit |
+| **Lieu magique** | au meneur | Aucun, un **Plexus** de chaque élément, un **Nexus** : il s'affiche par son nom ; les jets y gagnent leur bonus (p. 160) |
+| **Conjonction** | au meneur | Aucune, ou l'élément du jour ; le meneur en décide, le livre dit que la mécanique astrologique est brisée (p. 159) |
+| **Intensité** | au meneur, de 1 à 5 | 1 : conjonction simple (+1) ; 2 à 5 : Grande conjonction (±2 à ±5) |
 
 La Traque monte d'un jeton par scène d'approche, de Science occulte, de Vécu passé ou de recherche
 au-delà du Seuil RK : c'est vous qui l'ajoutez, GM-OS ne devine pas une scène. Pour juger du
@@ -135,7 +194,7 @@ qu'un oubli. Si la scène l'exige, reportez la montée à l'aube à la main.
 
 **Début de séance** (au bandeau, meneur) : chaque jauge de **Materiae Primae** revient à son
 maximum, lu sur la fiche (« MP Max ») — elles « reviennent à leur maximum entre chaque session de
-jeu » (p. 219). Le geste s'applique **aussitôt**, sans aperçu ; un message dit combien de fiches
+jeu » (p. 219). Les **mises en jeu** des Chutes et les **PS de Chute** non dépensés s'effacent (p. 152). Le geste s'applique **aussitôt**, sans aperçu ; un message dit combien de fiches
 ont été mises à jour.
 
 ---
@@ -145,15 +204,49 @@ ont été mises à jour.
 ![La carte de combat : trois cases temporaires cochées, puis une Conséquence mineure (−2) ; les Chutes en dessous](captures/jeu-nephilim-sante.jpg)
 
 - **Initiative** : Ka-Eau × 2. L'option du livre (+1d6, « initiative variable ») reste à la table.
-- **Santé physique** en six cases : les **trois cases temporaires**, puis **Conséquence mineure
-  (−2)**, **sérieuse (−4)**, **grave (−6)**. Le livre fait choisir au joueur une case de valeur
-  égale ou supérieure aux dommages ; GM-OS ne connaît pas cette valeur : **cochez à la main**, avec
-  « Dégâts » et « Soins ».
-- Le malus d'une Conséquence n'est **pas retiré seul** au jet : passez-le en circonstances.
-- **Les Chutes** — Khaïba, Ombre, Narcose, de 0 à 10 — sont des jauges sur la carte. Leurs seuils
-  (5–7, 8–9, 10) restent à la table.
+- **Santé physique** en six cases sur la carte de combat : les **trois cases temporaires**, puis
+  **Conséquence mineure (−2)**, **sérieuse (−4)**, **grave (−6)**. Pour encaisser selon le livre,
+  servez-vous de la carte **Santé et dommages** de la fiche (ci-dessous).
+- Le malus des Conséquences se retire **seul au jet** depuis le 23/10 (voir « Ce que le jet sait de plus »).
+- **Les Chutes** — Khaïba, Ombre, Narcose, de 0 à 10 — sont des jauges sur la carte ; leurs paliers se
+  lisent dans la carte **Les Chutes** de la fiche.
 - Préparer un sort prend **1 round**, une invocation **autant de rounds que son degré** (sauf
   Invocation rapide), sans autre action pendant ce temps (errata p. 127).
+
+### Les cartes de la fiche — 2026-10-23
+
+Dans l'onglet **Lancer un test**, sous le jet, quatre cartes repliables.
+
+![Santé et dommages : 5 degrés physiques, et les façons permises de les absorber](captures/jeu-nephilim-encaisser.jpg)
+
+**Santé et dommages** (p. 135-139). Deux pistes, **physique** et **magique** : les cases de 1, 2 et 3 —
+et, sur la piste physique, les cases de 1 que donne le Ka-Terre (5 et plus, 10 et plus) —, puis les trois
+Conséquences. **Encaisser N degrés**, puis **Proposer** : GM-OS ne propose que ce que le livre permet,
+**une seule case** de valeur suffisante (la plus petite libre), ou des **Conséquences** et une case pour
+le reste ; un clic coche, et le compte des cases suit sur la fiche. Rien ne suffit : **hors de combat**
+(physique), ou **un degré de Chute** au choix (magique). **Cinq minutes de repos** décoche les cases
+d'une piste. Une Conséquence cochée dit sa durée de guérison (11 − Ka-Terre, en jours, semaines, mois ;
+en heures, jours, semaines pour le magique). Une Conséquence magique se **transfère à la stase**, qui perd
+autant de degrés (p. 139). Le critique double les dommages et la protection les réduit : c'est vous qui
+dites le total.
+
+![Les Chutes : degrés, mise en jeu, forme du Khaïba](captures/jeu-nephilim-chutes.jpg)
+
+**Les Chutes** (p. 148-152). Chaque Chute dit son **palier** : à 5-7 ses effets (selon la **forme du
+Khaïba**, choisie au premier degré), à 8 le joueur confie son Nephilim au MJ, à 10 la perte est
+définitive. **Mettre en jeu** une Chute de 1 à 4, une fois par séance, donne autant de **PS de Chute**,
+seulement pour un Effet Mnémos, perdus en fin de séance. Le meneur seul monte ou baisse les degrés.
+
+**La stase** (p. 113, 139 ; errata). Le degré et son plafond, le Ka dominant ; **Quitter la stase :
+pleine**, **Un jour en Plexus ou Nexus : +1** (errata p. 160 : un degré par jour, et non par heure),
+**Tester la stase** (son Ka actuel, sans modificateur) après un Effet Jésus ou un jour hors d'un
+Simulacre. Vide, la carte rappelle le test de Ka quotidien et ses Conséquences.
+
+**Expérience** (p. 154-155), au meneur, en fin de séance : choisissez un Vécu, un Art, le métamorphe,
+une quête, un Ka ou un maximum de Materiae Primae, et GM-OS dit ce que coûte le degré suivant — la
+valeur visée, démultipliée au-delà de 5 et de 10 (10, 15, 20, 30, 50, puis 100) ; dix fois la valeur
+visée pour un Ka, 100 de plus par degré au-delà de 10 ; 1 PS pour une jauge de MP. Le premier degré
+d'un élément s'acquiert par un Effet Mnémos permanent, pas ici.
 
 ---
 
@@ -220,12 +313,15 @@ le **Druide** (*Le sanctuaire des Tuatha de Danann*) la description du Chasseur 
 
 ## Ce qui reste à la main
 
-- Les **Points de Sapience** hors de l'Effet Mnémos de bonus : priorité d'initiative, Effet Mnémos
-  **en tant que Vécu** (1 PS par degré, quand aucun Vécu ne s'applique), **Sacrifice** (5 PS, un sort
-  réussi d'office), Effets Mnémos permanents (+5 PS).
-- La **recharge** de la Stase — pleine en la quittant, puis un degré par jour en Plexus ou Nexus.
-- Le second élément d'une formule de l'**Œuvre au blanc** ; l'assemblage et l'activation des
-  constructs (p. 216–217).
-- Le **pacte de Kabbale** : un test en opposition, Art de la Sephirah + Ka contre le degré de
-  l'invocation, que GM-OS ne compare pas.
-- Les seuils des Chutes, les malus des Conséquences.
+- La **priorité d'initiative** pour 1 PS, les **Effets Mnémos permanents** (+5 PS) et celui qui réduit
+  le temps d'une enquête (3 PS).
+- L'**activation** des constructs (un degré de Ka donné, ou une Materia Prima transmutée par un test) et
+  leur assemblage d'un mois (p. 216-217) : notez le résultat sur la fiche.
+- La **protection**, l'**orichalque**, les **poisons** : le total des dommages se dit à la carte Santé.
+- La **remise en stase** et l'**Effet Jésus** se racontent ; la carte Stase lance le test.
+- **Deuxième chance** : une nouvelle approche pour retenter une action ratée (p. 122).
+- Les cases de santé nommées, les mises en jeu et les PS de Chute vivent sur la fiche GM-OS seule : la
+  fiche HTML garde le compte des cases, que GM-OS tient à jour. La **forme du Khaïba** (page 1), le
+  **second Ka-élément** des formules (page 7) et l'**assemblage** des constructs (page 6) sont sur les
+  deux fiches depuis le 23/10 au soir ([consigne au Studio](../Planning/2026-10-23-consigne-studio-nephilim-finir.md)) :
+  un choix fait sur l'une se retrouve sur l'autre, après « Sauvegarder ».

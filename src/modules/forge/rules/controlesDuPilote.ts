@@ -959,8 +959,55 @@ export function controlerLePilote(
         try { new RegExp(consommation.elementSur?.remplacer ?? ''); } catch {
             erreur('jet.consommation.elementSur', `« ${consommation.label} » : « ${consommation.elementSur?.remplacer} » n'est pas une expression valable.`);
         }
+        try { new RegExp(consommation.elementSecondSur?.remplacer ?? ''); } catch {
+            erreur('jet.consommation.elementSecondSur', `« ${consommation.label} » : « ${consommation.elementSecondSur?.remplacer} » n'est pas une expression valable.`);
+        }
         for (const [element, champ] of Object.entries(consommation.champs ?? {})) {
             if (!tousLesChamps.has(champ)) erreur('jet.consommation.champs', `« ${consommation.label} » ${element} se retire de « ${champ} », absent de la fiche.`);
+        }
+    }
+    // Nephilim jusqu'au bout (2026-10-23) : chaque champ, section, composante et réserve que `jet.nephilim` nomme.
+    const neph = driver.jet?.nephilim;
+    if (neph) {
+        if (driver.jet?.cible?.mecanique !== 'nephilim') {
+            avertir('jet.nephilim', 'Le bloc Nephilim ne sert qu’avec la cible de mécanique « nephilim » : il sera ignoré.');
+        }
+        const pistes = [['physique', neph.sante?.physique], ['magique', neph.sante?.magique]] as const;
+        const champsNommes: [string, string | undefined][] = [
+            ['kaDominant.choix', neph.kaDominant?.choix], ['kaDominant.degre', neph.kaDominant?.degre], ['kaTerre', neph.kaTerre],
+            ...Object.entries(neph.pentacle ?? {}).map(([k, v]) => [`pentacle.${k}`, v] as [string, string]),
+            ['sapience', neph.sapience], ['stase', neph.stase], ['vecuContemporain', neph.vecuContemporain],
+            ['chutes.khaiba', neph.chutes?.khaiba], ['chutes.ombre', neph.chutes?.ombre], ['chutes.narcose', neph.chutes?.narcose],
+            ['chutes.forme', neph.chutes?.forme], ['chutes.sapienceDeChute', neph.chutes?.sapienceDeChute],
+            ...Object.entries(neph.chutes?.misesEnJeu ?? {}).map(([k, v]) => [`chutes.misesEnJeu.${k}`, v] as [string, string]),
+            ['metamorphe.degre', neph.metamorphe?.degre], ['metamorphe.visibles', neph.metamorphe?.visibles],
+            ...(neph.metamorphe?.permanentes ?? []).map(c => ['metamorphe.permanentes', c] as [string, string]),
+            ['pacte.ordonnances', neph.pacte?.ordonnances],
+            ...Object.entries(neph.alchimie?.assemblage ?? {}).map(([k, v]) => [`alchimie.assemblage.${k}`, v] as [string, string]),
+            ...Object.keys(neph.alchimie?.oeuvres ?? {}).map(k => [`alchimie.oeuvres`, k] as [string, string]),
+            ...pistes.flatMap(([nom, p]) => [
+                ...(p?.cases ?? []).map(c => [`sante.${nom}.cases`, c.champ] as [string, string]),
+                ...(p?.consequences ?? []).map(c => [`sante.${nom}.consequences`, c.champ] as [string, string]),
+                [`sante.${nom}.compte`, p?.compte] as [string, string | undefined],
+            ]),
+        ];
+        for (const [ou, champ] of champsNommes) {
+            if (champ && !tousLesChamps.has(champ)) erreur(`jet.nephilim.${ou}`, `Nephilim lit « ${champ} », absent de la fiche.`);
+        }
+        for (const [ou, liste] of [['arts.magie', neph.arts?.magie], ['arts.kabbale', neph.arts?.kabbale], ['arts.alchimie', neph.arts?.alchimie], ['vecusPasses', neph.vecusPasses]] as const) {
+            for (const section of liste ?? []) {
+                if (!idsDeSections.has(section)) avertir(`jet.nephilim.${ou}`, `Nephilim range la section « ${section} », absente de la fiche : aucun jet n’en viendra.`);
+            }
+        }
+        for (const [nom, id] of Object.entries(neph.composantes ?? {})) {
+            if (id && !composantesDuDescripteur.has(id)) erreur(`jet.nephilim.composantes.${nom}`, `Nephilim lit la composante « ${id} », que le jet ne déclare pas.`);
+        }
+        for (const [nom, id] of Object.entries(neph.table ?? {})) {
+            if (id && !ressources.has(id)) erreur(`jet.nephilim.table.${nom}`, `Nephilim lit la réserve de table « ${id} », que le pilote ne déclare pas.`);
+        }
+        for (const [ou, motif] of [['pacte.motif', neph.pacte?.motif], ['alchimie.secondElement.remplacer', neph.alchimie?.secondElement?.remplacer]] as const) {
+            if (!motif) continue;
+            try { new RegExp(motif); } catch { erreur(`jet.nephilim.${ou}`, `« ${motif} » n'est pas une expression valable.`); }
         }
     }
     // Une composante filtrée par un motif : il doit être une expression valable.
@@ -1821,6 +1868,10 @@ export function controlerLePilote(
 
     // ---- Les réserves de table ---------------------------------------------
     (driver.ressourcesDeTable ?? []).forEach((ressource, i) => {
+        // Une réserve qui se lit par son nom (Nephilim, 2026-10-23) : un libellé par valeur, de min à max.
+        if (ressource.libelles && (ressource.max === undefined || ressource.libelles.length !== ressource.max - ressource.min + 1)) {
+            avertir(`ressourcesDeTable[${i}].libelles`, `« ${ressource.label} » a ${ressource.libelles.length} libellés pour ${ressource.max === undefined ? 'aucun plafond' : `${ressource.max - ressource.min + 1} valeurs`} : une valeur sans nom s'affichera en chiffre.`);
+        }
         const report = ressource.reportSurEpuisement;
         if (report && !ressources.has(report)) {
             erreur(

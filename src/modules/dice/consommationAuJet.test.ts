@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { consommationDuJet, direLaConsommation, type ConsommationAuJet } from './consommationAuJet';
+import { consommationDuJet, consommationsDuJet, direLaConsommation, type ConsommationAuJet } from './consommationAuJet';
 
 /**
  * **Les Materiae Primae d'une transmutation** — Nephilim, Quintessence p. 220 :
@@ -43,5 +43,14 @@ describe('les Materiae Primae d’une transmutation', () => {
         expect(consommationDuJet(MP, RETENUS, { ...FICHE, alchemy_formulas_3_degree: 0 }, 'reussite-normale')).toBeNull();
         expect(consommationDuJet(MP, RETENUS, { ...FICHE, alchemy_formulas_3_element: '' }, 'reussite-normale')).toBeNull();
         expect(consommationDuJet(undefined, RETENUS, FICHE, 'reussite-normale')).toBeNull();
+    });
+    it('une formule de l’Œuvre au blanc consomme ses deux éléments ; « double Ka-Lune », deux fois la même jauge (p. 220, 229)', () => {
+        const blanc = { ...MP, elementSecondSur: { remplacer: '_degree$', par: '_element2' }, champs: { ...MP.champs, Lune: 'alchemy_materia_moon' } };
+        const fiche = { ...FICHE, alchemy_formulas_3_element2: 'Feu', alchemy_materia_fire: 3 };
+        expect(consommationsDuJet(blanc, RETENUS, fiche, 'echec-normal').map(direLaConsommation))
+            .toEqual(['Materiae Primae Eau −4 → 2', 'Materiae Primae Feu −4 → 0 — il en manquait 1 : Ka du construct, du Pentacle ou de la stase à sacrifier (p. 218)']);
+        const lune = { ...FICHE, alchemy_formulas_3_element: 'Lune', alchemy_formulas_3_element2: 'Lune', alchemy_materia_moon: 9 };
+        expect(consommationsDuJet(blanc, RETENUS, lune, 'reussite-normale')).toMatchObject([{ element: 'Lune', quantite: 8, apres: 1 }]);
+        expect(consommationsDuJet(blanc, RETENUS, FICHE, 'reussite-normale')).toHaveLength(1);
     });
 });

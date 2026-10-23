@@ -185,7 +185,12 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                             une réserve sans plafond ne le peut pas — la Menace n'a
                             pas de maximum, et six carrés lui en inventeraient un.
                         */}
-                        {max !== undefined ? (
+                        {r.libelles?.length ? (
+                            // Une réserve qui se lit par son nom : le lieu magique de Nephilim.
+                            <span data-libelle-de-reserve className="font-bold text-sm text-app-text/80 min-w-[7rem] text-center">
+                                {r.libelles[valeur - r.min] ?? valeur}
+                            </span>
+                        ) : max !== undefined ? (
                             <div className={`flex items-center gap-1 ${pourLesJoueurs ? 'flex-wrap' : ''}`}>
                                 {Array.from({ length: Math.max(0, max) }, (_, i) => (
                                     <span

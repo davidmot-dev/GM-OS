@@ -25,6 +25,11 @@ export interface ConsommationAuJet {
     champs: Record<string, string>;
     /** Les résultats qui ne consomment rien : le critique. */
     conserveeSur?: ('critique')[];
+    /**
+     * Le second élément d'une formule de l'Œuvre au blanc (2026-10-23) : la même
+     * quantité de Materiae Primae de cet élément-là aussi (p. 220).
+     */
+    elementSecondSur?: { remplacer: string; par: string };
 }
 
 export type Consommation =
@@ -46,14 +51,37 @@ export function consommationDuJet(
     valeurs: Record<string, unknown>,
     degre: DegreDeReussite | undefined,
 ): Consommation | null {
-    if (!regle) return null;
+    return consommationsDuJet(regle, retenus, valeurs, degre)[0] ?? null;
+}
+
+/** Tout ce que ce jet consomme : un élément, ou deux pour une formule de l'Œuvre au blanc. */
+export function consommationsDuJet(
+    regle: ConsommationAuJet | undefined,
+    retenus: Record<string, string>,
+    valeurs: Record<string, unknown>,
+    degre: DegreDeReussite | undefined,
+): Consommation[] {
+    if (!regle) return [];
     const retenu = retenus[regle.composante];
-    if (!retenu) return null;
+    if (!retenu) return [];
     const quantite = Math.max(0, Math.floor(nombre(valeurs[retenu])));
-    if (quantite === 0) return null;
+    if (quantite === 0) return [];
+    const premiere = consommer(regle, retenu, regle.elementSur, quantite, valeurs, degre);
+    const seconde = regle.elementSecondSur ? consommer(regle, retenu, regle.elementSecondSur, quantite, valeurs, degre) : null;
+    // « Double Ka-Lune » (p. 229) : deux fois la même jauge, en une seule écriture.
+    if (premiere && seconde && premiere.element === seconde.element) {
+        return [consommer(regle, retenu, regle.elementSur, quantite * 2, valeurs, degre)!];
+    }
+    return [premiere, seconde].filter((c): c is Consommation => !!c);
+}
+
+function consommer(
+    regle: ConsommationAuJet, retenu: string, sur: { remplacer: string; par: string }, quantite: number,
+    valeurs: Record<string, unknown>, degre: DegreDeReussite | undefined,
+): Consommation | null {
     let champDeLElement: string;
     try {
-        champDeLElement = retenu.replace(new RegExp(regle.elementSur.remplacer), regle.elementSur.par);
+        champDeLElement = retenu.replace(new RegExp(sur.remplacer), sur.par);
     } catch {
         return null;
     }

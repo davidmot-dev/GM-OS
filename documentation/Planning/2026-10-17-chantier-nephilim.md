@@ -411,5 +411,31 @@ dit à l'aube, le manuel le signale) ; Alchimie option A (MP consommées à la m
    qui vise le champ retenu (`ajouter.composante`, `champDeLaSuite`) ; pilote par
    `materiae_au_jet.py`. ⚠️ Écrire les expressions **sans antislash** (`[.]`, `[0-9]`) : le shell
    les mange en route. À éprouver par David.
-5. À la main, sans projet : pacte de Kabbale en opposition, seuils des Chutes, malus des
-   Conséquences, Effet Mnémos « en tant que Vécu », Sacrifice, recharge de la Stase.
+5. ~~À la main, sans projet : pacte de Kabbale en opposition, seuils des Chutes, malus des
+   Conséquences, Effet Mnémos « en tant que Vécu », Sacrifice, recharge de la Stase.~~ — fait le
+   23/10 (§ 16).
+
+## 16 · Finir Nephilim — le 23/10/2026 (N1 à N9)
+
+David : *« je propose que l'on s'attaque à finir Nephilim Legend » ; GM-OS éteint ; périmètre complet N1–N9 ; cases de santé nommées ; lieu et conjonction réglés par le MJ au bandeau ; à partir de l'export du 22/10*. Le livre et l'errata relus sur chaque point, contre le pilote installé
+(export du 22/10) et le manuel.
+
+- **Code** : `src/modules/dice/systemes/nephilimRegles.ts` (pur : éléments et oppositions, lieu et
+  conjonction, malus des Conséquences, paliers et interdits des Chutes, mise en jeu, jet de Nephilim,
+  table des actions opposées et pacte, encaissement, durées de guérison, coûts de l'expérience, test de
+  stase, degré du Ka dominant) ; `jet.nephilim` dans `DescripteurDeJet` ; `NephilimAuJet.tsx` (options du
+  jet, suites, cartes Santé, Chutes, Stase, Expérience) branché dans `PanneauDeJet` ; réserves de table
+  à libellés (`libelles`) ; second élément consommé (`elementSecondSur`) ; contrôles de la Forge.
+- **Pilote 2.0.0** : `outils/nephilim-vecus/finir_nephilim.py` sur l'export du 22/10 →
+  `Export Dirvers/corriges/Nephilim_driver_gmos_finir.gmos-driver` ; zéro constat.
+- **Table des actions opposées** (p. 123), relue à la position des mots : échec contre maladresse,
+  l'actif l'emporte ; maladresse contre maladresse, personne.
+- **Pièges** : un champ calculé (le degré du Ka dominant) n'a pas sa valeur dans les valeurs brutes de
+  la fiche : le plafond de la Stase se lit sur le Pentacle. Le panneau porte désormais les cartes du jeu :
+  la capture règle la fenêtre sur sa hauteur. Les degrés visibles du métamorphe se comptent sur les
+  métamorphoses « permanente » déjà présentes, sans champ nouveau.
+- **Fiche HTML** (23/10 au soir) : la consigne au Studio livrée par David — forme du Khaïba, second
+  Ka-élément, assemblage ; 30 correspondances, validateur ACCEPTÉE, moteur `BUILTIN_VERSION` 16.
+- **Essai de David validé le 23/10** (« ok tout est bon tu peux valider. Commit et pousse »), pilote 2.0.0 réimporté.
+- **Reste** : l'essai sur tablette physique (déjà au registre).
+

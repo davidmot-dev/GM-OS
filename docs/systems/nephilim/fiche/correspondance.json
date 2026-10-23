@@ -144,6 +144,10 @@
       "fiche": "falls.khaiba"
     },
     {
+      "gmos": "falls_khaiba_form",
+      "fiche": "falls.khaiba.form"
+    },
+    {
       "gmos": "falls_khaiba_notes",
       "fiche": "falls.khaiba.notes"
     },
@@ -2888,6 +2892,10 @@
       "fiche": "alchemy.constructs.retort.water"
     },
     {
+      "gmos": "alchemy_constructs_retort_assembly",
+      "fiche": "alchemy.constructs.retort.assembly"
+    },
+    {
       "gmos": "alchemy_constructs_aludel_fire",
       "fiche": "alchemy.constructs.aludel.fire"
     },
@@ -2906,6 +2914,10 @@
     {
       "gmos": "alchemy_constructs_aludel_water",
       "fiche": "alchemy.constructs.aludel.water"
+    },
+    {
+      "gmos": "alchemy_constructs_aludel_assembly",
+      "fiche": "alchemy.constructs.aludel.assembly"
     },
     {
       "gmos": "alchemy_constructs_athanor_fire",
@@ -2928,6 +2940,10 @@
       "fiche": "alchemy.constructs.athanor.water"
     },
     {
+      "gmos": "alchemy_constructs_athanor_assembly",
+      "fiche": "alchemy.constructs.athanor.assembly"
+    },
+    {
       "gmos": "alchemy_constructs_crucible_fire",
       "fiche": "alchemy.constructs.crucible.fire"
     },
@@ -2948,6 +2964,10 @@
       "fiche": "alchemy.constructs.crucible.water"
     },
     {
+      "gmos": "alchemy_constructs_crucible_assembly",
+      "fiche": "alchemy.constructs.crucible.assembly"
+    },
+    {
       "gmos": "alchemy_constructs_alembic_fire",
       "fiche": "alchemy.constructs.alembic.fire"
     },
@@ -2966,6 +2986,10 @@
     {
       "gmos": "alchemy_constructs_alembic_water",
       "fiche": "alchemy.constructs.alembic.water"
+    },
+    {
+      "gmos": "alchemy_constructs_alembic_assembly",
+      "fiche": "alchemy.constructs.alembic.assembly"
     },
     {
       "gmos": "alchemy_materia_fire_max",
@@ -3020,6 +3044,10 @@
       "fiche": "alchemy.formulas.0.element"
     },
     {
+      "gmos": "alchemy_formulas_0_element2",
+      "fiche": "alchemy.formulas.0.element2"
+    },
+    {
       "gmos": "alchemy_formulas_0_degree",
       "fiche": "alchemy.formulas.0.degree"
     },
@@ -3054,6 +3082,10 @@
     {
       "gmos": "alchemy_formulas_1_element",
       "fiche": "alchemy.formulas.1.element"
+    },
+    {
+      "gmos": "alchemy_formulas_1_element2",
+      "fiche": "alchemy.formulas.1.element2"
     },
     {
       "gmos": "alchemy_formulas_1_degree",
@@ -3092,6 +3124,10 @@
       "fiche": "alchemy.formulas.2.element"
     },
     {
+      "gmos": "alchemy_formulas_2_element2",
+      "fiche": "alchemy.formulas.2.element2"
+    },
+    {
       "gmos": "alchemy_formulas_2_degree",
       "fiche": "alchemy.formulas.2.degree"
     },
@@ -3126,6 +3162,10 @@
     {
       "gmos": "alchemy_formulas_3_element",
       "fiche": "alchemy.formulas.3.element"
+    },
+    {
+      "gmos": "alchemy_formulas_3_element2",
+      "fiche": "alchemy.formulas.3.element2"
     },
     {
       "gmos": "alchemy_formulas_3_degree",
@@ -3164,6 +3204,10 @@
       "fiche": "alchemy.formulas.4.element"
     },
     {
+      "gmos": "alchemy_formulas_4_element2",
+      "fiche": "alchemy.formulas.4.element2"
+    },
+    {
       "gmos": "alchemy_formulas_4_degree",
       "fiche": "alchemy.formulas.4.degree"
     },
@@ -3198,6 +3242,10 @@
     {
       "gmos": "alchemy_formulas_5_element",
       "fiche": "alchemy.formulas.5.element"
+    },
+    {
+      "gmos": "alchemy_formulas_5_element2",
+      "fiche": "alchemy.formulas.5.element2"
     },
     {
       "gmos": "alchemy_formulas_5_degree",
@@ -3236,6 +3284,10 @@
       "fiche": "alchemy.formulas.6.element"
     },
     {
+      "gmos": "alchemy_formulas_6_element2",
+      "fiche": "alchemy.formulas.6.element2"
+    },
+    {
       "gmos": "alchemy_formulas_6_degree",
       "fiche": "alchemy.formulas.6.degree"
     },
@@ -3270,6 +3322,10 @@
     {
       "gmos": "alchemy_formulas_7_element",
       "fiche": "alchemy.formulas.7.element"
+    },
+    {
+      "gmos": "alchemy_formulas_7_element2",
+      "fiche": "alchemy.formulas.7.element2"
     },
     {
       "gmos": "alchemy_formulas_7_degree",
@@ -3308,6 +3364,10 @@
       "fiche": "alchemy.formulas.8.element"
     },
     {
+      "gmos": "alchemy_formulas_8_element2",
+      "fiche": "alchemy.formulas.8.element2"
+    },
+    {
       "gmos": "alchemy_formulas_8_degree",
       "fiche": "alchemy.formulas.8.degree"
     },
@@ -3342,6 +3402,10 @@
     {
       "gmos": "alchemy_formulas_9_element",
       "fiche": "alchemy.formulas.9.element"
+    },
+    {
+      "gmos": "alchemy_formulas_9_element2",
+      "fiche": "alchemy.formulas.9.element2"
     },
     {
       "gmos": "alchemy_formulas_9_degree",
@@ -3380,6 +3444,10 @@
       "fiche": "alchemy.formulas.10.element"
     },
     {
+      "gmos": "alchemy_formulas_10_element2",
+      "fiche": "alchemy.formulas.10.element2"
+    },
+    {
       "gmos": "alchemy_formulas_10_degree",
       "fiche": "alchemy.formulas.10.degree"
     },
@@ -3414,6 +3482,10 @@
     {
       "gmos": "alchemy_formulas_11_element",
       "fiche": "alchemy.formulas.11.element"
+    },
+    {
+      "gmos": "alchemy_formulas_11_element2",
+      "fiche": "alchemy.formulas.11.element2"
     },
     {
       "gmos": "alchemy_formulas_11_degree",
@@ -3452,6 +3524,10 @@
       "fiche": "alchemy.formulas.12.element"
     },
     {
+      "gmos": "alchemy_formulas_12_element2",
+      "fiche": "alchemy.formulas.12.element2"
+    },
+    {
       "gmos": "alchemy_formulas_12_degree",
       "fiche": "alchemy.formulas.12.degree"
     },
@@ -3486,6 +3562,10 @@
     {
       "gmos": "alchemy_formulas_13_element",
       "fiche": "alchemy.formulas.13.element"
+    },
+    {
+      "gmos": "alchemy_formulas_13_element2",
+      "fiche": "alchemy.formulas.13.element2"
     },
     {
       "gmos": "alchemy_formulas_13_degree",
@@ -3524,6 +3604,10 @@
       "fiche": "alchemy.formulas.14.element"
     },
     {
+      "gmos": "alchemy_formulas_14_element2",
+      "fiche": "alchemy.formulas.14.element2"
+    },
+    {
       "gmos": "alchemy_formulas_14_degree",
       "fiche": "alchemy.formulas.14.degree"
     },
@@ -3558,6 +3642,10 @@
     {
       "gmos": "alchemy_formulas_15_element",
       "fiche": "alchemy.formulas.15.element"
+    },
+    {
+      "gmos": "alchemy_formulas_15_element2",
+      "fiche": "alchemy.formulas.15.element2"
     },
     {
       "gmos": "alchemy_formulas_15_degree",
@@ -3596,6 +3684,10 @@
       "fiche": "alchemy.formulas.16.element"
     },
     {
+      "gmos": "alchemy_formulas_16_element2",
+      "fiche": "alchemy.formulas.16.element2"
+    },
+    {
       "gmos": "alchemy_formulas_16_degree",
       "fiche": "alchemy.formulas.16.degree"
     },
@@ -3630,6 +3722,10 @@
     {
       "gmos": "alchemy_formulas_17_element",
       "fiche": "alchemy.formulas.17.element"
+    },
+    {
+      "gmos": "alchemy_formulas_17_element2",
+      "fiche": "alchemy.formulas.17.element2"
     },
     {
       "gmos": "alchemy_formulas_17_degree",
@@ -3668,6 +3764,10 @@
       "fiche": "alchemy.formulas.18.element"
     },
     {
+      "gmos": "alchemy_formulas_18_element2",
+      "fiche": "alchemy.formulas.18.element2"
+    },
+    {
       "gmos": "alchemy_formulas_18_degree",
       "fiche": "alchemy.formulas.18.degree"
     },
@@ -3702,6 +3802,10 @@
     {
       "gmos": "alchemy_formulas_19_element",
       "fiche": "alchemy.formulas.19.element"
+    },
+    {
+      "gmos": "alchemy_formulas_19_element2",
+      "fiche": "alchemy.formulas.19.element2"
     },
     {
       "gmos": "alchemy_formulas_19_degree",
@@ -3740,6 +3844,10 @@
       "fiche": "alchemy.formulas.20.element"
     },
     {
+      "gmos": "alchemy_formulas_20_element2",
+      "fiche": "alchemy.formulas.20.element2"
+    },
+    {
       "gmos": "alchemy_formulas_20_degree",
       "fiche": "alchemy.formulas.20.degree"
     },
@@ -3774,6 +3882,10 @@
     {
       "gmos": "alchemy_formulas_21_element",
       "fiche": "alchemy.formulas.21.element"
+    },
+    {
+      "gmos": "alchemy_formulas_21_element2",
+      "fiche": "alchemy.formulas.21.element2"
     },
     {
       "gmos": "alchemy_formulas_21_degree",
@@ -3812,6 +3924,10 @@
       "fiche": "alchemy.formulas.22.element"
     },
     {
+      "gmos": "alchemy_formulas_22_element2",
+      "fiche": "alchemy.formulas.22.element2"
+    },
+    {
       "gmos": "alchemy_formulas_22_degree",
       "fiche": "alchemy.formulas.22.degree"
     },
@@ -3846,6 +3962,10 @@
     {
       "gmos": "alchemy_formulas_23_element",
       "fiche": "alchemy.formulas.23.element"
+    },
+    {
+      "gmos": "alchemy_formulas_23_element2",
+      "fiche": "alchemy.formulas.23.element2"
     },
     {
       "gmos": "alchemy_formulas_23_degree",

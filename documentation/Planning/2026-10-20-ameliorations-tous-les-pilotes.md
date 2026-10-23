@@ -50,7 +50,7 @@ conformément à la décision de David du 19/10.
 | [Crimes](#crimes) | 🟢 13 · 🟠 0 · 🔴 0 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** ; **tous les lots livrés et essayés le 23/10** : circonstances, hermétiques, opposition, psychologie et seuils, manœuvres, contacts, fortune, création (registre § 157–161) | Rien : tous les lots faits ; tir multiple, intimider, rivalités et fortune commune restent au meneur |
 | [Cthulhu Hack](#cthulhu-hack) | 🟢 5 · 🟠 0 · 🔴 0 | Cinq améliorations livrées et essayées par David le 23/10 contre le livre français (p. 31–32, 34, 42, 50–52), registre § 164 | Rien sur ces cinq lots ; soins spéciaux et suites mentales restent des sujets d'audit séparés |
 | [Dune](#dune) | 🟢 1 · 🟠 0 · 🔴 8 | Audit détaillé ; projet futur garé | Spécialisations et paiements Impulsion/Menace lors d'une reprise |
-| [Nephilim Légende](#nephilim-légende) | 🟢 0 · 🟠 1 · 🔴 5 | Plusieurs anciens lots réalisés ; restes documentés | Conséquences/Chutes, Stase et pacte de Kabbale |
+| [Nephilim Légende](#nephilim-légende) | 🟢 9 · 🟠 1 · 🔴 0 | **N1–N9 livrés et essayés le 23/10** (registre § 165) : tout le livre au jet et sur la fiche | L'essai sur tablette physique |
 | [NOC](#noc) | 🟢 1 · 🟠 1 · 🔴 5 | Restes revérifiés dans le code le 19/10 ; **Séquelle proposée à 8 le 22/10** (registre § 150), essai de David validé | Singularité attribuée par un Rouage |
 | [Rêve de Dragon](#rêve-de-dragon) | 🟢 0 · 🟠 1 · 🔴 5 | Socle R0–R7 livré pour les PJ ; première boucle TMR livrée ; mécaniques du Voyageur dans l'onglet « Lancer un test » le 22/10 | Initiative complète et suites du Haut-Rêve |
 | [Star Trek Adventures](#star-trek-adventures) | 🟢 0 · 🟠 1 · 🔴 4 | Pilote et LCARS documentés ; audit mécanique détaillé à faire | Export actuel, règles de la deuxième édition et essais matériels LCARS |
@@ -311,19 +311,29 @@ des critiques, Ka dominant sur les deux fiches et plafond de Stase, Alchimie ave
 des Materiae Primae au lancer, recharge des MP, 31 époques et 155 Vécus, suggestions sur tablette.
 Les captures correspondantes existent.
 
-| Priorité | Amélioration encore possible |
-| --- | --- |
-| 🔴 P1 | Proposer les malus des Conséquences au jet et les alertes aux seuils des Chutes |
-| 🔴 P1 | Assister le pacte de Kabbale en opposition, avec comparaison des résultats et suites choisies |
-| 🔴 P2 | Recharge contextualisée de Stase selon le livre/errata, avec temps écoulé et trace |
-| 🔴 P2 | Autres usages de Sapience : priorité, Effet Mnémos en tant que Vécu, Sacrifice et effets permanents |
-| 🔴 P2 | Second élément de l'Œuvre au blanc, assemblage et activation des constructs |
-| 🟠 Essai | Vérifier sur tablette physique les suggestions et, en séance, la consommation automatique des MP |
+| Lot | État | Ce qui est livré (23/10, pilote 2.0.0) |
+| --- | --- | --- |
+| 🟢 N1 | Livré et essayé le 23/10 | Malus des Conséquences au jet : physiques sur une action physique, magiques sur les Arts, retirés du Vécu avant l'approche (p. 137-138) |
+| 🟢 N2 | Livré et essayé le 23/10 | Santé en cases nommées, deux pistes ; « Encaisser N » propose les seules absorptions permises, hors de combat ou degré de Chute ; repos, transfert à la stase, durées de guérison (p. 135-139) |
+| 🟢 N3 | Livré et essayé le 23/10 | Paliers des Chutes et alerte dès 8 ; forme du Khaïba et ses interdits au jet ; mise en jeu (PS de Chute, une fois par séance) (p. 148-152) |
+| 🟢 N4 | Livré et essayé le 23/10 | Pacte de Kabbale en opposition, table des actions opposées et errata ; dommages et bannissement (p. 123, 198) |
+| 🟢 N5 | Livré et essayé le 23/10 | Stase : test, pleine en la quittant, +1 par jour en Plexus ou Nexus (errata p. 160), rappels de la remise en stase |
+| 🟢 N6 | Livré et essayé le 23/10 | Effet Mnémos en tant que Vécu, Sacrifice (réussite d'office), sort à retenter (1 PS ou 1 stase), Chute soignée par le critique, carte d'expérience (p. 118-119, 154-155, 183) |
+| 🟢 N7 | Livré et essayé le 23/10 | Second élément de l'Œuvre au blanc consommé, Ka le plus faible du construct ; assemblage des constructs contrôlé (p. 216-220 ; errata p. 217) |
+| 🟢 N8 | Livré et essayé le 23/10 | Lieu magique et conjonction au bandeau (réserves nommées) : bonus et malus aux Sciences occultes et aux approches (p. 160) |
+| 🟢 N9 | Livré et essayé le 23/10 | Métamorphe exprimé, Impressionner, métamorphoses permanentes ; Seuil RK et jeton de Traque proposé (p. 112-113 ; errata p. 146, 174) |
+| 🟠 Essai | Toujours ouvert | Vérifier sur tablette physique les suggestions et, en séance, la consommation automatique des MP |
 
 **Décisions à préserver :** les suites de critiques passent par un bouton ; l'option finale
 pour les MP est le débit **au lancer**, qui a remplacé le premier choix manuel. La Traque
 monte immédiatement au Seuil RK selon le choix de David, même si l'errata situe l'effet à l'aube.
-**Prochaine étape proposée :** Conséquences/Chutes, puis pacte ou Stase selon les personnages joués.
+**N1–N9 livrés le 23/10 (registre § 165)**, demande de David : *« je propose que l'on s'attaque à finir Nephilim Legend » ; GM-OS éteint ; périmètre complet N1–N9 ; cases de santé nommées ; lieu et conjonction réglés par le MJ au bandeau ; à partir de l'export du 22/10*. Module
+`src/modules/dice/systemes/nephilimRegles.ts`, cartes `NephilimAuJet.tsx`, pilote
+`Export Dirvers/corriges/Nephilim_driver_gmos_finir.gmos-driver` (`outils/nephilim-vecus/finir_nephilim.py`).
+**Essai de David validé le 23/10** (« ok tout est bon tu peux valider. Commit et pousse »). Vérifié : 36 essais du module et du panneau, 1 du bandeau, contrôles de la Forge (zéro constat sur le pilote), jet réel composé avec le pilote ; captures réelles dans Electron (14, dont 5 nouvelles) ; suite complète 8 904 essais verts. Points tranchés : les cases de bonus du
+Ka-Terre sur la piste physique seulement (la fiche n'en prévoit pas en magique) ; l'action physique cochée
+d'office quand une Conséquence physique l'est ; le malus magique sur les seuls Arts. La [consigne au Studio](2026-10-23-consigne-studio-nephilim-finir.md)
+est livrée le soir même (validateur ACCEPTÉE, moteur 16). **Suite :** l'essai sur tablette physique.
 Ne pas rouvrir ces choix en recopiant les premiers paragraphes historiques du chantier.
 
 ## NOC

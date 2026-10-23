@@ -35,6 +35,13 @@ l'errata officiel V1.3.
   l'élément et son degré calculé) après le Pentacle, la Stase plafonnée dessus (`maxSur`), et deux
   réserves au jet qui ajoutent des degrés à la cible — la Stase sur un sort de Magie, l'Effet Mnémos
   (1 PS : +2) sur un test de Vécu. À passer après `sections_des_arts.py`.
+- `finir_nephilim.py` — **finir Nephilim** (23/10, N1 à N9, pilote 2.0.0), à passer sur l'export du
+  22/10 (ou un pilote qui a déjà tout le reste) : cases de santé nommées, forme du Khaïba, mises en jeu
+  et PS de Chute, second élément des formules, section « Alchimie — assemblage des constructs », la
+  composante « Sort (Magie) », `jet.nephilim`, le second élément consommé, la réserve d'Effet Mnémos
+  payée par les PS de Chute, trois réserves de table (lieu magique, conjonction, intensité) et leurs
+  gestes de début de séance. Aucun champ n'entre dans une section proposée au menu du jet. Le
+  repasser ne double rien.
 - `alchimie_au_jet.py` — lot D (18/10, sans code) : les Ka des constructs dans une section à part,
   proposés par le menu « Approche (Ka) ou construct » ; les jauges de Materiae Primae à part ; et
   « Début de séance » qui remplit chaque jauge à son maximum (`gestesDesHeros.debutDeSeance`).
