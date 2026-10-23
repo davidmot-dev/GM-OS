@@ -1,6 +1,6 @@
 # 🐙 Jeu — Cthulhu Hack
 
-> **Pilote décrit :** « Cthulhu Hack » **1.1.0**, corrigé contre le livre français fourni par David et essayé par David le 23/10/2026. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Cthulhu Hack » **1.1.0**, exporté le 2026-10-23, corrigé contre le livre français fourni par David et essayé par David le 23/10/2026. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Deux gestes : la **Sauvegarde**, un d20 sous la caractéristique, et les **dés d'usure**, des
 ressources qui sont des dés et qui s'épuisent. Autour d'eux : la **Fortune**, la **Folie
