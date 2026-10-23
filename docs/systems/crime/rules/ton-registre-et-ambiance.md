@@ -7,7 +7,7 @@ sources: "Crimes 2 - Manuel de l'Enquèteur.pdf"
 sections: "« À quoi servent les règles? » ; « Des règles de natures différentes » ; « Un système modulable » ; « Tentation du néant et prise de risques » ; « Premiers pas: le genre » ; « Le concept »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: a895f90e
 ---
 
@@ -33,8 +33,8 @@ L'ambiance repose par défaut sur le réalisme et le naturalisme, enrichis par l
   3. Règles dramatiques (interprétation, convictions, folies).
 - Échelle de la modularité du système (section « Un système modulable »):
   1. Niveau élémentaire: potentiel GARDE compétence et état physique.
-  2. Niveau intermédiaire: angoisse, névrose, psychose et contacts.
-  3. Niveau complet: psychologie profonde, déchéance et styles d'enquête.
+  2. L'expérience de Crimes: névroses, psychoses et angoisses (la « psychologie profonde » du livre).
+  3. Puis les contacts ; le reste s'ajoute petit à petit, en écartant ce qui semble superflu (p. 381).
 - Évolution des personnages (section « Tentation du néant et prise de risques »):
   - Espoir d'un équilibre.
   - Déchéance (pouvoirs, stigmates et malédictions).
@@ -50,15 +50,15 @@ Concrètement, l'installation du ton, du registre et de l'ambiance s'incarne à 
 2. Choix du registre et du genre: Dès la préparation du scénario, le meneur et la table s'accordent sur le registre principal (réalisme naturaliste, fantastique gothique, romantisme noir ou symbolisme) pour guider les descriptions et l'atmosphère des enquêtes (section « Premiers pas: le genre », section « Le concept »).
 3. Gradation des règles selon l'expérience: Le meneur adapte la profondeur du système au niveau de la table en activant progressivement les modules (section « Un système modulable »):
 - Niveau élémentaire: résolution par Potentiel GARDE compétence et gestion des états physiques.
-- Niveau intermédiaire: prise en compte de l'angoisse, de la névrose, de la psychose et du réseau de contacts.
-- Niveau complet: intégration de la psychologie profonde, de la déchéance et des styles d'enquête.
+- Ensuite: névroses, psychoses et angoisses, qui interviennent dans la plupart des tests.
+- Puis: la gestion des contacts, et progressivement le reste (p. 381).
 4. Moteur dramatique et prise de risques: Les joueurs sont incités à confronter leurs personnages à leurs faiblesses et passions. L'accumulation des échecs et des traumatismes pousse l'enquêteur vers des choix moraux cornéliens, oscillant entre la quête d'un équilibre précaire et l'attraction de la déchéance (section « Tentation du néant et prise de risques »).
 
 ## Cas limites
 Le livre apporte des précisions sur plusieurs situations ambiguës concernant l'ambiance et la gestion des règles:
 
 - Conflit entre narration et mécanique: Si l'application stricte d'un point de règle nuit à la fluidité dramatique ou au suspense d'une scène d'horreur, la narration et la continuité de l'ambiance doivent prévaloir sur le calcul mécanique (section « À quoi servent les règles? »).
-- Transition entre registres: Une enquête débutant dans un réalisme historique et social strict peut basculer progressivement vers le fantastique gothique ou le symbolisme au fur et à mesure que les révélations et la perte de santé mentale altèrent la perception des joueurs (section « Le concept », section « Premiers pas: le genre »).
+- Pas d'enjeu, pas de jet: les tests se réservent aux moments stressants et aux actions vraiment difficiles ; « là où il n'y a pas d'enjeu, il n'y a pas de jet ! » (p. 380).
 
 ## Non couvert
 rien

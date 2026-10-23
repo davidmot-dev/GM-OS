@@ -7,7 +7,7 @@ sources: "Crimes 2 - Manuel de l'Enquèteur.pdf"
 sections: "« Gérer les combats » ; « L’initiative » ; « Le combat à distance » ; « Résolution des mêlées »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 58cc3932
 ---
 
@@ -20,7 +20,7 @@ L'initiative s'applique principalement aux tirs à distance, les mêlées de cor
 
 Si les circonstances ne sont pas claires, l'initiative se calcule selon la formule chiffrée (section « L’initiative »): Potentiel utilisé + Compétence utilisée - Angoisse actuelle. En cas d'égalité, les actions sont simultanées.
 
-Le combattant qui blesse son adversaire prend l'initiative à l'assaut suivant. En mêlée, avoir la meilleure initiative permet d'intercepter un tireur avant son tir ou de battre en retraite sans subir de coup. Le fuyard sans l'initiative subit une attaque gratuite tout en étant abasourdi.
+Le combattant qui blesse son adversaire prend l'initiative à l'assaut suivant (le blessé la perd, p. 390). En mêlée, avoir la meilleure initiative permet d'engager un tireur avant son tir, ou de battre en retraite sans subir de coup ; le fuyard sans l'initiative subit une dernière attaque en étant abasourdi, sauf test de Cirque réussi (p. 390, 393). Le meneur peut aussi décréter qu'un combattant expérimenté bat d'office un néophyte (p. 388).
 
 ## Valeurs
 - Unité de temps du combat: l'assaut.
@@ -51,8 +51,10 @@ Concrètement, un assaut de combat se déroule en appliquant successivement quat
 ## Cas limites
 Le livre détaille plusieurs situations particulières liées au déroulement de l'assaut et à l'initiative:
 
-- Interception d'un tireur: Un combattant au corps à corps possédant une meilleure initiative qu'un tireur peut se déplacer pour l'engager en mêlée avant son tir. Le tireur est alors abasourdi et ne peut pas faire feu durant cet assaut (section « Gérer les combats »).
-- Rupture de mêlée et retraite: Un combattant qui souhaite quitter le corps à corps doit avoir l'initiative sur son adversaire pour se dégager sans subir de coup. S'il tente de fuir sans avoir l'initiative, il subit une fuite désordonnée: son adversaire porte une attaque gratuite contre lui alors qu'il est abasourdi (section « Gérer les combats »). Le fuyard peut toutefois éviter l'état abasourdi s'il réussit un test de Cirque.
+- Engager un tireur: un combattant qui a la meilleure initiative peut engager en mêlée un tireur qui ne peut rien faire d'autre ; le tireur, prêt à tirer et non à se battre, est abasourdi et ne garde qu'un seul dé (section « Résolution des mêlées », p. 390).
+- Combat entre groupes: le camp qui cumule le plus de réussites inflige des blessures réparties entre les cibles déclarées ; pour ne pas désavantager les maîtres, le meneur peut faire tester un combattant contre chacun de ses adversaires (section « Combat entre groupes », p. 391).
+- Recharger (règle optionnelle): le temps de rechargement figure dans le tableau des armes ; un personnage angoissé (plus de 3) peut perdre un assaut de plus (p. 390).
+- Rupture de mêlée et retraite: Un combattant qui souhaite quitter le corps à corps doit avoir l'initiative sur son adversaire pour se dégager sans subir de coup. S'il tente de fuir sans avoir l'initiative, il subit une fuite désordonnée: son adversaire porte une attaque gratuite contre lui alors qu'il est abasourdi (sections « Battre en retraite » et « Fuir », p. 393). Le fuyard peut toutefois éviter l'état abasourdi s'il réussit un test de Cirque [acrobatie].
 - Égalité d'initiative: Lorsque deux scores d'initiative calculés sont identiques, les actions des deux protagonistes se déroulent en simultané complet (section « L’initiative »).
 
 ## Non couvert

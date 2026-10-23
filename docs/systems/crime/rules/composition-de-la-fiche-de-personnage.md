@@ -7,7 +7,7 @@ sources: "Crimes 2 - Manuel de l'Enquèteur.pdf"
 sections: "« L’identité » ; « Deux mesures: potentiel et compétences » ; « Psychologie de surface » ; « Psychologie profonde » ; « Fiches de personnages »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 533b2aeb
 ---
 
@@ -29,7 +29,7 @@ La fiche de personnage rassemble les paramètres mécaniques, narratifs et drama
 - Échelle des 3 degrés de maîtrise des compétences:
   1. Novice: 1D conservé (3 points).
   2. Pratiquant: 2D conservés (9 points).
-  3. Maître: 3D conservés (18 points + 1 spécialisation offerte).
+  3. Maître: 3D conservés (18 points ; une spécialisation offerte en passant maître, les autres s'achètent — on ne peut être spécialisé que là où l'on est maître, p. 324).
 - Budget de création des compétences:
   - Adulte: 45 points.
   - Personnage de 12 ans ou plus: 35 points.
@@ -43,8 +43,9 @@ La fiche de personnage rassemble les paramètres mécaniques, narratifs et drama
   2. Salarié (niveau 2).
   3. Classe moyenne (niveau 3).
   4. Opulence (niveau 4).
-- Allocation des contacts de base: 8 points (influence max: 2, loyauté max: 2).
-- Styles d'enquête (score de base 1 à 3): Condé, Limier, Illuminé, Mentaliste, Fouineur.
+- Allocation des contacts de base: 8 points ; influence au plus 2 ; loyauté au plus 2 sauf contacts universels ; un PNJ coûte 1 point × loyauté, un groupe 2 points × loyauté (p. 349).
+- Styles d'enquête (règle optionnelle, valeur de base 1 à 3 selon la meilleure compétence associée) : un seul au départ parmi Condé, Limier, Illuminé, Mentaliste, Fouineur (p. 352).
+- Compétences hermétiques (en italique sur la fiche) : sans elles, l'action ne se tente pas (p. 323-325).
 
 ## À la table
 Concrètement, l'utilisation de la fiche de personnage s'articule lors de la création et tout au long des séances de jeu:
@@ -57,8 +58,8 @@ Concrètement, l'utilisation de la fiche de personnage s'articule lors de la cr�
 ## Cas limites
 Le livre apporte des précisions sur la gestion de la fiche dans plusieurs configurations particulières:
 
-- Personnages enfants: La création d'un enfant de moins de 12 ans modifie la structure de la fiche en remplaçant la répartition classique des compétences par une réserve réduite de 24 points et en intégrant la jauge d'Innocence (section « Fiches de personnages »).
-- Gestion de l'équipe: L'équipe d'enquêteurs dispose d'une fiche collective distincte regroupant le nom du groupe, sa réputation, sa réserve de fortune commune, son niveau de fichage et ses jauges de cohésion et de résistance à la déchéance (section « Fiches de personnages »).
+- Personnages enfants: un enfant reçoit 24 points de compétences avant 12 ans, 35 à partir de 12 ans ; il répartit 12 points entre ses trois Potentiels et son seuil d'Innocence ; il n'a accès qu'aux rangs novice et pratiquant, avec jusqu'à deux spécialisations au niveau pratiquant (« Cas particulier : créer un enfant », p. 324).
+- Gestion de l'équipe: l'équipe a une fiche collective (nom, réputation de 1 à 4 — p. 296 —, objectifs, plots, une jauge propre). Les équipes prêtes-à-jouer du livre portent chacune **leur** jauge — cohésion, fortune de l'agence, résistance à la déchéance, fichage (p. 355-371) : ce sont des exemples, pas quatre jauges communes à toute équipe.
 - Évolution du personnage: Les modifications permanentes de la fiche (augmentation de compétences, gain de spécialisations ou de santé mentale) s'effectuent entre les scénarios par la dépense de points de développement (section « Fiches de personnages »).
 
 ## Non couvert

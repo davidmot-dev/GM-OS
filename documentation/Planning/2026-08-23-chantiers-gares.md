@@ -12460,8 +12460,7 @@ David, le 22/10 : *« oui on va sur crime C0, C1 »*, puis *« oui cela me va. G
   guides), captures `jeu-crimes-jet`, `-jet-lance`, `-garde-choisie`.
 - **Vérifié** : `tsc -b` et lint ; essais (moteur 11, descripteur 3, panneau 5, contrôles 5) ;
   captures de Crimes vertes ; suite complète **8 739 essais verts**.
-- **Reste** : réimport du pilote et essai de David. Hors lot : dépassement (C3), Potentiel actuel
-  (C2), Névrose écrite (C4), oppositions, pupitre.
+- **Essai** : essai de David validé le 22/10 (*« ok C1 à C6 est testé »*), avec C2 à C6. Hors lot : Névrose écrite (C4), jet gardé au pupitre.
 
 ### 158 · Crimes C2 et C3 — les atteintes des Potentiels, le dépassement — 22/10/2026
 
@@ -12500,8 +12499,7 @@ ne tournait (vérifié : seuls des outils de Codex). C2 et C3 du
 - **Pas réglé** : le constat de la Forge sur la santé du combat (« santé part de physique », sans
   champ courant) reste — la carte de combat tient ses propres points de vie ; les aligner sur le
   Physique actuel relève du combat (C6).
-- **Reste** : réimport du pilote `…_c2-c3` et essai de David (C1, C2 et C3 ensemble). Hors lot :
-  dégâts du combat, Névrose écrite (C4), tests psychotiques sans dépassement.
+- **Essai** : essai de David validé le 22/10 (*« ok C1 à C6 est testé »*). Hors lot : Névrose écrite (C4), tests psychotiques sans dépassement.
 
 ### 159 · Crimes C5 et C6 — le dossier d'enquête, les armes et l'attaque — 22/10/2026
 
@@ -12538,7 +12536,29 @@ trois choix : l'indice va **à l'enquêteur seul, puis se partage** ; les points
   localisations, assommer/immobiliser/intimider, tir multiple, décompte des munitions ; la Névrose
   des rivalités entre styles (C4). Pas de recette Electron pour la tablette qui reçoit l'indice
   privé : le serveur est essayé en unitaire.
-- **Reste** : réimport du pilote `…_c5-c6` et essai de David (C1 à C6 ensemble).
+- **Essai** : réimporté ; essai de David validé le 22/10 (*« ok C1 à C6 est testé »*).
+
+### 160 · Crimes C0 — les 19 fiches du corpus relues contre le livre — 23/10/2026
+
+David, le 23/10 : *« on va commencer par C0 »* (Claude Code). Trace complète :
+[relecture du corpus de Crimes](2026-10-23-relecture-corpus-crimes.md).
+
+- **Fait** : les 19 fiches de `docs/systems/crime/rules/` relues une à une, chaque affirmation
+  confrontée au livre, pages imprimées recalculées ; corrections, inventions retirées, options
+  rendues aux options ; `relu: true` sur les 19.
+- **Une correction de la veille** : la mort n'est pas automatique, mais le livre fixe −2 comme
+  consigne au meneur (implacable / logique / évitée selon la conduite, p. 393) — les fiches santé
+  et états, la page Crimes du manuel le disent désormais.
+- **Contradictions du livre exposées** : Névrose à la moitié (p. 409, 411) ou à zéro (p. 418)
+  après le seuil ; abasourdi (échec d'office, p. 386 ; un dé gardé au tir surpris, p. 390) ;
+  annonce du dépassement (avant, p. 385 ; après, exemple p. 407).
+- **Budget de la Forge** : le groupe « Dés et composition du jet » de Crimes dépassait (22 003 pour
+  21 024) ; doublons des bilans réduits, il tient.
+- **Proposé, pas fait (src)** : modificateur de seuil du jet gardé au tir (p. 389-390) ; consigne
+  de mort à −2 sur la carte des atteintes ; compétences hermétiques ; trois commentaires citant
+  la formule des dégâts en p. 395 au lieu de 393.
+- **Vérifié** : essais de la Forge et d'Electron ; suite complète **8 781 essais verts**.
+- **Reste** : la relecture de David, s'il le souhaite ; les suites de code ci-dessus.
 
 ## La vue d'un coup d'œil
 
@@ -12637,9 +12657,10 @@ trois choix : l'indice va **à l'enquêteur seul, puis se partage** ; les points
 | 90 | **Historique des fiches (H1), réserves au pupitre (C1)** | § 154 ; chaque modification de fiche au journal avec son origine ; le pupitre et la télécommande règlent les réserves d'un jet 2d20 (personnage ou PNJ) — faits le 22/10 | Essai de David | Rien |
 | 91 | **Symbaroum S3 et S4 — Avantage tactique, Corruption au seuil** | § 155 ; case Avantage tactique (+2, +1D4 aux dégâts, un seul d20) ; Stigmate et 1D4 permanent au Seuil de Corruption, Abomination à la Volonté — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
 | 92 | **Défauts des tablettes** | § 156 ; le refus d'un appareil s'affiche et propose une nouvelle identité ; recettes T0/T4/T5 revenues avec leur jeton, M1 et J2 alignées sur le 12/10 — toutes vertes (251 essais) le 22/10 | Rien | Rien |
-| 93 | **Crimes C0 et C1 — corpus, Potentiel GARDE Compétence** | § 157 ; quatre bilans, jet sans compétence, santé et points d'enquête corrigés au corpus ; jet gardé au moteur, au panneau (fiche et tablette), à la Forge, au pilote et au manuel — faits le 22/10 | Réimport du pilote et essai de David | Rien |
-| 94 | **Crimes C2 et C3 — atteintes, dépassement** | § 158 ; Potentiel actuel au jet, carte des atteintes, « Bonne nuit », dépassement annoncé une fois par scène ; fiche HTML (version 15), pilote `…_c2-c3`, manuel — faits le 22/10 | Réimport du pilote et essai de David | Rien |
-| 95 | **Crimes C5 et C6 — dossier d'enquête, armes** | § 159 ; points d'enquête par style, indices à seuils révélés à un seul enquêteur (sa seule tablette) puis partagés ; armes du livre, dégâts, portée, « Infliger » — faits le 22/10 | Réimport du pilote `…_c5-c6` et essai de David | Rien |
+| 93 | **Crimes C0 et C1 — corpus, Potentiel GARDE Compétence** | § 157 ; quatre bilans, jet sans compétence, santé et points d'enquête corrigés au corpus ; jet gardé au moteur, au panneau (fiche et tablette), à la Forge, au pilote et au manuel — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
+| 94 | **Crimes C2 et C3 — atteintes, dépassement** | § 158 ; Potentiel actuel au jet, carte des atteintes, « Bonne nuit », dépassement annoncé une fois par scène ; fiche HTML (version 15), pilote `…_c2-c3`, manuel — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
+| 95 | **Crimes C5 et C6 — dossier d'enquête, armes** | § 159 ; points d'enquête par style, indices à seuils révélés à un seul enquêteur (sa seule tablette) puis partagés ; armes du livre, dégâts, portée, « Infliger » — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
+| 96 | **Crimes C0 — relecture du corpus** | § 160 ; 19 fiches relues contre le livre, corrigées, `relu: true` ; contradictions du livre exposées ; mort à −2 rendue à sa consigne (p. 393) — fait le 23/10 | Rien : rapport validé par David le 23/10 ; suites de code C0.1 à C0.4 dans la synthèse | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

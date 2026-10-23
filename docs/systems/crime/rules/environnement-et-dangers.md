@@ -7,7 +7,7 @@ sources: "Crimes 2 - Manuel de l'Enquèteur.pdf"
 sections: "« Autres sources d’affliction » ; « Les chutes et les chocs » ; « Les poisons, alcools, maladies et autres substances » ; « Gérer les aléas de la scène »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 97e96fb3
 ---
 
@@ -20,14 +20,14 @@ Les chutes, collisions et chocs (section « Les chutes et les chocs ») infligen
 
 Les agressions chimiques, industrielles ou biologiques (section « Les poisons, alcools, maladies et autres substances ») comparent la virulence du danger à la résistance du personnage. Le jet s'effectue selon la formule: Potentiel Physique actuel GARDE dose contre un seuil égal à la virulence.
 
-Les aléas du terrain et du décor (section « Gérer les aléas de la scène ») modifient la difficulté des actions par des ajustements de situation ou des valeurs de couvert.
+Les aléas du terrain et du décor (section « Gérer les aléas de la scène ») déplacent le seuil des tirs (distance, mobilité, taille, de −1 à +1) et ajoutent un couvert à la protection (p. 389).
 
 ## Valeurs
 - Formule du test d'affliction (poisons, gaz, alcools, maladies): Potentiel Physique actuel GARDE dose.
 - Seuil de difficulté des afflictions: égal à la virulence (échelle de 1 à 10).
 - Niveaux de dose administrée (dés gardés):
   1. Faible dose: 3D gardés.
-  2. Dose moyenne: 2D gardés.
+  2. Dose moyenne: 2D gardés (exemple de l'alcool, p. 397).
   3. Dose létale: 1D gardé.
 - Échelle de virulence des dangers (du moins au plus virulent):
   1. Alcools courants, Blennorragie: virulence 3 à 5.
@@ -39,21 +39,22 @@ Les aléas du terrain et du décor (section « Gérer les aléas de la scène »
   7. Peste noire: virulence 10.
 - Esquive des chutes et chocs: test de Cirque [acrobatie] pour amortir les blessures.
 - Couvert et décor: 1 à 3 points de protection.
-- Modificateurs d'aléas de scène: de -1 à +1 au résultat.
+- Modificateurs d'aléas de scène: de −1 à +1 au seuil du tir, pour la distance, la mobilité et la taille de la cible (p. 389).
 
 ## À la table
 Concrètement, la confrontation aux périls environnementaux s'articules lors des scènes d'exploration, de danger ou de drame:
 
 1. Exposition aux éléments et objets: Lorsqu'un personnage chute de hauteur ou subit un choc (écrasement, collision), le meneur évalue l'impact et inflige des blessures selon la violence reçue (section « Les chutes et les chocs »). Le joueur peut annuler ou amortir ces blessures en réussissant un test d'esquive sous la compétence Cirque [acrobatie].
-2. Agression chimique et biologique: En cas d'ingestion ou d'exposition à du poison, du gaz, de l'alcool, une drogue ou une maladie (section « Les poisons, alcools, maladies et autres substances »), le joueur jette autant de dés que son Potentiel Physique actuel et garde un nombre de dés fixé par la dose (1D pour une dose létale, 2D pour une dose moyenne, 3D pour une dose faible). Il doit obtenir un nombre de réussites au moins égal à la virulence du danger pour y résister. En cas d'échec, il subit l'affliction correspondante (épuisement, blessures, baisse de Potentiel ou mort).
+2. Agression chimique et biologique: En cas d'ingestion ou d'exposition à du poison, du gaz, de l'alcool, une drogue ou une maladie (section « Les poisons, alcools, maladies et autres substances »), le joueur jette autant de dés que son Potentiel Physique actuel et garde un nombre de dés fixé par la dose (1D pour une dose létale, 2D pour une dose moyenne, 3D pour une dose faible). **Le seuil de chaque dé est la virulence** du danger ; en cas d'échec, il subit les effets de la substance (p. 397). Les poisons les plus violents ne demandent pas de jet : la mort est assurée, et le dépassement impossible. Une exposition prolongée oblige à refaire le jet régulièrement, la dose et la virulence baissant d'un point à chaque fois, jusqu'à ce que l'exposition cesse ou que la dose devienne nulle (p. 397).
 3. Utilisation du décor: Pendant les combats et les tirs, le meneur intègre la configuration des lieux (section « Gérer les aléas de la scène »). Les éléments de décor fournissent un couvert (de 1 à 3 points de protection) ou imposent des modificateurs de situation sur les jets d'action.
 
 ## Cas limites
 Le livre précise plusieurs cas particuliers sur la gestion des périls environnementaux:
 
-- Échec critique à une substance: Un échec critique lors d'un test contre un poison, une drogue ou une maladie entraîne un effet foudroyant, comme un arrêt cardiaque immédiat ou la perte definitiva d'un point de Potentiel Physique de base (section « Les poisons, alcools, maladies et autres substances »).
-- Chutes amorties: La réussite d'un test de Cirque [acrobatie] réduit les blessures causées par une chute mais ne supprime pas la fatigue ou l'épuisement accumulés si l'impact reste violent (section « Les chutes et les chocs »).
-- Interdépendance avec les gaz et suffocations: L'exposition au monoxyde de carbone ou au dioxyde de carbone combine les règles d'affliction avec des dégâts d'épuisement progressifs jusqu'à l'incapacité (section « Les poisons, alcools, maladies et autres substances », section « L’épuisement »).
+- Échec critique à une substance: ses effets sont donnés substance par substance (arrêt cardiaque, overdose, coma…) dans les listes des poisons, drogues et maladies (p. 397-405).
+- Chutes et chocs: le meneur estime les blessures selon le poids et la vitesse de l'objet ou la hauteur de la chute ; un test de Cirque permet de les amortir (p. 397).
+- Effets notés en épuisement: certaines substances, comme les oxydes de carbone, retirent des points de Potentiel Physique notés comme épuisement (p. 401).
+- Diagnostic: identifier une maladie demande un jet de Mental GARDE Sciences du vivant, fait en secret par le meneur ; un échec critique donne une mauvaise interprétation (p. 397).
 
 ## Non couvert
 rien

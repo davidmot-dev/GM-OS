@@ -27,26 +27,36 @@ de jeu supplémentaires ; leurs évolutions communes sont abordées en fin de do
 - **P3** : extension importante ou option à cadrer selon les usages.
 - **Essai** : fonction déjà réalisée, à éprouver en conditions réelles.
 
+**Indicateurs d'état** (demande de David du 22/10/2026 : *« que ce qui est accompli ou non soit
+plus visible »*), en tête de chaque ligne de lot ou de sujet :
+
+- 🟢 **fait** : livré et essayé par David, plus rien à faire sur cette ligne ;
+- 🟠 **en partie, ou à essayer** : livré mais essai de David attendu, livré en partie (un reste
+  est indiqué), ou fonction réalisée à éprouver en conditions réelles ;
+- 🔴 **à faire** : rien de livré sur cette ligne.
+
+Dans la vue d'ensemble, la colonne **Avancement** compte les lignes de chaque section.
+
 Cette hiérarchie commune ne remplace pas les priorités détaillées des audits. Aucun lot de
 développement n'est autorisé par la demande de synthèse. **Dune reste un projet futur garé**,
 conformément à la décision de David du 19/10.
 
 ## Vue d'ensemble
 
-| Pilote | État de la connaissance | Première amélioration ou prochaine étape proposée |
-| --- | --- | --- |
-| [Alien](#alien) | A0–A7 validés par David et poussés ; A8 livré et contrôlé le 22/10 | Essai A8 de David attendu ; combat spatial séparé |
-| [Blade Runner](#blade-runner) | Limites documentées ; audit complet à faire | Même choix de forçage au pupitre et sur la fiche ; suivi des blessures |
-| [Crimes](#crimes) | Audit du manuel ; **C0 ciblé, C1 à C3, C5 et C6 livrés le 22/10** : corpus, Potentiel GARDE Compétence, atteintes, dépassement, dossier d'enquête, armes et attaque (registre § 157–159) | Réimport du pilote `…_c5-c6` et essai de David ; puis C4 |
-| [Cthulhu Hack](#cthulhu-hack) | Limites documentées ; audit complet à faire | Effets du Hors Jeu et usure reliés aux valeurs de la fiche |
-| [Dune](#dune) | Audit détaillé ; projet futur garé | Spécialisations et paiements Impulsion/Menace lors d'une reprise |
-| [Nephilim Légende](#nephilim-légende) | Plusieurs anciens lots réalisés ; restes documentés | Conséquences/Chutes, Stase et pacte de Kabbale |
-| [NOC](#noc) | Restes revérifiés dans le code le 19/10 ; **Séquelle proposée à 8 le 22/10** (registre § 150), essai de David validé | Singularité attribuée par un Rouage |
-| [Rêve de Dragon](#rêve-de-dragon) | Socle R0–R7 livré pour les PJ ; première boucle TMR livrée ; mécaniques du Voyageur dans l'onglet « Lancer un test » le 22/10 | Initiative complète et suites du Haut-Rêve |
-| [Star Trek Adventures](#star-trek-adventures) | Pilote et LCARS documentés ; audit mécanique détaillé à faire | Export actuel, règles de la deuxième édition et essais matériels LCARS |
-| [Symbaroum](#symbaroum) | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), **essai de David validé** | S5 : attaque, défense et dégâts |
-| [Torg Eternity](#torg-eternity) | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
-| [Within](#within) | Export examiné sommairement ; aucune règle primaire auditée | Reprendre la référence et construire une configuration mécanique vérifiable |
+| Pilote | Avancement | État de la connaissance | Première amélioration ou prochaine étape proposée |
+| --- | --- | --- | --- |
+| [Alien](#alien) | 🟢 8 · 🟠 1 · 🔴 0 | A0–A7 validés par David et poussés ; A8 livré et contrôlé le 22/10 | Essai A8 de David attendu ; combat spatial séparé |
+| [Blade Runner](#blade-runner) | 🟢 0 · 🟠 0 · 🔴 4 | Limites documentées ; audit complet à faire | Même choix de forçage au pupitre et sur la fiche ; suivi des blessures |
+| [Crimes](#crimes) | 🟢 3 · 🟠 3 · 🔴 7 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** : corpus, Potentiel GARDE Compétence, atteintes, dépassement, dossier d'enquête, armes et attaque (registre § 157–159) | C4 (la psychologie), puis la carte de combat sur le Physique actuel |
+| [Cthulhu Hack](#cthulhu-hack) | 🟢 0 · 🟠 0 · 🔴 5 | Limites documentées ; audit complet à faire | Effets du Hors Jeu et usure reliés aux valeurs de la fiche |
+| [Dune](#dune) | 🟢 1 · 🟠 0 · 🔴 8 | Audit détaillé ; projet futur garé | Spécialisations et paiements Impulsion/Menace lors d'une reprise |
+| [Nephilim Légende](#nephilim-légende) | 🟢 0 · 🟠 1 · 🔴 5 | Plusieurs anciens lots réalisés ; restes documentés | Conséquences/Chutes, Stase et pacte de Kabbale |
+| [NOC](#noc) | 🟢 1 · 🟠 1 · 🔴 5 | Restes revérifiés dans le code le 19/10 ; **Séquelle proposée à 8 le 22/10** (registre § 150), essai de David validé | Singularité attribuée par un Rouage |
+| [Rêve de Dragon](#rêve-de-dragon) | 🟢 0 · 🟠 1 · 🔴 5 | Socle R0–R7 livré pour les PJ ; première boucle TMR livrée ; mécaniques du Voyageur dans l'onglet « Lancer un test » le 22/10 | Initiative complète et suites du Haut-Rêve |
+| [Star Trek Adventures](#star-trek-adventures) | 🟢 0 · 🟠 1 · 🔴 4 | Pilote et LCARS documentés ; audit mécanique détaillé à faire | Export actuel, règles de la deuxième édition et essais matériels LCARS |
+| [Symbaroum](#symbaroum) | 🟢 3 · 🟠 1 · 🔴 6 | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), **essai de David validé** | S5 : attaque, défense et dégâts |
+| [Torg Eternity](#torg-eternity) | 🟢 0 · 🟠 0 · 🔴 5 | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
+| [Within](#within) | 🟢 0 · 🟠 0 · 🔴 4 | Export examiné sommairement ; aucune règle primaire auditée | Reprendre la référence et construire une configuration mécanique vérifiable |
 
 ## Alien
 
@@ -121,15 +131,15 @@ fiche HTML, MU/TH/UR et détecteur de mouvement. Ces outils ne sont pas à recon
 
 | Lot | Priorité | Amélioration possible |
 | --- | --- | --- |
-| A0 | Livré et essayé | Export réel, identifiants et correspondance vérifiés ; Santé raccordée ; errata et référence de Panique corrigés. Essai de David validé le 20/10 |
-| A1 | Livré et essayé | Verdict, effets, contagion, Stress après dégâts et bilan de traumatisme vérifiés ; durées et conséquences narratives validées par Maman. Essai de David validé le 20/10 |
-| A2 | Livré et essayé | Bonus/Dégâts/Portée reliés ; modificateurs signés et aide (max. 3), bonus conservés au-delà de dix dés ; opposition, défenseur sans forçage et budget des actions d'éclat conservés. Essai de David validé le 21/10 |
-| A3 | Livré et essayé | Tir automatique et cibles secondaires, chargeurs/rechargement, protection avant dégâts, vrais D66 humains, Brisé, échéances de Trépas et soins séparés. Temps de jeu et résultats médicaux confirmés par Maman ; PNJ humain déclaré explicitement. Contrôlé et essai de David validé le 21/10 |
-| A4 | Livré et essayé | Aucun Stress/Panique/forçage ; D6 synthétiques persistants, avaries et activité, réactivation puis réparation Comtech, immunités et trauma conservé. 1 439 tests et recette Electron/Hub réussis le 21/10 ; essai de David validé le 21/10 |
-| A5 | Livré et essayé | Tests de Réserve sans Panique, stocks individuels/collectifs, échéances et reçus ; états HTML et restrictions, Rads permanents et surplus, charge sur masses confirmées. 1 460 tests et recette Electron/combat/Hub réussis le 21/10 ; huit captures relues ; essai de David validé le 21/10 |
-| A6 | Livré et essayé | Actions lentes/rapides, réactions et surveillance ; cartes selon la Vitesse avec une seule Santé ; attaques, critiques D6 et acide XX121. Contrôlé le 22/10 ; arbitrage narratif par Maman |
-| A7 | Livré et essayé | Objectifs remis en privé par acte, Récit Cinéma, bilan PX conservé, achats et apprentissage uniques, Camarade/Rival et fétiche par période. Contrôlé le 22/10 |
-| A8 | Livré, essai attendu | Détecteur raccordé en option au plan privé, déplacements par Tour, mouvements à portée et batterie M314 ; dossiers d'acte et remise privée dans MU/TH/UR. Contrôlé le 22/10 ; combat spatial séparé |
+| 🟢 A0 | Livré et essayé | Export réel, identifiants et correspondance vérifiés ; Santé raccordée ; errata et référence de Panique corrigés. Essai de David validé le 20/10 |
+| 🟢 A1 | Livré et essayé | Verdict, effets, contagion, Stress après dégâts et bilan de traumatisme vérifiés ; durées et conséquences narratives validées par Maman. Essai de David validé le 20/10 |
+| 🟢 A2 | Livré et essayé | Bonus/Dégâts/Portée reliés ; modificateurs signés et aide (max. 3), bonus conservés au-delà de dix dés ; opposition, défenseur sans forçage et budget des actions d'éclat conservés. Essai de David validé le 21/10 |
+| 🟢 A3 | Livré et essayé | Tir automatique et cibles secondaires, chargeurs/rechargement, protection avant dégâts, vrais D66 humains, Brisé, échéances de Trépas et soins séparés. Temps de jeu et résultats médicaux confirmés par Maman ; PNJ humain déclaré explicitement. Contrôlé et essai de David validé le 21/10 |
+| 🟢 A4 | Livré et essayé | Aucun Stress/Panique/forçage ; D6 synthétiques persistants, avaries et activité, réactivation puis réparation Comtech, immunités et trauma conservé. 1 439 tests et recette Electron/Hub réussis le 21/10 ; essai de David validé le 21/10 |
+| 🟢 A5 | Livré et essayé | Tests de Réserve sans Panique, stocks individuels/collectifs, échéances et reçus ; états HTML et restrictions, Rads permanents et surplus, charge sur masses confirmées. 1 460 tests et recette Electron/combat/Hub réussis le 21/10 ; huit captures relues ; essai de David validé le 21/10 |
+| 🟢 A6 | Livré et essayé | Actions lentes/rapides, réactions et surveillance ; cartes selon la Vitesse avec une seule Santé ; attaques, critiques D6 et acide XX121. Contrôlé le 22/10 ; arbitrage narratif par Maman |
+| 🟢 A7 | Livré et essayé | Objectifs remis en privé par acte, Récit Cinéma, bilan PX conservé, achats et apprentissage uniques, Camarade/Rival et fétiche par période. Contrôlé le 22/10 |
+| 🟠 A8 | Livré, essai attendu | Détecteur raccordé en option au plan privé, déplacements par Tour, mouvements à portée et batterie M314 ; dossiers d'acte et remise privée dans MU/TH/UR. Contrôlé le 22/10 ; combat spatial séparé |
 
 **Suite :** essai A8 de David ; combat spatial sur demande distincte.
 **Cas témoin :** des six suivis d'une Panique effective de 10 annulent l'action ; un Point
@@ -147,10 +157,10 @@ champs d'Humanité et raccord de la santé à la fiche HTML.
 
 | Priorité | Amélioration possible | Portée |
 | --- | --- | --- |
-| P1 | Offrir au pupitre le même choix de relancer un D10/D12 à une seule réussite que sur la fiche | Interface et conservation des choix de dés ; le mécanisme de forçage existe déjà |
-| P1 | Suivre sauvegardes contre la mort et stabilisation après blessure critique | Procédure de santé à sourcer et raccorder aux critiques existants |
-| P2 | Gérer durées de guérison, échéances et rappels | Suivi des blessures en temps de jeu, sans nouveau tirage à chaque ouverture |
-| P0 avant extension | Auditer l'export réel, les exceptions humain/réplicant et les passages du livre | Définir les règles exactes et le périmètre avant d'ajouter des automatismes |
+| 🔴 P1 | Offrir au pupitre le même choix de relancer un D10/D12 à une seule réussite que sur la fiche | Interface et conservation des choix de dés ; le mécanisme de forçage existe déjà |
+| 🔴 P1 | Suivre sauvegardes contre la mort et stabilisation après blessure critique | Procédure de santé à sourcer et raccorder aux critiques existants |
+| 🔴 P2 | Gérer durées de guérison, échéances et rappels | Suivi des blessures en temps de jeu, sans nouveau tirage à chaque ouverture |
+| 🔴 P0 avant extension | Auditer l'export réel, les exceptions humain/réplicant et les passages du livre | Définir les règles exactes et le périmètre avant d'ajouter des automatismes |
 
 **Cas témoin :** le choix de dés fait au pupitre conserve les mêmes réussites et paie le
 même coût que le panneau de fiche. Ne pas annoncer comme absents les critiques ou la protection.
@@ -182,9 +192,9 @@ actuel ; carte « Potentiels et atteintes » ; « Fin de scène » et « Bonne n
 nouveau geste) ; hors de combat à 0, blessure grave sous −1, pas de mort. Dépassement : annoncé
 avant le jet, réussites restées dehors gardées contre une fatigue chacune, un par scène. Fiche
 HTML : neuf compteurs sous les Potentiels (moteur de fiches version 15). Pilote
-`Export Dirvers/corriges/Crime_driver_gmos_c2-c3.gmos-driver`. **Essai à faire :** réimport par
-David et jets à l'écran, C1 à C3 ensemble. **Reste :** la relecture tracée des 19 fiches (C0
-complet), la carte de combat alignée sur le Physique actuel (C6), puis C4–C8.
+`Export Dirvers/corriges/Crime_driver_gmos_c2-c3.gmos-driver`. Réimporté ; essai de David validé le 22/10 (*« ok C1 à C6 est testé »*). **C0 complet le 23/10 (§ 160)** : les 19 fiches relues et corrigées ; la mort à −2 est une consigne
+au meneur (p. 393). **Reste :** la carte de combat alignée sur le Physique actuel (C6), C4, C7, C8 ;
+proposé : un modificateur de seuil au tir pour le jet gardé (p. 389-390).
 
 **C5 et C6 livrés le 22/10 (registre § 159).** Dossier d'enquête en tête des Indices : points par
 style sur le compteur de la fiche, gain seulement dans un style possédé, points du jet proposés au
@@ -192,20 +202,23 @@ meneur ; indices à seuils (« Limier 3 ») révélés à **un seul** enquêteur
 reçoit, le serveur filtre par personnage — puis partagés, l'origine gardée. Armes du livre (13
 blanches, 28 à feu), opposition, dégâts du livre écrits en marques sur la cible, portée utile et
 maximale, incidents E/T/C ; tranches tactiques corrigées. Pilote
-`Export Dirvers/corriges/Crime_driver_gmos_c5-c6.gmos-driver`. **Essai à faire :** réimport et
-jets à l'écran. **Reste :** carte de combat sur le Physique actuel, manœuvres et munitions, C4, C7, C8.
+`Export Dirvers/corriges/Crime_driver_gmos_c5-c6.gmos-driver`. Réimporté ; essai de David validé le 22/10 (*« ok C1 à C6 est testé »*). **Reste :** carte de combat sur le Physique actuel, manœuvres et munitions, C4, C7, C8.
 
 | Lot | Priorité | Amélioration possible |
 | --- | --- | --- |
-| C0 | Ciblé **livré le 22/10** ; reste P0 | Bilans des jets, santé, points d'enquête et trace d'outil corrigés ; reste la relecture tracée des 19 fiches |
-| C1 | **Livré le 22/10** ; essai | « Potentiel GARDE Compétence » : dés lancés/gardés, 1 obligatoires, spécialisations et quatre bilans ; garde modifiable. Restent les oppositions et le pupitre |
-| C2 | **Livré le 22/10** ; essai | Potentiels de base et actuels ; fatigue, épuisement, blessures, soins, fin de scène et bonne nuit. Restent les dégâts du combat (C6) |
-| C3 | **Livré le 22/10** ; essai | Dépassement annoncé avant le jet, sur les réussites réellement obtenues, une fatigue chacune, un par scène. Reste l'exclusion des tests psychotiques (C4) |
-| C4 | P1 | Relier Angoisse, Névrose, Psychose et Innocence aux seuils, tests et conséquences |
-| C5 | **Livré le 22/10** ; essai | Cinq styles, points, indices à seuils révélés à un seul puis partagés. Restent scènes et témoins rattachés à l'affaire |
-| C6 | **Livré le 22/10** ; essai | Armes, opposition, dégâts et blessures sur la cible, portées, protection, incidents. Restent la carte de combat, manœuvres, munitions décomptées, initiative narrative |
-| C7 | P2 | Contacts : influence/loyauté et services ; fortune : niveau/piste ; valeurs de base/actuelles |
-| C8 | P2 | Création et progression : budgets, âge, rangs, spécialisations, seuils et dépenses |
+| 🟢 C0 | **Livré et validé le 23/10** | Les 19 fiches relues contre le livre et corrigées, `relu: true` ([trace](2026-10-23-relecture-corpus-crimes.md), registre § 160) ; rapport relu et validé par David le 23/10 |
+| 🟠 C1 | **Livré et essayé le 22/10** ; reste | « Potentiel GARDE Compétence » : dés lancés/gardés, 1 obligatoires, spécialisations et quatre bilans ; garde modifiable. Restent les oppositions et le pupitre |
+| 🟢 C2 | **Livré et essayé le 22/10** | Potentiels de base et actuels ; fatigue, épuisement, blessures, soins, fin de scène et bonne nuit ; les dégâts du combat s'y écrivent depuis C6 |
+| 🟢 C3 | **Livré et essayé le 22/10** | Dépassement annoncé avant le jet, sur les réussites réellement obtenues, une fatigue chacune, un par scène. L'exclusion des tests psychotiques se fera avec ces tests (C4) |
+| 🔴 C4 | P1 | Relier Angoisse, Névrose, Psychose et Innocence aux seuils, tests et conséquences |
+| 🟠 C5 | **Livré et essayé le 22/10** ; reste | Cinq styles, points, indices à seuils révélés à un seul puis partagés. Restent scènes et témoins rattachés à l'affaire |
+| 🟠 C6 | **Livré et essayé le 22/10** ; reste | Armes, opposition, dégâts et blessures sur la cible, portées, protection, incidents. Restent la carte de combat, manœuvres, munitions décomptées, initiative narrative |
+| 🔴 C7 | P2 | Contacts : influence/loyauté et services ; fortune : niveau/piste ; valeurs de base/actuelles |
+| 🔴 C8 | P2 | Création et progression : budgets, âge, rangs, spécialisations, seuils et dépenses |
+| 🔴 C0.1 | P1 | Corrections proposées par la relecture (23/10) : **modificateur de seuil du jet gardé** au tir — distance, mobilité, taille de la cible de −1 à +1, angoisse du tireur au-dessus de 3 de −1 à −2 ; seuil de 9 non modifiable pour viser à 3 d'angoisse et plus (p. 389-390, 412) |
+| 🔴 C0.2 | P2 | La carte des atteintes rappelle la **consigne de mort à −2** (implacable, logique ou évitée selon la conduite, p. 393), sans rien écrire |
+| 🔴 C0.3 | P2 | **Compétences hermétiques** déclarées au pilote : pas de jet « sans compétence » sur elles (p. 323-325) |
+| 🔴 C0.4 | P3 | Trois commentaires du code (`armesDeCrimes.ts`, son essai, `AttaqueDeCrimes.tsx`) citent la formule des dégâts en p. 395 : elle est en **p. 393** |
 
 **Ordre conseillé :** C0 → C1 → C2/C3 → C4/C5 → C6–C8.
 **Cas témoin :** `[1,3,4,6,8]`, compétence 2, seuil 8 : garder `[1,8]` donne une réussite
@@ -222,11 +235,11 @@ dés d'usure, Folie/Choc, Hors Jeu avec table des Conséquences et récupératio
 
 | Priorité | Amélioration possible |
 | --- | --- |
-| P1 | Proposer l'application aux caractéristiques des Sauvegardes perdues par un Hors Jeu, avec aperçu des pertes permanentes |
-| P1 | Raccorder la diminution de protection à l'usure de l'armure |
-| P2 | Assister la défausse des jetons de Fortune par le meneur et ses effets |
-| P2 | Suivre les durées des Chocs et Folies selon l'unité prévue : Moments, minutes ou heures |
-| P3 | Ajouter un profil explicite pour la variante Pulp du Hors Jeu, séparé du fonctionnement standard |
+| 🔴 P1 | Proposer l'application aux caractéristiques des Sauvegardes perdues par un Hors Jeu, avec aperçu des pertes permanentes |
+| 🔴 P1 | Raccorder la diminution de protection à l'usure de l'armure |
+| 🔴 P2 | Assister la défausse des jetons de Fortune par le meneur et ses effets |
+| 🔴 P2 | Suivre les durées des Chocs et Folies selon l'unité prévue : Moments, minutes ou heures |
+| 🔴 P3 | Ajouter un profil explicite pour la variante Pulp du Hors Jeu, séparé du fonctionnement standard |
 
 **Cas témoin :** une conséquence permanente n'est appliquée qu'une fois à la fiche ;
 relever puis refaire tomber un personnage ne doit pas rejouer les pertes de son ancien tirage.
@@ -245,15 +258,15 @@ dés achetés, alternance des camps et tâche de défaite. Dune n'a pas à recev
 
 | Lot | Priorité | Amélioration possible lors d'une reprise |
 | --- | --- | --- |
-| D0 | P0 | Corpus et exemples corrigés contre le livre et l'errata ; vérifier l'export actuel |
-| D1 | P0 | Déclarer les spécialisations dans le pilote et la fiche ; utiliser la double réussite étendue déjà supportée par le moteur |
-| D2 | **Livré et essayé le 22/10** | « Dont en Menace » au panneau de jet ; l'Impulsion du jet hors réserve se dépense ou se verse (registre § 151, `Dune_driver_gmos_d2-paiement`) ; essai de David validé. Restent les dépenses contextualisées et l'Impulsion bonus |
-| D3 | P1 | Détermination, invocation/remise en cause des Principes, maximes et relances sélectives |
-| D4 | P0 | Rétention d'initiative payée par le bon camp, possibilité de rejouer soi-même, interdiction après attaque ratée |
-| D5 | P1 | Attaque reliée aux atouts et à la tâche de défaite, types de cibles, survie à la défaite et récupération |
-| D6 | P1 | Assistance, oppositions, complications variables et réussite mitigée autorisée par le MJ |
-| D7 | P3 | Atouts structurés et plateau de zones pour duel, escarmouche, espionnage, guerre et intrigue |
-| D8 | P2 | Fiche de Maison, Menace initiale selon le contexte, progression et amélioration des atouts |
+| 🔴 D0 | P0 | Corpus et exemples corrigés contre le livre et l'errata ; vérifier l'export actuel |
+| 🔴 D1 | P0 | Déclarer les spécialisations dans le pilote et la fiche ; utiliser la double réussite étendue déjà supportée par le moteur |
+| 🟢 D2 | **Livré et essayé le 22/10** | « Dont en Menace » au panneau de jet ; l'Impulsion du jet hors réserve se dépense ou se verse (registre § 151, `Dune_driver_gmos_d2-paiement`) ; essai de David validé. Restent les dépenses contextualisées et l'Impulsion bonus |
+| 🔴 D3 | P1 | Détermination, invocation/remise en cause des Principes, maximes et relances sélectives |
+| 🔴 D4 | P0 | Rétention d'initiative payée par le bon camp, possibilité de rejouer soi-même, interdiction après attaque ratée |
+| 🔴 D5 | P1 | Attaque reliée aux atouts et à la tâche de défaite, types de cibles, survie à la défaite et récupération |
+| 🔴 D6 | P1 | Assistance, oppositions, complications variables et réussite mitigée autorisée par le MJ |
+| 🔴 D7 | P3 | Atouts structurés et plateau de zones pour duel, escarmouche, espionnage, guerre et intrigue |
+| 🔴 D8 | P2 | Fiche de Maison, Menace initiale selon le contexte, progression et amélioration des atouts |
 
 **Ordre conservé pour une reprise :** D0/D1 et paiements D2/D4 → D3/D6 → D5 → D8/D7.
 **Cas témoins :** un 5 sous Combat 6 spécialisé vaut deux réussites ; payer une action
@@ -274,12 +287,12 @@ Les captures correspondantes existent.
 
 | Priorité | Amélioration encore possible |
 | --- | --- |
-| P1 | Proposer les malus des Conséquences au jet et les alertes aux seuils des Chutes |
-| P1 | Assister le pacte de Kabbale en opposition, avec comparaison des résultats et suites choisies |
-| P2 | Recharge contextualisée de Stase selon le livre/errata, avec temps écoulé et trace |
-| P2 | Autres usages de Sapience : priorité, Effet Mnémos en tant que Vécu, Sacrifice et effets permanents |
-| P2 | Second élément de l'Œuvre au blanc, assemblage et activation des constructs |
-| Essai | Vérifier sur tablette physique les suggestions et, en séance, la consommation automatique des MP |
+| 🔴 P1 | Proposer les malus des Conséquences au jet et les alertes aux seuils des Chutes |
+| 🔴 P1 | Assister le pacte de Kabbale en opposition, avec comparaison des résultats et suites choisies |
+| 🔴 P2 | Recharge contextualisée de Stase selon le livre/errata, avec temps écoulé et trace |
+| 🔴 P2 | Autres usages de Sapience : priorité, Effet Mnémos en tant que Vécu, Sacrifice et effets permanents |
+| 🔴 P2 | Second élément de l'Œuvre au blanc, assemblage et activation des constructs |
+| 🟠 Essai | Vérifier sur tablette physique les suggestions et, en séance, la consommation automatique des MP |
 
 **Décisions à préserver :** les suites de critiques passent par un bouton ; l'option finale
 pour les MP est le débit **au lancer**, qui a remplacé le premier choix manuel. La Traque
@@ -297,13 +310,13 @@ Cabale, moment de calme, effets du Fiel et recharge de nouveau scénario.
 
 | Point | Priorité | Amélioration possible |
 | --- | --- | --- |
-| 1 | **Livré le 22/10** | La Séquelle se propose sous le bandeau quand une jauge de péril atteint 8 ; « Noter » l'ajoute au champ Séquelles (registre § 150, `NOC_driver_gmos_sequelles`). Réimporté et essai de David validé le 22/10 |
-| 2 | P1 | Choisir le Héros désigné par la Loi et lui attribuer la Singularité restante d'un Rouage hostile quand le Fiel est vide |
-| 3 | P2 | Aider à répartir la récupération amputée par le Soupçon, actuellement annoncée dans l'aperçu |
-| 4–6 | P2 | Modéliser, si souhaité, Aura de lumière, partage de l'Extase et alliés de la Loi épargnés par certains effets |
-| 7 | P2 | Ajouter le suivi de Faveur de la Cabale lié à l'Atout Réseau |
-| 8 | P2 | Convertir les 78 cases des neuf pistes du Héros en hotspots numériques, en conservant les clés |
-| 9 | Essai | Éprouver à l'écran la recharge des pistes de Cabale au Nouveau scénario, déjà implémentée |
+| 🟢 1 | **Livré le 22/10** | La Séquelle se propose sous le bandeau quand une jauge de péril atteint 8 ; « Noter » l'ajoute au champ Séquelles (registre § 150, `NOC_driver_gmos_sequelles`). Réimporté et essai de David validé le 22/10 |
+| 🔴 2 | P1 | Choisir le Héros désigné par la Loi et lui attribuer la Singularité restante d'un Rouage hostile quand le Fiel est vide |
+| 🔴 3 | P2 | Aider à répartir la récupération amputée par le Soupçon, actuellement annoncée dans l'aperçu |
+| 🔴 4–6 | P2 | Modéliser, si souhaité, Aura de lumière, partage de l'Extase et alliés de la Loi épargnés par certains effets |
+| 🔴 7 | P2 | Ajouter le suivi de Faveur de la Cabale lié à l'Atout Réseau |
+| 🔴 8 | P2 | Convertir les 78 cases des neuf pistes du Héros en hotspots numériques, en conservant les clés |
+| 🟠 9 | Essai | Éprouver à l'écran la recharge des pistes de Cabale au Nouveau scénario, déjà implémentée |
 
 **Ordre conseillé :** 1/2 → 7/8 ; 3–6 selon le besoin réel de la table. Le choix d'un allié
 ou d'une répartition peut rester manuel. Les retouches de fiche passent par le Studio et le
@@ -332,12 +345,12 @@ captures du manuel refaites. **Essai de David à l'écran attendu.**
 
 | Priorité | Amélioration encore possible |
 | --- | --- |
-| P1 | Initiative par arme, caractéristiques/compétence/dé et sept phases du round ; le simple tri actuel ne remplace pas cette procédure |
-| P2 | Compléter le bilan de repos pour famine et enchantements non permanents, encore arbitrés à la table |
-| P2 | Mieux accompagner entraînement et apprentissage, dont les conditions et durées restent arbitrées ; l'allocation d'XP existe déjà |
-| P3 | Étendre le Haut-Rêve : rencontres, jets de maîtrise, sorts, réserves et suites draconiques, actuellement consignés/arbitrés manuellement |
-| P3 | Étendre, si utile, les commandes spécifiques R5–R7 aux PNJ/adversaires autonomes ; les panneaux actuels visent les PJ |
-| Essai | Juger les chiffres du livret dans la vraie fenêtre GM-OS et sur tablette ; poursuivre les essais de séance des procédures livrées |
+| 🔴 P1 | Initiative par arme, caractéristiques/compétence/dé et sept phases du round ; le simple tri actuel ne remplace pas cette procédure |
+| 🔴 P2 | Compléter le bilan de repos pour famine et enchantements non permanents, encore arbitrés à la table |
+| 🔴 P2 | Mieux accompagner entraînement et apprentissage, dont les conditions et durées restent arbitrées ; l'allocation d'XP existe déjà |
+| 🔴 P3 | Étendre le Haut-Rêve : rencontres, jets de maîtrise, sorts, réserves et suites draconiques, actuellement consignés/arbitrés manuellement |
+| 🔴 P3 | Étendre, si utile, les commandes spécifiques R5–R7 aux PNJ/adversaires autonomes ; les panneaux actuels visent les PJ |
+| 🟠 Essai | Juger les chiffres du livret dans la vraie fenêtre GM-OS et sur tablette ; poursuivre les essais de séance des procédures livrées |
 
 **Prochaine étape proposée :** initiative complète, ou suite du Haut-Rêve selon la campagne.
 Conserver une seule réserve de rêve/fatigue sur la fiche. La position et le carnet TMR ne
@@ -355,11 +368,11 @@ rapports privés, pièces jointes, alertes et sauvegarde par campagne.
 
 | Priorité | Étape ou amélioration à instruire |
 | --- | --- |
-| P0 avant extension | Auditer l'export actuel contre les règles de la deuxième édition : santé, réserves, complications et Détermination ; ne pas recopier les règles de Dune par parenté 2d20 |
-| P1 | Assister la Menace initiale à partir du nombre de PJ présents ; le manuel indique actuellement un montant fixe à ajuster |
-| Essai | Éprouver LCARS sur les appareils physiques : attribution des postes, confidentialité, déconnexion/reconnexion, son et retour de veille |
-| P2, à auditer | Examiner les raccords mécaniques des commandes de consoles, de la santé et des ressources, en distinguant mise en scène et résolution de règles |
-| P3, à cadrer | Déterminer si un suivi de vaisseau/équipage et des conflits spatiaux est souhaité, puis établir son périmètre avec le livre |
+| 🔴 P0 avant extension | Auditer l'export actuel contre les règles de la deuxième édition : santé, réserves, complications et Détermination ; ne pas recopier les règles de Dune par parenté 2d20 |
+| 🔴 P1 | Assister la Menace initiale à partir du nombre de PJ présents ; le manuel indique actuellement un montant fixe à ajuster |
+| 🟠 Essai | Éprouver LCARS sur les appareils physiques : attribution des postes, confidentialité, déconnexion/reconnexion, son et retour de veille |
+| 🔴 P2, à auditer | Examiner les raccords mécaniques des commandes de consoles, de la santé et des ressources, en distinguant mise en scène et résolution de règles |
+| 🔴 P3, à cadrer | Déterminer si un suivi de vaisseau/équipage et des conflits spatiaux est souhaité, puis établir son périmètre avec le livre |
 
 Ces deux dernières lignes sont **des pistes d'audit**, pas des fonctions déclarées absentes
 ou des règles déjà validées. Les consoles LCARS et leurs échanges ne sont pas à recréer.
@@ -397,16 +410,16 @@ refaites. **Réimporté ; essai de David validé le 22/10, comme S3 et S4.**
 
 | Lot | Priorité | Amélioration possible |
 | --- | --- | --- |
-| S0 | P0 | Corriger le corpus : choix du joueur après douleur, tests de mort qui continuent, cécité, asymétrie et gain permanent de Corruption |
-| S1 | P0 | Appliquer opposition et modificateurs au seuil du d20, avec explication du calcul |
-| S2 | Raccord **livré le 22/10** ; reste P1 | Endurance courante = santé principale et fiche neuve initialisée : faits (registre § 150). Restent les dérivées calculées et l'agonie |
-| S3 | **Livré le 22/10** | Case Avantage tactique (+2 au seuil, +1D4 aux dégâts rappelé, un seul d20) ; le double lancer renommé (registre § 155). Restent la cécité (trois cas) et la cible à terre (mêlée seulement), à la main |
-| S4 | **Livré le 22/10** | Fin de scène (§ 150) ; Corruption totale surveillée : Stigmate et 1D4 permanent au Seuil de Corruption, Abomination à la Volonté (§ 155). Restent quel Stigmate et sa durée, les coûts des pouvoirs |
-| S5 | P1 | Parcours attaque/défense du joueur ; dégâts/protection fixes des PNJ ; dégâts nets, douleur et effets particuliers |
-| S6 | P1 | Initiative départagée par Vigilance puis d20, choix de retard et rappels d'actions/réactions |
-| S7 | P2 | Création, budgets d'Attributs, effets des Talents et progression sur l'Expérience disponible |
-| S8 | P2 | Profils explicites de critiques, confirmation, Mort subite et relances optionnelles |
-| S9 | P2 | Unifier bourse et jauge monétaire, assister les voyages, ajouter le manuel du jeu et ses captures |
+| 🔴 S0 | P0 | Corriger le corpus : choix du joueur après douleur, tests de mort qui continuent, cécité, asymétrie et gain permanent de Corruption |
+| 🟢 S1 | **Livré le 22/10** | Opposition explicite et modificateur au seuil du d20, calcul lisible sous « Seuil » et redit au journal (registre § 149) ; essai de David validé |
+| 🟠 S2 | Raccord **livré le 22/10** ; reste P1 | Endurance courante = santé principale et fiche neuve initialisée : faits (registre § 150). Restent les dérivées calculées et l'agonie |
+| 🟢 S3 | **Livré le 22/10** | Case Avantage tactique (+2 au seuil, +1D4 aux dégâts rappelé, un seul d20) ; le double lancer renommé (registre § 155). Restent la cécité (trois cas) et la cible à terre (mêlée seulement), à la main |
+| 🟢 S4 | **Livré le 22/10** | Fin de scène (§ 150) ; Corruption totale surveillée : Stigmate et 1D4 permanent au Seuil de Corruption, Abomination à la Volonté (§ 155). Restent quel Stigmate et sa durée, les coûts des pouvoirs |
+| 🔴 S5 | P1 | Parcours attaque/défense du joueur ; dégâts/protection fixes des PNJ ; dégâts nets, douleur et effets particuliers |
+| 🔴 S6 | P1 | Initiative départagée par Vigilance puis d20, choix de retard et rappels d'actions/réactions |
+| 🔴 S7 | P2 | Création, budgets d'Attributs, effets des Talents et progression sur l'Expérience disponible |
+| 🔴 S8 | P2 | Profils explicites de critiques, confirmation, Mort subite et relances optionnelles |
+| 🔴 S9 | P2 | Unifier bourse et jauge monétaire, assister les voyages, ajouter le manuel du jeu et ses captures |
 
 **Ordre conseillé :** S0/S1/S2-raccord → S3/S4/S5 → agonies et tours → progression/options.
 **Cas témoin reproduit :** Précision 12, opposition 13, dé 10 : le code annonce aujourd'hui
@@ -425,11 +438,11 @@ plusieurs Lois du Monde, sbires, hordes, attaques combinées et cibles multiples
 
 | Priorité | Amélioration possible |
 | --- | --- |
-| P1 | Structurer Atouts et capacités spéciales pour proposer les gestes pertinents depuis les fiches, au lieu de les offrir sans vérifier leur présence |
-| P2 | Encadrer l'échange des Cartes du Destin en combat selon la procédure du jeu ; le don générique de Deck-OS n'en vérifie pas toutes les contraintes |
-| P2 | Raccorder progressivement les effets de cartes et Lois encore manuels, avec choix des cibles et application tracée |
-| P2 | Pour la capacité Sbires, proposer la cible proche et le transfert du coup ; le bouton actuel teste puis laisse le MJ porter le coup sur l'autre carte |
-| P0 avant extension | Relire les passages nécessaires du livre et l'export réel avant d'automatiser de nouveaux Atouts ou effets |
+| 🔴 P1 | Structurer Atouts et capacités spéciales pour proposer les gestes pertinents depuis les fiches, au lieu de les offrir sans vérifier leur présence |
+| 🔴 P2 | Encadrer l'échange des Cartes du Destin en combat selon la procédure du jeu ; le don générique de Deck-OS n'en vérifie pas toutes les contraintes |
+| 🔴 P2 | Raccorder progressivement les effets de cartes et Lois encore manuels, avec choix des cibles et application tracée |
+| 🔴 P2 | Pour la capacité Sbires, proposer la cible proche et le transfert du coup ; le bouton actuel teste puis laisse le MJ porter le coup sur l'autre carte |
+| 🔴 P0 avant extension | Relire les passages nécessaires du livre et l'export réel avant d'automatiser de nouveaux Atouts ou effets |
 
 **Cas témoin :** un vilain ne reçoit pas automatiquement la capacité Sbires parce qu'il est
 un adversaire ; le MJ peut toujours arbitrer la proximité et la cible. Les effets narratifs
@@ -449,10 +462,10 @@ pour l'agent qui réalise cette synthèse.
 
 | Priorité | Étape ou amélioration à instruire |
 | --- | --- |
-| P0 | Identifier le livre et l'édition retenus ; auditer les descriptions, noms et personas contre cette référence |
-| P0 | Définir un corpus fiable et une vraie configuration du jet ; ne pas prendre le texte « D6/D10 » de l'export comme une règle confirmée |
-| P1 après audit | Reprendre attributs, santé, ressources et procédures de combat selon les règles établies, puis leurs correspondances |
-| P2 après stabilisation | Préparer/raccorder une fiche interactive fidèle et le manuel du pilote, puis ses captures |
+| 🔴 P0 | Identifier le livre et l'édition retenus ; auditer les descriptions, noms et personas contre cette référence |
+| 🔴 P0 | Définir un corpus fiable et une vraie configuration du jet ; ne pas prendre le texte « D6/D10 » de l'export comme une règle confirmée |
+| 🔴 P1 après audit | Reprendre attributs, santé, ressources et procédures de combat selon les règles établies, puis leurs correspondances |
+| 🔴 P2 après stabilisation | Préparer/raccorder une fiche interactive fidèle et le manuel du pilote, puis ses captures |
 
 **Prochaine étape :** audit de fond de l'export avec le livre, avant toute proposition de
 barème ou de jauge. Ce pilote demande d'abord une référence mécanique établie.
@@ -464,14 +477,14 @@ propres :
 
 | Sujet commun | Pilotes concernés | Résultat recherché |
 | --- | --- | --- |
-| Corpus et contrôles de la Forge | Tous, en priorité Crimes/Symbaroum/Dune/Within | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. Sur les onze exports réels, seul Crimes est signalé (C1, déjà connu). **Reste :** relire le corpus, en priorité Crimes/Symbaroum/Dune/Within |
-| Modificateurs et contexte du jet | Symbaroum, Alien, puis audits des autres | Distinguer modificateur de seuil, nombre de dés, réussites exigées et meilleur/pire dé. **Avantage tactique livré le 22/10 (§ 155).** **Livré le 22/10 (registre § 149) :** `jet.modificateurDuSeuil`, capacité commune du moteur (tout jeu jeté sous un seuil additionné), avec opposition explicite ; Symbaroum la déclare. Les réussites exigées restent `difficulte` (Dune), le nombre de dés la réserve, meilleur/pire dé « Tirage ». **Reste :** les audits des autres jeux |
-| Choix du paiement et bilan du jet | Dune ; Star Trek à auditer séparément | Conserver coût, source, effets immédiats et reliquat, sans double dépense ni perte anticipée. **Livré le 22/10 (registre § 151) :** `paiementAuChoix` (« dont en Menace », depuis la fiche et la tablette) ; l'Impulsion du jet que la réserve pleine ne garde pas reste sur le test (dépenser ou verser). Activé pour Dune (D2) et, sur décision de David du 22/10, pour **Star Trek** (`ST_driver_gmos_paiement`). **Reste :** dépenses contextualisées (informations, traits, atouts), Impulsion bonus non conservable |
-| Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu. **Livré le 22/10 (registre § 150) :** la fiche naît à sa santé de départ ; la Forge avertit d'une santé sans champ courant (Symbaroum corrigé, Crimes signalé) ; `franchissements` propose la séquelle permanente une fois par passage (NOC). Crimes C2 livré le 22/10 (§ 158 : Potentiel actuel, atteintes, bonne nuit). **Reste :** Crimes C6 (carte de combat sur le Physique actuel), Blade Runner (stabilisation), Cthulhu Hack (Hors Jeu), agonie de Symbaroum |
-| Événements de scène, séance et temps de jeu | Corruption, Stress, soins, progression, voyages | Des déclencheurs nommés ; une reconnexion ne rejoue pas une dépense, un soin ou un franchissement. **Livré le 22/10 (registre § 150) :** « Fin de scène » écrit aussi les fiches (`gestesDesHeros.finDeScene`, `delta: 'vide'`) après aperçu, même sans réserve de table ; un franchissement traité est retenu par la fiche. **Reste :** durées et échéances en temps de jeu (Cthulhu Hack, Blade Runner) ; la Corruption au seuil est livrée (§ 155) |
-| Fiches, tablettes et journal | Tous | Même calcul et mêmes ressources ; clés stables, secrets filtrés et modifications historisées. **Audit rendu le 22/10** ([rapport](2026-10-22-audit-fiches-tablettes-journal.md), registre § 151) : secrets du meneur envoyés aux tablettes des joueurs (S1 `lectureDuMeneur`, S2 `gmNotes`, S5 fenêtres locales), indices non révélés (S3), notes du meneur écrivables par un joueur (S4), modifications de fiche jamais historisées (H1), pupitre sans réserves (C1) ; motif des tablettes au journal corrigé (A1). **S1, S2, S5 corrigés le 22/10** (registre § 152) : les secrets du meneur ne partent plus vers les tablettes ni les fenêtres de la table ; **S3, S4 le même jour** (§ 153) : indices non révélés retenus, notes du meneur protégées ; **H1 et C1** (§ 154) : modifications de fiche au journal avec leur origine, réserves 2d20 réglées au pupitre et à la télécommande. **Tous les constats traités** ; les recettes des tablettes, cassées depuis `a128c7af`, toutes vertes (§ 156). **Reste :** l'axe des clés stables, survolé |
-| **Onglet « Lancer un test »** — livré le 22/10 (`6f709c79`, registre § 147) | Tous | Le test a son onglet sur la fiche du meneur (Formulaire / Lancer un test / Fiche du jeu) et sur la tablette (Vue synthétique / Lancer un test / Ma fiche / groupe), d'après les maquettes Stitch retenues : étapes Composer, Préparer, Lancer les dés, Résultat ; dés nommés ; blocs propres au jeu en cartes repliables (Alien : dernier test, blessures, Stress et Panique ; RdD : mécaniques du Voyageur). Aucun pilote modifié. Captures du manuel refaites pour les dix jeux. **Essai de David validé le 22/10** |
-| Documentation et recette | Tous | Page 53, page 54 du jeu et captures conformes aux fonctions réellement livrées |
+| 🟠 Corpus et contrôles de la Forge | Tous, en priorité Crimes/Symbaroum/Dune/Within | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. Sur les onze exports réels, seul Crimes est signalé (C1, déjà connu). **Reste :** relire le corpus, en priorité Crimes/Symbaroum/Dune/Within |
+| 🟠 Modificateurs et contexte du jet | Symbaroum, Alien, puis audits des autres | Distinguer modificateur de seuil, nombre de dés, réussites exigées et meilleur/pire dé. **Avantage tactique livré le 22/10 (§ 155).** **Livré le 22/10 (registre § 149) :** `jet.modificateurDuSeuil`, capacité commune du moteur (tout jeu jeté sous un seuil additionné), avec opposition explicite ; Symbaroum la déclare. Les réussites exigées restent `difficulte` (Dune), le nombre de dés la réserve, meilleur/pire dé « Tirage ». **Reste :** les audits des autres jeux |
+| 🟠 Choix du paiement et bilan du jet | Dune ; Star Trek à auditer séparément | Conserver coût, source, effets immédiats et reliquat, sans double dépense ni perte anticipée. **Livré le 22/10 (registre § 151) :** `paiementAuChoix` (« dont en Menace », depuis la fiche et la tablette) ; l'Impulsion du jet que la réserve pleine ne garde pas reste sur le test (dépenser ou verser). Activé pour Dune (D2) et, sur décision de David du 22/10, pour **Star Trek** (`ST_driver_gmos_paiement`). **Reste :** dépenses contextualisées (informations, traits, atouts), Impulsion bonus non conservable |
+| 🟠 Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu. **Livré le 22/10 (registre § 150) :** la fiche naît à sa santé de départ ; la Forge avertit d'une santé sans champ courant (Symbaroum corrigé, Crimes signalé) ; `franchissements` propose la séquelle permanente une fois par passage (NOC). Crimes C2 livré le 22/10 (§ 158 : Potentiel actuel, atteintes, bonne nuit). **Reste :** Crimes C6 (carte de combat sur le Physique actuel), Blade Runner (stabilisation), Cthulhu Hack (Hors Jeu), agonie de Symbaroum |
+| 🟠 Événements de scène, séance et temps de jeu | Corruption, Stress, soins, progression, voyages | Des déclencheurs nommés ; une reconnexion ne rejoue pas une dépense, un soin ou un franchissement. **Livré le 22/10 (registre § 150) :** « Fin de scène » écrit aussi les fiches (`gestesDesHeros.finDeScene`, `delta: 'vide'`) après aperçu, même sans réserve de table ; un franchissement traité est retenu par la fiche. **Reste :** durées et échéances en temps de jeu (Cthulhu Hack, Blade Runner) ; la Corruption au seuil est livrée (§ 155) |
+| 🟠 Fiches, tablettes et journal | Tous | Même calcul et mêmes ressources ; clés stables, secrets filtrés et modifications historisées. **Audit rendu le 22/10** ([rapport](2026-10-22-audit-fiches-tablettes-journal.md), registre § 151) : secrets du meneur envoyés aux tablettes des joueurs (S1 `lectureDuMeneur`, S2 `gmNotes`, S5 fenêtres locales), indices non révélés (S3), notes du meneur écrivables par un joueur (S4), modifications de fiche jamais historisées (H1), pupitre sans réserves (C1) ; motif des tablettes au journal corrigé (A1). **S1, S2, S5 corrigés le 22/10** (registre § 152) : les secrets du meneur ne partent plus vers les tablettes ni les fenêtres de la table ; **S3, S4 le même jour** (§ 153) : indices non révélés retenus, notes du meneur protégées ; **H1 et C1** (§ 154) : modifications de fiche au journal avec leur origine, réserves 2d20 réglées au pupitre et à la télécommande. **Tous les constats traités** ; les recettes des tablettes, cassées depuis `a128c7af`, toutes vertes (§ 156). **Reste :** l'axe des clés stables, survolé |
+| 🟢 **Onglet « Lancer un test »** — livré le 22/10 (`6f709c79`, registre § 147) | Tous | Le test a son onglet sur la fiche du meneur (Formulaire / Lancer un test / Fiche du jeu) et sur la tablette (Vue synthétique / Lancer un test / Ma fiche / groupe), d'après les maquettes Stitch retenues : étapes Composer, Préparer, Lancer les dés, Résultat ; dés nommés ; blocs propres au jeu en cartes repliables (Alien : dernier test, blessures, Stress et Panique ; RdD : mécaniques du Voyageur). Aucun pilote modifié. Captures du manuel refaites pour les dix jeux. **Essai de David validé le 22/10** |
+| 🟠 Documentation et recette | Tous | Page 53, page 54 du jeu et captures conformes aux fonctions réellement livrées |
 
 **Pour choisir une prochaine intervention :** les anomalies de résultat déjà reproduites de
 Crimes et Symbaroum constituent des corrections P0 concrètes. Les premiers points NOC sont
@@ -490,6 +503,8 @@ utiliser le document de chantier/référence indiqué. La synthèse suit ces mê
 - **Traçabilité :** indiquer la date, les références au chantier et aux fichiers ou commits,
   ainsi que les vérifications effectuées. Si la réalisation est partielle, préciser ce qui
   manque. Un essai de David encore attendu reste signalé comme tel.
+- **Indicateurs :** passer la ligne de 🔴 à 🟠 à la livraison, de 🟠 à 🟢 quand David a
+  essayé et qu'il ne reste rien ; recompter la colonne **Avancement** de la vue d'ensemble.
 - **Nouveau pilote :** ajouter une section à son nom et une ligne dans la vue d'ensemble,
   avec la référence du pilote, ses acquis, les améliorations connues et les points à auditer.
   Ne pas inventer des règles ou des défauts pour remplir la section ; garder la liste et les

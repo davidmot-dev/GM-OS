@@ -12,9 +12,10 @@ font baisser les Potentiels ; le **dépassement** ; le **dossier d'enquête** et
 l'**attaque**, avec les armes du livre. La fiche de personnage HTML et ses
 spécialisations les nourrissent.
 
-> Règles relues contre le livre *Crimes 2 — Manuel de l'Enquêteur* (p. 385, 409–411) et le corpus
-> `docs/systems/crime/`, corrigé le 2026-10-22 : quatre bilans et non cinq, le jet sans compétence,
-> la santé sans mort automatique, les points d'enquête qui se cumulent sans se dépenser.
+> Règles relues contre le livre *Crimes 2 — Manuel de l'Enquêteur* et le corpus
+> `docs/systems/crime/`, dont les **19 fiches ont été relues une à une le 2026-10-23** (C0) :
+> quatre bilans et non cinq, le jet sans compétence, la santé sans mort automatique (mais une
+> consigne au meneur à −2, p. 393), les points d'enquête qui se cumulent sans se dépenser.
 
 ---
 
@@ -92,7 +93,9 @@ teste avec la valeur **actuelle**. Trois marques la font baisser :
   il n'y a plus de dé à lancer.
 - **Physique à 0** : la carte dit « Hors de combat ». **En dessous de −1** : « Blessure grave »,
   avec ce que le livre en dit (Physique de départ −1 jusqu'à une chirurgie, Psychose, Névrose, test
-  psychotique). Le livre ne fixe **aucune mort automatique**, et l'outil non plus.
+  psychotique). La mort n'est **jamais automatique** : à −2, le livre en fait une consigne au meneur —
+  « implacable » pour une conduite idiote ou suicidaire, « logique » pour une blessure trop lourde,
+  « évitée » après une action audacieuse et calculée (p. 393). L'outil ne tue personne.
 - Sur la **fiche du jeu** (HTML), trois petits compteurs — Fatigue, Épuisement, Blessures — sont
   ajoutés sous chaque rangée de Potentiel, et reliés aux mêmes champs.
 
@@ -186,7 +189,7 @@ portée**) ; il ne révèle rien seul.
   mur).
 
 Après le lancer, le résultat dit **« Touché : 2 blessures »** et le calcul du livre — succès
-excédentaires + arme − Physique de la cible − protection, **au moins 1** (p. 395). À égalité,
+excédentaires + arme − Physique de la cible − protection, **au moins 1** (p. 393). À égalité,
 « pas de blessure ». **« Infliger à … »** écrit les marques sur la fiche de la cible avec la règle
 des atteintes (une blessure prend la place d'une marque moindre), et le journal le note. Une
 matraque ou un bâton infligent de l'**épuisement**.

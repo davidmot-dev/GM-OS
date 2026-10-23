@@ -7,7 +7,7 @@ sources: "Crimes 2 - Manuel de l'Enquèteur.pdf"
 sections: "« Se dépasser » ; « La passion principale » ; « Les passions secondaires » ; « Les passions »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 679d6f6c
 ---
 
@@ -22,7 +22,7 @@ Les passions se divisent en deux catégories (section « La passion principale �
 
 Lorsqu'une passion est engagée, le joueur peut déclarer un dépassement avant le jet (section « Se dépasser »). Le dépassement permet de conserver des réussites supplémentaires obtenues sur les dés mais rejetées par la limite de compétence. Cela augmente la marge de succès ou réduit l'effet d'un 1.
 
-Ce recours est exigeant: il inflige une fatigue temporaire au Potentiel mobilisé et est limité à une fois par scène (section « Les passions »). L'échec ou le renoncement aux passions génère des frustrations psychologiques.
+Ce recours est exigeant : il inflige une fatigue au Potentiel mobilisé, un point par réussite supplémentaire gardée, jusqu'à la fin de la scène, et n'est possible qu'une fois par scène (section « Utilisation des convictions dans le système des dés », p. 407). Une passion frustrée fait gagner de la Névrose (p. 409). Une conviction forte permet de se dépasser dans les mêmes conditions quand l'action défend son point de vue (p. 407) ; en combat, chaque personnage peut se dépasser une fois, quelles que soient ses passions (p. 389, 390).
 
 ## Valeurs
 - Déclenchement: déclaration avant le jet, sur validation du meneur.
@@ -38,7 +38,7 @@ Ce recours est exigeant: il inflige une fatigue temporaire au Potentiel mobilis�
   5. Le don de soi: charité, altruisme et dévouement.
   6. L'ordre: conservatisme et maintien de l'ordre.
 - Nombre de passions secondaires: 2.
-- Impact psychologique: un échec avec passion engagée fait gagner 1 point de psychose.
+- Impact psychologique: un échec **critique** sur un jet impliquant une passion fait gagner 1 point de Psychose (p. 410) ; un échec simple donne +1 Névrose, comme tout échec (p. 409).
 
 ## À la table
 Concrètement, la mise en œuvre de la mécanique des passions et du dépassement s'articule lors des moments clés de la narration:
@@ -47,15 +47,17 @@ Concrètement, la mise en œuvre de la mécanique des passions et du dépassemen
 2. Déclaration du dépassement: Avant d'effectuer son jet de dés, le joueur annonce au meneur de jeu son intention de se dépasser. Le meneur valide si la situation narrative justifie l'implication de la passion invoquée (section « Se dépasser »).
 3. Lancement et résolution du test: Le joueur lance ses dés à dix faces selon la formule habituelle. Lors de la sélection des dés gardés, le dépassement lui permet de retenir des réussites obtenues sur les dés lancés mais normalement rejetées par la limite de son rang de compétence (section « Se dépasser »).
 4. Application du coût en fatigue: Pour chaque réussite supplémentaire retenue grâce au dépassement au-delà du rang de compétence, le Potentiel mobilisé subit immédiatement 1 point de fatigue (section « Se dépasser »). Le joueur note un trait oblique sous la jauge du Potentiel concerné.
-5. Contrecoup psychologique: Si le test engagé avec une passion se solde par un échec, la frustration ou la blessure morale inflige au personnage 1 point de Psychose (section « Les passions »).
+5. Contrecoup psychologique: Si le test engagé avec une passion se solde par un échec critique, le personnage gagne 1 point de Psychose (section « Variation de la psychose », p. 410) ; sur un échec simple, 1 point de Névrose (p. 409).
 
 ## Cas limites
 Le livre précise plusieurs cas particuliers et situations ambiguës entourant le dépassement:
 
 - Limite par scène: Un personnage ne peut effectuer qu'un seul dépassement par scène, quelle que soit la passion mobilisée (section « Se dépasser »).
-- Épuisement du Potentiel: Si la fatigue générée par les réussites supplémentaires conservées fait tomber le Potentiel Physique, Mental ou Social à 0, le personnage s'effondre en incapacité à la fin de son action (section « Se dépasser », section « Héros en incapacité »).
+- Fatigue jusqu'à zéro: si la fatigue du dépassement amène le Potentiel **Physique** à 0, le personnage est hors de combat (section « Héros en incapacité », p. 395) ; le livre ne prévoit pas d'incapacité pour le Mental ou le Social.
 - Annulation d'un dé 1: Le dépassement permet d'utiliser des réussites excédentaires pour annuler l'effet pénalisant d'un dé affichant 1 conservé obligatoirement lors du tirage (section « Se dépasser »).
-- Incompatibilité des passions: Le meneur peut refuser le dépassement si les actions du personnage contredisent l'orientation de sa passion principale (section « La passion principale »).
+- Contradiction de principes: tant qu'une conviction s'oppose à une passion, ou qu'un blocage se crée sur un objectif, le personnage ne peut pas utiliser le dépassement ; en contrepartie, le meneur lui octroie des points de développement supplémentaires (section « Le principe de contradiction », p. 414). Seul le meneur juge si la passion invoquée est engagée (p. 385).
+- Interdits: on ne se dépasse jamais sur un test psychotique (p. 410) ni contre un poison à mort assurée (p. 397).
+- Annonce: le livre veut l'annonce avant le jet (p. 385) ; l'exemple de l'orateur (p. 407) la montre au moment où il constate deux réussites non gardées. À la table de choisir ; GM-OS demande l'annonce avant le jet.
 
 ## Non couvert
 rien
