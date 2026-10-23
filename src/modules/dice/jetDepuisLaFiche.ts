@@ -1,4 +1,5 @@
 import { DiceEngine, type RollResult, type ModificateurDeSauvegarde } from './DiceEngine';
+import { sansCritiqueDeBase } from './systemes/symbaroumRegles';
 import { estUneSauvegarde, decrireLeJetDuPilote } from './lectureDuPilote';
 import { deCourant, ecrireLeDe, ressourcesDUsure } from './ressourcesDUsure';
 import { CLE_CTHULHU_HACK, memoriserTestCH, modificateursCH, type RegleCthulhuHack } from './systemes/cthulhuHack';
@@ -44,10 +45,11 @@ interface PiloteLu {
     dice?: { engine?: string; defaultDice?: string };
     jet?: {
         cthulhuHack?: RegleCthulhuHack;
+        symbaroum?: unknown;
         sens?: string;
         reserve?: { max?: number; faces?: number };
         desEchelonnes?: unknown;
-        seuil?: { sectionId: string; sectionsSupplementaires?: string[] }[];
+        seuil?: { sectionId: string; sectionsSupplementaires?: string[]; motif?: string }[];
     };
     desDUsure?: { fieldId: string; label: string; plafond?: number }[];
     combat?: { statsToTrack?: { fieldId: string; label: string; isMainHP?: boolean; isResource?: boolean }[] };
@@ -62,10 +64,22 @@ const DIT: Record<ModificateurDeSauvegarde, string> = { aucun: '', avantage: ' �
 /** Les caractéristiques qu'une Sauvegarde peut viser : les champs des sections du seuil. */
 export function caracteristiquesDeSauvegarde(pilote: PiloteLu | null | undefined, gabarit: GabaritLu | null | undefined) {
     if (!pilote || !gabarit || !estUneSauvegarde(decrireLeJetDuPilote(pilote))) return [];
-    const sections = new Set((pilote.jet?.seuil ?? []).flatMap(s => [s.sectionId, ...(s.sectionsSupplementaires ?? [])]));
+    /*
+      **Le motif de la composante** (Symbaroum, 2026-10-23) : la Défense se jette
+      depuis les valeurs secondaires, pas l'Endurance ni le Seuil de Corruption.
+      Sans lui, une section supplémentaire offrait tous ses champs.
+    */
+    const motifs = new Map<string, (RegExp | null)[]>();
+    for (const c of pilote.jet?.seuil ?? []) {
+        let motif: RegExp | null = null;
+        try { motif = c.motif ? new RegExp(c.motif) : null; } catch { motif = null; }
+        for (const id of [c.sectionId, ...(c.sectionsSupplementaires ?? [])]) motifs.set(id, [...(motifs.get(id) ?? []), motif]);
+    }
     return gabarit.sections
-        .filter(s => sections.has(s.id))
-        .flatMap(s => s.fields.map(f => ({ fieldId: f.id, label: f.label })));
+        .filter(s => motifs.has(s.id))
+        .flatMap(s => s.fields
+            .filter(f => motifs.get(s.id)!.some(m => !m || m.test(f.id)))
+            .map(f => ({ fieldId: f.id, label: f.label })));
 }
 
 export function resoudreLeJetDeFiche(
@@ -84,7 +98,9 @@ export function resoudreLeJetDeFiche(
         const valeur = Number(fiche[demande.champ]) - (ch?.malus ?? 0);
         if (!Number.isFinite(valeur)) return null;
         const modificateur = ch?.desavantage ? (demande.modificateur === 'avantage' ? 'aucun' : 'desavantage') : demande.modificateur ?? 'aucun';
-        const resultat = DiceEngine.rollSauvegarde(valeur, modificateur);
+        // Le d20 de Symbaroum n'a pas de critique de base (S8) : la mention du moteur s'efface.
+        const lance = DiceEngine.rollSauvegarde(valeur, modificateur);
+        const resultat = pilote?.jet?.symbaroum ? sansCritiqueDeBase(lance) : lance;
         return {
             resultat,
             ...(pilote?.jet?.cthulhuHack ? {suiviCH:{[CLE_CTHULHU_HACK]:memoriserTestCH(fiche,{id:crypto.randomUUID(),champ:demande.champ,genre:'sauvegarde',seuil:valeur,modificateur,desavantagePresent:!!ch?.desavantage||demande.modificateur==='desavantage',reussi:resultat.tagSuccess===true})[CLE_CTHULHU_HACK]}}:{}),

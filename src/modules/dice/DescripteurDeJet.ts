@@ -495,6 +495,13 @@ export interface DescripteurDeJet {
     /** Suivi optionnel du livre Cthulhu Hack : blessures, durées et armures. */
     cthulhuHack?: import('./systemes/cthulhuHack').RegleCthulhuHack;
     /**
+     * **Symbaroum, jusqu'au bout** — 2026-10-23 (`systemes/symbaroumRegles.ts`) :
+     * l'attaque et la Défense avec leurs dégâts, l'Endurance et l'agonie, la
+     * Corruption et ses Stigmates, la création, la progression, la bourse, les
+     * voyages et les règles optionnelles que la table retient.
+     */
+    symbaroum?: import('./systemes/symbaroumRegles').RegleDeSymbaroum;
+    /**
      * **Brisé** — Blade Runner, 2026-10-14. Quand forcer met un de ces champs à
      * zéro, le panneau le dit, et peut lancer l'effet critique : le dé `de` (un
      * champ échelonné, l'Empathie), lu dans `table` (Table-OS) ; sur un 1, le

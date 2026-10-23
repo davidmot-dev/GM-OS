@@ -20,7 +20,7 @@ En combat, la règle optionnelle des réussites parfaites et échecs critiques s
 
 La règle de confirmation limite la fréquence des critiques par un second jet (section « Limiter le nombre d'Attaques parfaites et d'Échecs critiques »).
 
-La règle des dégâts critiques exige de lancer deux fois les dés sur chaque test lorsqu'une créature subit des dégâts atteignant sa Résistance à la douleur (section « Modificateurs de dégâts critiques »).
+La règle des dégâts critiques exige de lancer deux fois les dés sur chaque test lorsqu'une créature subit des dégâts **qui dépassent** sa Résistance à la douleur (p. 183) — strictement : un coup égal à la douleur fait tomber ou ouvre une Attaque gratuite (p. 164), il n'est pas critique. Ne pas fusionner ces deux règles ni la Mort subite.
 
 ## Valeurs
 - Attaque parfaite (1 en Attaque): +1D6 dégâts (section « Attaques parfaites et échecs critiques en Défense »).
@@ -28,8 +28,8 @@ La règle des dégâts critiques exige de lancer deux fois les dés sur chaque t
 - Défense parfaite (1 en Défense): Attaque gratuite pour le joueur (section « Attaques parfaites et échecs critiques en Défense »).
 - Échec critique en Défense (20 en Défense): +3 dégâts pour l'ennemi (section « Attaques parfaites et échecs critiques en Défense »).
 - Confirmation du critique: second jet réussi pour le 1, ou échoué pour le 20 (section « Limiter le nombre d'Attaques parfaites et d'Échecs critiques »).
-- Seuil de Dégâts critiques: dégâts nets en un coup égaux ou supérieurs à la Résistance à la douleur.
-- Effet des Dégâts critiques: deux lancers par test (garder le pire résultat) jusqu'à guérir d'un point d'Endurance (section « Modificateurs de dégâts critiques »).
+- Seuil de Dégâts critiques: dégâts nets en un coup **supérieurs** à la Résistance à la douleur (p. 183 ; corrigé le 2026-10-23, la fiche disait « égaux ou supérieurs »).
+- Effet des Dégâts critiques: deux lancers par test jusqu'à guérir d'un point d'Endurance — le pire pour un PJ touché, le meilleur pour le joueur contre un PNJ touché (p. 183).
 
 ## À la table
 Lors d'un problème gradué, le joueur effectue son test d'Attribut. En cas de réussite, le Meneur de Jeu donne une information de base (section « Degrés de réussite »). L'accès aux niveaux d'information supérieurs nécessite la maîtrise d'un Talent spécifique comme Alchimie, Medicus, Connaissance des bêtes ou Domination (section « Degrés de réussite »).
@@ -38,7 +38,7 @@ En combat, un résultat de un en Attaque ajoute des dégâts supplémentaires, t
 
 Si la règle de confirmation est appliquée, un résultat de un ou vingt exige un second jet immédiat pour valider le résultat critique (section « Limiter le nombre d'Attaques parfaites et d'Échecs critiques »).
 
-Lorsqu'un coup atteint la Résistance à la douleur d'un personnage, la règle optionnelle des dégâts critiques contraint à lancer deux fois les dés sur chaque test et à garder le pire résultat jusqu'à recevoir au moins un point de soin (section « Modificateurs de dégâts critiques »).
+Lorsqu'un coup dépasse la Résistance à la douleur d'un personnage, la règle optionnelle des dégâts critiques contraint à lancer deux fois les dés sur chaque test et à garder le pire résultat jusqu'à recevoir au moins un point de soin (p. 183).
 
 ## Cas limites
 Le livre précise plusieurs cas particuliers:

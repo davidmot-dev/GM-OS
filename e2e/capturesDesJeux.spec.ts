@@ -152,7 +152,10 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         sheetData: {
             precision: 15, agilite: 13, vigilance: 11, volonte: 10, astuce: 10, discretion: 9, force: 7, persuasion: 5,
             endurance: 10, endurance_actuelle: 10, resistance_douleur: 4, defense: 12, seuil_corruption: 5,
-            corruption_temporaire: 2, corruption_permanente: 1, argent: 5,
+            corruption_temporaire: 2, corruption_permanente: 1, argent: 5.37, bourse: '5 thalers',
+            // Finir Symbaroum (2026-10-23) : une arme, une armure, un Talent, de l'Expérience.
+            arme_1: 'Épée', arme_1_degats: '1D8', armure_1: 'Cuir clouté', armure_1_protection: '1D4',
+            talent_1: 'Maîtrise des armes', talent_1_niveau: 'Novice', experience: 24, experience_non_depensee: 24,
         },
         composantes: ['precision'],
         scenes: c => scenesDeSymbaroum(c),
@@ -416,10 +419,15 @@ for (const { mise, pilote } of JEUX) {
         // Un panneau plus haut que la fenêtre se photographierait coupé : on l'agrandit le temps des deux prises.
         const fenetre = await gmos.application.browserWindow(f);
         await fenetre.evaluate(w => w.setContentSize(1440, 1800));
+        // Les cartes de Symbaroum (2026-10-23) ont leurs propres prises : le jet se photographie seul.
+        const sansCartes = mise.corpusId === 'symbaroum'
+            ? await panneau.evaluateHandle(p => { const st = document.createElement('style'); st.textContent = '[data-panneau-de-jet] > [data-carte-du-jeu] { display: none !important; }'; p.ownerDocument.head.appendChild(st); return st; })
+            : null;
         await photographier(panneau, `jeu-${mise.slug}-jet`);
 
         await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
         await photographier(panneau, `jeu-${mise.slug}-jet-lance`);
+        await sansCartes?.evaluate(st => st.remove());
         await fenetre.evaluate(w => w.setContentSize(1440, 900));
 
         // La fiche du groupe — la Cabale, commune à toute la table.
@@ -715,6 +723,7 @@ async function scenesDeSymbaroum(c: ContexteDeScene): Promise<void> {
     await expect(panneau.getByText(/15 \+ \(10 − 13\) \+ 2/)).toBeVisible();
     const fenetre = await gmos.application.browserWindow(f);
     await fenetre.evaluate(w => w.setContentSize(1440, 1800));
+    await f.evaluate(() => { const st = document.createElement('style'); st.id = 'capture-sans-cartes'; st.textContent = '[data-panneau-de-jet] > [data-carte-du-jeu] { display: none !important; }'; document.head.appendChild(st); });
     // Relancé contre 14 : le résultat du lancer précédent (contre 15) ne doit pas rester sous ce seuil.
     await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
     await expect(panneau.getByText(/ \/ 14/).first()).toBeVisible();
@@ -735,6 +744,7 @@ async function scenesDeSymbaroum(c: ContexteDeScene): Promise<void> {
         await panneau.locator('[data-avantage-tactique]').uncheck();
         await fenetre.evaluate(w => w.setContentSize(1440, 900));
     }
+    await f.evaluate(() => document.getElementById('capture-sans-cartes')?.remove());
 
     // Le Seuil de Corruption (S4) : Volonté 10 → seuil 5 ; 4 temporaires + 1 permanente le franchissent.
     if ((c.pilote.gameDriver as { franchissements?: unknown[] }).franchissements?.length) {
@@ -757,6 +767,66 @@ async function scenesDeSymbaroum(c: ContexteDeScene): Promise<void> {
         await photographier(fin, 'jeu-symbaroum-fin-de-scene');
         await fin.getByRole('button', { name: 'Annuler', exact: true }).click();
     }
+
+    // Finir Symbaroum (2026-10-23) : l'attaque et ses dégâts, la Défense ratée, l'agonie, les cartes de la fiche.
+    if (!(c.pilote.gameDriver as { jet?: { symbaroum?: unknown } }).jet?.symbaroum) return;
+    const lancer = () => panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    const resultat = panneau.getByRole('region', { name: 'Résultat', exact: true });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    await panneau.locator('select').first().selectOption('precision');
+    // Précision 15 contre une Défense de 12 : 15 + (10 − 12) = 13.
+    await panneau.locator('[data-valeur-adverse]').fill('12');
+    await panneau.locator('[data-modificateur-du-seuil]').fill('0');
+    await panneau.getByRole('radio', { name: 'Attaque', exact: true }).check();
+    const degats = panneau.locator('[data-degats-symbaroum]');
+    for (let i = 0; i < 40 && await degats.count() === 0; i++) await lancer();
+    await degats.getByLabel('Protection du PNJ').fill('2');
+    await degats.getByLabel('Résistance à la douleur du PNJ').fill('4');
+    await degats.getByRole('button', { name: /^Lancer 1D8/ }).click();
+    await expect(degats.locator('[data-issue-des-degats]')).toBeVisible();
+    await fenetre.evaluate(w => w.setContentSize(1440, 1800));
+    await photographier(resultat, 'jeu-symbaroum-degats');
+
+    // La Défense 12 contre une Précision de 13 : 12 + (10 − 13) = 9 ; ratée, on encaisse 6 moins le Cuir.
+    await panneau.getByRole('radio', { name: 'Défense', exact: true }).check();
+    await panneau.locator('[data-valeur-adverse]').fill('13');
+    const encaisser = panneau.locator('[data-encaisser-symbaroum]');
+    for (let i = 0; i < 40 && await encaisser.count() === 0; i++) await lancer();
+    await encaisser.getByLabel('Dégâts du PNJ').fill('6');
+    await encaisser.getByRole('button', { name: 'Lancer la protection et encaisser', exact: true }).click();
+    await expect(encaisser.locator('[data-issue-encaisser]')).toBeVisible();
+    await photographier(resultat, 'jeu-symbaroum-encaisser');
+    await fenetre.evaluate(w => w.setContentSize(1440, 900));
+
+    // L'agonie : à 0, un Test de mort.
+    await ecrireLaFiche(c, { endurance_actuelle: 0 });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const endurance = f.locator('[data-carte-du-jeu="endurance-symbaroum"]');
+    await endurance.getByRole('button', { name: 'Test de mort (1D20)', exact: true }).click();
+    await expect(endurance.locator('[data-dernier-endurance]')).toBeVisible();
+    await photographier(endurance, 'jeu-symbaroum-agonie');
+    await ecrireLaFiche(c, { endurance_actuelle: 10, _gmos_symbaroum: undefined });
+
+    // La Corruption et un Stigmate noté.
+    await ecrireLaFiche(c, { corruption_temporaire: 4, corruption_permanente: 1 });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const corruption = f.locator('[data-carte-du-jeu="corruption-symbaroum"]');
+    await corruption.getByRole('button', { name: 'Noter, temporaire', exact: true }).click();
+    await photographier(corruption, 'jeu-symbaroum-corruption');
+    await ecrireLaFiche(c, { corruption_temporaire: 2, corruption_permanente: 1, _gmos_symbaroum: undefined });
+
+    // Les cartes du meneur : valeurs dérivées, progression, bourse, voyage, règles optionnelles.
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    await photographier(f.locator('[data-carte-du-jeu="derivees-symbaroum"]'), 'jeu-symbaroum-derivees');
+    await photographier(f.locator('[data-carte-du-jeu="progression-symbaroum"]'), 'jeu-symbaroum-progression');
+    await photographier(f.locator('[data-carte-du-jeu="bourse-symbaroum"]'), 'jeu-symbaroum-bourse');
+    const voyage = f.locator('[data-carte-du-jeu="voyage-symbaroum"]');
+    await voyage.getByLabel('Distance en kilomètres').fill('45');
+    await photographier(voyage, 'jeu-symbaroum-voyage');
+    const options = f.locator('[data-carte-du-jeu="options-symbaroum"]');
+    await options.getByRole('checkbox', { name: /Attaques parfaites/ }).check();
+    await photographier(options, 'jeu-symbaroum-options');
+    await options.getByRole('checkbox', { name: /Attaques parfaites/ }).uncheck();
 }
 
 /**

@@ -54,7 +54,7 @@ conformément à la décision de David du 19/10.
 | [NOC](#noc) | 🟢 1 · 🟠 1 · 🔴 5 | Restes revérifiés dans le code le 19/10 ; **Séquelle proposée à 8 le 22/10** (registre § 150), essai de David validé | Singularité attribuée par un Rouage |
 | [Rêve de Dragon](#rêve-de-dragon) | 🟢 0 · 🟠 1 · 🔴 5 | Socle R0–R7 livré pour les PJ ; première boucle TMR livrée ; mécaniques du Voyageur dans l'onglet « Lancer un test » le 22/10 | Initiative complète et suites du Haut-Rêve |
 | [Star Trek Adventures](#star-trek-adventures) | 🟢 0 · 🟠 1 · 🔴 4 | Pilote et LCARS documentés ; audit mécanique détaillé à faire | Export actuel, règles de la deuxième édition et essais matériels LCARS |
-| [Symbaroum](#symbaroum) | 🟢 3 · 🟠 1 · 🔴 6 | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), **essai de David validé** | S5 : attaque, défense et dégâts |
+| [Symbaroum](#symbaroum) | 🟢 10 · 🟠 0 · 🔴 0 | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), essai de David validé ; **S0, S2 et S5 à S9 livrés le 23/10** (§ 166), pilote 2.0.0 | Réimport du pilote 2.0.0 et essai de David |
 | [Torg Eternity](#torg-eternity) | 🟢 0 · 🟠 0 · 🔴 5 | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
 | [Within](#within) | 🟢 0 · 🟠 0 · 🔴 4 | Export examiné sommairement ; aucune règle primaire auditée | Reprendre la référence et construire une configuration mécanique vérifiable |
 
@@ -422,7 +422,7 @@ livre de base, avec NotebookLM limité à ce livre et vérifications déterminis
 **Déjà disponible :** fiche HTML `symbaroum-fr`, 182 zones et 158 clés, intégrée et raccordée ;
 pilote corrigé à 10 sections et 139 champs, huit Attributs, talents, armes, protections,
 artéfacts et compagnons. La fiche passe son validateur sans erreur ni avertissement.
-Registre général : § 145 et ligne 81.
+Registre général : § 145, 149, 150, 155 et **166**, lignes 81 et 102.
 
 **Livré (registre § 145) :** le jet **additionnait les huit Attributs** — une seule composante
 désormais — et la santé de départ lit l'Endurance (`712f70c1`). En écrivant la page du manuel
@@ -446,21 +446,38 @@ refaites. **Réimporté ; essai de David validé le 22/10, comme S3 et S4.**
 
 | Lot | Priorité | Amélioration possible |
 | --- | --- | --- |
-| 🔴 S0 | P0 | Corriger le corpus : choix du joueur après douleur, tests de mort qui continuent, cécité, asymétrie et gain permanent de Corruption |
+| 🟢 S0 | **Livré le 23/10** | Corpus corrigé : choix du joueur après douleur, tests de mort qui continuent, cécité, asymétrie, gain permanent de Corruption, dégâts alternatifs (registre § 166) |
 | 🟢 S1 | **Livré le 22/10** | Opposition explicite et modificateur au seuil du d20, calcul lisible sous « Seuil » et redit au journal (registre § 149) ; essai de David validé |
-| 🟠 S2 | Raccord **livré le 22/10** ; reste P1 | Endurance courante = santé principale et fiche neuve initialisée : faits (registre § 150). Restent les dérivées calculées et l'agonie |
-| 🟢 S3 | **Livré le 22/10** | Case Avantage tactique (+2 au seuil, +1D4 aux dégâts rappelé, un seul d20) ; le double lancer renommé (registre § 155). Restent la cécité (trois cas) et la cible à terre (mêlée seulement), à la main |
-| 🟢 S4 | **Livré le 22/10** | Fin de scène (§ 150) ; Corruption totale surveillée : Stigmate et 1D4 permanent au Seuil de Corruption, Abomination à la Volonté (§ 155). Restent quel Stigmate et sa durée, les coûts des pouvoirs |
-| 🔴 S5 | P1 | Parcours attaque/défense du joueur ; dégâts/protection fixes des PNJ ; dégâts nets, douleur et effets particuliers |
-| 🔴 S6 | P1 | Initiative départagée par Vigilance puis d20, choix de retard et rappels d'actions/réactions |
-| 🔴 S7 | P2 | Création, budgets d'Attributs, effets des Talents et progression sur l'Expérience disponible |
-| 🔴 S8 | P2 | Profils explicites de critiques, confirmation, Mort subite et relances optionnelles |
-| 🔴 S9 | P2 | Unifier bourse et jauge monétaire, assister les voyages, ajouter le manuel du jeu et ses captures |
+| 🟢 S2 | **Livré** (22/10 et 23/10) | Endurance courante = santé principale, fiche neuve initialisée (§ 150) ; dérivées calculées et agonie (§ 166) |
+| 🟢 S3 | **Livré le 22/10** | Case Avantage tactique (+2 au seuil, +1D4 aux dégâts rappelé, un seul d20) ; le double lancer renommé (registre § 155). La cécité (trois cas) et la cible à terre (mêlée seulement) se règlent au jet, rappelées par la carte Le tour de combat (§ 166) |
+| 🟢 S4 | **Livré** (22/10 et 23/10) | Fin de scène (§ 150) ; Stigmate et 1D4 permanent au seuil, Abomination (§ 155) ; quel Stigmate et sa durée, Ombre, coûts des pouvoirs en gestes (§ 166) |
+| 🟢 S5 | **Livré le 23/10** | Parcours attaque/Défense du joueur ; dégâts/protection fixes des PNJ ; dégâts nets, douleur, poison, acide, dégâts alternatifs (§ 166) |
+| 🟢 S6 | **Livré le 23/10** | Initiative départagée par Vigilance puis d20 (`combat.departages`) ; retard par glisser ; rappels d'actions et réactions (§ 166) |
+| 🟢 S7 | **Livré le 23/10** | Contrôle de création, progression sur l'Expérience à dépenser (§ 166) ; les effets des Talents restent à la main |
+| 🟢 S8 | **Livré le 23/10** | Pas de critique de base ; options par campagne, confirmation, Mort subite, dégâts critiques, relances (§ 166) |
+| 🟢 S9 | **Livré le 23/10** | Bourse unique réécrite sur un clic ; voyages du Tableau 26 ; manuel et captures (§ 166) |
 
-**Ordre conseillé :** S0/S1/S2-raccord → S3/S4/S5 → agonies et tours → progression/options.
-**Cas témoin reproduit :** Précision 12, opposition 13, dé 10 : le code annonce aujourd'hui
-une réussite sous 12, alors que le seuil modifié devrait être 9. La simple validité du JSON
-et de la fiche ne détecte pas cette erreur.
+**S0, S2 et S5 à S9 livrés le 23/10 (registre § 166)**, à la demande de David (« je voudrais
+qu'on finisse Symbaroum »), contre le Livre de Base : logique pure `systemes/symbaroumRegles.ts`,
+cartes `SymbaroumAuJet.tsx` au panneau de jet, départage commun de l'initiative
+(`combat.departages`), règles optionnelles par campagne (`Campaign.reglesOptionnelles`), contrôles
+de la Forge, pilote **2.0.0** par `outils/symbaroum/finir_symbaroum.py` (zéro constat), corpus
+corrigé, page du manuel et neuf nouvelles captures. **Essai de David : à faire**, après réimport de
+`Export Dirvers/corriges/Symbaroum_driver_gmos_finir.gmos-driver`.
+
+| Lot | Livré le 23/10 | Vérifié | Reste à la main |
+| --- | --- | --- | --- |
+| 🟢 S0 | Neuf fiches du corpus corrigées ; santé, dégâts, initiative passées à `relu: true` ; trois affirmations sans passage retirées ; un écart de plus trouvé (dégâts alternatifs : l'Attribut à 0 **tue**, p. 205) | Contre les pages imprimées 103, 123–124, 152–157, 161–167, 177–184, 190, 205 | Six fiches encore `relu: false` (talents, problèmes gradués, toiles…) |
+| 🟢 S2 | Valeurs dérivées comparées à la fiche, « Adopter » ; carte Endurance et agonie : Test de mort compté sur la fiche, soins et Medicus par rang | 27 essais du module, 7 du panneau | — |
+| 🟢 S4 | Corruption, Ombre, sources (pouvoir, artéfact, apprendre, se lier — ou 1 Expérience), Stigmates du Tableau 24, temporaires un jour | Idem | Coûts propres à chaque tradition |
+| 🟢 S5 | Nature du test ; dégâts de l'arme (Avantage, Attaque parfaite) moins la protection fixe du PNJ ; encaisser : dégâts fixes moins la protection lancée, quatre genres de dégâts, mourant à 0 | Idem ; captures `jeu-symbaroum-degats`, `-encaisser` | L'Endurance des PNJ dans le suivi de combat |
+| 🟢 S6 | `combat.departages` : la Vigilance, puis un d20 relancé entre ex aequo ; carte Le tour de combat | 4 essais du départage | Retarder : glisser le combattant |
+| 🟢 S7 | Contrôle de création (80, 5–15, un seul 15) ; Expérience gagnée ; rangs 10/20/30 sur l'Expérience à dépenser | Idem | Les effets des Talents |
+| 🟢 S8 | Le d20 sans critique de base (panneau et tablette) ; six options du chapitre 19, par campagne ; confirmation ; relance unique | Idem | — |
+| 🟢 S9 | Bourse en thalers, shillings, ortegs, réécrite sur la fiche sur un clic ; voyage du Tableau 26 et jour éreintant | Idem ; captures `-bourse`, `-voyage` | Rencontres du voyage |
+
+**Cas témoin reproduit le 20/10, corrigé le 22/10 :** Précision 12, opposition 13, dé 10 : le
+code annonçait une réussite sous 12 ; il annonce `10 / 9`, un échec.
 
 ## Torg Eternity
 
@@ -513,10 +530,10 @@ propres :
 
 | Sujet commun | Pilotes concernés | Résultat recherché |
 | --- | --- | --- |
-| 🟠 Corpus et contrôles de la Forge | Tous, en priorité Crimes/Symbaroum/Dune/Within | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. Sur les onze exports réels, seul Crimes est signalé (C1, déjà connu). **Reste :** relire le corpus, en priorité Crimes/Symbaroum/Dune/Within |
+| 🟠 Corpus et contrôles de la Forge | Tous, en priorité Crimes/Symbaroum/Dune/Within | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Symbaroum relu le 23/10** (§ 166 : neuf fiches corrigées, trois relues). **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. Sur les onze exports réels, seul Crimes est signalé (C1, déjà connu). **Reste :** relire le corpus, en priorité Crimes/Symbaroum/Dune/Within |
 | 🟠 Modificateurs et contexte du jet | Symbaroum, Alien, puis audits des autres | Distinguer modificateur de seuil, nombre de dés, réussites exigées et meilleur/pire dé. **Avantage tactique livré le 22/10 (§ 155).** **Livré le 22/10 (registre § 149) :** `jet.modificateurDuSeuil`, capacité commune du moteur (tout jeu jeté sous un seuil additionné), avec opposition explicite ; Symbaroum la déclare. Les réussites exigées restent `difficulte` (Dune), le nombre de dés la réserve, meilleur/pire dé « Tirage ». **Reste :** les audits des autres jeux |
 | 🟠 Choix du paiement et bilan du jet | Dune ; Star Trek à auditer séparément | Conserver coût, source, effets immédiats et reliquat, sans double dépense ni perte anticipée. **Livré le 22/10 (registre § 151) :** `paiementAuChoix` (« dont en Menace », depuis la fiche et la tablette) ; l'Impulsion du jet que la réserve pleine ne garde pas reste sur le test (dépenser ou verser). Activé pour Dune (D2) et, sur décision de David du 22/10, pour **Star Trek** (`ST_driver_gmos_paiement`). **Reste :** dépenses contextualisées (informations, traits, atouts), Impulsion bonus non conservable |
-| 🟠 Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu. **Livré le 22/10 (registre § 150) :** la fiche naît à sa santé de départ ; la Forge avertit d'une santé sans champ courant (Symbaroum corrigé, Crimes signalé) ; `franchissements` propose la séquelle permanente une fois par passage (NOC). Crimes C2 livré le 22/10 (§ 158 : Potentiel actuel, atteintes, bonne nuit). **Reste :** Crimes C6 (carte de combat sur le Physique actuel), Blade Runner (stabilisation), Cthulhu Hack (Hors Jeu), agonie de Symbaroum |
+| 🟠 Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu. **Livré le 22/10 (registre § 150) :** la fiche naît à sa santé de départ ; la Forge avertit d'une santé sans champ courant (Symbaroum corrigé, Crimes signalé) ; `franchissements` propose la séquelle permanente une fois par passage (NOC). Crimes C2 livré le 22/10 (§ 158 : Potentiel actuel, atteintes, bonne nuit). **Reste :** Crimes C6 (carte de combat sur le Physique actuel), Blade Runner (stabilisation), Cthulhu Hack (Hors Jeu) ; l'agonie de Symbaroum est livrée le 23/10 (§ 166) |
 | 🟠 Événements de scène, séance et temps de jeu | Corruption, Stress, soins, progression, voyages | Des déclencheurs nommés ; une reconnexion ne rejoue pas une dépense, un soin ou un franchissement. **Livré le 22/10 (registre § 150) :** « Fin de scène » écrit aussi les fiches (`gestesDesHeros.finDeScene`, `delta: 'vide'`) après aperçu, même sans réserve de table ; un franchissement traité est retenu par la fiche. **Reste :** durées et échéances en temps de jeu (Cthulhu Hack, Blade Runner) ; la Corruption au seuil est livrée (§ 155) |
 | 🟠 Fiches, tablettes et journal | Tous | Même calcul et mêmes ressources ; clés stables, secrets filtrés et modifications historisées. **Audit rendu le 22/10** ([rapport](2026-10-22-audit-fiches-tablettes-journal.md), registre § 151) : secrets du meneur envoyés aux tablettes des joueurs (S1 `lectureDuMeneur`, S2 `gmNotes`, S5 fenêtres locales), indices non révélés (S3), notes du meneur écrivables par un joueur (S4), modifications de fiche jamais historisées (H1), pupitre sans réserves (C1) ; motif des tablettes au journal corrigé (A1). **S1, S2, S5 corrigés le 22/10** (registre § 152) : les secrets du meneur ne partent plus vers les tablettes ni les fenêtres de la table ; **S3, S4 le même jour** (§ 153) : indices non révélés retenus, notes du meneur protégées ; **H1 et C1** (§ 154) : modifications de fiche au journal avec leur origine, réserves 2d20 réglées au pupitre et à la télécommande. **Tous les constats traités** ; les recettes des tablettes, cassées depuis `a128c7af`, toutes vertes (§ 156). **Reste :** l'axe des clés stables, survolé |
 | 🟢 **Onglet « Lancer un test »** — livré le 22/10 (`6f709c79`, registre § 147) | Tous | Le test a son onglet sur la fiche du meneur (Formulaire / Lancer un test / Fiche du jeu) et sur la tablette (Vue synthétique / Lancer un test / Ma fiche / groupe), d'après les maquettes Stitch retenues : étapes Composer, Préparer, Lancer les dés, Résultat ; dés nommés ; blocs propres au jeu en cartes repliables (Alien : dernier test, blessures, Stress et Panique ; RdD : mécaniques du Voyageur). Aucun pilote modifié. Captures du manuel refaites pour les dix jeux. **Essai de David validé le 22/10** |

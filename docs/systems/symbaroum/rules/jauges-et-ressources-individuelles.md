@@ -24,7 +24,7 @@ Jauge de Corruption:
 - Départ: 0; Bornes: 0 à Volonté (section « Ombre et Corruption »).
 - Variation: Monte quand la situation empire.
 - Facteurs: Augmente par les sorts, artéfacts et Davokar sombre; baisse par dissipation en fin de scène (temporaire) ou rituels (permanente) (section « Ombre et Corruption »).
-- Seuils: Au Seuil de Corruption (Volonté divisée par deux arrondie au supérieur), le personnage est Marqué par la Corruption et reçoit un Stigmate. À la Volonté (Corruption totale), il se transforme définitivement en Abomination (section « Seuil de Corruption »).
+- Seuils: Au Seuil de Corruption (Volonté divisée par deux arrondie au supérieur), le personnage est Marqué par la Corruption et reçoit un Stigmate ; **atteindre ce seuil durant une scène fait aussi gagner 1D4 de Corruption permanente** (p. 180 ; ajouté le 2026-10-23). À la Volonté, atteinte ou dépassée par la Corruption totale, il se transforme définitivement en Abomination (Tableau 25 et p. 180).
 - Nature: S'accumule.
 
 Ressource d'Expérience:
@@ -52,7 +52,7 @@ L'Argent est manipulé lors des transactions en ville (section « Argent »). Le
 ## Cas limites
 Le livre précise plusieurs cas particuliers:
 - Transformation en Abomination: Si la Corruption totale atteint ou dépasse la Volonté du personnage, il se transforme immédiatement et définitivement en Abomination contrôlée par le Meneur de Jeu (section « Ombre et Corruption »).
-- Durée des Stigmates: Un Stigmate temporaire disparaît un jour après la fin de la scène, tandis qu'un Stigmate permanent persiste tant que la Corruption permanente n'est pas réduite sous le Seuil de Corruption par un rituel comme Feu purificateur ou Pierre d'âme (section « Seuil de Corruption » et section « Rituels »).
+- Durée des Stigmates: Un Stigmate temporaire guérit et disparaît après une journée (Tableau 25, p. 179), tandis qu'un Stigmate permanent persiste tant que la Corruption permanente n'est pas réduite sous le Seuil de Corruption par un rituel comme Feu purificateur ou Pierre d'âme (section « Seuil de Corruption » et section « Rituels »).
 - Décès du personnage: À la mort d'un personnage, le joueur crée un nouveau héros doté du même total d'Expérience accumulée par le précédent (section « Personnages joueurs Morts »).
 - Troc en zone sauvage: Chez les barbares et en Davokar, les pièces sont souvent refusées au profit du troc (section « Argent »).
 

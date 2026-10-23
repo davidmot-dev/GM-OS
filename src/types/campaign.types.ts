@@ -187,6 +187,12 @@ export interface Campaign {
      * rien de plus — la fiche HTML fait foi, ses valeurs redescendent ici.
      */
     groupe?: GroupeDeCampagne;
+    /**
+     * **Les règles optionnelles que la table a retenues** — Symbaroum, 2026-10-23
+     * (Mort subite, attaques parfaites, relances… p. 183–184). Sur la campagne :
+     * c'est un choix du groupe, pas d'un personnage ni du jeu. Absente : aucune.
+     */
+    reglesOptionnelles?: Record<string, boolean>;
 
     /**
      * Quand la campagne a été clôturée. C'est elle qui la range.

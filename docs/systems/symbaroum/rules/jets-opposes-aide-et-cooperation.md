@@ -21,7 +21,7 @@ L'aide et la coopération entre personnages s'expriment par plusieurs mécanique
 2. Les problèmes étendus permettent au groupe de cumuler des réussites successives pour accomplir une tâche collective (section « Problèmes étendus »). Le personnage possédant le meilleur Attribut commence, et chaque jet réussi fait avancer le groupe à l'étape suivante (section « Problèmes étendus »).
 3. Des Talents transmettent directement des avantages aux alliés, comme Connaissance des bêtes qui accorde des dégâts bonus au groupe contre un type de monstre, ou Meneur né qui permet aux alliés d'utiliser la Persuasion du meneur (section « Connaissance des bêtes » et section « Meneur né »).
 
-En cas d'opposition directe entre personnages joueurs, le joueur actif teste son Attribut modifié par celui de son partenaire (section « Conflits au sein du groupe »).
+Entre personnages joueurs, le meneur demande d'abord aux joueurs comment ils voient la situation se régler ; un combat entre eux se **raconte**, sans dés et sans risque de mort (p. 180). Ce n'est que lorsqu'un PJ piège ou dupe l'autre que le joueur actif fait le test et l'autre s'y oppose — un [Discrétion ← Vigilance] pour mentir, voler ou placer un objet (p. 182).
 
 ## Valeurs
 - Formule du modificateur d'opposition: 10 moins l'Attribut adverse (section « Attributs et Modificateurs »).
@@ -41,8 +41,8 @@ Pour une tâche collective hors combat, le groupe résout l'épreuve sous la for
 ## Cas limites
 Le livre apporte plusieurs précisions sur les situations complexes:
 - Limite d'encerclement: quatre combattants au maximum peuvent bénéficier simultanément de l'encerclement contre une même cible (section « Encerclement »).
-- Non-cumul des Avantages: si un personnage cumule plusieurs facteurs d'Avantage (comme un encerclement et une attaque par surprise), les bonus ne s'additionnent pas et restent de plus deux à l'Attribut et plus un dé à quatre faces aux dégâts (section « Avantage »).
-- Opposition entre joueurs: lorsqu'un conflit oppose deux personnages joueurs, le joueur actif effectue le jet sous son Attribut, modifié par dix moins l'Attribut de son partenaire (section « Conflits au sein du groupe »).
+- Plusieurs causes d'Avantage: le passage de la p. 166 ne dit **pas** explicitement qu'elles ne se cumulent pas. GM-OS retient une seule fois +2 et +1D4 — **convention de table**, pas règle du livre (2026-10-23).
+- Opposition entre joueurs: hors piège ou tromperie, pas de jet — la discussion, ou un combat raconté sans dés (p. 180, 182 ; corrigé le 2026-10-23).
 - Portée des Talents de soutien: le partage des bonus issus de Talents comme Meneur né nécessite que les alliés restent à portée de vue et d'audition du personnage (section « Meneur né »).
 
 ## Non couvert

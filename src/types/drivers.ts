@@ -514,6 +514,14 @@ export interface GameDriver {
         initiativeSort?: 'asc' | 'desc'; // Default: 'desc'
         initiativeCards?: number; // If set, use a unique card pool 1-N
         /**
+         * **Départager deux initiatives égales** — Symbaroum, 2026-10-23 (S6) :
+         * des formules comme `initiativeFormula`, comparées dans l'ordre, le
+         * plus haut d'abord ; restés ex aequo, un d20 relancé jusqu'à ce que
+         * l'un l'emporte (`combat/logic/departageDInitiative.ts`). Chez
+         * Symbaroum : `['vigilance']` (p. 161).
+         */
+        departages?: string[];
+        /**
          * Comment l'ordre d'action se décide, quand ce n'est pas un classement.
          *
          * **Ce qu'il rend possible** : dire qu'un jeu n'ordonne pas ses

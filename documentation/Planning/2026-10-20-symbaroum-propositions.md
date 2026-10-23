@@ -86,6 +86,13 @@ fiches, sans déduire une règle générale d'un seul pouvoir.
 sont retirées ou signalées comme arbitrages, et seuls les fichiers réellement vérifiés
 passent à `relu: true`.
 
+**Livré le 23/10/2026 (Claude Code, registre général § 166)** : neuf fiches corrigées contre le
+livre, dont tous les écarts de ce tableau ; un écart de plus trouvé — un Attribut réduit à 0 par
+des dégâts alternatifs **tue** la victime (p. 205), la fiche disait « inconscient » ; trois
+affirmations sans passage retirées (échec automatique sur un mourant, cumul de poisons, armes
+magiques) ; le non-cumul de l'Avantage signalé comme convention. Passées à `relu: true` : santé,
+dégâts, initiative ; les six autres restent `relu: false`.
+
 ## S1 — Appliquer réellement les modificateurs et l'opposition (priorité 0)
 
 Le livre p. 103 demande `d20 ≤ Attribut + modificateurs`. Contre un adversaire, le
@@ -156,6 +163,12 @@ calculées et agonie : pas commencées.
 4 ; un 2–10 ne supprime pas les prochains tests ; trois résultats 11–19 déclenchent la mort.
 L'agonie complète nécessite une évolution du moteur, au-delà du simple raccord de jauge.
 
+**Dérivées et agonie livrées le 23/10/2026 (registre général § 166)** : carte « Valeurs dérivées »
+(le calcul du livre à côté de la fiche, « Adopter » sur un clic, jamais la Défense d'office) ;
+carte « Endurance et agonie » : Test de mort compté sur la fiche (`_gmos_symbaroum`), 2–10 qui
+continue, trois 11–19, réveil sur 1 avec 1D4, soins qui l'arrêtent, Medicus par rang (p. 123–124).
+Force 7 donne 10 et 4 ; trois 11–19 tuent (essais).
+
 ## S3 — Distinguer Avantage tactique et deux lancers (priorité 0)
 
 Le sélecteur générique « Avantage » est proposé pour ce d20 ; il appelle
@@ -215,6 +228,12 @@ contextualisés des pouvoirs.
 gain au seuil tracé une seule fois pour un événement donné, transformation signalée avec
 sa source. « Jouer une abomination » reste une option nécessitant l'accord du groupe ; p. 184.
 
+**Reste de S4 livré le 23/10/2026 (registre général § 166)** : carte « Corruption et Stigmates » —
+total, seuil, Ombre (la Corruption domine dès qu'elle égale Volonté − Corruption), sources en
+gestes (pouvoir, artéfact : 1D4 temporaire ; apprendre, se lier : 1 permanente, ou 1 Expérience),
+Stigmates du Tableau 24 ou inventés, temporaires guéris par « Un jour passe ». Le 1D4 permanent du
+seuil reste porté par `franchissements`, une fois.
+
 ## S5 — Résoudre les échanges de combat dans le sens du joueur (priorité 1)
 
 Les armes, dégâts et protections sont présents sous forme de textes. Les types de dégâts
@@ -246,6 +265,12 @@ Relire chaque effet avant de créer une règle générale de cumul ou d'arrêt.
 coups ne s'additionnent pas pour ce seuil ; les dégâts alternatifs ne réduisent pas
 automatiquement l'Endurance ; aucun jet de PNJ n'est inventé.
 
+**Livré le 23/10/2026 (registre général § 166)** : nature du test au panneau (Test, Attaque,
+Défense — la Défense se choisit, `motif` sur les valeurs secondaires, côté tablette aussi) ;
+« Les dégâts » après une attaque réussie, « Encaisser » après une Défense ratée, avec la valeur
+fixe des PNJ (moitié de la plus haute face), la douleur coup par coup, quatre genres de dégâts.
+L'Endurance des PNJ reste au suivi de combat.
+
 ## S6 — Départager l'initiative et rappeler les actions (priorité 1)
 
 Agilité décroissante est déjà configurée. Les tris de `useCombatStore.ts` comparent seulement
@@ -260,6 +285,10 @@ au premier tour, désengagement, élixir sur soi/autrui et action pour se releve
 
 **Acceptation :** à Agilité égale, Vigilance départage ; la double égalité demande le d20 ;
 l'ordre choisi reste stable ; les réactions ne consomment pas abusivement l'action normale.
+
+**Livré le 23/10/2026 (registre général § 166)** : `combat.departages` (commun) et
+`combat/logic/departageDInitiative.ts` — Vigilance, puis d20 relancé entre ex aequo, ordre gardé
+au retri ; carte « Le tour de combat » (Tableau 22). Retarder : glisser le combattant.
 
 ## S7 — Assister la création, les Talents et la progression (priorité 2)
 
@@ -285,6 +314,11 @@ deux Novices et un Adepte ; p. 79, avec possibilités de départ expérimenté p
 acheter un Talent débite le disponible ; les rangs sont successifs ; un bonus de Talent
 n'est ni perdu au recalcul ni appliqué deux fois.
 
+**Livré le 23/10/2026 (registre général § 166)** : carte « Création et progression » — contrôle
+sans écriture (80, 5–15, un seul 15), Expérience gagnée sur le total et le disponible, rangs
+successifs 10/20/30 débités du disponible ; l'Expérience à dépenser est suivie. Les effets des
+Talents ne sont pas interprétés.
+
 ## S8 — Rendre les options explicites (priorité 2)
 
 Le pilote déclare `critique: 1`, `complication: 20` sans profil d'options. Le d20 est reconnu
@@ -307,6 +341,12 @@ Mort subite et dégâts critiques p. 183 constituent encore deux options distinc
 la ressource correcte ; un même résultat ne déclenche pas plusieurs paiements ; les tests
 de mort et accidents de voyage gardent leurs résultats spéciaux propres.
 
+**Livré le 23/10/2026 (registre général § 166)** : plus de `critique`/`complication` au pilote ; la
+mention « réussite critique » du moteur effacée sur le d20 de Symbaroum (panneau et tablette) ;
+six options du chapitre 19 retenues par campagne (`Campaign.reglesOptionnelles`), confirmation par
+un second jet, relance unique contre 1 Expérience ou 1 Corruption permanente, jamais sur un Test
+de mort ni un échec critique en Défense.
+
 ## S9 — Réunir monnaie, voyages et manuel (priorité 2)
 
 La bourse écrite sur la fiche HTML est reliée à `bourse`, tandis que la jauge de richesse
@@ -325,6 +365,12 @@ Aucune page `54-Jeu-Symbaroum` ni entrée Symbaroum dans les captures du manuel 
 retrouvée lors de l'audit. Après toute amélioration mise en œuvre, documenter le pilote dans
 le manuel des jeux, sa ligne dans la page 53 et les captures `e2e/capturesDesJeux.spec.ts`,
 conformément à `AGENTS.md`.
+
+**Livré le 23/10/2026 (registre général § 166)** : carte « Bourse » — « Argent (thalers) » fait
+foi, centièmes compris, la bourse de la fiche HTML se réécrit sur un clic ; carte « Voyage » —
+Tableau 26 et « Un jour de voyage » (guérison, allure forcée, test de Force éreintant, accident
+sur 20). Page `54-Jeu-Symbaroum.md` réécrite, neuf captures nouvelles. Pilote 2.0.0 :
+`Export Dirvers/corriges/Symbaroum_driver_gmos_finir.gmos-driver`.
 
 ## Ordre de réalisation proposé et limites de l'audit
 

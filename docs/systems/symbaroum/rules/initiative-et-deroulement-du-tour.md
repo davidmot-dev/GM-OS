@@ -7,7 +7,7 @@ sources: "Symbaroum - Livre de Base.pdf"
 sections: "« Ordre des tours » ; « Actions en combat » ; « Actions de mouvement » ; « Réactions » ; « Gestion des Actions » ; « Tableau 22 - Phases de combat » ; « Tours »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: d1257947
 ---
 

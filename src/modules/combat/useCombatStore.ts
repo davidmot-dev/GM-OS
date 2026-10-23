@@ -25,6 +25,7 @@ import {
 } from './logic/CombatRules';
 import { HealthInterpreter } from '../session/logic/HealthInterpreter';
 import { horlogeDeDefaite } from './logic/TacheDeDefaite';
+import { comparerLInitiative, departager } from './logic/departageDInitiative';
 import { estHorsDeCombat, santeDeDepart, valeurDuChamp } from './logic/SanteDuCombattant';
 // `logic/trame` ne connaît que des types : l'importer ne ferme aucun cycle,
 // contrairement au store de séance qui reste atteint par le global.
@@ -512,7 +513,7 @@ interface CombatState {
     /** Trie la liste par initiative */
     sortInitiative: (ascending?: boolean) => void;
     /** Lance l'initiative automatique pour tous les combattants via DiceEngine ou formules */
-    rollAutoInitiative: (params: { diceMax?: number; formula?: string; resolver?: (name: string, combatant: Combatant) => number; sortOrder?: 'asc' | 'desc'; cards?: number }) => void;
+    rollAutoInitiative: (params: { diceMax?: number; formula?: string; resolver?: (name: string, combatant: Combatant) => number; sortOrder?: 'asc' | 'desc'; cards?: number; departages?: string[] }) => void;
     /** Réordonne manuellement les combattants (ex: via Drag & Drop) */
     reorderCombatants: (startIndex: number, endIndex: number) => void;
 
@@ -1013,13 +1014,14 @@ export const useCombatStore = create<CombatState>()(
 
             sortInitiative: (ascending = false) => {
                 set((state) => {
-                    const sorted = [...state.combatants].sort((a, b) => ascending ? a.init - b.init : b.init - a.init);
+                    // Les départages du tirage (Symbaroum, S6) tiennent aussi au retri.
+                    const sorted = [...state.combatants].sort((a, b) => comparerLInitiative(a, b, ascending ? 'asc' : 'desc'));
                     return { combatants: sorted, currentTurnIdx: 0 };
                 });
                 get().broadcastSync();
             },
 
-            rollAutoInitiative: ({ diceMax = 20, formula, resolver, sortOrder = 'desc', cards }) => {
+            rollAutoInitiative: ({ diceMax = 20, formula, resolver, sortOrder = 'desc', cards, departages }) => {
                 // Porte 1 de l'ouverture : le rituel qui commence un combat dans
                 // presque tous les jeux. Avant le tirage, pour que le fil ouvre
                 // le combat puis annonce l'initiative.
@@ -1036,6 +1038,7 @@ export const useCombatStore = create<CombatState>()(
                     set({combatants:distribues,currentTurnIdx:0,round:1});get().broadcastSync();return;
                 }
 
+                const departagesDuPilote = departages;
                 set((state) => {
                     const combatants = state.combatants;
                     if (combatants.length === 0) {
@@ -1072,7 +1075,20 @@ export const useCombatStore = create<CombatState>()(
                         c.init = Number.isNaN(rolled) ? 0 : rolled;
                     });
 
-                    newCombatants.sort((a, b) => sortOrder === 'desc' ? b.init - a.init : a.init - b.init);
+                    /*
+                      **Départager les ex aequo** (Symbaroum, S6, 2026-10-23) : la
+                      Vigilance, puis un d20 relancé jusqu'à ce que l'un l'emporte
+                      (p. 161). Sans départage déclaré, rien ne change.
+                    */
+                    const departages = (formula && !cardPool.length && departagesDuPilote?.length) ? departagesDuPilote : null;
+                    const ordonnes = departages
+                        ? departager(newCombatants, c => departages.map(f => {
+                            const v = resolveInitiativeFormula({ formula: f, combatant: c, resolver, diceMax });
+                            return Number.isNaN(v) ? 0 : v;
+                        }), () => Math.floor(Math.random() * 20) + 1)
+                        : newCombatants.map(c => ({ ...c, departage: undefined }));
+                    newCombatants.splice(0, newCombatants.length, ...ordonnes);
+                    newCombatants.sort((a, b) => comparerLInitiative(a, b, sortOrder));
                     gmToast(`Initiative système lancée (${sortOrder === 'desc' ? 'Décroissant' : 'Croissant'})`, "success");
                     
                     useJournalStore.getState().addEvent({
@@ -1202,7 +1218,7 @@ export const useCombatStore = create<CombatState>()(
                 set((state) => ({
                     currentTurnIdx: 0,
                     round: 1,
-                    combatants: state.combatants.map(c => ({ ...c, init: 0, alien:undefined }))
+                    combatants: state.combatants.map(c => ({ ...c, init: 0, alien:undefined, departage: undefined }))
                 }));
                 get().broadcastSync();
             },

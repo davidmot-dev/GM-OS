@@ -144,6 +144,7 @@ const CombatControls: React.FC = () => {
                 formula: activeDriver!.combat.initiativeFormula,
                 sortOrder: activeDriver!.combat.initiativeSort || 'desc',
                 cards: activeDriver!.combat.initiativeCards,
+                departages: activeDriver!.combat.departages,
                 resolver: (stat, combatant) => {
                     const sessionStore = useSessionOSStore.getState();
                     const getStatValue = (data: Record<string, unknown>, statName: string) => {

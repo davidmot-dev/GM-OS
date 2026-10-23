@@ -25,6 +25,12 @@ export interface Combatant {
     /** Valeur d'initiative pour l'ordre de passage */
     init: number;
     /**
+     * Ce qui départage deux initiatives égales — Symbaroum : la Vigilance, puis
+     * un d20 relancé entre ex aequo (p. 161). Tiré avec l'initiative, gardé
+     * pour que l'ordre établi ne change plus (`combat.departages`).
+     */
+    departage?: number[];
+    /**
      * Points de vie — **facultatifs, parce que tous les jeux n'en ont pas.**
      *
      * Chez Dune, « il n'existe aucune jauge numérique de santé ou de fatigue sur

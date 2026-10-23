@@ -1999,3 +1999,31 @@ describe('les styles d’enquêteur', () => {
             .toEqual([['enquete.styles[0]', 'avertissement']]);
     });
 });
+
+/** **Symbaroum jusqu'au bout** (2026-10-23) : les champs de `jet.symbaroum`, la Défense jetable, les départages. */
+describe('le bloc Symbaroum et les départages', () => {
+    const jet = (symbaroum: Record<string, unknown>, seuil: Record<string, unknown>[] = [{ id: 'attribut', label: 'Attribut', sectionId: 'competences' }]) =>
+        ({ seuil, reserve: { base: 1, max: 1, faces: 20 }, sens: 'sous-ou-egal', symbaroum });
+    const constats = (driver: Record<string, unknown>) =>
+        controlerLePilote(driver as never, fiche)
+            .filter(c => c.ou.startsWith('jet.symbaroum') || c.ou.startsWith('combat.departages'))
+            .map(c => [c.ou, c.gravite]);
+
+    it('des champs présents et une Défense qu’on peut choisir passent sans un mot', () => {
+        expect(constats({ jet: jet({ force: 'combat', defense: 'determination' },
+            [{ id: 'attribut', label: 'Attribut', sectionId: 'competences', sectionsSupplementaires: ['jauges'], motif: '^(combat|determination)$' }]),
+        combat: { statsToTrack: [], initiativeFormula: 'combat', departages: ['determination'] } })).toEqual([]);
+    });
+
+    it('un champ absent est une erreur ; une Défense hors du jet, un avertissement', () => {
+        expect(constats({ jet: jet({ force: 'force', defense: 'determination' }) })).toEqual([
+            ['jet.symbaroum.force', 'erreur'],
+            ['jet.symbaroum.defense', 'avertissement'],
+        ]);
+    });
+
+    it('un départage qui invoque un champ inconnu est une erreur', () => {
+        expect(constats({ combat: { statsToTrack: [], initiativeFormula: 'combat', departages: ['vigilance'] } }))
+            .toEqual([['combat.departages', 'erreur']]);
+    });
+});

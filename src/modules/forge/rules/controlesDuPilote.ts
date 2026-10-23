@@ -1010,6 +1010,46 @@ export function controlerLePilote(
             try { new RegExp(motif); } catch { erreur(`jet.nephilim.${ou}`, `« ${motif} » n'est pas une expression valable.`); }
         }
     }
+    // Symbaroum jusqu'au bout (2026-10-23) : chaque champ que `jet.symbaroum` nomme, et le jet qu'il suppose.
+    const symb = driver.jet?.symbaroum;
+    if (symb) {
+        if (driver.jet?.sens !== 'sous-ou-egal' || driver.jet?.cible || facesLancees(driver) !== 20) {
+            avertir('jet.symbaroum', 'Le bloc Symbaroum suppose un d20 sous un Attribut additionné (p. 103) : il sera ignoré.');
+        }
+        const champsNommes: [string, string | undefined][] = [
+            ...(symb.attributs ?? []).map(c => ['attributs', c] as [string, string]),
+            ['force', symb.force], ['volonte', symb.volonte], ['agilite', symb.agilite],
+            ['endurance.courante', symb.endurance?.courante], ['endurance.maximum', symb.endurance?.maximum],
+            ['douleur', symb.douleur], ['defense', symb.defense], ['seuilDeCorruption', symb.seuilDeCorruption],
+            ['corruption.temporaire', symb.corruption?.temporaire], ['corruption.permanente', symb.corruption?.permanente],
+            ...(symb.armes ?? []).flatMap(a => [['armes.nom', a.nom], ['armes.degats', a.degats], ['armes.qualites', a.qualites]] as [string, string | undefined][]),
+            ...(symb.armures ?? []).flatMap(a => [['armures.nom', a.nom], ['armures.protection', a.protection], ['armures.qualites', a.qualites]] as [string, string | undefined][]),
+            ['experience.total', symb.experience?.total], ['experience.disponible', symb.experience?.disponible],
+            ...(symb.talents ?? []).flatMap(t => [['talents.nom', t.nom], ['talents.niveau', t.niveau]] as [string, string][]),
+            ['argent.champ', symb.argent?.champ], ['argent.ecrit', symb.argent?.ecrit],
+        ];
+        for (const [ou, champ] of champsNommes) {
+            if (champ && !tousLesChamps.has(champ)) erreur(`jet.symbaroum.${ou}`, `Symbaroum lit « ${champ} », absent de la fiche.`);
+        }
+        /*
+          La Défense se jette depuis la fiche (p. 164) : la composante du jet doit
+          pouvoir la retenir, sinon le parcours de Défense reste muet.
+        */
+        if (symb.defense && tousLesChamps.has(symb.defense)) {
+            const section = sections.find(sec => champsParSection.get(sec.id)?.has(symb.defense!))?.id;
+            const atteinte = (driver.jet?.seuil ?? []).some(c => {
+                if (![c.sectionId, ...(c.sectionsSupplementaires ?? [])].includes(section ?? '')) return false;
+                try { return !c.motif || new RegExp(c.motif).test(symb.defense!); } catch { return false; }
+            });
+            if (!atteinte) avertir('jet.symbaroum.defense', `La Défense « ${symb.defense} » ne se choisit pas dans le jet : ajouter sa section aux composantes du seuil.`);
+        }
+    }
+    // Les départages de l'initiative (Symbaroum, S6) : des formules sur des champs de la fiche.
+    for (const formule of driver.combat?.departages ?? []) {
+        for (const champ of champsInvoques(formule)) {
+            if (!champInvoque(champ)) erreur('combat.departages', `Le départage « ${formule} » invoque « ${champ} », qui n'est un champ d'aucune section.`);
+        }
+    }
     // Une composante filtrée par un motif : il doit être une expression valable.
     for (const composante of [...(driver.jet?.seuil ?? []), ...(driver.jet?.cible ? [driver.jet.cible.caracteristique, ...(driver.jet.cible.ajustement ?? [])] : [])]) {
         if (!composante?.motif) continue;

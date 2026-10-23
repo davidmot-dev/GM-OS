@@ -64,6 +64,11 @@ import ApportsDuGroupe from './ApportsDuGroupe';
 import { CarteDuJeu, Etape } from './EtapesDuJet';
 import { ChutesNephilim, ExperienceNephilim, PreparationNephilim, SanteNephilim, StaseNephilim, SuitesNephilim } from './NephilimAuJet';
 import type { ChoixDeNephilim, JetDeNephilim } from '../../../dice/systemes/nephilimRegles';
+import {
+    BourseSymbaroum, CorruptionSymbaroum, DeriveesSymbaroum, EnduranceSymbaroum, OptionsSymbaroum, PreparationSymbaroum,
+    ProgressionSymbaroum, SuitesSymbaroum, TourSymbaroum, VoyageSymbaroum, type Options as OptionsDeSymbaroum,
+} from './SymbaroumAuJet';
+import { lireSymbaroum, sansCritiqueDeBase, type NatureDuTest } from '../../../dice/systemes/symbaroumRegles';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
 import type { ApportDuGroupe, DiceConfig } from '../../../../types/drivers';
 
@@ -296,6 +301,25 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ecrireSurLaFiche?.(maj);
     };
 
+    /**
+     * **Symbaroum jusqu'au bout** (2026-10-23) : la nature du test (attaque,
+     * Défense), ce que le dernier lancer savait, la relance déjà faite, et les
+     * écritures des cartes — elles complètent la fiche qui les a produites.
+     */
+    const regleSymbaroum = descripteur.sens === 'sous-ou-egal' && !descripteur.cible ? descripteur.symbaroum : undefined;
+    const [natureSymbaroum, setNatureSymbaroum] = useState<NatureDuTest>('test');
+    const [symbaroumDuLancer, setSymbaroumDuLancer] = useState<{ nature: NatureDuTest; avantage: boolean; compte: number; dejaRelance: boolean } | null>(null);
+    const relanceSymbaroum = useRef(false);
+    const [ecritsSymbaroum, setEcritsSymbaroum] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const valeursSymbaroum = useMemo(() => ({ ...valeurs,
+        ...(ecritsSymbaroum.base === valeurs && ecritsSymbaroum.personnageId === personnageId ? ecritsSymbaroum.maj : {}),
+    }), [valeurs, ecritsSymbaroum, personnageId]);
+    const ecrireSymbaroum = (maj: Record<string, unknown>) => {
+        if (!Object.keys(maj).length) return;
+        setEcritsSymbaroum(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche?.(maj);
+    };
+
     const { etatDe, depenser, gagner, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
     const monnaie = useMemo(
         () => campaignId && ressourcesDeTable?.length ? { campaignId, ressourcesDeTable } : null,
@@ -315,6 +339,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const updateCampaign = useSessionOSStore(s => s.updateCampaign);
     const remoteEcrireLeGroupe = useSessionOSStore(s => s.remoteEcrireLeGroupe);
     const campagne = campaignId ? campagnes.find(c => c.id === campaignId) : undefined;
+    /** Les règles optionnelles de Symbaroum que la table a retenues (p. 183–184) : sur la campagne. */
+    const optionsSymbaroum: OptionsDeSymbaroum = regleSymbaroum ? (campagne?.reglesOptionnelles ?? {}) : {};
     const ficheDeGroupe = campagne
         ? tousLesPilotes(pilotesPerso).find(d => d.id === campagne.system)?.ficheDeGroupe
         : undefined;
@@ -915,7 +941,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         */
         const effetCH = descripteur.cthulhuHack ? modificateursCH(descripteur.cthulhuHack, valeursCH, jet.composantes[0]?.champ) : undefined;
         const modificateurCH = effetCH?.desavantage ? (modificateur === 'avantage' ? 'aucun' : 'desavantage') : modificateur;
-        const brut = descripteur.cthulhuHack
+        const brutDuMoteur = descripteur.cthulhuHack
             ? DiceEngine.rollSauvegarde(jet.seuil, modificateurCH)
             : jet.garde
             ? resoudreLaGarde(Array.from({ length: jet.nombreDeDes }, () => DiceEngine.roll(10)), jet.garde.quota, jet.garde.seuil)
@@ -954,6 +980,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     echelle: jet.echelle,
                 },
             );
+        // Le d20 de Symbaroum n'a pas de critique de base (S8) : l'effet optionnel se dit à part.
+        const brut = regleSymbaroum ? sansCritiqueDeBase(brutDuMoteur) : brutDuMoteur;
         /*
           Le bonus du groupe (Vécu, Atout) s'ajoute au résultat compté : chez NOC
           chaque réussite élève le niveau d'un point, comme lui.
@@ -973,6 +1001,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setSeuilDuLancer(jet.seuil);
         setBonusDuLancer(bonusDuGroupe + bonusPerso);
         setResultat(res);
+        if (regleSymbaroum) {
+            const retenu = jet.composantes[0]?.champ;
+            const dejaRelance = relanceSymbaroum.current;
+            setSymbaroumDuLancer(d => ({
+                nature: retenu && retenu === regleSymbaroum.defense ? 'defense' : natureSymbaroum,
+                avantage: !!jet.modificationDuSeuil?.avantage,
+                compte: (d?.compte ?? 0) + 1,
+                dejaRelance,
+            }));
+            relanceSymbaroum.current = false;
+        }
         if (descripteur.cthulhuHack && !pourLesJoueurs && ecrireSurLaFiche && jet.composantes[0]) {
             const suivi=memoriserTestCH(valeursCH,{id:crypto.randomUUID(),champ:jet.composantes[0].champ,genre:'sauvegarde',seuil:jet.seuil,modificateur:modificateurCH,desavantagePresent:!!effetCH?.desavantage||modificateur==='desavantage',reussi:res.tagSuccess===true});
             ecrireCH({[CLE_CTHULHU_HACK]:suivi[CLE_CTHULHU_HACK]});
@@ -2032,6 +2071,19 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {regleNephilim && (
                         <PreparationNephilim jet={jet.nephilim} choix={choixNephilim} changer={c => setChoixNephilim(x => ({ ...x, ...c }))} />
                     )}
+                    {regleSymbaroum && (
+                        <PreparationSymbaroum
+                            nature={jet.composantes[0]?.champ && jet.composantes[0].champ === regleSymbaroum.defense ? 'defense' : natureSymbaroum}
+                            changer={nature => {
+                                setNatureSymbaroum(nature);
+                                // La Défense se jette sur sa valeur secondaire (p. 164) ; un Talent peut en substituer une autre.
+                                const composante = descripteur.seuil?.[0]?.id;
+                                if (nature === 'defense' && composante && regleSymbaroum.defense) setChoix(c => ({ ...c, [composante]: regleSymbaroum.defense! }));
+                            }}
+                            grievement={optionsSymbaroum.degatsCritiques && lireSymbaroum(valeursSymbaroum).grievementTouche
+                                ? { appliquer: () => setModificateur('desavantage') } : undefined}
+                        />
+                    )}
                     {descripteur.garde?.specialisations && (
                         <label className="flex items-center gap-2">
                             <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Spécialisation</span>
@@ -2446,6 +2498,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             **La Névrose du jet, écrite** (Crimes, C4, p. 409) : ce que le panneau dit
                             sous les dés, le meneur le note d'un clic — une fois par lancer.
                         */}
+                        {regleSymbaroum && symbaroumDuLancer && ecrireSurLaFiche && (
+                            <SuitesSymbaroum key={symbaroumDuLancer.compte} regle={regleSymbaroum} nature={symbaroumDuLancer.nature}
+                                resultat={resultat} seuil={seuilDuLancer} avantage={symbaroumDuLancer.avantage}
+                                degatsDeLAvantage={descripteur.modificateurDuSeuil?.avantage?.degats}
+                                options={optionsSymbaroum} valeurs={valeursSymbaroum} ecrire={ecrireSymbaroum}
+                                consigner={(titre, ligne) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })}
+                                relancer={symbaroumDuLancer.dejaRelance ? undefined : () => { relanceSymbaroum.current = true; lancer(); }} />
+                        )}
                         {regleNephilim && nephilimDuLancer && ecrireSurLaFiche && (() => {
                             // Le PS du critique d'un Art occulte peut soigner une Chute : il ne se note plus alors (p. 149).
                             const suiteDeSapience = suites.find(s => s.quand === 'critique' && s.ajouter?.champ === regleNephilim.sapience);
@@ -2892,6 +2952,42 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {regleNephilim.experience && !pourLesJoueurs && (
                             <CarteDuJeu id="experience-nephilim" titre="Expérience">
                                 <ExperienceNephilim regle={regleNephilim} valeurs={valeursNephilim} sections={template.sections} ecrire={ecrireNephilim} consigner={consigner} />
+                            </CarteDuJeu>
+                        )}
+                    </>
+                );
+            })()}
+            {regleSymbaroum && ecrireSurLaFiche && (() => {
+                const consigner = (titre: string, ligne: string) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne });
+                const props = { regle: regleSymbaroum, valeurs: valeursSymbaroum, ecrire: ecrireSymbaroum, consigner };
+                const libelle = (id: string) => template.sections.flatMap(sec => sec.fields).find(f => f.id === id)?.label ?? id;
+                return (
+                    <>
+                        {regleSymbaroum.endurance && (
+                            <CarteDuJeu id="endurance-symbaroum" titre="Endurance et agonie">
+                                <EnduranceSymbaroum {...props} meneur={!pourLesJoueurs} />
+                            </CarteDuJeu>
+                        )}
+                        {regleSymbaroum.corruption && (
+                            <CarteDuJeu id="corruption-symbaroum" titre="Corruption et Stigmates">
+                                <CorruptionSymbaroum {...props} />
+                            </CarteDuJeu>
+                        )}
+                        <CarteDuJeu id="tour-symbaroum" titre="Le tour de combat"><TourSymbaroum /></CarteDuJeu>
+                        {regleSymbaroum.argent && (
+                            <CarteDuJeu id="bourse-symbaroum" titre="Bourse"><BourseSymbaroum {...props} /></CarteDuJeu>
+                        )}
+                        {!pourLesJoueurs && (
+                            <>
+                                <CarteDuJeu id="derivees-symbaroum" titre="Valeurs dérivées"><DeriveesSymbaroum {...props} libelle={libelle} /></CarteDuJeu>
+                                <CarteDuJeu id="progression-symbaroum" titre="Création et progression"><ProgressionSymbaroum {...props} /></CarteDuJeu>
+                                <CarteDuJeu id="voyage-symbaroum" titre="Voyage"><VoyageSymbaroum {...props} /></CarteDuJeu>
+                            </>
+                        )}
+                        {campagne && (
+                            <CarteDuJeu id="options-symbaroum" titre="Règles optionnelles">
+                                <OptionsSymbaroum proposees={regleSymbaroum.options} options={optionsSymbaroum}
+                                    changer={pourLesJoueurs ? undefined : o => updateCampaign(campagne.id, { reglesOptionnelles: { ...campagne.reglesOptionnelles, ...o } })} />
                             </CarteDuJeu>
                         )}
                     </>
