@@ -25,8 +25,10 @@ async function importer(doc){await page.locator('#file').setInputFiles({name:'fi
 try{
  await page.goto(pathToFileURL(cible).href);await page.locator('.crime-field').first().waitFor();
  const manifeste=await page.evaluate(()=>JSON.parse(document.getElementById('character-sheet-template').textContent));
- assert.equal(manifeste.template.pages.length,2);assert.equal(await page.locator('.crime-field').count(),335);
+ assert.equal(manifeste.template.pages.length,2);assert.equal(await page.locator('.crime-field').count(),344);
  assert.equal(await page.locator('.crime-checkbox').count(),55);
+ // Les marques des Potentiels (C2, 2026-10-22) : fatigue, épuisement, blessures, sous chacun des trois.
+ assert.equal(await page.locator('.crime-harm').count(),9);
  await page.locator('#zoom').fill('100');await page.locator('#zoom').dispatchEvent('change');
  for(let i=0;i<2;i++){
   await page.locator('#page').selectOption(String(i));
@@ -84,9 +86,9 @@ try{
  assert.notEqual(await page.locator('[data-key="attributes.physical"].active').first().evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)');
  await page.emulateMedia({media:'screen'});
  const mobile=await navigateur.newContext({viewport:{width:390,height:844},deviceScaleFactor:1});const mp=await mobile.newPage();await mp.goto(pathToFileURL(cible).href);
- assert.equal(await mp.locator('.crime-field').count(),335);assert.ok(await mp.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ assert.equal(await mp.locator('.crime-field').count(),344);assert.ok(await mp.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await mp.screenshot({path:`${sortie}/mobile-390.png`});await mobile.close();
  assert.deepEqual(erreurs,[]);assert.deepEqual(reseau,[]);
- const bilan={pages:2,zones:335,cles:197,erreursJavaScript:erreurs,appelsReseau:reseau,verifications:['fonds et manifeste','coordonnées dans les pages','jauges cumulatives et retour à zéro','choix exclusifs','cases indépendantes','compteurs numériques','portrait : ajout, suppression et transport JSON','autosauvegarde et rechargement','export/import sans perte','rejet atomique des imports invalides','réinitialisation : annulation et confirmation','zoom 20–400 et raccourcis','impression : deux pages visibles, outils masqués','écran de 390 pixels']};
+ const bilan={pages:2,zones:344,cles:206,erreursJavaScript:erreurs,appelsReseau:reseau,verifications:['fonds et manifeste','coordonnées dans les pages','jauges cumulatives et retour à zéro','choix exclusifs','cases indépendantes','compteurs numériques','portrait : ajout, suppression et transport JSON','autosauvegarde et rechargement','export/import sans perte','rejet atomique des imports invalides','réinitialisation : annulation et confirmation','zoom 20–400 et raccourcis','impression : deux pages visibles, outils masqués','écran de 390 pixels']};
  fs.writeFileSync(sortie+'/verification.json',JSON.stringify(bilan,null,2));console.log(JSON.stringify(bilan,null,2));
 }finally{await contexte.close();await navigateur.close();}

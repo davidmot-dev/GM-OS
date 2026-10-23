@@ -199,6 +199,24 @@ describe('SyncServer — messages reçus et relais', () => {
             expect(tabletteDeBob.send).not.toHaveBeenCalled();
         });
 
+        /*
+          **L'indice révélé à un seul enquêteur** (Crimes, C5, 2026-10-22) : la
+          synchronisation garde l'indice que seul « perso-a » connaît, et le
+          serveur ne le remet qu'à sa tablette.
+        */
+        it('remet l’indice connu d’un seul enquêteur à sa seule tablette', () => {
+            const tabletteDAlice = brancher('joueur-a2', 'hub', 'perso-a');
+            const tabletteDeBob = brancher('joueur-b', 'hub', 'perso-b');
+            const action = { type: 'sync', payload: { session: { clues: [
+                { id: 'larve', isRevealed: false, connuDe: ['perso-a'], content: 'LA LARVE' },
+                { id: 'public', isRevealed: true },
+            ] } } };
+            serveur.broadcastAction(action);
+            expect(String(tabletteDAlice.send.mock.calls[0][0])).toContain('LA LARVE');
+            expect(String(tabletteDeBob.send.mock.calls[0][0]), 'Bob reçoit l’indice d’Alice').not.toContain('LA LARVE');
+            expect(String(tabletteDeBob.send.mock.calls[0][0])).toContain('public');
+        });
+
         it('remet un message privé du meneur à son seul destinataire', () => {
             const tabletteDAlice = brancher('joueur-a2', 'hub', 'perso-a');
             const tabletteDeBob = brancher('joueur-b', 'hub', 'perso-b');

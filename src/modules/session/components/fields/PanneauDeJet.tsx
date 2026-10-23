@@ -40,6 +40,11 @@ import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { LigneDuReferentiel } from './ChampDuReferentiel';
 import { champDeLaSuite, jetVientDe, suitesDuJet, valeurApresLaSuite, type SuiteDUnCritique } from '../../../dice/suitesDesCritiques';
 import { consommationDuJet, direLaConsommation } from '../../../dice/consommationAuJet';
+import { effetsSurLaNevrose, resoudreLaGarde, type JetGarde } from '../../../dice/systemes/potentielGarde';
+import AtteintesDesPotentiels from './AtteintesDesPotentiels';
+import { IssueDeLAttaque, PreparationDeLAttaque } from './AttaqueDeCrimes';
+import { REGLAGES_D_ATTAQUE, type ReglagesDAttaque } from '../../../dice/systemes/armesDeCrimes';
+import { apresLeGain, peutGagner, pointsDuJet } from '../../logic/pointsDEnquete';
 import { useCosmsCourants } from '../../hooks/useCosmsCourants';
 import { malusDesCiblesMultiples } from '../../../combat/logic/sbiresEtHordes';
 import { loiEnVigueur } from '../../logic/cosmsCourants';
@@ -202,6 +207,35 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [modificateur, setModificateur] = useState<'aucun' | 'avantage' | 'desavantage'>('aucun');
     /** La spécialisation s'applique à ce jet — c'est le joueur qui le sait (Star Trek). */
     const [specialisation, setSpecialisation] = useState(false);
+    /** La spécialisation retenue pour un jet gardé (Crimes) : l'identifiant de sa case. */
+    const [specialisationDeLaGarde, setSpecialisationDeLaGarde] = useState('');
+    /** Les dés gardés que le journal connaît : une garde changée ensuite se consigne à la demande. */
+    const [gardeAuJournal, setGardeAuJournal] = useState('');
+    /** L'attaque de Crimes (C6) : l'arme, la portée, l'opposition, la cible ; et ce qui a été infligé. */
+    const [reglagesDAttaque, setReglagesDAttaque] = useState<ReglagesDAttaque>(REGLAGES_D_ATTAQUE);
+    const [attaqueInfligee, setAttaqueInfligee] = useState<string | null>(null);
+    /** Le style d'enquête crédité pour ce jet (Crimes, C5) : une seule fois par lancer. */
+    const [enqueteNotee, setEnqueteNotee] = useState<string | null>(null);
+    const stylesDEnquete = useSessionOSStore(s => s.getActiveDriver())?.enquete?.styles;
+    /** Le dépassement annoncé avant de jeter les dés (Crimes, C3, p. 385). */
+    const [depassementAnnonce, setDepassementAnnonce] = useState(false);
+    /** Ce que le jet gardé savait au lancer : le Potentiel, ses marques, le dépassement permis. */
+    const [gardeDuLancer, setGardeDuLancer] = useState<{
+        atteintes?: NonNullable<ReturnType<typeof preparerLeJet>['garde']>['atteintes'];
+        depassement?: NonNullable<ReturnType<typeof preparerLeJet>['garde']>['depassement'];
+    } | null>(null);
+    /*
+      **Les atteintes écrites d'ici** (C2) : elles complètent la version de fiche
+      qui les a produites, le temps que la fiche revienne — comme chez Alien.
+    */
+    const [ecritsDesAtteintes, setEcritsDesAtteintes] = useState({ base: valeurs, maj: {} as Record<string, number> });
+    const valeursDesAtteintes = useMemo(() => ({
+        ...valeurs, ...(ecritsDesAtteintes.base === valeurs ? ecritsDesAtteintes.maj : {}),
+    }), [valeurs, ecritsDesAtteintes]);
+    const ecrireLesAtteintes = (maj: Record<string, number>) => {
+        setEcritsDesAtteintes(e => ({ base: valeurs, maj: { ...(e.base === valeurs ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche?.(maj);
+    };
     /** Ce que le dernier lancer a fait aux réserves de la table. */
     const [mouvements, setMouvements] = useState<string[]>([]);
     /**
@@ -327,6 +361,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 modificateurDuSeuil,
                 valeurAdverse: valeurAdverse.trim() === '' ? undefined : Number(valeurAdverse),
                 avantageTactique,
+                ...(specialisationDeLaGarde ? { specialisationDeLaGarde } : {}),
+                ...(depassementAnnonce ? { depassementAnnonce } : {}),
                 /*
                   Sur un jeu à dés échelonnés, avantage et désavantage ajoutent
                   ou retirent un DÉ : c'est `preparerLeJet` qui les applique à la
@@ -359,7 +395,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
+        [descripteur, valeurs, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
     );
 
     /*
@@ -535,6 +571,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             ]),
         ...(descripteur.reserve?.composantes ?? []),
         ...(descripteur.reserve?.secondaire?.composantes ?? []),
+        // Crimes : la compétence ne s'additionne pas, elle dit combien de dés se gardent.
+        ...(descripteur.garde ? [descripteur.garde.competence] : []),
     ], [descripteur]);
 
     /** Rien ne part tant que chaque composante n'a pas son champ. */
@@ -789,7 +827,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             des: desTorg, options: optionsTorg, niveau: jet.seuil, difficulte, entraine,
             titre: jet.composantes.map(c => c.label).join(' + '),
         } : null);
-        const brut = desTorg
+        /*
+          **Potentiel GARDE Compétence** (Crimes, C1) : autant de d10 que le
+          Potentiel, puis `resoudreLaGarde` garde les 1 et les meilleurs dés.
+          Le joueur peut ensuite changer sa garde, au résultat.
+        */
+        const brut = jet.garde
+            ? resoudreLaGarde(Array.from({ length: jet.nombreDeDes }, () => DiceEngine.roll(10)), jet.garde.quota, jet.garde.seuil)
+            : desTorg
             ? DiceEngine.resultatDeTorg(jet.seuil, difficulte, desTorg, optionsTorg)
             : jet.desEchelonnes.length > 0
             ? DiceEngine.rollFromConfig(
@@ -851,7 +896,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           joueurs — un changement de comportement que ce chantier n'a pas à
           faire. On appelle donc le même décideur, par l'autre porte.
         */
-        const titreDuJet = (jet.composantes.length > 0
+        const titreDuJet = (jet.garde
+            ? [
+                // Le Potentiel se nomme par son champ : « Physique 5 », pas « Potentiel 5 ».
+                `${jet.composantesDeLaReserve.map(c => template.sections.flatMap(sec => sec.fields).find(f => f.id === c.champ)?.label ?? c.label).join(' + ')} ${jet.nombreDeDes}`,
+                jet.garde.niveau > 0 ? `${jet.garde.competence?.label ?? 'Compétence'} ${jet.garde.niveau}` : 'sans compétence',
+                ...(jet.garde.specialisation ? [jet.garde.specialisation.label] : []),
+            ].join(' · ')
+            : jet.composantes.length > 0
             ? jet.composantes.map(c => c.label).join(' + ')
             : jet.desEchelonnes.length > 0
                 ? jet.desEchelonnes.map(d => `${d.label} D${d.faces}`).join(' + ')
@@ -890,7 +942,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     /* Le seuil voyage avec le total, comme le journal l'écrit ici. */
                     totalDisplay: descripteur.cible || jet.composantes.length > 0
                         ? `${res.totalDisplay} (seuil ${jet.seuil})`
-                        : res.totalDisplay,
+                        : avecLaNevrose(res),
                     rolls: res.rolls,
                     successes: res.successes,
                     tagSuccess: res.tagSuccess,
@@ -900,7 +952,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         } else {
             consignerLeJet({
                 titre: titreDuJet,
-                totalDisplay: res.totalDisplay,
+                totalDisplay: avecLaNevrose(res),
                 degre: res.degre,
                 tagSuccess: res.tagSuccess,
                 seuil: descripteur.cible || jet.composantes.length > 0 ? jet.seuil : undefined,
@@ -958,6 +1010,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const avantage = jet.modificationDuSeuil?.avantage;
         if (avantage?.degats) dits.push(`${avantage.label} : +${avantage.degats.toUpperCase()} aux dégâts.`);
 
+        if ('garde' in res) setGardeAuJournal((res as JetGarde).garde.gardes.join(','));
+        setGardeDuLancer(jet.garde ? { atteintes: jet.garde.atteintes, depassement: jet.garde.depassement } : null);
+        setEnqueteNotee(null);
+        setAttaqueInfligee(null);
         setMouvements(dits);
     };
 
@@ -1033,6 +1089,33 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         }
     };
 
+    /**
+     * **Changer sa garde** (Crimes, livre p. 385) : le joueur peut garder de
+     * mauvais dés pour échouer volontairement. Cliquer un dé écarté le fait
+     * entrer à la place du meilleur gardé ; cliquer un dé gardé le fait sortir
+     * au profit du meilleur écarté. Les 1 restent gardés d'office.
+     */
+    const changerLaGarde = (i: number) => {
+        const g = (resultat as JetGarde | null)?.garde;
+        if (!g || !resultat || g.depassement > 0) return;
+        const des = resultat.rolls.map(d => Number(d.val));
+        const place = Math.max(0, g.quota - des.filter(v => v === 1).length);
+        if (des[i] === 1 || place === 0) return;
+        const voulus = g.gardes.filter(j => des[j] !== 1);
+        const ecartes = des.map((_, j) => j).filter(j => !g.gardes.includes(j) && des[j] !== 1);
+        const meilleur = (js: number[]) => js.reduce((a, b) => (des[b] > des[a] ? b : a));
+        const suivants = g.gardes.includes(i)
+            ? (ecartes.length > 0 ? [...voulus.filter(j => j !== i), meilleur(ecartes)] : null)
+            : voulus.length < place ? [...voulus, i] : [...voulus.filter(j => j !== meilleur(voulus)), i];
+        if (suivants) setResultat(resoudreLaGarde(des, g.quota, g.seuil, suivants));
+    };
+
+    /** Ce que le journal lit d'un jet gardé : le bilan et ce qu'il fait à la Névrose. */
+    function avecLaNevrose(res: RollResult): string {
+        const g = (res as Partial<JetGarde>).garde;
+        return g ? [res.totalDisplay, ...effetsSurLaNevrose(g)].join(' ') : res.totalDisplay ?? '';
+    }
+
     /** Redit un jet complété — au journal, ou au meneur depuis la tablette. */
     const redire = (titre: string, res: RollResult) => {
         if (pourLesJoueurs && personnageId) {
@@ -1045,6 +1128,35 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         } else {
             consignerLeJet({ titre, totalDisplay: res.totalDisplay, degre: res.degre, tagSuccess: res.tagSuccess });
         }
+    };
+
+    /**
+     * **Se dépasser** (Crimes, C3, p. 385 et 407) : garder `n` des réussites restées
+     * hors de la garde. Chacune coûte une fatigue sur le Potentiel utilisé ; un
+     * seul dépassement par scène, que la fin de scène rend. Le meneur juge si la
+     * passion ou la conviction invoquée vaut — l'outil compte, il n'arbitre pas.
+     */
+    const seDepasser = (n: number) => {
+        const g = (resultat as JetGarde | null)?.garde;
+        const a = gardeDuLancer?.atteintes;
+        const d = gardeDuLancer?.depassement;
+        if (!g || !resultat || !a || !d || !dernierLancer || g.depassement > 0 || n < 1) return;
+        const des = resultat.rolls.map(x => Number(x.val));
+        const res = resoudreLaGarde(des, g.quota, g.seuil, g.gardes.filter(j => des[j] !== 1), n);
+        const fatigue = (Number(valeursDesAtteintes[a.champs.fatigue]) || 0) + n;
+        ecrireLesAtteintes({ [a.champs.fatigue]: fatigue, [d.champ]: 1 });
+        setResultat(res);
+        const nom = template.sections.flatMap(sec => sec.fields).find(f => f.id === a.potentiel)?.label ?? a.potentiel;
+        setMouvements(m => [...m, `Dépassement : ${n} réussite${n > 1 ? 's' : ''} gardée${n > 1 ? 's' : ''} en plus — ${nom} : +${n} fatigue jusqu’à la fin de la scène.`]);
+        redire(`${dernierLancer.titre} · dépassement`, { ...res, totalDisplay: avecLaNevrose(res) });
+        setGardeAuJournal(res.garde.gardes.join(','));
+    };
+
+    const consignerLaGarde = () => {
+        const g = (resultat as JetGarde | null)?.garde;
+        if (!g || !resultat || !dernierLancer) return;
+        redire(`${dernierLancer.titre} · garde choisie`, { ...resultat, totalDisplay: avecLaNevrose(resultat) });
+        setGardeAuJournal(g.gardes.join(','));
     };
 
     const raisonDeNePasForcer = synthetiqueAlien ? 'Un androïde ne force jamais.'
@@ -1316,8 +1428,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     };
 
     const reussites = resultat?.successes ?? 0;
+    /** Le jet gardé de Crimes : son bilan se nomme, il ne se compte pas contre une difficulté. */
+    const gardeDuResultat = (resultat as JetGarde | null)?.garde;
     /** Une réserve, qui compte ses réussites — et non un verdict sur un seul dé. */
-    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin
+    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat
         && (jet.desEchelonnes.length > 0 || jet.nombreDeDes + jet.desSecondaires > 1);
     const v = verdict(reussites, jet.reussitesRequises);
     // Un dé écarté n'a rien déclenché : le compter ici annoncerait une
@@ -1336,7 +1450,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const aPreparer = !!descripteur.cible || torg || !!destin || disponiblesPerso.length > 0
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
-        || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable;
+        || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable
+        || !!descripteur.garde?.specialisations || !!descripteur.garde?.depassement || !!descripteur.garde?.armes;
     const numeros = { composer: 1, preparer: 2, lancer: aPreparer ? 3 : 2, resultat: aPreparer ? 4 : 3 };
     /*
       **Le septième lecteur, et il écrivait lui aussi son propre mot.** Le degré
@@ -1344,7 +1459,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       réussites, qui reste l'autorité sur une réserve. Il se lit en tête du
       résultat, à droite du titre.
     */
-    const verdictDuResultat = resultat && !paniqueEnAttente
+    const verdictDuResultat = resultat && gardeDuResultat
+        // Le bilan du livre (p. 385), et non le degré générique du moteur.
+        ? <span className={'font-black uppercase tracking-widest ' + (resultat.tagSuccess ? 'text-etat-succes' : 'text-etat-danger')}>
+            {gardeDuResultat.libelle}
+        </span>
+        : resultat && !paniqueEnAttente
         && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
         ? <EtiquetteDuDegre
             resultat={{ degre: resultat.degre, tagSuccess: v.reussi }}
@@ -1506,6 +1626,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                         ...jet.composantesDeLaReserve.map(c => `${c.valeur}`),
                                         ...(jet.desAchetes > 0 ? [`${jet.desAchetes}`] : []),
                                     ].join(' + ')}
+                                    {/* Le Potentiel actuel (Crimes, C2) : les marques se retirent de la réserve. */}
+                                    {jet.garde?.atteintes && jet.garde.atteintes.actuel !== jet.garde.atteintes.base
+                                        && ` − ${jet.garde.atteintes.base - jet.garde.atteintes.actuel} (atteintes)`}
                                     <span className="ml-1 opacity-60">
                                         ({[
                                             ...(descripteur.reserve?.base ? ['base'] : []),
@@ -1514,6 +1637,28 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                         ].join(' + ')})
                                     </span>
                                 </span>}
+                            </div>
+                        )}
+
+                        {/*
+                            **La garde** (Crimes) : combien de dés se gardent, et à quel
+                            seuil chacun réussit — on doit voir d'où sortent les deux.
+                        */}
+                        {jet.garde && (
+                            <div data-garde className="flex items-baseline gap-2 text-xs flex-wrap">
+                                <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">Gardés</span>
+                                <span className="font-mono text-lg font-black text-accent">{jet.garde.quota}</span>
+                                <span className="text-app-text/30 font-mono">
+                                    {jet.garde.niveau > 0
+                                        ? `= ${jet.garde.competence?.label ?? 'compétence'} ${jet.garde.niveau}`
+                                        : '— sans compétence, un seul dé'}
+                                </span>
+                                <span className="ml-3 text-app-text/40 font-bold uppercase tracking-widest text-ui-9">Seuil par dé</span>
+                                <span className="font-mono text-lg font-black text-accent">{jet.garde.seuil}</span>
+                                <span className="text-app-text/30 font-mono">
+                                    {jet.garde.specialisation ? `spécialisé (${jet.garde.specialisation.label})`
+                                        : jet.garde.niveau > 0 ? 'compétent' : 'de base'}
+                                </span>
                             </div>
                         )}
 
@@ -1775,6 +1920,59 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         </label>
                     )}
 
+                    {/*
+                        **La spécialisation d'un jet gardé** (Crimes) : seulement celles que
+                        la fiche coche pour la compétence retenue. Appropriée, elle baisse le
+                        seuil de chaque dé à 7 ; c'est au meneur d'en juger.
+                    */}
+                    {descripteur.garde?.specialisations && (
+                        <label className="flex items-center gap-2">
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Spécialisation</span>
+                            <select
+                                value={jet.garde?.specialisation?.champ ?? ''}
+                                onChange={e => setSpecialisationDeLaGarde(e.target.value)}
+                                disabled={!jet.garde?.niveau || !jet.garde.specialisationsPossibles.length}
+                                className="min-w-32 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50 disabled:opacity-40"
+                            >
+                                <option value="">
+                                    {jet.garde?.specialisationsPossibles.length ? '— aucune —' : '— aucune cochée —'}
+                                </option>
+                                {jet.garde?.specialisationsPossibles.map(sp => (
+                                    <option key={sp.champ} value={sp.champ}>{sp.label}</option>
+                                ))}
+                            </select>
+                        </label>
+                    )}
+
+                    {/* **L'attaque** (Crimes, C6) : l'arme, la distance, l'opposition et la cible. */}
+                    {descripteur.garde?.armes && (
+                        <PreparationDeLAttaque reglages={reglagesDAttaque} atteintes={descripteur.garde.atteintes}
+                            changer={r => setReglagesDAttaque(x => ({ ...x, ...r }))} />
+                    )}
+
+                    {/*
+                        **Se dépasser** (Crimes, C3) : le livre veut l'annonce **avant** de
+                        jeter les dés (p. 385). Une passion ou une conviction engagée, ou le
+                        combat (une fois, p. 389) ; le meneur en juge.
+                    */}
+                    {jet.garde?.depassement && (
+                        <label className="flex items-center gap-2"
+                            title={jet.garde.depassement.raison
+                                ?? 'Une passion ou une conviction est engagée (ou un combat) : le meneur en juge. Chaque réussite gardée en plus coûte une fatigue.'}>
+                            <input
+                                type="checkbox"
+                                checked={depassementAnnonce && jet.garde.depassement.possible}
+                                disabled={!jet.garde.depassement.possible}
+                                onChange={e => setDepassementAnnonce(e.target.checked)}
+                                data-depassement
+                                className="accent-current"
+                            />
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
+                                Se dépasser{!jet.garde.depassement.possible && ' — déjà fait dans cette scène'}
+                            </span>
+                        </label>
+                    )}
+
                     {descripteur.difficulte && !descripteur.cible && (
                         <label className="flex items-center gap-2">
                             <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Difficulté</span>
@@ -1855,8 +2053,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             <Etape numero={numeros.lancer} titre="Lancer les dés">
                 {briseAlien && <p className="text-xs text-etat-danger">{synthetiqueAlien ? 'Arrêt du système : aucun test ordinaire ; réactivation et réparation par Comtech.' : `${etatCombatAlien.mort ? 'Mort' : 'Brisé'} : aucun test de compétence ordinaire. Les premiers soins et le Trépas ont leurs gestes séparés.`}</p>}
                 <div className="flex flex-wrap items-center gap-4">
-                    {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système. */}
-                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien ? 'hidden' : ''}`}>
+                    {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système.
+                        Pas chez Crimes : le Potentiel dit le nombre de dés, rien ne s'y ajoute. */}
+                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde ? 'hidden' : ''}`}>
                         <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                         <button
                             onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -1998,6 +2197,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             */
                             const seconde = d.source === 'gear';
                             const declenche = seconde && d.isCritMin;
+                            // Jet gardé : un 1 gardé d'office, et les autres dés qu'on peut échanger.
+                            const unGarde = !!gardeDuResultat && !ecarte && val === 1;
+                            const echangeable = !!gardeDuResultat && val !== 1 && gardeDuResultat.depassement === 0
+                                && gardeDuResultat.quota > resultat.rolls.filter(r => r.val === 1).length;
                             const nomDuUn = descripteur.reserve?.secondaire?.libelleDuUn ?? 'Fléau';
                             /*
                               **Le nom sous le dé** (maquette du 2026-10-22) : on lit un dé sans
@@ -2007,6 +2210,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                               resterait sans nom à côté d'un 10 nommé.
                             */
                             const mention = ecarte ? 'Écarté'
+                                : gardeDuResultat ? (unGarde ? 'Un' : d.isCritMax ? 'Réussite' : 'Gardé')
                                 : declenche ? nomDuUn
                                 : seconde ? descripteur.reserve?.secondaire?.label
                                 : critique ? 'Critique'
@@ -2016,7 +2220,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             return (
                                 <span
                                     key={i}
-                                    title={ecarte ? 'Dé écarté — celui que le tirage n’a pas retenu'
+                                    {...(echangeable ? {
+                                        role: 'button', tabIndex: 0, 'data-de-de-la-garde': i,
+                                        onClick: () => changerLaGarde(i),
+                                        onKeyDown: (e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); changerLaGarde(i); } },
+                                    } : {})}
+                                    title={echangeable ? (ecarte ? 'Garder ce dé à la place du meilleur gardé' : 'Écarter ce dé au profit du meilleur écarté')
+                                        : unGarde ? 'Un 1 : gardé d’office'
+                                        : ecarte ? 'Dé écarté — celui que le tirage n’a pas retenu'
                                         : declenche ? nomDuUn
                                         : seconde ? descripteur.reserve?.secondaire?.label
                                         : critique ? 'Deux réussites'
@@ -2026,6 +2237,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                             ? 'bg-transparent border-dashed border-app-border/30 text-app-text/25 line-through'
                                         : declenche
                                             ? 'bg-etat-alerte/25 border-etat-alerte text-etat-alerte shadow-[0_0_10px_rgba(251,191,36,0.35)]'
+                                        : unGarde
+                                            ? 'bg-etat-danger/20 border-etat-danger/50 text-etat-danger'
                                             : critique
                                                 ? 'bg-etat-succes/20 border-etat-succes/50 text-etat-succes'
                                                 : d.isCritMax
@@ -2035,7 +2248,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                                         : seconde
                                                             ? 'bg-app-text/5 border-dashed border-etat-alerte/40 text-app-text/50'
                                                             : 'bg-app-text/5 border-app-border/30 text-app-text/40'
-                                    }${d.relance ? ' ring-2 ring-accent/50' : ''}${d.cssClass === 'reussite-depensee' ? ' ring-2 ring-etat-succes/60' : ''}`}
+                                    }${d.relance ? ' ring-2 ring-accent/50' : ''}${d.cssClass === 'reussite-depensee' ? ' ring-2 ring-etat-succes/60' : ''}${echangeable ? ' cursor-pointer hover:border-accent/60' : ''}`}
                                 >
                                     {val}
                                     {mention && <span className="font-sans text-ui-8 font-black uppercase tracking-wide leading-none">{mention}</span>}
@@ -2080,7 +2293,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             Panique est une décision de table — l'outil tient le
                             compte, il n'arbitre pas.
                         */}
-                        {(resultat?.fails ?? 0) > 0 && (
+                        {/* Un 1 gardé de Crimes n'est pas un fléau : le bilan le compte déjà. */}
+                        {(resultat?.fails ?? 0) > 0 && !gardeDuResultat && (
                             <span className="text-etat-alerte font-black uppercase tracking-widest">
                                 {resultat!.fails} {descripteur.reserve?.secondaire?.libelleDuUn ?? 'fléau'}
                                 {resultat!.fails! > 1 ? 's' : ''}
@@ -2088,10 +2302,72 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         {/* L'excédent alimente la monnaie de table — et depuis
                             le mur n° 4, il y est réellement versé. */}
-                        {v.excedent > 0 && !regleJetAlien && (
+                        {v.excedent > 0 && !regleJetAlien && !gardeDuResultat && (
                             <span className="text-etat-alerte/80 font-mono">
                                 +{v.excedent}{monnaie && jet.cout.ressource ? ` ${nomDe(jet.cout.ressource)}` : ' excédent'}
                             </span>
+                        )}
+                        {gardeDuResultat && effetsSurLaNevrose(gardeDuResultat).map(effet => (
+                            <span key={effet} className="text-etat-alerte/80 font-mono">{effet}</span>
+                        ))}
+                        {/* L'issue de l'attaque (C6) : touché ou non, le calcul du livre, et « Infliger ». */}
+                        {gardeDuResultat && descripteur.garde?.armes && reglagesDAttaque.arme && (
+                            <IssueDeLAttaque reglages={reglagesDAttaque} resultat={resultat as JetGarde}
+                                atteintes={descripteur.garde.atteintes}
+                                physiqueAttaquant={gardeDuLancer?.atteintes?.potentiel === (descripteur.garde.atteintes?.incapacite ?? 'physique')
+                                    ? gardeDuLancer.atteintes.actuel
+                                    : Number(valeursDesAtteintes[descripteur.garde.atteintes?.incapacite ?? 'physique']) || 0}
+                                peutInfliger={!pourLesJoueurs}
+                                infligee={attaqueInfligee}
+                                onInfligee={ligne => {
+                                    setAttaqueInfligee(ligne);
+                                    setMouvements(m => [...m, ligne]);
+                                    redire('Attaque', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne });
+                                }} />
+                        )}
+                        {/*
+                            **Les points d'enquête du jet** (Crimes, C5, p. 436) : au meneur, qui
+                            juge si la routine fait avancer l'affaire. Le compte suit la règle
+                            générale ; seuls les styles que l'enquêteur possède se proposent.
+                        */}
+                        {gardeDuResultat && stylesDEnquete && ecrireSurLaFiche && !pourLesJoueurs && (() => {
+                            const n = pointsDuJet(gardeDuResultat.bilan, gardeDuResultat.reussites);
+                            if (n === 0) return null;
+                            if (enqueteNotee) return <span className="text-gm-gold font-mono" data-enquete-notee>{enqueteNotee}</span>;
+                            return stylesDEnquete.filter(st => peutGagner(valeursDesAtteintes, st)).map(st => (
+                                <button key={st.id} data-point-d-enquete={st.id}
+                                    title={`Si la routine de ${st.label} fait avancer l’enquête (p. 436)`}
+                                    onClick={() => {
+                                        const apres = apresLeGain(valeursDesAtteintes, st, n);
+                                        ecrireLesAtteintes({ [st.points]: apres });
+                                        const dit = `${st.label} ${n > 0 ? '+' : ''}${n} → ${apres}`;
+                                        setEnqueteNotee(dit);
+                                        redire('Points d’enquête', { total: 0, modifier: 0, rolls: [], totalDisplay: dit });
+                                    }}
+                                    className="px-2 py-1 rounded-lg border border-gm-gold/40 text-gm-gold text-ui-10 font-black uppercase tracking-widest hover:bg-gm-gold/10">
+                                    {n > 0 ? '+' : ''}{n} {st.label}
+                                </button>
+                            ));
+                        })()}
+                        {/* Le dépassement annoncé : garder une ou plusieurs réussites de plus, une fatigue chacune. */}
+                        {gardeDuResultat && gardeDuLancer?.depassement?.annonce && gardeDuLancer.depassement.possible
+                            && gardeDuLancer.atteintes && ecrireSurLaFiche && gardeDuResultat.depassement === 0 && (
+                            gardeDuResultat.reussitesNonGardees > 0
+                                ? Array.from({ length: gardeDuResultat.reussitesNonGardees }, (_, i) => i + 1).map(n => (
+                                    <button key={n} onClick={() => seDepasser(n)} data-se-depasser={n}
+                                        className="px-3 py-1 rounded-lg border border-etat-alerte/50 text-etat-alerte text-ui-10 font-black uppercase tracking-widest hover:bg-etat-alerte/10">
+                                        Se dépasser : +{n} réussite{n > 1 ? 's' : ''} ({n} fatigue)
+                                    </button>
+                                ))
+                                : <span className="text-app-text/40 font-mono">Aucune réussite hors de la garde : rien à dépasser.</span>
+                        )}
+                        {gardeDuResultat && gardeDuResultat.gardes.join(',') !== gardeAuJournal && (
+                            <button
+                                onClick={consignerLaGarde}
+                                className="px-3 py-1 rounded-lg border border-accent/40 text-accent text-ui-10 font-black uppercase tracking-widest hover:bg-accent/10"
+                            >
+                                Consigner cette garde
+                            </button>
                         )}
                         {complications > 0 && (
                             <span className="text-etat-danger/80 font-mono">
@@ -2354,6 +2630,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         if (resultat) setResultat(res);
                         redire(`Alien — ${suite.nomCompetence}`, { ...res, totalDisplay: `${res.totalDisplay} — ${texte}` });
                     }} />
+                </CarteDuJeu>
+            )}
+            {descripteur.garde?.atteintes && ecrireSurLaFiche && (
+                <CarteDuJeu id="atteintes-crimes" titre="Potentiels et atteintes">
+                    <AtteintesDesPotentiels
+                        regle={descripteur.garde.atteintes}
+                        valeurs={valeursDesAtteintes}
+                        libelleDe={id => template.sections.flatMap(sec => sec.fields).find(f => f.id === id)?.label ?? id}
+                        ecrire={ecrireLesAtteintes}
+                        consigner={ligne => redire('Atteintes', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })}
+                    />
                 </CarteDuJeu>
             )}
             {combatAlien?.actions&&<ActionsAlien personnageId={personnageId} joueur={pourLesJoueurs}/>}

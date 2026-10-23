@@ -259,7 +259,7 @@ const ModalProvider: React.FC = () => {
                                         {/* Littéral : un écran de refonte, pour un seul lecteur. */}
                                         {customVariant === 'vitrine-du-socle' && 'Vitrine du socle'}
                                         {/* Littéral : trois gestes de table, pour un seul lecteur. */}
-                                        {customVariant === 'gestes-des-heros' && ({ calme: 'Moment de calme', debordement: 'Effets du débordement', finDeScene: 'Fin de scène' } as const)[
+                                        {customVariant === 'gestes-des-heros' && ({ calme: 'Moment de calme', debordement: 'Effets du débordement', finDeScene: 'Fin de scène', bonneNuit: 'Bonne nuit' } as const)[
                                             (defaultValue as { geste?: GesteDesHeros } | undefined)?.geste ?? 'calme']}
                                         {/* Littéral : un écran pour un seul lecteur, le meneur. */}
                                         {customVariant === 'identite-visuelle' && 'Identité visuelle'}

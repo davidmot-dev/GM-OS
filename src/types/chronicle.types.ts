@@ -84,4 +84,16 @@ export interface Clue {
     isRevealed: boolean;
     revealedAt?: number;
     campaignMoment?: string; // Acte, Chapitre, etc.
+
+    /*
+      **Les points d'enquête** — Crimes, C5 (2026-10-22), livre p. 440 : « Limier (3)
+      et Fouineur (4) pour la découvrir ». Un style suffit. Les gains vont à
+      l'enquêteur qui obtient l'indice, dans les styles qu'il possède.
+    */
+    seuilsDEnquete?: { style: string; points: number }[];
+    gainsDEnquete?: { style: string; points: number }[];
+    /** Les personnages qui le connaissent sans que la table le sache : leur seule tablette le reçoit. */
+    connuDe?: string[];
+    /** Qui l'a trouvé, et par quel style (son libellé) : l'origine reste quand on le partage. */
+    trouvePar?: { personnageId: string; nom: string; style?: string; quand: number };
 }

@@ -38,28 +38,20 @@ L'accomplissement de routines rapporte des points d'enquête (section « Gains e
   - Mentaliste: Intrigues ou Société.
   - Illuminé: Occultisme ou Sciences de l'homme.
   - Fouineur: Larcin ou Traque.
-- Variation des points d'enquête (section « Gains et pertes de points d’enquête »):
-  - Succès simple: +1 point d'enquête.
-  - Succès majeur (2 réussites ou plus) ou action très difficile: +2 points d'enquête.
+- Variation des points d'enquête (section « Gains et pertes de points d’enquête », p. 436), en général:
+  - Succès: +1 point d'enquête.
+  - Succès impliquant deux réussites, ou action particulièrement difficile: +2 points d'enquête.
   - Échec critique: -1 point d'enquête.
   - Inscription d'une théorie lors d'un débat: +1 point d'enquête.
+- Un indice peut donner des points d'enquête dans un ou plusieurs styles différents (p. 436).
 
-Tool response for write_to_file: <empty>Tool response for execute_command:
-```json
-{
-  "result":  "Successfully wrote to /workspace/scratch/check_enquete2.py"
-}
-```Tool response for execute_command:
-```json
-{
-  "result":  "exit_code: 0\nstdout:\nLength in chars: 2364\nAll checks passed!\n\nstderr:\n"
-}
-```## À la table
+
+## À la table
 Concrètement, le système des points d'enquête et des styles d'enquêteur s'utilise lors des phases d'investigation de la manière suivante:
 
 1. Choix de la routine et déclaration d'action: Lors d'une scène de recherche d'indices ou d'interrogatoire, le joueur choisit d'invoquer l'une des routines propres à son style d'enquêteur (Condé, Limier, Mentaliste, Illuminé ou Fouineur) (section « Les cinq styles d’enquêteur »).
 2. Lancement du test et gain de points: Le joueur résout son action selon le test de compétence associé à son style (section « Gains et pertes de points d’enquête »). Un succès simple rapporte 1 point d'enquête, un succès majeur (2 réussites ou plus) ou la résolution d'une action complexe en apporte 2.
-3. Dépense des points d'enquête: En accumulant des points d'enquête au cours des scènes, le joueur ou le groupe peut consommer sa réserve pour obtenir des éclaircissements, débloquer un indice bloqué, obtenir des confirmations du meneur ou faire valider une hypothèse d'enquête (section « Usage des points d’enquête »).
+3. Usage des points d'enquête: En les **cumulant**, le personnage glane des indices clés, accède à des indices supplémentaires (témoins, objets, pistes) qu'il n'aurait pas eus autrement, gagne des contacts selon son style et, en fin de scénario, aboutit à des preuves qui rendent sa version convaincante (section « Usage des points d’enquête », p. 436-438). Le livre ne décrit pas de dépense générale : les déductions restent celles des joueurs, et le meneur juge si l'affaire est résolue.
 4. Table ronde et formulation d'hypothèses: Durant les phases de débat ou de synthèse entre enquêteurs, inscrire ou faire valider une théorie cohérente sur le tableau de l'affaire crédite la réserve d'un point d'enquête supplémentaire (section « Gains et pertes de points d’enquête »).
 
 ## Cas limites

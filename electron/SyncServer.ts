@@ -746,7 +746,8 @@ export class SyncServer {
                           compris. Le même caviardage, quoi qu'on ait reçu.
                         */
                         const personnage = client.deviceId ? sessionManager.getClient(client.deviceId)?.characterId ?? null : null;
-                        client.send(JSON.stringify({...a,payload:caviarderPourLesJoueurs(filtrerAstrologieDistante(a.payload,personnage))}));
+                        // L'indice connu d'un seul enquêteur ne va qu'à sa tablette (Crimes, C5).
+                        client.send(JSON.stringify({...a,payload:caviarderPourLesJoueurs(filtrerAstrologieDistante(a.payload,personnage),personnage)}));
                     } else client.send(message);
                 }
             }

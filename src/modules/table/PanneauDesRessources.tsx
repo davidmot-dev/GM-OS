@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Minus, Users, Crown, Hourglass, Sunrise, RotateCcw, Coffee, Flame } from 'lucide-react';
+import { Plus, Minus, Users, Crown, Hourglass, Sunrise, RotateCcw, Coffee, Flame, Moon } from 'lucide-react';
 import { gmToast } from '../../stores/useToastStore';
 import { gmConfirm, gmCustom } from '../../stores/useModalStore';
 import { useRessourcesDeTableStore } from './useRessourcesDeTableStore';
@@ -81,6 +81,8 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
     const erosionPossible = !pourLesJoueurs && ressources.some(r => r.erosionFinDeScene);
     // La fin de scène qui touche aussi les fiches s'ouvre sur un aperçu, Héros par Héros.
     const finDeSceneDesHeros = !!gestesDuMeneur?.finDeScene?.length;
+    // La bonne nuit (Crimes) : l'épuisement se repose, avec le même aperçu.
+    const bonneNuitDesHeros = !!gestesDuMeneur?.bonneNuit?.length;
     const seancePossible = !pourLesJoueurs && (ressources.some(r => r.erosionDebutDeSeance) || !!gestesDuMeneur?.debutDeSeance?.length);
     const scenarioPossible = !pourLesJoueurs && (ressources.some(r => r.remiseAuDepartParScenario)
         || !!gestesDuMeneur?.nouveauScenario?.length || !!rechargeDuMeneur?.length);
@@ -139,7 +141,7 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
             : gagner(campaignId, ressources, r.id, delta));
     };
 
-    const gestesPossibles = erosionPossible || finDeSceneDesHeros || seancePossible || scenarioPossible
+    const gestesPossibles = erosionPossible || finDeSceneDesHeros || bonneNuitDesHeros || seancePossible || scenarioPossible
         || calmePossible || !!debordement;
     // Un pilote sans réserve visible ni geste ne laisse pas une bande vide derrière
     // lui, qui donnerait à croire à un oubli de configuration.
@@ -253,6 +255,15 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                             title={`Ce que la fin de scène change sur chaque fiche (${nomsDesMouvements(gestesDuMeneur?.finDeScene)}), à relire avant d'appliquer`}
                         >
                             <Hourglass size={11} /> Fin de scène
+                        </button>
+                    )}
+                    {bonneNuitDesHeros && (
+                        <button
+                            onClick={() => gmCustom('gestes-des-heros', { geste: 'bonneNuit' })}
+                            className={CLASSE_DU_GESTE}
+                            title={`Ce qu'une bonne nuit change sur chaque fiche (${nomsDesMouvements(gestesDuMeneur?.bonneNuit)}), à relire avant d'appliquer`}
+                        >
+                            <Moon size={11} /> Bonne nuit
                         </button>
                     )}
                     {erosionPossible && !finDeSceneDesHeros && (

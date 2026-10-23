@@ -23,6 +23,7 @@ fait.
 | 🌃 **Blade Runner** | **Dés échelonnés** : un dé par attribut et par compétence, de D6 à D12 | [Blade Runner](./54-Jeu-Blade-Runner.md) |
 | 🐙 **Cthulhu Hack** | **Sauvegardes** au d20 sous la caractéristique, **dés d'usure** (Torche, Bagou…) | [Cthulhu Hack](./54-Jeu-Cthulhu-Hack.md) |
 | 🌑 **Symbaroum** | Un **test** au d20 sous l'un des huit attributs ; **Corruption** temporaire et permanente en jauges ; fiche HTML reliée, douze cadres de talents et pouvoirs | [Symbaroum](./54-Jeu-Symbaroum.md) |
+| 🕯️ **Crimes** | **Potentiel GARDE Compétence** : des d10, on en garde autant que la compétence, les 1 d'office ; seuil 9, 8 ou 7 avec une spécialisation ; quatre bilans et la Névrose dite | [Crimes](./54-Jeu-Crimes.md) |
 | 🐉 **Rêves de Dragons** | d100 sous un **pourcentage**, degrés ; **Livret du voyageur HTML de cinq pages**, dont l'Archétype, relié au formulaire ; fatigue, blessures, ouvrages, repos et Château Dormant ; **stress/XP/Archétype**, **chance/destinée/moral**, **astrologie privée liée à Clock-OS** ; carte TMR | [Rêves de Dragons](./54-Jeu-Reves-de-Dragons.md) |
 | ⚡️ **Torg Eternity** | Un d20 qui **explose**, converti par la **Table des Bonus**, contre un **Niveau de Difficulté** ; **Possibilité**, « Un de plus ! » et relance favorisée après le premier dé ; **Annulation des dommages** | [Torg](./54-Jeu-Torg.md) |
 | ✨ **Nephilim Légende** | d100 sous une cible en **degrés × 10** (Vécu ou Art occulte + Ka d'approche), **doubles** critiques ou maladresses et leurs **suites** (Khaïba, Ombre, Sapience), **marge** sur les dizaines ; **Traque** plafonnée au **Seuil RK** du lieu ; **155 Vécus** et **31 époques** reliés à la fiche | [Nephilim](./54-Jeu-Nephilim.md) |
@@ -33,7 +34,7 @@ fait.
 
 | Écran | Ce qu'on y trouve |
 | :--- | :--- |
-| **Le bandeau des réserves**, en tête de Session-OS | Les réserves de table (Impulsion, Menace, Fiel…), leurs boutons + / −, et les gestes « Fin de scène », « Début de séance », « Nouveau scénario » — et, si le jeu les déclare, « Moment de calme » et « Effets du … » |
+| **Le bandeau des réserves**, en tête de Session-OS | Les réserves de table (Impulsion, Menace, Fiel…), leurs boutons + / −, et les gestes « Fin de scène », « Début de séance », « Nouveau scénario » — et, si le jeu les déclare, « Moment de calme », « Effets du … » et « Bonne nuit » |
 | **L'onglet « Lancer un test »** de la fiche d'un personnage, chez vous (à côté de « Formulaire » et « Fiche du jeu ») et sur la tablette (à côté de « Vue synthétique » et « Ma fiche ») | Le jet du jeu : ce qu'on retient sur la fiche, les dés achetés, ce qu'on puise dans le groupe, le résultat, puis les blocs du jeu |
 | **La carte de campagne**, dans le cockpit | Le bouton de la **fiche du groupe** (la Cabale), quand le jeu en a une |
 | **La tablette d'un joueur** | Les mêmes réserves et le même jet, et l'onglet du groupe à côté de « Ma fiche » |
@@ -122,6 +123,7 @@ appareil. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
 | **Dés échelonnés** (`desEchelonnes`) | **Un dé par valeur**, dont la taille se lit sur la fiche | Blade Runner : A = D12 … D = D6 |
 | **Cible en pourcentage** (`cible`) | Un d100 sous un pourcentage que le jeu **calcule** : lu dans la table de résolution (`reves-de-dragons`), ou degrés × 10 avec doubles critiques et marge sur les dizaines (`nephilim`) | Rêves de Dragons, Nephilim |
 | **Table des Bonus** (`tableDeBonus`) | Le dé se convertit en **bonus** par la table du jeu, s'ajoute au **niveau** (le seuil additionné) et se compare à la difficulté | Torg : un d20 qui explose sur 10 et 20 |
+| **Jet gardé** (`garde`) | On lance autant de d10 que la réserve (le **Potentiel**) et l'on en **garde** autant que la **compétence** retenue — un seul sans elle. Chaque dé gardé réussit au `seuil`, moins `competent` si le personnage a la compétence, moins `specialise` à la place avec la **spécialisation** choisie à l'étape « Préparer » (seules celles que la fiche coche, par `specialisations.parCompetence`). **Tous les 1 sont gardés.** Le résultat nomme l'un des **quatre bilans** du livre — échec critique, échec, réussite mitigée, réussite (« succès important » à trois réussites gardées) — et dit ce que le jet fait à la Névrose. On peut **changer sa garde** en cliquant un dé (pas un 1), puis « Consigner cette garde ». Avec `atteintes`, le jet lance le Potentiel **actuel** — la valeur de départ moins la fatigue, l'épuisement et les blessures, lus sur la fiche —, et la carte **« Potentiels et atteintes »** pose ces marques ; avec `depassement`, la case **« Se dépasser »** (à Préparer, avant le jet) permet de garder des réussites en plus, une fatigue chacune, une fois par scène ; avec `armes` (`crimes`, une table transcrite du livre), Préparer propose l'**arme**, la **distance** d'un tir, les **réussites adverses**, la **cible** (un combattant) et sa **protection**, et le résultat dit le calcul des dégâts — succès excédentaires + arme − Physique de la cible − protection, au moins 1 — et **« Infliger »** les marques sur sa fiche | Crimes : Physique 5, Sport 2 → 5 dés, 2 gardés à 8 ; `[1, 3, 4, 6, 8]` garde 1 et 8 : réussite mitigée |
 | **Réglages de Torg** (`torg`) | Le champ des **Blessures** (−1 au total d'action chacune, jusqu'à −3), celui des **Possibilités** (dépensées après le premier dé), et le test de Réalité de l'**Annulation des dommages** | Torg |
 | **Provoquer le destin** (`destin`) | Le **niveau** (le seuil : le Talent) contre la difficulté ; on lance de zéro au **plafond** (la réserve : le Domaine) de dés à dix faces, chaque 8 et plus élève le niveau, un 10 fait lancer un dé de plus, **chaque 1 verse une goutte dans la réserve de table** déclarée. Des **jauges de péril** retirent au Domaine et au Talent selon leurs seuils, cumulés | NOC |
 | **Réserves du personnage** (`reservesDuPersonnage`) | Ce que le personnage puise dans **ses** réserves, sur **sa** fiche, au moment du jet — même forme que les apports du groupe | NOC : Vécu, Espoir, Singularité · Nephilim : Stase, Effet Mnémos |
@@ -227,6 +229,7 @@ changent sont écrites.
 | :--- | :--- | :--- |
 | **Moment de calme** (`momentDeCalme`) | Un bouton au bandeau. Des réserves de table bougent, chaque Héros récupère dans l'ordre déclaré, des cases se décochent (`leve`). Une **récupération amputée** (`amputation`) se dit sans s'appliquer : le joueur choisit où la reprendre | NOC : −1 Fiel, Espoir +1 + Extase, −1 à chaque jauge de péril, Fatigué prend fin ; le Soupçon dit les 2, 4 ou 6 points à reprendre |
 | **Fin de scène** (`finDeScene`) | Le bouton « Fin de scène » ouvre un **aperçu**, puis écrit chaque fiche ; les réserves qui s'érodent en fin de scène s'érodent avec | Symbaroum : la Corruption temporaire revient à 0, la permanente reste |
+| **Bonne nuit** (`bonneNuit`) | Le bouton « Bonne nuit » du bandeau ouvre le même **aperçu**, Héros par Héros, puis écrit chaque fiche | Crimes : une croix d'épuisement de moins par Potentiel, la fatigue et le dépassement de la scène rendus |
 | **Début de séance**, **Nouveau scénario** (`debutDeSeance`, `nouveauScenario`) | Les boutons existants rendent aussi quelque chose à chaque fiche ; la confirmation du scénario le nomme | NOC : Vécu +1 par séance, plein à chaque scénario |
 | **Effets du débordement** (`effetsDuDebordement`) | Un bouton « Effets du … » au bandeau. Quand la réserve déborde, la Loi choisit **autant d'effets que vaut l'autre réserve** (la Menace), le même plusieurs fois si elle veut ; le compte est rappelé, pas imposé | NOC : Bouleversement administratif, Intervention de l'Artefact, Tension, Traque, Fatigue |
 
@@ -236,6 +239,20 @@ aggrave), un **plafond** fixe ou lu sur la fiche (l'Espoir : 2 × Ferveur + 3, a
 **« plein »** au plafond ou **« vide »** au plancher, un **plancher** de séquelles, et la case qui se **coche** quand la réserve est déjà vide (l'Espoir à
 zéro → Fatigué). **Un même effet choisi deux fois cumule ses pertes avant la résistance** : deux
 Tensions avec Folie 1 donnent 4 − 1 = 3 points de Trauma.
+
+### Le dossier d'enquête (`enquete`)
+
+Un jeu qui déclare ses **styles d'enquêteur** — Crimes : Condé, Limier, Illuminé, Mentaliste,
+Fouineur — ouvre, en tête des **Indices**, un **dossier d'enquête** au meneur : les points de chaque
+enquêteur dans chaque style, à distribuer d'un clic quand une routine fait avancer l'affaire ; les
+**indices à portée**, ceux dont un enquêteur atteint le seuil ; **« Révéler à … »**, qui ne l'envoie
+qu'à **sa** tablette, avec son origine ; puis **« Partager à la table »**. L'éditeur d'un indice
+gagne ses **seuils** (« Limier 3 ») et ses **gains**. Après un jet, le panneau propose au meneur les
+points du jet dans les styles que l'enquêteur possède.
+
+| Réglage | Ce qu'il change | Exemple |
+| :--- | :--- | :--- |
+| **Styles d'enquêteur** (`enquete`) | Chaque style : un identifiant, son nom, le champ de son **niveau** (on ne gagne de points que dans un style qu'on possède) et celui de ses **points** de l'affaire ; « Nouvelle affaire » ramène les points au niveau | Crimes : `conde` et `compteur_conde`, … ; la larve de bombyx s'obtient à Limier 3 ou Fouineur 4 |
 
 ### Les seuils qui laissent une trace (`franchissements`)
 

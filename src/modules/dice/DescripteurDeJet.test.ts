@@ -1107,3 +1107,77 @@ describe('l\'Avantage tactique', () => {
         expect(preparer({}).seuil).toBe(12);
     });
 });
+
+/**
+ * **Le jet gardé de Crimes** (C1, 2026-10-22) : le Potentiel donne les dés, la
+ * Compétence le quota, la spécialisation cochée le seuil.
+ */
+describe('Potentiel GARDE Compétence', () => {
+    const CRIMES: DescripteurDeJet = {
+        sens: 'superieur-ou-egal',
+        reserve: { base: 0, max: 10, faces: 10, composantes: [{ id: 'potentiel', label: 'Potentiel', sectionId: 'potentiels' }] },
+        garde: {
+            competence: { id: 'competence', label: 'Compétence', sectionId: 'competences' },
+            seuil: 9, competent: 1, specialise: 2,
+            specialisations: { parCompetence: { traque: 'specialties_tracking_' } },
+        },
+    };
+    const SECTIONS = [
+        { id: 'potentiels', label: 'Potentiels', fields: [{ id: 'physique', label: 'Physique', type: 'number' }] },
+        { id: 'competences', label: 'Compétences', fields: [{ id: 'traque', label: 'Traque', type: 'number' }, { id: 'sport', label: 'Sport', type: 'number' }] },
+        { id: 'specialisations', label: 'Spécialisations', fields: [
+        { id: 'specialties_tracking_hunting', label: 'Traque — Chasse', type: 'checkbox' },
+        { id: 'specialties_tracking_trapping', label: 'Traque — Piégeage', type: 'checkbox' },
+    ] }] as never;
+    const fiche = { physique: 5, traque: 2, sport: 0, specialties_tracking_hunting: true, specialties_tracking_trapping: false };
+    const preparer = (champs: Record<string, string>, specialisationDeLaGarde?: string) =>
+        preparerLeJet(CRIMES, fiche, { champs, specialisationDeLaGarde }, SECTIONS);
+
+    it('Physique 5, Traque 2 : cinq dés, deux gardés, seuil 8', () => {
+        const jet = preparer({ potentiel: 'physique', competence: 'traque' });
+        expect(jet.nombreDeDes).toBe(5);
+        expect(jet.garde).toMatchObject({ quota: 2, seuil: 8, niveau: 2 });
+        expect(jet.avertissements).toEqual([]);
+    });
+
+    it('la spécialisation cochée sur la fiche se propose, et retenue, le seuil passe à 7', () => {
+        expect(preparer({ potentiel: 'physique', competence: 'traque' }).garde?.specialisationsPossibles)
+            .toEqual([{ champ: 'specialties_tracking_hunting', label: 'Chasse' }]);
+        expect(preparer({ potentiel: 'physique', competence: 'traque' }, 'specialties_tracking_hunting').garde?.seuil).toBe(7);
+        expect(preparer({ potentiel: 'physique', competence: 'traque' }, 'specialties_tracking_trapping').garde?.seuil, 'non cochée').toBe(8);
+    });
+
+    it('sans la compétence : un dé gardé, au seuil de base (p. 411)', () => {
+        expect(preparer({ potentiel: 'physique', competence: 'sport' }).garde).toMatchObject({ quota: 1, seuil: 9 });
+    });
+
+    // C2 et C3 (2026-10-22) : le Potentiel actuel, et le dépassement une fois par scène.
+    const AVEC_ATTEINTES: DescripteurDeJet = {
+        ...CRIMES,
+        garde: {
+            ...CRIMES.garde!,
+            atteintes: { parPotentiel: { physique: { fatigue: 'fatigue_physique', epuisement: 'epuisement_physique', blessures: 'blessures_physique' } }, incapacite: 'physique' },
+            depassement: { champ: 'depassement_de_la_scene' },
+        },
+    };
+    const atteint = (marques: Record<string, unknown>, choix: Record<string, unknown> = {}) =>
+        preparerLeJet(AVEC_ATTEINTES, { ...fiche, ...marques }, { champs: { potentiel: 'physique', competence: 'traque' }, ...choix }, SECTIONS);
+
+    it('une fatigue et une blessure : Physique 5 lance trois dés, sa valeur de départ ne bouge pas', () => {
+        const jet = atteint({ fatigue_physique: 1, blessures_physique: 1 });
+        expect(jet.nombreDeDes).toBe(3);
+        expect(jet.garde?.atteintes).toMatchObject({ potentiel: 'physique', base: 5, actuel: 3, fatigue: 1, blessures: 1 });
+    });
+
+    it('à zéro, plus aucun dé : on le dit', () => {
+        const jet = atteint({ blessures_physique: 5 });
+        expect(jet.nombreDeDes).toBe(0);
+        expect(jet.avertissements).toEqual(['Physique actuel à 0 : plus aucun dé à lancer.']);
+    });
+
+    it('le dépassement se retient pour le jet ; déjà fait dans la scène, il ne l’est plus', () => {
+        expect(atteint({}, { depassementAnnonce: true }).garde?.depassement).toMatchObject({ annonce: true, possible: true });
+        expect(atteint({ depassement_de_la_scene: 1 }, { depassementAnnonce: true }).garde?.depassement)
+            .toMatchObject({ possible: false, raison: expect.stringMatching(/un seul dépassement par scène/) });
+    });
+});

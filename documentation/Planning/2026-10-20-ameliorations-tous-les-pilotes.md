@@ -37,14 +37,14 @@ conformément à la décision de David du 19/10.
 | --- | --- | --- |
 | [Alien](#alien) | A0–A7 validés par David et poussés ; A8 livré et contrôlé le 22/10 | Essai A8 de David attendu ; combat spatial séparé |
 | [Blade Runner](#blade-runner) | Limites documentées ; audit complet à faire | Même choix de forçage au pupitre et sur la fiche ; suivi des blessures |
-| [Crimes](#crimes) | Audit du manuel et de l'export corrigé | Corpus puis résolution « Potentiel GARDE Compétence » |
+| [Crimes](#crimes) | Audit du manuel ; **C0 ciblé, C1 à C3, C5 et C6 livrés le 22/10** : corpus, Potentiel GARDE Compétence, atteintes, dépassement, dossier d'enquête, armes et attaque (registre § 157–159) | Réimport du pilote `…_c5-c6` et essai de David ; puis C4 |
 | [Cthulhu Hack](#cthulhu-hack) | Limites documentées ; audit complet à faire | Effets du Hors Jeu et usure reliés aux valeurs de la fiche |
 | [Dune](#dune) | Audit détaillé ; projet futur garé | Spécialisations et paiements Impulsion/Menace lors d'une reprise |
 | [Nephilim Légende](#nephilim-légende) | Plusieurs anciens lots réalisés ; restes documentés | Conséquences/Chutes, Stase et pacte de Kabbale |
 | [NOC](#noc) | Restes revérifiés dans le code le 19/10 ; **Séquelle proposée à 8 le 22/10** (registre § 150), essai de David validé | Singularité attribuée par un Rouage |
 | [Rêve de Dragon](#rêve-de-dragon) | Socle R0–R7 livré pour les PJ ; première boucle TMR livrée ; mécaniques du Voyageur dans l'onglet « Lancer un test » le 22/10 | Initiative complète et suites du Haut-Rêve |
 | [Star Trek Adventures](#star-trek-adventures) | Pilote et LCARS documentés ; audit mécanique détaillé à faire | Export actuel, règles de la deuxième édition et essais matériels LCARS |
-| [Symbaroum](#symbaroum) | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 livré le 22/10** : modificateur et opposition explicite (§ 149) | Réimport du pilote corrigé et essai de David ; puis Endurance (S2) et Avantage tactique (S3) |
+| [Symbaroum](#symbaroum) | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), **essai de David validé** | S5 : attaque, défense et dégâts |
 | [Torg Eternity](#torg-eternity) | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
 | [Within](#within) | Export examiné sommairement ; aucune règle primaire auditée | Reprendre la référence et construire une configuration mécanique vérifiable |
 
@@ -165,18 +165,45 @@ L'audit porte sur *Crimes 2 — Manuel de l'Enquêteur* et l'export corrigé.
 compétences, spécialisations, styles, contacts et jauges. Le thème et l'identité existent.
 
 **Depuis le 22/10 (registre § 148)**, la revue de la Forge signale le défaut de C1 : une
-difficulté de 9 réussites sur une réserve plafonnée à 0 dé (erreur sur `jet.difficulte`). Le
-pilote n'a pas changé ; C1 reste à faire.
+difficulté de 9 réussites sur une réserve plafonnée à 0 dé (erreur sur `jet.difficulte`).
+
+**C0 ciblé et C1 livrés le 22/10 (registre § 157).** Corpus : quatre bilans (p. 385), jet sans
+compétence (p. 411), santé sans mort automatique (p. 395–396), points d'enquête cumulés sans
+dépense (p. 436–438), trace d'outil retirée. Jet : `potentielGarde.ts` et `jet.garde` — d10 ×
+Potentiel, garde = Compétence, seuil 9/8/7, 1 gardés d'office, bilan du livre, Névrose dite ;
+spécialisation cochée au menu, garde modifiable d'un clic puis consignée ; fiche et tablette.
+Pilote `Export Dirvers/corriges/Crime_driver_gmos_garde.gmos-driver`
+(`outils/crime/corriger_le_jet_garde.py`) ; page [Crimes](../User%20Guides/54-Jeu-Crimes.md) et
+trois captures.
+
+**C2 et C3 livrés le 22/10 (registre § 158).** Atteintes : fatigue, épuisement, blessures par
+Potentiel, la plus grave prenant la place d'une moindre (p. 395) ; le jet lance le Potentiel
+actuel ; carte « Potentiels et atteintes » ; « Fin de scène » et « Bonne nuit » (`bonneNuit`,
+nouveau geste) ; hors de combat à 0, blessure grave sous −1, pas de mort. Dépassement : annoncé
+avant le jet, réussites restées dehors gardées contre une fatigue chacune, un par scène. Fiche
+HTML : neuf compteurs sous les Potentiels (moteur de fiches version 15). Pilote
+`Export Dirvers/corriges/Crime_driver_gmos_c2-c3.gmos-driver`. **Essai à faire :** réimport par
+David et jets à l'écran, C1 à C3 ensemble. **Reste :** la relecture tracée des 19 fiches (C0
+complet), la carte de combat alignée sur le Physique actuel (C6), puis C4–C8.
+
+**C5 et C6 livrés le 22/10 (registre § 159).** Dossier d'enquête en tête des Indices : points par
+style sur le compteur de la fiche, gain seulement dans un style possédé, points du jet proposés au
+meneur ; indices à seuils (« Limier 3 ») révélés à **un seul** enquêteur — sa seule tablette les
+reçoit, le serveur filtre par personnage — puis partagés, l'origine gardée. Armes du livre (13
+blanches, 28 à feu), opposition, dégâts du livre écrits en marques sur la cible, portée utile et
+maximale, incidents E/T/C ; tranches tactiques corrigées. Pilote
+`Export Dirvers/corriges/Crime_driver_gmos_c5-c6.gmos-driver`. **Essai à faire :** réimport et
+jets à l'écran. **Reste :** carte de combat sur le Physique actuel, manœuvres et munitions, C4, C7, C8.
 
 | Lot | Priorité | Amélioration possible |
 | --- | --- | --- |
-| C0 | P0 | Relire le corpus : bilans des jets, santé, points d'enquête ; retirer les traces de réponses d'outils |
-| C1 | P0 | Implémenter « Potentiel GARDE Compétence » : dés lancés/conservés, 1 obligatoires, spécialisations et quatre bilans |
-| C2 | P1 | Séparer potentiels de base et actuels ; fatigue, épuisement, blessures, soins et récupérations |
-| C3 | P1 | Proposer le dépassement sur les réussites supplémentaires obtenues, avec coût en fatigue et suivi par scène |
+| C0 | Ciblé **livré le 22/10** ; reste P0 | Bilans des jets, santé, points d'enquête et trace d'outil corrigés ; reste la relecture tracée des 19 fiches |
+| C1 | **Livré le 22/10** ; essai | « Potentiel GARDE Compétence » : dés lancés/gardés, 1 obligatoires, spécialisations et quatre bilans ; garde modifiable. Restent les oppositions et le pupitre |
+| C2 | **Livré le 22/10** ; essai | Potentiels de base et actuels ; fatigue, épuisement, blessures, soins, fin de scène et bonne nuit. Restent les dégâts du combat (C6) |
+| C3 | **Livré le 22/10** ; essai | Dépassement annoncé avant le jet, sur les réussites réellement obtenues, une fatigue chacune, un par scène. Reste l'exclusion des tests psychotiques (C4) |
 | C4 | P1 | Relier Angoisse, Névrose, Psychose et Innocence aux seuils, tests et conséquences |
-| C5 | P1 | Dossier d'enquête par affaire : cinq styles, scènes, indices, témoins, preuves et visibilité des informations |
-| C6 | P2 | Initiative, oppositions, portées, protection, munitions, incidents et blessures |
+| C5 | **Livré le 22/10** ; essai | Cinq styles, points, indices à seuils révélés à un seul puis partagés. Restent scènes et témoins rattachés à l'affaire |
+| C6 | **Livré le 22/10** ; essai | Armes, opposition, dégâts et blessures sur la cible, portées, protection, incidents. Restent la carte de combat, manœuvres, munitions décomptées, initiative narrative |
 | C7 | P2 | Contacts : influence/loyauté et services ; fortune : niveau/piste ; valeurs de base/actuelles |
 | C8 | P2 | Création et progression : budgets, âge, rangs, spécialisations, seuils et dépenses |
 
@@ -366,7 +393,7 @@ panneau, sur la fiche et la tablette, qui s'additionnent ; calcul lisible sous �
 redit au journal ; consigne, contrôle et revue de la Forge. Le contre-exemple de l'audit échoue
 (`10 / 9`). Pilote corrigé : `Export Dirvers/corriges/Symbaroum_driver_gmos_s1-opposition.gmos-driver`
 (script `outils/symbaroum/ajouter_modificateur_du_seuil.py`) ; page du manuel et trois captures
-refaites. **Reste : réimport par David et essai à l'écran.**
+refaites. **Réimporté ; essai de David validé le 22/10, comme S3 et S4.**
 
 | Lot | Priorité | Amélioration possible |
 | --- | --- | --- |
@@ -440,7 +467,7 @@ propres :
 | Corpus et contrôles de la Forge | Tous, en priorité Crimes/Symbaroum/Dune/Within | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. Sur les onze exports réels, seul Crimes est signalé (C1, déjà connu). **Reste :** relire le corpus, en priorité Crimes/Symbaroum/Dune/Within |
 | Modificateurs et contexte du jet | Symbaroum, Alien, puis audits des autres | Distinguer modificateur de seuil, nombre de dés, réussites exigées et meilleur/pire dé. **Avantage tactique livré le 22/10 (§ 155).** **Livré le 22/10 (registre § 149) :** `jet.modificateurDuSeuil`, capacité commune du moteur (tout jeu jeté sous un seuil additionné), avec opposition explicite ; Symbaroum la déclare. Les réussites exigées restent `difficulte` (Dune), le nombre de dés la réserve, meilleur/pire dé « Tirage ». **Reste :** les audits des autres jeux |
 | Choix du paiement et bilan du jet | Dune ; Star Trek à auditer séparément | Conserver coût, source, effets immédiats et reliquat, sans double dépense ni perte anticipée. **Livré le 22/10 (registre § 151) :** `paiementAuChoix` (« dont en Menace », depuis la fiche et la tablette) ; l'Impulsion du jet que la réserve pleine ne garde pas reste sur le test (dépenser ou verser). Activé pour Dune (D2) et, sur décision de David du 22/10, pour **Star Trek** (`ST_driver_gmos_paiement`). **Reste :** dépenses contextualisées (informations, traits, atouts), Impulsion bonus non conservable |
-| Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu. **Livré le 22/10 (registre § 150) :** la fiche naît à sa santé de départ ; la Forge avertit d'une santé sans champ courant (Symbaroum corrigé, Crimes signalé) ; `franchissements` propose la séquelle permanente une fois par passage (NOC). **Reste :** Crimes C2, Blade Runner (stabilisation), Cthulhu Hack (Hors Jeu), agonie de Symbaroum |
+| Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu. **Livré le 22/10 (registre § 150) :** la fiche naît à sa santé de départ ; la Forge avertit d'une santé sans champ courant (Symbaroum corrigé, Crimes signalé) ; `franchissements` propose la séquelle permanente une fois par passage (NOC). Crimes C2 livré le 22/10 (§ 158 : Potentiel actuel, atteintes, bonne nuit). **Reste :** Crimes C6 (carte de combat sur le Physique actuel), Blade Runner (stabilisation), Cthulhu Hack (Hors Jeu), agonie de Symbaroum |
 | Événements de scène, séance et temps de jeu | Corruption, Stress, soins, progression, voyages | Des déclencheurs nommés ; une reconnexion ne rejoue pas une dépense, un soin ou un franchissement. **Livré le 22/10 (registre § 150) :** « Fin de scène » écrit aussi les fiches (`gestesDesHeros.finDeScene`, `delta: 'vide'`) après aperçu, même sans réserve de table ; un franchissement traité est retenu par la fiche. **Reste :** durées et échéances en temps de jeu (Cthulhu Hack, Blade Runner) ; la Corruption au seuil est livrée (§ 155) |
 | Fiches, tablettes et journal | Tous | Même calcul et mêmes ressources ; clés stables, secrets filtrés et modifications historisées. **Audit rendu le 22/10** ([rapport](2026-10-22-audit-fiches-tablettes-journal.md), registre § 151) : secrets du meneur envoyés aux tablettes des joueurs (S1 `lectureDuMeneur`, S2 `gmNotes`, S5 fenêtres locales), indices non révélés (S3), notes du meneur écrivables par un joueur (S4), modifications de fiche jamais historisées (H1), pupitre sans réserves (C1) ; motif des tablettes au journal corrigé (A1). **S1, S2, S5 corrigés le 22/10** (registre § 152) : les secrets du meneur ne partent plus vers les tablettes ni les fenêtres de la table ; **S3, S4 le même jour** (§ 153) : indices non révélés retenus, notes du meneur protégées ; **H1 et C1** (§ 154) : modifications de fiche au journal avec leur origine, réserves 2d20 réglées au pupitre et à la télécommande. **Tous les constats traités** ; les recettes des tablettes, cassées depuis `a128c7af`, toutes vertes (§ 156). **Reste :** l'axe des clés stables, survolé |
 | **Onglet « Lancer un test »** — livré le 22/10 (`6f709c79`, registre § 147) | Tous | Le test a son onglet sur la fiche du meneur (Formulaire / Lancer un test / Fiche du jeu) et sur la tablette (Vue synthétique / Lancer un test / Ma fiche / groupe), d'après les maquettes Stitch retenues : étapes Composer, Préparer, Lancer les dés, Résultat ; dés nommés ; blocs propres au jeu en cartes repliables (Alien : dernier test, blessures, Stress et Panique ; RdD : mécaniques du Voyageur). Aucun pilote modifié. Captures du manuel refaites pour les dix jeux. **Essai de David validé le 22/10** |

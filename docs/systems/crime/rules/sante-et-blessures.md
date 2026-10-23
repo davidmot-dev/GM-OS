@@ -22,13 +22,13 @@ L'épuisement (section « L’épuisement ») résulte de coups contondants ou d
 
 Les blessures (section « Les blessures ») découlent d'armes tranchantes, perçantes, de tir ou d'accidents. Notées par une étoile, elles remplacent la fatigue et l'épuisement, abattent le Potentiel Physique et exigent du temps ou des soins pour guérir.
 
-À 0 en Potentiel Physique, le personnage est en incapacité (section « Héros en incapacité »). À -1 ou moins, il subit une blessure grave avec séquelles physiques et mentales (section « Soigner les traumatismes physiques »).
+À 0 en Potentiel Physique, le personnage est en incapacité, hors de combat et à la merci de son vainqueur (section « Héros en incapacité », p. 395). **En dessous de -1**, il subit une blessure grave avec séquelles physiques et mentales (section « Soigner les traumatismes physiques », p. 396). Le livre n'établit pas de mort automatique à un seuil chiffré.
 
 ## Valeurs
 - Jauge du Potentiel Physique:
   - Mesure: force, résistance et agilité.
   - Départ: 3, 4 ou 5 selon la création.
-  - Bornes: minimale à -2 (mort), maximale à 5.
+  - Bornes: maximale à 5 ; aucune borne de mort chiffrée dans le livre (p. 395-396).
   - Variation: diminue quand la situation empire.
   - Gestion: s'accumule sous forme d'atteintes subies.
 - Échelle des états de santé (du meilleur au pire):
@@ -37,8 +37,7 @@ Les blessures (section « Les blessures ») découlent d'armes tranchantes, per�
   3. Épuisé (croix): malus effacé à 1 croix par nuit de repos.
   4. Blessé (étoile): guéri en 1 heure (1 point), 1 jour (2 points), 1 semaine (3 points), 1 mois (4 points) ou par soins.
   5. Incapacité (0): hors de combat.
-  6. Traumatisme grave (-1): -1 au Potentiel de départ (jusqu'à chirurgie), +1 Psychose, Névrose égale aux blessures, test psychotique.
-  7. Mort (-2): décès du personnage.
+  6. Traumatisme grave (en dessous de -1): -1 au Potentiel de départ (jusqu'à chirurgie), +1 Psychose, autant de points de Névrose que de points de blessure subis, test psychotique (p. 396).
 - Soins (Sciences du vivant):
   - Jet réussi: guérit 1 (Novice), 2 (Pratiquant) ou 3 points (Maître), limité par le matériel.
   - Médecin spécialiste: réussite automatique hors stress.
@@ -58,8 +57,8 @@ Concrètement, la gestion des atteintes à la santé physique s'applique à chaq
 Le livre précise la résolution des situations complexes liées aux atteintes physiques:
 
 - Cumul et chevauchement: Les blessures remplacent et effacent les croix d'épuisement et les traits de fatigue situés au même niveau du Potentiel Physique (section « Atteintes à la santé physique »).
-- Dépassement du seuil critique (-1 et moins): Un personnage tombant à -1 subit une blessure grave entraînant la perte définitive d'un point de son Potentiel Physique de départ jusqu'à une intervention chirurgicale lourde. Il gagne 1 point de Psychose, voit sa Névrose ajustée au nombre de ses blessures, et doit réussir un test psychotique (section « Soigner les traumatismes physiques »).
-- Inconscience et mort: Un personnage à 0 reste hors de combat mais vivant. Il ne meurt que si son Potentiel Physique descend jusqu'à -2 (section « Héros en incapacité »).
+- Dépassement du seuil critique (en dessous de -1): Un personnage qui descend en dessous de -1 subit une blessure grave entraînant la perte définitive d'un point de son Potentiel Physique de départ jusqu'à une intervention chirurgicale lourde. Il gagne 1 point de Psychose, voit sa Névrose ajustée au nombre de ses blessures, et doit réussir un test psychotique (section « Soigner les traumatismes physiques »).
+- Inconscience et mort: Un personnage à 0 reste hors de combat mais vivant (section « Héros en incapacité »). Le livre ne fixe pas de seuil de mort : la mort reste une décision de la fiction et du meneur.
 - Repos naturel: L'épuisement s'efface à raison d'une croix par nuit de repos complet (section « L’épuisement »), tandis que la fatigue disparaît dès la fin de la scène en cours (section « La fatigue »).
 
 ## Non couvert

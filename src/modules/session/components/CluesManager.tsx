@@ -17,6 +17,8 @@ import { MediaBrowser } from '../../../components/MediaBrowser';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import type { ProjectedEntity } from '../../image/types';
+import DossierDEnquete from './DossierDEnquete';
+import SeuilsDEnqueteDeLIndice from './SeuilsDEnqueteDeLIndice';
 
 const CluesManager: React.FC = () => {
     const { t } = useTranslation(['modules']);
@@ -32,6 +34,8 @@ const CluesManager: React.FC = () => {
     const [isMediaBrowserOpen, setIsMediaBrowserOpen] = useState(false);
     const [showAIPrompt, setShowAIPrompt] = useState(false);
     const [justRevealed, setJustRevealed] = useState<string | null>(null);
+    // Les styles d'enquêteur du jeu (Crimes, C5) : le dossier et les seuils des indices.
+    const stylesDEnquete = useSessionOSStore(s => s.getActiveDriver())?.enquete?.styles ?? [];
     
     const { projectEntity, projectedEntity } = useImageStore();
     const resolvedMedia = useMediaUrl(editingClue?.mediaUrl);
@@ -210,6 +214,8 @@ const CluesManager: React.FC = () => {
                 )}
             </div>
 
+            {stylesDEnquete.length > 0 && !editingClue && !isAdding && <DossierDEnquete styles={stylesDEnquete} />}
+
             {(editingClue || isAdding) && editingClue ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     {/* Editor Side */}
@@ -374,6 +380,15 @@ const CluesManager: React.FC = () => {
                             </div>
                         </div>
 
+                        {stylesDEnquete.length > 0 && (
+                            <SeuilsDEnqueteDeLIndice
+                                styles={stylesDEnquete}
+                                seuils={editingClue.seuilsDEnquete ?? []}
+                                gains={editingClue.gainsDEnquete ?? []}
+                                onChange={(seuilsDEnquete, gainsDEnquete) => setEditingClue({ ...editingClue, seuilsDEnquete, gainsDEnquete })}
+                            />
+                        )}
+
                         <div className="pt-8 flex gap-4">
                                 <button 
                                     onClick={handleSave}
@@ -517,6 +532,16 @@ const CluesManager: React.FC = () => {
                                         <span className="text-ui-9 font-bold text-app-text/40 truncate max-w-[80px]">
                                             {campaignEntities.find(e => e.id === clue.ownerId)?.name}
                                         </span>
+                                    </div>
+                                )}
+                                {(clue.seuilsDEnquete ?? []).map((sd, i) => (
+                                    <div key={i} className="px-3 py-1 bg-gm-gold/5 rounded-lg border border-gm-gold/10 text-ui-9 font-bold text-app-text/50" title="Seuil d’enquête pour le découvrir">
+                                        {stylesDEnquete.find(st => st.id === sd.style)?.label ?? sd.style} {sd.points}
+                                    </div>
+                                ))}
+                                {!clue.isRevealed && (clue.connuDe?.length ?? 0) > 0 && (
+                                    <div className="px-3 py-1 bg-app-text/5 rounded-lg border border-app-text/10 text-ui-9 font-bold text-app-text/50" title="Révélé à un seul enquêteur : sa seule tablette le reçoit">
+                                        connu d’un seul
                                     </div>
                                 )}
                                 <div className="ml-auto flex flex-col items-end gap-1">

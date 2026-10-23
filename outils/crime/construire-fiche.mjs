@@ -4,7 +4,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
-import {createCanvas} from '@napi-rs/canvas';
+import {createCanvas,GlobalFonts} from '@napi-rs/canvas';
 import {getDocument} from 'pdfjs-dist/legacy/build/pdf.mjs';
 const ici=path.dirname(fileURLToPath(import.meta.url));
 const racine=path.resolve(ici,'../..');
@@ -16,9 +16,19 @@ const octets=fs.readFileSync(source);
 const pdf=await getDocument({data:new Uint8Array(octets),wasmUrl:ressources('wasm'),standardFontDataUrl:ressources('standard_fonts')}).promise;
 assert.equal(pdf.numPages,2,'La recette attend les deux pages de Crime - PJ Sheet.pdf.');
 const pages=[],textes=[];
+// Les atteintes (Crimes C2, 2026-10-22) : trois compteurs sous chaque Potentiel, là où le livre fait
+// noter les marques (p. 395). Le PDF n'y imprime rien : leurs légendes sont dessinées sur le fond.
+const POTENTIELS=[['physical','Physique',70.8],['mental','Mental',229.5],['social','Social',388.3]];
+const ATTEINTES=[['fatigue','Fatigue'],['exhaustion','Épuisement'],['wounds','Blessures']];
+const atteinte=(x0,i)=>({x:x0+i*46+12,y:388,w:20,h:10.5});
+// L'italique des légendes imprimées (« Névrose - Seuil ») : Georgia, présente sous Windows ; à défaut, serif.
+const georgie='C:/Windows/Fonts/georgiai.ttf';if(fs.existsSync(georgie))GlobalFonts.registerFromPath(georgie,'Georgia Italique');
+const legender=(ctx,e)=>{ctx.fillStyle='#15110c';ctx.font=`${7.2*e}px "Georgia Italique", serif`;ctx.textAlign='center';
+ for(const [,,x0]of POTENTIELS)for(const [i,[,l]]of ATTEINTES.entries()){const z=atteinte(x0,i);ctx.fillText(l,(z.x+z.w/2)*e,(z.y-1.6)*e);}};
 for(let n=1;n<=2;n++){
  const p=await pdf.getPage(n),v=p.getViewport({scale:2}),c=createCanvas(Math.ceil(v.width),Math.ceil(v.height));
  await p.render({canvasContext:c.getContext('2d'),viewport:v}).promise;
+ if(n===1)legender(c.getContext('2d'),2);
  pages.push({id:`page-${n}`,label:n===1?'Expertise psychologique et compétences':'Profil, contacts et équipe',width:p.view[2],height:p.view[3],orientation:'portrait',backgroundData:'data:image/webp;base64,'+c.toBuffer('image/webp',96).toString('base64'),fields:[]});
  const contenu=await p.getTextContent();
  textes.push(contenu.items.filter(i=>i.str.trim()).map(i=>({s:i.str,x:i.transform[4],y:p.view[3]-i.transform[5],w:i.width,h:i.height})));
@@ -55,7 +65,9 @@ nombre(1,'psychology.innocence.threshold','Seuil d’Innocence',167,274,44,9.5);
 long(1,'psychology.madness','Folies constatées',333,241,209,27);
 texte(1,'psychology.decline','Déchéances',392,271,146,14);
 
-for(const [k,l,x]of[['physical','Physique',70.8],['mental','Mental',229.5],['social','Social',388.3]])piste(1,`attributes.${k}`,l,10,x,364.5,13.75,12.5,12.8);
+for(const [k,l,x]of POTENTIELS)piste(1,`attributes.${k}`,l,10,x,364.5,13.75,12.5,12.8);
+// Sous chaque Potentiel, ses marques : `harm.*` et non `attributes.*.…`, que le moteur rangerait SOUS la valeur.
+for(const [k,l,x]of POTENTIELS)for(const [i,[a,la]]of ATTEINTES.entries()){const z=atteinte(x,i);nombre(1,`harm.${k}.${a}`,`${l} — ${la.toLowerCase()}`,z.x,z.y,z.w,z.h,{className:'crime-field crime-number crime-harm'});}
 
 // Les trois cercles forment la piste ; le zéro incliné reste un compteur libre.
 const groupes=[

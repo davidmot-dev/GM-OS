@@ -107,3 +107,16 @@ describe('la fin de scène', () => {
         expect(fermer).toHaveBeenCalled();
     });
 });
+
+/** **La bonne nuit** (Crimes, C2, 2026-10-22) : une croix d'épuisement de moins par Potentiel touché. */
+describe('la bonne nuit', () => {
+    it('retire un point là où il y en a, jamais sous zéro, et n’écrit que les fiches qui changent', () => {
+        const crimes = { ...PILOTE, gestesDesHeros: { bonneNuit: [{ champ: 'trauma', label: 'Épuisement', delta: -1 }] } };
+        useSessionOSStore.setState({ getActiveDriver: () => crimes } as never);
+        render(<FenetreDesGestesDesHeros geste="bonneNuit" onClose={vi.fn()} />);
+        expect(screen.getByText(/^Épuisement 3 → 2/)).toBeTruthy();
+        fireEvent.click(screen.getByText('Appliquer'));
+        expect(updateCharacter).toHaveBeenCalledTimes(1);
+        expect(updateCharacter.mock.calls[0][2].sheetData.trauma).toBe(2);
+    });
+});

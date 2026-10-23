@@ -387,9 +387,12 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             '"sectionId":"…"},"ajustement":[{"id":"competence","label":"Compétence",' +
             '"sectionId":"…"}]}. ' +
             '"mecanique" vaut EXACTEMENT l\'un de : reves-de-dragons. ' +
-            'Pour TORG ETERNITY seulement (d20 qui explose sur 10 et 20, Table des Bonus) : ' +
+            'TORG : ' +
             '"jet.tableDeBonus":"torg", "seuil" = attribut puis compétence ("facultative":true), ' +
             '"difficulte" = le Niveau de Difficulté ; aucun nombre de la table. ' +
+            // Crimes, C1 (2026-10-22) : on garde des dés, on n'additionne pas la compétence.
+            // « competent » (1) et « specialise » (2) sont les valeurs par défaut du code.
+            'CRIMES : "jet.garde":{"competence":{…},"seuil":9}, ni "seuil" ni "difficulte". ' +
             'SI AUCUN DE CES NOMS NE DÉSIGNE LE JEU QUE TU LIS, N\'EN INVENTE AUCUN et n\'écris ' +
             'pas "jet.cible" : une mécanique porte une table transcrite d\'un livre, elle ne se ' +
             'déduit pas d\'un nom. NE METS JAMAIS DE NOMBRES DE CETTE TABLE dans le pilote — ' +

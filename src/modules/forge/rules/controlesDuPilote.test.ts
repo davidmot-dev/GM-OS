@@ -1914,3 +1914,73 @@ describe('seuils lus sur la fiche, Avantage tactique', () => {
         expect(constats).toEqual([['jet.modificateurDuSeuil.avantage', 'erreur']]);
     });
 });
+
+/** **Le jet gardé** (Crimes, C1, 2026-10-22) : Potentiel GARDE Compétence. */
+describe('le jet gardé', () => {
+    const constats = (jet: Record<string, unknown>) =>
+        controlerLePilote({ jet } as never, fiche)
+            .filter(c => c.ou.startsWith('jet.garde') || c.ou.startsWith('jet.reserve'))
+            .map(c => [c.ou, c.gravite]);
+    const crimes = {
+        reserve: { base: 0, max: 10, faces: 10, composantes: [{ id: 'potentiel', label: 'Potentiel', sectionId: 'jauges' }] },
+        sens: 'superieur-ou-egal',
+        garde: {
+            competence: { id: 'competence', label: 'Compétence', sectionId: 'competences' },
+            seuil: 9, competent: 1, specialise: 2,
+        },
+    };
+
+    it('le réglage de Crimes passe sans un mot', () => {
+        expect(constats(crimes)).toEqual([]);
+    });
+
+    it('sans réserve à lire, ou sans nombres, c’est une erreur', () => {
+        expect(constats({ ...crimes, reserve: { base: 0, max: 10, faces: 10 } }))
+            .toEqual([['jet.reserve.composantes', 'erreur']]);
+        expect(constats({ ...crimes, garde: { ...crimes.garde, seuil: 'neuf' } }))
+            .toEqual([['jet.garde', 'erreur']]);
+    });
+
+    it('un seuil additionné ou une difficulté à côté sont des réglages morts', () => {
+        expect(constats({ ...crimes, difficulte: { min: 9, max: 9, defaut: 9 } }))
+            .toEqual([['jet.garde', 'avertissement']]);
+    });
+
+    it('une compétence absente ou un préfixe qui ne désigne aucune case se disent', () => {
+        expect(constats({ ...crimes, garde: { ...crimes.garde, specialisations: { parCompetence: { combat: 'specialites_combat_', sport: 'x_' } } } }))
+            .toEqual([['jet.garde.specialisations', 'avertissement'], ['jet.garde.specialisations', 'avertissement']]);
+    });
+
+    it('des marques ou un compteur de dépassement absents de la fiche se disent (C2, C3)', () => {
+        expect(constats({ ...crimes, garde: { ...crimes.garde,
+            atteintes: { parPotentiel: { combat: { fatigue: 'f', epuisement: 'determination', blessures: 'b' } }, incapacite: 'physique' },
+            depassement: { champ: 'depassement' } } }))
+            .toEqual([
+                ['jet.garde.atteintes', 'avertissement'], ['jet.garde.atteintes.incapacite', 'avertissement'],
+                ['jet.garde.depassement', 'avertissement'],
+            ]);
+        expect(constats({ ...crimes, garde: { ...crimes.garde, depassement: { champ: 'combat' } } }))
+            .toEqual([['jet.garde.depassement', 'avertissement']]);
+    });
+
+    it('une table d’armes inconnue est une erreur (C6)', () => {
+        expect(constats({ ...crimes, garde: { ...crimes.garde, armes: 'crimes' } })).toEqual([]);
+        expect(constats({ ...crimes, garde: { ...crimes.garde, armes: 'belle-epoque' } })).toEqual([['jet.garde.armes', 'erreur']]);
+    });
+
+    it('la compétence vise une section de la fiche', () => {
+        expect(constats({ ...crimes, garde: { ...crimes.garde, competence: { id: 'competence', label: 'Compétence', sectionId: 'aptitudes' } } }))
+            .toEqual([['jet.garde.competence[0].sectionId', 'erreur']]);
+    });
+});
+
+/** **Les styles d'enquêteur** (Crimes, C5, 2026-10-22). */
+describe('les styles d’enquêteur', () => {
+    it('deux champs de fiche par style ; un absent se dit', () => {
+        const constats = (styles: unknown[]) => controlerLePilote({ enquete: { styles } } as never, fiche)
+            .filter(c => c.ou.startsWith('enquete')).map(c => [c.ou, c.gravite]);
+        expect(constats([{ id: 'limier', label: 'Limier', niveau: 'combat', points: 'determination' }])).toEqual([]);
+        expect(constats([{ id: 'limier', label: 'Limier', niveau: 'combat', points: 'compteur_limier' }]))
+            .toEqual([['enquete.styles[0]', 'avertissement']]);
+    });
+});

@@ -158,6 +158,13 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         scenes: c => scenesDeSymbaroum(c),
     },
     {
+        // Crimes, C1 (2026-10-22) : Physique 5, Sport 2 → cinq d10, deux gardés à 8 (7 avec Escalade).
+        corpusId: 'crime', slug: 'crimes', personnage: 'Léonce Varin',
+        sheetData: { physique: 5, mental: 3, social: 2, sport: 2, combat: 1, traque: 1, specialties_sport_climbing: true },
+        composantes: ['physique', 'sport'],
+        scenes: c => scenesDeCrimes(c),
+    },
+    {
         corpusId: 'reves de dragons', slug: 'reves-de-dragons', personnage: 'Aldaran le Voyageur',
         sheetData: { force: 12, agilite: 13, taille: 11, constitution: 13, discretion: 2, vie: 12 },
         composantes: ['agilite', 'discretion'],
@@ -328,7 +335,8 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
-        if (mise.corpusId === 'alien') test.setTimeout(240_000);
+        // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
+        if (mise.corpusId === 'alien' || mise.corpusId === 'crime') test.setTimeout(240_000);
         const f = gmos.fenetre;
         const campagne = campagneDe(mise.slug);
 
@@ -710,6 +718,116 @@ async function scenesDeSymbaroum(c: ContexteDeScene): Promise<void> {
         await expect(fin.getByText(/Corruption temporaire 2 → 0/)).toBeVisible();
         await photographier(fin, 'jeu-symbaroum-fin-de-scene');
         await fin.getByRole('button', { name: 'Annuler', exact: true }).click();
+    }
+}
+
+/**
+ * **Potentiel GARDE Compétence** (Crimes, C1, 2026-10-22) : la spécialisation
+ * cochée baisse le seuil à 7, puis un dé écarté entre dans la garde — le geste
+ * d'un joueur qui échoue volontairement.
+ */
+async function scenesDeCrimes(c: ContexteDeScene): Promise<void> {
+    if (!(c.pilote.gameDriver as { jet?: { garde?: unknown } }).jet?.garde) return;
+    const panneau = await jeterJusqua(c, ['physique', 'sport'],
+        p => p.locator('[data-de-de-la-garde]', { hasText: 'Écarté' }));
+    await panneau.getByRole('combobox', { name: /Spécialisation/ }).selectOption({ label: 'Escalade' });
+    await expect(panneau.locator('[data-garde]').getByText(/spécialisé \(Escalade\)/)).toBeVisible();
+    // Relancé avec la spécialisation, jusqu'à un dé écarté qu'on peut prendre.
+    const ecarte = panneau.locator('[data-de-de-la-garde]', { hasText: 'Écarté' });
+    for (let i = 0; i === 0 || (i < 40 && await ecarte.count() === 0); i++) {
+        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    }
+    await ecarte.first().click();
+    await expect(panneau.getByRole('button', { name: 'Consigner cette garde' })).toBeVisible();
+    await photographierLePanneau(panneau, 'jeu-crimes-garde-choisie');
+
+    // C2 (2026-10-22) : une blessure puis une fatigue sur le Physique, et le Potentiel actuel qui baisse.
+    // Dans l'autre ordre, la blessure prendrait la place de la fatigue (p. 396) : un seul point de moins.
+    if (!(c.pilote.gameDriver as { jet?: { garde?: { atteintes?: unknown } } }).jet?.garde?.atteintes) return;
+    const f = gmos.fenetre;
+    const carte = f.locator('[data-carte-du-jeu="atteintes-crimes"]');
+    const physique = carte.locator('[data-atteintes-du-potentiel="physique"]');
+    await physique.getByRole('button', { name: '+ Blessure', exact: true }).click();
+    await expect(physique.getByText('4', { exact: true })).toBeVisible();
+    await physique.getByRole('button', { name: '+ Fatigue', exact: true }).click();
+    await expect(physique.getByText('3', { exact: true })).toBeVisible();
+    await expect(panneau.getByText(/− 2 \(atteintes\)/)).toBeVisible();
+    await photographier(carte, 'jeu-crimes-atteintes');
+
+    // C3 : le dépassement annoncé, puis des réussites gardées en plus contre de la fatigue.
+    await panneau.locator('[data-depassement]').check();
+    const depasser = panneau.locator('[data-se-depasser]');
+    for (let i = 0; i === 0 || (i < 120 && await depasser.count() === 0); i++) {
+        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    }
+    await depasser.first().click();
+    await expect(panneau.getByText(/par dépassement/).first()).toBeVisible();
+    await photographierLePanneau(panneau, 'jeu-crimes-depassement');
+
+    // La bonne nuit : l'épuisement qui se repose, la fatigue et le dépassement rendus — l'aperçu, puis Annuler.
+    if ((c.pilote.gameDriver as { gestesDesHeros?: { bonneNuit?: unknown[] } }).gestesDesHeros?.bonneNuit?.length) {
+        await ecrireLaFiche(c, { epuisement_mental: 1 });
+        await vue(c.campagne, 'cockpit');
+        await f.getByRole('button', { name: /Bonne nuit/ }).click();
+        const nuit = f.locator('[data-gestes-des-heros="bonneNuit"]');
+        await expect(nuit).toBeVisible();
+        await expect(nuit.getByText(/Mental — épuisement 1 → 0/)).toBeVisible();
+        await photographier(nuit, 'jeu-crimes-bonne-nuit');
+        await nuit.getByRole('button', { name: 'Annuler', exact: true }).click();
+    }
+
+    // C5 (2026-10-22) : le dossier d'enquête — un point de Limier met la larve à portée, révélée à Léonce seul.
+    if ((c.pilote.gameDriver as { enquete?: unknown }).enquete) {
+        await ecrireLaFiche(c, { limier: 1, compteur_limier: 2, fouineur: 2, compteur_fouineur: 2 });
+        await f.evaluate(({ campagne }) => {
+            (window as unknown as Fenetre).useSessionOSStore.getState().addClue({
+                campaignId: campagne, title: 'La larve de bombyx', content: 'Logée dans la gorge de la victime.', isRevealed: false,
+                seuilsDEnquete: [{ style: 'limier', points: 3 }, { style: 'fouineur', points: 4 }], gainsDEnquete: [{ style: 'limier', points: 1 }],
+            } as never);
+        }, { campagne: c.campagne });
+        await vue(c.campagne, 'library');
+        // La carte de la campagne de démonstration (« Démo · Crimes »), puis la section des indices.
+        await f.locator('div.flex-col.overflow-hidden.rounded-xl', { hasText: 'Démo · Crimes' })
+            .getByRole('button', { name: /Modifier/ }).first().click();
+        await f.getByRole('button', { name: /Indices$/ }).first().click();
+        const dossier = f.locator('[data-dossier-d-enquete]');
+        await expect(dossier).toBeVisible({ timeout: 15_000 });
+        await dossier.getByRole('button', { name: `Un point de plus : ${c.nom}, Limier`, exact: true }).click();
+        await expect(dossier.locator('[data-indices-a-portee]').getByText(/Limier 3\/3/)).toBeVisible();
+        await photographier(dossier, 'jeu-crimes-dossier-d-enquete');
+        await dossier.getByRole('button', { name: `Révéler à ${c.nom}`, exact: true }).click();
+        await expect(dossier.locator('[data-indices-prives]')).toBeVisible();
+        await photographier(dossier, 'jeu-crimes-indice-revele');
+        // Les indices s'écrivent au magasin à chaque geste : fermer l'éditeur ne perd rien.
+        await f.getByRole('button', { name: 'Fermer la fenêtre', exact: true }).click();
+    }
+
+    // C6 : la canne-épée contre un surineur du plateau, et les blessures infligées à sa fiche.
+    if ((c.pilote.gameDriver as { jet?: { garde?: { armes?: unknown } } }).jet?.garde?.armes) {
+        await f.evaluate(({ campagne }) => {
+            const w = window as unknown as Fenetre, s = w.useSessionOSStore.getState();
+            s.addEntity({ name: 'Le surineur', type: 'npc', role: 'hostile', status: 'alive', avatar: '', hp: 0, maxHp: 0, ac: 0, speed: 0, initiative: 0,
+                description: 'Recette jetable', roleplayingNotes: '', gmSecretInfo: '', linkedMapIds: [], campaignId: campagne,
+                sheetData: { physique: 3, fatigue_physique: 0, epuisement_physique: 0, blessures_physique: 0 } } as never);
+            const e = w.useSessionOSStore.getState().entities.find(x => x.name === 'Le surineur')!;
+            w.useCombatStore.getState().clearCombatants();
+            w.useCombatStore.getState().addCombatant({ name: e.name, init: 0, isPlayer: false, sourceEntityId: e.id, faction: 'enemy', statuses: [] });
+        }, { campagne: c.campagne });
+        await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+        await expect(panneau).toBeVisible({ timeout: 15_000 });
+        await panneau.locator('select').nth(0).selectOption('physique');
+        await panneau.locator('select').nth(1).selectOption('combat');
+        const prep = panneau.locator('[data-attaque-de-crimes]');
+        await prep.locator('select').first().selectOption('canne-epee');
+        await prep.locator('[data-cible]').selectOption({ label: 'Le surineur' });
+        const touche = panneau.getByText(/^Touché :/);
+        for (let i = 0; i === 0 || (i < 60 && await touche.count() === 0); i++) {
+            await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+        }
+        await photographierLePanneau(panneau, 'jeu-crimes-attaque');
+        await panneau.locator('[data-infliger]').click();
+        await expect(panneau.getByText(/Le surineur : \+\d+ /).first()).toBeVisible();
+        await f.evaluate(() => (window as unknown as Fenetre).useCombatStore.getState().clearCombatants());
     }
 }
 

@@ -286,6 +286,16 @@ export interface CasesDeSante {
  * Un gain ou une perte, borné ; la perte peut être réduite par un Talent de
  * résistance, et une réserve vide qui devrait perdre encore coche un état.
  */
+/** Un style d'enquêteur et ses deux champs de fiche (Crimes : Condé, Limier…). */
+export interface StyleDEnquete {
+    id: string;
+    label: string;
+    /** Le niveau du style, 0 à 3 : on ne gagne de points que dans un style qu'on possède (p. 437). */
+    niveau: string;
+    /** Les points d'enquête de l'affaire en cours ; « Nouvelle affaire » les ramène au niveau. */
+    points: string;
+}
+
 export interface MouvementDeFiche {
     /** Le champ qui bouge : `espoir`, `blessures`. */
     champ: string;
@@ -366,6 +376,12 @@ export interface GestesDesHeros {
      * avant d'écrire, comme le moment de calme.
      */
     finDeScene?: MouvementDeFiche[];
+    /**
+     * Ce que chaque fiche récupère à « Bonne nuit » — Crimes, C2 (2026-10-22) :
+     * une croix d'épuisement par Potentiel touché (p. 395), et la fin de scène
+     * qu'une nuit suppose. Relu Héros par Héros avant d'écrire.
+     */
+    bonneNuit?: MouvementDeFiche[];
     /** Ce que chaque Héros regagne à « Début de séance » : le Vécu de NOC, +1. */
     debutDeSeance?: MouvementDeFiche[];
     /** Ce que chaque Héros regagne à « Nouveau scénario » : le Vécu de NOC, plein. */
@@ -691,6 +707,13 @@ export interface GameDriver {
      * Proposés au meneur sous le bandeau, une fois par passage. Absent : rien.
      */
     franchissements?: Franchissement[];
+    /**
+     * **Les styles d'enquêteur** — Crimes, C5 (2026-10-22), livre p. 436–440.
+     * Chaque style a un niveau (les ronds de la fiche : 0 à 3) et des points
+     * d'enquête, qui s'accumulent pendant l'affaire et ouvrent des indices.
+     * Voir `src/modules/session/logic/pointsDEnquete.ts`. Absent : rien.
+     */
+    enquete?: { styles: StyleDEnquete[] };
     /** Outils proposés par le pilote ; [] désactive les propositions implicites du jeu. Aucun secret ici. */
     modulesDuJeu?: ReferenceDeModuleDuJeu[];
     /**

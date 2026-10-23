@@ -7,9 +7,8 @@ Ce registre porte les états, priorités, dépendances et décisions des amélio
 L'[audit du 19/10](2026-10-19-crimes-propositions.md) conserve les preuves techniques,
 les références au livre et les consultations de NotebookLM. L'avancement se met à jour **ici**.
 
-**État général : propositions consignées, à planifier. Aucun développement lancé.**
-Les priorités et l'ordre ci-dessous sont proposés par Codex ; aucun lot n'a été choisi
-par David dans cette demande de consignation.
+**État général (22/10/2026) : C0 (ciblé), C1, C2, C3, C5 et C6 livrés, essai de David attendu ; C4, C7 et C8 à planifier.**
+Les priorités et l'ordre ci-dessous sont proposés par Codex ; David a choisi C0 et C1, puis C2 et C3, puis C5 et C6, le 22/10.
 
 ## Référence et acquis
 
@@ -24,19 +23,21 @@ La fiche HTML `crimes-fr` est déjà intégrée au gestionnaire v13 et raccordé
 David a validé son fonctionnement. Sa validation technique passe sans erreur ni avertissement.
 Le pilote corrigé comporte 12 sections et 203 champs : compétences, spécialisations,
 styles, indices, contacts et jauges. Thème, bannière et identité d'images existent aussi.
+Depuis le 22/10, l'export de travail est `Export Dirvers/Crime_driver_gmos_1792659707276.gmos-driver`
+(même fiche : 12 sections, 203 champs), corrigé en `corriges/Crime_driver_gmos_garde.gmos-driver`.
 Ces acquis sont à préserver ; la présence d'un champ ne signifie pas que sa règle est automatisée.
 
 ## Lots et états
 
 | Lot | Priorité proposée | Amélioration et résultat attendu | État |
 | --- | --- | --- | --- |
-| **C0** | 0 - préalable | **Corpus fiable** : relire les 19 fiches de règles, corriger les contradictions et retirer les traces d'outils ; distinguer règles, options et arbitrages du MJ. | À planifier |
-| **C1** | 0 | **Potentiel GARDE Compétence** : lancer les d10, choisir les dés conservés, garder les 1 obligatoires, appliquer les spécialisations et restituer les quatre bilans, dont la réussite mitigée. Depuis le 22/10, la revue de la Forge signale la difficulté de 9 réussites sur une réserve de 0 dé (registre général § 148). | À planifier |
-| **C2** | 1 | **Potentiels et atteintes** : distinguer base/actuel, fatigue/épuisement/blessures ; relier les valeurs actuelles aux jets, aux récupérations et aux soins. | À planifier |
-| **C3** | 1 | **Dépassement** : conserver des réussites supplémentaires obtenues, appliquer leur coût en fatigue et suivre l'usage par scène et les conditions narratives. | À planifier |
+| **C0** | 0 - préalable | **Corpus fiable** : relire les 19 fiches de règles, corriger les contradictions et retirer les traces d'outils ; distinguer règles, options et arbitrages du MJ. | **Ciblé, livré le 22/10** : les trois contradictions (bilans, santé, points d'enquête) et la trace d'outil corrigées, livre relu (registre général § 157). **Reste** la relecture tracée des 19 fiches |
+| **C1** | 0 | **Potentiel GARDE Compétence** : lancer les d10, choisir les dés conservés, garder les 1 obligatoires, appliquer les spécialisations et restituer les quatre bilans, dont la réussite mitigée. Depuis le 22/10, la revue de la Forge signale la difficulté de 9 réussites sur une réserve de 0 dé (registre général § 148). | **Livré le 22/10** (§ 157) : moteur `potentielGarde.ts`, panneau (fiche et tablette), Forge, pilote `Crime_driver_gmos_garde`, page du manuel ; l'exemple p. 385 vérifié. **Essai de David attendu** |
+| **C2** | 1 | **Potentiels et atteintes** : distinguer base/actuel, fatigue/épuisement/blessures ; relier les valeurs actuelles aux jets, aux récupérations et aux soins. | **Livré le 22/10** (registre général § 158) : Potentiel actuel au jet, carte des atteintes avec la règle de remplacement (p. 395), Fin de scène et Bonne nuit, compteurs sur la fiche HTML. Restent les dégâts du combat (C6). **Essai de David attendu** |
+| **C3** | 1 | **Dépassement** : conserver des réussites supplémentaires obtenues, appliquer leur coût en fatigue et suivre l'usage par scène et les conditions narratives. | **Livré le 22/10** (§ 158) : annonce avant le jet (p. 385, choix documenté face aux exemples p. 407), réussites restées dehors gardées contre une fatigue chacune, un seul par scène. La passion se juge par le meneur ; les tests psychotiques (C4) restent à exclure. **Essai de David attendu** |
 | **C4** | 1 | **Psychologie** : relier seuils et événements d'Angoisse, Névrose, Psychose et Innocence ; préparer les tests psychotiques et les conséquences à valider. | À planifier |
-| **C5** | 1 | **Dossier d'enquête** : suivre les cinq styles par affaire, scènes, indices, témoins, preuves et seuils ; gérer les informations cachées/découvertes/partagées. | À planifier |
-| **C6** | 2 | **Combat et armes** : compléter initiative et oppositions, relier portées, protections, munitions, incidents et blessures ; corriger les tranches tactiques incohérentes. | À planifier |
+| **C5** | 1 | **Dossier d'enquête** : suivre les cinq styles par affaire, scènes, indices, témoins, preuves et seuils ; gérer les informations cachées/découvertes/partagées. | **Livré le 22/10** (registre général § 159) : points par style sur le compteur de la fiche, seuils et gains des indices, révélation à un seul (sa seule tablette) puis partage, origine gardée, « Nouvelle affaire ». Restent les scènes et témoins rattachés à l'affaire, et la Névrose des rivalités (C4). **Essai de David attendu** |
+| **C6** | 2 | **Combat et armes** : compléter initiative et oppositions, relier portées, protections, munitions, incidents et blessures ; corriger les tranches tactiques incohérentes. | **Livré le 22/10** (§ 159) : armes du livre, opposition par réussites adverses, dégâts du livre écrits en marques sur la cible, portée utile/maximale, incidents rappelés, tranches tactiques corrigées. Restent la carte de combat sur le Physique actuel, localisations et manœuvres, tir multiple et munitions décomptées, initiative narrative. **Essai de David attendu** |
 | **C7** | 2 | **Contacts et fortune** : distinguer influence/loyauté, base/actuel, services et relations ; relier niveau/piste de fortune et suivi d'équipe aux règles vérifiées. | À planifier |
 | **C8** | 2 | **Création et progression** : assister budgets, âge, rangs, spécialisations, seuils et dépenses de développement ; vérifier les bornes selon le contexte. | À planifier |
 
@@ -86,6 +87,12 @@ y compris les tablettes, pour les gestes exposés sur plusieurs écrans.
 | 19/10/2026 | David | Demande d'analyse du pilote Crimes avec le manuel sur CLOUDDAVID et NotebookLM. |
 | 19/10/2026 | Codex | Audit consigné, propositions C0-C8 et défaut du moteur reproduit en lecture seule. Aucun code applicatif modifié. |
 | 19/10/2026 | David | « consigne cela dans un registre d'amélioration de Crime » : création du présent registre ; aucun lot de développement choisi. |
+| 22/10/2026 | David | « oui on va sur crime C0, C1 » ; périmètre accepté : C0 limité aux trois contradictions et aux traces d'outils, C1 complet hors dépassement, oppositions et pupitre. |
+| 22/10/2026 | Claude Code | C0 ciblé et C1 livrés (registre général § 157) ; Névrose dite, pas écrite (C4). Réimport et essai de David attendus. |
+| 22/10/2026 | David | « on peut quand même faire c2 ? », puis « Ok commence et si possible fais aussi c3 ». |
+| 22/10/2026 | Claude Code | C2 et C3 livrés (§ 158) ; fiche HTML retouchée (neuf compteurs, moteur de fiches version 15) ; pilote `Crime_driver_gmos_c2-c3`. |
+| 22/10/2026 | David | « On peut faire c5 et c6 […] ? Si oui vas y » ; choix : indice à l'enquêteur seul puis partage, points sur le compteur de la fiche, combat « armes, dégâts, portée ». |
+| 22/10/2026 | Claude Code | C5 et C6 livrés (§ 159) ; pilote `Crime_driver_gmos_c5-c6`. |
 
 Avant une reprise, vérifier l'export courant et les acquis depuis cet audit. Appliquer
 AGENTS.md, notamment la question « GM-OS tourne-t-il ? » avant toute édition de `src/`

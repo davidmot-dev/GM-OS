@@ -12,7 +12,11 @@ interface HubArchivesProps extends CommandesDeConsultation {
 }
 
 export const HubArchives: React.FC<HubArchivesProps> = memo(({ clues, activeCampaignId, onSelectClue, commandes, informations }) => {
-    const revealedClues = clues.filter(c => c.isRevealed && String(c.campaignId) === String(activeCampaignId));
+    /*
+      Les indices révélés à la table, et ceux que **ce** personnage connaît seul
+      (Crimes, C5) : le serveur ne remet à cette tablette que les siens.
+    */
+    const revealedClues = clues.filter(c => (c.isRevealed || (c.connuDe?.length ?? 0) > 0) && String(c.campaignId) === String(activeCampaignId));
     return (
         <HubConsultation ecran="archives" titre="Archives du Groupe" description="Preuves et indices collectés lors de la campagne."
             compteur={`${revealedClues.length} Fragments Découverts`} icone={Archive} {...{ commandes, informations }}>
@@ -25,6 +29,11 @@ export const HubArchives: React.FC<HubArchivesProps> = memo(({ clues, activeCamp
                         </div>
                         <div className="min-w-0 space-y-2">
                             <h3 className="break-words text-[16px] font-bold text-app-text">{clue.title}</h3>
+                            {!clue.isRevealed && (
+                                <p data-indice-prive className="text-[14px] font-bold text-accent">
+                                    Connu de vous seul{clue.trouvePar?.style ? ` — trouvé en ${clue.trouvePar.style}` : ''}
+                                </p>
+                            )}
                             {clue.revealedAt && <p className="text-[14px] text-app-muted">Découvert le {new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(clue.revealedAt))}</p>}
                             <p className="line-clamp-4 break-words text-[14px] font-normal leading-relaxed text-app-text">{clue.content}</p>
                         </div>

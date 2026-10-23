@@ -75,3 +75,20 @@ describe('ce que la table des joueurs ne reçoit jamais', () => {
         expect(caviarderPourLesJoueurs('texte')).toBe('texte');
     });
 });
+
+/** **L'indice connu d'un seul enquêteur** (Crimes, C5, 2026-10-22). */
+describe('l’indice révélé à un seul personnage', () => {
+    const charge = { session: { clues: [
+        { id: 'pub', isRevealed: true },
+        { id: 'prive', isRevealed: false, connuDe: ['pj'], content: 'À ILYA SEUL' },
+        { id: 'secret', isRevealed: false, content: 'SECRET' },
+    ] } };
+    it('part vers sa tablette, pas vers les autres ni vers les fenêtres publiques', () => {
+        const pour = (lecteur?: string | null) => (caviarderPourLesJoueurs(charge, lecteur).session.clues as { id: string }[]).map(c => c.id);
+        expect(pour('pj')).toEqual(['pub', 'prive']);
+        expect(pour('autre')).toEqual(['pub']);
+        expect(pour(null)).toEqual(['pub']);
+        // À l'émission, sans lecteur : le serveur resserre ensuite tablette par tablette.
+        expect(pour()).toEqual(['pub', 'prive']);
+    });
+});

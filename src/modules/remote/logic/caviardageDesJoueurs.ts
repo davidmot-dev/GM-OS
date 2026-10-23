@@ -1,4 +1,5 @@
 import { caviarderObjectifsAlien } from '../../dice/systemes/progressionAlien';
+import { indicesPourLeLecteur } from '../../session/logic/indicesDuLecteur';
 
 /**
  * **Ce que la table des joueurs ne reçoit jamais** — S1, S2, S3, S5 de l'audit
@@ -49,7 +50,13 @@ function caviarder(valeur: unknown): unknown {
     ]));
 }
 
-export function caviarderPourLesJoueurs<T>(charge: T): T {
+/**
+ * `lecteur` : le personnage de la tablette qui recevra la charge — un indice
+ * qu'il connaît seul lui parvient (Crimes, C5). Absent, à l'émission : les
+ * indices connus d'un seul restent, et le serveur resserre ensuite tablette
+ * par tablette. `null` : une fenêtre publique, ou une tablette sans personnage.
+ */
+export function caviarderPourLesJoueurs<T>(charge: T, lecteur?: string | null): T {
     if (!charge || typeof charge !== 'object' || Array.isArray(charge)) return charge;
     const racine = Object.fromEntries(
         Object.entries(charge).filter(([cle]) => !RETIRES_A_LA_RACINE.has(cle)),
@@ -78,7 +85,7 @@ export function caviarderPourLesJoueurs<T>(charge: T): T {
           garde pour l'acte trois était déjà sur l'appareil de chaque joueur.
         */
         if (Array.isArray(session.clues)) {
-            suivante.clues = session.clues.filter(c => !!c && typeof c === 'object' && (c as { isRevealed?: unknown }).isRevealed === true);
+            suivante.clues = indicesPourLeLecteur(session.clues as { isRevealed?: unknown; connuDe?: unknown }[], lecteur);
         }
         racine.session = suivante;
     }

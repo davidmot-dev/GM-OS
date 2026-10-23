@@ -1,7 +1,7 @@
 {
   "version": 1,
   "gabaritDeLaFiche": "crimes-fr",
-  "commentaire": "Correspondance entre la fiche GM-OS de Crimes et le gabarit crimes-fr (fiche de personnage, livrée par Codex le 2026-10-19). Écrite par outils/crime/relier_fiche_crimes.py : les champs du pilote gardent leur identifiant, compétences et styles prennent un identifiant français, les autres reprennent la clé de la fiche, points changés en « _ ».",
+  "commentaire": "Correspondance entre la fiche GM-OS de Crimes et le gabarit crimes-fr (fiche de personnage, livrée par Codex le 2026-10-19). Écrite par outils/crime/relier_fiche_crimes.py : les champs du pilote gardent leur identifiant, compétences et styles prennent un identifiant français, les autres reprennent la clé de la fiche, points changés en « _ ». Les atteintes des Potentiels (harm.*) ont été ajoutées le 2026-10-22 par outils/crime/ajouter_les_atteintes.py.",
   "champs": [
     {
       "gmos": "concept",
@@ -66,6 +66,42 @@
     {
       "gmos": "social",
       "fiche": "attributes.social"
+    },
+    {
+      "gmos": "fatigue_physique",
+      "fiche": "harm.physical.fatigue"
+    },
+    {
+      "gmos": "epuisement_physique",
+      "fiche": "harm.physical.exhaustion"
+    },
+    {
+      "gmos": "blessures_physique",
+      "fiche": "harm.physical.wounds"
+    },
+    {
+      "gmos": "fatigue_mental",
+      "fiche": "harm.mental.fatigue"
+    },
+    {
+      "gmos": "epuisement_mental",
+      "fiche": "harm.mental.exhaustion"
+    },
+    {
+      "gmos": "blessures_mental",
+      "fiche": "harm.mental.wounds"
+    },
+    {
+      "gmos": "fatigue_social",
+      "fiche": "harm.social.fatigue"
+    },
+    {
+      "gmos": "epuisement_social",
+      "fiche": "harm.social.exhaustion"
+    },
+    {
+      "gmos": "blessures_social",
+      "fiche": "harm.social.wounds"
     },
     {
       "gmos": "combat",

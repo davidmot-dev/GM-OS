@@ -12296,7 +12296,7 @@ choix : « Moteur commun + Dune D2 » (sujet 6 ; Dune reste garé pour le reste)
   du pilote de dune »*. Les constats de l'audit sont traités aux § 152 à 154.
 - **Choix de David pour Star Trek (22/10)** : *« pour Star Trek on va faire le paiement au choix »*.
   `outils/star-trek/ajouter_paiement_au_choix.py` → `Export Dirvers/corriges/ST_driver_gmos_paiement.gmos-driver` ;
-  page `54-Jeu-Star-Trek.md`. Réimport et essai de David attendus.
+  page `54-Jeu-Star-Trek.md`. Réimporté ; essai de David validé le 22/10.
 
 ### 152 · Les secrets du meneur ne partent plus vers la table (S1, S2, S5) — 22/10/2026
 
@@ -12399,8 +12399,9 @@ S3 et S4 de [l'audit de Codex](2026-10-20-symbaroum-propositions.md).
   seuil »), captures `jeu-symbaroum-avantage` et `jeu-symbaroum-stigmate` ; recette Symbaroum verte.
 - **Vérifié** : `tsc -b` et lint propres ; essais (moteur 3, franchissements 5, panneau 2,
   contrôles 3) ; suite complète **8 712 essais verts**.
-- **Reste** : réimport du pilote et essai de David. Hors lot : quel Stigmate et sa durée, les coûts
-  de Corruption des pouvoirs, l'agonie, la cécité (trois cas, p. 165).
+- **Essai de David validé le 22/10** : *« J'ai essayé Symbaroum et Star Trek c'est bien »*. Hors
+  lot : quel Stigmate et sa durée, les coûts de Corruption des pouvoirs, l'agonie, la cécité (trois
+  cas, p. 165).
 
 ### 156 · Les défauts des tablettes : le refus muet, et les recettes cassées depuis `a128c7af` — 22/10/2026
 
@@ -12429,6 +12430,115 @@ David, le 22/10 : *« corrige les défauts des tablettes »*, puis *« oui on fi
   apparence T1 : 90/90.
 - **Aussi le 22/10 — Star Trek** : capture `jeu-star-trek-jet` refaite avec le pilote au paiement
   au choix (« dont en Menace » visible).
+
+### 157 · Crimes C0 et C1 — le corpus corrigé, Potentiel GARDE Compétence — 22/10/2026
+
+David, le 22/10 : *« oui on va sur crime C0, C1 »*, puis *« oui cela me va. GM-OS est fermé »*
+(Claude Code). C0 et C1 du [registre de Crimes](2026-10-19-registre-ameliorations-crimes.md).
+
+- **Fait — C0, les trois contradictions** (`docs/systems/crime/rules/`, livre relu) : **quatre
+  bilans** et non cinq, le succès important qualifie une réussite (p. 385, 409) ; le jet **sans
+  compétence** garde un dé au seuil 9 (p. 411) ; la **santé** : incapacité à 0, blessure grave en
+  dessous de −1, **aucune mort automatique** (p. 395–396) ; les **points d'enquête** se cumulent
+  et ouvrent des accès, sans dépense générale (p. 436–438). La trace parasite « Tool response… »
+  est retirée. Ce n'est pas la relecture complète des 19 fiches.
+- **Fait — C1, le moteur** : `systemes/potentielGarde.ts` — d10 × Potentiel, garde = Compétence
+  (1 sans elle), seuil 9 / 8 compétent / 7 spécialisé, **tous les 1 gardés**, quatre bilans,
+  degrés (critique → échec total, succès important → réussite significative), effets sur la
+  Névrose **dits** (p. 409), pas écrits. `DescripteurDeJet.garde` ; `preparerLeJet` lit la
+  compétence et les spécialisations cochées.
+- **Fait — C1, le panneau** (fiche et tablette) : « Gardés » et « Seuil par dé » sous Composer ;
+  menu **Spécialisation** à Préparer ; au résultat, dés **Réussite / Gardé / Un / Écarté**, bilan
+  du livre, Névrose ; **changer sa garde** d'un clic (pas les 1), puis « Consigner cette garde ».
+  Ni dés à acheter, ni « fléau ». Journal : « Physique 5 · Sport 2 », bilan et Névrose.
+- **Fait — Forge** : consigne (une ligne, budget tenu) ; contrôle `jet.garde` (compétence,
+  nombres, réserve à lire, seuil ou difficulté morts, préfixes des spécialisations).
+- **Fait — pilote** : `outils/crime/corriger_le_jet_garde.py` →
+  `Export Dirvers/corriges/Crime_driver_gmos_garde.gmos-driver` ; à la Forge, un seul constat,
+  antérieur (santé sans jauge courante, C2).
+- **Fait — manuel** : ligne `garde` au guide 53, nouvelle page `54-Jeu-Crimes.md` (index des
+  guides), captures `jeu-crimes-jet`, `-jet-lance`, `-garde-choisie`.
+- **Vérifié** : `tsc -b` et lint ; essais (moteur 11, descripteur 3, panneau 5, contrôles 5) ;
+  captures de Crimes vertes ; suite complète **8 739 essais verts**.
+- **Reste** : réimport du pilote et essai de David. Hors lot : dépassement (C3), Potentiel actuel
+  (C2), Névrose écrite (C4), oppositions, pupitre.
+
+### 158 · Crimes C2 et C3 — les atteintes des Potentiels, le dépassement — 22/10/2026
+
+David, le 22/10 : *« Je ne suis pas sur mon ordi […] on peut quand même faire c2 ? »*, puis *« Ok
+commence et si possible fais aussi c3 »* (Claude Code). Aucun GM-OS ni serveur de développement
+ne tournait (vérifié : seuls des outils de Codex). C2 et C3 du
+[registre de Crimes](2026-10-19-registre-ameliorations-crimes.md), livre p. 385, 389, 395–396, 407.
+
+- **Fait — C2, le moteur** : `poserUneAtteinte` (une marque plus grave **prend la place** d'une
+  moindre : l'exemple p. 395, deux fatigues + un épuisement = une fatigue et un épuisement),
+  `potentielActuel`, `etatDuPhysique` (hors de combat à 0, blessure grave **en dessous de −1**, sans
+  mort). `jet.garde.atteintes` : le jet lance le **Potentiel actuel**, la réserve dit `5 − 2 (atteintes)`.
+- **Fait — C2, la carte « Potentiels et atteintes »** sous le panneau (fiche et tablette) : marques
+  ／ ✕ ★, valeur actuelle, + Fatigue / + Épuisement / + Blessure, Soigner ; chaque geste au journal.
+- **Fait — C2, les gestes** : `gestesDesHeros.bonneNuit` (nouveau, bouton « Bonne nuit » du bandeau,
+  même aperçu que la fin de scène) ; Crimes : Fin de scène efface les fatigues et le dépassement,
+  Bonne nuit retire en plus une croix d'épuisement par Potentiel.
+- **Fait — C3, le dépassement** : case « Se dépasser » à Préparer, **avant** le jet (p. 385, choix
+  documenté face aux exemples p. 407) ; après le lancer, « +1 réussite (1 fatigue) »… ;
+  `resoudreLaGarde(…, depassement)` garde les meilleures réussites restées dehors ; la fatigue
+  s'écrit sur le Potentiel utilisé ; un seul par scène (`depassement_de_la_scene`, rendu en fin de
+  scène). Le meneur juge la passion ; l'outil compte.
+- **Fait — fiche HTML** : neuf compteurs `harm.*` sous les Potentiels, légendes dessinées sur le
+  fond (`outils/crime/construire-fiche.mjs`, reconstruite à l'identique avant retouche) ; moteur de
+  fiches **BUILTIN_VERSION 15** (`outils/crime/mettre_a_jour_au_moteur.mjs`) ; correspondance
+  reliée ; validateur : acceptée, 0 avertissement ; vérification navigateur verte.
+- **Fait — pilote** : `outils/crime/ajouter_les_atteintes.py` →
+  `Export Dirvers/corriges/Crime_driver_gmos_c2-c3.gmos-driver` (part de `…_garde`) ; Forge :
+  contrôles `atteintes`, `depassement`, `bonneNuit`. Consigne de la Forge **non** étendue (budget
+  de l'invite à dix caractères près ; une reforge garde le jet gardé).
+- **Fait — manuel** : guide 53 (`bonneNuit`, `garde` complété), page Crimes (« Les atteintes »,
+  « Fin de scène et bonne nuit », « Se dépasser ») ; captures `jeu-crimes-atteintes`,
+  `-depassement`, `-bonne-nuit`.
+- **Vérifié** : `tsc -b` et lint ; essais (moteur 6, descripteur 3, panneau 4, gestes 1, contrôles 1),
+  captures de Crimes vertes ; suite complète **8 754 essais verts**.
+- **Pas réglé** : le constat de la Forge sur la santé du combat (« santé part de physique », sans
+  champ courant) reste — la carte de combat tient ses propres points de vie ; les aligner sur le
+  Physique actuel relève du combat (C6).
+- **Reste** : réimport du pilote `…_c2-c3` et essai de David (C1, C2 et C3 ensemble). Hors lot :
+  dégâts du combat, Névrose écrite (C4), tests psychotiques sans dépassement.
+
+### 159 · Crimes C5 et C6 — le dossier d'enquête, les armes et l'attaque — 22/10/2026
+
+David, le 22/10 : *« On peut faire c5 et c6 sans [réimport] ? Si oui vas y gm-os est fermé »*, puis
+trois choix : l'indice va **à l'enquêteur seul, puis se partage** ; les points vivent sur le
+**compteur de la fiche** ; le combat couvre **armes, dégâts, portée** (Claude Code). Livre p. 344–346,
+389–395, 436–440.
+
+- **Fait — C5, la logique** : `session/logic/pointsDEnquete.ts` — points du jet (+1, +2 à deux
+  réussites, −1 sur un échec critique), gain seulement dans un style possédé, indices à portée
+  (seuils « Limier 3 ou Fouineur 4 »), révélation à un seul avec son origine, nouvelle affaire.
+  `GameDriver.enquete.styles` ; `Clue.seuilsDEnquete`, `gainsDEnquete`, `connuDe`, `trouvePar`.
+- **Fait — C5, la confidentialité** : `caviarderPourLesJoueurs(charge, lecteur)` garde l'indice
+  connu d'un seul à l'émission, puis le serveur (`SyncServer.broadcastAction`) ne le remet qu'à la
+  tablette de **ce** personnage ; fenêtres publiques : indices révélés seulement
+  (`session/logic/indicesDuLecteur.ts`, sans import, pour Electron). Tablette : « Connu de vous seul ».
+- **Fait — C5, l'écran** : **dossier d'enquête** en tête des Indices (points par style, −/+,
+  « Nouvelle affaire » confirmée, indices à portée et « Révéler à … », « Partager à la table ») ;
+  seuils et gains dans l'éditeur de l'indice ; points du jet proposés au meneur après un jet.
+- **Fait — C6** : `dice/systemes/armesDeCrimes.ts` — 13 armes blanches et 28 à feu du livre,
+  `resoudreLAttaque` (succès excédentaires + arme − Physique − protection, au moins 1 ; portée
+  utile/maximale), incidents E/T/C et explosion à deux 1 ; au panneau, Préparer → arme, distance,
+  réussites adverses, cible (un combattant), protection ; résultat → « Touché : N blessures », le
+  calcul, « Infliger » (marques C2 sur la fiche de la cible, par `ecrireLaFicheDuCombattant`).
+  Tranches tactiques du pilote : l'échelle des portées du livre (2, 10, 20, 50, 400 m).
+- **Fait — pilote** : `outils/crime/ajouter_enquete_et_armes.py` →
+  `Export Dirvers/corriges/Crime_driver_gmos_c5-c6.gmos-driver` (part de `…_c2-c3`). Forge :
+  contrôles `enquete`, `jet.garde.armes`.
+- **Fait — manuel** : guide 53 (`enquete`, `garde.armes`), page Crimes (« Le dossier d'enquête »,
+  « Le combat ») ; captures `jeu-crimes-dossier-d-enquete`, `-indice-revele`, `-attaque`.
+- **Vérifié** : `tsc -b` et lint ; essais (enquête 8, caviardage 1, serveur 1, dossier 4,
+  panneau 4, armes 7, contrôles 2) ; captures de Crimes vertes ; suite complète **8 781 essais verts**.
+- **Pas fait** : la carte de combat alignée sur le Physique actuel (le constat de la Forge reste) ;
+  localisations, assommer/immobiliser/intimider, tir multiple, décompte des munitions ; la Névrose
+  des rivalités entre styles (C4). Pas de recette Electron pour la tablette qui reçoit l'indice
+  privé : le serveur est essayé en unitaire.
+- **Reste** : réimport du pilote `…_c5-c6` et essai de David (C1 à C6 ensemble).
 
 ## La vue d'un coup d'œil
 
@@ -12521,12 +12631,15 @@ David, le 22/10 : *« corrige les défauts des tablettes »*, puis *« oui on fi
 | 84 | **Forge : `jet.difficulte` compte des réussites** | § 148 ; consigne corrigée et contrôle du pilote au plafond de la réserve, faits le 22/10 ; 721 essais de la Forge verts ; sur les exports réels, seul Crimes est signalé (C1, connu) | Relire le corpus de la Forge | Rien |
 | 85 | **Symbaroum S1 — modificateur du seuil, opposition explicite** | § 149 ; moteur, panneau (fiche et tablette), journal, Forge, pilote corrigé, manuel et captures — faits le 22/10 | Réimport du pilote corrigé et essai de David | Rien |
 | 86 | **Santé et séquelles, fin de scène** | § 150 ; fiche qui naît pleine, contrôle de la santé courante, `finDeScene` et « vide », seuils qui laissent une trace (une fois par passage) ; Symbaroum S2-raccord/S4-fin de scène et NOC point 1 par script — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
-| 87 | **Paiement au choix (Dune D2) ; audit fiches, tablettes, journal** | § 151 ; « dont en Menace », Impulsion du jet hors réserve, motif des tablettes — faits le 22/10 ; audit rendu : S1, S2, S5 (secrets du meneur sur les tablettes et les fenêtres de la table), S3, S4, H1, C1 | Réimport du pilote Star Trek (paiement au choix, décidé le 22/10) et essai | Rien |
+| 87 | **Paiement au choix (Dune D2) ; audit fiches, tablettes, journal** | § 151 ; « dont en Menace », Impulsion du jet hors réserve, motif des tablettes — faits le 22/10 ; audit rendu : S1, S2, S5 (secrets du meneur sur les tablettes et les fenêtres de la table), S3, S4, H1, C1 | Rien : Star Trek réimporté, essai de David validé le 22/10 | Rien |
 | 88 | **Les secrets du meneur ne partent plus vers la table** | § 152 ; `caviarderPourLesJoueurs` à l'émission, au serveur et pour les fenêtres locales : trame du meneur, `gmNotes`, secrets des combattants (diffusion sans rôle) — faits le 22/10 | Essai de David ; S3, S4, H1, C1 | Rien |
 | 89 | **Indices non révélés, notes du meneur écrites par un joueur** | § 153 ; seuls les indices révélés partent vers la table ; `gmNotes` retiré des actions des joueurs au serveur — faits le 22/10 | H1, C1 de l'audit | Le choix de David pour C1 |
 | 90 | **Historique des fiches (H1), réserves au pupitre (C1)** | § 154 ; chaque modification de fiche au journal avec son origine ; le pupitre et la télécommande règlent les réserves d'un jet 2d20 (personnage ou PNJ) — faits le 22/10 | Essai de David | Rien |
-| 91 | **Symbaroum S3 et S4 — Avantage tactique, Corruption au seuil** | § 155 ; case Avantage tactique (+2, +1D4 aux dégâts, un seul d20) ; Stigmate et 1D4 permanent au Seuil de Corruption, Abomination à la Volonté — faits le 22/10 | Réimport du pilote et essai de David | Rien |
+| 91 | **Symbaroum S3 et S4 — Avantage tactique, Corruption au seuil** | § 155 ; case Avantage tactique (+2, +1D4 aux dégâts, un seul d20) ; Stigmate et 1D4 permanent au Seuil de Corruption, Abomination à la Volonté — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
 | 92 | **Défauts des tablettes** | § 156 ; le refus d'un appareil s'affiche et propose une nouvelle identité ; recettes T0/T4/T5 revenues avec leur jeton, M1 et J2 alignées sur le 12/10 — toutes vertes (251 essais) le 22/10 | Rien | Rien |
+| 93 | **Crimes C0 et C1 — corpus, Potentiel GARDE Compétence** | § 157 ; quatre bilans, jet sans compétence, santé et points d'enquête corrigés au corpus ; jet gardé au moteur, au panneau (fiche et tablette), à la Forge, au pilote et au manuel — faits le 22/10 | Réimport du pilote et essai de David | Rien |
+| 94 | **Crimes C2 et C3 — atteintes, dépassement** | § 158 ; Potentiel actuel au jet, carte des atteintes, « Bonne nuit », dépassement annoncé une fois par scène ; fiche HTML (version 15), pilote `…_c2-c3`, manuel — faits le 22/10 | Réimport du pilote et essai de David | Rien |
+| 95 | **Crimes C5 et C6 — dossier d'enquête, armes** | § 159 ; points d'enquête par style, indices à seuils révélés à un seul enquêteur (sa seule tablette) puis partagés ; armes du livre, dégâts, portée, « Infliger » — faits le 22/10 | Réimport du pilote `…_c5-c6` et essai de David | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

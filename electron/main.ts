@@ -849,7 +849,7 @@ ipcMain.on('remote:broadcast-sync', (_event, data, role?: string) => {
     */
     if (role === 'remote' || role === 'gm') return;
     // R7 : les fenêtres projetées n'ont pas de personnage identifié.
-    const publicData = caviarderPourLesJoueurs(filtrerAstrologieDistante(data, null));
+    const publicData = caviarderPourLesJoueurs(filtrerAstrologieDistante(data, null), null);
     if (hubWindow && !hubWindow.isDestroyed()) {
         hubWindow.webContents.send('remote:broadcast-sync', publicData);
     }

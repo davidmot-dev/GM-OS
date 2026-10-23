@@ -23,7 +23,7 @@ import {
  * plusieurs fois si la Loi le veut. Le compte est dit, pas imposé — c'est la Loi
  * qui décide, l'outil rappelle la règle.
  */
-export type GesteDesHeros = 'calme' | 'debordement' | 'finDeScene';
+export type GesteDesHeros = 'calme' | 'debordement' | 'finDeScene' | 'bonneNuit';
 
 const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => void }> = ({ geste, onClose }) => {
     const players = useSessionOSStore(s => s.players);
@@ -48,7 +48,9 @@ const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => 
     const debordement = pilote?.gestesDesHeros?.effetsDuDebordement;
     // La fin de scène (Symbaroum, 2026-10-22) : les fiches, puis l'érosion des réserves qui en déclarent une.
     const finDeScene = pilote?.gestesDesHeros?.finDeScene;
-    const declare = { calme: !!calme, debordement: !!debordement, finDeScene: !!finDeScene?.length }[geste];
+    // La bonne nuit (Crimes, 2026-10-22) : l'épuisement qui se repose, lu Héros par Héros comme la fin de scène.
+    const bonneNuit = pilote?.gestesDesHeros?.bonneNuit;
+    const declare = { calme: !!calme, debordement: !!debordement, finDeScene: !!finDeScene?.length, bonneNuit: !!bonneNuit?.length }[geste];
 
     if (!activeCampaignId || !declare) {
         return <p className="px-5 py-4 text-app-muted">Le jeu de cette campagne ne déclare pas ce geste.</p>;
@@ -62,23 +64,26 @@ const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => 
         ? { changements: momentDeCalme(calme!, heros, nom), aDire: [] }
         : geste === 'finDeScene'
             ? { changements: recuperationDesHeros(finDeScene, heros, nom), aDire: erosion ? ['Les réserves de table s’érodent aussi.'] : [] }
-            : effetsDuDebordement(debordement!.effets, choix, heros, nom);
+            : geste === 'bonneNuit'
+                ? { changements: recuperationDesHeros(bonneNuit, heros, nom), aDire: [] }
+                : effetsDuDebordement(debordement!.effets, choix, heros, nom);
     const effectifs = changementsEffectifs(apercu.changements);
     const tableQuiBouge = geste === 'calme' ? (calme!.table ?? []) : [];
 
     const appliquer = () => {
         ecrireLesHeros(effectifs, { players, updateCharacter, updateCharacterHealth });
         if (erosion) for (const a of eroderEnFinDeScene(activeCampaignId, ressources).avertissements) gmToast(a, 'info');
-        const motif = geste === 'calme' ? 'moment de calme' : geste === 'finDeScene' ? 'fin de scène' : `effets du ${nomDe(debordement!.ressource)}`;
+        const motif = geste === 'calme' ? 'moment de calme' : geste === 'finDeScene' ? 'fin de scène'
+            : geste === 'bonneNuit' ? 'bonne nuit' : `effets du ${nomDe(debordement!.ressource)}`;
         for (const t of tableQuiBouge) {
             const r = t.delta < 0
                 ? depenser(activeCampaignId, ressources, t.ressource, -t.delta, motif)
                 : gagner(activeCampaignId, ressources, t.ressource, t.delta, motif);
             for (const a of r.avertissements) gmToast(a, 'info');
         }
-        if (geste !== 'finDeScene') for (const a of apercu.aDire) gmToast(a, 'info');
+        if (geste !== 'finDeScene' && geste !== 'bonneNuit') for (const a of apercu.aDire) gmToast(a, 'info');
         gmToast(effectifs.length
-            ? `${{ calme: 'Moment de calme', debordement: 'Effets appliqués', finDeScene: 'Fin de scène' }[geste]} : ${effectifs.length} fiche${effectifs.length > 1 ? 's' : ''} mise${effectifs.length > 1 ? 's' : ''} à jour.`
+            ? `${{ calme: 'Moment de calme', debordement: 'Effets appliqués', finDeScene: 'Fin de scène', bonneNuit: 'Bonne nuit' }[geste]} : ${effectifs.length} fiche${effectifs.length > 1 ? 's' : ''} mise${effectifs.length > 1 ? 's' : ''} à jour.`
             : 'Aucune fiche à changer.', 'success');
         onClose();
     };

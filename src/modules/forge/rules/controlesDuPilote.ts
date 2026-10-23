@@ -692,6 +692,70 @@ export function controlerLePilote(
     }
 
     /*
+      **Le jet gardé** (Crimes, C1, 2026-10-22) : Potentiel GARDE Compétence. La
+      réserve donne les dés, la compétence le nombre gardé ; le seuil se règle
+      par dé. Un seuil additionné ou une difficulté posés à côté seraient des
+      réglages morts — c'était le défaut du pilote de Crimes, qui lançait zéro dé.
+    */
+    const garde = driver.jet?.garde;
+    if (garde) {
+        if (!garde.competence) {
+            erreur('jet.garde.competence', 'Le jet gardé lit sur la fiche combien de dés se gardent : il lui faut une compétence.');
+        }
+        const nombres = [garde.seuil, garde.competent ?? 1, garde.specialise ?? 2];
+        if (!nombres.every(n => typeof n === 'number' && Number.isFinite(n) && n >= 0)) {
+            erreur('jet.garde', 'Le seuil par dé et ce qu’en retirent compétence et spécialisation sont des nombres : 9, 1 et 2 chez Crimes.');
+        }
+        if (!driver.jet?.reserve?.composantes?.length) {
+            erreur('jet.reserve.composantes', 'Le jet gardé lance autant de dés que le Potentiel : la réserve doit le lire sur la fiche.');
+        }
+        if (driver.jet?.seuil?.length || driver.jet?.difficulte) {
+            avertir('jet.garde', 'Le jet gardé ne compose pas de seuil et ne compte pas de réussites contre une difficulté : retirer « jet.seuil » et « jet.difficulte ».');
+        }
+        // C6 : une table d'armes se nomme, comme la Table des Bonus ; le nom doit exister.
+        if (garde.armes !== undefined && garde.armes !== 'crimes') {
+            erreur('jet.garde.armes', `« ${String(garde.armes)} » n'est pas une table d'armes connue. La seule admise est : crimes.`);
+        }
+        // C2 et C3 : les marques et le compteur de dépassement sont des champs de la fiche.
+        for (const [potentiel, marques] of Object.entries(garde.atteintes?.parPotentiel ?? {})) {
+            const absents = [potentiel, marques.fatigue, marques.epuisement, marques.blessures].filter(c => !tousLesChamps.has(c));
+            if (absents.length) {
+                avertir('jet.garde.atteintes', `${potentiel} : ${absents.map(c => `« ${c} »`).join(', ')} absent${absents.length > 1 ? 's' : ''} de la fiche — ses marques ne compteront pas.`);
+            }
+        }
+        if (garde.atteintes?.incapacite && !garde.atteintes.parPotentiel[garde.atteintes.incapacite]) {
+            avertir('jet.garde.atteintes.incapacite', `« ${garde.atteintes.incapacite} » n'a pas de marques déclarées : l'incapacité ne se dira jamais.`);
+        }
+        if (garde.depassement) {
+            if (!tousLesChamps.has(garde.depassement.champ)) {
+                avertir('jet.garde.depassement', `Le dépassement se compte dans « ${garde.depassement.champ} », absent de la fiche : il resterait permis à chaque jet.`);
+            }
+            if (!garde.atteintes) {
+                avertir('jet.garde.depassement', 'Le dépassement coûte une fatigue par réussite : sans « atteintes », il ne pourrait pas la noter.');
+            }
+        }
+        for (const [competence, prefixe] of Object.entries(garde.specialisations?.parCompetence ?? {})) {
+            if (!tousLesChamps.has(competence)) {
+                avertir('jet.garde.specialisations', `« ${competence} » n'est pas un champ de la fiche : ses spécialisations ne seront jamais proposées.`);
+            } else if (![...tousLesChamps].some(id => id.startsWith(prefixe))) {
+                avertir('jet.garde.specialisations', `Aucune case de la fiche ne commence par « ${prefixe} » : la compétence « ${competence} » n'offrira aucune spécialisation.`);
+            }
+        }
+    }
+
+    /*
+      **Les styles d'enquêteur** (Crimes, C5, 2026-10-22) : deux champs de fiche
+      chacun, le niveau et les points. Un champ absent : un style qui ne
+      gagnerait jamais rien, ou n'ouvrirait aucun indice.
+    */
+    (driver.enquete?.styles ?? []).forEach((style, i) => {
+        const absents = [style.niveau, style.points].filter(c => !tousLesChamps.has(c));
+        if (absents.length) {
+            avertir(`enquete.styles[${i}]`, `${style.label} : ${absents.map(c => `« ${c} »`).join(' et ')} absent${absents.length > 1 ? 's' : ''} de la fiche — ses points d'enquête ne se compteront pas.`);
+        }
+    });
+
+    /*
       **Provoquer le destin** (NOC, 2026-10-13) : le Fiel est une réserve de table,
       les jauges de péril et les réserves du Héros des champs de sa fiche. Un nom
       qui ne désigne rien ferait un jet qui a l'air juste — sans Fiel, sans malus.
@@ -1119,6 +1183,8 @@ export function controlerLePilote(
         // La seconde poule — les dés de stress d'Alien — se lit sur la fiche
         // comme les autres, donc elle peut la manquer comme les autres.
         ['jet.reserve.secondaire.composantes', driver.jet?.reserve?.secondaire?.composantes],
+        // La compétence d'un jet gardé (Crimes) se retient sur la fiche, comme les autres.
+        ['jet.garde.competence', driver.jet?.garde?.competence ? [driver.jet.garde.competence] : []],
     ];
     composantesDuJet.forEach(([ou, liste]) => (liste ?? []).forEach((composante, i) => {
         /*
@@ -1837,6 +1903,7 @@ export function controlerLePilote(
             }
         }
         controlerLesMouvements(gestes.finDeScene, 'gestesDesHeros.finDeScene');
+        controlerLesMouvements(gestes.bonneNuit, 'gestesDesHeros.bonneNuit');
         controlerLesMouvements(gestes.debutDeSeance, 'gestesDesHeros.debutDeSeance');
         controlerLesMouvements(gestes.nouveauScenario, 'gestesDesHeros.nouveauScenario');
         const effets = gestes.effetsDuDebordement;

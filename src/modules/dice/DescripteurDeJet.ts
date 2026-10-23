@@ -20,6 +20,7 @@
  */
 
 import type { SheetSection } from '../../data/defaultSheetTemplates';
+import { potentielActuel, quotaDeLaGarde, seuilDeLaGarde } from './systemes/potentielGarde';
 import type { RegleDesJetsAlien } from './systemes/jetsAlien';
 import { estUnAndroide } from './systemes/paniqueAlien';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
@@ -301,6 +302,50 @@ export interface DescripteurDeJet {
      */
     tableDeBonus?: 'torg';
     /**
+     * **Potentiel GARDE Compétence** — Crimes, C1 de l'audit (2026-10-22),
+     * livre p. 385 (`systemes/potentielGarde.ts`).
+     *
+     * La réserve (`reserve.composantes`, le Potentiel) donne les d10 lancés ;
+     * la `competence` donne combien se gardent — un seul sans elle. Le seuil
+     * par dé vaut `seuil` (9), moins `competent` (1) si le personnage a la
+     * compétence, moins `specialise` (2) à la place avec une spécialisation
+     * appropriée. Tous les 1 sont gardés. Ni `seuil` additionné, ni
+     * `difficulte` : ce jeu ne compte pas des réussites contre un nombre.
+     */
+    garde?: {
+        competence: ComposanteDeJet;
+        seuil: number;
+        competent?: number;
+        specialise?: number;
+        /**
+         * Les cases de spécialisation de la fiche, par compétence : le début de
+         * leur identifiant. Chez Crimes, Cirque → `specialties_circus_`.
+         */
+        specialisations?: { parCompetence: Record<string, string> };
+        /**
+         * **Les atteintes** (C2, p. 395–396) : par Potentiel, les trois champs de
+         * la fiche qui comptent ses marques. Le jet lance le Potentiel **actuel**,
+         * la valeur de départ moins les marques.
+         */
+        atteintes?: {
+            parPotentiel: Record<string, { fatigue: string; epuisement: string; blessures: string }>;
+            /** Le Potentiel dont le zéro met hors de combat : le Physique (p. 395). */
+            incapacite?: string;
+        };
+        /**
+         * **Le dépassement** (C3, p. 385, 409) : le champ qui compte les
+         * dépassements de la scène — un seul par scène, remis à zéro en fin de
+         * scène. Chaque réussite gardée en plus coûte une fatigue (`atteintes`).
+         */
+        depassement?: { champ: string };
+        /**
+         * **Les armes** (C6, p. 344–395) : une table nommée, transcrite dans le
+         * code (`systemes/armesDeCrimes.ts`) — le panneau propose l'arme, la
+         * portée, l'opposition et la cible, et calcule les dégâts du livre.
+         */
+        armes?: 'crimes';
+    };
+    /**
      * Ce que le jet de Torg lit sur la fiche (2026-10-13) : le champ des
      * **Blessures** (−1 par Blessure au total d'action, jusqu'à −3) et celui des
      * **Possibilités**, qu'on dépense après avoir vu le premier dé.
@@ -445,6 +490,10 @@ export interface ChoixDuJoueur {
     valeurAdverse?: number;
     /** L'Avantage tactique est coché (`modificateurDuSeuil.avantage`). */
     avantageTactique?: boolean;
+    /** La spécialisation retenue pour un jet gardé (`garde`) : l'identifiant de sa case. */
+    specialisationDeLaGarde?: string;
+    /** Le joueur annonce qu'il se dépasse, avant de jeter les dés (`garde.depassement`, p. 385). */
+    depassementAnnonce?: boolean;
     /**
      * Valeur sous laquelle un dé compte double, quand elle diffère du critique
      * ordinaire — chez Dune, la compétence seule avec la spécialisation.
@@ -483,6 +532,28 @@ export interface JetPrepare {
      * Ce qui a déplacé le seuil (`modificateurDuSeuil`), pour le titre du jet
      * au journal. Absent quand rien ne l'a déplacé.
      */
+    /**
+     * **Le jet gardé** (`DescripteurDeJet.garde`) : combien de dés se gardent,
+     * à quel seuil, et pourquoi. Absent sur les autres jeux.
+     */
+    garde?: {
+        quota: number;
+        seuil: number;
+        niveau: number;
+        competence?: { label: string; champ: string };
+        specialisation?: { champ: string; label: string };
+        /** Les spécialisations cochées sur la fiche pour cette compétence : le menu du panneau. */
+        specialisationsPossibles: { champ: string; label: string }[];
+        /** Le Potentiel retenu, ses marques et sa valeur actuelle (`garde.atteintes`). */
+        atteintes?: {
+            potentiel: string; base: number; actuel: number;
+            fatigue: number; epuisement: number; blessures: number;
+            /** Les champs des marques : la fatigue du dépassement s'écrit dans le premier. */
+            champs: { fatigue: string; epuisement: string; blessures: string };
+        };
+        /** Le dépassement : annoncé, et encore permis dans la scène — ou pourquoi pas. */
+        depassement?: { annonce: boolean; possible: boolean; raison?: string; champ: string };
+    };
     modificationDuSeuil?: {
         situation: number;
         opposition?: { adverse: number; modificateur: number; label: string };
@@ -1018,6 +1089,38 @@ export function preparerLeJet(
         }
     }
 
+    /*
+      **Potentiel GARDE Compétence** (Crimes, C1). La compétence ne s'ajoute à
+      rien : sa valeur dit combien de dés se gardent, et si le personnage est
+      compétent. Une compétence à zéro est un jet **sans** compétence — un dé
+      gardé au seuil de base (p. 411) —, pas une erreur.
+    */
+    let garde: JetPrepare['garde'];
+    const libelleDuChamp = (id: string) => sections?.flatMap(sec => sec.fields).find(f => f.id === id)?.label ?? id;
+    if (descripteur.garde) {
+        const regle = descripteur.garde;
+        const champ = choix.champs[regle.competence.id];
+        const lu = champ ? lireLeChamp(valeursDeLaFiche, champ) : { valeur: null };
+        if (!champ) avertissements.push(`${regle.competence.label} : aucun champ retenu.`);
+        const niveau = Math.max(0, lu.valeur ?? 0);
+        const prefixe = champ ? regle.specialisations?.parCompetence[champ] : undefined;
+        const libelleDe = (id: string) => sections?.flatMap(sec => sec.fields).find(f => f.id === id)?.label ?? id;
+        const specialisationsPossibles = prefixe
+            ? Object.keys(valeursDeLaFiche)
+                .filter(id => id.startsWith(prefixe) && valeursDeLaFiche[id] === true)
+                .map(id => ({ champ: id, label: libelleDe(id).replace(/^.*?—\s*/, '') }))
+            : [];
+        const specialisation = specialisationsPossibles.find(sp => sp.champ === choix.specialisationDeLaGarde);
+        garde = {
+            quota: quotaDeLaGarde(niveau),
+            seuil: seuilDeLaGarde(regle, niveau, !!specialisation),
+            niveau,
+            ...(champ ? { competence: { label: libelleDe(champ), champ } } : {}),
+            ...(specialisation && niveau > 0 ? { specialisation } : {}),
+            specialisationsPossibles,
+        };
+    }
+
     const deLaReserve = additionner(descripteur.reserve?.composantes ?? []);
     const deLaSeconde = additionner(descripteur.reserve?.secondaire?.composantes ?? []);
 
@@ -1048,7 +1151,31 @@ export function preparerLeJet(
       ce qui est lancé d'office — souvent zéro dès que des composantes existent,
       un pour les jeux qui garantissent un dé.
     */
-    const reserveDeDepart = (reserve?.base ?? 0) + deLaReserve.total;
+    /*
+      **Le Potentiel actuel** (Crimes, C2, p. 395) : la fatigue, l'épuisement et
+      les blessures se retirent de la réserve, jamais de la valeur de départ.
+    */
+    const champsDesMarques = garde && deLaReserve.retenues[0]
+        ? descripteur.garde?.atteintes?.parPotentiel[deLaReserve.retenues[0].champ] : undefined;
+    if (garde && champsDesMarques) {
+        const marque = (id: string) => Math.max(0, lireLeChamp(valeursDeLaFiche, id).valeur ?? 0);
+        const m = { fatigue: marque(champsDesMarques.fatigue), epuisement: marque(champsDesMarques.epuisement), blessures: marque(champsDesMarques.blessures) };
+        const retenu = deLaReserve.retenues[0];
+        garde.atteintes = { potentiel: retenu.champ, base: retenu.valeur, actuel: potentielActuel(retenu.valeur, m), ...m, champs: champsDesMarques };
+        if (garde.atteintes.actuel <= 0) {
+            avertissements.push(`${libelleDuChamp(retenu.champ)} actuel à ${garde.atteintes.actuel} : plus aucun dé à lancer.`);
+        }
+    }
+    if (garde && descripteur.garde?.depassement) {
+        const champ = descripteur.garde.depassement.champ;
+        const deja = (lireLeChamp(valeursDeLaFiche, champ).valeur ?? 0) > 0;
+        garde.depassement = {
+            annonce: !!choix.depassementAnnonce, possible: !deja, champ,
+            ...(deja ? { raison: 'Déjà utilisé dans cette scène : un seul dépassement par scène (p. 407).' } : {}),
+        };
+    }
+    const marquesDuPotentiel = garde?.atteintes ? garde.atteintes.base - garde.atteintes.actuel : 0;
+    const reserveDeDepart = Math.max(0, (reserve?.base ?? 0) + deLaReserve.total - marquesDuPotentiel);
 
     // Les dés achetés ne franchissent pas le plafond du système : chez Dune,
     // cinq dés au total, quoi qu'on dépense.
@@ -1137,6 +1264,7 @@ export function preparerLeJet(
         composantes,
         explicationDuSeuil,
         modificationDuSeuil,
+        ...(garde ? { garde } : {}),
         echelle,
         /*
           Quand les dés sont échelonnés, c'est leur nombre qui fait foi : ils ne
