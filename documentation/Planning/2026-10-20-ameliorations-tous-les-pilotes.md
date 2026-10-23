@@ -48,7 +48,7 @@ conformément à la décision de David du 19/10.
 | [Alien](#alien) | 🟢 11 · 🟠 0 · 🔴 0 | A0–A9 validés par David ; **A10, préréglages et remise à zéro des modules, livré et essayé le 23/10** (registre § 163) | Rien : tous les lots faits |
 | [Blade Runner](#blade-runner) | 🟢 0 · 🟠 0 · 🔴 4 | Limites documentées ; audit complet à faire | Même choix de forçage au pupitre et sur la fiche ; suivi des blessures |
 | [Crimes](#crimes) | 🟢 13 · 🟠 0 · 🔴 0 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** ; **tous les lots livrés et essayés le 23/10** : circonstances, hermétiques, opposition, psychologie et seuils, manœuvres, contacts, fortune, création (registre § 157–161) | Rien : tous les lots faits ; tir multiple, intimider, rivalités et fortune commune restent au meneur |
-| [Cthulhu Hack](#cthulhu-hack) | 🟢 0 · 🟠 0 · 🔴 5 | Limites documentées ; audit complet à faire | Effets du Hors Jeu et usure reliés aux valeurs de la fiche |
+| [Cthulhu Hack](#cthulhu-hack) | 🟢 5 · 🟠 0 · 🔴 0 | Cinq améliorations livrées et essayées par David le 23/10 contre le livre français (p. 31–32, 34, 42, 50–52), registre § 164 | Rien sur ces cinq lots ; soins spéciaux et suites mentales restent des sujets d'audit séparés |
 | [Dune](#dune) | 🟢 1 · 🟠 0 · 🔴 8 | Audit détaillé ; projet futur garé | Spécialisations et paiements Impulsion/Menace lors d'une reprise |
 | [Nephilim Légende](#nephilim-légende) | 🟢 0 · 🟠 1 · 🔴 5 | Plusieurs anciens lots réalisés ; restes documentés | Conséquences/Chutes, Stase et pacte de Kabbale |
 | [NOC](#noc) | 🟢 1 · 🟠 1 · 🔴 5 | Restes revérifiés dans le code le 19/10 ; **Séquelle proposée à 8 le 22/10** (registre § 150), essai de David validé | Singularité attribuée par un Rouage |
@@ -247,7 +247,9 @@ mitigée. L'ajout de champs dans le JSON ne remplace pas cette mécanique de con
 ## Cthulhu Hack
 
 **Référence :** [manuel actuel](../User%20Guides/54-Jeu-Cthulhu-Hack.md),
-« Ce qui reste à la main ». Audit primaire complet à préparer avant automatisation des limites.
+et [audit et registre du 23/10](2026-10-23-cthulhu-hack-ameliorations.md).
+Livre primaire fourni par David : `dmkl01bpdf_cthulhuhackreedition_v1v3.pdf`.
+Relecture ciblée des cinq améliorations ; le corpus entier n'est pas déclaré relu.
 
 **Déjà disponible :** Sauvegardes au d20, avantage/désavantage, Fortune après un jet raté,
 dés d'usure, Folie/Choc, Hors Jeu avec table des Conséquences et récupération, PV raccordés
@@ -255,15 +257,19 @@ dés d'usure, Folie/Choc, Hors Jeu avec table des Conséquences et récupératio
 
 | Priorité | Amélioration possible |
 | --- | --- |
-| 🔴 P1 | Proposer l'application aux caractéristiques des Sauvegardes perdues par un Hors Jeu, avec aperçu des pertes permanentes |
-| 🔴 P1 | Raccorder la diminution de protection à l'usure de l'armure |
-| 🔴 P2 | Assister la défausse des jetons de Fortune par le meneur et ses effets |
-| 🔴 P2 | Suivre les durées des Chocs et Folies selon l'unité prévue : Moments, minutes ou heures |
-| 🔴 P3 | Ajouter un profil explicite pour la variante Pulp du Hors Jeu, séparé du fonctionnement standard |
+| 🟢 P1 | Livré et essayé le 23/10 : aperçu, répartition exacte et application unique des pertes permanentes ; Détruit impose deux Sauvegardes distinctes |
+| 🟢 P1 | Livré et essayé le 23/10 : PA déclarés sur les quatre emplacements ; déclin = −1 PA, restitué si la Fortune sauve l'usure |
+| 🟢 P2 | Livré et essayé le 23/10 : défausse MJ contextualisée, relance du test mémorisé, Choc sans perte mentale et rappels narratifs |
+| 🟢 P2 | Livré et essayé le 23/10 : suivi persistant des Moments, minutes, heures, scènes et échéances ; malus et Désavantages des effets généraux raccordés |
+| 🟢 P3 | Livré et essayé le 23/10 : variante Pulp activée explicitement, coups suivants à zéro avec malus cumulatif, aucun PV rendu pendant le combat |
+
+**Validation de David le 23/10 :** « ok c'est bon, c'est testé. Tu peux faire le commit et poussé ».
 
 **Cas témoin :** une conséquence permanente n'est appliquée qu'une fois à la fiche ;
 relever puis refaire tomber un personnage ne doit pas rejouer les pertes de son ancien tirage.
-Les variantes et barèmes restent à vérifier dans l'édition utilisée.
+Barèmes contrôlés dans l'édition fournie. Les soins spéciaux, séquelles mentales définitives,
+récupération mentale et cartes Contrecoups restent à auditer séparément ; ils ne sont pas
+comptés parmi ces cinq améliorations. Vérifications et export dans le registre lié.
 
 ## Dune
 

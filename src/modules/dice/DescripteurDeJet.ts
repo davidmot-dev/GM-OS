@@ -20,6 +20,7 @@
  */
 
 import type { SheetSection } from '../../data/defaultSheetTemplates';
+import { modificateursCH } from './systemes/cthulhuHack';
 import { potentielActuel, quotaDeLaGarde, seuilDeLaGarde } from './systemes/potentielGarde';
 import type { RegleDesJetsAlien } from './systemes/jetsAlien';
 import { estUnAndroide } from './systemes/paniqueAlien';
@@ -483,6 +484,8 @@ export interface DescripteurDeJet {
      * fiche s'en libère. Proposée au panneau de jet et au pupitre.
      */
     fortune?: { champ: string; label?: string; max: number; relance: number; reussite: number };
+    /** Suivi optionnel du livre Cthulhu Hack : blessures, durées et armures. */
+    cthulhuHack?: import('./systemes/cthulhuHack').RegleCthulhuHack;
     /**
      * **Brisé** — Blade Runner, 2026-10-14. Quand forcer met un de ces champs à
      * zéro, le panneau le dit, et peut lancer l'effet critique : le dé `de` (un
@@ -1076,6 +1079,13 @@ export function preparerLeJet(
     */
     const additionnees = additionner(descripteur.desEchelonnes ? [] : descripteur.seuil ?? []);
     let seuil = additionnees.total;
+    if (descripteur.cthulhuHack) {
+        const effet = modificateursCH(descripteur.cthulhuHack, valeursDeLaFiche, additionnees.retenues[0]?.champ);
+        seuil -= effet.malus;
+        if (effet.malus) remarques.push(`Conséquences Cthulhu Hack : −${effet.malus} à la Sauvegarde.`);
+        if (effet.desavantage) remarques.push('Désavantage imposé par une conséquence active.');
+        if (effet.indisponible) avertissements.push('Cette conséquence empêche cette action : attendre son terme.');
+    }
     let composantes = additionnees.retenues;
     let explicationDuSeuil: string | undefined;
     let echelle: EchelleDuJet | undefined;

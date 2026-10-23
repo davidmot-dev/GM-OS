@@ -19,6 +19,7 @@ import { resolveSheetTemplate } from '../../modules/session/logic/templateResolv
 import { piloteDuPersonnage } from '../../modules/session/logic/piloteDuPersonnage';
 import PanneauDesRessources from '../../modules/table/PanneauDesRessources';
 import PanneauDeJet from '../../modules/session/components/PanneauJetDeFiche';
+import SuiviCthulhuHack from '../../modules/session/components/fields/SuiviCthulhuHack';
 import { PanneauFatigueVoyageur } from '../../modules/session/components/PanneauFatigueVoyageur';
 import { PanneauSanteVoyageur } from '../../modules/session/components/PanneauSanteVoyageur';
 import { PanneauTachesVoyageur } from '../../modules/session/components/PanneauTachesVoyageur';
@@ -372,6 +373,8 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                             lancer la même Sauvegarde, dont une invisible pour
                             la table, ce serait pire qu'une seule.
                         */}
+                        {!jetDuJoueur && pilote?.jet?.cthulhuHack && <SuiviCthulhuHack
+                            regle={pilote.jet.cthulhuHack} valeurs={valeursVues} ecrire={()=>{}} joueur />}
                         {jetDuJoueur && pilote?.jet && (
                             <PanneauDeJet
                                 descripteur={pilote.jet}

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-/** Le contrat des champs imprimés reste scalaire. Les états réservés RdD et Alien sont du JSON
+/** Le contrat des champs imprimés reste scalaire. Les états réservés RdD, Alien et Cthulhu Hack sont du JSON
  * structuré ; une sauvegarde doit pouvoir les relire sans les jeter.
  * Bornes de lecture, pas de troncature ni de nettoyage silencieux. */
 function memoJSONValide(racine: unknown): boolean {
@@ -21,7 +21,7 @@ function memoJSONValide(racine: unknown): boolean {
 export const DonneesDeFicheSchema = z.record(z.string(), z.unknown()).superRefine((donnees, contexte) => {
     for (const [cle, valeur] of Object.entries(donnees)) {
         if (typeof valeur === 'string' || typeof valeur === 'boolean' || typeof valeur === 'number' && Number.isFinite(valeur)) continue;
-        if ((cle.startsWith('__rdd') || ['_gmos_combat_alien','_gmos_panique_alien','_gmos_jet_alien','_gmos_survie_alien','_gmos_progression_alien'].includes(cle)) && memoJSONValide(valeur)) continue;
-        contexte.addIssue({ code: 'custom', path: [cle], message: 'Valeur de champ attendue ; seules les métadonnées réservées RdD et Alien acceptent du JSON structuré borné.' });
+        if ((cle.startsWith('__rdd') || ['_gmos_combat_alien','_gmos_panique_alien','_gmos_jet_alien','_gmos_survie_alien','_gmos_progression_alien','_gmos_cthulhu_hack'].includes(cle)) && memoJSONValide(valeur)) continue;
+        contexte.addIssue({ code: 'custom', path: [cle], message: 'Valeur de champ attendue ; seules les métadonnées réservées RdD, Alien et Cthulhu Hack acceptent du JSON structuré borné.' });
     }
 });

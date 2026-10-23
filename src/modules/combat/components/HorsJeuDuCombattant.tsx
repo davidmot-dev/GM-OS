@@ -12,6 +12,10 @@ import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
 import type { GameDriver } from '../../../types/drivers';
 import type { TableEntry } from '../../tables/types';
 import type { Combatant } from '../types';
+import SuiviCthulhuHack from '../../session/components/fields/SuiviCthulhuHack';
+import { santePrincipaleDuPersonnage } from '../../session/logic/santePrincipale';
+import { resolveSheetTemplate } from '../../session/logic/templateResolver';
+import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 
 /**
  * **Tomber à zéro, sur la carte du combattant** — 2026-10-16.
@@ -182,6 +186,16 @@ const nombreDe = (brut: unknown) => {
 
 const HorsJeuDuCombattant: React.FC<{ combatant: Combatant; valeurs?: Record<string, unknown> }> = ({ combatant, valeurs = {} }) => {
     const pilote = useSessionOSStore(s => s.getActiveDriver());
+    const personnageCH = useSessionOSStore(s=>s.players.flatMap(p=>p.characters).find(c=>c.id===combatant.sourcePlayerId));
+    const etatCH=useSessionOSStore.getState();
+    const maxCH=santePrincipaleDuPersonnage(personnageCH,pilote,etatCH.campaigns,etatCH.customSheetTemplates)?.max;
+    const gabaritCH=personnageCH?resolveSheetTemplate(personnageCH,etatCH.campaigns,[...DEFAULT_SHEET_TEMPLATES,...etatCH.customSheetTemplates]):undefined;
+    if (pilote?.jet?.cthulhuHack && combatant.isPlayer && combatant.sourcePlayerId) return <SuiviCthulhuHack
+        regle={pilote.jet.cthulhuHack} valeurs={valeurs} maxPV={maxCH??combatant.hpMax} libelle={id=>gabaritCH?.sections.flatMap(s=>s.fields).find(f=>f.id===id)?.label??id} ecrire={maj=>{
+            const store=useSessionOSStore.getState(),joueur=store.players.find(p=>p.characters.some(c=>c.id===combatant.sourcePlayerId));
+            const personnage=joueur?.characters.find(c=>c.id===combatant.sourcePlayerId);
+            if(joueur&&personnage)store.updateCharacter(joueur.id,personnage.id,{sheetData:{...personnage.sheetData,...maj}});
+        }}/>;
     const regle = pilote?.combat?.horsJeu;
     const principal = pilote?.combat?.statsToTrack?.find(s => s.isMainHP)?.fieldId;
     // Le Brisé de la santé principale, c'est le Hors Jeu ; les autres (le Sang-froid) se lisent sur la fiche.

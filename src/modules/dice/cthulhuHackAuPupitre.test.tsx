@@ -145,14 +145,16 @@ describe('la Sauvegarde', () => {
  * à ce qu'il les suit en combat et que leur champ porte un dé.
  */
 describe('le dé de ressource d’un personnage', () => {
-    const ouvrirMilo = (fiche: Record<string, unknown>) => {
+    const ouvrirMilo = (fiche: Record<string, unknown>, suiviCH=false) => {
         useSessionOSStore.setState({
             activeCampaignId: 'c-1',
             campaigns: [{ id: 'c-1', name: 'Le Secret de Milo', system: 'ch-test' }],
             customGameDrivers: [{
                 id: 'ch-test', name: 'Cthulhu Hack',
                 dice: { defaultDice: '1d20', logic: 'count-success', engine: 'standard' },
-                jet: { sens: 'sous-ou-egal', reserve: { base: 1, max: 1, faces: 20 } },
+                jet: { sens: 'sous-ou-egal', reserve: { base: 1, max: 1, faces: 20 },
+                    ...(suiviCH?{cthulhuHack:{pv:'hp',fortune:'fortune',physique:['force','dexterite','constitution'],personnalite:['sagesse','intelligence','charisme'],armures:[]}}:{}),
+                },
                 combat: { statsToTrack: [
                     { fieldId: 'mentalHealth', label: 'Santé Mentale', isMainHP: false, isResource: true },
                     { fieldId: 'torche', label: 'Torche', isMainHP: false, isResource: true },
@@ -168,6 +170,16 @@ describe('le dé de ressource d’un personnage', () => {
     };
     const ficheDeMilo = () => (useSessionOSStore.getState() as never as { players: { characters: { sheetData: Record<string, unknown> }[] }[] })
         .players[0].characters[0].sheetData;
+
+    it('le pilote enrichi relit ses conséquences au pupitre et mémorise le contexte exact de Fortune', async () => {
+        const {signalerImpactCH,tirerConsequenceCH,lireCH}=await import('./systemes/cthulhuHack');
+        const regle={pv:'hp',fortune:'fortune',physique:['force','dexterite','constitution'],personnalite:['sagesse','intelligence','charisme'],armures:[]};
+        const f=tirerConsequenceCH(signalerImpactCH(regle,{torche:'d8',hp:8},8,0,8,'chute'),'chute',7,true);
+        // Commotion inflige le Désavantage à tous les tests, y compris les ressources.
+        ouvrirMilo(f,true);fireEvent.click(reglages().getByText('Torche'));tirer(5,1);lancer();
+        expect(ficheDeMilo().torche).toBe('d6');expect(lireCH(ficheDeMilo()).test).toMatchObject({champ:'torche',seuil:8,modificateur:'desavantage',reussi:false});
+        expect(dernierJet().deFiche?.champ).toBe('torche');
+    });
 
     it('lit le dé sur la fiche, le lance, et y réécrit ce qu’il devient', () => {
         ouvrirMilo({ torche: 'd8', mentalHealth: 'd4' });

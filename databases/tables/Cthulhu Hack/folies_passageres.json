@@ -42,7 +42,7 @@
             "max": 6,
             "title": "Délire",
             "description": "Il s'invente une réalité et remet tout en cause.",
-            "effect": "Lancez 1d6 : 1 il est aimé, 2 quelqu'un le jalouse, 3 il est persécuté, 4 il participe à quelque chose de grand, 5 il a des sensations bizarres, 6 tout est surnaturel. Durée : 1d20 minutes ou la fin de la scène."
+            "effect": "Lancez 1d6 : 1 il est aimé, 2 quelqu'un le jalouse, 3 il est persécuté, 4 il participe à quelque chose de grand, 5 il a des sensations bizarres, 6 tout est surnaturel. Comme Évanouissement : 1d20 minutes, sur 20 relancer et additionner (répéter), ou jusqu'à la fin de la scène, le plus long des deux."
         }
     ]
 }

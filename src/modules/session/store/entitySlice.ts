@@ -24,6 +24,7 @@ import { champDeSantePrincipale, maximumDeLaJauge, santeAlignee, santePrincipale
 import { santePrincipaleDuPersonnage } from '../logic/santePrincipale';
 import { CLE_PANIQUE_ALIEN, arreterLaPaniqueAlien, changerLeStressAlien } from '../../dice/systemes/paniqueAlien';
 import { CLE_JET_ALIEN } from '../../dice/systemes/jetsAlien';
+import { CLE_CTHULHU_HACK, lireCH, signalerImpactCH, usureArmureCH } from '../../dice/systemes/cthulhuHack';
 import { CLE_COMBAT_ALIEN, demanderUnCritique, lireLeCombatAlien } from '../../dice/systemes/combatAlien';
 import { estUnAndroide } from '../../dice/systemes/paniqueAlien';
 import { immuniteSynthetique, projeterLaSanteSynthetique } from '../../dice/systemes/synthetiquesAlien';
@@ -584,7 +585,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                                 if (c.id !== characterId) return c;
                                 // Une fiche HTML ancienne ne connaît pas le suivi de Panique :
                                 // son écriture ne doit effacer ni les reçus ni les demandes.
-                                const suivis = Object.fromEntries([CLE_PANIQUE_ALIEN, CLE_JET_ALIEN, CLE_COMBAT_ALIEN, CLE_SURVIE_ALIEN, CLE_PROGRESSION_ALIEN]
+                                const suivis = Object.fromEntries([CLE_PANIQUE_ALIEN, CLE_JET_ALIEN, CLE_COMBAT_ALIEN, CLE_SURVIE_ALIEN, CLE_PROGRESSION_ALIEN, CLE_CTHULHU_HACK]
                                     .filter(cle => c.sheetData?.[cle] && updates.sheetData && !Object.hasOwn(updates.sheetData, cle))
                                     .map(cle => [cle, c.sheetData![cle]]));
                                 const sheetData = updates.sheetData ? { ...updates.sheetData, ...suivis } : undefined;
@@ -600,6 +601,17 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                                 const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
                                 const pilote = piloteDuPersonnage(updated, etat.campaigns ?? [], etat.customGameDrivers ?? [], etat.activeCampaignId);
                                 updated.healthSystem = projeterLaSanteSynthetique(pilote?.combat.alien, updated.sheetData ?? {}, lireLeCombatAlien(updated.sheetData ?? {}), updated.healthSystem);
+                                if (pilote?.jet?.cthulhuHack) {
+                                    const r = pilote.jet.cthulhuHack;
+                                    updated.sheetData={...Object.fromEntries(r.armures.filter(a=>c.sheetData?.[a.protection]!==undefined&&!Object.hasOwn(updated.sheetData??{},a.protection)).map(a=>[a.protection,c.sheetData![a.protection]])),...updated.sheetData};
+                                    updated.sheetData = usureArmureCH(r, c.sheetData ?? {}, updated.sheetData ?? {}, () => crypto.randomUUID());
+                                    if (sheetData && Number.isFinite(Number(sheetData[r.pv]))) updated.hp = Math.max(0, Number(sheetData[r.pv]));
+                                    const suivi = structuredClone(lireCH(updated.sheetData));
+                                    if (Number(updated.hp) > 0) suivi.tombe = false;
+                                    updated.sheetData = {...updated.sheetData,[CLE_CTHULHU_HACK]:suivi};
+                                    updated.healthSystem = syncHealthSystem(updated.hp, updated.maxHp, updated.healthSystem);
+                                    if (updated.healthSystem) updated.healthSystem = { ...updated.healthSystem, data: { ...updated.healthSystem.data, cthulhuHack: { pulp: suivi.pulp, mort: suivi.mort } } };
+                                }
                                 return updated;
                           }),
                       }
@@ -607,14 +619,14 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             ),
         }));
         const c = get().players.find(p => p.id === playerId)?.characters.find(c => c.id === characterId);
-        if (c?.healthSystem?.data.alienSynthetique) plateauDeCombat()?.refleterLaFiche?.(characterId, { hp: c.hp, healthSystem: c.healthSystem, sheetData: c.sheetData });
+        if (c?.healthSystem?.data.alienSynthetique || c?.healthSystem?.data.cthulhuHack) plateauDeCombat()?.refleterLaFiche?.(characterId, { hp: c.hp, healthSystem: c.healthSystem, sheetData: c.sheetData });
     },
 
     updateCharacterSheetData: (playerId, characterId, fieldId, value) => {
         const personnage = get().players.find(p => p.id === playerId)?.characters.find(c => c.id === characterId);
         const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
         const pilote = piloteDuPersonnage(personnage, etat.campaigns ?? [], etat.customGameDrivers ?? [], etat.activeCampaignId);
-        if (personnage && fieldId === pilote?.combat.alien?.androide) {
+        if (personnage && (fieldId === pilote?.combat.alien?.androide || pilote?.jet?.cthulhuHack)) {
             get().updateCharacter(playerId, characterId, { sheetData: { ...personnage.sheetData, [fieldId]: value } }); return;
         }
         set((state) => ({
@@ -999,6 +1011,14 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             
             get().updateCharacterHealth(player.id, targetId, updatedHealth);
             get().updateCharacterHP(player.id, targetId, newHp);
+
+            if (piloteDuPJ?.jet?.cthulhuHack) {
+                const courant = get().players.find(p => p.id === player.id)?.characters.find(c => c.id === targetId);
+                if (courant) get().updateCharacter(player.id, targetId, { sheetData: signalerImpactCH(
+                    piloteDuPJ.jet.cthulhuHack, courant.sheetData ?? {}, Number(baseHealth.data.current), newHp,
+                    impact.isRecovery ? 0 : impact.value, `ch-impact-${crypto.randomUUID()}`,
+                ) });
+            }
 
             // Alien p. 103 : un coup qui fait effectivement perdre de la Santé
             // augmente le Stress une seule fois, pas d'un point par dégât.

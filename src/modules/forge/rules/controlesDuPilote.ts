@@ -868,6 +868,14 @@ export function controlerLePilote(
     if (specialisation && !(driver.jet?.seuil ?? []).some(c => c.id === specialisation.composante)) {
         erreur('jet.specialisation.composante', `La spécialisation lit la composante « ${specialisation.composante} », qui n'est pas dans « jet.seuil » : la case ne changerait aucun dé.`);
     }
+    if (driver.jet?.cthulhuHack) {
+        const ch=driver.jet.cthulhuHack;
+        for(const champ of [ch.pv,ch.fortune,...ch.physique,...ch.personnalite,...ch.armures.flatMap(a=>[a.de,a.nom,a.protection])]) {
+            if(!tousLesChamps.has(champ)) erreur('jet.cthulhuHack',`Le suivi Cthulhu Hack lit « ${champ} », absent de la fiche.`);
+        }
+        if(ch.physique.length!==3||ch.personnalite.length!==3||new Set([...ch.physique,...ch.personnalite]).size!==6) erreur('jet.cthulhuHack','Déclarer les trois Sauvegardes physiques et les trois de personnalité, sans doublon.');
+        if(driver.jet.sens!=='sous-ou-egal'||facesLancees(driver)!==20) erreur('jet.cthulhuHack','Le suivi Cthulhu Hack exige une Sauvegarde au D20 sous le seuil.');
+    }
     if (driver.jet?.alien) {
         const alien = driver.jet.alien;
         if (!driver.jet.panique?.suites || driver.dice?.engine !== 'yze') erreur('jet.alien', 'Les jets Alien exigent le moteur YZE et les suites de Panique A1.');

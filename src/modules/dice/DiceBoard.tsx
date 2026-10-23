@@ -22,6 +22,7 @@ import { attribuerLeFielDuDernierJet, jetDeDestinAAttribuer, unsDuJetDeDestin } 
 import { jetARegler, lireLeJetAuPupitre, reglerLesReservesDuDernierJet } from './reservesAuPupitre';
 import { gmToast } from '../../stores/useToastStore';
 import { placerLaFortune, suitesProposees, tirerLaSuiteDuDeclin } from './suitesDuJetDeFiche';
+import { resoudreLeJetDeFiche } from './jetDepuisLaFiche';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -617,6 +618,15 @@ const DiceBoard: React.FC = () => {
       décider de la suite.
     */
     const lancer = () => {
+        if(mode==='usure'&&activeDriver?.jet?.cthulhuHack&&lien&&ressourceLiee){
+            const demande={playerId:lien.joueurId,characterId:lien.personnage.id,genre:'ressource' as const,champ:ressourceLiee.fieldId};
+            const jet=resoudreLeJetDeFiche(demande,lien.personnage,activeDriver,null);
+            if(!jet){gmToast('La conséquence active empêche ce jet, ou cette ressource est indisponible.','info');return;}
+            useSessionOSStore.getState().updateCharacter(lien.joueurId,lien.personnage.id,{sheetData:{...lien.personnage.sheetData,...jet.suiviCH,...(jet.ecrire?{[jet.ecrire.champ]:jet.ecrire.valeur}:{})}});
+            useDiceStore.getState().setLastRoll({...jet.resultat,id:crypto.randomUUID(),timestamp:new Date(),title:jet.titre,
+                deFiche:{joueurId:lien.joueurId,characterId:lien.personnage.id,genre:'ressource',champ:ressourceLiee.fieldId}});
+            if(jet.resultat.usure?.apres)setFaces(jet.resultat.usure.apres);return;
+        }
         /* En mode ressource, le dé part toujours — lu sur la fiche, la rangée est masquée. */
         const jet = handleRoll(avecFaces || mode === 'usure' ? faces : 0, mode === 'formula');
         if (mode === 'usure' && jet?.usure?.apres) setFaces(jet.usure.apres);

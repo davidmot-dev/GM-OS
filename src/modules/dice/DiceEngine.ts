@@ -460,13 +460,15 @@ export class DiceEngine {
      * paie. Le résultat ne porte donc **aucun verdict** (`tagSuccess` absent),
      * seulement ce que devient le dé.
      */
-    static rollUsure(faces: number): RollResult {
-        const valeur = this.roll(faces);
+    static rollUsure(faces: number, modificateur: ModificateurDeSauvegarde = 'aucun'): RollResult {
+        const premier = this.roll(faces), second = modificateur === 'aucun' ? null : this.roll(faces);
+        const valeur = second === null ? premier : modificateur === 'avantage' ? Math.max(premier, second) : Math.min(premier, second);
+        const ecarte = second === null ? null : valeur === premier ? second : premier;
         const descend = faitDescendre(valeur);
         const apres = descend ? deDUnCranPlusBas(faces) : faces;
         return {
             total: valeur,
-            rolls: [{ val: valeur, sides: faces, isCritMin: descend }],
+            rolls: [{ val: valeur, sides: faces, isCritMin: descend }, ...(ecarte === null ? [] : [{ val: ecarte, sides: faces, isDropped: true }])],
             modifier: 0,
             usure: { avant: faces, apres },
             totalDisplay: !descend ? `${valeur} — tient`

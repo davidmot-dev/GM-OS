@@ -28,7 +28,7 @@
             "max": 4,
             "title": "Inconscience",
             "description": "Il s'évanouit.",
-            "effect": "1d2 Moments ; un allié doit consacrer un Moment entier à le réveiller."
+            "effect": "1d2 Moments ; un autre personnage peut consacrer un Moment à le réveiller plus tôt."
         },
         {
             "min": 5,

@@ -10,6 +10,7 @@ import { resolveSheetTemplate } from '../session/logic/templateResolver';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 import { pontDesTables } from '../tables/pontDesTables';
 import type { GameDriver } from '../../types/drivers';
+import { ajouterEffetMentalCH, annulerUsureCH } from './systemes/cthulhuHack';
 
 /**
  * **Ce qui suit un jet de fiche, au pupitre** — Cthulhu Hack, 2026-10-16.
@@ -108,9 +109,13 @@ export function placerLaFortune(quoi: 'relance' | 'reussite'): string[] {
     const c = jet ? contexte(jet) : null;
     const regle = c?.pilote?.jet?.fortune;
     if (!jet || !c || !regle) return [];
-    const fiche = c.personnage.sheetData ?? {};
+    let fiche = c.personnage.sheetData ?? {};
     const possible = fortuneDuJet(jet, regle, fiche);
     if (!possible || !possible[quoi]) return [];
+    if (c.pilote?.jet?.cthulhuHack && jet.usure && jet.usure.avant !== jet.usure.apres) {
+        try { fiche = annulerUsureCH(fiche, c.f.champ, jet.usure.avant, jet.usure.apres); }
+        catch (e) { return [(e as Error).message]; }
+    }
 
     const cout = quoi === 'relance' ? regle.relance : regle.reussite;
     const jetons = possible.jetons + cout;
@@ -139,6 +144,9 @@ export function placerLaFortune(quoi: 'relance' | 'reussite'): string[] {
         { playerId: c.joueur.id, characterId: c.personnage.id, genre: c.f.genre, champ: c.f.champ, modificateur: c.f.modificateur },
         { ...c.personnage, sheetData: maj }, c.pilote, gabarit,
     );
+    // Le PA restauré doit précéder la nouvelle usure, même si le dé échoue à nouveau.
+    if (c.pilote?.jet?.cthulhuHack && Object.keys(restaure).length) c.store.updateCharacter(c.joueur.id, c.personnage.id, { sheetData: maj });
+    if (relance?.suiviCH) maj = { ...maj, ...relance.suiviCH };
     if (relance?.ecrire) maj = { ...maj, [relance.ecrire.champ]: relance.ecrire.valeur };
     c.store.updateCharacter(c.joueur.id, c.personnage.id, { sheetData: maj as never });
     if (relance) {
@@ -168,9 +176,16 @@ export async function tirerLaSuiteDuDeclin(index: number): Promise<string[]> {
     const table = await pont.loadTable(suite.table.univers, suite.table.table).catch(() => null);
     const faces = table ? facesDeLaTable(table.dice) : 0;
     if (!table || !faces) return [`${suite.label} : la table « ${suite.table.univers} / ${suite.table.table} » est introuvable.`];
+    if (useDiceStore.getState().history[0]?.id !== jet.id || useDiceStore.getState().history[0]?.suite) return [];
 
     const tire = DiceEngine.roll(faces);
     const entree = entreeDeLaTable(table.entries, tire);
+    if (c.pilote?.jet?.cthulhuHack && faces === 6) {
+        const courant = contexte(jet);
+        if (!courant) return [];
+        const genre = /choc/i.test(suite.label) ? 'choc' : 'folie';
+        courant.store.updateCharacter(courant.joueur.id, courant.personnage.id, { sheetData: ajouterEffetMentalCH(courant.personnage.sheetData ?? {}, genre, tire, f => DiceEngine.roll(f), `declin-${jet.id}`) });
+    }
     des.annoterLeJet(jet.id, { suite: 'declin' });
     des.setLastRoll({
         id: `${jet.id}-${suite.label}`, timestamp: new Date(), suite: 'declin',

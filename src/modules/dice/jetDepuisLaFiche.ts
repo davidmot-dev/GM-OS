@@ -1,6 +1,7 @@
 import { DiceEngine, type RollResult, type ModificateurDeSauvegarde } from './DiceEngine';
 import { estUneSauvegarde, decrireLeJetDuPilote } from './lectureDuPilote';
 import { deCourant, ecrireLeDe, ressourcesDUsure } from './ressourcesDUsure';
+import { CLE_CTHULHU_HACK, memoriserTestCH, modificateursCH, type RegleCthulhuHack } from './systemes/cthulhuHack';
 
 /**
  * **Un jet demandé depuis la fiche d'un joueur, résolu chez le meneur** —
@@ -31,6 +32,7 @@ export interface JetDeFicheResolu {
     titre: string;
     /** Ce que la fiche doit devenir — une ressource qui a descendu. */
     ecrire?: { champ: string; valeur: string };
+    suiviCH?: Record<string,unknown>;
 }
 
 interface PersonnageLu {
@@ -41,6 +43,7 @@ interface PersonnageLu {
 interface PiloteLu {
     dice?: { engine?: string; defaultDice?: string };
     jet?: {
+        cthulhuHack?: RegleCthulhuHack;
         sens?: string;
         reserve?: { max?: number; faces?: number };
         desEchelonnes?: unknown;
@@ -72,15 +75,19 @@ export function resoudreLeJetDeFiche(
     gabarit: GabaritLu | null | undefined,
 ): JetDeFicheResolu | null {
     const fiche = personnage.sheetData ?? {};
+    const ch = pilote?.jet?.cthulhuHack ? modificateursCH(pilote.jet.cthulhuHack, fiche, demande.genre === 'sauvegarde' ? demande.champ : undefined) : undefined;
+    if (ch?.indisponible) return null;
 
     if (demande.genre === 'sauvegarde') {
         const caracteristique = caracteristiquesDeSauvegarde(pilote, gabarit).find(c => c.fieldId === demande.champ);
         if (!caracteristique) return null;
-        const valeur = Number(fiche[demande.champ]);
+        const valeur = Number(fiche[demande.champ]) - (ch?.malus ?? 0);
         if (!Number.isFinite(valeur)) return null;
-        const modificateur = demande.modificateur ?? 'aucun';
+        const modificateur = ch?.desavantage ? (demande.modificateur === 'avantage' ? 'aucun' : 'desavantage') : demande.modificateur ?? 'aucun';
+        const resultat = DiceEngine.rollSauvegarde(valeur, modificateur);
         return {
-            resultat: DiceEngine.rollSauvegarde(valeur, modificateur),
+            resultat,
+            ...(pilote?.jet?.cthulhuHack ? {suiviCH:{[CLE_CTHULHU_HACK]:memoriserTestCH(fiche,{id:crypto.randomUUID(),champ:demande.champ,genre:'sauvegarde',seuil:valeur,modificateur,desavantagePresent:!!ch?.desavantage||demande.modificateur==='desavantage',reussi:resultat.tagSuccess===true})[CLE_CTHULHU_HACK]}}:{}),
             titre: `${personnage.name} — Sauvegarde de ${caracteristique.label}${DIT[modificateur]}`,
         };
     }
@@ -89,10 +96,12 @@ export function resoudreLeJetDeFiche(
     if (!ressource) return null;
     const de = deCourant(fiche[demande.champ]);
     if (typeof de !== 'number') return null;
-    const resultat = DiceEngine.rollUsure(de);
+    const modificateur = ch?.desavantage ? (demande.modificateur === 'avantage' ? 'aucun' : 'desavantage') : demande.modificateur ?? 'aucun';
+    const resultat = DiceEngine.rollUsure(de, modificateur);
     const apres = resultat.usure!.apres;
     return {
         resultat,
+        ...(pilote?.jet?.cthulhuHack ? {suiviCH:{[CLE_CTHULHU_HACK]:memoriserTestCH(fiche,{id:crypto.randomUUID(),champ:demande.champ,genre:'ressource',seuil:de,modificateur,desavantagePresent:!!ch?.desavantage||demande.modificateur==='desavantage',reussi:apres===de})[CLE_CTHULHU_HACK]}}:{}),
         titre: `${personnage.name} — ${ressource.label} d${de}`,
         ...(apres !== de ? { ecrire: { champ: demande.champ, valeur: ecrireLeDe(apres) } } : {}),
     };

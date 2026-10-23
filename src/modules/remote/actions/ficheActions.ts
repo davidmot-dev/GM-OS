@@ -44,9 +44,9 @@ const jetDeFiche = (payload: unknown) => {
       `updateCharacter` et non `remoteUpdateCharacterSheetData`, qui renverrait
       l'écriture à la tablette qui vient de la demander.
     */
-    if (jet.ecrire) {
+    if (jet.ecrire || jet.suiviCH) {
         store.updateCharacter(joueur.id, personnage.id, {
-            sheetData: { ...personnage.sheetData, [jet.ecrire.champ]: jet.ecrire.valeur },
+            sheetData: { ...personnage.sheetData, ...jet.suiviCH, ...(jet.ecrire ? {[jet.ecrire.champ]: jet.ecrire.valeur} : {}) },
         });
     }
 

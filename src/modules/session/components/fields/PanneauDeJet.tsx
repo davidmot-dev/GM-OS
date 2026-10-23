@@ -21,6 +21,8 @@ import {
 } from '../../../dice/systemes/yearZero';
 import { pontDesTables } from '../../../tables/pontDesTables';
 import StressSubi from './StressSubi';
+import SuiviCthulhuHack from './SuiviCthulhuHack';
+import { CLE_CTHULHU_HACK, memoriserTestCH, modificateursCH } from '../../../dice/systemes/cthulhuHack';
 import PaniqueAlien from './PaniqueAlien';
 import SanteAlien from './SanteAlien';
 import MunitionsAlien from './MunitionsAlien';
@@ -154,6 +156,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** L'Avantage tactique de Symbaroum (+2, +1D4 aux dégâts) — S3, 2026-10-22. */
     const [avantageTactique, setAvantageTactique] = useState(false);
     const [resultat, setResultat] = useState<RollResult | null>(null);
+    const [ecritsCH, setEcritsCH] = useState({base:valeurs, personnageId, maj:{} as Record<string,unknown>});
+    const refCH=useRef(ecritsCH);
+    const valeursCH=useMemo(()=>({...valeurs,...(ecritsCH.base===valeurs&&ecritsCH.personnageId===personnageId?ecritsCH.maj:{})}),[valeurs,ecritsCH,personnageId]);
+    const ecrireCH=(maj:Record<string,unknown>)=>{
+        const avant=refCH.current.base===valeurs&&refCH.current.personnageId===personnageId?refCH.current.maj:{};
+        refCH.current={base:valeurs,personnageId,maj:{...avant,...maj}};setEcritsCH(refCH.current);ecrireSurLaFiche?.(refCH.current.maj);
+    };
     const [avantPanique, setAvantPanique] = useState<RollResult | null>(null);
     const [folieMeurtriere, setFolieMeurtriere] = useState(false);
     const [ecritsAlien, setEcritsAlien] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
@@ -372,7 +381,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const jet = useMemo(
         () => {
             const prepare = preparerLeJet(
-            descripteur, suitesAlien ? valeursAlien : valeurs,
+            descripteur, descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : valeurs,
             {
                 champs: choix, desSupplementaires: desAchetes, difficulte,
                 ajustementDeDifficulte: ajustementDeDifficulte + degresPuises, specialisation,
@@ -416,7 +425,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
+        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
     );
 
     /*
@@ -853,7 +862,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           Potentiel, puis `resoudreLaGarde` garde les 1 et les meilleurs dés.
           Le joueur peut ensuite changer sa garde, au résultat.
         */
-        const brut = jet.garde
+        const effetCH = descripteur.cthulhuHack ? modificateursCH(descripteur.cthulhuHack, valeursCH, jet.composantes[0]?.champ) : undefined;
+        const modificateurCH = effetCH?.desavantage ? (modificateur === 'avantage' ? 'aucun' : 'desavantage') : modificateur;
+        const brut = descripteur.cthulhuHack
+            ? DiceEngine.rollSauvegarde(jet.seuil, modificateurCH)
+            : jet.garde
             ? resoudreLaGarde(Array.from({ length: jet.nombreDeDes }, () => DiceEngine.roll(10)), jet.garde.quota, jet.garde.seuil)
             : desTorg
             ? DiceEngine.resultatDeTorg(jet.seuil, difficulte, desTorg, optionsTorg)
@@ -905,6 +918,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setSeuilDuLancer(jet.seuil);
         setBonusDuLancer(bonusDuGroupe + bonusPerso);
         setResultat(res);
+        if (descripteur.cthulhuHack && !pourLesJoueurs && ecrireSurLaFiche && jet.composantes[0]) {
+            const suivi=memoriserTestCH(valeursCH,{id:crypto.randomUUID(),champ:jet.composantes[0].champ,genre:'sauvegarde',seuil:jet.seuil,modificateur:modificateurCH,desavantagePresent:!!effetCH?.desavantage||modificateur==='desavantage',reussi:res.tagSuccess===true});
+            ecrireCH({[CLE_CTHULHU_HACK]:suivi[CLE_CTHULHU_HACK]});
+        }
 
         /*
           **Le panneau de fiche ne traverse pas le registre des dés**, donc il
@@ -1423,7 +1440,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       `forcage`, qu'une relance remet à zéro.
     */
     const fortune = descripteur.fortune && ecrireSurLaFiche && !torg && !destin ? descripteur.fortune : undefined;
-    const jetonsDeFortune = fortune ? Math.max(0, jetonsPlaces ?? (Number(valeurs[fortune.champ]) || 0)) : 0;
+    const jetonsDeFortune = fortune ? Math.max(0, descripteur.cthulhuHack ? Number(valeursCH[fortune.champ])||0 : jetonsPlaces ?? (Number(valeurs[fortune.champ]) || 0)) : 0;
     const fortuneOfferte = !!fortune && !!resultat && !!dernierLancer && resultat.tagSuccess === false && !reussiParLaFortune;
     const placerLaFortune = (quoi: 'relance' | 'reussite') => {
         if (!fortune || !fortuneOfferte || !resultat || !dernierLancer) return;
@@ -1432,7 +1449,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         if (jetons > fortune.max) return;
         const nom = fortune.label ?? 'Fortune';
         setJetonsPlaces(jetons);
-        ecrireSurLaFiche?.({ [fortune.champ]: jetons });
+        if(descripteur.cthulhuHack)ecrireCH({[fortune.champ]:jetons});
+        else ecrireSurLaFiche?.({ [fortune.champ]: jetons });
         const note = `${nom} : ${cout} jeton${cout > 1 ? 's' : ''} placé${cout > 1 ? 's' : ''} → ${jetons} sur la fiche`;
         if (quoi === 'relance') {
             lancer();
@@ -1444,6 +1462,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             totalDisplay: `${resultat.totalDisplay} → réussi (${nom})`,
         };
         setReussiParLaFortune(true);
+        if(descripteur.cthulhuHack&&!pourLesJoueurs&&jet.composantes[0]){
+            const suivi=memoriserTestCH(valeursCH,{id:crypto.randomUUID(),champ:jet.composantes[0].champ,genre:'sauvegarde',seuil:jet.seuil,modificateur:'aucun',reussi:true});
+            ecrireCH({[CLE_CTHULHU_HACK]:suivi[CLE_CTHULHU_HACK]});
+        }
         setResultat(res);
         setMouvements(m => [...m, `${note}, jet réussi`]);
         redire(`${dernierLancer.titre} · ${nom}`, res);
@@ -2782,6 +2804,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         campaignId={campaignId} pourLesJoueurs={pourLesJoueurs} consigner={redire} />
                 </CarteDuJeu>
             )}
+            {descripteur.cthulhuHack && ecrireSurLaFiche && <SuiviCthulhuHack key={personnageId} regle={descripteur.cthulhuHack} valeurs={valeursCH} ecrire={ecrireCH}
+                maxPV={useSessionOSStore.getState().players.flatMap(p=>p.characters).find(c=>c.id===personnageId)?.maxHp
+                    ?? Number(template.sections.flatMap(s=>s.fields).find(f=>f.id===descripteur.cthulhuHack?.pv)?.defaultValue)}
+                joueur={pourLesJoueurs} libelle={id=>template.sections.flatMap(s=>s.fields).find(f=>f.id===id)?.label??id}
+                consigner={(titre,texte)=>redire(titre,{total:0,modifier:0,rolls:[],totalDisplay:texte})}/>}
             {/* **Le stress subi** (Blade Runner) : au meneur, sous le jet — un geste à part, sans lancer le test. */}
             {descripteur.stressSubi && ecrireSurLaFiche && !pourLesJoueurs && (
                 <StressSubi

@@ -12638,6 +12638,24 @@ efface tout sauf les préréglages ; l'exemple du relais à sept salles est livr
 - **Essai de David validé le 23/10** (« A10 testé, c'est bon. Commit et pousse »).
 - **Reste** : rien.
 
+### 164 · Cthulhu Hack — blessures, armure, Fortune, durées et Pulp — 23/10/2026
+
+David fournit le livre français et engage les améliorations ; GM-OS confirmé fermé.
+[Audit, décisions et recette](2026-10-23-cthulhu-hack-ameliorations.md),
+[synthèse commune](2026-10-20-ameliorations-tous-les-pilotes.md#cthulhu-hack).
+
+- **Livré et essayé par David le 23/10** : répartition et application unique des pertes permanentes,
+  armure avec PA et restitution par Fortune, défausse du MJ avec contexte, durées persistantes
+  de Choc/Folie, variante Pulp explicite avec aggravation des coups à zéro et récupération unique.
+- **Pilote** : `Export Dirvers/corriges/CH_driver_gmos_2026-10-23.gmos-driver`, version 1.1.0,
+  mêmes identifiants et quatre champs PA ajoutés ; original intact. Recette dans `outils/cthulhu-hack/`.
+- **Vérifications** : 943 tests ciblés, complément de 18 essais recouvrants, contrôle de Forge
+  sans constat ; types/construction/lint propres, recette Electron et vrai Hub à trois tailles
+  réussie, rechargement compris ; captures relues et reportées au manuel.
+- **Validation de David** : « ok c'est bon, c'est testé. Tu peux faire le commit et poussé ».
+- **Reste** : rien sur ces cinq lots. Soins spéciaux, séquelles/récupération mentale et
+  cartes Contrecoups restent des sujets d'audit séparés.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12742,6 +12760,7 @@ efface tout sauf les préréglages ; l'exemple du relais à sept salles est livr
 | 97 | **Crimes C0.1 à C8 — le pilote complet** | § 161 ; circonstances, hermétiques, opposition, pupitre, psychologie et seuils, affaire et hypothèses, manœuvres et munitions, contacts, fortune, création et progression — livré et essayé le 23/10 | Rien : seuil de fortune à 10 validé par David | Rien |
 | 98 | **Alien A9 — le combat spatial** | § 162 ; module, pupitre et tablette, pilote 1.9.0 — livré et essayé le 23/10 | Rien | Rien |
 | 99 | **Alien A10 — préréglages et remise à zéro** | § 163 ; MU/TH/UR, détecteur et combat spatial ; exemple du relais — livré et essayé le 23/10 | Rien | Rien |
+| 100 | **Cthulhu Hack — cinq améliorations** | § 164 ; blessures, armure, Fortune MJ, durées et Pulp — livré et essayé le 23/10 | Rien sur ces cinq lots | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

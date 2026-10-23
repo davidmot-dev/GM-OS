@@ -143,7 +143,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
     },
     {
         corpusId: 'cthulhu hack', slug: 'cthulhu-hack', personnage: 'Edith Marsh',
-        sheetData: { force: 13, sagesse: 15, hp: 9, torche: 'd8', bagou: 'd6', mentalHealth: 'd10', richesse: 'd4', fortune: 0, materiel_1_nom: 'Lampe-torche', materiel_1: 'd8' },
+        sheetData: { force: 13, dexterite:11, constitution:11, intelligence:11, charisme:11, sagesse: 15, hp: 9, torche: 'd8', bagou: 'd6', mentalHealth: 'd10', richesse: 'd4', fortune: 0, materiel_1_nom: 'Lampe-torche', materiel_1: 'd8' },
         composantes: ['sagesse'],
         scenes: c => scenesDeCthulhuHack(c),
     },
@@ -336,7 +336,7 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
-        if (mise.corpusId === 'alien' || mise.corpusId === 'crime') test.setTimeout(240_000);
+        if (['alien','crime','cthulhu hack'].includes(mise.corpusId)) test.setTimeout(240_000);
         const f = gmos.fenetre;
         const campagne = campagneDe(mise.slug);
 
@@ -870,7 +870,7 @@ async function scenesDeCrimes(c: ContexteDeScene): Promise<void> {
 }
 
 async function scenesDeCthulhuHack(c: ContexteDeScene): Promise<void> {
-    const pilote = c.pilote.gameDriver as { jet?: { fortune?: unknown }; combat?: { horsJeu?: unknown } };
+    const pilote = c.pilote.gameDriver as { jet?: { fortune?: unknown;cthulhuHack?:unknown }; combat?: { horsJeu?: unknown } };
     const f = gmos.fenetre;
     if (pilote.jet?.fortune) {
         // Une Sagesse de 1 : la Sauvegarde rate presque toujours, la Fortune paraît.
@@ -901,10 +901,63 @@ async function scenesDeCthulhuHack(c: ContexteDeScene): Promise<void> {
     }
     if (pilote.combat?.horsJeu) {
         const carte = await entrerEnCombat(c, 30);
-        await carte.getByRole('button', { name: 'Tirer les conséquences', exact: true }).click();
-        await expect(carte.getByRole('button', { name: /S'il survit/ })).toBeVisible({ timeout: 15_000 });
-        await photographier(carte, 'jeu-cthulhu-hack-hors-jeu');
+        if(pilote.jet?.cthulhuHack)await sceneDesAmeliorationsCthulhuHack(c,carte);
+        else{
+            await carte.getByRole('button', { name: 'Tirer les conséquences', exact: true }).click();
+            await expect(carte.getByRole('button', { name: /S'il survit/ })).toBeVisible({ timeout: 15_000 });
+            await photographier(carte, 'jeu-cthulhu-hack-hors-jeu');
+        }
     }
+}
+
+/** Livre relu le 23/10 : pertes permanentes, Fortune MJ, armure, reprise et Pulp. */
+async function sceneDesAmeliorationsCthulhuHack(c:ContexteDeScene,carte:Locator):Promise<void>{
+    const f=gmos.fenetre;
+    const lire=()=>f.evaluate(id=>(window as unknown as Fenetre).useSessionOSStore.getState().players.flatMap(p=>p.characters).find(c=>c.id===id)!.sheetData!,c.personnage);
+    let p=carte.locator('[data-suivi-cthulhu-hack]');
+    const tirer=p.getByRole('button',{name:'Tirer le D10 de Hors Jeu',exact:true});await expect(tirer).toBeDisabled();
+    await p.getByLabel('Le danger est écarté (confirmation du MJ)').check();
+    await f.evaluate(()=>{const w=window as unknown as {hasardCH?:()=>number};w.hasardCH=Math.random;Math.random=()=>0.15;});
+    try{await tirer.click();}finally{await f.evaluate(()=>{Math.random=(window as unknown as {hasardCH:()=>number}).hasardCH;});}
+    const avant=await lire();await p.getByLabel('Perte Force',{exact:true}).fill('5');await p.getByLabel('Perte Sagesse',{exact:true}).fill('1');
+    expect((await lire()).force).toBe(avant.force);await photographier(p,'jeu-cthulhu-hack-pertes-apercu');
+    await p.getByRole('button',{name:'Confirmer les pertes permanentes',exact:true}).click();
+    expect((await lire()).force).toBe(Number(avant.force)-5);
+    await photographier(p,'jeu-cthulhu-hack-hors-jeu');
+    await f.waitForTimeout(750);await f.reload();await attendreLHydratation(gmos);await ouvrirLeModule(gmos,'Combat-OS');
+    p=f.locator('[data-suivi-cthulhu-hack]').first();await expect(p.getByText('Confirmer les pertes permanentes',{exact:true})).toHaveCount(0);
+    await p.getByLabel('Le danger est écarté (confirmation du MJ)').check();await p.getByRole('button',{name:'Danger écarté : récupérer 1D4 PV',exact:true}).click();
+    await ecrireLaFiche(c,{materiel_1_nom:'Gilet renforcé',materiel_1:'d8',materiel_1_pa:3,fortune:2});await ecrireLaFiche(c,{materiel_1:'d6'});expect((await lire()).materiel_1_pa).toBe(2);
+    await ecrireLaFiche(c,{fortune:0});
+    await jetAuPupitre({id:'ch-armure-usee',title:'Gilet renforcé — usure',total:1,modifier:0,totalDisplay:'1 — d8 → d6',rolls:[{val:1,sides:8}],usure:{avant:8,apres:6},deFiche:{joueurId:JOUEUR,characterId:c.personnage,genre:'ressource',champ:'materiel_1'}});
+    await f.locator('[data-suites-du-jet]').getByRole('button',{name:'Réussir (+2)',exact:true}).click();
+    expect((await lire()).materiel_1_pa).toBe(3);expect((await lire()).materiel_1).toBe('d8');
+    await ecrireLaFiche(c,{materiel_1:'d6'});expect((await lire()).materiel_1_pa).toBe(2);
+    await vue(c.campagne,'players',{joueur:JOUEUR,personnage:c.personnage});p=f.locator('[data-suivi-cthulhu-hack]').first();
+    await p.getByText('Armures — protection déclarée',{exact:true}).click();await photographier(p,'jeu-cthulhu-hack-armure');
+    await p.getByText('Fortune — défausse du MJ',{exact:true}).click();await p.getByLabel('Effet de Fortune MJ').selectOption('innocent');await p.getByRole('button',{name:'Défausser et appliquer',exact:true}).click();expect((await lire()).fortune).toBe(1);
+    await p.getByLabel('Variante Pulp (livre p. 50)').check();
+    const pulp=await entrerEnCombat(c,30);await f.evaluate(id=>(window as unknown as Fenetre).useSessionOSStore.getState().handleApplyImpact(id,'pc',{value:1}),c.personnage);
+    const suivi=(await lire())._gmos_cthulhu_hack as {consequences:{cycle:number;malus:number}[];cycle:number};expect(suivi.consequences.filter(v=>v.cycle===suivi.cycle).map(v=>v.malus)).toEqual([0,1]);
+    expect((await lire()).hp).toBe(0);await photographier(pulp.locator('[data-suivi-cthulhu-hack]'),'jeu-cthulhu-hack-pulp');
+    const mentale=(await lire()).mentalHealth;await ecrireLaFiche(c,{fortune:2});await vue(c.campagne,'players',{joueur:JOUEUR,personnage:c.personnage});p=f.locator('[data-suivi-cthulhu-hack]').first();
+    await p.getByText('Fortune — défausse du MJ',{exact:true}).click();await p.getByLabel('Effet de Fortune MJ').selectOption('choc');
+    await f.evaluate(()=>{const w=window as unknown as {hasardCH?:()=>number};w.hasardCH=Math.random;Math.random=()=>0.2;});
+    try{await p.getByRole('button',{name:'Défausser et appliquer',exact:true}).click();}finally{await f.evaluate(()=>{Math.random=(window as unknown as {hasardCH:()=>number}).hasardCH;});}
+    expect((await lire()).mentalHealth).toBe(mentale);expect((await lire()).fortune).toBe(0);await expect(p.getByText('Confus',{exact:true})).toBeVisible();
+    await p.getByText('Temps de jeu et effets',{exact:true}).click();await p.getByRole('button',{name:'Avancer de 1 moment(s)',exact:true}).click();await expect(p.getByText('1 Moment(s) restant(s).',{exact:true})).toBeVisible();
+    await f.waitForTimeout(750);await f.reload();await attendreLHydratation(gmos);await vue(c.campagne,'players',{joueur:JOUEUR,personnage:c.personnage});p=f.locator('[data-suivi-cthulhu-hack]').first();await expect(p.getByText('1 Moment(s) restant(s).',{exact:true})).toBeVisible();await photographier(p,'jeu-cthulhu-hack-durees');
+    await f.evaluate(({campagne,personnage})=>{const s=(window as unknown as Fenetre).useSessionOSStore;s.setState(etat=>({sessions:[{...etat.sessions[0],id:'ch-seance',campaignId:campagne,status:'active',sessionEntityIds:[personnage],publicSummary:''}]}));},{campagne:c.campagne,personnage:c.personnage});
+    const nav=await chromium.launch({channel:'msedge',args:['--mute-audio']});
+    try{
+        const ctx=await nav.newContext({viewport:{width:360,height:1100},isMobile:true,hasTouch:true,serviceWorkers:'block',reducedMotion:'reduce'});
+        await ctx.addInitScript(()=>localStorage.setItem('gmos-tablet-uuid','cthulhu-hack-recette'));
+        await ctx.route('**/*',route=>{const u=new URL(route.request().url());return u.hostname==='127.0.0.1'||['data:','blob:'].includes(u.protocol)?route.continue():route.abort();});
+        const t=await ctx.newPage();await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);
+        await t.getByRole('button',{name:new RegExp(c.nom)}).click();await expect(t.getByText('Connecté',{exact:true})).toBeVisible();await t.getByTitle('Fiche Personnage',{exact:true}).click();await ongletDeLaFiche(t,'Lancer un test');
+        const lecture=t.locator('[data-suivi-cthulhu-hack]');await expect(lecture).toBeVisible();await expect(lecture.getByRole('button')).toHaveCount(0);
+        for(const largeur of [360,768,1180]){await t.setViewportSize({width:largeur,height:1100});expect(await t.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await photographier(lecture,`jeu-cthulhu-hack-tablette-${largeur}`);}
+    }finally{await nav.close();}
 }
 
 /**

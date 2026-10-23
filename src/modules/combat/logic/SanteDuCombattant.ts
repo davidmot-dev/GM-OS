@@ -420,6 +420,9 @@ export function fractionDeVie(c: PorteurDeSante): number | null {
  * déclare pas mort un combattant faute d'information.
  */
 export function estHorsDeCombat(c: PorteurDeSante): boolean {
+    const ch = c.healthSystem?.data?.cthulhuHack as {pulp?:boolean;mort?:boolean}|undefined;
+    if (ch?.mort) return true;
+    if (ch?.pulp) return false;
     const xeno=c.healthSystem?.data?.alienXenomorphe as {etat?:string}|undefined;
     if(xeno)return xeno.etat==='mort';
     const synthetique = c.healthSystem?.data?.alienSynthetique as { arret?: boolean } | undefined;
