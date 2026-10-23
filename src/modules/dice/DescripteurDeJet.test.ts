@@ -1175,6 +1175,17 @@ describe('Potentiel GARDE Compétence', () => {
         expect(jet.avertissements).toEqual(['Physique actuel à 0 : plus aucun dé à lancer.']);
     });
 
+    it('les circonstances déplacent le seuil : « seuil de 8 +1 −1 = 8 » ; imposé, il revient à 9 (C0.1, p. 390, 412)', () => {
+        const avec = { ...CRIMES, garde: { ...CRIMES.garde!, circonstances: { angoisse: 'angoisse' } } };
+        const jet = (choix: Record<string, unknown>, fiche2: Record<string, unknown> = {}) =>
+            preparerLeJet(avec, { ...fiche, angoisse: 4, ...fiche2 }, { champs: { potentiel: 'physique', competence: 'traque' }, ...choix }, SECTIONS).garde!;
+        expect(jet({ modificateurDeLaGarde: 0 })).toMatchObject({ seuil: 8, seuilDeLaCompetence: 8, modificateur: 0, angoisse: 4 });
+        expect(jet({ modificateurDeLaGarde: 1 })).toMatchObject({ seuil: 9, modificateur: 1 });
+        expect(jet({ modificateurDeLaGarde: 1, seuilDeBaseImpose: true }, )).toMatchObject({ seuil: 9, modificateur: 0, seuilImpose: true });
+        expect(jet({ modificateurDeLaGarde: 5 }).seuil, 'un d10 ne fait pas mieux que 10').toBe(10);
+        expect(jet({ modificateurDeLaGarde: -9 }).seuil).toBe(2);
+    });
+
     it('le dépassement se retient pour le jet ; déjà fait dans la scène, il ne l’est plus', () => {
         expect(atteint({}, { depassementAnnonce: true }).garde?.depassement).toMatchObject({ annonce: true, possible: true });
         expect(atteint({ depassement_de_la_scene: 1 }, { depassementAnnonce: true }).garde?.depassement)

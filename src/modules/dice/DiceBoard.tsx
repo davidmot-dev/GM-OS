@@ -14,6 +14,7 @@ import { STYLES_DE_DES } from './logic/stylesDeDes';
 import { DES_D_USURE } from './desDUsure';
 import { deCourant, ecrireLeDe, ressourcesDUsure } from './ressourcesDUsure';
 import { estUneSauvegarde, decrireLeJetDuPilote } from './lectureDuPilote';
+import { resoudreLaGarde } from './systemes/potentielGarde';
 import { Panneau, Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../../components/socle';
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 import { estUnJetYearZero, forcerLeDernierJet, pourquoiNePasForcerAuPupitre } from './forcerAuPupitre';
@@ -33,7 +34,9 @@ interface RollRecord extends RollResult {
 
 type DiceMode = 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze' | 'yze-echelonne'
     /** Cthulhu Hack, 2026-09-30 : la Sauvegarde (d20 sous la caractéristique) et le dé de ressource. */
-    | 'sauvegarde' | 'usure';
+    | 'sauvegarde' | 'usure'
+    /** Crimes, C1 (2026-10-23) : Potentiel GARDE Compétence, au pupitre comme au panneau. */
+    | 'garde';
 
 /**
  * Les niveaux que le pupitre propose, du meilleur au pire.
@@ -72,7 +75,7 @@ const MODES_SANS_CHOIX_DE_FACES: readonly DiceMode[] = [
  * de ressource n'est jamais le jet principal du jeu ; la Sauvegarde se lance
  * avec l'avantage que l'écran tient, et que `rollFromConfig` ne connaît pas.
  */
-const MODES_HORS_DU_PILOTE: readonly DiceMode[] = ['usure', 'sauvegarde'];
+const MODES_HORS_DU_PILOTE: readonly DiceMode[] = ['usure', 'sauvegarde', 'garde'];
 
 interface RemoteDiceOptions {
     sides?: number;
@@ -120,6 +123,8 @@ const DiceBoard: React.FC = () => {
     const [modifier, setModifier] = useState<number | string>(0);
     const [target, setTarget] = useState<number>(10);
     const [gearCount, setGearCount] = useState<number>(1); // For YZE secondary pool
+    /** Les dés gardés d'un jet gardé (Crimes) : le niveau de la compétence, un sans elle. */
+    const [desGardes, setDesGardes] = useState<number>(1);
     const [formulaInput, setFormulaInput] = useState<string>('2d6+5');
 
     // v3 Features State
@@ -237,7 +242,17 @@ const DiceBoard: React.FC = () => {
               champs B et E ignorés, et les lettres réellement lancées
               invisibles (Blade Runner, trouvé en réagençant, 2026-09-30).
             */
-            if (engine === 'yze-echelonne' || activeDriver.jet?.desEchelonnes) {
+            /*
+              **Un pilote qui garde des dés** (Crimes, C1) : sans ce mode, le pupitre
+              lançait une réserve qui comptait TOUTES les réussites — un résultat
+              plausible et faux. Seuil 8 (compétent) d'office ; le meneur l'ajuste.
+            */
+            if (activeDriver.jet?.garde) {
+                setMode('garde');
+                setDiceCount(3);
+                setDesGardes(1);
+                setTarget(Math.max(2, activeDriver.jet.garde.seuil - (activeDriver.jet.garde.competent ?? 1)));
+            } else if (engine === 'yze-echelonne' || activeDriver.jet?.desEchelonnes) {
                 /*
                   **La variante à dés échelonnés n'était reconnue nulle part
                   ici.** Elle tombait dans le `else`, n'y trouvait aucun nom
@@ -448,6 +463,17 @@ const DiceBoard: React.FC = () => {
                             : modificateurSauvegarde === 'desavantage' ? ` · ${t('dice.agencement.desavantage')}` : '');
                     if (useSystemDriver && activeDriver) title = `${activeDriver.name} — ${title}`;
                     break;
+                /*
+                  **Potentiel GARDE Compétence** (Crimes, C1) : autant de d10 que le
+                  Potentiel, les 1 gardés d'office puis les meilleurs, le bilan du livre.
+                */
+                case 'garde': {
+                    const des = Array.from({ length: Math.max(0, finalCount) }, () => DiceEngine.roll(10));
+                    result = resoudreLaGarde(des, Math.max(1, desGardes), finalTarget);
+                    title = `Potentiel ${finalCount} GARDE ${Math.max(1, desGardes)} (seuil ${finalTarget})`;
+                    if (useSystemDriver && activeDriver) title = `${activeDriver.name} — ${title}`;
+                    break;
+                }
                 case 'usure':
                     result = DiceEngine.rollUsure(sides);
                     title = t('dice.results.usure', { faces: sides }) + (libelleDeLaRessource ? ` — ${libelleDeLaRessource}` : '');
@@ -467,7 +493,7 @@ const DiceBoard: React.FC = () => {
     }, [useSystemDriver, activeDriver, modifier, diceCount, gearCount, target, formulaInput, mode, targetRule,
         // Sans elles, un changement de niveau ne serait pas relu : le pupitre
         // lancerait la poignée d'avant, et le résultat resterait plausible.
-        poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee, modificateurSauvegarde, libelleDeLaRessource, t]);
+        poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee, modificateurSauvegarde, libelleDeLaRessource, desGardes, t]);
 
     const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "", remoteOverrides?: RemoteDiceOptions): RollRecord | null => {
         try {
@@ -666,6 +692,7 @@ const DiceBoard: React.FC = () => {
                         <option value="rolemaster">{t('dice.modes.rolemaster')}</option>
                         <option value="sauvegarde">{t('dice.modes.sauvegarde')}</option>
                         <option value="usure">{t('dice.modes.usure')}</option>
+                        <option value="garde">Potentiel GARDE Compétence</option>
                     </select>
                 </div>
 
@@ -739,6 +766,26 @@ const DiceBoard: React.FC = () => {
                                 </button>
                             ))}
                         </div>
+                    </div>
+                ) : mode === 'garde' ? (
+                    /*
+                      **Potentiel GARDE Compétence** (Crimes, C1) : le Potentiel donne les d10,
+                      la compétence le nombre gardé (un sans elle), et le seuil de chaque dé —
+                      9 de base, 8 compétent, 7 spécialisé, déplacé par les circonstances.
+                    */
+                    <div className="grid grid-cols-3 gap-3" data-pupitre-garde>
+                        {([['Potentiel', diceCount, setDiceCount, 0], ['Gardés', desGardes, setDesGardes, 1], ['Seuil', target, setTarget, 2]] as const).map(([label, valeur, poser, min]) => (
+                            <div key={label} className="space-y-1.5">
+                                <label className={etiquetteDeChamp}>{label}</label>
+                                <div className={champ}>
+                                    <button onClick={() => poser(Math.max(min, valeur - 1))} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">-</button>
+                                    <input type="number" value={valeur} aria-label={label}
+                                        onChange={e => poser(Math.max(min, parseInt(e.target.value) || 0))}
+                                        className={`w-full min-w-0 bg-transparent text-center font-semibold text-app-text outline-none ${sansFleches}`} />
+                                    <button onClick={() => poser(Math.min(label === 'Seuil' ? 10 : 20, valeur + 1))} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">+</button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 ) : mode === 'usure' ? (
                     <div className="space-y-3">

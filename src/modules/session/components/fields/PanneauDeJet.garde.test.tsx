@@ -268,3 +268,122 @@ describe('l’attaque de Crimes', () => {
         expect(within(prep).getByText('au-delà de 40 m : tir impossible')).toBeTruthy();
     });
 });
+
+/** **Les circonstances du seuil** — C0.1 (2026-10-23), p. 389-390 et 412. */
+describe('les circonstances qui déplacent le seuil', () => {
+    const JET_C01: DescripteurDeJet = { ...JET, garde: { ...JET.garde!, armes: 'crimes', circonstances: { angoisse: 'angoisse' } } };
+    const monterC01 = (valeurs: Record<string, unknown>) => {
+        render(<PanneauDeJet descripteur={JET_C01} dice={DICE} template={FICHE} valeurs={valeurs} />);
+        const [potentiel, competence] = screen.getAllByRole('combobox');
+        fireEvent.change(potentiel, { target: { value: 'physique' } });
+        fireEvent.change(competence, { target: { value: 'sport' } });
+    };
+    const garde = () => (document.querySelector('[data-garde]') as HTMLElement).textContent;
+
+    it('sans arme à feu, un seul réglage libre ; avec une arme à feu, distance, cible et taille', () => {
+        monterC01({ physique: 4, sport: 1 });
+        expect(document.querySelector('[data-distance-du-tir]')).toBeNull();
+        fireEvent.change(document.querySelector('[data-autre-circonstance]') as HTMLElement, { target: { value: '1' } });
+        expect(garde()).toMatch(/Seuil par dé9.*= 8 \+ 1 \(circonstances\)/);
+        const prep = document.querySelector('[data-attaque-de-crimes]') as HTMLElement;
+        fireEvent.change(within(prep).getAllByRole('combobox')[0], { target: { value: 'galand' } });
+        fireEvent.change(document.querySelector('[data-autre-circonstance]') as HTMLElement, { target: { value: '0' } });
+        // L'exemple du livre : une crapule lointaine (+1) mais immobile (−1) — seuil 8.
+        fireEvent.change(document.querySelector('[data-distance-du-tir]') as HTMLElement, { target: { value: '1' } });
+        fireEvent.change(document.querySelector('[data-mobilite]') as HTMLElement, { target: { value: '-1' } });
+        expect(garde()).toMatch(/Seuil par dé8compétent$/);
+    });
+
+    it('un tireur angoissé : +1 d’office au-dessus de 3 ; à 3 et plus, le seuil de 9 peut être imposé', () => {
+        monterC01({ physique: 4, sport: 1, angoisse: 4 });
+        const prep = document.querySelector('[data-attaque-de-crimes]') as HTMLElement;
+        fireEvent.change(within(prep).getAllByRole('combobox')[0], { target: { value: 'galand' } });
+        expect(garde()).toMatch(/Seuil par dé9.*= 8 \+ 1 \(circonstances\)/);
+        fireEvent.click(document.querySelector('[data-seuil-impose]') as HTMLElement);
+        expect(garde()).toMatch(/Seuil par dé9imposé \(angoisse\)$/);
+        expect(document.querySelector('[data-distance-du-tir]')).toBeNull();
+    });
+});
+
+/** **Les compétences hermétiques** — C0.3 (2026-10-23), p. 323-325. */
+describe('une action hermétique', () => {
+    const JET_C03: DescripteurDeJet = { ...JET, garde: { ...JET.garde!, hermetiques: ['specialties_sport_climbing'] } };
+    it('sans la spécialisation, le jet est refusé et le panneau dit pourquoi ; avec, il part', () => {
+        render(<PanneauDeJet descripteur={JET_C03} dice={DICE} template={FICHE} valeurs={{ physique: 4, sport: 2 }} />);
+        const [potentiel, competence] = screen.getAllByRole('combobox');
+        fireEvent.change(potentiel, { target: { value: 'physique' } });
+        fireEvent.change(competence, { target: { value: 'sport' } });
+        const menu = document.querySelector('[data-action-hermetique]') as HTMLSelectElement;
+        expect(Array.from(menu.options).map(o => o.textContent)).toEqual(['— non —', 'Escalade (non possédée)']);
+        fireEvent.change(menu, { target: { value: 'specialties_sport_climbing' } });
+        expect(screen.getByText(/Escalade est hermétique : sans cette spécialisation/)).toBeTruthy();
+        expect((screen.getByText('Lancer', { exact: true }) as HTMLButtonElement).disabled).toBe(true);
+        cleanup();
+        render(<PanneauDeJet descripteur={JET_C03} dice={DICE} template={FICHE} valeurs={{ physique: 4, sport: 2, specialties_sport_climbing: true }} />);
+        const [p2, c2] = screen.getAllByRole('combobox');
+        fireEvent.change(p2, { target: { value: 'physique' } });
+        fireEvent.change(c2, { target: { value: 'sport' } });
+        fireEvent.change(document.querySelector('[data-action-hermetique]') as HTMLElement, { target: { value: 'specialties_sport_climbing' } });
+        expect((screen.getByText('Lancer', { exact: true }) as HTMLButtonElement).disabled).toBe(false);
+    });
+});
+
+/** **La psychologie** — C4 (2026-10-23), livre p. 409-418. */
+describe('la psychologie de Crimes au panneau', () => {
+    const JET_C4: DescripteurDeJet = {
+        ...JET_C2,
+        garde: { ...JET_C2.garde!, psychologie: { angoisse: 'angoisse', nevrose: 'nevrose', seuilNevrose: 'seuil_nevrose', psychose: 'psychose', mental: 'mental', inclinaison: 'inclinaison' } },
+    };
+    const ecritsC4 = vi.fn();
+    function HoteC4({ depart }: { depart: Record<string, unknown> }) {
+        const [valeurs, setValeurs] = useState(depart);
+        return <PanneauDeJet descripteur={JET_C4} dice={DICE} template={FICHE} valeurs={valeurs}
+            ecrireSurLaFiche={maj => { ecritsC4(maj); setValeurs(v => ({ ...v, ...maj })); }} />;
+    }
+    const carte = () => document.querySelector('[data-psychologie]') as HTMLElement;
+    beforeEach(() => ecritsC4.mockClear());
+
+    it('l’angoisse monte, la névrose suit (p. 411) ; à 3, le panneau rappelle ce que le meneur peut exiger', () => {
+        render(<HoteC4 depart={{ physique: 4, mental: 3, sport: 1, angoisse: 2, nevrose: 4, seuil_nevrose: 7, psychose: 2 }} />);
+        fireEvent.click(within(carte().querySelector('[data-jauge="angoisse"]') as HTMLElement).getByText('+1'));
+        expect(ecritsC4).toHaveBeenLastCalledWith({ angoisse: 3, nevrose: 5 });
+        expect(within(carte()).getByText(/Le meneur peut exiger des jets même faciles/)).toBeTruthy();
+    });
+
+    it('le test psychotique : Mental 3 GARDE 2 contre psychose + angoisse ; raté, la folie et « Noter +1 Psychose »', () => {
+        render(<HoteC4 depart={{ physique: 4, mental: 3, sport: 1, angoisse: 2, nevrose: 4, seuil_nevrose: 7, psychose: 3, inclinaison: 'paranoïaque' }} />);
+        expect(within(carte()).getByText('Mental 3 contre 5')).toBeTruthy();
+        faces(2, 3, 4);
+        fireEvent.click(within(carte().querySelector('[data-test-psychotique]') as HTMLElement).getByText('Lancer le test psychotique'));
+        expect(within(carte()).getByText(/État de folie selon l'inclinaison « paranoïaque »/)).toBeTruthy();
+        fireEvent.click(within(carte()).getByText('Noter +1 Psychose'));
+        expect(ecritsC4).toHaveBeenLastCalledWith({ psychose: 4 });
+        expect(consigne).toHaveBeenCalledWith(expect.objectContaining({ titre: 'Test psychotique' }));
+    });
+
+    it('après un échec, « Noter : Névrose +1 » écrit la névrose du jet, une fois', () => {
+        render(<HoteC4 depart={{ physique: 4, mental: 3, sport: 1, angoisse: 0, nevrose: 4, seuil_nevrose: 7, psychose: 2 }} />);
+        const [potentiel, competence] = screen.getAllByRole('combobox');
+        fireEvent.change(potentiel, { target: { value: 'physique' } });
+        fireEvent.change(competence, { target: { value: 'sport' } });
+        faces(2, 3, 4, 5);
+        lancer();
+        fireEvent.click(screen.getByText('Noter : Névrose +1'));
+        expect(ecritsC4).toHaveBeenLastCalledWith({ nevrose: 5 });
+        expect(screen.getByText('Névrose 4 → 5 (+1, jet)')).toBeTruthy();
+    });
+});
+
+/** **Le test en opposition** — C1, reste (2026-10-23), livre p. 385. */
+describe('le test en opposition', () => {
+    it('sous le résultat : les réussites adverses disent qui l’emporte ; l’échec critique compte ses 1 à l’autre', () => {
+        monter({ physique: 4, sport: 2 });
+        faces(9, 8, 3, 2);
+        lancer();
+        fireEvent.change(document.querySelector('[data-reussites-adverses]') as HTMLElement, { target: { value: '1' } });
+        expect(screen.getByText(/Opposition remportée : 2 contre 1, marge 1/)).toBeTruthy();
+        fireEvent.change(document.querySelector('[data-reussites-adverses]') as HTMLElement, { target: { value: '0' } });
+        fireEvent.change(document.querySelector('[data-uns-adverses]') as HTMLElement, { target: { value: '2' } });
+        expect(screen.getByText(/4 contre 0 \(les 1 de l’échec critique comptés à l’adversaire\), marge 4/)).toBeTruthy();
+    });
+});

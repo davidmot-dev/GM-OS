@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
     bilanDeLaGarde, effetsSurLaNevrose, etatDuPhysique, garderLesDes, poserUneAtteinte, potentielActuel,
-    quotaDeLaGarde, resoudreLaGarde, seuilDeLaGarde,
+    quotaDeLaGarde, resoudreLaGarde, resoudreLOpposition, seuilDeLaGarde,
 } from './potentielGarde';
 
 /**
@@ -109,6 +109,8 @@ describe('les atteintes des Potentiels', () => {
         expect(potentielActuel(3, m)).toBe(-1);
         expect(etatDuPhysique(-1)).toMatch(/^Hors de combat/);
         expect(etatDuPhysique(-2)).toMatch(/^Blessure grave/);
+        // C0.2 : la consigne de mort de la p. 393 se dit, elle ne s'applique pas.
+        expect(etatDuPhysique(-2)).toMatch(/À −2, la mort est au meneur : implacable .* évitée .*\(p\. 393\)/);
         expect(etatDuPhysique(1)).toBeNull();
     });
 });
@@ -132,5 +134,17 @@ describe('se dépasser', () => {
 
     it('on ne garde en plus que des réussites qui existent', () => {
         expect(resoudreLaGarde([9, 3, 2], 1, 8, undefined, 3).garde.depassement).toBe(0);
+    });
+});
+
+describe('le test en opposition (p. 385)', () => {
+    it('le plus de réussites l’emporte ; à égalité, neutralisés', () => {
+        expect(resoudreLOpposition({ reussites: 2, uns: 0 }, { reussites: 1, uns: 0 })).toMatchObject({ issue: 'gagne', marge: 1 });
+        expect(resoudreLOpposition({ reussites: 1, uns: 1 }, { reussites: 1, uns: 0 }).issue).toBe('neutralises');
+    });
+    it('un échec critique : ses 1 s’ajoutent aux succès de l’adversaire, si le meneur le veut', () => {
+        expect(resoudreLOpposition({ reussites: 0, uns: 2 }, { reussites: 1, uns: 0 })).toMatchObject({ issue: 'perd', marge: 3 });
+        expect(resoudreLOpposition({ reussites: 0, uns: 2 }, { reussites: 1, uns: 0 }, false)).toMatchObject({ issue: 'perd', marge: 1 });
+        expect(resoudreLOpposition({ reussites: 0, uns: 1 }, { reussites: 0, uns: 2 }).issue).toBe('neutralises');
     });
 });

@@ -12560,6 +12560,48 @@ David, le 23/10 : *« on va commencer par C0 »* (Claude Code). Trace complète 
 - **Vérifié** : essais de la Forge et d'Electron ; suite complète **8 781 essais verts**.
 - **Reste** : la relecture de David, s'il le souhaite ; les suites de code ci-dessus.
 
+### 161 · Crimes C0.1 à C8 — le pilote complet — 23/10/2026
+
+David, le 23/10 : *« Je voudrais finir complètement Crime aujourd'hui »* ; périmètre choisi :
+C0.2 à C0.4, C4, les restes de C1, C5 et C6, C7 et C8 ; Névrose au seuil *« au choix du meneur »*
+(Claude Code). Pilote : `Export Dirvers/corriges/Crime_driver_gmos_complet.gmos-driver`
+(`outils/crime/completer_le_pilote.py`, à partir du c5-c6 lu dans git — le dossier `corriges/`
+avait été vidé et l'export frais du 22/10 précédait la réimportation).
+
+- **C0.1** : circonstances du seuil (`circonstancesDuSeuil.ts`, carte à Préparer) — distance,
+  mobilité, taille au tir, angoisse du tireur au-delà de 3, réglage libre ; seuil de 9 imposé à 3
+  d'angoisse (p. 389-390, 412). **C0.2** : la consigne de mort à −2 dite par la carte des atteintes
+  (p. 393). **C0.3** : quinze spécialisations hermétiques ; sans elle, le jet ne part pas
+  (p. 324-325). **C0.4** : commentaires p. 395 → p. 393.
+- **C1, reste** : mode « Potentiel GARDE » au pupitre de Dice-OS ; test en **opposition** sous le
+  résultat (p. 385), les 1 d'un échec critique comptés à l'autre au choix.
+- **C4** : carte « Psychologie » (angoisse que la névrose suit, névrose, psychose, test
+  psychotique Mental GARDE 1 à 3 contre psychose + angoisse, Innocence) ; « Noter : Névrose ±N »
+  sous le jet ; seuils sous le bandeau : Névrose au seuil avec **deux variantes** (moitié p. 409,
+  zéro p. 418 — nouveau `Franchissement.variantes`, nouveau delta `'moitie'`), psychose 6 et 10,
+  angoisse 3 et au-delà.
+- **C5, reste** : l'affaire rangée par lieu et par témoin ; hypothèses notées, écartées, rouvertes
+  (`Campaign.hypothesesDEnquete`).
+- **C6, reste** : Physique actuel sur la carte de combat et la fiche ; manœuvres (viser, assommer,
+  déséquilibrer, immobiliser, feinter) et localisation du coup (p. 391-394) ; munitions, d'un clic
+  (p. 390) ; initiative narrative rappelée (p. 388).
+- **C7** : carte « Contacts et fortune » — loyauté de base et appels du scénario séparés, influence,
+  test Social GARDE X, contact fidèle perdu +1 Psychose, appels effacés à « Nouveau scénario »
+  (p. 428-430) ; fortune niveau et jauge, achat, rétribution, dépassement (p. 431).
+- **C8** : carte « Création et progression » — tempérament des trois choix de Jung et ses totaux
+  (p. 328, 334), règles de création vérifiées (45/35/24 points, 3/9/18, potentiels, spécialisations,
+  p. 323-324), points de développement dépensés (potentiel = nouveau niveau, compétence = 3 par
+  degré, p. 405).
+- **Interprétations à confirmer par David** : le seuil de la jauge de fortune, que le livre ne
+  chiffre pas (10, la piste imprimée) et la jauge qui repart à la moitié du seuil quand le niveau
+  change ; « 3 points par degré » lu comme 3 × degré visé (retrouve 3/9/18) ; l'angoisse du tireur
+  lue comme une pénalité (seuil +1 ou +2).
+- **Forge** : les champs de ces réglages vérifiés sur la fiche (avertissement si absent).
+- **Vérifié** : `npx tsc -b` ; suite complète **8 822 essais verts** ; captures de Crimes
+  refaites (quatre nouvelles : psychologie, seuil de névrose, contacts et fortune, création).
+- **Essai de David validé le 23/10** (*« ok tout est testé, c'est bon »*), pilote réimporté.
+- **Reste** : confirmer le seuil de la jauge de fortune (10 retenu).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12661,6 +12703,7 @@ David, le 23/10 : *« on va commencer par C0 »* (Claude Code). Trace complète 
 | 94 | **Crimes C2 et C3 — atteintes, dépassement** | § 158 ; Potentiel actuel au jet, carte des atteintes, « Bonne nuit », dépassement annoncé une fois par scène ; fiche HTML (version 15), pilote `…_c2-c3`, manuel — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
 | 95 | **Crimes C5 et C6 — dossier d'enquête, armes** | § 159 ; points d'enquête par style, indices à seuils révélés à un seul enquêteur (sa seule tablette) puis partagés ; armes du livre, dégâts, portée, « Infliger » — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
 | 96 | **Crimes C0 — relecture du corpus** | § 160 ; 19 fiches relues contre le livre, corrigées, `relu: true` ; contradictions du livre exposées ; mort à −2 rendue à sa consigne (p. 393) — fait le 23/10 | Rien : rapport validé par David le 23/10 ; suites de code C0.1 à C0.4 dans la synthèse | Rien |
+| 97 | **Crimes C0.1 à C8 — le pilote complet** | § 161 ; circonstances, hermétiques, opposition, pupitre, psychologie et seuils, affaire et hypothèses, manœuvres et munitions, contacts, fortune, création et progression — livré et essayé le 23/10 | Confirmer le seuil de la jauge de fortune (10 retenu) | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

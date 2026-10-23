@@ -1968,6 +1968,21 @@ describe('le jet gardé', () => {
         expect(constats({ ...crimes, garde: { ...crimes.garde, armes: 'belle-epoque' } })).toEqual([['jet.garde.armes', 'erreur']]);
     });
 
+    it('les champs de la psychologie, des contacts, de la fortune et de la création se vérifient (C0.1 à C8)', () => {
+        expect(constats({ ...crimes, garde: { ...crimes.garde,
+            circonstances: { angoisse: 'combat' }, hermetiques: ['combat'], munitions: 'combat',
+            psychologie: { angoisse: 'combat', nevrose: 'combat', psychose: 'combat', mental: 'combat', innocence: { score: 'combat', seuil: 'combat' } },
+            contacts: [{ nom: 'combat', loyaute: 'combat' }], fortune: { niveau: 'combat', jauge: 'combat' },
+            creation: { potentiels: ['combat'], developpement: 'combat' } } })).toEqual([]);
+        expect(constats({ ...crimes, garde: { ...crimes.garde,
+            psychologie: { angoisse: 'angoisse', nevrose: 'combat', psychose: 'combat', mental: 'combat', innocence: { score: 'innocence', seuil: 'combat' } },
+            contacts: [{ nom: 'combat', loyaute: 'combat', appels: 'appels' }], fortune: { niveau: 'combat', jauge: 'piste' } } }))
+            .toEqual([
+                ['jet.garde.psychologie.angoisse', 'avertissement'], ['jet.garde.psychologie.innocence', 'avertissement'],
+                ['jet.garde.contacts', 'avertissement'], ['jet.garde.fortune', 'avertissement'],
+            ]);
+    });
+
     it('la compétence vise une section de la fiche', () => {
         expect(constats({ ...crimes, garde: { ...crimes.garde, competence: { id: 'competence', label: 'Compétence', sectionId: 'aptitudes' } } }))
             .toEqual([['jet.garde.competence[0].sectionId', 'erreur']]);

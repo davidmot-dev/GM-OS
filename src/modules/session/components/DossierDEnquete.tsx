@@ -29,7 +29,13 @@ const DossierDEnquete: React.FC<{ styles: StyleDEnquete[] }> = ({ styles }) => {
     const activeCampaignId = useSessionOSStore(s => s.activeCampaignId);
     const updateClue = useSessionOSStore(s => s.updateClue);
     const updateCharacterSheetData = useSessionOSStore(s => s.updateCharacterSheetData);
+    const atlasMaps = useSessionOSStore(s => s.atlasMaps);
+    const entities = useSessionOSStore(s => s.entities);
+    const campaigns = useSessionOSStore(s => s.campaigns);
+    const updateCampaign = useSessionOSStore(s => s.updateCampaign);
     const [affaireAConfirmer, setAffaireAConfirmer] = useState(false);
+    const [hypothese, setHypothese] = useState('');
+    const [styleDeLHypothese, setStyleDeLHypothese] = useState('');
 
     const heros = herosDeLaCampagne(players, activeCampaignId);
     const enqueteurs: Enqueteur[] = heros.map(h => ({ id: h.id, nom: h.nom, fiche: h.valeurs }));
@@ -73,6 +79,33 @@ const DossierDEnquete: React.FC<{ styles: StyleDEnquete[] }> = ({ styles }) => {
         noter(`Indice partagé à la table — ${indice.title}`,
             indice.trouvePar ? `Trouvé par ${indice.trouvePar.nom}${indice.trouvePar.style ? ` (${styles.find(s => s.id === indice.trouvePar!.style)?.label ?? indice.trouvePar.style})` : ''}.` : '');
         gmToast(`« ${indice.title} » partagé à la table.`, 'success');
+    };
+
+    /*
+      **L'affaire, par lieu et par témoin** (C5, p. 438-440) : chaque indice est
+      relié à un lieu, à un PNJ — le témoin — ou aux deux ; le dossier les range
+      ainsi, avec leur état : caché, à portée, connu d'un seul, partagé.
+    */
+    const campagne = campaigns.find(c => c.id === activeCampaignId);
+    const hypotheses = campagne?.hypothesesDEnquete ?? [];
+    const etatDe = (c: (typeof indices)[number]) => c.isRevealed ? 'partagé'
+        : (c.connuDe?.length ?? 0) > 0 ? `connu de ${(c.connuDe ?? []).map(id => enqueteurs.find(e => e.id === id)?.nom ?? id).join(', ')}`
+            : aPortee.some(p => p.indice.id === c.id) ? 'à portée' : 'caché';
+    const groupes: { titre: string; indices: typeof indices }[] = [
+        ...[...new Set(indices.map(c => c.locationId).filter((x): x is string => !!x))].map(id => ({
+            titre: `Lieu — ${atlasMaps.find(m => m.id === id)?.name ?? id}`, indices: indices.filter(c => c.locationId === id),
+        })),
+        ...[...new Set(indices.map(c => c.ownerId).filter((x): x is string => !!x))].map(id => ({
+            titre: `Témoin — ${entities.find(e => e.id === id)?.name ?? id}`, indices: indices.filter(c => c.ownerId === id),
+        })),
+    ];
+    const noterLesHypotheses = (liste: typeof hypotheses) => { if (campagne) updateCampaign(campagne.id, { hypothesesDEnquete: liste }); };
+    const ajouterUneHypothese = () => {
+        const texte = hypothese.trim();
+        if (!texte) return;
+        noterLesHypotheses([...hypotheses, { id: `h-${maintenant()}`, texte, quand: maintenant(), ...(styleDeLHypothese ? { style: styleDeLHypothese } : {}) }]);
+        noter('Hypothèse de l’affaire', `${texte}${styleDeLHypothese ? ` (${styleDeLHypothese})` : ''}`);
+        setHypothese('');
     };
 
     const ouvrirUneAffaire = () => {
@@ -159,6 +192,54 @@ const DossierDEnquete: React.FC<{ styles: StyleDEnquete[] }> = ({ styles }) => {
                         </button>
                     </div>
                 ))}
+            </div>
+
+            {groupes.length > 0 && (
+                <div className="space-y-2" data-affaire-par-lieu-et-temoin>
+                    <p className="text-ui-9 font-black uppercase tracking-widest text-app-text/30">L’affaire, par lieu et par témoin</p>
+                    {groupes.map(g => (
+                        <div key={g.titre} className="rounded-xl border border-app-text/10 px-3 py-2 text-xs">
+                            <p className="font-bold text-app-text">{g.titre}</p>
+                            <ul className="mt-1 space-y-0.5">
+                                {g.indices.map(c => (
+                                    <li key={c.id} className="flex gap-2">
+                                        <span className="text-app-text/80">{c.title}</span>
+                                        <span className="text-app-text/40">— {etatDe(c)}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            <div className="space-y-2" data-hypotheses>
+                <p className="text-ui-9 font-black uppercase tracking-widest text-app-text/30"
+                    title="Les théories de la table : l’outil ne les valide jamais (p. 437-438)">Hypothèses</p>
+                {hypotheses.map(h => (
+                    <div key={h.id} className="flex flex-wrap items-center gap-2 text-xs">
+                        <span className={h.ecartee ? 'line-through text-app-text/30' : 'text-app-text/80'}>{h.texte}</span>
+                        {h.style && <span className="text-app-text/40">({h.style})</span>}
+                        <button type="button" className="ml-auto text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-app-text"
+                            onClick={() => noterLesHypotheses(hypotheses.map(x => (x.id === h.id ? { ...x, ecartee: !x.ecartee } : x)))}>
+                            {h.ecartee ? 'Rouvrir' : 'Écarter'}
+                        </button>
+                    </div>
+                ))}
+                <div className="flex flex-wrap items-center gap-2">
+                    <input value={hypothese} onChange={e => setHypothese(e.target.value)} placeholder="Une théorie de la table…" data-nouvelle-hypothese
+                        onKeyDown={e => { if (e.key === 'Enter') ajouterUneHypothese(); }}
+                        className="flex-1 min-w-48 bg-app-bg/40 border border-app-text/10 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-gm-gold/40" />
+                    <select value={styleDeLHypothese} onChange={e => setStyleDeLHypothese(e.target.value)} aria-label="Style de l’hypothèse"
+                        className="bg-app-bg/40 border border-app-text/10 rounded-lg px-2 py-1.5 text-xs">
+                        <option value="">— style —</option>
+                        {styles.map(s => <option key={s.id} value={s.label}>{s.label}</option>)}
+                    </select>
+                    <button type="button" onClick={ajouterUneHypothese} disabled={!hypothese.trim()}
+                        className="px-3 py-1 rounded-lg border border-app-text/10 text-ui-9 font-black uppercase tracking-widest text-app-text/60 disabled:opacity-30">
+                        Noter
+                    </button>
+                </div>
             </div>
 
             {prives.length > 0 && (

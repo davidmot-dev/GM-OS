@@ -344,6 +344,55 @@ export interface DescripteurDeJet {
          * portée, l'opposition et la cible, et calcule les dégâts du livre.
          */
         armes?: 'crimes';
+        /** Les munitions de l'arme à feu, tenues sur la fiche (règle optionnelle, p. 390) : le champ. */
+        munitions?: string;
+        /**
+         * **Les circonstances qui déplacent le seuil** (C0.1, p. 389-390, 412) :
+         * le meneur ajoute au seuil de chaque dé — au tir, distance, mobilité et
+         * taille de la cible (−1 à +1 chacune), angoisse du tireur au-dessus de 3.
+         * `angoisse` : le champ d'angoisse ; à 3 et plus, le meneur peut imposer
+         * le seuil de base, non modifiable (« pour viser »).
+         */
+        circonstances?: { angoisse?: string };
+        /**
+         * **Les compétences hermétiques** (C0.3, p. 323-325) : les cases de
+         * spécialisation qui ne se tentent pas sans les posséder (en italique sur
+         * la fiche de Crimes). Le jet « sans compétence » ne s'y applique pas.
+         */
+        hermetiques?: string[];
+        /**
+         * **La psychologie** (C4, p. 409-418) : les champs de la fiche que la carte
+         * « Psychologie » lit et écrit — angoisse, névrose et son seuil, psychose,
+         * le Potentiel du test psychotique (Mental), l'inclinaison, l'Innocence.
+         */
+        psychologie?: {
+            angoisse: string;
+            nevrose: string;
+            seuilNevrose?: string;
+            psychose: string;
+            mental: string;
+            inclinaison?: string;
+            innocence?: { score: string; seuil: string };
+        };
+        /**
+         * Les contacts — C7 (p. 428-430) : le nom, la loyauté de base (la fiche),
+         * les appels du scénario (la loyauté actuelle = base − appels) et
+         * l'influence du PNJ. Au meneur seul : les PJ n'en sont pas conscients.
+         */
+        contacts?: { nom: string; loyaute: string; appels?: string; influence?: string }[];
+        /** La fortune — C7 (p. 431) : niveau 1 à 4, jauge, et son seuil, que le livre ne chiffre pas (10 par défaut). */
+        fortune?: { niveau: string; jauge: string; seuil?: number };
+        /**
+         * La création et la progression — C8 (p. 324-334, 404-405) : les trois
+         * choix de Jung (le tempérament s'écrit dans `temperament.nom`, ses totaux
+         * dans `psychologie`), l'âge, et les points de développement.
+         */
+        creation?: {
+            potentiels: string[];
+            temperament?: { emotivite: string; activite: string; reactivite: string; nom: string; basePsychose?: string };
+            age?: string;
+            developpement?: string;
+        };
     };
     /**
      * Ce que le jet de Torg lit sur la fiche (2026-10-13) : le champ des
@@ -494,6 +543,12 @@ export interface ChoixDuJoueur {
     specialisationDeLaGarde?: string;
     /** Le joueur annonce qu'il se dépasse, avant de jeter les dés (`garde.depassement`, p. 385). */
     depassementAnnonce?: boolean;
+    /** Ce que les circonstances ajoutent au seuil de chaque dé (`garde.circonstances`). */
+    modificateurDeLaGarde?: number;
+    /** Le seuil de base imposé, non modifiable : un tireur angoissé (`garde.circonstances.angoisse`). */
+    seuilDeBaseImpose?: boolean;
+    /** L'action relève de cette spécialisation hermétique (`garde.hermetiques`) : l'identifiant de sa case. */
+    actionHermetique?: string;
     /**
      * Valeur sous laquelle un dé compte double, quand elle diffère du critique
      * ordinaire — chez Dune, la compétence seule avec la spécialisation.
@@ -544,6 +599,16 @@ export interface JetPrepare {
         specialisation?: { champ: string; label: string };
         /** Les spécialisations cochées sur la fiche pour cette compétence : le menu du panneau. */
         specialisationsPossibles: { champ: string; label: string }[];
+        /** Le seuil avant les circonstances, ce qu'elles y ajoutent, et s'il est imposé. */
+        seuilDeLaCompetence: number;
+        modificateur: number;
+        seuilImpose: boolean;
+        /** L'angoisse lue sur la fiche (`circonstances.angoisse`), pour le panneau. */
+        angoisse?: number;
+        /** Les spécialisations hermétiques de cette compétence, et si le personnage les possède. */
+        hermetiques: { champ: string; label: string; possede: boolean }[];
+        /** L'action hermétique retenue, le cas échéant. */
+        actionHermetique?: { champ: string; label: string; possede: boolean };
         /** Le Potentiel retenu, ses marques et sa valeur actuelle (`garde.atteintes`). */
         atteintes?: {
             potentiel: string; base: number; actuel: number;
@@ -1111,13 +1176,44 @@ export function preparerLeJet(
                 .map(id => ({ champ: id, label: libelleDe(id).replace(/^.*?—\s*/, '') }))
             : [];
         const specialisation = specialisationsPossibles.find(sp => sp.champ === choix.specialisationDeLaGarde);
+        /*
+          **Une action hermétique ne se tente pas sans la spécialisation** (C0.3,
+          p. 323-325) : « on ne peut tenter une action qui relève d'une
+          compétence hermétique » sans la posséder. Le panneau le dit et refuse.
+        */
+        const hermetiques = prefixe
+            ? (regle.hermetiques ?? []).filter(id => id.startsWith(prefixe))
+                .map(id => ({ champ: id, label: libelleDe(id).replace(/^.*?—\s*/, ''), possede: valeursDeLaFiche[id] === true }))
+            : [];
+        const actionHermetique = hermetiques.find(h => h.champ === choix.actionHermetique);
+        if (actionHermetique && !actionHermetique.possede) {
+            avertissements.push(`${actionHermetique.label} est hermétique : sans cette spécialisation, l'action ne peut pas être tentée (p. 323-325).`);
+        }
         garde = {
             quota: quotaDeLaGarde(niveau),
-            seuil: seuilDeLaGarde(regle, niveau, !!specialisation),
+            ...(() => {
+                /*
+                  **Le seuil se déplace** (C0.1) : « seuil de 8 (compétent) +1 −1 = 8 »
+                  (p. 390). Imposé, il revient au seuil de base et ne bouge plus
+                  (p. 412). Il reste entre 2 et 10 : un d10 ne fait pas mieux.
+                */
+                const deLaCompetence = seuilDeLaGarde(regle, niveau, !!specialisation);
+                const impose = !!choix.seuilDeBaseImpose;
+                const modificateur = impose ? 0 : Math.trunc(choix.modificateurDeLaGarde ?? 0);
+                const angoisse = regle.circonstances?.angoisse
+                    ? Math.max(0, lireLeChamp(valeursDeLaFiche, regle.circonstances.angoisse).valeur ?? 0) : undefined;
+                return {
+                    seuil: impose ? regle.seuil : Math.min(10, Math.max(2, deLaCompetence + modificateur)),
+                    seuilDeLaCompetence: deLaCompetence, modificateur, seuilImpose: impose,
+                    ...(angoisse !== undefined ? { angoisse } : {}),
+                };
+            })(),
             niveau,
             ...(champ ? { competence: { label: libelleDe(champ), champ } } : {}),
             ...(specialisation && niveau > 0 ? { specialisation } : {}),
             specialisationsPossibles,
+            hermetiques,
+            ...(actionHermetique ? { actionHermetique } : {}),
         };
     }
 

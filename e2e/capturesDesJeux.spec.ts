@@ -829,6 +829,44 @@ async function scenesDeCrimes(c: ContexteDeScene): Promise<void> {
         await expect(panneau.getByText(/Le surineur : \+\d+ /).first()).toBeVisible();
         await f.evaluate(() => (window as unknown as Fenetre).useCombatStore.getState().clearCombatants());
     }
+
+    // C4, C7, C8 (2026-10-23) : la psychologie, les contacts et la fortune, la création — puis le seuil de névrose.
+    const garde = (c.pilote.gameDriver as { jet?: { garde?: { psychologie?: unknown; contacts?: unknown; creation?: unknown } } }).jet?.garde;
+    if (garde?.psychologie) {
+        await ecrireLaFiche(c, {
+            angoisse: 2, nevrose: 5, seuil_nevrose: 7, psychose: 2, base_psychose: 2, inclinaison_psychotique: 'Paranoïa',
+            contacts_0_name: 'Alphonse Bertillon', contacts_0_rating: 3, contacts_0_influence: 3, contacts_0_appels: 1,
+            contacts_1_name: 'La mère Lachaume', contacts_1_rating: 1, contacts_1_influence: 1, fortune: 2, fortune_piste: 4,
+            psychology_emotivity: 'Oui', psychology_activity: 'Oui', psychology_reactivity: 'Secondaire',
+            sexe_age: 'Homme, 34 ans', points_de_developpement: 6,
+        });
+        await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+        const psy = f.locator('[data-carte-du-jeu="psychologie-crimes"]');
+        await expect(psy).toBeVisible({ timeout: 15_000 });
+        await psy.getByRole('button', { name: 'Lancer le test psychotique', exact: true }).click();
+        await expect(psy.locator('[data-issue-psychotique]')).toBeVisible();
+        await photographier(psy, 'jeu-crimes-psychologie');
+        if (garde.contacts) {
+            const contacts = f.locator('[data-carte-du-jeu="contacts-fortune-crimes"]');
+            await expect(contacts.getByText('loyauté 2/3')).toBeVisible();
+            await photographier(contacts, 'jeu-crimes-contacts-et-fortune');
+        }
+        if (garde.creation) {
+            const creation = f.locator('[data-carte-du-jeu="creation-crimes"]');
+            await expect(creation.getByText('Passionné', { exact: true })).toBeVisible();
+            await creation.locator('[data-amelioration]').selectOption('mental');
+            await photographier(creation, 'jeu-crimes-creation');
+        }
+        // Le seuil de névrose sous le bandeau : la moitié ou zéro, au choix du meneur.
+        if ((c.pilote.gameDriver as { franchissements?: unknown[] }).franchissements?.length) {
+            await ecrireLaFiche(c, { nevrose: 7 });
+            await vue(c.campagne, 'cockpit');
+            const seuils = f.locator('[data-alertes-de-franchissement]');
+            await expect(seuils.getByRole('button', { name: /moitié/ })).toBeVisible({ timeout: 15_000 });
+            await photographier(seuils, 'jeu-crimes-seuil-de-nevrose');
+            await seuils.getByRole('button', { name: 'Écarter', exact: true }).first().click();
+        }
+    }
 }
 
 async function scenesDeCthulhuHack(c: ContexteDeScene): Promise<void> {

@@ -198,14 +198,57 @@ export function potentielActuel(base: number, m: MarquesDuPotentiel): number {
 
 /**
  * Ce que le Physique actuel dit du personnage : hors de combat à 0 (p. 395),
- * blessure grave en dessous de −1 (p. 396). **Aucune mort automatique** : le
- * livre n'en fixe pas.
+ * blessure grave en dessous de −1 (p. 396), et à −2 la **consigne de mort**
+ * donnée au meneur (p. 393) — dite, jamais appliquée : l'outil ne tue personne.
  */
 export function etatDuPhysique(actuel: number): string | null {
     if (actuel < -1) {
         return 'Blessure grave (p. 396) : Physique de départ −1 jusqu’à une chirurgie réussie, +1 Psychose, '
-            + 'autant de Névrose que de blessures subies, et un test psychotique à un seul dé.';
+            + 'autant de Névrose que de blessures subies, et un test psychotique à un seul dé. '
+            + 'À −2, la mort est au meneur : implacable après une conduite idiote ou suicidaire, logique pour une '
+            + 'blessure trop lourde, évitée après une action audacieuse et calculée (p. 393).';
     }
     if (actuel <= 0) return 'Hors de combat : à bout de souffle ou terrassé par la douleur (p. 395).';
     return null;
+}
+
+/**
+ * **Le Physique actuel d'une fiche** (C6, reste, 2026-10-23) : la valeur du
+ * Potentiel qui met hors de combat (`atteintes.incapacite`, le Physique) moins
+ * ses marques. Rend `undefined` si la fiche ne porte pas ce Potentiel. Lu par
+ * l'attaque, la carte de combat et l'en-tête de la fiche, qui remplace pour
+ * Crimes les « points de vie » d'autres jeux.
+ */
+export function physiqueActuel(
+    atteintes: { parPotentiel: Record<string, { fatigue: string; epuisement: string; blessures: string }>; incapacite?: string } | undefined,
+    valeurs: Record<string, unknown>,
+): number | undefined {
+    const potentiel = atteintes?.incapacite ?? 'physique';
+    if (valeurs[potentiel] === undefined || valeurs[potentiel] === '') return undefined;
+    const champs = atteintes?.parPotentiel[potentiel];
+    const n = (c?: string) => (c ? Math.max(0, Number(valeurs[c]) || 0) : 0);
+    return potentielActuel(Number(valeurs[potentiel]) || 0, { fatigue: n(champs?.fatigue), epuisement: n(champs?.epuisement), blessures: n(champs?.blessures) });
+}
+
+/** Un opposant : ses réussites gardées et ses 1 gardés. */
+export interface Opposant { reussites: number; uns: number }
+
+/**
+ * **Le test en opposition** (p. 385) : chacun fait son test simple ; le plus de
+ * réussites l'emporte, sinon les deux se neutralisent. Sur un échec critique
+ * (plus de 1 que de réussites), « on peut même ajouter le nombre de 1 au nombre
+ * de succès de l'adversaire » — au meneur d'en décider, d'où `ajouterLesUns`.
+ * Deux échecs critiques : le meneur peut décider qu'aucun ne prend le dessus.
+ */
+export function resoudreLOpposition(nous: Opposant, eux: Opposant, ajouterLesUns = true): { issue: 'gagne' | 'perd' | 'neutralises'; marge: number; ligne: string } {
+    const critique = (o: Opposant) => o.uns > o.reussites;
+    if (critique(nous) && critique(eux)) {
+        return { issue: 'neutralises', marge: 0, ligne: 'Deux échecs critiques : le meneur peut décider qu’aucun ne prend le dessus (p. 385).' };
+    }
+    const a = nous.reussites + (ajouterLesUns && critique(eux) ? eux.uns : 0);
+    const b = eux.reussites + (ajouterLesUns && critique(nous) ? nous.uns : 0);
+    const bonus = ajouterLesUns && (critique(eux) || critique(nous)) ? ' (les 1 de l’échec critique comptés à l’adversaire)' : '';
+    if (a > b) return { issue: 'gagne', marge: a - b, ligne: `Opposition remportée : ${a} contre ${b}${bonus}, marge ${a - b} (p. 385).` };
+    if (b > a) return { issue: 'perd', marge: b - a, ligne: `L’adversaire l’emporte : ${b} contre ${a}${bonus} (p. 385).` };
+    return { issue: 'neutralises', marge: 0, ligne: `${a} contre ${b} : les deux opposants se neutralisent (p. 385).` };
 }

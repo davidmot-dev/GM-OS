@@ -104,6 +104,12 @@ export interface GroupeDeCampagne {
 }
 
 export interface Campaign {
+    /**
+     * **Les hypothèses de l'affaire** — Crimes, C5 (2026-10-23), livre p. 437-438 :
+     * les théories que la table formule, notées par le meneur. L'outil ne les
+     * valide jamais ; le meneur peut en écarter une, et la rouvrir.
+     */
+    hypothesesDEnquete?: { id: string; texte: string; style?: string; quand: number; ecartee?: boolean }[];
     /** R7 : secrets MJ et prédictions personnelles, filtrés avant chaque diffusion joueur. */
     rddAstrologie?: import('../modules/session/logic/astrologieDuVoyageur').AstrologieVoyageur;
     id: string;

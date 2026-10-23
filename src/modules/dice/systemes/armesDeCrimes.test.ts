@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ARMES_A_FEU, ARMES_BLANCHES, ARMES_DE_CRIMES, incidentsDuTir, resoudreLAttaque } from './armesDeCrimes';
+import { ARMES_A_FEU, ARMES_BLANCHES, ARMES_DE_CRIMES, incidentsDuTir, localisationsDuJet, resoudreLAttaque } from './armesDeCrimes';
 
 /** **Les armes de Crimes** — C6, livre p. 344–346 et 389–395. Les cas sont ceux du livre. */
 const arme = (id: string) => ARMES_DE_CRIMES.find(a => a.id === id)!;
@@ -20,7 +20,7 @@ describe('les tableaux du livre', () => {
 });
 
 describe('l’attaque', () => {
-    it('l’exemple du livre : 2 succès + 5 (dégât fixe) − 0 − 3 (Physique) − 0 = 4 blessures (p. 395)', () => {
+    it('l’exemple du livre : 2 succès + 5 (dégât fixe) − 0 − 3 (Physique) − 0 = 4 blessures (p. 393)', () => {
         const coup = resoudreLAttaque({ arme: { ...arme('clic-clac'), degats: 5 }, reussites: 2, adverses: 0, physiqueAttaquant: 4, physiqueCible: 3, protection: 0 });
         expect(coup).toMatchObject({ touche: true, degats: 4, atteinte: 'blessures' });
         expect(coup.calcul).toMatch(/= 4$/);
@@ -48,5 +48,43 @@ describe('l’attaque', () => {
         expect(incidentsDuTir(arme('revol-cycle'), 1)).toHaveLength(3);
         expect(incidentsDuTir(arme('clic-clac'), 2).at(-1)).toMatch(/exploser/);
         expect(incidentsDuTir(arme('canne-epee'), 2)).toEqual([]);
+    });
+});
+
+describe('les manœuvres (p. 391-394)', () => {
+    const base = { arme: arme('canne-epee'), adverses: 0, physiqueAttaquant: 4, physiqueCible: 3, protection: 0 };
+
+    it('la localisation au hasard : le chiffre le plus fréquent ; à égalité, le vainqueur choisit', () => {
+        expect(localisationsDuJet([10, 10, 3])).toEqual(['Tête']);
+        expect(localisationsDuJet([4, 6, 1])).toEqual(['Bras droit', 'Thorax']);
+        const coup = resoudreLAttaque({ ...base, reussites: 1, des: [8, 8, 2] });
+        expect(coup.localisations).toEqual(['Jambe droite']);
+    });
+
+    it('viser : deux succès d’avance pour toucher où l’on veut, une réussite sacrifiée', () => {
+        const vise = resoudreLAttaque({ ...base, reussites: 2, manoeuvre: 'viser', localisation: 'Bras gauche', des: [10, 10] });
+        expect(vise).toMatchObject({ touche: true, localisations: ['Bras gauche'], degats: 4 });
+        const rate = resoudreLAttaque({ ...base, reussites: 1, manoeuvre: 'viser', localisation: 'Bras gauche', des: [10, 10] });
+        expect(rate.localisations).toEqual(['Tête']);
+        expect(rate.effets?.[0]).toMatch(/au hasard/);
+    });
+
+    it('assommer la tête : marge doublée, des points de fatigue', () => {
+        const coup = resoudreLAttaque({ ...base, reussites: 2, manoeuvre: 'assommer' });
+        expect(coup).toMatchObject({ touche: true, atteinte: 'fatigue', localisations: ['Tête'], degats: 7 });
+    });
+
+    it('déséquilibrer un plus fort demande autant de succès que l’écart de Physique', () => {
+        const coup = resoudreLAttaque({ ...base, physiqueAttaquant: 2, physiqueCible: 5, reussites: 2, manoeuvre: 'desequilibrer' });
+        expect(coup.effets?.at(-1)).toMatch(/il fallait 3 succès/);
+        expect(resoudreLAttaque({ ...base, reussites: 2, manoeuvre: 'desequilibrer' }).effets?.at(-1)).toMatch(/À terre/);
+    });
+
+    it('immobiliser : réussites + Physique contre le Physique adverse ; feinter : aucun dégât', () => {
+        expect(resoudreLAttaque({ ...base, reussites: 1, manoeuvre: 'immobiliser' }).effets?.[0]).toMatch(/^Immobilisé/);
+        expect(resoudreLAttaque({ ...base, physiqueAttaquant: 1, physiqueCible: 5, reussites: 1, manoeuvre: 'immobiliser' }).effets?.[0]).toMatch(/échoue/);
+        const feinte = resoudreLAttaque({ ...base, reussites: 3, manoeuvre: 'feinter', maitrise: 2 });
+        expect(feinte).toMatchObject({ touche: false, degats: 0 });
+        expect(feinte.effets?.[0]).toMatch(/jusqu'à 2 points/);
     });
 });

@@ -100,3 +100,19 @@ describe('un seuil lu sur la fiche, sur une somme de jauges', () => {
         expect(rearmer([STIGMATE], traite)).toEqual({ [CLE_DES_FRANCHISSEMENTS]: {} });
     });
 });
+
+/** **Plusieurs issues au choix** — la Névrose de Crimes au seuil (C4, 2026-10-23, p. 409 et 418). */
+describe('un seuil à plusieurs issues', () => {
+    const NEVROSE = {
+        id: 'nevrose-seuil', champ: 'nevrose', label: 'Névrose', aPartirDe: { champ: 'seuil_nevrose' }, mouvements: [],
+        variantes: [
+            { id: 'moitie', label: 'Névrose à la moitié (p. 409)', mouvements: [{ champ: 'psychose', delta: 1 }, { champ: 'nevrose', delta: 'moitie' as const }] },
+            { id: 'zero', label: 'Névrose à zéro (p. 418)', mouvements: [{ champ: 'psychose', delta: 1 }, { champ: 'nevrose', delta: 'vide' as const }] },
+        ],
+    };
+    it('Rachel, seuil 7 atteint : la moitié donne 3 (l’exemple p. 411), zéro donne 0 ; +1 Psychose dans les deux cas', () => {
+        const [a] = franchissementsEnAttente([NEVROSE], [{ joueurId: 'j', id: 'rachel', nom: 'Rachel', valeurs: { nevrose: 7, seuil_nevrose: 7, psychose: 2 } }]);
+        expect(a.variantes!.map(v => [v.id, v.noter.nevrose, v.noter.psychose])).toEqual([['moitie', 3, 3], ['zero', 0, 3]]);
+        expect(a.variantes![0].lignes).toEqual(['psychose 2 → 3 (+1)', 'nevrose 7 → 3 (moitié)']);
+    });
+});

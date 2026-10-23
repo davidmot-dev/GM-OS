@@ -304,9 +304,10 @@ export interface MouvementDeFiche {
     /**
      * +1, −1, −2 ; `'plein'` remet le champ à son plafond (le Vécu d'un nouveau
      * scénario) ; `'vide'` le ramène à son plancher (la Corruption temporaire de
-     * Symbaroum en fin de scène, 2026-10-22).
+     * Symbaroum en fin de scène, 2026-10-22) ; `'moitie'` le ramène à sa moitié,
+     * arrondie à l'inférieur (la Névrose de Crimes au seuil, p. 409, C4).
      */
-    delta: number | 'plein' | 'vide';
+    delta: number | 'plein' | 'vide' | 'moitie';
     /** Un champ dont la valeur s'ajoute au gain : l'Extase à l'Espoir regagné. */
     plus?: string;
     /**
@@ -433,6 +434,12 @@ export interface Franchissement {
      * l'aperçu, qui se redessine.
      */
     jet?: { faces: number; champ: string; label?: string };
+    /**
+     * **Plusieurs issues au choix du meneur** (Crimes, C4, 2026-10-23) : le livre
+     * ramène la Névrose au seuil à la moitié (p. 409) ou à zéro (p. 418). Chaque
+     * variante a son bouton et ses mouvements ; présentes, elles remplacent « Noter ».
+     */
+    variantes?: { id: string; label: string; mouvements: MouvementDeFiche[] }[];
 }
 
 /** La fiche du groupe — voir `GameDriver.ficheDeGroupe`. */

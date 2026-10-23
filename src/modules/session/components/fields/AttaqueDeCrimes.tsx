@@ -4,9 +4,10 @@ import { useSessionOSStore } from '../../useSessionOSStore';
 import { ecrireLaFicheDuCombattant } from '../../../combat/ficheDesCombattants';
 import { ficheDuCombattant } from '../../../combat/logic/ficheDuCombattant';
 import {
-    ARMES_A_FEU, ARMES_BLANCHES, ARMES_DE_CRIMES, incidentsDuTir, resoudreLAttaque, type ArmeDeCrimes, type ReglagesDAttaque,
+    ARMES_A_FEU, ARMES_BLANCHES, ARMES_DE_CRIMES, LIBELLES_DES_MANOEUVRES, LOCALISATIONS, incidentsDuTir, resoudreLAttaque,
+    type ArmeDeCrimes, type Manoeuvre, type ReglagesDAttaque,
 } from '../../../dice/systemes/armesDeCrimes';
-import { LIBELLES_DES_ATTEINTES, poserUneAtteinte, potentielActuel, type JetGarde } from '../../../dice/systemes/potentielGarde';
+import { LIBELLES_DES_ATTEINTES, physiqueActuel, poserUneAtteinte, potentielActuel, type JetGarde } from '../../../dice/systemes/potentielGarde';
 import type { DescripteurDeJet } from '../../../dice/DescripteurDeJet';
 import type { Combatant } from '../../../combat/types';
 
@@ -16,7 +17,7 @@ import type { Combatant } from '../../../combat/types';
  * À « Préparer », l'arme, la distance d'un tir, les réussites de l'adversaire
  * en opposition, la cible et sa protection. Au résultat, le calcul du livre —
  * succès excédentaires + arme − Physique de la victime − protection, au moins
- * 1 —, et, au meneur, « Infliger » : les marques s'écrivent sur la fiche de la
+ * 1 (p. 393) —, et, au meneur, « Infliger » : les marques s'écrivent sur la fiche de la
  * cible, avec la règle des atteintes (C2). Les incidents d'une arme à feu
  * sur un échec critique se rappellent ; le meneur choisit.
  */
@@ -37,14 +38,6 @@ function useFicheDeLaCible(cibleId: string): { combattant?: Combatant; valeurs: 
     return { combattant, valeurs: ficheDuCombattant(combattant, source, [], null).valeurs };
 }
 
-/** Le Physique actuel d'une fiche : sa valeur moins ses marques, si le pilote les déclare. */
-function physiqueActuel(valeurs: Record<string, unknown>, atteintes?: Atteintes): number | undefined {
-    const potentiel = atteintes?.incapacite ?? 'physique';
-    if (valeurs[potentiel] === undefined || valeurs[potentiel] === '') return undefined;
-    const champs = atteintes?.parPotentiel[potentiel];
-    const n = (c?: string) => (c ? Math.max(0, Number(valeurs[c]) || 0) : 0);
-    return potentielActuel(Number(valeurs[potentiel]) || 0, { fatigue: n(champs?.fatigue), epuisement: n(champs?.epuisement), blessures: n(champs?.blessures) });
-}
 
 const champ = 'bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50';
 const etiquette = 'text-ui-9 font-black uppercase tracking-widest text-app-text/40';
@@ -57,7 +50,7 @@ export const PreparationDeLAttaque: React.FC<{
     const combattants = useCombatStore(s => s.combatants);
     const { valeurs } = useFicheDeLaCible(reglages.cible);
     const arme = ARMES_DE_CRIMES.find(a => a.id === reglages.arme);
-    const physiqueLu = physiqueActuel(valeurs, atteintes);
+    const physiqueLu = physiqueActuel(atteintes, valeurs);
     const distance = reglages.distance.trim() === '' ? undefined : Number(reglages.distance);
     const horsDePortee = arme?.famille === 'feu' && distance !== undefined && arme.portee
         ? distance > arme.portee * 2 ? `au-delà de ${arme.portee * 2} m : tir impossible`
@@ -79,6 +72,21 @@ export const PreparationDeLAttaque: React.FC<{
             </label>
             {arme && (
                 <>
+                    {/* Les manœuvres (p. 391-394) : des possibilités en plus d'une attaque simple. */}
+                    <label className="flex items-center gap-2">
+                        <span className={etiquette}>Manœuvre</span>
+                        <select value={reglages.manoeuvre} onChange={e => changer({ manoeuvre: e.target.value as Manoeuvre })} className={champ} data-manoeuvre>
+                            {(Object.keys(LIBELLES_DES_MANOEUVRES) as Manoeuvre[]).map(m => <option key={m} value={m}>{LIBELLES_DES_MANOEUVRES[m]}</option>)}
+                        </select>
+                    </label>
+                    {reglages.manoeuvre === 'viser' && (
+                        <label className="flex items-center gap-2" title="Viser coûte une réussite ; il faut deux succès de plus que l'adversaire pour toucher où l'on veut (p. 392)">
+                            <span className={etiquette}>Localisation</span>
+                            <select value={reglages.localisation} onChange={e => changer({ localisation: e.target.value })} className={champ} data-localisation>
+                                {[...new Set(Object.values(LOCALISATIONS))].map(l => <option key={l} value={l}>{l}</option>)}
+                            </select>
+                        </label>
+                    )}
                     {arme.famille === 'feu' && (
                         <label className="flex items-center gap-2" title={`Portée utile ${arme.portee} m, maximale ${(arme.portee ?? 0) * 2} m (p. 389)`}>
                             <span className={etiquette}>Distance (m)</span>
@@ -128,15 +136,24 @@ export const IssueDeLAttaque: React.FC<{
     peutInfliger: boolean;
     infligee: string | null;
     onInfligee: (ligne: string) => void;
-}> = ({ reglages, resultat, physiqueAttaquant, atteintes, peutInfliger, infligee, onInfligee }) => {
+    /** Le degré de maîtrise de l'attaquant (la compétence) : la feinte s'y limite. */
+    maitrise?: number;
+    /**
+     * Les munitions de l'arme à feu, tenues sur la fiche de l'attaquant (règle optionnelle,
+     * p. 390) : « −1 munition » et « Recharger », d'un clic — rien ne se retire tout seul.
+     */
+    munitions?: { valeur: number; ecrire: (n: number) => void };
+}> = ({ reglages, resultat, physiqueAttaquant, atteintes, peutInfliger, infligee, onInfligee, maitrise, munitions }) => {
     const { combattant, valeurs } = useFicheDeLaCible(reglages.cible);
     const arme = ARMES_DE_CRIMES.find(a => a.id === reglages.arme) as ArmeDeCrimes | undefined;
     if (!arme) return null;
-    const physiqueLu = physiqueActuel(valeurs, atteintes);
+    const physiqueLu = physiqueActuel(atteintes, valeurs);
     const issue = resoudreLAttaque({
         arme, reussites: resultat.garde.reussites, adverses: entier(reglages.adverses),
         physiqueAttaquant, physiqueCible: physiqueLu ?? entier(reglages.physiqueCible), protection: entier(reglages.protection),
         ...(reglages.distance.trim() !== '' ? { distance: Number(reglages.distance) } : {}),
+        manoeuvre: reglages.manoeuvre, localisation: reglages.localisation,
+        des: resultat.rolls.map(d => Number(d.val)), ...(maitrise ? { maitrise } : {}),
     });
     const incidents = resultat.garde.bilan === 'echec-critique' ? incidentsDuTir(arme, resultat.garde.uns) : [];
     const nom = combattant?.name ?? 'la cible';
@@ -172,13 +189,35 @@ export const IssueDeLAttaque: React.FC<{
                         </button>
                     )}
                     {infligee && <span className="font-mono text-etat-danger">{infligee}</span>}
+                    {/* L'initiative narrative (p. 388) : Combat-OS garde son ordre, le meneur le change s'il le veut. */}
+                    <span className="basis-full text-app-text/60" data-initiative-suivante>
+                        Il aura l'initiative de l'assaut suivant : « celui qui a blessé l'autre » (p. 388).
+                    </span>
                 </p>
-            ) : (
+            ) : issue.calcul && (reglages.manoeuvre === 'immobiliser') ? (
+                <p className="font-mono text-app-text/60">{issue.calcul}</p>
+            ) : reglages.manoeuvre === 'feinter' ? null : (
                 <p className="text-app-text/60">
                     {issue.malusDePortee ? 'Manqué, la portée utile dépassée coûtant une réussite.' : entier(reglages.adverses) > 0 ? 'Pas de blessure : l’adversaire tient l’assaut (égalité ou mieux).' : 'Manqué.'}
                 </p>
             )}
+            {issue.localisations && (
+                <p className="text-app-text/70" data-localisation-du-coup>
+                    Localisation : {issue.localisations.join(' ou ')}{issue.localisations.length > 1 ? ' (égalité : le vainqueur choisit)' : ''}
+                </p>
+            )}
+            {(issue.effets ?? []).map(e => <p key={e} className="text-etat-alerte">{e}</p>)}
             {incidents.map(i => <p key={i} className="text-etat-alerte">{i}</p>)}
+            {arme.famille === 'feu' && munitions && (
+                <p className="flex flex-wrap items-center gap-2" data-munitions>
+                    <span className="font-mono">Munitions {munitions.valeur}/{arme.munitions}</span>
+                    <button type="button" disabled={munitions.valeur <= 0} onClick={() => munitions.ecrire(munitions.valeur - 1)}
+                        className="px-2 py-0.5 rounded-md border border-app-border/40 text-ui-10 font-bold disabled:opacity-30">−1 munition</button>
+                    <button type="button" onClick={() => munitions.ecrire(arme.munitions ?? 0)}
+                        title={`Recharger prend ${arme.rechargement} assaut${(arme.rechargement ?? 0) > 1 ? 's' : ''} ; un personnage angoissé (plus de 3) peut en perdre un de plus (p. 390)`}
+                        className="px-2 py-0.5 rounded-md border border-app-border/40 text-ui-10 font-bold">Recharger ({arme.rechargement} assaut{(arme.rechargement ?? 0) > 1 ? 's' : ''})</button>
+                </p>
+            )}
         </div>
     );
 };

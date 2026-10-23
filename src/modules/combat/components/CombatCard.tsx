@@ -32,6 +32,7 @@ import HordeDuCombattant from './HordeDuCombattant';
 import SbiresDuVilain from './SbiresDuVilain';
 import { useTranslation } from 'react-i18next';
 import { estUneFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
+import { etatDuPhysique, physiqueActuel } from '../../dice/systemes/potentielGarde';
 
 const PRESET_STATUSES = [
     { name: 'poison', icon: '🤢', duration: 3 },
@@ -312,6 +313,14 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
         </button>
     );
 
+    /*
+      **Le Physique actuel** (Crimes, C6, 2026-10-23) : un jeu à atteintes n'a pas de
+      points de vie ; la carte dit le Physique qui reste — valeur moins marques — et
+      ce qu'il signifie (hors de combat à 0, blessure grave sous −1, consigne à −2).
+    */
+    const atteintesDuJeu = activeDriver?.jet?.garde?.atteintes;
+    const physiqueDuCombattant = atteintesDuJeu ? physiqueActuel(atteintesDuJeu, ficheLue.valeurs) : undefined;
+
     return (
         <article
             data-combattant={combatant.id}
@@ -344,6 +353,12 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 </div>
 
                 {nomDuCombattant}
+                {physiqueDuCombattant !== undefined && (
+                    <span data-physique-actuel title={etatDuPhysique(physiqueDuCombattant) ?? 'Physique actuel : la valeur moins la fatigue, l’épuisement et les blessures'}
+                        className={`shrink-0 rounded-lg border px-2 py-0.5 font-mono text-xs font-black ${physiqueDuCombattant <= 0 ? 'border-etat-danger/50 text-etat-danger' : 'border-app-border text-app-text/70'}`}>
+                        Physique {physiqueDuCombattant}{physiqueDuCombattant <= 0 ? (physiqueDuCombattant < -1 ? ' · blessure grave' : ' · hors de combat') : ''}
+                    </span>
+                )}
 
                 <Select
                     value={combatant.faction}

@@ -5,7 +5,7 @@
  * Les tableaux sont transcrits ici, et non dans le pilote : un nombre de table
  * se relit contre le livre et se protège par des essais (règle de la Forge).
  *
- * L'attaque (p. 395) : « nombre de succès excédentaires de l'attaquant + dégât
+ * L'attaque (p. 393) : « nombre de succès excédentaires de l'attaquant + dégât
  * de l'arme − Potentiel physique de la victime − sa protection », **au moins 1**.
  * Une arme blanche frappe du Potentiel physique de l'attaquant plus son bonus ;
  * une arme à feu a des dégâts fixes. Au-delà de la portée utile, une réussite
@@ -103,6 +103,31 @@ export const INCIDENTS_DE_TIR: Record<IncidentDeTir, string> = {
     C: 'Le tir part de travers : une victime proche de la cible peut être touchée',
 };
 
+/**
+ * **Les manœuvres** (« Options de combat », p. 391-394) — des possibilités en
+ * plus : « une attaque simple, bien portée, vaut toutes les tactiques ».
+ */
+export type Manoeuvre = 'aucune' | 'viser' | 'assommer' | 'desequilibrer' | 'immobiliser' | 'feinter';
+
+export const LIBELLES_DES_MANOEUVRES: Record<Manoeuvre, string> = {
+    aucune: 'Attaque simple', viser: 'Viser une localisation', assommer: 'Assommer (viser la tête)',
+    desequilibrer: 'Déséquilibrer (viser les jambes)', immobiliser: 'Immobiliser (mains nues)', feinter: 'Feinter',
+};
+
+/** « Localisation des coups portés » (p. 391) : le chiffre de la plus forte occurrence du jet. */
+export const LOCALISATIONS: Record<number, string> = {
+    1: 'Thorax', 2: 'Thorax', 3: 'Abdomen', 4: 'Bras droit', 6: 'Bras droit', 5: 'Bras gauche', 7: 'Bras gauche',
+    8: 'Jambe droite', 9: 'Jambe gauche', 10: 'Tête',
+};
+
+/** La localisation d'un coup au hasard : les chiffres les plus fréquents du jet ; à égalité, le vainqueur choisit. */
+export function localisationsDuJet(des: readonly number[]): string[] {
+    const comptes = new Map<number, number>();
+    for (const d of des) comptes.set(d, (comptes.get(d) ?? 0) + 1);
+    const max = Math.max(0, ...comptes.values());
+    return [...new Set([...comptes.entries()].filter(([, n]) => n === max).map(([v]) => LOCALISATIONS[v]).filter(Boolean))];
+}
+
 /** Ce que l'attaque sait : le jet de l'attaquant, l'adversaire, la cible. */
 export interface Attaque {
     arme: ArmeDeCrimes;
@@ -117,6 +142,13 @@ export interface Attaque {
     protection: number;
     /** À feu : la distance de la cible, en mètres. */
     distance?: number;
+    manoeuvre?: Manoeuvre;
+    /** Viser : la localisation voulue. */
+    localisation?: string;
+    /** Les dés du jet de l'attaquant : la localisation d'un coup au hasard (p. 391). */
+    des?: readonly number[];
+    /** Le degré de maîtrise de l'attaquant (1 à 3) : la feinte s'y limite. */
+    maitrise?: number;
 }
 
 export interface IssueDeLAttaque {
@@ -127,7 +159,12 @@ export interface IssueDeLAttaque {
     touche: boolean;
     /** Les points d'atteinte infligés, au moins 1 sur une touche. */
     degats: number;
-    atteinte: AtteinteDeLArme;
+    /** Assommer change les blessures en fatigue (p. 392). */
+    atteinte: AtteinteDeLArme | 'fatigue';
+    /** Où porte le coup : la localisation visée, ou celles que le jet désigne. */
+    localisations?: string[];
+    /** Ce que la manœuvre produit en plus des dégâts, dit au meneur. */
+    effets?: string[];
     /** Le calcul, dit comme le livre : « 2 succès + 4 (Clic-clac) − 0 − 3 (Physique) − 0 = 3 ». */
     calcul: string;
 }
@@ -144,13 +181,67 @@ export function resoudreLAttaque(a: Attaque): IssueDeLAttaque {
     }
     const malusDePortee = arme.famille === 'feu' && a.distance !== undefined && portee > 0 && a.distance > portee ? 1 : 0;
     const reussites = Math.max(0, a.reussites - malusDePortee);
-    const touche = reussites > a.adverses;
+    const manoeuvre = a.manoeuvre ?? 'aucune';
+    const marge = reussites - a.adverses;
+    const auHasard = localisationsDuJet(a.des ?? []);
+    const effets: string[] = [];
+
+    // Feinter (p. 392) : aucun dégât ; sacrifier du Physique pour baisser d'autant le potentiel adverse.
+    if (manoeuvre === 'feinter') {
+        const n = Math.max(1, Math.min(3, a.maitrise ?? 1));
+        return {
+            malusDePortee, touche: false, degats: 0, atteinte: arme.atteinte, calcul: '',
+            effets: [`Feinte : aucun dégât. Sacrifier jusqu'à ${n} point${n > 1 ? 's' : ''} de Physique (selon la maîtrise) pour baisser d'autant le potentiel adverse et aggraver les coups suivants (p. 392).`],
+        };
+    }
+    // Immobiliser (p. 392) : au contact et à mains nues, réussites + Physique contre le Physique adverse.
+    if (manoeuvre === 'immobiliser') {
+        const total = reussites + a.physiqueAttaquant;
+        const reussi = total > a.physiqueCible;
+        return {
+            malusDePortee, touche: false, degats: 0, atteinte: arme.atteinte,
+            calcul: `${reussites} succès + ${a.physiqueAttaquant} (Physique) = ${total} contre ${a.physiqueCible} (Physique adverse)`,
+            effets: [reussi ? 'Immobilisé : il ne se défera de l’emprise qu’en gagnant un assaut suivant (p. 392).' : 'L’emprise échoue : il faut dépasser le Physique adverse (p. 392).'],
+        };
+    }
+
+    /*
+      Viser (p. 392) : une réussite sacrifiée ; il faut deux succès de plus que
+      l'adversaire pour toucher où l'on veut, sinon le coup porte au hasard.
+      Assommer vise la tête, Déséquilibrer les jambes.
+    */
+    const vise = manoeuvre === 'viser' || manoeuvre === 'assommer' || manoeuvre === 'desequilibrer';
+    const cible = manoeuvre === 'assommer' ? 'Tête' : manoeuvre === 'desequilibrer' ? 'Jambes' : a.localisation;
+    const ouIlVoulait = vise && marge >= 2;
+    const touche = marge > 0;
+    const localisations = touche ? (ouIlVoulait && cible ? [cible] : auHasard) : undefined;
+    let margeUtile = vise ? marge - 1 : marge;
+    let atteinte: AtteinteDeLArme | 'fatigue' = arme.atteinte;
+    if (vise && touche && !ouIlVoulait) effets.push(`Visé : ${cible ?? 'une localisation'} sans deux succès d'avance, le coup porte au hasard (p. 392).`);
+    if (manoeuvre === 'assommer' && ouIlVoulait) {
+        // La marge doublée, les blessures comptées comme de la fatigue (exemple p. 392 : « marge de réussite de 2 »).
+        margeUtile = marge * 2;
+        atteinte = 'fatigue';
+        effets.push('Assommer, si les circonstances le permettent : marge doublée, les dégâts comptent comme de la fatigue — on peut le maîtriser en amenant son Physique à 0 sans le tuer (p. 392).');
+    }
+    if (manoeuvre === 'desequilibrer' && ouIlVoulait) {
+        const ecart = a.physiqueCible - a.physiqueAttaquant;
+        effets.push(ecart > 0 && reussites < ecart
+            ? `Pas déséquilibré : il fallait ${ecart} succès, l'écart de Physique (p. 392).`
+            : 'À terre et abasourdi tant qu’il y reste ; il ne se relève qu’en gagnant un assaut suivant (p. 392).');
+    }
     const base = arme.famille === 'feu' ? arme.degats : a.physiqueAttaquant + arme.degats;
-    const brut = reussites - a.adverses + base - a.physiqueCible - a.protection;
+    const brut = margeUtile + base - a.physiqueCible - a.protection;
     const degats = touche ? Math.max(1, brut) : 0;
     const dArme = arme.famille === 'feu' ? `${arme.degats} (${arme.nom})` : `${a.physiqueAttaquant} + ${arme.degats} (Physique + ${arme.nom})`;
-    const calcul = `${reussites} succès${malusDePortee ? ' (−1 hors portée utile)' : ''} + ${dArme} − ${a.adverses} − ${a.physiqueCible} (Physique) − ${a.protection} (protection) = ${brut}${touche && brut < 1 ? ', au moins 1' : ''}`;
-    return { malusDePortee, touche, degats, atteinte: arme.atteinte, calcul };
+    const dMarge = manoeuvre === 'assommer' && ouIlVoulait ? `${marge} × 2 (marge doublée)`
+        : vise ? `${reussites} succès − 1 (visé) − ${a.adverses}` : `${reussites} succès − ${a.adverses}`;
+    const calcul = `${dMarge}${malusDePortee ? ' (−1 hors portée utile)' : ''} + ${dArme} − ${a.physiqueCible} (Physique) − ${a.protection} (protection) = ${brut}${touche && brut < 1 ? ', au moins 1' : ''}`;
+    return {
+        malusDePortee, touche, degats, atteinte, calcul,
+        ...(localisations?.length ? { localisations } : {}),
+        ...(effets.length ? { effets } : {}),
+    };
 }
 
 /**
@@ -168,10 +259,12 @@ export function incidentsDuTir(arme: ArmeDeCrimes, unsGardes: number): string[] 
 /** Les réglages de l'attaque au panneau, tels que le meneur les saisit (des textes : un champ peut rester vide). */
 export interface ReglagesDAttaque {
     arme: string;
+    manoeuvre: Manoeuvre;
+    localisation: string;
     distance: string;
     adverses: string;
     cible: string;
     physiqueCible: string;
     protection: string;
 }
-export const REGLAGES_D_ATTAQUE: ReglagesDAttaque = { arme: '', distance: '', adverses: '0', cible: '', physiqueCible: '', protection: '0' };
+export const REGLAGES_D_ATTAQUE: ReglagesDAttaque = { arme: '', manoeuvre: 'aucune', localisation: 'Thorax', distance: '', adverses: '0', cible: '', physiqueCible: '', protection: '0' };

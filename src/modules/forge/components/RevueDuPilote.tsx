@@ -140,8 +140,8 @@ const JournalDesConstats: React.FC<{ constats: ConstatDuPilote[] }> = ({ constat
 };
 
 /** Un mouvement de fiche, dit : « +1 », « −2 », « plein », « vide ». */
-const direLeDelta = (delta: number | 'plein' | 'vide') =>
-  typeof delta === 'number' ? `${delta > 0 ? '+' : ''}${delta}` : delta;
+const direLeDelta = (delta: number | 'plein' | 'vide' | 'moitie') =>
+  typeof delta === 'number' ? `${delta > 0 ? '+' : ''}${delta}` : delta === 'moitie' ? 'moitié' : delta;
 
 export const RevueDuPilote: React.FC<{
   driver: Partial<GameDriver>;

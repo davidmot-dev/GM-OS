@@ -1,5 +1,6 @@
 import React from 'react';
 import { Save, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool, Plus, Check, X } from 'lucide-react';
+import { etatDuPhysique, physiqueActuel } from '../../dice/systemes/potentielGarde';
 import { fractionDeVie } from '../../combat/logic/SanteDuCombattant';
 import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
 import { plafondDuChamp } from '../logic/plafondDuChamp';
@@ -285,7 +286,20 @@ const CharacterSheetEditor: React.FC = () => {
                                 <p className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Personnage</p>
                                 <h2 className="text-lg font-black text-app-text truncate">{character.name}</h2>
                             </div>
-                            {(piloteDeLaFiche?.combat?.defaultHealthType ?? 'hp') === 'hp' && (
+                            {/*
+                              **Crimes n'a pas de points de vie** (C6, 2026-10-23) : sa santé est le
+                              Physique actuel, la valeur moins les marques — c'est lui qui s'affiche.
+                            */}
+                            {piloteDeLaFiche?.jet?.garde?.atteintes ? (() => {
+                                const actuel = physiqueActuel(piloteDeLaFiche.jet.garde.atteintes, character.sheetData ?? {});
+                                return actuel === undefined ? null : (
+                                    <div className="px-4 py-2 rounded-lg border border-app-border bg-app-bg/60 flex items-baseline gap-2" data-physique-actuel
+                                        title={etatDuPhysique(actuel) ?? 'Le Physique actuel : sa valeur moins la fatigue, l’épuisement et les blessures'}>
+                                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Physique actuel</span>
+                                        <span className={`font-mono font-black ${actuel <= 0 ? 'text-etat-danger' : 'text-etat-succes'}`}>{actuel}</span>
+                                    </div>
+                                );
+                            })() : (piloteDeLaFiche?.combat?.defaultHealthType ?? 'hp') === 'hp' && (
                                 <div className="px-4 py-2 rounded-lg border border-app-border bg-app-bg/60 flex items-baseline gap-2">
                                     <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Points de vie</span>
                                     <span className="font-mono font-black text-etat-succes">{character.hp} / {character.maxHp}</span>
@@ -541,7 +555,8 @@ const CharacterSheetEditor: React.FC = () => {
                           neutre, et seulement quand le modèle du pilote compte
                           réellement des points.
                         */}
-                        {(piloteDeLaFiche?.combat?.defaultHealthType ?? 'hp') === 'hp' && (
+                        {/* Crimes : pas de points de vie à éditer, la santé est le Physique actuel (C6). */}
+                        {(piloteDeLaFiche?.combat?.defaultHealthType ?? 'hp') === 'hp' && !piloteDeLaFiche?.jet?.garde?.atteintes && (
                         <div className="p-4 bg-app-bg/60 border border-accent/20 rounded-xl space-y-3 shadow-lg shadow-etat-danger/5">
                             <div className="flex items-center justify-between">
                                 <span className="text-ui-9 font-black uppercase tracking-[0.15em] text-accent">Points de vie</span>

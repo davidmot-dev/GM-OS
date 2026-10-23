@@ -40,10 +40,17 @@ import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { LigneDuReferentiel } from './ChampDuReferentiel';
 import { champDeLaSuite, jetVientDe, suitesDuJet, valeurApresLaSuite, type SuiteDUnCritique } from '../../../dice/suitesDesCritiques';
 import { consommationDuJet, direLaConsommation } from '../../../dice/consommationAuJet';
-import { effetsSurLaNevrose, resoudreLaGarde, type JetGarde } from '../../../dice/systemes/potentielGarde';
+import { effetsSurLaNevrose, potentielActuel, resoudreLaGarde, type JetGarde } from '../../../dice/systemes/potentielGarde';
 import AtteintesDesPotentiels from './AtteintesDesPotentiels';
+import PsychologieDeCrimes from './PsychologieDeCrimes';
+import ContactsEtFortune from './ContactsEtFortune';
+import CreationDeCrimes from './CreationDeCrimes';
+import OppositionDeCrimes from './OppositionDeCrimes';
+import { nevroseDuJet } from '../../../dice/systemes/psychologieDeCrimes';
 import { IssueDeLAttaque, PreparationDeLAttaque } from './AttaqueDeCrimes';
-import { REGLAGES_D_ATTAQUE, type ReglagesDAttaque } from '../../../dice/systemes/armesDeCrimes';
+import { ARMES_DE_CRIMES, REGLAGES_D_ATTAQUE, type ReglagesDAttaque } from '../../../dice/systemes/armesDeCrimes';
+import CirconstancesDuSeuil from './CirconstancesDuSeuil';
+import { CIRCONSTANCES, totalDesCirconstances, type Circonstances } from '../../../dice/systemes/circonstancesDuSeuil';
 import { apresLeGain, peutGagner, pointsDuJet } from '../../logic/pointsDEnquete';
 import { useCosmsCourants } from '../../hooks/useCosmsCourants';
 import { malusDesCiblesMultiples } from '../../../combat/logic/sbiresEtHordes';
@@ -214,6 +221,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** L'attaque de Crimes (C6) : l'arme, la portée, l'opposition, la cible ; et ce qui a été infligé. */
     const [reglagesDAttaque, setReglagesDAttaque] = useState<ReglagesDAttaque>(REGLAGES_D_ATTAQUE);
     const [attaqueInfligee, setAttaqueInfligee] = useState<string | null>(null);
+    /** Les circonstances qui déplacent le seuil du jet gardé (Crimes, C0.1). */
+    const [circonstances, setCirconstances] = useState<Circonstances>(CIRCONSTANCES);
+    const [seuilDeBaseImpose, setSeuilDeBaseImpose] = useState(false);
+    /** L'action relève d'une spécialisation hermétique (Crimes, C0.3) : l'identifiant de sa case. */
+    const [actionHermetique, setActionHermetique] = useState('');
+    const tirDeCrimes = ARMES_DE_CRIMES.find(a => a.id === reglagesDAttaque.arme)?.famille === 'feu';
+    const champDAngoisse = descripteur.garde?.circonstances?.angoisse;
+    const angoisseDuTireur = champDAngoisse ? Math.max(0, Number(valeurs[champDAngoisse]) || 0) : undefined;
+    const modificateurDeLaGarde = descripteur.garde?.circonstances ? totalDesCirconstances(circonstances, tirDeCrimes, angoisseDuTireur) : 0;
+    /** La Névrose du jet notée sur la fiche (Crimes, C4) : une seule fois par lancer. */
+    const [nevroseNotee, setNevroseNotee] = useState<string | null>(null);
     /** Le style d'enquête crédité pour ce jet (Crimes, C5) : une seule fois par lancer. */
     const [enqueteNotee, setEnqueteNotee] = useState<string | null>(null);
     const stylesDEnquete = useSessionOSStore(s => s.getActiveDriver())?.enquete?.styles;
@@ -363,6 +381,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 avantageTactique,
                 ...(specialisationDeLaGarde ? { specialisationDeLaGarde } : {}),
                 ...(depassementAnnonce ? { depassementAnnonce } : {}),
+                ...(modificateurDeLaGarde ? { modificateurDeLaGarde } : {}),
+                ...(seuilDeBaseImpose ? { seuilDeBaseImpose } : {}),
+                ...(actionHermetique ? { actionHermetique } : {}),
                 /*
                   Sur un jeu à dés échelonnés, avantage et désavantage ajoutent
                   ou retirent un DÉ : c'est `preparerLeJet` qui les applique à la
@@ -395,7 +416,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
+        [descripteur, valeurs, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
     );
 
     /*
@@ -1014,6 +1035,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setGardeDuLancer(jet.garde ? { atteintes: jet.garde.atteintes, depassement: jet.garde.depassement } : null);
         setEnqueteNotee(null);
         setAttaqueInfligee(null);
+        setNevroseNotee(null);
         setMouvements(dits);
     };
 
@@ -1451,7 +1473,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
         || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable
-        || !!descripteur.garde?.specialisations || !!descripteur.garde?.depassement || !!descripteur.garde?.armes;
+        || !!descripteur.garde?.specialisations || !!descripteur.garde?.depassement || !!descripteur.garde?.armes
+        || !!descripteur.garde?.circonstances || !!descripteur.garde?.hermetiques?.length;
     const numeros = { composer: 1, preparer: 2, lancer: aPreparer ? 3 : 2, resultat: aPreparer ? 4 : 3 };
     /*
       **Le septième lecteur, et il écrivait lui aussi son propre mot.** Le degré
@@ -1656,8 +1679,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 <span className="ml-3 text-app-text/40 font-bold uppercase tracking-widest text-ui-9">Seuil par dé</span>
                                 <span className="font-mono text-lg font-black text-accent">{jet.garde.seuil}</span>
                                 <span className="text-app-text/30 font-mono">
-                                    {jet.garde.specialisation ? `spécialisé (${jet.garde.specialisation.label})`
-                                        : jet.garde.niveau > 0 ? 'compétent' : 'de base'}
+                                    {jet.garde.seuilImpose ? 'imposé (angoisse)'
+                                        : jet.garde.specialisation ? `spécialisé (${jet.garde.specialisation.label})`
+                                            : jet.garde.niveau > 0 ? 'compétent' : 'de base'}
+                                    {/* Les circonstances (C0.1) : « seuil de 8 +1 −1 = 8 », p. 390. */}
+                                    {!jet.garde.seuilImpose && jet.garde.modificateur !== 0
+                                        && ` = ${jet.garde.seuilDeLaCompetence} ${jet.garde.modificateur > 0 ? '+' : '−'} ${Math.abs(jet.garde.modificateur)} (circonstances)`}
                                 </span>
                             </div>
                         )}
@@ -1948,6 +1975,31 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {descripteur.garde?.armes && (
                         <PreparationDeLAttaque reglages={reglagesDAttaque} atteintes={descripteur.garde.atteintes}
                             changer={r => setReglagesDAttaque(x => ({ ...x, ...r }))} />
+                    )}
+                    {/* Les circonstances du seuil (C0.1) : au tir, distance, cible, taille, angoisse. */}
+                    {descripteur.garde?.circonstances && (
+                        <CirconstancesDuSeuil circonstances={circonstances} tir={tirDeCrimes} angoisse={angoisseDuTireur}
+                            changer={c => setCirconstances(x => ({ ...x, ...c }))}
+                            seuilImpose={seuilDeBaseImpose} imposer={setSeuilDeBaseImpose} />
+                    )}
+
+                    {/*
+                        **Une action hermétique** (Crimes, C0.3, p. 323-325) : on ne la tente
+                        pas sans la spécialisation. Le menu liste celles de la compétence
+                        retenue ; choisir une spécialisation que la fiche ne coche pas refuse
+                        le jet, et le panneau dit pourquoi.
+                    */}
+                    {!!jet.garde?.hermetiques.length && (
+                        <label className="flex items-center gap-2" title="Une action qui relève d'une compétence hermétique ne se tente pas sans la posséder">
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Action hermétique</span>
+                            <select value={jet.garde.actionHermetique?.champ ?? ''} onChange={e => setActionHermetique(e.target.value)} data-action-hermetique
+                                className="bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50">
+                                <option value="">— non —</option>
+                                {jet.garde.hermetiques.map(h => (
+                                    <option key={h.champ} value={h.champ}>{h.label}{h.possede ? '' : ' (non possédée)'}</option>
+                                ))}
+                            </select>
+                        </label>
                     )}
 
                     {/*
@@ -2310,6 +2362,33 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {gardeDuResultat && effetsSurLaNevrose(gardeDuResultat).map(effet => (
                             <span key={effet} className="text-etat-alerte/80 font-mono">{effet}</span>
                         ))}
+                        {/*
+                            **La Névrose du jet, écrite** (Crimes, C4, p. 409) : ce que le panneau dit
+                            sous les dés, le meneur le note d'un clic — une fois par lancer.
+                        */}
+                        {gardeDuResultat && descripteur.garde?.psychologie && ecrireSurLaFiche && !pourLesJoueurs && (() => {
+                            const d = nevroseDuJet(gardeDuResultat);
+                            if (d === 0) return null;
+                            if (nevroseNotee) return <span className="font-mono text-etat-alerte" data-nevrose-notee>{nevroseNotee}</span>;
+                            const champ = descripteur.garde.psychologie.nevrose;
+                            return (
+                                <button data-noter-la-nevrose onClick={() => {
+                                    const avant = Math.max(0, Number(valeursDesAtteintes[champ]) || 0);
+                                    const apres = Math.max(0, avant + d);
+                                    ecrireLesAtteintes({ [champ]: apres });
+                                    const dit = `Névrose ${avant} → ${apres} (${d > 0 ? '+' : ''}${d}, jet)`;
+                                    setNevroseNotee(dit);
+                                    redire('Névrose', { total: 0, modifier: 0, rolls: [], totalDisplay: dit });
+                                }}
+                                    className="px-2 py-1 rounded-lg border border-etat-alerte/50 text-etat-alerte text-ui-10 font-black uppercase tracking-widest hover:bg-etat-alerte/10">
+                                    Noter : Névrose {d > 0 ? '+' : ''}{d}
+                                </button>
+                            );
+                        })()}
+                        {/* Le test en opposition (C1, p. 385) : hors d'une attaque, qui l'emporte et de combien. */}
+                        {gardeDuResultat && !reglagesDAttaque.arme && (
+                            <OppositionDeCrimes reussites={gardeDuResultat.reussites} uns={gardeDuResultat.uns} />
+                        )}
                         {/* L'issue de l'attaque (C6) : touché ou non, le calcul du livre, et « Infliger ». */}
                         {gardeDuResultat && descripteur.garde?.armes && reglagesDAttaque.arme && (
                             <IssueDeLAttaque reglages={reglagesDAttaque} resultat={resultat as JetGarde}
@@ -2318,6 +2397,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                     ? gardeDuLancer.atteintes.actuel
                                     : Number(valeursDesAtteintes[descripteur.garde.atteintes?.incapacite ?? 'physique']) || 0}
                                 peutInfliger={!pourLesJoueurs}
+                                maitrise={jet.garde?.niveau}
+                                {...(descripteur.garde.munitions && ecrireSurLaFiche ? {
+                                    munitions: {
+                                        valeur: Math.max(0, Number(valeursDesAtteintes[descripteur.garde.munitions]) || 0),
+                                        ecrire: (n: number) => ecrireLesAtteintes({ [descripteur.garde!.munitions!]: Math.max(0, n) }),
+                                    },
+                                } : {})}
                                 infligee={attaqueInfligee}
                                 onInfligee={ligne => {
                                     setAttaqueInfligee(ligne);
@@ -2641,6 +2727,44 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         ecrire={ecrireLesAtteintes}
                         consigner={ligne => redire('Atteintes', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })}
                     />
+                </CarteDuJeu>
+            )}
+            {descripteur.garde?.psychologie && ecrireSurLaFiche && (() => {
+                const regle = descripteur.garde.psychologie;
+                // Le Mental du test psychotique, marques comprises (C2).
+                const marques = descripteur.garde.atteintes?.parPotentiel[regle.mental];
+                const n = (c?: string) => (c ? Math.max(0, Number(valeursDesAtteintes[c]) || 0) : 0);
+                const mental = potentielActuel(Number(valeursDesAtteintes[regle.mental]) || 0,
+                    { fatigue: n(marques?.fatigue), epuisement: n(marques?.epuisement), blessures: n(marques?.blessures) });
+                return (
+                    <CarteDuJeu id="psychologie-crimes" titre="Psychologie">
+                        <PsychologieDeCrimes regle={regle} valeurs={valeursDesAtteintes} mentalActuel={mental}
+                            ecrire={ecrireLesAtteintes}
+                            consigner={(titre, ligne) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
+                    </CarteDuJeu>
+                );
+            })()}
+            {(descripteur.garde?.fortune || (descripteur.garde?.contacts && !pourLesJoueurs)) && ecrireSurLaFiche && (
+                <CarteDuJeu id="contacts-fortune-crimes" titre={pourLesJoueurs || !descripteur.garde.contacts ? 'Fortune' : 'Contacts et fortune'}>
+                    <ContactsEtFortune contacts={descripteur.garde.contacts} fortune={descripteur.garde.fortune}
+                        psychose={descripteur.garde.psychologie?.psychose} meneur={!pourLesJoueurs}
+                        valeurs={valeursDesAtteintes} ecrire={ecrireLesAtteintes}
+                        consigner={(titre, ligne) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
+                </CarteDuJeu>
+            )}
+            {descripteur.garde?.creation && ecrireSurLaFiche && (
+                <CarteDuJeu id="creation-crimes" titre="Création et progression">
+                    <CreationDeCrimes regle={descripteur.garde.creation} psychologie={descripteur.garde.psychologie}
+                        competences={descripteur.garde.specialisations?.parCompetence ?? {}}
+                        valeurs={valeursDesAtteintes}
+                        libelleDe={id => template.sections.flatMap(sec => sec.fields).find(f => f.id === id)?.label ?? id}
+                        ecrire={maj => {
+                            const nombres = Object.fromEntries(Object.entries(maj).filter(([, v]) => typeof v === 'number')) as Record<string, number>;
+                            const textes = Object.fromEntries(Object.entries(maj).filter(([, v]) => typeof v !== 'number'));
+                            if (Object.keys(nombres).length) ecrireLesAtteintes(nombres);
+                            if (Object.keys(textes).length) ecrireSurLaFiche(textes);
+                        }}
+                        consigner={(titre, ligne) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
                 </CarteDuJeu>
             )}
             {combatAlien?.actions&&<ActionsAlien personnageId={personnageId} joueur={pourLesJoueurs}/>}

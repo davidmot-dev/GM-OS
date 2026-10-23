@@ -66,6 +66,22 @@ export interface FranchissementEnAttente {
     ecarter: Record<string, unknown>;
     /** L'aperçu : « Séquelles (Blessures) 0 → 1 (+1) ». */
     lignes: string[];
+    /** Les issues au choix (`Franchissement.variantes`), chacune avec ce qu'elle écrit. */
+    variantes?: { id: string; label: string; noter: Record<string, unknown>; lignes: string[] }[];
+}
+
+/** Ce que des mouvements écrivent sur une fiche, et ce qu'on en dit. */
+function ecrituresDes(mouvements: Franchissement['mouvements'], depart: Record<string, unknown>, nom: Libelle) {
+    const valeurs = { ...depart };
+    const maj: Record<string, unknown> = {};
+    const lignes: string[] = [];
+    for (const m of mouvements) {
+        const r = appliquerLeMouvement(m, valeurs, 1, nom);
+        if (!r) continue;
+        lignes.push(r.ligne);
+        if (r.valeur !== r.avant) { maj[m.champ] = r.valeur; valeurs[m.champ] = r.valeur; }
+    }
+    return { maj, lignes };
 }
 
 /** Les seuils franchis et pas encore traités, Héros par Héros, dans l'ordre du pilote. */
@@ -80,21 +96,19 @@ export function franchissementsEnAttente(
         return franchissements
             .filter(f => !traites[f.id] && franchi(f, h.valeurs))
             .map(f => {
-                const valeurs = { ...h.valeurs };
-                const maj: Record<string, unknown> = {};
-                const lignes: string[] = [];
-                for (const m of f.mouvements) {
-                    const r = appliquerLeMouvement(m, valeurs, 1, nom);
-                    if (!r) continue;
-                    lignes.push(r.ligne);
-                    if (r.valeur !== r.avant) { maj[m.champ] = r.valeur; valeurs[m.champ] = r.valeur; }
-                }
+                const { maj, lignes } = ecrituresDes(f.mouvements, h.valeurs, nom);
                 // Le dé se lance au geste, jamais ici : l'aperçu se redessine.
                 if (f.jet) lignes.push(`${f.jet.label ?? nom(f.jet.champ)} +1D${f.jet.faces}`);
                 const marque = { [CLE_DES_FRANCHISSEMENTS]: { ...traites, [f.id]: true } };
                 return {
                     heros: h, franchissement: f, valeur: valeurSurveillee(f, h.valeurs),
                     noter: { ...maj, ...marque }, ecarter: marque, lignes,
+                    ...(f.variantes?.length ? {
+                        variantes: f.variantes.map(v => {
+                            const e = ecrituresDes(v.mouvements, h.valeurs, nom);
+                            return { id: v.id, label: v.label, noter: { ...e.maj, ...marque }, lignes: e.lignes };
+                        }),
+                    } : {}),
                 };
             });
     });

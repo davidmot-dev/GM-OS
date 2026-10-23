@@ -50,9 +50,12 @@ const AlertesDeFranchissement: React.FC<{
     const enAttente = franchissementsEnAttente(franchissements, heros, nom);
     if (enAttente.length === 0) return null;
 
-    const ecrire = (a: FranchissementEnAttente, noter: boolean) => {
+    const ecrire = (a: FranchissementEnAttente, noter: boolean, variante?: string) => {
+        // Une issue au choix (la Névrose de Crimes : moitié ou zéro) remplace « Noter ».
+        const choisie = a.variantes?.find(v => v.id === variante);
         // Le dé du seuil (le 1D4 de Corruption de Symbaroum) se lance ici, au geste.
-        const note = noter ? noterLeFranchissement(a, faces => DiceEngine.roll(faces), nom) : { maj: a.ecarter, lignes: [] };
+        const note = choisie ? { maj: choisie.noter, lignes: [choisie.label, ...choisie.lignes] }
+            : noter ? noterLeFranchissement(a, faces => DiceEngine.roll(faces), nom) : { maj: a.ecarter, lignes: [] };
         // Ce qui est noté se dit au journal, ci-dessous : l'historique des fiches se tait (H1).
         avecOrigine('silencieuse', () =>
             updateCharacter(a.heros.joueurId, a.heros.id, { sheetData: { ...a.heros.valeurs, ...note.maj } }));
@@ -79,10 +82,17 @@ const AlertesDeFranchissement: React.FC<{
                     </span>
                     {a.lignes.length > 0 && <span className="font-mono text-app-text/50">{a.lignes.join(' ; ')}</span>}
                     <span className="ml-auto flex gap-2">
-                        <button onClick={() => ecrire(a, true)}
-                            className={`${CLASSE_DU_BOUTON} border-etat-alerte/40 text-etat-alerte hover:bg-etat-alerte/10`}>
-                            Noter
-                        </button>
+                        {a.variantes ? a.variantes.map(v => (
+                            <button key={v.id} onClick={() => ecrire(a, true, v.id)} title={v.lignes.join(' ; ')}
+                                className={`${CLASSE_DU_BOUTON} border-etat-alerte/40 text-etat-alerte hover:bg-etat-alerte/10`}>
+                                {v.label}
+                            </button>
+                        )) : (
+                            <button onClick={() => ecrire(a, true)}
+                                className={`${CLASSE_DU_BOUTON} border-etat-alerte/40 text-etat-alerte hover:bg-etat-alerte/10`}>
+                                Noter
+                            </button>
+                        )}
                         <button onClick={() => ecrire(a, false)}
                             title="Le seuil ne sera plus proposé tant que la jauge ne redescend pas en dessous"
                             className={`${CLASSE_DU_BOUTON} border-app-border/40 text-app-text/50 hover:border-accent/40 hover:text-accent`}>

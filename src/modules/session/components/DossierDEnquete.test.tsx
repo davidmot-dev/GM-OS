@@ -79,3 +79,38 @@ describe('le dossier d’enquête', () => {
         expect(updateCharacterSheetData).toHaveBeenCalledWith('j', 'rachel', 'compteur_conde', 0);
     });
 });
+
+/** **L'affaire par lieu et par témoin, et ses hypothèses** — C5, reste (2026-10-23), p. 437-440. */
+describe('l’affaire et ses hypothèses', () => {
+    const updateCampaign = vi.fn();
+    beforeEach(() => {
+        updateCampaign.mockClear();
+        useSessionOSStore.setState({
+            atlasMaps: [{ id: 'ruelle', name: 'La ruelle des Ursulines' }],
+            entities: [{ id: 'ivrogne', name: 'L’ivrogne' }],
+            campaigns: [{ id: 'c', name: 'Le Bombyx', system: 'crimes', activeLocationIds: [], hypothesesDEnquete: [] }],
+            clues: [
+                { id: 'arme', campaignId: 'c', title: 'L’arme dans la poubelle', content: '', isRevealed: false, locationId: 'ruelle', ownerId: 'ivrogne' },
+                { id: 'larve', campaignId: 'c', title: 'La larve de bombyx', content: '', isRevealed: true },
+            ],
+            updateCampaign,
+        } as never);
+    });
+
+    it('les indices se rangent par lieu et par témoin, avec leur état', () => {
+        render(<DossierDEnquete styles={STYLES} />);
+        const affaire = document.querySelector('[data-affaire-par-lieu-et-temoin]') as HTMLElement;
+        expect(within(affaire).getByText('Lieu — La ruelle des Ursulines')).toBeTruthy();
+        expect(within(affaire).getByText('Témoin — L’ivrogne')).toBeTruthy();
+        expect(within(affaire).getAllByText('— caché')).toHaveLength(2);
+    });
+
+    it('une hypothèse se note, avec son style ; l’outil ne la valide pas, le meneur peut l’écarter', () => {
+        render(<DossierDEnquete styles={STYLES} />);
+        fireEvent.change(document.querySelector('[data-nouvelle-hypothese]') as HTMLElement, { target: { value: 'Le meneur de la bande a jeté son arme.' } });
+        fireEvent.change(screen.getByLabelText('Style de l’hypothèse'), { target: { value: 'Limier' } });
+        fireEvent.click(within(document.querySelector('[data-hypotheses]') as HTMLElement).getByText('Noter'));
+        expect(updateCampaign).toHaveBeenCalledWith('c', { hypothesesDEnquete: [expect.objectContaining({ texte: 'Le meneur de la bande a jeté son arme.', style: 'Limier' })] });
+        expect(addEvent).toHaveBeenCalledWith(expect.objectContaining({ title: 'Hypothèse de l’affaire' }));
+    });
+});

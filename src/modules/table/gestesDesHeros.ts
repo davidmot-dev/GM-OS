@@ -94,6 +94,11 @@ export function appliquerLeMouvement(
         const vide = Math.min(avant, plancher);
         return { valeur: vide, avant, ligne: `${label} ${avant} → ${vide} (remis à ${plancher})` };
     }
+    // Ramené à sa moitié, arrondie à l'inférieur — la Névrose de Crimes au seuil (p. 409).
+    if (m.delta === 'moitie') {
+        const moitie = Math.max(Math.min(avant, plancher), Math.floor(avant / 2));
+        return { valeur: moitie, avant, ligne: `${label} ${avant} → ${moitie} (moitié)` };
+    }
 
     const precisions: string[] = [];
     let quantite = Math.abs(m.delta) * Math.max(1, fois);

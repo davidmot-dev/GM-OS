@@ -741,6 +741,26 @@ export function controlerLePilote(
                 avertir('jet.garde.specialisations', `Aucune case de la fiche ne commence par « ${prefixe} » : la compétence « ${competence} » n'offrira aucune spécialisation.`);
             }
         }
+        /*
+          Les champs que lisent les circonstances, les compétences hermétiques, la
+          psychologie, les munitions, les contacts, la fortune et la création
+          (Crimes C0.1 à C8, 2026-10-23) : un champ absent ne casse rien, il se tait.
+        */
+        const lus: [string, string | undefined][] = [
+            ['jet.garde.circonstances.angoisse', garde.circonstances?.angoisse],
+            ...(garde.hermetiques ?? []).map(c => ['jet.garde.hermetiques', c] as [string, string]),
+            ...Object.entries(garde.psychologie ?? {}).flatMap(([cle, v]) => (typeof v === 'string'
+                ? [[`jet.garde.psychologie.${cle}`, v]] : [['jet.garde.psychologie.innocence', v.score], ['jet.garde.psychologie.innocence', v.seuil]]) as [string, string][]),
+            ['jet.garde.munitions', garde.munitions],
+            ...(garde.contacts ?? []).flatMap(c => [c.nom, c.loyaute, c.appels, c.influence].map(v => ['jet.garde.contacts', v] as [string, string | undefined])),
+            ['jet.garde.fortune', garde.fortune?.niveau], ['jet.garde.fortune', garde.fortune?.jauge],
+            ...(garde.creation?.potentiels ?? []).map(p => ['jet.garde.creation.potentiels', p] as [string, string]),
+            ...Object.values(garde.creation?.temperament ?? {}).map(v => ['jet.garde.creation.temperament', v] as [string, string]),
+            ['jet.garde.creation.age', garde.creation?.age], ['jet.garde.creation.developpement', garde.creation?.developpement],
+        ];
+        for (const [chemin, champ] of lus) {
+            if (champ && !tousLesChamps.has(champ)) avertir(chemin, `« ${champ} » n'est pas un champ de la fiche : ce qu'il porte ne se lira pas.`);
+        }
     }
 
     /*
@@ -1876,8 +1896,8 @@ export function controlerLePilote(
         (mouvements ?? []).forEach((m, i) => {
             const ici = `${ou}[${i}]`;
             const nom = m.label ?? m.champ;
-            if (m.delta !== 'plein' && m.delta !== 'vide' && !(Number.isInteger(m.delta) && m.delta !== 0)) {
-                erreur(`${ici}.delta`, `« ${nom} » doit bouger d'un nombre entier non nul, ou revenir « plein » ou « vide ».`);
+            if (m.delta !== 'plein' && m.delta !== 'vide' && m.delta !== 'moitie' && !(Number.isInteger(m.delta) && m.delta !== 0)) {
+                erreur(`${ici}.delta`, `« ${nom} » doit bouger d'un nombre entier non nul, ou revenir « plein », « vide » ou à la « moitie ».`);
             }
             if (m.delta === 'plein' && m.max === undefined) {
                 erreur(`${ici}.max`, `« ${nom} » revient « plein » sans plafond : il ne bougerait jamais.`);
@@ -1972,8 +1992,13 @@ export function controlerLePilote(
         if (f.jet && !(Number.isInteger(f.jet.faces) && f.jet.faces > 1)) erreur(`${ou}.jet`, `Le dé de « ${f.label ?? f.champ} » doit avoir un nombre de faces.`);
         if (f.jet && !tousLesChamps.has(f.jet.champ)) avertir(`${ou}.jet`, `Le dé de « ${f.label ?? f.champ} » s'ajoute à « ${f.jet.champ} », absent de la fiche.`);
         // « Noter » sans mouvement consigne le rappel (l'Abomination) : il lui faut au moins de quoi dire.
-        if (!f.mouvements?.length && !f.jet && !f.rappel) erreur(`${ou}.mouvements`, `« ${f.label ?? f.champ} » ne propose rien à noter ni à dire.`);
+        if (!f.mouvements?.length && !f.jet && !f.rappel && !f.variantes?.length) erreur(`${ou}.mouvements`, `« ${f.label ?? f.champ} » ne propose rien à noter ni à dire.`);
         controlerLesMouvements(f.mouvements, `${ou}.mouvements`);
+        // Les issues au choix (Crimes, C4) : un identifiant, un libellé, des mouvements contrôlés comme les autres.
+        (f.variantes ?? []).forEach((v, j) => {
+            if (!v.id || !v.label) erreur(`${ou}.variantes[${j}]`, `Chaque issue de « ${f.label ?? f.champ} » porte un identifiant et un libellé.`);
+            controlerLesMouvements(v.mouvements, `${ou}.variantes[${j}].mouvements`);
+        });
     });
 
     return constats;
