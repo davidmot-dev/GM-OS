@@ -3,6 +3,9 @@ import manifeste from '../../outils/alien/modules/muthur/manifeste.json';
 import * as detecteur from '../../outils/alien/modules/detecteur/moteur.mjs';
 import manifesteDetecteur from '../../outils/alien/modules/detecteur/manifeste.json';
 import type { CommandeDetecteur } from '../../outils/alien/modules/detecteur/moteur.mjs';
+import * as combatSpatial from '../../outils/alien/modules/combat-spatial/moteur.mjs';
+import manifesteCombatSpatial from '../../outils/alien/modules/combat-spatial/manifeste.json';
+import type { CommandeCombatSpatial } from '../../outils/alien/modules/combat-spatial/moteur.mjs';
 import type { CommandeMuthur, ContexteMuthur } from '../../outils/alien/modules/muthur/moteur.mjs';
 import type { CommandeDeModule } from '../../src/modules/modulesDuJeu/protocole';
 import * as lcars from '../../outils/star-trek/lcars/natif.mjs';
@@ -71,5 +74,14 @@ export const REGISTRE_DES_MOTEURS: ReadonlyMap<string, MoteurEnregistre> = new M
             return detecteur.appliquerCommande(donnees, commande as CommandeDetecteur, lecteur);
         },
         vuePour(donnees, lecteur) { detecteur.validerEtat(donnees); return detecteur.vuePour(donnees, lecteur); },
+    }],
+    [manifesteCombatSpatial.id, {
+        manifeste: manifesteCombatSpatial, creerEtat: combatSpatial.creerEtat, migrerEtat: combatSpatial.migrerEtat,
+        arreterEffets(donnees) { combatSpatial.validerEtat(donnees); return combatSpatial.arreterEffets(donnees); },
+        appliquerCommande(donnees, commande, lecteur) {
+            combatSpatial.validerEtat(donnees);
+            return combatSpatial.appliquerCommande(donnees, commande as CommandeCombatSpatial, lecteur);
+        },
+        vuePour(donnees, lecteur, contexte) { combatSpatial.validerEtat(donnees); return combatSpatial.vuePour(donnees, lecteur, contexte); },
     }],
 ]);

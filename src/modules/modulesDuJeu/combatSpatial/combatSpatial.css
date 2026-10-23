@@ -1,0 +1,32 @@
+/* Combat spatial d'Alien : même terminal que le détecteur ; aucune règle ne déborde sur l'hôte. */
+.gmos-spatial { --spatial-texte:#c5ebd0; --spatial-discret:#9abbab; --spatial-alerte:#f1b9a5; --spatial-bord:#344b3f; color:var(--spatial-texte); background:#080e0c; border:1px solid var(--spatial-bord); border-radius:12px; padding:clamp(14px,3vw,28px); font:15px/1.55 ui-monospace,monospace; width:100%; max-width:1180px; margin:auto; box-sizing:border-box; }
+.gmos-spatial * { box-sizing:border-box; }
+.gmos-spatial h2 { font-size:clamp(20px,4vw,28px); font-weight:700; margin:0 0 6px; }
+.gmos-spatial h3 { font-size:17px; font-weight:700; margin:18px 0 10px; }
+.gmos-spatial h4 { font-size:15px; font-weight:700; margin:12px 0 6px; }
+.gmos-spatial p { margin:0 0 10px; }
+.gmos-spatial small, .gmos-spatial .spatial-discret { color:var(--spatial-discret); }
+.gmos-spatial .spatial-alerte { color:var(--spatial-alerte); }
+.gmos-spatial .spatial-bandeau { display:flex; flex-wrap:wrap; gap:8px 18px; padding:10px 14px; border:1px solid var(--spatial-bord); border-radius:8px; margin:0 0 14px; }
+.gmos-spatial .spatial-grille { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:14px; }
+.gmos-spatial .spatial-carte { border:1px solid var(--spatial-bord); border-radius:8px; padding:12px 14px; min-width:0; }
+.gmos-spatial .spatial-carte.spatial-actif { border-color:#b8e2c4; }
+.gmos-spatial .spatial-ligne { display:flex; flex-wrap:wrap; align-items:end; gap:10px; margin:8px 0; }
+.gmos-spatial button { min-height:44px; padding:8px 14px; border:1px solid #4c6f5a; border-radius:5px; background:#15291e; color:var(--spatial-texte); cursor:pointer; font:inherit; }
+.gmos-spatial button:hover { background:#213b2c; }
+.gmos-spatial button:disabled { opacity:.5; cursor:default; }
+.gmos-spatial button:focus-visible, .gmos-spatial input:focus-visible, .gmos-spatial select:focus-visible { outline:2px solid #b8e2c4; outline-offset:3px; }
+.gmos-spatial label { display:flex; flex-direction:column; gap:3px; min-width:0; }
+.gmos-spatial input[type=number], .gmos-spatial input[type=text], .gmos-spatial input:not([type]), .gmos-spatial select { min-height:40px; width:100%; border:1px solid #42594b; border-radius:4px; background:#0b1710; padding:6px 10px; color:var(--spatial-texte); font:inherit; }
+.gmos-spatial input[type=number] { max-width:7rem; }
+.gmos-spatial .spatial-case { flex-direction:row; align-items:center; gap:10px; min-height:40px; }
+.gmos-spatial input[type=checkbox] { width:20px; height:20px; accent-color:#b8e2c4; }
+.gmos-spatial summary { cursor:pointer; padding:10px 0; font-weight:700; }
+.gmos-spatial ul { margin:0; padding-left:1.2em; }
+.gmos-spatial li, .gmos-spatial strong { overflow-wrap:anywhere; }
+.gmos-spatial .spatial-journal { max-height:320px; overflow:auto; border-top:1px solid var(--spatial-bord); padding-top:8px; }
+.gmos-spatial .spatial-journal li { margin-bottom:4px; }
+.gmos-spatial .spatial-piste { display:grid; grid-template-columns:repeat(9,1fr); gap:3px; margin:8px 0 12px; }
+.gmos-spatial .spatial-piste span { text-align:center; border:1px solid var(--spatial-bord); border-radius:4px; padding:4px 0; font-size:12px; }
+.gmos-spatial .spatial-piste span.spatial-ici { background:#213b2c; border-color:#b8e2c4; }
+.gmos-spatial .spatial-des { font-size:18px; letter-spacing:.08em; }

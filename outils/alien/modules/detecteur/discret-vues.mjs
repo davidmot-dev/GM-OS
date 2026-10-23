@@ -53,6 +53,8 @@ export function DiscretMJ({ d,envoyer,occupe }) {
     h('label',{className:'detecteur-case'},h('input',{type:'checkbox',checked:d.actif,disabled:occupe,onChange:e=>envoyer('mode-discret',{actif:e.target.checked})}),'Raccorder le détecteur au plan et à sa batterie'),
     h('p',null,'Le mode de mise en scène reste disponible en décochant. Les Tours, déplacements et coûts restent conservés.'),
     h(Zones,{d,envoyer,occupe}),h(Pions,{d,envoyer,occupe}),
+    // Le plan se voit dès la première zone, pendant la préparation ; le reste attend le raccord.
+    !d.actif&&h(Plan,{d}),
     d.actif&&h('div',null,h(Plan,{d}),
       h('form',{key:JSON.stringify([d.terrain,d.energie,d.porteurId]),className:'detecteur-reglages','aria-label':'Batterie et porteur du M314',onSubmit:e=>{
         e.preventDefault();const f=new FormData(e.currentTarget);void envoyer('regler-discret',{terrain:f.get('terrain'),energie:Number(f.get('energie')),porteurId:f.get('porteurId')});

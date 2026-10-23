@@ -50,7 +50,7 @@ proposés pour ce pilote. Le choix s’enregistre automatiquement et accompagne 
 du pilote et de campagne. Une référence absente du catalogue est signalée au meneur et conservée
 à l’export ; elle peut être retirée explicitement.
 
-Les anciens pilotes Alien proposent **MU/TH/UR 6000** et le **Détecteur de mouvement** par défaut.
+Les anciens pilotes Alien proposent **MU/TH/UR 6000**, le **Détecteur de mouvement** et le **Combat spatial** par défaut.
 Tout décocher enregistre une liste vide : la proposition par défaut ne revient pas à la reprise.
 Star Trek propose **LCARS — Passerelle**, à sélectionner explicitement dans son pilote.
 
@@ -68,6 +68,9 @@ MU/TH/UR et le détecteur Alien sont disponibles avec des accès indépendants. 
 un scan partagé entre les PJ choisis, des contacts aléatoires dans la proximité retenue et un faux
 écho de neuf secondes. Chaque appareil active localement ses bips. Aucun Stress n’est modifié.
 Le MJ peut classer/supprimer les dossiers MU/TH/UR et traiter plusieurs demandes privées par PJ.
+Le **Combat spatial** d'Alien mène un affrontement entre vaisseaux : postes tenus par les PJ, ordres
+secrets donnés depuis la tablette, résolution dans l'ordre d'initiative, dés lancés au poste du MJ
+(voir le [guide Alien](54-Jeu-Alien.md)).
 Le détecteur propose des préréglages nommés par campagne : les charger arrête le scan, qui se
 relance volontairement. Voir le [guide Alien](54-Jeu-Alien.md).
 

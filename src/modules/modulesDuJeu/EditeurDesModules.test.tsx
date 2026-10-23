@@ -7,7 +7,7 @@ import type { GameDriver } from '../../types/drivers';
 afterEach(cleanup);
 const alien = { id: 'custom-1', name: 'Alien' } as GameDriver;
 describe('sélection des modules', () => {
-    it('désélectionne les deux modules et garde un choix explicite vide', () => {
+    it('désélectionne tous les modules et garde un choix explicite vide', () => {
         const sauver = vi.fn();
         function Atelier() {
             const [pilote, setPilote] = useState(alien);
@@ -16,7 +16,7 @@ describe('sélection des modules', () => {
         render(<Atelier />);
         const cases = screen.getAllByRole('checkbox');
         expect(cases.every(c => (c as HTMLInputElement).checked)).toBe(true);
-        fireEvent.click(cases[0]); fireEvent.click(cases[1]);
+        cases.forEach(c => fireEvent.click(c));
         expect(sauver).toHaveBeenLastCalledWith([]);
         expect(cases.every(c => !(c as HTMLInputElement).checked)).toBe(true);
     });

@@ -52,6 +52,9 @@ describe('instrument du détecteur', () => {
         fireEvent.change(vue.getByLabelText('Nom de la zone'),{target:{value:'Sas'}});
         await act(async()=>fireEvent.submit(vue.getByLabelText('Nom de la zone').closest('form')!));
         expect(etat.discret.zones[0].nom).toBe('Sas');
+        // Le plan privé se voit dès la première zone, avant le raccord (David, 23/10).
+        expect(vue.getByRole('img',{name:'Plan privé des zones'})).toBeTruthy();
+        expect(vue.queryByLabelText('Réserve propre à la batterie du M314')).toBeNull();
         fireEvent.change(vue.getByLabelText('Nom privé du pion'),{target:{value:'Porteur'}});
         await act(async()=>fireEvent.submit(vue.getByLabelText('Nom privé du pion').closest('form')!));
         expect(etat.discret.pions[0]).toMatchObject({nom:'Porteur',humain:true,limite:2,depense:0});

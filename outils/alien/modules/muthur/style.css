@@ -34,7 +34,9 @@
 .gmos-muthur :focus-visible { outline: 2px solid var(--muthur-encre); outline-offset: 3px; }
 .gmos-muthur label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
 .gmos-muthur fieldset { border:0; padding:0; min-width:0; }
-.gmos-muthur input[type="checkbox"] { width: 44px; accent-color: var(--muthur-encre); }
+/* Une case garde son rendu natif : habillée comme un champ (fond, bord, rembourrage), sa coche disparaît
+   (David, 23/10/2026). La marge rend au doigt sa cible de 44 px. */
+.gmos-muthur input[type="checkbox"] { appearance: auto; width: 24px; height: 24px; min-height: 0; padding: 0; margin: 10px; border: 0; background: none; accent-color: var(--muthur-encre); cursor: pointer; align-self: flex-start; }
 .gmos-muthur textarea { resize: vertical; width: 100%; }
 .gmos-muthur .muthur-champ-code { margin-bottom: 12px; }
 .gmos-muthur .muthur-champ-code label { margin-bottom: 6px; }

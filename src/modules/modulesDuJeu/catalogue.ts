@@ -2,6 +2,7 @@ import { resoudreCorpus, slug } from '../../../electron/corpusSysteme';
 import { validerLeManifeste, validerLesReferences } from '../../../outils/modules-du-jeu/contrat.mjs';
 import manifesteMuthur from '../../../outils/alien/modules/muthur/manifeste.json';
 import manifesteDetecteur from '../../../outils/alien/modules/detecteur/manifeste.json';
+import manifesteCombatSpatial from '../../../outils/alien/modules/combat-spatial/manifeste.json';
 import manifesteLcars from '../../../outils/star-trek/lcars/manifeste.json';
 import manifesteTmr from '../../../outils/reve-de-dragon/tmr/manifeste.json';
 import type { ModuleDuCatalogue, ModuleDuPilote, ReferenceDeModuleDuJeu } from './types';
@@ -9,6 +10,7 @@ import type { ModuleDuCatalogue, ModuleDuPilote, ReferenceDeModuleDuJeu } from '
 // Registre explicite : aucun chemin, script ou URL fourni par un pilote n'est exécuté.
 if (validerLeManifeste(manifesteMuthur).length) throw new Error('Manifeste MU/TH/UR invalide.');
 if (validerLeManifeste(manifesteDetecteur).length) throw new Error('Manifeste du détecteur invalide.');
+if (validerLeManifeste(manifesteCombatSpatial).length) throw new Error('Manifeste du combat spatial invalide.');
 if (validerLeManifeste(manifesteLcars).length) throw new Error('Manifeste LCARS invalide.');
 if (validerLeManifeste(manifesteTmr).length) throw new Error('Manifeste TMR invalide.');
 export const CATALOGUE_DES_MODULES: readonly ModuleDuCatalogue[] = [
@@ -21,6 +23,8 @@ export const CATALOGUE_DES_MODULES: readonly ModuleDuCatalogue[] = [
         corpusCompatibles: manifesteMuthur.corpusCompatibles, adaptation: 'prete' },
     { id: manifesteDetecteur.id, libelle: manifesteDetecteur.libelle, description: manifesteDetecteur.description,
         corpusCompatibles: manifesteDetecteur.corpusCompatibles, adaptation: 'prete' },
+    { id: manifesteCombatSpatial.id, libelle: manifesteCombatSpatial.libelle, description: manifesteCombatSpatial.description,
+        corpusCompatibles: manifesteCombatSpatial.corpusCompatibles, adaptation: 'prete' },
 ];
 
 export { validerLesReferences };

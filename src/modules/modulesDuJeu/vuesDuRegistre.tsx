@@ -40,11 +40,20 @@ const mjDetecteur = lazy(async () => {
     const { PupitreMJ } = await import('../../../outils/alien/modules/detecteur/vues.mjs');
     return { default: (props: Props) => <PupitreMJ vue={props.vue as EtatDetecteur} envoyerCommande={props.envoyerCommande} /> };
 });
+const joueurCombatSpatial = lazy(async () => {
+    const { VueEquipage } = await import('./combatSpatial/VuesCombatSpatial');
+    return { default: (props: Props) => <VueEquipage vue={props.vue as import('../../../outils/alien/modules/combat-spatial/moteur.mjs').VueCombatSpatial} envoyerCommande={props.envoyerCommande} /> };
+});
+const mjCombatSpatial = lazy(async () => {
+    const { PupitreCombatSpatial } = await import('./combatSpatial/VuesCombatSpatial');
+    return { default: (props: Props) => <PupitreCombatSpatial vue={props.vue as import('../../../outils/alien/modules/combat-spatial/moteur.mjs').VueCombatSpatial} envoyerCommande={props.envoyerCommande} /> };
+});
 const REGISTRE_DES_VUES = new Map([
     ['rdd-tmr', { joueur: vueTmr, mj: mjTmr }],
     ['star-trek-lcars', { joueur: joueurLcars, mj: mjLcars }],
     ['alien-muthur', { joueur: joueurMuthur, mj: mjMuthur }],
     ['alien-detecteur', { joueur: joueurDetecteur, mj: mjDetecteur }],
+    ['alien-combat-spatial', { joueur: joueurCombatSpatial, mj: mjCombatSpatial }],
 ]);
 class GardeDuModule extends Component<{ children: ReactNode }, { echec: boolean }> {
     state = { echec: false };

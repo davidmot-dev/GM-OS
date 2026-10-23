@@ -22,7 +22,7 @@ David valide les essais A4 et A5 le 21/10 : « ok A4 et A5 tester c'est bon ».
 A0–A5 sont livrés, essayés et validés. Le 21/10, David demande « on va continuer avec A6 et A7 »
 et confirme « Non, GM-OS est fermé. ». **A6/A7 livrés et contrôlés le 22/10** ;
 essai de David validé le 22/10. A8 demandé ensuite, GM-OS confirmé fermé.
-**A8 livré et contrôlé le 22/10 ; essai de David attendu.**
+**A8 livré et contrôlé le 22/10 ; essai de David validé le 23/10** : « ca marche A8 est testé ».
 Voir les bilans [A0/A1](2026-10-20-alien-a0-a1.md), [A2](2026-10-20-alien-a2.md)
 et [A3](2026-10-21-alien-a3.md), puis [A4](2026-10-21-alien-a4.md),
 [A5](2026-10-21-alien-a5.md) et [A6/A7](2026-10-21-alien-a6-a7.md).
@@ -70,15 +70,17 @@ et leurs raccords manquants.
 | **A5** | 3 | **Survie** : tests des réserves Air/Eau/Nourriture/Énergie individuels ou collectifs, échéances persistantes et reçus, quatre états reliés à l'HTML, restrictions de repos, Rads temporaires/permanents et surplus au-delà des dix cases, encombrement avec masses confirmées. | Livré le 21/10 : 49 champs et 46 liens, types/build/lint ciblé sans erreur, 1 460 tests dans 107 fichiers, recette finale Electron/combat/Hub à trois tailles réussie, huit captures relues. Essai de David validé le 21/10 ; [bilan A5](2026-10-21-alien-a5.md) |
 | **A6** | 4 | **Actions et xénomorphes** : budget lente/rapide déclaré avant les dés, réactions et surveillance, cartes uniques selon la Vitesse avec une seule Santé, attaques et critiques D6, sang acide XX121. Conséquences narratives confirmées par Maman. | Livré et contrôlé le 22/10, export v1.6.0 : 1 567 tests dans 119 fichiers, types/build/lint ciblé sans erreur, recette réelle A0–A7 Electron/combat/Hub à trois tailles et neuf captures vérifiées ; essai de David validé le 22/10 ; [bilan A6/A7](2026-10-21-alien-a6-a7.md) |
 | **A7** | 5 | **Cinéma et Campagne** : objectifs remis en messagerie privée par acte, Récit Cinéma, bilan PX conservé, apprentissages uniques, Camarade/Rival et fétiche par période. | Livré et contrôlé le 22/10, export v1.7.0 incluant A0–A6, 49 champs et 46 liens. Mêmes contrôles A6/A7 réussis ; confidentialité, reconnexion et absence de double gain/achat vérifiées ; essai de David validé le 22/10 ; [bilan A6/A7](2026-10-21-alien-a6-a7.md) |
-| **A8** | Livré, essai attendu | **Accessoires et mode discret** : plan privé de zones, déplacements par Tour, scan M314 unique avec batterie propre et mouvements à portée ; dossiers d'acte publiés explicitement et objectifs remis au seul opérateur dans MU/TH/UR. Mise en scène conservée, arbitrage de Maman et report des Tours dans A5 explicites. Combat spatial séparé. | Livré et contrôlé le 22/10, export v1.8.0 incluant A0–A7, 49 champs et 46 liens ; 173 tests/21 fichiers et 74 vérifications autonomes, types/build/lint ciblé réussis. Recette A8 et quatre parcours existants Electron/Hub réussis, six captures relues ; [bilan A8](2026-10-22-alien-a8.md). Essai de David attendu ; inclus dans le présent commit |
+| **A8** | Livré et essayé | **Accessoires et mode discret** : plan privé de zones, déplacements par Tour, scan M314 unique avec batterie propre et mouvements à portée ; dossiers d'acte publiés explicitement et objectifs remis au seul opérateur dans MU/TH/UR. Mise en scène conservée, arbitrage de Maman et report des Tours dans A5 explicites. Combat spatial séparé. | Livré et contrôlé le 22/10, export v1.8.0 incluant A0–A7, 49 champs et 46 liens ; 173 tests/21 fichiers et 74 vérifications autonomes, types/build/lint ciblé réussis. Recette A8 et quatre parcours existants Electron/Hub réussis, six captures relues ; [bilan A8](2026-10-22-alien-a8.md). Essai de David attendu ; inclus dans le présent commit |
+| **A9** | Livré et essayé | **Combat spatial (p. 188-201)** : vaisseaux du livre ou libres, postes tenus par les PJ, Tours en quatre phases, ordres secrets depuis la tablette, verrouillage, pilotage, tirs, Protection, coque, avaries D66/2D6 (errata 55), réparations d'urgence, Panique spatiale ; pilote 1.9.0. Plan privé d'A8 affiché dès la première zone. | Livré le 23/10 (registre général § 162) |
 
 ## Ordre proposé et dépendances
 
 A0–A5 sont livrés, essayés et validés par David ; validation A4/A5 reçue le 21/10.
 A0–A7 sont livrés, contrôlés et validés par David. Le 22/10, David demande le commit/push,
 puis A8, et confirme GM-OS fermé. A4–A7 sont poussés dans `3cffff3d`, après typage, lint,
-8 590 tests et build réussis. A8 est livré et contrôlé ; essai de David attendu.
-Le combat spatial reste séparé.
+8 590 tests et build réussis. A8 est livré, contrôlé et validé par David le 23/10.
+Le 23/10, David demande la suite (« je voudrais aussi finir Alien aujourd'hui ») : **A9, le combat spatial**,
+livré et essayé le même jour (« tout est testé, tu peux faire les commit et pousser »).
 
 A1 fixe le résultat définitif du jet avant l’application des dégâts d’A3. A2 relie les armes
 nécessaires au tir d’A3. A4 définit les exceptions de nature à respecter dans A1/A3/A5.
@@ -128,6 +130,10 @@ restent validés par Maman.
 | 22/10/2026 | Codex | Commit `3cffff3d` poussé sur `feature/tablet-hub-pwa` ; typage, lint global, 8 590 tests et build réussis. Deux guides synchronisés vers NotebookLM par le hook. A8 engagé. |
 | 22/10/2026 | Codex | A8 livré en v1.8.0 : 153 tests/20 fichiers, 74 vérifications autonomes, types/build/lint ciblé réussis ; recette réelle A8 et quatre parcours existants Electron/Hub réussis, six captures relues. Manuel, registre et synthèse actualisés. Essai de David attendu ; A8 non commité. |
 | 22/10/2026 | David | « commit tout ce qu'il reste sous ta responsabilité » : commit de la livraison A8, documentation et captures, avec les exports corrigés et états JSON Alien A4–A8 générés. Les autres chantiers restent hors commit ; aucun nouveau push demandé. |
+| 23/10/2026 | David | « on va faire la suite d'Alien, je voudrais aussi finir Alien aujourd'hui » ; GM-OS fermé ; périmètre du combat spatial « complet » ; plan A8 dès la première zone : oui. |
+| 23/10/2026 | David | « tout est testé, tu peux faire les commit et pousser » : essai A9 et cases à cocher de MU/TH/UR validés. A0–A9 livrés et validés. |
+| 23/10/2026 | Claude Code | A9 livré : module `alien-combat-spatial` 1.0.0, pilote 1.9.0, 10 essais du moteur, 2 d'écran, recette réelle Electron et Hub Edge, deux captures ; suite complète 8 834 essais verts. Essai de David attendu. |
+| 23/10/2026 | David | « ca marche A8 est testé » : essai A8 validé, pilote 1.8.0 réimporté. Le plan privé ne paraît qu'une fois « Raccorder le détecteur au plan et à sa batterie » cochée ; l'afficher dès la première zone est proposé, non fait. A0–A8 livrés et validés ; combat spatial non engagé. |
 
 À chaque réalisation : mettre à jour le lot ici, citer les fichiers/commits, indiquer les
 contrôles et distinguer réalisation logicielle et essai de David. Le manuel 54 Alien et les

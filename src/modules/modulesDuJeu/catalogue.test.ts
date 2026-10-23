@@ -20,8 +20,8 @@ describe('modules du pilote', () => {
         const resultat = modulesDuPilote(alien);
         expect(resultat.corpusId).toBe('alien');
         expect(resultat.implicite).toBe(true);
-        expect(resultat.references.map(r => r.id)).toEqual(['alien-muthur', 'alien-detecteur']);
-        expect(resultat.modules.map(m => m.disponibilite)).toEqual(['pret', 'pret']);
+        expect(resultat.references.map(r => r.id)).toEqual(['alien-muthur', 'alien-detecteur', 'alien-combat-spatial']);
+        expect(resultat.modules.map(m => m.disponibilite)).toEqual(['pret', 'pret', 'pret']);
     });
     it('respecte une désactivation explicite', () => {
         expect(modulesDuPilote({ ...alien, modulesDuJeu: [] }).references).toEqual([]);
@@ -30,7 +30,7 @@ describe('modules du pilote', () => {
     it('résout le corpus explicite et le chemin de campagne avant le nom', () => {
         expect(modulesDuPilote({ ...alien, corpusId: 'dune' }).references).toEqual([]);
         expect(modulesDuPilote({ ...alien, corpusId: 'alien' }, 'systems/dune').references).toEqual([]);
-        expect(modulesDuPilote({ id: 'custom-2', name: 'Mon jeu', ragPath: 'systems/alien' }).references).toHaveLength(2);
+        expect(modulesDuPilote({ id: 'custom-2', name: 'Mon jeu', ragPath: 'systems/alien' }).references).toHaveLength(3);
     });
     it('ne propose rien aux autres anciens pilotes ni sans pilote', () => {
         expect(modulesDuPilote({ id: 'dune', name: 'Dune' }).references).toEqual([]);

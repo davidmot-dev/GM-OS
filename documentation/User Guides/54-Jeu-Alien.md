@@ -1,11 +1,11 @@
 # 👽 Jeu — Alien
 
-> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-20, corrigé A8 le 2026-10-22 (version 1.8.0, conserve A0–A7). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-20, corrigé A8 le 2026-10-22 (version 1.8.0, conserve A0–A7), puis complété le 2026-10-23 du **combat spatial** (version 1.9.0, `outils/alien/ajouter-combat-spatial.mjs`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font monter la peur.
 
 **Ajout du 15/10/2026 — préparation des modules :** dans l’éditeur du pilote, **Modules du jeu**
-permet de conserver ou retirer **MU/TH/UR 6000** et le **Détecteur de mouvement**. Un ancien pilote
+permet de conserver ou retirer **MU/TH/UR 6000**, le **Détecteur de mouvement** et, depuis le 23/10, le **Combat spatial**. Un ancien pilote
 Alien les propose par défaut, même avec un identifiant personnalisé. Le choix est sauvegardé et
 exportable. Le cockpit possède aussi l’entrée **Modules du jeu** pour préparer et ouvrir ces outils.
 
@@ -187,6 +187,72 @@ Choisis le canal de remise d'un objectif pour éviter de l'envoyer aussi par la 
 ![Brouillons et remises par acte au poste de Maman](captures/jeu-alien-a8-actes-mj.jpg)
 
 ![Objectif remis et dossier autorisé dans le terminal privé du Hub](captures/jeu-alien-a8-terminal-360.jpg)
+
+### Le combat spatial — 23/10/2026
+
+Le module **Combat spatial** mène un affrontement entre vaisseaux (livre p. 188-201). Il
+s'ajoute à MU/TH/UR et au détecteur dans **Modules du jeu** (pilote 1.9.0), avec ses propres
+accès. Les dés roulent au poste de Maman ; la tablette déclare, règle ses dés et force son jet.
+
+![Le pupitre de Maman : deux vaisseaux engagés, les ordres secrets de la phase de senseurs](captures/jeu-alien-spatial-pupitre.jpg)
+
+**Préparer.** Dans le pupitre, **Préparer un vaisseau** : un **modèle du livre** (Starcub,
+Corvus, Bison cargo, remorqueur ou transport, frégate Conestoga) remplit Signature, Propulseurs,
+Coque, Protection et armement, ou **Vaisseau libre**. Choisis le **camp** (joueurs ou adversaire),
+le **transpondeur** (un vaisseau militaire le coupe) et l'**ombilic**. Puis, dans **Équipage**,
+chaque poste — capitaine, opérateur-senseurs, pilote, artilleur, ingénieur — reçoit un
+personnage de la séance ou reste à un PNJ (ou à MU/TH/UR), avec ses **dés de base**
+(attribut + compétence : COMTECH, PILOTAGE, COMBAT À DISTANCE, MACHINES LOURDES), son
+**Stress** et son talent : Commandant (deux cartes d'initiative), Artilleur (+2 au tir),
+Mécano (+2 aux réparations).
+
+**Engager.** Coche les vaisseaux, la **distance** (huit zones : la portée des senseurs) et les
+**vélocités** (souvent deux zones par Tour, p. 189), puis **Démarrer le combat** : chaque
+capitaine tire sa carte d'initiative. Coche aussi les PJ dans les accès du module.
+
+**Un Tour, quatre phases** : senseurs, pilote (puis le déplacement), artilleur, ingénieur.
+
+1. **Les ordres, en secret.** Chaque vaisseau reçoit l'ordre de la phase. Côté joueurs, le PJ
+   qui tient le poste de la phase — ou le capitaine — le donne depuis sa tablette ; Maman donne
+   ceux de l'adversaire. Les joueurs ne voient pas les ordres adverses.
+2. **Révéler les ordres**, puis **Résoudre** chaque vaisseau dans l'ordre d'initiative. Le PJ du
+   poste peut résoudre lui-même. Le jet d'un PJ attend : **Forcer le jet (Stress +1)** ou
+   **Valider le jet**. Un 1 sur un dé de stress déclenche la **Panique spatiale** (D6 + Stress,
+   table p. 201) ; il n'y a pas de forçage alors.
+3. **Phase suivante** ; après la phase de pilote, les vaisseaux se déplacent ; après l'ingénieur,
+   **Tour suivant**.
+
+| Phase | Actions | Ce que le module calcule |
+| --- | --- | --- |
+| Senseurs | Verrouillage, Faire le mort, Rallumer les senseurs | COMTECH avec la portée et la Signature de la cible ; verrouillé, il le reste les Tours suivants sans jet, sauf s'il fait le mort ; faire le mort annule des succès et peut couper senseurs (−1) et moteurs (−2) |
+| Pilote | Accélération, Décélération, Évasion, Éperonnage, Amarrage | PILOTAGE avec les Propulseurs ; l'évasion échange les cartes d'initiative et ses succès annulent ceux des tirs du Tour ; éperonnage et amarrage au contact seulement |
+| Artilleur | Tir offensif, Contremesures | Cible verrouillée ou à transpondeur actif, portée de l'arme ; dégâts de l'arme + succès au-delà du premier ; Protection en dés (moitié contre un canon électrique) ; munitions décomptées |
+| Ingénieur | Réparations d'urgence, Rallumer les moteurs, Ouverture du sas, Surcharge | Une avarie se répare test par test, pour un Quart ; la surcharge détruit le vaisseau à la fin du Tour suivant |
+
+**Dégâts et avaries** (p. 197-199). Les dégâts vont sur la **coque** ; à la Coque atteinte, le
+vaisseau est **Hors service** ; une seule attaque qui l'égale le **détruit**. Chaque attaque qui
+porte cause une **avarie mineure** (D66), **majeure** (2D6) à la moitié de la Coque. Leurs effets
+mécaniques s'appliquent : arme à −2 ou hors d'usage, instruments −1, senseurs −2 ou en panne,
+Propulseurs −2, transpondeur coupé, plus de pilotage. Une avarie sans objet pour ce vaisseau se
+**relance**. La ligne 55 vient de l'errata 2021 : unité de réfrigération endommagée.
+
+![La tablette d'un opérateur-senseurs à 360 px : ses dés, son ordre, un contact non identifié](captures/jeu-alien-spatial-tablette.jpg)
+
+**Sur la tablette**, le PJ voit son vaisseau en entier, ses postes et ses dés, l'état du combat
+et le journal. L'adversaire reste un **contact non identifié** tant que son transpondeur est coupé
+et qu'aucun vaisseau des joueurs ne l'a verrouillé ; ni son équipage ni ses jets ne sont
+transmis. Le **Stress** gagné en forçant ou en paniquant se reporte sur la fiche : le module
+tient sa copie pour le combat.
+
+**Après le combat**, **Terminer le combat** : les réparations d'urgence redeviennent des
+avaries (elles ne tenaient qu'un Quart). Dans **Réparer et ajuster**, note la coque réparée
+(un test de MACHINES LOURDES par Quart, chaque 6 répare un point) et marque une avarie **réparée**
+(un test par ligne de la table, une pièce de rechange chacun, p. 200).
+
+> Points tranchés, faute d'accord du livre avec lui-même : l'avarie mineure dès un point de
+> dégâts (la table, contre le texte) ; les contremesures contre une attaque de portée Courte ou
+> plus ; l'amarrage aux vélocités égales des deux camps. Les réactions et oppositions ne se
+> forcent pas. Le corps à corps à bord se joue à part, en Rounds (p. 197).
 
 Les données privées sont stockées à part des campagnes diffusées aux tablettes. Les sauvegardes
 complètes et exports de campagne incluent les dossiers, codes et dialogues ; un export de pilote
@@ -773,4 +839,9 @@ Les huit parcours des accessoires du 16/10 ne sont pas rejoués par cette recett
 *Complété le 2026-10-22 pour A8 : mode discret du M314, plan privé et batterie ; dossiers
 et objectifs d'acte MU/TH/UR. Recette réelle A8 Electron/deux Hub Edge et quatre parcours
 existants de scan, reconnexion et import réussis ; six captures A8 relues, détecteur à
-360/768/1 180 px. L'essai A8 de David reste attendu.*
+360/768/1 180 px. Essai A8 de David validé le 23/10 (« ca marche A8 est testé ») ; le plan privé
+paraît désormais dès la première zone.*
+
+*Complété le 2026-10-23 du combat spatial (p. 188-201) : module, pilote 1.9.0, recette réelle
+Electron et Hub Edge (ordres secrets, contact non identifié, verrouillage depuis la tablette,
+360 px sans débordement), deux captures relues.*

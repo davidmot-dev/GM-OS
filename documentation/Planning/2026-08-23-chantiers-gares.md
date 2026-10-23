@@ -12603,6 +12603,25 @@ avait été vidé et l'export frais du 22/10 précédait la réimportation).
 - **Seuil de la jauge de fortune** : 10, validé par David le 23/10 (*« le seuil de base est bon à 10 »*).
 - **Reste** : rien.
 
+### 162 · Alien A9 — le combat spatial — 23/10/2026
+
+David, le 23/10 : *« on va faire la suite d'Alien, je voudrais aussi finir Alien aujourd'hui »* ; GM-OS fermé ;
+périmètre « complet » ; le plan privé d'A8 affiché dès la première zone (Claude Code).
+
+- **Fait** : module du jeu `alien-combat-spatial` (contrat v1, données v1) — catalogue du livre (armes p. 177,
+  six modèles, avaries D66/2D6 avec la ligne 55 de l'errata, Panique spatiale p. 201) et moteur : Tours en quatre
+  phases, ordres secrets, résolution dans l'ordre d'initiative, distance et vélocités, verrouillage, faire le mort,
+  pilotage, évasion, éperonnage, amarrage, tirs, contremesures, Protection, coque, avaries et leurs effets,
+  réparations d'urgence, surcharge ; dés au poste du MJ, forçage et Panique. Pupitre et tablette
+  (`src/modules/modulesDuJeu/combatSpatial/`) ; registres natif, React et catalogue.
+- **Pilote** : `Export Dirvers/corriges/Alien_driver_gmos_combat-spatial.gmos-driver`, 1.9.0, à partir de l'export
+  du 22/10 (1.8.0) ; fiche intacte, aucun constat de la Forge.
+- **Vérifié** : 10 essais du moteur, 2 d'écran, recette réelle Electron et Hub Edge (`e2e/combatSpatialAlien.spec.ts`) ;
+  suite complète **8 834 essais verts** ; deux captures relues dans le manuel Alien.
+- **Aussi** : les cases à cocher du poste MU/TH/UR montrent de nouveau leur coche (`muthur/style.css`).
+- **Essai de David validé le 23/10** (« tout est testé, tu peux faire les commit et pousser »).
+- **Reste** : rien.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12705,6 +12724,7 @@ avait été vidé et l'export frais du 22/10 précédait la réimportation).
 | 95 | **Crimes C5 et C6 — dossier d'enquête, armes** | § 159 ; points d'enquête par style, indices à seuils révélés à un seul enquêteur (sa seule tablette) puis partagés ; armes du livre, dégâts, portée, « Infliger » — faits le 22/10 | Rien : essai de David validé le 22/10 | Rien |
 | 96 | **Crimes C0 — relecture du corpus** | § 160 ; 19 fiches relues contre le livre, corrigées, `relu: true` ; contradictions du livre exposées ; mort à −2 rendue à sa consigne (p. 393) — fait le 23/10 | Rien : rapport validé par David le 23/10 ; suites de code C0.1 à C0.4 dans la synthèse | Rien |
 | 97 | **Crimes C0.1 à C8 — le pilote complet** | § 161 ; circonstances, hermétiques, opposition, pupitre, psychologie et seuils, affaire et hypothèses, manœuvres et munitions, contacts, fortune, création et progression — livré et essayé le 23/10 | Rien : seuil de fortune à 10 validé par David | Rien |
+| 98 | **Alien A9 — le combat spatial** | § 162 ; module, pupitre et tablette, pilote 1.9.0 — livré et essayé le 23/10 | Rien | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
