@@ -9,7 +9,7 @@ import type { SauvegardeDesModules, PontDesModules } from './protocole';
 import { creerEtat as creerLcars } from '../../../outils/star-trek/lcars/natif.mjs';
 
 const original = window.appBridge;
-const sauvegarde: SauvegardeDesModules = { version: 1, campagnes: { 'camp-a': { 'alien-muthur': { versionDonnees: 4, donnees: creerEtat() } }, 'camp-b': { futur: { versionDonnees: 9, donnees: { code: 'GARDER' } } } } };
+const sauvegarde: SauvegardeDesModules = { version: 1, campagnes: { 'camp-a': { 'alien-muthur': { versionDonnees: 5, donnees: creerEtat() } }, 'camp-b': { futur: { versionDonnees: 9, donnees: { code: 'GARDER' } } } } };
 beforeEach(() => { useModulesDuJeuMJ.setState({ vue: null, sauvegarde: undefined, erreur: null }); });
 afterEach(() => { window.appBridge = original; useModulesDuJeuMJ.setState({ sauvegarde: undefined, vue: null }); });
 describe('les modules privés dans les sauvegardes et archives', () => {

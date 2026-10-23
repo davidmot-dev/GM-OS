@@ -12622,6 +12622,22 @@ périmètre « complet » ; le plan privé d'A8 affiché dès la première zone 
 - **Essai de David validé le 23/10** (« tout est testé, tu peux faire les commit et pousser »).
 - **Reste** : rien.
 
+### 163 · Alien A10 — préréglages et remise à zéro des modules — 23/10/2026
+
+David, le 23/10 : *« je veux pouvoir faire des pré-reglages et aussi avoir un bouton de reset pour tout remettre à zéro
+(pour les 3 modules MU/TH/UR) »* ; GM-OS fermé ; un préréglage garde la préparation complète ; la remise à zéro
+efface tout sauf les préréglages ; l'exemple du relais à sept salles est livré comme préréglage du détecteur.
+
+- **Fait** : `outils/alien/modules/prereglages.mjs` (validation, enregistrement, rappel, suppression ; 32 au plus,
+  nom unique) et `prereglages-vues.mjs` (panneau commun, rappel, suppression et remise à zéro confirmés).
+  MU/TH/UR v5 (réglages, dossiers, protocoles, actes ; le rappel remet le terminal à neuf, opérateurs gardés),
+  détecteur v4 (réglages, effets, plan discret ; `exemple.mjs` ajouté une fois à la migration), combat spatial v2
+  (vaisseaux et équipages ; rappel hors combat). Tablettes : aucun préréglage transmis.
+- **Pilote** : aucun à réimporter, les pilotes ne citent que l'identifiant des modules.
+- **Vérifié** : 10 essais du moteur, 2 d'écran, recette réelle Electron (`e2e/prereglagesAlien.spec.ts`, redémarrage compris), une capture ; suite complète 8 845 essais verts ; recettes existantes des modules Alien mises à jour et vertes.
+- **Essai de David validé le 23/10** (« A10 testé, c'est bon. Commit et pousse »).
+- **Reste** : rien.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12725,6 +12741,7 @@ périmètre « complet » ; le plan privé d'A8 affiché dès la première zone 
 | 96 | **Crimes C0 — relecture du corpus** | § 160 ; 19 fiches relues contre le livre, corrigées, `relu: true` ; contradictions du livre exposées ; mort à −2 rendue à sa consigne (p. 393) — fait le 23/10 | Rien : rapport validé par David le 23/10 ; suites de code C0.1 à C0.4 dans la synthèse | Rien |
 | 97 | **Crimes C0.1 à C8 — le pilote complet** | § 161 ; circonstances, hermétiques, opposition, pupitre, psychologie et seuils, affaire et hypothèses, manœuvres et munitions, contacts, fortune, création et progression — livré et essayé le 23/10 | Rien : seuil de fortune à 10 validé par David | Rien |
 | 98 | **Alien A9 — le combat spatial** | § 162 ; module, pupitre et tablette, pilote 1.9.0 — livré et essayé le 23/10 | Rien | Rien |
+| 99 | **Alien A10 — préréglages et remise à zéro** | § 163 ; MU/TH/UR, détecteur et combat spatial ; exemple du relais — livré et essayé le 23/10 | Rien | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

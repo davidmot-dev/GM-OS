@@ -4,6 +4,7 @@ import '../../alarme.js';
 import '../../video-alerte.js';
 import { videoAlerteUrl } from './medias.mjs';
 import { ActesMJ } from './actes-vues.mjs';
+import { PrereglagesEtRemise } from '../prereglages-vues.mjs';
 
 const bouton = (texte, props = {}) => h('button', { type: 'button', ...props }, texte);
 const champ = (libelle, nom, props = {}) => h('label', null, h('span', null, libelle),
@@ -323,7 +324,6 @@ function Protocoles({ vue, envoyer, occupe }) {
 }
 
 function Reglages({ vue, envoyer, occupe }) {
-  const [confirmation, setConfirmation] = useState(false);
   async function enregistrer(evenement) {
     evenement.preventDefault(); const donnees = new FormData(evenement.currentTarget);
     await envoyer('configurer', { vaisseau: donnees.get('vaisseau'), statut: donnees.get('statut'), motDePasse: donnees.get('motDePasse'), crt: donnees.has('crt'), parasites: donnees.has('parasites') });
@@ -345,10 +345,9 @@ function Reglages({ vue, envoyer, occupe }) {
       h('div', { className: 'muthur-actions' }, h('button', { type: 'submit', disabled: occupe }, 'Démarrer'),
         bouton('Arrêter le compte à rebours', { disabled: occupe, onClick: () => envoyer('compte-a-rebours', { minutes: null }) })),
       h('p', { className: 'muthur-aide' }, 'Affichage de mise en scène ; aucune conséquence automatique sur les personnages.')),
-    h('div', { className: 'muthur-formulaire' }, h('h3', null, 'Réinitialiser le terminal'),
-      h('p', null, 'Remet les documents, codes, dialogues et accès à leur état de départ. Les opérateurs sont conservés.'),
-      h('label', null, h('input', { type: 'checkbox', checked: confirmation, disabled: occupe, onChange: evenement => setConfirmation(evenement.target.checked) }), 'Confirmer la réinitialisation'),
-      bouton('Réinitialiser MU/TH/UR', { disabled: occupe || !confirmation, onClick: async () => { if (await envoyer('reinitialiser', {})) setConfirmation(false); } })));
+    h(PrereglagesEtRemise, { prereglages: vue.prereglages, envoyer, occupe, sujet: 'MU/TH/UR', classes: { section: 'muthur-formulaire' },
+      contenu: 'Un préréglage garde toute la préparation de Maman : réglages, dossiers, codes, protocoles et actes. Le rappel remet le terminal à neuf, puis pose cette préparation ; les opérateurs restent.',
+      remise: 'Remet les documents, codes, protocoles, actes, dialogues et accès à leur état de départ. Les opérateurs et les préréglages sont conservés.' }));
 }
 
 export function PupitreMJ({ vue, envoyerCommande }) {

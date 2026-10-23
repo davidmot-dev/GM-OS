@@ -3,8 +3,8 @@
   "id": "alien-combat-spatial",
   "libelle": "Combat spatial",
   "description": "Combat entre vaisseaux d'ALIEN (p. 188-201) : postes d'équipage, Tours en quatre phases, ordres secrets puis résolution dans l'ordre d'initiative, portée et vélocité, verrouillage, tirs, protection, coque, avaries et Panique spatiale.",
-  "version": "1.0.0",
-  "versionDonnees": 1,
+  "version": "1.1.0",
+  "versionDonnees": 2,
   "corpusCompatibles": [
     "alien"
   ],
@@ -18,6 +18,10 @@
     {"id": "phase-suivante", "roles": ["mj"]},
     {"id": "relancer-avarie", "roles": ["mj"]},
     {"id": "terminer-combat", "roles": ["mj"]},
+    {"id": "enregistrer-prereglage", "roles": ["mj"]},
+    {"id": "rappeler-prereglage", "roles": ["mj"]},
+    {"id": "supprimer-prereglage", "roles": ["mj"]},
+    {"id": "reinitialiser", "roles": ["mj"]},
     {"id": "ordonner", "roles": ["mj", "joueur"]},
     {"id": "mes-des", "roles": ["mj", "joueur"]},
     {"id": "resoudre", "roles": ["mj", "joueur"]},

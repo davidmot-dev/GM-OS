@@ -1,7 +1,8 @@
 export interface EtatDetecteur {
-  version: 3; system: 'alien'; revision: number;
+  version: 4; system: 'alien'; revision: number;
   discret: DiscretAlien;
-  prereglages: { id: string; nom: string; reglages: Pick<EtatDetecteur['tracker'], 'intensity' | 'volume' | 'contacts' | 'proximity' | 'noise'> }[];
+  /** Depuis la v4, `config` et `discret` gardent toute la préparation ; les anciens n'ont que `reglages`. */
+  prereglages: { id: string; nom: string; reglages: Pick<EtatDetecteur['tracker'], 'intensity' | 'volume' | 'contacts' | 'proximity' | 'noise'>; config?: EtatDetecteur['config']; discret?: DiscretAlien }[];
   config: { crt: boolean; glitches: boolean };
   tracker: { power: boolean; intensity: number; volume: number; contacts: number; proximity: number; noise: number; target: 'all'; seed: number; anomalyUntil: number; positions?: {x:number;y:number}[] };
 }
@@ -22,7 +23,7 @@ export type CommandeDetecteur =
   | { id: 'enregistrer-prereglage'; charge: { prereglageId: string; nom: string } }
   | { id: 'rappeler-prereglage' | 'supprimer-prereglage'; charge: { prereglageId: string } }
   | { id: 'scanner'; charge: { actif: boolean } }
-  | { id: 'faux-echo'; charge: Record<string, never> };
+  | { id: 'faux-echo' | 'reinitialiser'; charge: Record<string, never> };
 export function creerEtat(): EtatDetecteur;
 export function validerEtat(etat: unknown): asserts etat is EtatDetecteur;
 export function migrerEtat(donnees: unknown, versionDonnees: number): EtatDetecteur;

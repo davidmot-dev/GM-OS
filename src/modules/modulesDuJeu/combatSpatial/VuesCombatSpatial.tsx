@@ -6,6 +6,7 @@ import type {
 import {
     ACTIONS, ARMES, LIBELLES_DES_PHASES, LIBELLES_DES_PORTEES, LIBELLES_DES_POSTES, MODELES, POSTES, POSTE_DE_LA_PHASE, TALENTS_DES_POSTES,
 } from '../../../../outils/alien/modules/combat-spatial/catalogue.mjs';
+import { PrereglagesEtRemise } from '../../../../outils/alien/modules/prereglages-vues.mjs';
 import './combatSpatial.css';
 
 /**
@@ -385,6 +386,10 @@ export function PupitreCombatSpatial({ vue, envoyerCommande }: Props) {
                 ))}
             </div>
             {!combat && <PreparationDuVaisseau vaisseaux={vaisseaux} envoyer={envoyer} />}
+            <PrereglagesEtRemise prereglages={vue.prereglages ?? []} envoyer={envoyer} occupe={false} sujet="le combat spatial"
+                classes={{ section: 'spatial-carte', case: 'spatial-case' }}
+                contenu="Un préréglage garde les vaisseaux et leurs équipages : modèle, armes, munitions, coque, avaries et postes. Le rappel remplace les vaisseaux actuels ; il attend la fin du combat."
+                remise="Efface tous les vaisseaux et arrête le combat en cours. Les préréglages et les accès des PJ restent." />
         </section>
     );
 }

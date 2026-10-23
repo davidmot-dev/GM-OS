@@ -71,6 +71,8 @@ Le MJ peut classer/supprimer les dossiers MU/TH/UR et traiter plusieurs demandes
 Le **Combat spatial** d'Alien mène un affrontement entre vaisseaux : postes tenus par les PJ, ordres
 secrets donnés depuis la tablette, résolution dans l'ordre d'initiative, dés lancés au poste du MJ
 (voir le [guide Alien](54-Jeu-Alien.md)).
+Les trois modules Alien gardent leur préparation complète sous un nom (**préréglages**) et ont une
+**remise à zéro** qui conserve ces préréglages ; le détecteur arrive avec un plan d'exemple.
 Le détecteur propose des préréglages nommés par campagne : les charger arrête le scan, qui se
 relance volontairement. Voir le [guide Alien](54-Jeu-Alien.md).
 

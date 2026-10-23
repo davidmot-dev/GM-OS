@@ -1,6 +1,14 @@
 # MU/TH/UR 6000 — adaptateur de module GM-OS v1
 
-**22/10/2026 — version du module 0.5.0, données v4, contrat v1.**
+**23/10/2026 — version du module 0.6.0, données v5, contrat v1.**
+
+**Préréglages (23/10) :** la v5 ajoute `prereglages`, la préparation de Maman sous un nom : réglages,
+dossiers, protocoles et actes (dossiers publiés, objectifs à remettre), comme le fichier de l'atelier
+(`preparationDe`). Le rappel remet le terminal à neuf puis pose la préparation ; les opérateurs restent.
+`reinitialiser` garde les préréglages. La vue MJ n'en reçoit que les noms ; la tablette, rien.
+Dans l'atelier autonome, les préréglages ne durent que la page : son fichier de configuration reste
+le moyen d'y garder une préparation.
+Le panneau commun est `../prereglages-vues.mjs` ; la logique partagée, `../prereglages.mjs` (32 préréglages au plus, nom unique sans tenir compte de la casse, réservés au MJ).
 Conforme au format du [contrat v1](../../../../documentation/Architecture/Contrat-des-modules-du-jeu.md).
 Ce dossier fournit le manifeste, le moteur et les composants React joueur/MJ.
 
@@ -62,7 +70,10 @@ Le rôle fictif « administrateur » du terminal n'accorde aucun droit MJ.
 | `arbitrer-piratage` | MJ | `{ personnageId, reussite, demandeId? }`, booléen ; exige le HACK ciblé en attente, ou le premier si identifiant absent. |
 | `revoquer` | MJ | `{ personnageId }`, retire accès administrateur, déverrouillages et piratage en attente ; conserve le dialogue. |
 | `compte-a-rebours` | MJ | `{ minutes }`, nombre de 0,1 à 60 ; `null` arrête le compte. |
-| `reinitialiser` | MJ | `{}`, remet les exemples et efface dialogues/accès, en conservant les opérateurs. Confirmation locale au pupitre. |
+| `reinitialiser` | MJ | `{}`, remet les exemples et efface dialogues/accès, en conservant les opérateurs et les préréglages. Confirmation locale au pupitre. |
+| `enregistrer-prereglage` | MJ | `{ prereglageId, nom }` : crée ou remplace ce préréglage avec la préparation actuelle. |
+| `rappeler-prereglage` | MJ | `{ prereglageId }` : remet le terminal à neuf et pose la préparation ; confirmation locale. |
+| `supprimer-prereglage` | MJ | `{ prereglageId }` ; confirmation locale. |
 
 Le premier texte d'un PJ autorisé l'inscrit automatiquement sous son identité.
 Sa simple consultation produit une vue vide personnelle sans modifier l'état.

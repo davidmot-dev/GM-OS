@@ -72,6 +72,7 @@ et leurs raccords manquants.
 | **A7** | 5 | **Cinéma et Campagne** : objectifs remis en messagerie privée par acte, Récit Cinéma, bilan PX conservé, apprentissages uniques, Camarade/Rival et fétiche par période. | Livré et contrôlé le 22/10, export v1.7.0 incluant A0–A6, 49 champs et 46 liens. Mêmes contrôles A6/A7 réussis ; confidentialité, reconnexion et absence de double gain/achat vérifiées ; essai de David validé le 22/10 ; [bilan A6/A7](2026-10-21-alien-a6-a7.md) |
 | **A8** | Livré et essayé | **Accessoires et mode discret** : plan privé de zones, déplacements par Tour, scan M314 unique avec batterie propre et mouvements à portée ; dossiers d'acte publiés explicitement et objectifs remis au seul opérateur dans MU/TH/UR. Mise en scène conservée, arbitrage de Maman et report des Tours dans A5 explicites. Combat spatial séparé. | Livré et contrôlé le 22/10, export v1.8.0 incluant A0–A7, 49 champs et 46 liens ; 173 tests/21 fichiers et 74 vérifications autonomes, types/build/lint ciblé réussis. Recette A8 et quatre parcours existants Electron/Hub réussis, six captures relues ; [bilan A8](2026-10-22-alien-a8.md). Essai de David attendu ; inclus dans le présent commit |
 | **A9** | Livré et essayé | **Combat spatial (p. 188-201)** : vaisseaux du livre ou libres, postes tenus par les PJ, Tours en quatre phases, ordres secrets depuis la tablette, verrouillage, pilotage, tirs, Protection, coque, avaries D66/2D6 (errata 55), réparations d'urgence, Panique spatiale ; pilote 1.9.0. Plan privé d'A8 affiché dès la première zone. | Livré le 23/10 (registre général § 162) |
+| **A10** | Livré et essayé | **Préréglages et remise à zéro** : (MU/TH/UR, détecteur, combat spatial) : la préparation complète sous un nom, rappel et suppression confirmés, remise à zéro qui garde les préréglages ; exemple « relais à sept salles » pour le mode discret. Aucun pilote à réimporter. | Livré le 23/10 (registre général § 163) |
 
 ## Ordre proposé et dépendances
 
@@ -81,6 +82,7 @@ puis A8, et confirme GM-OS fermé. A4–A7 sont poussés dans `3cffff3d`, après
 8 590 tests et build réussis. A8 est livré, contrôlé et validé par David le 23/10.
 Le 23/10, David demande la suite (« je voudrais aussi finir Alien aujourd'hui ») : **A9, le combat spatial**,
 livré et essayé le même jour (« tout est testé, tu peux faire les commit et pousser »).
+Puis **A10, préréglages et remise à zéro** des trois modules, livré et essayé le 23/10 (« A10 testé, c'est bon »).
 
 A1 fixe le résultat définitif du jet avant l’application des dégâts d’A3. A2 relie les armes
 nécessaires au tir d’A3. A4 définit les exceptions de nature à respecter dans A1/A3/A5.
@@ -132,6 +134,9 @@ restent validés par Maman.
 | 22/10/2026 | David | « commit tout ce qu'il reste sous ta responsabilité » : commit de la livraison A8, documentation et captures, avec les exports corrigés et états JSON Alien A4–A8 générés. Les autres chantiers restent hors commit ; aucun nouveau push demandé. |
 | 23/10/2026 | David | « on va faire la suite d'Alien, je voudrais aussi finir Alien aujourd'hui » ; GM-OS fermé ; périmètre du combat spatial « complet » ; plan A8 dès la première zone : oui. |
 | 23/10/2026 | David | « tout est testé, tu peux faire les commit et pousser » : essai A9 et cases à cocher de MU/TH/UR validés. A0–A9 livrés et validés. |
+| 23/10/2026 | David | « je veux pouvoir faire des pré-reglages et aussi avoir un bouton de reset pour tout remettre à zéro (pour les 3 modules MU/TH/UR) » ; GM-OS fermé ; préparation complète ; remise à zéro sans les préréglages ; exemple du relais : oui. |
+| 23/10/2026 | Claude Code | A10 livré : 10 essais du moteur, 2 d'écran, recette réelle Electron (`e2e/prereglagesAlien.spec.ts`, redémarrage compris), une capture ; suite complète 8 845 essais verts. Données MU/TH/UR v5, détecteur v4, combat spatial v2. Essai de David attendu. |
+| 23/10/2026 | David | « A10 testé, c'est bon. Commit et pousse » : essai A10 validé. A0–A10 livrés et validés. |
 | 23/10/2026 | Claude Code | A9 livré : module `alien-combat-spatial` 1.0.0, pilote 1.9.0, 10 essais du moteur, 2 d'écran, recette réelle Electron et Hub Edge, deux captures ; suite complète 8 834 essais verts. Essai de David attendu. |
 | 23/10/2026 | David | « ca marche A8 est testé » : essai A8 validé, pilote 1.8.0 réimporté. Le plan privé ne paraît qu'une fois « Raccorder le détecteur au plan et à sa batterie » cochée ; l'afficher dès la première zone est proposé, non fait. A0–A8 livrés et validés ; combat spatial non engagé. |
 

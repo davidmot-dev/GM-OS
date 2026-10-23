@@ -1,14 +1,13 @@
 /** Préparation portable de l'atelier ; ni état de séance ni stockage de campagne du Hub. */
-import { creerEtat, validerEtat } from './moteur.mjs';
+import { creerEtat, preparationDe, validerEtat } from './moteur.mjs';
 
 export const cleSauvegardeConfiguration = 'gmos:alien:muthur:configuration:v1';
 const format = 'gmos-alien-muthur-configuration';
 const copie = valeur => JSON.parse(JSON.stringify(valeur));
 
 export function extraireConfiguration(etat) {
-  validerEtat(etat);
-  const actes=etat.actes.map(a=>({...a,dossiers:a.dossiers.map(d=>({...d,publie:etat.documents.some(doc=>doc.id===d.id)})),objectifs:a.objectifs.map(o=>({...o,remis:false}))}));
-  return copie({ format, version: 1, config: etat.config, documents: etat.documents, protocoles: etat.protocoles, ...(actes.length?{actes}:{}) });
+  const { actes, ...preparation } = preparationDe(etat);
+  return copie({ format, version: 1, ...preparation, ...(actes.length?{actes}:{}) });
 }
 
 export function etatDepuisConfiguration(configuration) {

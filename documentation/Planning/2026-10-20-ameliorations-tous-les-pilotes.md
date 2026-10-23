@@ -45,7 +45,7 @@ conformément à la décision de David du 19/10.
 
 | Pilote | Avancement | État de la connaissance | Première amélioration ou prochaine étape proposée |
 | --- | --- | --- | --- |
-| [Alien](#alien) | 🟢 10 · 🟠 0 · 🔴 0 | A0–A8 validés par David ; **A9, le combat spatial, livré et essayé le 23/10** (registre § 162) | Rien : tous les lots faits |
+| [Alien](#alien) | 🟢 11 · 🟠 0 · 🔴 0 | A0–A9 validés par David ; **A10, préréglages et remise à zéro des modules, livré et essayé le 23/10** (registre § 163) | Rien : tous les lots faits |
 | [Blade Runner](#blade-runner) | 🟢 0 · 🟠 0 · 🔴 4 | Limites documentées ; audit complet à faire | Même choix de forçage au pupitre et sur la fiche ; suivi des blessures |
 | [Crimes](#crimes) | 🟢 13 · 🟠 0 · 🔴 0 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** ; **tous les lots livrés et essayés le 23/10** : circonstances, hermétiques, opposition, psychologie et seuils, manœuvres, contacts, fortune, création (registre § 157–161) | Rien : tous les lots faits ; tir multiple, intimider, rivalités et fortune commune restent au meneur |
 | [Cthulhu Hack](#cthulhu-hack) | 🟢 0 · 🟠 0 · 🔴 5 | Limites documentées ; audit complet à faire | Effets du Hors Jeu et usure reliés aux valeurs de la fiche |
@@ -142,8 +142,11 @@ fiche HTML, MU/TH/UR et détecteur de mouvement. Ces outils ne sont pas à recon
 | 🟢 A8 | Livré et essayé | Détecteur raccordé en option au plan privé, déplacements par Tour, mouvements à portée et batterie M314 ; dossiers d'acte et remise privée dans MU/TH/UR. Contrôlé le 22/10 ; combat spatial séparé |
 
 | 🟢 A9 | **Livré et essayé le 23/10** | Combat spatial (p. 188-201) : vaisseaux du livre ou libres, postes tenus par les PJ, Tours en quatre phases, ordres secrets depuis la tablette, verrouillage, pilotage, tirs, Protection, coque, avaries D66/2D6 (errata 55), réparations d'urgence, Panique spatiale ; pilote 1.9.0. Plan privé d'A8 affiché dès la première zone. Recette réelle Electron et Hub Edge, deux captures |
+| 🟢 A10 | **Livré et essayé le 23/10** | Préréglages et remise à zéro des trois modules (MU/TH/UR, détecteur, combat spatial) : la préparation complète sous un nom, rappel et suppression confirmés, remise à zéro qui garde les préréglages ; exemple « relais à sept salles » pour le mode discret. Aucun pilote à réimporter. 10 essais du moteur, 2 d'écran, recette réelle Electron (`e2e/prereglagesAlien.spec.ts`, redémarrage compris), une capture ; suite complète 8 845 essais verts |
 
 **A9 livré le 23/10 (registre § 162)**, demande de David : *« on va faire la suite d'Alien, je voudrais aussi finir Alien aujourd'hui »* ; périmètre « complet ». Module `alien-combat-spatial` (`outils/alien/modules/combat-spatial/`), écrans `src/modules/modulesDuJeu/combatSpatial/`, pilote `Export Dirvers/corriges/Alien_driver_gmos_combat-spatial.gmos-driver` (`outils/alien/ajouter-combat-spatial.mjs`). Réimporté ; **essai de David validé le 23/10** (« tout est testé, tu peux faire les commit et pousser »). Points tranchés : avarie mineure dès un point (table contre texte), contremesures dès la portée Courte, amarrage aux vélocités égales ; réactions et oppositions sans forçage. Le 23/10 aussi : les cases à cocher du poste MU/TH/UR montrent de nouveau leur coche.
+
+**A10 livré le 23/10 (registre § 163)**, demande de David : *« je veux pouvoir faire des pré-reglages et aussi avoir un bouton de reset pour tout remettre à zéro (pour les 3 modules MU/TH/UR) »* ; choix : préparation complète, remise à zéro qui garde les préréglages, exemple du relais livré. Logique commune `outils/alien/modules/prereglages.mjs`, panneau commun `prereglages-vues.mjs` ; données MU/TH/UR v5, détecteur v4, combat spatial v2, migrées sans perte. **Essai de David validé le 23/10** (« A10 testé, c'est bon. Commit et pousse »).
 **Cas témoin :** des six suivis d'une Panique effective de 10 annulent l'action ; un Point
 de Récit ne doit pas contourner cette conséquence. L'export réel a été vérifié le 20/10.
 

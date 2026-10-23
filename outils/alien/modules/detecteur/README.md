@@ -1,6 +1,12 @@
 # Détecteur Alien — module du Tablet Hub
 
-Version 0.3.0, contrat v1, données v3. A8 du 22/10/2026.
+Version 0.4.0, contrat v1, données v4. A8 du 22/10/2026 ; préréglages complets et remise à zéro le 23/10.
+
+**Préréglages (23/10) :** un préréglage garde réglages, effets visuels et plan discret ; son rappel arrête
+le scan et repart au Tour 1, sans pas dépensés ni scan. Ceux d'avant la v4 n'ont que `reglages` et laissent
+le plan en place. `reinitialiser` remet le détecteur à neuf et garde les préréglages. `exemple.mjs` fournit
+**Exemple — relais à sept salles**, ajouté à `creerEtat` et une seule fois au passage en v4. Le panneau commun est `../prereglages-vues.mjs` ; la logique partagée, `../prereglages.mjs` (32 préréglages au plus, nom unique sans tenir compte de la casse, réservés au MJ).
+Le cœur `core.js` garde ses préréglages de réglages pour le prototype autonome ; le module ne s'en sert plus.
 `alien-detecteur` réutilise `AlienCore` pour ses commandes et le tirage des contacts,
 et `detecteur.js` pour le dessin partagé avec le prototype autonome. Il est enregistré
 explicitement dans les registres natif et React, sans branche Alien dans le Hub.
@@ -46,9 +52,10 @@ Commandes réservées au MJ ; le joueur consulte et active son audio local sans 
 | `configurer` | Facultatifs : `contacts` entier 0–9 ; `proximite`, `intensite`, `volume`, `parasites` nombres 0–100 ; `crt`, `effetsParasites` booléens. |
 | `scanner` | `{ actif: boolean }` ; le passage arrêté → actif renouvelle la graine partagée. |
 | `faux-echo` | `{}` ; scan actif requis, échéance autoritaire de neuf secondes. |
-| `enregistrer-prereglage` | `{ prereglageId, nom }` ; capture contacts, proximité, intensité, volume, parasites déjà appliqués. Crée ou remplace cet identifiant ; nom unique (casse ignorée), non blanc de 80 caractères au plus, 32 entrées maximum. |
-| `rappeler-prereglage` | `{ prereglageId }` ; charge les réglages, arrête scan et faux écho ; conserve la graine jusqu’au prochain démarrage volontaire. |
+| `enregistrer-prereglage` | `{ prereglageId, nom }` ; capture contacts, proximité, intensité, volume, parasites déjà appliqués, les effets visuels et, depuis la v4, le plan discret. Crée ou remplace cet identifiant ; nom unique (casse ignorée), non blanc de 80 caractères au plus, 32 entrées maximum. |
+| `rappeler-prereglage` | `{ prereglageId }` ; charge les réglages (et le plan, en v4), arrête scan et faux écho ; conserve la graine jusqu’au prochain démarrage volontaire. Confirmation locale. |
 | `supprimer-prereglage` | `{ prereglageId }` ; confirmation locale au pupitre. |
+| `reinitialiser` | `{}` ; remet réglages, plan, pions et Tours à neuf, scan arrêté ; garde les préréglages. Confirmation locale. |
 
 Charges inconnues ou mal formées refusées sans mutation. L’état contient version, système,
 révision, deux réglages visuels et radar ; aucun dossier, code, dialogue ou opérateur MU/TH/UR.

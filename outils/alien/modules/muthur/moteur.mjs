@@ -2,6 +2,7 @@
 import '../../video-alerte.js';
 import '../../core.js';
 import { validerActes, preparerActe } from './actes.mjs';
+import { COMMANDES_DE_PREREGLAGE, enregistrerPrereglage, lireCharge, prereglageDe, sansPrereglage, sommaireDesPrereglages, validerPrereglages } from '../prereglages.mjs';
 const coeur = globalThis.AlienCore;
 const copie = valeur => JSON.parse(JSON.stringify(valeur));
 const objet = valeur => valeur !== null && typeof valeur === 'object'
@@ -20,9 +21,10 @@ function forme(valeur, requis, facultatifs = []) {
   exiger(Object.keys(valeur).every(cle => requis.includes(cle) || facultatifs.includes(cle)));
 }
 
-export function validerEtat(etat, version = 4) {
-  forme(etat, ['version', 'system', 'revision', 'config', 'documents', 'players', 'countdown', 'protocoles', 'portes', 'autodestruction', 'diffusionAlarme', ...(version >= 4 ? ['actes'] : [])]);
+export function validerEtat(etat, version = 5) {
+  forme(etat, ['version', 'system', 'revision', 'config', 'documents', 'players', 'countdown', 'protocoles', 'portes', 'autodestruction', 'diffusionAlarme', ...(version >= 4 ? ['actes'] : []), ...(version >= 5 ? ['prereglages'] : [])]);
   if (version >= 4) validerActes(etat.actes);
+  if (version >= 5) validerPrereglages(etat.prereglages, validerPreparation);
   exiger(etat.version === version && etat.system === 'alien' && entier(etat.revision));
   forme(etat.config, ['vessel', 'status', 'adminPassword', 'crt', 'glitches']);
   exiger(chaine(etat.config.vessel, 64) && chaine(etat.config.status, 2000)
@@ -104,16 +106,28 @@ function validerProtocole(protocole) {
     && typeof protocole.actif === 'boolean' && ['operateur', 'equipage'].includes(protocole.portee));
 }
 
+/** Un préréglage v5 : la préparation de Maman, sans opérateur ni dialogue. */
+function validerPreparation(contenu) {
+  forme(contenu, ['config', 'documents', 'protocoles', 'actes']);
+  validerEtat({ ...enrichir(coeur.initial()), ...contenu });
+}
+/** Les dossiers d'acte publiés le restent ; les objectifs sont à remettre. Sert aussi au fichier de l'atelier. */
+export function preparationDe(etat) {
+  validerEtat(etat);
+  const actes = etat.actes.map(a => ({ ...a, dossiers: a.dossiers.map(d => ({ ...d, publie: etat.documents.some(doc => doc.id === d.id) })), objectifs: a.objectifs.map(o => ({ ...o, remis: false })) }));
+  return copie({ config: etat.config, documents: etat.documents, protocoles: etat.protocoles, actes });
+}
+
 function sansRadar(etat) {
   const { tracker: _radar, prereglagesDetecteur: _prereglages, ...terminal } = etat;
   return terminal;
 }
 
 function moteurDe(etat) {
-  const { actes: _actes, ...terminal } = etat;
+  const { actes: _actes, prereglages: _prereglages, ...terminal } = etat;
   return coeur.créer({ ...terminal, version: Math.min(3,terminal.version), tracker: coeur.initial().tracker });
 }
-const enrichir = (terminal, actes = []) => ({ ...sansRadar(terminal), version:4, actes:copie(actes) });
+const enrichir = (terminal, actes = [], prereglages = []) => ({ ...sansRadar(terminal), version:5, actes:copie(actes), prereglages:copie(prereglages) });
 
 export function creerEtat() {
   return enrichir(coeur.initial());
@@ -121,7 +135,7 @@ export function creerEtat() {
 
 /** Accepte aussi l'état v1 du prototype, en retirant uniquement son radar. */
 export function migrerEtat(donnees, versionDonnees) {
-  if (![1, 2, 3, 4].includes(versionDonnees)) throw new Error('Version de données MU/TH/UR non prise en charge.');
+  if (![1, 2, 3, 4, 5].includes(versionDonnees)) throw new Error('Version de données MU/TH/UR non prise en charge.');
   exiger(objet(donnees));
   let terminal = sansRadar(donnees);
   exiger(terminal.version === versionDonnees);
@@ -131,7 +145,7 @@ export function migrerEtat(donnees, versionDonnees) {
   }
   validerEtat(terminal, terminal.version);
   if (terminal.version === 2) terminal = sansRadar(moteurDe(terminal).sauvegarde());
-  const resultat = arreterEffets(enrichir(terminal,donnees.actes));
+  const resultat = arreterEffets(enrichir(terminal,donnees.actes,donnees.prereglages));
   // Le prototype antérieur au 15/10 gardait l'alias ORDERS en clair dans le fil.
   for (const joueur of Object.values(resultat.players)) for (const message of joueur.messages) {
     const secret = message.kind === 'input' && message.content.match(/^(LOGIN|CODE|ORDERS)\s/i);
@@ -158,13 +172,13 @@ export function vuePour(etat, lecteur) {
   validerEtat(etat); verifierLecteur(lecteur);
   const moteur = moteurDe(etat);
   if (lecteur.role === 'mj') {
-    return enrichir(moteur.snapshot('gm', '', lecteur.appareilId),etat.actes);
+    return { ...enrichir(moteur.snapshot('gm', '', lecteur.appareilId),etat.actes), prereglages: sommaireDesPrereglages(etat.prereglages) };
   }
   // L'ouverture ne mute pas la sauvegarde. La première commande inscrit le PJ.
   if (!Object.hasOwn(etat.players, lecteur.personnageId)) moteur.inscrire(lecteur.personnageId, 'Opérateur');
   const { tracker: _radar, ...vue } = moteur.snapshot('player', lecteur.personnageId, lecteur.appareilId);
   vue.revision = etat.revision;
-  vue.version = 4;
+  vue.version = 5;
   return vue;
 }
 
@@ -174,11 +188,24 @@ export function appliquerCommande(etat, commande, contexte) {
   const charge = commande.charge, moteur = moteurDe(etat);
   const mj = contexte.role === 'mj';
   if (!mj && !['saisir', 'choisir-diffusion'].includes(commande.id)) throw new Error('Commande réservée au meneur.');
+  if (COMMANDES_DE_PREREGLAGE.includes(commande.id)) {
+    const c = lireCharge(commande);
+    let resultat = copie(etat);
+    if (commande.id === 'enregistrer-prereglage') resultat.prereglages = enregistrerPrereglage(etat.prereglages, c, preparationDe(etat), validerPreparation);
+    else if (commande.id === 'supprimer-prereglage') resultat.prereglages = sansPrereglage(etat.prereglages, c.prereglageId);
+    else {
+      // Rappeler, c'est remettre le terminal à neuf puis poser la préparation ; les opérateurs restent.
+      const { id: _id, nom: _nom, ...preparation } = prereglageDe(etat.prereglages, c.prereglageId);
+      moteur.agir('gm', '', { type: 'reset' });
+      resultat = { ...enrichir(moteur.sauvegarde(), preparation.actes, etat.prereglages), config: preparation.config, documents: preparation.documents, protocoles: preparation.protocoles };
+    }
+    resultat.revision = etat.revision + 1; validerEtat(resultat); return resultat;
+  }
   if (['dossier-acte','objectif-acte','publier-dossier-acte','remettre-objectif-acte'].includes(commande.id)) {
     const actes = preparerActe(etat.actes,commande,etat.players,
       d => { exiger(!etat.documents.some(a=>a.id===d.id)); moteur.agir('gm','',{type:'creer-document',document:{id:d.id,title:d.titre,body:d.contenu,access:{equipage:'crew',code:'code',administrateur:'admin'}[d.acces],code:d.code}}); },
       (o,a) => moteur.agir('gm','',{type:'reply',playerId:o.personnageId,text:`Objectif — ${a.scenario}, acte ${a.acte}\n${o.texte}`,requestId:null}));
-    const resultat=enrichir(moteur.sauvegarde(),actes); resultat.revision=etat.revision+1; validerEtat(resultat); return resultat;
+    const resultat=enrichir(moteur.sauvegarde(),actes,etat.prereglages); resultat.revision=etat.revision+1; validerEtat(resultat); return resultat;
   }
   const cibler = () => { exiger(identite(charge.personnageId)); return charge.personnageId; };
   let action;
@@ -196,7 +223,7 @@ export function appliquerCommande(etat, commande, contexte) {
     forme(charge, ['personnageId', 'nom']); const id = cibler();
     exiger(chaine(charge.nom, 40, false));
     moteur.inscrire(id, charge.nom);
-    const candidat = enrichir(moteur.sauvegarde(),etat.actes);
+    const candidat = enrichir(moteur.sauvegarde(),etat.actes,etat.prereglages);
     candidat.players[id].name = charge.nom;
     candidat.revision = etat.revision + 1;
     validerEtat(candidat); return candidat;
@@ -256,7 +283,8 @@ export function appliquerCommande(etat, commande, contexte) {
     forme(charge, []); action = { type: 'reset' };
   } else throw new Error('Commande MU/TH/UR inconnue.');
   if (action) moteur.agir('gm', '', action);
-  const resultat = enrichir(moteur.sauvegarde(),commande.id === 'reinitialiser' ? [] : etat.actes);
+  // La remise à zéro garde les préréglages : c'est d'eux qu'on repart.
+  const resultat = enrichir(moteur.sauvegarde(),commande.id === 'reinitialiser' ? [] : etat.actes,etat.prereglages);
   resultat.revision = etat.revision + 1;
   validerEtat(resultat);
   return resultat;

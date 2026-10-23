@@ -3,6 +3,7 @@ import { createElement as h, useCallback, useEffect, useRef, useState } from 're
 import '../../core.js';
 import '../../detecteur.js';
 import { DiscretMJ, LectureDiscrete } from './discret-vues.mjs';
+import { PrereglagesEtRemise } from '../prereglages-vues.mjs';
 
 const bouton = (texte, props = {}) => h('button', { type: 'button', ...props }, texte);
 function useMouvementsReduits() {
@@ -131,30 +132,17 @@ function Reglages({ vue, envoyer, occupe }) {
       h('label', { className: 'detecteur-case' }, h('input', { type: 'checkbox', name: 'effetsParasites', defaultChecked: vue.config.glitches }), 'Effets parasites'),
       h('button', { type: 'submit' }, 'Enregistrer les réglages')));
 }
+function resumeDuPrereglage(pr) {
+  const r = pr.reglages, base = `${r.contacts} contacts · proximité ${r.proximity} · intensité ${r.intensity} · volume ${r.volume} · parasites ${r.noise}`;
+  if (!pr.discret) return `${base} · réglages de mise en scène seulement`;
+  return `${base} · plan : ${pr.discret.zones.length} zones, ${pr.discret.pions.length} pions${pr.discret.actif ? ', raccordé' : ''}`;
+}
 function Prereglages({ vue, envoyer, occupe }) {
-  const [choisi, choisir] = useState(''), [confirmation, confirmer] = useState(false);
-  const pr = vue.prereglages.find(p => p.id === choisi);
-  async function enregistrer(e) {
-    e.preventDefault();
-    const nom = new FormData(e.currentTarget).get('nom');
-    const prereglageId = pr?.id || 'prereglage-' + crypto.randomUUID();
-    if (await envoyer('enregistrer-prereglage', { prereglageId, nom })) choisir(prereglageId);
-  }
-  return h('section', { className: 'detecteur-reglages', 'aria-label': 'Préréglages du détecteur' },
-    h('h3', null, 'Préréglages nommés'),
-    h('p', null, 'Enregistre les réglages déjà appliqués ci-dessus. Charger un préréglage arrête le scan ; démarre-le lorsque tu es prêt.'),
-    h('label', null, 'Préréglage', h('select', { value: pr?.id || '', disabled: occupe, onChange: e => { choisir(e.target.value); confirmer(false); } },
-      h('option', { value: '' }, 'Nouveau préréglage…'), vue.prereglages.map(p => h('option', { value: p.id, key: p.id }, p.nom)))),
-    h('form', { key: pr ? JSON.stringify(pr) : 'nouveau', onSubmit: enregistrer },
-      h('label', null, 'Nom du préréglage', h('input', { name: 'nom', defaultValue: pr?.nom || '', maxLength: 80, required: true, disabled: occupe })),
-      h('button', { type: 'submit', disabled: occupe }, pr ? 'Remplacer par les réglages actuels' : 'Enregistrer les réglages actuels')),
-    pr && h('div', null,
-      h('p', null, `${pr.reglages.contacts} contacts · proximité ${pr.reglages.proximity} · intensité ${pr.reglages.intensity} · volume ${pr.reglages.volume} · parasites ${pr.reglages.noise}`),
-      bouton('Charger et arrêter le scan', { disabled: occupe, onClick: () => envoyer('rappeler-prereglage', { prereglageId: pr.id }) }),
-      h('label', { className: 'detecteur-case' }, h('input', { type: 'checkbox', checked: confirmation, disabled: occupe, onChange: e => confirmer(e.target.checked) }), 'Confirmer la suppression du préréglage'),
-      bouton('Supprimer le préréglage', { disabled: occupe || !confirmation, onClick: async () => {
-        if (await envoyer('supprimer-prereglage', { prereglageId: pr.id })) { choisir(''); confirmer(false); }
-      } })));
+  return h(PrereglagesEtRemise, { prereglages: vue.prereglages, envoyer, occupe, sujet: 'le détecteur',
+    classes: { section: 'detecteur-reglages', case: 'detecteur-case' },
+    contenu: 'Un préréglage garde toute la préparation : réglages de mise en scène, effets visuels et plan du mode discret (zones, pions, porteur, batterie). Le rappel arrête le scan et repart au Tour 1.',
+    remise: 'Remet le détecteur à neuf : réglages, plan, pions et Tours effacés, scan arrêté. Les préréglages et les accès des PJ restent.',
+    resume: id => resumeDuPrereglage(vue.prereglages.find(p => p.id === id)) });
 }
 export function PupitreMJ({ vue, envoyerCommande }) {
   const [occupe, occuper] = useState(false), [erreur, signaler] = useState('');
@@ -174,7 +162,7 @@ export function PupitreMJ({ vue, envoyerCommande }) {
       bouton('Faux écho · 9 s', { disabled: occupe || !vue.tracker.power || vue.discret?.actif, onClick: () => envoyer('faux-echo', {}) })),
     erreur && h('p', { role: 'alert' }, erreur),
     h(Reglages, { key: JSON.stringify([vue.config, vue.tracker.contacts, vue.tracker.proximity, vue.tracker.intensity, vue.tracker.volume, vue.tracker.noise]), vue, envoyer, occupe }),
-    h(Prereglages, { vue, envoyer, occupe }),
     h(DiscretMJ, { d:vue.discret, envoyer, occupe }),
+    h(Prereglages, { vue, envoyer, occupe }),
     h('p', null, 'Arrêter le scan conserve les accès et les réglages. Aucun effet automatique sur le Stress.')));
 }

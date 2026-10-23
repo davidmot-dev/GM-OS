@@ -92,15 +92,10 @@ la sirène et les annonces reprennent. La lecture automatique bloquée propose *
 
 ![Le détecteur reçu par un personnage autorisé](captures/jeu-alien-detecteur-joueur.jpg)
 
-Pour préparer plusieurs ambiances, applique d’abord les réglages avec **Enregistrer les réglages**.
-Dans **Préréglages nommés**, choisis **Nouveau préréglage…**, donne un nom puis **Enregistrer les
-réglages actuels**. Ils mémorisent contacts, proximité, intensité, volume et parasites du radar.
-Sélectionne ensuite un nom et **Charger et arrêter le scan** : le détecteur revient en veille,
-sans faux écho. Lance le scan au moment voulu. Tu peux remplacer le préréglage choisi par les
-réglages actuels, le renommer ou le supprimer après confirmation. Jusqu’à 32 noms sont conservés
-par campagne, dans les sauvegardes et exports ; ils restent réservés au MJ.
-
-![Préréglage rappelé avec le scan arrêté](captures/jeu-alien-prereglages.jpg)
+Pour préparer plusieurs ambiances, applique d’abord les réglages avec **Enregistrer les réglages**,
+puis garde-les sous un nom dans **Préréglages** : depuis le 23/10, un préréglage garde aussi le plan
+du mode discret. Son rappel remet le détecteur en veille, sans faux écho ; lance le scan au moment
+voulu. Voir [Préréglages et remise à zéro](#préréglages-et-remise-à-zéro--23102026).
 
 **Arrêter le scan** garde les accès et les réglages. Retirer un PJ ferme uniquement son instrument,
 sans interrompre celui des autres ; le dernier retrait arrête le scan. Le détecteur est un
@@ -253,6 +248,45 @@ avaries (elles ne tenaient qu'un Quart). Dans **Réparer et ajuster**, note la c
 > dégâts (la table, contre le texte) ; les contremesures contre une attaque de portée Courte ou
 > plus ; l'amarrage aux vélocités égales des deux camps. Les réactions et oppositions ne se
 > forcent pas. Le corps à corps à bord se joue à part, en Rounds (p. 197).
+
+### Préréglages et remise à zéro — 23/10/2026
+
+Les trois modules ont le même panneau **Préréglages**, suivi de **Remise à zéro** : dans l'onglet
+**Réglages** de MU/TH/UR, et au bas des pupitres du détecteur et du combat spatial. Un
+préréglage garde **toute la préparation** sous un nom ; la remise à zéro remet le module à neuf
+**sans toucher aux préréglages** ni aux accès des PJ.
+
+| Module | Le préréglage garde | Le rappel | La remise à zéro efface |
+| --- | --- | --- | --- |
+| MU/TH/UR | Réglages, dossiers et codes, protocoles, actes (dossiers publiés, objectifs à remettre) | Remet le terminal à neuf puis pose la préparation ; les opérateurs restent, sans dialogues ni déverrouillages | Dossiers, codes, protocoles, actes, dialogues et accès ; les opérateurs restent |
+| Détecteur | Réglages de mise en scène, effets visuels, plan du mode discret (zones, pions et leur place, porteur, batterie) | Arrête le scan et repart au Tour 1, sans pas dépensés ni scan | Réglages, plan, pions et Tours ; le scan s'arrête |
+| Combat spatial | Vaisseaux et équipages : modèle, armes, munitions, coque, avaries, postes | Remplace les vaisseaux ; il attend la fin du combat | Tous les vaisseaux et le combat en cours |
+
+1. Prépare le module comme pour une séance.
+2. Dans **Préréglages**, garde **Nouveau préréglage…**, donne un nom, puis **Enregistrer la
+   préparation actuelle**. Choisir un nom puis enregistrer **remplace** ce préréglage.
+3. Pour rappeler, choisis le nom, coche **Confirmer le remplacement de la préparation actuelle**,
+   puis **Rappeler ce préréglage**. La suppression a sa propre case de confirmation.
+4. Pour repartir de zéro, coche **Confirmer la réinitialisation**, puis **Réinitialiser…**.
+
+![Le panneau des préréglages du détecteur, l'exemple du relais choisi](captures/jeu-alien-prereglages-pupitre.jpg)
+
+Le détecteur arrive avec **Exemple — relais à sept salles** : un plan intérieur raccordé, Rye
+porteur du M314, une batterie à 5. Il montre les cas du mode discret en trois Tours :
+
+| Tour | Ce que fait Maman | Ce que voit la tablette |
+| --- | --- | --- |
+| 1 | Xénomorphe : Laboratoire → Coursive B → Gaine technique ; **Scanner** | **Gaine technique : 1 écho**. La vermine (non détectable) ne compte pas ; le chien du hangar, à 125 m et cinq zones, est hors de portée |
+| 2 | Davis : Sas → Coursive A ; **Examiner** pour le xénomorphe ; **Scanner** | **Coursive A : 1 écho** : c'est Davis, le M314 n'identifie personne ; la créature immobile disparaît |
+| 3 | Xénomorphe : Gaine → Coursive A → Mess ; **Scanner** | **Mess : 1 écho** : la créature est passée derrière Davis |
+
+Le synthétique immobile de l'infirmerie ne paraît jamais. Les trois zones par Tour de la créature
+sont un choix de l'exemple : ajuste-les à sa fiche. Supprimé, l'exemple ne revient pas.
+
+Jusqu'à 32 préréglages par module et par campagne. Ils restent au poste du MJ, dans le fichier
+privé des modules, les sauvegardes et les exports de campagne ; aucune tablette ne les reçoit.
+Les préréglages du détecteur faits avant le 23/10 ne gardent que les réglages de mise en scène :
+leur rappel laisse le plan en place.
 
 Les données privées sont stockées à part des campagnes diffusées aux tablettes. Les sauvegardes
 complètes et exports de campagne incluent les dossiers, codes et dialogues ; un export de pilote

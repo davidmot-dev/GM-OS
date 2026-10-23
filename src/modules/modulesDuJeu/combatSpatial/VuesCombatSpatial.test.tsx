@@ -61,6 +61,25 @@ describe('le pupitre de Maman', () => {
         h.definir(spatial.appliquerCommande(h.etat(), { id: 'ordonner', charge: { vaisseauId: patna.id, action: 'faire-le-mort', coupe: 'aucun' } }, mj));
         expect((getByLabelText('Action de USS Patna') as HTMLSelectElement).value).toBe('faire-le-mort');
     });
+    it('enregistre les vaisseaux sous un nom, remet à zéro après confirmation, puis les rappelle', async () => {
+        const depart = spatial.appliquerCommande(spatial.creerEtat(), { id: 'vaisseau', charge: { nom: 'Montero', modele: 'libre', camp: 'joueurs',
+            signature: 0, propulseurs: 0, coque: 6, protection: 4, armes: [], transpondeur: true, ombilic: false } }, mj);
+        const h = hote(depart, mj, PupitreCombatSpatial);
+        const { getByLabelText, getByRole } = h.rendu;
+        fireEvent.change(getByLabelText('Nom du préréglage'), { target: { value: 'Le Montero seul' } });
+        await soumettre(getByLabelText('Nom du préréglage').closest('form')!);
+        expect(h.etat().prereglages.map(p => p.nom)).toEqual(['Le Montero seul']);
+        const reinitialiser = getByRole('button', { name: 'Réinitialiser le combat spatial' }) as HTMLButtonElement;
+        expect(reinitialiser.disabled).toBe(true);
+        await cliquer(getByLabelText('Confirmer la réinitialisation'));
+        await cliquer(reinitialiser);
+        expect(h.etat().vaisseaux).toEqual([]);
+        fireEvent.change(getByLabelText('Préréglage'), { target: { value: h.etat().prereglages[0].id } });
+        await cliquer(getByLabelText('Confirmer le remplacement de la préparation actuelle'));
+        await cliquer(getByRole('button', { name: 'Rappeler ce préréglage' }));
+        expect(h.etat().vaisseaux.map(v => v.nom)).toEqual(['Montero']);
+        expect(h.commandes).toEqual(['enregistrer-prereglage', 'reinitialiser', 'rappeler-prereglage']);
+    });
 });
 
 describe('la tablette de l’équipage', () => {

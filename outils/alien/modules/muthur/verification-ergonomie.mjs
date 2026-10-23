@@ -43,7 +43,7 @@ test('questions et hack se traitent séparément, hors ordre et sans divulgation
   e = agir(e, 'repondre', { personnageId: 'alice', demandeId: null, texte: 'Message libre.' });
   assert.equal(e.players.alice.requests[0].status, 'pending');
   assert.ok(!JSON.stringify(maman.vuePour(e, bob)).includes('Quel secteur'));
-  assert.deepEqual(maman.migrerEtat(e, 4).players.alice.requests, e.players.alice.requests);
+  assert.deepEqual(maman.migrerEtat(e, 5).players.alice.requests, e.players.alice.requests);
   e = agir(e, 'revoquer', { personnageId: 'alice' });
   assert.equal(e.players.alice.requests[0].status, 'cancelled'); assert.equal(e.players.alice.request, null);
 });
@@ -64,9 +64,9 @@ test('la file refuse le débordement sans mutation et borne seulement son histor
 
 test('migration v2 : récupère la demande survivante et son texte sans modifier l’original', () => {
   const e = saisir(maman.creerEtat(), '/M Demande ancienne');
-  delete e.players.alice.requests; delete e.actes; e.version = 2;
+  delete e.players.alice.requests; delete e.actes; delete e.prereglages; e.version = 2;
   const avant = structuredClone(e), migre = maman.migrerEtat(e, 2);
-  assert.deepEqual(e, avant); assert.equal(migre.version, 4);
+  assert.deepEqual(e, avant); assert.equal(migre.version, 5);
   assert.equal(migre.players.alice.requests[0].content, 'Demande ancienne');
   e.players.alice.messages = [];
   assert.match(maman.migrerEtat(e, 2).players.alice.requests[0].content, /indisponible/);
@@ -75,7 +75,7 @@ test('migration v2 : récupère la demande survivante et son texte sans modifier
 });
 
 test('préréglages nommés : capture, rappel en veille, conservation et confidentialité', () => {
-  let e = detecter(radar.creerEtat(), 'configurer', { contacts: 7, proximite: 81, intensite: 95, volume: 60, parasites: 43 });
+  let e = detecter({ ...radar.creerEtat(), prereglages: [] }, 'configurer', { contacts: 7, proximite: 81, intensite: 95, volume: 60, parasites: 43 });
   e = detecter(e, 'enregistrer-prereglage', { prereglageId: 'couloir', nom: 'Couloir sombre' });
   e = detecter(e, 'configurer', { contacts: 1, volume: 0 });
   e = detecter(detecter(e, 'scanner', { actif: true }), 'faux-echo', {});
@@ -83,7 +83,7 @@ test('préréglages nommés : capture, rappel en veille, conservation et confide
   e = detecter(e, 'rappeler-prereglage', { prereglageId: 'couloir' });
   assert.equal(e.tracker.contacts, 7); assert.equal(e.tracker.volume, 60);
   assert.equal(e.tracker.seed, graine); assert.equal(e.tracker.power, false); assert.equal(e.tracker.anomalyUntil, 0);
-  assert.deepEqual(radar.migrerEtat(JSON.parse(JSON.stringify(e)), 3).prereglages, e.prereglages);
+  assert.deepEqual(radar.migrerEtat(JSON.parse(JSON.stringify(e)), 4).prereglages, e.prereglages);
   assert.equal(radar.vuePour(e, alice).prereglages, undefined);
   assert.equal(radar.vuePour(e, mj).prereglages[0].nom, 'Couloir sombre');
   const avant = structuredClone(e);
@@ -99,6 +99,6 @@ test('migration détecteur v1 stricte, sans démarrage ni perte des réglages', 
   const e = detecter(radar.creerEtat(), 'scanner', { actif: true });
   e.version = 1; delete e.prereglages; delete e.discret;
   const avant = structuredClone(e), migre = radar.migrerEtat(e, 1);
-  assert.deepEqual(e, avant); assert.equal(migre.version, 3); assert.deepEqual(migre.prereglages, []); assert.equal(migre.tracker.power, false);
+  assert.deepEqual(e, avant); assert.equal(migre.version, 4); assert.deepEqual(migre.prereglages.map(p => p.id), ['exemple-relais']); assert.equal(migre.tracker.power, false);
   assert.throws(() => radar.migrerEtat({ ...e, intrus: true }, 1));
 });

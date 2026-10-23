@@ -29,7 +29,7 @@ describe('A8 : mode discret et plan privé',()=>{
         vi.spyOn(Math,'random').mockReturnValue(0);
         const e=agir(preparerRadar(),'scanner-discret',{tour:1});
         expect(e.discret.energie).toBe(2);expect(e.discret.dernierScan?.des).toEqual([1,1,1,1,1,1]);
-        const reprise=radar.migrerEtat(JSON.parse(JSON.stringify(e)),3);
+        const reprise=radar.migrerEtat(JSON.parse(JSON.stringify(e)),4);
         expect(reprise.tracker.power).toBe(false);
         expect(()=>agir(reprise,'scanner-discret',{tour:1})).toThrow(/seul scan/);
         expect(()=>agir(reprise,'scanner',{actif:true})).toThrow(/scan discret/);
@@ -63,8 +63,8 @@ describe('A8 : mode discret et plan privé',()=>{
         expect(radar.vuePour(ancien,alice)).not.toHaveProperty('discret');
     });
     it('migre un vrai état v2 sans plan et sans perdre ses réglages',()=>{
-        const ancien:Record<string,unknown>={...radar.creerEtat(),version:2};delete ancien.discret;
-        const e=radar.migrerEtat(ancien,2);expect(e.version).toBe(3);expect(e.discret.actif).toBe(false);expect(e.tracker.contacts).toBe(3);
+        const ancien:Record<string,unknown>={...radar.creerEtat(),version:2,prereglages:[]};delete ancien.discret;
+        const e=radar.migrerEtat(ancien,2);expect(e.version).toBe(4);expect(e.discret.actif).toBe(false);expect(e.tracker.contacts).toBe(3);
     });
 });
 function preparerTerminal(){let e=maman.creerEtat();for(const id of ['alice','bob'])e=terminal(e,'preparer-operateur',{personnageId:id,nom:id});return e;}
@@ -77,7 +77,7 @@ describe('A8 : dossiers et objectifs d’acte MU/TH/UR',()=>{
         e=terminal(e,'remettre-objectif-acte',{...periode,personnageId:'alice'});
         expect(JSON.stringify(maman.vuePour(e,alice))).toContain('prélèvements');expect(JSON.stringify(maman.vuePour(e,bob))).not.toContain('prélèvements');
         expect(e.players.alice.requests[0].status).toBe('pending');
-        e=maman.migrerEtat(e,4);expect(()=>terminal(e,'remettre-objectif-acte',{...periode,personnageId:'alice'})).toThrow(/déjà/);
+        e=maman.migrerEtat(e,5);expect(()=>terminal(e,'remettre-objectif-acte',{...periode,personnageId:'alice'})).toThrow(/déjà/);
         expect(()=>maman.appliquerCommande(e,{id:'objectif-acte',charge:{...periode,personnageId:'bob',texte:'Voler le secret'}},alice)).toThrow(/meneur/);
     });
     it('ne publie un dossier qu’après le geste MJ et conserve ses accès par code',()=>{
@@ -93,13 +93,13 @@ describe('A8 : dossiers et objectifs d’acte MU/TH/UR',()=>{
     it('sauvegarde les actes ; l’export de préparation conserve les brouillons et retire les reçus de séance',()=>{
         let e=terminal(preparerTerminal(),'objectif-acte',{...periode,personnageId:'alice',texte:'Préserver les données.'});
         e=terminal(e,'remettre-objectif-acte',{...periode,personnageId:'alice'});
-        expect(maman.migrerEtat(e,4).actes).toEqual(e.actes);
+        expect(maman.migrerEtat(e,5).actes).toEqual(e.actes);
         const configuration=extraireConfiguration(e),importe=etatDepuisConfiguration(configuration);
         expect(importe.actes[0].objectifs[0]).toMatchObject({texte:'Préserver les données.',remis:false});
         expect(importe.players).toEqual({});
     });
     it('migre le terminal v3 en conservant dialogues et codes',()=>{
-        const ancien:Record<string,unknown>={...preparerTerminal(),version:3};delete ancien.actes;
+        const ancien:Record<string,unknown>={...preparerTerminal(),version:3};delete ancien.actes;delete ancien.prereglages;
         expect(maman.migrerEtat(ancien,3).actes).toEqual([]);expect(ancien).not.toHaveProperty('actes');
     });
 });

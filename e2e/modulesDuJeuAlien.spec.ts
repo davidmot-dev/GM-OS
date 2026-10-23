@@ -415,8 +415,8 @@ test('fichier privé, redémarrage et import conservent la préparation avec dro
     await poste.getByLabel('Contacts', { exact: true }).fill('8');
     await poste.getByRole('button', { name: 'Enregistrer les réglages', exact: true }).click();
     await poste.getByLabel('Nom du préréglage', { exact: true }).fill('A6 — Coursive');
-    await poste.getByRole('button', { name: 'Enregistrer les réglages actuels', exact: true }).click();
-    await expect(poste.getByRole('button', { name: 'Charger et arrêter le scan', exact: true })).toBeVisible();
+    await poste.getByRole('button', { name: 'Enregistrer la préparation actuelle', exact: true }).click();
+    await expect(poste.getByRole('button', { name: 'Rappeler ce préréglage', exact: true })).toBeVisible();
     await poste.getByRole('button', { name: 'Démarrer le scan', exact: true }).click();
     await poste.getByRole('button', { name: 'Faux écho · 9 s', exact: true }).click();
     await instrument(nel.page, 'Détecteur de mouvement');
@@ -427,7 +427,7 @@ test('fichier privé, redémarrage et import conservent la préparation avec dro
     await gmos.fermer();
     gmos = await demarrer(sauvegarde);
     const reprise = await vueMJ();
-    const preparation = { acces: [], vue: { tracker: { power: false, contacts: 8, anomalyUntil: 0 }, prereglages: [{ nom: 'A6 — Coursive', reglages: { contacts: 8 } }] } };
+    const preparation = { acces: [], vue: { tracker: { power: false, contacts: 8, anomalyUntil: 0 }, prereglages: [{ id: 'exemple-relais' }, { nom: 'A6 — Coursive', reglages: { contacts: 8 } }] } };
     expect(reprise.modules.find(m => m.id === 'alien-detecteur')).toMatchObject(preparation);
     const terminal = reprise.modules.find(m => m.id === 'alien-muthur')!.vue as VueMuthurMJ;
     expect(terminal.documents.map(d => d.id)).toEqual(['navigation', 'archive']);

@@ -3,8 +3,8 @@
   "id": "alien-detecteur",
   "libelle": "Détecteur de mouvement",
   "description": "Radar Alien scénarisé : contacts partagés, proximité, faux écho et intensité contrôlés par le meneur.",
-  "version": "0.3.0",
-  "versionDonnees": 3,
+  "version": "0.4.0",
+  "versionDonnees": 4,
   "corpusCompatibles": [
     "alien"
   ],
@@ -22,6 +22,7 @@
     {"id": "faux-echo", "roles": ["mj"]},
     {"id": "enregistrer-prereglage", "roles": ["mj"]},
     {"id": "rappeler-prereglage", "roles": ["mj"]},
-    {"id": "supprimer-prereglage", "roles": ["mj"]}
+    {"id": "supprimer-prereglage", "roles": ["mj"]},
+    {"id": "reinitialiser", "roles": ["mj"]}
   ]
 }

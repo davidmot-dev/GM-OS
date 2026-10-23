@@ -129,7 +129,7 @@ describe('hôte privé des modules', () => {
         const original: SauvegardeDesModules = { version: 1, campagnes: { 'campagne-b': { 'module-futur': { versionDonnees: 12, donnees: { texte: 'CONSERVER' } } } } };
         const { service, autoriser } = await preparer(original);
         await autoriser(['alice']);
-        await service.importer({ version: 1, campagnes: { 'campagne-a': { 'alien-muthur': { versionDonnees: 4, donnees: creerEtat() } } } });
+        await service.importer({ version: 1, campagnes: { 'campagne-a': { 'alien-muthur': { versionDonnees: 5, donnees: creerEtat() } } } });
         expect((await service.vueMJ()).sauvegarde?.campagnes['campagne-b']).toEqual(original.campagnes['campagne-b']);
         expect((await service.vueJoueur('alice', 'a')).modules).toEqual([]);
     });

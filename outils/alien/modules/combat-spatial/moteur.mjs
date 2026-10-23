@@ -18,6 +18,7 @@ import {
   ACTIONS, ARMES, AVARIES_MAJEURES, AVARIES_MINEURES, AVARIE_DU_POSTE, LIBELLES_DES_PORTEES, MODELES, MODIFICATEUR_DE_PORTEE,
   PANIQUE_SPATIALE, PORTEES, POSTES, POSTE_DE_LA_PHASE, avarieDeLaTable, porteeDeLaDistance,
 } from './catalogue.mjs';
+import { COMMANDES_DE_PREREGLAGE, enregistrerPrereglage, lireCharge, prereglageDe, sansPrereglage, sommaireDesPrereglages, validerPrereglages } from '../prereglages.mjs';
 
 const copier = v => JSON.parse(JSON.stringify(v));
 const exiger = (condition, message = 'Données du combat spatial invalides.') => { if (!condition) throw new Error(message); };
@@ -73,18 +74,24 @@ function validerCombat(c) {
   exiger(Array.isArray(c.resolus) && Array.isArray(c.amarres) && Array.isArray(c.sas) && Array.isArray(c.journal) && c.journal.length <= 400);
   exiger(c.enAttente === null || objet(c.enAttente));
 }
-export function validerEtat(etat) {
-  forme(etat, ['version', 'system', 'revision', 'vaisseaux', 'combat']);
-  exiger(etat.version === 1 && etat.system === 'alien' && Number.isSafeInteger(etat.revision) && etat.revision >= 0);
-  exiger(Array.isArray(etat.vaisseaux) && etat.vaisseaux.length <= 24);
-  etat.vaisseaux.forEach(validerVaisseau);
-  exiger(new Set(etat.vaisseaux.map(v => v.id)).size === etat.vaisseaux.length);
+function validerFlotte(vaisseaux) {
+  exiger(Array.isArray(vaisseaux) && vaisseaux.length <= 24);
+  vaisseaux.forEach(validerVaisseau);
+  exiger(new Set(vaisseaux.map(v => v.id)).size === vaisseaux.length);
+}
+/** v2 : un préréglage garde les vaisseaux et leurs équipages, sans combat. */
+function validerPreparation(contenu) { forme(contenu, ['vaisseaux']); validerFlotte(contenu.vaisseaux); }
+export function validerEtat(etat, version = 2) {
+  forme(etat, ['version', 'system', 'revision', 'vaisseaux', 'combat', ...(version >= 2 ? ['prereglages'] : [])]);
+  exiger(etat.version === version && etat.system === 'alien' && Number.isSafeInteger(etat.revision) && etat.revision >= 0);
+  validerFlotte(etat.vaisseaux);
+  if (version >= 2) validerPrereglages(etat.prereglages, validerPreparation);
   if (etat.combat !== null) validerCombat(etat.combat);
 }
-export function creerEtat() { return { version: 1, system: 'alien', revision: 0, vaisseaux: [], combat: null }; }
+export function creerEtat() { return { version: 2, system: 'alien', revision: 0, vaisseaux: [], combat: null, prereglages: [] }; }
 export function migrerEtat(donnees, version) {
-  exiger(version === 1, 'Version du combat spatial non prise en charge.');
-  validerEtat(donnees); return copier(donnees);
+  exiger([1, 2].includes(version), 'Version du combat spatial non prise en charge.');
+  validerEtat(donnees, version); return { ...copier(donnees), version: 2, prereglages: copier(donnees.prereglages ?? []) };
 }
 /** Rien ne tourne seul : ni minuterie, ni son. Le combat en cours est conservé. */
 export function arreterEffets(etat) { validerEtat(etat); return copier(etat); }
@@ -533,6 +540,20 @@ export function appliquerCommande(etat, commande, lecteur) {
   const reserveAuMJ = () => exiger(mj, 'Commande réservée au meneur.');
   const enCombat = () => exiger(c, 'Aucun combat en cours.');
   switch (commande.id) {
+    case 'enregistrer-prereglage': case 'rappeler-prereglage': case 'supprimer-prereglage': case 'reinitialiser': {
+      reserveAuMJ(); const p = lireCharge(commande);
+      if (commande.id === 'enregistrer-prereglage') {
+        // Une réparation d'urgence ne tient qu'un Quart : le préréglage garde l'avarie, comme la fin du combat.
+        const vaisseaux = copier(etat.vaisseaux);
+        for (const v of vaisseaux) for (const a of v.avaries) if (a.etat === 'temporaire') { a.etat = 'active'; a.restants = [...avarieDuCode(a).reparation]; }
+        suivant.prereglages = enregistrerPrereglage(etat.prereglages, p, { vaisseaux }, validerPreparation);
+      } else if (commande.id === 'supprimer-prereglage') suivant.prereglages = sansPrereglage(etat.prereglages, p.prereglageId);
+      else if (commande.id === 'rappeler-prereglage') {
+        exiger(!c, 'Termine le combat avant de rappeler un préréglage.');
+        suivant.vaisseaux = prereglageDe(etat.prereglages, p.prereglageId).vaisseaux;
+      } else Object.assign(suivant, { vaisseaux: [], combat: null });
+      break;
+    }
     case 'vaisseau': reserveAuMJ(); preparerVaisseau(suivant, ch); break;
     case 'supprimer-vaisseau': {
       reserveAuMJ(); forme(ch, ['vaisseauId']); const v = vaisseau(suivant, ch.vaisseauId);
@@ -663,7 +684,8 @@ export function vuePour(etat, lecteur, contexte = { personnages: [] }) {
     c.prochain = prochainAResoudre(etat);
   }
   // Les personnages de la séance, pour attribuer les postes.
-  if (lecteur.role === 'mj') return { ...vue, vaisseaux: vue.vaisseaux.map(enrichir), personnages: copier(contexte?.personnages ?? []) };
+  if (lecteur.role === 'mj') return { ...vue, vaisseaux: vue.vaisseaux.map(enrichir), prereglages: sommaireDesPrereglages(etat.prereglages), personnages: copier(contexte?.personnages ?? []) };
+  delete vue.prereglages;
   const identifies = new Set(etat.vaisseaux.filter(v => v.camp === 'joueurs')
     .flatMap(v => [...(etat.combat?.dejaVerrouilles[v.id] ?? []), ...(etat.combat?.verrous[v.id] ?? [])]));
   const vaisseaux = vue.vaisseaux.filter(v => v.camp === 'joueurs' || c?.engages.includes(v.id)).map(v => {

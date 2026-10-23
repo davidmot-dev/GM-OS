@@ -20,7 +20,7 @@ it('prépare dans le vrai formulaire un objectif par acte, le remet une fois et 
     await cliquer('Remettre dans le terminal privé');
     expect(JSON.stringify(maman.vuePour(etat,{role:'joueur',personnageId:'alice'}))).toContain('prélèvements');
     expect((vue.getByRole('button',{name:'Objectif déjà remis'}) as HTMLButtonElement).disabled).toBe(true);
-    vue.unmount();etat=maman.migrerEtat(etat,4);
+    vue.unmount();etat=maman.migrerEtat(etat,5);
     const reprise=render(<PupitreMJ vue={maman.vuePour(etat,{role:'mj'})} envoyerCommande={vi.fn()}/>);
     fireEvent.click(reprise.getByRole('button',{name:'Actes'}));
     fireEvent.change(reprise.getByLabelText('Destinataire de l’objectif'),{target:{value:'alice'}});

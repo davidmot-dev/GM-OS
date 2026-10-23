@@ -1,6 +1,6 @@
 # Combat spatial Alien — module du Tablet Hub
 
-Version 1.0.0, contrat v1, données v1. Créé le 23/10/2026 (Claude Code), à la demande de David :
+Version 1.1.0, contrat v1, données v2 (préréglages et remise à zéro, 23/10). Créé le 23/10/2026 (Claude Code), à la demande de David :
 « je voudrais aussi finir Alien aujourd'hui », périmètre complet. Règles du livre de base
 français, p. 175-201, et errata 2021 (avarie mineure 55).
 
@@ -51,7 +51,10 @@ français, p. 175-201, et errata 2021 (avarie mineure 55).
 ## Commandes
 
 Au MJ : `vaisseau`, `supprimer-vaisseau`, `poste`, `etat-vaisseau`, `demarrer-combat`, `reveler`,
-`phase-suivante`, `relancer-avarie`, `terminer-combat`. Au MJ et au joueur qui tient le poste de la
+`phase-suivante`, `relancer-avarie`, `terminer-combat`, `enregistrer-prereglage`, `rappeler-prereglage`,
+`supprimer-prereglage`, `reinitialiser`. Un préréglage garde les vaisseaux et leurs équipages (une réparation
+d'urgence y redevient avarie) ; le rappel attend la fin du combat ; la remise à zéro efface vaisseaux et
+combat et garde les préréglages. Le panneau commun est `../prereglages-vues.mjs` ; la logique partagée, `../prereglages.mjs` (32 préréglages au plus, nom unique sans tenir compte de la casse, réservés au MJ). Au MJ et au joueur qui tient le poste de la
 phase (ou le capitaine) : `ordonner`, `resoudre`, `forcer`, `valider` ; `mes-des` pour son propre
 poste. La tablette ne voit de l'adversaire que « Contact non identifié » tant que son transpondeur
 est coupé et qu'aucun vaisseau des joueurs ne l'a verrouillé ; ni ordres avant révélation, ni

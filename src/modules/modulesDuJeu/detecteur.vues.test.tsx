@@ -66,7 +66,7 @@ describe('instrument du détecteur', () => {
         expect((vue.getByRole('button',{name:'Scanner ce Tour et tester l’Énergie'}) as HTMLButtonElement).disabled).toBe(true);
         expect(JSON.stringify(moteur.vuePour(etat,{role:'joueur',personnageId:'alice'}))).not.toContain('Porteur');
     });
-    it('enregistre, rappelle en veille et supprime un préréglage après confirmation', async () => {
+    it('enregistre, rappelle en veille et supprime un préréglage après confirmation, puis remet à zéro', async () => {
         let etat = actif();
         const commandes: moteur.CommandeDetecteur[] = [];
         const props = () => ({ vue: etat, envoyerCommande: async (commande: moteur.CommandeDetecteur) => {
@@ -79,16 +79,31 @@ describe('instrument du détecteur', () => {
         const nom = vue.getByLabelText('Nom du préréglage');
         fireEvent.change(nom, { target: { value: 'Couloir' } });
         await act(async () => fireEvent.submit(nom.closest('form')!));
-        expect(etat.prereglages).toHaveLength(1);
-        expect((vue.getByLabelText('Préréglage') as HTMLSelectElement).value).toBe(etat.prereglages[0].id);
-        await cliquer(vue.getByRole('button', { name: 'Charger et arrêter le scan' }));
+        expect(etat.prereglages.map(p => p.nom)).toEqual(['Exemple — relais à sept salles', 'Couloir']);
+        expect((vue.getByLabelText('Préréglage') as HTMLSelectElement).value).toBe(etat.prereglages[1].id);
+        const rappeler = vue.getByRole('button', { name: 'Rappeler ce préréglage' });
+        expect((rappeler as HTMLButtonElement).disabled).toBe(true);
+        await cliquer(vue.getByLabelText('Confirmer le remplacement de la préparation actuelle'));
+        await cliquer(rappeler);
         expect(etat.tracker.power).toBe(false);
         const supprimer = vue.getByRole('button', { name: 'Supprimer le préréglage' });
         expect((supprimer as HTMLButtonElement).disabled).toBe(true);
         await cliquer(vue.getByLabelText('Confirmer la suppression du préréglage'));
         await cliquer(supprimer);
-        expect(etat.prereglages).toEqual([]);
-        expect(commandes.map(c => c.id)).toEqual(['enregistrer-prereglage', 'rappeler-prereglage', 'supprimer-prereglage']);
+        expect(etat.prereglages.map(p => p.id)).toEqual(['exemple-relais']);
+        // L'exemple tout fait pose le plan du relais, raccordé.
+        fireEvent.change(vue.getByLabelText('Préréglage'), { target: { value: 'exemple-relais' } });
+        await cliquer(vue.getByLabelText('Confirmer le remplacement de la préparation actuelle'));
+        await cliquer(vue.getByRole('button', { name: 'Rappeler ce préréglage' }));
+        expect(etat.discret).toMatchObject({ actif: true, porteurId: 'pj-rye', tour: 1 });
+        expect(etat.discret.zones).toHaveLength(8);
+        const reinitialiser = vue.getByRole('button', { name: 'Réinitialiser le détecteur' });
+        expect((reinitialiser as HTMLButtonElement).disabled).toBe(true);
+        await cliquer(vue.getByLabelText('Confirmer la réinitialisation'));
+        await cliquer(reinitialiser);
+        expect(etat.discret.zones).toEqual([]);
+        expect(etat.prereglages.map(p => p.id)).toEqual(['exemple-relais']);
+        expect(commandes.map(c => c.id)).toEqual(['enregistrer-prereglage', 'rappeler-prereglage', 'supprimer-prereglage', 'rappeler-prereglage', 'reinitialiser']);
     });
     it('le joueur ne reçoit aucun contrôle MJ et les bips demandent un geste local', async () => {
         const vue = render(<VueJoueur vue={actif()} envoyerCommande={envoyerCommande} />);

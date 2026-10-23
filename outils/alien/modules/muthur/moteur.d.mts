@@ -31,8 +31,9 @@ export interface ProtocoleMuthur {
   minutes: number; actif: boolean; portee: 'operateur' | 'equipage';
 }
 export interface EtatMuthur {
-  version: 4;
+  version: 5;
   actes: PreparationActe[];
+  prereglages: PrereglageMuthur[];
   system: 'alien';
   revision: number;
   config: { vessel: string; status: string; adminPassword: string; crt: boolean; glitches: boolean };
@@ -44,14 +45,16 @@ export interface EtatMuthur {
   autodestruction: { id: string; startedAt: number; message: string } | null;
   diffusionAlarme: string | null;
 }
-export type VueMuthurMJ = EtatMuthur & { diffusionAutorisee: boolean };
+/** v5 : la préparation de Maman sous un nom ; la remise à zéro les garde. */
+export interface PrereglageMuthur { id: string; nom: string; config: EtatMuthur['config']; documents: DossierMuthur[]; protocoles: ProtocoleMuthur[]; actes: PreparationActe[] }
+export type VueMuthurMJ = Omit<EtatMuthur, 'prereglages'> & { diffusionAutorisee: boolean; prereglages: { id: string; nom: string }[] };
 export interface PreparationActe {
   scenario:string; acte:number;
   dossiers:{id:string;titre:string;contenu:string;acces:'equipage'|'code'|'administrateur';code:string;publie:boolean}[];
   objectifs:{personnageId:string;texte:string;remis:boolean}[];
 }
 export interface VueMuthurJoueur {
-  version: 4;
+  version: 5;
   system: 'alien';
   revision: number;
   config: Pick<EtatMuthur['config'], 'vessel' | 'crt' | 'glitches'>;
@@ -82,7 +85,9 @@ export type CommandeMuthur =
   | { id: 'arbitrer-piratage'; charge: { personnageId: string; reussite: boolean; demandeId?: string } }
   | { id: 'revoquer'; charge: { personnageId: string } }
   | { id: 'compte-a-rebours'; charge: { minutes: number | null } }
-  | { id: 'reinitialiser'; charge: Record<string, never> };
+  | { id: 'reinitialiser'; charge: Record<string, never> }
+  | { id: 'enregistrer-prereglage'; charge: { prereglageId: string; nom: string } }
+  | { id: 'rappeler-prereglage' | 'supprimer-prereglage'; charge: { prereglageId: string } };
 export function creerEtat(): EtatMuthur;
 export function validerEtat(etat: unknown): asserts etat is EtatMuthur;
 export function migrerEtat(donnees: unknown, versionDonnees: number): EtatMuthur;

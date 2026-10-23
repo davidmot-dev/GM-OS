@@ -10,7 +10,7 @@ it('migre les campagnes existantes puis conserve dossiers, demandes et prérégl
     const mj = { role: 'mj' as const, appareilId: 'poste' };
     const ancienTerminal = maman.appliquerCommande(maman.creerEtat(), { id: 'saisir', charge: { texte: '/M Question ancienne' } }, { role: 'joueur', personnageId: 'alice' });
     const ancienRadar = radar.creerEtat();
-    const terminalV2 = JSON.parse(JSON.stringify(ancienTerminal)); terminalV2.version = 2; delete terminalV2.players.alice.requests; delete terminalV2.actes;
+    const terminalV2 = JSON.parse(JSON.stringify(ancienTerminal)); terminalV2.version = 2; delete terminalV2.players.alice.requests; delete terminalV2.actes; delete terminalV2.prereglages;
     const radarV1 = JSON.parse(JSON.stringify(ancienRadar)); radarV1.version = 1; delete radarV1.prereglages; delete radarV1.discret;
     let disque: SauvegardeDesModules = { version: 1, campagnes: { campagne: {
         'alien-muthur': { versionDonnees: 2, donnees: terminalV2 },
@@ -28,12 +28,12 @@ it('migre les campagnes existantes puis conserve dossiers, demandes et prérégl
     await commander('alien-detecteur', { id: 'scanner', charge: { actif: true } });
     const reprise = new ServiceDesModules(stockage, () => {}); await reprise.changerContexte(table);
     const sauvegarde = (await reprise.vueMJ()).sauvegarde!;
-    expect(sauvegarde.campagnes.campagne['alien-muthur'].versionDonnees).toBe(4);
+    expect(sauvegarde.campagnes.campagne['alien-muthur'].versionDonnees).toBe(5);
     const terminal = sauvegarde.campagnes.campagne['alien-muthur'].donnees as EtatMuthur;
     expect(terminal.documents.map(d => d.id)).toEqual(['archive', 'navigation']);
     expect(terminal.players.alice.requests.map(d => d.content)).toEqual(['Question ancienne', 'Question récente']);
     const detecteur = sauvegarde.campagnes.campagne['alien-detecteur'].donnees as EtatDetecteur;
-    expect(detecteur.tracker.power).toBe(false); expect(detecteur.prereglages[0].reglages.contacts).toBe(8);
+    expect(detecteur.tracker.power).toBe(false); expect(detecteur.prereglages.find(p => p.id === 'alarme')!.reglages.contacts).toBe(8);
     expect((await reprise.vueJoueur('alice', 'tablette')).modules).toEqual([]);
     await reprise.importer(JSON.parse(JSON.stringify(sauvegarde)));
     expect((await reprise.vueMJ()).sauvegarde).toEqual(sauvegarde);
