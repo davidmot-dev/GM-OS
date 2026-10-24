@@ -80,13 +80,25 @@ table ; ce qui est fermé ne quitte pas votre écran.
 
 ### Le mode fantastique
 
-Un calendrier est un fichier JSON déposé dans `databases/calendars/`. GM-OS en livre **un seul** :
-le **Calendrier d'Harptos** (Royaumes Oubliés) — 18 mois, dont les fêtes intercalaires, et des
-semaines de dix jours.
+Un calendrier est un fichier JSON déposé dans `databases/calendars/`. GM-OS en livre **deux** :
+
+- le **Calendrier d'Harptos** (Royaumes Oubliés) — 18 mois, dont les fêtes intercalaires, et des
+  semaines de dix jours ;
+- le **Calendrier de Rêve de Dragon** (`reve-de-dragon`, *depuis le 2026-10-24*) — douze mois
+  lunaires de 28 jours, du Vaisseau au Château Dormant, 336 jours ; **douze heures draconiques de
+  120 minutes**, nommées ; les saisons et les quatre phases de la lune en fêtes. Voir le
+  [guide Rêves de Dragons](54-Jeu-Reves-de-Dragons.md).
 
 Le format gère les mois de longueurs différentes, les **jours intercalaires**, les mois qui
 n'existent que les **années bissextiles**, et un nombre d'heures par jour qui n'est pas forcément
-vingt-quatre.
+vingt-quatre. Un calendrier peut **nommer ses heures** (`nomsDesHeures`, une par heure) : le cadran
+garde le rang de l'heure en chiffres (« 03:45 »), la date se termine par son nom (« · Le Faucon »),
+le pupitre la choisit dans une liste, et l'afficheur Ulanzi la dit en toutes lettres.
+
+> ⚠️ **Corrigé le 2026-10-24 : une minute fait soixante secondes.** Clock-OS prenait la durée de
+> l'heure pour la durée d'une minute ; c'était invisible à 60 minutes par heure, mais une heure de
+> 120 minutes comptait soixante « minutes » de deux minutes. Harptos et tout calendrier à heures de
+> 60 minutes ne changent pas.
 
 Année, mois, jour et heure se règlent ensuite dans le panneau de gauche.
 

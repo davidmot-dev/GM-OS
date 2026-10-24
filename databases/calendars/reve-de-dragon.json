@@ -1,0 +1,362 @@
+{
+    "name": "Calendrier de Rêve de Dragon",
+    "description": "Douze mois lunaires de 28 jours aux noms des heures et des constellations, du Vaisseau au Château Dormant : 336 jours, semaines de 7 jours. Douze heures draconiques de 120 minutes ; la journée commence au Vaisseau et change à la fin du Château Dormant (Livre des Voyageurs 2.3.1, p. 78 ; Livre des Mondes, p. 314).",
+    "hoursPerDay": 12,
+    "minutesPerHour": 120,
+    "nomsDesHeures": [
+        "Le Vaisseau",
+        "La Sirène",
+        "Le Faucon",
+        "La Couronne",
+        "Le Dragon",
+        "Les Épées",
+        "La Lyre",
+        "Le Serpent",
+        "Le Poisson Acrobate",
+        "L’Araignée",
+        "Le Roseau",
+        "Le Château Dormant"
+    ],
+    "daysPerWeek": 7,
+    "cycleBissextile": 0,
+    "currentYear": 1,
+    "currentMonthIndex": 0,
+    "currentDay": 1,
+    "currentHour": 0,
+    "currentMinute": 0,
+    "currentSecond": 0,
+    "months": [
+        {
+            "name": "Vaisseau",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier jour du printemps",
+                    "jour": 1,
+                    "description": "L’année commence au point vernal, le premier jour du mois du Vaisseau (Livre des Mondes 2.3.1, p. 314)."
+                },
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        },
+        {
+            "name": "Sirène",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        },
+        {
+            "name": "Faucon",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        },
+        {
+            "name": "Couronne",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier jour de l’été",
+                    "jour": 1,
+                    "description": "L’été commence le premier jour du mois de la Couronne."
+                },
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        },
+        {
+            "name": "Dragon",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        },
+        {
+            "name": "Épées",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        },
+        {
+            "name": "Lyre",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier jour de l’automne",
+                    "jour": 1,
+                    "description": "L’automne commence le premier jour du mois de la Lyre."
+                },
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        },
+        {
+            "name": "Serpent",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        },
+        {
+            "name": "Poisson Acrobate",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        },
+        {
+            "name": "Araignée",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier jour de l’hiver",
+                    "jour": 1,
+                    "description": "Le premier jour du mois de l’Araignée marque le premier jour de l’hiver."
+                },
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        },
+        {
+            "name": "Roseau",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        },
+        {
+            "name": "Château Dormant",
+            "days": 28,
+            "fetes": [
+                {
+                    "nom": "Premier quartier",
+                    "jour": 7,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Pleine lune",
+                    "jour": 14,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Second quartier",
+                    "jour": 21,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                },
+                {
+                    "nom": "Nouvelle lune",
+                    "jour": 28,
+                    "description": "Les mois sont lunaires : la lune est toujours au même quartier le même jour (p. 314)."
+                }
+            ]
+        }
+    ]
+}

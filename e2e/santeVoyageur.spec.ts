@@ -154,6 +154,18 @@ test('R2 : encaisser, sonné, soins, critique sur tablette et coma dans Combat-O
             const j = (window as unknown as Fenetre).useJournalStore.getState();
             return j.journals.find(x => x.id === j.activeJournalId)?.events.filter(e => e.title.includes('Adversaire autonome fictif') && e.title.includes('Encaisser')).length;
         })).toBe(1);
+        // Le Haut-Rêve d'un adversaire (2026-10-24) : une Fleur maîtrisée s'écrit sur sa fiche de combat.
+        const reveDeLAdversaire = () => f.evaluate(() => Number((window as unknown as Fenetre).useCombatStore.getState().combatants.find(c => c.name === 'Adversaire autonome fictif')?.sheetData?.reve_pts));
+        const reveAvant = await reveDeLAdversaire();
+        const hautReve = f.getByRole('region',{name:'Haut-Rêve RdD'});
+        await hautReve.getByText('Rencontre en TMR',{exact:true}).click();
+        await hautReve.getByLabel('Genre de terre',{exact:true}).selectOption('cite');
+        await hautReve.getByLabel('d100 des rencontres',{exact:true}).fill('55');
+        await hautReve.getByLabel('Force de la rencontre',{exact:true}).fill('3');
+        await hautReve.getByLabel('d100 de maîtrise',{exact:true}).fill('1');
+        await hautReve.getByRole('button',{name:'Préparer la rencontre',exact:true}).click();
+        await hautReve.getByRole('button',{name:'Valider cette opération',exact:true}).click();
+        await expect.poll(reveDeLAdversaire).toBe(reveAvant+3);
         await f.keyboard.press('Escape');
         await f.reload();await attendreLHydratation(app);
         expect((await lire()).sheetData.vie).toBe(0);

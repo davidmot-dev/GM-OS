@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { DEGRES_DE_REUSSITE, cleI18nDuDegre, type DegreDeReussite } from '../../dice/degresDeReussite';
 import { DiceEngine } from '../../dice/DiceEngine';
 import { lireSanteVoyageur } from '../logic/santeDuVoyageur';
-import { initialiserRepos, lireRepos, preparerGuerison, proposerChateauDormant, proposerRepos } from '../logic/reposDuVoyageur';
+import { initialiserRepos, lireRepos, preparerGuerison, proposerChateauDormant, proposerEnchantement, proposerFinDEnchantement, proposerRepasNormal, proposerRepos } from '../logic/reposDuVoyageur';
 import { operationDeVoyageur, type DonneesDeVoyage } from '../logic/operationsDeVoyageur';
 import { useOperationDeVoyageur } from '../hooks/useOperationDeVoyageur';
 import { CLASSE_OPERATION as classe, ValidationOperationVoyageur } from './ValidationOperationVoyageur';
@@ -25,6 +25,8 @@ export function PanneauReposVoyageur({donnees,appliquer,avantOperation,lectureSe
     const [stressDe,setStressDe]=useState(''),[stressSecond,setStressSecond]=useState(''),[moralDe,setMoralDe]=useState('');
     const [situationMoral,setSituationMoral]=useState<SituationDeMoral>('neutre'),[chanceDepensee,setChanceDepensee]=useState(false);
     const [destineeBlessures,setDestineeBlessures]=useState<Record<string,boolean>>({}),[destineeVie,setDestineeVie]=useState(false);
+    const [famine,setFamine]=useState(false),[nourriture,setNourriture]=useState(String(donnees.route_food ?? '')),[boisson,setBoisson]=useState(String(donnees.route_water ?? ''));
+    const [potion,setPotion]=useState(''),[revePotion,setRevePotion]=useState('');
     const op = useOperationDeVoyageur(donnees,d => {appliquer(d);setDdr('');setMaitrise('');setJets({});setHerbes({});setDeVie('');setNomNuit('');setControles(false);setDecoction('0');setStressDe('');setStressSecond('');setMoralDe('');setChanceDepensee(false);setDestineeBlessures({});setDestineeVie(false);},avantOperation);
     let r,s;try {r = lireRepos(donnees);s = lireSanteVoyageur(donnees);} catch(e) {return <p role="alert">{(e as Error).message}</p>;}
     if (!s) return null;
@@ -74,7 +76,13 @@ export function PanneauReposVoyageur({donnees,appliquer,avantOperation,lectureSe
                     <label className="text-sm flex flex-col">Nuit ou date de jeu (unique)<input className={classe} maxLength={120} placeholder="Ex. 5 Dragon" value={nomNuit} onChange={e => {setNomNuit(e.target.value);op.annuler();}} /></label>
                     <label className="text-sm block"><input type="checkbox" checked={maladieActuelle} onChange={e => {setMaladie(e.target.checked);op.annuler();}} /> Maladie ou empoisonnement encore actif</label>
                     <p className="text-sm">Ordre : stress après une heure de sommeil ; famine ; guérisons et vie ; moral ; chance ; rêve au-dessus du seuil ; enchantements non permanents. Le stress utilise les points de rêve avant leur perte nocturne.</p>
-                    <label className="text-sm block"><input type="checkbox" checked={controles} onChange={e => setControles(e.target.checked)} /> Famine traitée ou sans objet ; enchantements non permanents vérifiés</label>
+                    <label className="text-sm block"><input type="checkbox" checked={controles} onChange={e => setControles(e.target.checked)} /> Autres opérations nocturnes vérifiées (effets de scénario, souffles en cours)</label>
+                    <label className="text-sm block"><input type="checkbox" checked={famine} onChange={e => {setFamine(e.target.checked);op.annuler();}} /> Compter la famine et la soif (seuil de sustentation {String(donnees.sust ?? '?')})</label>
+                    {famine && <div className="grid grid-cols-2 gap-2">
+                        <label className="text-sm flex flex-col">Nourriture absorbée (sust)<input aria-label="Nourriture absorbée" type="number" min={0} step={0.5} className={classe} value={nourriture} onChange={e => {setNourriture(e.target.value);op.annuler();}} /></label>
+                        <label className="text-sm flex flex-col">Eau bue (mesures de 20 cl)<input aria-label="Eau bue" type="number" min={0} className={classe} value={boisson} onChange={e => {setBoisson(e.target.value);op.annuler();}} /></label>
+                        <p className="text-xs col-span-2">Moins que le seuil : −1 endurance (−3 pour l’eau) ; moins de la moitié : −2 (−6) ; rien : −3 (−12). Un demi-point par jour arrête l’endurance à la moitié. Les compteurs de la feuille de route repartent à zéro.</p>
+                    </div>}
                     {Number(donnees.stress ?? 0)>0&&r.heuresDormies>0&&<>
                         <p className="text-xs">Stress : rêve actuel {String(donnees.reve_pts)} à zéro, sans état ni astrologie.</p>
                         <label className="flex flex-col text-sm">d100 de stress<input aria-label="d100 de stress" type="number" min={1} max={100} className={classe} value={stressDe} onChange={e=>setStressDe(e.target.value)} /></label>
@@ -105,13 +113,26 @@ export function PanneauReposVoyageur({donnees,appliquer,avantOperation,lectureSe
                     <button type="button" className={classe} disabled={!!op.apercu} onClick={() => op.proposer(id => proposerChateauDormant(donnees,
                         {nom:nomNuit.trim(),controlesManuels:controles,maladieOuPoison:maladieActuelle,jetsBlessures:manuscrits(jets),herbes:manuscrits(herbes),deVie:deVie.trim() ? Number(deVie) : undefined,bonusDecoction:Number(decoction),
                             destineeBlessures:Object.keys(destineeBlessures).filter(k=>destineeBlessures[k]),destineeVie,
+                            famine:famine ? {nourriture:Number(nourriture) || 0,boisson:Number(boisson) || 0} : undefined,
                             etapesVoyageur:{stressDe:stressDe ? Number(stressDe):undefined,stressSecond:stressSecond ? Number(stressSecond):undefined,moralDe:Number(moralDe),situation:situationMoral,chanceDepensee}},id))}>Prévisualiser le bilan de nuit</button>
                 </div>
             </details>
         </>}
         {r && <>
+            {!!r.famine && <p className="text-sm">Famine : {r.famine} point(s) d’endurance retenus jusqu’à un repas normal.
+                {!lectureSeule && <button type="button" className={`${classe} ml-2`} onClick={() => op.proposer(id => proposerRepasNormal(donnees,id))}>Repas normal pris</button>}</p>}
+            <details><summary className="cursor-pointer font-bold">Potions et enchantements non permanents ({r.enchantements?.length ?? 0})</summary><div className="space-y-2 my-2">
+                <p className="text-xs">Un point de rêve de moins à chaque fin de Château Dormant ; au dernier, la potion s’évapore. Un rituel de Permanence l’arrête.</p>
+                {(r.enchantements ?? []).map(e => <p key={e.id} className="text-sm flex flex-wrap items-center gap-2">{e.nom} — {e.reve} point(s) de rêve
+                    {!lectureSeule && <button type="button" className={classe} onClick={() => op.proposer(id => proposerFinDEnchantement(donnees,e.id,id))}>Ne plus suivre</button>}</p>)}
+                {!lectureSeule && <div className="flex flex-wrap gap-2">
+                    <input aria-label="Nom de l’enchantement" placeholder="Potion de soins" maxLength={120} className={classe} value={potion} onChange={e => setPotion(e.target.value)} />
+                    <input aria-label="Rêve de l’enchantement" type="number" min={1} placeholder="Rêve" className={`${classe} w-24`} value={revePotion} onChange={e => setRevePotion(e.target.value)} />
+                    <button type="button" className={classe} onClick={() => op.proposer(id => proposerEnchantement(donnees,potion,Number(revePotion),id))}>Suivre cet enchantement</button>
+                </div>}
+            </div></details>
             {s.blessures.filter(b=>b.guerison).map(b=><p key={b.id} className="text-sm">{b.gravite} : prochain test en fin de journée de suivi {b.guerison!.prochainJour+1}.</p>)}
-            {r.effets.map(e=><div key={e.id} className="text-sm"><p>{e.nombre} {e.type}(s) de Dragon à résoudre — {e.motif}.</p>
+            {r.effets.map(e=><div key={e.id} className="text-sm"><p>{e.nombre} {e.type}(s) de Dragon à résoudre — {e.motif}. Tirez-les dans « Haut-Rêve, queues et souffles ».</p>
                 {!lectureSeule && <button type="button" className={classe} disabled={!!op.apercu} onClick={()=>op.proposer(id=>operationDeVoyageur(donnees,id,
                     {__rddRepos231:{...r,effets:r.effets.filter(x=>x.id!==e.id)}},'Effet de Dragon résolu',[`${e.nombre} ${e.type}(s) : conséquences traitées à la table.`]))}>Marquer cet effet résolu</button>}</div>)}
         </>}

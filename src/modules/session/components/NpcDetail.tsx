@@ -23,6 +23,8 @@ import { HealthManager } from './health/HealthManager';
 import { initiativeParCamps } from '../../combat/logic/OrdreDuTour';
 import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator } from 'lucide-react';
+import { estUneFicheDeVoyageur } from '../logic/ficheDeVoyageur';
+import { PanneauHautReveVoyageur } from './PanneauHautReveVoyageur';
 
 const ROLE_COLORS = {
     ally: 'bg-etat-succes/10 text-etat-succes border-etat-succes/20 hover:bg-etat-succes/20',
@@ -652,6 +654,18 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             </div>
                         </Panneau>
                     ))}
+
+                    {/*
+                        **Le Haut-Rêve d'un PNJ** — David, le 2026-10-24 : un haut-rêvant adverse
+                        lance ses sorts, affronte ses rencontres et résiste comme un Voyageur.
+                        Stress, chance et astrologie restent aux PJ.
+                    */}
+                    {!isEditing && estUneFicheDeVoyageur(template) && (
+                        <div className="flex-shrink-0">
+                            <PanneauHautReveVoyageur key={`haut-reve-${selectedNpc.id}`} donnees={selectedNpc.sheetData ?? {}}
+                                appliquer={maj => updateEntity(selectedNpc.id, { sheetData: maj })} />
+                        </div>
+                    )}
                 </div>
 
                 {/* Droite — la campagne, les relations, ce que le meneur garde pour lui */}

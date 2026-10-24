@@ -1518,8 +1518,8 @@ export function controlerLePilote(
     }
 
     const modeDInitiative = typeof driver.combat?.initiative === 'object' ? driver.combat.initiative?.mode : undefined;
-    if (modeDInitiative !== undefined && !['formule', 'alternance', 'paquet'].includes(modeDInitiative)) {
-        erreur('combat.initiative.mode', `« ${String(modeDInitiative)} » n'est pas un ordre d'action connu : formule, alternance (Dune) ou paquet (Torg).`);
+    if (modeDInitiative !== undefined && !['formule', 'alternance', 'paquet', 'phases'].includes(modeDInitiative)) {
+        erreur('combat.initiative.mode', `« ${String(modeDInitiative)} » n'est pas un ordre d'action connu : formule, alternance (Dune), paquet (Torg) ou phases (Rêve de Dragon).`);
     }
     // Torg : Inspiration et Fatigués de la carte d'Action ajoutent ou retirent du Choc.
     if (modeDInitiative === 'paquet' && !driver.combat?.dommages?.choc) {

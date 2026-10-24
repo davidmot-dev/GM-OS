@@ -101,6 +101,13 @@ export interface FantasyCalendar {
     hoursPerDay: number;
     /** Minutes par heure */
     minutesPerHour: number;
+    /**
+     * **Le nom de chaque heure**, dans l'ordre de la journée — autant que
+     * `hoursPerDay`. Rêve de Dragon (2026-10-24) : douze heures draconiques de
+     * 120 minutes, du Vaisseau au Château Dormant. Absent ou de mauvaise
+     * longueur : l'heure s'affiche en chiffres, comme avant ce champ.
+     */
+    nomsDesHeures?: string[];
 }
 
 /**
@@ -747,8 +754,15 @@ export const useClockStore = create<ClockState>()(
                     return null;
                 }
 
-                const secondsPerMin = cal.minutesPerHour || 60;
-                const secondsPerHour = secondsPerMin * 60;
+                /*
+                  ⛔ **Une minute fait soixante secondes, quelle que soit l'heure.**
+                  On prenait `minutesPerHour` pour le nombre de secondes d'une
+                  minute : à 60 les deux coïncident, mais une heure de 120 minutes
+                  (Rêve de Dragon, 2026-10-24) comptait 60 « minutes » de deux
+                  minutes. La longueur de l'heure, elle, ne change pas.
+                */
+                const secondsPerMin = 60;
+                const secondsPerHour = (cal.minutesPerHour || 60) * 60;
                 const secondsPerDay = secondesParJour(cal);
 
                 let totalSeconds = Math.floor(timestamp / 1000);

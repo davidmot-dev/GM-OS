@@ -26,7 +26,7 @@ import {
     SENS_PAR_DEFAUT, type SensDeLaJauge,
 } from './logic/sensDeLaJauge';
 import { nomDeLaJauge, SEGMENTS_PROPOSES, SEGMENTS_PAR_DEFAUT } from './logic/nomDeLaJauge';
-import { estBissextile } from './logic/formeDuCalendrier';
+import { estBissextile, heureNommee } from './logic/formeDuCalendrier';
 import { AtelierDesCalendriers } from './atelier/AtelierDesCalendriers';
 import { useTranslation } from 'react-i18next';
 
@@ -254,6 +254,17 @@ const ClockDashboard: React.FC = () => {
                                             </select>
                                         </div>
                                         <div className="grid grid-cols-3 gap-1">
+                                            {/* Rêve de Dragon (2026-10-24) : une heure nommée se choisit par son nom. */}
+                                            {heureNommee(calendars[activeCalendarId], fantasyDate.hour) ? (
+                                                <select
+                                                    aria-label="Heure"
+                                                    className="col-span-3 bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
+                                                    value={fantasyDate.hour}
+                                                    onChange={(e) => setFantasyDate({ hour: parseInt(e.target.value) })}
+                                                >
+                                                    {(calendars[activeCalendarId].nomsDesHeures ?? []).map((nom, i) => <option key={nom} value={i}>{nom}</option>)}
+                                                </select>
+                                            ) : (
                                             <input
                                                 type="number"
                                                 placeholder="HH"
@@ -261,6 +272,7 @@ const ClockDashboard: React.FC = () => {
                                                 value={fantasyDate.hour}
                                                 onChange={(e) => setFantasyDate({ hour: parseInt(e.target.value) })}
                                             />
+                                            )}
                                             <input
                                                 type="number"
                                                 placeholder="MM"

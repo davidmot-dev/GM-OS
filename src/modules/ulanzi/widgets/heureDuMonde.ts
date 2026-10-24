@@ -61,6 +61,8 @@ export interface TempsAAfficher {
         fete?: string;
         /** Un mois intercalaire n'a pas de quantième. */
         intercalaire?: boolean;
+        /** L'heure nommée par le calendrier (Rêve de Dragon, 2026-10-24 : « Le Faucon »). */
+        nomDeLHeure?: string;
     } | null;
 }
 
@@ -124,7 +126,9 @@ export function texteDuTemps(temps: TempsAAfficher, maintenant: number): string 
           ce qu'on retient de son début.*
         */
         const avecFete = d.fete ? `${avecJour} — ${d.fete}` : avecJour;
-        return nomPourLaMatrice(`${avecFete} ${heureEnTexte(d.heure, d.minute)}`, 64);
+        // Une heure nommée se lit par son nom : « 2:105 » ne dirait rien d'une heure de 120 minutes.
+        const heure = d.nomDeLHeure ? `${d.nomDeLHeure} ${d.minute} MIN` : heureEnTexte(d.heure, d.minute);
+        return nomPourLaMatrice(`${avecFete} ${heure}`, 64);
     }
 
     /*

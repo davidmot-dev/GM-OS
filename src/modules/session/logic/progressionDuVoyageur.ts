@@ -5,6 +5,7 @@ import { operationDeVoyageur, type DonneesDeVoyage } from './operationsDeVoyageu
 import { entierVoyageur as entier, lireMoral, majMoral } from './moralDuVoyageur';
 import { lireAction } from './recoursDuVoyageur';
 import type { AstrologieVoyageur } from './astrologieDuVoyageur';
+import { proposerFatigue } from './fatigueDuVoyageur';
 
 /** Livre 2.3.1, p. 143–148. XP de stress et d'exercice restent identifiables. */
 export interface ProgressionVoyageur {
@@ -140,4 +141,86 @@ export function experienceObservation(d:DonneesDeVoyage,a:AstrologieVoyageur,per
     p.jetsUtilises.push(preuve);lireProgression({__rddProgression231:p});
     return operationDeVoyageur(d,id,{__rddProgression231:p},'Communiquer l’expérience d’astrologie',
         [`${Math.ceil(o.xp/2)} XP Astrologie, ${Math.floor(o.xp/2)} XP INTELLECT. Le nombre astral réel reste secret.`]);
+}
+
+/** Un désir lancinant ou thanataire en cours empêche les XP d'exercice (p. 198–199). */
+function desirEnCours(d: DonneesDeVoyage): string | null {
+    const actifs = (d.__rddHautReve231 as {actifs?: {nom?: string}[]} | undefined)?.actifs ?? [];
+    return actifs.find(e => /^(Désir|Coup de foudre|Haine fatale)/.test(e.nom ?? ''))?.nom ?? null;
+}
+const MELEE_SEULE = ['corps_a_corps','dague_melee','epee_1m','bouclier','esquive'];
+export interface Entrainement {
+    competence: string; caracteristique: string;
+    /** Points de fatigue de l'heure d'entraînement : deux au moins, selon la compétence. */
+    fatigue: number;
+    /** Le d6 qui donne le nombre de jets, et ces jets. */
+    d6: number; jets: number[];
+    /** Le niveau du partenaire, pour la mêlée qui s'entraîne à deux. */
+    partenaire?: number;
+}
+/**
+ * L'entraînement (p. 146–147) : une heure pleine, deux points de fatigue au
+ * moins, puis 1d6 jets à un ajustement final de −1 quel que soit le niveau.
+ * Chaque particulière rapporte un point d'expérience, chaque échec total est une
+ * maladresse. En mêlée, à deux : la difficulté vise −1 pour le plus faible, seul
+ * à pouvoir gagner de l'expérience.
+ */
+export function proposerEntrainement(d: DonneesDeVoyage, f: SheetTemplate, e: Entrainement, id: string) {
+    const section = f.sections.find(s => s.fields.some(c => c.id === e.competence))?.id;
+    if (!competencesProgressives(f).some(c => c.id === e.competence) || section === 'connaissances' || section === 'draconic') {
+        throw new Error('L’entraînement vaut pour les compétences pratiques ; connaissances et Draconic s’apprennent avec un maître ou un livre.');
+    }
+    if (MELEE_SEULE.includes(e.competence) && e.partenaire === undefined) throw new Error('La mêlée s’entraîne à deux : indiquer le niveau du partenaire.');
+    entier(e.fatigue,2,12);entier(e.d6,1,6);
+    if (e.jets.length !== e.d6) throw new Error(`Le d6 donne ${e.d6} jet(s) : en renseigner autant.`);
+    const niveau = entier(d[e.competence],-11,999), carac = entier(d[e.caracteristique],1,999);
+    const difficulte = -1-(e.partenaire === undefined ? niveau : Math.min(niveau,entier(e.partenaire,-11,999)));
+    const ajustement = difficulte+niveau, echelle = bandesDuJet(carac,ajustement);
+    const degres = e.jets.map(j => degreDuDe(entier(j,1,100),echelle));
+    const particulieres = degres.filter(x => x === 'reussite-particuliere').length, maladresses = degres.filter(x => x === 'echec-total').length;
+    const desir = desirEnCours(d), gagne = ajustement < 0 && !desir ? particulieres : 0;
+    const p = lireProgression(d);
+    if (gagne) p.exercice[e.competence] = (p.exercice[e.competence] ?? 0)+gagne;
+    // Avec le suivi R1, la fatigue suit la piste du personnage ; sans lui, elle s'ajoute au champ.
+    let fatigue: number;
+    try {fatigue = Number(proposerFatigue(d,'libre',e.fatigue).maj.fatigue);} catch {fatigue = entier(d.fatigue ?? 0)+e.fatigue;}
+    const nom = (cle: string) => f.sections.flatMap(s => s.fields).find(c => c.id === cle)?.label ?? cle;
+    const details = [`${nom(e.caracteristique)}/${nom(e.competence)} : difficulté ${difficulte}, ajustement final ${ajustement} (${echelle.chances} %), ${e.d6} jet(s) : ${e.jets.join(', ')}.`,
+        `${particulieres} particulière(s) : +${gagne} XP d’exercice${desir ? ` — aucune tant que dure « ${desir} »` : ajustement >= 0 ? ' — le plus fort des deux partenaires ne gagne rien' : ''}.`,
+        `Fatigue +${e.fatigue} pour l’heure d’entraînement.`];
+    if (maladresses) details.push(`${maladresses} échec(s) total(aux) : autant de maladresses, au meneur de les décrire.`);
+    return operationDeVoyageur(d,id,{__rddProgression231:p,fatigue},'Une heure d’entraînement',details);
+}
+
+/**
+ * Le rythme de l'apprentissage (p. 145–146) : trois XP par semaine jusqu'au
+ * niveau zéro, une par semaine jusqu'à +3, puis une toutes les deux semaines
+ * pour +4, trois pour +5… Passer de +3 à +4 prend 40 semaines, de +4 à +5, 90.
+ */
+export function semainesParPoint(niveauVise: number): number {
+    return niveauVise <= 0 ? 1/3 : niveauVise <= 3 ? 1 : niveauVise-2;
+}
+/** Combien d'XP rapportent tant de semaines à plein temps, sans dépasser le niveau du maître. */
+export function experienceDApprentissage(niveau: number, xpDejaAcquise: number, semaines: number, maitre: number): {xp: number; niveauAtteint: number} {
+    let xp = 0, cible = niveau+1, versCible = xpDejaAcquise, temps = semaines;
+    while (cible <= maitre && temps > 1e-9) {
+        const cout = coutCompetence(cible), manque = Math.max(0,cout-versCible), rythme = semainesParPoint(cible);
+        const possibles = Math.floor(temps/rythme+1e-9);
+        if (possibles < manque) {xp += possibles;break;}
+        xp += manque;temps -= manque*rythme;versCible = Math.max(0,versCible-cout);cible++;
+    }
+    return {xp,niveauAtteint:cible-1};
+}
+export function proposerApprentissage(d: DonneesDeVoyage, f: SheetTemplate, cle: string, semaines: number, maitre: number, id: string) {
+    if (!competencesProgressives(f).some(c => c.id === cle)) throw new Error('Choisir une compétence ou une voie de Draconic.');
+    entier(semaines,1,520);
+    const niveau = entier(d[cle],-11,999);
+    if (!Number.isInteger(maitre) || maitre <= niveau) throw new Error('Le maître doit posséder la compétence à un niveau plus élevé que l’élève.');
+    const p = lireProgression(d), acquis = (p.exercice[cle] ?? 0)+(p.stress[cle] ?? 0);
+    const {xp,niveauAtteint} = experienceDApprentissage(niveau,acquis,semaines,maitre);
+    if (!xp) throw new Error('Ces semaines ne rapportent aucun point : allonger l’apprentissage ou augmenter d’abord la compétence.');
+    p.exercice[cle] = (p.exercice[cle] ?? 0)+xp;
+    return operationDeVoyageur(d,id,{__rddProgression231:p},'Apprentissage avec un maître',[
+        `${cle} : ${semaines} semaine(s) à plein temps (5 heures par jour) avec un maître de niveau ${maitre} : +${xp} XP d’apprentissage, de quoi viser ${niveauAtteint}.`,
+        'Entre deux aventures, en gris rêve ; impossible de dépasser le niveau du maître. Le niveau monte avec « Préparer l’augmentation d’un niveau ».']);
 }

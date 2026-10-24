@@ -158,3 +158,36 @@ describe('R4–R6 : ordre du Château Dormant',()=>{
         expect(p.maj).toMatchObject({points_de_chance:9,__rddChanceDepensee231:false});
     });
 });
+
+describe('Entraînement et apprentissage (p. 145–147)', () => {
+    it('le rythme de l’apprentissage retrouve les durées du livre', async () => {
+        const { experienceDApprentissage, semainesParPoint } = await import('./progressionDuVoyageur');
+        expect(semainesParPoint(0)).toBeCloseTo(1/3);
+        expect(semainesParPoint(4)).toBe(2);
+        expect(experienceDApprentissage(3,0,40,5)).toEqual({xp:20,niveauAtteint:4}); // +3 → +4 : 40 semaines
+        expect(experienceDApprentissage(4,0,90,5)).toEqual({xp:30,niveauAtteint:5}); // +4 → +5 : 90 semaines
+        expect(experienceDApprentissage(0,0,20,1)).toEqual({xp:20,niveauAtteint:1}); // 0 → +1 : 20 semaines
+        expect(experienceDApprentissage(3,0,400,4).xp).toBe(20); // jamais au-delà du maître
+    });
+});
+
+describe('Une heure d’entraînement (p. 146–147)', () => {
+    it('joue 1d6 jets à −1 ; chaque particulière rapporte un point, chaque échec total est une maladresse', async () => {
+        const { proposerEntrainement } = await import('./progressionDuVoyageur');
+        const d: DonneesDeVoyage = {navigation:2,agilite:12,fatigue:0};
+        const p = proposerEntrainement(d,f,{competence:'navigation',caracteristique:'agilite',fatigue:2,d6:3,jets:[1,50,100]},'e');
+        expect(p.details[0]).toMatch(/difficulté -3, ajustement final -1/);
+        const apres = appliquer(d,p)!;
+        expect(lireProgression(apres).exercice.navigation).toBe(1);
+        expect(apres.fatigue).toBe(2);
+        expect(p.details.join(' ')).toMatch(/1 échec\(s\) total/);
+        expect(() => proposerEntrainement(d,f,{competence:'navigation',caracteristique:'agilite',fatigue:2,d6:3,jets:[1]},'x')).toThrow(/3 jet/);
+    });
+    it('à deux, le plus fort ne gagne rien ; un désir lancinant bloque l’expérience', async () => {
+        const { proposerEntrainement } = await import('./progressionDuVoyageur');
+        const d: DonneesDeVoyage = {navigation:2,agilite:12,fatigue:0};
+        expect(proposerEntrainement(d,f,{competence:'navigation',caracteristique:'agilite',fatigue:2,d6:1,jets:[1],partenaire:0},'p').details[1]).toMatch(/\+0 XP.*plus fort/);
+        const desir = {...d,__rddHautReve231:{actifs:[{nom:'Désir lancinant'}]}};
+        expect(proposerEntrainement(desir,f,{competence:'navigation',caracteristique:'agilite',fatigue:2,d6:1,jets:[1]},'q').details[1]).toMatch(/aucune tant que dure/);
+    });
+});

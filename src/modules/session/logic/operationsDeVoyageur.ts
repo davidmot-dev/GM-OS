@@ -26,7 +26,7 @@ export function appliquerOperationDeVoyageur(d: DonneesDeVoyage, p: OperationDeV
 /** Une ancienne fiche/brouillon conserve les reçus et les carnets qu'elle ne connaît pas. */
 export function conserverOperationsDeVoyageur(avant: DonneesDeVoyage, apres: DonneesDeVoyage): DonneesDeVoyage {
     const resultat = {...apres};
-    for (const cle of ['__rddTaches231','__rddRepos231','__rddHistoriqueR34231','__rddProgression231','__rddMoral231','__rddAction231','__rddChanceDepensee231']) {
+    for (const cle of ['__rddTaches231','__rddRepos231','__rddHistoriqueR34231','__rddProgression231','__rddMoral231','__rddAction231','__rddChanceDepensee231','__rddHautReve231']) {
         if (resultat[cle] === undefined && avant[cle] !== undefined) resultat[cle] = avant[cle];
     }
     const a = avant.__rddOperationsR34231 ?? [], b = apres.__rddOperationsR34231 ?? [];

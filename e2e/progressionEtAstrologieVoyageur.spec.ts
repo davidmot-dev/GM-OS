@@ -45,7 +45,7 @@ test('R5–R7 : progression, recours, nuit et astrologie privée PC/deux tablett
         const repos=region('Repos et Château Dormant RdD'),prog=region('Progression et Archétype RdD'),recours=region('Chance destinée et moral RdD'),astro=region('Astrologie et heures draconiques RdD'),jet=region('Jet du Voyageur');
         await repos.getByText('Bilan de fin du Château Dormant',{exact:true}).click();
         await repos.getByLabel('Nuit ou date de jeu (unique)',{exact:true}).fill('5 Dragon');
-        await repos.getByLabel('Famine traitée ou sans objet ; enchantements non permanents vérifiés',{exact:true}).check();
+        await repos.getByLabel('Autres opérations nocturnes vérifiées (effets de scénario, souffles en cours)',{exact:true}).check();
         await repos.getByLabel('d100 de stress',{exact:true}).fill('67');await repos.getByLabel('d20 de moral au matin',{exact:true}).fill('10');
         await repos.getByRole('button',{name:'Prévisualiser le bilan de nuit',exact:true}).click();await valider(repos);
         expect(await lire()).toMatchObject({stress:19,moral:1,points_de_chance:10,reve_pts:15});

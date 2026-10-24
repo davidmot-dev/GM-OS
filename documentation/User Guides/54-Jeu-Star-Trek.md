@@ -23,7 +23,8 @@ et une Fonction.
 > personnage joueur** de la campagne, et la confirmation dit le calcul (« Menace revient à 8 (2 × 4
 > personnages) », p. 264). Ajustez ensuite au ton de la mission.
 >
-> **« Début de séance »** remet la **Détermination** de chaque personnage à 1 (p. 168).
+> **« Début de séance »** remet la **Détermination** de chaque personnage à 1 (p. 168), même s'il en
+> avait davantage.
 
 ---
 
@@ -158,8 +159,8 @@ qu'il montre.
   moins, la Résistance (Perforant l'ignore), le système touché au hasard (d20) ou choisi, l'attaque
   dévastatrice. Les Boucliers encaissent : **sous la moitié, secoué** (au d20, ou la position de sécurité
   pour un PNJ) ; **sous le quart dans le même coup, une brèche** ; **à zéro, une de plus** et ils
-  tombent ; déjà à zéro, chaque coup est une brèche (p. 308–309). *Lecture retenue : les trois seuils se
-  cumulent dans l'ordre du livre.*
+  tombent ; déjà à zéro, chaque coup est une brèche (p. 308–309). *Les trois seuils se cumulent dans l'ordre
+  du livre : un coup qui fait passer les Boucliers de 18 à 0 secoue et ouvre deux brèches.*
 - **Les brèches** se colmatent (les pénalités s'annulent) puis se réparent après la bataille. Un système
   est **détruit** à la moitié de l'Envergure ; au-delà de l'Envergure, **dégâts critiques**, et la brèche
   suivante détruit le vaisseau ; Moteurs détruits, le **noyau de distorsion** se lance à chaque fin de

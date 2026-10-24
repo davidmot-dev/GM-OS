@@ -14,6 +14,10 @@ export interface ReposVoyageur {
     version: 1; jour: number; heuresDormies: number; dernierBilan: string; bilans: string[];
     maladieOuPoison: boolean; vieApresJour: number;
     effets: {id: string; type: 'queue'|'tete'|'souffle'; nombre: number; motif: string}[];
+    /** Famine (p. 111) : endurance perdue faute de manger ou de boire, irrécupérable avant un repas normal. */
+    famine?: number;
+    /** Potions et enchantements non permanents : un point de rêve de moins à chaque Château Dormant (p. 268). */
+    enchantements?: {id: string; nom: string; reve: number}[];
 }
 export function lireRepos(d: DonneesDeVoyage): ReposVoyageur | null {
     const r = d.__rddRepos231 as ReposVoyageur | undefined;
@@ -22,7 +26,10 @@ export function lireRepos(d: DonneesDeVoyage): ReposVoyageur | null {
         || typeof r.dernierBilan !== 'string' || !Array.isArray(r.bilans) || r.bilans.length > 10000 || r.bilans.some(x => typeof x !== 'string')
         || typeof r.maladieOuPoison !== 'boolean' || !Number.isSafeInteger(r.vieApresJour)
         || !Array.isArray(r.effets) || r.effets.length > 60 || r.effets.some(e => !e || typeof e.id !== 'string'
-            || !['queue','tete','souffle'].includes(e.type) || !Number.isInteger(e.nombre) || e.nombre < 1 || typeof e.motif !== 'string')) {
+            || !['queue','tete','souffle'].includes(e.type) || !Number.isInteger(e.nombre) || e.nombre < 1 || typeof e.motif !== 'string')
+        || r.famine !== undefined && (!Number.isSafeInteger(r.famine) || r.famine < 0)
+        || r.enchantements !== undefined && (!Array.isArray(r.enchantements) || r.enchantements.length > 60
+            || r.enchantements.some(e => !e || typeof e.id !== 'string' || typeof e.nom !== 'string' || !Number.isSafeInteger(e.reve) || e.reve < 1))) {
         throw new Error('Suivi du repos invalide : conserver les données.');
     }
     return structuredClone(r);
@@ -50,7 +57,8 @@ export function plafondEnduranceAuRepos(d: DonneesDeVoyage, sommeil: boolean): n
     const s = lireSanteVoyageur(d);if (!s) throw new Error('Blessures inconnues : activer le suivi R2.');
     const graves = s.blessures.filter(b => b.gravite === 'grave').length;
     const limiteBlessures = s.blessures.some(b => b.gravite === 'critique') ? 1 : Math.floor(maximum/2**(graves+(sommeil ? 0 : 1)));
-    return Math.max(0,Math.min(maximum-2*vieManquante,limiteBlessures));
+    // La famine retient l'endurance perdue jusqu'au prochain repas normal (p. 111).
+    return Math.max(0,Math.min(maximum-2*vieManquante,limiteBlessures,maximum-(lireRepos(d)?.famine ?? 0)));
 }
 export function forceDuReve(tirages: number[]): number {
     if (!tirages.length || tirages.length > 100 || tirages.some((x,i) => !Number.isInteger(x) || x < 0 || x > 7 || i < tirages.length-1 && x !== 7)
@@ -109,6 +117,13 @@ export interface BilanDeNuit {
     deVie?: number; bonusDecoction: number;
     etapesVoyageur?: {stressDe?:number;stressSecond?:number;moralDe:number;situation:SituationDeMoral;chanceDepensee:boolean};
     destineeBlessures?:string[];destineeVie?:boolean;
+    /** Ce qui a été mangé (points de sust) et bu (mesures de 20 cl) dans la journée (p. 86, 111). */
+    famine?: {nourriture: number; boisson: number};
+}
+/** Perte d'endurance de la famine et de la soif (p. 111) : selon la part du seuil de sustentation absorbée. */
+export function perteDeFamine(absorbe: number, seuil: number, paliers: readonly [number, number, number]): number {
+    if (!Number.isFinite(absorbe) || absorbe < 0 || !Number.isFinite(seuil) || seuil < 1) throw new Error('Nourriture et boisson : des quantités positives.');
+    return absorbe >= seuil ? 0 : absorbe >= seuil/2 ? paliers[0] : absorbe >= 0.5 ? paliers[1] : paliers[2];
 }
 export function proposerChateauDormant(d: DonneesDeVoyage, choix: BilanDeNuit, id: string) {
     const {r,s} = exiger(d);
@@ -132,6 +147,23 @@ export function proposerChateauDormant(d: DonneesDeVoyage, choix: BilanDeNuit, i
         details.push(`Un point de destinée : CONSTITUTION ${degre} → ${resultat}.`);return resultat;
     };
     let vie = nombreDeSante(d,'vie'), endurance = nombreDeSante(d,'endurance',0), fatigue = nombreDeSante(d,'fatigue',0);
+    if (choix.famine) {
+        const sust = nombreDeSante(d,'sust',1), {nourriture,boisson} = choix.famine;
+        const faim = perteDeFamine(nourriture,sust,[1,2,3]), soif = perteDeFamine(boisson,sust,[3,6,12]);
+        const avant = endurance, demi = Math.floor(nombreDeSante(d,'endurance_max',1)/2);
+        // « Tant que l'on mange au moins un demi-point par jour, l'endurance stationne à une demi-Endurance. »
+        endurance = Math.max(nourriture >= 0.5 ? Math.min(endurance,demi) : 0,endurance-faim);
+        endurance = Math.max(0,endurance-soif);
+        const perdue = avant-endurance;fatigue += perdue;
+        r.famine = nourriture >= sust && boisson >= sust ? 0 : (r.famine ?? 0)+perdue;
+        details.push(faim+soif ? `Famine : ${nourriture} sust et ${boisson} mesure(s) pour un seuil de ${sust} ; −${faim} (faim) −${soif} (soif), endurance ${avant} → ${endurance}, autant de fatigue. Irrécupérables avant un repas normal (${r.famine} retenus).`
+            : `Nourriture et boisson suffisantes (seuil ${sust})${r.famine === 0 ? ' : rien n’est plus retenu par la famine' : ''}.`);
+        if (endurance === 0 && avant > 0) {
+            vie--;s.inconscient = true;
+            details.push(nourriture < 0.5 ? 'Famine totale : évanoui, −1 point de vie, puis −1 toutes les 6 heures (à suivre à la table).'
+                : 'Soif : endurance à zéro, −1 point de vie, puis −1 toutes les heures (à suivre à la table).');
+        }
+    }
     const avaitDesBlessures = s.blessures.length > 0;
     const maladieAvant = r.maladieOuPoison;
     r.maladieOuPoison = choix.maladieOuPoison;
@@ -171,10 +203,38 @@ export function proposerChateauDormant(d: DonneesDeVoyage, choix: BilanDeNuit, i
     }
     let reve = nombreDeSante(d,'reve_pts',0);
     if (reve > nombreDeSante(d,'reve_seuil',0)) {reve--;details.push('Après le stress : rêve supérieur au seuil, −1 point.');}
+    if (r.enchantements?.length) {
+        r.enchantements = r.enchantements.map(e => ({...e,reve:e.reve-1}));
+        for (const e of r.enchantements) details.push(e.reve > 0 ? `${e.nom} : un point de rêve de moins, ${e.reve} restant(s).` : `${e.nom} perd son dernier point de rêve et s’évapore.`);
+        r.enchantements = r.enchantements.filter(e => e.reve > 0);
+    }
     s.alite = s.blessures.some(b => b.gravite === 'critique' || b.gravite === 'grave' && !b.soinsComplets);
     if (vie < -nombreDeSante(d,'sc',1)) s.mort = true;
     if (endurance > 0 && vie > 0) s.inconscient = false;
     s.derniereOperation = id;r.dernierBilan = choix.nom;r.bilans.push(choix.nom);r.jour++;r.heuresDormies = 0;
-    const maj = {...complement,...(destinee !== Number(d.points_de_destinee ?? 0) ? {points_de_destinee:destinee} : {}),vie,endurance,fatigue,reve_pts:reve,[CLE_SANTE_VOYAGEUR]:s,__rddRepos231:r,__rddOperationFatigue:id};
+    const maj = {...complement,...(destinee !== Number(d.points_de_destinee ?? 0) ? {points_de_destinee:destinee} : {}),vie,endurance,fatigue,reve_pts:reve,[CLE_SANTE_VOYAGEUR]:s,__rddRepos231:r,__rddOperationFatigue:id,
+        ...(choix.famine ? {route_food:0,route_water:0} : {})};
     return operationDeVoyageur(d,id,maj,`Château Dormant — ${choix.nom}`,details);
+}
+
+/** Un repas normal (plein seuil de sustentation) libère ce que la famine retenait (p. 111). */
+export function proposerRepasNormal(d: DonneesDeVoyage, id: string) {
+    const r = lireRepos(d);if (!r) throw new Error('Activer le suivi du repos.');
+    if (!r.famine) throw new Error('La famine ne retient rien.');
+    const retenus = r.famine;r.famine = 0;
+    return operationDeVoyageur(d,id,{__rddRepos231:r},'Repas normal',[`${retenus} point(s) d’endurance et de fatigue redeviennent récupérables au repos.`]);
+}
+/** Une potion ou un objet enchanté non permanent, suivi jusqu'à son évaporation (p. 268). */
+export function proposerEnchantement(d: DonneesDeVoyage, nom: string, reve: number, id: string) {
+    const r = lireRepos(d);if (!r) throw new Error('Activer le suivi du repos.');
+    if (!nom.trim() || nom.length > 120 || !Number.isSafeInteger(reve) || reve < 1 || reve > 1000) throw new Error('Nommer l’enchantement et ses points de rêve (1 ou plus).');
+    if ((r.enchantements?.length ?? 0) >= 60) throw new Error('Soixante enchantements suivis au plus.');
+    r.enchantements = [...(r.enchantements ?? []),{id,nom:nom.trim(),reve}];
+    return operationDeVoyageur(d,id,{__rddRepos231:r},'Suivre un enchantement',[`${nom.trim()} : ${reve} point(s) de rêve, un de moins à chaque fin de Château Dormant.`]);
+}
+export function proposerFinDEnchantement(d: DonneesDeVoyage, enchantementId: string, id: string) {
+    const r = lireRepos(d), e = r?.enchantements?.find(x => x.id === enchantementId);
+    if (!r || !e) throw new Error('Enchantement introuvable.');
+    r.enchantements = r.enchantements!.filter(x => x.id !== enchantementId);
+    return operationDeVoyageur(d,id,{__rddRepos231:r},'Fin d’un enchantement',[`${e.nom} n’est plus suivi (bu, rendu permanent ou détruit).`]);
 }

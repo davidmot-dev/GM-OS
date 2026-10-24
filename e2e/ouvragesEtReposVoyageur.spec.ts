@@ -68,13 +68,13 @@ test('R3/R4 : ouvrage collectif, jet tablette, repos, guérisons et rechargement
         await carteDe(repos).screenshot({path:path.join(sortie,'jeu-reves-de-dragons-repos.jpg'),type:'jpeg',quality:85});
         await repos.getByText('Bilan de fin du Château Dormant',{exact:true}).click();
         await repos.getByLabel('Nuit ou date de jeu (unique)',{exact:true}).fill('5 Dragon');
-        await repos.getByLabel('Famine traitée ou sans objet ; enchantements non permanents vérifiés',{exact:true}).check();
+        await repos.getByLabel('Autres opérations nocturnes vérifiées (effets de scénario, souffles en cours)',{exact:true}).check();
         await repos.getByLabel('d20 de moral au matin',{exact:true}).fill('11');
         await repos.getByLabel('d100 de guérison — reprise-legere-0',{exact:true}).fill('30');
         await repos.getByRole('button',{name:'Prévisualiser le bilan de nuit',exact:true}).click();await valider(repos);
         expect(await lire()).toMatchObject({vie:8,reve_pts:15});
         await repos.getByLabel('Nuit ou date de jeu (unique)',{exact:true}).fill('6 Dragon');
-        await repos.getByLabel('Famine traitée ou sans objet ; enchantements non permanents vérifiés',{exact:true}).check();
+        await repos.getByLabel('Autres opérations nocturnes vérifiées (effets de scénario, souffles en cours)',{exact:true}).check();
         await repos.getByLabel('d20 de moral au matin',{exact:true}).fill('11');
         await repos.getByLabel('d100 de récupération de vie, si exigible',{exact:true}).fill('30');
         await repos.getByRole('button',{name:'Prévisualiser le bilan de nuit',exact:true}).click();

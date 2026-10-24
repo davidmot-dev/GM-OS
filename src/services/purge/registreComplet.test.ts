@@ -110,6 +110,7 @@ const HORS_PERIMETRE: Record<string, string> = {
     // ── Ce qui est déjà couvert autrement, ou ne survit pas à la séance.
     useDiceStore: 'Le pupitre lit le pilote actif ; il ne garde rien à son nom.',
     useOrdreDuTourStore: 'L’ordre du tour d’un combat en cours.',
+    useRoundDuVoyageurStore: 'Le round de Rêve de Dragon d’un combat en cours : déclarations et d6, rien à son nom de campagne.',
     useClockStore: 'Les jauges et calendriers — ils ne portent pas d’identifiant de campagne.',
     useSessionStore: 'L’ancien magasin de session, sans rattachement.',
     useTacticalAIStore: 'Les réglages de l’IA tactique, communs.',

@@ -58,7 +58,10 @@ Le corpus `docs/systems/star-trek/rules/` répétait quatre erreurs (relevées c
 livre : Résistance de l'Enterprise-D, Titan-A secoué, tâche de Reed, défi de la bombe), 4 d'écran du
 pupitre, 6 du panneau, 2 des réserves, 2 de la Forge ; suite complète **9 003 essais verts** ; captures relues.
 
-## Lectures retenues, à confirmer par David
+## Essai de David et lectures confirmées — 24/10
+
+Pilote 2.0.0 réimporté et **essai de David validé le 24/10** : *« ok j'ai tout testé c'est bien, la réponse
+au question 1.2.3 tu as pris les bonnes options »*. Les trois lectures ci-dessous sont donc **confirmées**.
 
 1. **Les seuils des Boucliers se cumulent** (p. 309) : un coup qui les fait passer sous la moitié secoue ;
    sous le quart dans le même coup, une brèche ; à zéro, une de plus. Un coup de 18 à 0 donne donc

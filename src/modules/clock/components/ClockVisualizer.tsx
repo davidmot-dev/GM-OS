@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { ClockMode, ClockTheme } from '../../../store/useClockStore';
 import { useClockStore } from '../../../store/useClockStore';
 import { useTranslation } from 'react-i18next';
-import { mentionDeLaFete } from '../logic/formeDuCalendrier';
+import { heureNommee, mentionDeLaFete } from '../logic/formeDuCalendrier';
 
 interface ClockVisualizerProps {
     theme: ClockTheme;
@@ -188,6 +188,9 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
             */
             const fete = mentionDeLaFete(fantasyDate.fete ?? null);
             if (fete) dateStr = `${dateStr} — ${fete}`;
+            // Rêve de Dragon (2026-10-24) : l'heure se dit par son nom, « le Faucon ».
+            const nommee = heureNommee(cal, fantasyDate.hour);
+            if (nommee) dateStr = `${dateStr} · ${nommee.nom}`;
 
             return dateStr;
         }
@@ -203,7 +206,15 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
         const m = mode === 'fantasy' && fantasyDate ? fantasyDate.minute : date.getMinutes();
         const s = mode === 'fantasy' && fantasyDate ? fantasyDate.second : date.getSeconds();
         const deux = (n: number) => n.toString().padStart(2, '0');
-        return { h, m, s, hh: deux(h), mm: deux(m), ss: deux(s) };
+        /*
+          Une heure qui ne fait pas soixante minutes (Rêve de Dragon : 120) fait
+          tourner l'aiguille des minutes une fois par heure, pas deux. Une heure
+          nommée se compte par son rang : la troisième, le Faucon, s'écrit 03.
+        */
+        const cal = mode === 'fantasy' && activeCalendarId ? calendars[activeCalendarId] : undefined;
+        const minutesParHeure = cal?.minutesPerHour && cal.minutesPerHour > 0 ? cal.minutesPerHour : 60;
+        const nommee = cal ? heureNommee(cal, h) : null;
+        return { h, m, s, minutesParHeure, hh: deux(nommee ? nommee.rang : h), mm: deux(m), ss: deux(s) };
     };
 
     /*
@@ -243,12 +254,12 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
     };
 
     const renderOldStyle = () => {
-        const { h, m, s, hh, mm, ss } = morceaux();
+        const { h, m, s, minutesParHeure, hh, mm, ss } = morceaux();
 
-        // Rotation for hands
+        // Rotation for hands — une heure de `minutesParHeure` minutes fait un tour de l'aiguille.
         const sRotate = s * 6;
-        const mRotate = m * 6 + s * 0.1;
-        const hRotate = (h % 12) * 30 + m * 0.5;
+        const mRotate = ((m + s / 60) / minutesParHeure) * 360;
+        const hRotate = (h % 12) * 30 + (m / minutesParHeure) * 30;
 
         /*
           **Les aiguilles en pourcentage du cadran**, plus en `rem` : le cadran

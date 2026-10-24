@@ -20,6 +20,7 @@ import { PanneauSanteVoyageur } from './PanneauSanteVoyageur';
 import { PanneauTachesVoyageur } from './PanneauTachesVoyageur';
 import { PanneauReposVoyageur } from './PanneauReposVoyageur';
 import { PanneauProgressionVoyageur } from './PanneauProgressionVoyageur';
+import { PanneauHautReveVoyageur } from './PanneauHautReveVoyageur';
 import { PanneauRecoursVoyageur } from './PanneauRecoursVoyageur';
 import { PanneauAstrologieVoyageur } from './PanneauAstrologieVoyageur';
 import ChampDuReferentiel from './fields/ChampDuReferentiel';
@@ -382,6 +383,11 @@ const CharacterSheetEditor: React.FC = () => {
                             <CarteDuJeu id="repos-voyageur" titre="Repos et Château Dormant">
                                 <PanneauReposVoyageur key={`repos-${character.id}`} donnees={{...character.sheetData,...editor.localData}}
                                     avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant de traiter un repos.','warning');return false;}}
+                                    appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="haut-reve-voyageur" titre="Haut-Rêve, queues et souffles">
+                                <PanneauHautReveVoyageur key={`haut-reve-${character.id}`} donnees={{...character.sheetData,...editor.localData}}
+                                    avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant une épreuve du Haut-Rêve.','warning');return false;}}
                                     appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
                             </CarteDuJeu>
                         </>}

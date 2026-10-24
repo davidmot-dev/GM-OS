@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
-import { CASES, GENRES, libelleCase, voisines } from '../../../../outils/reve-de-dragon/tmr/carte.mjs';
+import { CASES, GENRES, caseDe, libelleCase, voisines } from '../../../../outils/reve-de-dragon/tmr/carte.mjs';
+import { DiceEngine } from '../../dice/DiceEngine';
+import { rencontreDuD100, type GenreDeTerre } from '../../dice/systemes/hautReve';
 import { consequences } from '../../../../outils/reve-de-dragon/tmr/moteur.mjs';
 import type { DemandeTMR, NoteTMR, VoyageurTMR, VueTMRJoueur, VueTMRMJ } from '../../../../outils/reve-de-dragon/tmr/moteur.mjs';
 import type { CommandeDeModule, ResultatDeModule } from '../protocole';
@@ -55,14 +57,33 @@ function Arbitrage({ voyageur: v, envoyer, occupe }: { voyageur: VoyageurTMR; en
             <button type="button" disabled={occupe} onClick={() => void envoyer('arbitrer', { operationId: v.demande!.operationId, accepter: false, ficheTraitee: false, compteRendu })}>Refuser le trajet</button></div>
     </section>;
 }
+/**
+ * Le d7 de rencontre, la table selon le genre de la case, puis la force
+ * (Livre du Haut-Rêve 2.3.1, p. 182–183) — 24/10/2026. Le texte va dans la
+ * préparation privée : le meneur relit avant de révéler.
+ */
+function tirerUneRencontre(position: string | null): string {
+    const terre = caseDe(position);
+    if (!terre) return 'Placer le demi-rêve avant de tirer une rencontre.';
+    const d8: number[] = [];
+    do d8.push(DiceEngine.roll(8)); while (d8.at(-1) === 8 && d8.length < 50);
+    if (d8.at(-1) !== 7) return `d7 : ${d8.at(-1)} — pas de rencontre en ${libelleCase(terre.id)}.`;
+    const d100 = DiceEngine.roll(100), r = rencontreDuD100(terre.genre as GenreDeTerre, d100);
+    const m = /^(\d)d(\d)$/.exec(r.force);
+    let force: number, detail: string;
+    if (m) { const des = Array.from({ length: Number(m[1]) }, () => DiceEngine.roll(Number(m[2]))); force = des.reduce((a, b) => a + b, 0); detail = `${r.force} : ${des.join(' + ')}`; }
+    else { const ddr: number[] = []; let t; do { t = DiceEngine.roll(8) % 8; ddr.push(t); } while (t === 7 && ddr.length < 50); force = 7 + ddr.reduce((a, b) => a + b, 0); detail = `7 + ddr ${ddr.join(' + ')}`; }
+    return `d7 : 7 — ${r.nom} de force ${force} (${detail}), d100 ${d100} en ${GENRES[terre.genre]}. ${r.maitrisee ? `Maîtrisé : ${r.maitrisee} ` : ''}Non maîtrisé : ${r.nonMaitrisee}`;
+}
 function Rencontre({ voyageur: v, envoyer, occupe }: { voyageur: VoyageurTMR; envoyer: Envoyer; occupe: boolean }) {
     const [preparation, preparer] = useState(v.preparation), [publication, publier] = useState('');
     return <details><summary>Rencontre et préparation privée</summary>
+        <button type="button" disabled={occupe} onClick={() => preparer(tirerUneRencontre(v.position).slice(0, 2000))}>Tirer le d7, la rencontre et sa force</button>
         <label>Préparation secrète du MJ<textarea maxLength={2000} value={preparation} onChange={e => preparer(e.target.value)} /></label>
         <button type="button" disabled={occupe} onClick={() => void envoyer('preparer-rencontre', { texte: preparation })}>Garder la préparation privée</button>
         <label>Rencontre à révéler à ce joueur<textarea maxLength={2000} value={publication} onChange={e => publier(e.target.value)} placeholder="Genre, force et informations révélées" /></label>
         <button type="button" disabled={occupe || !publication.trim() || !v.present || !!v.demande} onClick={() => void envoyer('publier-rencontre', { texte: publication })}>Révéler la rencontre</button>
-        <p className="tmr-aide">Maîtrise, dérobade, refoulement et conséquences restent à résoudre à la table. Une rencontre publiée bloque le déplacement.</p>
+        <p className="tmr-aide">Maîtrise, dérobade ou refoulement se résolvent dans la carte « Haut-Rêve » de la fiche, qui écrit le rêve, le refoulement et les queues. Une rencontre publiée bloque le déplacement.</p>
         {v.rencontre && <button type="button" disabled={occupe || !!v.demande} onClick={() => void envoyer('terminer-rencontre', { etape: v.etape })}>Marquer la rencontre résolue</button>}
     </details>;
 }

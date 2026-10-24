@@ -512,6 +512,12 @@ interface CombatState {
     setInitiative: (id: string, init: number) => void;
     /** Trie la liste par initiative */
     sortInitiative: (ascending?: boolean) => void;
+    /**
+     * Rêve de Dragon (mode `phases`) : l'ordre vient des phases du round, pas
+     * d'un classement des nombres. Les combattants prennent l'ordre donné, leur
+     * initiative tirée s'affiche, les autres suivent.
+     */
+    ordonnerLeRound: (ordre: string[], initiatives: Record<string, number>) => void;
     /** Lance l'initiative automatique pour tous les combattants via DiceEngine ou formules */
     rollAutoInitiative: (params: { diceMax?: number; formula?: string; resolver?: (name: string, combatant: Combatant) => number; sortOrder?: 'asc' | 'desc'; cards?: number; departages?: string[] }) => void;
     /** Réordonne manuellement les combattants (ex: via Drag & Drop) */
@@ -1017,6 +1023,18 @@ export const useCombatStore = create<CombatState>()(
                     // Les départages du tirage (Symbaroum, S6) tiennent aussi au retri.
                     const sorted = [...state.combatants].sort((a, b) => comparerLInitiative(a, b, ascending ? 'asc' : 'desc'));
                     return { combatants: sorted, currentTurnIdx: 0 };
+                });
+                get().broadcastSync();
+            },
+
+            ordonnerLeRound: (ordre, initiatives) => {
+                get().consignerLOuvertureDuCombat();
+                set((state) => {
+                    const rang = (id: string) => { const i = ordre.indexOf(id); return i < 0 ? ordre.length : i; };
+                    const combatants = [...state.combatants]
+                        .map(c => (initiatives[c.id] === undefined ? c : { ...c, init: initiatives[c.id] }))
+                        .sort((a, b) => rang(a.id) - rang(b.id));
+                    return { combatants, currentTurnIdx: 0 };
                 });
                 get().broadcastSync();
             },

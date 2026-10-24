@@ -65,6 +65,16 @@ describe('le texte qui défile', () => {
         expect(texte).toBe('LUNDI 15 SARPEDON 8241 08:05');
     });
 
+    /** Rêve de Dragon (2026-10-24) : une heure de 120 minutes se dit par son nom. */
+    it('dit l’heure nommée au lieu de ses chiffres', () => {
+        const texte = texteDuTemps({
+            mode: 'fantasy',
+            timestamp: POSE,
+            dateFantastique: { jour: 14, mois: 'Vaisseau', annee: 1, heure: 2, minute: 105, fete: 'Pleine lune', nomDeLHeure: 'Le Faucon' },
+        }, QUAND);
+        expect(texte).toBe('14 VAISSEAU 1  PLEINE LUNE LE FAUCON 105 MIN');
+    });
+
     /** Un mois intercalaire n'a pas de quantième — le livre le dit, pas nous. */
     it('omet le quantième d’un mois intercalaire', () => {
         const texte = texteDuTemps({

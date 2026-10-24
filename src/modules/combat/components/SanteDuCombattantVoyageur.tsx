@@ -5,6 +5,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { PanneauRepriseVoyageur } from '../../session/components/PanneauRepriseVoyageur';
 import { PanneauFatigueVoyageur } from '../../session/components/PanneauFatigueVoyageur';
 import { PanneauSanteVoyageur } from '../../session/components/PanneauSanteVoyageur';
+import { PanneauHautReveVoyageur } from '../../session/components/PanneauHautReveVoyageur';
 import { CLE_REPRISE, lireFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
 import { projeterSanteVoyageur } from '../../session/logic/santeDuVoyageur';
 
@@ -35,5 +36,7 @@ export function SanteDuCombattantVoyageur({combattant,fiche,donnees}: {
     return <div className="space-y-3">
         <PanneauFatigueVoyageur donnees={valeurs} appliquer={appliquer} />
         <PanneauSanteVoyageur donnees={valeurs} appliquer={appliquer} roundCombat={round} />
+        {/* Le Haut-Rêve en combat (2026-10-24) : un PNJ ou un adversaire haut-rêvant, comme un PJ. */}
+        <PanneauHautReveVoyageur donnees={valeurs} appliquer={appliquer} />
     </div>;
 }

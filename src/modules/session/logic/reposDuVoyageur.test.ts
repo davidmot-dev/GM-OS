@@ -93,3 +93,42 @@ describe('R4 repos et Château Dormant, édition 2.3.1', () => {
         d = appliquer(d,proposerChateauDormant(d,choix('soir3',{deVie:5}),'b3'));expect(d.vie).toBe(10);
     });
 });
+
+describe('Famine et enchantements non permanents au Château Dormant (p. 111, 268)', () => {
+    it('perd l’endurance selon la part du seuil mangée et bue', async () => {
+        const { perteDeFamine } = await import('./reposDuVoyageur');
+        expect(perteDeFamine(2, 2, [1, 2, 3])).toBe(0);
+        expect(perteDeFamine(1, 2, [1, 2, 3])).toBe(1);
+        expect(perteDeFamine(0.5, 2, [1, 2, 3])).toBe(2);
+        expect(perteDeFamine(0, 2, [1, 2, 3])).toBe(3);
+        expect(perteDeFamine(0, 2, [3, 6, 12])).toBe(12);
+    });
+    it('Nitouche ne mange qu’un point : −1 endurance, une case de fatigue, retenues jusqu’au repas normal', async () => {
+        const { proposerRepasNormal } = await import('./reposDuVoyageur');
+        let d = debut({sust:2,endurance_max:23,endurance:23,route_food:1,route_water:10});
+        d = appliquer(d,proposerChateauDormant(d,choix('nuit',{famine:{nourriture:1,boisson:10}}),'nuit'));
+        expect(d.endurance).toBe(22);expect(d.fatigue).toBe(1);
+        expect(d.route_food).toBe(0);
+        expect(lireRepos(d)!.famine).toBe(1);
+        expect(plafondEnduranceAuRepos(d,true)).toBe(22);
+        d = appliquer(d,proposerRepasNormal(d,'repas'));
+        expect(lireRepos(d)!.famine).toBe(0);
+    });
+    it('un demi-point par jour arrête l’endurance à la moitié', () => {
+        const d = debut({sust:2,endurance_max:24,endurance:13});
+        const p = proposerChateauDormant(d,choix('nuit',{famine:{nourriture:0.5,boisson:10}}),'n');
+        expect(p.maj.endurance).toBe(12);
+        const e = debut({sust:2,endurance_max:24,endurance:12});
+        expect(proposerChateauDormant(e,choix('nuit',{famine:{nourriture:0.5,boisson:10}}),'n').maj.endurance).toBe(12);
+    });
+    it('une potion perd un point de rêve par nuit et s’évapore au dernier', async () => {
+        const { proposerEnchantement } = await import('./reposDuVoyageur');
+        let d = debut();
+        d = appliquer(d,proposerEnchantement(d,'Potion de soins',2,'potion'));
+        d = appliquer(d,proposerChateauDormant(d,choix('nuit 1'),'n1'));
+        expect(lireRepos(d)!.enchantements).toEqual([{id:'potion',nom:'Potion de soins',reve:1}]);
+        const p = proposerChateauDormant(d,choix('nuit 2'),'n2');
+        expect(p.details.join(' ')).toMatch(/s’évapore/);
+        expect(lireRepos(appliquer(d,p))!.enchantements).toEqual([]);
+    });
+});

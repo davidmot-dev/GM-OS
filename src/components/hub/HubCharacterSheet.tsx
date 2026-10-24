@@ -25,6 +25,7 @@ import { PanneauSanteVoyageur } from '../../modules/session/components/PanneauSa
 import { PanneauTachesVoyageur } from '../../modules/session/components/PanneauTachesVoyageur';
 import { PanneauReposVoyageur } from '../../modules/session/components/PanneauReposVoyageur';
 import { PanneauProgressionVoyageur } from '../../modules/session/components/PanneauProgressionVoyageur';
+import { PanneauHautReveVoyageur } from '../../modules/session/components/PanneauHautReveVoyageur';
 import { PanneauRecoursVoyageur } from '../../modules/session/components/PanneauRecoursVoyageur';
 import { PanneauAstrologieVoyageur } from '../../modules/session/components/PanneauAstrologieVoyageur';
 import { PanneauRepriseVoyageur } from '../../modules/session/components/PanneauRepriseVoyageur';
@@ -419,6 +420,9 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                             </CarteDuJeu>
                             <CarteDuJeu id="repos-voyageur" titre="Repos et Château Dormant">
                                 <PanneauReposVoyageur key={`repos-${character.id}`} donnees={valeursVues} lectureSeule appliquer={() => { /* Validation du repos réservée au MJ. */ }} />
+                            </CarteDuJeu>
+                            <CarteDuJeu id="haut-reve-voyageur" titre="Haut-Rêve, queues et souffles">
+                                <PanneauHautReveVoyageur key={`haut-reve-${character.id}`} donnees={valeursVues} lectureSeule appliquer={() => { /* Validation MJ. */ }} />
                             </CarteDuJeu>
                         </>}
                     </div>

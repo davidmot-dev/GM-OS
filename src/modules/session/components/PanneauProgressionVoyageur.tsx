@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { attribuerStress, lireProgression, competencesProgressives, declarerArchetype, allouerStress, augmenterVoyageur,
-    reporterExperience, acheterVoyage, experienceDuJet, CARACTERISTIQUES_PROGRESSIVES } from '../logic/progressionDuVoyageur';
+    reporterExperience, acheterVoyage, experienceDuJet, proposerApprentissage, proposerEntrainement, CARACTERISTIQUES_PROGRESSIVES } from '../logic/progressionDuVoyageur';
+import { DiceEngine } from '../../dice/DiceEngine';
 import { useOperationDeVoyageur } from '../hooks/useOperationDeVoyageur';
 import type { DonneesDeVoyage } from '../logic/operationsDeVoyageur';
 import { CLASSE_OPERATION as classe, ValidationOperationVoyageur } from './ValidationOperationVoyageur';
@@ -11,6 +12,8 @@ export function PanneauProgressionVoyageur({donnees,fiche,appliquer,avantOperati
 }) {
     const [points,setPoints]=useState('1'),[motif,setMotif]=useState(''),[cle,setCle]=useState(''),[potentiel,setPotentiel]=useState('');
     const [dommages,setDommages]=useState(false),[memoire,setMemoire]=useState(false),[composante,setComposante]=useState('');
+    const [carac,setCarac]=useState('agilite'),[fatigue,setFatigue]=useState('2'),[d6,setD6]=useState(''),[jets,setJets]=useState(''),[partenaire,setPartenaire]=useState('');
+    const [semaines,setSemaines]=useState('1'),[maitre,setMaitre]=useState('');
     const op=useOperationDeVoyageur(donnees,appliquer,avantOperation);
     let p;try {p=lireProgression(donnees);}catch(e){return <p role="alert">{(e as Error).message}</p>;}
     const competences=competencesProgressives(fiche),champs=fiche.sections.flatMap(s=>s.fields).filter(c=>competences.some(f=>f.id===c.id)||CARACTERISTIQUES_PROGRESSIVES.includes(c.id));
@@ -38,6 +41,26 @@ export function PanneauProgressionVoyageur({donnees,fiche,appliquer,avantOperati
                     <button className={classe} type="button" onClick={()=>op.proposer(id=>reporterExperience(donnees,fiche,cle,Number(points),motif,id))}>Reporter des XP d’exercice ou d’apprentissage</button>
                     <button className={classe} type="button" onClick={()=>op.proposer(id=>augmenterVoyageur(donnees,fiche,cle,id))}>Préparer l’augmentation d’un niveau</button>
                     <button className={classe} type="button" onClick={()=>op.proposer(id=>acheterVoyage(donnees,Number(points),id))}>Convertir des XP de stress en voyage</button>
+                </div></details>
+                <details><summary className="cursor-pointer font-bold">Une heure d’entraînement</summary><div className="space-y-3 my-3">
+                    <p className="text-xs">Compétence choisie ci-dessus (« Valeur à faire progresser »). Une heure pleine, deux points de fatigue au moins ; 1d6 jets à un ajustement final de −1. Chaque particulière : +1 XP ; chaque échec total : une maladresse. La mêlée s’entraîne à deux.</p>
+                    <label className="flex flex-col text-sm">Caractéristique du jet<select aria-label="Caractéristique de l’entraînement" className={classe} value={carac} onChange={e=>setCarac(e.target.value)}>
+                        {CARACTERISTIQUES_PROGRESSIVES.concat(['melee','tir','lancer','derobee']).map(c=><option key={c} value={c}>{fiche.sections.flatMap(s=>s.fields).find(x=>x.id===c)?.label ?? c}</option>)}</select></label>
+                    <label className="flex flex-col text-sm">Fatigue de l’heure<input aria-label="Fatigue de l’entraînement" type="number" min={2} className={classe} value={fatigue} onChange={e=>setFatigue(e.target.value)} /></label>
+                    <label className="flex flex-col text-sm">Niveau du partenaire (mêlée)<input aria-label="Niveau du partenaire" type="number" className={classe} value={partenaire} onChange={e=>setPartenaire(e.target.value)} /></label>
+                    <div className="flex flex-wrap gap-2 items-end">
+                        <label className="flex flex-col text-sm">d6 : nombre de jets<input aria-label="d6 d’entraînement" type="number" min={1} max={6} className={`${classe} w-20`} value={d6} onChange={e=>setD6(e.target.value)} /></label>
+                        <button className={classe} type="button" onClick={()=>{const n=DiceEngine.roll(6);setD6(String(n));setJets(Array.from({length:n},()=>DiceEngine.roll(100)).join(' '));}}>Tirer le d6 et les jets</button>
+                    </div>
+                    <label className="flex flex-col text-sm">Jets d100 (séparés par des espaces)<input aria-label="Jets d’entraînement" className={classe} value={jets} onChange={e=>setJets(e.target.value)} /></label>
+                    <button className={classe} type="button" disabled={!cle||!d6} onClick={()=>op.proposer(id=>proposerEntrainement(donnees,fiche,{competence:cle,caracteristique:carac,fatigue:Number(fatigue),d6:Number(d6),
+                        jets:jets.trim()?jets.trim().split(/[\s,;]+/).map(Number):[],partenaire:partenaire.trim()?Number(partenaire):undefined},id))}>Préparer l’entraînement</button>
+                </div></details>
+                <details><summary className="cursor-pointer font-bold">Apprentissage avec un maître</summary><div className="space-y-3 my-3">
+                    <p className="text-xs">Entre deux aventures, cinq heures par jour : 3 XP par semaine jusqu’au niveau 0, 1 par semaine jusqu’à +3, puis 1 toutes les 2 semaines pour +4, 3 pour +5… Jamais au-delà du niveau du maître.</p>
+                    <label className="flex flex-col text-sm">Semaines<input aria-label="Semaines d’apprentissage" type="number" min={1} className={classe} value={semaines} onChange={e=>setSemaines(e.target.value)} /></label>
+                    <label className="flex flex-col text-sm">Niveau du maître<input aria-label="Niveau du maître" type="number" className={classe} value={maitre} onChange={e=>setMaitre(e.target.value)} /></label>
+                    <button className={classe} type="button" disabled={!cle||!maitre.trim()} onClick={()=>op.proposer(id=>proposerApprentissage(donnees,fiche,cle,Number(semaines),Number(maitre),id))}>Préparer l’apprentissage</button>
                 </div></details>
                 <details><summary className="cursor-pointer font-bold">Expérience du dernier résultat définitif</summary><div className="space-y-3 my-3">
                     <p className="text-xs">Particulière d’action, ajustement final négatif. Le même résultat ne rapporte qu’une fois. Les XP de Draconic vont en voie.</p>

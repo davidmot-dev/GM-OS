@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 import PanneauDAlternance from './PanneauDAlternance';
 import PanneauDuPaquetDAction from './PanneauDuPaquetDAction';
+import PanneauDesPhases from './PanneauDesPhases';
 import LoisDuCosm from '../../session/components/LoisDuCosm';
 import { useCosmsCourants } from '../../session/hooks/useCosmsCourants';
 import { decrireLaSante } from '../logic/SanteDuCombattant';
@@ -69,6 +70,8 @@ const CombatControls: React.FC = () => {
         : null;
     /** Torg : une carte d'Action désigne le camp qui commence chaque round. */
     const parLePaquet = activeDriver?.combat.initiative?.mode === 'paquet';
+    /** Rêve de Dragon : sept phases, l'initiative par arme (2026-10-24). */
+    const parPhases = activeDriver?.combat.initiative?.mode === 'phases';
     const cosmsCourants = useCosmsCourants();
 
     const handleAddCombatant = () => {
@@ -343,7 +346,9 @@ const CombatControls: React.FC = () => {
                 */}
                 {/* Torg : les Lois du cosm courant, en rappel compact (2026-10-14). */}
                 <LoisDuCosm cosms={cosmsCourants} compact />
-                {parLePaquet ? (
+                {parPhases ? (
+                    <PanneauDesPhases />
+                ) : parLePaquet ? (
                     <PanneauDuPaquetDAction />
                 ) : alternance ? (
                     <PanneauDAlternance

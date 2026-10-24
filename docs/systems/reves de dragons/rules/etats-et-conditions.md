@@ -39,7 +39,7 @@ L'état sonné s'impose après une violente perte d'endurance si le jet d'endura
 
 ## À la table
 Lorsqu'un combattant subit une perte de deux points d'endurance ou plus, son joueur doit effectuer un jet d'endurance sous un dé à vingt faces (section « Jet d'endurance »). S'il obtient un résultat supérieur à sa caractéristique d'Endurance actuelle, le personnage est sonné pour le reste du round en cours et le suivant (section « Personnage sonné »). Tant que dure cet état, chaque action nécessite d'obtenir une réussite significative (section « Personnage sonné »).
-Si un personnage est surpris de face ou s'il se relève alors qu'il est au sol, le Gardien des Rêves lui applique la condition de demi-surprise (section « Demi-surprise »). Le joueur perd l'initiative physique et doit déclarer ses actions après ses adversaires (section « Demi-surprise »).
+Si un personnage est surpris de face ou s'il se relève alors qu'il est au sol, le Gardien des Rêves lui applique la condition de demi-surprise (section « Demi-surprise »). Il n'a jamais l'initiative : il agit après les autres de sa phase ; la déclaration d'intention reste commune (section « Demi-surprise »).
 Lorsqu'un Voyageur consomme de l'alcool, le Gardien des Rêves demande un jet de Constitution modifié par la force du breuvage (section « L'éthylisme »). En cas d'échec, le joueur augmente son éthylisme d'un degré et applique les malus correspondants à toutes ses actions physiques et mentales (section « L'éthylisme »). Pour chaque heure passée sans boire, le joueur efface automatiquement un degré d'éthylisme (section « Récupération »).
 
 ## Cas limites

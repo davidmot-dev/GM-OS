@@ -36,7 +36,12 @@ export type Camp = 'joueurs' | 'adversaires';
  * il joue **tous** ses tours, dans l'ordre de son choix, puis l'autre. Ni
  * cession ni rétention : la main ne passe que quand le camp est épuisé.
  */
-export type ModeDInitiative = 'formule' | 'alternance' | 'paquet';
+/**
+ * `phases` : Rêve de Dragon (2026-10-24). Sept phases par round ; tirs, lancers
+ * et mêlée s'y départagent par « facteur de l'arme + 1d6 »
+ * (`dice/systemes/roundDeReveDeDragon.ts`).
+ */
+export type ModeDInitiative = 'formule' | 'alternance' | 'paquet' | 'phases';
 
 /** L'ordre d'action se joue-t-il par camps, sans initiative chiffrée à saisir ? */
 export const initiativeParCamps = (mode: ModeDInitiative | undefined): boolean =>

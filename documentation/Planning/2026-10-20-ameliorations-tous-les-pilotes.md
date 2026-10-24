@@ -52,8 +52,8 @@ conformément à la décision de David du 19/10.
 | [Dune](#dune) | 🟢 1 · 🟠 0 · 🔴 8 | Audit détaillé ; projet futur garé | Spécialisations et paiements Impulsion/Menace lors d'une reprise |
 | [Nephilim Légende](#nephilim-légende) | 🟢 9 · 🟠 1 · 🔴 0 | **N1–N9 livrés et essayés le 23/10** (registre § 165) : tout le livre au jet et sur la fiche | L'essai sur tablette physique |
 | [NOC](#noc) | 🟢 1 · 🟠 1 · 🔴 5 | Restes revérifiés dans le code le 19/10 ; **Séquelle proposée à 8 le 22/10** (registre § 150), essai de David validé | Singularité attribuée par un Rouage |
-| [Rêve de Dragon](#rêve-de-dragon) | 🟢 0 · 🟠 1 · 🔴 5 | Socle R0–R7 livré pour les PJ ; première boucle TMR livrée ; mécaniques du Voyageur dans l'onglet « Lancer un test » le 22/10 | Initiative complète et suites du Haut-Rêve |
-| [Star Trek Adventures](#star-trek-adventures) | 🟢 9 · 🟠 1 · 🔴 0 | Pilote et LCARS documentés ; **audit et toutes les améliorations livrés le 23/10** (registre § 167, [audit](2026-10-23-star-trek-ameliorations.md)), pilote 2.0.0 | Réimport et essai de David ; essais matériels LCARS |
+| [Rêve de Dragon](#rêve-de-dragon) | 🟢 6 · 🟠 1 · 🔴 0 | Socle R0–R7 livré pour les PJ ; boucle TMR ; mécaniques du Voyageur dans « Lancer un test » le 22/10 ; **pilote fini le 24/10** (registre § 168, [bilan](2026-10-24-reve-de-dragon-finir.md)) : phases du round, famine et potions, entraînement, Haut-Rêve ; pilote 2.0.0 ; calendrier de Clock-OS ; Haut-Rêve des PNJ | Réimport et essai de David |
+| [Star Trek Adventures](#star-trek-adventures) | 🟢 4 · 🟠 1 · 🔴 0 | Pilote et LCARS documentés ; **audit et toutes les améliorations livrés le 23/10** (registre § 167, [audit](2026-10-23-star-trek-ameliorations.md)), pilote 2.0.0, **essai de David validé le 24/10** | Essais matériels LCARS |
 | [Symbaroum](#symbaroum) | 🟢 10 · 🟠 0 · 🔴 0 | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), essai de David validé ; **S0, S2 et S5 à S9 livrés le 23/10** (§ 166), pilote 2.0.0 | Réimport du pilote 2.0.0 et essai de David |
 | [Torg Eternity](#torg-eternity) | 🟢 0 · 🟠 0 · 🔴 5 | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
 | [Within](#within) | 🟢 0 · 🟠 0 · 🔴 4 | Export examiné sommairement ; aucune règle primaire auditée | Reprendre la référence et construire une configuration mécanique vérifiable |
@@ -360,7 +360,8 @@ raccord au moteur, sans reconstruire les mécaniques déjà présentes.
 
 ## Rêve de Dragon
 
-**Références actuelles :** [bilan R5–R7](2026-10-19-etat-et-reprise-codex-rdd-r5-r6-r7.md),
+**Références actuelles :** [audit et livraison du 24/10](2026-10-24-reve-de-dragon-finir.md) contre le livre 2.3.1 (registre § 168),
+[bilan R5–R7](2026-10-19-etat-et-reprise-codex-rdd-r5-r6-r7.md),
 [livret numérique corrigé](2026-10-19-etat-et-reprise-codex-rdd-champs-numeriques.md) et
 [manuel](../User%20Guides/54-Jeu-Reves-de-Dragons.md).
 L'[analyse R0–R8 du 17/10](2026-10-17-reve-de-dragon-propositions.md) est historique :
@@ -379,28 +380,40 @@ fiche, sous le jet, en cartes repliables, chez le meneur et sur la tablette. La 
 dans le formulaire et fait apparaître l'onglet. Vérifié : sept essais e2e du Voyageur verts,
 captures du manuel refaites. **Essai de David à l'écran attendu.**
 
-| Priorité | Amélioration encore possible |
-| --- | --- |
-| 🔴 P1 | Initiative par arme, caractéristiques/compétence/dé et sept phases du round ; le simple tri actuel ne remplace pas cette procédure |
-| 🔴 P2 | Compléter le bilan de repos pour famine et enchantements non permanents, encore arbitrés à la table |
-| 🔴 P2 | Mieux accompagner entraînement et apprentissage, dont les conditions et durées restent arbitrées ; l'allocation d'XP existe déjà |
-| 🔴 P3 | Étendre le Haut-Rêve : rencontres, jets de maîtrise, sorts, réserves et suites draconiques, actuellement consignés/arbitrés manuellement |
-| 🔴 P3 | Étendre, si utile, les commandes spécifiques R5–R7 aux PNJ/adversaires autonomes ; les panneaux actuels visent les PJ |
-| 🟠 Essai | Juger les chiffres du livret dans la vraie fenêtre GM-OS et sur tablette ; poursuivre les essais de séance des procédures livrées |
+*Inventaire du 22/10, instruit le 24/10 — le tableau suivant dit ce qui en est fait.*
 
-**Prochaine étape proposée :** initiative complète, ou suite du Haut-Rêve selon la campagne.
+**Fini le 24/10** (registre § 168, [audit et livraison](2026-10-24-reve-de-dragon-finir.md)), à la
+demande de David (« on va finir reve de dragons »), contre le livre 2.3.1 :
+
+| Lot | Livré | Reste |
+| --- | --- | --- |
+| 🟢 P1 · initiative et phases | Mode `phases` : panneau des sept phases dans Combat-OS, facteur de l'arme lu sur la fiche + 1d6 + état général, longueur d'arme à l'engagement, charge, demi-surprise, mêlée inégale ; aide-mémoire, maladresses, difficulté de tir | La longueur des armes absentes de la table ; la charge rend aléatoire toute la mêlée (lecture à confirmer) |
+| 🟢 P2 · famine et enchantements | Bilan du Château Dormant : famine et soif, endurance retenue jusqu'au repas normal ; potions suivies jusqu'à l'évaporation | — |
+| 🟢 P2 · entraînement et apprentissage | Une heure d'entraînement (seul ou à deux) ; apprentissage avec un maître, en semaines | Lecture des livres et des méthodes (p. 352–356) |
+| 🟢 P3 · Haut-Rêve | Carte « Haut-Rêve, queues et souffles » : rencontres, prisons, cases humides, sorts et réserves, JR, refoulement, queues, ombres, souffles et têtes ; le pupitre TMR tire la rencontre | Effets narratifs appliqués par le meneur |
+| 🟢 Calendrier | `databases/calendars/reve-de-dragon.json` dans Clock-OS : mois lunaires, heures draconiques nommées, saisons et phases de lune ; repère astrologique calé dessus (registre § 169, 24/10) | Essai de David |
+| 🟢 PNJ | **Décision de David le 24/10 : le Haut-Rêve seulement.** Carte Haut-Rêve sur la fiche d'un PNJ (modèle Livret du voyageur) et dans Combat-OS sous « Encaisser / soins RdD », pour un PNJ de campagne ou un adversaire fabriqué ; recette réelle (`e2e/santeVoyageur.spec.ts`) | Stress, chance et astrologie restent aux PJ, par décision |
+| 🟠 Essai | Recette réelle dans Electron (`e2e/finirReveDeDragon.spec.ts`) | Réimport du pilote 2.0.0 et essai de David ; chiffres du livret dans la vraie fenêtre et sur tablette |
+
+**Prochaine étape :** l'essai de David du pilote 2.0.0.
 Conserver une seule réserve de rêve/fatigue sur la fiche. La position et le carnet TMR ne
 doivent pas devenir une seconde fiche de ressources. Les secrets astrologiques restent filtrés.
 
 ## Star Trek Adventures
 
-**Référence :** [manuel du pilote et de LCARS](../User%20Guides/54-Jeu-Star-Trek.md).
-La page décrit la **deuxième édition**. Aucun audit mécanique primaire aussi détaillé que
-ceux de Dune ou Symbaroum n'a été retrouvé dans les documents de synthèse consultés.
+**Référence :** [audit et livraison du 23/10](2026-10-23-star-trek-ameliorations.md), contre le
+Livre de Base de la **deuxième édition** ; [manuel du pilote et de LCARS](../User%20Guides/54-Jeu-Star-Trek.md) ;
+registre § 167. **Mis à jour le 24/10** : pilote 2.0.0 réimporté, essai de David validé.
 
 **Déjà disponible :** Attribut + Fonction, 2d20, spécialisations, achats de dés,
 Impulsion/Menace ; LCARS intégré au Tablet Hub avec sept consoles, demandes arbitrées,
-rapports privés, pièces jointes, alertes et sauvegarde par campagne.
+rapports privés, pièces jointes, alertes et sauvegarde par campagne. **Depuis le 23/10** : la
+tâche complète au panneau (marge de complication, opposition, assistants, aide du vaisseau,
+Occasion parfaite, Éclair d'inspiration, réussite mitigée) ; Stress et blessures ; alternance
+des camps ; Réputation de fin de mission ; contrôle de création ; Menace de départ par
+personnage ; module **Bataille spatiale et tâches étendues** en habillage LCARS.
+
+*Inventaire du 20/10, conservé pour mémoire — chaque piste est instruite plus bas :*
 
 | Priorité | Étape ou amélioration à instruire |
 | --- | --- |
@@ -421,8 +434,8 @@ ou des règles déjà validées. Les consoles LCARS et leurs échanges ne sont p
 | 🟢 P0 · audit et corpus | Export du 22/10 audité contre la deuxième édition ; dix fiches du corpus corrigées, quatre relues | Six fiches encore `relu: false` |
 | 🟢 P1 · Menace initiale | « Nouveau scénario » : 2 par personnage joueur (`departParPersonnage`), Impulsion à 0 | — |
 | 🟢 P2 · raccords mécaniques | La tâche complète au panneau ; Stress et blessures ; Réputation ; alternance des camps ; Détermination à 1 par séance. LCARS reste une mise en scène, sans calcul | Talents non interprétés ; PNJ selon leur rang |
-| 🟢 P3 · vaisseau et conflits spatiaux | Module `star-trek-operations`, habillage LCARS : vaisseaux, Boucliers, dégâts, brèches, noyau ; tâches étendues et défis | Actions de poste à la main ; trois lectures retenues à confirmer |
-| 🟠 Essai | — | LCARS sur les appareils physiques, et l'essai de David du pilote 2.0.0 |
+| 🟢 P3 · vaisseau et conflits spatiaux | Module `star-trek-operations`, habillage LCARS : vaisseaux, Boucliers, dégâts, brèches, noyau ; tâches étendues et défis | Actions de poste à la main. Trois lectures **confirmées par David le 24/10** : seuils des Boucliers cumulés, Détermination à 1 par séance, 1 Menace pour ouvrir sur un PNJ à la main |
+| 🟠 Essai | Pilote 2.0.0 réimporté ; **essai de David validé le 24/10** (« ok j'ai tout testé c'est bien ») | LCARS sur les appareils physiques |
 
 ## Symbaroum
 

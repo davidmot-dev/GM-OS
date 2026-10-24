@@ -1,6 +1,6 @@
 # 🐉 Jeu — Rêves de Dragons
 
-> **Pilote décrit :** « Rêve de Dragon », exporté le 2026-10-19, version R0 consolidée selon le livre 2.3.1, avec suivis R1–R7, module TMR et fiche HTML du Livret du voyageur raccordés dans GM-OS. Pilote étendu : `RDD_driver_gmos_relie.gmos-driver`. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Rêve de Dragon » **2.0.0**, exporté le 2026-10-24 (`Export Dirvers/corriges/RDD_driver_gmos_finir.gmos-driver`), selon le livre 2.3.1 : le pilote relié au Livret du voyageur, avec le **round en sept phases**. Suivis R1–R7, Haut-Rêve, module TMR et fiche HTML raccordés dans GM-OS. Réimportez-le avec **Remplacer** : aucun identifiant ne change. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Un d100 sous un **pourcentage**, lu dans la **table de résolution** du jeu, qui croise une
 caractéristique et un ajustement.
@@ -231,16 +231,46 @@ les conséquences et leur trace remontent au meneur. Un rechargement ne répète
 
 ![Le suivi de santé depuis la fiche du combattant](captures/jeu-reves-de-dragons-sante-combat.jpg)
 
-### Initiative et valeurs de référence
+### Le round de combat — sept phases (*depuis le 2026-10-24*)
 
-- **Initiative actuelle du pilote :** tri par Agilité. La procédure complète du livre — arme,
-  compétence, dé et phases du round — reste à réaliser ; ce tri ne la remplace pas.
+Avec le pilote 2.0.0, **Combat-OS** remplace le tri par Agilité par le **panneau des phases**
+(Livre des Voyageurs, p. 120–131 et 138–139). Le round se joue en sept phases : déclaration
+d'intention, magie, tirs, lancers, mêlée, actualisation des mouvements, santé.
+
+![Le round : Nitouche lance sa dague en phase 4, le Groin frappe en mêlée en phase 5](captures/jeu-reves-de-dragons-phases.jpg)
+
+1. **Phase 1, les déclarations.** Pour chaque combattant, choisissez son **action** (magie, tir,
+   lancer, mêlée, déplacement, actions diverses) et son **arme**. Pour un Voyageur, la liste vient
+   de sa fiche avec son **facteur d'initiative** : la moitié de Mêlée, Tir ou Lancer, arrondie à
+   l'inférieur, plus le niveau de l'arme. Pour un adversaire, choisissez **Autre arme…**, nommez-la
+   et saisissez son facteur. L'**état général** de la fiche est repris ; cochez **Demi-surprise**,
+   **Charge**, ou indiquez le **groupe** d'une mêlée inégale (à trois contre un : 3).
+2. **Tirer l'initiative** lance un d6 par combattant. Le plateau se range **phase par phase** :
+   magie, tirs, lancers, puis mêlée ; dans chaque phase, facteur + d6 + état général (+ le groupe),
+   du plus haut au plus bas.
+3. **Round d'engagement** (coché au premier round) : en mêlée, l'arme la plus longue frappe
+   d'abord, de l'arme d'hast aux armes naturelles. Une arme que la table ne connaît pas (l'« Épée
+   à une main » du livret) passe après et le panneau le signale. Une **charge** rend l'initiative
+   aléatoire pour toute la mêlée.
+4. Le **demi-surpris** n'a jamais l'initiative : il passe après les autres de sa phase. Une
+   égalité de tir ou de lancer part simultanément ; une égalité de mêlée laisse le round nul,
+   sauf en mêlée inégale.
+5. Les flèches font avancer les **phases** ; un nom de l'ordre désigne le combattant actif.
+   **Round suivant** efface les d6, décoche l'engagement et avance le compteur de Combat-OS.
+
+L'**aide-mémoire** rappelle la difficulté libre de la mêlée (0 à −10), les trois options d'une
+particulière (force, finesse, rapidité — jamais la rapidité avec une arme lente), les conditions
+(complète surprise, demi-surprise, charge, feinte), tire une **maladresse** au 2d10 armé ou à mains
+nues, et additionne la **difficulté d'un tir** (portée, taille, activité de la cible). La phase 7
+reste celle du suivi de santé R2 : **Préparer la fin du round de santé** sur chaque blessé.
+
+### Valeurs de référence
+
 - **Santé :** points de vie, dont le **maximum vaut la moyenne de Taille et Constitution,
   arrondie au supérieur**. Le combat utilise le maximum de la fiche consolidée.
 - **Endurance maximale :** le plus grand de Taille + Constitution et Vie maximale + Volonté.
 - **Ressources suivies :** Endurance et Points de Rêve, distincts de leurs valeurs de référence.
 
-Les sept phases et l’initiative par arme restent à réaliser ; R2 traite la santé du combat.
 
 ## Ouvrages et points de tâche
 
@@ -293,9 +323,24 @@ ce que leurs conséquences aient été traitées et marquées résolues par le g
 ou une date unique. S'il y a du stress et au moins une heure de sommeil déclarée, renseignez
 son d100, puis le second dé en cas de particulière. Choisissez la situation du moral au matin
 et son d20. Signalez une éventuelle dépense de chance effectuée hors du suivi.
-L'assistant traite dans l'ordre stress, guérisons, vie, moral, chance et excédent de rêve.
-**La famine et les enchantements non permanents restent à résoudre à la table** et à confirmer.
-Le bilan n'avance pas Clock-OS.
+L'assistant traite dans l'ordre stress, famine, guérisons, vie, moral, chance, excédent de rêve
+et enchantements non permanents. Le bilan n'avance pas Clock-OS.
+
+**Famine et soif** (*depuis le 2026-10-24*, p. 86 et 111) : cochez **Compter la famine et la soif** ;
+la nourriture et l'eau de la feuille de route sont reprises, corrigez-les si besoin. Moins que le
+seuil de sustentation : −1 endurance (−3 pour l'eau) ; moins de la moitié : −2 (−6) ; rien : −3
+(−12). Autant de fatigue s'inscrit. Un demi-point mangé par jour arrête l'endurance à la moitié.
+Ces points sont **retenus** : le repos ne les rend pas avant un repas normal — **Repas normal pris**
+les libère. À zéro d'endurance, le personnage s'évanouit et perd un point de vie ; la suite (un
+point toutes les 6 heures de famine, toutes les heures de soif) se suit à la table. Les compteurs
+de la feuille de route repartent à zéro. La case reste décochée par défaut : une feuille de route
+vide ne déclenche jamais une famine sans que vous le demandiez.
+
+![Le bilan d'une journée maigre : un seul point de sustentation sur deux](captures/jeu-reves-de-dragons-famine.jpg)
+
+**Potions et enchantements non permanents** (p. 268) : inscrivez chacun avec ses points de rêve.
+Chaque bilan lui en retire un ; au dernier, la potion **s'évapore** et quitte la liste.
+**Ne plus suivre** une potion bue, rendue permanente ou détruite.
 
 ![L’aperçu du bilan de nuit avant son application](captures/jeu-reves-de-dragons-chateau-dormant.jpg)
 
@@ -350,8 +395,22 @@ Pour l'exercice, conservez le résultat définitif du jet, puis utilisez **Expé
 résultat définitif**. Une particulière à ajustement final négatif peut rapporter des XP, une fois
 seulement. Confirmez les dommages d'une attaque ou le simple test de mémoire si nécessaire ;
 choisissez la composante recevant un reliquat de dérivée. L'expérience du Draconic va en voie.
-Les XP d'un ancien carnet, d'un maître ou d'un livre peuvent être reportées avec leur provenance ;
-le calendrier d'apprentissage et les conditions de l'entraînement restent arbitrés par le MJ.
+Les XP d'un ancien carnet ou d'un livre peuvent être reportées avec leur provenance.
+
+**Une heure d'entraînement** (*depuis le 2026-10-24*, p. 146–147) : choisissez la compétence dans
+**Répartir et progresser**, puis la caractéristique du jet, la fatigue de l'heure (deux au moins),
+le d6 et autant de jets — ou **Tirer le d6 et les jets**. Chaque jet se joue à un **ajustement final
+de −1**, quel que soit le niveau ; chaque particulière rapporte un XP d'exercice, chaque échec total
+est une maladresse à décrire. La mêlée s'entraîne à deux : indiquez le niveau du partenaire ; seul
+le plus faible gagne de l'expérience. Un désir lancinant en cours bloque ces XP. Connaissances et
+Draconic ne s'entraînent pas : ils s'apprennent.
+
+![Une heure d'Acrobatie : une particulière, une maladresse](captures/jeu-reves-de-dragons-entrainement.jpg)
+
+**Apprentissage avec un maître** (p. 145–146) : entre deux aventures, à plein temps. Indiquez les
+semaines et le niveau du maître : trois XP par semaine jusqu'au niveau 0, un par semaine jusqu'à
++3, puis un toutes les deux semaines pour +4, trois pour +5… Passer de +3 à +4 prend 40 semaines.
+Jamais au-delà du niveau du maître. Le niveau monte ensuite avec **Préparer l'augmentation d'un niveau**.
 Les XP de stress non réparties peuvent aussi acheter des points de voyage, à raison de deux XP
 pour un point. La tablette du joueur consulte le carnet ; le MJ valide les modifications.
 
@@ -396,8 +455,25 @@ Les recours se valident côté MJ ; la tablette suit le résultat et les compteu
 
 ![Le carnet astrologique de la tablette ne montre que le nombre annoncé au personnage](captures/jeu-reves-de-dragons-astrologie.jpg)
 
-Dans Clock-OS, utilisez le temps **statique ou fantastique**. Dans **Astrologie et heures
-draconiques**, déclarez l'heure qui commence à l'instant affiché puis validez le repère.
+### Le calendrier de Rêve de Dragon (*depuis le 2026-10-24*)
+
+Dans Clock-OS, mode **Fantastique**, choisissez le calendrier **reve-de-dragon**. Douze mois
+lunaires de 28 jours aux noms des heures — Vaisseau, Sirène, Faucon… Château Dormant —, 336 jours
+par an ; l'année commence au premier jour du printemps (Livre des Mondes, p. 314). La journée compte
+**douze heures draconiques de 120 minutes** : elle commence au Vaisseau et change de date à la fin
+du Château Dormant, comme le bilan de nuit. Le cadran affiche le rang et les minutes (« 03:45 »), la
+date porte le nom de l'heure ; le pupitre choisit l'heure par son nom. Les quatre saisons et les
+quatre phases de la lune (premier quartier le 7, pleine lune le 14, second quartier le 21, nouvelle
+lune le 28) sont des fêtes : elles s'annoncent au journal.
+
+![Le 14 du Vaisseau, pleine lune, à l'heure du Faucon](captures/jeu-reves-de-dragons-calendrier.jpg)
+
+Avec ce calendrier, **Caler le repère sur le calendrier** remplace le choix de l'heure dans la carte
+d'astrologie : l'heure affichée est l'heure draconique, et aujourd'hui devient le jour de jeu zéro.
+
+Dans Clock-OS, utilisez le temps **statique ou fantastique**. Sans le calendrier de Rêve de Dragon,
+dans **Astrologie et heures draconiques**, déclarez l'heure qui commence à l'instant affiché puis
+validez le repère.
 Cet instant devient le début de l'heure choisie au jour de jeu zéro. Le Vaisseau commence
 la journée et l'Araignée correspond à minuit, dix-huit heures après ce début.
 Ce raccord n'impose pas de calendrier ni d'heure à votre campagne existante.
@@ -421,9 +497,47 @@ avec le véritable ajustement. Quand l'astrologie est active, ces jets sont donc
 MJ ; les actions ordinaires restent accessibles au joueur.
 Les heures n'accordent aucun bonus global aux actions ni aux sorts ordinaires.
 
-Les panneaux R5–R7 sont accessibles depuis les fiches PJ. Leur commande n'est pas ajoutée
-aux PNJ et combattants autonomes dans cette livraison. Le module externe TMR garde sa carte
+Les panneaux R5–R7 sont accessibles depuis les fiches PJ ; ils ne sont pas proposés aux PNJ et
+combattants autonomes (décision de David, 2026-10-24 : leur progression ne se suit pas). Le module externe TMR garde sa carte
 et son carnet ; les ressources, la progression et les règles restent dans GM-OS.
+
+## Haut-Rêve, queues et souffles (*depuis le 2026-10-24*)
+
+Une carte de plus dans l'onglet **Lancer un test** (Livre du Haut-Rêve, p. 181–210). Le MJ y
+prépare et valide ; la tablette lit le compteur de refoulement, les effets en cours et les sorts
+en réserve. **Les PNJ haut-rêvants l'ont aussi** (décision de David, 2026-10-24) : sous les
+sections de la fiche d'un PNJ dont le modèle est le Livret du voyageur, et dans **Combat-OS**, sous
+**Encaisser / soins RdD**, pour un PJ, un PNJ de campagne ou un adversaire fabriqué — l'écriture va
+à celui qui porte la fiche, comme la santé. Le compteur et les queues sont recopiés dans le livret (**Refoulement**, **Queues et
+souffles de Dragon**).
+
+![Un Changeur de 9 en désert : 26 % de maîtrise, manqué](captures/jeu-reves-de-dragons-haut-reve.jpg)
+
+- **Rencontre en TMR** : le genre de terre, le d100 de la table — ou une **rencontre imposée**
+  (table spéciale, rencontre retrouvée) —, la force (**Tirer** la lance), puis le choix :
+  **maîtriser** (rêve actuel, meilleure voie, moins la force, état général compris), **se dérober**,
+  **refouler** (le d20 du test de refoulement est demandé), ou **laisser passer** un Messager ou un
+  Passeur. Une Fleur ajoute sa force au rêve, un Mangeur la retire ; un Rêve de Dragon maîtrisé
+  rend un point de seuil, et une particulière une tête de Dragon et de l'expérience (moitié RÊVE,
+  moitié voie) ; manqué, une queue (deux sur un échec total).
+- **Reflet et Tourbillons** emprisonnent : **Lutter ce round** jusqu'à la maîtrise ; chaque round
+  de défaite coûte le rêve du Tourbillon, et la dérive finale est donnée en cases.
+- **Case humide** : force 7, ni dérobade ni refoulement ; seul l'échec total donne un souffle.
+- **Lancer un sort** : un sort de la page « Sorts et rituels » du livret ; RÊVE (la
+  caractéristique), la voie, la difficulté R et l'état général. Le **bonus de case** du livret
+  s'ajoute avant les résultats spéciaux, et gagne un point à chaque réussite depuis sa case. Le
+  coût : r, la moitié sur une particulière, 150 % et un effet erroné sur un échec total. Un rituel
+  prend l'ajustement astrologique et ne se met pas en réserve. **Mettre en réserve** coûte un rêve
+  de plus et inscrit le sort dans la page des réserves, dans la limite du niveau de la voie ;
+  **Déclencher** le libère. Après Thanatos, la prochaine queue se tire sur les Ombres.
+- **Jet de résistance** : rêve actuel, sans compétence ni état général (r−8 en général) ; une
+  particulière à difficulté négative rapporte un XP en RÊVE.
+- **Effets de Dragon à tirer** : ceux des rencontres, du Château Dormant, ou décidés par le
+  meneur. Le d100 de la table, et le d20 d'un désir ou d'une idée fixe. Les effets durables restent
+  **en cours**, avec **Refouler** à leur prix (puis le test) ou **Terminer** ; un infarctus applique
+  aussitôt −4 vie et −8 endurance.
+
+![Tympan d'Hypnos depuis les collines d'Encre : 60 % + 8 % de case](captures/jeu-reves-de-dragons-sort.jpg)
 
 ## Terres Médianes du Rêve — carte et coûts sur la fiche
 
@@ -460,14 +574,16 @@ rêve. La récupération reste à résoudre, sans minuterie automatique.
 **L'arbitrage manuel reste disponible** pour les effets modifiant les coûts : résolvez les dépenses
 sur la fiche puis cochez **Coûts, jets et conséquences résolus sur la fiche** avant **Valider le
 trajet**. Ce bouton ne débite rien. Ne payez pas manuellement un trajet puis avec le raccord.
-Les rounds, les jets de rencontre, les maîtrises et le lancer des sorts restent à votre main.
+Le pupitre propose **Tirer le d7, la rencontre et sa force** selon la case du demi-rêve : le
+texte va dans la préparation privée, que vous relisez avant de révéler. La maîtrise, la lutte,
+le refoulement et le lancer des sorts se résolvent dans la carte **Haut-Rêve** de la fiche.
 
 ![Le pupitre du MJ sépare préparation secrète et rencontre révélée](captures/jeu-reves-de-dragons-tmr-mj.jpg)
 
 Le MJ peut préparer une rencontre en privé, puis publier seulement le texte destiné au joueur.
 Une rencontre publiée bloque les déplacements jusqu'à sa résolution. Les sorts déjà mis en
 réserve sont consignés sur leur case ; queues et souffles se notent avec leurs détails et échéances.
-Leur déclenchement et leurs conséquences restent manuels. **Crédits et licences** mentionne
+Leur tirage et leurs conséquences sur la fiche passent par la carte **Haut-Rêve**. **Crédits et licences** mentionne
 Cyol et Kroc, dont les données cartographiques ont été adaptées sous CC BY 3.0 France,
 ainsi que la provenance de la carte officielle et les crédits de l'édition Scriptarium.
 
@@ -488,3 +604,7 @@ R8 : carte, déplacements et raccord aux fiches, Livre du Haut-Rêve 2.3.1, p. 1
 Livret du voyageur : cinq pages et raccord du pilote étendu, commit `fef92b06` ; distinction entre
 Archétype du livret et potentiel déclaré dans le carnet R5. Champs numériques du livret :
 flèches masquées, saisie et largeurs vérifiées dans le moteur intégré v12.*
+*Le 2026-10-24 — pilote 2.0.0 : round en sept phases et initiative par arme, Livre des Voyageurs
+2.3.1, p. 120–131 et 138–139 ; famine et potions, p. 86, 111 et 268 ; entraînement et
+apprentissage, p. 145–147 ; Haut-Rêve, Livre du Haut-Rêve 2.3.1, p. 181–210, tables relues sur
+les pages en image.*

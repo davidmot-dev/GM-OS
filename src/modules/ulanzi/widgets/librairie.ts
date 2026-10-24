@@ -527,7 +527,7 @@ export function tempsPourLaTable(etat: {
         fete?: { nom: string; description?: string; rang: number; sur: number };
     } | null;
     activeCalendarId?: string | null;
-    calendars?: Record<string, { months: { name: string; displayName?: string; isIntercalary?: boolean }[] }>;
+    calendars?: Record<string, { months: { name: string; displayName?: string; isIntercalary?: boolean }[]; hoursPerDay?: number; nomsDesHeures?: string[] }>;
 }): TempsAAfficher | null {
     if (!etat.isClockProjected) return null;
 
@@ -555,6 +555,8 @@ export function tempsPourLaTable(etat: {
             minute: date.minute,
             jourDeLaSemaine: date.dayOfWeek,
             intercalaire: mois.isIntercalary,
+            ...(calendrier?.nomsDesHeures?.length === calendrier?.hoursPerDay && calendrier?.nomsDesHeures?.[date.hour]
+                ? { nomDeLHeure: calendrier.nomsDesHeures[date.hour] } : {}),
             /* ⭐ La fête part telle qu'elle se lit, déjà mise en forme par la
                logique du calendrier — ce fichier reste pur et ne connaît aucune
                règle de fête. */

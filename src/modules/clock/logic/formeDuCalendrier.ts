@@ -381,7 +381,33 @@ export function controlerLeCalendrier(cal: CalendrierDatable): Constat[] {
         });
     }
 
+    if (cal.nomsDesHeures !== undefined && !heuresNommeesValides(cal)) {
+        constats.push({
+            gravite: 'doute',
+            code: 'heures-mal-nommees',
+            message: `${cal.nomsDesHeures.length} noms d’heures pour ${cal.hoursPerDay} heures par jour : `
+                + 'l’heure s’affichera en chiffres.',
+        });
+    }
+
     return constats;
+}
+
+/** Les noms d'heures sont-ils utilisables : un par heure, aucun vide ? */
+function heuresNommeesValides(cal: CalendrierDatable): boolean {
+    const noms = cal.nomsDesHeures;
+    return Array.isArray(noms) && noms.length === Math.floor(cal.hoursPerDay)
+        && noms.every(n => typeof n === 'string' && n.trim() !== '');
+}
+
+/**
+ * **L'heure nommée** — son rang dans la journée (1 pour la première) et son nom,
+ * ou `null` quand le calendrier n'en nomme pas. Rêve de Dragon : la troisième
+ * heure est le Faucon.
+ */
+export function heureNommee(cal: CalendrierDatable, heure: number): { rang: number; nom: string } | null {
+    if (!heuresNommeesValides(cal) || !Number.isInteger(heure) || heure < 0 || heure >= cal.nomsDesHeures!.length) return null;
+    return { rang: heure + 1, nom: cal.nomsDesHeures![heure] };
 }
 
 /**
@@ -426,8 +452,9 @@ export function horodatageDeLaDate(
     if (leCalendrierEstFautif(cal)) return null;
 
     const parJour = secondesParJour(cal);
-    const parMinute = Math.floor(cal.minutesPerHour);
-    const parHeure = parMinute * 60;
+    // Une minute fait soixante secondes ; c'est l'heure qui en compte `minutesPerHour` (2026-10-24).
+    const parMinute = 60;
+    const parHeure = Math.floor(cal.minutesPerHour) * 60;
 
     const annee = Math.trunc(date.year);
     let secondes = 0;

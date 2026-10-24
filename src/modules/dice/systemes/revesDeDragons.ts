@@ -317,3 +317,21 @@ export function bandesDuJet(caracteristique: number, ajustement: number): Bandes
         remarques,
     };
 }
+
+/**
+ * **Le bonus de case du haut-rêvant** (Livre du Haut-Rêve 2.3.1, p. 209) : +1 %
+ * par sort réussi depuis la même case. Il s'ajoute au pourcentage de la table,
+ * et **les résultats spéciaux se calculent après** : 60 % + 8 % donne 68 %,
+ * particulière à 14 et échec total à 98, comme dans l'exemple de Nitouche.
+ */
+export function bandesAvecBonusDeCase(caracteristique: number, ajustement: number, bonus: number): BandesDuJet {
+    const base = bandesDuJet(caracteristique, ajustement);
+    if (!bonus || ajustement <= AJUSTEMENT_SANS_RETOUR) return base;
+    const chances = base.chances + bonus;
+    if (ajustement < AJUSTEMENT_MINIMAL_DE_LA_TABLE) return { ...base, chances, echecParticulier: chances + 1 };
+    const ligne = ligneDesResultats(chances);
+    if (!ligne) return { ...base, chances, particuliere: Math.floor(chances / 5), significative: Math.floor(chances / 2), echecParticulier: null, echecTotal: null };
+    const significative = Math.floor(chances / 2);
+    return { ...base, chances, particuliere: ligne.part, significative: significative > ligne.part ? significative : null,
+        echecParticulier: ligne.echP, echecTotal: ligne.echT };
+}

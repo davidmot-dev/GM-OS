@@ -29,7 +29,7 @@ Le fonctionnement générique de `horsJeu` décrit ci-dessous reste celui des pi
 | 🐙 **Cthulhu Hack** | **Sauvegardes** au d20 sous la caractéristique, **dés d'usure** (Torche, Bagou…) | [Cthulhu Hack](./54-Jeu-Cthulhu-Hack.md) |
 | 🌑 **Symbaroum** | Un **test** au d20 sous l'un des huit attributs, opposition et Avantage tactique ; **attaque et Défense** avec dégâts et protection lancés par le joueur, valeurs fixes des PNJ ; **agonie** et Test de mort ; **Corruption**, Stigmates et Ombre ; création, progression, bourse, voyages, règles optionnelles de la table ; fiche HTML reliée | [Symbaroum](./54-Jeu-Symbaroum.md) |
 | 🕯️ **Crimes** | **Potentiel GARDE Compétence** : des d10, on en garde autant que la compétence, les 1 d'office ; seuil 9, 8 ou 7 avec une spécialisation ; quatre bilans et la Névrose dite | [Crimes](./54-Jeu-Crimes.md) |
-| 🐉 **Rêves de Dragons** | d100 sous un **pourcentage**, degrés ; **Livret du voyageur HTML de cinq pages**, dont l'Archétype, relié au formulaire ; fatigue, blessures, ouvrages, repos et Château Dormant ; **stress/XP/Archétype**, **chance/destinée/moral**, **astrologie privée liée à Clock-OS** ; carte TMR | [Rêves de Dragons](./54-Jeu-Reves-de-Dragons.md) |
+| 🐉 **Rêves de Dragons** | d100 sous un **pourcentage**, degrés ; **Livret du voyageur HTML de cinq pages**, dont l'Archétype, relié au formulaire ; **round en sept phases, initiative par arme** ; fatigue, blessures, ouvrages, repos et Château Dormant avec **famine et potions** ; **stress/XP/Archétype, entraînement et apprentissage**, **chance/destinée/moral**, **astrologie privée liée à Clock-OS** ; **Haut-Rêve** (rencontres, sorts, réserves, queues, souffles et têtes) ; carte TMR | [Rêves de Dragons](./54-Jeu-Reves-de-Dragons.md) |
 | ⚡️ **Torg Eternity** | Un d20 qui **explose**, converti par la **Table des Bonus**, contre un **Niveau de Difficulté** ; **Possibilité**, « Un de plus ! » et relance favorisée après le premier dé ; **Annulation des dommages** | [Torg](./54-Jeu-Torg.md) |
 | ✨ **Nephilim Légende** | d100 sous une cible en **degrés × 10** (Vécu ou Art occulte + Ka d'approche), **doubles** critiques ou maladresses et leurs **suites** (Khaïba, Ombre, Sapience), **marge** sur les dizaines ; **Traque** plafonnée au **Seuil RK** du lieu ; **155 Vécus** et **31 époques** reliés à la fiche | [Nephilim](./54-Jeu-Nephilim.md) |
 
@@ -61,7 +61,8 @@ Star Trek propose **LCARS — Passerelle**, à sélectionner explicitement dans 
 
 Rêve de Dragon propose **Terres Médianes du Rêve**, à sélectionner dans son pilote. Sa carte
 officielle en couleur et son carnet restent dans le module ; rêve et fatigue se dépensent sur
-la fiche après validation du MJ. Voir le [guide Rêves de Dragons](54-Jeu-Reves-de-Dragons.md).
+la fiche après validation du MJ. Le pupitre tire le d7, la rencontre et sa force selon la case ;
+la maîtrise se résout dans la carte « Haut-Rêve » de la fiche. Voir le [guide Rêves de Dragons](54-Jeu-Reves-de-Dragons.md).
 Les autres jeux attendent leurs modules compatibles.
 
 Dans **Cockpit › Modules du jeu**, **Ouvrir le pupitre** prépare l’outil. Pendant une séance,
@@ -361,6 +362,7 @@ ressources suivies en combat dont le champ contient un dé. Voir [Cthulhu Hack](
 | **Cartes d'initiative** (`initiativeCards`) | Un paquet de cartes numérotées, une par combattant (Alien, Blade Runner) |
 | **Ordre alterné** (`initiative`) | Pas d'initiative individuelle : le tour **alterne** entre les camps, garder la main ou l'ouvrir coûte une réserve (Dune) |
 | **Limites de Blessures** (`limitesDeBlessures`) | Sur la santé d'un **adversaire**, un choix « Type… » : combien de Blessures il encaisse avant d'être vaincu (sbire, aguerri…). Les cases du jeu se recoupent (Torg) |
+| **Phases du round** (`initiative` en mode `phases`) | Le round se joue en **sept phases** — déclaration, magie, tirs, lancers, mêlée, mouvements, santé. Le panneau note pour chacun son action et son **arme** (lue sur la fiche du Voyageur, ou saisie pour un adversaire) ; « Tirer l'initiative » lance un d6 par combattant et range le plateau phase par phase : **facteur de l'arme + 1d6 + état général**, l'arme la plus longue d'abord au round d'engagement, le demi-surpris toujours après. Aide-mémoire des conditions, des particulières, des maladresses (2d10) et de la difficulté d'un tir (Rêves de Dragons) |
 | **Paquet d'Action** (`initiative` en mode `paquet`) | Chaque round, une **carte d'Action** dit quel camp commence ; il joue tous ses tours, puis l'autre. La carte porte aussi une Ligne de Conflit (avantages, désavantages) et des Actions approuvées. Le paquet se marque **« Paquet d'Action »** dans Deck-OS (**Rôle**), et chaque carte s'y décrit une fois (Torg) |
 | **Modèle de santé** (`defaultHealthType`) | Points de vie, horloges, anatomie, blessures ou cases — la carte du combattant change d'aspect |
 | **Santé de départ** (`santeDeDepart`) | Le maximum se lit sur la fiche (Alien : la Force) |

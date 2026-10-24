@@ -19,6 +19,9 @@ export function PanneauAstrologieVoyageur({campagneId,personnageId,donnees,lectu
     const [de,setDe]=useState(''),[faux,setFaux]=useState('1'),[ciel,setCiel]=useState(false),[temps,setTemps]=useState(false);
     const [erreur,setErreur]=useState(''),[apercu,setApercu]=useState<{a:AstrologieVoyageur;empreinte:string;fiche:string;instant:number;description:string}|null>(null);
     const xp=useOperationDeVoyageur(donnees,d=>appliquer?.(d),avantOperation);
+    // Le calendrier de Rêve de Dragon de Clock-OS (2026-10-24) : ses heures sont celles du livre, le repère se lit dessus.
+    const calendrier=useClockStore(s=>mode==='fantasy'&&s.activeCalendarId?s.calendars[s.activeCalendarId]:undefined);
+    const dateDuCalendrier=calendrier&&JSON.stringify(calendrier.nomsDesHeures)===JSON.stringify(HEURES_DRACONIQUES)?useClockStore.getState().getFantasyDate():null;
     let moment,signe;
     try {if(a){lireAstrologie(a);moment=momentDraconique(a.origine,instant);}signe=signeVoyageur(donnees.heure_naissance);}catch(e){return <p role="alert">{(e as Error).message}</p>;}
     if (!campagneId) return null;
@@ -45,6 +48,11 @@ export function PanneauAstrologieVoyageur({campagneId,personnageId,donnees,lectu
                     <label className="flex flex-col text-sm">Heure draconique au repère Clock-OS<select aria-label="Heure au repère" className={classe} value={heure} onChange={e=>setHeure(e.target.value)}>{HEURES_DRACONIQUES.map((h,i)=><option key={h} value={i+1}>{h}</option>)}</select></label>
                     <p className="text-xs">L’instant actuel de Clock-OS sera le début de l’heure choisie, au jour de jeu zéro. Le Vaisseau est le début de cette journée ; l’Araignée est minuit.</p>
                     <button type="button" className={classe} onClick={()=>proposer(()=>({a:{version:1,origine:instant-(Number(heure)-1)*7200000,nombres:{},observations:[],predictions:{}},description:'Fixer le repère draconique de la campagne, sans changer l’horloge.'}))}>Préparer le repère draconique</button>
+                    {dateDuCalendrier&&<>
+                        <p className="text-xs">Clock-OS suit le calendrier de Rêve de Dragon : {HEURES_DRACONIQUES[dateDuCalendrier.hour]}, {dateDuCalendrier.minute} min. Le repère peut se caler dessus — aujourd’hui devient le jour de jeu zéro.</p>
+                        <button type="button" className={classe} onClick={()=>proposer(()=>({a:{version:1,origine:instant-((dateDuCalendrier.hour*120+dateDuCalendrier.minute)*60+dateDuCalendrier.second)*1000,nombres:{},observations:[],predictions:{}},
+                            description:`Caler le repère sur le calendrier de Clock-OS : ${HEURES_DRACONIQUES[dateDuCalendrier.hour]}, jour de jeu zéro.`}))}>Caler le repère sur le calendrier</button>
+                    </>}
                 </> : <details><summary className="cursor-pointer font-bold">Préparation astrologique du MJ</summary><div className="space-y-3 my-3">
                     <p className="text-xs">Nombres réels et résultats des observations secrets. Les joueurs ne reçoivent que leurs propres nombres annoncés.</p>
                     <label className="flex flex-col text-sm">Jour de jeu visé<input aria-label="Jour astral" type="number" className={classe} value={jour} onChange={e=>setJour(e.target.value)} /></label>
