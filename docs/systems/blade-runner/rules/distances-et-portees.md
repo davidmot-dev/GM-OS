@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« ZONES ET PORTÉE » ; « BORDURES ET LIGNE DE VUE » ; « CATÉGORIES DE PORTÉES » ; « COMBAT À DISTANCE » ; « MOUVEMENT » ; « POURSUITES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Distances et portées
@@ -57,3 +57,5 @@ Règles des cas particuliers :
 
 ## Non couvert
 Bien que l'altitude d'un spinner se mesure en zones verticales (section « ALTITUDE »), les sources n'expliquent pas comment combiner cette hauteur avec la distance horizontale pour évaluer la catégorie de portée réelle (de Courte à Extrême) d'un tir dirigé depuis les airs vers une cible au sol.
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 64–69, 82–86. Vérifié sans correction.*

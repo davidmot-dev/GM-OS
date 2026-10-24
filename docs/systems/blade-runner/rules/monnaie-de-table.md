@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« POINTS DE CHINYEN » ; « POINTS DE PROMOTION » ; « DEMANDE DE RESSOURCES AUPRÈS DU LAPD » ; « MOBILISER SES RELATIONS » ; « POINTS D’HUMANITÉ »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Monnaie de table
@@ -38,3 +38,5 @@ Le livre de règles précise les cas particuliers suivants :
 
 ## Non couvert
 Le livre de règles ne contient aucun mécanisme de ressource collective partagée au centre de la table pour attribuer des bonus narratifs globaux. De plus, les sources ne précisent pas s'il est possible de contraindre un PJ à mettre ses points de chinyen ou de Promotion en commun contre son gré, ni comment se résout le vol d'argent entre équipiers (section « ENQUÊTER SÉPARÉMENT ») [5].
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 36, 162–165, 203–205. Vérifié sans correction : aucune réserve commune ; la mise en commun de la Promotion et du chinyen, le pot-de-vin en chinyen et le savon du superviseur (p. 162).*

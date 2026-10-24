@@ -121,6 +121,9 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         sheetData: {
             vigueur: 'B', corpsACorps: 'C', sante: 8, santeMax: 8, sangFroid: 6, sangFroidMax: 6, empathie: 'B (D10)', nature: 'Humain',
             protectionNom: 'Gilet pare-balles dissimulé', protection: 'C (D8)', pointsHumanite: 3,
+            // Le pilote fini (B3–B8, 2026-10-24) : sauvegarde, soins, souvenir clé et objet fétiche.
+            endurance: 'C', intelligence: 'C', assistanceMedicale: 'B', manipulation: 'C',
+            souvenirCle: 'La pluie sur le toit du Bradbury, le soir où mon père est parti.', objetFetiche: 'Une montre à gousset',
         },
         composantes: ['vigueur', 'corpsACorps'],
         scenes: c => scenesDeBladeRunner(c),
@@ -1182,6 +1185,55 @@ async function photographierLePanneau(panneau: Locator, nom: string): Promise<vo
     await fenetre.evaluate(w => w.setContentSize(1440, 900));
 }
 
+/**
+ * **Blade Runner 2.0.0** (2026-10-24) : le soutien et le souvenir clé au panneau,
+ * le suivi d'une blessure mortelle, la relance d'une réussite au pupitre, l'échange
+ * de cartes d'initiative.
+ */
+async function scenesDuPiloteFiniBR(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await panneau.locator('select').nth(0).selectOption('vigueur');
+    await panneau.locator('select').nth(1).selectOption('corpsACorps');
+    await panneau.getByLabel('Soutien', { exact: true }).selectOption('B');
+    await panneau.locator('[data-souvenir-cle]').check();
+    await photographierLePanneau(panneau, 'jeu-blade-runner-soutien');
+
+    // Une plaie au ventre, mortelle : la sauvegarde contre la mort et la stabilisation.
+    await ecrireLaFiche(c, { _gmos_blade_runner: { blessures: [{
+        id: 'capture-plaie', titre: 'Plaie au ventre', table: 'Perforant', de: 5, mortelle: true, limite: 'quart', guerison: 'semaine',
+        etat: 'menace', effet: 'Les jets de MOBILITÉ rouvrent la plaie.',
+    }] } });
+    const carte = await entrerEnCombat(c);
+    const suivi = carte.locator('[data-suivi-blade-runner]');
+    await expect(suivi.getByRole('button', { name: 'Sauvegarde contre la mort (Endurance)' })).toBeVisible({ timeout: 15_000 });
+    await photographier(suivi, 'jeu-blade-runner-blessures');
+    await ecrireLaFiche(c, { _gmos_blade_runner: { blessures: [] }, blessuresCritiques: '' });
+
+    // Le pupitre relance aussi le D12 à une seule réussite.
+    await jetAuPupitre({ id: 'capture-br-pupitre', title: 'Armes à feu', total: 1, modifier: 0, successes: 1, tagSuccess: true,
+        totalDisplay: '1 Succès', rolls: [{ val: 8, sides: 12, source: 'base' }, { val: 3, sides: 10, source: 'base' }] });
+    const relance = f.locator('[data-relancer-aussi-au-pupitre]');
+    await expect(relance).toBeVisible({ timeout: 15_000 });
+    await relance.locator('input[type="checkbox"]').first().check();
+    await photographier(panneauDuDernierJet(relance), 'jeu-blade-runner-pupitre');
+
+    // Deux combattants, les cartes tirées : l'échange d'initiative.
+    await f.evaluate(({ id, nom }) => {
+        const combat = (window as unknown as Fenetre).useCombatStore.getState();
+        combat.clearCombatants();
+        combat.addCombatant({ name: nom, init: 3, isPlayer: true, faction: 'player', statuses: [], sourcePlayerId: id });
+        combat.addCombatant({ name: 'Al Jarry', init: 7, isPlayer: false, faction: 'enemy', statuses: [] } as never);
+    }, { id: c.personnage, nom: c.nom });
+    await ouvrirLeModule(gmos, 'Combat-OS');
+    const echange = f.locator('[data-echange-d-initiative]');
+    await expect(echange).toBeVisible({ timeout: 15_000 });
+    await echange.getByLabel('Échanger la carte avec').selectOption({ label: 'Al Jarry (7)' });
+    await photographier(echange.locator('xpath=..'), 'jeu-blade-runner-echange');
+}
+
 /** Alien : le test de Panique qu'un 1 de Stress déclenche, et un jet forcé. */
 async function scenesDAlien(c: ContexteDeScene): Promise<void> {
     const jet = (c.pilote.gameDriver as { jet?: { alien?: { combat?: unknown }; forcer?: unknown; panique?: { suites?: unknown } } }).jet;
@@ -1762,7 +1814,8 @@ async function scenesDeTorg(c: ContexteDeScene): Promise<void> {
 
 /** Blade Runner : la protection, Brisé par les dégâts et par le stress, sur la carte. */
 async function scenesDeBladeRunner(c: ContexteDeScene): Promise<void> {
-    const pilote = c.pilote.gameDriver as { combat?: { horsJeu?: unknown; protection?: unknown }; jet?: { stressSubi?: unknown; forcer?: { relancerUneReussite?: boolean } } };
+    const pilote = c.pilote.gameDriver as { combat?: { horsJeu?: unknown; protection?: unknown }; jet?: { stressSubi?: unknown; bladeRunner?: unknown; forcer?: { relancerUneReussite?: boolean } } };
+    if (pilote.jet?.bladeRunner) await scenesDuPiloteFiniBR(c);
     // Relancer un D10 à une seule réussite, au forçage.
     if (pilote.jet?.forcer?.relancerUneReussite) {
         const panneau = await jeterJusqua(c, ['vigueur', 'corpsACorps'], p => p.locator('[data-relancer-aussi]'));

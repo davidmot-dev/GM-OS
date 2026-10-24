@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« AUTRES DANGERS » ; « CHUTE » ; « EXPLOSIONS » ; « FEU » ; « NOYADE » ; « TRAITS DES ZONES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Environnement et dangers
@@ -19,7 +19,7 @@ Le système de Blade Runner : Le Jeu de Rôle expose les Blade Runners à divers
 * Chute (section « CHUTE ») :
   * Dégâts de base : hauteur en mètres divisée par deux, arrondie à l'inférieur.
   * Saut contrôlé : un symbole de l'œil sur un jet de Mobilité réduit les dégâts de un point.
-  * Dé de critique (si Brisé) : grandeur de dé la plus proche de la hauteur arrondie au supérieur (maximum dé à douze faces), plus un dé de critique supplémentaire par dégât excédentaire.
+  * Dé de critique (si Brisé) : grandeur de dé la plus proche de la hauteur arrondie au supérieur (maximum dé à douze faces), plus un dé de critique supplémentaire par dégât excédentaire ; on applique **le plus haut** résultat (p. 77).
 * Échelle de Puissance d'explosion (décroissante) (section « EXPLOSIONS ») :
   * Puissance A : deux dés à douze faces, quatre dégâts, dé à douze faces de critique.
   * Puissance B : deux dés à dix faces, trois dégâts, dé à dix faces de critique.
@@ -29,7 +29,7 @@ Le système de Blade Runner : Le Jeu de Rôle expose les Blade Runners à divers
 * Échelle d'intensité de feu (décroissante) (section « FEU ») :
   * Intensités : A (deux dés à douze faces), B (deux dés à dix faces), C (deux dés à huit faces), D (deux dés à six faces). un dégât par symbole de l'œil obtenu.
   * Évolution : augmente d'un cran par Round (maximum A).
-  * Extinction : jet de Mobilité (une action) réussi par la victime ou un allié Au contact.
+  * Extinction : jet de Mobilité (une action) réussi par la victime ou un allié Au contact ; les flammes s'éteignent aussi d'elles-mêmes dès qu'une attaque de feu n'inflige pas de dégâts (p. 78).
 * Noyade (section « NOYADE ») :
   * Jet de Mobilité par Round (pas une action) ; chaque échec inflige un point de dégât.
 * Zones (section « TRAITS DES ZONES ») :
@@ -53,3 +53,5 @@ La résolution des dangers se déroule ainsi :
 
 ## Non couvert
 Bien que l'atmosphère soit décrite comme hautement toxique avec des pluies acides mortelles obligeant à porter des masques (section « CLIMAT »), le livre de règles ne fournit aucune mécanique (dégât, type de dé ou jet) pour simuler ces menaces sur la Santé des Blade Runners. Rien n'est précisé sur l'usure de ces masques.
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 64–65, 77–78. Précisés : le plus haut dé de critique d'une chute, l'extinction spontanée du feu.*

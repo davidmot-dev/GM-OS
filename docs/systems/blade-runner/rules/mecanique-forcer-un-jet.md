@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« LANCER LES DÉS » ; « FORCER UN JET » ; « DÉGÂTS » ; « STRESS ET SANG-FROID »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: bf75e421
 ---
 
@@ -16,9 +16,9 @@ empreinte: bf75e421
 ## Règle
 Pour ajouter des réussites (œil) ou après un échec, le joueur peut « forcer le jet » en relançant tous ses dés, sauf les résultats de un (crâne) (section « FORCER UN JET »). Chaque crâne final obtenu (jet initial compris) inflige un point de dégâts (jet physique) ou de stress (jet mental) (section « FORCER UN JET »). L'action est résolue avant d'être Brisé (section « FORCER UN JET »). Les humains forcent une fois, les réplicants deux fois et subissent du stress au lieu de dégâts (section « FORCER UN JET »). Les jets passifs ne se forcent pas (section « FORCER UN JET »).
 
-**Santé**: Résistance physique (section « DÉGÂTS »). Départ: (Vigueur+Agilité)/quatre, arrondi au supérieur (+deux pour réplicants) (section « SANTÉ ET SANG-FROID »). Bornes: zéro à maximum. Descend par dégâts subis; remonte par Assistance médicale ou pause. Seuil de zéro: Brisé (hors de combat, toute attaque inflige un critique) (section « BRISÉ PAR LES DÉGÂTS »). S'accumule, dépensée par risque de jet forcé.
+**Santé**: Résistance physique (section « DÉGÂTS »). Départ: (Vigueur+Agilité)/quatre, arrondi au supérieur (+deux pour réplicants) (section « SANTÉ ET SANG-FROID »). Bornes: zéro à maximum. Descend par dégâts subis; remonte par Assistance médicale ou pause. Seuil de zéro: Brisé (hors de combat, toute attaque inflige un critique) (section « BRISÉ PAR LES DÉGÂTS »).
 
-**Sang-froid**: Stabilité face à la peur (section « STRESS ET SANG-FROID »). Départ: (Intelligence+Empathie)/quatre, arrondi au supérieur (-deux pour réplicants) (section « SANTÉ ET SANG-FROID »). Bornes: zéro à maximum. Descend par stress subi; remonte par soutien (Manipulation), pause ou objet fétiche. Seuil de zéro: Brisé (stress critique) (section « BRISÉ PAR LE STRESS »). Si la valeur maximale tombe à zéro, le personnage est retiré (section « PERTE DE SANG-FROID PERMANENTE »). S'accumule, dépensée pour forcer des dés.
+**Sang-froid**: Stabilité face à la peur (section « STRESS ET SANG-FROID »). Départ: (Intelligence+Empathie)/quatre, arrondi au supérieur (-deux pour réplicants) (section « SANTÉ ET SANG-FROID »). Bornes: zéro à maximum. Descend par stress subi; remonte par soutien (Manipulation), pause ou objet fétiche. Seuil de zéro: Brisé (stress critique) (section « BRISÉ PAR LE STRESS »). Si la valeur maximale tombe à zéro, le personnage est retiré (section « PERTE DE SANG-FROID PERMANENTE »).
 
 ## Valeurs
 - **Dés**: réussite (œil) sur six+; dix+ vaut deux réussites (section « RÉUSSITE »). Critique: deux+ réussites (section « RÉUSSITE CRITIQUE »). Face un (crâne) interdite de relance (section « FORCER UN JET »).
@@ -39,12 +39,14 @@ Les réplicants peuvent forcer deux fois, relançant les dés sans crâne des la
 Le livre précise plusieurs cas particuliers:
 - Jets passifs: Impossible de forcer un jet si le personnage est passif ou inconscient du danger, comme pour repérer un intrus (section « JETS PASSIFS »).
 - Jets en opposition: Seul l'initiateur actif de l'action peut forcer son jet, après avoir vu le résultat de son adversaire (section « JETS EN OPPOSITION »).
-- Soutien: En cas d'aide, seul l'acteur principal force le jet. L'allié ne relance pas son dé de soutien et ne subit aucun contrecoup (section « SOUTIEN »).
 - Souvenir clé: Un joueur peut invoquer son souvenir clé avant de forcer pour un dé supplémentaire. S'il échoue, il subit un point de stress (section « SOUVENIRS CLÉS »).
 - Personnages non joueurs: Les PNJ ne forcent presque jamais leurs dés, sauf cas exceptionnels décidés par le Blade Meneur (section « PNJ ET COMPÉTENCES »).
 
 ## Non couvert
+*Couvert, contrairement à ce que disait cette fiche* : Brisé par les dégâts, on ne fait aucun jet de compétence (p. 71) ; la sauvegarde contre la mort se lance alors sans pouvoir être forcée (p. 72) ; l'effet de stress critique « Secouée ? Moi aussi » interdit de forcer (p. 75).
+
 Le livre de règles ne dit rien sur les points suivants:
-- La possibilité de forcer un jet de compétence effectué alors que le personnage est déjà Brisé par les dégâts ou le stress (section « BRISÉ PAR LES DÉGÂTS », section « BRISÉ PAR LE STRESS »).
 - L'impact d'un jet forcé raté sur l'état du matériel ou des armes utilisées, les crânes n'infligeant de traumatisme qu'au personnage (section « FORCER UN JET »).
 - La gestion des relances multiples de réplicant lors d'un jet de groupe où les compétences sont mutualisées (section « DISCRÉTION DE GROUPE »).
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 29, 54–57, 71–77. Retiré : un dé de soutien « qui ne se relance pas » et dont l'aidant « ne subit aucun contrecoup » — le livre n'en dit rien, et le dé de soutien fait partie des dés de base du jet. Corrigé : le forçage d'un Brisé est couvert. Retirées : deux phrases sans objet sur la Santé et le Sang-froid « dépensés ».*

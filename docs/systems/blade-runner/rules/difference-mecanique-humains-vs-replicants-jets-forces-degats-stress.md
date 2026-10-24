@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« HUMAIN OU RÉPLICANT ? » ; « SANTÉ ET SANG-FROID » ; « FORCER UN JET » ; « PAUSE ET RÉCUPÉRATION » ; « UN RÉPLICANT QUI S’IGNORE » ; « EFFETS DE STRESS CRITIQUES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Différence mécanique Humains vs Réplicants (Jets forcés & Dégâts/Stress)
@@ -53,4 +53,5 @@ Le livre de règles résout plusieurs situations particulières ou ambiguës :
 Les sources ne précisent pas les éléments suivants :
 - Si la Protection d’un véhicule (section « PROTECTION ») réduit le stress subi par les passagers réplicants lors d’un crash de spinner.
 - Si un humain peut subir un recalibrage (section « PASSER UN TEST DE RÉFÉRENTIEL ») pour soigner sa jauge de Sang-froid, cette procédure n'étant mentionnée que pour les réplicants.
-- Si les personnages non joueurs (section « PERSONNAGES NON JOUEURS ») peuvent forcer leurs jets (section « JETS EN OPPOSITION »).
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 28–29, 55, 70–77. Retiré du « non couvert » : les PNJ forcent rarement, réservés aux PNJ majeurs dans les situations importantes (p. 57).*

@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« RÉPLICANTS ET TESTS DE RÉFÉRENTIEL » ; « PASSER UN TEST DE RÉFÉRENTIEL » ; « TEST DE RÉFÉRENTIEL »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Le Test de Référentiel Post
@@ -48,3 +48,5 @@ La gestion du test de référentiel se déroule ainsi :
 
 ## Non couvert
 Bien que la machine évalue la stabilité mentale (section « TEST DE RÉFÉRENTIEL »), les sources ne précisent pas comment réagir face à un réplicant refusant de passer son TRPT, ni s'il est possible de pirater les capteurs biométriques pour simuler une réponse stable. Enfin, aucun coût financier n'est indiqué pour le recalibrage dans un laboratoire agréé (section « PASSER UN TEST DE RÉFÉRENTIEL »).
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 37, 177. Vérifié sans correction : déclencheurs, avantage et désavantage, conséquences des échecs consécutifs, recalibrage.*

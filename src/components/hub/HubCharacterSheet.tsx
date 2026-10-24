@@ -20,6 +20,7 @@ import { piloteDuPersonnage } from '../../modules/session/logic/piloteDuPersonna
 import PanneauDesRessources from '../../modules/table/PanneauDesRessources';
 import PanneauDeJet from '../../modules/session/components/PanneauJetDeFiche';
 import SuiviCthulhuHack from '../../modules/session/components/fields/SuiviCthulhuHack';
+import SuiviBladeRunner from '../../modules/session/components/fields/SuiviBladeRunner';
 import { PanneauFatigueVoyageur } from '../../modules/session/components/PanneauFatigueVoyageur';
 import { PanneauSanteVoyageur } from '../../modules/session/components/PanneauSanteVoyageur';
 import { PanneauTachesVoyageur } from '../../modules/session/components/PanneauTachesVoyageur';
@@ -376,6 +377,9 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                         */}
                         {!jetDuJoueur && pilote?.jet?.cthulhuHack && <SuiviCthulhuHack
                             regle={pilote.jet.cthulhuHack} valeurs={valeursVues} ecrire={()=>{}} joueur />}
+                        {/* Blade Runner : le joueur voit ses blessures critiques et leur état ; le meneur les traite (B3–B7). */}
+                        {pilote?.jet?.bladeRunner && <SuiviBladeRunner
+                            regle={pilote.jet.bladeRunner} valeurs={valeursVues} ecrire={() => {}} nom="" joueur />}
                         {jetDuJoueur && pilote?.jet && (
                             <PanneauDeJet
                                 descripteur={pilote.jet}

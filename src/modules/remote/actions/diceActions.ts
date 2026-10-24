@@ -53,7 +53,9 @@ interface DiceRollPayload {
  */
 function poigneeDeLaCharge(p: DiceRollPayload) {
     if (!p.niveauxEchelonnes?.length) return null;
-    const poignee = poigneeDepuisLesLettres(p.niveauxEchelonnes, p.modificateurEchelonne ?? 'aucun');
+    const poignee = poigneeDepuisLesLettres(p.niveauxEchelonnes, p.modificateurEchelonne ?? 'aucun', 'yze-lettres', {
+        plafondDesD12: useSessionOSStore.getState().getActiveDriver?.()?.jet?.desEchelonnes?.plafondDesD12,
+    });
     if (poignee.des.length === 0) return null;
 
     const equipement = facesDuNiveau(p.equipementEchelonne ?? '');

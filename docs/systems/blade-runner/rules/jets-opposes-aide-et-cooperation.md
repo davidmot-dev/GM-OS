@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« JETS EN OPPOSITION » ; « SOUTIEN » ; « JETS DE GROUPE » ; « DISCRÉTION DE GROUPE » ; « OBSERVATION DE GROUPE »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Jets opposés, aide et coopération
@@ -49,4 +49,6 @@ Le livre de règles précise plusieurs situations particulières :
 - Cible passive : Le Blade Meneur peut lancer secrètement les dés d'un PJ passif pour préserver l'incertitude (section « JETS EN OPPOSITION ») [4].
 
 ## Non couvert
-Le livre de règles ne précise pas s'il est possible pour plusieurs alliés d'apporter simultanément leur soutien à un unique jet d'un acteur en dehors du combat (les règles emploient le singulier "l'allié" mais font aussi référence aux "autres PJ", sans préciser si l'apport de dés de compétence est cumulatif ou limité à un seul dé de base) [2].
+*Plusieurs soutiens* : le livre en admet plusieurs (« les autres PJ ou PNJ peuvent vous aider »), mais le soutien est un avantage, et après le compte des avantages et désavantages **un seul** s'applique (« Un seul modificateur », p. 56) : un seul dé de soutien s'ajoute. Le livre ne dit pas lequel garder quand deux aidants proposent des dés différents.
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 56–60, 66. Vérifiés : l'interrogatoire contre l'Endurance (p. 59), l'observation de groupe, le rapport de force (p. 60). Corrigé : plusieurs soutiens ne donnent qu'un dé, par la règle « Un seul modificateur ».*

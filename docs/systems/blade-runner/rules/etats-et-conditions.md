@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« BRISÉ PAR LES DÉGÂTS » ; « BRISÉ PAR LE STRESS » ; « AGRIPPER » ; « COMBAT RAPPROCHÉ » ; « COMBAT À DISTANCE »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # États et conditions
@@ -15,7 +15,7 @@ relu: false
 ## Règle
 Blade Runner : Le Jeu de Rôle définit des états et conditions physiques ou mentaux affectant les capacités d'action.
 L'état **Brisé par les dégâts** s'enclenche quand la Santé tombe à zéro (section « BRISÉ PAR LES DÉGÂTS »). Il empêche d'effectuer des actions ou des jets de compétence.
-L'état **Brisé par le stress** s'activer quand le stress atteint le Sang-froid maximal (section « BRISÉ PAR LE STRESS »), déclenchant un effet de stress critique.
+L'état **Brisé par le stress** s'active quand le stress subi atteint le Sang-froid restant — le Sang-froid tombe à zéro (p. 75) —, déclenchant un effet de stress critique. Déjà Brisé par le stress, on ne subit plus de stress.
 La condition **Couché** réduit la mobilité et l'efficacité au combat (section « COMBAT RAPPROCHÉ »). On s'y jette ou y est contraint par chute ou échec de mouvement (section « ACTIONS ET MOUVEMENTS », section « CHUTE »).
 La condition **Agrippé** découle d'une attaque spéciale au corps à corps (section « AGRIPPER »). Le personnage tombe au sol avec l'assaillant, lâche son arme et perd toute capacité de déplacement.
 La condition **À couvert** s'obtient derrière un abri solide durant son mouvement (section « COMBAT À DISTANCE »). Elle complique les tirs des adversaires en leur imposant un désavantage.
@@ -43,3 +43,5 @@ La gestion des états s'articule ainsi :
 
 ## Non couvert
 Bien que les sources détaillent l'état Brisé par le stress (section « BRISÉ PAR LE STRESS »), elles ne décrivent aucun mécanisme pour simuler des troubles psychiatriques chroniques ou des addictions. De plus, rien n'indique si l'état Couché ou Agrippé empêche de faire passer un test Voight-Kampff (section « FAIRE PASSER UN TEST D’EMPATHIE »).
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 65–69, 71, 75–76. Corrigé : le Brisé par le stress vient au Sang-froid épuisé, non au Sang-froid « maximal ».*

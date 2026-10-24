@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« SANTÉ ET SANG-FROID » ; « SPÉCIALITÉS » ; « DÉGÂTS » ; « BRISÉ PAR LES DÉGÂTS » ; « RÉCUPÉRATION » ; « BLESSURES CRITIQUES » ; « MORT »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Santé et blessures
@@ -25,16 +25,16 @@ La Santé mesure la résistance physique du Blade Runner (section « DÉGÂTS »
   * Nature : Elle subit les événements, mais un humain peut risquer de la réduire lors d'un jet forcé.
 * Blessures Critiques (Échelle de un à douze) :
   * Seuil de touche critique : Deux symboles de l'œil (section « TOUCHES CRITIQUES »).
-  * Gravité un à huit : Non mortelles, causant des désavantages (section « BLESSURES CRITIQUES – PERCUTANT »).
-  * Gravité neuf à onze : Mortelles avec limite de temps d'un Round (cinq à dix secondes) ou d'un Quart (six heures) avant jet d'Endurance de sauvegarde (section « MORT »).
-  * Gravité douze : Mort instantanée (section « MORT INSTANTANÉE »).
+  * **Percutant** (p. 73) : 1 à 8 non mortelles ; 9 et 10 mortelles (limite d'un Quart), 11 mortelle (limite d'un Round) ; 12 mort instantanée.
+  * **Perforant** (p. 73) : 1 à 4 non mortelles ; 5, 6, 7 et 11 mortelles (limite d'un Quart), 9 mortelle (limite d'un Round) ; **8, 10 et 12 mort instantanée**.
+  * Limite de temps : un Round (cinq à dix secondes) ou un Quart (environ six heures), au terme duquel vient le jet d'Endurance de sauvegarde contre la mort (p. 72).
 
 ## À la table
 Concrètement, lorsqu'un Blade Runner subit des dégâts, le joueur coche les cases de sa jauge de Santé (section « Dégâts »). À zéro de Santé, le personnage est Brisé par les dégâts et s'effondre (section « Brisé par les dégâts »). À son tour, il ne peut plus effectuer d'action normale ni de jet de compétence, et peut uniquement utiliser son action pour ramper (section « Brisé par les dégâts », section « Ramper »).
 
 Si l'attaque était une touche critique ou si le personnage subit des dégâts alors qu'il est déjà Brisé, le Blade Meneur lance le dé de critique approprié pour déterminer la blessure sur la table Percutante ou Perforante (section « Blessures critiques »). Si la blessure est mortelle, un compte à rebours s'enclenche (section « Mort »). À l'expiration de la limite de temps (un Round ou un Quart), le joueur doit effectuer un jet d'Endurance de sauvegarde contre la mort (section « Mort »). S'il échoue, il meurt sur-le-champ (section « Mort »).
 
-Pour sauver la victime, un allié Au contact doit tenter un jet d'Assistance médicale pour stabiliser la blessure (section « Stabilisation »). Pour regagner de la Santé, un personnage Brisé doit recevoir des premiers secours via un jet d'Assistance médicale (section « Premiers secours ») ou attendre de récupérer naturellement un point de Santé au bout d'un Quart (section « Récupération naturelle »). Durant un Quart de pause, un humain récupère un point de Santé et un réplicant en récupère deux (section « Pause et récupération »).
+Pour sauver la victime, un jet d'Assistance médicale stabilise la blessure — d'un Round à un Quart, puis hors de danger ; l'hôpital ou la trousse de chirurgien donnent un avantage, le blessé non Brisé peut se stabiliser lui-même avec un désavantage (p. 72). Pour regagner de la Santé, un personnage Brisé doit recevoir des premiers secours via un jet d'Assistance médicale (section « Premiers secours ») ou attendre de récupérer naturellement un point de Santé au bout d'un Quart (section « Récupération naturelle »). Durant un Quart de pause, un humain récupère un point de Santé et un réplicant en récupère deux (section « Pause et récupération »).
 
 ## Cas limites
 - **Dégâts annulés par l'armure** : Si la protection de la cible réduit les dégâts d'une attaque à zéro, toute blessure critique associée est annulée (section « Protection »).
@@ -44,4 +44,6 @@ Pour sauver la victime, un allié Au contact doit tenter un jet d'Assistance mé
 - **Forçage des réplicants** : Obtenir des symboles de dégât lors d'un jet physique forcé n'inflige aucun dégât de Santé à un réplicant, ceux-ci étant convertis en stress (section « Forcer un jet »).
 
 ## Non couvert
-Les sources indiquent que les blessures critiques permanentes requièrent des implants médicaux (section « Guérison des critiques »). Cependant, les coûts précis de ces implants (en chinyen ou Promotion) ainsi que leurs règles d'utilisation ou d'installation chirurgicale ne sont pas détaillés.
+L'implant médical est au catalogue (p. 193) : il annule l'effet permanent d'une blessure critique, disponibilité « Rare », coût 6 à 10. Le livre ne détaille pas l'opération elle-même (durée, risques), au-delà de ce que dit l'encadré des augmentations synthétiques (p. 192–193).
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 61, 70–73, 192–193. Corrigé : la gravité des blessures, fausse pour la table Perforant (mortelle dès le 5, mort instantanée aux 8, 10 et 12) ; la stabilisation (pas d'obligation « au contact », auto-stabilisation au désavantage) ; le coût des implants, qui figure au catalogue.*

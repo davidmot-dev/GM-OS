@@ -555,6 +555,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     activeDiceConfig: piloteActif?.dice ?? null,
                     desEchelonnes: !!piloteActif?.jet?.desEchelonnes
                         || piloteActif?.dice?.engine === 'yze-echelonne',
+                    plafondDesD12: piloteActif?.jet?.desEchelonnes?.plafondDesD12,
                     // Year Zero : le dernier jet du pupitre se force depuis la télécommande (2026-10-14).
                     jetForcable: !!piloteActif?.jet?.forcer,
                     // 2d20 : la télécommande règle les réserves du dernier jet (C1, 2026-10-22).

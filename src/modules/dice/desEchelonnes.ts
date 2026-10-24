@@ -122,8 +122,26 @@ export function appliquerLeModificateur(
     return des;
 }
 
-/** Le plafond du livre : au plus deux dés à douze faces. */
+/**
+ * Le plafond du SRD Year Zero : au plus deux dés à douze faces.
+ *
+ * ⚠️ **Le livre de Blade Runner n'a pas ce plafond** (relu le 2026-10-24, p. 54–57) :
+ * un personnage A/A avec un avantage lance trois D12. Le pilote le lève par
+ * `desEchelonnes.plafondDesD12: 0` ; sans déclaration, la règle du SRD vaut.
+ */
 export const MAX_D12 = 2;
+
+/** Ce qui accompagne le modificateur : le dé d'un soutien, et le plafond du jeu. */
+export interface OptionsDeLaPoignee {
+    /**
+     * **Le soutien** (Blade Runner, « Soutien », p. 57) : un avantage, mais *« au
+     * lieu de doubler votre dé le plus faible, le soutien vous apporte un dé de base
+     * qui dépend de son niveau de compétence »*. Le dé de l'aidant.
+     */
+    soutien?: { label: string; faces: number };
+    /** Au plus tant de D12 ; 0 : aucun plafond. Absent : `MAX_D12`. */
+    plafondDesD12?: number;
+}
 
 /**
  * Ramène la poignée dans les bornes, et dit ce qui a été corrigé.
@@ -132,21 +150,21 @@ export const MAX_D12 = 2;
  * sa fiche et n'en lance que deux doit savoir pourquoi — sinon il croit à un bug
  * et compte lui-même, ce qui est la pire des issues.
  */
-export function bornerLaPoignee(des: DeEchelonne[]): { des: DeEchelonne[]; remarques: string[] } {
+export function bornerLaPoignee(des: DeEchelonne[], plafond: number = MAX_D12): { des: DeEchelonne[]; remarques: string[] } {
     const remarques: string[] = [];
     const douze = des.filter(d => d.faces === 12);
 
-    if (douze.length <= MAX_D12) return { des, remarques };
+    if (plafond <= 0 || douze.length <= plafond) return { des, remarques };
 
     /*
       On dégrade les D12 en trop d'un cran plutôt que de les retirer : le livre
       plafonne la TAILLE, il ne réduit pas le nombre de dés lancés.
     */
-    const aDegrader = new Set(douze.slice(MAX_D12));
+    const aDegrader = new Set(douze.slice(plafond));
     const bornes = des.map(d => (aDegrader.has(d) ? { ...d, faces: 10 } : d));
 
     remarques.push(
-        `Au plus ${MAX_D12} dés à douze faces : ${aDegrader.size} dé(s) ramené(s) à dix faces.`,
+        `Au plus ${plafond} dés à douze faces : ${aDegrader.size} dé(s) ramené(s) à dix faces.`,
     );
     return { des: bornes, remarques };
 }
@@ -169,8 +187,23 @@ export function bornerLaPoignee(des: DeEchelonne[]): { des: DeEchelonne[]; remar
 export function composerLaPoignee(
     des: DeEchelonne[],
     modificateur: ModificateurDeDes = 'aucun',
+    options: OptionsDeLaPoignee = {},
 ): { des: DeEchelonne[]; remarques: string[] } {
-    return bornerLaPoignee(appliquerLeModificateur(des, modificateur));
+    const { soutien } = options;
+    if (!soutien || des.length === 0) return bornerLaPoignee(appliquerLeModificateur(des, modificateur), options.plafondDesD12);
+    /*
+      Le soutien est un avantage : il s'annule avec un désavantage, et deux
+      avantages n'en font qu'un (« Un seul modificateur », p. 56). Le dé qui
+      s'ajoute est alors celui de l'aidant, pas une copie du plus faible.
+    */
+    if (modificateur === 'desavantage') {
+        return { des, remarques: ['Soutien et désavantage s’annulent : deux dés de base.'] };
+    }
+    const avec = [...des, { label: soutien.label, champ: 'soutien', niveau: `D${soutien.faces}`, faces: soutien.faces }];
+    const borne = bornerLaPoignee(avec, options.plafondDesD12);
+    return modificateur === 'avantage'
+        ? { des: borne.des, remarques: ['Un seul avantage s’applique : le dé du soutien.', ...borne.remarques] }
+        : borne;
 }
 
 /**
@@ -190,6 +223,7 @@ export function poigneeDepuisLesLettres(
     niveaux: { label: string; lettre: string }[],
     modificateur: ModificateurDeDes = 'aucun',
     echelle: NomDEchelle = 'yze-lettres',
+    options: OptionsDeLaPoignee = {},
 ): { des: DeEchelonne[]; remarques: string[] } {
     const remarques: string[] = [];
     const des: DeEchelonne[] = [];
@@ -203,6 +237,6 @@ export function poigneeDepuisLesLettres(
         des.push({ label, champ: label, niveau: String(lettre).trim().toUpperCase(), faces });
     }
 
-    const poignee = composerLaPoignee(des, modificateur);
+    const poignee = composerLaPoignee(des, modificateur, options);
     return { des: poignee.des, remarques: [...remarques, ...poignee.remarques] };
 }

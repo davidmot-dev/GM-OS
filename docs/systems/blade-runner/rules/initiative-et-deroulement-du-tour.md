@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« ROUNDS ET INITIATIVE » ; « ÉCHANGE D’INITIATIVE » ; « VOTRE TOUR » ; « ACTIONS ET MOUVEMENTS » ; « SURPRISE » ; « COURRIR » ; « RAMPER » ; « INITIATIVE DES PNJ » ; « SOUTIEN » ; « EMBUSCADE »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Initiative et déroulement du tour
@@ -52,3 +52,5 @@ Le livre apporte les précisions suivantes pour les situations ambiguës :
 
 ## Non couvert
 Le livre ne précise pas comment départager ou ordonner les tours si un combat implique plus de dix belligérants agissant de manière individuelle, puisque le paquet d'initiative réglementaire ne comprend que dix cartes (section « TIRER L’INITIATIVE »).
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 65–68 : rounds, cartes, surprise, échange d'initiative, actions et mouvements, soutien, course. Vérifié sans correction. GM-OS 2.0.0 gère la carte 1 de la surprise et l'échange de cartes (Combat-OS).*

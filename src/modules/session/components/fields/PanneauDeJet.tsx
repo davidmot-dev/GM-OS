@@ -58,6 +58,9 @@ import { useCosmsCourants } from '../../hooks/useCosmsCourants';
 import { malusDesCiblesMultiples } from '../../../combat/logic/sbiresEtHordes';
 import { loiEnVigueur } from '../../logic/cosmsCourants';
 import { useSessionOSStore } from '../../useSessionOSStore';
+import { facesDuNiveau } from '../../../dice/desEchelonnes';
+import { dejaUtilise, ecrireLeSuivi, lireLeSuivi } from '../../../dice/systemes/bladeRunner';
+import { seanceOuverteDe } from '../../logic/seanceOuverte';
 import { tousLesPilotes } from '../../store/tousLesPilotes';
 import { appliquerAuGroupe } from '../../logic/groupeDeLaCampagne';
 import ApportsDuGroupe from './ApportsDuGroupe';
@@ -234,6 +237,48 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * BAS sur un jeu qui jette sous un seuil.
      */
     const [modificateur, setModificateur] = useState<'aucun' | 'avantage' | 'desavantage'>('aucun');
+    /**
+     * **Le soutien** (Blade Runner, « Soutien », p. 57 — B2, 2026-10-24) : un allié
+     * présent apporte le dé de son niveau dans la compétence du jet. Une lettre
+     * (un PNJ), ou `pj:<id>` : un personnage du groupe, dont on lit la lettre.
+     */
+    const [soutien, setSoutien] = useState('');
+    // La liste des joueurs elle-même : un `flatMap` dans le sélecteur rendrait un tableau neuf à chaque rendu.
+    const joueursDuGroupe = useSessionOSStore(s => s.players);
+    const personnagesDuGroupe = useMemo(() => joueursDuGroupe.flatMap(p => p.characters), [joueursDuGroupe]);
+    const composanteDeCompetence = descripteur.desEchelonnes?.composantes.find(c => c.id === 'competence') ?? descripteur.desEchelonnes?.composantes.at(-1);
+    const champDeCompetence = choix[composanteDeCompetence?.id ?? ''] ?? '';
+    const echelonne = !!descripteur.desEchelonnes;
+    const allies = useMemo(() => echelonne
+        ? personnagesDuGroupe
+            .filter(c => c.id !== personnageId && facesDuNiveau(c.sheetData?.[champDeCompetence]) !== null)
+            .map(c => ({ id: c.id, nom: c.name, lettre: String(c.sheetData?.[champDeCompetence]).trim().charAt(0).toUpperCase() }))
+        : [], [echelonne, personnagesDuGroupe, personnageId, champDeCompetence]);
+    const soutienDuJet = useMemo(() => {
+        if (!echelonne || !soutien) return undefined;
+        const allie = soutien.startsWith('pj:') ? allies.find(a => `pj:${a.id}` === soutien) : undefined;
+        const faces = facesDuNiveau(allie ? allie.lettre : soutien);
+        return faces ? { label: allie ? `Soutien de ${allie.nom}` : `Soutien ${soutien}`, faces } : undefined;
+    }, [echelonne, soutien, allies]);
+    /**
+     * **Le souvenir clé** (Blade Runner, « Souvenirs clés », p. 56 — B7, 2026-10-24) :
+     * une fois par séance, un avantage d'office ; ou, après le jet et avant de le
+     * forcer, un dé de plus. Raté malgré lui et un forçage : 1 point de stress.
+     * Il se marque sur la fiche : le panneau doit pouvoir l'écrire.
+     */
+    const regleBR = descripteur.bladeRunner;
+    const souvenirDeLaFiche = regleBR?.souvenirCle ? String(valeurs[regleBR.souvenirCle] ?? '').trim() : '';
+    const seanceOuverteBR = useSessionOSStore(s => seanceOuverteDe(s.campaigns, s.sessions, s.activeCampaignId)?.id);
+    const seanceBR = seanceOuverteBR ?? `jour ${new Date().toDateString()}`;
+    const souvenirDisponible = !!regleBR && !!souvenirDeLaFiche && !!ecrireSurLaFiche
+        && !dejaUtilise(lireLeSuivi(valeurs), 'souvenirCle', seanceBR);
+    const [souvenirAuJet, setSouvenirAuJet] = useState(false);
+    const [souvenirDuJet, setSouvenirDuJet] = useState<'avant' | 'apres' | null>(null);
+    const [stressDuSouvenir, setStressDuSouvenir] = useState(false);
+    const souvenirRetenu = souvenirAuJet && souvenirDisponible;
+    const marquerLeSouvenir = () => {
+        if (regleBR) ecrireSurLaFiche?.(ecrireLeSuivi(regleBR, { ...lireLeSuivi(valeurs), souvenirCle: seanceBR }, valeurs));
+    };
     /** La spécialisation s'applique à ce jet — c'est le joueur qui le sait (Star Trek). */
     const [specialisation, setSpecialisation] = useState(false);
     /** La spécialisation retenue pour un jet gardé (Crimes) : l'identifiant de sa case. */
@@ -485,7 +530,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                   poignée. Ailleurs, ils font garder un dé sur deux, et c'est
                   `rollAdvantage` — deux mécaniques, un seul sélecteur à l'écran.
                 */
-                modificateurDeDes: descripteur.desEchelonnes ? modificateur : 'aucun',
+                // Le souvenir clé est un avantage : il annule un désavantage, et deux avantages n'en font qu'un (p. 56).
+                modificateurDeDes: !descripteur.desEchelonnes ? 'aucun'
+                    : !souvenirRetenu ? modificateur : modificateur === 'desavantage' ? 'aucun' : 'avantage',
+                ...(soutienDuJet ? { soutien: soutienDuJet } : {}),
             },
             template.sections,
             );
@@ -511,7 +559,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN],
+        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, soutienDuJet, souvenirRetenu],
     );
 
     /*
@@ -725,6 +773,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const dits: string[] = [];
         // Un nouveau jet : rien n'est encore forcé, aucune Panique n'est jouée.
         setForcage({ fois: 0, unsPayes: 0, ecrits: {} });
+        setStressDuSouvenir(false);
+        if (souvenirRetenu) { marquerLeSouvenir(); setSouvenirDuJet('avant'); dits.push('Souvenir clé : avantage (une fois par séance).'); }
+        else setSouvenirDuJet(null);
+        setSouvenirAuJet(false);
         setPaniqueJouee(null);
         setFolieMeurtriere(false);
         paniqueDejaJouee.current = false;
@@ -1382,11 +1434,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             dits.push(`${label} +${montee} → ${ecrits[champ]}${aReporter}`);
         }
 
-        const res = forcerLeJet(resultat, regleDuForcage, {
+        // Le souvenir clé rappelé après le jet : un dé de plus, du type du plus faible, entre dans la relance (p. 56).
+        const plusFaible = Math.min(...resultat.rolls.filter(d => !d.isDropped).map(d => d.sides ?? 6));
+        const avecLeSouvenir = souvenirDuJet === 'apres' && forcage.fois === 0 && Number.isFinite(plusFaible)
+            ? { ...resultat, rolls: [...resultat.rolls, { val: 0, sides: plusFaible, source: 'base' as const }] } : resultat;
+        if (avecLeSouvenir !== resultat) dits.push(`Souvenir clé : un D${plusFaible} de plus`);
+        const res = forcerLeJet(avecLeSouvenir, regleDuForcage, {
             famille: familleYearZero, desEnPlus: montee, libelleDuUn, aussi: aRelancerAussi,
             de: faces => DiceEngine.roll(faces),
         });
         setARelancerAussi([]);
+        if (souvenirDuJet && (res.successes ?? 0) === 0) setStressDuSouvenir(true);
 
         const prix = prixDuForcage(regleDuForcage, {
             resultat: res, valeurs, choix: dernierLancer.choix, dejaPayes: forcage.unsPayes,
@@ -2425,6 +2483,28 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             </select>
                         </label>
                     )}
+                    {descripteur.desEchelonnes && (
+                        <label className="flex items-center gap-2" title="Un allié présent apporte le dé de son niveau dans la compétence du jet — à déclarer avant de lancer (p. 57)">
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Soutien</span>
+                            <select
+                                aria-label="Soutien"
+                                value={soutien}
+                                onChange={e => setSoutien(e.target.value)}
+                                className="bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50 text-app-text/70"
+                            >
+                                <option value="">Aucun</option>
+                                {allies.map(a => <option key={a.id} value={`pj:${a.id}`}>{a.nom} ({a.lettre})</option>)}
+                                {['A', 'B', 'C', 'D'].map(l => <option key={l} value={l}>Un PNJ de niveau {l} (D{facesDuNiveau(l)})</option>)}
+                            </select>
+                        </label>
+                    )}
+                    {souvenirDisponible && (
+                        <label className="flex items-center gap-2 text-ui-11" title={`« ${souvenirDeLaFiche} » — expliquez comment il vous soutient (p. 56)`}>
+                            <input type="checkbox" checked={souvenirAuJet} onChange={e => setSouvenirAuJet(e.target.checked)} data-souvenir-cle />
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Souvenir clé</span>
+                            <span className="text-app-text/50">avantage, une fois par séance</span>
+                        </label>
+                    )}
 
                     <button
                         onClick={lancer}
@@ -2867,6 +2947,29 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                               **Relancer malgré une réussite** (Blade Runner, « Forcer un jet ») : un D10
                               ou un D12 qui n'en montre qu'une peut viser deux — ou la perdre.
                             */}
+                            {regleDuForcage && !raisonDeNePasForcer && forcage.fois === 0 && souvenirDisponible && !souvenirDuJet && (
+                                <button type="button" data-souvenir-apres
+                                    onClick={() => { marquerLeSouvenir(); setSouvenirDuJet('apres'); setMouvements(m => [...m, 'Souvenir clé : un dé de plus au forçage (une fois par séance).']); }}
+                                    title={`« ${souvenirDeLaFiche} » — après le jet et avant de le forcer : un dé supplémentaire (p. 56)`}
+                                    className="self-start px-3 py-1 rounded-lg border border-accent/40 text-accent text-ui-10 font-bold hover:bg-accent/10">
+                                    Souvenir clé : un dé de plus au forçage
+                                </button>
+                            )}
+                            {stressDuSouvenir && regleBR && (
+                                <div data-souvenir-rate className="flex flex-wrap items-center gap-2 text-ui-10 text-etat-alerte">
+                                    <span>Raté malgré le souvenir clé et un forçage : 1 point de stress (p. 56).</span>
+                                    <button type="button" className="px-2 py-0.5 rounded-lg border border-etat-alerte/50 hover:bg-etat-alerte/10"
+                                        onClick={() => {
+                                            const reste = Math.max(0, lireLeNombre(regleBR.sangFroid) - 1);
+                                            ecrireSurLaFiche?.({ [regleBR.sangFroid]: reste });
+                                            setForcage(f => ({ ...f, ecrits: { ...f.ecrits, [regleBR.sangFroid]: reste } }));
+                                            setStressDuSouvenir(false);
+                                            setMouvements(m => [...m, `Souvenir clé raté : Sang-froid −1 → ${reste}`]);
+                                        }}>
+                                        −1 Sang-froid
+                                    </button>
+                                </div>
+                            )}
                             {regleDuForcage?.relancerUneReussite && !raisonDeNePasForcer && resultat.rolls.some(relancableMalgreSaReussite) && (
                                 <div data-relancer-aussi className="flex flex-wrap items-center gap-2 text-ui-10 text-app-text/60">
                                     <span>Relancer aussi, au risque de perdre la réussite :</span>

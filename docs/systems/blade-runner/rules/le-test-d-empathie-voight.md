@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« MACHINE VOIGHT-KAMPFF » ; « FAIRE PASSER UN TEST D’EMPATHIE »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Le Test d'Empathie Voight
@@ -39,7 +39,9 @@ Pour faire passer un test Voight-Kampff en cours de partie, la scène se résout
 ## Cas limites
 - **Incompatibilité avec les Nexus-9** : La machine Voight-Kampff est obsolète pour les réplicants Nexus-9 (section « MACHINE VOIGHT-KAMPFF »). Ils doivent à la place subir un test de référentiel, détaillé dans un autre sujet (renvoi vers le sujet « Jauges et ressources individuelles »).
 - **Stress du forçage** : Si l'enquêteur force son jet d'opposition de Psychologie et obtient des résultats de un, chaque symbole de stress obtenu lui inflige un point de stress (section « FORCER UN JET », section « COMPÉTENCES »).
-- **Nouvelle tentative** : Si le test se solde par un échec, l'enquêteur d'origine ne peut pas retenter l'interrogatoire. Un autre Blade Runner doit prendre le relais et y consacrer un Quart (section « FAIRE PASSER UN TEST D’EMPATHIE »).
+- **Nouvelle tentative** : si le test n'est pas concluant, « un autre opérateur peut refaire passer le test au sujet », en y consacrant un Quart à son tour (p. 176).
 
 ## Non couvert
 Les sources mentionnent que la machine Voight-Kampff mesure des phéromones et des particules d'aérosols (section « MACHINE VOIGHT-KAMPFF »). Cependant, les règles ne précisent pas si les environnements toxiques (section « CLIMAT ») perturbent ses capteurs. De plus, rien n'indique si l'on peut tester un suspect Brisé par les dégâts ou inconscient.
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 176–177. Vérifié : Psychologie contre la Manipulation du sujet, avec désavantage ; un Quart ; l'opérateur force normalement. Ramené au texte : la nouvelle tentative par un autre opérateur.*

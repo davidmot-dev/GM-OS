@@ -245,6 +245,11 @@ export interface DescripteurDeJet {
          * artefact. Même rôle que `reserve.secondaire`, autre variante.
          */
         secondaire?: { label: string; libelleDuUn?: string };
+        /**
+         * Au plus tant de D12 dans la poignée ; **0 : aucun plafond** (Blade Runner,
+         * dont le livre n'en a pas). Absent : deux, la règle du SRD Year Zero.
+         */
+        plafondDesD12?: number;
     };
     /** Chaque dé est-il une réussite en dessous ou au-dessus du seuil ? */
     sens: SensDuJet;
@@ -494,6 +499,8 @@ export interface DescripteurDeJet {
     fortune?: { champ: string; label?: string; max: number; relance: number; reussite: number };
     /** Suivi optionnel du livre Cthulhu Hack : blessures, durées et armures. */
     cthulhuHack?: import('./systemes/cthulhuHack').RegleCthulhuHack;
+    /** Blade Runner : blessures critiques suivies, sauvegardes, soins et secours (B3–B7, 2026-10-24). */
+    bladeRunner?: import('./systemes/bladeRunner').RegleBladeRunner;
     /**
      * **Symbaroum, jusqu'au bout** — 2026-10-23 (`systemes/symbaroumRegles.ts`) :
      * l'attaque et la Défense avec leurs dégâts, l'Endurance et l'agonie, la
@@ -595,6 +602,11 @@ export interface ChoixDuJoueur {
      * mécanique sans rapport* — le piège relevé sur `difficulte`.
      */
     modificateurDeDes?: ModificateurDeDes;
+    /**
+     * **Le soutien d'un allié**, sur un jeu à dés échelonnés (Blade Runner, p. 57) :
+     * le dé de base de son niveau de compétence s'ajoute — un avantage, avec son dé.
+     */
+    soutien?: { label: string; faces: number };
 }
 
 /** Un jet prêt à partir, et de quoi expliquer d'où il sort. */
@@ -1376,7 +1388,10 @@ export function preparerLeJet(
       Dice-OS emploie aussi depuis qu'il sait lancer des dés échelonnés sans
       fiche à lire.
     */
-    const poignee = composerLaPoignee(desEchelonnes, choix.modificateurDeDes ?? 'aucun');
+    const poignee = composerLaPoignee(desEchelonnes, choix.modificateurDeDes ?? 'aucun', {
+        soutien: choix.soutien,
+        plafondDesD12: descripteur.desEchelonnes?.plafondDesD12,
+    });
     remarques.push(...poignee.remarques);
 
     /*

@@ -58,6 +58,21 @@ const CombatControls: React.FC = () => {
 
     const activeDriver = getActiveDriver();
     const [diceMax, setDiceMax] = useState<number>(20);
+    /**
+     * **Les cartes d'initiative de Blade Runner** (B8, 2026-10-24, p. 65 et 67) :
+     * l'embuscade ou l'attaque surprise réussie donne la carte 1 ; le combattant
+     * dont c'est le tour peut échanger sa carte avec un autre qui n'a pas joué.
+     * Alien tient ses propres cartes (`combat.alien`) : il garde son chemin.
+     */
+    const parCartes = !!activeDriver?.combat.initiativeCards && !activeDriver.combat.alien?.actions;
+    const combattants = useCombatStore(s => s.combatants);
+    const tourCourant = useCombatStore(s => s.currentTurnIdx);
+    const echangerLInitiative = useCombatStore(s => s.echangerLInitiative);
+    const [carteUn, setCarteUn] = useState('');
+    const [echangeAvec, setEchangeAvec] = useState('');
+    const actif = combattants[tourCourant];
+    const tirees = combattants.some(c => c.init > 0);
+    const partenaires = actif && actif.echangeAuRound !== round ? combattants.slice(tourCourant + 1) : [];
 
     /**
      * L'ordre d'action alterne-t-il entre les camps ?
@@ -148,6 +163,7 @@ const CombatControls: React.FC = () => {
                 sortOrder: activeDriver!.combat.initiativeSort || 'desc',
                 cards: activeDriver!.combat.initiativeCards,
                 departages: activeDriver!.combat.departages,
+                ...(parCartes && carteUn ? { carteUn } : {}),
                 resolver: (stat, combatant) => {
                     const sessionStore = useSessionOSStore.getState();
                     const getStatValue = (data: Record<string, unknown>, statName: string) => {
@@ -358,6 +374,16 @@ const CombatControls: React.FC = () => {
                     />
                 ) : (
                 <>
+                {parCartes && !tirees && combattants.length > 0 && (
+                    <label className="flex items-center gap-2 text-ui-10 text-app-text/60" title="Embuscade ou attaque inattendue réussie : la carte 1 d'office ; les autres, son camp compris, tirent normalement (p. 65, 67)">
+                        <span className="font-black uppercase tracking-widest">Surprise</span>
+                        <select aria-label="Embuscade ou surprise : carte 1" value={carteUn} onChange={e => setCarteUn(e.target.value)}
+                            className="flex-1 rounded-lg border border-app-border/40 bg-app-bg py-1 pl-2 pr-7 text-ui-10">
+                            <option value="">Aucune</option>
+                            {combattants.map(c => <option key={c.id} value={c.id}>Carte 1 à {c.name}</option>)}
+                        </select>
+                    </label>
+                )}
                 {initiativeDuSysteme && (
                     <button
                         onClick={handleAutoInitiative}
@@ -379,6 +405,29 @@ const CombatControls: React.FC = () => {
                             </span>
                         </div>
                     </button>
+                )}
+
+                {parCartes && tirees && actif && (
+                    <div data-echange-d-initiative className="flex flex-wrap items-center gap-2 text-ui-10 text-app-text/60"
+                        title="Pendant son tour, avant toute action : l'autre prend la carte et agit aussitôt ; il ne peut pas l'échanger de nouveau avant le round suivant (p. 65)">
+                        <span className="font-black uppercase tracking-widest">Échanger</span>
+                        <span>la carte {actif.init} de {actif.name} avec</span>
+                        <select aria-label="Échanger la carte avec" value={echangeAvec} onChange={e => setEchangeAvec(e.target.value)}
+                            disabled={partenaires.length === 0}
+                            className="rounded-lg border border-app-border/40 bg-app-bg py-1 pl-2 pr-7 text-ui-10">
+                            <option value="">{partenaires.length ? '—' : actif.echangeAuRound === round ? 'pas ce round' : 'personne'}</option>
+                            {partenaires.map(c => <option key={c.id} value={c.id}>{c.name} ({c.init})</option>)}
+                        </select>
+                        <button type="button" disabled={!echangeAvec}
+                            onClick={() => {
+                                const refus = echangerLInitiative(actif.id, echangeAvec);
+                                setEchangeAvec('');
+                                if (refus) gmToast(refus, 'warning');
+                            }}
+                            className="rounded-lg border border-accent/40 px-2 py-1 font-bold text-accent hover:bg-accent/10 disabled:opacity-40">
+                            Échanger
+                        </button>
+                    </div>
                 )}
 
                 <div className="flex gap-2">

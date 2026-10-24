@@ -70,6 +70,16 @@ describe('forcer le dernier jet du pupitre', () => {
         expect(forcerLeDernierJet()).toBe('Ce jet a déjà été forcé 2 fois.');
     });
 
+    it('Blade Runner : le pupitre relance aussi le D12 à une seule réussite qu’on lui désigne (B1, p. 55)', () => {
+        sousLePilote({ ...BLADE_RUNNER, jet: { ...BLADE_RUNNER.jet, forcer: { ...BLADE_RUNNER.jet.forcer, relancerUneReussite: true } } });
+        useDiceStore.setState({ history: [jet([{ val: 8, sides: 12, source: 'base' }, { val: 3, sides: 8, source: 'base' }])] });
+        const faces = [11, 6];
+        de.mockImplementation(() => faces.shift()!);
+        forcerLeDernierJet([0]);
+        expect(useDiceStore.getState().history[0].rolls.map(d => d.val)).toEqual([11, 6]);
+        expect(useDiceStore.getState().history[0].successes).toBe(3);
+    });
+
     it('un jet qui n’est pas Year Zero ne se force pas', () => {
         expect(pourquoiNePasForcerAuPupitre(jet([{ val: 14, sides: 20 }]), ALIEN.jet as never)).toBe('Seul un jet Year Zero se force.');
     });

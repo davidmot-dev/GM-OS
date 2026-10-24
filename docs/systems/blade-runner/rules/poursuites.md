@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« COMMENCER UNE POURSUITE » ; « RÉSOLUTION » ; « MANŒUVRES DE POURSUITE » ; « TRIO DE CHOC »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Poursuites
@@ -50,3 +50,5 @@ Le livre précise plusieurs règles spécifiques pour les situations complexes :
 
 ## Non couvert
 Les sources ne précisent pas comment gérer mécaniquement les poursuites verticales (par exemple à pied dans les escaliers des mégastructures de cinq cents étages), car les obstacles de la table à pied ne concernent que la rue (section « OBSTACLES DE POURSUITE À PIED »).
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 81–87. Vérifié sans correction ; les obstacles sont aussi dans Table-OS.*

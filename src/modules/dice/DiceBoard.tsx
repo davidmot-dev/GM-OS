@@ -18,6 +18,7 @@ import { resoudreLaGarde } from './systemes/potentielGarde';
 import { Panneau, Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../../components/socle';
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 import { estUnJetYearZero, forcerLeDernierJet, pourquoiNePasForcerAuPupitre } from './forcerAuPupitre';
+import { relancableMalgreSaReussite } from './systemes/yearZero';
 import { attribuerLeFielDuDernierJet, jetDeDestinAAttribuer, unsDuJetDeDestin } from './fielAuPupitre';
 import { jetARegler, lireLeJetAuPupitre, reglerLesReservesDuDernierJet } from './reservesAuPupitre';
 import { gmToast } from '../../stores/useToastStore';
@@ -172,6 +173,8 @@ const DiceBoard: React.FC = () => {
       qu'on corrige : un dé d'arme trop petit, et personne pour le voir.
     */
     const [niveauEquipement, setNiveauEquipement] = useState('');
+    /** Le niveau de compétence d'un allié qui soutient le jet — Blade Runner, p. 57 (B2). */
+    const [niveauSoutien, setNiveauSoutien] = useState('');
     const [modificateurEchelonne, setModificateurEchelonne] = useState<ModificateurDeDes>('aucun');
     const [modificateurSauvegarde, setModificateurSauvegarde] = useState<ModificateurDeSauvegarde>('aucun');
     /** 2d20 : la difficulté du dernier jet et la part payée en Menace par choix, au moment de régler (C1). */
@@ -210,8 +213,13 @@ const DiceBoard: React.FC = () => {
                 { label: 'Compétence', lettre: niveauCompetence },
             ],
             modificateurEchelonne,
+            'yze-lettres',
+            {
+                soutien: facesDuNiveau(niveauSoutien) ? { label: 'Soutien', faces: facesDuNiveau(niveauSoutien)! } : undefined,
+                plafondDesD12: activeDriver?.jet?.desEchelonnes?.plafondDesD12,
+            },
         ),
-        [niveauAttribut, niveauCompetence, modificateurEchelonne],
+        [niveauAttribut, niveauCompetence, modificateurEchelonne, niveauSoutien, activeDriver?.jet?.desEchelonnes?.plafondDesD12],
     );
 
     const facesDeLEquipement = facesDuNiveau(niveauEquipement);
@@ -654,6 +662,9 @@ const DiceBoard: React.FC = () => {
     const champ = 'flex bg-app-bg border border-app-border rounded-lg overflow-hidden h-[38px]';
     const sansFleches = '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
     const dernier = history[0];
+    // Les D10/D12 à une seule réussite que le meneur relancera aussi (Blade Runner, B1) — propres au dernier jet.
+    const [relancesAussi, setRelancesAussi] = useState<{ jet?: string; rangs: number[] }>({ rangs: [] });
+    const aRelancerAussi = relancesAussi.jet === dernier?.id ? relancesAussi.rangs : [];
 
     /*
       ── La colonne de droite : ce qui se règle ──
@@ -859,6 +870,7 @@ const DiceBoard: React.FC = () => {
                             { cle: 'attribut', titre: 'Attribut', valeur: niveauAttribut, poser: setNiveauAttribut, facultatif: false },
                             { cle: 'competence', titre: 'Compétence', valeur: niveauCompetence, poser: setNiveauCompetence, facultatif: false },
                             { cle: 'equipement', titre: 'Équipement', valeur: niveauEquipement, poser: setNiveauEquipement, facultatif: true },
+                            { cle: 'soutien', titre: 'Soutien', valeur: niveauSoutien, poser: setNiveauSoutien, facultatif: true },
                         ] as const).map(({ cle, titre, valeur, poser, facultatif }) => (
                             <div key={cle} className={champ}>
                                 <span className="w-28 shrink-0 bg-app-surface-2 text-app-muted text-ui-11 px-2 flex items-center border-r border-app-border uppercase tracking-wider">
@@ -1340,10 +1352,29 @@ const DiceBoard: React.FC = () => {
                                 const refus = pourquoiNePasForcerAuPupitre(dernier, activeDriver.jet);
                                 return (
                                     <div className="mt-3 flex flex-col items-center gap-1" data-forcer-au-pupitre>
+                                        {/*
+                                          **Relancer aussi une réussite** — B1, 2026-10-24 (« Forcer un jet », p. 55) :
+                                          le pupitre désigne les D10/D12 à une seule réussite, comme la fiche.
+                                        */}
+                                        {!refus && activeDriver.jet.forcer.relancerUneReussite && dernier.rolls.some(relancableMalgreSaReussite) && (
+                                            <div data-relancer-aussi-au-pupitre className="flex flex-wrap items-center justify-center gap-2 text-ui-10 text-app-muted">
+                                                <span>Relancer aussi, au risque de perdre la réussite :</span>
+                                                {dernier.rolls.map((d, i) => relancableMalgreSaReussite(d) && (
+                                                    <label key={i} className="flex items-center gap-1 rounded-md border border-app-border/40 px-2 py-0.5">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={aRelancerAussi.includes(i)}
+                                                            onChange={e => setRelancesAussi({ jet: dernier.id, rangs: e.target.checked ? [...aRelancerAussi, i] : aRelancerAussi.filter(x => x !== i) })}
+                                                        />
+                                                        D{d.sides} ({d.val})
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        )}
                                         <button
                                             type="button"
                                             disabled={!!refus}
-                                            onClick={() => forcerLeDernierJet()}
+                                            onClick={() => forcerLeDernierJet(aRelancerAussi)}
                                             className="px-4 py-1.5 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-black uppercase tracking-widest hover:bg-accent/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                                         >
                                             Forcer le jet

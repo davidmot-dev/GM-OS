@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« SOUVENIR CLÉ » ; « SOUVENIRS CLÉS » ; « PROMOTION ET HUMANITÉ »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: da814624
 ---
 
@@ -43,3 +43,5 @@ Le livre de règles ne précise pas:
 - L'utilisation du souvenir clé sur un jet passif ou de réaction, notamment lors d'un jet d'Observation passif pour repérer un ennemi caché (section « JETS PASSIFS »).
 - Les effets psychologiques ou narratifs si un réplicant découvre que son souvenir clé implanté appartient à un humain réel encore vivant dans la ville (section « SOUVENIRS CLÉS »).
 - La possibilité d'utiliser un souvenir clé pour soutenir le jet de compétence d'un autre personnage (section « SOUTIEN »).
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 30–31, 37, 56, 219–220. Vérifié sans correction. GM-OS 2.0.0 offre le souvenir clé au panneau de jet, une fois par séance.*

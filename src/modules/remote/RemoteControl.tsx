@@ -137,6 +137,7 @@ const RemoteControl: React.FC = () => {
                     <RemoteDicePad
                         activeDiceConfig={isPaired ? syncData.session?.activeDiceConfig : undefined}
                         desEchelonnes={isPaired ? syncData.session?.desEchelonnes : undefined}
+                        plafondDesD12={isPaired ? syncData.session?.plafondDesD12 : undefined}
                         onRoll={(dice) => sendAction('remote:dice:roll', dice)}
                         onClear={() => sendAction('remote:dice:clear', {})}
                         onForcer={isPaired && syncData.session?.jetForcable ? () => sendAction('remote:dice:forcer', {}) : undefined}

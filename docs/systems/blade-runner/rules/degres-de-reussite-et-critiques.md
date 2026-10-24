@@ -7,14 +7,14 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« RÉUSSITE » ; « RÉUSSITE CRITIQUE » ; « RÉUSSITES MULTIPLES » ; « TOUCHES CRITIQUES » ; « CRITIQUES AGGRAVÉS » ; « DÉS DE CRITIQUE »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Degrés de réussite et critiques
 
 ## Règle
 Lors d’un jet de compétence, le nombre de symboles de l’œil obtenus détermine la qualité de la réussite (section « RÉUSSITE »). Une réussite simple est acquise dès qu’un dé affiche six ou plus (section « RÉUSSITE »). Un résultat de dix ou plus sur un seul dé compte comme deux réussites (section « RÉUSSITE »).
-Obtenir au moins deux symboles de l’œil déclenche une réussite critique (section « RÉUSSITE CRITIQUE »). Hors combat, cela offre un bonus narratif ou technique au choix du joueur (section « RÉUSSITE CRITIQUE »). 
+Obtenir au moins deux symboles de l’œil déclenche une réussite critique (section « RÉUSSITE CRITIQUE »). Hors combat, cela offre un bonus que le Dossier indique, ou que l'on imagine — le Blade Meneur a le dernier mot (p. 54). 
 En combat, une réussite critique provoque une touche critique (section « TOUCHES CRITIQUES »). Celle-ci inflige des dégâts accrus et une blessure critique immédiate (section « TOUCHES CRITIQUES »). Chaque réussite supplémentaire au-delà du seuil requis pour toucher augmente les dégâts de un point (section « RÉUSSITES MULTIPLES ») et permet d’utiliser la règle des critiques aggravés pour choisir la blessure (section « CRITIQUES AGGRAVÉS »).
 
 ## Valeurs
@@ -50,3 +50,5 @@ Le livre de règles précise plusieurs situations particulières :
 
 ## Non couvert
 Rien.
+
+*Relu le 2026-10-24 (livre, p. 54, 68–71).*

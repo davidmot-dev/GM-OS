@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« THÈMES CLÉS » ; « JOUER À BLADE RUNNER » ; « SÉCURITÉ ÉMOTIONNELLE » ; « POSER L’AMBIANCE » ; « JOUER SCÈNE APRÈS SCÈNE » ; « CE N’EST PAS AU SUJET DE L’AFFAIRE » ; « ANATOMIE D’UN DOSSIER » ; « AUCUNE IMPASSE »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Ton, registre et ambiance
@@ -54,3 +54,5 @@ Le livre précise plusieurs cas particuliers pour guider le Blade Meneur :
 
 ## Non couvert
 Le livre présente les outils de sécurité (section « SÉCURITÉ ÉMOTIONNELLE ») [6] mais n'explique pas comment réagir à l'usage d'une carte de sécurité pendant la partie, renvoyant à des **recherches sur Internet** (section « SÉCURITÉ ÉMOTIONNELLE ») [12]. De plus, aucun mécanisme n'est fourni si un Blade Runner est **surpris à mentir** ou retenir des preuves par ses supérieurs (section « TRANSMETTRE LES PREUVES ») [8].
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 19–21, 212–222. Vérifiés : trois à six PNJ principaux, dix à quinze lieux, deux accès à chaque lieu, l'aide de Holden qui coûte un point de Promotion (p. 215), le point d'Humanité de la preuve retenue (p. 220).*

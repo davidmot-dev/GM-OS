@@ -15,6 +15,9 @@ import type { DescripteurDeJet } from './DescripteurDeJet';
  *
  * Sans personnage, on ne sait pas s'il force une ou deux fois (le réplicant) :
  * le pupitre permet le plus grand nombre que la règle connaisse, et le dit.
+ *
+ * **Relancer aussi une réussite** (Blade Runner, p. 55) — B1, 2026-10-24 : le
+ * pupitre désigne, comme la fiche, les D10 et D12 à une seule réussite à relancer.
  */
 
 /** Un jet du pupitre est-il un jet Year Zero qu'on peut forcer ? */
@@ -56,7 +59,7 @@ function direLePrix(regle: RegleDuForcage, descripteur: DescripteurDeJet, force:
  * Force le dernier jet du pupitre et le consigne comme un jet neuf. Rend la raison
  * d'un refus, ou `null` quand le jet est forcé.
  */
-export function forcerLeDernierJet(): string | null {
+export function forcerLeDernierJet(aussi: readonly number[] = []): string | null {
     const des = useDiceStore.getState();
     const dernier = des.history[0];
     const descripteur = useSessionOSStore.getState().getActiveDriver?.()?.jet;
@@ -69,6 +72,7 @@ export function forcerLeDernierJet(): string | null {
         famille: descripteur.desEchelonnes ? 'echelonnee' : 'reserve',
         desEnPlus: regle.monteeDeLaSeconde ?? 0,
         libelleDuUn: descripteur.reserve?.secondaire?.libelleDuUn,
+        aussi,
         de: faces => DiceEngine.roll(faces),
     });
     const brouillon = { ...dernier, ...resultat } as RollRecord;

@@ -221,6 +221,7 @@ export interface RemoteSyncData {
          * un moteur qui dit autre chose. Le meneur tranche, la tablette obéit.
          */
         desEchelonnes?: boolean;
+        plafondDesD12?: number;
         /** Le jeu fait forcer ses jets (Year Zero) : la télécommande propose « Forcer le dernier jet ». */
         jetForcable?: boolean;
         /** Le jeu paie ses dés achetés sur une réserve (2d20) : la télécommande règle le dernier jet (C1, 2026-10-22). */

@@ -81,7 +81,7 @@ const session: Regles<SessionDuHub> = {
     cosmsCourants: tableau(texte),
     effetsDuRound: tableau(choix(...NOMS_DES_EFFETS)),
     favorites: tableau(identifie), reservesDeTable: dictionnaire(nombre),
-    activeDiceConfig: nullable(estObjet), desEchelonnes: booleen, jetForcable: booleen, reservesAuPupitre: booleen,
+    activeDiceConfig: nullable(estObjet), desEchelonnes: booleen, plafondDesD12: nombre, jetForcable: booleen, reservesAuPupitre: booleen,
 };
 
 function estJet(v: unknown): boolean {

@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« DÉGÂTS » ; « SUBIR DES DÉGÂTS » ; « PROTECTION » ; « BLESSURES CRITIQUES » ; « CHUTE » ; « EXPLOSIONS » ; « VÉHICULE BÉLIER »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Dégâts et types de dégâts
@@ -41,7 +41,7 @@ Les blessures critiques sont classées selon deux types de dégâts physiques di
 
 ## À la table
 La résolution et l'application des dégâts se déroulent pas à pas à chaque tour d'un conflit :
-1. L'attaquant effectue son jet en utilisant la compétence de Corps à corps (section « COMBAT RAPPROCHÉ ») ou d’Armes à feu (section « COMBAT À DISTANCE »). S'il obtient au moins une réussite, représentée par le symbole de l'œil, l'attaque atteint sa cible.
+1. L'attaquant effectue son jet : au tir, un jet classique d'Armes à feu, qui touche sur une réussite (p. 70) ; au corps à corps, un jet **en opposition** contre la compétence de l'arme du défenseur, où le vainqueur — le défenseur compris — touche le perdant, et une égalité ne touche personne (p. 68).
 2. L'attaquant ajoute au montant de base de son arme un point de dégât par réussite (symbole de l'œil) excédentaire obtenue au-delà de la première sur son jet d'attaque (section « SUBIR DES DÉGÂTS »).
 3. Si la cible porte un équipement de protection, elle effectue immédiatement son jet de Protection, ce qui ne compte pas comme une action (section « PROTECTION »). Le joueur lance deux dés de base correspondant à sa valeur de Protection, qui s'échelonne du dé à six faces au dé à douze faces (section « PROTECTION »).
 4. Chaque réussite (symbole de l'œil) obtenue sur ce jet de protection réduit les dégâts subis de un point (section « PROTECTION »).
@@ -57,3 +57,5 @@ Le livre de règles apporte les précisions suivantes pour plusieurs situations 
 
 ## Non couvert
 Le système de règles ne propose aucun mécanisme pour classifier et appliquer des dégâts de nature chimique, radioactive ou biologique. Bien que l'atmosphère de Los Angeles soit décrite comme hautement toxique et que la pluie non purifiée puisse tuer (section « CLIMAT »), les sources ne fournissent aucune valeur chiffrée, dé de dégât ou type (percutant ou perforant) pour simuler ces menaces environnementales. Rien n'indique non plus comment la Protection standard réagit face à ces dangers corrosifs ou toxiques.
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 68–73, 77, 80. Corrigé : le combat rapproché se résout en opposition, pas sur une simple réussite.*

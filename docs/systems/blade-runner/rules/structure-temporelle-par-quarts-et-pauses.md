@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« MESURE DU TEMPS » ; « QUARTS » ; « UNITÉS DE TEMPS » ; « PAUSE » ; « SUBIR DU STRESS » ; « PAUSE ET RÉCUPÉRATION » ; « QUARTS ET LIEUX » ; « SCÈNES DE PAUSE »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Structure temporelle par Quarts et Pauses
@@ -37,10 +37,12 @@ Concrètement, la structure par Quarts et Pauses se joue ainsi :
 * **La Pause** : Prendre une Pause consomme un Quart complet (section « PAUSE »). Le joueur y applique ses effets de récupération de Santé et de Sang-froid (section « PAUSE ET RÉCUPÉRATION »). C'est durant ce Quart de pause que les joueurs dépensent leurs points d'Humanité pour améliorer leurs compétences (section « UTILISER LES POINTS D’HUMANITÉ »). Le Blade Meneur jette un dé à huit faces pour déterminer un événement de pause personnel (section « SCÈNES DE PAUSE »).
 
 ## Cas limites
-Le livre précise several cas particuliers :
+Le livre précise plusieurs cas particuliers :
 * **Surmenage** : Travailler trop de Quarts consécutifs sans pause inflige du stress (section « SUBIR DU STRESS »). La spécialité Bourreau de travail permet d'augmenter le seuil d'activité toléré avant de subir ce stress (section « SPÉCIALITÉS »).
 * **TRPT** : Pour un réplicant, passer un test de référentiel exige un Quart complet au siège de l'UDR, mais ce Quart ne compte pas comme une pause et n'autorise donc aucune récupération (section « RÉPLICANTS ET TESTS DE RÉFÉRENTIEL »).
 * **Soins rapides** : Utiliser un objet fétiche (section « OBJET FÉTICHE ») ou un Soviet Happy (section « SERVICES MÉDICAUX, STIMULANTS ET MÉDICAMENTS ») permet de regagner du Sang-froid immédiatement sans consommer de Quart de pause.
 
 ## Non couvert
 Bien que le déplacement au sol consomme un Quart de plus en cas de jet de Contacts raté (section « SE DÉPLACER AU SOL »), les sources n'expliquent pas comment gérer le temps si un personnage à pied se déplace avec un coéquipier véhiculé. De plus, rien n'indique si la règle du surmenage s'applique également aux PNJ (section « PAUSE »).
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 20–23, 61, 74, 177, 186, 216, 218. Vérifiés : quatre Quarts d'environ six heures (« 5–10 heures » au tableau des unités), Bourreau de travail (quatre Quarts), le déplacement au sol (jet de Contacts).*

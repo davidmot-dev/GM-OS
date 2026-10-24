@@ -21,6 +21,7 @@ import { poigneeDepuisLesLettres, composerLaPoignee, MAX_D12, type DeEchelonne }
  */
 
 const faces = (poignee: { des: DeEchelonne[] }) => poignee.des.map(d => d.faces);
+const d = (label: string, f: number): DeEchelonne => ({ label, champ: label, niveau: `D${f}`, faces: f });
 
 describe('la poignée composée depuis des lettres', () => {
     it('traduit chaque lettre en son dé', () => {
@@ -136,5 +137,28 @@ describe('la composition partagée', () => {
 
         expect(poignee.des.map(d => d.faces)).toEqual([10, 8]);
         expect(poignee.remarques).toEqual([]);
+    });
+
+    /**
+     * **Le soutien et les trois D12** — Blade Runner, B2, 2026-10-24 (p. 56–57) :
+     * le soutien apporte le dé de l'aidant ; le livre ne plafonne pas les D12.
+     */
+    it('le soutien ajoute le dé de l’aidant, pas une copie du plus faible', () => {
+        const { des } = composerLaPoignee([d('Attribut', 10), d('Compétence', 6)], 'aucun', { soutien: { label: 'Soutien de Resch', faces: 8 } });
+        expect(des.map(x => x.faces)).toEqual([10, 6, 8]);
+    });
+
+    it('soutien et désavantage s’annulent ; avec un avantage, un seul dé s’ajoute', () => {
+        const base = [d('Attribut', 10), d('Compétence', 6)];
+        expect(composerLaPoignee(base, 'desavantage', { soutien: { label: 'S', faces: 12 } }).des.map(x => x.faces)).toEqual([10, 6]);
+        const deux = composerLaPoignee(base, 'avantage', { soutien: { label: 'S', faces: 12 } });
+        expect(deux.des.map(x => x.faces)).toEqual([10, 6, 12]);
+        expect(deux.remarques[0]).toMatch(/Un seul avantage/);
+    });
+
+    it('sans plafond déclaré, un A/A avec avantage lance trois D12 ; le SRD reste à deux', () => {
+        const aa = [d('Attribut', 12), d('Compétence', 12)];
+        expect(composerLaPoignee(aa, 'avantage', { plafondDesD12: 0 }).des.map(x => x.faces)).toEqual([12, 12, 12]);
+        expect(composerLaPoignee(aa, 'avantage').des.map(x => x.faces)).toEqual([12, 12, 10]);
     });
 });

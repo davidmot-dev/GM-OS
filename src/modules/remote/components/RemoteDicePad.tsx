@@ -19,6 +19,8 @@ interface RemoteDicePadProps {
      * contredire. Voir `useNexusSynchronizer`.
      */
     desEchelonnes?: boolean;
+    /** Au plus tant de D12 (0 : aucun plafond), comme au pupitre. */
+    plafondDesD12?: number;
     onRoll: (params: { 
         sides?: number; 
         count: number; 
@@ -56,7 +58,7 @@ const DICE_MODES = [
     { id: 'rolemaster', label: 'Rolemaster' },
 ];
 
-const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEchelonnes, onRoll, onClear, onForcer, onReglerLesReserves }) => {
+const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEchelonnes, plafondDesD12, onRoll, onClear, onForcer, onReglerLesReserves }) => {
     const [diceCount, setDiceCount] = useState(1);
     const [diceModifier, setDiceModifier] = useState(0);
     const [diceMode, setDiceMode] = useState<string>('standard');
@@ -94,6 +96,8 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
             { label: 'Compétence', lettre: niveauCompetence },
         ],
         modificateurEchelonne,
+        'yze-lettres',
+        { plafondDesD12 },
     );
     const facesDeLEquipement = facesDuNiveau(niveauEquipement);
 

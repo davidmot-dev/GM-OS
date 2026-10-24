@@ -16,7 +16,8 @@ import { campDe, type Camp } from './logic/OrdreDuTour';
  * seule porte.
  */
 
-type Valeur = string | number | boolean;
+/** Une valeur de fiche — un suivi structuré (Blade Runner, Cthulhu Hack) compris. */
+type Valeur = unknown;
 
 /** La fiche de campagne du combattant, quand il en a une. */
 function source(c: Combatant): { sheetData?: Record<string, unknown> } | undefined {
@@ -35,11 +36,11 @@ export function ecrireLaFicheDuCombattant(c: Combatant, maj: Record<string, Vale
     const s = useSessionOSStore.getState();
     if (c.isPlayer && c.sourcePlayerId) {
         const joueur = s.players.find(p => p.characters.some(ch => ch.id === c.sourcePlayerId));
-        if (joueur) for (const [champ, v] of Object.entries(maj)) s.updateCharacterSheetData(joueur.id, c.sourcePlayerId, champ, v);
+        if (joueur) for (const [champ, v] of Object.entries(maj)) s.updateCharacterSheetData(joueur.id, c.sourcePlayerId, champ, v as string);
         return;
     }
     if (c.sourceEntityId) {
-        for (const [champ, v] of Object.entries(maj)) s.updateEntitySheetData(c.sourceEntityId, champ, v);
+        for (const [champ, v] of Object.entries(maj)) s.updateEntitySheetData(c.sourceEntityId, champ, v as string);
         return;
     }
     // Le combattant autonome : sa fiche vit sur le plateau.

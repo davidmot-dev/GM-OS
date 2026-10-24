@@ -19,6 +19,8 @@ export type SessionDuHub = Partial<Pick<Session,
     reservesDeTable?: EtatsDuHub['useRessourcesDeTableStore']['reserves'][string];
     activeDiceConfig?: NonNullable<RemoteSyncData['session']>['activeDiceConfig'];
     desEchelonnes?: boolean;
+    /** Au plus tant de D12 (0 : aucun plafond) — Blade Runner n'en a pas (B2, 2026-10-24). */
+    plafondDesD12?: number;
     jetForcable?: boolean;
     reservesAuPupitre?: boolean;
 };

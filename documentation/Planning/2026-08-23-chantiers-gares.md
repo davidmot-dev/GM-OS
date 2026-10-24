@@ -12769,6 +12769,20 @@ Cinquième volet de « finir les améliorations communes ». David a donné le l
 - **Essais** : suite complète 9 063 passés. Un seul échec en chemin : `corpusDerivable.test.ts` — le groupe « Dés et composition du jet » de Dune dépassait de 99 caractères le budget d'invite de la Forge (21 024) ; notes de relecture de ses deux fiches raccourcies, l'essai repasse. *Une note de relecture alourdit l'invite de la Forge : rester bref.*
 - **Reste** : rien. Within n'aura pas de corpus pour l'instant : David a effacé son pilote (24/10).
 
+### 174 · Blade Runner fini — pilote 2.0.0, 24/10/2026
+
+David : *« on va finir Blade Runner »*, livre de base français (`BRN-01_LivreDeRegles.pdf`). Détail, constats et pages : [2026-10-24-blade-runner-finir.md](2026-10-24-blade-runner-finir.md). GM-OS fermé ; les huit lots de règles retenus par David, et le retrait des tables de butin d'essai.
+
+- **B1** — le pupitre relance aussi un D10/D12 à une seule réussite (« Relancer aussi », p. 55).
+- **B2** — le **soutien** (le dé de l'aidant, p. 57 ; menu au panneau, lettre au pupitre) ; le plafond de deux D12 du SRD devient une option du pilote (`desEchelonnes.plafondDesD12`), **levée pour Blade Runner** (le livre n'en a pas).
+- **B3–B6** — le bloc **« Blessures critiques »** (`SuiviBladeRunner`, règles dans `systemes/bladeRunner.ts`) sur la carte de combat, la fiche et la tablette (lecture) : tirage avant zéro aussi, **critiques aggravés**, **sauvegarde contre la mort** (Endurance, forçable hors Brisé), **stabilisation**, **soins** avec échéance Clock-OS ou permanence, **premiers secours** et **main secourable** d'un Brisé. Chaque jet se lance ou se reporte (« Réussi », « Raté »).
+- **B7** — **souvenir clé** au panneau (une fois par séance : avantage, ou un dé de plus au forçage ; « −1 Sang-froid » s'il échoue malgré lui) ; **objet fétiche** (+1 Sang-froid).
+- **B8** — Combat-OS : **Surprise** (carte 1 d'office) et **échange de cartes** (refus motivés, journal), pour tout jeu à cartes hors Alien.
+- **B9** — pilote **2.0.0** (`outils/blade-runner/finir_blade_runner.py` → `Export Dirvers/corriges/BladeRunner_driver_gmos_finir.gmos-driver`) : `jet.bladeRunner`, `plafondDesD12: 0`, tables « TEST » et « Table 2 » retirées ; la Forge contrôle les champs lus par le suivi. Aucun identifiant ne change.
+- **B0** — **corpus relu, 22 fiches sur 22**. Corrigés : la gravité des blessures de la table Perforant (mortelle dès le 5, mort instantanée aux 8, 10 et 12 — la fiche santé appliquait l'échelle du Percutant), le tableau des années de service (la Promotion de départ est D3 à D10, les −1 à +2 vont au chinyen), le combat rapproché en opposition, le Brisé par le stress au Sang-froid épuisé, le coût des implants (au catalogue, p. 193), les scènes de pause de la relation clé, plusieurs « non couvert » que le livre couvre. Retiré, sans source : un dé de soutien « qui ne se relance pas ». Les quatre tables de Table-OS sont conformes.
+- **Vérifié** : essais unitaires et de composant (+28), `pilote.test.ts` (aucun constat de la Forge), `npx tsc -b`, captures rejouées sur le pilote fini (neuf, dont quatre nouvelles). `corpusDerivable.test.ts` : les notes de relecture faisaient déborder de 321 caractères le groupe « Dés et composition du jet » ; notes réduites.
+- **Essayé par David le 25/10** : « c'est bon ». **Reste** : rien.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12876,6 +12890,7 @@ Cinquième volet de « finir les améliorations communes ». David a donné le l
 | 100 | **Cthulhu Hack — cinq améliorations** | § 164 ; blessures, armure, Fortune MJ, durées et Pulp — livré et essayé le 23/10 | Rien sur ces cinq lots | Rien |
 | 101 | **Nephilim — finir le pilote (N1 à N9)** | § 165 ; jet, santé, Chutes, pacte, stase, Sapience, Alchimie, lieux, métamorphe — livré et essayé le 23/10 | Rien | Rien |
 | 102 | **Symbaroum — finir le pilote (S0, S2, S4 à S9)** | § 166 ; corpus corrigé, attaque et Défense avec dégâts, agonie, Stigmates, départage de l'initiative, création et progression, bourse, voyages, règles optionnelles ; pilote 2.0.0 — livré le 23/10 | Réimporter le pilote, puis une attaque, une Défense ratée et un Test de mort sur une fiche | L'essai de David |
+| 110 | **Blade Runner fini — pilote 2.0.0** | § 174 ; blessures critiques suivies (mort, stabilisation, guérison, secours, aggravés), soutien et trois D12, souvenir clé et objet fétiche, pupitre, échange d'initiative ; corpus 22/22 — 24/10 | Réimporter le pilote avec Remplacer ; une blessure mortelle, une stabilisation, un soutien, un échange de cartes — **essayé par David le 25/10** | Rien |
 | 109 | **Corpus de Dune relu en entier** | § 173 ; 20 fiches sur 20 contre le livre et l'errata, bégaiements réparés, règles du scénario ramenées à leur source, cinq affirmations sans source retirées — 24/10 | Rien | Rien |
 | 108 | **Corpus de Symbaroum relu en entier** | § 172 ; 13 fiches sur 13, sept corrections, quatre affirmations sans source retirées — 24/10 | Rien | Rien |
 | 107 | **Recette de la documentation des jeux** | § 171 ; onze jeux rejoués, six captures et deux légendes à jour, deux défauts de l'essai des captures corrigés — 24/10 | Rien | Rien |

@@ -13,6 +13,7 @@ import type { GameDriver } from '../../../types/drivers';
 import type { TableEntry } from '../../tables/types';
 import type { Combatant } from '../types';
 import SuiviCthulhuHack from '../../session/components/fields/SuiviCthulhuHack';
+import SuiviBladeRunner from '../../session/components/fields/SuiviBladeRunner';
 import { santePrincipaleDuPersonnage } from '../../session/logic/santePrincipale';
 import { resolveSheetTemplate } from '../../session/logic/templateResolver';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -205,6 +206,27 @@ const HorsJeuDuCombattant: React.FC<{ combatant: Combatant; valeurs?: Record<str
     const tombe = principale ? principale.courant <= 0 : estHorsDeCombat(combatant);
     // Le Hors Jeu d'un adversaire n'a de sens que si sa chute se note (Blade Runner) — pas ses Conséquences.
     const horsJeu = !!regle && tombe && (combatant.isPlayer ? !!combatant.sourcePlayerId : !!regle.noterDans);
+    /*
+      **Blade Runner suit ses blessures** (B3–B7, 2026-10-24) : la blessure critique
+      se tire dans le suivi — avant zéro aussi, sur une touche à deux réussites —,
+      avec ses dés aggravés, puis se sauvegarde, se stabilise et se soigne.
+    */
+    const suiviBR = pilote?.jet?.bladeRunner;
+    if (suiviBR) {
+        return (
+            <>
+                {horsJeu && regle && (
+                    <div data-hors-jeu className="mx-3 my-2 space-y-1 rounded-lg border border-etat-danger/40 bg-etat-danger/10 p-2">
+                        <p className="flex items-center gap-2 text-ui-11 font-black uppercase tracking-widest text-etat-danger"><Skull size={12} /> {regle.label ?? 'Hors Jeu'}</p>
+                        {regle.rappel && <p className="text-ui-11 text-app-text/70">{regle.rappel}</p>}
+                    </div>
+                )}
+                <SuiviBladeRunner regle={suiviBR} forcer={pilote?.jet?.forcer} tirage={regle} valeurs={valeurs} nom={combatant.name}
+                    personnageId={combatant.sourcePlayerId} ecrire={maj => ecrireLaFicheDuCombattant(combatant, maj)} />
+                {brises.map(b => <PanneauDuBrise key={b.champ} combatant={combatant} brise={b} valeurs={valeurs} />)}
+            </>
+        );
+    }
     if (!horsJeu && brises.length === 0) return null;
     return (
         <>

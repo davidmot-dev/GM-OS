@@ -25,6 +25,11 @@ export interface Combatant {
     /** Valeur d'initiative pour l'ordre de passage */
     init: number;
     /**
+     * Le round où ce combattant a reçu une carte par échange (Blade Runner, p. 65) :
+     * il ne peut pas l'échanger de nouveau pendant ce round.
+     */
+    echangeAuRound?: number;
+    /**
      * Ce qui départage deux initiatives égales — Symbaroum : la Vigilance, puis
      * un d20 relancé entre ex aequo (p. 161). Tiré avec l'initiative, gardé
      * pour que l'ordre établi ne change plus (`combat.departages`).

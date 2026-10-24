@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« LANCER LES DÉS » ; « FORCER UN JET » ; « AVANTAGE / DÉSAVANTAGE » ; « SOUTIEN »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Résolution des jets
@@ -44,11 +44,11 @@ Les modificateurs s'appliquent sous forme d'avantage (ajout d’un troisième d�
   * Niveau D de l'allié : dé à six faces.
 
 ## À la table
-Concrètement, la résolution d’une action commence par une conversation où le joueur décrit ce qu’il cherche à accomplir (section « LANCER LES DÉS »). Le joueur réunit alors les deux dés de base appropriés : un dé d'attribut et un dé de compétence (section « LANCER LES DÉS »). Si un allié décide de l'aider, cette assistance doit être déclarée avant le lancer, ajoutant un dé de base lié à sa propre compétence (section « SOUTIEN »). Le joueur lance l’ensemble des dés simultanément.
+Le joueur réunit alors les deux dés de base appropriés : un dé d'attribut et un dé de compétence (section « LANCER LES DÉS »). Si un allié décide de l'aider, cette assistance doit être déclarée avant le lancer, ajoutant un dé de base lié à sa propre compétence (section « SOUTIEN »). Le joueur lance l’ensemble des dés simultanément.
 
 Si au moins un dé affiche un résultat de six ou plus, l’action réussit, chaque résultat de ce type accordant un symbole de l’œil (section « LANCER LES DÉS »). Si aucun œil n’est obtenu, ou si l'acteur souhaite accumuler plus d’œil pour obtenir des effets critiques, il peut décider de forcer le jet (section « FORCER UN JET »). 
 
-Pour forcer, le joueur conserve les réussites ou résultats neutres, mais doit laisser de côté les dés ayant obtenu un résultat de un, représenté par le symbole de dégât (section « FORCER UN JET »). Il relance ensuite tous ses autres dés admissibles. Une fois ce second lancer effectué, tous les dés sont pris en compte. Le joueur subit alors un point de dégât ou de stress pour chaque symbole de dégât affiché sur l'ensemble de la tentative (section « FORCER UN JET »).
+Pour forcer, les dés qui ont fait un (le symbole de dégât) restent sur la table, et les réussites aussi ; il relance tous les autres dés — et, s'il le veut, un D10 ou un D12 qui n'a fait qu'une réussite, au risque de la perdre (p. 55). Une fois ce second lancer effectué, tous les dés sont pris en compte. Le joueur subit alors un point de dégât ou de stress pour chaque symbole de dégât affiché sur l'ensemble de la tentative (section « FORCER UN JET »).
 
 ## Cas limites
 Le livre de règles précise plusieurs situations particulières pour lever toute ambiguïté :
@@ -60,3 +60,5 @@ Le livre de règles précise plusieurs situations particulières pour lever tout
 
 ## Non couvert
 Rien.
+
+*Relu le 2026-10-24 (livre, p. 54–57) ; corrigé : ce qui reste sur la table au forçage.*

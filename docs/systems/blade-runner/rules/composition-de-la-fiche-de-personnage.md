@@ -7,7 +7,7 @@ sources: "BRN-01_LivreDeRegles.pdf"
 sections: "« FICHE DE PERSONNAGE » ; « CRÉER SON PERSONNAGE JOUEUR » ; « ATTRIBUTS » ; « COMPÉTENCES » ; « ANNÉES DE SERVICE » ; « TOUCHES FINALES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Composition de la fiche de personnage
@@ -31,22 +31,25 @@ La fiche de personnage rassemble les caractéristiques d'un Blade Runner nécess
   * Augmentations d'attributs : +4 / +3 / +2 / +1.
   * Augmentations de compétences : +8 / +10 / +12 / +14.
   * Spécialités de départ : aucune / une / deux / trois.
-  * Promotion de départ : dé à trois faces moins un / dé à six faces / dé à huit faces plus un / dé à dix faces plus deux.
-  * Réplicants : moins un en Promotion et en chinyen (section « ANNÉES DE SERVICE »).
+  * Promotion de départ : dé à trois faces / dé à six faces / dé à huit faces / dé à dix faces.
+  * Modificateur du chinyen de départ (dé de l'archétype) : −1 / aucun / +1 / +2.
+  * Réplicants : un point de moins en Promotion et en chinyen, qui peuvent commencer à zéro ; une augmentation d'attribut de plus, en Vigueur ou en Agilité (p. 28).
 
 ## À la table
 La gestion de la fiche de personnage s'articule ainsi lors des scènes :
 - **Jets de dés de base** : Le joueur consulte sa fiche pour associer son attribut et sa compétence. Il prend le dé correspondant (de six à douze faces) pour lancer son test (section « LANCER LES DÉS »).
 - **Suivi des blessures et du stress** : Le joueur coche les cases de sa jauge de Santé ou de Sang-froid sur sa fiche dès qu'il subit des dégâts ou du stress (section « DÉGÂTS »).
-- **L'objet fétiche** : Une fois par session, le joueur efface un point de stress de sa fiche en déclarant l'interaction avec son objet fétiche (section « OBJET FÉTICHE »).
+- **L'objet fétiche** : Une fois par session, s'il y a accès et n'est pas Brisé, le joueur récupère un point de Sang-froid sans pause (p. 76).
 - **Fin de session** : Le joueur modifie ses points d'Humanité et de Promotion dans les encadrés de sa fiche selon les gains ou pertes attribués par le Blade Meneur (section « PROMOTION ET HUMANITÉ »).
 - **Amélioration des compétences** : Durant un Quart de pause, le joueur dépense ses points d'Humanité pour augmenter d'un niveau le dé d'une de ses compétences (section « UTILISER LES POINTS D’HUMANITÉ »).
 
 ## Cas limites
 Le livre détaille plusieurs situations atypiques liées à la fiche :
-- **Le réplicant qui s'ignore** : Si un PJ découvre sa nature synthétique, sa Santé maximale augmente de deux points et son Sang-froid maximal diminue de deux points (section « UN RÉPLICANT QUI S’IGNORE »). Ses règles de forçage mémoriel remplacent dès lors les siennes (section « UN RÉPLICANT QUI S’IGNORE »).
+- **Le réplicant qui s'ignore** : Si un PJ découvre sa nature synthétique, sa Santé maximale augmente de deux points et son Sang-froid maximal diminue de deux points (section « UN RÉPLICANT QUI S’IGNORE »). Les règles propres aux réplicants s'appliquent dès lors — forçage et effets de stress critiques (p. 28).
 - **Perte définitive de Sang-froid** : Obtenir un un (symbole du un) lors du jet d'effet de stress critique réduit définitivement la valeur maximale de Sang-froid de sa fiche de un point (section « PERTE DE SANG-FROID PERMANENTE »). Si cette valeur tombe à zéro, le personnage quitte la partie (section « PERTE DE SANG-FROID PERMANENTE »).
 - **Ressources à zéro** : Un personnage réplicant peut commencer la partie avec un score de départ de zéro en Promotion et en chinyen à cause de ses modificateurs de création (section « ANNÉES DE SERVICE »).
 
 ## Non couvert
 Bien que la spécialité Sociable permette d'acquérir une seconde relation clé (section « SOCIABLE »), le livre ne précise pas comment l'inscrire sur la fiche qui ne comporte qu'un seul emplacement dédié (section « RELATION CLÉ »). De plus, aucun espace n'est prévu sur la fiche pour consigner les dettes et les faveurs financières contractées en dehors du chinyen (section « AFFAIRES »).
+
+*Relu le 2026-10-24 contre le livre de base français (BRN-01, Arkhane Asylum ; page imprimée = PDF − 4), p. 27–37, 76–77. Corrigé : le tableau des années de service — la Promotion de départ est D3, D6, D8 ou D10, et les −1, +1, +2 modifient le **chinyen** ; la fiche les avait fusionnés. Précisés : le réplicant qui s'ignore, l'objet fétiche.*

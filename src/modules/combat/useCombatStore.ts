@@ -71,7 +71,7 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
 }
 
 /** Le pilote actif, lu par le global — un import direct fermerait un cycle. */
-function piloteActif(): { combat?: { santeDeDepart?: string; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien } } | undefined {
+function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'asc' | 'desc'; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien } } | undefined {
     try {
         return (window as unknown as {
             useSessionOSStore?: { getState: () => { getActiveDriver?: () => { combat?: { santeDeDepart?: string; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien } } | undefined } };
@@ -519,7 +519,16 @@ interface CombatState {
      */
     ordonnerLeRound: (ordre: string[], initiatives: Record<string, number>) => void;
     /** Lance l'initiative automatique pour tous les combattants via DiceEngine ou formules */
-    rollAutoInitiative: (params: { diceMax?: number; formula?: string; resolver?: (name: string, combatant: Combatant) => number; sortOrder?: 'asc' | 'desc'; cards?: number; departages?: string[] }) => void;
+    rollAutoInitiative: (params: { diceMax?: number; formula?: string; resolver?: (name: string, combatant: Combatant) => number; sortOrder?: 'asc' | 'desc'; cards?: number; departages?: string[];
+        /** Embuscade ou attaque surprise réussie : ce combattant reçoit la carte 1, les autres tirent (Blade Runner, p. 65, 67). */
+        carteUn?: string }) => void;
+    /**
+     * **Échanger sa carte d'initiative** (Blade Runner, « Échange d'initiative », p. 65) :
+     * avec un combattant qui n'a pas encore joué ce round ; il prend la carte et
+     * agit aussitôt, et ne peut pas échanger de nouveau avant le round suivant.
+     * Rend la raison d'un refus, ou `null`.
+     */
+    echangerLInitiative: (id: string, avecId: string) => string | null;
     /** Réordonne manuellement les combattants (ex: via Drag & Drop) */
     reorderCombatants: (startIndex: number, endIndex: number) => void;
 
@@ -1039,7 +1048,7 @@ export const useCombatStore = create<CombatState>()(
                 get().broadcastSync();
             },
 
-            rollAutoInitiative: ({ diceMax = 20, formula, resolver, sortOrder = 'desc', cards, departages }) => {
+            rollAutoInitiative: ({ diceMax = 20, formula, resolver, sortOrder = 'desc', cards, departages, carteUn }) => {
                 // Porte 1 de l'ouverture : le rituel qui commence un combat dans
                 // presque tous les jeux. Avant le tirage, pour que le fil ouvre
                 // le combat puis annonce l'initiative.
@@ -1074,10 +1083,16 @@ export const useCombatStore = create<CombatState>()(
                         }
                     }
 
+                    // L'embuscade réussie : la carte 1 d'office, retirée du paquet des autres (p. 65, 67).
+                    const surprend = cardPool.length > 0 && carteUn && newCombatants.some(c => c.id === carteUn) ? carteUn : undefined;
+                    if (surprend) cardPool = cardPool.filter(n => n !== 1);
                     let cardIdx = 0;
                     newCombatants.forEach(c => {
                         let rolled = 0;
-                        if (cardPool.length > 0) {
+                        c.echangeAuRound = undefined;
+                        if (surprend && c.id === surprend) {
+                            rolled = 1;
+                        } else if (cardPool.length > 0) {
                             if (cardIdx < cardPool.length) rolled = cardPool[cardIdx++];
                             else rolled = Math.floor(Math.random() * (cards || 10)) + 1;
                         } else if (formula) {
@@ -1120,6 +1135,30 @@ export const useCombatStore = create<CombatState>()(
                     return { combatants: newCombatants, currentTurnIdx: 0 };
                 });
                 get().broadcastSync();
+            },
+
+            echangerLInitiative: (id, avecId) => {
+                const s = get();
+                const i = s.combatants.findIndex(c => c.id === id);
+                const j = s.combatants.findIndex(c => c.id === avecId);
+                if (i < 0 || j < 0 || i === j) return 'Combattant introuvable.';
+                if (i !== s.currentTurnIdx) return "Seul le combattant dont c'est le tour peut échanger sa carte.";
+                if (j <= s.currentTurnIdx) return `${s.combatants[j].name} a déjà joué ce round.`;
+                if (s.combatants[i].echangeAuRound === s.round) return `${s.combatants[i].name} vient de recevoir sa carte par un échange : pas avant le round suivant.`;
+                const a = s.combatants[i], b = s.combatants[j];
+                const sens = piloteActif()?.combat?.initiativeSort ?? 'asc';
+                const combatants = s.combatants
+                    .map(c => (c.id === a.id ? { ...c, init: b.init } : c.id === b.id ? { ...c, init: a.init, echangeAuRound: s.round } : c))
+                    .sort((x, y) => comparerLInitiative(x, y, sens));
+                // Le partenaire prend la carte du tour en cours : c'est lui qui agit, tout de suite.
+                set({ combatants, currentTurnIdx: Math.max(0, combatants.findIndex(c => c.id === b.id)) });
+                useJournalStore.getState().addEvent({
+                    type: 'COMBAT', title: "Combat : échange d'initiative",
+                    content: `Round ${s.round} — ${a.name} échange sa carte ${a.init} avec ${b.name} (${b.init}), qui agit aussitôt.`,
+                    sceneId: s.sceneId ?? undefined, metadata: { round: s.round },
+                });
+                get().broadcastSync();
+                return null;
             },
 
             reorderCombatants: (startIndex, endIndex) => {

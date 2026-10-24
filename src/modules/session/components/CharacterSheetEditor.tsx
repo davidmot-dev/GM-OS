@@ -21,6 +21,7 @@ import { PanneauTachesVoyageur } from './PanneauTachesVoyageur';
 import { PanneauReposVoyageur } from './PanneauReposVoyageur';
 import { PanneauProgressionVoyageur } from './PanneauProgressionVoyageur';
 import { PanneauHautReveVoyageur } from './PanneauHautReveVoyageur';
+import SuiviBladeRunner from './fields/SuiviBladeRunner';
 import { PanneauRecoursVoyageur } from './PanneauRecoursVoyageur';
 import { PanneauAstrologieVoyageur } from './PanneauAstrologieVoyageur';
 import ChampDuReferentiel from './fields/ChampDuReferentiel';
@@ -333,6 +334,22 @@ const CharacterSheetEditor: React.FC = () => {
                                 }
                             }}
                         />}
+
+                        {/*
+                            **Blade Runner : blessures critiques et secours** (B3–B7, 2026-10-24) —
+                            sauvegarde contre la mort, stabilisation, soins, premiers secours.
+                        */}
+                        {piloteDeLaFiche?.jet?.bladeRunner && editor.selectedPlayer && (
+                            <CarteDuJeu id="blessures-blade-runner" titre="Blessures critiques et secours">
+                                <SuiviBladeRunner key={`br-${character.id}`} regle={piloteDeLaFiche.jet.bladeRunner} forcer={piloteDeLaFiche.jet.forcer}
+                                    tirage={piloteDeLaFiche.combat?.horsJeu} valeurs={{ ...character.sheetData, ...editor.localData }}
+                                    nom={character.name} personnageId={character.id}
+                                    ecrire={maj => {
+                                        if (editor.aDesChangements) { gmToast('Sauvegardez les saisies de la fiche avant de traiter une blessure.', 'warning'); return; }
+                                        updateCharacter(editor.selectedPlayer!.id, character.id, { sheetData: { ...character.sheetData, ...maj } });
+                                    }} />
+                            </CarteDuJeu>
+                        )}
 
                         {/*
                             **Les mécaniques du Voyageur, avec le test** — David, le
