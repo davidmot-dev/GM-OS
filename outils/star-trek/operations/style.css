@@ -1,0 +1,30 @@
+/* Opérations de Star Trek (23/10/2026) : l'habillage du module LCARS (lcars/style.css), et ce qui lui manque — Boucliers, jauges, formulaires serrés. */
+.lcars-prototype.lcars-operations .lcars-ops-champs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); gap: 4px 12px; }
+.lcars-prototype.lcars-operations .lcars-ops-champs label { margin: 6px 0; }
+.lcars-prototype.lcars-operations .lcars-ops-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.lcars-prototype.lcars-operations .lcars-ops-actions button, .lcars-prototype.lcars-operations .lcars-ops-ligne button { padding: 8px 14px; }
+.lcars-prototype.lcars-operations .lcars-ops-ligne { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 6px 0; }
+.lcars-prototype.lcars-operations .lcars-ops-entete { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; margin-bottom: 12px; }
+.lcars-prototype.lcars-operations .lcars-ops-discret { color: #b7b0c5; font-size: 14px; }
+.lcars-prototype.lcars-operations .lcars-ops-attention { color: var(--lcars-orange); font-weight: 700; }
+.lcars-prototype.lcars-operations .lcars-ops-danger { color: #ff9e9e; font-weight: 700; }
+.lcars-prototype.lcars-operations .lcars-ops-boucliers { margin: 10px 0; }
+.lcars-prototype.lcars-operations .lcars-ops-boucliers-legende { display: flex; justify-content: space-between; color: var(--lcars-orange); font-size: 12px; letter-spacing: .1em; font-weight: 700; }
+.lcars-prototype.lcars-operations .lcars-ops-barre { position: relative; height: 16px; border-radius: 8px; background: #1b1f2c; overflow: hidden; margin-top: 4px; }
+.lcars-prototype.lcars-operations .lcars-ops-barre > span:first-child { display: block; height: 100%; background: var(--lcars-bleu); border-radius: 8px; }
+.lcars-prototype.lcars-operations .lcars-ops-barre.lcars-ops-moitie > span:first-child { background: var(--lcars-orange); }
+.lcars-prototype.lcars-operations .lcars-ops-barre.lcars-ops-quart > span:first-child { background: #ff9e9e; }
+.lcars-prototype.lcars-operations .lcars-ops-palier { position: absolute; top: 0; bottom: 0; width: 2px; background: #050608; }
+.lcars-prototype.lcars-operations .lcars-ops-valeurs { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 6px 12px; margin: 10px 0; }
+.lcars-prototype.lcars-operations .lcars-ops-valeurs dt { color: var(--lcars-mauve); font-size: 12px; letter-spacing: .06em; }
+.lcars-prototype.lcars-operations .lcars-ops-valeurs dd { margin: 0; font-weight: 700; }
+.lcars-prototype.lcars-operations .lcars-ops-valeurs .lcars-ops-detruit dd { color: #ff9e9e; }
+.lcars-prototype.lcars-operations .lcars-ops-jauge { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0; }
+.lcars-prototype.lcars-operations .lcars-ops-jauge span { width: 22px; height: 22px; border-radius: 5px; border: 2px solid #86739d; }
+.lcars-prototype.lcars-operations .lcars-ops-jauge span.lcars-ops-avancee { border-color: var(--lcars-orange); }
+.lcars-prototype.lcars-operations .lcars-ops-jauge span.lcars-ops-coche { background: var(--lcars-bleu); }
+.lcars-prototype.lcars-operations .lcars-ops-jauge.lcars-ops-consequence span.lcars-ops-coche { background: #ff9e9e; }
+.lcars-prototype.lcars-operations ul, .lcars-prototype.lcars-operations ol { margin: 8px 0; padding-left: 20px; }
+.lcars-prototype.lcars-operations li { margin: 4px 0; }
+.lcars-prototype.lcars-operations details > summary { cursor: pointer; color: var(--lcars-orange); font-weight: 700; letter-spacing: .06em; }
+@media (max-width: 760px) { .lcars-prototype.lcars-operations .lcars-grille { grid-template-columns: minmax(0, 1fr); } }

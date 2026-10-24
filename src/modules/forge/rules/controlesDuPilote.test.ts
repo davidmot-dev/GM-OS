@@ -2027,3 +2027,22 @@ describe('le bloc Symbaroum et les départages', () => {
             .toEqual([['combat.departages', 'erreur']]);
     });
 });
+
+/** **Star Trek jusqu'au bout** (2026-10-23) : les champs de `jet.starTrek`, le départ par personnage. */
+describe('le bloc Star Trek et le départ par personnage', () => {
+    const jet = (starTrek: Record<string, unknown>) => ({ seuil: [{ id: 'attribut', label: 'Attribut', sectionId: 'competences' }], reserve: { base: 2, max: 5, faces: 20 }, sens: 'sous-ou-egal', starTrek });
+    const constats = (driver: Record<string, unknown>) => controlerLePilote(driver as never, fiche)
+        .filter(c => c.ou.startsWith('jet.starTrek') || c.ou.includes('departParPersonnage')).map(c => [c.ou, c.gravite]);
+
+    it('des champs présents passent sans un mot ; un champ absent est une erreur', () => {
+        expect(constats({ jet: jet({ forme: 'combat', stress: { courant: 'determination' } }) })).toEqual([]);
+        expect(constats({ jet: jet({ forme: 'forme', stress: { courant: 'determination' } }) })).toEqual([['jet.starTrek.forme', 'erreur']]);
+    });
+
+    it('un départ par personnage sans « Nouveau scénario » s’avertit ; négatif, c’est une erreur', () => {
+        const menace = { id: 'menace', label: 'Menace', proprietaire: 'meneur', depart: 2, min: 0 };
+        expect(constats({ ressourcesDeTable: [{ ...menace, departParPersonnage: 2 }] })).toEqual([['ressourcesDeTable[0].departParPersonnage', 'avertissement']]);
+        expect(constats({ ressourcesDeTable: [{ ...menace, departParPersonnage: -1, remiseAuDepartParScenario: true }] })).toEqual([['ressourcesDeTable[0].departParPersonnage', 'erreur']]);
+        expect(constats({ ressourcesDeTable: [{ ...menace, departParPersonnage: 2, remiseAuDepartParScenario: true }] })).toEqual([]);
+    });
+});

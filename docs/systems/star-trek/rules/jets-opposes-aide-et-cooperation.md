@@ -17,7 +17,7 @@ Lorsque deux personnages s'affrontent directement, l'action se résout par une t
 
 Pour accomplir une action complexe, des alliés peuvent apporter leur aide (section « Aide et travail d’équipe »). Chaque assistant jette un dé à vingt faces avec son propre seuil d'attribut et de fonction (section « Aide et travail d’équipe »). Leurs réussites s'ajoutent à celles de l'acteur principal si ce dernier obtient au moins une réussite sur son propre jet (section « Aide et travail d’équipe »). En cas d'échec du principal, l'aide est annulée et la tâche échoue (section « Aide et travail d’équipe »).
 
-Lors d'efforts conjugués sur une tâche étendue, l'aide d'un coéquipier augmente l'efficacité mécanique en ajoutant ses réussites à l'impact ou en générant de l'Impulsion collective (section « Efforts conjugués »).
+⚠️ *Retiré le 2026-10-23* : des « efforts conjugués » qui ajouteraient les réussites d'un assistant à l'impact d'une tâche étendue — aucune section du livre ne porte ce nom. Sur une tâche étendue, l'impact vaut la fonction utilisée, ou celle du vaisseau qui aidait (p. 271).
 
 ## Valeurs
 - Dé lancé par un assistant: un dé à vingt faces (section « Aide et travail d’équipe »).
@@ -26,7 +26,6 @@ Lors d'efforts conjugués sur une tâche étendue, l'aide d'un coéquipier augme
 - Validation de l'aide: l'acteur principal doit obtenir au moins une réussite (section « Aide et travail d’équipe »).
 - Résolution d'égalité: le personnage actif l'emporte s'il égale les réussites du personnage réactif (section « Tâches en opposition »).
 - Échec de l'actif en opposition: le personnage réactif gagne un point d'Impulsion par réussite manquante de l'actif pour atteindre la difficulté (section « Tâches en opposition »).
-- Impact d'aide (effort conjugué): augmente l'impact de la tâche de un point par réussite (section « Efforts conjugués »).
 
 ## À la table
 Lors d'un différend, le MJ annonce une tâche en opposition (section « Tâches en opposition »). Le personnage réactif lance ses dés en premier (section « Tâches en opposition »). Ses réussites fixent la difficulté temporaire (section « Tâches en opposition »). Le personnage actif effectue alors son jet (section « Tâches en opposition »). S'il égale ou dépasse ce seuil, il gagne; sinon, le réactif l'emporte et obtient de l'Impulsion collective égale aux réussites manquantes de l'actif (section « Tâches en opposition »).

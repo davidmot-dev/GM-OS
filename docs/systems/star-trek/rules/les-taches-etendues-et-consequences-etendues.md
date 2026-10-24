@@ -37,9 +37,9 @@ Dès que la jauge d'effort franchit la moitié des cases, le joueur annonce: « 
 
 ## Cas limites
 Le livre résout plusieurs situations ambiguës:
-1. **Travail d'équipe**: Un assistant peut intervenir (section « Entreprendre une Tâche Étendue »). Ses réussites s'ajoutent à celles de l'acteur principal, mais sa fonction n'augmente pas l'impact final, basé uniquement sur la fonction du leader (section « Entreprendre une Tâche Étendue »).
+1. **Travail d'équipe**: l'impact vaut la fonction du personnage qui mène la tâche ; si le **vaisseau** l'aidait, on peut prendre la fonction du vaisseau à la place (p. 271).
 2. **Échecs critiques**: Si la tâche étendue échoue, aucun effort n'est coché (section « Entreprendre une Tâche Étendue »). En cas de complication sur un échec, le meneur de jeu peut ajouter directement un revers à la conséquence étendue, accélérant la menace (section « Revers »).
-3. **Obstacle supérieur**: L'obstacle ne peut réduire l'impact sous zéro (section « Entreprendre une Tâche Étendue »). Même si l'obstacle dépasse la fonction, une réussite garantit toujours de cocher une case d'effort si le joueur dépense deux points d'Impulsion pour un effort supplémentaire (section « Entreprendre une Tâche Étendue »).
+3. **Obstacle supérieur**: l'obstacle réduit l'impact de un par point **jusqu'à un minimum de 1** : une tâche réussie coche toujours au moins une case (p. 271 ; corrigé le 2026-10-23, la fiche disait « jamais sous zéro »). Les complications, elles, retirent chacune un point d'impact.
 
 ## Non couvert
 Les sources ne précisent pas:

@@ -53,7 +53,7 @@ conformément à la décision de David du 19/10.
 | [Nephilim Légende](#nephilim-légende) | 🟢 9 · 🟠 1 · 🔴 0 | **N1–N9 livrés et essayés le 23/10** (registre § 165) : tout le livre au jet et sur la fiche | L'essai sur tablette physique |
 | [NOC](#noc) | 🟢 1 · 🟠 1 · 🔴 5 | Restes revérifiés dans le code le 19/10 ; **Séquelle proposée à 8 le 22/10** (registre § 150), essai de David validé | Singularité attribuée par un Rouage |
 | [Rêve de Dragon](#rêve-de-dragon) | 🟢 0 · 🟠 1 · 🔴 5 | Socle R0–R7 livré pour les PJ ; première boucle TMR livrée ; mécaniques du Voyageur dans l'onglet « Lancer un test » le 22/10 | Initiative complète et suites du Haut-Rêve |
-| [Star Trek Adventures](#star-trek-adventures) | 🟢 0 · 🟠 1 · 🔴 4 | Pilote et LCARS documentés ; audit mécanique détaillé à faire | Export actuel, règles de la deuxième édition et essais matériels LCARS |
+| [Star Trek Adventures](#star-trek-adventures) | 🟢 9 · 🟠 1 · 🔴 0 | Pilote et LCARS documentés ; **audit et toutes les améliorations livrés le 23/10** (registre § 167, [audit](2026-10-23-star-trek-ameliorations.md)), pilote 2.0.0 | Réimport et essai de David ; essais matériels LCARS |
 | [Symbaroum](#symbaroum) | 🟢 10 · 🟠 0 · 🔴 0 | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), essai de David validé ; **S0, S2 et S5 à S9 livrés le 23/10** (§ 166), pilote 2.0.0 | Réimport du pilote 2.0.0 et essai de David |
 | [Torg Eternity](#torg-eternity) | 🟢 0 · 🟠 0 · 🔴 5 | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
 | [Within](#within) | 🟢 0 · 🟠 0 · 🔴 4 | Export examiné sommairement ; aucune règle primaire auditée | Reprendre la référence et construire une configuration mécanique vérifiable |
@@ -412,7 +412,17 @@ rapports privés, pièces jointes, alertes et sauvegarde par campagne.
 
 Ces deux dernières lignes sont **des pistes d'audit**, pas des fonctions déclarées absentes
 ou des règles déjà validées. Les consoles LCARS et leurs échanges ne sont pas à recréer.
-**Prochaine étape :** audit du pilote de jeu et essais matériels, avant d'étendre LCARS.
+
+**Instruites et livrées le 23/10** (registre § 167, [audit et livraison](2026-10-23-star-trek-ameliorations.md)),
+à la demande de David (« on va faire toute les améliorations de Star Trek ») :
+
+| Lot | Livré | Reste |
+| --- | --- | --- |
+| 🟢 P0 · audit et corpus | Export du 22/10 audité contre la deuxième édition ; dix fiches du corpus corrigées, quatre relues | Six fiches encore `relu: false` |
+| 🟢 P1 · Menace initiale | « Nouveau scénario » : 2 par personnage joueur (`departParPersonnage`), Impulsion à 0 | — |
+| 🟢 P2 · raccords mécaniques | La tâche complète au panneau ; Stress et blessures ; Réputation ; alternance des camps ; Détermination à 1 par séance. LCARS reste une mise en scène, sans calcul | Talents non interprétés ; PNJ selon leur rang |
+| 🟢 P3 · vaisseau et conflits spatiaux | Module `star-trek-operations`, habillage LCARS : vaisseaux, Boucliers, dégâts, brèches, noyau ; tâches étendues et défis | Actions de poste à la main ; trois lectures retenues à confirmer |
+| 🟠 Essai | — | LCARS sur les appareils physiques, et l'essai de David du pilote 2.0.0 |
 
 ## Symbaroum
 

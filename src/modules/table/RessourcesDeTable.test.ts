@@ -376,3 +376,16 @@ describe('maxSur — la Traque plafonne au Seuil RK du lieu', () => {
         expect(plafondDe(NEPHILIM, {}, { ...TRAQUE, maxSur: 'absente', max: 6 })).toBe(6);
     });
 });
+
+/** Star Trek, 2026-10-23 : « 2 points de Menace par personnage joueur présent » (Livre de Base, p. 264). */
+describe('le départ par personnage joueur', () => {
+    const menace: RessourceDeTable = { id: 'menace', label: 'Menace', proprietaire: 'meneur', depart: 2, min: 0, remiseAuDepartParScenario: true, departParPersonnage: 2 };
+    it('Nouveau scénario remet la Menace à deux par personnage', () => {
+        const r = nouveauScenario([menace], { menace: 11 }, 4);
+        expect(r.etat.menace).toBe(8);
+        expect(r.mouvements).toEqual([{ ressourceId: 'menace', delta: -3 }]);
+    });
+    it('sans compte de personnages, le départ fixe', () => {
+        expect(nouveauScenario([menace], { menace: 11 }).etat.menace).toBe(2);
+    });
+});

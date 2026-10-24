@@ -54,7 +54,7 @@ Le livre résout plusieurs situations ambiguës:
 1. Postes et consoles: L'officier doit se tenir au poste adéquat pour obtenir l'aide (section « La Passerelle »). Agir depuis Communications, Science ou la salle des machines réduit la difficulté de la tâche de un point (section « COMMUNICATIONS », section « SCIENCE », section « Salle des Machines »).
 2. Systèmes endommagés: Une brèche augmente la difficulté des tâches associées (section « Rœparation des dŒg¥ts »). Le talent Dispositifs de détection de pointe cesse d'agir si les Détecteurs subissent une brèche (section « Dispositifs de dŒtection de pointe »).
 3. Vaisseaux non-joueurs: Sans postes individuels, le meneur utilise leur Qualité d'équipage (section « PNJ et ManŒuvres de vaisseau »). Le navire agit selon son Envergure, mais se limite à une tâche aidée par système par round, sauf dépense d'un point de Menace (section « PNJ et ManŒuvres de vaisseau »).
-4. Surcharge: Si les Moteurs sont détruits, le réacteur menace d'exploser. L'équipage doit stabiliser le confinement par une tâche d'Ingénierie de difficulté trois ou l'éjecter pour fuir (section « Brœche imminente du Noyau de distorsion! »).
+4. Noyau de distorsion: quand le vaisseau a subi des **dégâts critiques** et que ses Moteurs sont détruits, un d20 à la fin de chaque round — supérieur à l'Ingénierie du vaisseau, il explose (Envergure + 1 dégâts Perforants à portée courte). Le stabiliser : tâche **étendue** d'Audace ou de Maîtrise + Ingénierie, difficulté 3, jauge égale aux Moteurs ; l'éjecter : Audace + Ingénierie, difficulté 2 (p. 311 ; corrigé le 2026-10-23).
 
 ## Non couvert
 Les sources ne précisent pas:

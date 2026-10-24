@@ -7,10 +7,12 @@ sources: "star_trek_deuxieme_edition__livre_de_base_pdf.pdf"
 sections: "« Mécanique de base » ; « Entreprendre une tâche » ; « Tâches en opposition » ; « Marge de complication » ; « Réussite mitigée »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Résolution des jets
+
+> Relue le 2026-10-23 contre le Livre de Base de la deuxième édition (pages imprimées 253–259). Corrigé : la réussite mitigée.
 
 ## Règle
 Pour toute action incertaine, le personnage effectue une tâche en additionnant un attribut et une fonction pour obtenir son seuil de réussite (section « Mécanique de base »). Le joueur lance deux dés à vingt faces: chaque dé inférieur ou égal au seuil compte pour une réussite (section « Mécanique de base »). La tâche réussit si ses réussites égalent ou dépassent la difficulté (de zéro à cinq) (section « Entreprendre une tâche »).
@@ -43,7 +45,7 @@ Le livre de base précise ces cas particuliers:
 1. Difficulté de zéro: Ces tâches réussissent automatiquement (section « Difficulté des tâches »). Pour essayer de générer de l'Impulsion, le joueur peut lancer les dés normalement, s'exposant alors à des complications (section « Difficulté des tâches »).
 2. Égalité en opposition: Si le personnage actif égale exactement le nombre de réussites du réactif, l'actif gagne la confrontation (section « Tâches en opposition »).
 3. Racheter les complications: Un joueur peut annuler l'effet d'une complication en donnant deux points de Menace au MJ (section « Complications »).
-4. Réussite mitigée: En cas d'échec d'un jet capital, le joueur peut demander une réussite mitigée. L'action aboutit mais s'accompagne d'une complication majeure automatique (section « Réussite mitigée »).
+4. Réussite mitigée: c'est **le meneur** qui la propose, avant ou après le lancer ; le joueur peut alors réussir en échange d'une complication automatique, ordinaire, qu'on peut repousser pour 2 Menace — et sans dépense d'Impulsion sur ce résultat (p. 259 ; corrigé le 2026-10-23).
 
 ## Non couvert
 Les sources ne mentionnent pas:

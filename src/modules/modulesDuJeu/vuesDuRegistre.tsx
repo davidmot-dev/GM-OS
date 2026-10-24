@@ -48,7 +48,16 @@ const mjCombatSpatial = lazy(async () => {
     const { PupitreCombatSpatial } = await import('./combatSpatial/VuesCombatSpatial');
     return { default: (props: Props) => <PupitreCombatSpatial vue={props.vue as import('../../../outils/alien/modules/combat-spatial/moteur.mjs').VueCombatSpatial} envoyerCommande={props.envoyerCommande} /> };
 });
+const joueurOperations = lazy(async () => {
+    const { VueEquipageOperations } = await import('./operationsStarTrek/VuesOperations');
+    return { default: (props: Props) => <VueEquipageOperations vue={props.vue as import('../../../outils/star-trek/operations/moteur.mjs').VueOperations} envoyerCommande={props.envoyerCommande} /> };
+});
+const mjOperations = lazy(async () => {
+    const { PupitreOperations } = await import('./operationsStarTrek/VuesOperations');
+    return { default: (props: Props) => <PupitreOperations vue={props.vue as import('../../../outils/star-trek/operations/moteur.mjs').VueOperations} envoyerCommande={props.envoyerCommande} /> };
+});
 const REGISTRE_DES_VUES = new Map([
+    ['star-trek-operations', { joueur: joueurOperations, mj: mjOperations }],
     ['rdd-tmr', { joueur: vueTmr, mj: mjTmr }],
     ['star-trek-lcars', { joueur: joueurLcars, mj: mjLcars }],
     ['alien-muthur', { joueur: joueurMuthur, mj: mjMuthur }],

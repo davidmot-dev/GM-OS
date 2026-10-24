@@ -7,10 +7,12 @@ sources: "star_trek_deuxieme_edition__livre_de_base_pdf.pdf"
 sections: "« IMPULSION, reserve d’Impulsion » ; « MENACE » ; « Obtenir de la Menace » ; « Dépenser de la Menace »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Monnaie de table
+
+> Relue le 2026-10-23 contre le Livre de Base de la deuxième édition (pages imprimées 259–265, 277). Corrigé : la visibilité de la Menace.
 
 ## Règle
 Le jeu propose deux ressources collectives: l'Impulsion et la Menace (section « IMPULSION »).
@@ -52,8 +54,10 @@ En combat, un joueur qui finit son tour peut dépenser deux points d'Impulsion p
 Le livre précise plusieurs cas particuliers:
 1. Débordement d'Impulsion: Si la réserve d'Impulsion est déjà à six points, toute réussite excédentaire est perdue, sauf si le joueur la dépense immédiatement pour des effets de sa tâche, comme obtenir des informations ou augmenter les dégâts (section « reserve d’Impulsion »).
 2. Cumul d'achats de dés: Un joueur ne peut pas lancer plus de fiv/cinq dés à vingt faces sur une tâche (section « Entreprendre une tâche »). Il peut combiner Impulsion et Menace pour acheter trois dés bonus maximum (section « Entreprendre une tâche »).
-3. Transparence de la Menace: La réserve de Menace du meneur de jeu doit rester visible de tous, matérialisant la tension (section « MENACE »).
-4. Interruption ennemie: Le meneur de jeu peut dépenser de la Menace pour faire agir un personnage non-joueur après le tour d'un joueur, rompant l'alternance (section « Dépenser de la Menace »).
+3. ⚠️ *Retiré le 2026-10-23* : « la Menace doit rester visible de tous » — le livre dit au contraire que les personnages en ignorent l'existence (p. 264) ; la montrer est un choix de table.
+4. Garder l'initiative côté PNJ : 2 points de Menace (p. 260, 264). Au début d'un conflit, 1 point de Menace donne le premier tour à un PNJ (p. 277).
+5. Départ : 2 points de Menace par personnage joueur présent, à ajuster au ton de la mission ; aucune Impulsion en début de mission (p. 259, 264).
+6. Escalade : une attaque létale ajoute 1 point de Menace (p. 264, 290).
 
 ## Non couvert
 Les sources n'indiquent pas:

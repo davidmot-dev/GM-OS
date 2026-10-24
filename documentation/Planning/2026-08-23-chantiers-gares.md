@@ -12686,6 +12686,19 @@ David, le 23/10 : *« je voudrais qu'on finisse Symbaroum, le livre de base est 
 - **Vérifié** : `npx tsc -b`, lint ciblé, suite complète **8 957 essais verts** (puis l’essai de la relance interdite après un échec critique en Défense) ; captures relues.
 - **Feu vert de David le 23/10** (« c'est bon tu peux commit et poussé »). **Reste** : le réimport du pilote 2.0.0 et l'essai à la table, s'ils ne sont pas déjà faits. À la main, et dit dans le manuel : l'Endurance des PNJ, les effets des Talents, la durée des poisons, la réentrée dans le seuil.
 
+### 167 · Star Trek — toutes les améliorations (ST0 à ST9) — 23/10/2026
+
+David, le 23/10 : *« on va faire toute les améliorations de Star Trek, le livre de base se trouve ici […] GM-OS est fermé »* ; en cours de route : *« Prend le style du module existant de star trek »*. Audit et livraison : [2026-10-23-star-trek-ameliorations.md](2026-10-23-star-trek-ameliorations.md).
+
+- **Fait — audit** contre le Livre de Base de la deuxième édition (export du 22/10 repris de `41453319^`) : initiative absente, Stress sans règle, Menace fixe, ni aide, ni opposition, ni vaisseau, ni tâches étendues.
+- **Fait — personnage** (`systemes/starTrekRegles.ts`, 20 essais ; `StarTrekAuJet.tsx`) : la tâche complète au panneau (nature, marge, opposition, assistants, vaisseau, Occasion parfaite ; complications repoussées, réussite mitigée, Éclair d'inspiration, Viser, blessure infligée) ; cartes Stress et blessures, Le tour de conflit, Réputation de fin de mission, Création et progression.
+- **Fait — commun** : `RessourceDeTable.departParPersonnage` (Nouveau scénario : 2 Menace par personnage) ; les dés d'aide portent leur nom au résultat.
+- **Fait — module du jeu** `star-trek-operations` (11 essais du moteur, 4 d'écran), **habillage LCARS** : vaisseaux et VNJ, Résistance, Boucliers, armes, dégâts, secousses, brèches, systèmes détruits, dégâts critiques, noyau ; tâches étendues, conséquences, défis chronométrés.
+- **Fait — pilote** : `outils/star-trek/finir_star_trek.py` → `Export Dirvers/corriges/ST_driver_gmos_finir.gmos-driver`, **2.0.0** : `jet.starTrek`, Réputation au choix de la fonction, alternance des camps, Stress suivi, Menace par personnage, Détermination à 1 en début de séance, module ajouté à LCARS. Zéro constat de la Forge.
+- **Fait — corpus** : dix fiches corrigées, quatre relues ; **manuel** : page Star Trek et guide 53, six captures neuves relues.
+- **Vérifié** : `npx tsc -b`, lint, suite complète **9 003 essais verts**, captures réelles dans Electron.
+- **Feu vert de David le 24/10** (« Commit et pousse »). **Reste** : le réimport du pilote 2.0.0 et l'essai à la table, s'ils ne sont pas déjà faits ; trois lectures retenues à confirmer (seuils des Boucliers cumulés, Détermination à 1 par séance, 1 Menace pour ouvrir sur un PNJ à la main).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12793,6 +12806,7 @@ David, le 23/10 : *« je voudrais qu'on finisse Symbaroum, le livre de base est 
 | 100 | **Cthulhu Hack — cinq améliorations** | § 164 ; blessures, armure, Fortune MJ, durées et Pulp — livré et essayé le 23/10 | Rien sur ces cinq lots | Rien |
 | 101 | **Nephilim — finir le pilote (N1 à N9)** | § 165 ; jet, santé, Chutes, pacte, stase, Sapience, Alchimie, lieux, métamorphe — livré et essayé le 23/10 | Rien | Rien |
 | 102 | **Symbaroum — finir le pilote (S0, S2, S4 à S9)** | § 166 ; corpus corrigé, attaque et Défense avec dégâts, agonie, Stigmates, départage de l'initiative, création et progression, bourse, voyages, règles optionnelles ; pilote 2.0.0 — livré le 23/10 | Réimporter le pilote, puis une attaque, une Défense ratée et un Test de mort sur une fiche | L'essai de David |
+| 103 | **Star Trek — toutes les améliorations (ST0 à ST9)** | § 167 ; tâche complète, Stress et blessures, Réputation, alternance, Menace par personnage, module Bataille spatiale et tâches étendues (LCARS) ; pilote 2.0.0 — livré le 23/10 | Réimporter le pilote, ouvrir le module, une attaque à distance aidée du vaisseau | L'essai de David |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

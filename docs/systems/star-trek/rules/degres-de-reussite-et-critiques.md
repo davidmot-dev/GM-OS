@@ -7,10 +7,12 @@ sources: "star_trek_deuxieme_edition__livre_de_base_pdf.pdf"
 sections: "« Entreprendre une tâche » ; « Marge de complication » ; « Complications »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Degrés de réussite et critiques
+
+> Relue le 2026-10-23 contre le Livre de Base de la deuxième édition (pages imprimées 255–259, 178).
 
 ## Règle
 Chaque tâche possède une difficulté indiquant les réussites nécessaires pour réussir l'action (section « Entreprendre une tâche »). Quand les réussites sur les dés à vingt faces dépassent la difficulté, chaque réussite excédentaire gagne un point d'Impulsion collective (section « Entreprendre une tâche »).

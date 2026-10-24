@@ -23,7 +23,7 @@ Pendant son tour, un personnage peut accomplir une action majeure et une action 
 - Nombre de tours: un seul tour d'action par participant par round (section « STRUCTURE DES CONFLITS »).
 - Composition du tour: une action majeure et une action mineure (section « ACTIONS DE COMBAT »).
 - Limite absolue: deux actions majeures maximum par round (section « ACTIONS DE COMBAT »).
-- Conserver l'initiative: deux points d'Impulsion immédiate pour faire agir un allié de suite (section « Conserver l’initiative »).
+- Conserver l'initiative: deux points d'Impulsion immédiate pour faire agir un allié de suite ; cet allié doit céder ensuite à l'opposition, et le camp ne peut plus garder l'initiative avant qu'un adversaire ait joué (p. 260, 277).
 - Action majeure supplémentaire: deux points d'Impulsion, augmentant de un point la difficulté du jet (section « Actions majeures »).
 - Action mineure supplémentaire: un point d'Impulsion immédiate (section « Actions mineures »).
 - Priorité initiale: premier tour attribué à un joueur, départagé par l'Audace la plus élevée (section « STRUCTURE DES CONFLITS »).

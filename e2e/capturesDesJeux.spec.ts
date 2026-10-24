@@ -102,10 +102,12 @@ const MISES_EN_SCENE: MiseEnScene[] = [
     },
     {
         corpusId: 'star-trek', slug: 'star-trek', personnage: 'Enseigne T’Vael',
-        sheetData: { audace: 10, securite: 3, raison: 9, science: 4 },
+        // Star Trek jusqu'au bout (2026-10-23) : la Forme du Stress, la Détermination, la Réputation, la Protection.
+        sheetData: { audace: 10, securite: 3, raison: 9, science: 4, maitrise: 10, forme: 9, ingenierie: 2, stress: 2, determination: 1, reputation: 3, resistance: 1 },
         composantes: ['audace', 'securite'],
         reserves: { impulsion: 2, menace: 5 },
         desAchetes: 1,
+        scenes: c => scenesDeStarTrek(c),
     },
     {
         corpusId: 'alien', slug: 'alien', personnage: 'Dana Okoro',
@@ -339,7 +341,7 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
-        if (['alien','crime','cthulhu hack'].includes(mise.corpusId)) test.setTimeout(240_000);
+        if (['alien','crime','cthulhu hack','star-trek'].includes(mise.corpusId)) test.setTimeout(240_000);
         const f = gmos.fenetre;
         const campagne = campagneDe(mise.slug);
 
@@ -419,8 +421,8 @@ for (const { mise, pilote } of JEUX) {
         // Un panneau plus haut que la fenêtre se photographierait coupé : on l'agrandit le temps des deux prises.
         const fenetre = await gmos.application.browserWindow(f);
         await fenetre.evaluate(w => w.setContentSize(1440, 1800));
-        // Les cartes de Symbaroum (2026-10-23) ont leurs propres prises : le jet se photographie seul.
-        const sansCartes = mise.corpusId === 'symbaroum'
+        // Les cartes de Symbaroum et de Star Trek (2026-10-23) ont leurs propres prises : le jet se photographie seul.
+        const sansCartes = ['symbaroum', 'star-trek'].includes(mise.corpusId)
             ? await panneau.evaluateHandle(p => { const st = document.createElement('style'); st.textContent = '[data-panneau-de-jet] > [data-carte-du-jeu] { display: none !important; }'; p.ownerDocument.head.appendChild(st); return st; })
             : null;
         await photographier(panneau, `jeu-${mise.slug}-jet`);
@@ -827,6 +829,81 @@ async function scenesDeSymbaroum(c: ContexteDeScene): Promise<void> {
     await options.getByRole('checkbox', { name: /Attaques parfaites/ }).check();
     await photographier(options, 'jeu-symbaroum-options');
     await options.getByRole('checkbox', { name: /Attaques parfaites/ }).uncheck();
+}
+
+/**
+ * **Star Trek jusqu'au bout** (2026-10-23) : la tâche préparée (attaque à distance,
+ * assistant, vaisseau, marge), ses suites, les cartes Stress et Réputation, et le
+ * pupitre de la bataille spatiale dans l'habillage LCARS.
+ */
+async function scenesDeStarTrek(c: ContexteDeScene): Promise<void> {
+    if (!(c.pilote.gameDriver as { jet?: { starTrek?: unknown } }).jet?.starTrek) return;
+    const f = gmos.fenetre;
+    const fenetre = await gmos.application.browserWindow(f);
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await fenetre.evaluate(w => w.setContentSize(1440, 2400));
+    await panneau.getByRole('radio', { name: 'Attaque à distance', exact: true }).check();
+    const prep = panneau.locator('[data-preparation-star-trek]');
+    await prep.getByLabel('Nom de l’assistant').fill('Lt Varga');
+    await prep.getByLabel('Seuil de l’assistant').fill('13');
+    await prep.getByRole('button', { name: 'Ajouter', exact: true }).click();
+    await prep.locator('label', { hasText: 'Aide du vaisseau' }).locator('input').check();
+    await prep.locator('[data-marge-de-complication]').selectOption('2');
+    await photographier(panneau.getByRole('region', { name: 'Préparer', exact: true }), 'jeu-star-trek-preparation');
+    const blessure = panneau.locator('[data-blessure-infligee]');
+    for (let i = 0; i < 40 && await blessure.count() === 0; i++) await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    await blessure.getByLabel('Gravité de l’arme').fill('4');
+    await blessure.getByLabel('Létale').check();
+    await photographier(panneau.getByRole('region', { name: 'Résultat', exact: true }), 'jeu-star-trek-suites');
+    await photographier(f.locator('[data-carte-du-jeu="stress-star-trek"]'), 'jeu-star-trek-stress');
+    const reputation = f.locator('[data-carte-du-jeu="reputation-star-trek"]');
+    await reputation.getByLabel('La mission a-t-elle été couronnée de succès ?').check();
+    await reputation.getByLabel('Avez-vous obéi aux ordres de vos supérieurs ?').check();
+    await reputation.getByLabel('Avez-vous recouru à la force létale ?').check();
+    await reputation.getByRole('button', { name: /^Jet de Réputation/ }).click();
+    await photographier(reputation, 'jeu-star-trek-reputation');
+
+    // Le pupitre de la bataille spatiale, dans l'habillage LCARS.
+    await vue(c.campagne, 'modules-du-jeu');
+    await expect(f.locator('[data-hub-consultation="modules-du-jeu-mj"]')).toBeVisible();
+    await f.locator('article').filter({ has: f.getByRole('heading', { name: 'Bataille spatiale et tâches étendues', exact: true }) })
+        .getByRole('button', { name: 'Ouvrir le pupitre', exact: true }).click();
+    const pupitre = f.locator('[data-pupitre-operations]');
+    await expect(pupitre).toBeVisible();
+    const creer = async (nom: string, camp: string, envergure: string, arme?: [string, string]) => {
+        const form = pupitre.locator('[data-nouveau-vaisseau]');
+        if (!(await form.getAttribute('open') !== null)) await form.locator('summary').click();
+        await form.getByLabel('Nom', { exact: true }).first().fill(nom);
+        await form.locator('label', { hasText: 'Camp' }).locator('select').selectOption(camp);
+        await form.getByLabel('Envergure', { exact: true }).fill(envergure);
+        if (arme) {
+            await form.getByLabel('Nom', { exact: true }).nth(1).fill(arme[0]);
+            await form.getByLabel('Dégâts de base', { exact: true }).fill(arme[1]);
+            await form.getByRole('button', { name: 'Ajouter l’arme', exact: true }).click();
+        }
+        await form.getByRole('button', { name: 'Créer le vaisseau', exact: true }).click();
+        await expect(pupitre.locator('h3', { hasText: nom }).first()).toBeVisible();
+    };
+    await creer('U.S.S. Défiant', 'joueurs', '3', ['Canons phaseurs', '5']);
+    await creer('Oiseau-de-proie', 'adverse', '3');
+    const attaque = pupitre.locator('[data-attaque-spatiale]');
+    const [attaquant, arme, cible] = await attaque.locator('select').all();
+    await attaquant.selectOption({ label: 'U.S.S. Défiant' });
+    await arme.selectOption({ label: 'Canons phaseurs' });
+    await cible.selectOption({ label: 'Oiseau-de-proie' });
+    await attaque.getByRole('button', { name: 'Appliquer les dégâts', exact: true }).click();
+    await expect(pupitre.locator('[data-journal-operations] li').first()).toBeVisible();
+    const tache = pupitre.locator('details', { hasText: 'NOUVELLE TÂCHE ÉTENDUE' });
+    await tache.locator('summary').click();
+    await tache.getByLabel('Nom', { exact: true }).fill('Rétablir les boucliers');
+    await tache.getByRole('button', { name: 'Créer', exact: true }).click();
+    await pupitre.locator('[data-tache-etendue]').getByRole('button', { name: 'Tâche réussie : cocher l’impact', exact: true }).click();
+    await fenetre.evaluate(w => w.setContentSize(1440, 4800));
+    await f.evaluate(() => window.scrollTo(0, 0));
+    await photographier(pupitre, 'jeu-star-trek-bataille-spatiale');
+    await fenetre.evaluate(w => w.setContentSize(1440, 900));
 }
 
 /**

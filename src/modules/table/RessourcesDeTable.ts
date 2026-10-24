@@ -100,6 +100,14 @@ export interface RessourceDeTable {
      */
     remiseAuDepartParScenario?: boolean;
     /**
+     * **Le départ se compte par personnage joueur** — Star Trek, 2026-10-23 :
+     * *« votre MJ commence la partie avec une réserve de 2 points de Menace par
+     * personnage joueur présent »* (Livre de Base, p. 264). « Nouveau scénario »
+     * remet alors la réserve à ce nombre fois les personnages de la campagne, au
+     * lieu de `depart` ; le meneur ajuste ensuite au ton de la mission.
+     */
+    departParPersonnage?: number;
+    /**
      * Tenue par la table mais **pas dessinée dans le bandeau** — les réserves de
      * la Cabale (`reservesDuGroupe`), trente-cinq stocks qui se lisent dans le
      * panneau de jet, là où l'on puise. Les gestes de séance et de scénario les
@@ -492,9 +500,15 @@ export function debutDeSeance(
 }
 
 /** Les réserves qui le déclarent reviennent à leur départ — un nouveau scénario commence. */
+/** Le départ d'une réserve pour un nouveau scénario : par personnage joueur quand elle le déclare. */
+export function departDuScenario(r: RessourceDeTable, personnages?: number): number {
+    return r.departParPersonnage !== undefined && personnages !== undefined ? Math.max(0, r.departParPersonnage * personnages) : r.depart;
+}
+
 export function nouveauScenario(
     ressources: RessourceDeTable[],
     etat: EtatDesRessources,
+    personnages?: number,
 ): ResultatDeMouvement {
     let courant = { ...etat };
     const mouvements: MouvementDeReserve[] = [];
@@ -502,9 +516,10 @@ export function nouveauScenario(
     for (const r of ressources) {
         if (!r.remiseAuDepartParScenario) continue;
         const avant = valeurDe(ressources, courant, r.id);
-        if (avant === r.depart) continue;
-        courant = { ...courant, [r.id]: r.depart };
-        mouvements.push({ ressourceId: r.id, delta: r.depart - avant });
+        const depart = departDuScenario(r, personnages);
+        if (avant === depart) continue;
+        courant = { ...courant, [r.id]: depart };
+        mouvements.push({ ressourceId: r.id, delta: depart - avant });
     }
 
     return { etat: courant, mouvements, perdu: 0, avertissements: [] };

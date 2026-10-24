@@ -68,7 +68,7 @@ interface RessourcesDeTableState {
     /** L'érosion de début de séance — la soirée de jeu, que le meneur ouvre. */
     debutDeSeance: (campaignId: string, ressources: RessourceDeTable[]) => ResultatDeMouvement;
     /** Les réserves qui le déclarent reviennent à leur départ : un scénario commence. */
-    nouveauScenario: (campaignId: string, ressources: RessourceDeTable[]) => ResultatDeMouvement;
+    nouveauScenario: (campaignId: string, ressources: RessourceDeTable[], personnages?: number) => ResultatDeMouvement;
     /** Remet les réserves d'une campagne à leur valeur de départ. */
     reinitialiser: (campaignId: string, ressources: RessourceDeTable[]) => void;
     /**
@@ -186,8 +186,8 @@ export const useRessourcesDeTableStore = create<RessourcesDeTableState>()(
                 debutDeSeance: (campaignId, ressources) =>
                     appliquer(campaignId, debutDeSeancePur(ressources, lire(campaignId, ressources)), ressources, 'début de séance'),
 
-                nouveauScenario: (campaignId, ressources) =>
-                    appliquer(campaignId, nouveauScenarioPur(ressources, lire(campaignId, ressources)), ressources, 'nouveau scénario'),
+                nouveauScenario: (campaignId, ressources, personnages) =>
+                    appliquer(campaignId, nouveauScenarioPur(ressources, lire(campaignId, ressources), personnages), ressources, 'nouveau scénario'),
 
                 reinitialiser: (campaignId, ressources) => {
                     set(state => ({ reserves: { ...state.reserves, [campaignId]: etatInitial(ressources) } }));

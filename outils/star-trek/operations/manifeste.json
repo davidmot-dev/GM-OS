@@ -1,0 +1,28 @@
+{
+  "versionContrat": 1,
+  "id": "star-trek-operations",
+  "libelle": "Bataille spatiale et tâches étendues",
+  "description": "Star Trek Adventures, deuxième édition : vaisseaux de l'équipage et d'en face (systèmes, Résistance, Boucliers, réserves d'énergie, armes), dégâts, secousses, brèches et noyau de distorsion (p. 294-313) ; tâches étendues, conséquences étendues et défis chronométrés (p. 268-273, 329-333).",
+  "version": "1.0.0",
+  "versionDonnees": 1,
+  "corpusCompatibles": ["star-trek"],
+  "commandes": [
+    {"id": "vaisseau", "roles": ["mj"]},
+    {"id": "supprimer-vaisseau", "roles": ["mj"]},
+    {"id": "etat-vaisseau", "roles": ["mj"]},
+    {"id": "attaque", "roles": ["mj"]},
+    {"id": "recharger-boucliers", "roles": ["mj"]},
+    {"id": "colmater", "roles": ["mj"]},
+    {"id": "reparer", "roles": ["mj"]},
+    {"id": "noyau", "roles": ["mj"]},
+    {"id": "nouvelle-scene", "roles": ["mj"]},
+    {"id": "tache", "roles": ["mj"]},
+    {"id": "supprimer-tache", "roles": ["mj"]},
+    {"id": "impact", "roles": ["mj"]},
+    {"id": "defi", "roles": ["mj"]},
+    {"id": "supprimer-defi", "roles": ["mj"]},
+    {"id": "defi-tache", "roles": ["mj"]},
+    {"id": "intervalles", "roles": ["mj"]},
+    {"id": "reinitialiser", "roles": ["mj"]}
+  ]
+}

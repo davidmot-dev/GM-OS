@@ -11,6 +11,9 @@ import type { CommandeDeModule } from '../../src/modules/modulesDuJeu/protocole'
 import * as lcars from '../../outils/star-trek/lcars/natif.mjs';
 import { validerEtat as validerLcars } from '../../outils/star-trek/lcars/moteur.mjs';
 import manifesteLcars from '../../outils/star-trek/lcars/manifeste.json';
+import * as operations from '../../outils/star-trek/operations/moteur.mjs';
+import manifesteOperations from '../../outils/star-trek/operations/manifeste.json';
+import type { CommandeOperations } from '../../outils/star-trek/operations/moteur.mjs';
 import * as tmr from '../../outils/reve-de-dragon/tmr/moteur.mjs';
 import manifesteTmr from '../../outils/reve-de-dragon/tmr/manifeste.json';
 
@@ -47,6 +50,16 @@ export const REGISTRE_DES_MOTEURS: ReadonlyMap<string, MoteurEnregistre> = new M
         migrerEtat: lcars.migrerEtat,
         arreterEffets(donnees) { validerLcars(donnees); return lcars.arreterEffets(donnees); },
         appliquerCommande: lcars.appliquerCommande, vuePour: lcars.vuePour,
+    }],
+    // Star Trek, 2026-10-23 : vaisseaux, bataille spatiale, tâches étendues et défis — le meneur seul commande.
+    [manifesteOperations.id, {
+        manifeste: manifesteOperations, creerEtat: operations.creerEtat, migrerEtat: operations.migrerEtat,
+        arreterEffets(donnees) { operations.validerEtat(donnees); return operations.arreterEffets(donnees); },
+        appliquerCommande(donnees, commande, lecteur) {
+            operations.validerEtat(donnees);
+            return operations.appliquerCommande(donnees, commande as CommandeOperations, lecteur);
+        },
+        vuePour(donnees, lecteur) { operations.validerEtat(donnees); return operations.vuePour(donnees, lecteur); },
     }],
     [manifeste.id, {
         manifeste, creerEtat: muthur.creerEtat, migrerEtat: muthur.migrerEtat,

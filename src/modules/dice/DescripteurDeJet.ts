@@ -502,6 +502,14 @@ export interface DescripteurDeJet {
      */
     symbaroum?: import('./systemes/symbaroumRegles').RegleDeSymbaroum;
     /**
+     * **Star Trek Adventures, jusqu'au bout** — 2026-10-23 (`systemes/starTrekRegles.ts`) :
+     * au jet, la nature de la tâche, la marge de complication, l'opposition, les
+     * assistants et l'aide du vaisseau, la Détermination ; après, les complications
+     * repoussées, la réussite mitigée, les relances, la blessure infligée ; sur la
+     * fiche, le Stress et les blessures, la Réputation et la création.
+     */
+    starTrek?: import('./systemes/starTrekRegles').RegleDeStarTrek;
+    /**
      * **Brisé** — Blade Runner, 2026-10-14. Quand forcer met un de ces champs à
      * zéro, le panneau le dit, et peut lancer l'effet critique : le dé `de` (un
      * champ échelonné, l'Empathie), lu dans `table` (Table-OS) ; sur un 1, le

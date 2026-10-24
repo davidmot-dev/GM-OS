@@ -1,6 +1,9 @@
 # 🖖 Jeu — Star Trek
 
-> **Pilote décrit :** « Star Trek », exporté le 2026-10-14 ; module LCARS 0.5.0 relu le 2026-10-16 ; paiement au choix le 2026-10-22 (`Export Dirvers/corriges/ST_driver_gmos_paiement.gmos-driver`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Star Trek », exporté le 2026-10-14 ; module LCARS 0.5.0 relu le 2026-10-16 ; paiement au choix le 2026-10-22 ; **toutes les améliorations le 2026-10-23**, version 2.0.0 : la tâche complète, le Stress et les blessures, la Réputation, l'alternance des camps, la Menace par personnage, et le module **Bataille spatiale et tâches étendues** (`Export Dirvers/corriges/ST_driver_gmos_finir.gmos-driver`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+
+> Règles relues contre le **Livre de Base de la deuxième édition** le 2026-10-23 (pages imprimées 132, 166–178,
+> 185–191, 226–228, 241–243, 250–313, 329–333), et le corpus `docs/systems/star-trek/` corrigé d'après lui.
 
 Star Trek Adventures, deuxième édition : le système 2d20, comme [Dune](./54-Jeu-Dune.md), avec un Attribut
 et une Fonction.
@@ -13,11 +16,14 @@ et une Fonction.
 
 | Réserve | Ce qu'elle fait dans GM-OS |
 | :--- | :--- |
-| **Impulsion** (0 à 6, aux joueurs) | Chaque **réussite excédentaire** l'alimente ; elle paie les dés achetés. **« Fin de scène »** lui retire un point. Les joueurs la voient et la dépensent depuis leur tablette |
+| **Impulsion** (0 à 6, aux joueurs) | Chaque **réussite excédentaire** l'alimente ; elle paie les dés achetés. **« Fin de scène »** lui retire un point ; **« Nouveau scénario »** la remet à 0 (p. 259). Les joueurs la voient et la dépensent depuis leur tablette |
 | **Menace** (au meneur, sans plafond) | Visible des joueurs. **Un dé acheté sans Impulsion se paie en Menace** — ou **par choix** du joueur, même avec de l'Impulsion |
 
-> La Menace de départ du livre est de **deux points par personnage joueur** ; le pilote en pose 2,
-> à ajuster à la main au début de la partie.
+> **La Menace de départ** (2026-10-23) : **« Nouveau scénario »** la remet à **deux points par
+> personnage joueur** de la campagne, et la confirmation dit le calcul (« Menace revient à 8 (2 × 4
+> personnages) », p. 264). Ajustez ensuite au ton de la mission.
+>
+> **« Début de séance »** remet la **Détermination** de chaque personnage à 1 (p. 168).
 
 ---
 
@@ -42,13 +48,144 @@ et une Fonction.
 
 ![Après le lancer](captures/jeu-star-trek-jet-lance.jpg)
 
+### La tâche complète
+
+![Préparer : une attaque à distance, un assistant, l'aide du vaisseau, la marge de complication 19–20](captures/jeu-star-trek-preparation.jpg)
+
+À l'étape **Préparer** (2026-10-23) :
+
+- **Tâche, attaque au corps à corps, attaque à distance** : l'attaque règle l'attribut, la fonction et la
+  difficulté du livre — Audace + Sécurité, difficulté 1 ; Maîtrise + Sécurité, difficulté 2 (p. 290).
+- **Marge de complication** : de 20 seul à 16–20, pour une tâche plus dangereuse sans être plus
+  difficile (p. 258).
+- **En opposition** : le réactif lance d'abord ; ses réussites, moins les facteurs qui le gênent, font la
+  difficulté (p. 256–258).
+- **Assistants** : chacun lance un d20 à son propre seuil (attribut + fonction), avec sa spécialisation ;
+  leurs réussites comptent **si le personnage en obtient au moins une**. Le premier est gratuit, les
+  suivants coûtent 1 Impulsion chacun, payée au lancer (p. 255).
+- **Aide du vaisseau** : un d20 au seuil système + fonction du vaisseau, qui a toujours la spécialisation
+  (sous la fonction, deux réussites). Les valeurs se lisent dans le module **Bataille spatiale** quand il
+  tient le vaisseau de l'équipage ; sinon, saisissez-les. **Énergie redirigée** : le dé vaut 1 (p. 178, 185).
+- **Un idéal ou une directive s'aligne** : la Détermination devient utilisable ; **Occasion parfaite**
+  fait d'un dé un 1, pour un point (p. 262).
+- **Difficulté 0** : « Réussie sans lancer » la consigne, sans Impulsion ni complication (p. 254).
+
+Les dés d'aide portent leur nom sous le dé, et le compte dit ce qu'ils ont donné — ou pourquoi ils ne
+comptent pas.
+
+### Après le lancer
+
+![Le résultat : 2 réussites, une complication sur le dé du vaisseau, la relance et la blessure infligée](captures/jeu-star-trek-suites.jpg)
+
+- **Repousser une complication** : +2 Menace par complication (p. 258).
+- **Réussite mitigée** (au meneur) : réussie avec une complication de plus, sans Impulsion à dépenser (p. 259).
+- **Relancer** : cochez les dés. **Éclair d'inspiration** (1 Détermination, avec un idéal) relance ceux
+  qu'on veut ; **Viser**, sur une attaque, relance un d20. Le nouveau résultat remplace l'ancien, même
+  moins bon ; l'Impulsion déjà versée suit le nouveau compte (p. 253, 262, 288).
+- **En opposition, échouée** : le réactif gagne l'Impulsion manquante ; un PNJ la change en Menace.
+- **La blessure** d'une attaque réussie : la gravité de l'arme, +1 pour 2 Impulsion (1 si Puissante),
+  deux fois au plus, et **Létale** : +1 Menace pour l'escalade (p. 290).
+
 ---
 
 ## Combat et santé
 
-- **Santé :** le modèle « blessures ».
-- **Détermination** et **Réputation** sont suivies sur chaque carte de combattant.
+- **L'ordre du tour** : les **camps alternent** (p. 277). Le meneur donne le premier tour à un PJ ;
+  **garder l'initiative** coûte 2 Impulsion, et l'allié qui la reçoit doit céder ensuite (deux tours
+  d'affilée au plus). Le panneau d'alternance du combat les tient ; 1 Menace donne le premier tour à un
+  PNJ, à la main.
+- **Santé :** le modèle « blessures » au combat ; le **Stress**, la **Détermination** et la
+  **Réputation** sont suivis sur chaque carte de combattant.
 - **Distances** en zones.
+
+### Stress et blessures
+
+![La carte Stress et blessures : 2 / 9, les gestes du Stress, une blessure à encaisser](captures/jeu-star-trek-stress.jpg)
+
+La carte, sous le panneau de jet :
+
+- **Stress** : maximum la **Forme** (ou le « Stress maximum » de la fiche, quand un talent l'a changé).
+  **Subir du Stress** au lieu d'une conséquence ; **éviter une blessure** en prenant autant de Stress que
+  sa gravité. Plein, le personnage est **épuisé** : difficulté +1, un attribut bloqué, choisi sur la carte
+  (p. 277–278). Le réduire : 2 Impulsion par case (trois au plus), **Répit** −4, **Pause** −8, **Sommeil**
+  tout (p. 278).
+- **Blessure** : un nom (Brûlure…), une gravité — la **Protection** de la fiche la réduit, jamais sous 1 ;
+  Perforant l'ignore —, létale ou étourdissante. Blessé, le personnage est **vaincu** ; vaincu avec une
+  blessure létale, il est **mourant** et meurt à la fin de la scène si personne ne le soigne (p. 292).
+- **Soins** : premiers secours (Audace + Médecine, difficulté 2 : il n'est plus vaincu) ; traiter
+  (difficulté égale à la gravité, les pénalités s'annulent ; une complication la rouvre) ; guérir
+  (intervention de Maîtrise + Médecine, difficulté égale à la gravité, +1 si elle n'a pas été traitée,
+  autant d'heures). « Fin de l'étourdissement » efface les blessures étourdissantes.
+
+### La Réputation de fin de mission — au meneur
+
+![La Réputation : les influences cochées, le jet, la Gloire](captures/jeu-star-trek-reputation.jpg)
+
+Les questions du livre en cases à cocher (p. 171), puis **le jet** : autant de d20 que d'influences
+positives, sous 7 + Réputation (deux réussites sous la Réputation), difficulté égale aux négatives. Au-delà,
+des points de **Gloire**, à dépenser aussitôt ; « Améliorer la Réputation » coûte autant de Gloire que le
+niveau visé, une fois par aventure (p. 172). En deçà, des **Réprimandes** : une par réussite manquante, plus
+une par 20 ; celles qu'on garde se notent sur la carte et élargissent la chance d'en recevoir.
+
+### Création et progression — au meneur
+
+Un contrôle sans écriture : un attribut au plus à 12 (de 7 à 12), une fonction au plus à 5 (p. 132) ; et les
+plafonds d'un jalon (11 et 4) ou d'un arc narratif (12 et 5).
+
+### Le tour de conflit
+
+Une carte de rappels : actions majeure et mineure, garder l'initiative, les attaques, l'escalade, éviter une
+blessure, le contact, à terre, viser.
+
+---
+
+## Bataille spatiale et tâches étendues — un module du jeu
+
+![Le pupitre, dans l'habillage LCARS : deux vaisseaux, leurs Boucliers, une attaque appliquée, une tâche étendue et le journal de bord](captures/jeu-star-trek-bataille-spatiale.jpg)
+
+Dans **Cockpit › Modules du jeu**, à côté de LCARS, **Bataille spatiale et tâches étendues** a le même
+habillage. Le meneur y tient ce que la table partage ; les tablettes, quand il leur ouvre l'accès, voient le
+vaisseau de l'équipage en entier, ceux d'en face de loin (Boucliers en pour cent, brèches), et les tâches
+qu'il montre.
+
+- **Les vaisseaux** : six systèmes, six fonctions, l'Envergure ; la **Résistance** (moitié de
+  l'Envergure, plus le bonus de Structure) et les **Boucliers** (Structure + Envergure + Sécurité) se
+  calculent (p. 185). Pour un vaisseau adverse, la **qualité d'équipage** donne l'attribut et la fonction de
+  ses tâches (p. 296). Les **armes** : énergie (difficulté 2) ou torpille (difficulté 3, +1 Menace), leurs
+  dégâts de base plus le bonus d'Armement, leurs qualités (p. 226–228).
+- **Une attaque a touché** : le tir se lance **au panneau de jet** (Maîtrise + Sécurité, aidé de
+  l'Armement + Sécurité) ; le pupitre applique ses dégâts — l'Impulsion en plus, les complications en
+  moins, la Résistance (Perforant l'ignore), le système touché au hasard (d20) ou choisi, l'attaque
+  dévastatrice. Les Boucliers encaissent : **sous la moitié, secoué** (au d20, ou la position de sécurité
+  pour un PNJ) ; **sous le quart dans le même coup, une brèche** ; **à zéro, une de plus** et ils
+  tombent ; déjà à zéro, chaque coup est une brèche (p. 308–309). *Lecture retenue : les trois seuils se
+  cumulent dans l'ordre du livre.*
+- **Les brèches** se colmatent (les pénalités s'annulent) puis se réparent après la bataille. Un système
+  est **détruit** à la moitié de l'Envergure ; au-delà de l'Envergure, **dégâts critiques**, et la brèche
+  suivante détruit le vaisseau ; Moteurs détruits, le **noyau de distorsion** se lance à chaque fin de
+  round (p. 311).
+- **Recharger les Boucliers** (Ingénierie du personnage + 1, +2 par Impulsion) consomme les réserves
+  d'énergie ; **Nouvelle scène** remet Boucliers et énergie (p. 185, 303, 308).
+- **Tâches étendues** : jauge d'effort, difficulté, obstacle, avancées à la moitié et aux trois quarts ;
+  « Tâche réussie » coche l'impact — la fonction moins l'obstacle, jamais sous 1, +1 par effort (2
+  Impulsion), −1 par complication. **Conséquences étendues** : la jauge d'achoppement monte de son impact,
+  +1 par Menace, trois au plus (p. 271–272, 329–331).
+- **Défis** : des tâches clés à cocher, et des **intervalles** pour les chronométrer — une tâche en
+  consomme 2, 1 avec 2 Impulsion, une complication en ajoute (p. 268–270, 333).
+
+---
+
+## Ce qui reste à la main
+
+- Le **choix des actions de poste** en bataille (éviter, se défendre, manœuvrer…) : leurs tâches se lancent
+  au panneau ; leur effet se règle au pupitre (secousse, Boucliers) ou de vive voix.
+- Les **talents** des personnages et des vaisseaux : leurs noms sont libres, GM-OS n'en interprète aucun.
+- Les **complications doublées** d'une énergie redirigée (p. 185) et les **dés d'aide relancés** par la
+  Détermination : à compter à la main.
+- Les **PNJ** : Stress et blessures selon leur rang (mineur, notable, majeur, p. 278, 291) — leur carte de
+  combat.
+- Les **différends sociaux** (tromperie, preuve, intimidation, négociation, p. 279–283) : des tâches en
+  opposition et des traits.
 
 ---
 
@@ -170,3 +307,5 @@ Décocher un accès retire immédiatement LCARS à ce personnage. **Tout couper*
 les modules ; une déconnexion ferme la vue jusqu’à la reprise de la liaison.
 
 *Relu le 2026-10-16 : L1–L7 logiciel, sept instruments dans le vrai Hub, médias privés et diffuseur unique. Essais des appareils physiques encore à réaliser.*
+
+*Relu le 2026-10-23, Star Trek 2.0.0 — toutes les améliorations.*

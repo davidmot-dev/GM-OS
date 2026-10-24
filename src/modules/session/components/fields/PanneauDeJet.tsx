@@ -69,6 +69,12 @@ import {
     ProgressionSymbaroum, SuitesSymbaroum, TourSymbaroum, VoyageSymbaroum, type Options as OptionsDeSymbaroum,
 } from './SymbaroumAuJet';
 import { lireSymbaroum, sansCritiqueDeBase, type NatureDuTest } from '../../../dice/systemes/symbaroumRegles';
+import { CreationStarTrek, PreparationStarTrek, ReputationStarTrek, StressEtBlessuresStarTrek, SuitesStarTrek, TourStarTrek, type VaisseauPourLAide } from './StarTrekAuJet';
+import {
+    CHOIX_STAR_TREK, coutDesAssistants, desDeLaTache, oppositionDeLaTache, resultatDeStarTrek, seuilDeComplication,
+    type ChoixStarTrek, type DeDuJet,
+} from '../../../dice/systemes/starTrekRegles';
+import { useModulesDuJeuJoueur, useModulesDuJeuMJ } from '../../../modulesDuJeu/magasins';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
 import type { ApportDuGroupe, DiceConfig } from '../../../../types/drivers';
 
@@ -319,6 +325,35 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setEcritsSymbaroum(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
         ecrireSurLaFiche?.(maj);
     };
+
+    /**
+     * **Star Trek jusqu'au bout** (2026-10-23) : la tâche complète — nature, marge,
+     * opposition, assistants, vaisseau, Détermination — et ce que le dernier lancer
+     * savait, pour le recompter après une relance.
+     */
+    const regleStarTrek = descripteur.sens === 'sous-ou-egal' && !descripteur.cible ? descripteur.starTrek : undefined;
+    const [choixStarTrek, setChoixStarTrek] = useState<ChoixStarTrek>(CHOIX_STAR_TREK);
+    const [starTrekDuLancer, setStarTrekDuLancer] = useState<{ des: DeDuJet[]; complication: number; difficulte: number; choix: ChoixStarTrek; compte: number } | null>(null);
+    const [ecritsStarTrek, setEcritsStarTrek] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const valeursStarTrek = useMemo(() => ({ ...valeurs,
+        ...(ecritsStarTrek.base === valeurs && ecritsStarTrek.personnageId === personnageId ? ecritsStarTrek.maj : {}),
+    }), [valeurs, ecritsStarTrek, personnageId]);
+    const ecrireStarTrek = (maj: Record<string, unknown>) => {
+        if (!Object.keys(maj).length) return;
+        setEcritsStarTrek(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche?.(maj);
+    };
+    const determinationStarTrek = regleStarTrek?.determination ? Math.max(0, Number(valeursStarTrek[regleStarTrek.determination]) || 0) : 0;
+    /** Le vaisseau de l'équipage, quand le module « Bataille spatiale » le tient : son aide se lit sans ressaisie. */
+    const vueModulesMJ = useModulesDuJeuMJ(st => st.vue);
+    const vueModulesJoueur = useModulesDuJeuJoueur(st => st.vue);
+    const vaisseauStarTrek: VaisseauPourLAide | null = useMemo(() => {
+        if (!regleStarTrek) return null;
+        const module = (pourLesJoueurs ? vueModulesJoueur : vueModulesMJ)?.modules.find(m => m.id === 'star-trek-operations');
+        const lu = (module?.vue as { vaisseaux?: { camp: string; nom: string; systemes?: Record<string, number>; fonctions?: Record<string, number> }[] } | undefined)
+            ?.vaisseaux?.find(v => v.camp === 'joueurs' && v.systemes && v.fonctions);
+        return lu ? { nom: lu.nom, systemes: lu.systemes!, fonctions: lu.fonctions! } : null;
+    }, [regleStarTrek, pourLesJoueurs, vueModulesJoueur, vueModulesMJ]);
 
     const { etatDe, depenser, gagner, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
     const monnaie = useMemo(
@@ -981,7 +1016,18 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 },
             );
         // Le d20 de Symbaroum n'a pas de critique de base (S8) : l'effet optionnel se dit à part.
-        const brut = regleSymbaroum ? sansCritiqueDeBase(brutDuMoteur) : brutDuMoteur;
+        /*
+          **La tâche de Star Trek** (2026-10-23) : les dés du moteur restent ceux du
+          personnage ; s'y ajoutent l'Occasion parfaite, les assistants et le vaisseau,
+          chacun avec son seuil, comptés selon le livre (p. 255–257).
+        */
+        const complicationStarTrek = seuilDeComplication(choixStarTrek.marge);
+        const desStarTrek = regleStarTrek
+            ? desDeLaTache(brutDuMoteur.rolls.filter(d => !d.isDropped).map(d => Number(d.val) || 0), seuilDuMoteur ?? jet.seuil, jet.doubleSous, choixStarTrek, () => DiceEngine.roll(20))
+            : null;
+        const brut = regleSymbaroum ? sansCritiqueDeBase(brutDuMoteur)
+            : desStarTrek ? resultatDeStarTrek(desStarTrek, complicationStarTrek, jet.reussitesRequises)
+            : brutDuMoteur;
         /*
           Le bonus du groupe (Vécu, Atout) s'ajoute au résultat compté : chez NOC
           chaque réussite élève le niveau d'un point, comme lui.
@@ -1001,6 +1047,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setSeuilDuLancer(jet.seuil);
         setBonusDuLancer(bonusDuGroupe + bonusPerso);
         setResultat(res);
+        if (regleStarTrek && desStarTrek) {
+            setStarTrekDuLancer(d => ({ des: desStarTrek, complication: complicationStarTrek, difficulte: jet.reussitesRequises, choix: choixStarTrek, compte: (d?.compte ?? 0) + 1 }));
+            // L'Occasion parfaite se paie d'un point de Détermination (p. 262) ; le deuxième assistant et les suivants, d'un point d'Impulsion ou de Menace (p. 255).
+            if (choixStarTrek.occasionParfaite && regleStarTrek.determination) {
+                ecrireStarTrek({ [regleStarTrek.determination]: Math.max(0, determinationStarTrek - 1) });
+                dits.push(`Occasion parfaite : Détermination ${determinationStarTrek} → ${Math.max(0, determinationStarTrek - 1)}`);
+            }
+            const coutAide = coutDesAssistants(choixStarTrek.assistants.length);
+            if (coutAide > 0 && monnaie && jet.cout.ressource) dits.push(...mouvoir(jet.cout.ressource, -coutAide, `${enTete}, assistants au-delà du premier`).avertissements, `${coutAide} pour les assistants`);
+            setChoixStarTrek(c => ({ ...c, occasionParfaite: false }));
+        }
         if (regleSymbaroum) {
             const retenu = jet.composantes[0]?.champ;
             const dejaRelance = relanceSymbaroum.current;
@@ -1574,9 +1631,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const v = verdict(reussites, jet.reussitesRequises);
     // Un dé écarté n'a rien déclenché : le compter ici annoncerait une
     // complication que le tirage vient précisément d'éviter.
-    const complications = descripteur.complication
+    // La marge de complication de Star Trek (p. 258) : celle du lancer, pas celle du réglage d'après.
+    const seuilDeComplicationDuLancer = regleStarTrek && starTrekDuLancer ? starTrekDuLancer.complication : descripteur.complication;
+    const complications = seuilDeComplicationDuLancer
         ? (resultat?.rolls ?? []).filter(
-            d => !d.isDropped && typeof d.val === 'number' && d.val >= descripteur.complication!,
+            d => !d.isDropped && typeof d.val === 'number' && d.val >= seuilDeComplicationDuLancer!,
         ).length
         : 0;
 
@@ -2071,6 +2130,30 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {regleNephilim && (
                         <PreparationNephilim jet={jet.nephilim} choix={choixNephilim} changer={c => setChoixNephilim(x => ({ ...x, ...c }))} />
                     )}
+                    {regleStarTrek && (
+                        <PreparationStarTrek
+                            choix={choixStarTrek}
+                            changer={c => {
+                                setChoixStarTrek(x => ({ ...x, ...c }));
+                                // En opposition, la difficulté est le nombre de réussites du réactif (p. 256).
+                                if (c.opposition) setDifficulte(oppositionDeLaTache(c.opposition.reussites, c.opposition.facteurs, 0).difficulte);
+                            }}
+                            choisirLaNature={nature => {
+                                setChoixStarTrek(x => ({ ...x, nature }));
+                                // Corps à corps : Audace + Sécurité, difficulté 1 ; à distance : Maîtrise + Sécurité, difficulté 2 (p. 290).
+                                const [attr, fonc] = descripteur.seuil ?? [];
+                                if (nature !== 'test' && attr && fonc) {
+                                    setChoix(c => ({ ...c, [attr.id]: nature === 'melee' ? 'audace' : 'maitrise', [fonc.id]: 'securite' }));
+                                    setDifficulte(nature === 'melee' ? 1 : 2);
+                                }
+                            }}
+                            determination={determinationStarTrek}
+                            difficulte={difficulte}
+                            vaisseau={vaisseauStarTrek}
+                            reussirSansLancer={() => redire(`${jet.composantes.map(c => c.label).join(' + ') || 'Tâche'} · difficulté 0`,
+                                { total: 0, modifier: 0, rolls: [], tagSuccess: true, totalDisplay: 'Réussie sans lancer : ni Impulsion ni complication (p. 254).' })}
+                        />
+                    )}
                     {regleSymbaroum && (
                         <PreparationSymbaroum
                             nature={jet.composantes[0]?.champ && jet.composantes[0].champ === regleSymbaroum.defense ? 'defense' : natureSymbaroum}
@@ -2370,8 +2453,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                               annoncerait un événement qui n'a pas eu lieu.
                             */
                             const ecarte = d.isDropped === true;
-                            const critique = !ecarte && descripteur.critique !== undefined && val <= jet.doubleSous;
-                            const complique = !ecarte && descripteur.complication !== undefined && val >= descripteur.complication;
+                            // Star Trek : chaque dé porte son propre seuil — les dés d'aide ont leur critique (2026-10-23).
+                            const aideStarTrek = d.cssClass === 'aide-star-trek' ? d.displayStr : undefined;
+                            const critique = !ecarte && (regleStarTrek && starTrekDuLancer ? !!d.isCritMax : descripteur.critique !== undefined && val <= jet.doubleSous);
+                            const complique = !ecarte && (regleStarTrek && starTrekDuLancer ? !!d.isCritMin : descripteur.complication !== undefined && val >= descripteur.complication);
                             /*
                               **Quel dé a déclenché, et pas seulement combien.**
                               Un compte de Paniques sans savoir lequel des huit
@@ -2393,7 +2478,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                               où le succès est la face maximale ; ailleurs, un 7 réussi sur un D10
                               resterait sans nom à côté d'un 10 nommé.
                             */
-                            const mention = ecarte ? 'Écarté'
+                            const mention = aideStarTrek ? `${aideStarTrek}${critique ? ' · 2' : complique ? ' · compl.' : ''}`
+                                : ecarte ? 'Écarté'
                                 : gardeDuResultat ? (unGarde ? 'Un' : d.isCritMax ? 'Réussite' : 'Gardé')
                                 : declenche ? nomDuUn
                                 : seconde ? descripteur.reserve?.secondaire?.label
@@ -2457,8 +2543,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 {reussites} réussite{reussites > 1 ? 's' : ''}
                                 {bonusDuLancer > 0 && ` (dont +${bonusDuLancer} ${ficheDeGroupe?.libelle ?? 'groupe'})`}
                                 {descripteur.difficulte
-                                    ? ` / difficulté ${difficulte}`
+                                    ? ` / difficulté ${regleStarTrek && starTrekDuLancer ? starTrekDuLancer.difficulte : difficulte}`
                                     : ` / ${jet.reussitesRequises} requise${jet.reussitesRequises > 1 ? 's' : ''}`}
+                                {/* Star Trek : ce que l'aide a donné, ou pourquoi elle ne compte pas (p. 256). */}
+                                {regleStarTrek && starTrekDuLancer && resultat.totalDisplay.replace(/^\d+ réussites?/, '')}
                             </span>
                         ) : (
                             <span className="text-app-text/50 font-mono">{resultat.totalDisplay}</span>
@@ -2498,6 +2586,32 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             **La Névrose du jet, écrite** (Crimes, C4, p. 409) : ce que le panneau dit
                             sous les dés, le meneur le note d'un clic — une fois par lancer.
                         */}
+                        {regleStarTrek && starTrekDuLancer && (
+                            <SuitesStarTrek key={starTrekDuLancer.compte} resultat={resultat} des={starTrekDuLancer.des}
+                                complication={starTrekDuLancer.complication} difficulte={starTrekDuLancer.difficulte} choix={starTrekDuLancer.choix}
+                                determination={determinationStarTrek} meneur={!pourLesJoueurs}
+                                remplacer={(des, motif) => {
+                                    const nouveau = resultatDeStarTrek(des, starTrekDuLancer.complication, starTrekDuLancer.difficulte);
+                                    // L'Impulsion déjà versée suit le nouveau compte (p. 253 : le nouveau jet remplace l'ancien).
+                                    const ecart = verdict(nouveau.successes ?? 0, starTrekDuLancer.difficulte).excedent - verdict(resultat.successes ?? 0, starTrekDuLancer.difficulte).excedent;
+                                    if (ecart !== 0 && monnaie && jet.cout.ressource) setMouvements(m => [...m, ...mouvoir(jet.cout.ressource!, ecart, motif).avertissements, `${ecart > 0 ? '+' : ''}${ecart} ${nomDe(jet.cout.ressource!)} (${motif})`]);
+                                    setStarTrekDuLancer(d => d && { ...d, des });
+                                    setResultat(nouveau);
+                                    redire(`${dernierLancer?.titre ?? 'Tâche'} · ${motif}`, nouveau);
+                                }}
+                                mitiger={() => {
+                                    const mitige: RollResult = { ...resultat, successes: Math.max(resultat.successes ?? 0, starTrekDuLancer.difficulte), tagSuccess: true, degre: 'reussite-normale',
+                                        totalDisplay: `${resultat.totalDisplay} — réussite mitigée : une complication de plus, pas d’Impulsion à dépenser` };
+                                    setResultat(mitige);
+                                    redire(`${dernierLancer?.titre ?? 'Tâche'} · réussite mitigée`, mitige);
+                                }}
+                                mouvoir={(ressource, delta, motif) => {
+                                    if (!monnaie) return;
+                                    setMouvements(m => [...m, ...mouvoir(ressource, delta, motif).avertissements, `${delta > 0 ? '+' : ''}${delta} ${nomDe(ressource)} (${motif})`]);
+                                }}
+                                ecrireDetermination={apres => regleStarTrek.determination && ecrireStarTrek({ [regleStarTrek.determination]: apres })}
+                                consigner={(titre, ligne) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
+                        )}
                         {regleSymbaroum && symbaroumDuLancer && ecrireSurLaFiche && (
                             <SuitesSymbaroum key={symbaroumDuLancer.compte} regle={regleSymbaroum} nature={symbaroumDuLancer.nature}
                                 resultat={resultat} seuil={seuilDuLancer} avantage={symbaroumDuLancer.avantage}
@@ -2953,6 +3067,30 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             <CarteDuJeu id="experience-nephilim" titre="Expérience">
                                 <ExperienceNephilim regle={regleNephilim} valeurs={valeursNephilim} sections={template.sections} ecrire={ecrireNephilim} consigner={consigner} />
                             </CarteDuJeu>
+                        )}
+                    </>
+                );
+            })()}
+            {regleStarTrek && ecrireSurLaFiche && (() => {
+                const consigner = (titre: string, ligne: string) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne });
+                const champsDe = (ids: string[] | undefined) => (ids ?? []).map(i => ({ id: i, label: template.sections.flatMap(sec => sec.fields).find(f => f.id === i)?.label ?? i }));
+                return (
+                    <>
+                        {regleStarTrek.stress && (
+                            <CarteDuJeu id="stress-star-trek" titre="Stress et blessures">
+                                <StressEtBlessuresStarTrek regle={regleStarTrek} valeurs={valeursStarTrek} ecrire={ecrireStarTrek} consigner={consigner} meneur={!pourLesJoueurs}
+                                    attributs={champsDe(regleStarTrek.attributs)}
+                                    payerImpulsion={monnaie ? (cout, motif) => setMouvements(m => [...m, ...mouvoir('impulsion', -cout, motif).avertissements, `−${cout} Impulsion (${motif})`]) : undefined} />
+                            </CarteDuJeu>
+                        )}
+                        <CarteDuJeu id="tour-star-trek" titre="Le tour de conflit"><TourStarTrek /></CarteDuJeu>
+                        {!pourLesJoueurs && regleStarTrek.reputation && (
+                            <CarteDuJeu id="reputation-star-trek" titre="Réputation de fin de mission">
+                                <ReputationStarTrek regle={regleStarTrek} valeurs={valeursStarTrek} ecrire={ecrireStarTrek} consigner={consigner} />
+                            </CarteDuJeu>
+                        )}
+                        {!pourLesJoueurs && (regleStarTrek.attributs || regleStarTrek.fonctions) && (
+                            <CarteDuJeu id="creation-star-trek" titre="Création et progression"><CreationStarTrek regle={regleStarTrek} valeurs={valeursStarTrek} /></CarteDuJeu>
                         )}
                     </>
                 );

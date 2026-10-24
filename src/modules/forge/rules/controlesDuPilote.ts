@@ -1044,6 +1044,23 @@ export function controlerLePilote(
             if (!atteinte) avertir('jet.symbaroum.defense', `La Défense « ${symb.defense} » ne se choisit pas dans le jet : ajouter sa section aux composantes du seuil.`);
         }
     }
+    // Star Trek jusqu'au bout (2026-10-23) : chaque champ que `jet.starTrek` nomme, et le 2d20 qu'il suppose.
+    const st = driver.jet?.starTrek;
+    if (st) {
+        if (driver.jet?.sens !== 'sous-ou-egal' || driver.jet?.cible || facesLancees(driver) !== 20) {
+            avertir('jet.starTrek', 'Le bloc Star Trek suppose des d20 sous un attribut + une fonction (p. 257) : il sera ignoré.');
+        }
+        const nommes: [string, string | undefined][] = [
+            ...(st.attributs ?? []).map(c => ['attributs', c] as [string, string]),
+            ...(st.fonctions ?? []).map(c => ['fonctions', c] as [string, string]),
+            ['forme', st.forme], ['stress.courant', st.stress?.courant], ['stress.maximum', st.stress?.maximum],
+            ['protection', st.protection], ['determination', st.determination], ['reputation', st.reputation],
+        ];
+        for (const [ou, champ] of nommes) {
+            if (champ && !tousLesChamps.has(champ)) erreur(`jet.starTrek.${ou}`, `Star Trek lit « ${champ} », absent de la fiche.`);
+        }
+        if (st.stress && !st.forme && !st.stress.maximum) avertir('jet.starTrek.forme', 'Sans Forme ni maximum écrit, le Stress n’a pas de plafond (p. 277).');
+    }
     // Les départages de l'initiative (Symbaroum, S6) : des formules sur des champs de la fiche.
     for (const formule of driver.combat?.departages ?? []) {
         for (const champ of champsInvoques(formule)) {
@@ -1908,6 +1925,14 @@ export function controlerLePilote(
 
     // ---- Les réserves de table ---------------------------------------------
     (driver.ressourcesDeTable ?? []).forEach((ressource, i) => {
+        // Le départ par personnage joueur (Star Trek, 2026-10-23) : un nombre, et lu seulement à « Nouveau scénario ».
+        if (ressource.departParPersonnage !== undefined) {
+            if (!Number.isFinite(ressource.departParPersonnage) || ressource.departParPersonnage < 0) {
+                erreur(`ressourcesDeTable[${i}].departParPersonnage`, `« ${ressource.label} » : le départ par personnage est un nombre positif — 2 pour la Menace de Star Trek.`);
+            } else if (!ressource.remiseAuDepartParScenario) {
+                avertir(`ressourcesDeTable[${i}].departParPersonnage`, `« ${ressource.label} » : le départ par personnage ne sert qu'avec « Nouveau scénario » (remiseAuDepartParScenario).`);
+            }
+        }
         // Une réserve qui se lit par son nom (Nephilim, 2026-10-23) : un libellé par valeur, de min à max.
         if (ressource.libelles && (ressource.max === undefined || ressource.libelles.length !== ressource.max - ressource.min + 1)) {
             avertir(`ressourcesDeTable[${i}].libelles`, `« ${ressource.label} » a ${ressource.libelles.length} libellés pour ${ressource.max === undefined ? 'aucun plafond' : `${ressource.max - ressource.min + 1} valeurs`} : une valeur sans nom s'affichera en chiffre.`);

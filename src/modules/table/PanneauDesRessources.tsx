@@ -5,7 +5,7 @@ import { gmConfirm, gmCustom } from '../../stores/useModalStore';
 import { useRessourcesDeTableStore } from './useRessourcesDeTableStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import {
-    visiblePourUnJoueur, manipulableParUnJoueur, plafondDe,
+    visiblePourUnJoueur, manipulableParUnJoueur, plafondDe, departDuScenario,
     type RessourceDeTable, type ResultatDeMouvement,
 } from './RessourcesDeTable';
 import type { GestesDesHeros, MouvementDeFiche } from '../../types/drivers';
@@ -68,6 +68,8 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
     const { etatDe, gagner, depenser, finDeScene, debutDeSeance, nouveauScenario, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
     const etat = etatDe(campaignId, ressources);
     const players = useSessionOSStore(s => s.players);
+    /** Les personnages joueurs de la campagne : la Menace de Star Trek part de deux par personnage (p. 264). */
+    const nombreDePersonnages = players.reduce((s, j) => s + j.characters.filter(c => c.campaignId === campaignId).length, 0);
     const updateCharacter = useSessionOSStore(s => s.updateCharacter);
     const updateCharacterHealth = useSessionOSStore(s => s.updateCharacterHealth);
     const gestesDuMeneur = pourLesJoueurs ? undefined : gestes;
@@ -313,7 +315,7 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                         <button
                             onClick={() => gmConfirm(
                                 `Nouveau scénario : ${[
-                                    ...remisesAuDepart.map(r => `${r.label} revient à ${r.depart}`),
+                                    ...remisesAuDepart.map(r => `${r.label} revient à ${departDuScenario(r, nombreDePersonnages)}${r.departParPersonnage !== undefined ? ` (${r.departParPersonnage} × ${nombreDePersonnages} personnage${nombreDePersonnages > 1 ? 's' : ''})` : ''}`),
                                     ...(reservesCachees ? ['les réserves du groupe se rechargent'] : []),
                                     ...(gestesDuMeneur?.nouveauScenario?.length
                                         ? [`chaque Héros récupère : ${nomsDesMouvements(gestesDuMeneur.nouveauScenario)}`] : []),
@@ -321,7 +323,7 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                                         ? [`le groupe se recharge : ${nomsDesMouvements(rechargeDuMeneur)}`] : []),
                                 ].join(', ')}.`,
                                 () => {
-                                    const r = nouveauScenario(campaignId, ressources);
+                                    const r = nouveauScenario(campaignId, ressources, nombreDePersonnages);
                                     annoncer(r);
                                     const heros = rendreAuxHeros(gestesDuMeneur?.nouveauScenario);
                                     direLesHeros(heros, 'Nouveau scénario');
