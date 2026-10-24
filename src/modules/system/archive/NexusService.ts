@@ -1737,6 +1737,13 @@ export class NexusService {
                 ...state.gameDriver,
                 id: newDriverId,
                 name: `${state.gameDriver.name} (Copie)`,
+                /*
+                  ⛔ **La copie désigne SA fiche** (audit des clés, 2026-10-24).
+                  La fiche copiée prend le nouvel identifiant ci-dessous ; le
+                  pilote copié gardait l'ancien `templateId`, et jouait donc la
+                  fiche de l'original pendant que la sienne restait orpheline.
+                */
+                ...(state.sheetTemplate ? { templateId: newDriverId } : {}),
             },
         };
 

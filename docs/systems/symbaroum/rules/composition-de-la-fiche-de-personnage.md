@@ -7,7 +7,7 @@ sources: "Symbaroum - Livre de Base.pdf"
 sections: "« Comment créer un personnage » ; « Les Attributs » ; « Attributs secondaires » ; « Ombre » ; « Équipement »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 283a2934
 ---
 
@@ -50,3 +50,5 @@ Le livre précise plusieurs cas particuliers relatifs à la fiche de personnage:
 
 ## Non couvert
 Le livre de base ne fournit pas de règles d'encombrement chiffrées par poids en kilogrammes pour limiter le nombre d'objets transportés dans l'inventaire de la fiche de personnage.
+
+*Relu le 2026-10-24 contre le Livre de Base (création, p. 58–60, Attributs secondaires, Tableau 25) : Attributs, dérivés, Talents de départ (deux Novices et un Adepte, ou cinq Novices). Aucune correction.*

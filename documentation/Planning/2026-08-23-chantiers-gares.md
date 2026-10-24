@@ -12726,6 +12726,49 @@ David, le 24/10 : *« est-ce que tu peux construire un calendrier Reve de Dragon
 - **Vérifié** : 5 essais du calendrier, 1 de l'afficheur ; recette réelle (`e2e/calendrierReveDeDragon.spec.ts`) et les 20 recettes de Clock-OS ; capture relue.
 - **Reste** : l'essai de David.
 
+### 170 · L'axe des clés stables — audit et quatre corrections — 24/10/2026
+
+David, le 24/10 : *« je voudrais finir "Améliorations communes et tenue du document" »*, puis le choix des quatre volets (section remise à jour, clés stables, documentation, corpus). L'audit du 22/10 ([rapport](2026-10-22-audit-fiches-tablettes-journal.md)) disait avoir « survolé » les clés. Parcouru cette fois : import d'un pilote (remplacer, copier), éditeur de fiche, duplication et suppression de modèles, copie de campagne, Forge.
+
+- **Tient** : « Remplacer » à l'import garde les identifiants du pilote et de sa fiche ; les identifiants de champs ne sont pas modifiables dans l'éditeur (seul le libellé l'est) ; la copie de campagne réécrit scènes, modules du jeu, réserves et combats préparés ; re-forger un jeu enrichit le pilote existant, par ajout seul.
+- **K1 corrigé** — la copie d'un pilote à l'import gardait l'ancien `templateId` : elle jouait la fiche de l'original, la sienne restait orpheline (`NexusService.applyResolutionToDriver`).
+- **K2 corrigé** — dupliquer un gabarit perdait `reglesDeFiche` et les personas : une copie du Livret du voyageur n'avait plus aucune mécanique de Rêve de Dragon (`usagesDuModele.copieDuGabarit`).
+- **K3 corrigé** — la corbeille du tableau des modèles supprimait un gabarit ou un pilote encore utilisé ; elle refuse désormais, en nommant ce qui s'en sert, et renvoie à la gomme pour un pilote (`usagesDuGabarit`, `usagesDuPilote`).
+- **K4 corrigé** — la copie d'une campagne (« Copie », « Nouvelle partie ») gardait le `ficheId` de ses personnages et de son groupe : la copie écrivait dans les fiches HTML de l'original. Elle repart sans fiche reliée ; les valeurs restent dans `sheetData` (`clonerLaCampagne`).
+- **Vérifié** : 2 essais des archives, 4 des usages et de la copie ; `npx tsc -b`, lint.
+- **Essayé par David le 24/10** : les quatre corrections marchent. **Reste** : rien.
+
+### 171 · Recette de la documentation des jeux — 24/10/2026
+
+Troisième volet de « finir les améliorations communes » (David, 24/10). Les pages 53 et 54 et leurs captures confrontées aux fonctions livrées.
+
+- **Pages** : les en-têtes des onze pages 54 disent le pilote décrit et sa date ; aucune image référencée ne manque ; les pages des jeux finis cette semaine (Alien, Crimes, Cthulhu Hack, Nephilim, Rêve de Dragon, Star Trek, Symbaroum) suivent leur pilote ; celles de Blade Runner, Dune, NOC et Torg n'ont eu aucune livraison depuis, et portent les fonctions communes (paiement au choix, réserves au pupitre). **Within n'a pas de page 54** : son pilote n'est pas audité.
+- **Recette** : `e2e/capturesDesJeux.spec.ts` rejoué pour les onze jeux sur le dernier pilote de chacun (dossier `scratch/recette-pilotes/`), sortie à part (`GMOS_SORTIE_CAPTURES_JEUX`), puis comparée pixel à pixel au manuel. **Les onze passent.** Deux défauts de l'essai corrigés : il attendait deux modules pour Alien (trois depuis A9) ; il photographiait en pixels d'écran, et une fenêtre passée sur un écran à l'échelle 2 doublait les images (`scale: 'css'`). ⚠️ Joués d'une traite, certains jeux échouent selon l'ordre (Alien, Crimes) alors qu'ils passent seuls : fragilité de l'enchaînement dans une même instance, pas de l'application.
+- **Captures remplacées (6)** : modules d'Alien (trois), pupitre du détecteur (préréglages, remise à zéro), jet, résultat et Fortune de Cthulhu Hack (carte des blessures sous le jet), agonie de Symbaroum (Medicus par niveau). **Légendes corrigées (2)** : la Fortune de Cthulhu Hack citait un « 16 sur 15 » qu'aucune image ne montrait ; l'agonie de Symbaroum, un 5 au lieu de 6. Les autres écarts sont des arrondis d'un pixel ou des dés tirés au hasard dont la légende cite les valeurs : gardés.
+- **Reste** : rien sur la recette ; Within est en suspens (pilote retiré par David, 24/10).
+
+### 172 · Corpus de Symbaroum relu en entier — 24/10/2026
+
+Quatrième volet de « finir les améliorations communes » (David, 24/10). Les dix fiches encore `relu: false` de `docs/systems/symbaroum/rules/` confrontées au Livre de Base (texte extrait au 23/10, `scratch/symbaroum-audit/livre.txt`) : **13 fiches sur 13 relues**.
+
+- **Corrigé** : le 1 et le 20 critiques ne valent qu'en Attaque et en Défense (la fiche de résolution les étendait à tout test) ; l'acide doit pénétrer l'Armure (la fiche disait l'inverse) ; le test d'un effet en cours est celui du lanceur ; l'immunité des morts-vivants vaut pour les poisons conventionnels et les maladies ordinaires ; Meneur né (Adepte +1D4 sur une cible, Maître la Persuasion) ; l'Expérience s'attribue à la fin de l'aventure ; la sortie de la Confusion.
+- **Retiré, introuvable dans le livre** : une « portée de vue et d'audition » des Talents de soutien, le déplacement en diagonale au même coût, l'Attaque gratuite d'un tir au contact, la « famine ».
+- **Vérifié sans correction** : critiques et dégâts critiques, composition de la fiche, voyages et chutes (Tableau 26), ton.
+- **Reste** : Dune (20 fiches) et Within (aucun corpus) attendent les livres de David.
+
+### 173 · Corpus de Dune relu en entier — 24/10/2026
+
+Cinquième volet de « finir les améliorations communes ». David a donné le livre de base et son errata (24/10). Les vingt fiches de `docs/systems/dune/rules/` confrontées à *Dune : Aventures dans l'Imperium* (texte extrait le 19/10, `scratch/dune-audit/livre.txt` ; page du PDF = page imprimée + 7) et à `DUNE-Errata.pdf` : **20 fiches sur 20 relues**, chacune avec sa note de relecture et ses pages.
+
+- **Réparé partout** : les bégaiements de la génération (« de de de deux », « à de cinq »), une centaine d'occurrences.
+- **Corrigé d'après l'errata** : la relance de la Détermination porte sur les dés de son choix, non sur toute la réserve ; une tâche étendue s'achève quand le total **égale ou dépasse** les conditions ; une réussite se compte quand le dé est **inférieur ou égal** au seuil.
+- **Corrigé d'après le livre** : les tâches étendues avancent par test réussi, non par critique ; qui peut Survivre à la défaite (tout PJ, PNJ majeur ou notable, personnage secondaire notable) et ce que coûte sa complication (un atout, un avantage pour l'ennemi…) ; le seuil d'une tâche de défaite (compétence la plus appropriée, plus les atouts défensifs) ; Conserver l'initiative (pas de « deux tours », interdit après un échec, gratuit après un déplacement discret réussi) ; la Détermination va de 0 à 3 ; les sources des points de progression (difficulté 3, Menace 4, ambition 1 ou 3) et leur dépense, une par aventure ; la récupération d'un principe (deux options, d'office entre les aventures) ; la Menace de départ (deux par joueur en règle générale) ; l'achat de dés payable en Menace à tout moment ; un obstacle se franchit à difficulté 1 ; le coût réduit de la guerre tient à la distance du commandant, non au trait Rapide ; la Discipline mentat ne vaut que pour se rappeler des données ; Mentat tordu se choisit à la création ; l'architecte est « en grande partie protégé », sans perte d'atouts prescrite ; les poursuites relèvent expressément du système de conflit (p. 171), l'inventaire les donne désormais « partiellement » traitées.
+- **Ramené à sa source** : Assoiffé, Affaibli, Fatigué, le ver « dans trois rounds » et la fuite de conditions 10 viennent du scénario d'introduction (p. 312 et 318), non de règles générales ; le laser contre un bouclier est une infraction à la Grande Convention, non une fin de partie automatique.
+- **Retiré, introuvable dans le livre** : un « conditionnement Suk » levé par la prise d'otage de Wanna (c'est le roman ; le livre dit le conditionnement jamais brisé), « à zéro, le meneur ne peut plus compliquer d'action », un « échec critique », la compétence « Discrétion » (Dune a cinq compétences), le talent Rétablissement rapide présenté comme règle commune.
+- ⚠️ **Une erreur de ma part, rattrapée** : j'avais d'abord retiré l'« abus du meilleur principe » et l'interdiction de relancer un dé déjà relancé, en ne cherchant que dans le chapitre des règles. Les deux sont dans le livre (p. 105, 142, 147, 226) : rétablis et sourcés. Leçon : **chercher dans le livre entier avant de retirer**. Les quatre retraits de Symbaroum (§ 172) ont été recherchés de même dans tout le livre : ils tiennent.
+- **Essais** : suite complète 9 063 passés. Un seul échec en chemin : `corpusDerivable.test.ts` — le groupe « Dés et composition du jet » de Dune dépassait de 99 caractères le budget d'invite de la Forge (21 024) ; notes de relecture de ses deux fiches raccourcies, l'essai repasse. *Une note de relecture alourdit l'invite de la Forge : rester bref.*
+- **Reste** : rien. Within n'aura pas de corpus pour l'instant : David a effacé son pilote (24/10).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12833,6 +12876,10 @@ David, le 24/10 : *« est-ce que tu peux construire un calendrier Reve de Dragon
 | 100 | **Cthulhu Hack — cinq améliorations** | § 164 ; blessures, armure, Fortune MJ, durées et Pulp — livré et essayé le 23/10 | Rien sur ces cinq lots | Rien |
 | 101 | **Nephilim — finir le pilote (N1 à N9)** | § 165 ; jet, santé, Chutes, pacte, stase, Sapience, Alchimie, lieux, métamorphe — livré et essayé le 23/10 | Rien | Rien |
 | 102 | **Symbaroum — finir le pilote (S0, S2, S4 à S9)** | § 166 ; corpus corrigé, attaque et Défense avec dégâts, agonie, Stigmates, départage de l'initiative, création et progression, bourse, voyages, règles optionnelles ; pilote 2.0.0 — livré le 23/10 | Réimporter le pilote, puis une attaque, une Défense ratée et un Test de mort sur une fiche | L'essai de David |
+| 109 | **Corpus de Dune relu en entier** | § 173 ; 20 fiches sur 20 contre le livre et l'errata, bégaiements réparés, règles du scénario ramenées à leur source, cinq affirmations sans source retirées — 24/10 | Rien | Rien |
+| 108 | **Corpus de Symbaroum relu en entier** | § 172 ; 13 fiches sur 13, sept corrections, quatre affirmations sans source retirées — 24/10 | Rien | Rien |
+| 107 | **Recette de la documentation des jeux** | § 171 ; onze jeux rejoués, six captures et deux légendes à jour, deux défauts de l'essai des captures corrigés — 24/10 | Rien | Rien |
+| 106 | **Clés stables — K1 à K4** | § 170 ; copie d'un pilote, duplication d'un gabarit, corbeille des modèles, copie de campagne et fiches HTML — corrigé le 24/10 | Copier un pilote à l'import ; dupliquer le Livret du voyageur ; jeter un gabarit utilisé ; « Nouvelle partie » d'une campagne reliée à des fiches HTML — **essayé par David le 24/10** | Rien |
 | 105 | **Calendrier de Rêve de Dragon dans Clock-OS** | § 169 ; douze mois lunaires, douze heures draconiques nommées, saisons et phases de lune ; minutes de Clock-OS corrigées ; repère astrologique calé sur le calendrier — livré le 24/10 | Choisir « reve-de-dragon » en mode Fantastique, régler une date, caler le repère | L'essai de David |
 | 104 | **Rêve de Dragon — finir le pilote (D1 à D7)** | § 168 ; round en sept phases et initiative par arme, famine et potions, entraînement et apprentissage, Haut-Rêve (rencontres, sorts, réserves, queues et souffles) ; pilote 2.0.0 — livré le 24/10 | Réimporter le pilote, un round à deux combattants, une rencontre en TMR, un bilan avec famine | L'essai de David |
 | 103 | **Star Trek — toutes les améliorations (ST0 à ST9)** | § 167 ; tâche complète, Stress et blessures, Réputation, alternance, Menace par personnage, module Bataille spatiale et tâches étendues (LCARS) ; pilote 2.0.0 — livré le 23/10, essayé le 24/10, trois lectures confirmées | Rien | Rien |

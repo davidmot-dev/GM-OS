@@ -7,7 +7,7 @@ sources: "Symbaroum - Livre de Base.pdf"
 sections: "« Tests » ; « Attributs et Modificateurs » ; « Encerclement » ; « Avantage » ; « Problèmes étendus » ; « Conflits au sein du groupe »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: e76ec9b0
 ---
 
@@ -19,7 +19,7 @@ Dans Symbaroum, seuls les joueurs lancent les dés (section « les dés »). Lor
 L'aide et la coopération entre personnages s'expriment par plusieurs mécaniques:
 1. L'encerclement d'une cible par deux à quatre combattants alliés octroie l'Avantage à chaque attaquant (section « Encerclement » et section « Avantage »).
 2. Les problèmes étendus permettent au groupe de cumuler des réussites successives pour accomplir une tâche collective (section « Problèmes étendus »). Le personnage possédant le meilleur Attribut commence, et chaque jet réussi fait avancer le groupe à l'étape suivante (section « Problèmes étendus »).
-3. Des Talents transmettent directement des avantages aux alliés, comme Connaissance des bêtes qui accorde des dégâts bonus au groupe contre un type de monstre, ou Meneur né qui permet aux alliés d'utiliser la Persuasion du meneur (section « Connaissance des bêtes » et section « Meneur né »).
+3. Des Talents transmettent directement des avantages aux alliés, comme Connaissance des bêtes qui accorde des dégâts bonus au groupe contre un type de monstre, ou Meneur né : au niveau Adepte, une cible désignée subit +1D4 dégâts de tous les alliés ; au niveau Maître, les alliés emploient sa Persuasion au lieu de leur Volonté pour la scène (p. 131, sections « Connaissance des bêtes » et « Meneur né »).
 
 Entre personnages joueurs, le meneur demande d'abord aux joueurs comment ils voient la situation se régler ; un combat entre eux se **raconte**, sans dés et sans risque de mort (p. 180). Ce n'est que lorsqu'un PJ piège ou dupe l'autre que le joueur actif fait le test et l'autre s'y oppose — un [Discrétion ← Vigilance] pour mentir, voler ou placer un objet (p. 182).
 
@@ -43,7 +43,9 @@ Le livre apporte plusieurs précisions sur les situations complexes:
 - Limite d'encerclement: quatre combattants au maximum peuvent bénéficier simultanément de l'encerclement contre une même cible (section « Encerclement »).
 - Plusieurs causes d'Avantage: le passage de la p. 166 ne dit **pas** explicitement qu'elles ne se cumulent pas. GM-OS retient une seule fois +2 et +1D4 — **convention de table**, pas règle du livre (2026-10-23).
 - Opposition entre joueurs: hors piège ou tromperie, pas de jet — la discussion, ou un combat raconté sans dés (p. 180, 182 ; corrigé le 2026-10-23).
-- Portée des Talents de soutien: le partage des bonus issus de Talents comme Meneur né nécessite que les alliés restent à portée de vue et d'audition du personnage (section « Meneur né »).
+- Talents de soutien: Connaissance des bêtes ne transmet ses dégâts aux alliés que si le personnage leur a dit comment combattre la créature ; Meneur né agit pour la scène, et changer de cible demande une nouvelle Action (sections « Connaissance des bêtes », « Meneur né »).
 
 ## Non couvert
 Le livre de base ne propose pas de règle générique d'assistance permettant d'accorder un bonus direct au jet d'un allié hors des problèmes étendus, de l'encerclement ou de Talents dédiés.
+
+*Relu le 2026-10-24 contre le Livre de Base (p. 166, 174–176, 180–182 et les Talents) : encerclement (2 à 4), Avantage, problèmes étendus, Connaissance des bêtes ; corrigé : Meneur né (Adepte +1D4, Maître la Persuasion), et retirée une « portée de vue et d'audition » que le livre ne contient pas.*

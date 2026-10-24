@@ -8,6 +8,7 @@ import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
 import { tousLesPilotes } from '../store/tousLesPilotes';
 import { Search, Hammer, Trash2, Copy, FileText, Sparkles, CheckCircle2, ChevronRight, Pencil, DownloadCloud, Upload, Eye, FolderTree, Swords, Eraser } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
+import { copieDuGabarit, direLesUsages, usagesDuGabarit, usagesDuPilote } from '../logic/usagesDuModele';
 import { useModalStore, gmCustom } from '../../../stores/useModalStore';
 import type { GameDriver } from '../../../types/drivers';
 import { nexusService } from '../../system/archive/NexusService';
@@ -210,6 +211,20 @@ const TemplateDashboard: React.FC = () => {
 
     const handleDelete = (e: React.MouseEvent, id: string, name: string) => {
         e.stopPropagation();
+        /*
+          ⛔ **La corbeille refuse ce qui sert encore** (audit des clés, 2026-10-24).
+          Elle filtrait une liste et rien d'autre : des personnages, des PNJ ou des
+          campagnes gardaient l'identifiant d'un gabarit ou d'un pilote disparu. La
+          gomme sait défaire un jeu proprement ; la corbeille, seulement ce que
+          personne n'utilise.
+        */
+        const s = useSessionOSStore.getState();
+        const enUsage = activeTab === 'sheets' ? usagesDuGabarit(s, id) : usagesDuPilote(s, id);
+        if (enUsage.length) {
+            gmToast(`« ${name} » sert encore : ${direLesUsages(enUsage)}. `
+                + (activeTab === 'sheets' ? 'Changez leur modèle avant de le supprimer.' : 'Utilisez la gomme pour défaire le jeu et ce qui en dépend.'), 'error');
+            return;
+        }
         showConfirm(
             t('modules:session.template_dashboard.status.delete_confirm', { 
                 type: activeTab === 'sheets' ? t('modules:session.template_dashboard.status.type_template') : t('modules:session.template_dashboard.status.type_driver'),
@@ -232,12 +247,8 @@ const TemplateDashboard: React.FC = () => {
 
     const handleDuplicate = (e: React.MouseEvent, template: SheetTemplate) => {
         e.stopPropagation();
-        addSheetTemplate({
-            name: t('modules:session.template_dashboard.status.duplicate_suffix', { name: template.name }),
-            emoji: template.emoji,
-            sections: JSON.parse(JSON.stringify(template.sections)),
-            defaultNotebookUrl: template.defaultNotebookUrl
-        });
+        // La copie garde tout le gabarit, `reglesDeFiche` compris (audit des clés, 2026-10-24).
+        addSheetTemplate(copieDuGabarit(template, t('modules:session.template_dashboard.status.duplicate_suffix', { name: template.name })));
         gmToast(t('modules:session.template_dashboard.toasts.template_duplicated'));
     };
 

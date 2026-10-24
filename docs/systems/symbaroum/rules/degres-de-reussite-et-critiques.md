@@ -7,7 +7,7 @@ sources: "Symbaroum - Livre de Base.pdf"
 sections: "« Degrés de réussite » ; « Attaques parfaites et échecs critiques en Défense » ; « Limiter le nombre d'Attaques parfaites et d'Échecs critiques » ; « Modificateurs de dégâts critiques »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 34195f01
 ---
 
@@ -48,3 +48,5 @@ Le livre précise plusieurs cas particuliers:
 
 ## Non couvert
 Le livre de base ne fournit pas de grille de marge de réussite chiffrée hors des problèmes gradués liés aux Talents, ni de conséquences mécaniques pour les échecs critiques hors combat.
+
+*Relu le 2026-10-24 contre le Livre de Base (p. 163, 174–175, 183–184) : valeurs des critiques, confirmation, dégâts critiques au-delà de la douleur, morts-vivants, attaques gratuites et Talents passifs. Aucune correction de plus.*

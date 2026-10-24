@@ -7,7 +7,7 @@ sources: "Dune_Aventures_dans_l'Imperium_BQ.pdf"
 sections: "« Aperçu du livre de base » ; « Agents et Architectes » ; « Consentement et gestion des niveaux de confort » ; « Type de Maison et Menace » ; « Haine » ; « Disposition et désir » ; « Indice d’habitabilité des planètes » ; « Les couleurs ou la méthode du feu rouge » ; « Le mot d’alerte » ; « Imposer les défis de la technologie »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Ton, registre et ambiance
@@ -18,24 +18,26 @@ Dune : Aventures dans l’Imperium est un jeu de rôle narratif (section « Aper
 ## Valeurs
 - Portée de la campagne, du restreint au vaste : locale, planétaire, galactique (section « La portée »).
 - Type de Maison et Menace de départ pour le meneur : Maison naissante (zéro point), Maison mineure (un point par joueur), Maison majeure (deux points par joueur), Grande Maison (trois points par joueur) (section « Type de Maison et Menace »).
-- Degré de Haine au dé à vingt faces : Aversion (de un à de cinq), Rivalité (de six à dix), Haine (de onze à quinze), Kanly (de seize à vingt) (section « Haine »).
+- Degré de Haine au dé à vingt faces : Aversion (de un à cinq), Rivalité (de six à dix), Haine (de onze à quinze), Kanly (de seize à vingt) (section « Haine »).
 - Disposition d’une faction (du meilleur au pire) et modificateur de difficulté : Allié (moins deux), Amical (moins un), Neutre (zéro), Inamical (plus un) et Opposé (plus un) (section « Disposition et désir »).
-- Habitabilité (du meilleur au pire) : classe de de de de cinq (accueillante), classe quatre (sans protection), classe trois (précautions), classe deux (extrêmes précautions), classe un (inhabitable) (section « Indice d’habitabilité des planètes »).
+- Habitabilité (du meilleur au pire) : classe cinq (accueillante), classe quatre (sans protection), classe trois (précautions), classe deux (extrêmes précautions), classe un (inhabitable) (section « Indice d’habitabilité des planètes »).
 - Confort (du meilleur au pire) : Vert (confort total), Orange (attention), Rouge (arrêt immédiat) (section « Les couleurs ou la méthode du feu rouge »).
-- Pause du mot d'alerte : de de de de cinq minutes (section « Le mot d’alerte »).
+- Pause du mot d'alerte : de cinq minutes (section « Le mot d’alerte »).
 
 ## À la table
 La paranoïa et l'ambiance s'articulent autour de cette séquence (section « Session 0 ») :
 1. Le groupe définit la portée et le type de Maison Noble, ce qui fixe le niveau de Menace de départ du meneur de jeu (section « Session 0 », section « Type de Maison et Menace »).
 2. Les joueurs choisissent l'implication de leur alter ego par le biais de deux modes : le mode Agent, pour l’action sur le terrain, ou le mode Architecte, s’ils préfèrent manipuler leurs atouts à distance (section « Passer de l’architecte à l’agent »).
 3. Face aux thèmes sombres de l’Imperium, les participants régulent à tout moment l'ambiance par des outils de confort (section « Consentement et gestion des niveaux de confort »). Ils utilisent le Signe OK pour s’assurer du bien-être de chacun, ou modifient la couleur de leur jeton selon la méthode du feu rouge (section « Le signe « ok » », section « Les couleurs ou la méthode du feu rouge »).
-4. Si un sujet franchit les limites d'un participant, celui-ci prononce le Mot d'alerte, suspendant immédiatement la partie pour une pause de de de cinq minutes afin d’ajuster le récit (section « Le mot d’alerte »).
+4. Si un sujet franchit les limites d'un participant, celui-ci prononce le Mot d'alerte, suspendant immédiatement la partie pour une pause de cinq minutes afin d’ajuster le récit (section « Le mot d’alerte »).
 
 ## Cas limites
 Le livre de règles précise ces cas particuliers :
 - Primauté de la sécurité : L'argument selon lequel un personnage agirait ainsi est rejeté s'il justifie des comportements oppressants. La sécurité émotionnelle des joueurs prend la priorité absolue sur le récit (section « Réduire la maltraitance d’un joueur »).
-- Éradication totale : Si les dés mènent à l’élimination du groupe, le meneur ne doit pas chercher à détruire les personnages, mais ouvrir une discussion pour privilégier la capture ou la rançon (section « Éradication totale »).
-- Interaction laser-bouclier : Un tir laser touchant un bouclier Holtzman provoque une explosion nucléaire. Cette rupture mécanique met fin à la partie pour la Maison coupable, détruite sans pardon (section « Les lasers, les boucliers et la grande Convention »).
+- Éradication totale : si les dés mènent à l'élimination du groupe, le meneur demande aux joueurs ce qu'ils veulent faire et cherche avec eux un compromis qui les laisse agir dans l'histoire, même au prix de la mort d'un personnage ; capturés, ils valent souvent plus comme otages ou monnaie d'échange (p. 230, section « Éradication totale »).
+- Interaction laser-bouclier : un tir laser touchant un bouclier provoque une explosion semblable à une explosion nucléaire ; c'est une infraction à la Grande Convention, dont une violation grave expose la Maison à la destruction par le Landsraad. Le livre l'emploie comme avertissement aux joueurs, non comme fin de partie automatique (p. 22–23).
 
 ## Non couvert
 Les sources ne proposent aucune jauge ou ressource pour mesurer l'usure de la santé mentale, la paranoïa ou la fatigue face à la dureté de l'Imperium (section « La dimension d’un personnage »). Elles ne décrivent pas non plus de règles pour simuler l'addiction physiologique ou le sevrage physique de substances comme le jus de sapho ou la drogue shere, s’en remettant uniquement à des traits narratifs (section « Le jus de sapho », section « Shere »).
+
+*Relu le 2026-10-24 contre Dune : Aventures dans l'Imperium (p. 22–23, 65, 87, 96, 185, 230–233). Vérifiés : table de Haine (Aversion 1–5, Rivalité 6–10, Haine 11–15, Kanly 16–20), dispositions (Allié −2, Amical −1, Inamical et Opposé +1), classes d'habitabilité, Menace par type de Maison, feu rouge, mot d'alerte et sa pause de cinq minutes. Corrigé : l'éradication totale (un compromis, la mort restant possible) et le laser contre bouclier.*

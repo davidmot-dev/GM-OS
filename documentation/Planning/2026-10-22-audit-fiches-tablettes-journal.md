@@ -73,3 +73,9 @@ ou **lu dans le code** (chemin cité, pas encore éprouvé).
 Lecture du code, sans session réelle ni capture réseau : S1 à S4 et H1 ne sont **pas encore
 reproduits** par un essai ; la première correction commencera par l'essai qui les montre. L'axe
 des clés stables a été survolé.
+
+> **Repris le 24/10 (registre § 170)** : parcouru jusqu'au bout — import d'un pilote, éditeur de
+> fiche, duplication et suppression de modèles, copie de campagne, Forge. Quatre défauts, tous
+> corrigés : K1 copie d'un pilote sur la fiche de l'original, K2 duplication d'un gabarit sans ses
+> règles, K3 corbeille sans vérification d'usage, K4 copie de campagne partageant les fiches HTML.
+> **Essayé par David le 24/10 : les quatre corrections marchent.**

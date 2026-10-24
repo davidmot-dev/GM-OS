@@ -39,7 +39,7 @@ n'en a **jamais plus de deux**.
 - **Sur la fiche** (panneau de jet, chez vous ou sur la tablette) : sous une Sauvegarde ratée, les
   boutons **« Relancer (+1 Fortune) »** et **« Réussir (+2 Fortune) »**.
 
-  ![Une Sauvegarde de Sagesse ratée (16 sur 15) : la Fortune, à 0 sur 2, propose de relancer pour un jeton ou de réussir pour deux](captures/jeu-cthulhu-hack-fortune.jpg)
+  ![Une Sauvegarde de Sagesse ratée : la Fortune, à 0 sur 2, propose de relancer pour un jeton ou de réussir pour deux](captures/jeu-cthulhu-hack-fortune.jpg)
 - **Au pupitre** : sous le dernier jet venu d'une fiche — une Sauvegarde demandée depuis la
   tablette, une ressource lancée depuis la carte de combat ou le pupitre — les mêmes deux boutons.
   Une **ressource** sauvée retrouve d'abord le dé qu'elle venait de perdre ; relancée, elle peut

@@ -7,7 +7,7 @@ sources: "Symbaroum - Livre de Base.pdf"
 sections: "« Actions de mouvement » ; « Ligne de tir » ; « Mouvement à l'échelle » ; « Armes de trait » ; « Armes de jet » ; « Armes longues » ; « Long »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: f57e1de0
 ---
 
@@ -40,14 +40,16 @@ En combat, la position relative des combattants détermine le type d'action disp
 
 Pour engager un ennemi à distance, le personnage utilise une Action de mouvement pour parcourir jusqu'à dix mètres et entrer au corps à corps (section « Actions de mouvement »). Pour attaquer à distance ou lancer un sort, le joueur doit vérifier la présence d'une ligne de tir dégagée (section « Ligne de tir »). Si un allié se trouve sur la trajectoire, la vue est obstruée: le personnage doit consacrer une Action de mouvement pour se décaler avant de pouvoir exécuter son Action de combat (section « Ligne de tir »).
 
-Sur une carte quadrillée à l'échelle, les combattants occupent des carrés de deux mètres de côté (section « Mouvement à l'échelle »). Le déplacement s'effectue jusqu'à cinq carrés par Action de mouvement, le mouvement en diagonale étant autorisé au même coût (section « Mouvement à l'échelle »).
+Sur une carte quadrillée à l'échelle, les combattants occupent des carrés de deux mètres de côté (section « Mouvement à l'échelle »). Le déplacement s'effectue jusqu'à cinq carrés par Action de mouvement (section « Mouvement à l'échelle »).
 
 ## Cas limites
 Le livre précise plusieurs cas particuliers:
-- Obstruction par les alliés: un allié situé entre le tireur et sa cible masque la ligne de tir, imposant un déplacement; un ennemi sur la trajectoire empêche totalement le tir vers la cible arrière (section « Ligne de tir »).
-- Attaque à distance en mêlée: utiliser une arme de trait ou de jet alors qu'un ennemi est au corps à corps déclenche une Attaque gratuite de cet ennemi (section « Attaques gratuites »).
+- Obstruction: les armes à distance ne tirent pas par-dessus d'autres combattants ; un allié entre le tireur (ou le mystique) et sa cible bloque l'angle de tir, et il faut une Action de mouvement pour le dégager (p. 165, section « Ligne de tir »). Un bouclier interdit les armes à distance (p. 166).
+- Attaques gratuites liées au mouvement: aller au contact d'un ennemi armé d'une arme longue (sauf si l'on en porte une), dépasser un ennemi, ou se désengager d'un corps à corps (une par ennemi engagé) (p. 162, 168).
 - Rechargement des armes: recharger un arc ou une fronde est une Action gratuite, tandis que recharger une arbalète exige une Action de mouvement (section « Armes de trait »).
 - Portée des sorts: sauf mention contraire dans la description du pouvoir, la portée d'un sortilège nécessite une ligne de vue dégagée sur la cible (section « Ligne de tir »).
 
 ## Non couvert
 Le livre de base ne fournit pas de table chiffrée fixant des portées maximales exactes en mètres pour chaque arme à distance ou pouvoir mystique hors du champ de vision et de la ligne de tir.
+
+*Relu le 2026-10-24 contre le Livre de Base (p. 116, 161–168, 186) : 10 mètres par Action de mouvement, 5 carrés de 2 mètres, rechargement, ligne de tir ; retirés, faute de les trouver dans le livre : le déplacement en diagonale au même coût et l'Attaque gratuite d'un tir au contact.*

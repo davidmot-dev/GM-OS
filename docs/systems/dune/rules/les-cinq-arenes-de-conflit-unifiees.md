@@ -7,7 +7,7 @@ sources: "Dune_Aventures_dans_l'Imperium_BQ.pdf"
 sections: "« La nature du conflit » ; « Les bases du conflit » ; « Les formes du conflit » ; « Duels » ; « Escarmouches » ; « Espionnage » ; « Guerre » ; « Intrigue »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Les Cinq Arènes de Conflit Unifiées
@@ -38,17 +38,19 @@ Le conflit se déroule selon cette séquence :
 2. Les participants déploient leurs atouts (section « Atouts »).
 3. Le meneur désigne le camp qui commence à agir (section « Ordre d’action »).
 4. À son tour, un personnage effectue une unique action pour déplacer un atout (section « Déplacer un atout ») ou l'utiliser (section « Utiliser un atout »).
-5. Pour déplacer, le joueur effectue un test de de de de difficulté deux (section « Déplacer un atout »). S'il réussit avec discrétion, il conserve l'initiative gratuitement. S'il réussit avec audace, il déplace un atout adverse d'une zone.
-6. Pour attaquer, il effectue un test en opposition contre sa cible (section « Résultats des tests en opposition »). Chaque réussite inflige deux points de progression, plus la qualité de l'atout, vers la tâche de défaite (section « Attaques réussies »).
-7. À la fin de son tour, le camp actif peut dépenser deux points d'Impulsion pour faire agir un allié (section « Ordre d’action »).
+5. Pour déplacer, le joueur effectue un test de difficulté deux (section « Déplacer un atout »). S'il réussit avec discrétion, il conserve l'initiative gratuitement. S'il réussit avec audace, il déplace un atout adverse d'une zone.
+6. Pour attaquer, il effectue un test en opposition contre sa cible (section « Résultats des tests en opposition »). Un personnage mineur est vaincu d'un coup ; sinon **chaque attaque réussie** apporte deux points, plus la qualité de l'atout, à la tâche de défaite (section « Attaques réussies »).
+7. À la fin de son tour, le personnage peut Conserver l'initiative pour deux points d'Impulsion (ou deux de Menace ajoutés ; deux de Menace dépensés pour un PNJ) : il agit de nouveau avec une difficulté accrue de 1, ou fait agir un allié (section « Ordre d’action »).
 8. Quand tout le monde a agi, le round se termine (section « Ordre d’action »).
 
 ## Cas limites
 Le livre de règles précise plusieurs configurations ambiguës :
-- Conflit sans atout : Un personnage peut agir sans atout s'il dispose d'une justification ou d'un talent adapté comme Hyperacuité (section « Et si je n’ai aucun atout ? »).
+- Conflit sans atout : les atouts restent facultatifs, sauf quand l'action en exige un ; d'autres traits et talents (Hyperacuité, par exemple) ouvrent aussi des actions autrement impossibles (p. 169, encadré « Et si je n’ai aucun atout ? »).
 - Échec de déplacement : En cas d'échec de déplacement, le joueur ne peut pas dépenser d'Impulsion pour étendre son mouvement, et un ennemi peut déplacer un de ses atouts d'une zone en réaction (section « Déplacer un atout »).
 - Atouts défensifs mobiles : Certains atouts de protection, comme un demi-bouclier, peuvent être déplacés par le défenseur dans ses zones adjacentes (section « Atouts défensifs »).
 - Accumulation de défaite : En escarmouche, les attaques menées par plusieurs alliés s'accumulent vers la même tâche de défaite de la cible (section « Actions lors d’une escarmouche »).
 
 ## Non couvert
-Le livre ne fournit pas d'échelles métriques pour les zones, laissant leur taille à l'appréciation narrative du meneur (section « Les zones de conflit »). De plus, les règles de conflit ne proposent aucun mécanisme pour gérer les poursuites de personnages ou de véhicules (section « Les formes du conflit »). Enfin, les sources restent muettes sur la limite d'atouts pouvant occuper une même zone (section « Les zones de conflit »).
+Le livre ne fournit pas d'échelles métriques pour les zones, laissant leur taille à l'appréciation narrative du meneur (section « Les zones de conflit »). Le livre précise que le système de base sert à toute forme de conflit, « des courses-poursuites aux intrigues » (p. 171), mais ne consacre aucune section aux poursuites. Enfin, les sources restent muettes sur la limite d'atouts pouvant occuper une même zone (section « Les zones de conflit »).
+
+*Relu le 2026-10-24 contre Dune : Aventures dans l'Imperium (p. 162–185, le chapitre du conflit). Corrigé : la progression vient de chaque attaque réussie (pas de chaque réussite) et un personnage mineur tombe d'un coup ; Conserver l'initiative et ses deux usages ; le conflit sans atout ; les poursuites, que le livre range expressément sous le système de base. Vérifiés : difficultés 2 (déplacement) et 1 (obstacle), atouts défensifs, boucliers en escarmouche, dispositions, survie à la défaite.*

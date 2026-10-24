@@ -7,7 +7,7 @@ sources: "Symbaroum - Livre de Base.pdf"
 sections: "« Surprises désagréables » ; « N'expliquez pas le « Mal » ; « Décrivez le monde » ; « Le rôle des Ombres » ; « Le pouvoir de la corruption »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 12dc1e99
 ---
 
@@ -39,3 +39,5 @@ Le livre apporte des précisions sur plusieurs situations narratives particuliè
 
 ## Non couvert
 Le livre de base ne fournit pas de jauge chiffrée de santé mentale ni de mécanique de folie progressive pour mesurer l'impact psychologique des horreurs de Davokar sur les personnages.
+
+*Relu le 2026-10-24 : ton et ambiance, sans règle chiffrée à vérifier.*

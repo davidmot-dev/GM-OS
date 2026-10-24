@@ -177,6 +177,17 @@ describe("Deck-OS appartient au jeu, pas à la campagne (décision de David, 202
         expect(copie.paquets![0].systemId).toBe(copie.gameDriver.id);
     });
 
+    it('la copie d’un pilote désigne sa propre fiche, pas celle de l’original (audit des clés, 24/10)', () => {
+        const copie = nexusService.applyResolutionToDriver({
+            gameDriver: { id: 'cyberpunk-perso', name: 'Cyberpunk maison', templateId: 'tpl-cyber' },
+            sheetTemplate: { id: 'tpl-cyber', name: 'Fiche cyber', sections: [] },
+        } as never, { strategy: 'clone' });
+        expect(copie.sheetTemplate!.id).not.toBe('tpl-cyber');
+        expect(copie.gameDriver.templateId).toBe(copie.sheetTemplate!.id);
+        const sansFiche = nexusService.applyResolutionToDriver({ gameDriver: { id: 'p', name: 'P', templateId: 'tpl-x' } } as never, { strategy: 'clone' });
+        expect(sansFiche.gameDriver.templateId).toBe('tpl-x');
+    });
+
     it('prend le pilote personnalisé et son gabarit', () => {
         const paquet = nexusService.scrapeCampaignData(CAMPAGNE);
         expect(paquet.requiredDriverData?.map(d => d.id)).toEqual(['cyberpunk-perso']);

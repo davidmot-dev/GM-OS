@@ -7,7 +7,7 @@ sources: "Symbaroum - Livre de Base.pdf"
 sections: "« Actions spéciales » ; « Se relever » ; « Combat à l’aveugle, dégâts de poison et d’acide » ; « Effet en cours » ; « Confusion » ; « Toile »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 60718e0c
 ---
 
@@ -18,7 +18,7 @@ Dans Symbaroum, les états et conditions altèrent la capacité d'action d'un pe
 
 Les principaux états et leurs résolutions sont:
 - À terre: la victime offre l'Avantage aux attaques au corps à corps (voir le sujet « Jets opposés, aide et coopération »). Se relever coûte une Action de mouvement sur test d'Agilité réussi, ou un tour complet en cas d'échec (section « Se relever »).
-- Empoisonné et Acidifié: le poison inflige des dégâts à chaque tour sans armure jusqu'à expiration ou remède via test d'Astuce (section « dégâts de poison et d’acide »). L'acide attaque à chaque tour à travers l'armure et exige une Action de combat et un test d'Astuce pour être rincé (section « dégâts de poison et d’acide »).
+- Empoisonné et Acidifié: le poison inflige des dégâts à chaque tour sans armure jusqu'à expiration ou remède via test d'Astuce (section « dégâts de poison et d’acide »). L'acide attaque à chaque tour et **doit pénétrer l'Armure** pour infliger des dégâts ; le rincer demande une Action de combat et un test d'Astuce (p. 182, section « dégâts de poison et d’acide »).
 - Paralysé, Enchevêtré et Entravé: l'effet bloque le mouvement ou les actions. La cible tente un test à chaque tour (comme Force contre Astuce pour une toile) pour se libérer (section « Toile »).
 - Aveuglé: seul le combattant affecté a deux chances de rater — un PJ affecté lance deux fois et garde le pire ; un ennemi affecté, le joueur lance deux fois et garde le meilleur ; les deux affectés, aucun ajustement (p. 165).
 - Confus: la victime est paralysée ou attaque cibles proches aléatoirement (section « Confusion »).
@@ -38,14 +38,16 @@ En combat, les états s'appliquent au fil des tours selon l'Initiative (section 
 
 Un poison inflige des dégâts à chaque tour sans armure (section « dégâts de poison et d’acide »). L'effet cesse si un allié ou le personnage réussit un test d'Astuce en Action de combat pour appliquer un antidote (section « dégâts de poison et d’acide »). L'acide inflige des dégâts réduits par l'armure chaque tour jusqu'à ce qu'un test d'Astuce réussi en Action de combat permette de le rincer (section « dégâts de poison et d’acide »).
 
-Pour un Effet en cours mystique, le lanceur teste son Attribut en Action gratuite à chaque tour pour maintenir l'état (section « Effet en cours »). La victime effectue son test de résistance à son propre tour selon le pouvoir (section « Effet en cours »).
+Pour un Effet en cours mystique, le lanceur teste son Attribut en Action gratuite à chaque tour pour maintenir l'état (section « Effet en cours »). Ce test est celui du lanceur, répété à chaque tour selon **son** Initiative — seuls les joueurs lancent (p. 130, section « Effet en cours »).
 
 ## Cas limites
 Le livre précise plusieurs cas particuliers:
 - Perte de concentration: subissant des dégâts, un Mystique maintenant un Effet en cours doit réussir un test de [Volonté - dégâts subis] par attaque sous peine de rompre l'état (section « Effet en cours »).
 - Cibles multiples: l'échec du test de maintien sur une cible rompt l'effet pour celle-ci sans affecter les autres cibles (section « Effet en cours »).
 - Cécité d'un seul combattant: **seuls les joueurs lancent** ; si c'est l'ennemi qui ne voit pas, le joueur lance deux fois et garde le meilleur résultat (p. 165 ; corrigé le 2026-10-23, la fiche disait que l'adversaire voyant « agit normalement »). Le rang Maître de Sixième sens retire ce malus (p. 165).
-- Immunité: les créatures mortes-vivantes ne subissent ni les poisons ni les maladies (section « Mort-vivant »).
+- Immunité: les morts-vivants ne sont pas sensibles aux poisons **conventionnels** ni aux maladies **ordinaires**, et la Corruption ne les touche pas (section « Mort-vivant »).
 
 ## Non couvert
 Le livre ne regroupe pas les états dans un glossaire unique et ne définit pas de règle générale de cumul pour deux états identiques subis simultanément.
+
+*Relu le 2026-10-24 contre le Livre de Base (p. 130, 163–165, 182, et les poisons de l'équipement) : se relever, à terre, poisons, cécité, concentration ; corrigés : l'acide doit pénétrer l'Armure (la fiche disait l'inverse), le test d'un effet en cours est celui du lanceur, l'immunité des morts-vivants vaut pour les poisons conventionnels et les maladies ordinaires.*

@@ -7,7 +7,7 @@ sources: "Dune_Aventures_dans_l'Imperium_BQ.pdf"
 sections: "« Exemple de partie » ; « Les bases du conflit » ; « Règles du jeu » ; « Le conflit » ; « Agir »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Poursuites
@@ -17,8 +17,8 @@ J'ai cherché dans le livre de base de **Dune** les règles structurelles spéci
 
 En l'absence de système dédié (jauges d'allure, de distance ou de vitesse), le jeu traite ces situations de deux manières (section « Exemple de partie », section « Les formes du conflit ») :
 
-1. L'**opposition narrative directe** : Le meneur de jeu résout la traque par des tests en opposition (section « Oppositions »). Par exemple, pour rattraper un assassin en fuite, le poursuivant et la proie effectuent des tests en opposition de compétences, en combinant la compétence de **Mobilité** ou de **Discipline** à un principe approprié (section « Exemple de partie », section « Oppositions »). Si le poursuivant obtient plus de réussites, il rattrape sa cible (section « Exemple de partie »).
-2. L'**arène de conflit générique** : Le système de base de conflit s'adapte pour modéliser une course-poursuite à l'aide de zones géographiques ou abstraites (section « Les bases du conflit », section « Les zones de conflit »). Les personnages y déplacent leurs atouts de zone en zone en effectuant des tests de déplacement avec discrétion ou avec audace pour distancer l'opposition (section « Déplacer un atout »).
+1. L'**opposition narrative directe** : Le meneur de jeu résout la traque par des tests en opposition (section « Oppositions »). Par exemple, pour rattraper un assassin en fuite, la poursuivante et la proie font des tests en opposition ; l'exemple ne nomme pas la compétence, et la poursuivante s'aide d'un talent (p. 12–14, « Exemple de partie »). Si le poursuivant égale ou dépasse les réussites de la proie, il la rattrape (section « Oppositions »).
+2. L'**arène de conflit générique** : le livre dit que le système de base sert à toute forme de conflit, « des courses-poursuites aux intrigues » (p. 171) ; il s'adapte pour modéliser une course-poursuite à l'aide de zones géographiques ou abstraites (section « Les bases du conflit », section « Les zones de conflit »). Les personnages y déplacent leurs atouts de zone en zone en effectuant des tests de déplacement avec discrétion ou avec audace pour distancer l'opposition (section « Déplacer un atout »).
 
 ## Valeurs
 Le sujet étant mécaniquement absent du livre de base, il n'existe aucune valeur chiffrée ni échelle ordonnée propre aux poursuites (section « Règles du jeu », section « Le conflit ») :
@@ -31,15 +31,17 @@ Le sujet étant mécaniquement absent du livre de base, il n'existe aucune valeu
 ## À la table
 Une poursuite se résout de deux manières :
 
-1. Par l'opposition narrative directe : Le meneur de jeu jette les dés de la proie pour fixer la difficulté (section « Oppositions »). Le joueur actif fait son test en opposition avec ses dés à vingt faces, en combinant Mobilité ou Discipline à un principe comme le Devoir ou la Domination (section « Procédure des tests de compétence », section « Choisir les principes »). Si le poursuivant obtient au moins autant de réussites que la proie, il la rattrape (section « Oppositions », section « Exemple de partie »).
+1. Par l'opposition narrative directe : Le meneur de jeu jette les dés de la proie pour fixer la difficulté (section « Oppositions »). Le joueur actif fait son test en opposition avec la compétence et le principe qui conviennent à sa façon de poursuivre — Mobilité est l'évidence pour une course (section « Procédure des tests de compétence », section « Choisir les principes »). Si le poursuivant obtient au moins autant de réussites que la proie, il la rattrape (section « Oppositions », section « Exemple de partie »).
 
-2. Par l'arène de conflit : Les personnages déplacent leurs atouts de zone en zone à chaque round (section « Ordre d’action »). Pour distancer ou rattraper l'adversaire, un joueur déplace son personnage ou véhicule avec discrétion ou audace, ce qui requiert un test de Mobilité de difficulté deux (section « Déplacer un atout »). S'il réussit avec discrétion, il peut Conserver l'initiative gratuitement (section « Déplacer un atout »). En cas d'échec, l'adversaire déplace son atout d'une zone en réaction (section « Déplacer un atout »).
+2. Par l'arène de conflit : Les personnages déplacent leurs atouts de zone en zone à chaque round (section « Ordre d’action »). Pour distancer ou rattraper l'adversaire, un joueur déplace son personnage ou véhicule avec discrétion ou audace, ce qui requiert un test de compétence de difficulté deux, Mobilité le plus souvent (section « Déplacer un atout »). S'il réussit avec discrétion, il peut Conserver l'initiative gratuitement (section « Déplacer un atout »). En cas d'échec, l'adversaire déplace son atout d'une zone en réaction (section « Déplacer un atout »).
 
 ## Cas limites
 Le livre de règles précise les situations ambiguës suivantes :
 - **Poursuites en vol** : En ornithoptère, les personnages doivent utiliser leur atout de véhicule pour rendre l'affrontement possible, mais ils ne peuvent s'en servir comme trait pour réduire la difficulté (section « Utiliser un atout »).
-- **Blessures et complications** : Un vingt naturel engendre une complication comme Blessé, augmentant de un la difficulté des tests de déplacement (section « Complications »). Pour l'eliminer immédiatement, le personnage peut concéder deux points de Menace au meneur (section « Complications »).
-- **Vibrations dans le désert** : Courir ou piloter dans le désert profond génère des secousses (section « Signe du ver ! »). Si la poursuite dure plus de trois rounds, le signe du ver apparaît et Shai-Hulud surgit (section « Signe du ver ! »).
+- **Blessures et complications** : un vingt naturel engendre une complication (une blessure, par exemple), qui augmente le plus souvent de un la difficulté des tests qu'elle gêne ; pour l'annuler aussitôt, le personnage ajoute deux points de Menace (section « Complications »).
+- **Vibrations dans le désert** : les bruits répétitifs attirent les vers des sables (p. 66). Le livre n'en fait pas une règle chiffrée : dans le scénario d'introduction, une fois le signe du ver repéré, le ver arrive **trois rounds** plus tard et la fuite est une tâche étendue de conditions 10 (p. 318) — un choix de ce scénario, pas une règle générale.
 
 ## Non couvert
 Le livre de base de Dune ne contient aucune règle structurelle pour les poursuites (section « Règles du jeu »). Les concepts de jauge d'écart de distance, de modificateurs de vitesse selon l'Allure des véhicules, ou de seuils d'échappement mécanique sont absents (section « Règles du jeu », section « Les atouts »). De plus, aucun système ne détaille comment gérer une poursuite impliquant plus de deux factions rivales en dehors des oppositions narratives classiques (section « Oppositions »).
+
+*Relu le 2026-10-24 contre Dune : Aventures dans l'Imperium (p. 12–14, 66, 158, 166–167, scénario p. 318). Corrigé : l'exemple de partie ne nomme ni Mobilité ni Discipline ; le poursuivant l'emporte à égalité ; le déplacement se teste avec la compétence du conflit ; le ver « après trois rounds de poursuite » était une lecture fautive du scénario d'introduction, ramenée à ce qu'il dit.*

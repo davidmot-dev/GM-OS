@@ -7,17 +7,17 @@ sources: "Dune_Aventures_dans_l'Imperium_BQ.pdf"
 sections: "« Tests de compétence » ; « Procédure des tests de compétence » ; « Impulsion » ; « Conserver de l’Impulsion »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Degrés de réussite et critiques
 
 ## Règle
-Chaque test s'effectue en jetant de deux à de cinq dés à vingt faces sous un seuil égal à la somme d'une compétence et d'un principe (section « Tests de compétence »). Le total de dés réussis détermine le degré de réussite. Pour réussir, le total de réussites doit égaler ou dépasser la difficulté (section « Procédure des tests de compétence »). Chaque réussite excédentaire génère un point d'Impulsion, une réserve collective améliorant les actions futures (section « Procédure des tests de compétence »). Une réussite critique accorde deux réussites au lieu d'une seule. Les complications, survenant sur les lancers les plus élevés, n'empêchent pas le succès immédiat mais créent des traits néfastes (section « Procédure des tests de compétence »).
+Chaque test s'effectue en jetant de deux à cinq dés à vingt faces sous un seuil égal à la somme d'une compétence et d'un principe (section « Tests de compétence »). Le total de dés réussis détermine le degré de réussite. Pour réussir, le total de réussites doit égaler ou dépasser la difficulté (section « Procédure des tests de compétence »). Chaque réussite excédentaire génère un point d'Impulsion, une réserve collective améliorant les actions futures (section « Procédure des tests de compétence »). Une réussite critique accorde deux réussites au lieu d'une seule. Les complications, survenant sur les lancers les plus élevés, n'empêchent pas le succès immédiat mais créent des traits néfastes (section « Procédure des tests de compétence »).
 
 ## Valeurs
 - Réserve de dés : deux à cinq dés à vingt faces (section « Dés »).
-- Difficulté standard : de zéro à de cinq (section « Difficulté »).
+- Difficulté standard : de zéro à cinq (section « Difficulté »).
 - Réussite critique absolue : résultat de un naturel, valant deux réussites (section « Procédure des tests de compétence »).
 - Réussite critique spécialisée : résultat inférieur ou égal à la compétence seule avec spécialisation, valant deux réussites (section « Procédure des tests de compétence »).
 - Complication standard : résultat de vingt naturel (section « Procédure des tests de compétence »).
@@ -29,7 +29,7 @@ Chaque test s'effectue en jetant de deux à de cinq dés à vingt faces sous un 
   * En cas de crise : elle descend par érosion (section « Conserver de l’Impulsion »).
   * Hausse : réussites excédentaires (section « Procédure des tests de compétence »).
   * Baisse : dépenses volontaires et érosion de moins un point en fin de scène (section « Utilisations courantes », « Conserver de l’Impulsion »).
-  * Effets de seuils : à de six points, l'excédent est perdu. À zéro point, l'achat de dés supplémentaires nécessite d'ajouter de la Menace.
+  * Effets de seuils : à six points, l'excédent est perdu. À zéro point, l'achat de dés supplémentaires nécessite d'ajouter de la Menace.
   * Consommation : elle s'accumule lors des réussites et se dépense de manière volontaire (section « Conserver de l’Impulsion »).
 
 ## À la table
@@ -46,7 +46,9 @@ Le livre résout plusieurs configurations particulières :
 - Réussite et complication : Obtenir un vingt naturel n'annule pas les réussites du jet. Un joueur peut réussir son action tout en subissant une complication narrative ou physique (section « Complications »).
 - Perte d'Impulsion : L'Impulsion excédentaire au-delà de la borne maximale de six points est perdue si elle n'est pas dépensée immédiatement (section « Conserver de l’Impulsion »).
 - Érosion de fin de scène : La réserve d'Impulsion diminue de moins un point à la fin de chaque scène (section « Conserver de l’Impulsion »).
-- Tâches étendues : Chaque réussite critique accélère la résolution en ajoutant deux points de progression plus la qualité de l'atout (section « Tâches étendues »).
+- Tâches étendues : **chaque test réussi** apporte 2 points (moins par complication, plus par Impulsion), plus la qualité de l'atout employé ; la tâche est achevée quand le total **égale ou dépasse** les conditions (p. 159 et errata).
 
 ## Non couvert
 Les sources ne précisent pas comment se résout une réussite critique d'un assistant si le leader n'obtient que des complications (section « Améliorer vos chances »). Elles ne décrivent pas non plus si obtenir un un naturel lors d'un test de difficulté de zéro double l'Impulsion générée par ce dé spécifique (section « Difficulté »).
+
+*Relu le 2026-10-24 contre le livre (p. 145–159) et l'errata ; corrigé : les tâches étendues.*

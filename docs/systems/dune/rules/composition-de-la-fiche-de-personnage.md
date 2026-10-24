@@ -7,7 +7,7 @@ sources: "Dune_Aventures_dans_l'Imperium_BQ.pdf"
 sections: "« La dimension d’un personnage » ; « Les traits personnels » ; « Les compétences » ; « Les spécialisations » ; « Les principes » ; « Les maximes » ; « L’ambition » ; « Les atouts » ; « Les touches finales »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Composition de la fiche de personnage
@@ -23,20 +23,20 @@ Ses motivations sont traduites par d'autres éléments appelés principes (secti
 - Valeur d'une compétence : de quatre à huit points (section « Les compétences »).
 - Échelle de niveau de compétence, du meilleur au pire : huit (maître), sept (très capable), six (bien formé), cinq (rudiments), quatre (manque de formation) (section « Les compétences »).
 - Valeur d'un principe : de quatre à huit points (section « Les principes »).
-- Échelle brute des principes ordonnés, du meilleur au pire : de de de de de de de de huit à quatre points (section « Les principes »).
+- Échelle brute des principes ordonnés, du meilleur au pire : de huit à quatre points (section « Les principes »).
 - Seuil minimal pour posséder une maxime : valeur de six (section « Les maximes »).
 - Nombre de maximes de départ d'un personnage principal : trois maximes (section « Les maximes »).
-- Capacité de la jauge de Détermination (ressource individuelle) : de un à trois points, démarrant à un point (section « Détermination »).
+- Capacité de la jauge de Détermination (ressource individuelle) : de zéro à trois points, un point au début de chaque aventure (section « Détermination »).
 - Nombre d'atouts de départ : trois atouts (section « Les atouts »).
 - Atout tangible obligatoire au départ : un atout (section « Les atouts »).
-- Limite d'atouts permanents : de de de de de de de de de de de cinq atouts (section « Progression des personnages »).
+- Limite d'atouts permanents : cinq au plus, davantage avec certains talents (p. 192, chapitre « Les atouts »).
 - Nombre de talents de départ : trois talents (section « Les talents »).
 - Nombre de spécialisations de départ : quatre spécialisations (section « Les spécialisations »).
 
 ## À la table
 La feuille se gère selon deux approches (section « La dimension d’un personnage ») :
 1. La **création organisée** : Les joueurs se réunissent en **Session Zéro** (section « La création organisée »). Ils choisissent vocation, archétype, compétences, spécialisations, talents, principes, maximes et atouts (section « Résumé de la création de personnage »). La feuille est finalisée avant de jouer (section « La création de personnage organisée »).
-2. La **création en jeu** : Les joueurs débutent avec une fiche partiellement vide : concept, archétype, compétences primaire et secondaire, une spécialisation, un talent, un principe majeur avec maxime et un atout unique (section « La création en jeu »). En cours de partie, le joueur définit les blancs restants (compétences, spécialisations, principes, atouts, talents) au moment opportun, révélant ainsi rétroactivement une aptitude déjà possédée (section « Mener la création en jeu »). Le meneur fixe une limite de **une à quatre sessions** pour tout finaliser (section « Mener la création en jeu »).
+2. La **création en jeu** : Les joueurs débutent avec une fiche partiellement vide : concept, archétype, compétences primaire et secondaire, deux spécialisations, un talent, un principe majeur avec maxime, un trait et un atout ; il reste à définir un trait, trois compétences (4, 5 et 6), deux spécialisations, deux talents, quatre principes, l'ambition et deux atouts (p. 133–135). En cours de partie, le joueur définit les blancs restants (compétences, spécialisations, principes, atouts, talents) au moment opportun, révélant ainsi rétroactivement une aptitude déjà possédée (section « Mener la création en jeu »). Le meneur fixe une limite — fin de la première séance, trois ou quatre séances, ou un scénario d'introduction complet ; ce qui reste se définit hors jeu à la fin de la séance concernée (p. 133).
 
 ## Cas limites
 Le livre de règles précise ces situations :
@@ -47,3 +47,5 @@ Le livre de règles précise ces situations :
 
 ## Non couvert
 Les sources ne précisent pas comment modifier le trait secondaire de **réputation** en campagne (section « Les touches finales »). Elles ne décrivent pas de méthode pour perdre un atout permanent sans rachat (section « Progression des personnages »). Enfin, il n'existe aucune règle pour faire progresser une **spécialisation** au-delà du bonus de réussite critique (section « Les spécialisations »).
+
+*Relu le 2026-10-24 contre Dune : Aventures dans l'Imperium (p. 101–105, 133–135, 139, 192) et son errata (création : compétences 6/5/4/4/4 plus 5 points, 8 au plus ; 4 spécialisations ; 3 talents ; principes 8, 7, 6, 5, 4 ; maximes sur les trois plus élevés ; 3 atouts dont un tangible). Corrigé : la Détermination va de 0 à 3, la limite d'atouts permanents (chapitre des atouts, et extensible par talents), la liste de départ et le délai de la création en jeu.*

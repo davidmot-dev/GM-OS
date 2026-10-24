@@ -177,7 +177,7 @@ le formulaire de GM-OS.
 
 ### Endurance et agonie
 
-![La carte Endurance et agonie : 0 / 10, mourant ; Test de mort, 5 : un pied dans la tombe](captures/jeu-symbaroum-agonie.jpg)
+![La carte Endurance et agonie : 0 / 10, mourant ; Test de mort, 6 : un pied dans la tombe ; les soins de Medicus par niveau](captures/jeu-symbaroum-agonie.jpg)
 
 La carte dit l'**Endurance**, la Résistance à la douleur et l'état : debout, **mourant**, **mort**.
 Mourant, le bouton **« Test de mort (1D20) »** se lance à chaque tour, à l'Initiative du personnage

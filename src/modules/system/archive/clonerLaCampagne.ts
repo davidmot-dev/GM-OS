@@ -117,6 +117,20 @@ export function clonerLaCampagne(state: NexusCampaignState, nouvelId: Fabrique =
     }
     // Les joueurs gardent leur identifiant ; seuls leurs personnages de cette campagne changent.
     copie.players = r(state.players);
+    /*
+      ⛔ **Une fiche HTML ne se partage pas entre deux campagnes** (audit des clés,
+      2026-10-24). `ficheId` désigne un enregistrement de la bibliothèque du
+      moteur, que GM-OS ne détient pas : il n'est dans aucune table, la copie le
+      gardait, et jouer la copie écrivait dans la fiche de l'original. Les
+      personnages copiés et la fiche du groupe repartent **sans fiche reliée** ;
+      leurs valeurs, elles, sont dans `sheetData`, et une fiche reliée de nouveau
+      les reprend (le plus récent gagne).
+    */
+    if (copie.campaign.groupe?.ficheId) copie.campaign = { ...copie.campaign, groupe: { ...copie.campaign.groupe, ficheId: undefined } };
+    copie.players = copie.players?.map(j => ({
+        ...j,
+        characters: j.characters?.map(c => (c.campaignId === copie.campaign.id && c.ficheId ? { ...c, ficheId: undefined } : c)),
+    }));
     if (state.modulesDuJeu !== undefined) copie.modulesDuJeu = r(state.modulesDuJeu);
     // Lot E2 : les combats préparés suivent leurs scènes (rangés par identifiant de scène), les tuiles leur râtelier.
     if (state.combatsGares !== undefined) copie.combatsGares = r(state.combatsGares);

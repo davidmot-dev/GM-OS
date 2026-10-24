@@ -7,13 +7,13 @@ sources: "Dune_Aventures_dans_l'Imperium_BQ.pdf"
 sections: "« Oppositions » ; « Améliorer vos chances » ; « Facteurs externes lors d’une opposition »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Jets opposés, aide et coopération
 
 ## Règle
-Lorsqu'un personnage entreprend une action à laquelle un opposant fait activement barrage, la résolution se fait par un test en opposition (section « Oppositions »). L'opposant jette ses dés en premier sous sa propre difficulté de base pour fixer le seuil de difficulté final du test du personnage actif. Si le personnage actif égale ou dépasse ce nombre de réussites, il parvient à accomplir son objectif. En cas d'échec, le personnage adverse gagne immédiatement de l'Impulsion à hauteur de la différence.
+Lorsqu'un personnage entreprend une action à laquelle un opposant fait activement barrage, la résolution se fait par un test en opposition (section « Oppositions »). L'opposant lance ses dés en premier, contre sa propre difficulté comme pour un test ordinaire ; son nombre de réussites devient la difficulté du personnage actif. Si celui-ci l'égale ou la dépasse, il parvient à son objectif. En cas d'échec, l'adversaire gagne un point d'Impulsion par réussite manquante, qu'il dépense aussitôt comme s'il avait réussi son propre test ; les complications des deux camps se règlent ensuite (p. 158, section « Oppositions »).
 
 Afin d'améliorer ses chances de réussite, le personnage actif peut demander l'aide de ses alliés (section « Améliorer vos chances »). Chaque assistant configurera son propre test de compétence selon sa propre méthode d'aide. Leurs réussites s'ajoutent ensuite à celles du personnage leader, à l'unique condition que ce dernier parvienne à obtenir au moins une réussite de son côté. Les complications subies par n'importe quel participant s'appliquent à l'ensemble du groupe.
 
@@ -38,10 +38,13 @@ Pour coopérer, la procédure est la suivante (section « Améliorer vos chances
 
 ## Cas limites
 Le livre de règles précise plusieurs configurations spécifiques :
-- Absence de réussite du leader : Si le personnage actif n'obtient aucun succès, le test échoue automatiquement, quelles que soient les réussites des assistants (section « Améliorer vos chances »).
+- Absence de réussite du leader : si le personnage actif n'obtient aucune réussite, celles des assistants ne comptent pas (section « Améliorer vos chances »).
 - Complications partagées : Si un assistant ou le leader obtient un vingt naturel, la complication s'applique et affecte l'ensemble des personnages engagés dans la tâche (section « Améliorer vos chances »).
 - Facteurs défavorables de l'opposant : Chaque trait ou modificateur négatif affectant l'opposant réduit de un la difficulté finale du test de l'actif, jusqu'à un minimum de zéro (section « Facteurs externes lors d’une opposition »).
-- Interdiction de modification : Les assistants ne peuvent pas dépenser d'Impulsion ou offrir de la Menace pour modifier leur propre dé (section « Améliorer vos chances »).
+- Dé de l'assistant : il ne peut pas acheter de dés supplémentaires, et le dé d'un assistant ne fait pas partie de la réserve du leader, qui ne peut donc pas le relancer avec sa Détermination (p. 150 et exemple p. 158).
+- Opposition et aide : les deux camps d'une opposition peuvent recevoir l'aide de leurs alliés (section « Facteurs externes lors d’une opposition »).
 
 ## Non couvert
-Les sources ne définissent pas de limite chiffrée au nombre d'assistants pouvant coopérer à un même test, laissant cette décision à la discrétion du meneur de jeu (section « Améliorer vos chances »). Elles ne décrivent pas non plus la résolution d'un conflit de maximes opposées entre le leader et un assistant, ni le cas d'une réussite critique d'un assistant combinée à un échec critique du leader.
+Les sources ne définissent pas de limite chiffrée au nombre d'assistants pouvant coopérer à un même test, laissant cette décision à la discrétion du meneur de jeu (section « Améliorer vos chances »). Elles ne décrivent pas non plus la résolution d'un conflit de maximes opposées entre le leader et un assistant. (Dune n'a pas d'« échec critique » : le 20 donne une complication, pas un échec.)
+
+*Relu le 2026-10-24 contre Dune : Aventures dans l'Imperium (p. 150, 158). Corrigé : l'opposant lance contre sa propre difficulté et dépense aussitôt l'Impulsion gagnée ; sans réussite du leader, ce sont les réussites d'aide qui ne comptent pas (un test de difficulté 0 peut encore réussir) ; le dé d'aide ne se relance pas par la Détermination du leader. Retiré : un « échec critique », qui n'existe pas dans Dune.*

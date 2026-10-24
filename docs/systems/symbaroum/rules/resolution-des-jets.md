@@ -7,7 +7,7 @@ sources: "Symbaroum - Livre de Base.pdf"
 sections: "« les dés » ; « Tests » ; « Attributs et Modificateurs » ; « La résolution de problèmes »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: d0e72ded
 ---
 
@@ -42,7 +42,9 @@ Le livre précise plusieurs cas particuliers pour la résolution des tests:
 - Problèmes gradués: la réussite à un test permet d'obtenir une information de base, mais débloquer le niveau d'information supérieur exige la possession d'un Talent spécifique comme Alchimie, Medicus, Connaissance des bêtes ou Domination (section « Problèmes gradués »).
 - Inversion des formules pour les PNJ: lorsqu'un PNJ attaque ou cible un joueur avec un Talent, le test s'inverse: le joueur teste son propre Attribut avec pour modificateur la valeur d'Attribut du PNJ selon la formule habituelle (section « Règles du Meneur de Jeu »).
 - Relancer un jet: en règle optionnelle, un joueur peut refaire un lancer en dépensant définitivement un point d'Expérience (section « Refaire un jet contre de l’Expérience ») ou en subissant un point de Corruption permanente (section « Refaire un jet contre la Corruption »).
-- Réussites et échecs critiques: en règle optionnelle, obtenir un sur le dé à vingt faces constitue une réussite parfaite, tandis qu'obtenir vingt entraîne un échec critique (section « Attaques parfaites et échecs critiques en Défense »).
+- Réussites et échecs critiques: en règle optionnelle, et **seulement en combat**, un 1 au jet d'Attaque ou de Défense est parfait, un 20 est un échec critique ; hors de l'Attaque et de la Défense, un 1 n'est qu'une réussite et un 20 qu'un échec (p. 184, section « Attaques parfaites et échecs critiques en Défense »).
 
 ## Non couvert
 Le livre de base ne fournit pas de règle générale permettant de retenter un test simple échoué hors combat en l'absence de modification de la situation, ni de mécanique universelle de marge de réussite chiffrée en dehors des problèmes gradués.
+
+*Relu le 2026-10-24 contre le Livre de Base (p. 174–176, 184) : difficultés de +5 à −5, problèmes simples, gradués et étendus, PNJ qui ne lancent jamais ; corrigé : le 1 et le 20 critiques ne valent qu'en Attaque et en Défense.*

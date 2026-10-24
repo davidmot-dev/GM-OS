@@ -314,7 +314,8 @@ test.afterAll(async () => { await gmos?.fermer(); });
 
 async function photographier(cible: Locator, nom: string): Promise<void> {
     await gmos.fenetre.waitForTimeout(500);
-    await cible.screenshot({ path: path.join(SORTIE, `${nom}.jpg`), type: 'jpeg', quality: 82, animations: 'disabled', caret: 'hide' });
+    // En pixels CSS : la fenêtre peut passer sur un écran à l'échelle 2, et la capture doublerait (24/10).
+    await cible.screenshot({ path: path.join(SORTIE, `${nom}.jpg`), type: 'jpeg', quality: 82, animations: 'disabled', caret: 'hide', scale: 'css' });
 }
 
 /**
@@ -378,7 +379,8 @@ for (const { mise, pilote } of JEUX) {
             await f.getByRole('button', { name: /Modules du jeu/ }).click();
             const modules = f.getByRole('region', { name: 'Modules du jeu', exact: true });
             await expect(modules).toBeVisible();
-            await expect(modules.getByRole('checkbox')).toHaveCount(2);
+            // MU/TH/UR, le détecteur et, depuis A9 (23/10), le combat spatial.
+            await expect(modules.getByRole('checkbox')).toHaveCount(3);
             await photographier(modules, 'jeu-alien-modules');
             await vue(campagne, 'modules-du-jeu');
             await expect(f.locator('[data-hub-consultation="modules-du-jeu-mj"]')).toBeVisible();

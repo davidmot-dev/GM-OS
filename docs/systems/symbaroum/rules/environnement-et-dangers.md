@@ -7,7 +7,7 @@ sources: "Symbaroum - Livre de Base.pdf"
 sections: "« dégâts de chute » ; « Voyages et Rencontres » ; « Ombre et Corruption »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 90e3d565
 ---
 
@@ -57,3 +57,5 @@ Le livre précise plusieurs cas particuliers concernant les dangers environnemen
 
 ## Non couvert
 Le livre de base ne fournit pas de règles chiffrées génériques pour la noyade, l'asphyxie, les brûlures par le feu naturel ou les gelures dues au froid extrême hors du cadre des voyages et des pouvoirs mystiques.
+
+*Relu le 2026-10-24 contre le Livre de Base (p. 179, 183, Tableau 26 p. 190) : chutes, voyages et leurs allures, Corruption des zones sombres. Aucune correction.*

@@ -7,7 +7,7 @@ sources: "Symbaroum - Livre de Base.pdf"
 sections: "« Ombre et Corruption » ; « Seuil de Corruption » ; « Argent » ; « Améliorer votre personnage »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 354e7e7e
 ---
 
@@ -45,7 +45,7 @@ Ressource d'Argent:
 ## À la table
 La Corruption se gère à chaque utilisation de pouvoir, activation d'artéfact ou traversée de zone sombre en Davokar (section « Ombre et Corruption »). Le joueur note ses points de Corruption temporaire, qui s'ajoutent à sa Corruption permanente pour former sa Corruption totale (section « Ombre et Corruption »). En fin de scène, la Corruption temporaire s'efface, mais la Corruption permanente reste sur la fiche (section « Ombre et Corruption »). Si la Corruption totale ou permanente atteint le Seuil de Corruption, le joueur choisit un Stigmate (section « Seuil de Corruption »).
 
-L'Expérience est attribuée par le Meneur de Jeu à la fin des scènes ou aventures (section « Améliorer votre personnage »). Entre les sessions, le joueur inscrit ses points et les dépense pour acquérir de nouveaux Talents, élever le niveau d'un Talent ou se lier à un artéfact (section « Améliorer votre personnage »). En règle optionnelle, un point d'Expérience peut être dépensé en cours de partie pour relancer un dé échoué (section « Refaire un jet contre de l’Expérience »).
+L'Expérience est attribuée par le Meneur de Jeu **lorsqu'une aventure s'achève**, selon les scènes survécues — un interlude sans épreuve n'en rapporte pas (p. 175, 177, 178). Entre les sessions, le joueur inscrit ses points et les dépense pour acquérir de nouveaux Talents, élever le niveau d'un Talent ou se lier à un artéfact (section « Améliorer votre personnage »). En règle optionnelle, un point d'Expérience peut être dépensé en cours de partie pour relancer un dé échoué (section « Refaire un jet contre de l’Expérience »).
 
 L'Argent est manipulé lors des transactions en ville (section « Argent »). Le joueur ajuste sa bourse en thalers, shillings et ortegs selon ses achats d'équipement, de soins ou d'hébergement (section « Argent » et section « Biens et Services »).
 
@@ -58,3 +58,5 @@ Le livre précise plusieurs cas particuliers:
 
 ## Non couvert
 Le livre ne fournit pas de règle pour échanger des points d'Expérience contre de la monnaie, ni de système bancaire pour sécuriser ou placer une fortune.
+
+*Relu le 2026-10-24 contre le Livre de Base (p. 165, 175–180, 184) : Corruption temporaire et permanente, Tableau 25, coûts des Talents (10, 20, 30), personnage mort qui garde l'Expérience ; corrigé : l'Expérience s'attribue à la fin de l'aventure.*

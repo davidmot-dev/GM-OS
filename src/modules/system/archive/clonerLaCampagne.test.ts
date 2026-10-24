@@ -160,6 +160,26 @@ describe('cloner ce que l’archive emporte hors de la trame (lot E2)', () => {
     });
 });
 
+describe('une copie ne partage pas les fiches HTML de l’original (audit des clés, 24/10)', () => {
+    it('ses personnages et son groupe repartent sans fiche reliée ; ceux des autres campagnes la gardent', () => {
+        const etat = {
+            campaign: { id: C, name: 'Rêve', system: 'rdd', description: '', activeLocationIds: [], groupe: { ficheId: 'fiche-groupe', sheetData: { nom: 'Les Voyageurs' } } },
+            entities: [],
+            players: [{ id: 'joueur-1', name: 'Alice', characters: [
+                { id: 'pj-1', campaignId: C, name: 'Nitouche', ficheId: 'fiche-nitouche', sheetData: { reve: 15 } },
+                { id: 'pj-autre', campaignId: 'camp-autre', name: 'Autre', ficheId: 'fiche-autre' },
+            ] }],
+        } as unknown as NexusCampaignState;
+        const copie = clonerLaCampagne(etat);
+        const [nitouche, autre] = copie.players[0].characters;
+        expect(nitouche.ficheId).toBeUndefined();
+        expect(nitouche.sheetData).toEqual({ reve: 15 });
+        expect(autre.ficheId).toBe('fiche-autre');
+        expect(copie.campaign.groupe).toEqual({ sheetData: { nom: 'Les Voyageurs' }, ficheId: undefined });
+        expect(etat.players[0].characters[0].ficheId).toBe('fiche-nitouche');
+    });
+});
+
 describe('réécrire les identifiants', () => {
     it('un identifiant entier seulement : « c1 » ne touche ni « c10 » ni « abc1 »', () => {
         const table = new Map([['c1', 'X']]);
