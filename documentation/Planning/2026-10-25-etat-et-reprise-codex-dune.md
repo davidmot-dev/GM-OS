@@ -30,7 +30,7 @@ Sources reproductibles : `outils/dune/fiches/`. Validateur et recette hors ligne
 y compris import dans un moteur jetable ; captures et rapports dans le dossier de livraison.
 ~~Reste l'intégration des deux modèles et la correspondance au pilote~~ : **faites par Claude Code
 le 25/10 (registre § 176)** — fiches rangées dans `docs/fiches/Dune/`, moteur 17, Maison en fiche
-de groupe qui fait foi (le pupitre du module en prend le reflet). Reste leur essai dans GM-OS. Aucun fichier du moteur ni profil personnel modifié pour cette livraison Studio.
+de groupe qui fait foi (le pupitre du module en prend le reflet). Essai de David validé le 25/10 (« tout marche »), commit `48b8691e`. Aucun fichier du moteur ni profil personnel modifié pour cette livraison Studio.
 
 **Commit et push demandés par David le 25/10/2026.** Commit principal : `1338b1f1`
 (`feat(dune): finir le pilote et livrer les fiches PJ et Maison`). Le commit couvre le chantier Dune, ses
