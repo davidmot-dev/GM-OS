@@ -12839,9 +12839,9 @@ Le modèle `noc-reference` conserve son identifiant, le moteur passe à 18 ; les
 dont les deux fiches Dune, sont inchangés. Les deux fiches NOC passent le validateur sans constat.
 
 Export local : `Export Dirvers/corriges/NOC_driver_gmos_2.0.0.gmos-driver` ; constructeur
-`scripts/exporter-noc.mjs`. **Vérifications réussies ; essai de David attendu**, lots 2–9 orange,
-séquelles du § 150 toujours vertes. Aucun profil personnel consulté ; commit local demandé
-par David après le bilan, aucun push demandé.
+`scripts/exporter-noc.mjs`. **Vérifications réussies et essai de David validé le 25/10 :
+« ok tout fonctionne »** ; neuf points verts, chantier terminé. Aucun profil personnel consulté ;
+réalisation `bf83cbf6`, puis push demandé par David après validation.
 Types, lint, **9 150 tests réussis** (quatre ignorés), construction de production ; recette Electron
 et vrai Hub aux largeurs 360/768/1180, écritures reçues par le meneur ; 17 captures actualisées.
 
@@ -12954,7 +12954,7 @@ et vrai Hub aux largeurs 360/768/1180, écritures reçues par le meneur ; 17 cap
 | 102 | **Symbaroum — finir le pilote (S0, S2, S4 à S9)** | § 166 ; corpus corrigé, attaque et Défense avec dégâts, agonie, Stigmates, départage de l'initiative, création et progression, bourse, voyages, règles optionnelles ; pilote 2.0.0 — livré le 23/10 | Réimporter le pilote, puis une attaque, une Défense ratée et un Test de mort sur une fiche | L'essai de David |
 | 110 | **Blade Runner fini — pilote 2.0.0** | § 174 ; blessures critiques suivies (mort, stabilisation, guérison, secours, aggravés), soutien et trois D12, souvenir clé et objet fétiche, pupitre, échange d'initiative ; corpus 22/22 — 24/10 | Réimporter le pilote avec Remplacer ; une blessure mortelle, une stabilisation, un soutien, un échange de cartes — **essayé par David le 25/10** | Rien |
 | 112 | **Dune — fiches HTML raccordées** | § 176 ; moteur 17, fiche PJ (maximes par principe, spécialisations par compétence) et fiche de Maison en fiche de groupe, reflet au module — 25/10 | Validé par David le 25/10 (pilote remplacé, Cockpit → Maison) — `48b8691e` | Rien |
-| 113 | **NOC — fin des améliorations** | § 177 ; points 2–9 développés, pilote 2.0.0, pistes numériques rétrocompatibles, Cabale et tablette — 25/10 | Réimporter avec Remplacer et essayer les gestes du bilan ; séquelles déjà validées | Essai de David |
+| 113 | **NOC — fin des améliorations** | 🟢 § 177 ; neuf points terminés et validés par David le 25/10 : « ok tout fonctionne » ; pilote 2.0.0, moteur 18, `bf83cbf6` | Rien | Rien |
 | 111 | **Dune — pilote 2.0.0** | § 175 ; spécialisations, principes, Détermination, bilans, conflits, zones, Maison et progression — validé par David le 25/10 | [Recette Dune](2026-10-25-dune-finir.md) | Fiches HTML : § 176 |
 | 109 | **Corpus de Dune relu en entier** | § 173 ; 20 fiches sur 20 contre le livre et l'errata, bégaiements réparés, règles du scénario ramenées à leur source, cinq affirmations sans source retirées — 24/10 | Rien | Rien |
 | 108 | **Corpus de Symbaroum relu en entier** | § 172 ; 13 fiches sur 13, sept corrections, quatre affirmations sans source retirées — 24/10 | Rien | Rien |

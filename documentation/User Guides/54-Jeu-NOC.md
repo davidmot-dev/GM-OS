@@ -206,7 +206,7 @@ offerts par les 10 s'y choisissent comme sur la fiche, avant l'attribution des g
 
 ## Ce qui manque encore
 
-Les points 2 à 9 du chantier du 19/10 sont développés le 25/10 ; leur essai par David reste attendu.
+Les neuf points du chantier du 19/10 sont terminés et validés par David le 25/10 : « ok tout fonctionne ».
 Les conséquences narratives des Séquelles et les soins lourds restent arbitrés par la Loi.
 
 - La **Séquelle** se propose à 8, mais son **effet** (le trait Criminel, le second trait de
@@ -233,4 +233,4 @@ pas toutes. Le modèle intégré garde son identifiant `noc-reference` ; le mote
 
 ![Les pistes numériques sur la fiche originale](captures/jeu-noc-pistes-numeriques.jpg)
 
-*Relu le 2026-10-25 contre le livre de base p. 220, 231–234, 248 et Diffractions p. 134 ; essai de David attendu.*
+*Relu le 2026-10-25 contre le livre de base p. 220, 231–234, 248 et Diffractions p. 134 ; validé par David le 25/10/2026.*

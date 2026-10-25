@@ -5,9 +5,10 @@ et Claude terminé, en demandant de conserver Dune. Branche `production` ; les c
 `48b8691e` et `c1f5c70b` sont présents et conservés. David demande ensuite le commit local NOC.
 
 Lire le [bilan](2026-10-25-noc-finir.md), le registre § 177 et la synthèse des pilotes, section NOC.
-Points 2–9 développés, statut orange tant que David ne les a pas essayés ; Séquelles déjà validées.
+Les neuf points sont verts : **David confirme « ok tout fonctionne » le 25/10/2026**.
+Réalisation commitée dans `bf83cbf6` ; aucun reste sur ces lots.
 
-Export à réimporter avec **Remplacer** : `Export Dirvers/corriges/NOC_driver_gmos_2.0.0.gmos-driver`.
+Export livré et validé : `Export Dirvers/corriges/NOC_driver_gmos_2.0.0.gmos-driver`.
 Sources : `scripts/exporter-noc.mjs`, `outils/noc/convertir-pistes.mjs` (idempotent),
 `outils/noc/verifier-fiche.mjs`, `outils/noc/verifier-pilote.mjs`.
 
@@ -24,4 +25,4 @@ Traces et captures : `tmp/noc-fin/`. Recette Electron et Hub réussie (360/768/1
 écritures de Cabale et piste PJ reçues par le meneur) ; 17 captures dans le manuel. Types, lint,
 9 150 tests réussis ; quatre ignorés. Construction de production réussie, `npm run validate` terminé.
 Les deux modifications préexistantes de documentation (prompts Stitch et guide tablette 62)
-restent à part. Commit local demandé après le bilan ; aucun push demandé.
+restent à part. Réalisation `bf83cbf6` ; push demandé ensuite par David, avec la validation.
