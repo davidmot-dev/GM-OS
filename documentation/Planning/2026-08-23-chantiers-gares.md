@@ -12801,8 +12801,9 @@ Export `Export Dirvers/corriges/Dune_driver_gmos_2.0.0.gmos-driver`, produit par
 `scripts/exporter-dune.mjs`, relu après écriture. Les clés de l'ancien gabarit sont conservées,
 le faux champ PV et les anciennes portées métriques retirés. Aucun profil de David consulté.
 Types, lint ciblé et construction passés ; recette Electron et onze captures relues passées.
-Suite globale : **9 111 tests passés** ; puis **53 tests ciblés** sur les garde-fous finaux. **Réimport et essai de David attendus**, y compris
-sur tablette physique ; statut orange, aucune validation de séance supposée. Aucun commit/push.
+Suite globale : **9 111 tests passés** ; puis **53 tests ciblés** sur les garde-fous finaux.
+**Validé par David le 25/10/2026 : « tout est testé, c'est bon , commit et pousse l'ensemble ».**
+D0–D8 passent au vert ; commit et push sur `production` explicitement autorisés.
 
 **Atelier Studio demandé ensuite le 25/10 :** deux fiches HTML fidèles au PDF de David,
 PJ (une page, 30 champs) et Maison (une page, 40 champs, armoiries importables), dans

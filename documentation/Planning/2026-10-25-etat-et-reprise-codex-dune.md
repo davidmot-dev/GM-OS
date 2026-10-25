@@ -31,6 +31,7 @@ y compris import dans un moteur jetable ; captures et rapports dans le dossier d
 **Reste l'intégration des deux modèles et la correspondance au pilote**, puis leur essai
 dans GM-OS. Aucun fichier du moteur ni profil personnel modifié pour cette livraison Studio.
 
-**Commit et push demandés par David le 25/10/2026.** Le commit couvre le chantier Dune, ses
+**Commit et push demandés par David le 25/10/2026.** Commit principal : `1338b1f1`
+(`feat(dune): finir le pilote et livrer les fiches PJ et Maison`). Le commit couvre le chantier Dune, ses
 fiches, ses sources, son manuel et ses captures ; les exports locaux et les autres chantiers
 restent hors commit, conformément aux consignes de passation.

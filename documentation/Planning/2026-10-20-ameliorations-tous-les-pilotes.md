@@ -305,8 +305,8 @@ dés achetés, alternance des camps et tâche de défaite. Dune n'a pas à recev
 | 🟢 D8 | Livré ; validé par David | Maison dans le module, Menace initiale selon type/joueurs, carnet de progression avec aperçu, historique, limite par aventure, reconversion et qualité à 2 × nouvelle valeur |
 
 **Vérifié :** suite globale 9 111 tests, types, lint ciblé, construction et recette Electron (onze captures relues, vrai Hub à 360/768/1 180 px).
-**Prochaine étape :** réimporter le 2.0.0 puis essayer ces gestes
-avec David. **Atelier Studio du 25/10 :** fiches HTML fidèles PJ (30 champs) et Maison
+**Validation de David le 25/10/2026 : « tout est testé, c'est bon » ; D0–D8 passent au vert.**
+**Atelier Studio du 25/10 :** fiches HTML fidèles PJ (30 champs) et Maison
 (40 champs, armoiries importables) créées dans `output/fiches/dune/`, une page chacune.
 Validation sans erreur, sauvegarde/JSON/zoom/impression/hors ligne et import réel dans un
 moteur jetable vérifiés ; [livraison](../../output/fiches/dune/LIVRAISON.md).
