@@ -6,6 +6,7 @@ import manifesteCombatSpatial from '../../../outils/alien/modules/combat-spatial
 import manifesteLcars from '../../../outils/star-trek/lcars/manifeste.json';
 import manifesteOperations from '../../../outils/star-trek/operations/manifeste.json';
 import manifesteTmr from '../../../outils/reve-de-dragon/tmr/manifeste.json';
+import manifesteDune from '../../../outils/dune/conflits/manifeste.json';
 import type { ModuleDuCatalogue, ModuleDuPilote, ReferenceDeModuleDuJeu } from './types';
 
 // Registre explicite : aucun chemin, script ou URL fourni par un pilote n'est exécuté.
@@ -15,7 +16,9 @@ if (validerLeManifeste(manifesteCombatSpatial).length) throw new Error('Manifest
 if (validerLeManifeste(manifesteLcars).length) throw new Error('Manifeste LCARS invalide.');
 if (validerLeManifeste(manifesteOperations).length) throw new Error('Manifeste des opérations Star Trek invalide.');
 if (validerLeManifeste(manifesteTmr).length) throw new Error('Manifeste TMR invalide.');
+if (validerLeManifeste(manifesteDune).length) throw new Error('Manifeste Dune invalide.');
 export const CATALOGUE_DES_MODULES: readonly ModuleDuCatalogue[] = [
+    { id: manifesteDune.id, libelle: manifesteDune.libelle, description: manifesteDune.description, corpusCompatibles: manifesteDune.corpusCompatibles, adaptation: 'prete' },
     { id: manifesteTmr.id, libelle: manifesteTmr.libelle, description: manifesteTmr.description,
         corpusCompatibles: manifesteTmr.corpusCompatibles, adaptation: 'prete' },
     { id: manifesteLcars.id, libelle: manifesteLcars.libelle,

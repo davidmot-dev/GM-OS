@@ -50,6 +50,8 @@ interface OrdreDuTourState {
     ceder: () => void;
     /** Le camp actif garde la main. **Le paiement est à l'appelant** — ce store ne connaît pas les réserves. */
     conserver: () => void;
+    qualifierActionDune: (action: NonNullable<EtatDuTour['actionDune']>) => void;
+    rejouerDune: (parDetermination?: boolean) => void;
     /** Le round suivant s'ouvre sur le camp désigné. */
     roundSuivant: (camp: Camp) => void;
     /** Sort de l'alternance — fin du conflit. */
@@ -107,6 +109,11 @@ export const useOrdreDuTourStore = create<OrdreDuTourState>()(
                 const tour = get().tour;
                 if (!tour) return;
                 set({ tour: conserverLaMain(tour) });
+            },
+            qualifierActionDune: action => set(s => ({ tour: s.tour ? { ...s.tour, actionDune: action } : null })),
+            rejouerDune: (parDetermination = false) => {
+                const t = get().tour; if (!t?.dernierAgissant) return;
+                set({ tour: { ...t, repriseDune: t.dernierAgissant, enAttenteDeDecision: false, difficulteDune: parDetermination ? 0 : 1, repriseParDetermination: parDetermination } });
             },
 
             roundSuivant: camp => {

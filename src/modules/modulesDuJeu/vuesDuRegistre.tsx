@@ -57,6 +57,10 @@ const mjOperations = lazy(async () => {
     return { default: (props: Props) => <PupitreOperations vue={props.vue as import('../../../outils/star-trek/operations/moteur.mjs').VueOperations} envoyerCommande={props.envoyerCommande} /> };
 });
 const REGISTRE_DES_VUES = new Map([
+    ['dune-conflits', {
+        joueur: lazy(async () => { const { PlateauDune } = await import('./dune/VuesDune'); return { default: (p: Props) => <PlateauDune vue={p.vue as import('../dice/systemes/conflitsDeDune').ConflitDune} /> }; }),
+        mj: lazy(async () => { const { PupitreDune } = await import('./dune/VuesDune'); return { default: (p: Props) => <PupitreDune vue={p.vue as import('../dice/systemes/conflitsDeDune').ConflitDune} envoyerCommande={p.envoyerCommande} /> }; }),
+    }],
     ['star-trek-operations', { joueur: joueurOperations, mj: mjOperations }],
     ['rdd-tmr', { joueur: vueTmr, mj: mjTmr }],
     ['star-trek-lcars', { joueur: joueurLcars, mj: mjLcars }],

@@ -49,6 +49,23 @@ const HARKONNEN = combattant('harkonnen');
 const SARDAUKAR = combattant('sardaukar');
 const TABLE = [PAUL, DUNCAN, HARKONNEN, SARDAUKAR];
 
+describe('Dune : reprise et résultat de l’action (p. 165–167)', () => {
+    const regle = { ...DUNE, repriseDune: true };
+    it('un PJ seul peut reprendre la main pour lui-même', () => {
+        const t = agir(ouvrirLeRound('joueurs'), PAUL.id);
+        expect(retentionPossible(regle, [PAUL, HARKONNEN], t).possible).toBe(true);
+        expect(retentionPossible(regle, TABLE, { ...t, actionDune: 'attaque-ratee' }).possible).toBe(false);
+        expect(retentionPossible(regle, TABLE, { ...t, actionDune: 'deplacement-rate' }).possible).toBe(false);
+        expect(retentionPossible(regle, TABLE, { ...t, actionDune: 'discretion' }).cout).toBeUndefined();
+    });
+    it('la reprise ne duplique pas les tours pris et reste plafonnée', () => {
+        const t = agir(ouvrirLeRound('joueurs'), PAUL.id);
+        const deux = agir({ ...t, repriseDune: PAUL.id }, PAUL.id);
+        expect(deux.ontAgi).toEqual([PAUL.id]);
+        expect(retentionPossible(regle, TABLE, deux).possible).toBe(false);
+    });
+});
+
 describe('les camps', () => {
     it('un allié du meneur agit avec les joueurs', () => {
         // Le livre oppose des camps, pas des fiches. Sans cela, un PNJ allié

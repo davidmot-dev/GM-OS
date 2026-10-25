@@ -68,6 +68,8 @@ export interface DescripteurDInitiative {
      * l'initiative est impossible tant qu'au moins un ennemi n'a pas agi ».
      */
     activationsConsecutivesMax?: number;
+    /** Dune p. 165 : le même acteur peut agir à nouveau (+1 difficulté), les ennemis paient la Menace. */
+    repriseDune?: boolean;
 }
 
 export interface EtatDuTour {
@@ -89,6 +91,10 @@ export interface EtatDuTour {
     enAttenteDeDecision: boolean;
     /** Le dernier à avoir agi — c'est lui qui désigne l'ouverture du round suivant. */
     dernierAgissant?: string;
+    actionDune?: 'autre' | 'attaque-ratee' | 'deplacement-rate' | 'discretion';
+    repriseDune?: string;
+    difficulteDune?: number;
+    repriseParDetermination?: boolean;
 }
 
 /** L'autre camp. */
@@ -176,12 +182,16 @@ export function roundTermine(combattants: Combatant[], etat: EtatDuTour): boolea
  * c'est précisément l'erreur que le mode « formule » commettait.
  */
 export function agir(etat: EtatDuTour, combattantId: string): EtatDuTour {
-    if (etat.ontAgi.includes(combattantId)) return etat;
+    if (etat.ontAgi.includes(combattantId) && etat.repriseDune !== combattantId) return etat;
     return {
         ...etat,
-        ontAgi: [...etat.ontAgi, combattantId],
+        ontAgi: [...new Set([...etat.ontAgi, combattantId])],
+        repriseDune: undefined,
+        actionDune: 'autre',
+        difficulteDune: etat.repriseDune === combattantId ? etat.difficulteDune ?? 0 : 0,
+        repriseParDetermination: false,
         dernierAgissant: combattantId,
-        activationsConsecutives: etat.activationsConsecutives + 1,
+        activationsConsecutives: etat.activationsConsecutives + (etat.repriseParDetermination ? 0 : 1),
         enAttenteDeDecision: true,
     };
 }
@@ -211,6 +221,9 @@ export function retentionPossible(
 ): RetentionPossible {
     const cout = descripteur.coutDeRetention;
     const max = descripteur.activationsConsecutivesMax;
+    if (descripteur.repriseDune && (etat.actionDune === 'attaque-ratee' || etat.actionDune === 'deplacement-rate')) {
+        return { possible: false, raison: 'Après une attaque ou un déplacement raté, impossible de conserver l’initiative.', cout };
+    }
 
     if (max !== undefined && etat.activationsConsecutives >= max) {
         return {
@@ -221,11 +234,11 @@ export function retentionPossible(
     }
 
     const libres = restants(combattants, etat).filter(c => campDe(c) === etat.campActif);
-    if (libres.length === 0) {
+    if (libres.length === 0 && !(descripteur.repriseDune && etat.dernierAgissant && combattants.some(c => c.id === etat.dernierAgissant))) {
         return { possible: false, raison: 'Plus personne de ce camp n\'a de tour à prendre.', cout };
     }
 
-    return { possible: true, cout };
+    return { possible: true, cout: descripteur.repriseDune && etat.actionDune === 'discretion' ? undefined : cout };
 }
 
 /**

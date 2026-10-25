@@ -15,6 +15,9 @@ import {
     type DescripteurDInitiative,
 } from '../logic/OrdreDuTour';
 import type { RessourceDeTable } from '../../table/RessourcesDeTable';
+import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { ecrireLaFicheDuCombattant, valeursDuCombattant } from '../ficheDesCombattants';
+import { CLE_DUNE, entierDune, lireDune } from '../../dice/systemes/duneRegles';
 
 /**
  * L'ordre du tour quand il alterne entre les camps.
@@ -48,6 +51,8 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
     const combattants = useCombatStore(s => s.combatants);
     const { tour, ouvrir, faireAgir, ceder, conserver, roundSuivant, clore } = useOrdreDuTourStore();
     const depenser = useRessourcesDeTableStore(s => s.depenser);
+    const [enMenace, setEnMenace] = React.useState(false);
+    const [maximeDetermination, setMaximeDetermination] = React.useState('');
 
     const monnaie = campaignId && ressourcesDeTable?.length ? { campaignId, ressourcesDeTable } : null;
 
@@ -58,11 +63,14 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
      * aboutit toujours, mais pas toujours au même endroit. Le taire ferait
      * monter la réserve du meneur sans que personne ne le voie.
      */
-    const payer = (montant: number, ressource: string) => {
-        if (!monnaie) return;
-        for (const a of depenser(monnaie.campaignId, monnaie.ressourcesDeTable, ressource, montant).avertissements) {
+    const payer = (montant: number, ressource: string, camp?: Camp) => {
+        if (!monnaie) return false;
+        const ennemi = descripteur.repriseDune && (camp ?? tour?.campActif) === 'adversaires';
+        if (ennemi && useRessourcesDeTableStore.getState().valeur(monnaie.campaignId, monnaie.ressourcesDeTable, 'menace') < montant) { gmToast('Menace insuffisante.', 'warning'); return false; }
+        for (const a of depenser(monnaie.campaignId, monnaie.ressourcesDeTable, ennemi ? 'menace' : ressource, montant, 'Dune : initiative', !ennemi && enMenace ? montant : 0).avertissements) {
             gmToast(a, 'warning');
         }
+        return true;
     };
 
     if (combattants.length === 0) return null;
@@ -91,13 +99,14 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                         </button>
                     ))}
                 </div>
+                {descripteur.repriseDune && <button type="button" className="rounded border border-app-border/40 px-3 py-2 text-xs" onClick={() => { if (payer(2, 'menace', 'adversaires')) ouvrir('adversaires'); }}>Ouvrir sur les adversaires : payer 2 Menace</button>}
             </div>
         );
     }
 
     const fini = roundTermine(combattants, tour);
     const retention = retentionPossible(descripteur, combattants, tour);
-    const aJouer = candidats(combattants, tour);
+    const aJouer = tour.repriseDune ? combattants.filter(c => c.id === tour.repriseDune) : candidats(combattants, tour);
     /** Le repli du livre : le camp actif n'a plus personne, l'autre finit le round. */
     const replisurAutreCamp = aJouer.length > 0 && campDe(aJouer[0]) !== tour.campActif;
 
@@ -116,7 +125,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
             </div>
 
             {/* ── Le round est fini : qui ouvre le suivant ─────────────────── */}
-            {fini ? (
+            {fini && (!descripteur.repriseDune || !tour.enAttenteDeDecision) && !tour.repriseDune ? (
                 <div className="space-y-2 rounded-xl border border-accent/20 bg-accent/5 p-3">
                     <p className="text-ui-11 text-app-text/60 leading-snug">
                         Tout le monde a agi. Le dernier à jouer désigne le camp qui ouvre — ou paie
@@ -137,7 +146,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                                 </button>
                                 <button
                                     onClick={() => {
-                                        if (cout) payer(cout.montant, cout.ressource);
+                                        if (cout && !payer(cout.montant, cout.ressource, payant)) return;
                                         roundSuivant(payant);
                                     }}
                                     className="px-3 py-2 rounded-lg border border-etat-alerte/30 hover:border-etat-alerte/60 text-etat-alerte/80 transition-colors"
@@ -145,7 +154,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                                     <NomDuCamp camp={payant} />
                                     {cout && (
                                         <span className="block text-ui-9 font-bold text-etat-alerte/60 mt-0.5">
-                                            {cout.montant} {cout.ressource}
+                                            {cout.montant} {descripteur.repriseDune && payant === 'adversaires' ? 'menace' : cout.ressource}
                                         </span>
                                     )}
                                 </button>
@@ -159,6 +168,27 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                     <p className="text-ui-11 text-app-text/60 leading-snug">
                         Action résolue. <NomDuCamp camp={tour.campActif} /> cède la main, ou la garde.
                     </p>
+                    {descripteur.repriseDune && <>
+                        <label className="block text-xs">Action résolue <select aria-label="Action résolue Dune" value={tour.actionDune ?? 'autre'} onChange={e => useOrdreDuTourStore.getState().qualifierActionDune(e.target.value as NonNullable<typeof tour.actionDune>)} className="bg-app-bg text-app-text">
+                            <option value="autre">Autre / attaque réussie</option><option value="attaque-ratee">Attaque ratée</option><option value="deplacement-rate">Déplacement raté</option><option value="discretion">Déplacement discret réussi</option>
+                        </select></label>
+                        {tour.campActif === 'joueurs' && <label className="block text-xs"><input type="checkbox" checked={enMenace} onChange={e => setEnMenace(e.target.checked)} /> Payer la rétention en Menace concédée</label>}
+                        <button type="button" className="rounded border border-app-border/40 px-3 py-2 text-xs disabled:opacity-30" disabled={!retention.possible} onClick={() => {
+                            if (retention.cout && !payer(retention.cout.montant, retention.cout.ressource)) return;
+                            useOrdreDuTourStore.getState().rejouerDune();
+                        }}>Rejouer le même personnage (+1 difficulté){retention.cout ? ` · 2 ${tour.campActif === 'adversaires' ? 'Menace' : enMenace ? 'Menace concédée' : 'Impulsion'}` : ' · gratuit'}</button>
+                        {(() => {
+                            const acteur = combattants.find(c => c.id === tour.dernierAgissant), regle = useSessionOSStore.getState().getActiveDriver()?.jet?.dune;
+                            if (!acteur || !regle) return null;
+                            const v = valeursDuCombattant(acteur), s = lireDune(v), det = entierDune(v[regle.determination]);
+                            const principes = regle.principes.filter(p => s.maximes[p] && !s.bafoues.includes(p));
+                            return <div className="space-y-1 text-xs"><label>Maxime pertinente validée <select aria-label="Maxime de l’action supplémentaire Dune" className="bg-app-bg text-app-text" value={maximeDetermination} onChange={e => setMaximeDetermination(e.target.value)}><option value="">Choisir le principe</option>{principes.map(p => <option key={p} value={p}>{p} : {s.maximes[p]}</option>)}</select></label>
+                                <button type="button" className="rounded border border-app-border/40 px-3 py-2 disabled:opacity-30" disabled={det < 1 || !principes.includes(maximeDetermination)} onClick={() => {
+                                    ecrireLaFicheDuCombattant(acteur, { [regle.determination]: det - 1, [CLE_DUNE]: { ...s, determinationDansLaScene: true } });
+                                    useOrdreDuTourStore.getState().rejouerDune(true); setMaximeDetermination('');
+                                }}>Action supplémentaire (1 Détermination, même après rétention)</button></div>;
+                        })()}
+                    </>}
                     <div className="grid grid-cols-2 gap-2">
                         <button
                             onClick={ceder}
@@ -175,7 +205,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                         <button
                             onClick={() => {
                                 if (!retention.possible) return;
-                                if (retention.cout) payer(retention.cout.montant, retention.cout.ressource);
+                                if (retention.cout && !payer(retention.cout.montant, retention.cout.ressource)) return;
                                 conserver();
                             }}
                             disabled={!retention.possible}
@@ -189,7 +219,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                             {retention.possible ? <Hand size={12} /> : <Ban size={12} />} Conserver
                             {retention.possible && retention.cout && (
                                 <span className="font-mono normal-case tracking-normal">
-                                    ({retention.cout.montant} {retention.cout.ressource})
+                                    ({retention.cout.montant} {descripteur.repriseDune && tour.campActif === 'adversaires' ? 'menace' : retention.cout.ressource})
                                 </span>
                             )}
                         </button>
@@ -226,6 +256,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                             >
                                 <ChevronRight size={12} className="text-app-text/30" />
                                 <span className="text-xs font-bold text-app-text/80 truncate">{c.name}</span>
+                                {tour.repriseDune && <span className="text-xs text-etat-alerte">Nouvelle action : difficulté +1</span>}
                                 <span className="ml-auto text-ui-9 font-black uppercase tracking-widest text-app-text/25">
                                     {campDe(c) === 'joueurs' ? 'joueurs' : 'adversaires'}
                                 </span>

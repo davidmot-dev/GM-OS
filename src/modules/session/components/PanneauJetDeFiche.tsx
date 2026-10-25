@@ -10,5 +10,6 @@ export default function PanneauJetDeFiche(props: ComponentProps<typeof PanneauDe
         && props.descripteur.cible?.mecanique === 'reves-de-dragons') {
         return <PanneauJetVoyageur {...props} personnageId={props.personnageId ?? ''} />;
     }
-    return <PanneauDeJet {...props} />;
+    // Le bilan Dune appartient au personnage qui a lancé, jamais au suivant sélectionné.
+    return <PanneauDeJet key={props.descripteur.dune ? `${props.campaignId}:${props.personnageId}:${props.template.id}` : undefined} {...props} />;
 }

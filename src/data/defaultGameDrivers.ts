@@ -60,7 +60,7 @@ const DUNE: GameDriver = {
     id: 'dune',
     name: "Dune : Aventures dans l'Imperium",
     author: 'GM-OS',
-    version: '1.0.0',
+    version: '2.0.0',
     description:
         "Système 2d20 de Modiphius. Le seuil d'un test est la somme d'une compétence et d'un " +
         "principe ; chaque dé sous ce seuil est une réussite. Ni points de vie ni initiative " +
@@ -101,6 +101,10 @@ const DUNE: GameDriver = {
         reserve: { base: 2, max: 5, faces: 20, cout: [1, 2, 3], ressource: 'impulsion' },
         sens: 'sous-ou-egal',
         critique: 1,        // « Réussite critique standard : un naturel, valant deux réussites. »
+        specialisation: { label: 'Spécialisation pertinente', composante: 'competence' },
+        dune: { competences: ['analyse', 'combat', 'discipline', 'mobilite', 'rhetorique'],
+            principes: ['devoir', 'domination', 'foi', 'justice', 'verite'], determination: 'determination',
+            progression: 'progression', specialisations: 'specialisations', talents: 'talents', traits: 'traits', atouts: 'atouts' },
         complication: 20,   // « Complication standard : résultat de vingt naturel. »
         difficulte: { min: 0, max: 5, defaut: 1 },
     },
@@ -125,6 +129,7 @@ const DUNE: GameDriver = {
         /** Ce qui abat le mur n° 2. Valeurs de `initiative-et-deroulement-du-tour.md`. */
         initiative: {
             mode: 'alternance',
+            repriseDune: true,
             // « Deux points d'Impulsion dépensés par les joueurs, ou deux points
             // de Menace ajoutés à la réserve du meneur » — le report de la
             // réserve traite le « ou » tout seul.
@@ -215,16 +220,8 @@ const DUNE: GameDriver = {
      * une zone vaut une unité, et au-delà de la zone adjacente le livre ne dit
      * plus rien. À prendre comme une approximation, pas comme la règle.
      */
-    tactical: {
-        ranges: {
-            contact: { label: 'Même zone', maxUnits: 1, modifier: 0 },
-            courte: { label: 'Zone adjacente', maxUnits: 2, modifier: 1 },
-            moyenne: { label: 'Zone éloignée', maxUnits: 3, modifier: 2 },
-            longue: { label: 'Hors de portée', maxUnits: 4, modifier: 3 },
-            extreme: { label: 'Hors de portée', maxUnits: 5, modifier: 4 },
-        },
-        useTacticalAI: false,
-    },
+    // 25/10/2026 : le module dune-conflits porte les zones abstraites et leurs liens.
+    // Les anciens +2/+3/+4 de grille n'étaient pas des règles du livre.
 
     /**
      * Champ requis par le type, **lu par aucun modèle**. Vérifié le 2026-08-10 :
@@ -237,6 +234,7 @@ const DUNE: GameDriver = {
 
     /** Le dossier du corpus — c'est ce champ que lisent l'Oracle, l'Atelier et le Grimoire. */
     corpusId: 'dune',
+    modulesDuJeu: [{ id: 'dune-conflits' }],
 };
 
 export const DEFAULT_GAME_DRIVERS: GameDriver[] = [DUNE];

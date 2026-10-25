@@ -25,6 +25,7 @@ import {
 } from './logic/CombatRules';
 import { HealthInterpreter } from '../session/logic/HealthInterpreter';
 import { horlogeDeDefaite } from './logic/TacheDeDefaite';
+import { lireDune, santeDuConflitDune } from '../dice/systemes/duneRegles';
 import { comparerLInitiative, departager } from './logic/departageDInitiative';
 import { estHorsDeCombat, santeDeDepart, valeurDuChamp } from './logic/SanteDuCombattant';
 // `logic/trame` ne connaît que des types : l'importer ne ferme aucun cycle,
@@ -63,6 +64,8 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
         }).useSessionOSStore?.getState();
         const tache = session?.getActiveDriver?.()?.combat?.tacheDeDefaite;
         if (!tache) return undefined;
+        const defaiteDune = lireDune(sheetData).defaite;
+        if (defaiteDune) return santeDuConflitDune(defaiteDune);
         return horlogeDeDefaite(tache, sheetData).sante;
     } catch {
         // Un combat ne s'interrompt pas parce qu'un pilote est mal renseigné.
@@ -846,7 +849,7 @@ export const useCombatStore = create<CombatState>()(
                         */
                         statuses: combatant.statuses ?? [],
                         sheetData: fiche,
-                        healthSystem: combatant.healthSystem ?? santeSelonLeSysteme(fiche),
+                        healthSystem: fiche && lireDune(fiche).defaite ? santeSelonLeSysteme(fiche) ?? combatant.healthSystem : combatant.healthSystem ?? santeSelonLeSysteme(fiche),
                         // La santé de départ vient de la fiche quand le pilote
                         // dit où la lire. Sans formule, ou sans fiche, on garde
                         // ce que l'appelant a fourni : *on ne fait pas payer une

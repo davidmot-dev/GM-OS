@@ -1,0 +1,21 @@
+{
+  "versionContrat": 1,
+  "id": "dune-conflits",
+  "libelle": "Dune : conflits et Maison",
+  "description": "Zones reliées pour duels, escarmouches, espionnage, guerre et intrigue. Atouts, modes Agent et Architecte, dispositions et désirs révélés par le MJ ; fiche de Maison.",
+  "version": "1.0.0",
+  "versionDonnees": 1,
+  "corpusCompatibles": ["dune"],
+  "commandes": [
+    {"id":"cadre","roles":["mj"]},
+    {"id":"zone","roles":["mj"]},
+    {"id":"lier","roles":["mj"]},
+    {"id":"atout","roles":["mj"]},
+    {"id":"deplacer","roles":["mj"]},
+    {"id":"neutraliser","roles":["mj"]},
+    {"id":"recuperer","roles":["mj"]},
+    {"id":"desir","roles":["mj"]},
+    {"id":"maison","roles":["mj"]},
+    {"id":"scene","roles":["mj"]}
+  ]
+}

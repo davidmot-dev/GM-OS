@@ -1,6 +1,10 @@
 # Dune — améliorations proposées après lecture du livre et de NotebookLM
 
-> **Statut : projet futur, garé.** Décision de David du **19/10/2026** :
+> **Repris le 25/10/2026** : David demande de finir les améliorations du pilote.
+> **Testé et validé par David le 25/10** : « tout est testé, c'est bon ».
+> Voir [le bilan Dune 2.0.0](2026-10-25-dune-finir.md), registre § 175.
+> Le texte ci-dessous conserve l'audit du 19/10. Statut d'origine : projet futur, garé.
+> Décision de David du **19/10/2026** :
 > « sauve-moi cela comme projet futur ». Conserver les propositions D0–D8 pour une reprise
 > ultérieure, sur demande explicite de David. Aucune date fixée, aucun développement lancé.
 > Référence du registre : **§ 143, ligne 79**.

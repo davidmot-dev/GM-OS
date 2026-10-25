@@ -38,8 +38,8 @@ plus visible »*), en tête de chaque ligne de lot ou de sujet :
 Dans la vue d'ensemble, la colonne **Avancement** compte les lignes de chaque section.
 
 Cette hiérarchie commune ne remplace pas les priorités détaillées des audits. Aucun lot de
-développement n'est autorisé par la demande de synthèse. **Dune reste un projet futur garé**,
-conformément à la décision de David du 19/10.
+développement n'est autorisé par la demande de synthèse seule. **Dune a été repris le 25/10**,
+sur demande explicite de David : « Je voudrais finir les améliorations du driver Dune ».
 
 ## Vue d'ensemble
 
@@ -49,7 +49,7 @@ conformément à la décision de David du 19/10.
 | [Blade Runner](#blade-runner) | 🟢 4 · 🟠 0 · 🔴 0 | **Fini le 24/10, pilote 2.0.0** (registre § 174) : audit, pupitre, mort et stabilisation, guérison, et au-delà ; **essayé par David le 25/10** | Rien : tous les lots faits |
 | [Crimes](#crimes) | 🟢 13 · 🟠 0 · 🔴 0 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** ; **tous les lots livrés et essayés le 23/10** : circonstances, hermétiques, opposition, psychologie et seuils, manœuvres, contacts, fortune, création (registre § 157–161) | Rien : tous les lots faits ; tir multiple, intimider, rivalités et fortune commune restent au meneur |
 | [Cthulhu Hack](#cthulhu-hack) | 🟢 5 · 🟠 0 · 🔴 0 | Cinq améliorations livrées et essayées par David le 23/10 contre le livre français (p. 31–32, 34, 42, 50–52), registre § 164 | Rien sur ces cinq lots ; soins spéciaux et suites mentales restent des sujets d'audit séparés |
-| [Dune](#dune) | 🟢 1 · 🟠 1 · 🔴 7 | Audit détaillé ; corpus relu le 24/10 (§ 173) ; projet futur garé | Export à vérifier, spécialisations et paiements Impulsion/Menace lors d'une reprise |
+| [Dune](#dune) | 🟢 9 · 🟠 0 · 🔴 0 | D0–D8 livrés, pilote 2.0.0 ; **tout testé et validé par David le 25/10**. Fiches HTML PJ/Maison créées au Studio, import vérifié, raccordement restant. Corpus relu (§ 173) ; bilan § 175 | Intégrer/raccorder les deux fiches ; les arbitrages narratifs restent au MJ |
 | [Nephilim Légende](#nephilim-légende) | 🟢 9 · 🟠 1 · 🔴 0 | **N1–N9 livrés et essayés le 23/10** (registre § 165) : tout le livre au jet et sur la fiche | L'essai sur tablette physique |
 | [NOC](#noc) | 🟢 1 · 🟠 1 · 🔴 5 | Restes revérifiés dans le code le 19/10 ; **Séquelle proposée à 8 le 22/10** (registre § 150), essai de David validé | Singularité attribuée par un Rouage |
 | [Rêve de Dragon](#rêve-de-dragon) | 🟢 6 · 🟠 1 · 🔴 0 | Socle R0–R7 livré pour les PJ ; boucle TMR ; mécaniques du Voyageur dans « Lancer un test » le 22/10 ; **pilote fini le 24/10** (registre § 168, [bilan](2026-10-24-reve-de-dragon-finir.md)) : phases du round, famine et potions, entraînement, Haut-Rêve ; pilote 2.0.0 ; calendrier de Clock-OS ; Haut-Rêve des PNJ | Réimport et essai de David |
@@ -80,7 +80,7 @@ c'est bien, on fait A3 »). A3 est livré le 21/10 en v1.3.0 : tir automatique,
 chargeurs, protection, critiques humains, Brisé, Trépas, soins séparés et guérison.
 Le champ `armes_proprietes` porte le total à 44 ; les 42 liens HTML sont conservés.
 **1 330 tests**, types, construction et lint ciblé réussis ; recette Electron,
-carte de combat et vrai Hub à trois tailles réussie, sept captures relues.
+carte de combat et vrai Hub à trois tailles réussie, onze captures relues, vrai Hub à 360/768/1 180 px.
 Voir le [bilan A3](2026-10-21-alien-a3.md). **Essai A3 de David validé le 21/10** :
 « ok c'est bon pour A3, commit et pousse ».
 
@@ -282,30 +282,39 @@ comptés parmi ces cinq améliorations. Vérifications et export dans le registr
 ## Dune
 
 **Référence :** [projet futur D0–D8](2026-10-19-dune-propositions.md).
-**Statut conservé : garé**, sur demande de David du 19/10 ; aucune reprise engagée ici.
-Registre général : § 143 et ligne 79 de la vue d'un coup d'œil.
-L'audit concerne le pilote de référence du dépôt, le livre français et l'errata officiel,
-pas un export personnalisé récent.
+**Repris le 25/10/2026**, David : « Je voudrais finir les améliorations du driver Dune » ;
+GM-OS confirmé fermé. Registre : § 175, suite de § 143 ;
+[bilan et recette](2026-10-25-dune-finir.md).
+L'export `Dune_driver_gmos_1792659586664` a été audité puis corrigé en **2.0.0**, clés conservées.
+Le livre français et l'errata local 1.0 ont été consultés ; l'errata officiel 1.1 corrige aussi
+le prix de qualité des atouts.
 
 **Déjà disponible :** Compétence + Principe, 2–5d20, réserves Impulsion/Menace,
 dés achetés, alternance des camps et tâche de défaite. Dune n'a pas à recevoir des PV génériques.
 
-| Lot | Priorité | Amélioration possible lors d'une reprise |
+| Lot | État au 25/10 | Réalisation |
 | --- | --- | --- |
-| 🟠 D0 | P0 | Corpus et exemples corrigés contre le livre et l'errata ; vérifier l'export actuel. **Corpus relu le 24/10** (registre § 173 : 20 fiches sur 20, errata compris). **Reste :** vérifier l'export actuel du pilote |
-| 🔴 D1 | P0 | Déclarer les spécialisations dans le pilote et la fiche ; utiliser la double réussite étendue déjà supportée par le moteur |
-| 🟢 D2 | **Livré et essayé le 22/10** | « Dont en Menace » au panneau de jet ; l'Impulsion du jet hors réserve se dépense ou se verse (registre § 151, `Dune_driver_gmos_d2-paiement`) ; essai de David validé. Restent les dépenses contextualisées et l'Impulsion bonus |
-| 🔴 D3 | P1 | Détermination, invocation/remise en cause des Principes, maximes et relances sélectives |
-| 🔴 D4 | P0 | Rétention d'initiative payée par le bon camp, possibilité de rejouer soi-même, interdiction après attaque ratée |
-| 🔴 D5 | P1 | Attaque reliée aux atouts et à la tâche de défaite, types de cibles, survie à la défaite et récupération |
-| 🔴 D6 | P1 | Assistance, oppositions, complications variables et réussite mitigée autorisée par le MJ |
-| 🔴 D7 | P3 | Atouts structurés et plateau de zones pour duel, escarmouche, espionnage, guerre et intrigue |
-| 🔴 D8 | P2 | Fiche de Maison, Menace initiale selon le contexte, progression et amélioration des atouts |
+| 🟢 D0 | Livré ; validé par David | Corpus 20/20 déjà relu (§ 173). Export réel audité : faux champ PV retiré, anciennes portées métriques retirées, clés conservées ; constructeur d'export reproductible |
+| 🟢 D1 | Livré ; validé par David | Spécialisation déclarée et liste sur la fiche ; un 5 sous Combat 6 spécialisé vaut deux réussites |
+| 🟢 D2 | Livré ; validé par David | Paiement au choix déjà essayé le 22/10 (§ 151). Le test conserve maintenant son bilan jusqu'à clôture : bonus non conservable, dépenses d'informations/traits/atouts, versement unique du reliquat |
+| 🟢 D3 | Livré ; validé par David | Maximes structurées, Détermination, un dé automatique et relances sélectives, bafouer après résolution, récupération et rééquilibrage, action supplémentaire et début d'aventure explicite |
+| 🟢 D4 | Livré ; validé par David | PNJ payés en Menace ; reprise personnelle avec +1 difficulté ; rétention refusée après attaque/déplacement raté et gratuite après discrétion réussie |
+| 🟢 D5 | Livré ; validé par David | Application unique d'une attaque réussie à un vrai combattant ; mineur/tâche étendue ; qualité défensive au-delà de 8 ; survie une fois par scène et récupération distincte des PV, conséquences au choix du MJ |
+| 🟢 D6 | Livré ; validé par David | Dés d'aide séparés, opposition non plafonnée à 5, marge 1–5, rachat signé des complications, réussite mitigée mécaniquement échouée ; bilan du défenseur |
+| 🟢 D7 | Livré ; validé par David | Module partagé « Dune : conflits et Maison » : cinq arènes, Agent/Architecte, zones reliées, atouts visibles/cachés, neutralisation/récupération, désirs secrets et enquête d'intrigue. Le MJ valide tests et dépenses |
+| 🟢 D8 | Livré ; validé par David | Maison dans le module, Menace initiale selon type/joueurs, carnet de progression avec aperçu, historique, limite par aventure, reconversion et qualité à 2 × nouvelle valeur |
 
-**Ordre conservé pour une reprise :** D0/D1 et paiements D2/D4 → D3/D6 → D5 → D8/D7.
+**Vérifié :** suite globale 9 111 tests, types, lint ciblé, construction et recette Electron (onze captures relues, vrai Hub à 360/768/1 180 px).
+**Prochaine étape :** réimporter le 2.0.0 puis essayer ces gestes
+avec David. **Atelier Studio du 25/10 :** fiches HTML fidèles PJ (30 champs) et Maison
+(40 champs, armoiries importables) créées dans `output/fiches/dune/`, une page chacune.
+Validation sans erreur, sauvegarde/JSON/zoom/impression/hors ligne et import réel dans un
+moteur jetable vérifiés ; [livraison](../../output/fiches/dune/LIVRAISON.md).
+**Restent l'intégration des modèles et leur correspondance au pilote**, puis le contrôle de ce raccordement.
+Aucun profil personnel n'a été ouvert. Les propositions historiques D0–D8 restent dans l'audit lié.
 **Cas témoins :** un 5 sous Combat 6 spécialisé vaut deux réussites ; payer une action
 d'un PNJ ennemi débite sa Menace ; une réserve pleine ne détruit pas l'Impulsion immédiatement
-utilisable du test. Le plateau de zones peut attendre les corrections du jet.
+utilisable du test. Le plateau de zones fait partie de la livraison validée par David.
 
 ## Nephilim Légende
 
@@ -565,7 +574,7 @@ propres :
 | --- | --- | --- |
 | 🟠 Corpus et contrôles de la Forge | Tous, en priorité Symbaroum/Dune | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. **Crimes relu en entier le 23/10** (§ 160 : 19 fiches sur 19) ; Symbaroum corrigé le 23/10 (§ 166) ; Star Trek (§ 167) et Rêve de Dragon (§ 168) corrigés à leur livraison. **Symbaroum relu en entier le 24/10** (§ 172 : 13 sur 13, sept corrections, quatre affirmations sans source retirées). **Dune relu en entier le 24/10** (§ 173 : 20 sur 20 contre le livre et son errata). **Blade Runner relu en entier le 24/10** (§ 174 : 22 sur 22). **Compté le 24/10 — fiches encore `relu: false` :** Alien 23 sur 26, Cthulhu Hack 18, NOC 19, Nephilim 21, Rêve de Dragon 16 sur 21, Star Trek 15 sur 19, Torg 16, corpus 2d20 19, SRD YZE 17, Barbarian 16 ; Within n'a aucun corpus, et son pilote est retiré (David, 24/10 : pas la peine pour l'instant). **Reste :** les autres corpus, à relire quand leur jeu sera repris |
 | 🟢 Modificateurs et contexte du jet | Symbaroum, Alien, puis audits des autres | Distinguer modificateur de seuil, nombre de dés, réussites exigées et meilleur/pire dé. **Avantage tactique livré le 22/10 (§ 155).** **Livré le 22/10 (registre § 149) :** `jet.modificateurDuSeuil`, capacité commune du moteur (tout jeu jeté sous un seuil additionné), avec opposition explicite ; Symbaroum la déclare. Les réussites exigées restent `difficulte` (Dune), le nombre de dés la réserve, meilleur/pire dé « Tirage ». **Rien de commun ne reste (24/10)** : le moteur est livré ; chaque jeu l'emploie dans son propre chantier (Crimes, Symbaroum, Star Trek, Nephilim, Rêve de Dragon et Blade Runner finis ; Dune, NOC et Torg dans leurs sections, Within en suspens) |
-| 🟢 Choix du paiement et bilan du jet | Dune, Star Trek | Conserver coût, source, effets immédiats et reliquat, sans double dépense ni perte anticipée. **Livré le 22/10 (registre § 151) :** `paiementAuChoix` (« dont en Menace », depuis la fiche et la tablette) ; l'Impulsion du jet que la réserve pleine ne garde pas reste sur le test (dépenser ou verser). Activé pour Dune (D2) et pour **Star Trek**, audité et fini le 23/10 (§ 167). **Rien de commun ne reste (24/10)** : les dépenses contextualisées et l'Impulsion bonus sont propres à Dune, dans sa section (projet garé) |
+| 🟢 Choix du paiement et bilan du jet | Dune, Star Trek | Conserver coût, source, effets immédiats et reliquat, sans double dépense ni perte anticipée. **Livré le 22/10 (registre § 151) :** `paiementAuChoix` (« dont en Menace », depuis la fiche et la tablette) ; l'Impulsion du jet que la réserve pleine ne garde pas reste sur le test (dépenser ou verser). Activé pour Dune (D2) et pour **Star Trek**, audité et fini le 23/10 (§ 167). **Rien de commun ne reste (24/10)** : les dépenses contextualisées et l'Impulsion bonus sont propres à Dune, dans sa section (développées et validées par David le 25/10, § 175) |
 | 🟢 Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu. **Livré le 22/10 (registre § 150) :** la fiche naît à sa santé de départ ; la Forge avertit d'une santé sans champ courant (Symbaroum corrigé, Crimes signalé) ; `franchissements` propose la séquelle permanente une fois par passage (NOC). Crimes C2 livré le 22/10 (§ 158 : Potentiel actuel, atteintes, bonne nuit). **Vérifié le 24/10 :** Crimes C6 livré (la carte de combat lit le Physique actuel, `CombatCard` → `physiqueActuel`, § 161) ; Cthulhu Hack fini le 23/10 (§ 164) ; agonie de Symbaroum (§ 166), Stress et blessures de Star Trek (§ 167), blessures et famine de Rêve de Dragon (§ 168). **Rien de commun ne reste** : la stabilisation de Blade Runner est livrée dans sa section le 24/10 (§ 174) |
 | 🟢 Événements de scène, séance et temps de jeu | Corruption, Stress, soins, progression, voyages | Des déclencheurs nommés ; une reconnexion ne rejoue pas une dépense, un soin ou un franchissement. **Livré le 22/10 (registre § 150) :** « Fin de scène » écrit aussi les fiches (`gestesDesHeros.finDeScene`, `delta: 'vide'`) après aperçu, même sans réserve de table ; un franchissement traité est retenu par la fiche. La Corruption au seuil est livrée (§ 155) ; les durées de Cthulhu Hack le 23/10 (§ 164) ; potions et famine de Rêve de Dragon au Château Dormant le 24/10 (§ 168). **Rien de commun ne reste (24/10)** : les durées de guérison de Blade Runner sont livrées le 24/10 (§ 174) |
 | 🟢 Fiches, tablettes et journal | Tous | Même calcul et mêmes ressources ; clés stables, secrets filtrés et modifications historisées. **Audit rendu le 22/10** ([rapport](2026-10-22-audit-fiches-tablettes-journal.md), registre § 151) : secrets du meneur envoyés aux tablettes des joueurs (S1 `lectureDuMeneur`, S2 `gmNotes`, S5 fenêtres locales), indices non révélés (S3), notes du meneur écrivables par un joueur (S4), modifications de fiche jamais historisées (H1), pupitre sans réserves (C1) ; motif des tablettes au journal corrigé (A1). **S1, S2, S5 corrigés le 22/10** (registre § 152) : les secrets du meneur ne partent plus vers les tablettes ni les fenêtres de la table ; **S3, S4 le même jour** (§ 153) : indices non révélés retenus, notes du meneur protégées ; **H1 et C1** (§ 154) : modifications de fiche au journal avec leur origine, réserves 2d20 réglées au pupitre et à la télécommande. **Tous les constats traités** ; les recettes des tablettes, cassées depuis `a128c7af`, toutes vertes (§ 156). **Clés stables, audit fini le 24/10** (§ 170) : quatre défauts corrigés — copie d'un pilote sur la fiche de l'original, duplication d'un gabarit sans ses règles, corbeille sans vérification d'usage, copie de campagne partageant les fiches HTML. **Essayé par David le 24/10 : tout marche. Rien ne reste** |
@@ -574,7 +583,7 @@ propres :
 
 **Pour choisir une prochaine intervention (revu le 24/10) :** Alien, Crimes, Cthulhu Hack,
 Nephilim, Rêve de Dragon, Star Trek, Symbaroum et Blade Runner sont finis contre leur livre. Restent à auditer
-NOC et Torg ; Dune reste garé ; Within est en suspens, son pilote retiré par David. Ce repérage n'impose pas un ordre entre les
+NOC et Torg ; Dune est validé par David le 25/10 (§ 175) ; Within est en suspens, son pilote retiré par David. Ce repérage n'impose pas un ordre entre les
 campagnes de David.
 
 ### Mise à jour obligatoire à chaque livraison

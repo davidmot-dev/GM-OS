@@ -1,0 +1,36 @@
+{
+  "fiches": [
+    {
+      "fichier": "Dune_Fiche_PJ_interactive.html",
+      "templateId": "dune-pj-fr",
+      "champs": 30,
+      "autonomie": true,
+      "geometrie": true,
+      "sauvegarde": true,
+      "importExport": true,
+      "mauvaisImportRefuse": true,
+      "zoom": true,
+      "impression": true,
+      "mobile390": true,
+      "armoiries": false,
+      "importMoteur": true
+    },
+    {
+      "fichier": "Dune_Fiche_Maison_interactive.html",
+      "templateId": "dune-maison-fr",
+      "champs": 40,
+      "autonomie": true,
+      "geometrie": true,
+      "sauvegarde": true,
+      "importExport": true,
+      "mauvaisImportRefuse": true,
+      "zoom": true,
+      "impression": true,
+      "mobile390": true,
+      "armoiries": true,
+      "importMoteur": true
+    }
+  ],
+  "reseau": [],
+  "erreursJavaScript": []
+}

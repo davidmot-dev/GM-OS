@@ -33,6 +33,7 @@ import SbiresDuVilain from './SbiresDuVilain';
 import { useTranslation } from 'react-i18next';
 import { estUneFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
 import { etatDuPhysique, physiqueActuel } from '../../dice/systemes/potentielGarde';
+import { DefaiteDune } from './ConflitDune';
 
 const PRESET_STATUSES = [
     { name: 'poison', icon: '🤢', duration: 3 },
@@ -796,6 +797,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     </div>
             )}
 
+            {activeDriver?.jet?.dune && <DefaiteDune combattant={combatant} regle={activeDriver.jet.dune} />}
             {/* Expansible Status Panel */}
             {showStatusMenu && (
                 <div className="mt-3 pt-3 border-t border-app-border/50 w-full animate-in slide-in-from-top-2 fade-in duration-200">

@@ -1070,6 +1070,15 @@ export function controlerLePilote(
         }
         if (st.stress && !st.forme && !st.stress.maximum) avertir('jet.starTrek.forme', 'Sans Forme ni maximum écrit, le Stress n’a pas de plafond (p. 277).');
     }
+    // Dune, 25/10/2026 : l'export conserve ses clés ; une référence absente ne doit jamais se taire.
+    const dune = driver.jet?.dune;
+    if (dune) {
+        if (driver.jet?.sens !== 'sous-ou-egal' || driver.jet?.cible || facesLancees(driver) !== 20) erreur('jet.dune', 'Dune exige une réserve de d20 sous Compétence + Principe.');
+        for (const champ of [...(dune.competences ?? []), ...(dune.principes ?? []), dune.determination, dune.progression, dune.specialisations, dune.talents, dune.traits, dune.atouts]) {
+            if (!champ || !tousLesChamps.has(champ)) erreur('jet.dune', `Dune lit « ${champ ?? '(absent)'} », absent de la fiche.`);
+        }
+        if (dune.competences?.length !== 5 || dune.principes?.length !== 5) erreur('jet.dune', 'Dune doit désigner cinq compétences et cinq principes.');
+    }
     // Les départages de l'initiative (Symbaroum, S6) : des formules sur des champs de la fiche.
     for (const formule of driver.combat?.departages ?? []) {
         for (const champ of champsInvoques(formule)) {

@@ -16,6 +16,8 @@ import manifesteOperations from '../../outils/star-trek/operations/manifeste.jso
 import type { CommandeOperations } from '../../outils/star-trek/operations/moteur.mjs';
 import * as tmr from '../../outils/reve-de-dragon/tmr/moteur.mjs';
 import manifesteTmr from '../../outils/reve-de-dragon/tmr/manifeste.json';
+import manifesteDune from '../../outils/dune/conflits/manifeste.json';
+import { creerConflitDune, migrerConflitDune, commanderConflitDune, vueConflitDune } from '../../src/modules/dice/systemes/conflitsDeDune';
 
 export type LecteurDeModule = { role: 'mj' | 'joueur'; personnageId?: string; appareilId: string };
 export type ContexteDeMoteur = { personnages: { id: string; nom: string }[] };
@@ -39,6 +41,8 @@ const contexte = (lecteur: LecteurDeModule): ContexteMuthur => {
     return lecteur as ContexteMuthur;
 };
 export const REGISTRE_DES_MOTEURS: ReadonlyMap<string, MoteurEnregistre> = new Map<string, MoteurEnregistre>([
+    [manifesteDune.id, { manifeste: manifesteDune, creerEtat: creerConflitDune, migrerEtat: migrerConflitDune,
+        arreterEffets: donnees => migrerConflitDune(donnees, 1), appliquerCommande: commanderConflitDune, vuePour: vueConflitDune }],
     [manifesteTmr.id, { manifeste: manifesteTmr, creerEtat: tmr.creerEtat, preparerLecteur: tmr.preparerLecteur,
         terminerEcriture: tmr.terminerEcriture,
         preparerContexte: tmr.preparerContexte, migrerEtat: tmr.migrerEtat, arreterEffets: tmr.arreterEffets,

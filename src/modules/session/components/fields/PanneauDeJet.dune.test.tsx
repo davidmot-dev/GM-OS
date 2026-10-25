@@ -9,6 +9,7 @@ import { useRessourcesDeTableStore } from '../../../table/useRessourcesDeTableSt
 import { DEFAULT_GAME_DRIVERS } from '../../../../data/defaultGameDrivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../../data/defaultSheetTemplates';
 import type { DiceConfig } from '../../../../types/drivers';
+import { CLE_DUNE, lireDune } from '../../../dice/systemes/duneRegles';
 
 /**
  * **Le paiement au choix et l'Impulsion du jet** — Dune, lot D2 (2026-10-22).
@@ -66,9 +67,10 @@ describe('l\'Impulsion du jet, quand la réserve est pleine', () => {
         faces(3, 4); // deux réussites, difficulté 1 : un excédent
         lancer();
         expect(reserves().impulsion).toBe(6);
-        expect(screen.getByText('1 Impulsion hors réserve')).toBeTruthy();
-        fireEvent.click(screen.getByText('Dépenser un point'));
-        expect(screen.queryByText('1 Impulsion hors réserve')).toBeNull();
+        expect(screen.getByText(/Impulsion du test/).textContent).toContain('1 normale');
+        fireEvent.change(screen.getByLabelText('Effet de l’Impulsion'), { target: { value: 'Qui contrôle ce passage ?' } });
+        fireEvent.click(screen.getByText('Obtenir une information (1)'));
+        expect(screen.getByText(/Impulsion du test/).textContent).toContain('0 normale');
         expect(reserves().impulsion).toBe(6);
     });
 
@@ -76,10 +78,53 @@ describe('l\'Impulsion du jet, quand la réserve est pleine', () => {
         monter({ impulsion: 5, menace: 0 });
         faces(1, 4); // le 1 compte double : trois réussites, deux d'excédent
         lancer();
-        expect(reserves().impulsion).toBe(6);
-        expect(screen.getByText('1 Impulsion hors réserve')).toBeTruthy();
+        expect(reserves().impulsion).toBe(5); // Le reliquat attend la fin des dépenses du test.
+        expect(screen.getByText(/Impulsion du test/).textContent).toContain('2 normale');
         useRessourcesDeTableStore.getState().depenser('c', RESSOURCES, 'impulsion', 2);
-        fireEvent.click(screen.getByText('Verser à la réserve'));
+        fireEvent.click(screen.getByText('Terminer le test et conserver le reliquat'));
         expect(reserves().impulsion).toBe(5);
+    });
+});
+
+describe('Dune : le test complet au panneau', () => {
+    it('une relance sélective recompte le même test avant un versement unique', () => {
+        useRessourcesDeTableStore.setState({ reserves: { c: { impulsion: 0, menace: 0 } } });
+        const ecrire = vi.fn();
+        render(<PanneauDeJet descripteur={DUNE.jet!} dice={DUNE.dice as DiceConfig} template={FICHE}
+            valeurs={{ combat: 6, devoir: 7, determination: 2, [CLE_DUNE]: { ...lireDune({}), maximes: { devoir: 'Je protège ma Maison.' } } }} ecrireSurLaFiche={ecrire} campaignId="c" ressourcesDeTable={RESSOURCES} />);
+        const [competence, principe] = screen.getAllByRole('combobox');
+        fireEvent.change(competence, { target: { value: 'combat' } }); fireEvent.change(principe, { target: { value: 'devoir' } });
+        fireEvent.click(screen.getByLabelText('Maxime pertinente, validée à la table'));
+        faces(15, 5); lancer();
+        expect(reserves().impulsion).toBe(0);
+        fireEvent.click(screen.getByLabelText('Dé 1 : 15'));
+        faces(1); fireEvent.click(screen.getByText('Relancer les dés choisis (1 Détermination)'));
+        expect(ecrire.mock.calls.at(-1)?.[0]).toMatchObject({ determination: 1 });
+        expect(screen.getByText(/Impulsion du test/).textContent).toContain('2 normale');
+        expect(reserves().impulsion).toBe(0);
+        fireEvent.click(screen.getByText('Terminer le test et conserver le reliquat'));
+        expect(reserves().impulsion).toBe(2);
+    });
+    it('spécialisation pertinente : un 5 de Combat 6 compte double', () => {
+        monter({ impulsion: 0, menace: 0 });
+        fireEvent.click(screen.getByLabelText('Spécialisation pertinente'));
+        faces(5, 20); lancer();
+        expect(screen.getByText(/Impulsion du test/).textContent).toContain('1 normale');
+        fireEvent.click(screen.getByText('Terminer le test et conserver le reliquat'));
+        expect(reserves().impulsion).toBe(1);
+        expect(screen.getByText('Test terminé. L’Impulsion conservable a été versée une seule fois.')).toBeTruthy();
+    });
+    it('un PNJ ennemi achète avec sa Menace, sans toucher à l’Impulsion', () => {
+        monter({ impulsion: 6, menace: 10 });
+        fireEvent.click(screen.getByLabelText('PNJ ennemi : achats et dépenses en Menace'));
+        acheterUnDe(); faces(20, 20, 20); lancer();
+        expect(reserves()).toMatchObject({ impulsion: 6, menace: 9 });
+    });
+    it('l’Impulsion bonus disparaît à la clôture, même si la réserve est vide', () => {
+        monter({ impulsion: 0, menace: 0 });
+        fireEvent.change(screen.getByLabelText('Impulsion bonus'), { target: { value: '3' } });
+        faces(3, 4); lancer();
+        fireEvent.click(screen.getByText('Terminer le test et conserver le reliquat'));
+        expect(reserves().impulsion).toBe(1);
     });
 });

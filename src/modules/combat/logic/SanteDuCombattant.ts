@@ -420,6 +420,8 @@ export function fractionDeVie(c: PorteurDeSante): number | null {
  * déclare pas mort un combattant faute d'information.
  */
 export function estHorsDeCombat(c: PorteurDeSante): boolean {
+    const dune = c.healthSystem?.data?.dune as { vaincu?: boolean } | undefined;
+    if (typeof dune?.vaincu === 'boolean') return dune.vaincu;
     const ch = c.healthSystem?.data?.cthulhuHack as {pulp?:boolean;mort?:boolean}|undefined;
     if (ch?.mort) return true;
     if (ch?.pulp) return false;

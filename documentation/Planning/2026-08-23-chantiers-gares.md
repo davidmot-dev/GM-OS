@@ -1467,7 +1467,7 @@ destinataire sans expéditeur attend, et un expéditeur sans destinataire parle 
 type, aucun test unitaire ne les voit ; **c'est en jouant qu'on les trouve.**
 
 **Vérifié** : `tsc -b` propre, lint sans régression, **37 tests neufs**, `npm run validate` vert —
-**3 652 tests**.
+**3 653 tests**.
 
 ### 18 bis · ⛔ Une vue autorisée et inatteignable (2026-09-05)
 
@@ -5585,7 +5585,7 @@ de la doc d'analyse.
 `surveillerLaSortie`, `bouclerOuFinir`, `appliquerLaBoucleNative`), `useMusicStore.ts`
 (`definirLaPlageDuPad`, `loadToDeck`), `components/Deck.tsx`, guide 71 § 3.
 
-**Vérifié** : `tsc -b` propre, **5 052 tests** (401 fichiers, 1 ignoré), dont **48 neufs**.
+**Vérifié** : `tsc -b` propre, **5 053 tests** (401 fichiers, 1 ignoré), dont **48 neufs**.
 
 #### ⛔ Éprouvé en réel le jour même — et la plage a cassé le fondu croisé
 
@@ -11089,7 +11089,7 @@ existantes. Les 13 expressions d'assertion et dix enregistrements de tests
 restent. Un projet TypeScript dédié est référencé dans `tsc -b` ; sortie
 facultative des captures pour préserver les guides suivis.
 
-Types, construction et lint ciblé propres ; **52 tests des protections passent**,
+Types, construction et lint ciblé propres ; **53 tests des protections passent**,
 **79 scénarios e2e passent**, **78 JPEG relus sur neuf planches**. Lint global :
 **1 585 fichiers, zéro erreur, trois avertissements**, tous de mémoïsation.
 Comptage brut : **cinq annotations applicatives déjà masquées**, zéro dans les
@@ -11206,7 +11206,7 @@ formule, total, dé courant, libellé, bouton et contour complets.
 précédent. [Preuves et reprise](2026-10-09-cadrage-dernier-jet.md).
 
 **Éprouvé.** Construction, types, lint global (**1 590 fichiers, zéro erreur,
-zéro avertissement**), 52 tests de protection et un scénario Electron ciblé
+zéro avertissement**), 53 tests de protection et un scénario Electron ciblé
 passent. Profil temporaire, chemins confinés et matériel désactivé ;
 aucun code applicatif modifié, aucune donnée réelle lue. Pas de nouvelle
 suite complète ou des 79 captures. `git diff --check` propre ; les 21 fichiers
@@ -12783,6 +12783,34 @@ David : *« on va finir Blade Runner »*, livre de base français (`BRN-01_Livre
 - **Vérifié** : essais unitaires et de composant (+28), `pilote.test.ts` (aucun constat de la Forge), `npx tsc -b`, captures rejouées sur le pilote fini (neuf, dont quatre nouvelles). `corpusDerivable.test.ts` : les notes de relecture faisaient déborder de 321 caractères le groupe « Dés et composition du jet » ; notes réduites.
 - **Essayé par David le 25/10** : « c'est bon ». **Reste** : rien.
 
+### 175 · Dune — reprise des améliorations D0–D8, pilote 2.0.0 — 25/10/2026
+
+David : « Je voudrais finir les améliorations du driver Dune (ameliorations tous les pilotes) » ;
+GM-OS confirmé fermé. Reprise du projet § 143 ; corpus 20/20 déjà relu au § 173.
+[Bilan, sources, limites et recette](2026-10-25-dune-finir.md).
+
+Spécialisations ; maximes et Détermination ; relances sélectives avec dés d'aide conservés ;
+bilan normal/bonus d'Impulsion et dépenses contextualisées ; opposition et complications ;
+rétention payée par le bon camp et reprise du même acteur ; application des attaques aux
+combattants, survie et récupération ; module partagé **Dune : conflits et Maison** (cinq arènes,
+zones, atouts, secrets d'intrigue) ; Maison et Menace de séance ; progression avec aperçu,
+historique, reconversion et coûts de l'errata 1.1. Les arbitrages narratifs et la validation des
+tests/report des dépenses restent explicites au MJ, détaillés dans le bilan.
+
+Export `Export Dirvers/corriges/Dune_driver_gmos_2.0.0.gmos-driver`, produit par
+`scripts/exporter-dune.mjs`, relu après écriture. Les clés de l'ancien gabarit sont conservées,
+le faux champ PV et les anciennes portées métriques retirés. Aucun profil de David consulté.
+Types, lint ciblé et construction passés ; recette Electron et onze captures relues passées.
+Suite globale : **9 111 tests passés** ; puis **53 tests ciblés** sur les garde-fous finaux. **Réimport et essai de David attendus**, y compris
+sur tablette physique ; statut orange, aucune validation de séance supposée. Aucun commit/push.
+
+**Atelier Studio demandé ensuite le 25/10 :** deux fiches HTML fidèles au PDF de David,
+PJ (une page, 30 champs) et Maison (une page, 40 champs, armoiries importables), dans
+`output/fiches/dune/`. [Livraison et contrôles](../../output/fiches/dune/LIVRAISON.md) :
+validateur sans erreur, fonctionnement hors ligne, JSON, zoom, impression, petit écran et
+import réel dans un moteur jetable vérifiés. **Intégration des modèles et correspondances
+au pilote restant à faire**, puis essai de David ; aucun profil personnel touché.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12846,12 +12874,12 @@ David : *« on va finir Blade Runner »*, livre de base français (`BRN-01_Livre
 | 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
 | 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |
 | 58 | **La refonte des tablettes** | ✅ **Clôturée le 07/10 : T6 validé par David**, « j'ai testé c'est bon, tu peux faire le commit et poussé ». T4 poussé (`edcdb68a`), T5 commité (`e920abc1`) ; preuves et clôture archivées, voir § 123 | Terminé | Validation T6 consignée ; commit et push autorisés par David |
-| 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
+| 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, onze captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
 | 62 | **Avertissements du lint** | ✅ **540 → 0 avertissement, zéro erreur**, § 127 ; lot 38 commité `4e080992` et poussé jusqu'à `1aefeb99`. Après la migration PDF séparée : zéro annotation explicite `any` dans `src/`, `electron/` et `e2e/` | Chantier lint terminé | [Analyse](2026-10-08-audit-avertissements-lint.md), [lot 38](2026-10-09-lint-ponts-du-storyboard.md) |
 | 63 | **Lecteurs PDF v2** | ✅ **Lot 39 commité et poussé `1aefeb99`**, § 128 ; import PDF dans l'interface validé par David le 09/10 : « j'ai fait l'import d'un PDF c'est bon ». Pré-push : types, lint, 7 222 tests, construction réussis | Terminé | [Migration et reprise](2026-10-09-migration-pdf.md) |
-| 64 | **Capture du dernier jet** | ✅ **Lot 40 livré dans le commit contenant cette entrée**, § 129 ; commit et push demandés par David le 09/10. Panneau entier, scénario autonome, image remplacée et relue ; construction, types, lint, 52 tests de protection et un scénario Electron passent | Terminé | [Correction et reprise](2026-10-09-cadrage-dernier-jet.md) |
+| 64 | **Capture du dernier jet** | ✅ **Lot 40 livré dans le commit contenant cette entrée**, § 129 ; commit et push demandés par David le 09/10. Panneau entier, scénario autonome, image remplacée et relue ; construction, types, lint, 53 tests de protection et un scénario Electron passent | Terminé | [Correction et reprise](2026-10-09-cadrage-dernier-jet.md) |
 | 65 | **Première connexion de la tablette du meneur** | ✅ **Corrigé le 09/10, ÉPROUVÉ sur tablette le 10/10**, § 130 : l'état complet est demandé après l'inscription, plus à la connexion ; contournement retiré des e2e meneur, 117/117 | — | Rien |
 | 66 | **Trame prévue : toutes les scènes** | ✅ **Construit et VALIDÉ par David le 10/10**, § 131 : scènes de tous les actes, groupées et repliables, case à cocher, compteur ; un seul acte principal, modèle inchangé | — | Rien |
 | 67 | **Description des PNJ d'une séance** | ✅ **Corrigé et VALIDÉ par David le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | — | Rien |
@@ -12866,7 +12894,7 @@ David : *« on va finir Blade Runner »*, livre de base français (`BRN-01_Livre
 | 76 | **Rêve de Dragon — règles, module TMR et fiche HTML** | § 141 ; R0/R1/R2/R8 (`94e0aaed`), R3/R4 (`ef659f35`), R5–R7 (`9e7df47a`) ; livret HTML (`5426215f`) et raccord au pilote étendu (`fef92b06`) ; retouche numérique intégrée v12, non commitée | Relancer pour recevoir le gabarit v12 et juger les chiffres ; réimporter le pilote relié si nécessaire ; maîtrises et sorts : carte Haut-Rêve (§ 168, 24/10) ; potentiel R5 à reporter explicitement depuis la page Archétype | [Retouche numérique](2026-10-19-etat-et-reprise-codex-rdd-champs-numeriques.md), [raccord](2026-10-19-raccord-fiche-rdd-claude.md) |
 | 77 | **Nephilim — le jeu à la table** | § 142 ; Arts occultes et suites des critiques au jet, Stase et Effet Mnémos, Ka dominant, Alchimie au jet, 31 époques et 155 Vécus du livre, errata V1.3 dans les règles — commité et éprouvé le 18/10 ; captures du manuel refaites ; Vécus et époques saisis sur tablette ; MP consommées au lancer | Éprouver la tablette et la transmutation | Rien ; [reprise au § 15](2026-10-17-chantier-nephilim.md) |
 | 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ✅ **Codé et poussé le 19/10, lots E0 à E6** (`11cf56f1`…`934874b2`) : Obsidian filtré, registre des détenteurs complété, clonage juste, archive complète, « Rejouer », aperçu + sauvegarde avant import + bilan, archive des médias `.gmos-medias` avec Image-OS (ce que la campagne utilise). **Essayé par David le 19/10 sur l'instance de test, export et import : *« ok ça fonctionne »*** ; bilan d'export ajouté après le premier essai. ⛔ Décisions de David : cartes, tables, calendriers et bibliothèque commune **ne s'archivent pas** (pas liés à une campagne) ; **Deck-OS part avec le pilote** (`.gmos-driver`), plus avec la campagne ; Rejouer : toutes les réserves au départ, combats préparés et modules gardés | **David** : dire si l'archive des médias doit aussi prendre les médias que la campagne **utilise** sans les étiqueter (portraits, cartes…) ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
-| 79 | **Dune — pilote, règles et conflits** | ⏸ **Projet futur, garé par David le 19/10** ; § 143 ; audit et propositions D0–D8 conservés, aucun développement | Attendre la demande de reprise de David ; alors choisir le premier lot et vérifier son export du pilote | [Audit et priorités](2026-10-19-dune-propositions.md) |
+| 79 | **Dune — pilote, règles et conflits** | 🟢 Livré et validé par David le 25/10 ; § 175 ; D0–D8, pilote 2.0.0 ; audit historique § 143 | [Bilan et recette](2026-10-25-dune-finir.md) | Raccordement des deux HTML Studio restant |
 | 80 | **Crimes — pilote et fiche HTML** | § 144 ; fiche `crimes-fr` intégrée au moteur v13, fiche GM-OS refaite sur la fiche HTML, correspondance complète ; pilote corrigé réimporté, fiche validée par David le 19/10 | Le jet « Potentiel GARDE Compétence » ; trancher les Potentiels (10 cases ou 0 à 5) et les pistes sans règle | Le moteur de dés ne sait pas « garder » des dés |
 | 81 | **Symbaroum — pilote, fiche HTML et jet** | § 145 ; fiche `symbaroum-fr` intégrée au moteur v14, correspondance complète, page du manuel (`712f70c1`, `34404411`) ; jet corrigé — un seul attribut, plus de `difficulte` qui faisait tout réussir ; pilote réimporté par David le 21/10 ; S1 à S4 les 22/10 (§ 149, 150, 155), **le reste le 23/10 (§ 166)** | Réimporter le pilote 2.0.0 (`corriges/Symbaroum_driver_gmos_finir`) | L'essai de David (ligne 102) |
 | 82 | **Import qui ne se refermait plus, campagne forgée invisible** | § 146 ; bilan d'import fermé seul après 8 s sauf s'il alerte (`NexusHUD.tsx`) ; campagne créée à la première fiche publiée dans l'Atelier (`AtelierDeCampagne.tsx`) — faits et commités le 22/10 | L'essai de David à l'écran ; recueillir le troisième défaut annoncé | Rien |
@@ -12891,6 +12919,7 @@ David : *« on va finir Blade Runner »*, livre de base français (`BRN-01_Livre
 | 101 | **Nephilim — finir le pilote (N1 à N9)** | § 165 ; jet, santé, Chutes, pacte, stase, Sapience, Alchimie, lieux, métamorphe — livré et essayé le 23/10 | Rien | Rien |
 | 102 | **Symbaroum — finir le pilote (S0, S2, S4 à S9)** | § 166 ; corpus corrigé, attaque et Défense avec dégâts, agonie, Stigmates, départage de l'initiative, création et progression, bourse, voyages, règles optionnelles ; pilote 2.0.0 — livré le 23/10 | Réimporter le pilote, puis une attaque, une Défense ratée et un Test de mort sur une fiche | L'essai de David |
 | 110 | **Blade Runner fini — pilote 2.0.0** | § 174 ; blessures critiques suivies (mort, stabilisation, guérison, secours, aggravés), soutien et trois D12, souvenir clé et objet fétiche, pupitre, échange d'initiative ; corpus 22/22 — 24/10 | Réimporter le pilote avec Remplacer ; une blessure mortelle, une stabilisation, un soutien, un échange de cartes — **essayé par David le 25/10** | Rien |
+| 111 | **Dune — pilote 2.0.0** | § 175 ; spécialisations, principes, Détermination, bilans, conflits, zones, Maison et progression — validé par David le 25/10 | [Recette Dune](2026-10-25-dune-finir.md) | Raccordement des HTML restant |
 | 109 | **Corpus de Dune relu en entier** | § 173 ; 20 fiches sur 20 contre le livre et l'errata, bégaiements réparés, règles du scénario ramenées à leur source, cinq affirmations sans source retirées — 24/10 | Rien | Rien |
 | 108 | **Corpus de Symbaroum relu en entier** | § 172 ; 13 fiches sur 13, sept corrections, quatre affirmations sans source retirées — 24/10 | Rien | Rien |
 | 107 | **Recette de la documentation des jeux** | § 171 ; onze jeux rejoués, six captures et deux légendes à jour, deux défauts de l'essai des captures corrigés — 24/10 | Rien | Rien |

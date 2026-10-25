@@ -516,6 +516,8 @@ export interface DescripteurDeJet {
      * fiche, le Stress et les blessures, la Réputation et la création.
      */
     starTrek?: import('./systemes/starTrekRegles').RegleDeStarTrek;
+    /** Dune : maximes, Détermination, assistance et bilan d'Impulsion (livre et errata 1.1). */
+    dune?: import('./systemes/duneRegles').RegleDeDune;
     /**
      * **Brisé** — Blade Runner, 2026-10-14. Quand forcer met un de ces champs à
      * zéro, le panneau le dit, et peut lancer l'effet critique : le dé `de` (un

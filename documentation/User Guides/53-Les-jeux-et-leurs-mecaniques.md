@@ -6,6 +6,12 @@ comment on lance les dés, quelles réserves la table partage, comment on encais
 mécanique une fois**, et dit **où la voir**. Une page par jeu dit ensuite ce que *son* pilote en
 fait.
 
+**Dune, 25/10/2026 :** `dune` sur le descripteur de jet ouvre les maximes, la Détermination,
+l'assistance, les oppositions et le bilan d'Impulsion du test. `repriseDune` sur l'initiative
+permet de rejouer le même personnage, avec +1 difficulté, et fait payer les PNJ ennemis en
+Menace. Le module **Dune : conflits et Maison** tient les zones et les atouts ; voir
+[le guide Dune](./54-Jeu-Dune.md).
+
 **Cthulhu Hack, 23/10/2026 :** le pilote 1.1.0 ajoute le suivi persistant des pertes du Hors Jeu,
 la protection perdue par l'usure, la défausse de Fortune du MJ, les durées dans la fiction et
 la variante Pulp activée explicitement. Voir [le guide du jeu](./54-Jeu-Cthulhu-Hack.md).

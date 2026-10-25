@@ -158,6 +158,7 @@ const DUNE_TEMPLATE: SheetTemplate = {
             fields: [
                 { id: 'traits', label: 'Traits', type: 'textarea', defaultValue: '' },
                 { id: 'talents', label: 'Talents', type: 'textarea', defaultValue: '' },
+                { id: 'specialisations', label: 'Spécialisations (une par ligne)', type: 'textarea', defaultValue: '' },
                 { id: 'atouts', label: 'Atouts', type: 'textarea', defaultValue: '' },
             ],
         },

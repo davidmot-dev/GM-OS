@@ -99,6 +99,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         composantes: ['combat', 'devotion'],
         reserves: { impulsion: 1, menace: 4 },
         desAchetes: 2,
+        scenes: c => scenesDeDune(c),
     },
     {
         corpusId: 'star-trek', slug: 'star-trek', personnage: 'Enseigne T’Vael',
@@ -344,6 +345,7 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
+        if (mise.corpusId === 'dune') test.setTimeout(120_000);
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
         if (['alien','crime','cthulhu hack','star-trek'].includes(mise.corpusId)) test.setTimeout(240_000);
         const f = gmos.fenetre;
@@ -427,7 +429,7 @@ for (const { mise, pilote } of JEUX) {
         const fenetre = await gmos.application.browserWindow(f);
         await fenetre.evaluate(w => w.setContentSize(1440, 1800));
         // Les cartes de Symbaroum et de Star Trek (2026-10-23) ont leurs propres prises : le jet se photographie seul.
-        const sansCartes = ['symbaroum', 'star-trek'].includes(mise.corpusId)
+        const sansCartes = ['symbaroum', 'star-trek', 'dune'].includes(mise.corpusId)
             ? await panneau.evaluateHandle(p => { const st = document.createElement('style'); st.textContent = '[data-panneau-de-jet] > [data-carte-du-jeu] { display: none !important; }'; p.ownerDocument.head.appendChild(st); return st; })
             : null;
         await photographier(panneau, `jeu-${mise.slug}-jet`);
@@ -841,6 +843,108 @@ async function scenesDeSymbaroum(c: ContexteDeScene): Promise<void> {
  * assistant, vaisseau, marge), ses suites, les cartes Stress et Réputation, et le
  * pupitre de la bataille spatiale dans l'habillage LCARS.
  */
+async function scenesDeDune(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    const clotureDune = panneau.getByRole('button', { name: 'Terminer le test et conserver le reliquat', exact: true });
+    if (await clotureDune.count()) await clotureDune.click();
+    await panneau.locator('select').nth(0).selectOption('combat');
+    await panneau.locator('select').nth(1).selectOption('devotion');
+    const carnet = panneau.locator('[data-carnet-dune]');
+    await carnet.locator('summary', { hasText: 'Principes, maximes et Détermination' }).click();
+    await carnet.getByLabel('Maxime devotion', { exact: true }).fill('Je sers le bon vouloir de ma Maison.');
+    await panneau.getByLabel('Maxime pertinente, validée à la table', { exact: true }).check();
+    await panneau.getByLabel('Spécialisation pertinente', { exact: true }).check();
+    await panneau.getByLabel('Marge de complication Dune').selectOption('2');
+    await panneau.getByLabel('Impulsion bonus', { exact: true }).fill('2');
+    await panneau.getByLabel('Assistant Dune', { exact: true }).fill('Nasir');
+    await panneau.getByRole('button', { name: 'Ajouter l’assistant', exact: true }).click();
+    const fenetre = await gmos.application.browserWindow(f);
+    await fenetre.evaluate(w => w.setContentSize(1440, 1800));
+    await photographier(panneau.locator('[data-preparation-dune]'), 'jeu-dune-preparation');
+    await photographier(carnet, 'jeu-dune-principes');
+    // La première prise générique a pu laisser un test ouvert : on le termine explicitement.
+    await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    await expect(panneau.locator('[data-suites-dune]')).toBeVisible();
+    await photographier(panneau.locator('[data-suites-dune]'), 'jeu-dune-bilan');
+    await clotureDune.click();
+
+    await vue(c.campagne, 'modules-du-jeu');
+    await f.locator('article').filter({ has: f.getByRole('heading', { name: 'Dune : conflits et Maison', exact: true }) })
+        .getByRole('button', { name: 'Ouvrir le pupitre', exact: true }).click();
+    await expect(f.locator('[data-plateau-dune]')).toBeVisible();
+    const commande = async (id: string, charge: unknown) => {
+        const r = await f.evaluate(async ({ campagne, id, charge }) => {
+            const vue = await window.appBridge!.modulesDuJeu!.lire();
+            return window.appBridge!.modulesDuJeu!.commander({ requeteId: crypto.randomUUID(), campagneId: campagne, moduleId: 'dune-conflits', contexte: vue.contexte, commande: { id, charge } });
+        }, { campagne: c.campagne, id, charge });
+        expect(r).toEqual({ ok: true });
+    };
+    await commande('cadre', { arene: 'intrigue', mode: 'architecte' });
+    await commande('maison', { nom: 'Maison Vaeth', monde: 'Arrakis', domaines: 'Commerce d’épice', type: 1 });
+    await commande('zone', { id: 'salon', nom: 'Le salon des négociants', visible: true, disposition: 'Neutre', desir: 'Écarter son associé', discipline: 6 });
+    await commande('zone', { id: 'secretaire', nom: 'Le secrétaire', visible: true, disposition: 'Amical', desir: 'Quitter la Maison', discipline: 5 });
+    await commande('lier', { zoneId: 'salon', autreId: 'secretaire' });
+    await commande('atout', { id: 'contrat', nom: 'Contrat de transport', proprietaire: 'Irulan Vaeth', zone: 'salon', qualite: 1, visible: true, permanent: true, tangible: true });
+    await photographier(f.locator('[data-plateau-dune]'), 'jeu-dune-plateau');
+    // Le vrai Hub : le jet partage ses comptes avec le MJ et le plateau exclut les secrets.
+    await commande('zone', { id: 'secret', nom: 'SECRET-COFFRE-DUNE', visible: false, desir: 'SECRET-DESIR-DUNE' });
+    await commande('atout', { id: 'secret-atout', nom: 'SECRET-ATOUT-DUNE', visible: false, zone: 'secret' });
+    await f.evaluate(({ campagne, personnage }) => {
+        const s = (window as unknown as Fenetre).useSessionOSStore;
+        s.setState(etat => ({ sessions: [{ ...etat.sessions[0], id: 'dune-seance-recette', campaignId: campagne, status: 'active', sessionEntityIds: [personnage], publicSummary: '' }] }));
+    }, { campagne: c.campagne, personnage: c.personnage });
+    await expect.poll(async () => {
+        return f.evaluate(async ({ campagne, personnage }) => {
+            const v = await window.appBridge!.modulesDuJeu!.lire();
+            return window.appBridge!.modulesDuJeu!.autoriser({ campagneId: campagne, contexte: v.contexte, moduleId: 'dune-conflits', personnages: [personnage] });
+        }, { campagne: c.campagne, personnage: c.personnage });
+    }).toEqual({ ok: true });
+    await f.evaluate(campagne => {
+        const s = (window as unknown as Fenetre).useRessourcesDeTableStore.getState();
+        (window as unknown as Fenetre).useRessourcesDeTableStore.setState({ reserves: { ...s.reserves, [campagne]: { impulsion: 6, menace: 4 } } });
+    }, c.campagne);
+    const navigateur = await chromium.launch({ channel: 'msedge', args: ['--mute-audio'] });
+    try {
+        const contexte = await navigateur.newContext({ viewport: { width: 360, height: 1100 }, isMobile: true, hasTouch: true, locale: 'fr-FR', serviceWorkers: 'block', reducedMotion: 'reduce' });
+        await contexte.route('**/*', route => { const u = new URL(route.request().url()); return u.hostname === '127.0.0.1' || ['data:', 'blob:'].includes(u.protocol) ? route.continue() : route.abort(); });
+        await contexte.addInitScript(() => {
+            localStorage.setItem('gmos-tablet-uuid', 'dune-recette');
+            const w = window as unknown as { messagesDune: string[] }; w.messagesDune = [];
+            const Socket = window.WebSocket;
+            window.WebSocket = class extends Socket { constructor(url: string | URL, protocoles?: string | string[]) { super(url, protocoles); this.addEventListener('message', e => w.messagesDune.push(String(e.data))); } };
+        });
+        const t = await contexte.newPage();
+        await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);
+        await t.getByRole('button', { name: new RegExp(c.nom) }).click();
+        await expect(t.getByText('Connecté', { exact: true })).toBeVisible();
+        await t.getByTitle('Fiche Personnage', { exact: true }).click(); await ongletDeLaFiche(t, 'Lancer un test');
+        const jet = t.locator('[data-panneau-de-jet]').first();
+        await jet.locator('select').nth(0).selectOption('combat'); await jet.locator('select').nth(1).selectOption('devotion');
+        for (const largeur of [360, 768, 1180]) {
+            await t.setViewportSize({ width: largeur, height: 1100 });
+            expect(await t.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+            await photographier(jet.locator('[data-preparation-dune]'), `jeu-dune-tablette-${largeur}`);
+        }
+        await jet.locator('div', { has: t.getByText('Dés', { exact: true }) }).last().locator('button').nth(1).click();
+        await jet.getByRole('button', { name: 'Un point de plus en Menace', exact: true }).click();
+        await jet.getByRole('button', { name: 'Lancer', exact: true }).click();
+        await expect.poll(() => f.evaluate(campagne => (window as unknown as Fenetre).useRessourcesDeTableStore.getState().reserves[campagne].menace, c.campagne)).toBe(5);
+        await jet.getByRole('button', { name: 'Terminer le test et conserver le reliquat', exact: true }).click();
+        await t.reload(); await expect(t.getByText('Connecté', { exact: true })).toBeVisible();
+        await t.getByTitle('Modules du jeu', { exact: true }).click();
+        await t.getByRole('button', { name: 'Ouvrir Dune : conflits et Maison', exact: true }).click();
+        const plateau = t.locator('[data-plateau-dune]'); await expect(plateau).toBeVisible();
+        await expect(plateau.getByText('Le salon des négociants', { exact: true })).toBeVisible();
+        await expect(plateau.getByText('Écarter son associé', { exact: false })).toHaveCount(0);
+        expect(await t.evaluate(() => (window as unknown as { messagesDune: string[] }).messagesDune.join('\n'))).not.toContain('SECRET-');
+        expect(await t.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+        await photographier(plateau, 'jeu-dune-plateau-tablette');
+    } finally { await navigateur.close(); }
+    await fenetre.evaluate(w => w.setContentSize(1440, 900));
+}
+
 async function scenesDeStarTrek(c: ContexteDeScene): Promise<void> {
     if (!(c.pilote.gameDriver as { jet?: { starTrek?: unknown } }).jet?.starTrek) return;
     const f = gmos.fenetre;

@@ -1,0 +1,13 @@
+.sheet[data-template="__TEMPLATE__"] .dune-field{position:absolute;box-sizing:border-box;margin:0;min-width:0;min-height:0;border:0;border-radius:0;background:transparent;color:#3a261d;font:9.2px/1.16 Georgia,"Times New Roman",serif;padding:0 1px;resize:none;outline:0}
+.sheet[data-template="__TEMPLATE__"] .dune-textarea{padding:1px;line-height:1.19;overflow:auto}
+.sheet[data-template="__TEMPLATE__"] .dune-statement{font-size:8.8px}
+.sheet[data-template="__TEMPLATE__"] .dune-number{text-align:center;font:10px/1 Georgia,"Times New Roman",serif;padding:0;appearance:textfield}
+.sheet[data-template="__TEMPLATE__"] .dune-score{font-size:16px;font-weight:bold}
+.sheet[data-template="__TEMPLATE__"] .dune-resource{font-size:18px;font-weight:bold}
+.sheet[data-template="__TEMPLATE__"] .dune-motto{font-size:7.8px;text-align:center}
+.sheet[data-template="__TEMPLATE__"] .dune-select{appearance:none;padding:0 1px;cursor:pointer}
+.sheet[data-template="__TEMPLATE__"] .dune-field:focus{outline:.6px solid #94684b;background:#fff9e9df}
+.sheet[data-template="__TEMPLATE__"] .dune-portrait{cursor:pointer;overflow:hidden;padding:0;display:block;clip-path:ellipse(50% 50% at 50% 50%)}
+.sheet[data-template="__TEMPLATE__"] .dune-portrait img{width:100%;height:100%;object-fit:contain;display:block}
+.sheet[data-template="__TEMPLATE__"].zones .dune-field{outline:.5px solid #276a9299;background-color:#8acdf02b}
+.sheet[data-template="__TEMPLATE__"].zones .dune-portrait{outline:1px dashed #94684b}

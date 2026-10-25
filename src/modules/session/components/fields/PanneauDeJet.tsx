@@ -58,6 +58,8 @@ import { useCosmsCourants } from '../../hooks/useCosmsCourants';
 import { malusDesCiblesMultiples } from '../../../combat/logic/sbiresEtHordes';
 import { loiEnVigueur } from '../../logic/cosmsCourants';
 import { useSessionOSStore } from '../../useSessionOSStore';
+import { useOrdreDuTourStore } from '../../../combat/useOrdreDuTourStore';
+import { useCombatStore } from '../../../combat/useCombatStore';
 import { facesDuNiveau } from '../../../dice/desEchelonnes';
 import { dejaUtilise, ecrireLeSuivi, lireLeSuivi } from '../../../dice/systemes/bladeRunner';
 import { seanceOuverteDe } from '../../logic/seanceOuverte';
@@ -73,6 +75,9 @@ import {
 } from './SymbaroumAuJet';
 import { lireSymbaroum, sansCritiqueDeBase, type NatureDuTest } from '../../../dice/systemes/symbaroumRegles';
 import { CreationStarTrek, PreparationStarTrek, ReputationStarTrek, StressEtBlessuresStarTrek, SuitesStarTrek, TourStarTrek, type VaisseauPourLAide } from './StarTrekAuJet';
+import { CarnetDune, PreparationDune, SuitesDune } from './DuneAuJet';
+import { CHOIX_DUNE, CLE_DUNE, bilanDune, conserverDune, depenserDune, desDune, difficulteDune, entierDune, lireDune, lignesDune, noterDune, resultatDune,
+    type ChoixDune, type DeDune, type BilanDune } from '../../../dice/systemes/duneRegles';
 import {
     CHOIX_STAR_TREK, coutDesAssistants, desDeLaTache, oppositionDeLaTache, resultatDeStarTrek, seuilDeComplication,
     type ChoixStarTrek, type DeDuJet,
@@ -377,6 +382,23 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * savait, pour le recompter après une relance.
      */
     const regleStarTrek = descripteur.sens === 'sous-ou-egal' && !descripteur.cible ? descripteur.starTrek : undefined;
+    const regleDune = descripteur.dune;
+    const [choixDune, setChoixDune] = useState<ChoixDune>(CHOIX_DUNE);
+    const [ecritsDune, setEcritsDune] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const valeursDune = useMemo(() => ({ ...valeurs, ...(ecritsDune.base === valeurs && ecritsDune.personnageId === personnageId ? ecritsDune.maj : {}) }), [valeurs, ecritsDune, personnageId]);
+    const ecrireDune = (maj: Record<string, unknown>) => {
+        setEcritsDune(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche?.(maj);
+    };
+    const [duneDuLancer, setDuneDuLancer] = useState<{ des: DeDune[]; choix: ChoixDune; difficulte: number; bilan: BilanDune; principe: string; compte: number } | null>(null);
+    const suiviDune = lireDune(valeursDune);
+    const determinationDune = regleDune ? entierDune(valeursDune[regleDune.determination], 0, 3) : 0;
+    const principeDune = choix.principe;
+    const maximeDune = suiviDune.maximes[principeDune] ?? '';
+    const tourDune = useOrdreDuTourStore(s => s.tour);
+    const acteursDune = useCombatStore(s => s.combatants);
+    const acteurDune = acteursDune.find(c => c.sourcePlayerId === personnageId && personnageId);
+    const difficulteDeRepriseDune = regleDune && acteurDune?.id === tourDune?.dernierAgissant ? tourDune?.difficulteDune ?? 0 : 0;
     const [choixStarTrek, setChoixStarTrek] = useState<ChoixStarTrek>(CHOIX_STAR_TREK);
     const [starTrekDuLancer, setStarTrekDuLancer] = useState<{ des: DeDuJet[]; complication: number; difficulte: number; choix: ChoixStarTrek; compte: number } | null>(null);
     const [ecritsStarTrek, setEcritsStarTrek] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
@@ -511,7 +533,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const jet = useMemo(
         () => {
             const prepare = preparerLeJet(
-            descripteur, descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : regleNephilim ? valeursNephilim : valeurs,
+            descripteur, regleDune ? valeursDune : descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : regleNephilim ? valeursNephilim : valeurs,
             {
                 ...(regleNephilim ? { nephilim: { ...choixNephilim, lieu: lieuN, conjonction: conjonctionN, intensite: intensiteN, seuilRK: seuilRKN } } : {}),
                 champs: choix, desSupplementaires: desAchetes, difficulte,
@@ -537,6 +559,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             },
             template.sections,
             );
+            if (regleDune) return { ...prepare, ...(choixDune.ennemi ? { cout: { ...prepare.cout, ressource: 'menace' } } : {}),
+                reussitesRequises: (choixDune.opposition ? difficulteDune(choixDune.opposition) : prepare.reussitesRequises) + difficulteDeRepriseDune };
             if (!suitesAlien) return prepare;
             const stress = estUnAndroide(suitesAlien, valeursAlien) ? 0 : prepare.desSecondaires;
             const effet = lireLaPaniqueAlien(valeursAlien).effet;
@@ -559,7 +583,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, soutienDuJet, souvenirRetenu],
+        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
     );
 
     /*
@@ -770,6 +794,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
     const lancer = () => {
         if (!pret || briseAlien) return;
+        if (regleDune && (suiviDune.bafoues.includes(principeDune) || (duneDuLancer && !duneDuLancer.bilan.clos))) return;
+        if (regleDune && choixDune.contradiction === 'bafouer' && suiviDune.recuperes.includes(principeDune)) return;
+        if (regleDune && choixDune.unAutomatique && (!maximeDune || !choixDune.maximeAlignee || determinationDune < 1 || !ecrireSurLaFiche)) return;
         const dits: string[] = [];
         // Un nouveau jet : rien n'est encore forcé, aucune Panique n'est jouée.
         setForcage({ fois: 0, unsPayes: 0, ecrits: {} });
@@ -1077,7 +1104,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const desStarTrek = regleStarTrek
             ? desDeLaTache(brutDuMoteur.rolls.filter(d => !d.isDropped).map(d => Number(d.val) || 0), seuilDuMoteur ?? jet.seuil, jet.doubleSous, choixStarTrek, () => DiceEngine.roll(20))
             : null;
-        const brut = regleSymbaroum ? sansCritiqueDeBase(brutDuMoteur)
+        const choixDuneValide = { ...choixDune, unAutomatique: choixDune.unAutomatique && !!maximeDune && choixDune.maximeAlignee && determinationDune > 0 };
+        const desDuTestDune = regleDune ? desDune(brutDuMoteur.rolls.filter(d => !d.isDropped).map(d => Number(d.val)), seuilDuMoteur ?? jet.seuil, jet.doubleSous, choixDuneValide, () => DiceEngine.roll(20)) : null;
+        const brut = desDuTestDune ? resultatDune(desDuTestDune, choixDune.marge, jet.reussitesRequises)
+            : regleSymbaroum ? sansCritiqueDeBase(brutDuMoteur)
             : desStarTrek ? resultatDeStarTrek(desStarTrek, complicationStarTrek, jet.reussitesRequises)
             : brutDuMoteur;
         /*
@@ -1099,6 +1129,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setSeuilDuLancer(jet.seuil);
         setBonusDuLancer(bonusDuGroupe + bonusPerso);
         setResultat(res);
+        if (regleDune && desDuTestDune) {
+            setDuneDuLancer(d => ({ des: desDuTestDune, choix: choixDuneValide, difficulte: jet.reussitesRequises,
+                bilan: bilanDune(res.successes ?? 0, jet.reussitesRequises, choixDune.bonus), principe: principeDune, compte: (d?.compte ?? 0) + 1 }));
+            const delta = (choixDune.contradiction !== 'aucune' ? 1 : 0) - (choixDuneValide.unAutomatique ? 1 : 0);
+            if (delta && ecrireSurLaFiche) ecrireDune({ [regleDune.determination]: entierDune(determinationDune + delta, 0, 3),
+                [CLE_DUNE]: noterDune({ ...suiviDune, determinationDansLaScene: true }, `Détermination : ${delta > 0 ? '+' : ''}${delta}`) });
+            setChoixDune(c => ({ ...c, unAutomatique: false, contradiction: 'aucune' }));
+        }
         if (regleStarTrek && desStarTrek) {
             setStarTrekDuLancer(d => ({ des: desStarTrek, complication: complicationStarTrek, difficulte: jet.reussitesRequises, choix: choixStarTrek, compte: (d?.compte ?? 0) + 1 }));
             // L'Occasion parfaite se paie d'un point de Détermination (p. 262) ; le deuxième assistant et les suivants, d'un point d'Impulsion ou de Menace (p. 255).
@@ -1209,7 +1247,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
          * peut être générée si le test échoue ». Le plafond, lui, se dit :
          * gagner trois points et n'en voir arriver qu'un doit s'expliquer.
          */
-        if (monnaie && jet.cout.ressource) {
+        if (monnaie && jet.cout.ressource && !regleDune) {
             const excedent = verdict(res.successes ?? 0, jet.reussitesRequises).excedent;
             /*
               **Ce que la réserve peut garder entre, le reste attend sur le test**
@@ -1686,11 +1724,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** Une réserve, qui compte ses réussites — et non un verdict sur un seul dé. */
     const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat
         && (jet.desEchelonnes.length > 0 || jet.nombreDeDes + jet.desSecondaires > 1);
-    const v = verdict(reussites, jet.reussitesRequises);
+    const v = verdict(reussites, regleDune && duneDuLancer ? duneDuLancer.difficulte : jet.reussitesRequises);
     // Un dé écarté n'a rien déclenché : le compter ici annoncerait une
     // complication que le tirage vient précisément d'éviter.
     // La marge de complication de Star Trek (p. 258) : celle du lancer, pas celle du réglage d'après.
-    const seuilDeComplicationDuLancer = regleStarTrek && starTrekDuLancer ? starTrekDuLancer.complication : descripteur.complication;
+    const seuilDeComplicationDuLancer = regleDune && duneDuLancer ? 21 - duneDuLancer.choix.marge : regleStarTrek && starTrekDuLancer ? starTrekDuLancer.complication : descripteur.complication;
     const complications = seuilDeComplicationDuLancer
         ? (resultat?.rolls ?? []).filter(
             d => !d.isDropped && typeof d.val === 'number' && d.val >= seuilDeComplicationDuLancer!,
@@ -2165,6 +2203,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         inférieur à la composante nommée vaut deux réussites. La borne
                         se dit à côté, pour qu'on voie ce qu'elle change.
                     */}
+                    {regleDune && <PreparationDune choix={choixDune} changer={c => setChoixDune(x => ({ ...x, ...c }))}
+                        maxime={maximeDune} indisponible={suiviDune.bafoues.includes(principeDune)} determination={determinationDune}
+                        specialisations={lignesDune(valeursDune[regleDune.specialisations])} retenirSpecialisation={s => setSpecialisation(!!s)} recupere={suiviDune.recuperes.includes(principeDune)}
+                        peutEcrire={!!ecrireSurLaFiche} verrouille={!!duneDuLancer && !duneDuLancer.bilan.clos} meneur={!pourLesJoueurs} />}
                     {descripteur.specialisation && (
                         <label className="flex items-center gap-2" title="Chaque dé inférieur ou égal à cette valeur vaut deux réussites">
                             <input
@@ -2508,7 +2550,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
                     <button
                         onClick={lancer}
-                        disabled={!pret || briseAlien}
+                        disabled={!pret || briseAlien || (!!regleDune && (suiviDune.bafoues.includes(principeDune) || (!!duneDuLancer && !duneDuLancer.bilan.clos)))}
                         className={`ml-auto w-full sm:w-auto min-h-[44px] px-10 py-3 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all ${
                             pret
                                 ? 'bg-accent text-app-on-accent hover:scale-105 active:scale-95'
@@ -2534,9 +2576,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             */
                             const ecarte = d.isDropped === true;
                             // Star Trek : chaque dé porte son propre seuil — les dés d'aide ont leur critique (2026-10-23).
-                            const aideStarTrek = d.cssClass === 'aide-star-trek' ? d.displayStr : undefined;
-                            const critique = !ecarte && (regleStarTrek && starTrekDuLancer ? !!d.isCritMax : descripteur.critique !== undefined && val <= jet.doubleSous);
-                            const complique = !ecarte && (regleStarTrek && starTrekDuLancer ? !!d.isCritMin : descripteur.complication !== undefined && val >= descripteur.complication);
+                            const aideStarTrek = d.cssClass === 'aide-star-trek' || d.cssClass === 'aide-dune' ? d.displayStr : undefined;
+                            const critique = !ecarte && ((regleStarTrek && starTrekDuLancer) || (regleDune && duneDuLancer) ? !!d.isCritMax : descripteur.critique !== undefined && val <= jet.doubleSous);
+                            const complique = !ecarte && ((regleStarTrek && starTrekDuLancer) || (regleDune && duneDuLancer) ? !!d.isCritMin : descripteur.complication !== undefined && val >= descripteur.complication);
                             /*
                               **Quel dé a déclenché, et pas seulement combien.**
                               Un compte de Paniques sans savoir lequel des huit
@@ -2648,7 +2690,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {/* Un 1 gardé de Crimes n'est pas un fléau : le bilan le compte déjà. */}
                         {(resultat?.fails ?? 0) > 0 && !gardeDuResultat && (
                             <span className="text-etat-alerte font-black uppercase tracking-widest">
-                                {resultat!.fails} {descripteur.reserve?.secondaire?.libelleDuUn ?? 'fléau'}
+                                {resultat!.fails} {regleDune ? 'complication' : descripteur.reserve?.secondaire?.libelleDuUn ?? 'fléau'}
                                 {resultat!.fails! > 1 ? 's' : ''}
                             </span>
                         )}
@@ -2666,6 +2708,49 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             **La Névrose du jet, écrite** (Crimes, C4, p. 409) : ce que le panneau dit
                             sous les dés, le meneur le note d'un clic — une fois par lancer.
                         */}
+                        {regleDune && duneDuLancer && (
+                            <SuitesDune key={duneDuLancer.compte} resultat={resultat} des={duneDuLancer.des} choix={duneDuLancer.choix}
+                                bilan={duneDuLancer.bilan} difficulte={duneDuLancer.difficulte} determination={determinationDune}
+                                maximeAlignee={duneDuLancer.choix.maximeAlignee && !!suiviDune.maximes[duneDuLancer.principe]}
+                                valeurs={valeursDune} regle={regleDune} ecrire={ecrireSurLaFiche ? ecrireDune : undefined} reserver={!!monnaie} meneur={!pourLesJoueurs}
+                                remplacer={des => {
+                                    const nouveau = resultatDune(des, duneDuLancer.choix.marge, duneDuLancer.difficulte);
+                                    setDuneDuLancer(d => d && { ...d, des, bilan: bilanDune(nouveau.successes ?? 0, d.difficulte, d.choix.bonus) });
+                                    setResultat(nouveau); redire('Dune · relance sélective', nouveau);
+                                }}
+                                depenser={(montant, motif) => {
+                                    if (!monnaie) return false;
+                                    try {
+                                        const r = depenserDune(duneDuLancer.bilan, montant, useRessourcesDeTableStore.getState().valeur(campaignId!, ressourcesDeTable!, duneDuLancer.choix.ennemi ? 'menace' : 'impulsion'));
+                                        if (r.table) mouvoir(duneDuLancer.choix.ennemi ? 'menace' : 'impulsion', -r.table, motif);
+                                        setDuneDuLancer(d => d && { ...d, bilan: r.bilan }); return true;
+                                    } catch (e) { setMouvements(m => [...m, (e as Error).message]); return false; }
+                                }}
+                                racheter={() => {
+                                    if (!monnaie) return false;
+                                    const ennemi = duneDuLancer.choix.ennemi;
+                                    if (ennemi && useRessourcesDeTableStore.getState().valeur(campaignId!, ressourcesDeTable!, 'menace') < 2) return false;
+                                    mouvoir('menace', ennemi ? -2 : 2, 'Dune : complication rachetée'); return true;
+                                }}
+                                ecrireDetermination={apres => ecrireDune({ [regleDune.determination]: apres, [CLE_DUNE]: { ...suiviDune, determinationDansLaScene: true } })}
+                                mitiger={n => {
+                                    const nouveau = { ...resultat, totalDisplay: `${resultat.totalDisplay} — réussite mitigée : ${n} complication(s) de plus ; test échoué, aucune dépense d’Impulsion` };
+                                    setResultat(nouveau); redire('Dune · réussite mitigée', nouveau);
+                                }}
+                                clore={depenseDuDefenseur => {
+                                    const r = conserverDune(duneDuLancer.bilan, monnaie ? useRessourcesDeTableStore.getState().valeur(campaignId!, ressourcesDeTable!, 'impulsion') : 0, duneDuLancer.choix.ennemi);
+                                    if (r.verse) mouvoir(duneDuLancer.choix.ennemi ? 'menace' : 'impulsion', r.verse, 'Dune : reliquat du test');
+                                    if (!pourLesJoueurs && duneDuLancer.choix.opposition?.pnj && !resultat.tagSuccess) {
+                                        const duDefenseur = Math.max(0, duneDuLancer.difficulte - (resultat.successes ?? 0));
+                                        const reliquat = Math.max(0, duDefenseur - entierDune(depenseDuDefenseur, 0, duDefenseur));
+                                        if (reliquat) mouvoir('menace', reliquat, 'Dune : Impulsion inutilisée du défenseur ennemi');
+                                    }
+                                    if (duneDuLancer.choix.contradiction === 'bafouer' && ecrireSurLaFiche) ecrireDune({ [CLE_DUNE]: noterDune({ ...suiviDune, bafoues: [...new Set([...suiviDune.bafoues, duneDuLancer.principe])] }, `Principe bafoué après résolution : ${duneDuLancer.principe}`) });
+                                    setDuneDuLancer(d => d && { ...d, bilan: r.bilan });
+                                    redire('Dune · fin du test', { total: 0, modifier: 0, rolls: [], totalDisplay: `${r.verse} conservé(s), ${r.perdu} perdu(s) (bonus ou plafond)` });
+                                }}
+                                consigner={(titre, ligne) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
+                        )}
                         {regleStarTrek && starTrekDuLancer && (
                             <SuitesStarTrek key={starTrekDuLancer.compte} resultat={resultat} des={starTrekDuLancer.des}
                                 complication={starTrekDuLancer.complication} difficulte={starTrekDuLancer.difficulte} choix={starTrekDuLancer.choix}
@@ -3174,6 +3259,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     </>
                 );
             })()}
+            {regleDune && ecrireSurLaFiche && <CarteDuJeu id="carnet-dune" titre="Dune : principes, atouts et progression">
+                <CarnetDune regle={regleDune} valeurs={valeursDune} ecrire={ecrireDune} meneur={!pourLesJoueurs}
+                    consigner={(titre, ligne) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
+            </CarteDuJeu>}
             {regleStarTrek && ecrireSurLaFiche && (() => {
                 const consigner = (titre: string, ligne: string) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne });
                 const champsDe = (ids: string[] | undefined) => (ids ?? []).map(i => ({ id: i, label: template.sections.flatMap(sec => sec.fields).find(f => f.id === i)?.label ?? i }));
