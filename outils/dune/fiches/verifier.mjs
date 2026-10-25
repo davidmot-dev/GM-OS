@@ -6,7 +6,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from '@playwright/test';
 import { createCanvas } from '@napi-rs/canvas';
 const racine = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-const dossier = path.join(racine, 'output/fiches/dune'), temporaire = path.join(racine, 'tmp/dune-fiches');
+const fiches = path.join(racine, 'docs/fiches/Dune'), dossier = path.join(racine, 'output/fiches/dune'), temporaire = path.join(racine, 'tmp/dune-fiches');
 const fichiers = ['Dune_Fiche_PJ_interactive.html', 'Dune_Fiche_Maison_interactive.html'];
 const exemples = {
     'identity.name': 'Irulan Vaeth', 'identity.house': 'Maison Vaeth', 'identity.role': 'Émissaire', 'identity.faction': 'Bene Gesserit',
@@ -31,7 +31,7 @@ try {
     await contexte.setOffline(true);
     for (const fichier of fichiers) {
         const page = await contexte.newPage(); page.on('pageerror', e => erreurs.push(e.message));
-        await page.goto(pathToFileURL(path.join(dossier, fichier)).href);
+        await page.goto(pathToFileURL(path.join(fiches, fichier)).href);
         const modele = await page.locator('#character-sheet-template').evaluate(el => JSON.parse(el.textContent).template);
         const titre = modele.id === 'dune-pj-fr' ? 'pj' : 'maison';
         const ajusterZoom = async valeur => { await page.locator('#zoom').fill(String(valeur)); await page.locator('#zoom').dispatchEvent('change'); };
@@ -100,7 +100,7 @@ try {
     await moteur.evaluate(() => window.RPGSheet.list());
     for (const [i, fichier] of fichiers.entries()) {
         const rapport = rapports[i];
-        await moteur.locator('#templateFile').setInputFiles(path.join(dossier, fichier));
+        await moteur.locator('#templateFile').setInputFiles(path.join(fiches, fichier));
         await moteur.waitForFunction(async id => (await window.RPGSheet.list()).templates.some(t => t.id === id), rapport.templateId);
         const donnees = JSON.parse(fs.readFileSync(path.join(temporaire, `${i === 0 ? 'pj' : 'maison'}-export.json`))).data;
         await moteur.evaluate(({ id, data }) => window.RPGSheet.create('Contrôle Dune', id, data), { id: rapport.templateId, data: donnees });

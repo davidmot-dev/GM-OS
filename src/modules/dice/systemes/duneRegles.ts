@@ -35,11 +35,20 @@ export const entierDune = (v: unknown, min = 0, max = Number.MAX_SAFE_INTEGER) =
     const x = Number(v); return Math.min(max, Math.max(min, Number.isFinite(x) ? Math.trunc(x) : min));
 };
 export const lignesDune = (v: unknown) => String(v ?? '').split(/[\n;]+/).map(x => x.trim()).filter(Boolean);
+const suiviViergeDune = (): SuiviDune => ({ version: 1, aventure: '', scene: '', maximes: {}, bafoues: [], recuperes: [],
+    determinationDansLaScene: false, atouts: [], progression: [], competencesAugmentees: [], evenements: [] });
 export function lireDune(v: ValeursDune): SuiviDune {
-    const s = v[CLE_DUNE] as SuiviDune | undefined;
-    return s?.version === 1 && Array.isArray(s.atouts) && Array.isArray(s.progression) && s.maximes
-        ? s : { version: 1, aventure: '', scene: '', maximes: {}, bafoues: [], recuperes: [], determinationDansLaScene: false,
-            atouts: [], progression: [], competencesAugmentees: [], evenements: [] };
+    const s = v[CLE_DUNE] as Partial<SuiviDune> | undefined;
+    if (!s || typeof s !== 'object' || (s.version !== undefined && s.version !== 1)) return suiviViergeDune();
+    if (s.version === 1 && Array.isArray(s.atouts) && Array.isArray(s.progression) && s.maximes) return s as SuiviDune;
+    /*
+      **Un suivi partiel se complète** (2026-10-25) : la fiche HTML écrit les maximes par principe
+      (`_gmos_dune.maximes`) avant qu'aucun geste n'ait créé le suivi. Le jeter perdrait ces maximes.
+    */
+    const vierge = suiviViergeDune(), liste = <T,>(x: unknown, d: T[]) => (Array.isArray(x) ? x as T[] : d);
+    return { ...vierge, ...s, version: 1, maximes: s.maximes && typeof s.maximes === 'object' ? s.maximes : {},
+        bafoues: liste(s.bafoues, []), recuperes: liste(s.recuperes, []), atouts: liste(s.atouts, []),
+        progression: liste(s.progression, []), competencesAugmentees: liste(s.competencesAugmentees, []), evenements: liste(s.evenements, []) };
 }
 export function noterDune(s: SuiviDune, texte: string): SuiviDune {
     return { ...s, evenements: [...s.evenements, texte].slice(-200) };

@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "dune-pj-fr",
+  "commentaire": "Correspondance de la fiche de personnage de Dune (dune-pj-fr), écrite le 2026-10-25 sur le pilote 2.0.0 de Codex. Les maximes vont à leur principe dans le suivi _gmos_dune (maximes.<principe>), que lisent le jet, la Détermination et la récupération des principes ; le champ texte « maxims » n'est plus lu. Les spécialisations, une case par compétence sur la fiche, deviennent une ligne « Compétence : spécialisation » chacune dans « specializations ». « gear_notes » n'a pas de case sur la fiche : il reste à GM-OS.",
+  "champs": [
+    {
+      "gmos": "char_name",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "house_name",
+      "fiche": "identity.house"
+    },
+    {
+      "gmos": "role",
+      "fiche": "identity.role"
+    },
+    {
+      "gmos": "faction",
+      "fiche": "identity.faction"
+    },
+    {
+      "gmos": "personal_traits",
+      "fiche": "identity.personality"
+    },
+    {
+      "gmos": "ambition",
+      "fiche": "identity.ambition"
+    },
+    {
+      "gmos": "devotion",
+      "fiche": "drives.duty.value"
+    },
+    {
+      "gmos": "domination",
+      "fiche": "drives.power.value"
+    },
+    {
+      "gmos": "faith",
+      "fiche": "drives.faith.value"
+    },
+    {
+      "gmos": "justice",
+      "fiche": "drives.justice.value"
+    },
+    {
+      "gmos": "truth",
+      "fiche": "drives.truth.value"
+    },
+    {
+      "gmos": "_gmos_dune",
+      "fiche": "drives.duty.statement",
+      "dans": "maximes.devotion"
+    },
+    {
+      "gmos": "_gmos_dune",
+      "fiche": "drives.power.statement",
+      "dans": "maximes.domination"
+    },
+    {
+      "gmos": "_gmos_dune",
+      "fiche": "drives.faith.statement",
+      "dans": "maximes.faith"
+    },
+    {
+      "gmos": "_gmos_dune",
+      "fiche": "drives.justice.statement",
+      "dans": "maximes.justice"
+    },
+    {
+      "gmos": "_gmos_dune",
+      "fiche": "drives.truth.statement",
+      "dans": "maximes.truth"
+    },
+    {
+      "gmos": "analyse",
+      "fiche": "skills.understand.value"
+    },
+    {
+      "gmos": "combat",
+      "fiche": "skills.battle.value"
+    },
+    {
+      "gmos": "discipline",
+      "fiche": "skills.discipline.value"
+    },
+    {
+      "gmos": "mob",
+      "fiche": "skills.move.value"
+    },
+    {
+      "gmos": "rhetoric",
+      "fiche": "skills.communicate.value"
+    },
+    {
+      "gmos": "specializations",
+      "fiche": [
+        "skills.understand.focuses",
+        "skills.battle.focuses",
+        "skills.discipline.focuses",
+        "skills.move.focuses",
+        "skills.communicate.focuses"
+      ],
+      "transforme": "specialisationsDeDune"
+    },
+    {
+      "gmos": "talents",
+      "fiche": "traits.talents"
+    },
+    {
+      "gmos": "assets",
+      "fiche": "assets.notes"
+    },
+    {
+      "gmos": "progression",
+      "fiche": "resources.advancement"
+    },
+    {
+      "gmos": "determination",
+      "fiche": "resources.determination"
+    }
+  ]
+}

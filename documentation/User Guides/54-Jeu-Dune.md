@@ -7,7 +7,8 @@
 Réimportez le pilote dans la Forge avec **Remplacer**. Les clés existantes sont conservées,
 y compris Mobilité (`mob`), Rhétorique (`rhetoric`) et les principes de l'ancien export.
 Le champ de points de vie erroné disparaît du gabarit. La préparation de cet export ne modifie
-aucune campagne. Une fiche HTML fidèle reste un travail Studio distinct.
+aucune campagne. Depuis le 25/10, l'export déclare aussi la **fiche de Maison** comme fiche de groupe :
+réimportez-le pour la voir paraître (voir « Les fiches HTML »).
 
 ## Lancer un test
 
@@ -148,10 +149,44 @@ mouvements de réserve remontent au meneur.
 
 ![Préparer le jet sur un écran de 360 px](captures/jeu-dune-tablette-360.jpg)
 
-La fiche de Maison du pupitre conserve type, monde, domaines, rôles, alliés, ennemis et atouts.
+La Maison du pupitre reprend de la **fiche de Maison** son nom, son monde, son type, ses domaines,
+ses rôles et ses ennemis (voir « Les fiches HTML ») ; alliés et atouts se saisissent au pupitre.
 **Début de séance** propose la Menace selon les joueurs présents : 0/1/2/3 par joueur pour une
 Maison naissante/mineure/majeure/Grande Maison, avec ajustement du MJ. Le clic remplace la
 réserve ; ouvrir le pupitre ne la remet pas à zéro.
+
+## Les fiches HTML — personnage et Maison
+
+Deux fiches fidèles au PDF, dans le moteur de fiches (**version 17**) depuis le 25/10/2026 :
+`docs/fiches/Dune/Dune_Fiche_PJ_interactive.html` (`dune-pj-fr`) et
+`docs/fiches/Dune/Dune_Fiche_Maison_interactive.html` (`dune-maison-fr`).
+
+![La fiche du personnage dans GM-OS : la maxime du Devoir, l'Escrime sous Combat et le Pilotage sous Mobilité, venus de GM-OS](captures/jeu-dune-fiche-pj.jpg)
+
+**La fiche du personnage** s'ouvre dans l'onglet **Fiche du jeu** de son PJ (et sur la tablette,
+**Ma fiche**). Les règles de raccord sont celles de toutes les fiches : la saisie sur la fiche
+fait foi, et ce que GM-OS change part vers la fiche ouverte.
+
+- Identité, principes, compétences, talents, atouts, progression et Détermination se lisent
+  dans leurs champs du pilote.
+- **Chaque maxime va à son principe**, dans le suivi que lisent le jet, la Détermination et la
+  récupération des principes (`_gmos_dune`) ; l'ancien champ texte « Maximes » n'est plus lu.
+- **Les spécialisations** : une case par compétence sur la fiche, une ligne
+  **« Compétence : spécialisation »** dans GM-OS — la forme que lit la progression. Séparez
+  plusieurs spécialisations d'une même case par des virgules. Une ligne sans compétence
+  reconnue se range dans la case d'Analyse.
+- « Équipement & notes » n'a pas de case sur la fiche : il reste dans le Formulaire.
+
+![La fiche de Maison, fiche de groupe commune à la table](captures/jeu-dune-fiche-du-groupe.jpg)
+
+**La fiche de Maison est la fiche de groupe** de la campagne, comme la Cabale de NOC :
+**Cockpit → Maison**, et l'onglet **Maison** sur les tablettes. Elle **fait foi** (décision
+de David du 25/10) : le pupitre du module **Dune : conflits et Maison** en reprend le nom, le
+monde, le type (lu dans le texte : naissante, mineure, majeure, Grande Maison), les domaines,
+les rôles et les ennemis — ces rubriques s'y grisent, et **Ouvrir la fiche de la Maison** y mène.
+Les **alliés** et les **atouts** de Maison, que la fiche n'imprime pas, se saisissent toujours au
+pupitre. La Menace de début de séance lit le type de la fiche. Les armoiries s'importent sur la
+fiche d'un clic (Maj+clic ou clic droit pour les retirer).
 
 ## Progression
 

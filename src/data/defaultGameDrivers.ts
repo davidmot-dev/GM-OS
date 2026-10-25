@@ -201,6 +201,13 @@ const DUNE: GameDriver = {
         },
     ],
 
+    /**
+     * **La Maison, fiche de groupe** — 2026-10-25, décision de David : « la fiche HTML fait foi ».
+     * La fiche Maison du moteur (`dune-maison-fr`) est commune à la table ; ses valeurs vivent sur
+     * la campagne (`Campaign.groupe`), et le module « Dune : conflits et Maison » en tient le reflet.
+     */
+    ficheDeGroupe: { libelle: 'Maison', gabaritDeLaFiche: 'dune-maison-fr' },
+
     ui_config: {
         gauges: [
             { fieldId: 'determination', label: 'Détermination', color: '#d97706', style: 'segmented' },

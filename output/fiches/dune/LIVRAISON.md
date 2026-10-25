@@ -8,7 +8,7 @@ Livraison GM-OS Studio du 25/10/2026 à partir des deux pages du PDF fourni
 | `Dune_Fiche_PJ_interactive.html` | 1 | `dune-pj-fr` | 30 |
 | `Dune_Fiche_Maison_interactive.html` | 2 | `dune-maison-fr` | 40 |
 
-Ouvrir chaque HTML dans un navigateur. Le fond original, les styles et le code sont
+Les deux HTML sont rangés dans `docs/fiches/Dune/` depuis le 25/10 (intégration au moteur, registre § 176). Ouvrir chaque HTML dans un navigateur. Le fond original, les styles et le code sont
 intégrés : aucun accès réseau nécessaire. Les fiches livrées sont vierges ; les noms
 présents dans les captures sont des exemples de contrôle.
 
@@ -34,8 +34,8 @@ Reproduction depuis la racine du dépôt :
 ```powershell
 node outils/dune/fiches/construire.mjs
 node outils/dune/fiches/verifier.mjs
-node scripts/fiche-valider.mjs output/fiches/dune/Dune_Fiche_PJ_interactive.html
-node scripts/fiche-valider.mjs output/fiches/dune/Dune_Fiche_Maison_interactive.html
+node scripts/fiche-valider.mjs docs/fiches/Dune/Dune_Fiche_PJ_interactive.html
+node scripts/fiche-valider.mjs docs/fiches/Dune/Dune_Fiche_Maison_interactive.html
 ```
 
 `fabrication.json` conserve l'empreinte du PDF, les identifiants et les clés.

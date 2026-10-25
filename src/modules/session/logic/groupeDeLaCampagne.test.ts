@@ -34,6 +34,12 @@ describe('le nom du groupe — celui que sa fiche porte', () => {
     it('sans table, on ne devine pas où est le nom', () => {
         expect(nomDuGroupe({ sheetData: { 'identity.name': 'Rue Krev' } }, null, 'Cabale')).toBe('Cabale');
     });
+
+    it('la Maison de Dune porte le sien sur « house.name » (2026-10-25)', () => {
+        const maison: CorrespondanceDeFiche = { version: 1, gabaritDeLaFiche: 'dune-maison-fr', champs: [{ gmos: 'house.name', fiche: 'house.name' }] };
+        expect(nomDuGroupe({ sheetData: { 'house.name': 'Molay' } }, maison, 'Maison')).toBe('Molay');
+        expect(nomDuGroupe({ sheetData: {} }, maison, 'Maison')).toBe('Maison');
+    });
 });
 
 describe('ce que l’hôte des fiches reçoit', () => {

@@ -1,5 +1,5 @@
 import {
-    versGmOs, type CorrespondanceDeFiche, type CotesGmOs,
+    versGmOs, ecrireLeChemin, lireLeChemin, SEPARATEUR_DE_CHEMIN, type CorrespondanceDeFiche, type CotesGmOs,
 } from './correspondanceDeFiche';
 import type { InventoryItem } from '../../types/player.types';
 
@@ -126,7 +126,19 @@ export function rapprocher(
     };
 
     for (const [cle, nouvelle] of Object.entries(impose.sheetData)) {
-        remplir(aEcrire, cle, personnage.sheetData?.[cle], nouvelle);
+        const coupure = cle.indexOf(SEPARATEUR_DE_CHEMIN);
+        if (coupure < 0) { remplir(aEcrire, cle, personnage.sheetData?.[cle], nouvelle); continue; }
+        /*
+          **Un chemin dans un objet** (les maximes de Dune dans `_gmos_dune`) : on compare la
+          valeur pointée, et on écrit l'objet entier **complété** — jamais un objet réduit au
+          seul chemin, qui effacerait le reste du suivi.
+        */
+        const objet = cle.slice(0, coupure), chemin = cle.slice(coupure + 1);
+        const releve: Record<string, unknown> = {};
+        remplir(releve, `${objet}.${chemin}`, lireLeChemin(personnage.sheetData?.[objet], chemin), nouvelle);
+        if (Object.hasOwn(releve, `${objet}.${chemin}`)) {
+            aEcrire[objet] = ecrireLeChemin(aEcrire[objet] ?? personnage.sheetData?.[objet], chemin, nouvelle);
+        }
     }
 
     for (const [cle, nouvelle] of Object.entries(impose.narratif ?? {})) {

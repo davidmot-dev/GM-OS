@@ -167,11 +167,50 @@ export const SERIE: Transformation = {
     },
 };
 
+/**
+ * **Les spécialisations de Dune, rangées par compétence** — 2026-10-25.
+ *
+ * La fiche imprime une case de spécialisations **par compétence** (`skills.battle.focuses`…) ;
+ * GM-OS les tient en un seul texte, **une spécialisation par ligne**, sous la forme que lit la
+ * progression : « Combat : Escrime » (`duneRegles.ts`). Vers la fiche, chaque ligne va dans la
+ * case de sa compétence (libellé ou identifiant du pilote, sans accents ni casse) ; vers GM-OS,
+ * chaque élément d'une case (séparés par virgule, point-virgule ou ligne) devient sa ligne.
+ *
+ * ⚠️ Une ligne sans compétence reconnue est rangée dans la **première** case, telle quelle :
+ * rien ne se perd, mais elle revient préfixée « Analyse : ». Écrire « Compétence : spécialisation ».
+ */
+const COMPETENCES_DE_DUNE: { libelle: string; alias: string[] }[] = [
+    { libelle: 'Analyse', alias: ['analyse'] },
+    { libelle: 'Combat', alias: ['combat'] },
+    { libelle: 'Discipline', alias: ['discipline'] },
+    { libelle: 'Mobilité', alias: ['mobilite', 'mob'] },
+    { libelle: 'Rhétorique', alias: ['rhetorique', 'rhetoric'] },
+];
+const sansAccents = (texte: string) => texte.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+export const SPECIALISATIONS_DE_DUNE: Transformation = {
+    cles: 5,
+    decomposer(valeur) {
+        const cases: string[][] = COMPETENCES_DE_DUNE.map(() => []);
+        for (const ligne of String(valeur ?? '').split(/\r?\n|;/).map(l => l.trim()).filter(Boolean)) {
+            const m = ligne.match(/^([^:]+):\s*(.+)$/);
+            const rang = m ? COMPETENCES_DE_DUNE.findIndex(c => c.alias.includes(sansAccents(m[1]))) : -1;
+            if (rang >= 0) cases[rang].push(m![2].trim());
+            else cases[0].push(ligne);
+        }
+        return cases.map(c => c.join(', '));
+    },
+    composer(valeurs) {
+        return valeurs.flatMap((v, i) => String(v ?? '').split(/[,;\n]/).map(x => x.trim()).filter(Boolean)
+            .map(x => `${COMPETENCES_DE_DUNE[i].libelle} : ${x}`)).join('\n');
+    },
+};
+
 /** Les transformations que le format connaît, par le nom qu'une table emploie. */
 export const TRANSFORMATIONS: Record<string, Transformation> = {
     niveauEtDe: NIVEAU_ET_DE,
     lignes: LIGNES,
     serie: SERIE,
+    specialisationsDeDune: SPECIALISATIONS_DE_DUNE,
 };
 
 /**
@@ -209,6 +248,36 @@ export interface ChampCorrespondu {
     transforme?: string;
     /** Traduction des valeurs, **de la fiche vers GM-OS**. Inversée pour l'autre sens. */
     valeurs?: Record<string, string>;
+    /**
+     * **Un chemin dans un objet de la fiche de GM-OS** — Dune, 2026-10-25 : les maximes vivent par
+     * principe dans le suivi `_gmos_dune` (`maximes.devotion`), pas dans un champ à plat. `gmos`
+     * nomme l'objet, `dans` le chemin pointé. L'objet est **complété, jamais remplacé** : le reste
+     * du suivi ne bouge pas. Seulement vers `sheetData`, et sans transformation.
+     */
+    dans?: string;
+}
+
+/** La clé qu'un champ à chemin prend entre `versGmOs` et le rapprochement : `objet#chemin`. */
+export const SEPARATEUR_DE_CHEMIN = '#';
+export const cleDuChamp = (champ: Pick<ChampCorrespondu, 'gmos' | 'dans'>) =>
+    champ.dans ? `${champ.gmos}${SEPARATEUR_DE_CHEMIN}${champ.dans}` : champ.gmos;
+
+/** La valeur au bout d'un chemin pointé, ou `undefined`. */
+export function lireLeChemin(objet: unknown, chemin: string): unknown {
+    return chemin.split('.').reduce<unknown>((o, k) => (o && typeof o === 'object' ? (o as Record<string, unknown>)[k] : undefined), objet);
+}
+
+/** Une copie de l'objet où le chemin porte la valeur — l'original n'est pas touché. */
+export function ecrireLeChemin(objet: unknown, chemin: string, valeur: unknown): Record<string, unknown> {
+    const copie: Record<string, unknown> = objet && typeof objet === 'object' ? structuredClone(objet as Record<string, unknown>) : {};
+    const etapes = chemin.split('.');
+    let ici = copie;
+    for (const k of etapes.slice(0, -1)) {
+        if (!ici[k] || typeof ici[k] !== 'object') ici[k] = {};
+        ici = ici[k] as Record<string, unknown>;
+    }
+    ici[etapes[etapes.length - 1]] = valeur;
+    return copie;
 }
 
 /**
@@ -352,7 +421,7 @@ export function verifierLaCorrespondance(
 
         if (!champ.gmos) erreur(`${ou} : identifiant GM-OS manquant.`);
         // Deux destinations différentes peuvent porter le même nom sans se gêner.
-        const signature = `${destination}:${champ.gmos}`;
+        const signature = `${destination}:${cleDuChamp(champ)}`;
         if (vues.has(signature)) erreur(`${ou} : cet identifiant GM-OS est déclaré deux fois.`);
         vues.add(signature);
 
@@ -367,6 +436,9 @@ export function verifierLaCorrespondance(
         }
 
         const liste = Array.isArray(champ.fiche);
+        if (champ.dans && (destination !== 'sheetData' || liste)) {
+            erreur(`${ou} : un chemin « dans » ne vise que sheetData, et une seule clé de fiche.`);
+        }
         if (liste && !champ.transforme) erreur(`${ou} : plusieurs clés de fiche sans transformation.`);
         if (champ.transforme && !liste) erreur(`${ou} : une transformation demande plusieurs clés de fiche.`);
         const transformation = champ.transforme ? TRANSFORMATIONS[champ.transforme] : undefined;
@@ -412,7 +484,8 @@ export function verifierLaCorrespondance(
     if (idsGmOsConnus) {
         const dansGmOs = new Set(idsGmOsConnus);
         for (const champ of table.champs) {
-            if (!dansGmOs.has(champ.gmos) && !champ.siPresent) {
+            // Un objet de suivi (`_gmos_dune`) n'est pas un champ du gabarit : il n'y a rien à vérifier.
+            if (!dansGmOs.has(champ.gmos) && !champ.siPresent && !champ.dans) {
                 avertir(`le gabarit de GM-OS n'a pas de champ « ${champ.gmos} » ; la table le cite.`);
             }
         }
@@ -462,7 +535,7 @@ export function versLaFiche(personnage: CotesGmOs, table: CorrespondanceDeFiche)
     for (const champ of table.champs) {
         const source = champ.destination === 'personnage' ? personnage.narratif : personnage.sheetData;
         if (champ.siPresent && !Object.hasOwn(source ?? {}, champ.gmos)) continue;
-        let valeur = source?.[champ.gmos];
+        let valeur = champ.dans ? lireLeChemin(source?.[champ.gmos], champ.dans) : source?.[champ.gmos];
         if (champ.valeurs) valeur = versLaValeurDeLaFiche(champ.valeurs, valeur);
 
         if (Array.isArray(champ.fiche)) {
@@ -522,7 +595,7 @@ export function versGmOs(
             narratif[champ.gmos] = valeur ?? '';
             ilYADuNarratif = true;
         } else {
-            sheetData[champ.gmos] = valeur ?? '';
+            sheetData[cleDuChamp(champ)] = valeur ?? '';
         }
     }
 

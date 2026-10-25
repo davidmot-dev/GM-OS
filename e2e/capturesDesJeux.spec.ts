@@ -943,6 +943,31 @@ async function scenesDeDune(c: ContexteDeScene): Promise<void> {
         await photographier(plateau, 'jeu-dune-plateau-tablette');
     } finally { await navigateur.close(); }
     await fenetre.evaluate(w => w.setContentSize(1440, 900));
+
+    /*
+      **La fiche HTML du personnage** (2026-10-25) : la maxime du suivi et une spécialisation de
+      GM-OS doivent paraître sur la fiche, dans leurs cases — la maxime à son principe, la
+      spécialisation dans la case de sa compétence.
+    */
+    await f.evaluate(({ id }) => {
+        const s = (window as unknown as Fenetre).useSessionOSStore.getState();
+        const joueur = s.players.find(p => p.characters.some(ch => ch.id === id))!;
+        const pj = joueur.characters.find(ch => ch.id === id)!;
+        const suivi = (pj.sheetData?._gmos_dune ?? {}) as Record<string, unknown>;
+        s.updateCharacter(joueur.id, id, { sheetData: { ...pj.sheetData, specializations: ['Combat : Escrime', 'Mobilité : Pilotage'].join(String.fromCharCode(10)),
+            _gmos_dune: { ...suivi, maximes: { ...(suivi.maximes as object ?? {}), devotion: 'La Maison avant tout' } } } });
+    }, { id: c.personnage });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });
+    await creerLaFiche.click();
+    const ficheHtml = f.frameLocator('iframe').first();
+    await expect(ficheHtml.locator('[data-key="drives.duty.statement"]')).toHaveValue('La Maison avant tout', { timeout: 30_000 });
+    await expect(ficheHtml.locator('[data-key="skills.battle.focuses"]')).toHaveValue('Escrime');
+    await expect(ficheHtml.locator('[data-key="skills.move.focuses"]')).toHaveValue('Pilotage');
+    await f.waitForTimeout(1_000);
+    await photographier(f.locator('body'), 'jeu-dune-fiche-pj');
 }
 
 async function scenesDeStarTrek(c: ContexteDeScene): Promise<void> {

@@ -139,9 +139,9 @@ describe('les gabarits intégrés du moteur', () => {
         const version = Number(source.match(/const BUILTIN_VERSION=(\d+);/)?.[1]);
         const ids = MOTEURS.map(g => g.id).sort();
         expect({ version, ids }, 'liste changée : montez BUILTIN_VERSION dans le moteur, puis cette attente').toEqual({
-            // 16 : Nephilim, forme du Khaïba, second élément et assemblage (2026-10-23).
-            version: 16,
-            ids: ['alien-v2-normalise', 'blade-runner-fr', 'crimes-fr', 'cthulhu-hack', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr'],
+            // 17 : les fiches PJ et Maison de Dune (2026-10-25).
+            version: 17,
+            ids: ['alien-v2-normalise', 'blade-runner-fr', 'crimes-fr', 'cthulhu-hack', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr'],
         });
     });
 });
@@ -153,6 +153,9 @@ it.each([
     'docs/fiches/Rêve de Dragon/reve-de-dragon-livret-voyageur-interactif.html',
     'docs/fiches/Crimes/crimes-fiche-personnage-interactive.html',
     'docs/fiches/Symbaroum/symbaroum-fiche-personnage-interactive.html',
+    // Dune, la fiche du personnage et celle de la Maison (25/10).
+    'docs/fiches/Dune/Dune_Fiche_PJ_interactive.html',
+    'docs/fiches/Dune/Dune_Fiche_Maison_interactive.html',
 ])('%s : le gabarit intégré reprend la fiche livrée, CSS et largeurs comprises', (chemin) => {
     const fiche = fs.readFileSync(path.join(RACINE, chemin), 'utf8');
     const manifeste = JSON.parse(fiche.match(/<script\b[^>]*\bid="character-sheet-template"[^>]*>([\s\S]*?)<\/script>/)![1]);

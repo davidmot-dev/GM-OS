@@ -12,8 +12,9 @@ import { getDocument } from 'pdfjs-dist/legacy/build/pdf.mjs';
 const ici = path.dirname(fileURLToPath(import.meta.url));
 const racine = path.resolve(ici, '../../..');
 const source = process.argv[2] || "C:/Users/david/Downloads/Dune_Aventures_dans_l'Imperium_Fiche PJ.pdf";
-const sortie = path.join(racine, 'output/fiches/dune');
-fs.mkdirSync(sortie, { recursive: true });
+// Les fiches vont au dépôt des fiches (cahier, § 8) ; la fabrication et les contrôles restent dans la livraison.
+const fiches = path.join(racine, 'docs/fiches/Dune'), sortie = path.join(racine, 'output/fiches/dune');
+fs.mkdirSync(fiches, { recursive: true }); fs.mkdirSync(sortie, { recursive: true });
 const octets = fs.readFileSync(source), document = await getDocument({ data: new Uint8Array(octets) }).promise;
 assert.equal(document.numPages, 2, 'Le PDF de référence comprend une page PJ et une page Maison.');
 
@@ -96,7 +97,7 @@ for (const jeu of jeux) {
 <input id="file" type="file" accept="application/json,.json" hidden><input id="portrait-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
 <dialog id="help-dialog"><h2>${jeu.nom}</h2><p>La page originale du PDF est conservée. Saisissez dans les espaces imprimés ; « Zones » affiche leurs contours. Aucun calcul automatique n’est ajouté. Les deux emblèmes de progression et de Détermination sont des emplacements numériques libres : ils ne sont pas des pistes de cases.</p><p>Maison : cliquez dans les armoiries pour choisir une image locale. Maj+clic ou un clic droit permet de la retirer, après confirmation. Le JSON contient aussi l’image.</p><p>Zoom : 20 à 400 %, Ctrl+molette, Ctrl++, Ctrl+− ; Ctrl+0 ou « Ajuster » ajuste la page à l’écran. Sur un petit écran, augmentez le zoom pour écrire, puis déplacez la page.</p><p>La sauvegarde locale appartient à ce navigateur. Exportez régulièrement un JSON pour conserver une copie ou passer sur un autre appareil. L’import remplace la fiche après confirmation et vérifie son modèle.</p><p>L’impression restitue la page entière sans les commandes. La fiche est utilisable hors ligne ; son manifeste permet d’importer le modèle dans le moteur GM-OS. La liaison aux champs du pilote se prépare séparément.</p><button id="close-help">Fermer</button></dialog>
 <script id="character-sheet-template" type="application/json">${JSON.stringify(manifeste).replaceAll('<', '\\u003c')}</script><script>${runtime}</script></body></html>`;
-    fs.writeFileSync(path.join(sortie, jeu.fichier), html);
+    fs.writeFileSync(path.join(fiches, jeu.fichier), html);
     rapports.push({ fichier: jeu.fichier, templateId: jeu.id, pageSource: jeu.page, pages: 1, zones: page.fields.length, cles: [...cles], octets: Buffer.byteLength(html) });
 }
 await document.destroy();

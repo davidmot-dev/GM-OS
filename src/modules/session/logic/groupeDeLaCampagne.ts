@@ -33,7 +33,8 @@ export function nomDuGroupe(
     table: CorrespondanceDeFiche | null,
     libelle: string,
 ): string {
-    const champ = table?.champs.find(c => c.fiche === 'identity.name');
+    // La Maison de Dune nomme le sien `house.name` (2026-10-25).
+    const champ = table?.champs.find(c => c.fiche === 'identity.name') ?? table?.champs.find(c => c.fiche === 'house.name');
     const valeur = champ ? groupe?.sheetData[champ.gmos] : undefined;
     return typeof valeur === 'string' && valeur.trim() ? valeur.trim() : libelle;
 }

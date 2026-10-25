@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "dune-maison-fr",
+  "commentaire": "Correspondance de la fiche de Maison de Dune (dune-maison-fr), fiche de groupe commune à la table, écrite le 2026-10-25. Décision de David : la fiche HTML fait foi. Ses valeurs vivent sur la campagne (Campaign.groupe) ; aucun gabarit GM-OS n'est tenu en double, chaque clé garde donc son nom. Le module « Dune : conflits et Maison » en tient un reflet (nom, monde, type, domaines, rôles, ennemis) ; alliés et atouts de Maison, que la fiche n'imprime pas, restent au module. Les armoiries voyagent comme une image (data URL).",
+  "champs": [
+    {
+      "gmos": "house.name",
+      "fiche": "house.name"
+    },
+    {
+      "gmos": "house.homeworld",
+      "fiche": "house.homeworld"
+    },
+    {
+      "gmos": "house.type",
+      "fiche": "house.type"
+    },
+    {
+      "gmos": "house.traits",
+      "fiche": "house.traits"
+    },
+    {
+      "gmos": "house.coat_of_arms",
+      "fiche": "house.coat_of_arms"
+    },
+    {
+      "gmos": "house.motto",
+      "fiche": "house.motto"
+    },
+    {
+      "gmos": "house.domains",
+      "fiche": "house.domains"
+    },
+    {
+      "gmos": "house.roles.lord",
+      "fiche": "house.roles.lord"
+    },
+    {
+      "gmos": "house.roles.consort",
+      "fiche": "house.roles.consort"
+    },
+    {
+      "gmos": "house.roles.heir",
+      "fiche": "house.roles.heir"
+    },
+    {
+      "gmos": "house.roles.treasurer",
+      "fiche": "house.roles.treasurer"
+    },
+    {
+      "gmos": "house.roles.chamberlain",
+      "fiche": "house.roles.chamberlain"
+    },
+    {
+      "gmos": "house.roles.constable",
+      "fiche": "house.roles.constable"
+    },
+    {
+      "gmos": "house.roles.advisor",
+      "fiche": "house.roles.advisor"
+    },
+    {
+      "gmos": "house.roles.envoy",
+      "fiche": "house.roles.envoy"
+    },
+    {
+      "gmos": "house.roles.scholar",
+      "fiche": "house.roles.scholar"
+    },
+    {
+      "gmos": "house.roles.spymaster",
+      "fiche": "house.roles.spymaster"
+    },
+    {
+      "gmos": "house.roles.swordmaster",
+      "fiche": "house.roles.swordmaster"
+    },
+    {
+      "gmos": "house.roles.warmaster",
+      "fiche": "house.roles.warmaster"
+    },
+    {
+      "gmos": "house.roles.chief_physician",
+      "fiche": "house.roles.chief_physician"
+    },
+    {
+      "gmos": "house.enemies.0.name",
+      "fiche": "house.enemies.0.name"
+    },
+    {
+      "gmos": "house.enemies.0.type",
+      "fiche": "house.enemies.0.type"
+    },
+    {
+      "gmos": "house.enemies.0.hatred",
+      "fiche": "house.enemies.0.hatred"
+    },
+    {
+      "gmos": "house.enemies.0.reason",
+      "fiche": "house.enemies.0.reason"
+    },
+    {
+      "gmos": "house.enemies.0.notes",
+      "fiche": "house.enemies.0.notes"
+    },
+    {
+      "gmos": "house.enemies.1.name",
+      "fiche": "house.enemies.1.name"
+    },
+    {
+      "gmos": "house.enemies.1.type",
+      "fiche": "house.enemies.1.type"
+    },
+    {
+      "gmos": "house.enemies.1.hatred",
+      "fiche": "house.enemies.1.hatred"
+    },
+    {
+      "gmos": "house.enemies.1.reason",
+      "fiche": "house.enemies.1.reason"
+    },
+    {
+      "gmos": "house.enemies.1.notes",
+      "fiche": "house.enemies.1.notes"
+    },
+    {
+      "gmos": "house.enemies.2.name",
+      "fiche": "house.enemies.2.name"
+    },
+    {
+      "gmos": "house.enemies.2.type",
+      "fiche": "house.enemies.2.type"
+    },
+    {
+      "gmos": "house.enemies.2.hatred",
+      "fiche": "house.enemies.2.hatred"
+    },
+    {
+      "gmos": "house.enemies.2.reason",
+      "fiche": "house.enemies.2.reason"
+    },
+    {
+      "gmos": "house.enemies.2.notes",
+      "fiche": "house.enemies.2.notes"
+    },
+    {
+      "gmos": "house.enemies.3.name",
+      "fiche": "house.enemies.3.name"
+    },
+    {
+      "gmos": "house.enemies.3.type",
+      "fiche": "house.enemies.3.type"
+    },
+    {
+      "gmos": "house.enemies.3.hatred",
+      "fiche": "house.enemies.3.hatred"
+    },
+    {
+      "gmos": "house.enemies.3.reason",
+      "fiche": "house.enemies.3.reason"
+    },
+    {
+      "gmos": "house.enemies.3.notes",
+      "fiche": "house.enemies.3.notes"
+    }
+  ]
+}

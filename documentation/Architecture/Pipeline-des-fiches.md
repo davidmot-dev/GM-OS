@@ -37,7 +37,9 @@ PDF ─→ Character Sheet HTML Studio ─→ HTML + manifeste « character-shee
 - **La correspondance** traduit les clés de la fiche vers les champs de GM-OS — renommages,
   compositions (`"C (D8)"` ↔ niveau + dé), destinations comme l'inventaire
   (`src/modules/fiches/correspondanceDeFiche.ts`). **Elle existe pour Blade Runner et Cthulhu
-  Hack** (au 13/10) ; Alien, NOC et Star Trek n'en ont pas encore.
+  Hack** (au 13/10) ; Alien, NOC et Star Trek n'en ont pas encore. Depuis le 25/10 (Dune), une entrée
+  peut viser **un chemin dans un objet** de la fiche GM-OS (`dans`, par exemple les maximes du suivi
+  `_gmos_dune`) : le rapprochement complète l'objet au lieu de le remplacer.
 
 ## 3 · Ce que le cahier des charges a fixé
 

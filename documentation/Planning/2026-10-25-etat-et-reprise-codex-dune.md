@@ -28,8 +28,9 @@ Atelier GM-OS Studio demandé ensuite : les deux fiches HTML PJ/Maison sont cré
 `output/fiches/dune/`, modèles `dune-pj-fr` (30 champs) et `dune-maison-fr` (40 champs).
 Sources reproductibles : `outils/dune/fiches/`. Validateur et recette hors ligne passés,
 y compris import dans un moteur jetable ; captures et rapports dans le dossier de livraison.
-**Reste l'intégration des deux modèles et la correspondance au pilote**, puis leur essai
-dans GM-OS. Aucun fichier du moteur ni profil personnel modifié pour cette livraison Studio.
+~~Reste l'intégration des deux modèles et la correspondance au pilote~~ : **faites par Claude Code
+le 25/10 (registre § 176)** — fiches rangées dans `docs/fiches/Dune/`, moteur 17, Maison en fiche
+de groupe qui fait foi (le pupitre du module en prend le reflet). Reste leur essai dans GM-OS. Aucun fichier du moteur ni profil personnel modifié pour cette livraison Studio.
 
 **Commit et push demandés par David le 25/10/2026.** Commit principal : `1338b1f1`
 (`feat(dune): finir le pilote et livrer les fiches PJ et Maison`). Le commit couvre le chantier Dune, ses

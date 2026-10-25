@@ -12812,6 +12812,17 @@ validateur sans erreur, fonctionnement hors ligne, JSON, zoom, impression, petit
 import réel dans un moteur jetable vérifiés. **Intégration des modèles et correspondances
 au pilote restant à faire**, puis essai de David ; aucun profil personnel touché.
 
+### 176 · Dune — les fiches HTML raccordées, moteur 17 — 25/10/2026
+
+David : *« j'ai généré 2 fiches HTML pour Dune, pour le personnage et pour la maison […] est-ce que tu peux les connecter comme il faut, déplace les quand c'est nécessaire »* ; après l'essai et le commit du Dune de Codex (`1338b1f1`) ; GM-OS fermé. Trois choix de David : **la fiche HTML de Maison fait foi**, **une maxime par principe**, et l'intégration **après** son essai.
+
+- **Rangement** : les deux HTML passent de `output/fiches/dune/` à `docs/fiches/Dune/` (cahier, § 8) ; captures et rapports restent dans la livraison. `outils/dune/fiches/construire.mjs` et `verifier.mjs` suivent.
+- **Moteur 16 → 17** : `dune-pj-fr` et `dune-maison-fr` intégrés tels quels (`outils/dune/fiches/integrer_au_moteur.mjs`).
+- **Personnage** — `docs/systems/dune/fiche/correspondance.json` sur le pilote 2.0.0 : 26 entrées pour 30 clés. Deux capacités ajoutées à la table : un **chemin dans un objet** (`dans`), pour que chaque maxime aille à son principe dans `_gmos_dune.maximes` **sans écraser le reste du suivi** (le rapprochement complète l'objet) ; la transformation **`specialisationsDeDune`** (une case par compétence ↔ une ligne « Compétence : spécialisation »). `lireDune` complète désormais un suivi partiel au lieu de le jeter.
+- **Maison** — fiche de groupe : `ficheDeGroupe: { libelle: 'Maison', gabaritDeLaFiche: 'dune-maison-fr' }` dans le pilote intégré, donc dans l'export régénéré par `scripts/exporter-dune.mjs` ; `correspondance-groupe.json` (40 clés gardées sous leur nom). Le pupitre du module prend le **reflet** de la fiche (`modulesDuJeu/dune/maisonDeLaFiche.ts`) : nom, monde, type, domaines, rôles, ennemis ; alliés et atouts restent au module. Le nom de la Maison se lit sur `house.name`.
+- **Vérifié** : validateur des fiches (0 erreur, 0 avertissement pour les deux), `electron/fichesDeDune.test.ts` (6), essai du groupe (+1), essais des fiches (84), `npx tsc -b`, lint ; captures rejouées sur l'export régénéré — la fiche du personnage montre la maxime et les spécialisations venues de GM-OS, la Maison s'ouvre en fiche de groupe.
+- **Reste** : l'essai de David — réimporter `Export Dirvers/corriges/Dune_driver_gmos_2.0.0.gmos-driver` avec **Remplacer** (pour la fiche de groupe), relier un PJ à sa fiche, remplir la Maison.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12920,7 +12931,8 @@ au pilote restant à faire**, puis essai de David ; aucun profil personnel touch
 | 101 | **Nephilim — finir le pilote (N1 à N9)** | § 165 ; jet, santé, Chutes, pacte, stase, Sapience, Alchimie, lieux, métamorphe — livré et essayé le 23/10 | Rien | Rien |
 | 102 | **Symbaroum — finir le pilote (S0, S2, S4 à S9)** | § 166 ; corpus corrigé, attaque et Défense avec dégâts, agonie, Stigmates, départage de l'initiative, création et progression, bourse, voyages, règles optionnelles ; pilote 2.0.0 — livré le 23/10 | Réimporter le pilote, puis une attaque, une Défense ratée et un Test de mort sur une fiche | L'essai de David |
 | 110 | **Blade Runner fini — pilote 2.0.0** | § 174 ; blessures critiques suivies (mort, stabilisation, guérison, secours, aggravés), soutien et trois D12, souvenir clé et objet fétiche, pupitre, échange d'initiative ; corpus 22/22 — 24/10 | Réimporter le pilote avec Remplacer ; une blessure mortelle, une stabilisation, un soutien, un échange de cartes — **essayé par David le 25/10** | Rien |
-| 111 | **Dune — pilote 2.0.0** | § 175 ; spécialisations, principes, Détermination, bilans, conflits, zones, Maison et progression — validé par David le 25/10 | [Recette Dune](2026-10-25-dune-finir.md) | Raccordement des HTML restant |
+| 112 | **Dune — fiches HTML raccordées** | § 176 ; moteur 17, fiche PJ (maximes par principe, spécialisations par compétence) et fiche de Maison en fiche de groupe, reflet au module — 25/10 | Réimporter le pilote avec Remplacer ; relier un PJ ; remplir la Maison | L'essai de David |
+| 111 | **Dune — pilote 2.0.0** | § 175 ; spécialisations, principes, Détermination, bilans, conflits, zones, Maison et progression — validé par David le 25/10 | [Recette Dune](2026-10-25-dune-finir.md) | Fiches HTML : § 176 |
 | 109 | **Corpus de Dune relu en entier** | § 173 ; 20 fiches sur 20 contre le livre et l'errata, bégaiements réparés, règles du scénario ramenées à leur source, cinq affirmations sans source retirées — 24/10 | Rien | Rien |
 | 108 | **Corpus de Symbaroum relu en entier** | § 172 ; 13 fiches sur 13, sept corrections, quatre affirmations sans source retirées — 24/10 | Rien | Rien |
 | 107 | **Recette de la documentation des jeux** | § 171 ; onze jeux rejoués, six captures et deux légendes à jour, deux défauts de l'essai des captures corrigés — 24/10 | Rien | Rien |

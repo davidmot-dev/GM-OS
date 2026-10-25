@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { CommandeDeModule, ResultatDeModule } from '../protocole';
 import { ARENES_DUNE, type ConflitDune, type ZoneDune } from '../../dice/systemes/conflitsDeDune';
 import { menaceInitialeDune } from '../../dice/systemes/duneRegles';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useRessourcesDeTableStore } from '../../table/useRessourcesDeTableStore';
+import { ecartsDuReflet, maisonDepuisLaFiche, RUBRIQUES_DE_LA_FICHE } from './maisonDeLaFiche';
 const champ = 'rounded border border-app-border/50 bg-app-bg p-2 text-app-text';
 const bouton = 'rounded border border-app-border/50 px-3 py-2 hover:border-accent disabled:opacity-30';
 type Props = { vue: ConflitDune; envoyerCommande: (c: CommandeDeModule) => Promise<ResultatDeModule> };
@@ -25,7 +26,19 @@ export function PupitreDune({ vue, envoyerCommande }: Props) {
     const [analyse, setAnalyse] = useState(6);
     const [maison, setMaison] = useState(vue.maison);
     const envoyer = async (id: string, charge: unknown) => { const r = await envoyerCommande({ id, charge }); setErreur(r.ok ? '' : r.erreur); return r.ok; };
-    const menace = menaceInitialeDune(maison.type, joueurs, ajustement);
+    /*
+      **La fiche de Maison fait foi** (David, 2026-10-25) : ce qu'elle porte se recalcule ici et
+      part au module quand il diffère — le plateau des joueurs le montre, la Menace le lit.
+    */
+    const ficheDeMaison = useSessionOSStore(s => s.campaigns.find(c => c.id === s.activeCampaignId)?.groupe?.sheetData);
+    const setCurrentView = useSessionOSStore(s => s.setCurrentView);
+    const reflet = maisonDepuisLaFiche(ficheDeMaison);
+    const ecarts = ecartsDuReflet(vue.maison, reflet);
+    const aEnvoyer = Object.keys(ecarts).length ? JSON.stringify(ecarts) : '';
+    useEffect(() => { if (aEnvoyer) void envoyerCommande({ id: 'maison', charge: JSON.parse(aEnvoyer) }); }, [aEnvoyer, envoyerCommande]);
+    const tenuParLaFiche = (k: string) => !!reflet && (RUBRIQUES_DE_LA_FICHE as readonly string[]).includes(k) && (k !== 'type' || reflet.type !== undefined);
+    const affichee = { ...maison, ...(reflet ?? {}) };
+    const menace = menaceInitialeDune(affichee.type, joueurs, ajustement);
     return <div className="space-y-4 text-sm">
         <PlateauDune vue={vue} />
         <div className="space-y-4 p-4">
@@ -56,9 +69,10 @@ export function PupitreDune({ vue, envoyerCommande }: Props) {
             {vue.atouts.map(a => <div key={a.id} className="flex flex-wrap gap-2 pt-2"><span>{a.nom}</span><button type="button" className={bouton} disabled={!destination || a.neutralise} onClick={() => void envoyer('deplacer', { atoutId: a.id, zoneId: destination })}>Déplacer d’une zone</button><button type="button" className={bouton} onClick={() => void envoyer(a.neutralise ? 'recuperer' : 'neutraliser', { atoutId: a.id })}>{a.neutralise ? 'Récupérer' : a.tangible ? 'Neutraliser' : 'Détruire'}</button></div>)}
             <p>Déplacement : difficulté 2. Discrétion réussie : rétention gratuite ; audace réussie : déplacement d’un atout adverse. Échec : réaction adverse et aucune rétention. Une zone supplémentaire ou un second atout coûte 2 Impulsion ; appliquez le paiement au bandeau avant le second mouvement.</p></details>
             <details><summary>Maison et début de séance</summary><div className="space-y-2 pt-2">
-                {(['nom', 'monde', 'domaines', 'roles', 'allies', 'ennemis', 'atouts'] as const).map(k => <label className="block" key={k}>{k} <input className={champ} value={maison[k]} onChange={e => setMaison(m => ({ ...m, [k]: e.target.value }))} /></label>)}
-                <label>Type <select className={champ} value={maison.type} onChange={e => setMaison(m => ({ ...m, type: Number(e.target.value) }))}>{types.map((t, i) => <option key={t} value={i}>{t}</option>)}</select></label>
-                <button type="button" className={bouton} onClick={() => void envoyer('maison', maison)}>Enregistrer la Maison</button>
+                {reflet && <p data-maison-de-la-fiche>Nom, monde, type, domaines, rôles et ennemis viennent de la fiche de Maison, qui fait foi. <button type="button" className={bouton} onClick={() => setCurrentView('group-sheet')}>Ouvrir la fiche de la Maison</button></p>}
+                {(['nom', 'monde', 'domaines', 'roles', 'allies', 'ennemis', 'atouts'] as const).map(k => <label className="block" key={k}>{k} <input className={champ} value={affichee[k]} disabled={tenuParLaFiche(k)} title={tenuParLaFiche(k) ? 'Tenu par la fiche de Maison' : undefined} onChange={e => setMaison(m => ({ ...m, [k]: e.target.value }))} /></label>)}
+                <label>Type <select className={champ} value={affichee.type} disabled={tenuParLaFiche('type')} onChange={e => setMaison(m => ({ ...m, type: Number(e.target.value) }))}>{types.map((t, i) => <option key={t} value={i}>{t}</option>)}</select></label>
+                <button type="button" className={bouton} onClick={() => void envoyer('maison', { ...maison, ...(reflet ?? {}) })}>Enregistrer la Maison</button>
                 <label>Joueurs présents <input className={`w-16 ${champ}`} type="number" min={0} value={joueurs} onChange={e => setJoueurs(Number(e.target.value))} /></label><label>Ajustement MJ <input className={`w-16 ${champ}`} type="number" value={ajustement} onChange={e => setAjustement(Number(e.target.value))} /></label>
                 <button type="button" className={bouton} onClick={() => { const s = useSessionOSStore.getState(), r = s.getActiveDriver()?.ressourcesDeTable; if (s.activeCampaignId && r) { useRessourcesDeTableStore.getState().fixer(s.activeCampaignId, r, 'menace', menace, 'Dune : début de séance, Maison et joueurs présents'); setErreur(''); } else setErreur('Campagne Dune active requise.'); }}>Début de séance : fixer la Menace à {menace}</button>
                 <p>Ce geste remplace la Menace actuelle après votre clic. La Détermination se remet au début d’aventure sur chaque fiche.</p>
