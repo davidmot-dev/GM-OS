@@ -1,7 +1,7 @@
 {
   "version": 1,
   "gabaritDeLaFiche": "noc-reference",
-  "commentaire": "Correspondance entre la fiche de NOC dans GM-OS et le gabarit noc-reference du moteur de fiches. Écrite le 2026-10-13, avec la fiche GM-OS corrigée le même jour (Caractéristiques inventées retirées, Talents nommés, identité complétée). Les pistes imprimées en cases numérotées (Vécu, Espoir, Singularité, Faveurs, jauges de Péril) se comptent par la transformation « serie ». Les Domaines et les Talents, chiffrés depuis la régénération du 2026-10-13, se relient aux Domaines et aux Talents nommés de la fiche GM-OS.",
+  "commentaire": "Correspondance entre la fiche de NOC dans GM-OS et le gabarit noc-reference du moteur de fiches. Écrite le 2026-10-13, avec la fiche GM-OS corrigée le même jour (Caractéristiques inventées retirées, Talents nommés, identité complétée). Les Domaines et les Talents chiffrés se relient aux champs nommés de GM-OS. 25/10/2026 : neuf pistes numériques (Vécu, Espoir, Singularité, Faveurs et jauges de Péril) remplacent les séries de booléens ; anciennes clés conservées et synchronisées par legacySeries.",
   "champs": [
     {
       "gmos": "nom",
@@ -51,125 +51,35 @@
     },
     {
       "gmos": "faveur",
-      "fiche": [
-        "favours.current.1",
-        "favours.current.2",
-        "favours.current.3",
-        "favours.current.4"
-      ],
-      "transforme": "serie"
+      "fiche": "favours.current"
     },
     {
       "gmos": "vecu",
-      "fiche": [
-        "tracks.vecu.1",
-        "tracks.vecu.2",
-        "tracks.vecu.3",
-        "tracks.vecu.4",
-        "tracks.vecu.5",
-        "tracks.vecu.6",
-        "tracks.vecu.7",
-        "tracks.vecu.8",
-        "tracks.vecu.9",
-        "tracks.vecu.10"
-      ],
-      "transforme": "serie"
+      "fiche": "tracks.vecu"
     },
     {
       "gmos": "espoir",
-      "fiche": [
-        "tracks.espoir.1",
-        "tracks.espoir.2",
-        "tracks.espoir.3",
-        "tracks.espoir.4",
-        "tracks.espoir.5",
-        "tracks.espoir.6",
-        "tracks.espoir.7",
-        "tracks.espoir.8",
-        "tracks.espoir.9",
-        "tracks.espoir.10"
-      ],
-      "transforme": "serie"
+      "fiche": "tracks.espoir"
     },
     {
       "gmos": "singularite",
-      "fiche": [
-        "tracks.singularite.1",
-        "tracks.singularite.2",
-        "tracks.singularite.3",
-        "tracks.singularite.4",
-        "tracks.singularite.5",
-        "tracks.singularite.6",
-        "tracks.singularite.7",
-        "tracks.singularite.8",
-        "tracks.singularite.9",
-        "tracks.singularite.10"
-      ],
-      "transforme": "serie"
+      "fiche": "tracks.singularite"
     },
     {
       "gmos": "blessures",
-      "fiche": [
-        "tracks.blessures.1",
-        "tracks.blessures.2",
-        "tracks.blessures.3",
-        "tracks.blessures.4",
-        "tracks.blessures.5",
-        "tracks.blessures.6",
-        "tracks.blessures.7",
-        "tracks.blessures.8",
-        "tracks.blessures.9",
-        "tracks.blessures.10"
-      ],
-      "transforme": "serie"
+      "fiche": "tracks.blessures"
     },
     {
       "gmos": "trauma",
-      "fiche": [
-        "tracks.trauma.1",
-        "tracks.trauma.2",
-        "tracks.trauma.3",
-        "tracks.trauma.4",
-        "tracks.trauma.5",
-        "tracks.trauma.6",
-        "tracks.trauma.7",
-        "tracks.trauma.8",
-        "tracks.trauma.9",
-        "tracks.trauma.10"
-      ],
-      "transforme": "serie"
+      "fiche": "tracks.trauma"
     },
     {
       "gmos": "traque",
-      "fiche": [
-        "tracks.traque.1",
-        "tracks.traque.2",
-        "tracks.traque.3",
-        "tracks.traque.4",
-        "tracks.traque.5",
-        "tracks.traque.6",
-        "tracks.traque.7",
-        "tracks.traque.8",
-        "tracks.traque.9",
-        "tracks.traque.10"
-      ],
-      "transforme": "serie"
+      "fiche": "tracks.traque"
     },
     {
       "gmos": "noirceur",
-      "fiche": [
-        "tracks.noirceur.1",
-        "tracks.noirceur.2",
-        "tracks.noirceur.3",
-        "tracks.noirceur.4",
-        "tracks.noirceur.5",
-        "tracks.noirceur.6",
-        "tracks.noirceur.7",
-        "tracks.noirceur.8",
-        "tracks.noirceur.9",
-        "tracks.noirceur.10"
-      ],
-      "transforme": "serie"
+      "fiche": "tracks.noirceur"
     },
     {
       "gmos": "vie",
@@ -310,6 +220,10 @@
     {
       "gmos": "facade",
       "fiche": "skills.status.facade"
+    },
+    {
+      "gmos": "faveur_max",
+      "fiche": "favours.max"
     }
   ],
   "absents": [
@@ -336,6 +250,302 @@
     {
       "fiche": "favours.max.4",
       "pourquoi": "Le maximum de Faveurs n'a pas de champ dans GM-OS ; seules les Faveurs actuelles remontent."
+    },
+    {
+      "fiche": "favours.current.1",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "favours.current.2",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "favours.current.3",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "favours.current.4",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.vecu.1",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.vecu.2",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.vecu.3",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.vecu.4",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.vecu.5",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.vecu.6",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.vecu.7",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.vecu.8",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.vecu.9",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.vecu.10",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.espoir.1",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.espoir.2",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.espoir.3",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.espoir.4",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.espoir.5",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.espoir.6",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.espoir.7",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.espoir.8",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.espoir.9",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.espoir.10",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.singularite.1",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.singularite.2",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.singularite.3",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.singularite.4",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.singularite.5",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.singularite.6",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.singularite.7",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.singularite.8",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.singularite.9",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.singularite.10",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.trauma.1",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.trauma.2",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.trauma.3",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.trauma.4",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.trauma.5",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.trauma.6",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.trauma.7",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.trauma.8",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.trauma.9",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.trauma.10",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.blessures.1",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.blessures.2",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.blessures.3",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.blessures.4",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.blessures.5",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.blessures.6",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.blessures.7",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.blessures.8",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.blessures.9",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.blessures.10",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.noirceur.1",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.noirceur.2",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.noirceur.3",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.noirceur.4",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.noirceur.5",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.noirceur.6",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.noirceur.7",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.noirceur.8",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.noirceur.9",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.noirceur.10",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.traque.1",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.traque.2",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.traque.3",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.traque.4",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.traque.5",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.traque.6",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.traque.7",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.traque.8",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.traque.9",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
+    },
+    {
+      "fiche": "tracks.traque.10",
+      "pourquoi": "Ancienne case conservée pour compatibilité ; la piste numérique est désormais la référence."
     }
   ]
 }

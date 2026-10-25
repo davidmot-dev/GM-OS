@@ -43,7 +43,7 @@ describe('« Nouveau scénario » recharge les pistes du groupe', () => {
         fireEvent.click(screen.getByRole('button', { name: /Nouveau scénario/ }));
         expect(useModalStore.getState().message).toContain('le groupe se recharge : Espoir, Vécu, Singularité');
         useModalStore.getState().onConfirm?.();
-        expect(updateCampaign).toHaveBeenCalledWith('c', { groupe: { sheetData: expect.objectContaining({
+        expect(updateCampaign).toHaveBeenCalledWith('c', { groupe: { donneesModifieesLe: expect.any(Number), sheetData: expect.objectContaining({
             'tracks.espoir': 3, 'tracks.vecu': 2, 'tracks.singularite': 4,
         }) } });
         expect(useRessourcesDeTableStore.getState().reserves.c.Menace).toBe(0);

@@ -225,6 +225,7 @@ test » montre alors une section **« Puiser dans la … »**, une ligne par app
 | :--- | :--- |
 | **Effet** (`effet`) | Des **dés** de plus dans la réserve, un **bonus** ajouté au résultat, des **1 annulés** après le lancer (`annuleLesUns` : seuls ceux qui servent se dépensent), ou des **degrés** ajoutés à la cible avant le ×10 (`degres` : la Stase et l'Effet Mnémos de Nephilim, dépensés quel que soit le résultat) |
 | **Par point** (`parPoint`) | Ce que rapporte un point : trois dés pour un point d'Espoir de la Cabale |
+| **Selon le Talent** (`parPointSelon`) | NOC : à partir de Ferveur 4, chaque point d'Espoir personnel donne autant de dés que la Ferveur ; l'Espoir de la Cabale garde son rendement propre |
 | **Épuisement** (`epuisement`) | `piste` : la piste de la feuille du groupe descend (l'Espoir). `scenario` : une réserve rechargée par **« Nouveau scénario »** (les dés d'un Domaine) |
 | **Stocks** (`stocks`) | Où se lit chaque stock sur la feuille du groupe |
 | **Composante** (`composante`) | Le stock suit ce que le personnage a retenu : le Domaine du Héros choisit le Domaine de la Cabale |

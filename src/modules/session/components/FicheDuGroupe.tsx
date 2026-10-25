@@ -6,6 +6,7 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { tousLesPilotes } from '../store/tousLesPilotes';
 import { appliquerAuGroupe, groupePourLHote, lierLeGroupe, nomDuGroupe } from '../logic/groupeDeLaCampagne';
 import type { Rapprochement } from '../../fiches/rapprochementDeLaFiche';
+import FaveursDeLaCabale from '../../table/FaveursDeLaCabale';
 
 /**
  * **La fiche du groupe de la campagne** — la Cabale de NOC, 2026-10-13.
@@ -65,7 +66,9 @@ const FicheDuGroupe: React.FC = () => {
                 </div>
             </div>
 
-            <div className="flex-1 overflow-hidden p-4">
+            {pilote.gestesDesHeros?.entraideNocturne && <FaveursDeLaCabale fiche={groupe?.sheetData ?? {}}
+                ecrire={maj => appliquer({ aEcrire: maj, divergences: [] })} />}
+            <div className="flex-1 min-h-0 overflow-hidden p-4">
                 <FicheHote
                     personnage={groupePourLHote(campagne, groupe, nom)}
                     table={table}

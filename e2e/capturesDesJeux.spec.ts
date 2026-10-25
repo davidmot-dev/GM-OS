@@ -10,6 +10,7 @@ import type { useRessourcesDeTableStore } from '../src/modules/table/useRessourc
 import type { useCombatStore } from '../src/modules/combat/useCombatStore';
 import type { useDiceStore } from '../src/stores/useDiceStore';
 import type { CurrentView } from '../src/types/campaign.types';
+import { PORT_FICHES_PAR_DEFAUT } from '../electron/portsDeGmOs';
 
 /**
  * **Les captures du manuel des jeux** — demandé par David le 2026-10-13 : *« un
@@ -297,6 +298,11 @@ test.beforeAll(async () => {
           ses règles, que rien ici ne lit.
         */
         preparerLeProfil: profil => {
+            if (JEUX.some(({ mise }) => mise.corpusId === 'noc')) {
+                const cible = path.join(profil, 'corpus', 'fiches');
+                fs.mkdirSync(cible, { recursive: true });
+                fs.copyFileSync(path.join(ICI, '..', 'docs', 'fiches', 'Character_Sheet_Manager.html'), path.join(cible, 'Character_Sheet_Manager.html'));
+            }
             for (const { mise } of JEUX) {
                 for (const dossier of ['fiche', 'theme']) {
                     const source = path.join(ICI, '..', 'docs', 'systems', mise.corpusId, dossier);
@@ -345,7 +351,7 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
-        if (mise.corpusId === 'dune') test.setTimeout(120_000);
+        if (['dune', 'noc'].includes(mise.corpusId)) test.setTimeout(180_000);
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
         if (['alien','crime','cthulhu hack','star-trek'].includes(mise.corpusId)) test.setTimeout(240_000);
         const f = gmos.fenetre;
@@ -621,6 +627,109 @@ async function scenesDeNoc(c: ContexteDeScene): Promise<void> {
         await seuils.getByRole('button', { name: 'Écarter', exact: true }).click();
         await ecrireLaFiche(c, { trauma: 2 });
     }
+    if ((c.pilote.gameDriver as { gestesDesHeros?: { entraideNocturne?: boolean } }).gestesDesHeros?.entraideNocturne) await finirNoc(c);
+}
+
+/** NOC 2.0 : vrais gestes sur les fiches, migration numérique et recharge de Cabale. */
+async function finirNoc(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    const lire = () => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState().players.flatMap(p => p.characters).find(ch => ch.id === id)!.sheetData!, c.personnage);
+    await ecrireLaFiche(c, { espoir: 1, extase: 1, ferveur: 2, soupcon: 5, trauma: 2, singularite: 1, fatigue: true });
+    await vue(c.campagne, 'cockpit');
+    await f.getByRole('button', { name: /Moment de calme/ }).click();
+    const calme = f.locator('[data-gestes-des-heros="calme"]');
+    await expect(calme.getByRole('button', { name: 'Appliquer', exact: true })).toBeDisabled();
+    await calme.getByLabel(`Soupçon de ${c.nom} sur espoir`, { exact: true }).fill('2');
+    await photographier(calme, 'jeu-noc-soupcon-reparti');
+    await calme.getByRole('button', { name: 'Appliquer', exact: true }).click();
+    await expect.poll(async () => (await lire()).espoir).toBe(1);
+    expect((await lire()).trauma).toBe(1); expect((await lire()).fatigue).toBe(false);
+    await f.evaluate(campagne => {
+        const store = (window as unknown as Fenetre).useRessourcesDeTableStore;
+        store.setState(s => ({ reserves: { ...s.reserves, [campagne]: { ...s.reserves[campagne], Fiel: 0 } } }));
+    }, c.campagne);
+    await jetAuPupitre({ id: 'noc-choix-beneficiaire', title: 'Rouage hostile', total: 1, modifier: 0, successes: 1, fails: 0, tagSuccess: true,
+        totalDisplay: '1 réussite', rolls: [{ val: 1, sides: 10 }, { val: 9, sides: 10 }, { val: 1, sides: 10 }] });
+    const rouage = f.locator('[data-fiel-au-pupitre]');
+    await expect(rouage.getByRole('button', { name: 'Un Rouage hostile', exact: true })).toBeDisabled();
+    await rouage.getByLabel('Héros bénéficiaire de la Singularité').selectOption({ label: c.nom });
+    await photographier(panneauDuDernierJet(rouage), 'jeu-noc-singularite-attribuee');
+    await rouage.getByRole('button', { name: 'Un Rouage hostile', exact: true }).click();
+    await expect.poll(async () => (await lire()).singularite).toBe(3);
+    // La recharge doit aussi se voir sur la vraie feuille HTML de Cabale.
+    await f.evaluate(campagne => {
+        const s = (window as unknown as Fenetre).useSessionOSStore.getState(), c = s.campaigns.find(c => c.id === campagne)!;
+        s.updateCampaign(campagne, { groupe: { ...c.groupe, sheetData: { ...c.groupe?.sheetData, 'assets.status.network': 3,
+            'network.contacts.0.favours': 0, 'network.contacts.1.favours': 1, 'network.contacts.2.favours': 0,
+            'assets.life.creed': 3, 'assets.life.legends': 2, 'assets.technical.observatory': 2, 'tracks.espoir': 0, 'tracks.vecu': 0, 'tracks.singularite': 0 } } });
+    }, c.campagne);
+    await vue(c.campagne, 'cockpit');
+    await f.getByRole('button', { name: /Nouveau scénario/ }).click();
+    await f.getByRole('button', { name: 'Remettre', exact: true }).click();
+    await expect.poll(() => f.evaluate(campagne => (window as unknown as Fenetre).useSessionOSStore.getState().campaigns.find(c => c.id === campagne)!.groupe?.sheetData['network.contacts.0.favours'], c.campagne)).toBe(2);
+    await vue(c.campagne, 'group-sheet');
+    const faveurs = f.locator('[data-faveurs-cabale]');
+    await faveurs.locator('summary').click();
+    await faveurs.locator('input[type=checkbox]').nth(0).check(); await faveurs.locator('input[type=checkbox]').nth(1).check();
+    await faveurs.getByRole('button', { name: 'Grande faveur (3)', exact: true }).click();
+    await photographier(faveurs, 'jeu-noc-faveurs-cabale');
+    const groupeHtml = f.frameLocator('iframe').first();
+    await expect(groupeHtml.locator('[data-key="tracks.espoir"].active')).toHaveCount(3);
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creer = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creer).toBeEnabled({ timeout: 20_000 }); await creer.click();
+    const fiche = f.frameLocator('iframe').first();
+    const piste = fiche.locator('.hotspot[data-key="tracks.vecu"][data-value="6"]');
+    await expect(piste).toBeVisible({ timeout: 30_000 }); await piste.click();
+    await expect.poll(async () => (await lire()).vecu).toBe(6);
+    await expect(fiche.locator('.hotspot[data-key="tracks.vecu"].active')).toHaveCount(6);
+    await photographier(f.locator('body'), 'jeu-noc-pistes-numeriques');
+    await f.evaluate(({ campagne, personnage }) => {
+        const store = (window as unknown as Fenetre).useSessionOSStore;
+        store.setState(s => ({ sessions: [{ ...s.sessions[0], id: 'noc-recette', campaignId: campagne, status: 'active', sessionEntityIds: [personnage], publicSummary: '' }] }));
+    }, { campagne: c.campagne, personnage: c.personnage });
+    const navigateur = await chromium.launch({ channel: 'msedge', args: ['--mute-audio'] });
+    try {
+        const contexte = await navigateur.newContext({ viewport: { width: 360, height: 1100 }, isMobile: true, hasTouch: true, locale: 'fr-FR', serviceWorkers: 'block', reducedMotion: 'reduce' });
+        // Le renderer connaît le port de sync ; son serveur de fiches garde le port standard.
+        // Router ce port vers CELUI du profil jetable : ne jamais lire un serveur personnel.
+        await contexte.route('**/*', route => {
+            const u = new URL(route.request().url());
+            if (['data:', 'blob:'].includes(u.protocol)) return route.continue();
+            if (u.hostname !== '127.0.0.1') return route.abort();
+            if (u.port === String(PORT_FICHES_PAR_DEFAUT) || u.port === String(gmos.ports.fiches)) {
+                u.port = String(gmos.ports.fiches); return route.continue({ url: u.href });
+            }
+            return u.port === String(gmos.ports.sync) ? route.continue() : route.abort();
+        });
+        await contexte.addInitScript(() => localStorage.setItem('gmos-tablet-uuid', 'noc-recette'));
+        const tablette = await contexte.newPage();
+        await tablette.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);
+        await tablette.getByRole('button', { name: new RegExp(c.nom) }).click();
+        await expect(tablette.getByText('Connecté', { exact: true })).toBeVisible();
+        await tablette.getByTitle('Fiche Personnage', { exact: true }).click();
+        await ongletDeLaFiche(tablette, 'Cabale');
+        const contacts = tablette.locator('[data-faveurs-cabale]'); await contacts.locator('summary').click();
+        for (const largeur of [360, 768, 1180]) {
+            await tablette.setViewportSize({ width: largeur, height: 1100 });
+            expect(await tablette.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+            await photographier(contacts, `jeu-noc-tablette-${largeur}`);
+        }
+        await contacts.locator('input[type=checkbox]').nth(2).check();
+        await contacts.getByRole('button', { name: 'Petite faveur (1)', exact: true }).click();
+        await expect.poll(() => f.evaluate(campagne => (window as unknown as Fenetre).useSessionOSStore.getState().campaigns.find(c => c.id === campagne)!.groupe?.sheetData['network.contacts.2.favours'], c.campagne)).toBe(1);
+        await ongletDeLaFiche(tablette, 'Ma fiche');
+        const pjHtml = tablette.frameLocator('iframe:visible');
+        try { await expect(pjHtml.locator('.hotspot[data-key="tracks.vecu"][data-value="4"]')).toBeVisible({ timeout: 30_000 }); }
+        catch (erreur) {
+            await test.info().attach('tablette-noc', { body: JSON.stringify({ texte: await tablette.locator('body').innerText(), cadres: await Promise.all(tablette.frames().map(async cadre => ({ url: cadre.url(), texte: (await cadre.locator('body').innerText()).slice(-2500) }))) }), contentType: 'application/json' });
+            throw erreur;
+        }
+        await expect(pjHtml.locator('.hotspot[data-key="tracks.vecu"].active')).toHaveCount(6);
+        await pjHtml.locator('.hotspot[data-key="tracks.vecu"][data-value="4"]').click();
+        await expect.poll(async () => (await lire()).vecu).toBe(4);
+    } finally { await navigateur.close(); }
 }
 
 /**

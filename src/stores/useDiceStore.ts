@@ -23,6 +23,8 @@ export interface RollRecord extends RollResult {
     unsAnnonces?: number;
     /** NOC : à qui les 1 de ce jet de destin ont été attribués au pupitre — voir `fielAuPupitre`. */
     fielAttribue?: 'heros' | 'rouage';
+    /** Le choix des dés supplémentaires offerts par les 10 est terminé (NOC). */
+    destinClos?: boolean;
     /**
      * 2d20 : à qui les réserves de ce jet ont été réglées au pupitre — dés
      * achetés payés, excédent versé (C1, 2026-10-22, `reservesAuPupitre`). Une
@@ -64,7 +66,7 @@ interface DiceState {
     styleDesDes: StyleDeDes;
     setLastRoll: (roll: RollRecord) => void;
     /** Annote un jet déjà consigné, sans le consigner de nouveau. */
-    annoterLeJet: (id: string, annotation: Partial<Pick<RollRecord, 'fielAttribue' | 'reservesReglees' | 'suite' | 'deFiche'>>) => void;
+    annoterLeJet: (id: string, annotation: Partial<Pick<RollRecord, 'fielAttribue' | 'destinClos' | 'reservesReglees' | 'suite' | 'deFiche'>>) => void;
     setIsDiceProjected: (projected: boolean) => void;
     setEnable3D: (enabled: boolean) => void;
     setStyleDesDes: (style: StyleDeDes) => void;

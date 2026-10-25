@@ -17,6 +17,8 @@ import { valeurDeJauge } from '../dice/systemes/nocturne';
 
 /** Un Héros de la campagne, tel que les gestes le lisent. */
 export interface HerosDeLaTable {
+    /** Rouage allié de la campagne, choisi par la Loi ; jamais un bénéficiaire automatique de Singularité. */
+    allie?: boolean;
     joueurId: string;
     id: string;
     nom: string;

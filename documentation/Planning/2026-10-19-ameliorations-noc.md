@@ -1,5 +1,9 @@
 # Améliorations possibles de NOC — 19/10/2026
 
+> **Repris le 25/10/2026** à la demande de David : voir le
+> [bilan actuel](2026-10-25-noc-finir.md), la section NOC de la synthèse et le registre § 177.
+> Le texte ci-dessous conserve l'état historique du 19/10 ; les points ne sont plus tous à faire.
+
 Dressée par Claude Code à la demande de David : *« est-ce qu'il reste des améliorations pour
 NOC ? »*, puis *« sauve cela dans un fichier d'amélioration de NOC »*. Rien n'est choisi ni codé.
 

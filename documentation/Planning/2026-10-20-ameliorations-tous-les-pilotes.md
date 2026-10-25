@@ -51,7 +51,7 @@ sur demande explicite de David : « Je voudrais finir les améliorations du driv
 | [Cthulhu Hack](#cthulhu-hack) | 🟢 5 · 🟠 0 · 🔴 0 | Cinq améliorations livrées et essayées par David le 23/10 contre le livre français (p. 31–32, 34, 42, 50–52), registre § 164 | Rien sur ces cinq lots ; soins spéciaux et suites mentales restent des sujets d'audit séparés |
 | [Dune](#dune) | 🟢 9 · 🟠 0 · 🔴 0 | D0–D8 livrés, pilote 2.0.0 ; **tout testé et validé par David le 25/10**. Fiches HTML PJ/Maison **intégrées au moteur 17 et raccordées le 25/10** (§ 176 : maximes par principe, spécialisations par compétence, Maison en fiche de groupe qui fait foi). Corpus relu (§ 173) ; bilan § 175 | Fiches essayées et validées par David le 25/10 ; les arbitrages narratifs restent au MJ |
 | [Nephilim Légende](#nephilim-légende) | 🟢 9 · 🟠 1 · 🔴 0 | **N1–N9 livrés et essayés le 23/10** (registre § 165) : tout le livre au jet et sur la fiche | L'essai sur tablette physique |
-| [NOC](#noc) | 🟢 1 · 🟠 1 · 🔴 5 | Restes revérifiés dans le code le 19/10 ; **Séquelle proposée à 8 le 22/10** (registre § 150), essai de David validé | Singularité attribuée par un Rouage |
+| [NOC](#noc) | 🟢 1 · 🟠 8 · 🔴 0 | Points 2–9 développés le 25/10, pilote 2.0.0, moteur de fiches 18 ; anciennes clés conservées. Séquelles déjà validées (§ 150). [Bilan](2026-10-25-noc-finir.md), registre § 177 | Réimport et essai de David ; les portées et arbitrages narratifs restent à la Loi |
 | [Rêve de Dragon](#rêve-de-dragon) | 🟢 6 · 🟠 1 · 🔴 0 | Socle R0–R7 livré pour les PJ ; boucle TMR ; mécaniques du Voyageur dans « Lancer un test » le 22/10 ; **pilote fini le 24/10** (registre § 168, [bilan](2026-10-24-reve-de-dragon-finir.md)) : phases du round, famine et potions, entraînement, Haut-Rêve ; pilote 2.0.0 ; calendrier de Clock-OS ; Haut-Rêve des PNJ | Réimport et essai de David |
 | [Star Trek Adventures](#star-trek-adventures) | 🟢 4 · 🟠 1 · 🔴 0 | Pilote et LCARS documentés ; **audit et toutes les améliorations livrés le 23/10** (registre § 167, [audit](2026-10-23-star-trek-ameliorations.md)), pilote 2.0.0, **essai de David validé le 24/10** | Essais matériels LCARS |
 | [Symbaroum](#symbaroum) | 🟢 10 · 🟠 0 · 🔴 0 | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), essai de David validé ; **S0, S2 et S5 à S9 livrés le 23/10** (§ 166), pilote 2.0.0 | Réimport du pilote 2.0.0 et essai de David |
@@ -355,25 +355,35 @@ Ne pas rouvrir ces choix en recopiant les premiers paragraphes historiques du ch
 
 ## NOC
 
-**Référence :** [améliorations revérifiées le 19/10](2026-10-19-ameliorations-noc.md).
-Les numéros ci-dessous sont ceux de cette note ; tous ne demandent pas une automatisation.
+**Références :** [améliorations du 19/10](2026-10-19-ameliorations-noc.md) et
+[reprise du 25/10, sources et contrôles](2026-10-25-noc-finir.md), registre § 177.
+David demande de finir NOC et fournit le livre de base ; GM-OS confirmé fermé.
+Les changements Dune de Claude ont été conservés. Les numéros restent ceux de la note du 19/10.
 
 **Déjà disponible :** jet de Destin, Fiel/Menace, jauges de péril et malus, réserves des Héros,
 Cabale, moment de calme, effets du Fiel et recharge de nouveau scénario.
 
-| Point | Priorité | Amélioration possible |
+| Point | État au 25/10 | Réalisation |
 | --- | --- | --- |
 | 🟢 1 | **Livré le 22/10** | La Séquelle se propose sous le bandeau quand une jauge de péril atteint 8 ; « Noter » l'ajoute au champ Séquelles (registre § 150, `NOC_driver_gmos_sequelles`). Réimporté et essai de David validé le 22/10 |
-| 🔴 2 | P1 | Choisir le Héros désigné par la Loi et lui attribuer la Singularité restante d'un Rouage hostile quand le Fiel est vide |
-| 🔴 3 | P2 | Aider à répartir la récupération amputée par le Soupçon, actuellement annoncée dans l'aperçu |
-| 🔴 4–6 | P2 | Modéliser, si souhaité, Aura de lumière, partage de l'Extase et alliés de la Loi épargnés par certains effets |
-| 🔴 7 | P2 | Ajouter le suivi de Faveur de la Cabale lié à l'Atout Réseau |
-| 🔴 8 | P2 | Convertir les 78 cases des neuf pistes du Héros en hotspots numériques, en conservant les clés |
-| 🟠 9 | Essai | Éprouver à l'écran la recharge des pistes de Cabale au Nouveau scénario, déjà implémentée |
+| 🟠 2 | Développé ; essai de David attendu | Bénéficiaire choisi avant attribution, écriture de Singularité et journal ; jet traité une seule fois |
+| 🟠 3 | Développé ; essai de David attendu | Soupçon réparti dans l'aperçu, borné aux récupérations possibles ; application bloquée tant que le choix est incomplet |
+| 🟠 4 | Développé ; essai de David attendu | Lumière répartie entre soi et les alliés à portée d'Aura ; sources cumulables, point jamais dupliqué ; la Loi valide les portées |
+| 🟠 5 | Développé ; essai de David attendu | Participants au repos et partage d'Extase, plafond propre au bénéficiaire ; Fiel diminué seulement si tous les Héros se reposent |
+| 🟠 6 | Développé ; essai de David attendu | Cibles explicites, personnages épargnés décochés ; Rouages alliés avec réserve d'Espoir inclus pour la Fatigue. Le livre parle des alliés des Héros |
+| 🟠 7 | Développé ; essai de David attendu | Faveurs par Contact de Réseau, dépenses 1/3/5 et recharge ; complément de la feuille sur PC/tablette, règle Diffractions p. 134 |
+| 🟠 8 | Développé ; essai de David attendu | Neuf pistes numériques, 78 anciennes clés conservées et synchronisées, imports et sauvegardes migrés ; moteur 18, aucun autre gabarit changé |
+| 🟠 9 | Recette Electron/tablette réussie ; essai de David attendu | Recharge des pistes de Cabale et des Contacts au Nouveau scénario ; horodatage du groupe mis à jour pour la synchronisation |
 
-**Ordre conseillé :** 1/2 → 7/8 ; 3–6 selon le besoin réel de la table. Le choix d'un allié
-ou d'une répartition peut rester manuel. Les retouches de fiche passent par le Studio et le
-raccord au moteur, sans reconstruire les mécaniques déjà présentes.
+**Audit du livre :** les dés offerts par les 10 sont optionnels, sur la fiche et au pupitre ;
+Ferveur 4+ augmente les dés donnés par l'Espoir personnel ; au pupitre les 1 alimentent le Fiel
+sans retirer de réussites. Export `Export Dirvers/corriges/NOC_driver_gmos_2.0.0.gmos-driver`.
+**Déjà vérifié :** migration des anciennes données et fonctionnement hors ligne ; les deux
+fiches sont acceptées sans erreur ni avertissement ; Forge sans constat. Recette Electron et
+tablette réussie aux trois largeurs 360/768/1180, 17 captures actualisées. Types et lint réussis ;
+9 150 tests réussis (quatre ignorés), construction de production réussie (`npm run validate`).
+**À éprouver par David :** ces gestes et les nouveaux clics sur les pistes, après réimport avec
+Remplacer. Les conséquences narratives des Séquelles, les soins lourds et les portées restent à la Loi.
 
 ## Rêve de Dragon
 

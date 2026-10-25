@@ -1,6 +1,6 @@
 # 🌌 Jeu — NOC
 
-> **Pilote décrit :** « NOC », exporté le 2026-10-16 et corrigé le jour même (gestes des Héros), puis le 2026-10-22 (séquelle proposée à 8, `Export Dirvers/corriges/NOC_driver_gmos_sequelles.gmos-driver`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « NOC » **2.0.0**, exporté le 2026-10-25, amélioré contre le livre de base et les règles de Cabale de *Diffractions obsidionales*. Export : `Export Dirvers/corriges/NOC_driver_gmos_2.0.0.gmos-driver`. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Les Héros résistent dans un monde enfermé dans l'Artefact. Trois choses rendent ce jeu différent
 dans GM-OS : les **dés de destin**, le **Fiel** qui déborde en **Menace**, et la **Cabale**, la
@@ -36,7 +36,7 @@ se posent une à une. Les règles ne tranchent pas ce cas.
    pas de difficulté par défaut ; le panneau part de 0, la maîtrise basique).
 3. **Provoquer le destin** : on lance **de zéro au plafond** de dés à dix faces. Sans dé, le Talent
    seul affronte la difficulté.
-4. Chaque **8, 9 ou 10** élève le niveau d'un point ; un **10 fait lancer un dé de plus** ; **chaque
+4. Chaque **8, 9 ou 10** élève le niveau d'un point ; un **10 propose un dé de plus**, que l'on peut refuser ; **chaque
    1 verse une goutte dans le Fiel**, automatiquement — et la jauge déborde en Menace à cinq.
 5. Le résultat se dit en entier : « Réussite, marge 1 — niveau 2 + 3 réussites (5 dés de destin) =
    5 contre difficulté 4 · 1 goutte de Fiel ». Un **seul degré d'échec** peut devenir un échec
@@ -49,7 +49,7 @@ La section **« Puiser dans ses réserves »** se lit sur la fiche du Héros et 
 | Réserve | Ce qu'elle donne |
 | :--- | :--- |
 | **Vécu** | +1 au niveau — **un seul point par test** |
-| **Espoir** | 3 dés de destin de plus par point |
+| **Espoir** | 3 dés de destin de plus par point ; avec **Ferveur 4 ou plus**, autant de dés que son niveau de Ferveur |
 | **Singularité** | Chaque point **annule un 1** avant qu'il ne rejoigne le Fiel ; **seuls les points qui servent sont dépensés** |
 
 ### Les malus de péril
@@ -84,7 +84,7 @@ La Cabale est **un personnage de plus, commun à toute la table** (règle :
 
 ### Puiser dans la Cabale
 
-Au panneau de jet, la section **« Puiser dans la Cabale »** offre quatre apports :
+Au panneau de jet, la section **« Puiser dans la Cabale »** offre cinq apports :
 
 | Apport | Ce qu'il donne | D'où il est pris |
 | :--- | :--- | :--- |
@@ -94,7 +94,7 @@ Au panneau de jet, la section **« Puiser dans la Cabale »** offre quatre appor
 | **Atout de la Cabale** | +1 au niveau — **un seul point par test** | L'Atout choisi dans la liste (seuls les Atouts garnis sont proposés). **Rechargé par « Nouveau scénario »**. Une Faille (Atout à −1) ne fournit rien |
 | **Singularité de la Cabale** | Annule un 1 par point | La piste Singularité de la feuille, qui descend — après celle du Héros |
 
-![Après le lancer : huit dés (trois du Domaine, deux de la Cabale, trois pour un point d'Espoir), et ce qui a été puisé](captures/jeu-noc-jet-lance.jpg)
+![Après le lancer : résultat courant et dé supplémentaire offert par un 10 ; le joueur peut le lancer ou garder ce résultat](captures/jeu-noc-jet-lance.jpg)
 
 > **Relu contre le carnet NotebookLM « NOC » le 2026-10-13** : les Domaines, les Atouts, l'Espoir,
 > le Vécu et la Singularité de la Cabale **se rechargent au début de chaque scénario**, un point
@@ -154,8 +154,16 @@ rechargement, ni quand une tablette se reconnecte — tant que la jauge ne redes
 le passage suivant est un nouveau franchissement, et se propose de nouveau.
 
 Le **Soupçon** (Cabale Dykovienne) ampute la récupération : à 5, 8 et 10 points, le Héros
-récupère 2, 4 ou 6 points de moins, **au choix du joueur**. L'aperçu le dit ; reprenez ces points
-à la main. Le partage de l'Extase entre Héros qui se reposent ensemble reste à la main aussi.
+récupère 2, 4 ou 6 points de moins, **au choix du joueur**. Dans l'aperçu, répartissez ces points
+entre les récupérations réellement possibles ; **Appliquer** reste indisponible tant que la
+répartition est incomplète. On ne reprend jamais davantage que ce qui aurait été récupéré.
+
+Choisissez les participants au repos et répartissez leur **Extase**. Un point donné à un allié
+ne recharge plus son propriétaire ; le plafond de Ferveur du bénéficiaire s'applique. Un repos
+partiel n'enlève pas de Fiel collectif. Les Rouages alliés de la campagne possédant une réserve
+d'Espoir peuvent aussi être sélectionnés.
+
+![Le Soupçon réparti dans l'aperçu du repos](captures/jeu-noc-soupcon-reparti.jpg)
 
 **Effets du Fiel** (bouton du bandeau). Quand le Fiel déborde, choisissez autant d'effets que
 vaut la **Menace** — le même plusieurs fois si vous le voulez — puis appliquez :
@@ -163,15 +171,19 @@ vaut la **Menace** — le même plusieurs fois si vous le voulez — puis appliq
 | Effet | Ce que GM-OS écrit sur chaque Héros |
 | :--- | :--- |
 | **Bouleversement administratif** | La case **Bouleversement** : −1 aux Talents du Domaine **Statut**, au panneau de jet. Décochez-la au bout du cycle (49 heures) ; pas de Faveur pendant ce temps |
-| **Intervention de l'Artefact** | +2 Noirceur, moins sa **Lumière**. L'Aura de lumière d'un allié peut encore réduire : à la main |
+| **Intervention de l'Artefact** | +2 Noirceur. Répartissez la **Lumière** de chaque source entre soi-même et les bénéficiaires dans son Aura ; les sources se cumulent |
 | **Tension** | +2 Trauma, moins sa **Folie** (Folie −1 : +3) |
 | **Traque** | +2 Traque, moins sa **Façade** |
 | **Fatigue** | −1 Espoir ; déjà à zéro, la case **Fatigué** se coche : −1 à tous les Talents jusqu'au prochain moment de calme |
+| **Coup du sort / Événement inattendu** | La Loi décrit l'échec critique total ou déclenche l'événement prévu ; ces choix ne fabriquent pas automatiquement de dommages ni de conséquence narrative |
 
 ![Les effets du Fiel : la Menace à 2 en demande deux ; Tension et Fatigue choisies, l'aperçu dit ce que chaque Héros perd — Trauma 2 → 3 (la Folie en retire un), Espoir 1 → 0](captures/jeu-noc-effets-du-fiel.jpg)
 
 Un même effet choisi deux fois **cumule ses pertes avant la résistance** : deux Tensions avec
-Folie 1 font 4 − 1 = 3 points de Trauma. Les alliés de la Loi ne sont pas touchés : à la main.
+Folie 1 font 4 − 1 = 3 points de Trauma. La Loi décoche les personnages épargnés. Les Rouages
+alliés subissent la **Fatigue** ; les autres effets de cet écran concernent les Héros.
+La Loi confirme la portée des Auras : zone éclairée, au plus 10 × Lumière mètres ; pénombre,
+1 mètre ; ténèbres, contact direct. Une même unité de Lumière ne protège qu'une fois.
 
 **Le Vécu.** « Début de séance » rend **+1 Vécu** à chaque Héros (jusqu'à 3) ; « Nouveau
 scénario » le remet **plein**. Un Vécu agrandi par le Développement n'est jamais ramené à 3.
@@ -181,8 +193,12 @@ Talent **Fortune** ; tous les autres Atouts restent à un point par test.
 
 **Le jet d'un Rouage, au pupitre.** Après un jet de dés de destin qui fait des 1, le pupitre
 demande **qui a lancé** : « Un Héros » verse les gouttes dans le Fiel, « Un Rouage hostile » en
-retire autant. Fiel déjà vide : un Héros désigné par la Loi gagne la Singularité qui reste — à
-reporter sur sa fiche.
+retire autant. Si le Fiel ne suffit pas, choisissez le **Héros bénéficiaire** avant de valider :
+la Singularité restante est écrite sur sa fiche et consignée. Le même jet ne s'attribue qu'une fois.
+Les 1 ne retirent jamais de réussites au pupitre : ils alimentent seulement le Fiel. Les dés
+offerts par les 10 s'y choisissent comme sur la fiche, avant l'attribution des gouttes.
+
+![Le bénéficiaire choisi pour la Singularité du Rouage](captures/jeu-noc-singularite-attribuee.jpg)
 
 ![Le pupitre après le jet d'un agent de la PoliSec : deux 1 sur trois dés de destin, et la question « qui a lancé ? » — Un Héros, ou Un Rouage hostile](captures/jeu-noc-rouage.jpg)
 
@@ -190,11 +206,31 @@ reporter sur sa fiche.
 
 ## Ce qui manque encore
 
+Les points 2 à 9 du chantier du 19/10 sont développés le 25/10 ; leur essai par David reste attendu.
+Les conséquences narratives des Séquelles et les soins lourds restent arbitrés par la Loi.
+
 - La **Séquelle** se propose à 8, mais son **effet** (le trait Criminel, le second trait de
   Noirceur) et son **traitement lourd** lors d'un Passage se reportent à la main.
 - Les **Blessures** passent par les dix cases de santé : le moment de calme en décoche une, comme
   « Soins ».
-- **La Singularité** gagnée par un Rouage, l'**Aura de lumière**, le **partage de l'Extase** et
-  les **alliés** se reportent à la main.
-- **La Faveur de la Cabale** (2 points par Contact de l'Atout Réseau) n'a pas de piste sur sa feuille :
-  à la main.
+
+## Les Faveurs du Réseau et les pistes — 25/10/2026
+
+La feuille de Cabale garde son dessin original. Son complément **Réseau et Faveurs de la Cabale**,
+chez le meneur et sur la tablette, suit chaque Contact de l'Atout Réseau : deux Faveurs par
+Contact, rechargeables au Nouveau scénario (*Diffractions obsidionales*, p. 134).
+Nommez les Contacts, cochez ceux à solliciter, puis dépensez une petite (1), grande (3) ou énorme
+(5) faveur. Plusieurs Contacts peuvent contribuer ; la Loi apprécie le délai d'une heure par
+Contact mobilisé. Une baisse de Réseau conserve les anciennes données des Contacts devenus inactifs.
+
+![Les Faveurs des Contacts de la Cabale](captures/jeu-noc-faveurs-cabale.jpg)
+
+Sur la fiche du Héros, les neuf pistes sont **numériques et cumulatives** : cliquer le sixième
+rond en remplit six ; recliquer le niveau actuel remet la piste à zéro. Les 78 anciennes clés
+restent conservées et synchronisées pour les sauvegardes et imports antérieurs. Les valeurs
+numériques supérieures au nombre de ronds restent conservées, même si la feuille ne les affiche
+pas toutes. Le modèle intégré garde son identifiant `noc-reference` ; le moteur passe à 18.
+
+![Les pistes numériques sur la fiche originale](captures/jeu-noc-pistes-numeriques.jpg)
+
+*Relu le 2026-10-25 contre le livre de base p. 220, 231–234, 248 et Diffractions p. 134 ; essai de David attendu.*

@@ -35,6 +35,7 @@ export interface ChampDeFiche {
     x?: number; y?: number; w?: number; h?: number;
     value?: unknown;
     options?: unknown[];
+    legacy?: boolean;
     derive?: { source?: string; operation?: string };
 }
 
@@ -43,6 +44,7 @@ export interface GabaritDeFiche {
     id: string;
     name?: string;
     system?: string;
+    legacySeries?: Record<string, string[]>;
     pages?: { id?: string; width?: number; height?: number; backgroundData?: string; fields?: ChampDeFiche[] }[];
 }
 
@@ -243,9 +245,18 @@ export function validerLaFiche(entree: EntreeDeFiche): RapportDeFiche {
       sur le hotspot vaut le cinquième du coût de la correspondance.
     */
     const series = new Map<string, number>();
+    const anciennesPistes = new Set<string>();
+    for (const [cle, anciennes] of Object.entries(gabarit.legacySeries ?? {})) {
+        const piste = champs.filter(c => c.key === cle);
+        if (!Array.isArray(anciennes) || !anciennes.length || new Set(anciennes).size !== anciennes.length
+            || piste.length !== anciennes.length || piste.some(c => normaliser(c.type) !== 'hotspot' || typeof c.value !== 'number')
+            || anciennes.some(k => !champs.some(c => c.key === k && c.type === 'checkbox' && c.legacy === true))) {
+            erreur('§ 6', `Migration legacySeries invalide pour « ${cle} » : une piste numérique et toutes ses anciennes cases conservées sont requises.`);
+        } else anciennes.forEach(k => anciennesPistes.add(k));
+    }
     for (const champ of champs) {
         const m = /^(.*)\.(\d+)$/.exec(champ.key ?? '');
-        if (m && normaliser(champ.type) === 'checkbox') series.set(m[1], (series.get(m[1]) ?? 0) + 1);
+        if (m && normaliser(champ.type) === 'checkbox' && !anciennesPistes.has(champ.key!)) series.set(m[1], (series.get(m[1]) ?? 0) + 1);
     }
     for (const [prefixe, n] of series) {
         if (n >= 3) {

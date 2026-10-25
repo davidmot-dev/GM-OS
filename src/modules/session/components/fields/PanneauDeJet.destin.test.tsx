@@ -50,15 +50,15 @@ beforeEach(() => {
     useRessourcesDeTableStore.setState({ reserves: {} });
     lancer = vi.spyOn(DiceEngine, 'rollFromConfig');
 });
-afterEach(() => { cleanup(); lancer.mockRestore(); useSessionOSStore.setState(initial, true); });
+afterEach(() => { cleanup(); vi.restoreAllMocks(); useSessionOSStore.setState(initial, true); });
 
 const tirage = (...faces: number[]) => lancer.mockReturnValue({
     total: 0, rolls: faces.map(val => ({ val, sides: 10 })), modifier: 0, successes: 0, fails: 0, tagSuccess: false, totalDisplay: '',
 });
 
-const monter = (valeurs: Record<string, unknown>, ecrire = vi.fn()) => {
+const monter = (valeurs: Record<string, unknown>, ecrire = vi.fn(), descripteur = JET_NOC) => {
     render(
-        <PanneauDeJet descripteur={JET_NOC} dice={DICE} template={FICHE} valeurs={valeurs}
+        <PanneauDeJet descripteur={descripteur} dice={DICE} template={FICHE} valeurs={valeurs}
             campaignId="c" ressourcesDeTable={[FIEL]} ecrireSurLaFiche={ecrire} />,
     );
     const [talent, domaine] = screen.getAllByRole('combobox');
@@ -71,6 +71,25 @@ const lancerLeJet = () => fireEvent.click(screen.getByText('Lancer', { exact: tr
 const fiel = () => useRessourcesDeTableStore.getState().reserves.c?.Fiel ?? 0;
 
 describe('le jet de NOC', () => {
+    it('permet de refuser le dé offert par un 10 avant de consigner le Fiel', () => {
+        const de = vi.spyOn(DiceEngine, 'roll').mockReturnValueOnce(10).mockReturnValueOnce(1);
+        monter({ combat: 1, action: 2 }, vi.fn(), { ...JET_NOC, destin: { ...JET_NOC.destin, desSurDixAuChoix: true } });
+        lancerLeJet();
+        expect(de).toHaveBeenCalledTimes(2); expect(fiel()).toBe(1);
+        expect((screen.getByRole('button', { name: 'Lancer' }) as HTMLButtonElement).disabled).toBe(true);
+        plus('Garder ce résultat');
+        expect(de).toHaveBeenCalledTimes(2); expect(fiel()).toBe(1);
+        expect(screen.queryByRole('button', { name: 'Garder ce résultat' })).toBeNull();
+    });
+    it('propose aussi les 10 supplémentaires et ne dépense la Singularité utile qu’une fois', () => {
+        const de = vi.spyOn(DiceEngine, 'roll').mockReturnValueOnce(10).mockReturnValueOnce(10).mockReturnValueOnce(1);
+        const ecrire = monter({ combat: 1, action: 1, singularite: 2 }, vi.fn(), { ...JET_NOC, destin: { ...JET_NOC.destin, desSurDixAuChoix: true } });
+        plus('Un point de plus : Singularité'); lancerLeJet();
+        plus('Lancer un dé supplémentaire'); plus('Lancer un dé supplémentaire');
+        expect(de).toHaveBeenCalledTimes(3); expect(fiel()).toBe(0);
+        expect(ecrire).toHaveBeenCalledTimes(1); expect(ecrire).toHaveBeenCalledWith({ singularite: 1 });
+        expect(screen.getByText(/niveau 1 \+ 2 réussites/)).toBeTruthy();
+    });
     it('le Talent, plus un par dé à 8 et plus, contre la difficulté', () => {
         tirage(8, 3, 10, 5);
         monter({ combat: 2, action: 3 });

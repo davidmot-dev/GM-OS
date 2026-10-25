@@ -233,6 +233,8 @@ export interface ApportDuGroupe {
     si?: { sections?: string[]; champs?: string[] };
     /** Ce que rapporte un point : trois dés pour un point d'Espoir. */
     parPoint: number;
+    /** Au-delà du rendement normal : NOC, Ferveur 4+ donne son niveau de dés par Espoir. */
+    parPointSelon?: { champ: string; aPartirDe: number };
     /**
      * Combien de points au plus sur un même jet. NOC : un seul point de Vécu,
      * un seul point d'Atout (sauf Capital). Absent : autant qu'il en reste.
@@ -354,6 +356,8 @@ export interface EffetDeDebordement {
  * Héros avant d'écrire.
  */
 export interface GestesDesHeros {
+    /** Entraide de NOC : répartition d'Extase et de Lumière, cibles et Soupçon explicitement choisis. */
+    entraideNocturne?: boolean;
     /**
      * **Le moment de calme** : la table respire, puis chaque Héros récupère —
      * dans l'ordre du livre de NOC : −1 Fiel, +1 Espoir + Extase, −1 à chaque

@@ -104,6 +104,12 @@ describe('ce que les points rapportent', () => {
 });
 
 describe("l'Atout Capital — plusieurs points, sur le Talent Fortune seulement", () => {
+    it('Ferveur 4+ augmente le rendement de l’Espoir personnel, sans changer la Cabale', () => {
+        const apport = { ...ESPOIR, parPointSelon: { champ: 'ferveur', aPartirDe: 4 } };
+        const lire = (ferveur: number) => apportsDisponibles([apport], {}, {}, { [apport.id]: 1 }, { ferveur, [apport.stocks[0].champ]: 2 }, {})[0];
+        expect(lire(3).apport.parPoint).toBe(3); expect(lire(5).apport.parPoint).toBe(5);
+        expect(ESPOIR.parPoint).toBe(3);
+    });
     // Carnet « NOC », section « Capital » (2026-10-16) : les autres Atouts, un seul point par test.
     const ATOUTS: ApportDuGroupe = {
         id: 'atout', label: 'Atout', effet: 'bonus', parPoint: 1, epuisement: 'scenario', maxParJet: 1,

@@ -424,6 +424,10 @@ export interface DescripteurDeJet {
      * un 10 fait lancer un dé de plus, un 1 verse une goutte dans `fiel`.
      */
     destin?: {
+        /** NOC p. 231 : bénéficiaire choisi au pupitre quand les 1 d'un Rouage trouvent le Fiel vide. */
+        singularite?: string;
+        /** Les dés supplémentaires d'un 10 sont proposés, jamais imposés (p. 231). */
+        desSurDixAuChoix?: boolean;
         /** La réserve de table où chaque 1 verse une goutte (« Fiel »). */
         fiel?: string;
         /** Les jauges de péril dont les seuils pénalisent Domaines et Talents. */

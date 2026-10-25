@@ -139,8 +139,8 @@ describe('les gabarits intégrés du moteur', () => {
         const version = Number(source.match(/const BUILTIN_VERSION=(\d+);/)?.[1]);
         const ids = MOTEURS.map(g => g.id).sort();
         expect({ version, ids }, 'liste changée : montez BUILTIN_VERSION dans le moteur, puis cette attente').toEqual({
-            // 17 : les fiches PJ et Maison de Dune (2026-10-25).
-            version: 17,
+            // 18 : pistes NOC numériques, anciennes clés conservées ; Dune reste intégré.
+            version: 18,
             ids: ['alien-v2-normalise', 'blade-runner-fr', 'crimes-fr', 'cthulhu-hack', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr'],
         });
     });

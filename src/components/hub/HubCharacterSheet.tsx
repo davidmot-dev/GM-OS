@@ -12,6 +12,7 @@ import { useCorrespondanceDuJeu } from '../../modules/fiches/useCorrespondanceDu
 import { useCorrespondanceDuGroupe } from '../../modules/fiches/useCorrespondanceDuGroupe';
 import { tousLesPilotes } from '../../modules/session/store/tousLesPilotes';
 import { campagneDuGroupe, groupePourLHote, nomDuGroupe } from '../../modules/session/logic/groupeDeLaCampagne';
+import FaveursDeLaCabale from '../../modules/table/FaveursDeLaCabale';
 import { ressourcesDeLaTable } from '../../modules/table/reservesDuGroupe';
 import type { Rapprochement } from '../../modules/fiches/rapprochementDeLaFiche';
 import type { PlayerCharacter, Campaign, SheetTemplate, InventoryItem } from '../../modules/session/store/types';
@@ -321,7 +322,10 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
             */}
             {groupeDejaOuvert && ficheDeGroupe && campagneDeLaTable && (
                 <div id="fiche-joueur-groupe" role="tabpanel" aria-labelledby="fiche-joueur-onglet-groupe"
-                    className={`flex-1 overflow-hidden pb-4 ${ongletVu === 'groupe' ? '' : 'hidden'}`}>
+                    className={`flex-1 min-h-0 flex flex-col overflow-hidden pb-4 ${ongletVu === 'groupe' ? '' : 'hidden'}`}>
+                    {pilote?.gestesDesHeros?.entraideNocturne && <FaveursDeLaCabale fiche={campagneDeLaTable.groupe?.sheetData ?? {}}
+                        interdit={!!character.sheetData?.bouleversement}
+                        ecrire={maj => remoteEcrireLeGroupe(campagneDeLaTable.id, character.id, maj)} />}
                     <FicheHote
                         personnage={groupePourLHote(campagneDeLaTable, campagneDeLaTable.groupe, nomDeLaCabale)}
                         table={correspondanceDuGroupe}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useRessourcesDeTableStore } from './useRessourcesDeTableStore';
@@ -7,6 +7,10 @@ import { gmToast } from '../../stores/useToastStore';
 import { ecrireLesHeros } from './ecrireLesHeros';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 import { BoutonPrincipal, BoutonSecondaire } from '../../components/socle/CadreDeSurcouche';
+import ChoixEntraideNocturne from './ChoixEntraideNocturne';
+import { calmeNocturne, debordementNocturne, type ChoixEntraideNocturne as Entraide } from './entraideNocturne';
+import { HealthInterpreter } from '../session/logic/HealthInterpreter';
+import { avecOrigine } from '../session/logic/origineDesModifications';
 import {
     changementsEffectifs, effetsDuDebordement, herosDeLaCampagne, momentDeCalme, nombreDEffetsAChoisir, recuperationDesHeros,
     type ChangementDuHeros,
@@ -27,6 +31,7 @@ export type GesteDesHeros = 'calme' | 'debordement' | 'finDeScene' | 'bonneNuit'
 
 const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => void }> = ({ geste, onClose }) => {
     const players = useSessionOSStore(s => s.players);
+    const entities = useSessionOSStore(s => s.entities);
     const campaigns = useSessionOSStore(s => s.campaigns);
     const activeCampaignId = useSessionOSStore(s => s.activeCampaignId);
     const updateCharacter = useSessionOSStore(s => s.updateCharacter);
@@ -35,6 +40,8 @@ const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => 
     const fichesPerso = useSessionOSStore(s => s.customSheetTemplates);
     const { etatDe, gagner, depenser, finDeScene: eroderEnFinDeScene } = useRessourcesDeTableStore();
     const [choix, setChoix] = useState<Record<string, number>>({});
+    const [entraide, setEntraide] = useState<Entraide>({});
+    const applique = useRef(false);
     // L'aperçu dit « Fatigué », « Extase » — les libellés de la fiche du jeu, pas les identifiants.
     const gabarit = [...(fichesPerso ?? []), ...DEFAULT_SHEET_TEMPLATES].find(t => t.id === pilote?.templateId);
     const libelles = new Map((gabarit?.sections ?? []).flatMap(s => s.fields.map(f => [f.id, f.label] as const)));
@@ -44,6 +51,8 @@ const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => 
     const ressources = ressourcesDeLaTable(pilote, campagne);
     const etat = activeCampaignId ? etatDe(activeCampaignId, ressources) : {};
     const heros = herosDeLaCampagne(players, activeCampaignId);
+    const participantsNocturnes = [...heros, ...entities.filter(e => e.campaignId === activeCampaignId && e.role === 'ally' && e.status !== 'dead' && e.sheetData?.espoir !== undefined)
+        .map(e => ({ id: e.id, joueurId: '', nom: `${e.name} (allié)`, valeurs: e.sheetData ?? {}, allie: true }))];
     const calme = pilote?.gestesDesHeros?.momentDeCalme;
     const debordement = pilote?.gestesDesHeros?.effetsDuDebordement;
     // La fin de scène (Symbaroum, 2026-10-22) : les fiches, puis l'érosion des réserves qui en déclarent une.
@@ -60,18 +69,37 @@ const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => 
     const aChoisir = debordement ? nombreDEffetsAChoisir(etat[debordement.nombreSelon]) : 0;
     const choisis = Object.values(choix).reduce((a, b) => a + b, 0);
     const erosion = geste === 'finDeScene' && ressources.some(r => r.erosionFinDeScene);
+    const nocturne = pilote?.gestesDesHeros?.entraideNocturne;
+    const repos = nocturne && geste === 'calme' ? calmeNocturne(calme!, participantsNocturnes, entraide, nom) : undefined;
+    const effets = nocturne && geste === 'debordement' ? debordementNocturne(debordement!.effets, choix, participantsNocturnes, entraide, nom) : undefined;
+    const erreurs = repos?.erreurs ?? effets?.erreurs ?? [];
     const apercu: { changements: ChangementDuHeros[]; aDire: string[] } = geste === 'calme'
-        ? { changements: momentDeCalme(calme!, heros, nom), aDire: [] }
+        ? repos ?? { changements: momentDeCalme(calme!, heros, nom), aDire: [] }
         : geste === 'finDeScene'
             ? { changements: recuperationDesHeros(finDeScene, heros, nom), aDire: erosion ? ['Les réserves de table s’érodent aussi.'] : [] }
             : geste === 'bonneNuit'
                 ? { changements: recuperationDesHeros(bonneNuit, heros, nom), aDire: [] }
-                : effetsDuDebordement(debordement!.effets, choix, heros, nom);
+                : effets ?? effetsDuDebordement(debordement!.effets, choix, heros, nom);
     const effectifs = changementsEffectifs(apercu.changements);
-    const tableQuiBouge = geste === 'calme' ? (calme!.table ?? []) : [];
+    const tableQuiBouge = geste === 'calme' && (!repos || repos.collectif) ? (calme!.table ?? []) : [];
 
     const appliquer = () => {
+        if (applique.current || erreurs.length) return;
+        applique.current = true;
         ecrireLesHeros(effectifs, { players, updateCharacter, updateCharacterHealth });
+        if (nocturne) avecOrigine('geste de table', () => {
+            const session = useSessionOSStore.getState();
+            for (const c of effectifs.filter(c => !c.joueurId)) {
+                const allie = session.entities.find(e => e.id === c.herosId && e.campaignId === activeCampaignId && e.role === 'ally');
+                if (!allie) continue;
+                session.updateEntity(allie.id, { sheetData: { ...allie.sheetData, ...c.maj } });
+                if (allie.healthSystem?.type === 'boxes' && typeof c.maj.blessures === 'number') {
+                    const avant = (Array.isArray(allie.healthSystem.data.boxes) ? allie.healthSystem.data.boxes as { filled?: boolean }[] : []).filter(b => b.filled).length;
+                    const ecart = c.maj.blessures - avant;
+                    if (ecart) session.updateEntityHealth(allie.id, HealthInterpreter.handleBoxes(allie.healthSystem, { value: Math.abs(ecart), isRecovery: ecart < 0 }));
+                }
+            }
+        });
         if (erosion) for (const a of eroderEnFinDeScene(activeCampaignId, ressources).avertissements) gmToast(a, 'info');
         const motif = geste === 'calme' ? 'moment de calme' : geste === 'finDeScene' ? 'fin de scène'
             : geste === 'bonneNuit' ? 'bonne nuit' : `effets du ${nomDe(debordement!.ressource)}`;
@@ -90,6 +118,9 @@ const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => 
 
     return (
         <div className="flex flex-col gap-4 px-5 py-4" data-gestes-des-heros={geste}>
+            {nocturne && (geste === 'calme' || geste === 'debordement') && <ChoixEntraideNocturne
+                calme={geste === 'calme'} heros={participantsNocturnes} choix={entraide} changer={setEntraide}
+                recuperations={repos?.recuperations} amputations={repos?.amputations} />}
             {geste === 'debordement' && debordement && (
                 <section className="flex flex-col gap-2" aria-label="Effets à choisir">
                     <p className="text-sm text-app-text">
@@ -143,8 +174,9 @@ const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => 
             </section>
 
             <div className="flex justify-end gap-2">
+                {erreurs.length > 0 && <ul role="alert" className="text-xs text-etat-alerte">{erreurs.map((e, i) => <li key={i}>{e}</li>)}</ul>}
                 <BoutonSecondaire onClick={onClose}>Annuler</BoutonSecondaire>
-                <BoutonPrincipal onClick={appliquer} disabled={geste === 'debordement' && choisis === 0}
+                <BoutonPrincipal onClick={appliquer} disabled={erreurs.length > 0 || (geste === 'debordement' && choisis === 0) || (repos && repos.changements.length === 0)}
                     className="disabled:opacity-30 disabled:cursor-not-allowed">
                     Appliquer
                 </BoutonPrincipal>

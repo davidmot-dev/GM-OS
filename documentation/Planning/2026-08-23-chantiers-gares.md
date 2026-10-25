@@ -12824,6 +12824,27 @@ David : *« j'ai généré 2 fiches HTML pour Dune, pour le personnage et pour l
 - **Commité et poussé** : `48b8691e`.
 - **Essai de David — validé le 25/10** : pilote réimporté avec **Remplacer**, fiche de Maison ouverte par **Cockpit → Maison** — *« tout marche »*.
 
+### 177 · NOC — fin des améliorations, pilote 2.0.0 et moteur de fiches 18 — 25/10/2026
+
+David : « Je voudrais finir les améliorations du driver NOC (ameliorations tous les pilotes) »,
+avec le livre de base local. GM-OS confirmé fermé ; Claude a terminé Dune et David autorise
+les ajouts NOC en conservant son travail. [Bilan et sources](2026-10-25-noc-finir.md).
+
+Points 2–9 développés : bénéficiaire de Singularité au pupitre ; répartition du Soupçon,
+de l'Extase et de la Lumière ; cibles et alliés ; Faveurs des Contacts de Réseau sur PC/tablette ;
+neuf pistes numériques avec conservation des 78 anciennes clés et migration des sauvegardes ;
+recharge de Cabale horodatée. Livre : p. 220, 231–234, 248 ; Réseau : Diffractions p. 134.
+L'audit corrige aussi les 10 optionnels, Ferveur 4+ et les 1 du pupitre qui ne retirent pas de succès.
+Le modèle `noc-reference` conserve son identifiant, le moteur passe à 18 ; les autres modèles,
+dont les deux fiches Dune, sont inchangés. Les deux fiches NOC passent le validateur sans constat.
+
+Export local : `Export Dirvers/corriges/NOC_driver_gmos_2.0.0.gmos-driver` ; constructeur
+`scripts/exporter-noc.mjs`. **Vérifications réussies ; essai de David attendu**, lots 2–9 orange,
+séquelles du § 150 toujours vertes. Aucun profil personnel consulté ; commit local demandé
+par David après le bilan, aucun push demandé.
+Types, lint, **9 150 tests réussis** (quatre ignorés), construction de production ; recette Electron
+et vrai Hub aux largeurs 360/768/1180, écritures reçues par le meneur ; 17 captures actualisées.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12933,6 +12954,7 @@ David : *« j'ai généré 2 fiches HTML pour Dune, pour le personnage et pour l
 | 102 | **Symbaroum — finir le pilote (S0, S2, S4 à S9)** | § 166 ; corpus corrigé, attaque et Défense avec dégâts, agonie, Stigmates, départage de l'initiative, création et progression, bourse, voyages, règles optionnelles ; pilote 2.0.0 — livré le 23/10 | Réimporter le pilote, puis une attaque, une Défense ratée et un Test de mort sur une fiche | L'essai de David |
 | 110 | **Blade Runner fini — pilote 2.0.0** | § 174 ; blessures critiques suivies (mort, stabilisation, guérison, secours, aggravés), soutien et trois D12, souvenir clé et objet fétiche, pupitre, échange d'initiative ; corpus 22/22 — 24/10 | Réimporter le pilote avec Remplacer ; une blessure mortelle, une stabilisation, un soutien, un échange de cartes — **essayé par David le 25/10** | Rien |
 | 112 | **Dune — fiches HTML raccordées** | § 176 ; moteur 17, fiche PJ (maximes par principe, spécialisations par compétence) et fiche de Maison en fiche de groupe, reflet au module — 25/10 | Validé par David le 25/10 (pilote remplacé, Cockpit → Maison) — `48b8691e` | Rien |
+| 113 | **NOC — fin des améliorations** | § 177 ; points 2–9 développés, pilote 2.0.0, pistes numériques rétrocompatibles, Cabale et tablette — 25/10 | Réimporter avec Remplacer et essayer les gestes du bilan ; séquelles déjà validées | Essai de David |
 | 111 | **Dune — pilote 2.0.0** | § 175 ; spécialisations, principes, Détermination, bilans, conflits, zones, Maison et progression — validé par David le 25/10 | [Recette Dune](2026-10-25-dune-finir.md) | Fiches HTML : § 176 |
 | 109 | **Corpus de Dune relu en entier** | § 173 ; 20 fiches sur 20 contre le livre et l'errata, bégaiements réparés, règles du scénario ramenées à leur source, cinq affirmations sans source retirées — 24/10 | Rien | Rien |
 | 108 | **Corpus de Symbaroum relu en entier** | § 172 ; 13 fiches sur 13, sept corrections, quatre affirmations sans source retirées — 24/10 | Rien | Rien |

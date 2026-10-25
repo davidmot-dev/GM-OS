@@ -177,6 +177,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** L'Avantage tactique de Symbaroum (+2, +1D4 aux dégâts) — S3, 2026-10-22. */
     const [avantageTactique, setAvantageTactique] = useState(false);
     const [resultat, setResultat] = useState<RollResult | null>(null);
+    const [suiteDuDestin, setSuiteDuDestin] = useState<{ personnageId?: string; texte: string; disponibles: number; ajouter: () => void; terminer: () => void } | null>(null);
+    const generationDuDestin = useRef(0);
     const [ecritsCH, setEcritsCH] = useState({base:valeurs, personnageId, maj:{} as Record<string,unknown>});
     const refCH=useRef(ecritsCH);
     const valeursCH=useMemo(()=>({...valeurs,...(ecritsCH.base===valeurs&&ecritsCH.personnageId===personnageId?ecritsCH.maj:{})}),[valeurs,ecritsCH,personnageId]);
@@ -794,10 +796,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
     const lancer = () => {
         if (!pret || briseAlien) return;
+        if (suiteDuDestin?.personnageId === personnageId && suiteDuDestin) return;
         if (regleDune && (suiviDune.bafoues.includes(principeDune) || (duneDuLancer && !duneDuLancer.bilan.clos))) return;
         if (regleDune && choixDune.contradiction === 'bafouer' && suiviDune.recuperes.includes(principeDune)) return;
         if (regleDune && choixDune.unAutomatique && (!maximeDune || !choixDune.maximeAlignee || determinationDune < 1 || !ecrireSurLaFiche)) return;
         const dits: string[] = [];
+        generationDuDestin.current++;
+        setSuiteDuDestin(null);
         // Un nouveau jet : rien n'est encore forcé, aucune Panique n'est jouée.
         setForcage({ fois: 0, unsPayes: 0, ecrits: {} });
         setStressDuSouvenir(false);
@@ -864,6 +869,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
          * vraiment : tout ce qu'on a engagé pour des dés ou un bonus, mais
          * seulement les 1 effectivement annulés pour la Singularité.
          */
+        const ecritsPersonnels: Record<string, number> = {};
         const depenser = (liste: ApportDisponible[], porteur: 'groupe' | 'personnage', combien: (d: ApportDisponible) => number) => {
             const surLaFeuille: Record<string, number> = {};
             for (const d of liste) {
@@ -876,10 +882,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             if (Object.keys(surLaFeuille).length === 0) return;
             if (porteur === 'personnage') {
-                ecrireSurLaFiche?.(surLaFeuille);
+                Object.assign(ecritsPersonnels, surLaFeuille);
+                ecrireSurLaFiche?.({ ...ecritsPersonnels });
             } else if (campagne) {
                 if (pourLesJoueurs && personnageId) remoteEcrireLeGroupe(campagne.id, personnageId, surLaFeuille);
-                else if (!pourLesJoueurs) updateCampaign(campagne.id, { groupe: appliquerAuGroupe(campagne.groupe, { aEcrire: surLaFeuille }) });
+                else if (!pourLesJoueurs) updateCampaign(campagne.id, { groupe: appliquerAuGroupe(useSessionOSStore.getState().campaigns.find(c => c.id === campagne.id)?.groupe, { aEcrire: surLaFeuille }) });
             }
         };
         // Avant le lancer : les dés et les bonus. Les annulations attendent de voir les 1.
@@ -973,26 +980,28 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         */
         if (destin) {
             const nombre = desLances + desPerso + desDuGroupe;
-            const tires = nombre > 0
-                ? DiceEngine.rollFromConfig({ ...dice, successThreshold: 8 }, { baseCount: nombre })
-                : null;
-            const faces = (tires?.rolls ?? []).map(r => (typeof r.val === 'number' ? r.val : 0));
-            const verdictDuDestin = resoudreLeDestin(niveauDuDestin, difficulte, faces, annulePerso + annuleDuGroupe);
-
-            // Les 1 annulés se paient d'abord sur la Singularité du Héros, puis sur celle du groupe.
-            let aPayer = verdictDuDestin.annules;
-            const apres = (d: ApportDisponible) => {
-                if (d.apport.effet !== 'annuleLesUns') return 0;
-                const n = Math.min(aPayer, d.points * d.apport.parPoint);
-                aPayer -= n;
-                return Math.ceil(n / Math.max(1, d.apport.parPoint));
+            const payes = new Map<ApportDisponible, number>();
+            let fielVerse = 0;
+            const reglerDestin = (rolls: RollResult['rolls']) => {
+                const verdict = resoudreLeDestin(niveauDuDestin, difficulte, rolls.map(r => Number(r.val)), annulePerso + annuleDuGroupe);
+                let aPayer = verdict.annules;
+                for (const [liste, porteur] of [[engagesPerso, 'personnage'], [engagesDuGroupe, 'groupe']] as const) for (const d of liste) {
+                    if (d.apport.effet !== 'annuleLesUns') continue;
+                    const annules = Math.min(aPayer, d.points * d.apport.parPoint); aPayer -= annules;
+                    const cumul = Math.ceil(annules / Math.max(1, d.apport.parPoint)), avant = payes.get(d) ?? 0;
+                    if (cumul > avant) depenser([{ ...d, reste: d.reste - avant }], porteur, () => cumul - avant);
+                    payes.set(d, cumul);
+                }
+                if (destin.fiel && verdict.fiel > fielVerse) {
+                    dits.push(...mouvoir(destin.fiel, verdict.fiel - fielVerse, `${enTete}, gouttes de Fiel`).avertissements);
+                    fielVerse = verdict.fiel;
+                }
+                return verdict;
             };
-            depenser(engagesPerso, 'personnage', apres);
-            depenser(engagesDuGroupe, 'groupe', apres);
-            if (destin.fiel && verdictDuDestin.fiel > 0) {
-                dits.push(...mouvoir(destin.fiel, verdictDuDestin.fiel,
-                    `${enTete}, ${verdictDuDestin.fiel} goutte${verdictDuDestin.fiel > 1 ? 's' : ''} de Fiel`).avertissements);
-            }
+            const finaliserDestin = (rolls: RollResult['rolls']) => {
+            setSuiteDuDestin(null);
+            const tires = { rolls };
+            const verdictDuDestin = reglerDestin(rolls);
 
             const resultatDuDestin: RollResult = {
                 total: verdictDuDestin.niveauFinal,
@@ -1022,6 +1031,29 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 consignerLeJet({ titre, totalDisplay: verdictDuDestin.texte, degre: verdictDuDestin.degre, tagSuccess: resultatDuDestin.tagSuccess });
             }
             setMouvements(dits);
+            };
+            if (destin.desSurDixAuChoix) {
+                const generation = generationDuDestin.current;
+                let revision = 0;
+                const proposer = (rolls: RollResult['rolls'], disponibles: number) => {
+                    const verdict = reglerDestin(rolls);
+                    if (disponibles === 0) { finaliserDestin(rolls); return; }
+                    const jeton = ++revision;
+                    const valable = () => generationDuDestin.current === generation && jeton === revision;
+                    setSuiteDuDestin({ personnageId, disponibles,
+                        texte: verdict.texte,
+                        ajouter: () => {
+                            if (!valable()) return; revision++;
+                            const val = DiceEngine.roll(10);
+                            proposer([...rolls, { val, sides: 10, isExploded: true }], disponibles - 1 + (val === 10 ? 1 : 0));
+                        },
+                        terminer: () => { if (!valable()) return; revision++; finaliserDestin(rolls); },
+                    });
+                };
+                const rolls = Array.from({ length: nombre }, () => ({ val: DiceEngine.roll(10), sides: 10 }));
+                setResultat(null);
+                proposer(rolls, rolls.filter(d => d.val === 10).length);
+            } else finaliserDestin(nombre > 0 ? DiceEngine.rollFromConfig({ ...dice, successThreshold: 8 }, { baseCount: nombre }).rolls : []);
             return;
         }
 
@@ -2550,7 +2582,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
                     <button
                         onClick={lancer}
-                        disabled={!pret || briseAlien || (!!regleDune && (suiviDune.bafoues.includes(principeDune) || (!!duneDuLancer && !duneDuLancer.bilan.clos)))}
+                        disabled={!pret || briseAlien || (!!suiteDuDestin && suiteDuDestin.personnageId === personnageId) || (!!regleDune && (suiviDune.bafoues.includes(principeDune) || (!!duneDuLancer && !duneDuLancer.bilan.clos)))}
                         className={`ml-auto w-full sm:w-auto min-h-[44px] px-10 py-3 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all ${
                             pret
                                 ? 'bg-accent text-app-on-accent hover:scale-105 active:scale-95'
@@ -2562,6 +2594,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 </div>
             </Etape>
 
+            {suiteDuDestin && suiteDuDestin.personnageId === personnageId && <section aria-label="Dés supplémentaires de destin" className="space-y-2 rounded-xl border border-accent/40 p-3">
+                <p className="text-sm text-app-text">{suiteDuDestin.texte}</p>
+                <p className="text-xs text-app-muted">{suiteDuDestin.disponibles} dé(s) supplémentaire(s) offert(s) par les 10. Chaque nouveau dé peut aussi apporter du Fiel. Fiel et Singularité sont réglés à chaque lancer ; vous choisissez quand arrêter.</p>
+                <div className="flex flex-wrap gap-2">
+                    <button type="button" onClick={suiteDuDestin.ajouter} className="rounded border border-accent px-3 py-2 text-accent">Lancer un dé supplémentaire</button>
+                    <button type="button" onClick={suiteDuDestin.terminer} className="rounded border border-app-border px-3 py-2 text-app-text">Garder ce résultat</button>
+                </div>
+            </section>}
             {resultat && (
                 <Etape numero={numeros.resultat} titre="Résultat" droite={verdictDuResultat}>
                     <div className="flex flex-wrap gap-2">

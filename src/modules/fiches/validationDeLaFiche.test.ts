@@ -127,6 +127,14 @@ describe('validerLaFiche — la correspondance avec GM-OS (§ 7)', () => {
 });
 
 describe('les outils autour', () => {
+    it('contrôle la migration des anciennes cases avant de les exempter comme pistes visibles', () => {
+        const anciens = [1, 2, 3].map(i => champ(`stress.${i}`, { type: 'checkbox', legacy: true }));
+        const pistes = [1, 2, 3].map(i => champ('stress', { type: 'hotspot', value: i }));
+        const g = gabarit([...anciens, ...pistes], { legacySeries: { stress: anciens.map(c => c.key) } });
+        expect(valider(html(g)).erreurs).toEqual([]);
+        expect(valider(html(g)).avertissements.filter(a => a.regle === '§ 4')).toEqual([]);
+        expect(valider(html({ ...g, legacySeries: { stress: ['absent'] } })).erreurs.some(e => e.regle === '§ 6')).toBe(true);
+    });
     it('lit les gabarits intégrés du moteur', () => {
         const source = `<script id="builtinTemplates" type="application/json">[{"id":"a"},{"id":"b"}]</script>`;
         expect(gabaritsDuMoteur(source).map(g => g.id)).toEqual(['a', 'b']);

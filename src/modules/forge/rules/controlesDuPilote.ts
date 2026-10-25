@@ -782,6 +782,8 @@ export function controlerLePilote(
     */
     const destin = driver.jet?.destin;
     if (destin) {
+        if (destin.singularite && !tousLesChamps.has(destin.singularite)) erreur('jet.destin.singularite', `Le bénéficiaire de Singularité n'a pas de champ « ${destin.singularite} » sur sa fiche.`);
+        if (destin.desSurDixAuChoix && driver.dice?.engine === 'pool_explode') erreur('dice.engine', 'Les 10 sont au choix : utilisez pool, sinon le pupitre lance les dés supplémentaires avant le choix.');
         if (destin.fiel && !ressources.has(destin.fiel)) {
             erreur('jet.destin.fiel', `Les 1 doivent verser dans « ${destin.fiel} », qui n'est pas une réserve de table du jeu.`);
         }
@@ -802,6 +804,9 @@ export function controlerLePilote(
         });
     }
     (driver.jet?.reservesDuPersonnage ?? []).forEach((reserve, i) => {
+        if (reserve.parPointSelon && (!tousLesChamps.has(reserve.parPointSelon.champ) || !Number.isInteger(reserve.parPointSelon.aPartirDe) || reserve.parPointSelon.aPartirDe < 1)) {
+            erreur(`jet.reservesDuPersonnage[${i}].parPointSelon`, 'Le rendement variable demande un Talent existant et un seuil entier positif.');
+        }
         for (const stock of reserve.stocks ?? []) {
             if (!tousLesChamps.has(stock.champ)) {
                 avertir(`jet.reservesDuPersonnage[${i}]`, `La réserve « ${reserve.label} » se lit dans « ${stock.champ} », absent de la fiche : elle restera à zéro.`);

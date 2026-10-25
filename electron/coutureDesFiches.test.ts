@@ -193,7 +193,7 @@ describe('la couture est présente dans le fichier', () => {
      * sans eux la couture existe et ne dit jamais rien.
      */
     it('setByPath signale le changement, openCharacter annonce l’ouverture', () => {
-        expect(source).toContain('obj[path]=val;if(activeCharacter&&obj===activeCharacter.data)markChange(path);');
+        expect(source).toMatch(/obj\[path\]\s*=\s*val;\s*if\(activeCharacter&&obj===activeCharacter.data\)\s*\{?\s*markChange\(path\)/);
         expect(source).toContain('buildPages();announceOpen();');
         expect(source).toContain('window.RPGSheet=');
     });

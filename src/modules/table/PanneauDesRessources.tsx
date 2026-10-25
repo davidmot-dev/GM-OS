@@ -11,6 +11,8 @@ import {
 import type { GestesDesHeros, MouvementDeFiche } from '../../types/drivers';
 import { changementsEffectifs, herosDeLaCampagne, recuperationDesHeros } from './gestesDesHeros';
 import { ecrireLesHeros } from './ecrireLesHeros';
+import { rechargerLesFaveurs } from './faveursDeCabale';
+import { appliquerAuGroupe } from '../session/logic/groupeDeLaCampagne';
 
 /**
  * Les réserves de la table, sous la main du meneur.
@@ -110,9 +112,11 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
         if (!rechargeDuMeneur?.length || !campagne?.groupe) return [];
         const fiche = campagne.groupe.sheetData ?? {};
         const [c] = recuperationDesHeros(rechargeDuMeneur, [{ joueurId: '', id: 'groupe', nom: '', valeurs: fiche }]);
-        if (!c || Object.keys(c.maj).length === 0) return [];
-        updateCampaign(campaignId, { groupe: { ...campagne.groupe, sheetData: { ...fiche, ...c.maj } } });
-        return c.lignes;
+        const faveurs = gestesDuMeneur?.entraideNocturne ? rechargerLesFaveurs(fiche) : {};
+        const maj = { ...c?.maj, ...faveurs };
+        if (Object.keys(maj).length === 0) return [];
+        updateCampaign(campaignId, { groupe: appliquerAuGroupe(campagne.groupe, { aEcrire: maj }) });
+        return [...(c?.lignes ?? []), ...(Object.keys(faveurs).length ? ['Faveurs des Contacts remises à 2'] : [])];
     };
     const direLesHeros = (n: number, quoi: string) => {
         if (n > 0) gmToast(`${quoi} : ${n} fiche${n > 1 ? 's' : ''} de Héros mise${n > 1 ? 's' : ''} à jour.`, 'info');

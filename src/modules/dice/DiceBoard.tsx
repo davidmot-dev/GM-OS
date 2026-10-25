@@ -19,7 +19,10 @@ import { Panneau, Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 import { estUnJetYearZero, forcerLeDernierJet, pourquoiNePasForcerAuPupitre } from './forcerAuPupitre';
 import { relancableMalgreSaReussite } from './systemes/yearZero';
-import { attribuerLeFielDuDernierJet, jetDeDestinAAttribuer, unsDuJetDeDestin } from './fielAuPupitre';
+import { jetDeDestinAAttribuer } from './fielAuPupitre';
+import ChoixDuFiel from './ChoixDuFiel';
+import ChoixDesDix from './ChoixDesDix';
+import { resultatDestinAuPupitre } from './suiteDuDestinAuPupitre';
 import { jetARegler, lireLeJetAuPupitre, reglerLesReservesDuDernierJet } from './reservesAuPupitre';
 import { gmToast } from '../../stores/useToastStore';
 import { placerLaFortune, suitesProposees, tirerLaSuiteDuDeclin } from './suitesDuJetDeFiche';
@@ -104,7 +107,7 @@ const DiceBoard: React.FC = () => {
         addQuickRoll: storeAddQuickRoll, 
         removeQuickRoll: storeRemoveQuickRoll,
         history,
-        setLastRoll,
+        setLastRoll: enregistrerLeJet,
         clearHistory,
         enable3D,
         setEnable3D,
@@ -152,6 +155,8 @@ const DiceBoard: React.FC = () => {
     const { players, activeCampaignId, updateCharacterSheetData } = useSessionOSStore();
     // Une dépendance réactive, avec l'identité du pilote conservée entre deux changements.
     const activeDriver = useSessionOSStore(state => state.getActiveDriver());
+    const destinDuPilote = activeDriver?.jet?.destin;
+    const setLastRoll = useCallback((jet: RollRecord) => enregistrerLeJet(destinDuPilote ? resultatDestinAuPupitre(jet) : jet), [destinDuPilote, enregistrerLeJet]);
     const [useSystemDriver, setUseSystemDriver] = useState(false);
 
     /*
@@ -1387,24 +1392,9 @@ const DiceBoard: React.FC = () => {
                               **Les 1 d'un jet de destin** — NOC, 2026-10-16. Le pupitre ne sait
                               pas qui lance : un Héros verse le Fiel, un Rouage hostile en retire.
                             */}
+                            {activeDriver?.jet?.destin?.desSurDixAuChoix && dernier && <ChoixDesDix jet={dernier} />}
                             {jetDeDestinAAttribuer(dernier, activeDriver?.jet) && (
-                                <div className="mt-3 flex flex-col items-center gap-1" data-fiel-au-pupitre>
-                                    <span className="text-ui-10 text-app-muted text-center">
-                                        {unsDuJetDeDestin(dernier)} × 1 : qui a lancé ?
-                                    </span>
-                                    <div className="flex gap-2">
-                                        {(['heros', 'rouage'] as const).map(qui => (
-                                            <button
-                                                key={qui}
-                                                type="button"
-                                                onClick={() => { for (const d of attribuerLeFielDuDernierJet(qui)) gmToast(d, 'info'); }}
-                                                className="px-3 py-1.5 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-black uppercase tracking-widest hover:bg-accent/20 transition-colors"
-                                            >
-                                                {qui === 'heros' ? 'Un Héros' : 'Un Rouage hostile'}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
+                                <ChoixDuFiel key={dernier.id} jet={dernier} />
                             )}
                             {/*
                               **Les réserves d'un jet 2d20** — C1 de l'audit, 2026-10-22. Le pupitre

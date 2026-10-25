@@ -40,6 +40,22 @@ afterEach(() => { useSessionOSStore.setState(initial, true); });
 const lancer = (r: RollRecord) => useDiceStore.getState().setLastRoll(r);
 
 describe('les 1 d’un jet de destin au pupitre', () => {
+    it('le pilote fini exige un bénéficiaire de la campagne avant de consommer le Fiel', () => {
+        const pilote = { ...PILOTE, jet: { ...PILOTE.jet!, destin: { fiel: 'Fiel', singularite: 'singularite' } } };
+        const ecrire = vi.fn();
+        useSessionOSStore.setState({ getActiveDriver: () => pilote, updateCharacter: ecrire,
+            players: [{ id: 'p', characters: [{ id: 'h', name: 'Ilse', campaignId: 'c', sheetData: { singularite: 2 } }] }] } as never);
+        useRessourcesDeTableStore.setState({ reserves: { c: { Fiel: 1 } } });
+        lancer(jet(1, 1, 1));
+        attribuerLeFielDuDernierJet('rouage', { joueurId: 'p', id: 'absent' });
+        expect(fiel()).toBe(1); expect(ecrire).not.toHaveBeenCalled();
+        expect(useDiceStore.getState().history[0].fielAttribue).toBeUndefined();
+        const dits = attribuerLeFielDuDernierJet('rouage', { joueurId: 'p', id: 'h' });
+        expect(fiel()).toBe(0); expect(ecrire).toHaveBeenCalledWith('p', 'h', { sheetData: { singularite: 4 } });
+        expect(dits.at(-1)).toBe('Ilse : Singularité +2 → 4.');
+        attribuerLeFielDuDernierJet('rouage', { joueurId: 'p', id: 'h' });
+        expect(ecrire).toHaveBeenCalledTimes(1);
+    });
     it('compte les 1 des d10, sans les dés écartés', () => {
         expect(unsDuJetDeDestin({ rolls: [{ val: 1, sides: 10 }, { val: 1, sides: 10, isDropped: true }, { val: 9, sides: 10 }] } as never)).toBe(1);
     });

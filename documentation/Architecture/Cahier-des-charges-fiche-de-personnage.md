@@ -120,6 +120,15 @@ ceux de la fiche, traduits en anglais court et stable.
 
 ## § 5 · L'autonomie
 
+**Migration d'anciennes cases (NOC, 25/10/2026).** Pour convertir une série de cases en piste
+numérique sans retirer de clés (§ 6), le modèle peut déclarer `legacySeries` :
+`{"tracks.vecu":["tracks.vecu.1","tracks.vecu.2"]}`. Les anciennes cases restent des champs
+`checkbox`, avec `legacy: true`, masquées par le style propre au modèle. Les hotspots visibles
+partagent la nouvelle clé numérique. Si celle-ci manque, le moteur compte les anciennes cases
+cochées ; ensuite le nombre fait foi et les anciennes clés sont synchronisées. Le HTML autonome
+doit appliquer la même migration aux sauvegardes et imports. Le validateur vérifie les deux côtés
+de cette déclaration ; une case simplement marquée `legacy` n'échappe pas aux contrôles.
+
 La fiche fonctionne **hors ligne**, sur une tablette sans Internet : **aucune** ressource chargée
 depuis le réseau — ni script, ni feuille de style, ni police, ni image (`http://`, `https://`,
 `//…`, `@import url(…)`). Tout est intégré dans le HTML.

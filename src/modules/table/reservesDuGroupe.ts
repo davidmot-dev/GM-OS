@@ -146,7 +146,10 @@ export function apportsDisponibles(
     sheetData: Record<string, unknown> | undefined,
     etatDesReserves: Record<string, number>,
 ): ApportDisponible[] {
-    return apports.map(apport => {
+    return apports.map(definition => {
+        const regle = definition.parPointSelon;
+        const niveau = regle ? niveauDuGroupe(sheetData, regle.champ) : 0;
+        const apport = regle && niveau >= regle.aPartirDe ? { ...definition, parPoint: niveau } : definition;
         const stock = stockRetenu(apport, choixDuJet, choixDuJoueur[apport.id]);
         const reste = !stock ? 0 : Math.max(0, apport.epuisement === 'piste'
             ? niveauDuGroupe(sheetData, stock.champ)
