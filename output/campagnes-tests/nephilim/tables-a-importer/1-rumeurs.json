@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE Méridien — rumeurs",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Les plaques ont changé de nom.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Une montre perd toujours la même minute.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "L’eau a été remplacée récemment.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Le devis ne montre pas le raccord ancien.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Le collecteur tient à une lettre.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Un passage longe les conduites.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    }
+  ]
+}

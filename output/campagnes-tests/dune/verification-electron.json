@@ -1,0 +1,128 @@
+{
+  "reussi": false,
+  "importNatif": true,
+  "remplacementIsole": true,
+  "reload": true,
+  "joueursExistantsConserves": true,
+  "anciensPJConserves": 3,
+  "joueurs": [
+    {
+      "id": "p-1",
+      "nom": "Thomas D.",
+      "personnages": 5
+    },
+    {
+      "id": "p-2",
+      "nom": "Marie C.",
+      "personnages": 5
+    },
+    {
+      "id": "p-3",
+      "nom": "Lucas R.",
+      "personnages": 5
+    }
+  ],
+  "ficheHTML": true,
+  "maisonHTML": 3,
+  "progressionsTablettes": 3,
+  "jetsRecusParMJ": 3,
+  "tablettes": [
+    360,
+    768,
+    1180
+  ],
+  "modulesImportes": 3,
+  "modulesPrives": true,
+  "desirRevele": true,
+  "atoutDeplace": true,
+  "menaceMaison": true,
+  "archives": [
+    {
+      "fichier": "01-Le-Sceau-de-Nereide.gmos",
+      "sha256": "29c746e19923f382e918834e6d9e89801a8880eb5766743142f930c14524e42d"
+    },
+    {
+      "fichier": "02-Principes-Defaite-et-Progression.gmos",
+      "sha256": "0335e9a956d641de24aaedfd4d7795ccfd0f63ac7aa5301ba98d8dcd55d31f7c"
+    },
+    {
+      "fichier": "03-Conflits-et-Maison.gmos",
+      "sha256": "6599928d6fca0c4b9dfda96728f22d8545ade7b555e6cafd4af179607c75694e"
+    }
+  ],
+  "secretsNonDiffuses": false,
+  "anomalies": [
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.0.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.1.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.2.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.3.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.4.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.5.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.6.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.7.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.8.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.9.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.10.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.11.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    }
+  ]
+}

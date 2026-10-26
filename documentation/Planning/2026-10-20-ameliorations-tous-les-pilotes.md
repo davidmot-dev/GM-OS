@@ -49,8 +49,8 @@ sur demande explicite de David : « Je voudrais finir les améliorations du driv
 | [Blade Runner](#blade-runner) | 🟢 4 · 🟠 0 · 🔴 0 | **Fini le 24/10, pilote 2.0.0** (registre § 174) : audit, pupitre, mort et stabilisation, guérison, et au-delà ; **essayé par David le 25/10** | Rien : tous les lots faits |
 | [Crimes](#crimes) | 🟢 13 · 🟠 0 · 🔴 0 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** ; **tous les lots livrés et essayés le 23/10** : circonstances, hermétiques, opposition, psychologie et seuils, manœuvres, contacts, fortune, création (registre § 157–161) | Rien : tous les lots faits ; tir multiple, intimider, rivalités et fortune commune restent au meneur |
 | [Cthulhu Hack](#cthulhu-hack) | 🟢 5 · 🟠 0 · 🔴 0 | Cinq améliorations livrées et essayées par David le 23/10 contre le livre français (p. 31–32, 34, 42, 50–52), registre § 164 ; campagnes de recette livrées le 25/10 et rattachées aux trois joueurs existants (§ 178) | Essayer les 59 cas du cahier ; défaut transversal GM-05 (`gmSecrets` transmis aux tablettes) consigné au § 1 bis. Soins spéciaux et suites mentales restent des sujets d'audit séparés |
-| [Dune](#dune) | 🟢 9 · 🟠 0 · 🔴 0 | D0–D8 livrés, pilote 2.0.0 ; **tout testé et validé par David le 25/10**. Fiches HTML PJ/Maison **intégrées au moteur 17 et raccordées le 25/10** (§ 176 : maximes par principe, spécialisations par compétence, Maison en fiche de groupe qui fait foi). Corpus relu (§ 173) ; bilan § 175 | Fiches essayées et validées par David le 25/10 ; les arbitrages narratifs restent au MJ |
-| [Nephilim Légende](#nephilim-légende) | 🟢 9 · 🟠 1 · 🔴 0 | **N1–N9 livrés et essayés le 23/10** (registre § 165) : tout le livre au jet et sur la fiche | L'essai sur tablette physique |
+| [Dune](#dune) | 🟢 9 · 🟠 0 · 🔴 0 | D0–D8 et fiches PJ/Maison validés par David le 25/10, pilote 2.0.0 (§ 175–176), corpus relu (§ 173) ; campagne de recette avec Maison et conflits préparés livrée le 26/10 (§ 182) | Essayer les 66 cas du cahier ; GM-05 transversal signalé ; arbitrages narratifs au MJ |
+| [Nephilim Légende](#nephilim-légende) | 🟢 9 · 🟠 1 · 🔴 0 | **N1–N9 livrés et essayés le 23/10** (registre § 165) ; campagne et deux laboratoires livrés le 26/10, 70 cas (§ 183) | L'essai sur tablette physique |
 | [NOC](#noc) | 🟢 9 · 🟠 0 · 🔴 0 | **Tous les points validés par David le 25/10 : « ok tout fonctionne »** ; pilote 2.0.0, moteur de fiches 18, commit `bf83cbf6`. [Bilan](2026-10-25-noc-finir.md), registre § 177 ; campagne et Cabale de recette livrées (§ 179) | Essayer les 62 cas de recette ; GM-05 transversal signalé ; les portées et arbitrages narratifs restent à la Loi |
 | [Rêve de Dragon](#rêve-de-dragon) | 🟢 6 · 🟠 1 · 🔴 0 | Socle R0–R7, boucle TMR ; **pilote fini le 24/10**, 2.0.0 (registre § 168, [bilan](2026-10-24-reve-de-dragon-finir.md)) : phases du round, famine/potions, entraînement, Haut-Rêve, calendrier Clock-OS, PNJ ; campagne de recette avec carte TMR et 14 tables livrée le 26/10 (§ 181) | Réimport et essai de David avec les 69 cas ; GM-05 transversal signalé |
 | [Star Trek Adventures](#star-trek-adventures) | 🟢 4 · 🟠 1 · 🔴 0 | Pilote et LCARS documentés ; **audit et toutes les améliorations livrés le 23/10** (registre § 167, [audit](2026-10-23-star-trek-ameliorations.md)), pilote 2.0.0, **essai de David validé le 24/10** | Essais matériels LCARS |
@@ -296,6 +296,15 @@ comptés parmi ces cinq améliorations. Vérifications et export dans le registr
 
 ## Dune
 
+**Données de recette livrées le 26/10/2026** ([bilan](2026-10-26-campagne-recette-dune.md),
+registre § 182) : **Le Sceau de Néréide**, trois PJ rattachés aux joueurs existants, **Maison
+Vaëlan** remplie, deux laboratoires et **66 cas manuels**. Le module existant de conflits
+embarque zones/atouts/désirs ; guide des cinq arènes, aucun module supplémentaire nécessaire.
+21 contrôles de données réussis, dont les 40 champs de Maison ; import et trois vrais Hub,
+fiches PJ/Maison, jets et progression HTML, Menace et révélation d’intrigue vérifiés.
+**GM-05 transversal seul échec** ; essais humains/matériel à faire. Aucun lot D0–D8 ou code
+applicatif modifié ; talents non préconfigurés pour isoler la recette de base.
+
 **Référence :** [projet futur D0–D8](2026-10-19-dune-propositions.md).
 **Repris le 25/10/2026**, David : « Je voudrais finir les améliorations du driver Dune » ;
 GM-OS confirmé fermé. Registre : § 175, suite de § 143 ;
@@ -332,6 +341,8 @@ d'un PNJ ennemi débite sa Menace ; une réserve pleine ne détruit pas l'Impuls
 utilisable du test. Le plateau de zones fait partie de la livraison validée par David.
 
 ## Nephilim Légende
+
+**Campagnes de recette Nephilim livrées le 26/10 :** [Le Méridien de verre et deux laboratoires](2026-10-26-campagne-recette-nephilim.md), registre **§ 183**. Astérion/Thomas, Ismérie/Marie, Nahal/Lucas et leurs Simulacres ; Magie, Kabbale et Alchimie, Pentacle fictif, **70 cas avec attendus**, outils transversaux préparés. Aucun module spécifique compatible dans le catalogue. **26 contrôles de données**, imports/remplacement et trois Hub/HTML/jets, Sapience et débordement de Traque persistés ; GM-05 seul échec (12 chemins). Cas humains et matériel à essayer. Pouvoirs fictifs RECETTE identifiés, aucun correctif du pilote.
 
 **Références :** [chantier, § 15 et suite](2026-10-17-chantier-nephilim.md) et
 [manuel actuel](../User%20Guides/54-Jeu-Nephilim.md).

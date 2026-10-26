@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "genereLe": "2026-10-25T12:00:00.000Z",
+  "rattachement": {
+    "source": "Export Dirvers/RDD_campagne_gmos_1792944586235.gmos",
+    "sha256": "c99b8f87ecad7dee7104fcba1c6bd8a8639bd81c7b1c70ad2d4272cbd3c12b04",
+    "joueurs": [
+      {
+        "id": "p-1",
+        "realName": "Thomas D."
+      },
+      {
+        "id": "p-2",
+        "realName": "Marie C."
+      },
+      {
+        "id": "p-3",
+        "realName": "Lucas R."
+      }
+    ]
+  },
+  "pilote": {
+    "id": "custom-1792235906697",
+    "version": "2.0.0",
+    "source": "Export Dirvers/corriges/Nephilim_driver_gmos_finir.gmos-driver"
+  },
+  "archives": [
+    {
+      "fichier": "01-Le-Meridien-de-verre.gmos",
+      "campagne": "recette-nephilim-campagne-meridien",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "7b19284384fd8a1de9457a19d0fe5cbcf20b289ce3963ab1a1ce289bd8f44a6c"
+    },
+    {
+      "fichier": "02-Sante-Chutes-et-Stase.gmos",
+      "campagne": "recette-nephilim-chutes-campagne-meridien",
+      "personnages": 9,
+      "medias": 39,
+      "sha256": "6e097090a0a3b1b0155ba8fd33de125d1a21c46bb5a89eaefe99640476438866"
+    },
+    {
+      "fichier": "03-Arts-et-Ressources.gmos",
+      "campagne": "recette-nephilim-arts-campagne-meridien",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "a72b229efb11350c206c2ae67af04392400d768aabbdc74d35e8e75662419557"
+    }
+  ],
+  "campagne": {
+    "joueurs": 3,
+    "personnages": 3,
+    "pnj": 12,
+    "lieux": 8,
+    "indices": 12,
+    "actes": 4,
+    "scenes": 16,
+    "rencontres": 3,
+    "seances": 4,
+    "wiki": 9,
+    "butin": 8,
+    "moments": 4
+  },
+  "modules": {
+    "specifiques": 0,
+    "outils": [
+      "Combat-OS",
+      "Atlas",
+      "Table-OS",
+      "Storyboard",
+      "Sound-OS",
+      "Music-OS",
+      "Light-OS",
+      "Nexus Wiki"
+    ]
+  },
+  "casDeRecette": 70
+}

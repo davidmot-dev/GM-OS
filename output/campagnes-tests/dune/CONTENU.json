@@ -1,0 +1,44 @@
+{
+  "archives": [
+    {
+      "fichier": "01-Le-Sceau-de-Nereide.gmos",
+      "campagne": "recette-dune-campagne-nereide",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "29c746e19923f382e918834e6d9e89801a8880eb5766743142f930c14524e42d"
+    },
+    {
+      "fichier": "02-Principes-Defaite-et-Progression.gmos",
+      "campagne": "recette-dune-principes-campagne-nereide",
+      "personnages": 9,
+      "medias": 39,
+      "sha256": "0335e9a956d641de24aaedfd4d7795ccfd0f63ac7aa5301ba98d8dcd55d31f7c"
+    },
+    {
+      "fichier": "03-Conflits-et-Maison.gmos",
+      "campagne": "recette-dune-conflits-campagne-nereide",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "6599928d6fca0c4b9dfda96728f22d8545ade7b555e6cafd4af179607c75694e"
+    }
+  ],
+  "joueurs": [
+    {
+      "id": "p-1",
+      "nom": "Thomas D.",
+      "pj": "Tarek Senn"
+    },
+    {
+      "id": "p-2",
+      "nom": "Marie C.",
+      "pj": "Lysa Vaëlan"
+    },
+    {
+      "id": "p-3",
+      "nom": "Lucas R.",
+      "pj": "Kaël Rovan"
+    }
+  ],
+  "maison": "Maison Vaëlan",
+  "casManuels": 66
+}

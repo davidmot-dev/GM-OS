@@ -1,0 +1,62 @@
+export const titreDune = 'Le Sceau de Néréide';
+export const herosDune = [
+    {slug:'tarek',nom:'Tarek Senn',joueur:'Thomas D.',metier:'Analyste et conseiller de la Maison',faction:'Mentat',competences:[8,4,6,5,5],principes:[6,4,5,7,8],specialisations:'analyse : Comptabilité des concessions\ndiscipline : Observation',traits:'Méthodique, mémoire des contrats',maximes:{devotion:'Un engagement doit pouvoir être compris.',justice:'Une preuve protège mieux qu’une accusation.',truth:'Le vrai prix se cache dans les comptes.'},description:'Veste claire, carnet chiffré et regard immobile.',histoire:'Il a validé le précédent bilan des concessions. Une signature identique figure désormais sur un ordre qu’il n’a jamais lu.',motivation:'Établir la chaîne de falsification avant que la Maison n’endosse la pénurie.',materiel:['Carnet chiffré','Sceau de conseiller','Lame de service']},
+    {slug:'lysa',nom:'Lysa Vaëlan',joueur:'Marie C.',metier:'Émissaire de la Maison',faction:'',competences:[6,4,5,5,8],principes:[8,6,5,7,4],specialisations:'rhetoric : Négociation\nanalyse : Usages des Maisons',traits:'Diplomate, loyale à ses sujets',maximes:{devotion:'La Maison répond de ceux qu’elle gouverne.',domination:'L’autorité oblige à écouter.',justice:'Un accord qui affame les faibles ne tient pas.'},description:'Tenue d’audience sobre, ruban de Maison et voix mesurée.',histoire:'Chargée de représenter Vaëlan à la commission, elle doit décider ce qu’elle consent à révéler des difficultés de sa famille.',motivation:'Sauver la concession et obtenir un accord qui survive à la crise.',materiel:['Sceau d’émissaire','Correspondance diplomatique','Lame de ceinture']},
+    {slug:'kael',nom:'Kaël Rovan',joueur:'Lucas R.',metier:'Officier et protecteur de la délégation',faction:'',competences:[4,8,6,5,5],principes:[7,6,4,8,5],specialisations:'combat : Lames courtes\ndiscipline : Protection rapprochée',traits:'Vigilant, respecte sa parole',maximes:{devotion:'Je ramène ceux qui me sont confiés.',domination:'La force doit laisser une porte de sortie.',justice:'Un prisonnier conserve le droit de parler.'},description:'Manteau de garde, posture discrète et main éloignée de sa lame.',histoire:'Un ancien camarade garde le dépôt contesté. Kaël connaît sa loyauté, mais ignore le contrat qu’on lui a fait signer.',motivation:'Protéger les témoins sans faire de la délégation une armée d’occupation.',materiel:['Lame courte','Bouclier personnel','Insigne de garde']},
+];
+export const lieuxDune = [
+    ['residence','La Résidence Vaëlan','building','Une cour de pierre pâle accueille les représentants de la Maison et les familles venues réclamer leur contingent.','Le coffre conserve une copie du dernier accord.',['parvis','archives']],
+    ['parvis','Le Parvis des concessions','city','Des comptoirs affichent les quotas. Les chiffres changent pendant que les files restent immobiles.','La liste publique diffère du registre du dépôt.',['residence','archives','quai']],
+    ['archives','Les Archives des marées','building','Les contrats sont rangés par cycle de livraison. Une cire récente couvre des cachets anciens.','Le contre-registre prouve l’antidatage des ordres.',['residence','parvis','salon']],
+    ['quai','Le Quai des citernes','building','Des citernes scellées attendent une autorisation de départ. Les gardes surveillent les convoyeurs autant que les visiteurs.','Le manifeste désigne un dépôt privé ; l’expédition peut être suspendue sans tirer.',['parvis','depot','relais']],
+    ['depot','Le Dépôt des trois vannes','dungeon','Trois circuits alimentent des concessions différentes. Une vanne neuve détourne le flux vers un réservoir sans marque.','Une dérivation matérielle et un ordre contrefait ont servi ensemble.',['quai','relais','commission']],
+    ['relais','Le Relais du vent blanc','wilderness','Le relais de transmission domine les digues. Ses journaux enregistrent les retards et les priorités du trafic.','Le paquet original existe encore dans une mémoire de service.',['quai','depot','salon']],
+    ['salon','Le Salon des cautions','building','Sous une verrière, alliés et créanciers négocient avant la séance publique.','La déléguée de Sareth veut la garantie de paiement de ses ouvriers, pas la chute de Vaëlan.',['archives','relais','commission']],
+    ['commission','La Chambre des sceaux','building','Une commission locale arbitre l’exécution des concessions. Les témoins entrent par une porte latérale.','Ravel a financé le détournement pour forcer une vente ; preuve, réparation ou accord public peuvent le priver de son levier.',['depot','salon']],
+];
+export const pnjDune = [
+    ['eda','Eda Vaëlan','ally','residence','Seigneure de la Maison, attentive aux silences de ses conseillers.','Je veux savoir ce que nous avons signé.','Elle acceptera d’exposer une dette ancienne si les foyers restent approvisionnés.'],
+    ['seris','Seris Dane','ally','archives','Archiviste aux gants tachés de cire.','Un cachet n’est pas une preuve de lecture.','Elle a gardé le contre-registre avant le remplacement des pages.'],
+    ['jarek','Jarek Voss','hostile','quai','Officier lié par un contrat dont il craint les clauses.','Je garde les citernes, pas les mensonges.','L’ancien camarade de Kaël laissera passer un témoin sous garantie écrite.'],
+    ['mira','Mira Sol','ally','parvis','Déléguée des ateliers qui connaît les livraisons réelles.','Les chiffres arrivent. L’eau, moins souvent.','Son carnet permet de comparer les quantités reçues.'],
+    ['orun','Orun Kett','neutral','depot','Responsable technique qui protège son équipe.','La vanne a été posée sur ordre.','Il possède le plan et reconnaît l’équipe extérieure qui a posé la dérivation.'],
+    ['rav','Ravel Sareth','boss','commission','Mandataire d’une Maison rivale, courtois jusque dans ses menaces.','Une concession fragile mérite un propriétaire solide.','Il a financé une pénurie limitée pour acheter la concession à vil prix.'],
+    ['nalia','Nalia Sareth','neutral','salon','Négociatrice qui exige des garanties concrètes.','Je ne prête pas mon nom à une faim organisée.','Elle cherche le paiement des ouvriers et peut désavouer Ravel.'],
+    ['ilan','Ilan Mer','ally','relais','Opérateur de relais qui conserve les journaux de service.','Une priorité laisse toujours une trace.','Le paquet original et sa priorité ont échappé à l’effacement.'],
+    ['sava','Sava Dren','neutral','quai','Convoyeuse qui connaît la tournée des citernes.','Mon trajet ne passe pas par ce dépôt.','Une copie de l’itinéraire montre le détour imposé après chargement.'],
+    ['var','Var Nemm','hostile','depot','Chef d’escorte payé pour interdire la vanne.','Le contrat dit de tenir cette porte.','Il se replie si le contrat est publiquement annulé ; pas de combat obligatoire.'],
+    ['helo','Hélo Rinn','neutral','commission','Arbitre locale qui exige une chaîne de preuves lisible.','Je peux entendre une explication ; apportez aussi la trace.','Elle peut suspendre l’expédition le temps d’une expertise contradictoire.'],
+    ['tessa','Tessa Vale','ally','salon','Médecin des concessions, témoin du rationnement.','Une journée de retard est déjà une décision.','Son rapport établit l’urgence sans transformer la crise en prétexte militaire.'],
+];
+export const indicesDune = [
+    ['ordre','I01 — L’ordre au sceau double','Un ordre de transfert porte deux empreintes légèrement décalées. La Maison demande une vérification avant le départ.','residence','eda',true],
+    ['bilan','I02 — Le bilan précédent','La livraison promise et les quantités comptées ne correspondent plus au registre affiché.','residence','eda',false],
+    ['atelier','I03 — Le carnet des ateliers','Les réceptions de trois quartiers diminuent aux mêmes dates que les transferts privés.','parvis','mira',false],
+    ['registre','I04 — Le contre-registre','La page conservée par Seris est antérieure à l’ordre supposé plus ancien.','archives','seris',false],
+    ['manifeste','I05 — Le manifeste corrigé','Une destination privée a remplacé le dépôt communal après le chargement.','quai','sava',false],
+    ['garantie','I06 — La clause de garantie','Le contrat de Jarek permet un contrôle sous garantie signée d’un représentant de Maison.','quai','jarek',false],
+    ['plan','I07 — Le plan des vannes','La dérivation peut être isolée en maintenant l’alimentation des concessions.','depot','orun',false],
+    ['paquet','I08 — Le paquet original','Le relais a reçu la version non modifiée et l’identifiant du mandataire qui l’a remplacée.','relais','ilan',false],
+    ['priorite','I09 — La priorité de trafic','Le paiement d’une priorité relie le remplacement à un intermédiaire de Ravel.','relais','ilan',false],
+    ['caution','I10 — La demande de caution','Nalia réclame une garantie pour les ouvriers ; ce besoin peut fonder une alliance.','salon','nalia',false],
+    ['soins','I11 — Le rapport des quartiers','Le rationnement est réel et urgent ; une suspension technique doit maintenir le service.','salon','tessa',false],
+    ['avance','I12 — L’avance sur la vente','Une avance privée à Ravel dépend d’une vente forcée de la concession après défaut.','commission','helo',false],
+];
+export const scenesDune = [
+    ['mandat',1,'S01 — Le mandat de la Maison','residence',['eda'],['ordre','bilan'],'Recevoir le mandat, choisir les maximes pertinentes et obtenir I01 sans jet.',['quotas','archives']],
+    ['quotas',1,'S02 — Les files du Parvis','parvis',['mira'],['atelier'],'Comparer les chiffres et entendre les familles ; leur carnet reste accessible après un échec.',['archives','quai']],
+    ['archives',1,'S03 — La cire récente','archives',['seris'],['registre'],'Suivre la falsification par les dates, les sceaux ou le témoignage.',['quai','relais']],
+    ['quai',1,'S04 — Une porte sous contrat','quai',['jarek','sava'],['manifeste','garantie'],'Négocier le contrôle, fournir une garantie ou suivre le détour ; duel optionnel.',['vannes','relais']],
+    ['vannes',2,'S05 — Les trois circuits','depot',['orun'],['plan'],'Préparer l’isolement de la dérivation sans couper le service public.',['escorte','relais']],
+    ['escorte',2,'S06 — L’escorte de Var','depot',['var','jarek'],['garantie'],'Annuler le contrat, contourner ou éprouver l’escarmouche ; aucune mort imposée.',['relais','cautions']],
+    ['relais',2,'S07 — Le paquet qui demeure','relais',['ilan'],['paquet','priorite'],'Obtenir la trace par expertise, accès autorisé ou espionnage de recette.',['cautions']],
+    ['cautions',2,'S08 — La garantie de Nalia','salon',['nalia','tessa'],['caution','soins'],'Enquête d’intrigue et alliance ; un désir secret a des conditions et une progression.',['preparer','audience']],
+    ['preparer',3,'S09 — Ce qui peut être prouvé','archives',['seris','orun'],['registre','plan'],'Assembler deux chaînes de preuves, choisir les témoins et préparer un repli.',['audience','digues']],
+    ['audience',3,'S10 — Le prix du sceau','commission',['rav','helo'],['avance'],'Affronter Ravel en intrigue ou présenter l’expertise ; la Maison peut aussi négocier.',['digues','accord']],
+    ['digues',3,'S11 — Tenir le service','depot',['orun','jarek'],['plan'],'Déployer une équipe en mode Architecte, réparer ou protéger les citernes ; guerre optionnelle hors escalade obligatoire.',['accord']],
+    ['accord',3,'S12 — Un sceau qui engage','commission',['eda','nalia','helo'],['avance','caution'],'Exposer Ravel, obtenir un accord ou rétablir le service avant la vente ; clore l’aventure et répartir les biens.',['principes']],
+    ['principes',4,'AT01 — Principes et bilan','residence',['eda'],[],'Laboratoire 02 : Détermination, contradiction, introspection et progression.',['conflits']],
+    ['conflits',4,'AT02 — Cinq arènes','depot',['jarek'],[],'Laboratoire 03 : duel, escarmouche, espionnage, guerre, intrigue ; chaque changement de scène est explicite.',['maison']],
+    ['maison',4,'AT03 — Maison et réserves','salon',['nalia'],[],'Fiche de Maison, reflet au module, Menace selon trois joueurs et réimport isolé.',['bilan-final']],
+    ['bilan-final',4,'AT04 — Export et reprise','residence',['eda'],[],'Révoquer les accès, exporter et vérifier fiches, atouts, Maison et autres campagnes.',[]],
+];

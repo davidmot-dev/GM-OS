@@ -1,0 +1,108 @@
+{
+  "name": "RECETTE Méridien — objets",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Calque ancien",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique.",
+      "butin": [
+        {
+          "name": "Calque ancien",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, pas une réserve occulte."
+        }
+      ]
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Flacon étiqueté",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique.",
+      "butin": [
+        {
+          "name": "Flacon étiqueté",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, pas une réserve occulte."
+        }
+      ]
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Euros fictifs",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique.",
+      "butin": [
+        {
+          "name": "Euros fictifs",
+          "type": "currency",
+          "quantite": 7,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, pas une réserve occulte."
+        }
+      ]
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Plaque photographique",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique.",
+      "butin": [
+        {
+          "name": "Plaque photographique",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, pas une réserve occulte."
+        }
+      ]
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Clef de tiroir",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique.",
+      "butin": [
+        {
+          "name": "Clef de tiroir",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, pas une réserve occulte."
+        }
+      ]
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Carnet de mesures",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique.",
+      "butin": [
+        {
+          "name": "Carnet de mesures",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, pas une réserve occulte."
+        }
+      ]
+    }
+  ]
+}

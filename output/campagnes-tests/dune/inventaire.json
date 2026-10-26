@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "genereLe": "2026-10-25T12:00:00.000Z",
+  "rattachement": {
+    "source": "Export Dirvers/RDD_campagne_gmos_1792944586235.gmos",
+    "sha256": "c99b8f87ecad7dee7104fcba1c6bd8a8639bd81c7b1c70ad2d4272cbd3c12b04",
+    "joueurs": [
+      {
+        "id": "p-1",
+        "realName": "Thomas D."
+      },
+      {
+        "id": "p-2",
+        "realName": "Marie C."
+      },
+      {
+        "id": "p-3",
+        "realName": "Lucas R."
+      }
+    ]
+  },
+  "pilote": {
+    "id": "dune",
+    "version": "2.0.0",
+    "source": "Export Dirvers/corriges/Dune_driver_gmos_2.0.0.gmos-driver"
+  },
+  "archives": [
+    {
+      "fichier": "01-Le-Sceau-de-Nereide.gmos",
+      "campagne": "recette-dune-campagne-nereide",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "29c746e19923f382e918834e6d9e89801a8880eb5766743142f930c14524e42d"
+    },
+    {
+      "fichier": "02-Principes-Defaite-et-Progression.gmos",
+      "campagne": "recette-dune-principes-campagne-nereide",
+      "personnages": 9,
+      "medias": 39,
+      "sha256": "0335e9a956d641de24aaedfd4d7795ccfd0f63ac7aa5301ba98d8dcd55d31f7c"
+    },
+    {
+      "fichier": "03-Conflits-et-Maison.gmos",
+      "campagne": "recette-dune-conflits-campagne-nereide",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "6599928d6fca0c4b9dfda96728f22d8545ade7b555e6cafd4af179607c75694e"
+    }
+  ],
+  "campagne": {
+    "joueurs": 3,
+    "personnages": 3,
+    "pnj": 12,
+    "lieux": 8,
+    "indices": 12,
+    "actes": 4,
+    "scenes": 16,
+    "rencontres": 3,
+    "seances": 4,
+    "wiki": 9,
+    "butin": 8,
+    "moments": 4
+  },
+  "modules": {
+    "conflits": {
+      "versionDonnees": 1,
+      "zones": 5,
+      "atouts": 6,
+      "arenes": 5
+    }
+  },
+  "maison": "Maison Vaëlan",
+  "casDeRecette": 66
+}

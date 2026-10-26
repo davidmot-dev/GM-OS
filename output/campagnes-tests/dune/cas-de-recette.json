@@ -1,0 +1,464 @@
+[
+  {
+    "id": "DU-01",
+    "archive": "01",
+    "precondition": "Trois PJ et pilote 2.0.0",
+    "action": "Composer Compétence + Principe et difficulté 1.",
+    "attendu": "Deux d20 ; somme = seuil de chaque dé, difficulté = réussites exigées."
+  },
+  {
+    "id": "DU-02",
+    "archive": "01",
+    "precondition": "Spécialisation pertinente",
+    "action": "Comparer un jet avec puis sans spécialisation sur copies.",
+    "attendu": "Critique étendu jusqu’à la compétence ; le seuil ne change pas."
+  },
+  {
+    "id": "DU-03",
+    "archive": "01",
+    "precondition": "Jet préparé",
+    "action": "Acheter successivement les troisième, quatrième et cinquième dés.",
+    "attendu": "Coûts 1, 2, 3 ; réserve plafonnée à cinq dés."
+  },
+  {
+    "id": "DU-04",
+    "archive": "01",
+    "precondition": "Impulsion 2 et Menace 3",
+    "action": "Choisir de payer un achat en Menace malgré de l’Impulsion disponible.",
+    "attendu": "La part choisie monte en Menace, le reste seul débite l’Impulsion."
+  },
+  {
+    "id": "DU-05",
+    "archive": "01",
+    "precondition": "PNJ ennemi",
+    "action": "Cocher PNJ ennemi et acheter un dé.",
+    "attendu": "Le coût débite la Menace du meneur, pas l’Impulsion des joueurs."
+  },
+  {
+    "id": "DU-06",
+    "archive": "01",
+    "precondition": "Assistant déclaré",
+    "action": "Ajouter un assistant avec son propre seuil et critique.",
+    "attendu": "Un dé propre ; ses réussites ne comptent que si le principal réussit au moins un dé ; ses complications comptent toujours."
+  },
+  {
+    "id": "DU-07",
+    "archive": "01",
+    "precondition": "Aide et Détermination",
+    "action": "Relancer les dés sélectionnés du principal.",
+    "attendu": "Dés d’aide conservés, même s’ils ont été cochés par erreur."
+  },
+  {
+    "id": "DU-08",
+    "archive": "01",
+    "precondition": "Complication",
+    "action": "Comparer marge 20 puis 16–20 sur copies.",
+    "attendu": "Les complications se lisent indépendamment de la réussite."
+  },
+  {
+    "id": "DU-09",
+    "archive": "01",
+    "precondition": "Opposition",
+    "action": "Entrer réussites du défenseur, gêne et facteurs.",
+    "attendu": "Difficulté calculée, peut dépasser 5 ; ordre des deux jets explicite."
+  },
+  {
+    "id": "DU-10",
+    "archive": "01",
+    "precondition": "Maximes déjà inscrites",
+    "action": "Ouvrir la fiche HTML et le carnet des principes.",
+    "attendu": "Chaque maxime reste rattachée au bon principe dans _gmos_dune.maximes."
+  },
+  {
+    "id": "DU-11",
+    "archive": "01",
+    "precondition": "Détermination 1",
+    "action": "Confirmer une maxime alignée et choisir Un dé vaut 1 avant le jet.",
+    "attendu": "Un dé remplacé, réserve non agrandie, point dépensé une fois."
+  },
+  {
+    "id": "DU-12",
+    "archive": "01",
+    "precondition": "Jet lancé",
+    "action": "Choisir des dés et dépenser une Détermination pour relancer.",
+    "attendu": "Résultats remplacés ; pas de relance des assistants ni de dépenses déjà effectuées."
+  },
+  {
+    "id": "DU-13",
+    "archive": "01",
+    "precondition": "Déclaration narrative",
+    "action": "Créer/modifier un trait par Détermination après accord du MJ.",
+    "attendu": "Coût et carnet conservés ; texte du trait modifié explicitement."
+  },
+  {
+    "id": "DU-14",
+    "archive": "02",
+    "precondition": "P01 Détermination 0",
+    "action": "Tenter une dépense puis accorder un point explicitement.",
+    "attendu": "Insuffisance refusée ; une reconnexion ne rend pas de point."
+  },
+  {
+    "id": "DU-15",
+    "archive": "01",
+    "precondition": "Contradiction offerte par le MJ",
+    "action": "Essayer Respecter, Bafouer et refuser sur copies.",
+    "attendu": "Complication ou principe indisponible à la fin du test ; choix explicite."
+  },
+  {
+    "id": "DU-16",
+    "archive": "02",
+    "precondition": "P02 Devoir bafoué",
+    "action": "Lancer avec Devoir puis préparer une scène d’introspection.",
+    "attendu": "Principe indisponible ; récupération exige conditions et nouvelle maxime ou rééquilibrage."
+  },
+  {
+    "id": "DU-17",
+    "archive": "02",
+    "precondition": "P03 Justice récupérée",
+    "action": "Tenter de bafouer Justice encore dans la même aventure.",
+    "attendu": "Récupération mémorisée, pas de nouvelle bafouade autorisée dans l’aventure."
+  },
+  {
+    "id": "DU-18",
+    "archive": "02",
+    "precondition": "Introspection",
+    "action": "Dépenser/gagner de la Détermination dans la scène puis tenter la récupération.",
+    "attendu": "Récupération refusée dans cette scène ; une nouvelle scène autorisée ne remet pas toute seule les points à 1."
+  },
+  {
+    "id": "DU-19",
+    "archive": "01",
+    "precondition": "Début d’aventure",
+    "action": "Nommer explicitement une autre aventure et confirmer.",
+    "attendu": "Détermination remise à 1 par ce geste ; pas par ouverture ou changement de scène."
+  },
+  {
+    "id": "DU-20",
+    "archive": "02",
+    "precondition": "Impulsion commune 6",
+    "action": "Réussir avec marge et bonus annoncé puis examiner le bilan.",
+    "attendu": "Impulsion normale et bonus du test dépensables malgré réserve pleine."
+  },
+  {
+    "id": "DU-21",
+    "archive": "01",
+    "precondition": "Test réussi",
+    "action": "Payer information, trait puis atout temporaire sur essais séparés.",
+    "attendu": "Bonus, normal, réserve consommés dans cet ordre ; effet confirmé avec le MJ."
+  },
+  {
+    "id": "DU-22",
+    "archive": "01",
+    "precondition": "Question sans réponse possible",
+    "action": "Rendre le point explicitement au bandeau.",
+    "attendu": "Restitution visible et justifiée ; pas d’ajout silencieux automatique."
+  },
+  {
+    "id": "DU-23",
+    "archive": "01",
+    "precondition": "Clôture du test",
+    "action": "Terminer le test et conserver le reliquat.",
+    "attendu": "Seul le reliquat normal rejoint la réserve jusqu’à 6 ; bonus perdu, pas de second versement."
+  },
+  {
+    "id": "DU-24",
+    "archive": "01",
+    "precondition": "PNJ ennemi et marge",
+    "action": "Clore son test.",
+    "attendu": "Reliquat normal converti en Menace ; bonus non conservé."
+  },
+  {
+    "id": "DU-25",
+    "archive": "01",
+    "precondition": "Complication",
+    "action": "Racheter pour un PJ puis pour un ennemi sur copies.",
+    "attendu": "PJ concède 2 Menace ; ennemi dépense 2 Menace."
+  },
+  {
+    "id": "DU-26",
+    "archive": "01",
+    "precondition": "Échec autorisé mitigé",
+    "action": "Choisir réussite mitigée et décrire la complication avec le MJ.",
+    "attendu": "Test reste en échec ; pas d’Impulsion du test ni de dépense d’amélioration."
+  },
+  {
+    "id": "DU-27",
+    "archive": "01",
+    "precondition": "Fin de scène",
+    "action": "Valider le geste de fin de scène une fois.",
+    "attendu": "Impulsion commune −1 selon le pilote ; réserves et suivi retrouvés après recharge."
+  },
+  {
+    "id": "DU-28",
+    "archive": "03",
+    "precondition": "Rencontre de recette",
+    "action": "Choisir le camp qui ouvre puis alterner.",
+    "attendu": "Pas d’initiative individuelle au d20 ; ouverture ennemie narrative ou 2 Menace selon choix."
+  },
+  {
+    "id": "DU-29",
+    "archive": "03",
+    "precondition": "Action réussie",
+    "action": "Retenir le camp pour un allié puis pour le même acteur sur copies.",
+    "attendu": "Coût 2 payé par le bon camp ; même acteur reçoit +1 difficulté."
+  },
+  {
+    "id": "DU-30",
+    "archive": "03",
+    "precondition": "Attaque ou mouvement raté",
+    "action": "Tenter une rétention.",
+    "attendu": "Refus ; pas de rétention répétée avant intervention ennemie."
+  },
+  {
+    "id": "DU-31",
+    "archive": "03",
+    "precondition": "Mouvement discret réussi",
+    "action": "Conserver la main après le mouvement confirmé.",
+    "attendu": "Rétention gratuite pour le cas prévu ; second mouvement payé séparément si nécessaire."
+  },
+  {
+    "id": "DU-32",
+    "archive": "03",
+    "precondition": "Maxime alignée et point",
+    "action": "Dépenser une Détermination pour l’action supplémentaire.",
+    "attendu": "Action supplémentaire distincte de la rétention ordinaire, coût suivi."
+  },
+  {
+    "id": "DU-33",
+    "archive": "02",
+    "precondition": "P07 mineur vaincu",
+    "action": "Comparer une attaque réussie sur un mineur neuf.",
+    "attendu": "Une réussite le vainc ; pas de mort ni PV inventés."
+  },
+  {
+    "id": "DU-34",
+    "archive": "03",
+    "precondition": "Cible notable",
+    "action": "Régler défense/qualité puis appliquer une attaque réellement réussie.",
+    "attendu": "Conditions = compétence défensive + qualité ; progression 2 + qualité offensive."
+  },
+  {
+    "id": "DU-35",
+    "archive": "03",
+    "precondition": "Amélioration offensive",
+    "action": "Payer 2 Impulsion et appliquer l’attaque.",
+    "attendu": "Qualité +1 pour cette attaque uniquement ; coût annoncé une fois."
+  },
+  {
+    "id": "DU-36",
+    "archive": "02",
+    "precondition": "P04 vaincu, qualité 1",
+    "action": "Survivre dans une scène nommée et choisir une complication.",
+    "attendu": "Coût 2 ; survie une fois par scène, progression conservée, pas de guérison générale."
+  },
+  {
+    "id": "DU-37",
+    "archive": "02",
+    "precondition": "P04 conséquence durable",
+    "action": "Appliquer une aide réussie de difficulté 2.",
+    "attendu": "Conséquence empêchée selon le suivi ; cible pas automatiquement remise en jeu."
+  },
+  {
+    "id": "DU-38",
+    "archive": "02",
+    "precondition": "P07 sans conséquence durable",
+    "action": "Préparer la tâche de récupération.",
+    "attendu": "Conditions 4 + qualité de l’atout vainqueur ; aucun soin par points de vie."
+  },
+  {
+    "id": "DU-39",
+    "archive": "02",
+    "precondition": "P05 35 points de progression",
+    "action": "Acheter une compétence après l’aventure.",
+    "attendu": "Coût affiché, max 8, une progression par aventure et restrictions gardées."
+  },
+  {
+    "id": "DU-40",
+    "archive": "02",
+    "precondition": "P08 compétence à 6+",
+    "action": "Acheter une spécialisation puis tenter la même aventure à nouveau.",
+    "attendu": "Précondition et coût selon nombre détenu ; seconde progression refusée."
+  },
+  {
+    "id": "DU-41",
+    "archive": "02",
+    "precondition": "P09 atout de qualité 0",
+    "action": "Améliorer sa qualité puis essayer pérennisation sur copies.",
+    "attendu": "Qualité 0→1 coûte 2 ; permanent coûte 3 selon errata ; atout et points persistés."
+  },
+  {
+    "id": "DU-42",
+    "archive": "02",
+    "precondition": "Progression par reconversion",
+    "action": "Choisir une capacité cédée valide.",
+    "attendu": "Coût divisé par deux arrondi au supérieur, ancienne capacité retirée, compétence cédée reste à 4 minimum."
+  },
+  {
+    "id": "DU-43",
+    "archive": "01",
+    "precondition": "Module déjà préparé",
+    "action": "Ouvrir le pupitre et autoriser les trois PJ.",
+    "attendu": "Un module existant, cinq zones et six atouts ; accès explicites, pas de commande MJ pour les joueurs."
+  },
+  {
+    "id": "DU-44",
+    "archive": "01",
+    "precondition": "Zone Nalia et désirs cachés",
+    "action": "Appliquer deux enquêtes réussies Analyse 6.",
+    "attendu": "+4 puis +4 ; Discipline 6 atteinte au second test, désir révélé seulement alors."
+  },
+  {
+    "id": "DU-45",
+    "archive": "01",
+    "precondition": "Secrets du plateau",
+    "action": "Inspecter les données reçues avant révélation.",
+    "attendu": "Zone cachée, atout privé et désirs non révélés absents ; journal sans charge privée."
+  },
+  {
+    "id": "DU-46",
+    "archive": "03",
+    "precondition": "Cinq arènes",
+    "action": "Choisir duel, escarmouche, espionnage, guerre puis intrigue sur essais distincts.",
+    "attendu": "Cadre et mode changent ; zones abstraites conservées, pas de conversion métrique."
+  },
+  {
+    "id": "DU-47",
+    "archive": "03",
+    "precondition": "Mode Architecte",
+    "action": "Engager l’équipe militaire préparée et perdre une unité.",
+    "attendu": "Atout militaire ciblé ; le commandant ne reçoit pas de blessure automatiquement."
+  },
+  {
+    "id": "DU-48",
+    "archive": "01",
+    "precondition": "Atout sur le Parvis",
+    "action": "Déplacer vers une voisine puis tenter une zone non adjacente.",
+    "attendu": "Lien réciproque requis ; déplacement refusé s’il n’existe pas."
+  },
+  {
+    "id": "DU-49",
+    "archive": "03",
+    "precondition": "Atouts tangibles/intangibles",
+    "action": "Neutraliser le tangible, détruire l’intangible puis changer de scène.",
+    "attendu": "Tangibles permanents réactivés, temporaires retirés, intangible détruit ne se récupère pas."
+  },
+  {
+    "id": "DU-50",
+    "archive": "01",
+    "precondition": "Maison Vaëlan remplie",
+    "action": "Créer/ouvrir sa fiche HTML puis changer une rubrique sur copie.",
+    "attendu": "Nom/monde/type/domaines/rôles/ennemis répercutés au module ; fiche de Maison fait foi."
+  },
+  {
+    "id": "DU-51",
+    "archive": "01",
+    "precondition": "Maison mineure et trois présents",
+    "action": "Fixer la Menace de début de séance à 3.",
+    "attendu": "Clic remplace la réserve ; ouvrir le pupitre seul ne modifie pas la Menace."
+  },
+  {
+    "id": "DU-52",
+    "archive": "03",
+    "precondition": "Variante Grande Maison",
+    "action": "Avec trois présents, fixer la Menace puis ajuster explicitement.",
+    "attendu": "Base 9, ajustement du MJ visible ; aucune modification de l’enquête 01."
+  },
+  {
+    "id": "DU-53",
+    "archive": "01",
+    "precondition": "Joueurs existants p-1/p-2/p-3",
+    "action": "Importer les trois archives telle quelle.",
+    "attendu": "Profils et anciens PJ conservés ; quinze nouveaux PJ de ces seules campagnes."
+  },
+  {
+    "id": "DU-54",
+    "archive": "01",
+    "precondition": "Trois tablettes 360/768/1180",
+    "action": "Choisir chacun son PJ, ouvrir le HTML et lancer un test.",
+    "attendu": "Bonne fiche, maximes/spécialisations visibles et jets reçus au MJ."
+  },
+  {
+    "id": "DU-55",
+    "archive": "01",
+    "precondition": "Marqueur de secrets de séance",
+    "action": "Inspecter les messages joueur.",
+    "attendu": "Aucun SECRET_MJ_DUNE_RECETTE attendu ; défaut GM-05 connu à consigner si reçu."
+  },
+  {
+    "id": "DU-56",
+    "archive": "01",
+    "precondition": "Atlas et indices",
+    "action": "Suivre les huit lieux, douze indices et liens de PNJ.",
+    "attendu": "Révélations explicites et liens valides ; seul I01 révélé au départ."
+  },
+  {
+    "id": "DU-57",
+    "archive": "01",
+    "precondition": "Trame",
+    "action": "Parcourir les trois issues et quatre séances prévues.",
+    "attendu": "Scènes liées, ateliers hors fiction distincts ; aucun indice essentiel sur un jet unique."
+  },
+  {
+    "id": "DU-58",
+    "archive": "01",
+    "precondition": "Butin 101 Solari",
+    "action": "Partager 33 par PJ et garder le reliquat.",
+    "attendu": "Total 101 conservé, reste 2 ; distribuer un objet ne lui crée pas un bonus automatique."
+  },
+  {
+    "id": "DU-59",
+    "archive": "01",
+    "precondition": "Wiki/Chronologie",
+    "action": "Ouvrir neuf pages et quatre repères.",
+    "attendu": "Liens corrects ; dates ISO fictives, pas calendrier impérial affirmé."
+  },
+  {
+    "id": "DU-60",
+    "archive": "01",
+    "precondition": "Sound/Music/Storyboard",
+    "action": "Écouter les trois sons, deux pistes et quatre moments puis arrêter.",
+    "attendu": "Médias embarqués, aucun son commercial ou service externe requis."
+  },
+  {
+    "id": "DU-61",
+    "archive": "01",
+    "precondition": "Light-OS",
+    "action": "Assigner des appareils de test après lecture des trois tuiles.",
+    "attendu": "Aucun appareil inventé ; états vides au départ, matériel pas déclaré testé."
+  },
+  {
+    "id": "DU-62",
+    "archive": "Tables",
+    "precondition": "Table-OS Atelier",
+    "action": "Importer les trois JSON dans un univers de recette et Ranger tel quel.",
+    "attendu": "Trois tables 1d6 originales, bornes 1–6 ; aucun remplacement des règles de complication."
+  },
+  {
+    "id": "DU-63",
+    "archive": "02/03",
+    "precondition": "Laboratoire altéré",
+    "action": "Réimporter seulement le laboratoire avec Remplacer.",
+    "attendu": "Réinitialisation locale ; Maison, fiches et plateau de l’enquête intacts."
+  },
+  {
+    "id": "DU-64",
+    "archive": "01",
+    "precondition": "Après modification",
+    "action": "Exporter puis Cloner et suivre les liens.",
+    "attendu": "Références cohérentes ; original intact et profils existants conservés."
+  },
+  {
+    "id": "DU-65",
+    "archive": "Toutes",
+    "precondition": "Clôture de séance",
+    "action": "Couper les accès, recharger et rouvrir la campagne.",
+    "attendu": "Module et fiches persistés ; droits fermés, pas de dépense rejouée."
+  },
+  {
+    "id": "DU-66",
+    "archive": "Toutes",
+    "precondition": "Après chaque essai",
+    "action": "Remplir resultats.csv avec observé et preuve.",
+    "attendu": "PASSÉ, ÉCHEC, NON TESTÉ ou NON APPLICABLE ; aucune case prévalidée."
+  }
+]

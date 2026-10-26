@@ -62,3 +62,63 @@ David demande ensuite **« commit »** : regrouper les quatre lots de recette CH
 leurs générateurs, tests, livraisons et documentation. Les autres fichiers locaux, notamment
 les tables importées dans les bases globales, restent hors de ce commit. Aucun push demandé.
 Les validations et le défaut GM-05 restent tels que décrits ci-dessus.
+
+**Puis push explicitement demandé et terminé** : `96ef674e` sur `origin/production`.
+Hook réussi : types, lint (un avertissement préexistant), 9 150 tests réussis / quatre ignorés,
+construction de production. Les autres fichiers locaux restent hors commit.
+
+## Suite du 26/10 — Dune, Maison et conflits
+
+Nouvelle demande : campagne Dune, mêmes joueurs, modules si nécessaire. [Bilan Dune](2026-10-26-campagne-recette-dune.md),
+registre **§ 182**, vue **118**. **Le Sceau de Néréide**, Tarek/Thomas, Lysa/Marie, Kaël/Lucas,
+Maison Vaëlan mineure ; deux laboratoires (principes/défaite/progression, puis cinq arènes avec
+variante Grande Maison), 15 nouveaux PJ, 66 cas manuels, trois tables originales et 39 médias.
+Module **dune-conflits existant**, trois états embarqués, pas de nouveau module nécessaire.
+Lot `output/campagnes-tests/dune/Dune-Campagnes-de-recette.zip`, sources `dune*.mjs`, tests/config
+dédiés, `emballer-dune.mjs`, e2e `campagneDeRecetteDune.spec.ts`.
+
+**21 contrôles de données réussis**, lint ciblé sans erreur, 36 SVG/3 WAV décodés hors ligne,
+rendus/captures inspectés. Import natif/remplacement des deux laboratoires et persistance,
+anciens profils/avatars/PJ fictifs conservés ; trois Hub, jets, fiches PJ/Maison et écritures
+de progression HTML 1/2/3 persistées. Menace 3 explicitement fixée, désir de Nalia révélé au
+second succès d’enquête reporté, atout déplacé, accès fermés après clôture. **Seul GM-05
+échoue** (12 chemins), sans correctif applicatif. Les 66 cas humains restent NON TESTÉS.
+
+Piège payé par la relecture des captures : le sélecteur de la fiche Maison accepte **Mineure**,
+pas « Maison mineure » ; le champ Haine d’un ennemi est numérique. Données corrigées en
+Mineure et 2, contrôle de types/options des 40 champs ajouté et parcours natif rejoué sur
+les SHA corrigées. Ne pas changer les clés ou la fiche HTML pour accommoder des données fausses.
+La fiche Maison fait foi ; aligner le reflet du module à la génération avec `maisonDepuisLaFiche`.
+
+Talents non préconfigurés pour isoler le socle ; aucun talent improvisé ni PV ajoutés. Atouts
+personnels et partagés sont des représentations distinctes. Les cinq arènes passent le moteur,
+leurs conflits joués intégralement restent une recette humaine. Aucun commit/push demandé
+pour ce nouveau lot ; aucun changement de `src/`/`electron/`, aucun profil personnel consulté.
+
+## Suite du 26/10 — Nephilim et Sciences occultes
+
+Nouvelle demande : campagne Nephilim, mêmes joueurs et modules si nécessaire. [Bilan Nephilim](2026-10-26-campagne-recette-nephilim.md), registre **§ 183**, vue **119**. Le Méridien de verre :
+Astérion/Thomas (Magie), Ismérie/Marie (Kabbale), Nahal/Lucas (Alchimie), trois Simulacres et
+Pentacle descriptif. Deux laboratoires, quinze nouveaux PJ, 70 cas manuels, trois tables
+originales et 39 médias. Aucun module spécifique compatible dans le catalogue : cartes natives
+et outils transversaux préparés, aucune extension supplémentaire créée.
+
+**26 contrôles de données réussis**, lint ciblé sans erreur, 36 SVG/3 WAV décodés hors ligne,
+rendus/captures inspectés. Import natif et remplacement de 02, anciens profils/avatars/PJ
+fictifs conservés ; trois Hub/HTML/jets, Sapience 14/15/16 persistée et Traque 1 → 0/Intensité
+1 → 2 après quatre ajouts explicites à RK 5. **GM-05 seul échec (12 chemins)** ; aucun correctif
+applicatif. Les réserves joueur sont dans la fiche ouverte : ne pas la fermer avant leurs gestes.
+
+Les Vécus/époques viennent du référentiel ; trois pouvoirs originaux sont marqués RECETTE,
+profils avancés sans budget novice revendiqué. Six cases Combat-OS ne remplacent pas la carte
+Santé complète ; contextes occultes manuels au bandeau. 70 cas humains NON TESTÉS, sept pages
+entièrement éditées et matériel à éprouver. ZIP output/campagnes-tests/nephilim/, sources
+nephilim*.mjs, tests/config dédiés, emballer-nephilim.mjs, e2e campagneDeRecetteNephilim.spec.ts.
+Aucun src/electron ou profil personnel touché ; Dune et Nephilim non commités/non poussés.
+
+## Commit et push demandés — Dune et Nephilim
+
+David demande « commit et poussse » le 26/10 : regrouper les deux nouveaux lots Dune/Nephilim,
+leurs générateurs, tests, livraisons et documentation sur production. Les autres fichiers locaux
+restent hors commit. Les validations ciblées et le défaut GM-05 restent décrits ci-dessus ;
+le hook de push effectue la validation globale du dépôt.

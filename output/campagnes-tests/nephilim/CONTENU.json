@@ -1,0 +1,44 @@
+{
+  "archives": [
+    {
+      "fichier": "01-Le-Meridien-de-verre.gmos",
+      "campagne": "recette-nephilim-campagne-meridien",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "7b19284384fd8a1de9457a19d0fe5cbcf20b289ce3963ab1a1ce289bd8f44a6c"
+    },
+    {
+      "fichier": "02-Sante-Chutes-et-Stase.gmos",
+      "campagne": "recette-nephilim-chutes-campagne-meridien",
+      "personnages": 9,
+      "medias": 39,
+      "sha256": "6e097090a0a3b1b0155ba8fd33de125d1a21c46bb5a89eaefe99640476438866"
+    },
+    {
+      "fichier": "03-Arts-et-Ressources.gmos",
+      "campagne": "recette-nephilim-arts-campagne-meridien",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "a72b229efb11350c206c2ae67af04392400d768aabbdc74d35e8e75662419557"
+    }
+  ],
+  "joueurs": [
+    {
+      "id": "p-1",
+      "nom": "Thomas D.",
+      "pj": "Astérion"
+    },
+    {
+      "id": "p-2",
+      "nom": "Marie C.",
+      "pj": "Ismérie"
+    },
+    {
+      "id": "p-3",
+      "nom": "Lucas R.",
+      "pj": "Nahal"
+    }
+  ],
+  "modulesSpecifiques": 0,
+  "casManuels": 70
+}

@@ -1,0 +1,108 @@
+{
+  "name": "RECETTE Néréide — objets",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Copie de contrat",
+      "description": "Fiction originale de recette, sans effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Copie de contrat",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun atout automatique à la distribution."
+        }
+      ]
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Sceau de cire",
+      "description": "Fiction originale de recette, sans effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Sceau de cire",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun atout automatique à la distribution."
+        }
+      ]
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Solari fictifs",
+      "description": "Fiction originale de recette, sans effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Solari fictifs",
+          "type": "currency",
+          "quantite": 7,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun atout automatique à la distribution."
+        }
+      ]
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Clef de vanne",
+      "description": "Fiction originale de recette, sans effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Clef de vanne",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun atout automatique à la distribution."
+        }
+      ]
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Carnet de service",
+      "description": "Fiction originale de recette, sans effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Carnet de service",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun atout automatique à la distribution."
+        }
+      ]
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Trousse de maintenance",
+      "description": "Fiction originale de recette, sans effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Trousse de maintenance",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun atout automatique à la distribution."
+        }
+      ]
+    }
+  ]
+}

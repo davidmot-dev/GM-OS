@@ -1,0 +1,74 @@
+[
+  {
+    "lieuId": "recette-nephilim-lieu-atelier",
+    "lieu": "L’Atelier des reflets",
+    "seuilRK": 5,
+    "lieuMagique": 0,
+    "conjonction": 0,
+    "intensiteDeLaConjonction": 1,
+    "note": "Proposition originale de recette ; régler manuellement au bandeau après décision du MJ. Aucun changement au simple déplacement dans Atlas."
+  },
+  {
+    "lieuId": "recette-nephilim-lieu-archives",
+    "lieu": "Les Archives du canal",
+    "seuilRK": 4,
+    "lieuMagique": 0,
+    "conjonction": 0,
+    "intensiteDeLaConjonction": 1,
+    "note": "Proposition originale de recette ; régler manuellement au bandeau après décision du MJ. Aucun changement au simple déplacement dans Atlas."
+  },
+  {
+    "lieuId": "recette-nephilim-lieu-cour",
+    "lieu": "La Cour des verriers",
+    "seuilRK": 3,
+    "lieuMagique": 0,
+    "conjonction": 0,
+    "intensiteDeLaConjonction": 1,
+    "note": "Proposition originale de recette ; régler manuellement au bandeau après décision du MJ. Aucun changement au simple déplacement dans Atlas."
+  },
+  {
+    "lieuId": "recette-nephilim-lieu-cabinet",
+    "lieu": "Le Cabinet des heures",
+    "seuilRK": 5,
+    "lieuMagique": 0,
+    "conjonction": 0,
+    "intensiteDeLaConjonction": 1,
+    "note": "Proposition originale de recette ; régler manuellement au bandeau après décision du MJ. Aucun changement au simple déplacement dans Atlas."
+  },
+  {
+    "lieuId": "recette-nephilim-lieu-serre",
+    "lieu": "La Serre des cinq eaux",
+    "seuilRK": 7,
+    "lieuMagique": 3,
+    "conjonction": 0,
+    "intensiteDeLaConjonction": 1,
+    "note": "Proposition originale de recette ; régler manuellement au bandeau après décision du MJ. Aucun changement au simple déplacement dans Atlas."
+  },
+  {
+    "lieuId": "recette-nephilim-lieu-passage",
+    "lieu": "Le Passage des ouvriers",
+    "seuilRK": 3,
+    "lieuMagique": 0,
+    "conjonction": 0,
+    "intensiteDeLaConjonction": 1,
+    "note": "Proposition originale de recette ; régler manuellement au bandeau après décision du MJ. Aucun changement au simple déplacement dans Atlas."
+  },
+  {
+    "lieuId": "recette-nephilim-lieu-station",
+    "lieu": "La Station de mesure",
+    "seuilRK": 3,
+    "lieuMagique": 0,
+    "conjonction": 0,
+    "intensiteDeLaConjonction": 1,
+    "note": "Proposition originale de recette ; régler manuellement au bandeau après décision du MJ. Aucun changement au simple déplacement dans Atlas."
+  },
+  {
+    "lieuId": "recette-nephilim-lieu-chambre",
+    "lieu": "La Chambre du méridien",
+    "seuilRK": 8,
+    "lieuMagique": 6,
+    "conjonction": 0,
+    "intensiteDeLaConjonction": 1,
+    "note": "Proposition originale de recette ; régler manuellement au bandeau après décision du MJ. Aucun changement au simple déplacement dans Atlas."
+  }
+]

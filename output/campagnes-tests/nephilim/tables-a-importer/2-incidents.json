@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE Méridien — incidents",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Un témoin demande à rester anonyme.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Un accès est fermé pour travaux.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Une lampe révèle une seconde inscription.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Un surveillant veut vérifier les autorisations.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Un artisan réclame son outil.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Une horloge retarde dans la fiction.",
+      "description": "Fiction originale de recette, sans gain de Sapience ou de Materiae automatique."
+    }
+  ]
+}

@@ -452,6 +452,12 @@ contrôles d’import et de tablette aboutissent. Données exclusivement fictive
 lot. Les contrôles de confidentialité propres aux trois modules Alien et aux demi-rêves TMR
 passent séparément ; cela ne corrige pas la diffusion transversale des secrets de séance.
 
+**Dune confirme le même défaut le 26/10** (§ 182) : douze chemins de `gmSecrets` reçus ;
+secrets du plateau filtrés séparément, désir de Nalia révélé seulement après l’enquête.
+
+**Nephilim confirme le 26/10** (§ 183) : douze chemins de gmSecrets dans les trames des
+trois Hub. Import, fiches, jets, Sapience et Traque aboutissent ; assertion finale GM-05 en échec.
+
 **Ouverte le 2026-09-12, à la demande de David** : *« lors de tes tests E2E, où consignes-tu les
 différents bugs que tu aurais découverts ? »* — la réponse honnête était **nulle part de
 systématique**. Un défaut corrigé obtient sa section numérotée ; un défaut *constaté et différé*
@@ -12943,10 +12949,57 @@ et autres demi-rêves filtrés ; accès clos avec la séance. **GM-05 seul éche
 Les 69 cas humains, l’import global Table-OS et le matériel restent à essayer. Ni `src/` ni
 `electron/` modifiés, aucun profil personnel consulté, aucun commit/push demandé.
 
+### 182 · Campagnes de recette — Dune, Maison et cinq arènes — 26/10/2026
+
+David : « tu peux faire une campagne de Dune rattaché au même Joueurs, n’oublie pas de créer
+des modules si nécessaire ». [Bilan et reproduction](2026-10-26-campagne-recette-dune.md).
+
+**Le Sceau de Néréide**, fiction originale : Tarek/Thomas `p-1`, Lysa/Marie `p-2`, Kaël/Lucas
+`p-3`, **Maison Vaëlan** mineure déjà remplie (devise, armoiries, rôles, domaines et ennemi).
+12 PNJ, 8 lieux, 12 indices, 16 scènes, trois issues, deux laboratoires et **15 nouveaux PJ**
+au total, anciens joueurs/PJ conservés. Module **dune-conflits existant**, cinq zones et six
+atouts avec secrets d’intrigue, modes Agent/Architecte et guide des cinq arènes ; aucun nouveau
+module nécessaire. Variante Grande Maison au laboratoire 03. **66 cas manuels**, trois tables
+Table-OS, 39 médias et outils transversaux. ZIP dans `output/campagnes-tests/dune/`.
+
+**21 contrôles de données réussis**, y compris les types/options des 40 champs de Maison,
+défaite réelle sans PV, maximes/spécialisations, modules et reflet de Maison, confidentialité,
+enquête 4/6 puis 8/6, déplacements, scènes, arènes et progression. Lint ciblé sans erreur,
+36 SVG et trois WAV décodés hors ligne, rendus/captures inspectés. Electron jetable : imports,
+remplacement des deux laboratoires, profils/avatars et trois anciens PJ fictifs conservés ;
+trois Hub 360/768/1180, jets, fiches PJ/Maison, écritures HTML de progression persistées,
+Menace 3, désir révélé, atout déplacé et accès clos après la séance. **GM-05 seul échec**,
+douze chemins, § 1 bis. Les 66 essais humains, talents, cinq conflits complets et appareils
+restent à éprouver. Aucun `src/`/`electron/` ou profil personnel touché, aucun commit/push demandé.
+
+### 183 · Campagnes de recette — Nephilim, les trois Sciences occultes — 26/10/2026
+
+David : « tu peux faire une campagne de Nephilim rattaché au même Joueurs, n’oublie pas de créer
+des modules si nécessaire ». [Bilan et reproduction](2026-10-26-campagne-recette-nephilim.md).
+**Le Méridien de verre**, Astérion/Thomas, Ismérie/Marie, Nahal/Lucas, leurs Simulacres et
+Pentacle Les Veilleurs du Méridien ; enquête originale, 12 PNJ, 8 lieux, 12 indices, 16 scènes,
+deux laboratoires Santé/Chutes/Stase et Arts/ressources, **15 nouveaux PJ** pour les mêmes
+joueurs existants. **70 cas manuels**, trois tables Table-OS, 39 médias et outils transversaux.
+Aucun module spécifique compatible Nephilim dans le catalogue ; cartes natives et outils
+existants suffisants, aucune nouvelle extension créée. ZIP dans output/campagnes-tests/nephilim/.
+
+**26 contrôles de données réussis**, Vécus/époques et types, règles réelles de conséquences,
+Khaïba, Chutes, Sacrifice, assemblage et Materiae Primae ; sept pages HTML, clone, tables et
+réserves. Lint ciblé sans erreur, 36 SVG/trois WAV décodés hors ligne, rendus/captures inspectés.
+Electron jetable : trois imports, remplacement du laboratoire Santé/Chutes, profils/avatars et
+anciens PJ fictifs conservés ; trois Hub, jets et fiches HTML, Sapience 14/15/16 persistée,
+Traque 1 → 0 et Intensité 1 → 2 après quatre ajouts explicites, RK 5. **GM-05 seul échec**,
+douze chemins, § 1 bis. Les 70 cas humains, sept pages entièrement éditées, Sciences occultes
+complètes, import global des tables et appareils restent à éprouver. Pouvoirs fictifs RECETTE
+identifiés ; pas de budget novice revendiqué. Aucun src/electron ou profil personnel touché,
+aucun commit/push demandé.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 119 | **Campagnes de recette — Nephilim** | § 183 ; enquête, deux laboratoires, trois Sciences occultes, outils préparés et 70 cas | Importer 01-Le-Meridien-de-verre.gmos ; suivre PARCOURS-NEPHILIM.md | GM-05 transversal ; essais humains/matériel à faire |
+| 118 | **Campagnes de recette — Dune** | § 182 ; enquête, Maison, deux laboratoires, module de conflits préparé et 66 cas | Importer 01-Le-Sceau-de-Nereide.gmos ; ouvrir Maison et suivre MODULES-ET-MAISON.md | GM-05 transversal ; essais humains/matériel à faire |
 | 117 | **Campagnes de recette — Rêve de Dragon** | § 181 ; enquête, deux laboratoires, 69 cas, module TMR préparé et 14 tables conformes au moteur | Importer 01-Le-Moulin-des-heures-oubliees.gmos ; tables via Table-OS ; suivre PARCOURS-TMR.md | GM-05 transversal ; essais humains/matériel à faire |
 | 116 | **Campagnes de recette — ALIEN** | § 180 ; enquête, deux laboratoires, 74 cas, MU/TH/UR/M314/spatial préparés et éprouvés sur trois Hub | Importer 01-La-derniere-releve.gmos ; ouvrir les modules au bon équipage | GM-05 transversal ; essais humains/matériel à faire |
 | 115 | **Campagnes de recette — NOC** | § 179 ; enquête, Cabale et trois Contacts, deux laboratoires, 62 cas, mêmes joueurs existants | Importer 01-Le-neuvieme-timbre.gmos ; suivre le cahier et ouvrir Cabale | GM-05 transversal ; essais humains et matériel à faire |

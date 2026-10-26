@@ -1,0 +1,4297 @@
+{
+  "campaign": {
+    "id": "recette-dune-campagne-nereide",
+    "name": "RECETTE DUNE — Le Sceau de Néréide",
+    "system": "dune",
+    "activeLocationIds": [
+      "recette-dune-lieu-residence"
+    ],
+    "wallpaperUrl": "recette-dune-media-maison.svg",
+    "themeDuJeu": true,
+    "groupe": {
+      "sheetData": {
+        "house.name": "Maison Vaëlan",
+        "house.homeworld": "Néréide — monde fictif de recette",
+        "house.type": "Mineure",
+        "house.traits": "Gardiens des digues ; comptes sous contrôle",
+        "house.coat_of_arms": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDEyMDAgODAwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiNlZWUwYzEiLz48c3R5bGU+dGV4dHtmb250LWZhbWlseTpHZW9yZ2lhLHNlcmlmO2ZpbGw6IzRhMzQyNH08L3N0eWxlPjxwYXRoIGQ9Ik0yNSAxMDBIMTE3NU0yNSA3MjVIMTE3NSIgc3Ryb2tlPSIjOTQ2ODRiIiBzdHJva2Utd2lkdGg9IjMiLz48dGV4dCB4PSI1MCIgeT0iNjciIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI3MDAiPk1haXNvbiBWYcOrbGFuPC90ZXh0PjxwYXRoIGQ9Ik01MDAgMjAwSDcwMFYzOTBMNjAwIDQ3NSA1MDAgMzkwWiIgZmlsbD0iIzk0Njg0YiIvPjxwYXRoIGQ9Ik01MzUgMjcwUTYwMCAyMDAgNjY1IDI3MEw2MDAgNDAwWiIgZmlsbD0iI2VlZTBjMSIvPjx0ZXh0IHg9IjU1IiB5PSI1NjAiIGZvbnQtc2l6ZT0iMjIiPk5vdHJlIHBhcm9sZSBtYWludGllbnQgbGVzIGRpZ3Vlcy4gTWFpc29uIG1pbmV1cmUgZGUgTsOpcsOpaWRlLCBtb25kZSBldCBmYW1pbGxlPC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSI1OTIiIGZvbnQtc2l6ZT0iMjIiPmludmVudMOpcyBwb3VyIGNldHRlIHJlY2V0dGUuPC90ZXh0Pjx0ZXh0IHg9IjUwIiB5PSI3NjUiIGZvbnQtc2l6ZT0iMTYiPkRVTkUgwrcgTsOJUsOJSURFIMK3IEZJQ1RJT04gT1JJR0lOQUxFIERFIFJFQ0VUVEUgR00tT1M8L3RleHQ+PC9zdmc+",
+        "house.motto": "Notre parole maintient les digues.",
+        "house.domains": "Domaine principal : concessions de distribution ; secondaire : archives et expertise des contrats.",
+        "house.roles.lord": "Eda Vaëlan",
+        "house.roles.consort": "",
+        "house.roles.heir": "Lysa Vaëlan",
+        "house.roles.treasurer": "Seris Dane",
+        "house.roles.chamberlain": "",
+        "house.roles.constable": "Kaël Rovan",
+        "house.roles.advisor": "Tarek Senn",
+        "house.roles.envoy": "Lysa Vaëlan",
+        "house.roles.scholar": "Tarek Senn",
+        "house.roles.spymaster": "",
+        "house.roles.swordmaster": "Kaël Rovan",
+        "house.roles.warmaster": "",
+        "house.roles.chief_physician": "Tessa Vale",
+        "house.enemies.0.name": "Maison Sareth",
+        "house.enemies.0.type": "Mineure",
+        "house.enemies.0.hatred": 2,
+        "house.enemies.0.reason": "Reprise de concessions et dette ancienne",
+        "house.enemies.0.notes": "Nalia peut désavouer le mandataire Ravel.",
+        "house.enemies.1.name": "",
+        "house.enemies.1.type": "",
+        "house.enemies.1.hatred": "",
+        "house.enemies.1.reason": "",
+        "house.enemies.1.notes": "",
+        "house.enemies.2.name": "",
+        "house.enemies.2.type": "",
+        "house.enemies.2.hatred": "",
+        "house.enemies.2.reason": "",
+        "house.enemies.2.notes": "",
+        "house.enemies.3.name": "",
+        "house.enemies.3.type": "",
+        "house.enemies.3.hatred": "",
+        "house.enemies.3.reason": "",
+        "house.enemies.3.notes": ""
+      },
+      "donneesModifieesLe": 1792929600000
+    },
+    "langueDeForge": "fr",
+    "description": "Campagne originale sur un monde et une Maison fictifs. Tests du pilote Dune 2.0.0 ; aucun événement déjà joué.",
+    "synopsis": "Un ordre de transfert contrefait menace les concessions de la Maison Vaëlan. Preuves, accord ou réparation permettent de maintenir le service.",
+    "gmNotes": "SECRET_MJ_DUNE_RECETTE : Ravel finance la pénurie pour forcer une vente. Contre-registre, paquet original et avance privée le relient à la fraude. Nalia veut des garanties pour les ouvriers. Trois issues : expertise, accord, service rétabli."
+  },
+  "players": [
+    {
+      "id": "p-1",
+      "realName": "Thomas D.",
+      "avatarUrl": "",
+      "isOnline": false,
+      "characters": [
+        {
+          "id": "recette-dune-pj-tarek",
+          "name": "Tarek Senn",
+          "classRace": "Analyste et conseiller de la Maison",
+          "campaignId": "recette-dune-campagne-nereide",
+          "templateId": "tpl-1774724573418",
+          "systemId": "dune",
+          "portraitUrl": "recette-dune-media-pj-tarek.svg",
+          "tokenUrl": "recette-dune-media-pj-tarek.svg",
+          "sheetData": {
+            "char_name": "Tarek Senn",
+            "house_name": "Maison Vaëlan",
+            "role": "Analyste et conseiller de la Maison",
+            "faction": "Mentat",
+            "ambition": "Établir la chaîne de falsification avant que la Maison n’endosse la pénurie.",
+            "personal_traits": "Méthodique, mémoire des contrats",
+            "analyse": 8,
+            "combat": 4,
+            "discipline": 6,
+            "mob": 5,
+            "rhetoric": 5,
+            "devotion": 6,
+            "domination": 4,
+            "faith": 5,
+            "justice": 7,
+            "truth": 8,
+            "maxims": "",
+            "specializations": "analyse : Comptabilité des concessions\ndiscipline : Observation",
+            "talents": "",
+            "determination": 1,
+            "assets": "Carnet chiffré\nSceau de conseiller\nLame de service",
+            "gear_notes": "Il a validé le précédent bilan des concessions. Une signature identique figure désormais sur un ordre qu’il n’a jamais lu.",
+            "progression": 0,
+            "_gmos_dune": {
+              "version": 1,
+              "aventure": "Le Sceau de Néréide",
+              "scene": "S01 — Le mandat de la Maison",
+              "maximes": {
+                "devotion": "Un engagement doit pouvoir être compris.",
+                "justice": "Une preuve protège mieux qu’une accusation.",
+                "truth": "Le vrai prix se cache dans les comptes."
+              },
+              "bafoues": [],
+              "recuperes": [],
+              "determinationDansLaScene": false,
+              "atouts": [
+                {
+                  "id": "recette-dune-atout-personnel-tarek-0",
+                  "nom": "Carnet chiffré",
+                  "qualite": 1,
+                  "tangible": true,
+                  "permanent": true,
+                  "usage": "autre",
+                  "zone": "",
+                  "neutralise": false
+                },
+                {
+                  "id": "recette-dune-atout-personnel-tarek-1",
+                  "nom": "Sceau de conseiller",
+                  "qualite": 0,
+                  "tangible": true,
+                  "permanent": true,
+                  "usage": "autre",
+                  "zone": "",
+                  "neutralise": false
+                },
+                {
+                  "id": "recette-dune-atout-personnel-tarek-2",
+                  "nom": "Lame de service",
+                  "qualite": 0,
+                  "tangible": true,
+                  "permanent": true,
+                  "usage": "offensif",
+                  "zone": "",
+                  "neutralise": false
+                }
+              ],
+              "progression": [],
+              "competencesAugmentees": [],
+              "evenements": [],
+              "defaite": {
+                "genre": "notable",
+                "vaincu": false,
+                "progression": 0,
+                "conditions": 4,
+                "qualite": 0,
+                "durable": "",
+                "recuperation": 0
+              }
+            }
+          },
+          "healthSystem": {
+            "type": "clocks",
+            "data": {
+              "filled": 0,
+              "segments": 4,
+              "dune": {
+                "genre": "notable",
+                "vaincu": false,
+                "progression": 0,
+                "conditions": 4,
+                "qualite": 0,
+                "durable": "",
+                "recuperation": 0
+              }
+            },
+            "state": "healthy",
+            "badges": []
+          },
+          "description": "Veste claire, carnet chiffré et regard immobile.",
+          "playerNotes": "Il a validé le précédent bilan des concessions. Une signature identique figure désormais sur un ordre qu’il n’a jamais lu.",
+          "gmNotes": "SECRET_MJ_DUNE_RECETTE : Établir la chaîne de falsification avant que la Maison n’endosse la pénurie.",
+          "donneesModifieesLe": 1792929600000,
+          "inventory": "Carnet chiffré\nSceau de conseiller\nLame de service",
+          "inventoryItems": [
+            {
+              "id": "recette-dune-campagne-nereide-tarek-principal-objet-0",
+              "name": "Carnet chiffré",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dune-campagne-nereide-tarek-principal-objet-1",
+              "name": "Sceau de conseiller",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dune-campagne-nereide-tarek-principal-objet-2",
+              "name": "Lame de service",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+              "properties": {}
+            }
+          ],
+          "relations": [
+            {
+              "targetId": "recette-dune-pnj-seris",
+              "targetType": "npc",
+              "type": "ally",
+              "libelle": "Expertise des archives",
+              "description": "Expertise des archives"
+            }
+          ],
+          "faction": "Maison Vaëlan",
+          "hubOptions": {
+            "showHP": false,
+            "showMP": false,
+            "showAP": false,
+            "showInventory": true,
+            "showRelations": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "p-2",
+      "realName": "Marie C.",
+      "avatarUrl": "",
+      "isOnline": false,
+      "characters": [
+        {
+          "id": "recette-dune-pj-lysa",
+          "name": "Lysa Vaëlan",
+          "classRace": "Émissaire de la Maison",
+          "campaignId": "recette-dune-campagne-nereide",
+          "templateId": "tpl-1774724573418",
+          "systemId": "dune",
+          "portraitUrl": "recette-dune-media-pj-lysa.svg",
+          "tokenUrl": "recette-dune-media-pj-lysa.svg",
+          "sheetData": {
+            "char_name": "Lysa Vaëlan",
+            "house_name": "Maison Vaëlan",
+            "role": "Émissaire de la Maison",
+            "faction": "",
+            "ambition": "Sauver la concession et obtenir un accord qui survive à la crise.",
+            "personal_traits": "Diplomate, loyale à ses sujets",
+            "analyse": 6,
+            "combat": 4,
+            "discipline": 5,
+            "mob": 5,
+            "rhetoric": 8,
+            "devotion": 8,
+            "domination": 6,
+            "faith": 5,
+            "justice": 7,
+            "truth": 4,
+            "maxims": "",
+            "specializations": "rhetoric : Négociation\nanalyse : Usages des Maisons",
+            "talents": "",
+            "determination": 1,
+            "assets": "Sceau d’émissaire\nCorrespondance diplomatique\nLame de ceinture",
+            "gear_notes": "Chargée de représenter Vaëlan à la commission, elle doit décider ce qu’elle consent à révéler des difficultés de sa famille.",
+            "progression": 0,
+            "_gmos_dune": {
+              "version": 1,
+              "aventure": "Le Sceau de Néréide",
+              "scene": "S01 — Le mandat de la Maison",
+              "maximes": {
+                "devotion": "La Maison répond de ceux qu’elle gouverne.",
+                "domination": "L’autorité oblige à écouter.",
+                "justice": "Un accord qui affame les faibles ne tient pas."
+              },
+              "bafoues": [],
+              "recuperes": [],
+              "determinationDansLaScene": false,
+              "atouts": [
+                {
+                  "id": "recette-dune-atout-personnel-lysa-0",
+                  "nom": "Sceau d’émissaire",
+                  "qualite": 1,
+                  "tangible": true,
+                  "permanent": true,
+                  "usage": "autre",
+                  "zone": "",
+                  "neutralise": false
+                },
+                {
+                  "id": "recette-dune-atout-personnel-lysa-1",
+                  "nom": "Correspondance diplomatique",
+                  "qualite": 0,
+                  "tangible": true,
+                  "permanent": true,
+                  "usage": "autre",
+                  "zone": "",
+                  "neutralise": false
+                },
+                {
+                  "id": "recette-dune-atout-personnel-lysa-2",
+                  "nom": "Lame de ceinture",
+                  "qualite": 0,
+                  "tangible": true,
+                  "permanent": true,
+                  "usage": "offensif",
+                  "zone": "",
+                  "neutralise": false
+                }
+              ],
+              "progression": [],
+              "competencesAugmentees": [],
+              "evenements": [],
+              "defaite": {
+                "genre": "notable",
+                "vaincu": false,
+                "progression": 0,
+                "conditions": 4,
+                "qualite": 0,
+                "durable": "",
+                "recuperation": 0
+              }
+            }
+          },
+          "healthSystem": {
+            "type": "clocks",
+            "data": {
+              "filled": 0,
+              "segments": 4,
+              "dune": {
+                "genre": "notable",
+                "vaincu": false,
+                "progression": 0,
+                "conditions": 4,
+                "qualite": 0,
+                "durable": "",
+                "recuperation": 0
+              }
+            },
+            "state": "healthy",
+            "badges": []
+          },
+          "description": "Tenue d’audience sobre, ruban de Maison et voix mesurée.",
+          "playerNotes": "Chargée de représenter Vaëlan à la commission, elle doit décider ce qu’elle consent à révéler des difficultés de sa famille.",
+          "gmNotes": "SECRET_MJ_DUNE_RECETTE : Sauver la concession et obtenir un accord qui survive à la crise.",
+          "donneesModifieesLe": 1792929600000,
+          "inventory": "Sceau d’émissaire\nCorrespondance diplomatique\nLame de ceinture",
+          "inventoryItems": [
+            {
+              "id": "recette-dune-campagne-nereide-lysa-principal-objet-0",
+              "name": "Sceau d’émissaire",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dune-campagne-nereide-lysa-principal-objet-1",
+              "name": "Correspondance diplomatique",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dune-campagne-nereide-lysa-principal-objet-2",
+              "name": "Lame de ceinture",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+              "properties": {}
+            }
+          ],
+          "relations": [
+            {
+              "targetId": "recette-dune-pnj-eda",
+              "targetType": "npc",
+              "type": "family",
+              "libelle": "Mandat de la Maison",
+              "description": "Mandat de la Maison"
+            }
+          ],
+          "faction": "Maison Vaëlan",
+          "hubOptions": {
+            "showHP": false,
+            "showMP": false,
+            "showAP": false,
+            "showInventory": true,
+            "showRelations": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "p-3",
+      "realName": "Lucas R.",
+      "avatarUrl": "",
+      "isOnline": false,
+      "characters": [
+        {
+          "id": "recette-dune-pj-kael",
+          "name": "Kaël Rovan",
+          "classRace": "Officier et protecteur de la délégation",
+          "campaignId": "recette-dune-campagne-nereide",
+          "templateId": "tpl-1774724573418",
+          "systemId": "dune",
+          "portraitUrl": "recette-dune-media-pj-kael.svg",
+          "tokenUrl": "recette-dune-media-pj-kael.svg",
+          "sheetData": {
+            "char_name": "Kaël Rovan",
+            "house_name": "Maison Vaëlan",
+            "role": "Officier et protecteur de la délégation",
+            "faction": "",
+            "ambition": "Protéger les témoins sans faire de la délégation une armée d’occupation.",
+            "personal_traits": "Vigilant, respecte sa parole",
+            "analyse": 4,
+            "combat": 8,
+            "discipline": 6,
+            "mob": 5,
+            "rhetoric": 5,
+            "devotion": 7,
+            "domination": 6,
+            "faith": 4,
+            "justice": 8,
+            "truth": 5,
+            "maxims": "",
+            "specializations": "combat : Lames courtes\ndiscipline : Protection rapprochée",
+            "talents": "",
+            "determination": 1,
+            "assets": "Lame courte\nBouclier personnel\nInsigne de garde",
+            "gear_notes": "Un ancien camarade garde le dépôt contesté. Kaël connaît sa loyauté, mais ignore le contrat qu’on lui a fait signer.",
+            "progression": 0,
+            "_gmos_dune": {
+              "version": 1,
+              "aventure": "Le Sceau de Néréide",
+              "scene": "S01 — Le mandat de la Maison",
+              "maximes": {
+                "devotion": "Je ramène ceux qui me sont confiés.",
+                "domination": "La force doit laisser une porte de sortie.",
+                "justice": "Un prisonnier conserve le droit de parler."
+              },
+              "bafoues": [],
+              "recuperes": [],
+              "determinationDansLaScene": false,
+              "atouts": [
+                {
+                  "id": "recette-dune-atout-personnel-kael-0",
+                  "nom": "Lame courte",
+                  "qualite": 1,
+                  "tangible": true,
+                  "permanent": true,
+                  "usage": "offensif",
+                  "zone": "",
+                  "neutralise": false
+                },
+                {
+                  "id": "recette-dune-atout-personnel-kael-1",
+                  "nom": "Bouclier personnel",
+                  "qualite": 0,
+                  "tangible": true,
+                  "permanent": true,
+                  "usage": "defensif",
+                  "zone": "",
+                  "neutralise": false
+                },
+                {
+                  "id": "recette-dune-atout-personnel-kael-2",
+                  "nom": "Insigne de garde",
+                  "qualite": 0,
+                  "tangible": true,
+                  "permanent": true,
+                  "usage": "autre",
+                  "zone": "",
+                  "neutralise": false
+                }
+              ],
+              "progression": [],
+              "competencesAugmentees": [],
+              "evenements": [],
+              "defaite": {
+                "genre": "notable",
+                "vaincu": false,
+                "progression": 0,
+                "conditions": 8,
+                "qualite": 0,
+                "durable": "",
+                "recuperation": 0
+              }
+            }
+          },
+          "healthSystem": {
+            "type": "clocks",
+            "data": {
+              "filled": 0,
+              "segments": 8,
+              "dune": {
+                "genre": "notable",
+                "vaincu": false,
+                "progression": 0,
+                "conditions": 8,
+                "qualite": 0,
+                "durable": "",
+                "recuperation": 0
+              }
+            },
+            "state": "healthy",
+            "badges": []
+          },
+          "description": "Manteau de garde, posture discrète et main éloignée de sa lame.",
+          "playerNotes": "Un ancien camarade garde le dépôt contesté. Kaël connaît sa loyauté, mais ignore le contrat qu’on lui a fait signer.",
+          "gmNotes": "SECRET_MJ_DUNE_RECETTE : Protéger les témoins sans faire de la délégation une armée d’occupation.",
+          "donneesModifieesLe": 1792929600000,
+          "inventory": "Lame courte\nBouclier personnel\nInsigne de garde",
+          "inventoryItems": [
+            {
+              "id": "recette-dune-campagne-nereide-kael-principal-objet-0",
+              "name": "Lame courte",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dune-campagne-nereide-kael-principal-objet-1",
+              "name": "Bouclier personnel",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dune-campagne-nereide-kael-principal-objet-2",
+              "name": "Insigne de garde",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+              "properties": {}
+            }
+          ],
+          "relations": [
+            {
+              "targetId": "recette-dune-pnj-jarek",
+              "targetType": "npc",
+              "type": "rival",
+              "libelle": "Ancien camarade sous contrat",
+              "description": "Ancien camarade sous contrat"
+            }
+          ],
+          "faction": "Maison Vaëlan",
+          "hubOptions": {
+            "showHP": false,
+            "showMP": false,
+            "showAP": false,
+            "showInventory": true,
+            "showRelations": true
+          }
+        }
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "id": "recette-dune-pnj-eda",
+      "name": "Eda Vaëlan",
+      "type": "npc",
+      "role": "ally",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-eda.svg",
+      "description": "Seigneure de la Maison, attentive aux silences de ses conseillers.",
+      "roleplayingNotes": "Je veux savoir ce que nous avons signé.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : Elle acceptera d’exposer une dette ancienne si les foyers restent approvisionnés.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Eda Vaëlan",
+        "house_name": "Concessions de Néréide",
+        "role": "Seigneure de la Maison, attentive aux silences de ses conseillers.",
+        "faction": "",
+        "ambition": "Établir la chaîne de falsification avant que la Maison n’endosse la pénurie.",
+        "personal_traits": "Méthodique, mémoire des contrats",
+        "analyse": 8,
+        "combat": 4,
+        "discipline": 6,
+        "mob": 5,
+        "rhetoric": 5,
+        "devotion": 6,
+        "domination": 4,
+        "faith": 5,
+        "justice": 7,
+        "truth": 8,
+        "maxims": "",
+        "specializations": "analyse : Comptabilité des concessions\ndiscipline : Observation",
+        "talents": "",
+        "determination": 1,
+        "assets": "Carnet chiffré\nSceau de conseiller\nLame de service",
+        "gear_notes": "Il a validé le précédent bilan des concessions. Une signature identique figure désormais sur un ordre qu’il n’a jamais lu.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "Un engagement doit pouvoir être compris.",
+            "justice": "Une preuve protège mieux qu’une accusation.",
+            "truth": "Le vrai prix se cache dans les comptes."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-tarek-0",
+              "nom": "Carnet chiffré",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-tarek-1",
+              "nom": "Sceau de conseiller",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-tarek-2",
+              "nom": "Lame de service",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 4,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-residence"
+      ],
+      "relations": [],
+      "faction": "Concessions de Néréide",
+      "isVisibleByPlayers": true
+    },
+    {
+      "id": "recette-dune-pnj-seris",
+      "name": "Seris Dane",
+      "type": "npc",
+      "role": "ally",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-seris.svg",
+      "description": "Archiviste aux gants tachés de cire.",
+      "roleplayingNotes": "Un cachet n’est pas une preuve de lecture.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : Elle a gardé le contre-registre avant le remplacement des pages.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Seris Dane",
+        "house_name": "Concessions de Néréide",
+        "role": "Archiviste aux gants tachés de cire.",
+        "faction": "",
+        "ambition": "Sauver la concession et obtenir un accord qui survive à la crise.",
+        "personal_traits": "Diplomate, loyale à ses sujets",
+        "analyse": 6,
+        "combat": 4,
+        "discipline": 5,
+        "mob": 5,
+        "rhetoric": 8,
+        "devotion": 8,
+        "domination": 6,
+        "faith": 5,
+        "justice": 7,
+        "truth": 4,
+        "maxims": "",
+        "specializations": "rhetoric : Négociation\nanalyse : Usages des Maisons",
+        "talents": "",
+        "determination": 1,
+        "assets": "Sceau d’émissaire\nCorrespondance diplomatique\nLame de ceinture",
+        "gear_notes": "Chargée de représenter Vaëlan à la commission, elle doit décider ce qu’elle consent à révéler des difficultés de sa famille.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "La Maison répond de ceux qu’elle gouverne.",
+            "domination": "L’autorité oblige à écouter.",
+            "justice": "Un accord qui affame les faibles ne tient pas."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-lysa-0",
+              "nom": "Sceau d’émissaire",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-lysa-1",
+              "nom": "Correspondance diplomatique",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-lysa-2",
+              "nom": "Lame de ceinture",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 4,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-archives"
+      ],
+      "relations": [],
+      "faction": "Concessions de Néréide",
+      "isVisibleByPlayers": true
+    },
+    {
+      "id": "recette-dune-pnj-jarek",
+      "name": "Jarek Voss",
+      "type": "npc",
+      "role": "hostile",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-jarek.svg",
+      "description": "Officier lié par un contrat dont il craint les clauses.",
+      "roleplayingNotes": "Je garde les citernes, pas les mensonges.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : L’ancien camarade de Kaël laissera passer un témoin sous garantie écrite.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Jarek Voss",
+        "house_name": "Concessions de Néréide",
+        "role": "Officier lié par un contrat dont il craint les clauses.",
+        "faction": "",
+        "ambition": "Protéger les témoins sans faire de la délégation une armée d’occupation.",
+        "personal_traits": "Vigilant, respecte sa parole",
+        "analyse": 4,
+        "combat": 8,
+        "discipline": 6,
+        "mob": 5,
+        "rhetoric": 5,
+        "devotion": 7,
+        "domination": 6,
+        "faith": 4,
+        "justice": 8,
+        "truth": 5,
+        "maxims": "",
+        "specializations": "combat : Lames courtes\ndiscipline : Protection rapprochée",
+        "talents": "",
+        "determination": 1,
+        "assets": "Lame courte\nBouclier personnel\nInsigne de garde",
+        "gear_notes": "Un ancien camarade garde le dépôt contesté. Kaël connaît sa loyauté, mais ignore le contrat qu’on lui a fait signer.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "Je ramène ceux qui me sont confiés.",
+            "domination": "La force doit laisser une porte de sortie.",
+            "justice": "Un prisonnier conserve le droit de parler."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-kael-0",
+              "nom": "Lame courte",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-kael-1",
+              "nom": "Bouclier personnel",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "defensif",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-kael-2",
+              "nom": "Insigne de garde",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 8,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 8,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 8,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-quai"
+      ],
+      "relations": [],
+      "faction": "Mandataire de Sareth",
+      "isVisibleByPlayers": true
+    },
+    {
+      "id": "recette-dune-pnj-mira",
+      "name": "Mira Sol",
+      "type": "npc",
+      "role": "ally",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-mira.svg",
+      "description": "Déléguée des ateliers qui connaît les livraisons réelles.",
+      "roleplayingNotes": "Les chiffres arrivent. L’eau, moins souvent.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : Son carnet permet de comparer les quantités reçues.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Mira Sol",
+        "house_name": "Concessions de Néréide",
+        "role": "Déléguée des ateliers qui connaît les livraisons réelles.",
+        "faction": "",
+        "ambition": "Établir la chaîne de falsification avant que la Maison n’endosse la pénurie.",
+        "personal_traits": "Méthodique, mémoire des contrats",
+        "analyse": 8,
+        "combat": 4,
+        "discipline": 6,
+        "mob": 5,
+        "rhetoric": 5,
+        "devotion": 6,
+        "domination": 4,
+        "faith": 5,
+        "justice": 7,
+        "truth": 8,
+        "maxims": "",
+        "specializations": "analyse : Comptabilité des concessions\ndiscipline : Observation",
+        "talents": "",
+        "determination": 1,
+        "assets": "Carnet chiffré\nSceau de conseiller\nLame de service",
+        "gear_notes": "Il a validé le précédent bilan des concessions. Une signature identique figure désormais sur un ordre qu’il n’a jamais lu.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "Un engagement doit pouvoir être compris.",
+            "justice": "Une preuve protège mieux qu’une accusation.",
+            "truth": "Le vrai prix se cache dans les comptes."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-tarek-0",
+              "nom": "Carnet chiffré",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-tarek-1",
+              "nom": "Sceau de conseiller",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-tarek-2",
+              "nom": "Lame de service",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 4,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-parvis"
+      ],
+      "relations": [],
+      "faction": "Concessions de Néréide",
+      "isVisibleByPlayers": true
+    },
+    {
+      "id": "recette-dune-pnj-orun",
+      "name": "Orun Kett",
+      "type": "npc",
+      "role": "neutral",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-orun.svg",
+      "description": "Responsable technique qui protège son équipe.",
+      "roleplayingNotes": "La vanne a été posée sur ordre.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : Il possède le plan et reconnaît l’équipe extérieure qui a posé la dérivation.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Orun Kett",
+        "house_name": "Concessions de Néréide",
+        "role": "Responsable technique qui protège son équipe.",
+        "faction": "",
+        "ambition": "Sauver la concession et obtenir un accord qui survive à la crise.",
+        "personal_traits": "Diplomate, loyale à ses sujets",
+        "analyse": 6,
+        "combat": 4,
+        "discipline": 5,
+        "mob": 5,
+        "rhetoric": 8,
+        "devotion": 8,
+        "domination": 6,
+        "faith": 5,
+        "justice": 7,
+        "truth": 4,
+        "maxims": "",
+        "specializations": "rhetoric : Négociation\nanalyse : Usages des Maisons",
+        "talents": "",
+        "determination": 1,
+        "assets": "Sceau d’émissaire\nCorrespondance diplomatique\nLame de ceinture",
+        "gear_notes": "Chargée de représenter Vaëlan à la commission, elle doit décider ce qu’elle consent à révéler des difficultés de sa famille.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "La Maison répond de ceux qu’elle gouverne.",
+            "domination": "L’autorité oblige à écouter.",
+            "justice": "Un accord qui affame les faibles ne tient pas."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-lysa-0",
+              "nom": "Sceau d’émissaire",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-lysa-1",
+              "nom": "Correspondance diplomatique",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-lysa-2",
+              "nom": "Lame de ceinture",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 4,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-depot"
+      ],
+      "relations": [],
+      "faction": "Concessions de Néréide",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dune-pnj-rav",
+      "name": "Ravel Sareth",
+      "type": "npc",
+      "role": "boss",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-rav.svg",
+      "description": "Mandataire d’une Maison rivale, courtois jusque dans ses menaces.",
+      "roleplayingNotes": "Une concession fragile mérite un propriétaire solide.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : Il a financé une pénurie limitée pour acheter la concession à vil prix.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Ravel Sareth",
+        "house_name": "Maison Sareth",
+        "role": "Mandataire d’une Maison rivale, courtois jusque dans ses menaces.",
+        "faction": "",
+        "ambition": "Protéger les témoins sans faire de la délégation une armée d’occupation.",
+        "personal_traits": "Vigilant, respecte sa parole",
+        "analyse": 4,
+        "combat": 8,
+        "discipline": 6,
+        "mob": 5,
+        "rhetoric": 5,
+        "devotion": 7,
+        "domination": 6,
+        "faith": 4,
+        "justice": 8,
+        "truth": 5,
+        "maxims": "",
+        "specializations": "combat : Lames courtes\ndiscipline : Protection rapprochée",
+        "talents": "",
+        "determination": 1,
+        "assets": "Lame courte\nBouclier personnel\nInsigne de garde",
+        "gear_notes": "Un ancien camarade garde le dépôt contesté. Kaël connaît sa loyauté, mais ignore le contrat qu’on lui a fait signer.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "Je ramène ceux qui me sont confiés.",
+            "domination": "La force doit laisser une porte de sortie.",
+            "justice": "Un prisonnier conserve le droit de parler."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-kael-0",
+              "nom": "Lame courte",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-kael-1",
+              "nom": "Bouclier personnel",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "defensif",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-kael-2",
+              "nom": "Insigne de garde",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 8,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 8,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 8,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-commission"
+      ],
+      "relations": [],
+      "faction": "Mandataire de Sareth",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dune-pnj-nalia",
+      "name": "Nalia Sareth",
+      "type": "npc",
+      "role": "neutral",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-nalia.svg",
+      "description": "Négociatrice qui exige des garanties concrètes.",
+      "roleplayingNotes": "Je ne prête pas mon nom à une faim organisée.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : Elle cherche le paiement des ouvriers et peut désavouer Ravel.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Nalia Sareth",
+        "house_name": "Maison Sareth",
+        "role": "Négociatrice qui exige des garanties concrètes.",
+        "faction": "",
+        "ambition": "Établir la chaîne de falsification avant que la Maison n’endosse la pénurie.",
+        "personal_traits": "Méthodique, mémoire des contrats",
+        "analyse": 8,
+        "combat": 4,
+        "discipline": 6,
+        "mob": 5,
+        "rhetoric": 5,
+        "devotion": 6,
+        "domination": 4,
+        "faith": 5,
+        "justice": 7,
+        "truth": 8,
+        "maxims": "",
+        "specializations": "analyse : Comptabilité des concessions\ndiscipline : Observation",
+        "talents": "",
+        "determination": 1,
+        "assets": "Carnet chiffré\nSceau de conseiller\nLame de service",
+        "gear_notes": "Il a validé le précédent bilan des concessions. Une signature identique figure désormais sur un ordre qu’il n’a jamais lu.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "Un engagement doit pouvoir être compris.",
+            "justice": "Une preuve protège mieux qu’une accusation.",
+            "truth": "Le vrai prix se cache dans les comptes."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-tarek-0",
+              "nom": "Carnet chiffré",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-tarek-1",
+              "nom": "Sceau de conseiller",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-tarek-2",
+              "nom": "Lame de service",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 4,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-salon"
+      ],
+      "relations": [],
+      "faction": "Concessions de Néréide",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dune-pnj-ilan",
+      "name": "Ilan Mer",
+      "type": "npc",
+      "role": "ally",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-ilan.svg",
+      "description": "Opérateur de relais qui conserve les journaux de service.",
+      "roleplayingNotes": "Une priorité laisse toujours une trace.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : Le paquet original et sa priorité ont échappé à l’effacement.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Ilan Mer",
+        "house_name": "Concessions de Néréide",
+        "role": "Opérateur de relais qui conserve les journaux de service.",
+        "faction": "",
+        "ambition": "Sauver la concession et obtenir un accord qui survive à la crise.",
+        "personal_traits": "Diplomate, loyale à ses sujets",
+        "analyse": 6,
+        "combat": 4,
+        "discipline": 5,
+        "mob": 5,
+        "rhetoric": 8,
+        "devotion": 8,
+        "domination": 6,
+        "faith": 5,
+        "justice": 7,
+        "truth": 4,
+        "maxims": "",
+        "specializations": "rhetoric : Négociation\nanalyse : Usages des Maisons",
+        "talents": "",
+        "determination": 1,
+        "assets": "Sceau d’émissaire\nCorrespondance diplomatique\nLame de ceinture",
+        "gear_notes": "Chargée de représenter Vaëlan à la commission, elle doit décider ce qu’elle consent à révéler des difficultés de sa famille.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "La Maison répond de ceux qu’elle gouverne.",
+            "domination": "L’autorité oblige à écouter.",
+            "justice": "Un accord qui affame les faibles ne tient pas."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-lysa-0",
+              "nom": "Sceau d’émissaire",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-lysa-1",
+              "nom": "Correspondance diplomatique",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-lysa-2",
+              "nom": "Lame de ceinture",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 4,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-relais"
+      ],
+      "relations": [],
+      "faction": "Concessions de Néréide",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dune-pnj-sava",
+      "name": "Sava Dren",
+      "type": "npc",
+      "role": "neutral",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-sava.svg",
+      "description": "Convoyeuse qui connaît la tournée des citernes.",
+      "roleplayingNotes": "Mon trajet ne passe pas par ce dépôt.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : Une copie de l’itinéraire montre le détour imposé après chargement.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Sava Dren",
+        "house_name": "Concessions de Néréide",
+        "role": "Convoyeuse qui connaît la tournée des citernes.",
+        "faction": "",
+        "ambition": "Protéger les témoins sans faire de la délégation une armée d’occupation.",
+        "personal_traits": "Vigilant, respecte sa parole",
+        "analyse": 4,
+        "combat": 8,
+        "discipline": 6,
+        "mob": 5,
+        "rhetoric": 5,
+        "devotion": 7,
+        "domination": 6,
+        "faith": 4,
+        "justice": 8,
+        "truth": 5,
+        "maxims": "",
+        "specializations": "combat : Lames courtes\ndiscipline : Protection rapprochée",
+        "talents": "",
+        "determination": 1,
+        "assets": "Lame courte\nBouclier personnel\nInsigne de garde",
+        "gear_notes": "Un ancien camarade garde le dépôt contesté. Kaël connaît sa loyauté, mais ignore le contrat qu’on lui a fait signer.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "Je ramène ceux qui me sont confiés.",
+            "domination": "La force doit laisser une porte de sortie.",
+            "justice": "Un prisonnier conserve le droit de parler."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-kael-0",
+              "nom": "Lame courte",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-kael-1",
+              "nom": "Bouclier personnel",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "defensif",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-kael-2",
+              "nom": "Insigne de garde",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 8,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 8,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 8,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-quai"
+      ],
+      "relations": [],
+      "faction": "Concessions de Néréide",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dune-pnj-var",
+      "name": "Var Nemm",
+      "type": "npc",
+      "role": "hostile",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-var.svg",
+      "description": "Chef d’escorte payé pour interdire la vanne.",
+      "roleplayingNotes": "Le contrat dit de tenir cette porte.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : Il se replie si le contrat est publiquement annulé ; pas de combat obligatoire.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Var Nemm",
+        "house_name": "Concessions de Néréide",
+        "role": "Chef d’escorte payé pour interdire la vanne.",
+        "faction": "",
+        "ambition": "Établir la chaîne de falsification avant que la Maison n’endosse la pénurie.",
+        "personal_traits": "Méthodique, mémoire des contrats",
+        "analyse": 8,
+        "combat": 4,
+        "discipline": 6,
+        "mob": 5,
+        "rhetoric": 5,
+        "devotion": 6,
+        "domination": 4,
+        "faith": 5,
+        "justice": 7,
+        "truth": 8,
+        "maxims": "",
+        "specializations": "analyse : Comptabilité des concessions\ndiscipline : Observation",
+        "talents": "",
+        "determination": 1,
+        "assets": "Carnet chiffré\nSceau de conseiller\nLame de service",
+        "gear_notes": "Il a validé le précédent bilan des concessions. Une signature identique figure désormais sur un ordre qu’il n’a jamais lu.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "Un engagement doit pouvoir être compris.",
+            "justice": "Une preuve protège mieux qu’une accusation.",
+            "truth": "Le vrai prix se cache dans les comptes."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-tarek-0",
+              "nom": "Carnet chiffré",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-tarek-1",
+              "nom": "Sceau de conseiller",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-tarek-2",
+              "nom": "Lame de service",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 4,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-depot"
+      ],
+      "relations": [],
+      "faction": "Mandataire de Sareth",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dune-pnj-helo",
+      "name": "Hélo Rinn",
+      "type": "npc",
+      "role": "neutral",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-helo.svg",
+      "description": "Arbitre locale qui exige une chaîne de preuves lisible.",
+      "roleplayingNotes": "Je peux entendre une explication ; apportez aussi la trace.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : Elle peut suspendre l’expédition le temps d’une expertise contradictoire.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Hélo Rinn",
+        "house_name": "Concessions de Néréide",
+        "role": "Arbitre locale qui exige une chaîne de preuves lisible.",
+        "faction": "",
+        "ambition": "Sauver la concession et obtenir un accord qui survive à la crise.",
+        "personal_traits": "Diplomate, loyale à ses sujets",
+        "analyse": 6,
+        "combat": 4,
+        "discipline": 5,
+        "mob": 5,
+        "rhetoric": 8,
+        "devotion": 8,
+        "domination": 6,
+        "faith": 5,
+        "justice": 7,
+        "truth": 4,
+        "maxims": "",
+        "specializations": "rhetoric : Négociation\nanalyse : Usages des Maisons",
+        "talents": "",
+        "determination": 1,
+        "assets": "Sceau d’émissaire\nCorrespondance diplomatique\nLame de ceinture",
+        "gear_notes": "Chargée de représenter Vaëlan à la commission, elle doit décider ce qu’elle consent à révéler des difficultés de sa famille.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "La Maison répond de ceux qu’elle gouverne.",
+            "domination": "L’autorité oblige à écouter.",
+            "justice": "Un accord qui affame les faibles ne tient pas."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-lysa-0",
+              "nom": "Sceau d’émissaire",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-lysa-1",
+              "nom": "Correspondance diplomatique",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-lysa-2",
+              "nom": "Lame de ceinture",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 4,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 4,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-commission"
+      ],
+      "relations": [],
+      "faction": "Concessions de Néréide",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dune-pnj-tessa",
+      "name": "Tessa Vale",
+      "type": "npc",
+      "role": "ally",
+      "status": "alive",
+      "campaignId": "recette-dune-campagne-nereide",
+      "avatar": "recette-dune-media-pnj-tessa.svg",
+      "description": "Médecin des concessions, témoin du rationnement.",
+      "roleplayingNotes": "Une journée de retard est déjà une décision.",
+      "gmSecretInfo": "SECRET_MJ_DUNE_RECETTE : Son rapport établit l’urgence sans transformer la crise en prétexte militaire.",
+      "templateId": "tpl-1774724573418",
+      "sheetData": {
+        "char_name": "Tessa Vale",
+        "house_name": "Concessions de Néréide",
+        "role": "Médecin des concessions, témoin du rationnement.",
+        "faction": "",
+        "ambition": "Protéger les témoins sans faire de la délégation une armée d’occupation.",
+        "personal_traits": "Vigilant, respecte sa parole",
+        "analyse": 4,
+        "combat": 8,
+        "discipline": 6,
+        "mob": 5,
+        "rhetoric": 5,
+        "devotion": 7,
+        "domination": 6,
+        "faith": 4,
+        "justice": 8,
+        "truth": 5,
+        "maxims": "",
+        "specializations": "combat : Lames courtes\ndiscipline : Protection rapprochée",
+        "talents": "",
+        "determination": 1,
+        "assets": "Lame courte\nBouclier personnel\nInsigne de garde",
+        "gear_notes": "Un ancien camarade garde le dépôt contesté. Kaël connaît sa loyauté, mais ignore le contrat qu’on lui a fait signer.",
+        "progression": 0,
+        "_gmos_dune": {
+          "version": 1,
+          "aventure": "Le Sceau de Néréide",
+          "scene": "S01 — Le mandat de la Maison",
+          "maximes": {
+            "devotion": "Je ramène ceux qui me sont confiés.",
+            "domination": "La force doit laisser une porte de sortie.",
+            "justice": "Un prisonnier conserve le droit de parler."
+          },
+          "bafoues": [],
+          "recuperes": [],
+          "determinationDansLaScene": false,
+          "atouts": [
+            {
+              "id": "recette-dune-atout-personnel-kael-0",
+              "nom": "Lame courte",
+              "qualite": 1,
+              "tangible": true,
+              "permanent": true,
+              "usage": "offensif",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-kael-1",
+              "nom": "Bouclier personnel",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "defensif",
+              "zone": "",
+              "neutralise": false
+            },
+            {
+              "id": "recette-dune-atout-personnel-kael-2",
+              "nom": "Insigne de garde",
+              "qualite": 0,
+              "tangible": true,
+              "permanent": true,
+              "usage": "autre",
+              "zone": "",
+              "neutralise": false
+            }
+          ],
+          "progression": [],
+          "competencesAugmentees": [],
+          "evenements": [],
+          "defaite": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 8,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        }
+      },
+      "healthSystem": {
+        "type": "clocks",
+        "data": {
+          "filled": 0,
+          "segments": 8,
+          "dune": {
+            "genre": "notable",
+            "vaincu": false,
+            "progression": 0,
+            "conditions": 8,
+            "qualite": 0,
+            "durable": "",
+            "recuperation": 0
+          }
+        },
+        "state": "healthy",
+        "badges": []
+      },
+      "linkedMapIds": [
+        "recette-dune-lieu-salon"
+      ],
+      "relations": [],
+      "faction": "Concessions de Néréide",
+      "isVisibleByPlayers": false
+    }
+  ],
+  "atlasMaps": [
+    {
+      "id": "recette-dune-lieu-residence",
+      "name": "La Résidence Vaëlan",
+      "type": "building",
+      "narrativeDescription": "Une cour de pierre pâle accueille les représentants de la Maison et les familles venues réclamer leur contingent.",
+      "gmNotes": "Le coffre conserve une copie du dernier accord.",
+      "campaignId": "recette-dune-campagne-nereide",
+      "fileUrl": "recette-dune-media-carte-residence.svg",
+      "isVideo": false,
+      "isVisited": true,
+      "linkedEntities": [
+        {
+          "id": "recette-dune-lien-residence-eda",
+          "name": "Eda Vaëlan",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-eda"
+        },
+        {
+          "id": "recette-dune-lien-residence-parvis",
+          "name": "Le Parvis des concessions",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-parvis"
+        },
+        {
+          "id": "recette-dune-lien-residence-archives",
+          "name": "Les Archives des marées",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-archives"
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-lieu-parvis",
+      "name": "Le Parvis des concessions",
+      "type": "city",
+      "narrativeDescription": "Des comptoirs affichent les quotas. Les chiffres changent pendant que les files restent immobiles.",
+      "gmNotes": "La liste publique diffère du registre du dépôt.",
+      "campaignId": "recette-dune-campagne-nereide",
+      "fileUrl": "recette-dune-media-carte-parvis.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dune-lien-parvis-mira",
+          "name": "Mira Sol",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-mira"
+        },
+        {
+          "id": "recette-dune-lien-parvis-residence",
+          "name": "La Résidence Vaëlan",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-residence"
+        },
+        {
+          "id": "recette-dune-lien-parvis-archives",
+          "name": "Les Archives des marées",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-archives"
+        },
+        {
+          "id": "recette-dune-lien-parvis-quai",
+          "name": "Le Quai des citernes",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-quai"
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-lieu-archives",
+      "name": "Les Archives des marées",
+      "type": "building",
+      "narrativeDescription": "Les contrats sont rangés par cycle de livraison. Une cire récente couvre des cachets anciens.",
+      "gmNotes": "Le contre-registre prouve l’antidatage des ordres.",
+      "campaignId": "recette-dune-campagne-nereide",
+      "fileUrl": "recette-dune-media-carte-archives.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dune-lien-archives-seris",
+          "name": "Seris Dane",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-seris"
+        },
+        {
+          "id": "recette-dune-lien-archives-residence",
+          "name": "La Résidence Vaëlan",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-residence"
+        },
+        {
+          "id": "recette-dune-lien-archives-parvis",
+          "name": "Le Parvis des concessions",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-parvis"
+        },
+        {
+          "id": "recette-dune-lien-archives-salon",
+          "name": "Le Salon des cautions",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-salon"
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-lieu-quai",
+      "name": "Le Quai des citernes",
+      "type": "building",
+      "narrativeDescription": "Des citernes scellées attendent une autorisation de départ. Les gardes surveillent les convoyeurs autant que les visiteurs.",
+      "gmNotes": "Le manifeste désigne un dépôt privé ; l’expédition peut être suspendue sans tirer.",
+      "campaignId": "recette-dune-campagne-nereide",
+      "fileUrl": "recette-dune-media-carte-quai.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dune-lien-quai-jarek",
+          "name": "Jarek Voss",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-jarek"
+        },
+        {
+          "id": "recette-dune-lien-quai-sava",
+          "name": "Sava Dren",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-sava"
+        },
+        {
+          "id": "recette-dune-lien-quai-parvis",
+          "name": "Le Parvis des concessions",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-parvis"
+        },
+        {
+          "id": "recette-dune-lien-quai-depot",
+          "name": "Le Dépôt des trois vannes",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-depot"
+        },
+        {
+          "id": "recette-dune-lien-quai-relais",
+          "name": "Le Relais du vent blanc",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-relais"
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-lieu-depot",
+      "name": "Le Dépôt des trois vannes",
+      "type": "dungeon",
+      "narrativeDescription": "Trois circuits alimentent des concessions différentes. Une vanne neuve détourne le flux vers un réservoir sans marque.",
+      "gmNotes": "Une dérivation matérielle et un ordre contrefait ont servi ensemble.",
+      "campaignId": "recette-dune-campagne-nereide",
+      "fileUrl": "recette-dune-media-carte-depot.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dune-lien-depot-orun",
+          "name": "Orun Kett",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-orun"
+        },
+        {
+          "id": "recette-dune-lien-depot-var",
+          "name": "Var Nemm",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-var"
+        },
+        {
+          "id": "recette-dune-lien-depot-quai",
+          "name": "Le Quai des citernes",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-quai"
+        },
+        {
+          "id": "recette-dune-lien-depot-relais",
+          "name": "Le Relais du vent blanc",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-relais"
+        },
+        {
+          "id": "recette-dune-lien-depot-commission",
+          "name": "La Chambre des sceaux",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-commission"
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-lieu-relais",
+      "name": "Le Relais du vent blanc",
+      "type": "wilderness",
+      "narrativeDescription": "Le relais de transmission domine les digues. Ses journaux enregistrent les retards et les priorités du trafic.",
+      "gmNotes": "Le paquet original existe encore dans une mémoire de service.",
+      "campaignId": "recette-dune-campagne-nereide",
+      "fileUrl": "recette-dune-media-carte-relais.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dune-lien-relais-ilan",
+          "name": "Ilan Mer",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-ilan"
+        },
+        {
+          "id": "recette-dune-lien-relais-quai",
+          "name": "Le Quai des citernes",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-quai"
+        },
+        {
+          "id": "recette-dune-lien-relais-depot",
+          "name": "Le Dépôt des trois vannes",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-depot"
+        },
+        {
+          "id": "recette-dune-lien-relais-salon",
+          "name": "Le Salon des cautions",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-salon"
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-lieu-salon",
+      "name": "Le Salon des cautions",
+      "type": "building",
+      "narrativeDescription": "Sous une verrière, alliés et créanciers négocient avant la séance publique.",
+      "gmNotes": "La déléguée de Sareth veut la garantie de paiement de ses ouvriers, pas la chute de Vaëlan.",
+      "campaignId": "recette-dune-campagne-nereide",
+      "fileUrl": "recette-dune-media-carte-salon.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dune-lien-salon-nalia",
+          "name": "Nalia Sareth",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-nalia"
+        },
+        {
+          "id": "recette-dune-lien-salon-tessa",
+          "name": "Tessa Vale",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-tessa"
+        },
+        {
+          "id": "recette-dune-lien-salon-archives",
+          "name": "Les Archives des marées",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-archives"
+        },
+        {
+          "id": "recette-dune-lien-salon-relais",
+          "name": "Le Relais du vent blanc",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-relais"
+        },
+        {
+          "id": "recette-dune-lien-salon-commission",
+          "name": "La Chambre des sceaux",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-commission"
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-lieu-commission",
+      "name": "La Chambre des sceaux",
+      "type": "building",
+      "narrativeDescription": "Une commission locale arbitre l’exécution des concessions. Les témoins entrent par une porte latérale.",
+      "gmNotes": "Ravel a financé le détournement pour forcer une vente ; preuve, réparation ou accord public peuvent le priver de son levier.",
+      "campaignId": "recette-dune-campagne-nereide",
+      "fileUrl": "recette-dune-media-carte-commission.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dune-lien-commission-rav",
+          "name": "Ravel Sareth",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-rav"
+        },
+        {
+          "id": "recette-dune-lien-commission-helo",
+          "name": "Hélo Rinn",
+          "category": "npc",
+          "entityId": "recette-dune-pnj-helo"
+        },
+        {
+          "id": "recette-dune-lien-commission-depot",
+          "name": "Le Dépôt des trois vannes",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-depot"
+        },
+        {
+          "id": "recette-dune-lien-commission-salon",
+          "name": "Le Salon des cautions",
+          "category": "lieu",
+          "mapId": "recette-dune-lieu-salon"
+        }
+      ]
+    }
+  ],
+  "clues": [
+    {
+      "id": "recette-dune-indice-ordre",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I01 — L’ordre au sceau double",
+      "content": "Un ordre de transfert porte deux empreintes légèrement décalées. La Maison demande une vérification avant le départ.",
+      "locationId": "recette-dune-lieu-residence",
+      "ownerId": "recette-dune-pnj-eda",
+      "mediaUrl": "recette-dune-media-indice-ordre.svg",
+      "isRevealed": true,
+      "revealedAt": 1792929600000
+    },
+    {
+      "id": "recette-dune-indice-bilan",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I02 — Le bilan précédent",
+      "content": "La livraison promise et les quantités comptées ne correspondent plus au registre affiché.",
+      "locationId": "recette-dune-lieu-residence",
+      "ownerId": "recette-dune-pnj-eda",
+      "mediaUrl": "recette-dune-media-indice-bilan.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dune-indice-atelier",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I03 — Le carnet des ateliers",
+      "content": "Les réceptions de trois quartiers diminuent aux mêmes dates que les transferts privés.",
+      "locationId": "recette-dune-lieu-parvis",
+      "ownerId": "recette-dune-pnj-mira",
+      "mediaUrl": "recette-dune-media-indice-atelier.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dune-indice-registre",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I04 — Le contre-registre",
+      "content": "La page conservée par Seris est antérieure à l’ordre supposé plus ancien.",
+      "locationId": "recette-dune-lieu-archives",
+      "ownerId": "recette-dune-pnj-seris",
+      "mediaUrl": "recette-dune-media-indice-registre.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dune-indice-manifeste",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I05 — Le manifeste corrigé",
+      "content": "Une destination privée a remplacé le dépôt communal après le chargement.",
+      "locationId": "recette-dune-lieu-quai",
+      "ownerId": "recette-dune-pnj-sava",
+      "mediaUrl": "recette-dune-media-indice-manifeste.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dune-indice-garantie",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I06 — La clause de garantie",
+      "content": "Le contrat de Jarek permet un contrôle sous garantie signée d’un représentant de Maison.",
+      "locationId": "recette-dune-lieu-quai",
+      "ownerId": "recette-dune-pnj-jarek",
+      "mediaUrl": "recette-dune-media-indice-garantie.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dune-indice-plan",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I07 — Le plan des vannes",
+      "content": "La dérivation peut être isolée en maintenant l’alimentation des concessions.",
+      "locationId": "recette-dune-lieu-depot",
+      "ownerId": "recette-dune-pnj-orun",
+      "mediaUrl": "recette-dune-media-indice-plan.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dune-indice-paquet",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I08 — Le paquet original",
+      "content": "Le relais a reçu la version non modifiée et l’identifiant du mandataire qui l’a remplacée.",
+      "locationId": "recette-dune-lieu-relais",
+      "ownerId": "recette-dune-pnj-ilan",
+      "mediaUrl": "recette-dune-media-indice-paquet.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dune-indice-priorite",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I09 — La priorité de trafic",
+      "content": "Le paiement d’une priorité relie le remplacement à un intermédiaire de Ravel.",
+      "locationId": "recette-dune-lieu-relais",
+      "ownerId": "recette-dune-pnj-ilan",
+      "mediaUrl": "recette-dune-media-indice-priorite.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dune-indice-caution",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I10 — La demande de caution",
+      "content": "Nalia réclame une garantie pour les ouvriers ; ce besoin peut fonder une alliance.",
+      "locationId": "recette-dune-lieu-salon",
+      "ownerId": "recette-dune-pnj-nalia",
+      "mediaUrl": "recette-dune-media-indice-caution.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dune-indice-soins",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I11 — Le rapport des quartiers",
+      "content": "Le rationnement est réel et urgent ; une suspension technique doit maintenir le service.",
+      "locationId": "recette-dune-lieu-salon",
+      "ownerId": "recette-dune-pnj-tessa",
+      "mediaUrl": "recette-dune-media-indice-soins.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dune-indice-avance",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "I12 — L’avance sur la vente",
+      "content": "Une avance privée à Ravel dépend d’une vente forcée de la concession après défaut.",
+      "locationId": "recette-dune-lieu-commission",
+      "ownerId": "recette-dune-pnj-helo",
+      "mediaUrl": "recette-dune-media-indice-avance.svg",
+      "isRevealed": false
+    }
+  ],
+  "wikiEntries": [
+    {
+      "id": "recette-dune-wiki-residence",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "La Résidence Vaëlan",
+      "content": "Une cour de pierre pâle accueille les représentants de la Maison et les familles venues réclamer leur contingent.",
+      "category": "location",
+      "tags": [
+        "Néréide",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dune-media-carte-residence.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dune-pnj-eda"
+      ]
+    },
+    {
+      "id": "recette-dune-wiki-parvis",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "Le Parvis des concessions",
+      "content": "Des comptoirs affichent les quotas. Les chiffres changent pendant que les files restent immobiles.",
+      "category": "location",
+      "tags": [
+        "Néréide",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dune-media-carte-parvis.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dune-pnj-mira"
+      ]
+    },
+    {
+      "id": "recette-dune-wiki-archives",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "Les Archives des marées",
+      "content": "Les contrats sont rangés par cycle de livraison. Une cire récente couvre des cachets anciens.",
+      "category": "location",
+      "tags": [
+        "Néréide",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dune-media-carte-archives.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dune-pnj-seris"
+      ]
+    },
+    {
+      "id": "recette-dune-wiki-quai",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "Le Quai des citernes",
+      "content": "Des citernes scellées attendent une autorisation de départ. Les gardes surveillent les convoyeurs autant que les visiteurs.",
+      "category": "location",
+      "tags": [
+        "Néréide",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dune-media-carte-quai.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dune-pnj-jarek",
+        "recette-dune-pnj-sava"
+      ]
+    },
+    {
+      "id": "recette-dune-wiki-depot",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "Le Dépôt des trois vannes",
+      "content": "Trois circuits alimentent des concessions différentes. Une vanne neuve détourne le flux vers un réservoir sans marque.",
+      "category": "location",
+      "tags": [
+        "Néréide",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dune-media-carte-depot.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dune-pnj-orun",
+        "recette-dune-pnj-var"
+      ]
+    },
+    {
+      "id": "recette-dune-wiki-relais",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "Le Relais du vent blanc",
+      "content": "Le relais de transmission domine les digues. Ses journaux enregistrent les retards et les priorités du trafic.",
+      "category": "location",
+      "tags": [
+        "Néréide",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dune-media-carte-relais.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dune-pnj-ilan"
+      ]
+    },
+    {
+      "id": "recette-dune-wiki-salon",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "Le Salon des cautions",
+      "content": "Sous une verrière, alliés et créanciers négocient avant la séance publique.",
+      "category": "location",
+      "tags": [
+        "Néréide",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dune-media-carte-salon.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dune-pnj-nalia",
+        "recette-dune-pnj-tessa"
+      ]
+    },
+    {
+      "id": "recette-dune-wiki-commission",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "La Chambre des sceaux",
+      "content": "Une commission locale arbitre l’exécution des concessions. Les témoins entrent par une porte latérale.",
+      "category": "location",
+      "tags": [
+        "Néréide",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dune-media-carte-commission.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dune-pnj-rav",
+        "recette-dune-pnj-helo"
+      ]
+    },
+    {
+      "id": "recette-dune-wiki-maison",
+      "campaignId": "recette-dune-campagne-nereide",
+      "title": "Maison Vaëlan et concession de Néréide",
+      "content": "Maison et monde fictifs. La fiche de Maison fait foi ; le module en reprend les données. Zones abstraites, secrets révélés par le gardien et atouts distincts des ressources personnelles.",
+      "category": "lore",
+      "tags": [
+        "Maison",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dune-media-maison.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dune-pnj-eda"
+      ]
+    }
+  ],
+  "timelineEvents": [
+    {
+      "id": "recette-dune-chrono-0",
+      "campaignId": "recette-dune-campagne-nereide",
+      "date": "2026-10-22",
+      "title": "Dernier bilan validé",
+      "description": "Repère de tri fictif J-3 ; les dates ISO ne constituent pas le calendrier impérial.",
+      "type": "lore",
+      "locationId": "recette-dune-lieu-depot",
+      "involvedEntityIds": [
+        "recette-dune-pnj-rav"
+      ]
+    },
+    {
+      "id": "recette-dune-chrono-1",
+      "campaignId": "recette-dune-campagne-nereide",
+      "date": "2026-10-23",
+      "title": "Ordre remplacé",
+      "description": "Repère de tri fictif J-2 ; les dates ISO ne constituent pas le calendrier impérial.",
+      "type": "lore",
+      "locationId": "recette-dune-lieu-depot",
+      "involvedEntityIds": [
+        "recette-dune-pnj-rav"
+      ]
+    },
+    {
+      "id": "recette-dune-chrono-2",
+      "campaignId": "recette-dune-campagne-nereide",
+      "date": "2026-10-24",
+      "title": "Les quotas diminuent",
+      "description": "Repère de tri fictif J-1 ; les dates ISO ne constituent pas le calendrier impérial.",
+      "type": "lore",
+      "locationId": "recette-dune-lieu-depot",
+      "involvedEntityIds": [
+        "recette-dune-pnj-rav"
+      ]
+    },
+    {
+      "id": "recette-dune-chrono-3",
+      "campaignId": "recette-dune-campagne-nereide",
+      "date": "2026-10-25",
+      "title": "La délégation est mandatée",
+      "description": "Repère de tri fictif J0 ; les dates ISO ne constituent pas le calendrier impérial.",
+      "type": "lore",
+      "locationId": "recette-dune-lieu-depot",
+      "involvedEntityIds": [
+        "recette-dune-pnj-rav"
+      ]
+    }
+  ],
+  "actes": [
+    {
+      "id": "recette-dune-acte-1",
+      "campaignId": "recette-dune-campagne-nereide",
+      "ordre": 1,
+      "titre": "Les sceaux ne concordent plus",
+      "resume": "Les sceaux ne concordent plus",
+      "acheve": false,
+      "notesDuMeneur": "Ne pas bloquer un indice sur un unique jet. Acte IV : laboratoires hors fiction."
+    },
+    {
+      "id": "recette-dune-acte-2",
+      "campaignId": "recette-dune-campagne-nereide",
+      "ordre": 2,
+      "titre": "Ce que vaut une garantie",
+      "resume": "Ce que vaut une garantie",
+      "acheve": false,
+      "notesDuMeneur": "Ne pas bloquer un indice sur un unique jet. Acte IV : laboratoires hors fiction."
+    },
+    {
+      "id": "recette-dune-acte-3",
+      "campaignId": "recette-dune-campagne-nereide",
+      "ordre": 3,
+      "titre": "La parole de la Maison",
+      "resume": "La parole de la Maison",
+      "acheve": false,
+      "notesDuMeneur": "Ne pas bloquer un indice sur un unique jet. Acte IV : laboratoires hors fiction."
+    },
+    {
+      "id": "recette-dune-acte-4",
+      "campaignId": "recette-dune-campagne-nereide",
+      "ordre": 4,
+      "titre": "Atelier de recette — hors fiction",
+      "resume": "Atelier de recette — hors fiction",
+      "acheve": false,
+      "notesDuMeneur": "Ne pas bloquer un indice sur un unique jet. Acte IV : laboratoires hors fiction."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "recette-dune-scene-mandat",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-1",
+      "ordre": 1,
+      "titre": "S01 — Le mandat de la Maison",
+      "lieuId": "recette-dune-lieu-residence",
+      "entiteIds": [
+        "recette-dune-pnj-eda"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-ordre",
+        "recette-dune-indice-bilan"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Recevoir le mandat, choisir les maximes pertinentes et obtenir I01 sans jet.",
+      "enjeux": "Recevoir le mandat, choisir les maximes pertinentes et obtenir I01 sans jet.",
+      "descriptionNarrative": "Une cour de pierre pâle accueille les représentants de la Maison et les familles venues réclamer leur contingent. Recevoir le mandat, choisir les maximes pertinentes et obtenir I01 sans jet.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Elle acceptera d’exposer une dette ancienne si les foyers restent approvisionnés.",
+      "repliques": "Eda Vaëlan : Je veux savoir ce que nous avons signé.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-quotas",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dune-scene-archives",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000,
+      "momentDeStoryboardId": "recette-dune-moment-mandat"
+    },
+    {
+      "id": "recette-dune-scene-quotas",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-1",
+      "ordre": 2,
+      "titre": "S02 — Les files du Parvis",
+      "lieuId": "recette-dune-lieu-parvis",
+      "entiteIds": [
+        "recette-dune-pnj-mira"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-atelier"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Comparer les chiffres et entendre les familles ; leur carnet reste accessible après un échec.",
+      "enjeux": "Comparer les chiffres et entendre les familles ; leur carnet reste accessible après un échec.",
+      "descriptionNarrative": "Des comptoirs affichent les quotas. Les chiffres changent pendant que les files restent immobiles. Comparer les chiffres et entendre les familles ; leur carnet reste accessible après un échec.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Son carnet permet de comparer les quantités reçues.",
+      "repliques": "Mira Sol : Les chiffres arrivent. L’eau, moins souvent.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-archives",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dune-scene-quai",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000
+    },
+    {
+      "id": "recette-dune-scene-archives",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-1",
+      "ordre": 3,
+      "titre": "S03 — La cire récente",
+      "lieuId": "recette-dune-lieu-archives",
+      "entiteIds": [
+        "recette-dune-pnj-seris"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-registre"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Suivre la falsification par les dates, les sceaux ou le témoignage.",
+      "enjeux": "Suivre la falsification par les dates, les sceaux ou le témoignage.",
+      "descriptionNarrative": "Les contrats sont rangés par cycle de livraison. Une cire récente couvre des cachets anciens. Suivre la falsification par les dates, les sceaux ou le témoignage.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Elle a gardé le contre-registre avant le remplacement des pages.",
+      "repliques": "Seris Dane : Un cachet n’est pas une preuve de lecture.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-quai",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dune-scene-relais",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000
+    },
+    {
+      "id": "recette-dune-scene-quai",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-1",
+      "ordre": 4,
+      "titre": "S04 — Une porte sous contrat",
+      "lieuId": "recette-dune-lieu-quai",
+      "entiteIds": [
+        "recette-dune-pnj-jarek",
+        "recette-dune-pnj-sava"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-manifeste",
+        "recette-dune-indice-garantie"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Négocier le contrôle, fournir une garantie ou suivre le détour ; duel optionnel.",
+      "enjeux": "Négocier le contrôle, fournir une garantie ou suivre le détour ; duel optionnel.",
+      "descriptionNarrative": "Des citernes scellées attendent une autorisation de départ. Les gardes surveillent les convoyeurs autant que les visiteurs. Négocier le contrôle, fournir une garantie ou suivre le détour ; duel optionnel.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : L’ancien camarade de Kaël laissera passer un témoin sous garantie écrite. Une copie de l’itinéraire montre le détour imposé après chargement.",
+      "repliques": "Jarek Voss : Je garde les citernes, pas les mensonges.\nSava Dren : Mon trajet ne passe pas par ce dépôt.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-vannes",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dune-scene-relais",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000
+    },
+    {
+      "id": "recette-dune-scene-vannes",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-2",
+      "ordre": 1,
+      "titre": "S05 — Les trois circuits",
+      "lieuId": "recette-dune-lieu-depot",
+      "entiteIds": [
+        "recette-dune-pnj-orun"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-plan"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Préparer l’isolement de la dérivation sans couper le service public.",
+      "enjeux": "Préparer l’isolement de la dérivation sans couper le service public.",
+      "descriptionNarrative": "Trois circuits alimentent des concessions différentes. Une vanne neuve détourne le flux vers un réservoir sans marque. Préparer l’isolement de la dérivation sans couper le service public.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Il possède le plan et reconnaît l’équipe extérieure qui a posé la dérivation.",
+      "repliques": "Orun Kett : La vanne a été posée sur ordre.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-escorte",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dune-scene-relais",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000,
+      "momentDeStoryboardId": "recette-dune-moment-vannes"
+    },
+    {
+      "id": "recette-dune-scene-escorte",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-2",
+      "ordre": 2,
+      "titre": "S06 — L’escorte de Var",
+      "lieuId": "recette-dune-lieu-depot",
+      "entiteIds": [
+        "recette-dune-pnj-var",
+        "recette-dune-pnj-jarek"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-garantie"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Annuler le contrat, contourner ou éprouver l’escarmouche ; aucune mort imposée.",
+      "enjeux": "Annuler le contrat, contourner ou éprouver l’escarmouche ; aucune mort imposée.",
+      "descriptionNarrative": "Trois circuits alimentent des concessions différentes. Une vanne neuve détourne le flux vers un réservoir sans marque. Annuler le contrat, contourner ou éprouver l’escarmouche ; aucune mort imposée.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Il se replie si le contrat est publiquement annulé ; pas de combat obligatoire. L’ancien camarade de Kaël laissera passer un témoin sous garantie écrite.",
+      "repliques": "Var Nemm : Le contrat dit de tenir cette porte.\nJarek Voss : Je garde les citernes, pas les mensonges.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-relais",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dune-scene-cautions",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000
+    },
+    {
+      "id": "recette-dune-scene-relais",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-2",
+      "ordre": 3,
+      "titre": "S07 — Le paquet qui demeure",
+      "lieuId": "recette-dune-lieu-relais",
+      "entiteIds": [
+        "recette-dune-pnj-ilan"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-paquet",
+        "recette-dune-indice-priorite"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Obtenir la trace par expertise, accès autorisé ou espionnage de recette.",
+      "enjeux": "Obtenir la trace par expertise, accès autorisé ou espionnage de recette.",
+      "descriptionNarrative": "Le relais de transmission domine les digues. Ses journaux enregistrent les retards et les priorités du trafic. Obtenir la trace par expertise, accès autorisé ou espionnage de recette.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Le paquet original et sa priorité ont échappé à l’effacement.",
+      "repliques": "Ilan Mer : Une priorité laisse toujours une trace.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-cautions",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000
+    },
+    {
+      "id": "recette-dune-scene-cautions",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-2",
+      "ordre": 4,
+      "titre": "S08 — La garantie de Nalia",
+      "lieuId": "recette-dune-lieu-salon",
+      "entiteIds": [
+        "recette-dune-pnj-nalia",
+        "recette-dune-pnj-tessa"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-caution",
+        "recette-dune-indice-soins"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Enquête d’intrigue et alliance ; un désir secret a des conditions et une progression.",
+      "enjeux": "Enquête d’intrigue et alliance ; un désir secret a des conditions et une progression.",
+      "descriptionNarrative": "Sous une verrière, alliés et créanciers négocient avant la séance publique. Enquête d’intrigue et alliance ; un désir secret a des conditions et une progression.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Elle cherche le paiement des ouvriers et peut désavouer Ravel. Son rapport établit l’urgence sans transformer la crise en prétexte militaire.",
+      "repliques": "Nalia Sareth : Je ne prête pas mon nom à une faim organisée.\nTessa Vale : Une journée de retard est déjà une décision.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-preparer",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dune-scene-audience",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000,
+      "momentDeStoryboardId": "recette-dune-moment-cautions"
+    },
+    {
+      "id": "recette-dune-scene-preparer",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-3",
+      "ordre": 1,
+      "titre": "S09 — Ce qui peut être prouvé",
+      "lieuId": "recette-dune-lieu-archives",
+      "entiteIds": [
+        "recette-dune-pnj-seris",
+        "recette-dune-pnj-orun"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-registre",
+        "recette-dune-indice-plan"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Assembler deux chaînes de preuves, choisir les témoins et préparer un repli.",
+      "enjeux": "Assembler deux chaînes de preuves, choisir les témoins et préparer un repli.",
+      "descriptionNarrative": "Les contrats sont rangés par cycle de livraison. Une cire récente couvre des cachets anciens. Assembler deux chaînes de preuves, choisir les témoins et préparer un repli.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Elle a gardé le contre-registre avant le remplacement des pages. Il possède le plan et reconnaît l’équipe extérieure qui a posé la dérivation.",
+      "repliques": "Seris Dane : Un cachet n’est pas une preuve de lecture.\nOrun Kett : La vanne a été posée sur ordre.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-audience",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dune-scene-digues",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000
+    },
+    {
+      "id": "recette-dune-scene-audience",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-3",
+      "ordre": 2,
+      "titre": "S10 — Le prix du sceau",
+      "lieuId": "recette-dune-lieu-commission",
+      "entiteIds": [
+        "recette-dune-pnj-rav",
+        "recette-dune-pnj-helo"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-avance"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Affronter Ravel en intrigue ou présenter l’expertise ; la Maison peut aussi négocier.",
+      "enjeux": "Affronter Ravel en intrigue ou présenter l’expertise ; la Maison peut aussi négocier.",
+      "descriptionNarrative": "Une commission locale arbitre l’exécution des concessions. Les témoins entrent par une porte latérale. Affronter Ravel en intrigue ou présenter l’expertise ; la Maison peut aussi négocier.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Il a financé une pénurie limitée pour acheter la concession à vil prix. Elle peut suspendre l’expédition le temps d’une expertise contradictoire.",
+      "repliques": "Ravel Sareth : Une concession fragile mérite un propriétaire solide.\nHélo Rinn : Je peux entendre une explication ; apportez aussi la trace.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-digues",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dune-scene-accord",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000
+    },
+    {
+      "id": "recette-dune-scene-digues",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-3",
+      "ordre": 3,
+      "titre": "S11 — Tenir le service",
+      "lieuId": "recette-dune-lieu-depot",
+      "entiteIds": [
+        "recette-dune-pnj-orun",
+        "recette-dune-pnj-jarek"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-plan"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Déployer une équipe en mode Architecte, réparer ou protéger les citernes ; guerre optionnelle hors escalade obligatoire.",
+      "enjeux": "Déployer une équipe en mode Architecte, réparer ou protéger les citernes ; guerre optionnelle hors escalade obligatoire.",
+      "descriptionNarrative": "Trois circuits alimentent des concessions différentes. Une vanne neuve détourne le flux vers un réservoir sans marque. Déployer une équipe en mode Architecte, réparer ou protéger les citernes ; guerre optionnelle hors escalade obligatoire.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Il possède le plan et reconnaît l’équipe extérieure qui a posé la dérivation. L’ancien camarade de Kaël laissera passer un témoin sous garantie écrite.",
+      "repliques": "Orun Kett : La vanne a été posée sur ordre.\nJarek Voss : Je garde les citernes, pas les mensonges.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-accord",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000
+    },
+    {
+      "id": "recette-dune-scene-accord",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-3",
+      "ordre": 4,
+      "titre": "S12 — Un sceau qui engage",
+      "lieuId": "recette-dune-lieu-commission",
+      "entiteIds": [
+        "recette-dune-pnj-eda",
+        "recette-dune-pnj-nalia",
+        "recette-dune-pnj-helo"
+      ],
+      "indiceIds": [
+        "recette-dune-indice-avance",
+        "recette-dune-indice-caution"
+      ],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Exposer Ravel, obtenir un accord ou rétablir le service avant la vente ; clore l’aventure et répartir les biens.",
+      "enjeux": "Exposer Ravel, obtenir un accord ou rétablir le service avant la vente ; clore l’aventure et répartir les biens.",
+      "descriptionNarrative": "Une commission locale arbitre l’exécution des concessions. Les témoins entrent par une porte latérale. Exposer Ravel, obtenir un accord ou rétablir le service avant la vente ; clore l’aventure et répartir les biens.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Elle acceptera d’exposer une dette ancienne si les foyers restent approvisionnés. Elle cherche le paiement des ouvriers et peut désavouer Ravel. Elle peut suspendre l’expédition le temps d’une expertise contradictoire.",
+      "repliques": "Eda Vaëlan : Je veux savoir ce que nous avons signé.\nNalia Sareth : Je ne prête pas mon nom à une faim organisée.\nHélo Rinn : Je peux entendre une explication ; apportez aussi la trace.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-principes",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000,
+      "momentDeStoryboardId": "recette-dune-moment-accord"
+    },
+    {
+      "id": "recette-dune-scene-principes",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-4",
+      "ordre": 1,
+      "titre": "AT01 — Principes et bilan",
+      "lieuId": "recette-dune-lieu-residence",
+      "entiteIds": [
+        "recette-dune-pnj-eda"
+      ],
+      "indiceIds": [],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Laboratoire 02 : Détermination, contradiction, introspection et progression.",
+      "enjeux": "Laboratoire 02 : Détermination, contradiction, introspection et progression.",
+      "descriptionNarrative": "Une cour de pierre pâle accueille les représentants de la Maison et les familles venues réclamer leur contingent. Laboratoire 02 : Détermination, contradiction, introspection et progression.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Elle acceptera d’exposer une dette ancienne si les foyers restent approvisionnés.",
+      "repliques": "Eda Vaëlan : Je veux savoir ce que nous avons signé.",
+      "origine": "preparee",
+      "importance": "optionnelle",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-conflits",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000
+    },
+    {
+      "id": "recette-dune-scene-conflits",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-4",
+      "ordre": 2,
+      "titre": "AT02 — Cinq arènes",
+      "lieuId": "recette-dune-lieu-depot",
+      "entiteIds": [
+        "recette-dune-pnj-jarek"
+      ],
+      "indiceIds": [],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Laboratoire 03 : duel, escarmouche, espionnage, guerre, intrigue ; chaque changement de scène est explicite.",
+      "enjeux": "Laboratoire 03 : duel, escarmouche, espionnage, guerre, intrigue ; chaque changement de scène est explicite.",
+      "descriptionNarrative": "Trois circuits alimentent des concessions différentes. Une vanne neuve détourne le flux vers un réservoir sans marque. Laboratoire 03 : duel, escarmouche, espionnage, guerre, intrigue ; chaque changement de scène est explicite.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : L’ancien camarade de Kaël laissera passer un témoin sous garantie écrite.",
+      "repliques": "Jarek Voss : Je garde les citernes, pas les mensonges.",
+      "origine": "preparee",
+      "importance": "optionnelle",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-maison",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000
+    },
+    {
+      "id": "recette-dune-scene-maison",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-4",
+      "ordre": 3,
+      "titre": "AT03 — Maison et réserves",
+      "lieuId": "recette-dune-lieu-salon",
+      "entiteIds": [
+        "recette-dune-pnj-nalia"
+      ],
+      "indiceIds": [],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Fiche de Maison, reflet au module, Menace selon trois joueurs et réimport isolé.",
+      "enjeux": "Fiche de Maison, reflet au module, Menace selon trois joueurs et réimport isolé.",
+      "descriptionNarrative": "Sous une verrière, alliés et créanciers négocient avant la séance publique. Fiche de Maison, reflet au module, Menace selon trois joueurs et réimport isolé.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Elle cherche le paiement des ouvriers et peut désavouer Ravel.",
+      "repliques": "Nalia Sareth : Je ne prête pas mon nom à une faim organisée.",
+      "origine": "preparee",
+      "importance": "optionnelle",
+      "enchainements": [
+        {
+          "vers": "recette-dune-scene-bilan-final",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1792929600000
+    },
+    {
+      "id": "recette-dune-scene-bilan-final",
+      "campaignId": "recette-dune-campagne-nereide",
+      "acteId": "recette-dune-acte-4",
+      "ordre": 4,
+      "titre": "AT04 — Export et reprise",
+      "lieuId": "recette-dune-lieu-residence",
+      "entiteIds": [
+        "recette-dune-pnj-eda"
+      ],
+      "indiceIds": [],
+      "personnagesIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "resume": "Révoquer les accès, exporter et vérifier fiches, atouts, Maison et autres campagnes.",
+      "enjeux": "Révoquer les accès, exporter et vérifier fiches, atouts, Maison et autres campagnes.",
+      "descriptionNarrative": "Une cour de pierre pâle accueille les représentants de la Maison et les familles venues réclamer leur contingent. Révoquer les accès, exporter et vérifier fiches, atouts, Maison et autres campagnes.",
+      "notesDuMeneur": "SECRET_MJ_DUNE_RECETTE : Elle acceptera d’exposer une dette ancienne si les foyers restent approvisionnés.",
+      "repliques": "Eda Vaëlan : Je veux savoir ce que nous avons signé.",
+      "origine": "preparee",
+      "importance": "optionnelle",
+      "enchainements": [],
+      "passages": [],
+      "creeeLe": 1792929600000
+    }
+  ],
+  "rencontres": [
+    {
+      "id": "recette-dune-rencontre-0",
+      "campaignId": "recette-dune-campagne-nereide",
+      "sceneId": "recette-dune-scene-quai",
+      "nom": "R01 — La porte sous contrat",
+      "creeeLe": 1792929600000,
+      "notes": "Combat optionnel de recette ; ajouter les PJ et vérifier les armes/protections avant de commencer. Profils choisis, sans bestiaire officiel.",
+      "lignes": [
+        {
+          "genre": "entite",
+          "entiteId": "recette-dune-pnj-jarek",
+          "faction": "enemy"
+        },
+        {
+          "genre": "entite",
+          "entiteId": "recette-dune-pnj-sava",
+          "faction": "ally"
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-rencontre-1",
+      "campaignId": "recette-dune-campagne-nereide",
+      "sceneId": "recette-dune-scene-escorte",
+      "nom": "R02 — Les trois vannes",
+      "creeeLe": 1792929600000,
+      "notes": "Combat optionnel de recette ; ajouter les PJ et vérifier les armes/protections avant de commencer. Profils choisis, sans bestiaire officiel.",
+      "lignes": [
+        {
+          "genre": "entite",
+          "entiteId": "recette-dune-pnj-var",
+          "faction": "enemy"
+        },
+        {
+          "genre": "entite",
+          "entiteId": "recette-dune-pnj-orun",
+          "faction": "ally"
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-rencontre-2",
+      "campaignId": "recette-dune-campagne-nereide",
+      "sceneId": "recette-dune-scene-audience",
+      "nom": "R03 — Audience en conflit",
+      "creeeLe": 1792929600000,
+      "notes": "Combat optionnel de recette ; ajouter les PJ et vérifier les armes/protections avant de commencer. Profils choisis, sans bestiaire officiel.",
+      "lignes": [
+        {
+          "genre": "entite",
+          "entiteId": "recette-dune-pnj-rav",
+          "faction": "enemy"
+        },
+        {
+          "genre": "entite",
+          "entiteId": "recette-dune-pnj-helo",
+          "faction": "ally"
+        }
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "id": "recette-dune-seance-1",
+      "campaignId": "recette-dune-campagne-nereide",
+      "number": 1,
+      "date": "2026-10-25",
+      "status": "planned",
+      "publicSummary": "Suivre les ordres.",
+      "gmSecrets": "SECRET_MJ_DUNE_RECETTE : des preuves et accords redondants permettent de résoudre la crise.",
+      "sessionEntityIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "acteId": "recette-dune-acte-1",
+      "scenesPrevuesIds": [
+        "recette-dune-scene-mandat",
+        "recette-dune-scene-quotas",
+        "recette-dune-scene-archives",
+        "recette-dune-scene-quai"
+      ],
+      "checklist": [
+        {
+          "id": "recette-dune-check-1",
+          "text": "Consigner les résultats ; ouvrir le plateau aux PJ choisis.",
+          "isCompleted": false
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-seance-2",
+      "campaignId": "recette-dune-campagne-nereide",
+      "number": 2,
+      "date": "2026-10-25",
+      "status": "planned",
+      "publicSummary": "Obtenir les garanties.",
+      "gmSecrets": "SECRET_MJ_DUNE_RECETTE : des preuves et accords redondants permettent de résoudre la crise.",
+      "sessionEntityIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "acteId": "recette-dune-acte-2",
+      "scenesPrevuesIds": [
+        "recette-dune-scene-vannes",
+        "recette-dune-scene-escorte",
+        "recette-dune-scene-relais",
+        "recette-dune-scene-cautions"
+      ],
+      "checklist": [
+        {
+          "id": "recette-dune-check-2",
+          "text": "Consigner les résultats ; ouvrir le plateau aux PJ choisis.",
+          "isCompleted": false
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-seance-3",
+      "campaignId": "recette-dune-campagne-nereide",
+      "number": 3,
+      "date": "2026-10-25",
+      "status": "planned",
+      "publicSummary": "Décider de la concession.",
+      "gmSecrets": "SECRET_MJ_DUNE_RECETTE : des preuves et accords redondants permettent de résoudre la crise.",
+      "sessionEntityIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "acteId": "recette-dune-acte-3",
+      "scenesPrevuesIds": [
+        "recette-dune-scene-preparer",
+        "recette-dune-scene-audience",
+        "recette-dune-scene-digues",
+        "recette-dune-scene-accord"
+      ],
+      "checklist": [
+        {
+          "id": "recette-dune-check-3",
+          "text": "Consigner les résultats ; ouvrir le plateau aux PJ choisis.",
+          "isCompleted": false
+        }
+      ]
+    },
+    {
+      "id": "recette-dune-seance-4",
+      "campaignId": "recette-dune-campagne-nereide",
+      "number": 4,
+      "date": "2026-10-25",
+      "status": "planned",
+      "publicSummary": "Atelier hors fiction.",
+      "gmSecrets": "SECRET_MJ_DUNE_RECETTE : des preuves et accords redondants permettent de résoudre la crise.",
+      "sessionEntityIds": [
+        "recette-dune-pj-tarek",
+        "recette-dune-pj-lysa",
+        "recette-dune-pj-kael"
+      ],
+      "acteId": "recette-dune-acte-4",
+      "scenesPrevuesIds": [
+        "recette-dune-scene-principes",
+        "recette-dune-scene-conflits",
+        "recette-dune-scene-maison",
+        "recette-dune-scene-bilan-final"
+      ],
+      "checklist": [
+        {
+          "id": "recette-dune-check-4",
+          "text": "Consigner les résultats ; ouvrir le plateau aux PJ choisis.",
+          "isCompleted": false
+        }
+      ]
+    }
+  ],
+  "lootPool": [
+    {
+      "id": "recette-dune-objet-sceau",
+      "name": "Copie de sceau",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+      "properties": {},
+      "campaignId": "recette-dune-campagne-nereide"
+    },
+    {
+      "id": "recette-dune-objet-registre",
+      "name": "Copie du registre",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+      "properties": {},
+      "campaignId": "recette-dune-campagne-nereide"
+    },
+    {
+      "id": "recette-dune-objet-garantie",
+      "name": "Lettre de garantie",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+      "properties": {},
+      "campaignId": "recette-dune-campagne-nereide"
+    },
+    {
+      "id": "recette-dune-objet-outils",
+      "name": "Trousse de maintenance",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+      "properties": {},
+      "campaignId": "recette-dune-campagne-nereide"
+    },
+    {
+      "id": "recette-dune-objet-rations",
+      "name": "Rations scellées",
+      "type": "consumable",
+      "rarity": "common",
+      "quantity": 6,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+      "properties": {},
+      "campaignId": "recette-dune-campagne-nereide"
+    },
+    {
+      "id": "recette-dune-objet-solaris",
+      "name": "Solari fictifs",
+      "type": "currency",
+      "rarity": "common",
+      "quantity": 101,
+      "weight": 1,
+      "value": 0,
+      "description": "Lot arithmétique : 33 par PJ, reliquat 2. Aucun change de monnaie imposé.",
+      "properties": {},
+      "campaignId": "recette-dune-campagne-nereide"
+    },
+    {
+      "id": "recette-dune-objet-cle",
+      "name": "Clef de vanne",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+      "properties": {},
+      "campaignId": "recette-dune-campagne-nereide"
+    },
+    {
+      "id": "recette-dune-objet-transmission",
+      "name": "Paquet de transmission",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+      "properties": {},
+      "campaignId": "recette-dune-campagne-nereide"
+    }
+  ],
+  "lootReserve": [
+    {
+      "id": "recette-dune-objet-reserve",
+      "name": "Caisse conservée à la résidence",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet de fiction ; effet géré comme atout après décision du MJ.",
+      "properties": {},
+      "campaignId": "recette-dune-campagne-nereide"
+    }
+  ],
+  "lootHistory": [],
+  "messages": [],
+  "journaux": [],
+  "requiredDriverData": [
+    {
+      "id": "dune",
+      "name": "Dune",
+      "author": "GM-OS",
+      "version": "2.0.0",
+      "description": "Système 2d20 de Modiphius. Le seuil d'un test est la somme d'une compétence et d'un principe ; chaque dé sous ce seuil est une réussite. Ni points de vie ni initiative individuelle : les blessures sont des traits, et le tour alterne entre les camps.",
+      "emoji": "🏜️",
+      "templateId": "tpl-1774724573418",
+      "dice": {
+        "engine": "2d20",
+        "defaultDice": "2d20",
+        "logic": "count-success",
+        "successThreshold": 8
+      },
+      "jet": {
+        "seuil": [
+          {
+            "id": "competence",
+            "label": "Compétence",
+            "sectionId": "stats"
+          },
+          {
+            "id": "principe",
+            "label": "Principe",
+            "sectionId": "principles"
+          }
+        ],
+        "reserve": {
+          "base": 2,
+          "max": 5,
+          "faces": 20,
+          "cout": [
+            1,
+            2,
+            3
+          ],
+          "ressource": "impulsion"
+        },
+        "sens": "sous-ou-egal",
+        "critique": 1,
+        "specialisation": {
+          "label": "Spécialisation pertinente",
+          "composante": "competence"
+        },
+        "dune": {
+          "competences": [
+            "analyse",
+            "combat",
+            "discipline",
+            "mob",
+            "rhetoric"
+          ],
+          "principes": [
+            "devotion",
+            "domination",
+            "faith",
+            "justice",
+            "truth"
+          ],
+          "determination": "determination",
+          "progression": "progression",
+          "specialisations": "specializations",
+          "talents": "talents",
+          "traits": "personal_traits",
+          "atouts": "assets"
+        },
+        "complication": 20,
+        "difficulte": {
+          "min": 0,
+          "max": 5,
+          "defaut": 1
+        }
+      },
+      "combat": {
+        "statsToTrack": [
+          {
+            "fieldId": "determination",
+            "label": "Détermination",
+            "isMainHP": false,
+            "isResource": true
+          }
+        ],
+        "initiativeFormula": "",
+        "initiative": {
+          "mode": "alternance",
+          "repriseDune": true,
+          "coutDeRetention": {
+            "montant": 2,
+            "ressource": "impulsion"
+          },
+          "coutDOuverture": {
+            "montant": 2,
+            "ressource": "impulsion"
+          },
+          "activationsConsecutivesMax": 2
+        },
+        "defaultHealthType": "clocks",
+        "tacheDeDefaite": {
+          "sectionDuSeuil": "stats",
+          "champParDefaut": "combat",
+          "seuil": {
+            "min": 4,
+            "max": 8
+          },
+          "progressionDeBase": 2,
+          "qualiteMax": 4,
+          "label": "Défaite"
+        }
+      },
+      "ressourcesDeTable": [
+        {
+          "id": "impulsion",
+          "label": "Impulsion",
+          "proprietaire": "joueurs",
+          "depart": 0,
+          "min": 0,
+          "max": 6,
+          "erosionFinDeScene": 1,
+          "reportSurEpuisement": "menace",
+          "paiementAuChoix": true,
+          "description": "Réserve commune aux joueurs. Chaque réussite excédentaire l'alimente ; elle paie les dés supplémentaires, les informations et les traits."
+        },
+        {
+          "id": "menace",
+          "label": "Menace",
+          "proprietaire": "meneur",
+          "depart": 0,
+          "min": 0,
+          "description": "Réserve du meneur. Elle monte quand les joueurs prennent des risques, et se dépense pour compliquer, hausser une difficulté ou déclencher un danger."
+        }
+      ],
+      "ui_config": {
+        "gauges": [
+          {
+            "fieldId": "determination",
+            "label": "Détermination",
+            "color": "#d97706",
+            "style": "segmented"
+          }
+        ],
+        "initiativeStyle": "list",
+        "themeColor": "#d97706"
+      },
+      "aiInstructions": "",
+      "corpusId": "dune",
+      "ragPath": "systems/dune/rules",
+      "defaultNotebookUrl": "https://notebooklm.google.com/notebook/10bc3b64-7d40-4aad-99e6-9da1bf780b46",
+      "banniere": "Dune Band.jpg",
+      "ficheDeGroupe": {
+        "libelle": "Maison",
+        "gabaritDeLaFiche": "dune-maison-fr"
+      },
+      "modulesDuJeu": [
+        {
+          "id": "dune-conflits"
+        }
+      ]
+    }
+  ],
+  "requiredTemplateData": [
+    {
+      "name": "Fiche de Personnage Dune",
+      "emoji": "📜",
+      "sections": [
+        {
+          "id": "identity",
+          "label": "Identité",
+          "fields": [
+            {
+              "id": "char_name",
+              "label": "Nom du Personnage",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "house_name",
+              "label": "Maison Noble",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "role",
+              "label": "Rôle",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "faction",
+              "label": "Factions (Bene Gesserit, Mentat, etc.)",
+              "type": "select",
+              "defaultValue": "",
+              "options": [
+                "Bene Gesserit",
+                "Mentat"
+              ]
+            },
+            {
+              "id": "ambition",
+              "label": "Ambition (long terme)",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "personal_traits",
+              "label": "Traits Personnels",
+              "type": "textarea",
+              "defaultValue": "Ex: Honorable, Loyale, Rusé"
+            }
+          ]
+        },
+        {
+          "id": "stats",
+          "label": "Compétences",
+          "fields": [
+            {
+              "id": "analyse",
+              "label": "Analyse",
+              "type": "number",
+              "defaultValue": 4,
+              "min": 4,
+              "max": 8
+            },
+            {
+              "id": "combat",
+              "label": "Combat",
+              "type": "number",
+              "defaultValue": 4,
+              "min": 4,
+              "max": 8
+            },
+            {
+              "id": "discipline",
+              "label": "Discipline",
+              "type": "number",
+              "defaultValue": 4,
+              "min": 4,
+              "max": 8
+            },
+            {
+              "id": "mob",
+              "label": "Mobilité",
+              "type": "number",
+              "defaultValue": 4,
+              "min": 4,
+              "max": 8
+            },
+            {
+              "id": "rhetoric",
+              "label": "Rhétorique",
+              "type": "number",
+              "defaultValue": 4,
+              "min": 4,
+              "max": 8
+            }
+          ]
+        },
+        {
+          "id": "principles",
+          "label": "Principes & Maximes",
+          "fields": [
+            {
+              "id": "devotion",
+              "label": "Devoir",
+              "type": "number",
+              "defaultValue": 4,
+              "min": 4,
+              "max": 8
+            },
+            {
+              "id": "domination",
+              "label": "Domination",
+              "type": "number",
+              "defaultValue": 4,
+              "min": 4,
+              "max": 8
+            },
+            {
+              "id": "faith",
+              "label": "Foi",
+              "type": "number",
+              "defaultValue": 4,
+              "min": 4,
+              "max": 8
+            },
+            {
+              "id": "justice",
+              "label": "Justice",
+              "type": "number",
+              "defaultValue": 4,
+              "min": 4,
+              "max": 8
+            },
+            {
+              "id": "truth",
+              "label": "Vérité",
+              "type": "number",
+              "defaultValue": 4,
+              "min": 4,
+              "max": 8
+            },
+            {
+              "id": "maxims",
+              "label": "Maximes (pour les principes à 6+)",
+              "type": "textarea",
+              "defaultValue": "Ex: Devoir: 'Je sers le bon vouloir de la Maison.'\nDomination: 'Le pouvoir attire les individus corruptibles.'"
+            }
+          ]
+        },
+        {
+          "id": "skills_talents",
+          "label": "Spécialisations & Talents",
+          "fields": [
+            {
+              "id": "specializations",
+              "label": "Spécialisations",
+              "type": "textarea",
+              "defaultValue": "Ex: Analyse (Politique impériale), Combat (Lames courtes)"
+            },
+            {
+              "id": "talents",
+              "label": "Talents",
+              "type": "textarea",
+              "defaultValue": "Ex: Entraînement prana-bindu, Hyperacuité"
+            }
+          ]
+        },
+        {
+          "id": "resources",
+          "label": "Ressources & Atouts",
+          "fields": [
+            {
+              "id": "determination",
+              "label": "Détermination",
+              "type": "gauge",
+              "defaultValue": 1,
+              "min": 0,
+              "max": 3
+            },
+            {
+              "id": "assets",
+              "label": "Atouts",
+              "type": "textarea",
+              "defaultValue": "Ex: Couteau dissimulable (Qualité 0), Ornithoptère personnel (Qualité 0)"
+            },
+            {
+              "id": "gear_notes",
+              "label": "Équipement & Notes",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "progression",
+              "label": "Points de progression",
+              "type": "number",
+              "defaultValue": 0
+            }
+          ]
+        }
+      ],
+      "id": "tpl-1774724573418",
+      "isBuiltin": false
+    }
+  ],
+  "moments": [
+    {
+      "id": "recette-dune-moment-mandat",
+      "campaignId": "recette-dune-campagne-nereide",
+      "name": "M01 — S01 — Le mandat de la Maison",
+      "description": "Plan et signal original de recette.",
+      "color": "#94684b",
+      "icon": "Map",
+      "mapUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDEyMDAgODAwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiNlZWUwYzEiLz48c3R5bGU+dGV4dHtmb250LWZhbWlseTpHZW9yZ2lhLHNlcmlmO2ZpbGw6IzRhMzQyNH08L3N0eWxlPjxwYXRoIGQ9Ik0yNSAxMDBIMTE3NU0yNSA3MjVIMTE3NSIgc3Ryb2tlPSIjOTQ2ODRiIiBzdHJva2Utd2lkdGg9IjMiLz48dGV4dCB4PSI1MCIgeT0iNjciIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI3MDAiPkxhIFLDqXNpZGVuY2UgVmHDq2xhbjwvdGV4dD48dGV4dCB4PSI1NSIgeT0iMTU1IiBmb250LXNpemU9IjIyIj5VbmUgY291ciBkZSBwaWVycmUgcMOibGUgYWNjdWVpbGxlIGxlcyByZXByw6lzZW50YW50cyBkZSBsYSBNYWlzb24gZXQgbGVzIGZhbWlsbGVzPC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSIxODciIGZvbnQtc2l6ZT0iMjIiPnZlbnVlcyByw6ljbGFtZXIgbGV1ciBjb250aW5nZW50LjwvdGV4dD48cGF0aCBkPSJNNjAwIDM0NUwyMjAgNTMwIiBzdHJva2U9IiM5NDY4NGIiIHN0cm9rZS13aWR0aD0iNCIvPjxyZWN0IHg9IjYwIiB5PSI1MjAiIHdpZHRoPSIzMTAiIGhlaWdodD0iOTUiIHJ4PSIxMiIgZmlsbD0iI2RjYzdhMyIgc3Ryb2tlPSIjOTQ2ODRiIi8+PHRleHQgeD0iNzUiIHk9IjU3MCIgZm9udC1zaXplPSIxOCI+TGUgUGFydmlzIGRlcyBjb25jZXNzaW9uczwvdGV4dD48cGF0aCBkPSJNNjAwIDM0NUw1NjAgNTMwIiBzdHJva2U9IiM5NDY4NGIiIHN0cm9rZS13aWR0aD0iNCIvPjxyZWN0IHg9IjQwMCIgeT0iNTIwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9Ijk1IiByeD0iMTIiIGZpbGw9IiNkY2M3YTMiIHN0cm9rZT0iIzk0Njg0YiIvPjx0ZXh0IHg9IjQxNSIgeT0iNTcwIiBmb250LXNpemU9IjE4Ij5MZXMgQXJjaGl2ZXMgZGVzIG1hcsOpZXM8L3RleHQ+PGVsbGlwc2UgY3g9IjYwMCIgY3k9IjM0NSIgcng9IjIzNSIgcnk9IjYwIiBmaWxsPSIjZGNjN2EzIiBzdHJva2U9IiM5NDY4NGIiLz48dGV4dCB4PSI0MTUiIHk9IjM1MCIgZm9udC1zaXplPSIyMSI+TGEgUsOpc2lkZW5jZSBWYcOrbGFuPC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSI2NzUiIGZvbnQtc2l6ZT0iMjIiPlBsYW4gQXRsYXMgc2FucyDDqWNoZWxsZSA7IGxlcyB6b25lcyBkZSBjb25mbGl0IHNvbnQgYWJzdHJhaXRlcyBkYW5zIGxlIG1vZHVsZS48L3RleHQ+PHRleHQgeD0iNTAiIHk9Ijc2NSIgZm9udC1zaXplPSIxNiI+RFVORSDCtyBOw4lSw4lJREUgwrcgRklDVElPTiBPUklHSU5BTEUgREUgUkVDRVRURSBHTS1PUzwvdGV4dD48L3N2Zz4=",
+      "isMapVideo": false,
+      "soundAtmosphereId": "recette-dune-ambiance-nereide",
+      "soundPadId": "recette-dune-pad-citernes",
+      "titre": "S01 — Le mandat de la Maison",
+      "titreDuree": 5
+    },
+    {
+      "id": "recette-dune-moment-vannes",
+      "campaignId": "recette-dune-campagne-nereide",
+      "name": "M02 — S05 — Les trois circuits",
+      "description": "Plan et signal original de recette.",
+      "color": "#94684b",
+      "icon": "Map",
+      "mapUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDEyMDAgODAwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiNlZWUwYzEiLz48c3R5bGU+dGV4dHtmb250LWZhbWlseTpHZW9yZ2lhLHNlcmlmO2ZpbGw6IzRhMzQyNH08L3N0eWxlPjxwYXRoIGQ9Ik0yNSAxMDBIMTE3NU0yNSA3MjVIMTE3NSIgc3Ryb2tlPSIjOTQ2ODRiIiBzdHJva2Utd2lkdGg9IjMiLz48dGV4dCB4PSI1MCIgeT0iNjciIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI3MDAiPkxlIETDqXDDtHQgZGVzIHRyb2lzIHZhbm5lczwvdGV4dD48dGV4dCB4PSI1NSIgeT0iMTU1IiBmb250LXNpemU9IjIyIj5Ucm9pcyBjaXJjdWl0cyBhbGltZW50ZW50IGRlcyBjb25jZXNzaW9ucyBkaWZmw6lyZW50ZXMuIFVuZSB2YW5uZSBuZXV2ZSBkw6l0b3VybmU8L3RleHQ+PHRleHQgeD0iNTUiIHk9IjE4NyIgZm9udC1zaXplPSIyMiI+bGUgZmx1eCB2ZXJzIHVuIHLDqXNlcnZvaXIgc2FucyBtYXJxdWUuPC90ZXh0PjxwYXRoIGQ9Ik02MDAgMzQ1TDIyMCA1MzAiIHN0cm9rZT0iIzk0Njg0YiIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHJlY3QgeD0iNjAiIHk9IjUyMCIgd2lkdGg9IjMxMCIgaGVpZ2h0PSI5NSIgcng9IjEyIiBmaWxsPSIjZGNjN2EzIiBzdHJva2U9IiM5NDY4NGIiLz48dGV4dCB4PSI3NSIgeT0iNTcwIiBmb250LXNpemU9IjE4Ij5MZSBRdWFpIGRlcyBjaXRlcm5lczwvdGV4dD48cGF0aCBkPSJNNjAwIDM0NUw1NjAgNTMwIiBzdHJva2U9IiM5NDY4NGIiIHN0cm9rZS13aWR0aD0iNCIvPjxyZWN0IHg9IjQwMCIgeT0iNTIwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9Ijk1IiByeD0iMTIiIGZpbGw9IiNkY2M3YTMiIHN0cm9rZT0iIzk0Njg0YiIvPjx0ZXh0IHg9IjQxNSIgeT0iNTcwIiBmb250LXNpemU9IjE4Ij5MZSBSZWxhaXMgZHUgdmVudCBibGFuYzwvdGV4dD48cGF0aCBkPSJNNjAwIDM0NUw5MDAgNTMwIiBzdHJva2U9IiM5NDY4NGIiIHN0cm9rZS13aWR0aD0iNCIvPjxyZWN0IHg9Ijc0MCIgeT0iNTIwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9Ijk1IiByeD0iMTIiIGZpbGw9IiNkY2M3YTMiIHN0cm9rZT0iIzk0Njg0YiIvPjx0ZXh0IHg9Ijc1NSIgeT0iNTcwIiBmb250LXNpemU9IjE4Ij5MYSBDaGFtYnJlIGRlcyBzY2VhdXg8L3RleHQ+PGVsbGlwc2UgY3g9IjYwMCIgY3k9IjM0NSIgcng9IjIzNSIgcnk9IjYwIiBmaWxsPSIjZGNjN2EzIiBzdHJva2U9IiM5NDY4NGIiLz48dGV4dCB4PSI0MTUiIHk9IjM1MCIgZm9udC1zaXplPSIyMSI+TGUgRMOpcMO0dCBkZXMgdHJvaXMgdmFubmVzPC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSI2NzUiIGZvbnQtc2l6ZT0iMjIiPlBsYW4gQXRsYXMgc2FucyDDqWNoZWxsZSA7IGxlcyB6b25lcyBkZSBjb25mbGl0IHNvbnQgYWJzdHJhaXRlcyBkYW5zIGxlIG1vZHVsZS48L3RleHQ+PHRleHQgeD0iNTAiIHk9Ijc2NSIgZm9udC1zaXplPSIxNiI+RFVORSDCtyBOw4lSw4lJREUgwrcgRklDVElPTiBPUklHSU5BTEUgREUgUkVDRVRURSBHTS1PUzwvdGV4dD48L3N2Zz4=",
+      "isMapVideo": false,
+      "soundAtmosphereId": "recette-dune-ambiance-nereide",
+      "soundPadId": "recette-dune-pad-sceau",
+      "titre": "S05 — Les trois circuits",
+      "titreDuree": 5
+    },
+    {
+      "id": "recette-dune-moment-cautions",
+      "campaignId": "recette-dune-campagne-nereide",
+      "name": "M03 — S08 — La garantie de Nalia",
+      "description": "Plan et signal original de recette.",
+      "color": "#94684b",
+      "icon": "Map",
+      "mapUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDEyMDAgODAwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiNlZWUwYzEiLz48c3R5bGU+dGV4dHtmb250LWZhbWlseTpHZW9yZ2lhLHNlcmlmO2ZpbGw6IzRhMzQyNH08L3N0eWxlPjxwYXRoIGQ9Ik0yNSAxMDBIMTE3NU0yNSA3MjVIMTE3NSIgc3Ryb2tlPSIjOTQ2ODRiIiBzdHJva2Utd2lkdGg9IjMiLz48dGV4dCB4PSI1MCIgeT0iNjciIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI3MDAiPkxlIFNhbG9uIGRlcyBjYXV0aW9uczwvdGV4dD48dGV4dCB4PSI1NSIgeT0iMTU1IiBmb250LXNpemU9IjIyIj5Tb3VzIHVuZSB2ZXJyacOocmUsIGFsbGnDqXMgZXQgY3LDqWFuY2llcnMgbsOpZ29jaWVudCBhdmFudCBsYSBzw6lhbmNlIHB1YmxpcXVlLjwvdGV4dD48cGF0aCBkPSJNNjAwIDM0NUwyMjAgNTMwIiBzdHJva2U9IiM5NDY4NGIiIHN0cm9rZS13aWR0aD0iNCIvPjxyZWN0IHg9IjYwIiB5PSI1MjAiIHdpZHRoPSIzMTAiIGhlaWdodD0iOTUiIHJ4PSIxMiIgZmlsbD0iI2RjYzdhMyIgc3Ryb2tlPSIjOTQ2ODRiIi8+PHRleHQgeD0iNzUiIHk9IjU3MCIgZm9udC1zaXplPSIxOCI+TGVzIEFyY2hpdmVzIGRlcyBtYXLDqWVzPC90ZXh0PjxwYXRoIGQ9Ik02MDAgMzQ1TDU2MCA1MzAiIHN0cm9rZT0iIzk0Njg0YiIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHJlY3QgeD0iNDAwIiB5PSI1MjAiIHdpZHRoPSIzMTAiIGhlaWdodD0iOTUiIHJ4PSIxMiIgZmlsbD0iI2RjYzdhMyIgc3Ryb2tlPSIjOTQ2ODRiIi8+PHRleHQgeD0iNDE1IiB5PSI1NzAiIGZvbnQtc2l6ZT0iMTgiPkxlIFJlbGFpcyBkdSB2ZW50IGJsYW5jPC90ZXh0PjxwYXRoIGQ9Ik02MDAgMzQ1TDkwMCA1MzAiIHN0cm9rZT0iIzk0Njg0YiIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHJlY3QgeD0iNzQwIiB5PSI1MjAiIHdpZHRoPSIzMTAiIGhlaWdodD0iOTUiIHJ4PSIxMiIgZmlsbD0iI2RjYzdhMyIgc3Ryb2tlPSIjOTQ2ODRiIi8+PHRleHQgeD0iNzU1IiB5PSI1NzAiIGZvbnQtc2l6ZT0iMTgiPkxhIENoYW1icmUgZGVzIHNjZWF1eDwvdGV4dD48ZWxsaXBzZSBjeD0iNjAwIiBjeT0iMzQ1IiByeD0iMjM1IiByeT0iNjAiIGZpbGw9IiNkY2M3YTMiIHN0cm9rZT0iIzk0Njg0YiIvPjx0ZXh0IHg9IjQxNSIgeT0iMzUwIiBmb250LXNpemU9IjIxIj5MZSBTYWxvbiBkZXMgY2F1dGlvbnM8L3RleHQ+PHRleHQgeD0iNTUiIHk9IjY3NSIgZm9udC1zaXplPSIyMiI+UGxhbiBBdGxhcyBzYW5zIMOpY2hlbGxlIDsgbGVzIHpvbmVzIGRlIGNvbmZsaXQgc29udCBhYnN0cmFpdGVzIGRhbnMgbGUgbW9kdWxlLjwvdGV4dD48dGV4dCB4PSI1MCIgeT0iNzY1IiBmb250LXNpemU9IjE2Ij5EVU5FIMK3IE7DiVLDiUlERSDCtyBGSUNUSU9OIE9SSUdJTkFMRSBERSBSRUNFVFRFIEdNLU9TPC90ZXh0Pjwvc3ZnPg==",
+      "isMapVideo": false,
+      "soundAtmosphereId": "recette-dune-ambiance-nereide",
+      "soundPadId": "recette-dune-pad-citernes",
+      "titre": "S08 — La garantie de Nalia",
+      "titreDuree": 5
+    },
+    {
+      "id": "recette-dune-moment-accord",
+      "campaignId": "recette-dune-campagne-nereide",
+      "name": "M04 — S12 — Un sceau qui engage",
+      "description": "Plan et signal original de recette.",
+      "color": "#94684b",
+      "icon": "Map",
+      "mapUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDEyMDAgODAwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiNlZWUwYzEiLz48c3R5bGU+dGV4dHtmb250LWZhbWlseTpHZW9yZ2lhLHNlcmlmO2ZpbGw6IzRhMzQyNH08L3N0eWxlPjxwYXRoIGQ9Ik0yNSAxMDBIMTE3NU0yNSA3MjVIMTE3NSIgc3Ryb2tlPSIjOTQ2ODRiIiBzdHJva2Utd2lkdGg9IjMiLz48dGV4dCB4PSI1MCIgeT0iNjciIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI3MDAiPkxhIENoYW1icmUgZGVzIHNjZWF1eDwvdGV4dD48dGV4dCB4PSI1NSIgeT0iMTU1IiBmb250LXNpemU9IjIyIj5VbmUgY29tbWlzc2lvbiBsb2NhbGUgYXJiaXRyZSBs4oCZZXjDqWN1dGlvbiBkZXMgY29uY2Vzc2lvbnMuIExlcyB0w6ltb2lucyBlbnRyZW50PC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSIxODciIGZvbnQtc2l6ZT0iMjIiPnBhciB1bmUgcG9ydGUgbGF0w6lyYWxlLjwvdGV4dD48cGF0aCBkPSJNNjAwIDM0NUwyMjAgNTMwIiBzdHJva2U9IiM5NDY4NGIiIHN0cm9rZS13aWR0aD0iNCIvPjxyZWN0IHg9IjYwIiB5PSI1MjAiIHdpZHRoPSIzMTAiIGhlaWdodD0iOTUiIHJ4PSIxMiIgZmlsbD0iI2RjYzdhMyIgc3Ryb2tlPSIjOTQ2ODRiIi8+PHRleHQgeD0iNzUiIHk9IjU3MCIgZm9udC1zaXplPSIxOCI+TGUgRMOpcMO0dCBkZXMgdHJvaXMgdmFubmVzPC90ZXh0PjxwYXRoIGQ9Ik02MDAgMzQ1TDU2MCA1MzAiIHN0cm9rZT0iIzk0Njg0YiIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHJlY3QgeD0iNDAwIiB5PSI1MjAiIHdpZHRoPSIzMTAiIGhlaWdodD0iOTUiIHJ4PSIxMiIgZmlsbD0iI2RjYzdhMyIgc3Ryb2tlPSIjOTQ2ODRiIi8+PHRleHQgeD0iNDE1IiB5PSI1NzAiIGZvbnQtc2l6ZT0iMTgiPkxlIFNhbG9uIGRlcyBjYXV0aW9uczwvdGV4dD48ZWxsaXBzZSBjeD0iNjAwIiBjeT0iMzQ1IiByeD0iMjM1IiByeT0iNjAiIGZpbGw9IiNkY2M3YTMiIHN0cm9rZT0iIzk0Njg0YiIvPjx0ZXh0IHg9IjQxNSIgeT0iMzUwIiBmb250LXNpemU9IjIxIj5MYSBDaGFtYnJlIGRlcyBzY2VhdXg8L3RleHQ+PHRleHQgeD0iNTUiIHk9IjY3NSIgZm9udC1zaXplPSIyMiI+UGxhbiBBdGxhcyBzYW5zIMOpY2hlbGxlIDsgbGVzIHpvbmVzIGRlIGNvbmZsaXQgc29udCBhYnN0cmFpdGVzIGRhbnMgbGUgbW9kdWxlLjwvdGV4dD48dGV4dCB4PSI1MCIgeT0iNzY1IiBmb250LXNpemU9IjE2Ij5EVU5FIMK3IE7DiVLDiUlERSDCtyBGSUNUSU9OIE9SSUdJTkFMRSBERSBSRUNFVFRFIEdNLU9TPC90ZXh0Pjwvc3ZnPg==",
+      "isMapVideo": false,
+      "soundAtmosphereId": "recette-dune-ambiance-nereide",
+      "soundPadId": "recette-dune-pad-sceau",
+      "titre": "S12 — Un sceau qui engage",
+      "titreDuree": 5
+    }
+  ],
+  "atmospheres": [
+    {
+      "id": "recette-dune-ambiance-nereide",
+      "campagneId": "recette-dune-campagne-nereide",
+      "name": "RECETTE Dune — citernes et relais",
+      "pads": {
+        "recette-dune-pad-citernes": {
+          "id": "recette-dune-pad-citernes",
+          "title": "citernes",
+          "filePath": "recette-dune-media-citernes.wav",
+          "volume": 0.2,
+          "color": "#94684b",
+          "midiMapping": null,
+          "keyMapping": null,
+          "isActive": false,
+          "linkedLightSceneId": null
+        },
+        "recette-dune-pad-relais": {
+          "id": "recette-dune-pad-relais",
+          "title": "relais",
+          "filePath": "recette-dune-media-relais.wav",
+          "volume": 0.2,
+          "color": "#94684b",
+          "midiMapping": null,
+          "keyMapping": null,
+          "isActive": false,
+          "linkedLightSceneId": null
+        },
+        "recette-dune-pad-sceau": {
+          "id": "recette-dune-pad-sceau",
+          "title": "sceau",
+          "filePath": "recette-dune-media-sceau.wav",
+          "volume": 0.2,
+          "color": "#94684b",
+          "midiMapping": null,
+          "keyMapping": null,
+          "isActive": false,
+          "linkedLightSceneId": null
+        }
+      }
+    }
+  ],
+  "playlists": [
+    {
+      "id": "recette-dune-playlist-nereide",
+      "campagneId": "recette-dune-campagne-nereide",
+      "name": "RECETTE Dune — signaux",
+      "pads": [
+        {
+          "id": "recette-dune-musique-citernes",
+          "label": "citernes",
+          "url": "recette-dune-media-citernes.wav",
+          "type": "local",
+          "loopA": null,
+          "loopB": null
+        },
+        {
+          "id": "recette-dune-musique-relais",
+          "label": "relais",
+          "url": "recette-dune-media-relais.wav",
+          "type": "local",
+          "loopA": null,
+          "loopB": null
+        }
+      ]
+    }
+  ],
+  "tuilesDeLumiere": [
+    {
+      "id": "SCENE_recette-dune-campagne-nereide_1",
+      "name": "Résidence — audience",
+      "campagneId": "recette-dune-campagne-nereide",
+      "icon": "Lightbulb",
+      "color": "#94684b",
+      "lightStates": {},
+      "sceneBrightness": 30
+    },
+    {
+      "id": "SCENE_recette-dune-campagne-nereide_2",
+      "name": "Dépôt — alerte",
+      "campagneId": "recette-dune-campagne-nereide",
+      "icon": "Lightbulb",
+      "color": "#94684b",
+      "lightStates": {},
+      "sceneBrightness": 30
+    },
+    {
+      "id": "SCENE_recette-dune-campagne-nereide_3",
+      "name": "Salon — négociation",
+      "campagneId": "recette-dune-campagne-nereide",
+      "icon": "Lightbulb",
+      "color": "#94684b",
+      "lightStates": {},
+      "sceneBrightness": 30
+    }
+  ],
+  "reservesDeTable": {
+    "impulsion": 2,
+    "menace": 3
+  },
+  "modulesDuJeu": {
+    "dune-conflits": {
+      "versionDonnees": 1,
+      "donnees": {
+        "version": 1,
+        "scene": "S08 — La garantie de Nalia",
+        "arene": "intrigue",
+        "mode": "architecte",
+        "zones": [
+          {
+            "id": "recette-dune-zone-parvis",
+            "nom": "Les ateliers du Parvis",
+            "liens": [
+              "recette-dune-zone-nalia",
+              "recette-dune-zone-commission"
+            ],
+            "visible": true,
+            "traits": "Nombreux témoins",
+            "disposition": "prudents",
+            "desir": "SECRET_MODULE_DUNE : garantir une journée de distribution avant toute saisie.",
+            "desirRevele": false,
+            "decouverte": 0,
+            "discipline": 4
+          },
+          {
+            "id": "recette-dune-zone-nalia",
+            "nom": "Nalia Sareth",
+            "liens": [
+              "recette-dune-zone-parvis",
+              "recette-dune-zone-commission"
+            ],
+            "visible": true,
+            "traits": "Mandat de négociation",
+            "disposition": "réservée",
+            "desir": "SECRET_DESIR_NALIA : faire payer ses ouvriers et dissocier sa Maison de Ravel.",
+            "desirRevele": false,
+            "decouverte": 0,
+            "discipline": 6
+          },
+          {
+            "id": "recette-dune-zone-commission",
+            "nom": "La commission locale",
+            "liens": [
+              "recette-dune-zone-nalia",
+              "recette-dune-zone-rav",
+              "recette-dune-zone-parvis"
+            ],
+            "visible": true,
+            "traits": "Audience publique",
+            "disposition": "impartiale",
+            "desir": "SECRET_MODULE_DUNE : obtenir une preuve contradictoire avant de suspendre le contrat.",
+            "desirRevele": false,
+            "decouverte": 0,
+            "discipline": 6
+          },
+          {
+            "id": "recette-dune-zone-rav",
+            "nom": "Le réseau de Ravel",
+            "liens": [
+              "recette-dune-zone-commission",
+              "recette-dune-zone-cache"
+            ],
+            "visible": true,
+            "traits": "Intermédiaires sous contrat",
+            "disposition": "hostile",
+            "desir": "SECRET_MODULE_DUNE : provoquer une vente forcée sans être nommé.",
+            "desirRevele": false,
+            "decouverte": 0,
+            "discipline": 7
+          },
+          {
+            "id": "recette-dune-zone-cache",
+            "nom": "Réserve cachée de Ravel",
+            "liens": [
+              "recette-dune-zone-rav"
+            ],
+            "visible": false,
+            "traits": "SECRET_ZONE_DUNE : comptes hors registre",
+            "disposition": "",
+            "desir": "SECRET_MODULE_DUNE : conserver les avances.",
+            "desirRevele": false,
+            "decouverte": 0,
+            "discipline": 5
+          }
+        ],
+        "atouts": [
+          {
+            "id": "recette-dune-atout-analyse",
+            "nom": "Copie du registre",
+            "proprietaire": "Tarek Senn",
+            "qualite": 1,
+            "tangible": false,
+            "permanent": true,
+            "visible": true,
+            "militaire": false,
+            "usage": "offensif",
+            "zone": "recette-dune-zone-parvis",
+            "neutralise": false
+          },
+          {
+            "id": "recette-dune-atout-sceau",
+            "nom": "Sceau de délégation",
+            "proprietaire": "Lysa Vaëlan",
+            "qualite": 1,
+            "tangible": true,
+            "permanent": true,
+            "visible": true,
+            "militaire": false,
+            "usage": "autre",
+            "zone": "recette-dune-zone-parvis",
+            "neutralise": false
+          },
+          {
+            "id": "recette-dune-atout-garde",
+            "nom": "Équipe de protection",
+            "proprietaire": "Kaël Rovan",
+            "qualite": 1,
+            "tangible": true,
+            "permanent": true,
+            "visible": true,
+            "militaire": false,
+            "usage": "defensif",
+            "zone": "recette-dune-zone-parvis",
+            "neutralise": false
+          },
+          {
+            "id": "recette-dune-atout-soutien",
+            "nom": "Soutien des ateliers",
+            "proprietaire": "Maison Vaëlan",
+            "qualite": 0,
+            "tangible": false,
+            "permanent": false,
+            "visible": true,
+            "militaire": false,
+            "usage": "autre",
+            "zone": "recette-dune-zone-parvis",
+            "neutralise": false
+          },
+          {
+            "id": "recette-dune-atout-escorte",
+            "nom": "Escorte sous contrat",
+            "proprietaire": "Ravel",
+            "qualite": 1,
+            "tangible": true,
+            "permanent": true,
+            "visible": true,
+            "militaire": false,
+            "usage": "defensif",
+            "zone": "recette-dune-zone-rav",
+            "neutralise": false
+          },
+          {
+            "id": "recette-dune-atout-pression",
+            "nom": "Avance privée — SECRET_ATOUT_DUNE",
+            "proprietaire": "Ravel",
+            "qualite": 2,
+            "tangible": false,
+            "permanent": true,
+            "visible": false,
+            "militaire": false,
+            "usage": "offensif",
+            "zone": "recette-dune-zone-cache",
+            "neutralise": false
+          }
+        ],
+        "journal": [
+          "Mise à jour : cadre",
+          "Mise à jour : scene",
+          "Mise à jour : maison",
+          "Mise à jour : zone",
+          "Mise à jour : zone",
+          "Mise à jour : zone",
+          "Mise à jour : zone",
+          "Mise à jour : zone",
+          "Mise à jour : lier",
+          "Mise à jour : lier",
+          "Mise à jour : lier",
+          "Mise à jour : lier",
+          "Mise à jour : lier",
+          "Mise à jour : atout",
+          "Mise à jour : atout",
+          "Mise à jour : atout",
+          "Mise à jour : atout",
+          "Mise à jour : atout",
+          "Mise à jour : atout"
+        ],
+        "maison": {
+          "nom": "Maison Vaëlan",
+          "type": 1,
+          "monde": "Néréide — monde fictif de recette",
+          "domaines": "Domaine principal : concessions de distribution ; secondaire : archives et expertise des contrats.",
+          "roles": "Seigneur : Eda Vaëlan · Héritier : Lysa Vaëlan · Trésorier : Seris Dane · Connétable : Kaël Rovan · Conseiller : Tarek Senn · Émissaire : Lysa Vaëlan · Érudit : Tarek Senn · Maître d'armes : Kaël Rovan · Médecin-chef : Tessa Vale",
+          "allies": "Ateliers du Parvis ; opérateurs du Relais",
+          "ennemis": "Maison Sareth (Mineure, 2)",
+          "atouts": "Archives de concession ; équipes de maintenance ; délégation accréditée"
+        }
+      }
+    }
+  }
+}

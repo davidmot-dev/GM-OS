@@ -1,0 +1,492 @@
+[
+  {
+    "id": "NE-01",
+    "archive": "01",
+    "precondition": "Vécu 4 et Ka 4",
+    "action": "Composer le jet puis comparer avec approche vide.",
+    "attendu": "80 % avec Ka, 40 % sans ; la somme des degrés est multipliée par dix."
+  },
+  {
+    "id": "NE-02",
+    "archive": "01",
+    "precondition": "Jet au-delà de dix degrés",
+    "action": "Ajouter une circonstance autorisée puis comparer la marge.",
+    "attendu": "Chances au-delà de 100 possibles ; degrés au-delà de dix ajoutés à la marge."
+  },
+  {
+    "id": "NE-03",
+    "archive": "01",
+    "precondition": "D100 naturel",
+    "action": "Observer doubles réussis/ratés et 00 au cours des essais.",
+    "attendu": "Double réussi critique, double raté maladresse, 00 toujours en échec ; ne pas truquer un tirage."
+  },
+  {
+    "id": "NE-04",
+    "archive": "01",
+    "precondition": "Vécus présents et lignes vides",
+    "action": "Ouvrir les menus puis le référentiel du Vécu passé.",
+    "attendu": "Noms lisibles, liens vers les époques exactes ; ligne sans nom absente du jet."
+  },
+  {
+    "id": "NE-05",
+    "archive": "03",
+    "precondition": "A01 Grand Secret nommé et A03 Œuvre rouge nommée",
+    "action": "Comparer les options de troisième cercle avant/après effacement du nom sur copies.",
+    "attendu": "Champ nommé proposé ; champ sans nom masqué. Aucun pouvoir officiel inventé sous ce nom de recette."
+  },
+  {
+    "id": "NE-06",
+    "archive": "02/03",
+    "precondition": "Contextes du bandeau",
+    "action": "Comparer Plexus Feu, Nexus et conjonction simple/grande.",
+    "attendu": "Bonus et oppositions du moteur selon l’élément ; rien sans Ka au jet."
+  },
+  {
+    "id": "NE-07",
+    "archive": "02",
+    "precondition": "S01 trois cases et Conséquence mineure",
+    "action": "Comparer un jet physique puis non physique.",
+    "attendu": "−2 au Vécu, minimum zéro, avant ajout du Ka ; pas de malus physique automatique sur toute action."
+  },
+  {
+    "id": "NE-08",
+    "archive": "02",
+    "precondition": "S02 Conséquence magique sérieuse",
+    "action": "Lancer un Art puis un Vécu.",
+    "attendu": "−4 à l’Art ; la conséquence magique ne pénalise pas le métier du Simulacre."
+  },
+  {
+    "id": "NE-09",
+    "archive": "01",
+    "precondition": "Santé saine",
+    "action": "Proposer 2 degrés physiques puis choisir la case minimale suffisante.",
+    "attendu": "Une case de valeur 2, pas deux cases de valeur 1 ; compte des cases mis à jour."
+  },
+  {
+    "id": "NE-10",
+    "archive": "02",
+    "precondition": "S01",
+    "action": "Proposer des dommages avec Conséquences et case restante.",
+    "attendu": "Seulement les combinaisons suffisantes autorisées ; aucun choix appliqué à l’aperçu."
+  },
+  {
+    "id": "NE-11",
+    "archive": "01",
+    "precondition": "Nahal Ka-Terre 6",
+    "action": "Comparer cases physiques de bonus et piste magique.",
+    "attendu": "Une case physique supplémentaire de 1 ouverte ; pas de case magique de bonus."
+  },
+  {
+    "id": "NE-12",
+    "archive": "02",
+    "precondition": "Cases cochées et Conséquence",
+    "action": "Confirmer cinq minutes de repos sur une piste.",
+    "attendu": "Cases temporaires décochées ; Conséquence conservée."
+  },
+  {
+    "id": "NE-13",
+    "archive": "02",
+    "precondition": "Conséquence cochée",
+    "action": "Comparer durée physique et magique à Ka-Terre connu.",
+    "attendu": "11 − Ka-Terre, unités de gravité distinctes ; pas de guérison au rechargement."
+  },
+  {
+    "id": "NE-14",
+    "archive": "02",
+    "precondition": "S02 magique sérieuse, Stase 4",
+    "action": "Transférer la Conséquence magique à la stase sur copie.",
+    "attendu": "Coût en degrés appliqué une fois ; insuffisance signalée, pas de stase négative."
+  },
+  {
+    "id": "NE-15",
+    "archive": "02",
+    "precondition": "Piste physique saturée sur copie",
+    "action": "Proposer un dommage que rien n’absorbe.",
+    "attendu": "Hors de combat proposé explicitement, jamais décès par simple case cochée."
+  },
+  {
+    "id": "NE-16",
+    "archive": "02",
+    "precondition": "Piste magique saturée sur copie",
+    "action": "Proposer un dommage que rien n’absorbe.",
+    "attendu": "Degré de Chute choisi avec le MJ ; pas de dommage physique automatique."
+  },
+  {
+    "id": "NE-17",
+    "archive": "02",
+    "precondition": "Chutes préparées",
+    "action": "Comparer paliers 0, 1–4, 5–7, 8–9 et 10.",
+    "attendu": "Effets, injouabilité temporaire puis perte définitive distincts."
+  },
+  {
+    "id": "NE-18",
+    "archive": "02",
+    "precondition": "S03 Nanisme 5, sort degré 5",
+    "action": "Tenter le sort au panneau.",
+    "attendu": "Lancer bloqué par l’interdit du Khaïba."
+  },
+  {
+    "id": "NE-19",
+    "archive": "02",
+    "precondition": "S04 Gigantisme 5, dominant Feu",
+    "action": "Tenter la Magie au Ka-Feu puis une approche permise sur copie.",
+    "attendu": "Interdit sur Magie du Ka dominant, pas sur tous les jets."
+  },
+  {
+    "id": "NE-20",
+    "archive": "02",
+    "precondition": "S05 forme éthérale 5, formule Terre",
+    "action": "Préparer Alchimie au Ka-Terre du construct.",
+    "attendu": "Formule du Ka dominant interdite ; choisir la formule/approche cohérente."
+  },
+  {
+    "id": "NE-21",
+    "archive": "02",
+    "precondition": "S06 forme élémentaire 5, invocation Eau",
+    "action": "Préparer Hod et Ka-Eau.",
+    "attendu": "Invocation du Ka dominant interdite."
+  },
+  {
+    "id": "NE-22",
+    "archive": "02",
+    "precondition": "S07 Ombre 8",
+    "action": "Lire l’alerte et ramener à 7 sur copie après décision du MJ.",
+    "attendu": "Confié au MJ à 8 ; statut narratif explicite, pas mort physique."
+  },
+  {
+    "id": "NE-23",
+    "archive": "02",
+    "precondition": "S08 Narcose 10",
+    "action": "Lire le palier et conserver le personnage comme témoin de test.",
+    "attendu": "Perte définitive signalée ; aucune suppression automatique du PJ."
+  },
+  {
+    "id": "NE-24",
+    "archive": "02",
+    "precondition": "S09 Khaïba 3 déjà mise en jeu, PS de Chute 2",
+    "action": "Tenter une seconde mise en jeu puis un Effet Mnémos.",
+    "attendu": "Pas de second gain dans la séance ; PS de Chute employés avant les PS ordinaires."
+  },
+  {
+    "id": "NE-25",
+    "archive": "03",
+    "precondition": "A03 Materiae Lune 1",
+    "action": "Valider Début de séance, puis vérifier les trois Chutes sur S09 dans un essai séparé.",
+    "attendu": "MP restaurées à leur maximum saisi ; mises en jeu et PS de Chute effacés, pas Sapience ordinaire."
+  },
+  {
+    "id": "NE-26",
+    "archive": "01",
+    "precondition": "Ka dominant 6, Stase 4",
+    "action": "Comparer choix dominant, degré calculé et jauge de Stase.",
+    "attendu": "Plafond sur le Ka choisi, stase bornée ; une baisse de Ka signale une réserve périmée."
+  },
+  {
+    "id": "NE-27",
+    "archive": "01",
+    "precondition": "Réserves de personnage",
+    "action": "Puiser deux degrés de Stase puis lancer une action autorisée.",
+    "attendu": "Coût au lancer une fois ; approche/métamorphe ne deviennent pas des ressources distinctes."
+  },
+  {
+    "id": "NE-28",
+    "archive": "01",
+    "precondition": "Vécu passé",
+    "action": "Ajouter un Effet Mnémos de bonus puis lancer.",
+    "attendu": "Coût en PS annoncé ; ne pas confondre bonus et Mnémos en tant que Vécu."
+  },
+  {
+    "id": "NE-29",
+    "archive": "02",
+    "precondition": "S09 PS de Chute",
+    "action": "Choisir Mnémos en tant que Vécu de deux degrés.",
+    "attendu": "Deux PS, plafonné par le Vécu passé ; consommation prioritaire des PS de Chute."
+  },
+  {
+    "id": "NE-30",
+    "archive": "01",
+    "precondition": "Métamorphe degré 2",
+    "action": "Exprimer un puis deux degrés sur le Ka dominant.",
+    "attendu": "Bonus limité aux degrés non permanents ; autres approches non couvertes."
+  },
+  {
+    "id": "NE-31",
+    "archive": "01",
+    "precondition": "Métamorphose rendue permanente sur copie",
+    "action": "Relire le degré exprimable puis reconnecter.",
+    "attendu": "Degré permanent déjà visible retiré de la réserve exprimable ; aucune seconde coche automatique."
+  },
+  {
+    "id": "NE-32",
+    "archive": "01",
+    "precondition": "Action sociale",
+    "action": "Choisir Impressionner puis lancer.",
+    "attendu": "+2 et un jeton de Traque ; coût visible et non rejoué."
+  },
+  {
+    "id": "NE-33",
+    "archive": "02",
+    "precondition": "RK 3, chutes au-delà de 4",
+    "action": "Comparer le calcul de dépassement.",
+    "attendu": "Approche, exprimé, visible et degrés de Chute au-delà de 4 pris en compte selon le moteur."
+  },
+  {
+    "id": "NE-34",
+    "archive": "01",
+    "precondition": "Traque 1, Seuil RK 5",
+    "action": "Ajouter quatre jetons explicitement au bandeau.",
+    "attendu": "Au seuil, jauge vidée et Intensité +1 immédiatement : choix de David, distinct de l’aube de l’errata."
+  },
+  {
+    "id": "NE-35",
+    "archive": "02",
+    "precondition": "Intensité de Traque 2 puis 3 sur copie",
+    "action": "Noter avec le MJ le sacrifice/l’élément interdit.",
+    "attendu": "Restrictions narrées explicitement ; ne pas attribuer au logiciel une sélection automatique de tous les interdits."
+  },
+  {
+    "id": "NE-36",
+    "archive": "01",
+    "precondition": "Astérion, sort de recette degré 2",
+    "action": "Choisir Basse Magie 4, Ka-Feu 6 et le sort.",
+    "attendu": "80 % avant circonstances : (4 + 6 − 2) × 10 ; nom, élément et coût lisibles."
+  },
+  {
+    "id": "NE-37",
+    "archive": "01/03",
+    "precondition": "Sapience 12 puis A01 Sapience 4",
+    "action": "Préparer un Sacrifice avec un sort admissible puis inadmissible sur copies.",
+    "attendu": "Coût 5 PS et réussite automatique si autorisé ; insuffisance et degré au-delà de l’Art refusés."
+  },
+  {
+    "id": "NE-38",
+    "archive": "01",
+    "precondition": "Sort raté sans maladresse",
+    "action": "Retenter avec 1 PS puis, sur autre copie, 1 Stase.",
+    "attendu": "Prix payé une fois et relance immédiate ; focus/arbitrage confirmés à la table."
+  },
+  {
+    "id": "NE-39",
+    "archive": "01",
+    "precondition": "Critique d’Art",
+    "action": "Choisir noter 1 PS ou soigner immédiatement un degré de Chute.",
+    "attendu": "Deux usages exclusifs ; pas de double récompense."
+  },
+  {
+    "id": "NE-40",
+    "archive": "01",
+    "precondition": "Ismérie, Hod 4, Eau 6, créature 2",
+    "action": "Réussir l’invocation puis ouvrir le pacte.",
+    "attendu": "Ordonnances distinctes, deux d100 comparés par la table d’opposition ; pacte pas noué au chargement."
+  },
+  {
+    "id": "NE-41",
+    "archive": "03",
+    "precondition": "A02 invocation 3",
+    "action": "Résoudre un pacte perdu puis encaisser.",
+    "attendu": "Dommages magiques de degré 3, aucune écriture physique inventée."
+  },
+  {
+    "id": "NE-42",
+    "archive": "03",
+    "precondition": "Pacte sur maladresse",
+    "action": "Lire le bannissement et sa condition de fin.",
+    "attendu": "Banni du fief jusqu’à un degré de plus dans la Sephirah ; pas de pacte lié après l’échec."
+  },
+  {
+    "id": "NE-43",
+    "archive": "01",
+    "precondition": "Nahal, Œuvre noire 4, cornue Eau 4, formule 2",
+    "action": "Lancer la transmutation et examiner les Materiae.",
+    "attendu": "60 % avant contexte ; Eau −2 sauf critique, aucune double consommation."
+  },
+  {
+    "id": "NE-44",
+    "archive": "03",
+    "precondition": "A03 formule Lune/Lune degré 2",
+    "action": "Lancer puis examiner les deux consommations.",
+    "attendu": "Même jauge Lune payée deux fois ; insuffisance détaillée, pas de réserve négative."
+  },
+  {
+    "id": "NE-45",
+    "archive": "03",
+    "precondition": "A03 cornue Eau 4 et Lune 3",
+    "action": "Préparer l’Œuvre au blanc avec la formule à second élément Lune.",
+    "attendu": "Moins développé des deux Ka du construct retenu."
+  },
+  {
+    "id": "NE-46",
+    "archive": "03",
+    "precondition": "A03 assemblage blanc et Œuvre rouge nommée",
+    "action": "Tenter la transmutation de niveau supérieur.",
+    "attendu": "Lancer bloqué si l’assemblage est insuffisant."
+  },
+  {
+    "id": "NE-47",
+    "archive": "03",
+    "precondition": "A03 Materiae insuffisantes",
+    "action": "Examiner le reliquat dû après le lancer.",
+    "attendu": "Jauge arrêtée à zéro ; complément à prendre ailleurs explicitement avec le MJ."
+  },
+  {
+    "id": "NE-48",
+    "archive": "01",
+    "precondition": "Maladresse d’Alchimie",
+    "action": "Appliquer +1 Khaïba puis Construct abîmé après lecture.",
+    "attendu": "Forme éthérale si premier Khaïba ; Ka du construct −1 au bouton, pas formule retentée dans le scénario."
+  },
+  {
+    "id": "NE-49",
+    "archive": "01",
+    "precondition": "Fin de séance et PS disponibles",
+    "action": "Préparer un achat de Vécu, d’Art, de Ka et de maximum MP sur copies.",
+    "attendu": "Prix du degré suivant selon le moteur ; un premier Ka nécessite Mnémos permanent."
+  },
+  {
+    "id": "NE-50",
+    "archive": "01",
+    "precondition": "Stase entamée",
+    "action": "Confirmer un jour en Plexus/Nexus, sortie de stase, puis test sur copies.",
+    "attendu": "+1 par jour, pas par heure ; plafond respecté ; test sur Ka actuel sans modificateur."
+  },
+  {
+    "id": "NE-51",
+    "archive": "01",
+    "precondition": "PNJ humains",
+    "action": "Ouvrir les fiches de Maëlle et Ruben puis un Nephilim.",
+    "attendu": "Métier humain et Ka-Soleil sans Arts occultes gratuits ; Menace/initiative humaine à arbitrer selon le livre."
+  },
+  {
+    "id": "NE-52",
+    "archive": "01",
+    "precondition": "Rencontre préparée",
+    "action": "Ajouter les Nephilim, lire Ka-Eau ×2 puis annoncer les priorités.",
+    "attendu": "Initiative de base correcte ; PS, sorts préparés et tirs visés restent à déclarer explicitement."
+  },
+  {
+    "id": "NE-53",
+    "archive": "01",
+    "precondition": "Trois rencontres évitables",
+    "action": "Négocier, contourner puis engager une copie de rencontre.",
+    "attendu": "Bons alliés/hostiles et profils de recette ; pas de combat imposé pour obtenir une preuve."
+  },
+  {
+    "id": "NE-54",
+    "archive": "01",
+    "precondition": "Changement de lieu Atlas",
+    "action": "Suivre CONTEXTE-DES-LIEUX.json et régler le bandeau.",
+    "attendu": "Contexte proposé, jamais appliqué automatiquement par le fichier de données."
+  },
+  {
+    "id": "NE-55",
+    "archive": "Toutes",
+    "precondition": "Joueurs existants p-1/p-2/p-3",
+    "action": "Importer les trois archives telle quelle.",
+    "attendu": "Profils, avatars et anciens PJ conservés ; quinze nouveaux personnages au total."
+  },
+  {
+    "id": "NE-56",
+    "archive": "01",
+    "precondition": "Trois tablettes 360/768/1180",
+    "action": "Choisir le bon PJ et lancer un Vécu avec approche.",
+    "attendu": "Jet reçu par le MJ ; formules/sorts facultatifs peuvent rester vides."
+  },
+  {
+    "id": "NE-57",
+    "archive": "01",
+    "precondition": "Fiche HTML",
+    "action": "Ouvrir les sept pages, modifier une valeur puis sortir du champ.",
+    "attendu": "Nom du Nephilim/Simulacre distincts, valeurs remontées ; copies calculées en lecture seule."
+  },
+  {
+    "id": "NE-58",
+    "archive": "01",
+    "precondition": "Marqueur de secrets de séance",
+    "action": "Inspecter les messages joueur.",
+    "attendu": "Aucun SECRET_MJ_NEPHILIM_RECETTE attendu ; consigner GM-05 en échec s’il persiste."
+  },
+  {
+    "id": "NE-59",
+    "archive": "01",
+    "precondition": "Atlas et indices",
+    "action": "Ouvrir huit lieux et révéler/recacher une preuve.",
+    "attendu": "Liens exacts ; I01 seul révélé au départ."
+  },
+  {
+    "id": "NE-60",
+    "archive": "01",
+    "precondition": "Trame quatre actes",
+    "action": "Suivre les trois issues puis l’atelier hors fiction.",
+    "attendu": "Chaînes reliées, aucune preuve essentielle dépendante d’un jet unique."
+  },
+  {
+    "id": "NE-61",
+    "archive": "01",
+    "precondition": "101 euros fictifs",
+    "action": "Partager 33 chacun puis conserver le reliquat.",
+    "attendu": "99 distribués, reste 2 ; pas de conversion des objets en Sapience ou Materiae."
+  },
+  {
+    "id": "NE-62",
+    "archive": "01",
+    "precondition": "Wiki et Chronologie",
+    "action": "Lire neuf pages et quatre repères.",
+    "attendu": "Pentacle descriptif, dates ISO fictives ; aucun calendrier ésotérique affirmé."
+  },
+  {
+    "id": "NE-63",
+    "archive": "01",
+    "precondition": "Sons, musique et Storyboard",
+    "action": "Écouter trois sons et deux pistes, déclencher quatre moments puis arrêter.",
+    "attendu": "Médias locaux, sons synthétiques 4 s ; rien ne démarre à l’import."
+  },
+  {
+    "id": "NE-64",
+    "archive": "01",
+    "precondition": "Light-OS",
+    "action": "Assigner les appareils de test aux trois tuiles.",
+    "attendu": "États matériels vides à la livraison ; aucun appareil déclaré validé."
+  },
+  {
+    "id": "NE-65",
+    "archive": "Tables",
+    "precondition": "Atelier Table-OS",
+    "action": "Importer les trois JSON dans un univers de recette, Ranger tel quel.",
+    "attendu": "Trois tables originales 1d6 ; aucune table officielle remplacée."
+  },
+  {
+    "id": "NE-66",
+    "archive": "02/03",
+    "precondition": "Laboratoire altéré",
+    "action": "Réimporter uniquement ce laboratoire avec Remplacer.",
+    "attendu": "Fiches et réserves du laboratoire remises à zéro ; enquête 01 préservée."
+  },
+  {
+    "id": "NE-67",
+    "archive": "01",
+    "precondition": "Après modification",
+    "action": "Exporter puis importer avec Cloner.",
+    "attendu": "Liens et personnages cohérents, original conservé."
+  },
+  {
+    "id": "NE-68",
+    "archive": "Toutes",
+    "precondition": "Clôture et reconnexion",
+    "action": "Recharger puis comparer les fiches et réserves.",
+    "attendu": "Écritures persistées, pas de coût ni gain de séance rejoué à la connexion."
+  },
+  {
+    "id": "NE-69",
+    "archive": "Toutes",
+    "precondition": "Catalogue des modules",
+    "action": "Ouvrir Modules du jeu sous ce pilote.",
+    "attendu": "Aucun module spécifique compatible dans cette version ; les outils transversaux et cartes natives suffisent au lot."
+  },
+  {
+    "id": "NE-70",
+    "archive": "Toutes",
+    "precondition": "Après chaque essai",
+    "action": "Renseigner observé, verdict et preuve dans resultats.csv.",
+    "attendu": "PASSÉ, ÉCHEC, NON TESTÉ ou NON APPLICABLE ; aucun cas humain prévalidé."
+  }
+]
