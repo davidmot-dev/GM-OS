@@ -438,6 +438,20 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**25/10/2026 — Secrets de séance transmis aux tablettes (GM-05, § 178).** La campagne de
+recette CH place un marqueur fictif dans `GameSession.gmSecrets`. Après import des trois
+archives et connexion des joueurs, il est reçu dans `payload.session.sessions[*].gmSecrets`
+sur les tablettes 360/768/1180 : douze chemins observés. Le filtre
+`src/modules/remote/logic/caviardageDesJoueurs.ts` vide `gmNotes`/`notesDuMeneur`, mais ne
+traite pas `gmSecrets`. Reproduction : `e2e/campagneDeRecetteCthulhuHack.spec.ts` ; rapport
+`output/campagnes-tests/cthulhu-hack/verification-electron.json`. **À corriger séparément**,
+après confirmation que GM-OS est fermé. Le scénario e2e conserve son échec, les autres
+contrôles d’import et de tablette aboutissent. Données exclusivement fictives.
+
+**Reproduit le 26/10 sur ALIEN et Rêve de Dragon** (§ 180–181) : douze chemins sur chaque
+lot. Les contrôles de confidentialité propres aux trois modules Alien et aux demi-rêves TMR
+passent séparément ; cela ne corrige pas la diffusion transversale des secrets de séance.
+
 **Ouverte le 2026-09-12, à la demande de David** : *« lors de tes tests E2E, où consignes-tu les
 différents bugs que tu aurais découverts ? »* — la réponse honnête était **nulle part de
 systématique**. Un défaut corrigé obtient sa section numérotée ; un défaut *constaté et différé*
@@ -12845,10 +12859,98 @@ réalisation `bf83cbf6`, puis push demandé par David après validation.
 Types, lint, **9 150 tests réussis** (quatre ignorés), construction de production ; recette Electron
 et vrai Hub aux largeurs 360/768/1180, écritures reçues par le meneur ; 17 captures actualisées.
 
+### 178 · Campagnes de recette — Cthulhu Hack — 25/10/2026
+
+David demande une campagne complète de tests avec PNJ, lieux, indices, loot, PJ pour Thomas D.,
+Marie C. et Lucas R. ; il précise que les modules externes sont les outils GM-OS autour du pilote.
+[Bilan, sources et reprise](2026-10-25-campagnes-de-recette.md).
+
+Livré : enquête Port-Lenoir (3 PJ, 12 PNJ, 8 lieux, 12 indices, 18 scènes, rencontres et butin),
+deux laboratoires (15 et 12 PJ), médias, sons, Storyboard, tuiles de lumière non assignées,
+trois tables originales et 59 cas avec attendus. ZIP et archives dans
+`output/campagnes-tests/cthulhu-hack/`, génération dans `outils/campagnes-de-recette/`.
+13 contrôles de données et lint ciblé réussis ; imports natifs, reprise et trois tablettes
+exercés en profil jetable. **GM-05 en échec : gmSecrets diffusés**, rangé au § 1 bis ;
+aucun correctif applicatif inclus. Essais de David et périphériques physiques à faire.
+David confirme ensuite **« ils existent déjà »** et fournit l’export
+`Export Dirvers/RDD_campagne_gmos_1792944586235.gmos` : seuls les noms/identifiants des joueurs
+sont repris (Thomas D. `p-1`, Marie C. `p-2`, Lucas R. `p-3`). Les trois archives sont régénérées
+pour leur ajouter les PJ sans doublon ; avatars et anciens PJ fictifs sont conservés dans l’essai
+natif. Aucun PJ de l’export RDD n’est recopié dans le lot. Aucun accès au profil personnel ;
+aucun commit/push demandé.
+
+### 179 · Campagnes de recette — NOC et Cabale — 25/10/2026
+
+David : **« tu peux faire une campagne NOC rattaché au même Joueurs, n’oublie pas de créer une
+cabale »**. [Bilan et reproduction](2026-10-25-campagne-recette-noc.md).
+
+Livré dans `output/campagnes-tests/noc/` : **Le neuvième timbre**, enquête du Bloc Vesper
+(fiction originale), trois Héros pour Thomas D. `p-1`, Marie C. `p-2`, Lucas R. `p-3`,
+**Cabale Les Veilleurs du Palier déjà remplie**, trois Contacts et leurs Faveurs ; douze PNJ,
+huit lieux, douze indices, seize scènes, rencontres, butin et outils transversaux. Deux
+laboratoires avec Cabales indépendantes : douze Héros de seuils et trois d’entraide ;
+18 nouveaux PJ au total, sans recopier ni remplacer ceux des autres campagnes.
+39 médias par archive, trois tables Table-OS séparées, scénario de la Loi, **62 cas manuels**
+et CSV vierge. **14 contrôles de données réussis**, lint ciblé propre, 36 SVG et trois WAV
+décodés hors ligne. Recette Electron isolée : import, conservation des joueurs/anciens PJ,
+Cabale HTML, recharges, trois tablettes, pistes et Faveurs ; rapports dans le lot.
+**GM-05 reste en échec** (secrets de séance transmis, § 1 bis) : aucun correctif applicatif
+dans ce chantier de données. Essais humains et sorties physiques à faire ; ni `src/` ni
+`electron/` modifiés, aucun accès au profil personnel, aucun commit/push demandé.
+
+### 180 · Campagnes de recette — ALIEN et ses trois modules — 26/10/2026
+
+David : « tu peux faire une campagne Alien rattaché au même Joueurs, n’oublie pas de créer des
+modules (détecteur, etc...) ». [Bilan et reproduction](2026-10-26-campagne-recette-alien.md).
+
+**La dernière relève d’Orphée**, trois PJ pour Thomas `p-1`, Marie `p-2`, Lucas `p-3`,
+12 PNJ, 8 lieux, 12 indices, 16 scènes et deux laboratoires ; **15 nouveaux PJ** au total.
+Les trois modules existants sont préparés dans chaque archive : MU/TH/UR (mission, dossiers,
+neuf objectifs privés en trois actes), M314 (huit zones métriques, sept pions, porteur,
+batteries et préréglages), combat spatial (deux modèles de vaisseau et postes PJ/PNJ,
+laboratoire engagé et armé). 39 médias par archive, outils transversaux, trois tables et
+**74 cas manuels** vierges. ZIP : `output/campagnes-tests/alien/Alien-Campagnes-de-recette.zip`.
+
+**17 contrôles de données réussis**, médias décodés hors ligne, rendus/captures inspectés,
+lint ciblé et construction réussis. Import natif, profils/anciens PJ fictifs conservés,
+remplacements isolés, persistance, trois jets/fiches HTML et **neuf ouvertures de modules**
+sur trois Hub (360/768/1180). READ mission, objectif remis au seul Eli, scan Gaine et ordre
+spatial reçus ; secrets des modules filtrés et accès coupés après clôture. **GM-05 seul échec**,
+douze chemins, § 1 bis. Les essais humains/matériel restent à faire. Aucun correctif applicatif,
+profil personnel, commit ou push dans ce chantier.
+
+### 181 · Campagnes de recette — Rêve de Dragon, TMR et Table-OS — 26/10/2026
+
+David demande la campagne RdD avec les mêmes joueurs et la TMR ; **« Les deux »** précise
+carte officielle du module **et** rencontres Table-OS.
+[Bilan, sources et parcours](2026-10-26-campagne-recette-rdd.md).
+
+**Le Moulin des heures oubliées**, fiction originale : Liseron/Thomas `p-1`, Ambre/Marie `p-2`,
+Oriel/Lucas `p-3`, haut-rêvants de recette avancés ; 12 PNJ, 8 lieux, 12 indices, 16 scènes,
+trois issues, deux laboratoires, **15 nouveaux PJ** au total. Pilote 2.0.0, valeurs R0 recalculées,
+santé R2 réelle ; blessés/coma et variantes de haut-rêve. Module **rdd-tmr existant** préparé
+dans chaque archive, demi-rêves G4/J4/D13, carte officielle couleur du module, pas de nouveau
+module nécessaire. **14 tables Table-OS**, bornes/noms/forces du moteur relu contre le livre,
+import séparé. 39 médias, outils transversaux, **69 cas manuels** et CSV vierge.
+ZIP : `output/campagnes-tests/reve-de-dragon/Reve-de-Dragon-Campagnes-de-recette.zip`.
+
+**19 contrôles de données réussis**, dont comparaison des **1400 résultats d100** ; lint sans
+erreur, 36 SVG/3 WAV décodés hors ligne et rendus inspectés. Electron isolé : imports,
+remplacement, conservation profils/anciens PJ fictifs, persistance ; trois tablettes, jets,
+fiches HTML, carte officielle, trois montées réellement payées (12→11 rêve, 0→1 fatigue),
+déplacement G4→H4, rencontre privée et deux reçus conservés après rechargement. Préparations
+et autres demi-rêves filtrés ; accès clos avec la séance. **GM-05 seul échec**, douze chemins.
+Les 69 cas humains, l’import global Table-OS et le matériel restent à essayer. Ni `src/` ni
+`electron/` modifiés, aucun profil personnel consulté, aucun commit/push demandé.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 117 | **Campagnes de recette — Rêve de Dragon** | § 181 ; enquête, deux laboratoires, 69 cas, module TMR préparé et 14 tables conformes au moteur | Importer 01-Le-Moulin-des-heures-oubliees.gmos ; tables via Table-OS ; suivre PARCOURS-TMR.md | GM-05 transversal ; essais humains/matériel à faire |
+| 116 | **Campagnes de recette — ALIEN** | § 180 ; enquête, deux laboratoires, 74 cas, MU/TH/UR/M314/spatial préparés et éprouvés sur trois Hub | Importer 01-La-derniere-releve.gmos ; ouvrir les modules au bon équipage | GM-05 transversal ; essais humains/matériel à faire |
+| 115 | **Campagnes de recette — NOC** | § 179 ; enquête, Cabale et trois Contacts, deux laboratoires, 62 cas, mêmes joueurs existants | Importer 01-Le-neuvieme-timbre.gmos ; suivre le cahier et ouvrir Cabale | GM-05 transversal ; essais humains et matériel à faire |
+| 114 | **Campagnes de recette — Cthulhu Hack** | § 178 ; enquête, deux laboratoires, 59 cas, trois joueurs existants réutilisés ; données/imports vérifiés | Importer 01-Port-Lenoir.gmos, suivre le cahier ; essais humains à faire | GM-05 : secrets de séance transmis aux tablettes, § 1 bis |
 | 1 | **Afficheur Ulanzi** | ✅ **CONSTRUIT le 23/08, ÉPROUVÉ EN RÉEL le 30/08** — trois défauts de restitution trouvés et corrigés | La séance de Blade Runner elle-même | Rien |
 | 2 | **Deck-OS — garder la carte** | ✅ **CONSTRUIT et ÉPROUVÉ EN RÉEL le 30/08** — quatrième tas, don entre joueurs, pioche par le joueur, onglet Cartes | — | Rien |
 | 3a | **Thème par jeu** | ✅ **LIVRÉ le 24/08** | — *vérifié en réel sur Hadley Hope* | Rien |

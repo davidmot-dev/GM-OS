@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "genereLe": "2026-10-25T12:00:00.000Z",
+  "rattachement": {
+    "source": "Export Dirvers/RDD_campagne_gmos_1792944586235.gmos",
+    "sha256": "c99b8f87ecad7dee7104fcba1c6bd8a8639bd81c7b1c70ad2d4272cbd3c12b04",
+    "joueurs": [
+      {
+        "id": "p-1",
+        "realName": "Thomas D."
+      },
+      {
+        "id": "p-2",
+        "realName": "Marie C."
+      },
+      {
+        "id": "p-3",
+        "realName": "Lucas R."
+      }
+    ]
+  },
+  "pilote": {
+    "id": "custom-1777730495114",
+    "version": "2.0.0",
+    "source": "Export Dirvers/corriges/RDD_driver_gmos_finir.gmos-driver"
+  },
+  "archives": [
+    {
+      "fichier": "01-Le-Moulin-des-heures-oubliees.gmos",
+      "campagne": "recette-rdd-campagne-moulin",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "f38152a316d407b9b1d7f01a6b0bed10abd0ab411211f03f6e4c2b740511a406"
+    },
+    {
+      "fichier": "02-Corps-Repos-et-Progression.gmos",
+      "campagne": "recette-rdd-corps-campagne-moulin",
+      "personnages": 9,
+      "medias": 39,
+      "sha256": "1ff4fc98e134845a649944cd9e4f557548f55968c89023df08807b9a9ce6392d"
+    },
+    {
+      "fichier": "03-Haut-Reve-et-TMR.gmos",
+      "campagne": "recette-rdd-tmr-campagne-moulin",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "e8aeec55c5fd514df3c54b7e6e3ff29007edc635bc14b11c32690245453d14c4"
+    }
+  ],
+  "campagne": {
+    "joueurs": 3,
+    "personnages": 3,
+    "pnj": 12,
+    "lieux": 8,
+    "indices": 12,
+    "actes": 4,
+    "scenes": 16,
+    "rencontres": 3,
+    "seances": 4,
+    "wiki": 9,
+    "butin": 8,
+    "moments": 4
+  },
+  "modules": {
+    "tmr": {
+      "versionDonnees": 2,
+      "voyageurs": 3,
+      "carteOfficielle": "module rdd-tmr — carte-officielle.jpg"
+    }
+  },
+  "casDeRecette": 69
+}

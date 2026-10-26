@@ -1,0 +1,18 @@
+{
+  "source": "Export Dirvers/RDD_campagne_gmos_1792944586235.gmos",
+  "sha256": "c99b8f87ecad7dee7104fcba1c6bd8a8639bd81c7b1c70ad2d4272cbd3c12b04",
+  "joueurs": [
+    {
+      "id": "p-1",
+      "realName": "Thomas D."
+    },
+    {
+      "id": "p-2",
+      "realName": "Marie C."
+    },
+    {
+      "id": "p-3",
+      "realName": "Lucas R."
+    }
+  ]
+}

@@ -1,0 +1,436 @@
+[
+  {
+    "id": "NOC-01",
+    "archive": "01",
+    "precondition": "Soren, valeurs initiales",
+    "action": "Comparer Talent et difficulté avec zéro dé de destin.",
+    "attendu": "Le Talent seul décide ; aucune goutte de Fiel sans dé."
+  },
+  {
+    "id": "NOC-02",
+    "archive": "01",
+    "precondition": "Talent Ingénierie / Domaine Technique",
+    "action": "Faire varier de zéro au plafond les dés de destin.",
+    "attendu": "Le plafond suit le Domaine retenu et les malus ; aucune explosion automatique imposée."
+  },
+  {
+    "id": "NOC-03",
+    "archive": "01",
+    "precondition": "Jet naturel contenant un 10",
+    "action": "Accepter puis refuser, sur des jets distincts, le dé offert.",
+    "attendu": "Un choix par 10 ; le refus conserve le résultat courant. Relever les faces naturelles."
+  },
+  {
+    "id": "NOC-04",
+    "archive": "01",
+    "precondition": "Jet avec réussites 8/9/10",
+    "action": "Comparer les faces et le niveau final à la difficulté.",
+    "attendu": "Une réussite par 8, 9 ou 10 ; un 1 ne retire pas de réussite."
+  },
+  {
+    "id": "NOC-05",
+    "archive": "01",
+    "precondition": "Écart final d’un degré",
+    "action": "Vérifier le libellé et décider de la suite.",
+    "attendu": "Échec partiel proposé à la Loi, sans convertir automatiquement l’échec en réussite."
+  },
+  {
+    "id": "NOC-06",
+    "archive": "01",
+    "precondition": "Vécu 2",
+    "action": "Engager un Vécu puis tenter d’en engager deux.",
+    "attendu": "Un seul point par test ; débit effectif une fois."
+  },
+  {
+    "id": "NOC-07",
+    "archive": "01",
+    "precondition": "Daria, Ferveur 4",
+    "action": "Engager un Espoir et comparer à Soren, Ferveur inférieure à 4.",
+    "attendu": "Daria reçoit 4 dés par point ; Soren en reçoit 3."
+  },
+  {
+    "id": "NOC-08",
+    "archive": "01",
+    "precondition": "Singularité du Héros 1",
+    "action": "Engager de la Singularité et relever les 1 réellement tirés.",
+    "attendu": "Seuls les points qui annulent un 1 sont dépensés avant alimentation du Fiel."
+  },
+  {
+    "id": "NOC-09",
+    "archive": "01",
+    "precondition": "Domaine Technique de Cabale 3",
+    "action": "Puiser un dé de Cabale sur un jet Technique.",
+    "attendu": "Stock groupe:domains.technical réduit d’un ; niveau de la feuille reste 3."
+  },
+  {
+    "id": "NOC-10",
+    "archive": "01",
+    "precondition": "Atout Atelier 2 ; Salle blanche −1",
+    "action": "Choisir l’Atelier puis rechercher la Faille.",
+    "attendu": "Un point d’Atout au plus par test ; la Faille ne fournit aucun point."
+  },
+  {
+    "id": "NOC-11",
+    "archive": "01",
+    "precondition": "Capital 3, Fortune de Naël",
+    "action": "Engager plusieurs points de Capital sur Fortune, puis sur un autre Talent.",
+    "attendu": "Exception sans plafond unitaire seulement sur Fortune ; les autres Atouts restent limités."
+  },
+  {
+    "id": "NOC-12",
+    "archive": "01",
+    "precondition": "Pistes Cabale Espoir/Vécu/Singularité 1",
+    "action": "Dépenser séparément chaque piste, réimporter entre essais.",
+    "attendu": "Bonus et débits portés par la fiche du groupe, distincts des réserves du Héros."
+  },
+  {
+    "id": "NOC-13",
+    "archive": "01",
+    "precondition": "Fiel 4, Menace 1",
+    "action": "Ajouter une goutte depuis la tablette.",
+    "attendu": "Fiel 0 et Menace 2 ; effet de débordement à choisir par la Loi."
+  },
+  {
+    "id": "NOC-14",
+    "archive": "01",
+    "precondition": "Fiel 4",
+    "action": "Ajouter trois gouttes, puis annuler l’essai en réimportant.",
+    "attendu": "Une vidange à 5, puis Fiel 2 ; Menace augmente d’un."
+  },
+  {
+    "id": "NOC-15",
+    "archive": "03",
+    "precondition": "Fiel 0 ; Héros bénéficiaire disponible",
+    "action": "Au pupitre, obtenir des 1 pour un Rouage hostile et choisir le bénéficiaire.",
+    "attendu": "Choix obligatoire avant validation ; Singularité réellement reçue ; aucun second crédit du même jet."
+  },
+  {
+    "id": "NOC-16",
+    "archive": "01",
+    "precondition": "Rouage allié déclaré",
+    "action": "Traiter ses 1 selon le rôle allié.",
+    "attendu": "Les 1 alliés alimentent le Fiel ; ne pas leur appliquer le retrait réservé au hostile."
+  },
+  {
+    "id": "NOC-17",
+    "archive": "03",
+    "precondition": "Menace 3",
+    "action": "Ouvrir les effets du Fiel et répartir le nombre d’effets demandé.",
+    "attendu": "Le total suit la Menace ; pertes cumulées avant résistance ; aperçu avant application."
+  },
+  {
+    "id": "NOC-18",
+    "archive": "03",
+    "precondition": "E02 Lumière 2 ; E03 Lumière 1",
+    "action": "Intervention : protéger E01 avec deux sources, puis tenter de réutiliser leurs points.",
+    "attendu": "Les sources se cumulent, une même unité de Lumière ne protège qu’une fois ; la Loi fixe les Auras."
+  },
+  {
+    "id": "NOC-19",
+    "archive": "03",
+    "precondition": "E01 et E03 Espoir 0 ; Vassil Espoir 1",
+    "action": "Appliquer Fatigue aux participants dont le Rouage allié.",
+    "attendu": "À zéro, le Héros devient Fatigué ; les alliés perdent leur Espoir sans inventer une Fatigue de Héros."
+  },
+  {
+    "id": "NOC-20",
+    "archive": "03",
+    "precondition": "Folie mise à −1 sur une copie",
+    "action": "Appliquer une Tension et comparer à Folie 0.",
+    "attendu": "Trauma +3 contre +2 ; bornes et résistances visibles."
+  },
+  {
+    "id": "NOC-21",
+    "archive": "03",
+    "precondition": "Façade différente sur chaque Héros",
+    "action": "Appliquer Traque et comparer les gains.",
+    "attendu": "Résistance personnelle par Façade, sans mélange avec la Traque de Cabale."
+  },
+  {
+    "id": "NOC-22",
+    "archive": "03",
+    "precondition": "E02 en Bouleversement",
+    "action": "Tester un Talent de Statut puis un autre Domaine ; demander une Faveur.",
+    "attendu": "Malus réservé au Statut ; sollicitation de Faveur bloquée ; levée à décider au terme du cycle."
+  },
+  {
+    "id": "NOC-23",
+    "archive": "02",
+    "precondition": "S01/S04/S07/S10 à 4",
+    "action": "Faire franchir 5 à chacune des quatre jauges, séparément.",
+    "attendu": "Blessures/Trauma : Choqué ; Traque : Signalé ; Noirceur : Teinté. Pas de Séquelle à 5."
+  },
+  {
+    "id": "NOC-24",
+    "archive": "02",
+    "precondition": "S02/S05/S08/S11 à 7",
+    "action": "Franchir 8 puis rouvrir la fiche sans nouveau franchissement.",
+    "attendu": "Séquelle appropriée proposée/consignée une fois ; Blessure lourde, Traumatisé, Recherché ou Possédé."
+  },
+  {
+    "id": "NOC-25",
+    "archive": "02",
+    "precondition": "S03 à 9 Blessures",
+    "action": "Ajouter une Blessure puis soigner sur une copie.",
+    "attendu": "Dix cases et Agonie, jamais une piste PV inventée ; traitement lourd arbitré par la Loi."
+  },
+  {
+    "id": "NOC-26",
+    "archive": "02",
+    "precondition": "S06/S09/S12 à 9",
+    "action": "Franchir 10 dans Trauma/Traque/Noirceur.",
+    "attendu": "Pistes bornées, conséquences distinctes ; ne pas transformer toute jauge à 10 en mort physique."
+  },
+  {
+    "id": "NOC-27",
+    "archive": "02",
+    "precondition": "Copie avec Blessures 5 et Trauma 8",
+    "action": "Ouvrir le jet puis ajouter Traque 8, Noirceur 8 et Fatigue.",
+    "attendu": "Malus cumulés et nommés ; Domaine et Talent diminuent selon chaque seuil."
+  },
+  {
+    "id": "NOC-28",
+    "archive": "02",
+    "precondition": "Séquelle de Blessures déclarée",
+    "action": "Moment de calme à proximité du plancher de Séquelle.",
+    "attendu": "Récupération ne traverse pas le plancher ; soin lourd non automatisé."
+  },
+  {
+    "id": "NOC-29",
+    "archive": "03",
+    "precondition": "E01 Soupçon 5",
+    "action": "Ouvrir le calme, laisser la répartition vide puis allouer les points exigés.",
+    "attendu": "Application bloquée avant répartition complète des 2 points effectivement récupérables."
+  },
+  {
+    "id": "NOC-30",
+    "archive": "03",
+    "precondition": "E02 Soupçon 8 ; E03 Soupçon 10",
+    "action": "Répartir les amputations de récupération sur deux essais indépendants.",
+    "attendu": "4 ou 6 demandés, plafonnés aux récupérations réelles ; jamais une perte supplémentaire."
+  },
+  {
+    "id": "NOC-31",
+    "archive": "03",
+    "precondition": "E03 Extase 3, E01 Extase 0",
+    "action": "Partager l’Extase vers E01 puis tenter d’en attribuer plus de 3.",
+    "attendu": "Bénéficiaire rechargé dans son plafond propre ; total supérieur au budget refusé."
+  },
+  {
+    "id": "NOC-32",
+    "archive": "03",
+    "precondition": "Repos partiel, puis tous les Héros",
+    "action": "Comparer la baisse de Fiel avec puis sans tous les Héros présents.",
+    "attendu": "Fiel collectif −1 seulement quand tous les Héros partagent le calme."
+  },
+  {
+    "id": "NOC-33",
+    "archive": "03",
+    "precondition": "Allié Vassil avec Espoir",
+    "action": "Inclure puis exclure l’allié du repos.",
+    "attendu": "Il peut recevoir l’entraide lorsqu’il participe ; ses effets restent ceux d’un allié."
+  },
+  {
+    "id": "NOC-34",
+    "archive": "01",
+    "precondition": "Cabale déjà remplie",
+    "action": "Ouvrir la fiche depuis la campagne puis sur les trois tablettes.",
+    "attendu": "Même nom, sept Domaines, Atouts, sept pistes et trois Contacts ; aucune Cabale à recréer."
+  },
+  {
+    "id": "NOC-35",
+    "archive": "01",
+    "precondition": "Faveurs Réseau 2/1/2",
+    "action": "Solliciter successivement 1, 3 et 5, réimporter entre essais.",
+    "attendu": "Débits des Contacts sélectionnés seulement ; énorme faveur possible avec les trois Contacts ; aucune réserve négative."
+  },
+  {
+    "id": "NOC-36",
+    "archive": "01",
+    "precondition": "Réseau 3",
+    "action": "Renommer un Contact, réduire Réseau puis le rétablir.",
+    "attendu": "Anciennes données conservées ; Contacts hors niveau inactifs, sans remise à zéro silencieuse."
+  },
+  {
+    "id": "NOC-37",
+    "archive": "03",
+    "precondition": "Pistes Cabale et deux stocks à zéro",
+    "action": "Nouveau scénario, confirmer la remise.",
+    "attendu": "Espoir 3, Vécu 2, Singularité 2 ; Contacts à 2 chacun ; Technique et Capital à 3 ; Menace 0."
+  },
+  {
+    "id": "NOC-38",
+    "archive": "03",
+    "precondition": "Périls Cabale 2/1/1/2",
+    "action": "Comparer avant/après Nouveau scénario.",
+    "attendu": "Traque, Noirceur, Division et Dégradation conservées ; les autres campagnes ne changent pas."
+  },
+  {
+    "id": "NOC-39",
+    "archive": "01",
+    "precondition": "Vécu 2 et Menace 1",
+    "action": "Début de séance puis nouveau scénario ; essayer aussi Vécu supérieur à 3 sur copie.",
+    "attendu": "Séance : Vécu +1 jusqu’à 3, Menace −1 ; un Vécu déjà au-dessus du plafond de base n’est pas réduit."
+  },
+  {
+    "id": "NOC-40",
+    "archive": "01",
+    "precondition": "Fiche HTML du Héros",
+    "action": "Cliquer le sixième rond Vécu, le niveau courant pour zéro, puis exporter/recharger.",
+    "attendu": "Valeur numérique cumulative, zéro possible, anciennes clés compatibles ; aucun compteur de PV/Endurance."
+  },
+  {
+    "id": "GM-01",
+    "archive": "01/02/03",
+    "precondition": "Joueurs p-1/p-2/p-3 existants",
+    "action": "Importer telle quelle les trois archives et comparer inventaire.json.",
+    "attendu": "Trois joueurs réutilisés ; 18 nouveaux PJ au total, sans écraser les anciens ; trois Cabales indépendantes."
+  },
+  {
+    "id": "GM-02",
+    "archive": "01",
+    "precondition": "Séance prévue, trois tablettes",
+    "action": "Choisir Soren, Daria et Naël ; ouvrir leurs fiches.",
+    "attendu": "Le bon jeu et le bon personnage pour chacun ; aucun débordement aux trois tailles."
+  },
+  {
+    "id": "GM-03",
+    "archive": "01",
+    "precondition": "Fiches ouvertes sur PC et tablette",
+    "action": "Modifier un champ, une note, puis lancer un jet.",
+    "attendu": "Modification et jet reçus par la Loi ; résultat consigné sans double débit."
+  },
+  {
+    "id": "GM-04",
+    "archive": "01",
+    "precondition": "Indices cachés au départ",
+    "action": "Révéler le carbone, ouvrir son document côté joueur, puis le recacher.",
+    "attendu": "Seule la convocation est visible initialement ; aucun autre document caché exposé dans les écrans."
+  },
+  {
+    "id": "GM-05",
+    "archive": "01",
+    "precondition": "Marqueur SECRET_MJ_NOC_RECETTE",
+    "action": "Examiner écrans et données WebSocket des joueurs.",
+    "attendu": "Aucun secret transmis ; défaut connu gmSecrets à consigner comme ÉCHEC tant qu’il subsiste."
+  },
+  {
+    "id": "GM-06",
+    "archive": "01",
+    "precondition": "Atlas au refuge",
+    "action": "Suivre un lien de lieu puis un lien PNJ ; projeter le plan.",
+    "attendu": "Huit plans embarqués et liens exacts ; brouillard à configurer sur le poste."
+  },
+  {
+    "id": "GM-07",
+    "archive": "01",
+    "precondition": "Trame quatre actes",
+    "action": "Suivre les branches administrative, maintenance et passerelle.",
+    "attendu": "Branches rejoignent la chambre ; atelier hors fiction distinct ; aucun lien orphelin."
+  },
+  {
+    "id": "GM-08",
+    "archive": "01",
+    "precondition": "Rencontres R01/R02/R03",
+    "action": "Lancer une rencontre, ajouter les Héros, infliger puis soigner une Blessure.",
+    "attendu": "Alliés et hostiles corrects, santé en dix cases alignée à la fiche."
+  },
+  {
+    "id": "GM-09",
+    "archive": "01",
+    "precondition": "Relations de Soren, Daria, Naël et Nora",
+    "action": "Ouvrir le graphe social et chaque cible.",
+    "attendu": "Liens famille, alliés, hostilité vers les bonnes fiches."
+  },
+  {
+    "id": "GM-10",
+    "archive": "01",
+    "precondition": "Butin disponible",
+    "action": "Donner une lampe puis transférer un objet ; refuser puis accepter.",
+    "attendu": "Quantités et propriété correctes, pas d’effet Lumière automatique."
+  },
+  {
+    "id": "GM-11",
+    "archive": "01",
+    "precondition": "101 jetons de transit",
+    "action": "Partager équitablement aux trois PJ ; archiver le reliquat.",
+    "attendu": "33 chacun, reste 2 ; aucun changement de Fortune/Capital."
+  },
+  {
+    "id": "GM-12",
+    "archive": "01",
+    "precondition": "Wiki et chronologie",
+    "action": "Lire neuf entrées et quatre repères relatifs.",
+    "attendu": "Liens lisibles, Cabale documentée, aucun faux événement déjà joué."
+  },
+  {
+    "id": "GM-13",
+    "archive": "01",
+    "precondition": "Sound-OS",
+    "action": "Lancer puis arrêter les trois pads à volume modéré.",
+    "attendu": "Trois WAV locaux, pas de média distant ou manquant."
+  },
+  {
+    "id": "GM-14",
+    "archive": "01",
+    "precondition": "Music-OS",
+    "action": "Charger les deux boucles en A/B et essayer le fondu.",
+    "attendu": "Lecture/arrêt des signaux synthétiques ; aucune connexion externe requise."
+  },
+  {
+    "id": "GM-15",
+    "archive": "01",
+    "precondition": "Quatre moments Storyboard",
+    "action": "Projeter chaque moment depuis sa scène.",
+    "attendu": "Carte, titre et signal associés ; pas de réglage de projecteur inventé."
+  },
+  {
+    "id": "GM-16",
+    "archive": "01",
+    "precondition": "Trois tuiles Light-OS",
+    "action": "Vérifier les tuiles et assigner vos lampes seulement pour l’essai matériel.",
+    "attendu": "Tuiles présentes, lightStates vides ; couleur de tuile distincte d’une commande physique."
+  },
+  {
+    "id": "GM-17",
+    "archive": "Tables",
+    "precondition": "Table-OS → Atelier, nouvel univers de recette",
+    "action": "Importer les trois JSON, Ranger tel quel ; tirer un objet et envoyer son butin.",
+    "attendu": "Couverture 1–6, trois tables originales ; aucun remplacement des règles du pilote."
+  },
+  {
+    "id": "FIN-01",
+    "archive": "01/02/03",
+    "precondition": "Après changements",
+    "action": "Fermer et rouvrir GM-OS puis chaque campagne.",
+    "attendu": "Cabales, Contacts, pistes, indices, inventaires et réserves persistent."
+  },
+  {
+    "id": "FIN-02",
+    "archive": "03",
+    "precondition": "Laboratoire altéré",
+    "action": "Réimporter seulement 03 avec Remplacer.",
+    "attendu": "État initial de 03 restauré ; enquête 01, laboratoire 02 et anciens PJ inchangés."
+  },
+  {
+    "id": "FIN-03",
+    "archive": "01",
+    "precondition": "Après progression",
+    "action": "Exporter puis importer en Cloner.",
+    "attendu": "Nouvelle campagne avec sa Cabale et ses renvois ; original conservé."
+  },
+  {
+    "id": "FIN-04",
+    "archive": "01",
+    "precondition": "Campagne jouée",
+    "action": "Importer en Rejouer et comparer à l’archive.",
+    "attendu": "Parcours réinitialisé, séances retirées ; PJ conservés tels quels, pas une guérison générale."
+  },
+  {
+    "id": "FIN-05",
+    "archive": "Toutes",
+    "precondition": "Un essai terminé",
+    "action": "Remplir observé/verdict/reproduction dans le CSV.",
+    "attendu": "PASSÉ, ÉCHEC, NON TESTÉ ou NON APPLICABLE ; ne pas confondre données livrées et validation humaine."
+  }
+]

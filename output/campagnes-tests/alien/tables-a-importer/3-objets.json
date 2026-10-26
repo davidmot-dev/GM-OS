@@ -1,0 +1,108 @@
+{
+  "name": "RECETTE Orphée — objets",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Ruban d’isolation",
+      "description": "Fiction originale ; aucun effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Ruban d’isolation",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, sans recharge automatique."
+        }
+      ]
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Batterie scellée",
+      "description": "Fiction originale ; aucun effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Batterie scellée",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, sans recharge automatique."
+        }
+      ]
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Crédits de transit",
+      "description": "Fiction originale ; aucun effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Crédits de transit",
+          "type": "currency",
+          "quantite": 7,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, sans recharge automatique."
+        }
+      ]
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Pansements",
+      "description": "Fiction originale ; aucun effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Pansements",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, sans recharge automatique."
+        }
+      ]
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Balise de retour",
+      "description": "Fiction originale ; aucun effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Balise de retour",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, sans recharge automatique."
+        }
+      ]
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Connecteur thermique",
+      "description": "Fiction originale ; aucun effet mécanique automatique.",
+      "butin": [
+        {
+          "name": "Connecteur thermique",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette, sans recharge automatique."
+        }
+      ]
+    }
+  ]
+}

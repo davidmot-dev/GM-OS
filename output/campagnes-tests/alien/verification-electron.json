@@ -1,0 +1,128 @@
+{
+  "reussi": false,
+  "importNatif": true,
+  "sentinelleConservee": true,
+  "joueurs": [
+    {
+      "id": "p-1",
+      "nom": "Thomas D.",
+      "personnages": 5
+    },
+    {
+      "id": "p-2",
+      "nom": "Marie C.",
+      "personnages": 5
+    },
+    {
+      "id": "p-3",
+      "nom": "Lucas R.",
+      "personnages": 5
+    }
+  ],
+  "joueursExistantsConserves": true,
+  "anciensPJConserves": 3,
+  "modulesImportes": 9,
+  "modulesPrives": true,
+  "parcoursModulesTablettes": 9,
+  "scanM314": true,
+  "objectifPriveRemis": true,
+  "ordreSpatialRecu": true,
+  "archives": [
+    {
+      "fichier": "01-La-derniere-releve.gmos",
+      "sha256": "35369bdac93385f2de12921de95c1bc5ab90ef9d8d0a1bc03372640e59cb4bcf"
+    },
+    {
+      "fichier": "02-Corps-Panique-et-Survie.gmos",
+      "sha256": "c3d1196d5217ca6c7df14aee9db2f562cdf472bc5f5e1ca7fe311c9b0dcecc0e"
+    },
+    {
+      "fichier": "03-M314-Terminal-et-Vaisseaux.gmos",
+      "sha256": "1f91a3ea4234b25a6944221c798f7564b427a6156a7cdc51269d1e46fa3371f6"
+    }
+  ],
+  "remplacementIsole": true,
+  "reload": true,
+  "tablettes": [
+    360,
+    768,
+    1180
+  ],
+  "jetsRecusParMJ": 3,
+  "secretsNonDiffuses": false,
+  "ficheHTML": true,
+  "anomalies": [
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.0.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.1.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.2.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.3.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.4.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.5.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.6.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.7.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.8.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.9.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.10.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    },
+    {
+      "cas": "GM-05",
+      "chemin": "payload.session.sessions.11.gmSecrets",
+      "attendu": "secret absent des trames joueur",
+      "observe": "marqueur secret présent"
+    }
+  ]
+}

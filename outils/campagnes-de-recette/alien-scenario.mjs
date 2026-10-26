@@ -1,0 +1,81 @@
+// Relais, vaisseaux et personnages originaux ; pas un scénario officiel ALIEN.
+export const titreAlien = 'La dernière relève d’Orphée';
+export const herosAlien = [
+    { slug: 'thomas', nom: 'Eli Voss', joueur: 'Thomas D.', metier: 'Mécanicien de bord', attributs: [4, 3, 4, 3],
+        talents: 'Déterminé', competences: { machines_lourdes: 3, comtech: 2, endurance: 2, combat_rapproche: 1, observation: 1 },
+        description: 'Combinaison usée, gestes économes ; préfère un raccord honnête à un rapport rassurant.',
+        histoire: 'Chargé de remettre le relais en service, il a promis à Iona de ramener son équipe.', fetiche: 'Clé de mécanicien de son père',
+        materiel: ['Trousse de maintenance', 'Lampe frontale', 'M314 de recette', 'Combinaison de transit'],
+        objectifs: ['Retrouver Iona et diagnostiquer la panne avant de couper un circuit.', 'Copier le journal technique malgré les ordres de purge.', 'Sauver les survivants sans condamner le vaisseau Iskra.'] },
+    { slug: 'marie', nom: 'Mara Chen', joueur: 'Marie C.', metier: 'Officière et médecin', attributs: [3, 3, 4, 4],
+        talents: 'Nerfs d’acier', competences: { commandement: 3, soins_medicaux: 3, observation: 2, manipulation: 1, comtech: 1 },
+        description: 'Voix posée, carnet clinique fermé par un élastique ; refuse les diagnostics sans témoin.',
+        histoire: 'Elle commande le petit équipage d’Iskra et connaît le prix d’une quarantaine mal comprise.', fetiche: 'Photo de son équipage précédent',
+        materiel: ['Trousse médicale', 'Lampe', 'Carnet clinique', 'Combinaison de transit'],
+        objectifs: ['Établir le nombre réel de survivants et vérifier leur état.', 'Décider qui peut être déplacé sans masquer les risques.', 'Choisir une quarantaine compatible avec le sauvetage de l’équipage.'] },
+    { slug: 'lucas', nom: 'Samir Hale', joueur: 'Lucas R.', metier: 'Pilote et convoyeur', attributs: [3, 4, 4, 3],
+        talents: 'Vif', competences: { pilotage: 3, mobilite: 2, combat_a_distance: 2, comtech: 2, observation: 1 },
+        description: 'Gants de vol et sourire bref ; marque chaque sortie avant de poser sa caisse.',
+        histoire: 'Une prime attend la récupération de la cargaison, mais le signal de détresse passe avant le contrat.', fetiche: 'Jeton de premier vol',
+        materiel: ['Corde de sécurité', 'Balise de retour', 'Pistolet de détresse de recette', 'Combinaison de transit'],
+        objectifs: ['Sécuriser la route de retour et garder un quai disponible.', 'Identifier le transpondeur qui approche du relais.', 'Ramener les siens et décider du sort de la boîte noire.'] },
+];
+// slug, nom, type, description publique, secret, voisins
+export const lieuxAlien = [
+    ['sas', 'Sas de relève', 'building', 'Un sas sous éclairage de secours ; de la poussière flotte autour d’une combinaison abandonnée.', 'Le joint est réparable ; une mauvaise ouverture ne doit pas devenir un piège inévitable.', ['coursive']],
+    ['coursive', 'Coursive A', 'building', 'Une ligne jaune conduit au mess ; une porte porte des marques de manutention.', 'Le panneau permet un contournement technique vers le mess.', ['sas', 'mess']],
+    ['mess', 'Mess et terminal', 'building', 'Tasses froides, sangles détachées et terminal MU/TH/UR encore alimenté.', 'Le journal équipage contredit le décompte du contrat.', ['coursive', 'infirmerie', 'labo']],
+    ['infirmerie', 'Infirmerie isolée', 'building', 'Une cloison souple sépare deux couchettes ; le synthétique Boréal attend près du chariot.', 'Iona est blessée mais lucide ; son témoignage donne une seconde voie vers la vérité.', ['mess']],
+    ['labo', 'Laboratoire de transit', 'building', 'Conteneurs verrouillés, givre sur un cadre et traces de déplacement sous une bâche.', 'L’échantillon a été ouvert avant l’arrivée d’Iskra ; conserver ou détruire reste un choix.', ['mess', 'gaine', 'reacteur']],
+    ['gaine', 'Gaine de maintenance', 'dungeon', 'Un passage étroit où chaque bruit se répercute le long du métal.', 'La créature se déplace vers le mess ; le M314 ne distingue ni espèce ni intention.', ['labo', 'hangar']],
+    ['hangar', 'Hangar externe', 'building', 'Des chariots circulent sous une verrière opaque ; Iskra est amarré au quai de secours.', 'Le chariot à 125 m produit un écho mobile hors de portée intérieure depuis le sas.', ['gaine']],
+    ['reacteur', 'Contrôle des échangeurs', 'building', 'Vannes et panneaux indiquent des températures incompatibles ; une dérivation attend sa pièce.', 'L’isolement thermique est possible sans provoquer une destruction automatique.', ['labo']],
+];
+// slug, nom, rôle, lieu, description, réplique, secret, synthétique
+export const pnjAlien = [
+    ['iona', 'Iona Rhee', 'ally', 'infirmerie', 'Cheffe de quart blessée, toujours attentive aux annonces.', 'Nous étions six sur cette relève.', 'A vu l’ouverture du conteneur ; sait où le journal a été copié.', false],
+    ['boreal', 'Boréal', 'ally', 'infirmerie', 'Synthétique de maintenance, immobile près des blessés.', 'Je peux rester ici jusqu’à votre retour.', 'Conserve les horaires ; n’a reçu aucun ordre de tuer ni de dissimuler les survivants.', true],
+    ['nils', 'Nils Arendt', 'neutral', 'mess', 'Gestionnaire du fret, épuisé et accroché à son inventaire.', 'Le contrat prévoit une caisse scellée.', 'A signé un ordre de purge sous pression ; acceptera de remettre le code CARGO-17.', false],
+    ['leena', 'Leena Osh', 'ally', 'reacteur', 'Électricienne réfugiée derrière la console.', 'Ne coupez pas ce conduit. Iona est de l’autre côté.', 'Sait isoler le compartiment thermique si on lui apporte une pièce.', false],
+    ['tor', 'Tor Malik', 'hostile', 'labo', 'Agent contractuel chargé de garder la cargaison.', 'La boîte reste ici jusqu’à confirmation.', 'Son ordre est administratif ; un contre-ordre authentifié ou une évacuation peut le faire céder.', false],
+    ['vesna', 'Vesna Kade', 'neutral', 'sas', 'Convoyeuse laissée derrière une porte coincée.', 'J’ai envoyé trois appels. Un seul est parti.', 'Possède un relevé des signaux et peut guider par le sas de secours.', false],
+    ['osk', 'Osk Renn', 'neutral', 'hangar', 'Opérateur du chariot de fret, casque radio endommagé.', 'Le hangar bouge tout seul, dit votre radar ?', 'Le chariot automatique peut être arrêté ; cet écho n’est pas une créature.', false],
+    ['milo', 'Milo Dane', 'ally', 'coursive', 'Apprenti frigoriste retrouvé dans une niche technique.', 'J’ai fermé sans regarder derrière.', 'A aperçu le trajet vers la gaine ; peut aider sans produire de savoir scientifique.', false],
+    ['creature', 'Spécimen d’Orphée', 'monster', 'labo', 'Une présence allongée, des griffes sur une cloison ; profil de recette à confirmer par Maman.', 'Un frottement, puis le silence.', 'Pion caché du laboratoire. Les statistiques de test ne constituent pas une espèce officielle.', false],
+    ['petit', 'Mouvement dans les gaines', 'monster', 'gaine', 'Petits débris déplacés par la ventilation.', 'Un cliquetis bref.', 'Pion trop petit pour le M314, marqué non détectable ; pas de faux xénomorphe automatique.', false],
+    ['yara', 'Yara Fen', 'neutral', 'mess', 'Responsable du remorqueur concurrent Vautour, joignable à la radio.', 'Nous venons vérifier le contrat de récupération.', 'Peut négocier ; le combat spatial est une branche optionnelle et un atelier séparé.', false],
+    ['celian', 'Célian Dorr', 'ally', 'hangar', 'Navigateur PNJ d’Iskra, garde les amarres sous contrôle.', 'J’ai un chenal libre. Dites-moi qui vient.', 'Peut tenir le poste de senseurs ou d’artilleur resté sans PJ.', false],
+];
+export const indicesAlien = [
+    ['appel', 'Appel de relève', 'ORPHÉE / MESSAGE ÉQUIPAGE : panne thermique, relève incomplète, survivants à l’infirmerie. Demande d’assistance, aucun ordre d’ouvrir la cargaison.', 'sas', 'vesna', true],
+    ['effectifs', 'Liste des six', 'Six personnes attendues à la relève. Le contrat ne compte que quatre passagers. Iona et Milo manquent sur la liste du fret.', 'mess', 'iona', false],
+    ['cargo', 'Bon CARGO-17', 'Une caisse de transit a été ouverte avant le signal de détresse. Le code fictif du dossier est CARGO-17.', 'mess', 'nils', false],
+    ['medecine', 'Relevé clinique', 'Iona souffre d’une blessure mécanique ; aucune conclusion d’infection automatique. Maman arbitre les examens et l’isolement.', 'infirmerie', 'boreal', false],
+    ['porte', 'Trace de porte', 'La déformation vient du côté intérieur du laboratoire. Une autre voie passe par le contrôle des échangeurs.', 'coursive', 'milo', false],
+    ['thermique', 'Calque de dérivation', 'Isoler le compartiment chaud sans couper l’infirmerie nécessite une pièce de raccord gardée au hangar.', 'reacteur', 'leena', false],
+    ['signal', 'Relevé des trois appels', 'Deux appels sont restés en mémoire ; un troisième a quitté le relais. Le Vautour a pu recevoir une partie du message.', 'sas', 'vesna', false],
+    ['horaires', 'Horaires de Boréal', 'Le conteneur a été descellé, puis le circuit de sécurité désactivé, avant la panne. Les relevés ne prouvent pas une intention du synthétique.', 'infirmerie', 'boreal', false],
+    ['boite', 'Boîte noire de transit', 'Contient l’ordre de récupération et la copie du journal. On peut copier les données sans embarquer le conteneur.', 'labo', 'tor', false],
+    ['chariot', 'Programme du chariot', 'Le chariot revient du hangar sur un itinéraire fixe. Son mouvement est détectable ; sa taille ne renseigne pas sur sa nature.', 'hangar', 'osk', false],
+    ['canal', 'Canal d’approche', 'Le Vautour annonce son approche. Son transpondeur peut être coupé pour la variante de combat spatial ; négocier reste possible.', 'mess', 'yara', false],
+    ['evacuation', 'Liste d’évacuation vierge', 'Noter les survivants, les blessés, le matériel et les données effectivement évacués. Aucun résultat de partie n’est prérempli.', 'hangar', 'celian', false],
+];
+// slug, acte, titre, lieu, PNJ, indices, enjeu, suites
+export const scenesAlien = [
+    ['approche', 1, 'Un appel entre deux relevés', 'sas', ['vesna'], ['appel', 'signal'], 'Accoster, identifier la panne et fixer les conditions de retour.', ['mess', 'porte']],
+    ['mess', 1, 'Quatre noms pour six personnes', 'mess', ['nils'], ['effectifs', 'cargo'], 'Comparer l’effectif et le contrat, ouvrir MU/TH/UR sans tout révéler.', ['infirmerie', 'thermique']],
+    ['porte', 1, 'La niche du frigoriste', 'coursive', ['milo'], ['porte'], 'Retrouver Milo et comprendre les accès de rechange.', ['infirmerie', 'thermique']],
+    ['infirmerie', 1, 'Des blessés et un témoin', 'infirmerie', ['iona', 'boreal'], ['medecine', 'horaires'], 'Examiner, écouter et décider de l’isolement sans condamner d’avance les survivants.', ['thermique', 'labo']],
+    ['thermique', 2, 'La dérivation chaude', 'reacteur', ['leena'], ['thermique'], 'Préparer la réparation et un passage sûr vers le laboratoire.', ['hangar', 'labo']],
+    ['hangar', 2, 'Le mouvement de trop', 'hangar', ['osk', 'celian'], ['chariot'], 'Récupérer la pièce et distinguer un écho de l’identité de sa source.', ['labo', 'repos']],
+    ['labo', 2, 'Ce que gardait le contrat', 'labo', ['tor', 'creature'], ['boite'], 'Éviter, négocier ou affronter ; copier les preuves et préserver une issue.', ['repos', 'ordre']],
+    ['repos', 2, 'Un Tour sous la lampe', 'infirmerie', ['iona', 'boreal'], [], 'Organiser un repos réellement sûr, traiter les blessés et compter les réserves.', ['ordre', 'isolement']],
+    ['ordre', 3, 'Un autre contrat approche', 'mess', ['yara', 'nils'], ['canal'], 'Négocier avec le Vautour ou préparer les postes de combat spatial.', ['isolement', 'sortie']],
+    ['isolement', 3, 'Réparer sans condamner', 'reacteur', ['leena'], ['thermique'], 'Isoler le danger en laissant fonctionner l’infirmerie.', ['sortie']],
+    ['sortie', 3, 'Dernière passerelle', 'hangar', ['celian', 'osk', 'creature'], ['evacuation'], 'Évacuer personnes et données, décider du conteneur et du trajet d’Iskra.', ['retour']],
+    ['retour', 3, 'Le rapport qui restera', 'mess', ['iona', 'yara'], [], 'Clore les objectifs et documenter ce qui a réellement été sauvé.', []],
+    ['jets', 4, 'Atelier — Stress et blessures', 'infirmerie', ['boreal'], [], 'Hors fiction : humain, synthétique, panique, forçage et soins.', ['reserves']],
+    ['reserves', 4, 'Atelier — Survie et progression', 'reacteur', ['leena'], [], 'Hors fiction : réserves à 1, privations, temps, objectifs et expérience.', ['instruments']],
+    ['instruments', 4, 'Atelier — Terminal et M314', 'mess', ['nils'], [], 'Hors fiction : accès, dossiers, codes, objectifs privés, radar et batterie.', ['spatial']],
+    ['spatial', 4, 'Atelier — Iskra et Vautour', 'hangar', ['celian', 'yara'], [], 'Hors fiction : ordres secrets, quatre phases, tirs, avaries et remise à zéro.', []],
+];

@@ -1,0 +1,85 @@
+{
+  "version": 2,
+  "genereLe": "2026-10-25T12:00:00.000Z",
+  "rattachement": {
+    "source": "Export Dirvers/RDD_campagne_gmos_1792944586235.gmos",
+    "sha256": "c99b8f87ecad7dee7104fcba1c6bd8a8639bd81c7b1c70ad2d4272cbd3c12b04",
+    "joueurs": [
+      {
+        "id": "p-1",
+        "realName": "Thomas D."
+      },
+      {
+        "id": "p-2",
+        "realName": "Marie C."
+      },
+      {
+        "id": "p-3",
+        "realName": "Lucas R."
+      }
+    ]
+  },
+  "pilote": {
+    "id": "custom-1774643419710",
+    "version": "1.1.0",
+    "source": "Export Dirvers\\corriges\\CH_driver_gmos_2026-10-23.gmos-driver"
+  },
+  "archives": [
+    {
+      "fichier": "01-Port-Lenoir.gmos",
+      "campagne": "recette-ch-campagne-port-lenoir",
+      "personnages": 3,
+      "medias": 38,
+      "sha256": "e3ccf7e281804eaf0a79e72bc81b5113fd57f98848cd35561c27a63780748cc4"
+    },
+    {
+      "fichier": "02-Hors-Jeu-et-limites.gmos",
+      "campagne": "recette-ch-limites-campagne-port-lenoir",
+      "personnages": 15,
+      "medias": 38,
+      "sha256": "d52ede95bf8f801dbdd8f55170c441655c4bbaf77dad04086618ae4acd1bcb0a"
+    },
+    {
+      "fichier": "03-Chocs-et-Folies.gmos",
+      "campagne": "recette-ch-effets-campagne-port-lenoir",
+      "personnages": 12,
+      "medias": 38,
+      "sha256": "606295a23255111de08053710c573f16ab29dc7925f6b77c5edf81cb6ed31c02"
+    }
+  ],
+  "campagne": {
+    "joueurs": [
+      "Thomas D.",
+      "Marie C.",
+      "Lucas R."
+    ],
+    "personnages": 3,
+    "pnj": 12,
+    "lieux": 8,
+    "indices": 12,
+    "actes": 4,
+    "scenes": 18,
+    "rencontres": 3,
+    "seances": 4,
+    "butin": 8,
+    "reserve": 1,
+    "moments": 4,
+    "tuiles": 3
+  },
+  "casDeRecette": 59,
+  "modulesExternesSpecifiques": [],
+  "outilsTransversaux": [
+    "Atlas",
+    "Trame",
+    "Combat",
+    "Indices",
+    "Butin",
+    "Wiki",
+    "Chronologie",
+    "Sound-OS",
+    "Music-OS",
+    "Storyboard",
+    "Light-OS",
+    "Hub"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE Vesper — incidents",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Entrée 1",
+      "description": "Une annonce couvre les dernières paroles."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Entrée 2",
+      "description": "Un chariot obstrue le passage direct."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Entrée 3",
+      "description": "Un commis reconnaît un visage de la Cabale."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Entrée 4",
+      "description": "Une lampe s’éteint au prochain palier."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Entrée 5",
+      "description": "La relève arrive en avance dans la fiction."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Entrée 6",
+      "description": "Un apprenti demande une place au refuge."
+    }
+  ]
+}

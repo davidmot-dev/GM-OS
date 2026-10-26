@@ -1,0 +1,520 @@
+[
+  {
+    "id": "AL-01",
+    "archive": "01",
+    "precondition": "Eli, Stress 0",
+    "action": "Lancer Attribut + Compétence puis noter les six.",
+    "attendu": "Base et Stress séparés ; une réussite par 6."
+  },
+  {
+    "id": "AL-02",
+    "archive": "01",
+    "precondition": "Bonus d’aide/outil/situation",
+    "action": "Composer une réserve supérieure à dix dés.",
+    "attendu": "Bonus conservés et origines lisibles ; pas de plafond artificiel à dix."
+  },
+  {
+    "id": "AL-03",
+    "archive": "01",
+    "precondition": "Jet sans 1 de Stress",
+    "action": "Forcer puis tenter un second forçage sans talent adapté.",
+    "attendu": "Stress +1 et nouveau dé ; les six restent ; un forçage normal au plus."
+  },
+  {
+    "id": "AL-04",
+    "archive": "01",
+    "precondition": "Talent Vif de Samir",
+    "action": "Forcer deux fois un jet d’Agilité sans Panique, puis un jet d’un autre Attribut.",
+    "attendu": "Deux forçages seulement pour l’attribut couvert, jamais après Panique."
+  },
+  {
+    "id": "AL-05",
+    "archive": "01",
+    "precondition": "Jet contenant un 1 de Stress",
+    "action": "Résoudre le test de Panique avant d’arrêter le verdict.",
+    "attendu": "Résultat provisoire ; à 10+ l’action est annulée, même avec des six."
+  },
+  {
+    "id": "AL-06",
+    "archive": "02",
+    "precondition": "B01 Panique 7",
+    "action": "Ouvrir le suivi, lancer Agilité puis comparer un autre Attribut.",
+    "attendu": "Tremblement retire deux dés à l’Agilité ; autres jets inchangés."
+  },
+  {
+    "id": "AL-07",
+    "archive": "02",
+    "precondition": "B02 Panique 10",
+    "action": "Résoudre l’effet et la contagion sur une sélection de Héros.",
+    "attendu": "Cibles explicites, aucune double application en rouvrant le panneau."
+  },
+  {
+    "id": "AL-08",
+    "archive": "02",
+    "precondition": "B03 Panique 13",
+    "action": "Terminer l’effet puis effectuer le bilan de séance.",
+    "attendu": "Rappel du bilan conservé ; test Empathie sans Stress ni compétence."
+  },
+  {
+    "id": "AL-09",
+    "archive": "02",
+    "precondition": "Panique déjà en cours",
+    "action": "Obtenir une nouvelle Panique inférieure puis égale sur copies indépendantes.",
+    "attendu": "Profil français : inférieur donne l’effet suivant l’ancien ; égal conserve l’effet égal."
+  },
+  {
+    "id": "AL-10",
+    "archive": "01",
+    "precondition": "Mara, Nerfs d’acier",
+    "action": "Comparer le modificateur du test de Panique.",
+    "attendu": "−2 au test ; pas de suppression automatique de tout effet."
+  },
+  {
+    "id": "AL-11",
+    "archive": "01",
+    "precondition": "Point de Récit 1",
+    "action": "Dépenser après un jet autorisé, puis forcer si permis.",
+    "attendu": "Un 6 ajouté, point déduit une fois et conservé au forçage ; bloqué si Panique annule l’action."
+  },
+  {
+    "id": "AL-12",
+    "archive": "02",
+    "precondition": "B04 Synthétique brisé",
+    "action": "Ouvrir soins/forçage/Stress et le traitement synthétique.",
+    "attendu": "Pas de Stress, Panique ou forçage humain ; dommage critique synthétique distinct."
+  },
+  {
+    "id": "AL-13",
+    "archive": "02",
+    "precondition": "B06 humain Santé 0",
+    "action": "Ouvrir critique, trépas et soins sur une copie.",
+    "attendu": "Brisé n’est pas mort par défaut ; critique réel, durées et soins explicites."
+  },
+  {
+    "id": "AL-14",
+    "archive": "01",
+    "precondition": "Combat de recette",
+    "action": "Infliger un coup réel, des dégâts nuls puis soigner.",
+    "attendu": "Santé alignée à la fiche ; Stress +1 pour une perte réelle, pas par point ni pour le soin."
+  },
+  {
+    "id": "AL-15",
+    "archive": "01",
+    "precondition": "Arme de recette sans bonus",
+    "action": "Préparer tir, rafale, visée et protection sur copies.",
+    "attendu": "Bonus/dégâts/portée séparés, rafale n’ajoute pas deux fois le Stress."
+  },
+  {
+    "id": "AL-16",
+    "archive": "01",
+    "precondition": "Action d’éclat après succès",
+    "action": "Dépenser un succès supplémentaire autorisé.",
+    "attendu": "Choix et coût consignés ; pas de réutilisation du même succès."
+  },
+  {
+    "id": "AL-17",
+    "archive": "01",
+    "precondition": "Initiative de rencontre",
+    "action": "Distribuer les cartes puis ajouter une créature à Vitesse confirmée.",
+    "attendu": "Cartes 1–10, ordre croissant, une par Vitesse confirmée ; aucun profil d’espèce inventé."
+  },
+  {
+    "id": "AL-18",
+    "archive": "02",
+    "precondition": "B05 réserves à 1",
+    "action": "Tester Air puis Énergie sur essais indépendants.",
+    "attendu": "Réserve de six dés au maximum ; chaque 1 retire un point, sans Stress ni Panique."
+  },
+  {
+    "id": "AL-19",
+    "archive": "02",
+    "precondition": "B08 privations",
+    "action": "Valider Tour/Quart/Jour dans Survie Alien.",
+    "attendu": "Temps explicite, effets des privations et radiations distincts ; aucun minuteur réel caché."
+  },
+  {
+    "id": "AL-20",
+    "archive": "02",
+    "precondition": "B08 radiations 4 dont permanents 2",
+    "action": "Tester traitement/temps des radiations.",
+    "attendu": "La part permanente ne disparaît pas avec une simple modification de la part courante."
+  },
+  {
+    "id": "AL-21",
+    "archive": "01",
+    "precondition": "Objet Fétiche renseigné",
+    "action": "Employer le fétiche puis recommencer dans le même acte.",
+    "attendu": "Usage suivi, pas de récupération illimitée ; mode Cinéma et mode Campagne distincts."
+  },
+  {
+    "id": "AL-22",
+    "archive": "01",
+    "precondition": "Acte Cinéma 1",
+    "action": "Conclure l’acte avec puis sans mérite sur copies ; revenir au même acte.",
+    "attendu": "Point de Récit conditionnel, aucune seconde récompense du même acte."
+  },
+  {
+    "id": "AL-23",
+    "archive": "02",
+    "precondition": "B09 15 PX au total",
+    "action": "Effectuer bilan de séance puis achats entre séances.",
+    "attendu": "Dix cases imprimées plus cinq PX supplémentaires conservés ; achats débités une fois."
+  },
+  {
+    "id": "AL-24",
+    "archive": "02",
+    "precondition": "B09 mode Campagne",
+    "action": "Essayer achat de compétence, prérequis et entraînement d’un Talent.",
+    "attendu": "Coût et conditions vérifiés, pas d’achat répété avec le même identifiant."
+  },
+  {
+    "id": "AL-25",
+    "archive": "01",
+    "precondition": "Objectifs remis par MU/TH/UR",
+    "action": "Changer d’acte dans le suivi puis remettre le nouvel objectif une fois.",
+    "attendu": "Choisir un seul canal de remise ; ne pas doubler par messagerie A7 et MU/TH/UR."
+  },
+  {
+    "id": "AL-26",
+    "archive": "02",
+    "precondition": "B07 Stress 11",
+    "action": "Ouvrir fiche HTML, sauvegarder et recharger.",
+    "attendu": "La valeur supérieure aux dix cases imprimées reste conservée."
+  },
+  {
+    "id": "AL-27",
+    "archive": "01",
+    "precondition": "Camarade et Rival renseignés",
+    "action": "Ouvrir relations et bilan d’expérience.",
+    "attendu": "Noms et relations cohérents ; les choix de rôle ne se résolvent pas automatiquement."
+  },
+  {
+    "id": "AL-28",
+    "archive": "01",
+    "precondition": "Mouvement discret et combat",
+    "action": "Passer exploration → rencontre puis revenir.",
+    "attendu": "Un écho ne donne pas de ligne de vue ; Maman décide embuscade, Observation et passage au combat."
+  },
+  {
+    "id": "AL-29",
+    "archive": "01",
+    "precondition": "Créature profil de recette",
+    "action": "Choisir espèce, Vitesse, Santé et attaque de signature confirmées avant essai réel.",
+    "attendu": "Aucune attaque officielle attribuée par supposition au Spécimen d’Orphée."
+  },
+  {
+    "id": "AL-30",
+    "archive": "01",
+    "precondition": "Retour en lieu sûr",
+    "action": "Valider un Tour de repos et la fin d’un effet de Panique.",
+    "attendu": "Repos −1 Stress distinct de la simple fin de Panique ; ni soin général ni retour automatique à zéro."
+  },
+  {
+    "id": "MOD-01",
+    "archive": "01",
+    "precondition": "Modules importés",
+    "action": "Ouvrir les trois pupitres avant une séance.",
+    "attendu": "Données déjà remplies, accès joueurs fermés et effets arrêtés."
+  },
+  {
+    "id": "MOD-02",
+    "archive": "01",
+    "precondition": "Trois PJ en séance",
+    "action": "Autoriser les personnages indépendamment pour terminal, détecteur et spatial.",
+    "attendu": "Chaque instrument suit ses propres droits ; retirer un droit ne donne ni ne retire les deux autres."
+  },
+  {
+    "id": "MOD-03",
+    "archive": "01",
+    "precondition": "MU/TH/UR mission et cargo",
+    "action": "LIST puis READ mission ; READ cargo avant/après CODE CARGO-17.",
+    "attendu": "Mission public aux opérateurs ; cargo protégé avant son code ; code non diffusé comme donnée MJ."
+  },
+  {
+    "id": "MOD-04",
+    "archive": "01",
+    "precondition": "Dossier ordre-prive et acte 2",
+    "action": "Lire depuis un opérateur équipage puis administrateur de recette.",
+    "attendu": "Dossier admin invisible à l’équipage ; brouillons d’actes invisibles même à un admin avant publication."
+  },
+  {
+    "id": "MOD-05",
+    "archive": "01",
+    "precondition": "Trois actes préparés",
+    "action": "Publier un dossier puis remettre l’objectif d’Eli au bon acte.",
+    "attendu": "Publication explicite ; objectif privé à Eli seulement, remise unique persistante."
+  },
+  {
+    "id": "MOD-06",
+    "archive": "01",
+    "precondition": "Deux opérateurs",
+    "action": "Envoyer deux /M et un HACK, puis arbitrer les demandes.",
+    "attendu": "Files et réponses privées ; HACK n’accorde pas de privilège avant décision de Maman."
+  },
+  {
+    "id": "MOD-07",
+    "archive": "01",
+    "precondition": "Protocoles Orphée",
+    "action": "Essayer ORPHEE-LOCK puis ORPHEE-OPEN ; autodestruction seulement pour essai volontaire, puis ORPHEE-STOP.",
+    "attendu": "Portes fictives et annulation fonctionnent ; aucun effet actif dans l’archive livrée."
+  },
+  {
+    "id": "MOD-08",
+    "archive": "01",
+    "precondition": "Préréglage terminal",
+    "action": "Modifier, rappeler après confirmation, puis réinitialiser sur une copie.",
+    "attendu": "Préréglage conservé ; préparation remplacée conformément au module, accès et effets coupés."
+  },
+  {
+    "id": "MOD-09",
+    "archive": "01",
+    "precondition": "Plan privé M314, porteur Eli au sas",
+    "action": "Vérifier huit zones, sept pions et Énergie 5.",
+    "attendu": "Plan préparé ; aucun nom de pion caché dans les données joueurs."
+  },
+  {
+    "id": "MOD-10",
+    "archive": "01",
+    "precondition": "Tour 1, créature au laboratoire",
+    "action": "Déplacer le spécimen Laboratoire → Gaine puis Scanner ce Tour.",
+    "attendu": "Un écho Gaine ; Boréal immobile absent, petits débris non détectables, chariot hors portée depuis le sas."
+  },
+  {
+    "id": "MOD-11",
+    "archive": "01",
+    "precondition": "Scan déjà fait au Tour 1",
+    "action": "Scanner encore ; fermer/rouvrir ; reconnecter le même appareil.",
+    "attendu": "Pas de second scan ni second débit au même Tour."
+  },
+  {
+    "id": "MOD-12",
+    "archive": "01",
+    "precondition": "Tour 2",
+    "action": "Valider le Tour suivant, déplacer Samir Sas → Coursive A, laisser la créature immobile, scanner.",
+    "attendu": "Un écho Coursive A sans nom ni espèce ; aucune apparition de la créature immobile."
+  },
+  {
+    "id": "MOD-13",
+    "archive": "01",
+    "precondition": "Tour 3",
+    "action": "Valider le Tour, déplacer la créature Gaine → Laboratoire → Mess, puis scanner.",
+    "attendu": "Écho Mess, trajet de deux zones autorisé ; budget de chaque pion respecté."
+  },
+  {
+    "id": "MOD-14",
+    "archive": "03",
+    "precondition": "Batterie M314 à 1",
+    "action": "Scanner après un mouvement, relever les dés, puis essayer à Énergie 0 sur copie.",
+    "attendu": "Dernier scan consultable s’il vide la batterie ; suivant interdit à zéro, sans Stress/Panique."
+  },
+  {
+    "id": "MOD-15",
+    "archive": "01",
+    "precondition": "Deux préréglages Orphée plus exemple du module",
+    "action": "Rappeler plan puis mise en scène, démarrer/arrêter le scan et le faux écho.",
+    "attendu": "Rappel en veille ; plan conservé dans son préréglage ; faux écho temporaire sans déplacer les contacts existants."
+  },
+  {
+    "id": "MOD-16",
+    "archive": "01",
+    "precondition": "Détecteur sur trois appareils",
+    "action": "Comparer zones/échos et tester le choix local des bips.",
+    "attendu": "Mêmes échos autorisés ; bips nécessitent un geste local ; onglet caché et révocation coupent les bips."
+  },
+  {
+    "id": "MOD-17",
+    "archive": "01/03",
+    "precondition": "Iskra et Vautour préparés",
+    "action": "Vérifier les cinq postes et démarrer depuis 01 ou reprendre le combat de 03.",
+    "attendu": "Eli : senseurs/ingénieur ; Mara : capitaine ; Samir : pilote ; artilleur PNJ. 03 démarre au Tour 1, phase senseurs."
+  },
+  {
+    "id": "MOD-18",
+    "archive": "03",
+    "precondition": "Vautour sans transpondeur",
+    "action": "Choisir un ordre senseurs depuis le PJ autorisé puis comparer les écrans avant révélation.",
+    "attendu": "Ordre adverse et vrai nom non identifiés restent privés ; seuls les postes autorisés donnent l’ordre."
+  },
+  {
+    "id": "MOD-19",
+    "archive": "03",
+    "precondition": "Phase senseurs puis pilote",
+    "action": "Révéler, résoudre, valider/forcer le jet autorisé puis avancer.",
+    "attendu": "Initiative, Panique spatiale et Stress correctement traités ; déplacement après phase pilote seulement."
+  },
+  {
+    "id": "MOD-20",
+    "archive": "03",
+    "precondition": "Phase artilleur",
+    "action": "Verrouiller puis tirer ; essayer portée, protection, munitions et contre-mesures.",
+    "attendu": "Dégâts, protection et munitions du modèle du livre ; pas de tir sans cible autorisée."
+  },
+  {
+    "id": "MOD-21",
+    "archive": "03",
+    "precondition": "Ingénieur et avarie réelle",
+    "action": "Essayer réparation temporaire, fin de combat et réparation durable.",
+    "attendu": "Réparation temporaire redevient avarie ; durable exige conditions/pièce ; surcharge n’est jamais lancée au chargement."
+  },
+  {
+    "id": "MOD-22",
+    "archive": "01/03",
+    "precondition": "Fin de séance ou changement de campagne",
+    "action": "Fermer la séance, changer puis revenir ; rappeler les préréglages.",
+    "attendu": "Accès et effets interrompus ; préparation, dialogues et états persistants conformes au module."
+  },
+  {
+    "id": "GM-01",
+    "archive": "01/02/03",
+    "precondition": "Joueurs p-1/p-2/p-3 existants",
+    "action": "Importer les trois archives telle quelle.",
+    "attendu": "Trois joueurs conservés ; 15 nouveaux PJ, 36 PNJ, 24 lieux, trois jeux de modules indépendants."
+  },
+  {
+    "id": "GM-02",
+    "archive": "01",
+    "precondition": "Séance prévue et trois tablettes",
+    "action": "Choisir Eli, Mara et Samir, ouvrir leurs fiches.",
+    "attendu": "Le bon PJ pour chacun, pas de débordement aux trois tailles."
+  },
+  {
+    "id": "GM-03",
+    "archive": "01",
+    "precondition": "Une fiche de jeu ouverte",
+    "action": "Modifier Santé/une note puis lancer un jet depuis la tablette.",
+    "attendu": "Écritures et jet reçus par Maman sans double application."
+  },
+  {
+    "id": "GM-04",
+    "archive": "01",
+    "precondition": "Indices au départ",
+    "action": "Révéler un document puis le recacher.",
+    "attendu": "Seul l’appel est révélé initialement ; le reste attend la décision de Maman."
+  },
+  {
+    "id": "GM-05",
+    "archive": "01",
+    "precondition": "Marqueur SECRET_MJ_ALIEN_RECETTE",
+    "action": "Examiner écrans et données reçues des joueurs.",
+    "attendu": "Aucun secret transmis attendu ; défaut transversal gmSecrets à consigner en ÉCHEC tant qu’il subsiste."
+  },
+  {
+    "id": "GM-06",
+    "archive": "01",
+    "precondition": "Atlas",
+    "action": "Ouvrir plans, liens de lieux et PNJ ; projeter une carte.",
+    "attendu": "Images embarquées et liens exacts ; Atlas distinct du plan métrique du M314."
+  },
+  {
+    "id": "GM-07",
+    "archive": "01",
+    "precondition": "Trame quatre actes",
+    "action": "Suivre témoins, terminal ou réparation vers le dénouement.",
+    "attendu": "Branches liées, ateliers hors fiction identifiés, pas d’indice essentiel bloqué par un jet unique."
+  },
+  {
+    "id": "GM-08",
+    "archive": "01",
+    "precondition": "Trois rencontres préparées",
+    "action": "Lancer puis réutiliser une rencontre.",
+    "attendu": "Alliés et hostiles corrects ; Santé/Stress alignés aux fiches."
+  },
+  {
+    "id": "GM-09",
+    "archive": "01",
+    "precondition": "Relations équipage",
+    "action": "Ouvrir les trois relations principales puis leurs cibles.",
+    "attendu": "Camarades et rivalité vers les bons personnages, sans renvoi à une autre campagne."
+  },
+  {
+    "id": "GM-10",
+    "archive": "01",
+    "precondition": "Butin",
+    "action": "Distribuer, transférer, refuser puis accepter un objet.",
+    "attendu": "Quantités correctes ; une cartouche distribuée ne recharge pas tout équipement automatiquement."
+  },
+  {
+    "id": "GM-11",
+    "archive": "01",
+    "precondition": "101 crédits",
+    "action": "Partager aux trois PJ, archiver puis reprendre le reliquat.",
+    "attendu": "33 chacun et reste 2 ; total conservé."
+  },
+  {
+    "id": "GM-12",
+    "archive": "01",
+    "precondition": "Wiki et chronologie",
+    "action": "Lire neuf entrées et quatre repères de recette.",
+    "attendu": "Documents cohérents ; dates explicitement fictives, aucune séance déjà jouée."
+  },
+  {
+    "id": "GM-13",
+    "archive": "01",
+    "precondition": "Sound-OS",
+    "action": "Lancer/arrêter les trois signaux locaux à volume modéré.",
+    "attendu": "Trois WAV embarqués, pas de téléchargement nécessaire."
+  },
+  {
+    "id": "GM-14",
+    "archive": "01",
+    "precondition": "Music-OS",
+    "action": "Essayer boucles A/B et fondu.",
+    "attendu": "Deux pads synthétiques disponibles ; pas d’authentification externe."
+  },
+  {
+    "id": "GM-15",
+    "archive": "01",
+    "precondition": "Storyboard",
+    "action": "Déclencher les quatre moments puis revenir à leur scène.",
+    "attendu": "Cartes, titres et signaux corrects."
+  },
+  {
+    "id": "GM-16",
+    "archive": "01",
+    "precondition": "Light-OS",
+    "action": "Vérifier trois tuiles, assigner des appareils seulement pour l’essai physique.",
+    "attendu": "lightStates vides à la livraison ; matériel non déclaré testé."
+  },
+  {
+    "id": "GM-17",
+    "archive": "Tables",
+    "precondition": "Table-OS → Atelier, univers de recette",
+    "action": "Importer les trois JSON et Ranger tel quel ; tirer un objet vers le butin.",
+    "attendu": "Trois tables couvrant 1–6, aucune table de Panique/critique officielle remplacée."
+  },
+  {
+    "id": "FIN-01",
+    "archive": "Toutes",
+    "precondition": "Après modifications",
+    "action": "Fermer et rouvrir puis comparer les campagnes.",
+    "attendu": "Fiches, module privé, progression et médias persistants ; accès fermés au redémarrage."
+  },
+  {
+    "id": "FIN-02",
+    "archive": "03",
+    "precondition": "Laboratoire altéré",
+    "action": "Réimporter seulement 03 avec Remplacer.",
+    "attendu": "Réinitialisation de 03 uniquement, y compris ses modules ; anciens PJ et enquête intacts."
+  },
+  {
+    "id": "FIN-03",
+    "archive": "01",
+    "precondition": "Après jeu",
+    "action": "Exporter puis importer en Cloner.",
+    "attendu": "Campagne et modules copiés avec références remappées ; original intact."
+  },
+  {
+    "id": "FIN-04",
+    "archive": "01",
+    "precondition": "Rejouer",
+    "action": "Comparer la reprise à l’archive.",
+    "attendu": "Parcours/séances réinitialisés ; les PJ sont conservés, sans guérison générale. Vérifier les préparations privées."
+  },
+  {
+    "id": "FIN-05",
+    "archive": "Toutes",
+    "precondition": "Après chaque essai",
+    "action": "Remplir observé, verdict et reproduction dans le CSV.",
+    "attendu": "Distinguer PASSÉ, ÉCHEC, NON TESTÉ et NON APPLICABLE ; les contrôles du lot ne valident pas toute la recette humaine."
+  }
+]

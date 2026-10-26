@@ -45,20 +45,28 @@ sur demande explicite de David : « Je voudrais finir les améliorations du driv
 
 | Pilote | Avancement | État de la connaissance | Première amélioration ou prochaine étape proposée |
 | --- | --- | --- | --- |
-| [Alien](#alien) | 🟢 11 · 🟠 0 · 🔴 0 | A0–A9 validés par David ; **A10, préréglages et remise à zéro des modules, livré et essayé le 23/10** (registre § 163) | Rien : tous les lots faits |
+| [Alien](#alien) | 🟢 11 · 🟠 0 · 🔴 0 | A0–A9 validés par David ; **A10, préréglages et remise à zéro des modules, livré et essayé le 23/10** (registre § 163) ; campagne de recette avec trois modules préparés livrée le 26/10 (§ 180) | Essayer les 74 cas du cahier ; GM-05 transversal signalé ; aucun lot A0–A10 à refaire |
 | [Blade Runner](#blade-runner) | 🟢 4 · 🟠 0 · 🔴 0 | **Fini le 24/10, pilote 2.0.0** (registre § 174) : audit, pupitre, mort et stabilisation, guérison, et au-delà ; **essayé par David le 25/10** | Rien : tous les lots faits |
 | [Crimes](#crimes) | 🟢 13 · 🟠 0 · 🔴 0 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** ; **tous les lots livrés et essayés le 23/10** : circonstances, hermétiques, opposition, psychologie et seuils, manœuvres, contacts, fortune, création (registre § 157–161) | Rien : tous les lots faits ; tir multiple, intimider, rivalités et fortune commune restent au meneur |
-| [Cthulhu Hack](#cthulhu-hack) | 🟢 5 · 🟠 0 · 🔴 0 | Cinq améliorations livrées et essayées par David le 23/10 contre le livre français (p. 31–32, 34, 42, 50–52), registre § 164 | Rien sur ces cinq lots ; soins spéciaux et suites mentales restent des sujets d'audit séparés |
+| [Cthulhu Hack](#cthulhu-hack) | 🟢 5 · 🟠 0 · 🔴 0 | Cinq améliorations livrées et essayées par David le 23/10 contre le livre français (p. 31–32, 34, 42, 50–52), registre § 164 ; campagnes de recette livrées le 25/10 et rattachées aux trois joueurs existants (§ 178) | Essayer les 59 cas du cahier ; défaut transversal GM-05 (`gmSecrets` transmis aux tablettes) consigné au § 1 bis. Soins spéciaux et suites mentales restent des sujets d'audit séparés |
 | [Dune](#dune) | 🟢 9 · 🟠 0 · 🔴 0 | D0–D8 livrés, pilote 2.0.0 ; **tout testé et validé par David le 25/10**. Fiches HTML PJ/Maison **intégrées au moteur 17 et raccordées le 25/10** (§ 176 : maximes par principe, spécialisations par compétence, Maison en fiche de groupe qui fait foi). Corpus relu (§ 173) ; bilan § 175 | Fiches essayées et validées par David le 25/10 ; les arbitrages narratifs restent au MJ |
 | [Nephilim Légende](#nephilim-légende) | 🟢 9 · 🟠 1 · 🔴 0 | **N1–N9 livrés et essayés le 23/10** (registre § 165) : tout le livre au jet et sur la fiche | L'essai sur tablette physique |
-| [NOC](#noc) | 🟢 9 · 🟠 0 · 🔴 0 | **Tous les points validés par David le 25/10 : « ok tout fonctionne »** ; pilote 2.0.0, moteur de fiches 18, commit `bf83cbf6`. [Bilan](2026-10-25-noc-finir.md), registre § 177 | Rien sur les neuf lots ; les portées et arbitrages narratifs restent à la Loi |
-| [Rêve de Dragon](#rêve-de-dragon) | 🟢 6 · 🟠 1 · 🔴 0 | Socle R0–R7 livré pour les PJ ; boucle TMR ; mécaniques du Voyageur dans « Lancer un test » le 22/10 ; **pilote fini le 24/10** (registre § 168, [bilan](2026-10-24-reve-de-dragon-finir.md)) : phases du round, famine et potions, entraînement, Haut-Rêve ; pilote 2.0.0 ; calendrier de Clock-OS ; Haut-Rêve des PNJ | Réimport et essai de David |
+| [NOC](#noc) | 🟢 9 · 🟠 0 · 🔴 0 | **Tous les points validés par David le 25/10 : « ok tout fonctionne »** ; pilote 2.0.0, moteur de fiches 18, commit `bf83cbf6`. [Bilan](2026-10-25-noc-finir.md), registre § 177 ; campagne et Cabale de recette livrées (§ 179) | Essayer les 62 cas de recette ; GM-05 transversal signalé ; les portées et arbitrages narratifs restent à la Loi |
+| [Rêve de Dragon](#rêve-de-dragon) | 🟢 6 · 🟠 1 · 🔴 0 | Socle R0–R7, boucle TMR ; **pilote fini le 24/10**, 2.0.0 (registre § 168, [bilan](2026-10-24-reve-de-dragon-finir.md)) : phases du round, famine/potions, entraînement, Haut-Rêve, calendrier Clock-OS, PNJ ; campagne de recette avec carte TMR et 14 tables livrée le 26/10 (§ 181) | Réimport et essai de David avec les 69 cas ; GM-05 transversal signalé |
 | [Star Trek Adventures](#star-trek-adventures) | 🟢 4 · 🟠 1 · 🔴 0 | Pilote et LCARS documentés ; **audit et toutes les améliorations livrés le 23/10** (registre § 167, [audit](2026-10-23-star-trek-ameliorations.md)), pilote 2.0.0, **essai de David validé le 24/10** | Essais matériels LCARS |
 | [Symbaroum](#symbaroum) | 🟢 10 · 🟠 0 · 🔴 0 | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), essai de David validé ; **S0, S2 et S5 à S9 livrés le 23/10** (§ 166), pilote 2.0.0 | Réimport du pilote 2.0.0 et essai de David |
 | [Torg Eternity](#torg-eternity) | 🟢 0 · 🟠 0 · 🔴 5 | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
 | [Within](#within) | ⏸️ en suspens | Pilote retiré par David (24/10) ; rien à faire tant qu'il ne revient pas | Si le jeu revient : livre, corpus, configuration mécanique vérifiable |
 
 ## Alien
+
+**Données de recette livrées le 26/10/2026** ([bilan](2026-10-26-campagne-recette-alien.md),
+registre § 180) : enquête **La dernière relève d’Orphée**, trois PJ pour les joueurs existants
+Thomas/Marie/Lucas, deux laboratoires et **74 cas manuels**. MU/TH/UR, M314 et combat spatial
+déjà préparés dans les trois archives ; 17 contrôles de données, import et neuf ouvertures de
+modules sur trois vrais Hub vérifiés. **Seule l’assertion transversale GM-05 échoue** (secrets
+de séance diffusés) ; préparations privées des modules filtrées. Essais de David et matériel
+restant à faire. Aucune modification des lots A0–A10 ni du code applicatif dans ce paquet.
 
 **Références :** [audit détaillé](2026-10-19-alien-propositions.md) et
 [registre A0–A8](2026-10-19-registre-ameliorations-alien.md), qui fait foi pour leur avancement.
@@ -254,6 +262,13 @@ mitigée. L'ajout de champs dans le JSON ne remplace pas cette mécanique de con
 
 ## Cthulhu Hack
 
+**Campagnes de recette livrées le 25/10 :** [enquête et laboratoires](2026-10-25-campagnes-de-recette.md),
+59 cas avec attendus, PJ rattachés aux joueurs existants Thomas D., Marie C. et Lucas R.
+(identifiants de l’export RDD fourni par David le 25/10), outils transversaux ; registre § 178.
+Les données et imports sont vérifiés, les essais humains restent à faire. **Défaut découvert :**
+les secrets de séance `gmSecrets` sont transmis aux tablettes (GM-05, registre § 1 bis) ;
+la recette n’est pas entièrement verte. Ce défaut transversal est distinct des cinq lots validés ci-dessous.
+
 **Référence :** [manuel actuel](../User%20Guides/54-Jeu-Cthulhu-Hack.md),
 et [audit et registre du 23/10](2026-10-23-cthulhu-hack-ameliorations.md).
 Livre primaire fourni par David : `dmkl01bpdf_cthulhuhackreedition_v1v3.pdf`.
@@ -355,6 +370,13 @@ Ne pas rouvrir ces choix en recopiant les premiers paragraphes historiques du ch
 
 ## NOC
 
+**Campagnes de recette livrées le 25/10 :** [Le neuvième timbre et deux laboratoires](2026-10-25-campagne-recette-noc.md),
+**Cabale Les Veilleurs du Palier déjà remplie**, trois Contacts et leurs Faveurs, PJ rattachés
+aux mêmes joueurs existants (Thomas D., Marie C., Lucas R.), **62 cas avec attendus** ; registre
+§ 179. Données et essais automatiques distincts des essais humains restant à faire.
+Le défaut transversal GM-05 (`gmSecrets` diffusés aux tablettes, § 1 bis) reste consigné ;
+aucun correctif applicatif dans cette livraison de données.
+
 **Références :** [améliorations du 19/10](2026-10-19-ameliorations-noc.md) et
 [reprise du 25/10, sources et contrôles](2026-10-25-noc-finir.md), registre § 177.
 David demande de finir NOC et fournit le livre de base ; GM-OS confirmé fermé.
@@ -387,6 +409,15 @@ validés ; réalisation commitée dans `bf83cbf6`. Les conséquences narratives 
 les soins lourds et les portées restent à la Loi.
 
 ## Rêve de Dragon
+
+**Données de recette livrées le 26/10/2026** ([bilan](2026-10-26-campagne-recette-rdd.md),
+registre § 181) : **Le Moulin des heures oubliées**, trois nouveaux haut-rêvants aux joueurs
+existants, deux laboratoires et **69 cas manuels**. À la demande « Les deux » de David :
+**module TMR existant et carte officielle** préparés, **14 tables de rencontres Table-OS**
+issues du moteur. 19 contrôles de données, 1400 tirages comparés ; import, trois vrais Hub,
+trois montées payées et G4→H4 avec reçus persistés vérifiés. Confidentialité des demi-rêves
+vérifiée ; **GM-05 transversal reste en échec**. Essais humains, import global des tables et
+matériel restant à faire. Aucun changement de pilote ou du code applicatif dans le lot.
 
 **Références actuelles :** [audit et livraison du 24/10](2026-10-24-reve-de-dragon-finir.md) contre le livre 2.3.1 (registre § 168),
 [bilan R5–R7](2026-10-19-etat-et-reprise-codex-rdd-r5-r6-r7.md),

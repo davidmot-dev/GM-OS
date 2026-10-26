@@ -1,0 +1,78 @@
+{
+  "genre": "plaines",
+  "name": "TMR — plaines",
+  "dice": "1d100",
+  "source": "Livre du Haut-Rêve 2.3.1 p. 183 ; moteur GM-OS hautReve.ts relu le 24/10/2026",
+  "entries": [
+    {
+      "min": 1,
+      "max": 20,
+      "title": "Messager des rêves",
+      "description": "Force 2d4. Maîtrisée : Peut être envoyé jusqu’à sa force en cases : le sort se lance depuis sa case, ce round-ci. Pas de case humide à maîtriser pour lui. Non maîtrisée : Disparaît. Refoulement : 1.",
+      "rencontreId": "messager"
+    },
+    {
+      "min": 21,
+      "max": 40,
+      "title": "Passeur des rêves",
+      "description": "Force 2d4. Maîtrisée : Téléporte le demi-rêve jusqu’à sa force en cases, sans fatigue ni nouvelle rencontre. Une case humide d’arrivée se maîtrise. Non maîtrisée : Disparaît. Refoulement : 1.",
+      "rencontreId": "passeur"
+    },
+    {
+      "min": 41,
+      "max": 55,
+      "title": "Fleur des rêves",
+      "description": "Force 1d6. Maîtrisée : Le rêve augmente de sa force. Non maîtrisée : Disparaît. Refoulement : 1.",
+      "rencontreId": "fleur"
+    },
+    {
+      "min": 56,
+      "max": 60,
+      "title": "Mangeur de rêve",
+      "description": "Force 1d6. Maîtrisée : Disparaît. Non maîtrisée : Le rêve diminue de sa force. Refoulement : 1.",
+      "rencontreId": "mangeur"
+    },
+    {
+      "min": 61,
+      "max": 75,
+      "title": "Changeur de rêve",
+      "description": "Force 2d6. Maîtrisée : Téléporte le demi-rêve sur une case du même genre, au choix, sans limite de distance. Non maîtrisée : Le téléporte sur une case du même genre choisie par le meneur ; seul le genre est dit. Refoulement : 1.",
+      "rencontreId": "changeur"
+    },
+    {
+      "min": 76,
+      "max": 82,
+      "title": "Briseur de rêve",
+      "description": "Force 2d6. Maîtrisée : Disparaît ; on tire un nouveau d7 de rencontre. Non maîtrisée : Brise la concentration : le haut-rêvant quitte les TMR ; il peut remonter le round suivant. Refoulement : 1.",
+      "rencontreId": "briseur"
+    },
+    {
+      "min": 83,
+      "max": 88,
+      "title": "Reflet d’ancien rêve",
+      "description": "Force 2d6. Maîtrisée : Disparaît : le round redevient normal. Non maîtrisée : Emprisonne le demi-rêve sur sa case ; nouvelle maîtrise chaque round, 1 point de fatigue par round. Refoulement : 1.",
+      "rencontreId": "reflet"
+    },
+    {
+      "min": 89,
+      "max": 93,
+      "title": "Tourbillon blanc",
+      "description": "Force 2d6. Maîtrisée : Disparaît. Non maîtrisée : Emporte le demi-rêve : 1 fatigue et 1 rêve par round de défaite ; dérive d’autant de cases dans une direction tirée. Refoulement : 1.",
+      "rencontreId": "tourbillon-blanc"
+    },
+    {
+      "min": 94,
+      "max": 97,
+      "title": "Tourbillon noir",
+      "description": "Force 2d8. Maîtrisée : Disparaît. Non maîtrisée : Comme le blanc, mais 2 rêves par round de défaite et une dérive double. Refoulement : 1.",
+      "rencontreId": "tourbillon-noir"
+    },
+    {
+      "min": 98,
+      "max": 100,
+      "title": "Rêve de Dragon",
+      "description": "Force 7+ddr. Maîtrisée : Le rêve augmente de sa force ; un point de seuil regagné ; une particulière donne une tête de Dragon. Non maîtrisée : Une queue de Dragon, deux sur un échec total. Refoulement : 2.",
+      "rencontreId": "reve-de-dragon"
+    }
+  ]
+}

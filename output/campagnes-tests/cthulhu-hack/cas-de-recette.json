@@ -1,0 +1,415 @@
+[
+  {
+    "id": "CH-01",
+    "archive": "01",
+    "precondition": "Adrien, Fortune 0, aucune conséquence",
+    "action": "Ouvrir Lancer un test ; choisir successivement les six Sauvegardes et lancer.",
+    "attendu": "Un seul seuil choisi par jet ; d20 ≤ caractéristique = réussite. Les six caractéristiques ne s’additionnent pas."
+  },
+  {
+    "id": "CH-02",
+    "archive": "01",
+    "precondition": "Claire, test physique puis personnalité",
+    "action": "Lancer en mode normal, Avantage puis Désavantage ; lire les dés gardés.",
+    "attendu": "Normal : un dé ; Avantage : le plus bas de deux ; Désavantage : le plus haut. Les critiques dépendent du résultat naturel."
+  },
+  {
+    "id": "CH-03",
+    "archive": "01",
+    "precondition": "Adrien, Fortune 0 ; obtenir un échec",
+    "action": "Cliquer Relancer (+1 Fortune), puis noter la fiche et le résultat.",
+    "attendu": "Fortune 0 → 1 ; un nouveau résultat. Réussir coûte deux jetons et n’est plus proposé lorsque la fiche en porte déjà un."
+  },
+  {
+    "id": "CH-04",
+    "archive": "01",
+    "precondition": "Adrien après remise à zéro, Fortune 0 ; échec",
+    "action": "Choisir Réussir (+2 Fortune).",
+    "attendu": "Fortune 0 → 2 ; l’issue devient une réussite ; aucun troisième jeton possible."
+  },
+  {
+    "id": "CH-05",
+    "archive": "01",
+    "precondition": "Claire Fortune 1 ; Émile Fortune 2",
+    "action": "Obtenir un échec sur chaque fiche et comparer les boutons.",
+    "attendu": "À 1, seule une relance est encore payable ; à 2 aucun nouveau placement. La défausse du MJ peut libérer la capacité."
+  },
+  {
+    "id": "CH-06",
+    "archive": "01",
+    "precondition": "Ressources renseignées sur les trois PJ",
+    "action": "Tester Santé mentale, Torche, Bagou et Richesse depuis fiche, carte de combat et pupitre.",
+    "attendu": "Même ressource et même fiche ; un 1 ou 2 descend d’un cran ; autre résultat conserve le dé. Le résultat et l’écriture sont au journal."
+  },
+  {
+    "id": "CH-07",
+    "archive": "02",
+    "precondition": "L03, quatre ressources d4, Fortune 0",
+    "action": "Tester une ressource jusqu’au premier déclin.",
+    "attendu": "d4 → épuisé ; aucune conversion en PV ni perte en dessous de l’épuisement. Fortune peut sauver le dernier déclin selon sa capacité."
+  },
+  {
+    "id": "CH-08",
+    "archive": "02",
+    "precondition": "L04, Matériel 1 d20, Matériel 4 sans nom",
+    "action": "Ouvrir les ressources et tester le premier emplacement.",
+    "attendu": "Matériel nommé accessible, quatrième absent ; au déclin d20 → d12, puis d10/d8/d6/d4/épuisé sur les déclins suivants."
+  },
+  {
+    "id": "CH-09",
+    "archive": "02",
+    "precondition": "L03, Matériel 1 d4 et 1 PA",
+    "action": "Provoquer un déclin du Matériel 1 puis sauver le jet avec Fortune si possible.",
+    "attendu": "Déclin : 1 PA → 0. Fortune restitue le dé et le PA une seule fois ; pas de double restitution en rouvrant le jet."
+  },
+  {
+    "id": "CH-10",
+    "archive": "01",
+    "precondition": "Une armure nommée, dé et PA notés",
+    "action": "Baisser manuellement son dé ; puis effectuer une réparation explicite du dé et des PA.",
+    "attendu": "Le déclin manuel retire 1 PA ; la réparation exige un réglage explicite. Ne pas attendre une absorption automatique des dégâts."
+  },
+  {
+    "id": "CH-11",
+    "archive": "01",
+    "precondition": "Santé mentale déclinante au pupitre",
+    "action": "Choisir Folie passagère, puis tenter une seconde suite sur le même jet.",
+    "attendu": "Un tirage D6, effet et durée écrits ; seconde attribution bloquée. Recommencer sur un autre jet pour essayer Choc."
+  },
+  {
+    "id": "CH-12",
+    "archive": "02",
+    "precondition": "L05 Fortune 2, dernier test réussi préparé",
+    "action": "Essayer séparément chaque défausse MJ en réimportant le laboratoire entre essais.",
+    "attendu": "Relance normale, innocent et secret : −1 ; Choc et Menace : −2. Le Choc ne réduit pas la Santé mentale. Les suites narratives restent au MJ."
+  },
+  {
+    "id": "CH-13",
+    "archive": "01",
+    "precondition": "Un vrai test réussi en Désavantage et Fortune 2",
+    "action": "Demander la relance via la défausse du MJ.",
+    "attendu": "Coût 2 ; une relance unique, avec le même mode. Un test déjà utilisé ne peut pas être réutilisé."
+  },
+  {
+    "id": "CH-14",
+    "archive": "02",
+    "precondition": "L01 à zéro PV, Standard, danger présent",
+    "action": "Ouvrir le suivi ; tenter le tirage avant puis après cocher Le danger est écarté.",
+    "attendu": "Le premier tirage est bloqué avant confirmation du danger écarté. Un D10 pour la chute, pas un par clic."
+  },
+  {
+    "id": "CH-15",
+    "archive": "02",
+    "precondition": "HJ02 — Détruit",
+    "action": "Répartir d’abord six points sur une seule Sauvegarde ; puis 3 en Force et 3 en Sagesse ; confirmer.",
+    "attendu": "Premier choix refusé : exactement deux Sauvegardes. Second choix enlève 3 à chacune, une seule fois ; aperçu avant application."
+  },
+  {
+    "id": "CH-16",
+    "archive": "02",
+    "precondition": "HJ03 — Ravagé",
+    "action": "Répartir quatre points de personnalité : 2 Intelligence et 2 Charisme ; confirmer.",
+    "attendu": "Seuls Intelligence/Sagesse/Charisme ; total 4 ; baisse définitive unique, pas de perte physique imposée."
+  },
+  {
+    "id": "CH-17",
+    "archive": "02",
+    "precondition": "HJ04 — Estropié",
+    "action": "Répartir deux points physiques : 1 Force et 1 Dextérité ; confirmer.",
+    "attendu": "Seuls Force/Dextérité/Constitution ; total 2 ; baisse unique persistante."
+  },
+  {
+    "id": "CH-18",
+    "archive": "02",
+    "precondition": "HJ01 — Mort",
+    "action": "Tenter une Sauvegarde et la récupération.",
+    "attendu": "La mort bloque l’activité et la récupération ; aucun 1D4 PV rendu."
+  },
+  {
+    "id": "CH-19",
+    "archive": "02",
+    "precondition": "HJ05 — Os brisés",
+    "action": "Lire le modificateur physique ; avancer une journée ; recommencer depuis le début et avancer une séance.",
+    "attendu": "−4 aux Sauvegardes physiques tant que l’effet est actif ; la fin d’une des deux échéances lève l’effet."
+  },
+  {
+    "id": "CH-20",
+    "archive": "02",
+    "precondition": "HJ06 — Inconscient",
+    "action": "Essayer de lancer puis confirmer la fin de scène.",
+    "attendu": "Actions bloquées pendant l’effet ; la fin de scène le lève. Le retour de PV reste une opération distincte après danger."
+  },
+  {
+    "id": "CH-21",
+    "archive": "02",
+    "precondition": "HJ07, HJ08, HJ09 et HJ10",
+    "action": "Avancer respectivement 20, 10 ou 1 minute ; vérifier les échéances juste avant/après.",
+    "attendu": "Commotion/Titubant/Essoufflé : Désavantage général pendant 20/10/1 minute. D10 9 et 10 donnent tous deux Essoufflé."
+  },
+  {
+    "id": "CH-22",
+    "archive": "02",
+    "precondition": "Un HJ survivant, pertes éventuelles déjà confirmées",
+    "action": "Danger écarté : récupérer 1D4 PV ; cliquer de nouveau puis recharger.",
+    "attendu": "Une récupération seulement pour cette chute ; PV de fiche, état de santé et carte alignés, maximum 12."
+  },
+  {
+    "id": "CH-23",
+    "archive": "02",
+    "precondition": "L02, variante Pulp, zéro PV et premier D10 en attente",
+    "action": "Tirer le D10 sans confirmer danger écarté ; ajouter une nouvelle blessure si le personnage survit.",
+    "attendu": "Premier D10 immédiat ; deuxième avec −1, troisième −2, minimum 1. Un survivant peut agir à zéro ; mort bloque tout."
+  },
+  {
+    "id": "CH-24",
+    "archive": "02",
+    "precondition": "L02, survivant Pulp avec plusieurs conséquences de même chute",
+    "action": "Essayer la récupération avant puis après danger écarté, après traiter toutes les conséquences.",
+    "attendu": "Aucun PV rendu pendant le danger ; une récupération 1D4 pour la chute, non une par conséquence."
+  },
+  {
+    "id": "CH-25",
+    "archive": "03",
+    "precondition": "C1 — Tremblements, intensité 2",
+    "action": "Choisir Force puis Dextérité ; avancer un Moment, puis un autre.",
+    "attendu": "Malus 2 → 1 → 0 ; les autres Sauvegardes ne reçoivent pas ce malus. Aucun temps en minutes ne remplace un Moment."
+  },
+  {
+    "id": "CH-26",
+    "archive": "03",
+    "precondition": "C2 — Confus, deux Moments",
+    "action": "Comparer Intelligence/Sagesse/Charisme aux caractéristiques physiques ; avancer deux Moments.",
+    "attendu": "Désavantage de personnalité seulement ; expiration à deux Moments."
+  },
+  {
+    "id": "CH-27",
+    "archive": "03",
+    "precondition": "C3 — Immobile, deux Moments",
+    "action": "Tenter une Sauvegarde physique puis une non physique ; avancer deux Moments.",
+    "attendu": "Physique bloqué ; non physique reste possible si aucun autre effet ne l’interdit."
+  },
+  {
+    "id": "CH-28",
+    "archive": "03",
+    "precondition": "C4 — Inconscience, deux Moments",
+    "action": "Tenter d’agir puis avancer les Moments confirmés.",
+    "attendu": "Activité bloquée pendant l’effet. Un réveil par allié s’arbitre selon la règle ; ne pas inventer un bouton absent."
+  },
+  {
+    "id": "CH-29",
+    "archive": "03",
+    "precondition": "C5 — Frayeur, deux Moments",
+    "action": "Lire l’effet puis confirmer deux Moments.",
+    "attendu": "Se dissimuler est la seule action possible selon la description ; le choix narratif est au MJ. Le texte expire."
+  },
+  {
+    "id": "CH-30",
+    "archive": "03",
+    "precondition": "C6 — Hurlement",
+    "action": "Lire le suivi et l’historique.",
+    "attendu": "Événement instantané : attire l’attention, sans malus durable inventé. L’effet peut déjà être inactif à l’ouverture."
+  },
+  {
+    "id": "CH-31",
+    "archive": "03",
+    "precondition": "F1 — Amnésie, deux heures",
+    "action": "Lire la forme d’amnésie ; avancer 119 puis une minute.",
+    "attendu": "L’effet reste jusqu’à deux heures ; son interprétation n’efface pas automatiquement les données de fiche."
+  },
+  {
+    "id": "CH-32",
+    "archive": "03",
+    "precondition": "F2 — Évanouissement, deux minutes et fin de scène",
+    "action": "Avancer deux minutes sans finir la scène ; puis finir la scène. Réimporter et inverser l’ordre.",
+    "attendu": "La plus longue durée s’applique : les deux échéances doivent être atteintes. Constitution/−1 PV reste une décision explicite."
+  },
+  {
+    "id": "CH-33",
+    "archive": "03",
+    "precondition": "F3 — Paranoïa, deux heures",
+    "action": "Lire puis tester une perception pertinente selon la scène.",
+    "attendu": "Avantage de perception à apprécier avec le MJ ; pas d’Avantage général arbitraire. Durée deux heures."
+  },
+  {
+    "id": "CH-34",
+    "archive": "03",
+    "precondition": "F4 — Hystérie, deux heures",
+    "action": "Lire les sens affectés et jouer une action concernée ; avancer deux heures.",
+    "attendu": "Désavantage lié aux sens décrits, apprécié par le MJ ; pas une incapacité générale."
+  },
+  {
+    "id": "CH-35",
+    "archive": "03",
+    "precondition": "F5 — Paralysie, deux minutes",
+    "action": "Essayer une action ; avancer deux minutes.",
+    "attendu": "Personnage sans réaction ; il peut être porté. Le blocage cesse à l’échéance."
+  },
+  {
+    "id": "CH-36",
+    "archive": "03",
+    "precondition": "F6 — Délire, deux minutes et scène",
+    "action": "Avancer chaque compteur séparément, dans les deux ordres après remise à zéro.",
+    "attendu": "Attendre la plus longue durée ; réalité alternative narrative, sans disparition de notes ni perte chiffrée supplémentaire."
+  },
+  {
+    "id": "CH-37",
+    "archive": "03",
+    "precondition": "Un effet actif, tous compteurs à zéro",
+    "action": "Comparer Moment, minute, heure, scène, jour et séance puis recharger la fenêtre.",
+    "attendu": "Compteurs indépendants et persistants ; aucune conversion Moment/minute ni expiration sur une simple fermeture de panneau."
+  },
+  {
+    "id": "GM-01",
+    "archive": "01",
+    "precondition": "Import telle quelle",
+    "action": "Comparer le bilan à inventaire.json.",
+    "attendu": "3 joueurs existants réutilisés sans doublon ; leurs profils et anciens PJ conservés. 3 nouveaux PJ, 12 PNJ, 8 lieux, 12 indices, 4 actes, 18 scènes, 3 rencontres, 4 séances prévues."
+  },
+  {
+    "id": "GM-02",
+    "archive": "01",
+    "precondition": "Thomas D., Marie C., Lucas R.",
+    "action": "Ouvrir une séance prévue, connecter trois tablettes et choisir leur PJ.",
+    "attendu": "Chaque joueur accède à sa fiche ; aucun écran d’un autre jeu. PV, usure et Fortune se lisent correctement."
+  },
+  {
+    "id": "GM-03",
+    "archive": "01",
+    "precondition": "Un PJ sur téléphone/tablette",
+    "action": "Modifier une valeur, une note, l’inventaire ; lancer une Sauvegarde et une Ressource.",
+    "attendu": "Modifications et jets reçus par le MJ ; résultats au journal ; suivi des conséquences en lecture côté joueur, décisions au MJ."
+  },
+  {
+    "id": "GM-04",
+    "archive": "01",
+    "precondition": "Indices initiaux",
+    "action": "Ouvrir Indices : seul le télégramme est révélé ; révéler le reçu puis le recacher.",
+    "attendu": "Aucun indice caché visible par les joueurs ; texte et document du reçu apparaissent seulement après révélation."
+  },
+  {
+    "id": "GM-05",
+    "archive": "01",
+    "precondition": "Secrets marqués SECRET_MJ_CH_RECETTE",
+    "action": "Lire les écrans joueurs, la trame publique et les PNJ publiés.",
+    "attendu": "Le marqueur et les notes secrètes ne doivent jamais être diffusés. Les descriptions publiques restent utilisables."
+  },
+  {
+    "id": "GM-06",
+    "archive": "01",
+    "precondition": "Atlas : plan du port",
+    "action": "Ouvrir le plan, suivre un lien vers un lieu puis un PNJ ; projeter une carte.",
+    "attendu": "Images embarquées chargées hors ligne ; liens vers les bonnes fiches ; aucune image manquante. Brouillard à configurer sur le poste."
+  },
+  {
+    "id": "GM-07",
+    "archive": "01",
+    "precondition": "Trame quatre actes",
+    "action": "Suivre les deux sorties de S01, une branche de fuite et la sortie vers l’épilogue.",
+    "attendu": "Les liens restent dans cette campagne ; les scènes portent leurs PNJ, indices et lieux ; atelier de recette identifié hors fiction."
+  },
+  {
+    "id": "GM-08",
+    "archive": "01",
+    "precondition": "R01 puis R02/R03",
+    "action": "Lancer une rencontre préparée, ajouter les trois PJ ; infliger un coup puis un soin.",
+    "attendu": "Ennemis et allié corrects ; santé de fiche et carte alignées ; la rencontre reste réutilisable. Pas d’initiative chiffrée imposée par ces données."
+  },
+  {
+    "id": "GM-09",
+    "archive": "01",
+    "precondition": "Graphe social",
+    "action": "Ouvrir les relations d’Adrien et Jeanne, du reporter et de Le Goff.",
+    "attendu": "Liens famille, alliés, rivalité et hostilité distincts ; pas de liens orphelins après import ou clone."
+  },
+  {
+    "id": "GM-10",
+    "archive": "01",
+    "precondition": "Butin et inventaires",
+    "action": "Donner la clef à Adrien, puis transférer un objet à Claire ; refuser puis accepter un transfert.",
+    "attendu": "Un seul exemplaire circule ; quantités correctes ; historique de distribution associé à cette campagne."
+  },
+  {
+    "id": "GM-11",
+    "archive": "01",
+    "precondition": "101 billets, trois bénéficiaires",
+    "action": "Partager équitablement la monnaie ; archiver le reliquat puis le remettre au pool.",
+    "attendu": "33 par PJ ; deux unités restantes ; quantité totale conservée. Le dé Richesse ne devient pas un portefeuille numérique."
+  },
+  {
+    "id": "GM-12",
+    "archive": "01",
+    "precondition": "Chronologie et Wiki",
+    "action": "Ouvrir les quatre événements préparés et les huit entrées de lieu ; ajouter une note de séance.",
+    "attendu": "Ordre et liens cohérents ; contenu public sans révélation de la solution ; aucune chronologie jouée inventée."
+  },
+  {
+    "id": "GM-13",
+    "archive": "01",
+    "precondition": "Sound-OS, volume modéré",
+    "action": "Lancer successivement cloche, radio et bourdon, régler le volume et arrêter.",
+    "attendu": "Trois vrais fichiers WAV locaux, aucun lien Internet, aucun pad muet faute de fichier ; arrêt et volume fonctionnels."
+  },
+  {
+    "id": "GM-14",
+    "archive": "01",
+    "precondition": "Music-OS",
+    "action": "Charger les deux boucles dans A/B, lancer une boucle, tester le fondu et arrêter.",
+    "attendu": "Deux pads locaux utilisables ; pas d’authentification Spotify/YouTube. Ce sont des signaux synthétiques de recette."
+  },
+  {
+    "id": "GM-15",
+    "archive": "01",
+    "precondition": "Storyboard M01 à M04",
+    "action": "Déclencher puis arrêter chaque moment ; ouvrir la scène associée.",
+    "attendu": "Carte et titre projetables ; son de recette ; pas d’accès automatique à un écran ou périphérique inconnu. Les cartes du storyboard sont embarquées en data URI."
+  },
+  {
+    "id": "GM-16",
+    "archive": "01",
+    "precondition": "Light-OS, trois tuiles nommées",
+    "action": "Ouvrir le râtelier de campagne, vérifier les tuiles ; assigner vos lampes seulement pour le test matériel.",
+    "attendu": "Tuiles présentes mais lightStates vides à livraison. La couleur de tuile n’est pas une commande de lampe ; la sortie physique reste à tester chez David."
+  },
+  {
+    "id": "GM-17",
+    "archive": "Tables séparées",
+    "precondition": "Créer un univers de recette dans Table-OS",
+    "action": "Atelier : importer les trois JSON de tables-a-importer, Ranger tel quel puis accepter ; tirer un objet et envoyer son butin.",
+    "attendu": "Trois tables 1d6 couvrent 1 à 6 sans trou ; objet ajouté au pool de la campagne active ; tables de règles CH intactes."
+  },
+  {
+    "id": "FIN-01",
+    "archive": "01/02/03",
+    "precondition": "Après une modification de chaque sous-système",
+    "action": "Fermer et rouvrir GM-OS puis la même campagne.",
+    "attendu": "PV, Fortune, effets, allocations, indices, inventaire et trame persistent ; aucune seconde récupération ni perte automatique."
+  },
+  {
+    "id": "FIN-02",
+    "archive": "01",
+    "precondition": "Après modification du butin et révélation d’un indice",
+    "action": "Exporter la campagne .gmos puis importer en Cloner.",
+    "attendu": "Nouvelle campagne avec ses liens et ses médias ; l’original reste tel quel. Vérifier que les identifiants internes changent."
+  },
+  {
+    "id": "FIN-03",
+    "archive": "01/02/03",
+    "precondition": "Campagne de recette altérée",
+    "action": "Réimporter SON fichier d’origine avec Remplacer.",
+    "attendu": "Retour aux valeurs de livraison de cette seule campagne. Les autres campagnes et leurs PJ restent inchangés."
+  },
+  {
+    "id": "FIN-04",
+    "archive": "01",
+    "precondition": "Une campagne ayant été jouée",
+    "action": "Importer en Rejouer et comparer les PJ à l’archive.",
+    "attendu": "Parcours et indices réinitialisés, séances retirées ; les PJ restent tels quels. Rejouer n’est pas une remise à neuf des caractéristiques."
+  },
+  {
+    "id": "FIN-05",
+    "archive": "01/02/03",
+    "precondition": "Une étape à consigner",
+    "action": "Remplir resultats.csv : observé, verdict, reproduction ; joindre une capture si anomalie.",
+    "attendu": "Distinguer PASSÉ, ÉCHEC, NON TESTÉ et NON APPLICABLE. Ne pas déduire la validation humaine des contrôles automatiques du pack."
+  }
+]

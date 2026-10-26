@@ -1,0 +1,114 @@
+{
+  "archives": [
+    {
+      "fichier": "01-Le-Moulin-des-heures-oubliees.gmos",
+      "campagne": "recette-rdd-campagne-moulin",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "f38152a316d407b9b1d7f01a6b0bed10abd0ab411211f03f6e4c2b740511a406"
+    },
+    {
+      "fichier": "02-Corps-Repos-et-Progression.gmos",
+      "campagne": "recette-rdd-corps-campagne-moulin",
+      "personnages": 9,
+      "medias": 39,
+      "sha256": "1ff4fc98e134845a649944cd9e4f557548f55968c89023df08807b9a9ce6392d"
+    },
+    {
+      "fichier": "03-Haut-Reve-et-TMR.gmos",
+      "campagne": "recette-rdd-tmr-campagne-moulin",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "e8aeec55c5fd514df3c54b7e6e3ff29007edc635bc14b11c32690245453d14c4"
+    }
+  ],
+  "joueurs": [
+    {
+      "id": "p-1",
+      "nom": "Thomas D.",
+      "pj": "Liseron des Gués"
+    },
+    {
+      "id": "p-2",
+      "nom": "Marie C.",
+      "pj": "Ambre des Saules"
+    },
+    {
+      "id": "p-3",
+      "nom": "Lucas R.",
+      "pj": "Oriel Trois-Ponts"
+    }
+  ],
+  "tables": [
+    {
+      "terrain": "cite",
+      "nom": "TMR — cité",
+      "entrees": 10
+    },
+    {
+      "terrain": "sanctuaire",
+      "nom": "TMR — sanctuaire",
+      "entrees": 10
+    },
+    {
+      "terrain": "plaines",
+      "nom": "TMR — plaines",
+      "entrees": 10
+    },
+    {
+      "terrain": "pont",
+      "nom": "TMR — pont",
+      "entrees": 10
+    },
+    {
+      "terrain": "collines",
+      "nom": "TMR — collines",
+      "entrees": 10
+    },
+    {
+      "terrain": "foret",
+      "nom": "TMR — forêt",
+      "entrees": 10
+    },
+    {
+      "terrain": "monts",
+      "nom": "TMR — monts",
+      "entrees": 10
+    },
+    {
+      "terrain": "desert",
+      "nom": "TMR — désert",
+      "entrees": 10
+    },
+    {
+      "terrain": "fleuve",
+      "nom": "TMR — fleuve",
+      "entrees": 10
+    },
+    {
+      "terrain": "lac",
+      "nom": "TMR — lac",
+      "entrees": 10
+    },
+    {
+      "terrain": "marais",
+      "nom": "TMR — marais",
+      "entrees": 10
+    },
+    {
+      "terrain": "gouffre",
+      "nom": "TMR — gouffre",
+      "entrees": 10
+    },
+    {
+      "terrain": "necropole",
+      "nom": "TMR — nécropole",
+      "entrees": 7
+    },
+    {
+      "terrain": "desolation",
+      "nom": "TMR — désolation",
+      "entrees": 7
+    }
+  ]
+}

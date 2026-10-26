@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE Orphée — incidents",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "La lampe clignote",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Un bac bloque la coursive",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Un témoin demande à boire",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Une radio sature",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Le chariot change de quai",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Un document tombe du classeur",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    }
+  ]
+}

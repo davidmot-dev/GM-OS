@@ -1,0 +1,485 @@
+[
+  {
+    "id": "RDD-01",
+    "archive": "01",
+    "precondition": "Trois fiches neuves",
+    "action": "Comparer les caractéristiques et valeurs dérivées à la lecture R0.",
+    "attendu": "Mêlée, Tir, Lancer, Dérobée, Vie, Endurance, SC, SUST, ENC et dommages cohérents."
+  },
+  {
+    "id": "RDD-02",
+    "archive": "01",
+    "precondition": "Rêve et seuil indépendants",
+    "action": "Modifier le seuil sur une copie puis recalculer.",
+    "attendu": "La caractéristique RÊVE et le rêve courant ne sont pas écrasés par le seuil."
+  },
+  {
+    "id": "RDD-03",
+    "archive": "01",
+    "precondition": "Jet caractéristique + compétence",
+    "action": "Composer Vue/Vigilance à ajustement 0 puis négatif.",
+    "attendu": "Probabilité et cinq degrés lisibles ; jet reçu au poste MJ."
+  },
+  {
+    "id": "RDD-04",
+    "archive": "01",
+    "precondition": "Jet du pilote",
+    "action": "Comparer réussite normale, significative, particulière et échecs avec les bornes affichées.",
+    "attendu": "Le degré suit le d100 et le moteur RdD, sans double coût."
+  },
+  {
+    "id": "RDD-05",
+    "archive": "02",
+    "precondition": "B01 fatigue 20",
+    "action": "Lire l’état général puis lancer une action concernée.",
+    "attendu": "Malus issus du segment de fatigue, pas une pénalité inventée."
+  },
+  {
+    "id": "RDD-06",
+    "archive": "02",
+    "precondition": "B02 Endurance 0",
+    "action": "Ouvrir le suivi de santé puis récupération.",
+    "attendu": "Inconscient, pas mort ; Vie et Endurance distinctes."
+  },
+  {
+    "id": "RDD-07",
+    "archive": "02",
+    "precondition": "B03 une blessure légère",
+    "action": "Appliquer premiers soins puis soins complets.",
+    "attendu": "Points de soins, malus, durée et opérant conservés ; pas de guérison instantanée."
+  },
+  {
+    "id": "RDD-08",
+    "archive": "02",
+    "precondition": "B04 une blessure grave",
+    "action": "Comparer les soins et le passage du temps.",
+    "attendu": "Échéances explicites et bonus de guérison selon le moteur."
+  },
+  {
+    "id": "RDD-09",
+    "archive": "02",
+    "precondition": "B05 Vie 0 et critique",
+    "action": "Inspecter l’état puis tester le jet de Vie sur une copie.",
+    "attendu": "Coma, pas décès automatique ; SC et échéances visibles."
+  },
+  {
+    "id": "RDD-10",
+    "archive": "02",
+    "precondition": "Copie saine",
+    "action": "Appliquer un encaissement, une protection puis un coup non mortel sur copies.",
+    "attendu": "Blessure, Vie, Endurance et fatigue reflètent le barème affiché."
+  },
+  {
+    "id": "RDD-11",
+    "archive": "02",
+    "precondition": "Perte d’Endurance en round",
+    "action": "Appliquer deux pertes puis résoudre le jet requis.",
+    "attendu": "Le cumul du round est traité une fois ; ouvrir le panneau ne relance pas."
+  },
+  {
+    "id": "RDD-12",
+    "archive": "02",
+    "precondition": "Sonné",
+    "action": "Avancer un round confirmé.",
+    "attendu": "Durée suivie par rounds décidés, sans horloge réelle."
+  },
+  {
+    "id": "RDD-13",
+    "archive": "02",
+    "precondition": "B09 récupération",
+    "action": "Prévisualiser puis valider une récupération d’Endurance.",
+    "attendu": "La récupération ne supprime pas les blessures ni tous les points de fatigue."
+  },
+  {
+    "id": "RDD-14",
+    "archive": "02",
+    "precondition": "B08 réserves à 1",
+    "action": "Valider nourriture, eau et temps de voyage.",
+    "attendu": "Consommation explicite, ressources persistées ; aucun débit au chargement."
+  },
+  {
+    "id": "RDD-15",
+    "archive": "01",
+    "precondition": "Scène S09",
+    "action": "Créer une tâche de charpenterie, prévisualiser et appliquer deux étapes.",
+    "attendu": "Seuil, progression, temps et circonstances conservés."
+  },
+  {
+    "id": "RDD-16",
+    "archive": "01",
+    "precondition": "Aperçu de tâche",
+    "action": "Modifier la fiche entre aperçu et validation.",
+    "attendu": "Aperçu périmé refusé ; un même reçu ne s’applique pas deux fois."
+  },
+  {
+    "id": "RDD-17",
+    "archive": "02",
+    "precondition": "B09 fatigue 4",
+    "action": "Préparer repos puis sommeil selon les conditions réellement choisies.",
+    "attendu": "Temps explicite ; récupération, rêve et suivi de journée distincts."
+  },
+  {
+    "id": "RDD-18",
+    "archive": "02",
+    "precondition": "B03 blessure soignée",
+    "action": "Avancer une journée de guérison.",
+    "attendu": "Jet de guérison lié à la blessure et échéance, sans doublon de journée."
+  },
+  {
+    "id": "RDD-19",
+    "archive": "02",
+    "precondition": "B07 moral −3",
+    "action": "Ouvrir le Moral, résoudre un événement puis une modification.",
+    "attendu": "Le moral reste séparé de la fatigue et du stress ; reçu unique."
+  },
+  {
+    "id": "RDD-20",
+    "archive": "01",
+    "precondition": "Expérience disponible après essai",
+    "action": "Noter une particulière à ajustement négatif puis distribuer les points.",
+    "attendu": "Séparer caractéristique, compétence, voie et sort ; pas de récompense au simple chargement."
+  },
+  {
+    "id": "RDD-21",
+    "archive": "01",
+    "precondition": "Apprentissage",
+    "action": "Créer un exercice ou une leçon et examiner les conditions.",
+    "attendu": "Seuil, coût, temps et niveau vérifiés avant validation."
+  },
+  {
+    "id": "RDD-22",
+    "archive": "02",
+    "precondition": "B06 chance 1",
+    "action": "Employer la Chance sur une action autorisée puis réessayer la même opération.",
+    "attendu": "Un débit, un reçu ; interdictions propres à l’action respectées."
+  },
+  {
+    "id": "RDD-23",
+    "archive": "02",
+    "precondition": "B06 destinée 1",
+    "action": "Employer la Destinée dans le cas autorisé sur copie.",
+    "attendu": "Chance et Destinée distinctes ; usage non répété par réouverture."
+  },
+  {
+    "id": "RDD-24",
+    "archive": "01",
+    "precondition": "Heures de naissance renseignées",
+    "action": "Préparer un jour astrologique, nombre et heure.",
+    "attendu": "Douze heures, lecture des circonstances ; pas d’assimilation des dates ISO au calendrier du jeu."
+  },
+  {
+    "id": "RDD-25",
+    "archive": "01",
+    "precondition": "Rencontre R01",
+    "action": "Ajouter les PJ puis tester initiative, attaque, défense et protection.",
+    "attendu": "Combat optionnel ; Vie et Endurance restent raccordées aux fiches."
+  },
+  {
+    "id": "RDD-26",
+    "archive": "01",
+    "precondition": "Arme sans profil validé",
+    "action": "Vérifier les valeurs avant le jet.",
+    "attendu": "Aucun dégât d’arme déduit du seul nom d’inventaire."
+  },
+  {
+    "id": "RDD-27",
+    "archive": "03",
+    "precondition": "T01 rêve 1",
+    "action": "Prévisualiser une montée normale puis accélérée sur copies.",
+    "attendu": "Prix 1/2 rêve et 1 fatigue, insuffisance refusée ; rien débité à l’aperçu."
+  },
+  {
+    "id": "RDD-28",
+    "archive": "03",
+    "precondition": "T02 refoulement 2",
+    "action": "Refouler une rencontre imposée avec un d20 connu.",
+    "attendu": "Coût de la rencontre ajouté avant le test ; souffle si d20 inférieur ou égal."
+  },
+  {
+    "id": "RDD-29",
+    "archive": "03",
+    "precondition": "T03 rêve 20",
+    "action": "Maîtriser une Fleur puis un Rêve de Dragon sur copies.",
+    "attendu": "Gains selon la force ; triple du seuil, éclatement et effets suivent le moteur."
+  },
+  {
+    "id": "RDD-30",
+    "archive": "01",
+    "precondition": "Sort Tympan d’Hypnos renseigné",
+    "action": "Ouvrir le haut-rêve depuis la fiche, préparer le jet sur J4.",
+    "attendu": "Voie Hypnos, difficulté −5, coût 2, bonus de case distinct ; cibles arbitrées par le gardien."
+  },
+  {
+    "id": "RDD-31",
+    "archive": "03",
+    "precondition": "Sort de laboratoire",
+    "action": "Comparer coût d’un succès, particulière, échec et échec total.",
+    "attendu": "Coût 2 / 1 / 0 / 3 pour le sort de coût 2, avant autres circonstances."
+  },
+  {
+    "id": "RDD-32",
+    "archive": "03",
+    "precondition": "Réserve de sort",
+    "action": "Mettre un sort en réserve avec sa case puis le déclencher.",
+    "attendu": "Limite, coût et case conservés ; une note de module seule ne débite pas un sort."
+  },
+  {
+    "id": "RDD-33",
+    "archive": "03",
+    "precondition": "Case humide",
+    "action": "Préparer une maîtrise de force 7 sur terrain humide.",
+    "attendu": "Maîtrise de case distincte du jet de rencontre."
+  },
+  {
+    "id": "RDD-34",
+    "archive": "03",
+    "precondition": "Reflet ou Tourbillon",
+    "action": "Échouer une maîtrise puis poursuivre la lutte.",
+    "attendu": "Coût par round, dérive et sortie selon la rencontre ; pas de dérobade après emprisonnement."
+  },
+  {
+    "id": "RDD-35",
+    "archive": "03",
+    "precondition": "Effet en attente",
+    "action": "Tirer une Queue, un Souffle puis une Tête sur copies.",
+    "attendu": "Table, source, refoulabilité et précision gardées ; aucun effet actif inventé au départ."
+  },
+  {
+    "id": "RDD-36",
+    "archive": "03",
+    "precondition": "Résistance et magie",
+    "action": "Préparer un sort nécessitant une résistance puis arbitrer.",
+    "attendu": "Jet et conséquence séparés ; pas de réussite imposée par le module cartographique."
+  },
+  {
+    "id": "RDD-37",
+    "archive": "01",
+    "precondition": "Module fermé aux joueurs",
+    "action": "Activer la séance, ouvrir le pupitre TMR, autoriser Liseron seulement.",
+    "attendu": "Un accès explicite par personnage ; les deux autres restent fermés."
+  },
+  {
+    "id": "RDD-38",
+    "archive": "01",
+    "precondition": "Carte TMR",
+    "action": "Ouvrir l’image officielle depuis le module et examiner G4/J4/D13.",
+    "attendu": "Image couleur 900 × 1000 ; 189 cases ; pas le plan du village."
+  },
+  {
+    "id": "RDD-39",
+    "archive": "01",
+    "precondition": "Trois joueurs connectés",
+    "action": "Ouvrir les TMR pour chacun puis inspecter les messages reçus.",
+    "attendu": "Un seul demi-rêve par lecteur ; aucune préparation MJ ni données des autres voyageurs."
+  },
+  {
+    "id": "RDD-40",
+    "archive": "01",
+    "precondition": "Liseron G4, rêve 12, fatigue 0",
+    "action": "Demander la montée ; prévisualiser puis débiter depuis le pupitre.",
+    "attendu": "Rêve 11, fatigue 1 ; reçu durable unique et demi-rêve présent."
+  },
+  {
+    "id": "RDD-41",
+    "archive": "01",
+    "precondition": "Liseron présent sur G4",
+    "action": "Choisir H4, demander le déplacement et valider le raccord.",
+    "attendu": "H4, rêve 11, fatigue 2 ; seules les cases voisines acceptées."
+  },
+  {
+    "id": "RDD-42",
+    "archive": "01",
+    "precondition": "Demande en attente",
+    "action": "Envoyer la même intention ou ouvrir le pupitre deux fois.",
+    "attendu": "Pas de double débit ni de double progression."
+  },
+  {
+    "id": "RDD-43",
+    "archive": "01",
+    "precondition": "Aperçu du raccord",
+    "action": "Modifier la fatigue avant la validation.",
+    "attendu": "Fiche changée détectée ; refaire l’aperçu ; aucun débit sur données périmées."
+  },
+  {
+    "id": "RDD-44",
+    "archive": "01",
+    "precondition": "Voyageur en TMR",
+    "action": "Rester un round puis descendre.",
+    "attendu": "Séjour : 1 fatigue ; descente : 0 rêve et 0 fatigue."
+  },
+  {
+    "id": "RDD-45",
+    "archive": "01",
+    "precondition": "Rencontre de Table-OS",
+    "action": "Tirer selon le genre de la case puis publier le texte au bon PJ.",
+    "attendu": "Résultat remis au seul voyageur ; préparer n’est pas publier."
+  },
+  {
+    "id": "RDD-46",
+    "archive": "01",
+    "precondition": "Rencontre publiée",
+    "action": "Tenter de déplacer avant résolution ; terminer la rencontre puis reprendre.",
+    "attendu": "Déplacement bloqué pendant la rencontre, ouvert après résolution explicite."
+  },
+  {
+    "id": "RDD-47",
+    "archive": "03",
+    "precondition": "Module TMR et fiche",
+    "action": "Comparer coût du raccord et panneau de haut-rêve.",
+    "attendu": "Ne pas payer deux fois un même trajet ; le module ne résout pas automatiquement la maîtrise."
+  },
+  {
+    "id": "RDD-48",
+    "archive": "01",
+    "precondition": "Contexte fermé",
+    "action": "Clore la séance ou couper tous les accès.",
+    "attendu": "Accès révoqués, voyage interrompu, position conservée."
+  },
+  {
+    "id": "RDD-49",
+    "archive": "01",
+    "precondition": "Après trajet payé",
+    "action": "Recharger le profil de recette puis rouvrir le module.",
+    "attendu": "Coûts et reçus persistés, pas de second débit ; position conservée."
+  },
+  {
+    "id": "RDD-50",
+    "archive": "03",
+    "precondition": "Laboratoire TMR",
+    "action": "Exporter puis réimporter ce laboratoire avec Remplacer.",
+    "attendu": "Demandes et effets de voyage arrêtés ; cartes et préparations conservées."
+  },
+  {
+    "id": "RDD-51",
+    "archive": "Table-OS",
+    "precondition": "Univers de recette vierge",
+    "action": "Importer les 14 JSON dans Atelier → Ranger tel quel.",
+    "attendu": "14 terrains, chaque table couvre 1–100 sans trou ni chevauchement."
+  },
+  {
+    "id": "RDD-52",
+    "archive": "Table-OS",
+    "precondition": "Cité ou sanctuaire",
+    "action": "Comparer d100 25/26, 50/51, 97/98.",
+    "attendu": "Bornes du moteur : Messager/Passeur, Passeur/Fleur, Tourbillon noir/Rêve de Dragon."
+  },
+  {
+    "id": "RDD-53",
+    "archive": "Table-OS",
+    "precondition": "Autres terrains",
+    "action": "Comparer chaque borne et son voisin avec le panneau du haut-rêve.",
+    "attendu": "Les sept colonnes du livre sont conservées, aucun tirage de rencontre si le d7 ne la demande pas."
+  },
+  {
+    "id": "RDD-54",
+    "archive": "Table-OS",
+    "precondition": "Résultat de rencontre",
+    "action": "Consulter force et maîtrise puis jeter la force séparément.",
+    "attendu": "La table d100 ne lance pas la force et n’écrit aucun effet sur la fiche."
+  },
+  {
+    "id": "RDD-55",
+    "archive": "01",
+    "precondition": "Import Nexus",
+    "action": "Importer telle quelle avec p-1/p-2/p-3 déjà existants.",
+    "attendu": "Profils, avatars et anciens PJ conservés ; trois nouveaux PJ de cette enquête."
+  },
+  {
+    "id": "RDD-56",
+    "archive": "02",
+    "precondition": "Fiche modifiée en 01",
+    "action": "Réimporter 02 avec Remplacer.",
+    "attendu": "Laboratoire remis à zéro ; enquête et autres campagnes préservées."
+  },
+  {
+    "id": "RDD-57",
+    "archive": "01",
+    "precondition": "Cloner l’archive",
+    "action": "Importer avec Cloner puis ouvrir les TMR.",
+    "attendu": "Identifiants des voyageurs remappés vers les PJ clonés."
+  },
+  {
+    "id": "RDD-58",
+    "archive": "01",
+    "precondition": "Trois tablettes 360/768/1180 px",
+    "action": "Choisir chacun son PJ, lancer un jet et ouvrir les cinq pages HTML.",
+    "attendu": "Bon joueur, valeurs raccordées, caractères accentués lisibles ; aucun partage de PJ."
+  },
+  {
+    "id": "RDD-59",
+    "archive": "01",
+    "precondition": "Atlas",
+    "action": "Ouvrir huit lieux et suivre liens vers PNJ et voisins.",
+    "attendu": "Liens résolus ; statut visité et visibilité indépendants."
+  },
+  {
+    "id": "RDD-60",
+    "archive": "01",
+    "precondition": "Indices",
+    "action": "Révéler I04 au groupe puis retirer la révélation.",
+    "attendu": "Contenu public synchronisé au bon moment, propriétaire et lieu conservés."
+  },
+  {
+    "id": "RDD-61",
+    "archive": "01",
+    "precondition": "Secrets de séance fictifs",
+    "action": "Inspecter les messages reçus par un joueur.",
+    "attendu": "Aucun SECRET_MJ_RDD_RECETTE ; GM-05 est un défaut connu à retester, pas un succès présumé."
+  },
+  {
+    "id": "RDD-62",
+    "archive": "01",
+    "precondition": "Storyboard",
+    "action": "Projeter les quatre moments, changer de carte puis arrêter.",
+    "attendu": "Bon plan et titre ; aucune piste audio lancée à l’import."
+  },
+  {
+    "id": "RDD-63",
+    "archive": "01",
+    "precondition": "Sons et musique",
+    "action": "Écouter les trois sons et deux pistes locales, régler puis arrêter.",
+    "attendu": "Fichiers embarqués ; sons synthétiques de 4 s, sans accès distant."
+  },
+  {
+    "id": "RDD-64",
+    "archive": "01",
+    "precondition": "Trois scènes lumineuses",
+    "action": "Choisir des lampes de test et préparer une scène manuellement.",
+    "attendu": "États matériels vides au départ ; aucun identifiant de lampe inventé."
+  },
+  {
+    "id": "RDD-65",
+    "archive": "01",
+    "precondition": "Butin 101 deniers",
+    "action": "Distribuer 33 à chaque PJ et garder le reliquat.",
+    "attendu": "99 distribués, 2 restants ; historique et inventaire cohérents."
+  },
+  {
+    "id": "RDD-66",
+    "archive": "01",
+    "precondition": "Objets et réserve",
+    "action": "Transférer un objet, refuser un autre puis réexporter.",
+    "attendu": "Quantité conservée ; pas d’effet magique attribué au seul nom."
+  },
+  {
+    "id": "RDD-67",
+    "archive": "01",
+    "precondition": "Trame et séances",
+    "action": "Parcourir les branches, déplacer une scène puis préparer la séance suivante.",
+    "attendu": "Liens conservés ; états achevés et scènes prévues indépendants."
+  },
+  {
+    "id": "RDD-68",
+    "archive": "01",
+    "precondition": "Nexus Wiki et Chronologie",
+    "action": "Ouvrir neuf pages et quatre repères.",
+    "attendu": "Dates de tri clairement fictives ; liens vers les bons PNJ."
+  },
+  {
+    "id": "RDD-69",
+    "archive": "01",
+    "precondition": "Bilan",
+    "action": "Exporter la campagne modifiée, rouvrir dans un profil de recette.",
+    "attendu": "Médias, fiches, états TMR et autres campagnes conservés ; remplir resultats.csv."
+  }
+]

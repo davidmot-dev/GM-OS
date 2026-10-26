@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "genereLe": "2026-10-25T12:00:00.000Z",
+  "rattachement": {
+    "source": "Export Dirvers/RDD_campagne_gmos_1792944586235.gmos",
+    "sha256": "c99b8f87ecad7dee7104fcba1c6bd8a8639bd81c7b1c70ad2d4272cbd3c12b04",
+    "joueurs": [
+      {
+        "id": "p-1",
+        "realName": "Thomas D."
+      },
+      {
+        "id": "p-2",
+        "realName": "Marie C."
+      },
+      {
+        "id": "p-3",
+        "realName": "Lucas R."
+      }
+    ]
+  },
+  "pilote": {
+    "id": "custom-1776715362245",
+    "version": "2.0.0",
+    "source": "Export Dirvers/corriges/NOC_driver_gmos_2.0.0.gmos-driver"
+  },
+  "archives": [
+    {
+      "fichier": "01-Le-neuvieme-timbre.gmos",
+      "campagne": "recette-noc-campagne-neuvieme-timbre",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "02dd311df3c72dea5202e79f6ad4ef90619842bf018163bdbf42d205482044f5"
+    },
+    {
+      "fichier": "02-Seuils-et-Sequelles.gmos",
+      "campagne": "recette-noc-seuils-campagne-neuvieme-timbre",
+      "personnages": 12,
+      "medias": 39,
+      "sha256": "58a4ee62ae4051e3404d8c9be69569776526ef265fa402e276c3fe283f3e626a"
+    },
+    {
+      "fichier": "03-Repos-Auras-et-Cabale.gmos",
+      "campagne": "recette-noc-entraide-campagne-neuvieme-timbre",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "b9fdf0984ef05ff0c6b8cba6e614e82c4b1f14d946b869d0e9b1dbe47cf28c1a"
+    }
+  ],
+  "campagne": {
+    "cabale": "Les Veilleurs du Palier",
+    "contacts": 3,
+    "joueurs": 3,
+    "personnages": 3,
+    "pnj": 12,
+    "lieux": 8,
+    "indices": 12,
+    "actes": 4,
+    "scenes": 16,
+    "rencontres": 3,
+    "seances": 4,
+    "wiki": 9,
+    "butin": 8,
+    "moments": 4,
+    "sons": 3,
+    "tuiles": 3
+  },
+  "casDeRecette": 62
+}

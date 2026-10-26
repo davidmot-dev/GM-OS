@@ -1,0 +1,116 @@
+# Recette manuelle — Cthulhu Hack
+
+Consigner le résultat **observé**, pas seulement l’attendu. Les fichiers 01/02/03 correspondent aux trois archives ; réimporter la bonne archive avec Remplacer entre essais destructifs indépendants.
+
+Références : manuel `54-Jeu-Cthulhu-Hack.md`, pilote 1.1.0 et moteur `src/modules/dice/systemes/cthulhuHack.ts`. Fortune et dés d’usure : tests du pilote ; effets et durées : états préparés par ce même moteur.
+
+| Cas | Archive | Précondition | Geste | Attendu |
+| --- | --- | --- | --- | --- |
+| CH-01 | 01 | Adrien, Fortune 0, aucune conséquence | Ouvrir Lancer un test ; choisir successivement les six Sauvegardes et lancer. | Un seul seuil choisi par jet ; d20 ≤ caractéristique = réussite. Les six caractéristiques ne s’additionnent pas. |
+| CH-02 | 01 | Claire, test physique puis personnalité | Lancer en mode normal, Avantage puis Désavantage ; lire les dés gardés. | Normal : un dé ; Avantage : le plus bas de deux ; Désavantage : le plus haut. Les critiques dépendent du résultat naturel. |
+| CH-03 | 01 | Adrien, Fortune 0 ; obtenir un échec | Cliquer Relancer (+1 Fortune), puis noter la fiche et le résultat. | Fortune 0 → 1 ; un nouveau résultat. Réussir coûte deux jetons et n’est plus proposé lorsque la fiche en porte déjà un. |
+| CH-04 | 01 | Adrien après remise à zéro, Fortune 0 ; échec | Choisir Réussir (+2 Fortune). | Fortune 0 → 2 ; l’issue devient une réussite ; aucun troisième jeton possible. |
+| CH-05 | 01 | Claire Fortune 1 ; Émile Fortune 2 | Obtenir un échec sur chaque fiche et comparer les boutons. | À 1, seule une relance est encore payable ; à 2 aucun nouveau placement. La défausse du MJ peut libérer la capacité. |
+| CH-06 | 01 | Ressources renseignées sur les trois PJ | Tester Santé mentale, Torche, Bagou et Richesse depuis fiche, carte de combat et pupitre. | Même ressource et même fiche ; un 1 ou 2 descend d’un cran ; autre résultat conserve le dé. Le résultat et l’écriture sont au journal. |
+| CH-07 | 02 | L03, quatre ressources d4, Fortune 0 | Tester une ressource jusqu’au premier déclin. | d4 → épuisé ; aucune conversion en PV ni perte en dessous de l’épuisement. Fortune peut sauver le dernier déclin selon sa capacité. |
+| CH-08 | 02 | L04, Matériel 1 d20, Matériel 4 sans nom | Ouvrir les ressources et tester le premier emplacement. | Matériel nommé accessible, quatrième absent ; au déclin d20 → d12, puis d10/d8/d6/d4/épuisé sur les déclins suivants. |
+| CH-09 | 02 | L03, Matériel 1 d4 et 1 PA | Provoquer un déclin du Matériel 1 puis sauver le jet avec Fortune si possible. | Déclin : 1 PA → 0. Fortune restitue le dé et le PA une seule fois ; pas de double restitution en rouvrant le jet. |
+| CH-10 | 01 | Une armure nommée, dé et PA notés | Baisser manuellement son dé ; puis effectuer une réparation explicite du dé et des PA. | Le déclin manuel retire 1 PA ; la réparation exige un réglage explicite. Ne pas attendre une absorption automatique des dégâts. |
+| CH-11 | 01 | Santé mentale déclinante au pupitre | Choisir Folie passagère, puis tenter une seconde suite sur le même jet. | Un tirage D6, effet et durée écrits ; seconde attribution bloquée. Recommencer sur un autre jet pour essayer Choc. |
+| CH-12 | 02 | L05 Fortune 2, dernier test réussi préparé | Essayer séparément chaque défausse MJ en réimportant le laboratoire entre essais. | Relance normale, innocent et secret : −1 ; Choc et Menace : −2. Le Choc ne réduit pas la Santé mentale. Les suites narratives restent au MJ. |
+| CH-13 | 01 | Un vrai test réussi en Désavantage et Fortune 2 | Demander la relance via la défausse du MJ. | Coût 2 ; une relance unique, avec le même mode. Un test déjà utilisé ne peut pas être réutilisé. |
+| CH-14 | 02 | L01 à zéro PV, Standard, danger présent | Ouvrir le suivi ; tenter le tirage avant puis après cocher Le danger est écarté. | Le premier tirage est bloqué avant confirmation du danger écarté. Un D10 pour la chute, pas un par clic. |
+| CH-15 | 02 | HJ02 — Détruit | Répartir d’abord six points sur une seule Sauvegarde ; puis 3 en Force et 3 en Sagesse ; confirmer. | Premier choix refusé : exactement deux Sauvegardes. Second choix enlève 3 à chacune, une seule fois ; aperçu avant application. |
+| CH-16 | 02 | HJ03 — Ravagé | Répartir quatre points de personnalité : 2 Intelligence et 2 Charisme ; confirmer. | Seuls Intelligence/Sagesse/Charisme ; total 4 ; baisse définitive unique, pas de perte physique imposée. |
+| CH-17 | 02 | HJ04 — Estropié | Répartir deux points physiques : 1 Force et 1 Dextérité ; confirmer. | Seuls Force/Dextérité/Constitution ; total 2 ; baisse unique persistante. |
+| CH-18 | 02 | HJ01 — Mort | Tenter une Sauvegarde et la récupération. | La mort bloque l’activité et la récupération ; aucun 1D4 PV rendu. |
+| CH-19 | 02 | HJ05 — Os brisés | Lire le modificateur physique ; avancer une journée ; recommencer depuis le début et avancer une séance. | −4 aux Sauvegardes physiques tant que l’effet est actif ; la fin d’une des deux échéances lève l’effet. |
+| CH-20 | 02 | HJ06 — Inconscient | Essayer de lancer puis confirmer la fin de scène. | Actions bloquées pendant l’effet ; la fin de scène le lève. Le retour de PV reste une opération distincte après danger. |
+| CH-21 | 02 | HJ07, HJ08, HJ09 et HJ10 | Avancer respectivement 20, 10 ou 1 minute ; vérifier les échéances juste avant/après. | Commotion/Titubant/Essoufflé : Désavantage général pendant 20/10/1 minute. D10 9 et 10 donnent tous deux Essoufflé. |
+| CH-22 | 02 | Un HJ survivant, pertes éventuelles déjà confirmées | Danger écarté : récupérer 1D4 PV ; cliquer de nouveau puis recharger. | Une récupération seulement pour cette chute ; PV de fiche, état de santé et carte alignés, maximum 12. |
+| CH-23 | 02 | L02, variante Pulp, zéro PV et premier D10 en attente | Tirer le D10 sans confirmer danger écarté ; ajouter une nouvelle blessure si le personnage survit. | Premier D10 immédiat ; deuxième avec −1, troisième −2, minimum 1. Un survivant peut agir à zéro ; mort bloque tout. |
+| CH-24 | 02 | L02, survivant Pulp avec plusieurs conséquences de même chute | Essayer la récupération avant puis après danger écarté, après traiter toutes les conséquences. | Aucun PV rendu pendant le danger ; une récupération 1D4 pour la chute, non une par conséquence. |
+| CH-25 | 03 | C1 — Tremblements, intensité 2 | Choisir Force puis Dextérité ; avancer un Moment, puis un autre. | Malus 2 → 1 → 0 ; les autres Sauvegardes ne reçoivent pas ce malus. Aucun temps en minutes ne remplace un Moment. |
+| CH-26 | 03 | C2 — Confus, deux Moments | Comparer Intelligence/Sagesse/Charisme aux caractéristiques physiques ; avancer deux Moments. | Désavantage de personnalité seulement ; expiration à deux Moments. |
+| CH-27 | 03 | C3 — Immobile, deux Moments | Tenter une Sauvegarde physique puis une non physique ; avancer deux Moments. | Physique bloqué ; non physique reste possible si aucun autre effet ne l’interdit. |
+| CH-28 | 03 | C4 — Inconscience, deux Moments | Tenter d’agir puis avancer les Moments confirmés. | Activité bloquée pendant l’effet. Un réveil par allié s’arbitre selon la règle ; ne pas inventer un bouton absent. |
+| CH-29 | 03 | C5 — Frayeur, deux Moments | Lire l’effet puis confirmer deux Moments. | Se dissimuler est la seule action possible selon la description ; le choix narratif est au MJ. Le texte expire. |
+| CH-30 | 03 | C6 — Hurlement | Lire le suivi et l’historique. | Événement instantané : attire l’attention, sans malus durable inventé. L’effet peut déjà être inactif à l’ouverture. |
+| CH-31 | 03 | F1 — Amnésie, deux heures | Lire la forme d’amnésie ; avancer 119 puis une minute. | L’effet reste jusqu’à deux heures ; son interprétation n’efface pas automatiquement les données de fiche. |
+| CH-32 | 03 | F2 — Évanouissement, deux minutes et fin de scène | Avancer deux minutes sans finir la scène ; puis finir la scène. Réimporter et inverser l’ordre. | La plus longue durée s’applique : les deux échéances doivent être atteintes. Constitution/−1 PV reste une décision explicite. |
+| CH-33 | 03 | F3 — Paranoïa, deux heures | Lire puis tester une perception pertinente selon la scène. | Avantage de perception à apprécier avec le MJ ; pas d’Avantage général arbitraire. Durée deux heures. |
+| CH-34 | 03 | F4 — Hystérie, deux heures | Lire les sens affectés et jouer une action concernée ; avancer deux heures. | Désavantage lié aux sens décrits, apprécié par le MJ ; pas une incapacité générale. |
+| CH-35 | 03 | F5 — Paralysie, deux minutes | Essayer une action ; avancer deux minutes. | Personnage sans réaction ; il peut être porté. Le blocage cesse à l’échéance. |
+| CH-36 | 03 | F6 — Délire, deux minutes et scène | Avancer chaque compteur séparément, dans les deux ordres après remise à zéro. | Attendre la plus longue durée ; réalité alternative narrative, sans disparition de notes ni perte chiffrée supplémentaire. |
+| CH-37 | 03 | Un effet actif, tous compteurs à zéro | Comparer Moment, minute, heure, scène, jour et séance puis recharger la fenêtre. | Compteurs indépendants et persistants ; aucune conversion Moment/minute ni expiration sur une simple fermeture de panneau. |
+| GM-01 | 01 | Import telle quelle | Comparer le bilan à inventaire.json. | 3 joueurs existants réutilisés sans doublon ; leurs profils et anciens PJ conservés. 3 nouveaux PJ, 12 PNJ, 8 lieux, 12 indices, 4 actes, 18 scènes, 3 rencontres, 4 séances prévues. |
+| GM-02 | 01 | Thomas D., Marie C., Lucas R. | Ouvrir une séance prévue, connecter trois tablettes et choisir leur PJ. | Chaque joueur accède à sa fiche ; aucun écran d’un autre jeu. PV, usure et Fortune se lisent correctement. |
+| GM-03 | 01 | Un PJ sur téléphone/tablette | Modifier une valeur, une note, l’inventaire ; lancer une Sauvegarde et une Ressource. | Modifications et jets reçus par le MJ ; résultats au journal ; suivi des conséquences en lecture côté joueur, décisions au MJ. |
+| GM-04 | 01 | Indices initiaux | Ouvrir Indices : seul le télégramme est révélé ; révéler le reçu puis le recacher. | Aucun indice caché visible par les joueurs ; texte et document du reçu apparaissent seulement après révélation. |
+| GM-05 | 01 | Secrets marqués SECRET_MJ_CH_RECETTE | Lire les écrans joueurs, la trame publique et les PNJ publiés. | Le marqueur et les notes secrètes ne doivent jamais être diffusés. Les descriptions publiques restent utilisables. |
+| GM-06 | 01 | Atlas : plan du port | Ouvrir le plan, suivre un lien vers un lieu puis un PNJ ; projeter une carte. | Images embarquées chargées hors ligne ; liens vers les bonnes fiches ; aucune image manquante. Brouillard à configurer sur le poste. |
+| GM-07 | 01 | Trame quatre actes | Suivre les deux sorties de S01, une branche de fuite et la sortie vers l’épilogue. | Les liens restent dans cette campagne ; les scènes portent leurs PNJ, indices et lieux ; atelier de recette identifié hors fiction. |
+| GM-08 | 01 | R01 puis R02/R03 | Lancer une rencontre préparée, ajouter les trois PJ ; infliger un coup puis un soin. | Ennemis et allié corrects ; santé de fiche et carte alignées ; la rencontre reste réutilisable. Pas d’initiative chiffrée imposée par ces données. |
+| GM-09 | 01 | Graphe social | Ouvrir les relations d’Adrien et Jeanne, du reporter et de Le Goff. | Liens famille, alliés, rivalité et hostilité distincts ; pas de liens orphelins après import ou clone. |
+| GM-10 | 01 | Butin et inventaires | Donner la clef à Adrien, puis transférer un objet à Claire ; refuser puis accepter un transfert. | Un seul exemplaire circule ; quantités correctes ; historique de distribution associé à cette campagne. |
+| GM-11 | 01 | 101 billets, trois bénéficiaires | Partager équitablement la monnaie ; archiver le reliquat puis le remettre au pool. | 33 par PJ ; deux unités restantes ; quantité totale conservée. Le dé Richesse ne devient pas un portefeuille numérique. |
+| GM-12 | 01 | Chronologie et Wiki | Ouvrir les quatre événements préparés et les huit entrées de lieu ; ajouter une note de séance. | Ordre et liens cohérents ; contenu public sans révélation de la solution ; aucune chronologie jouée inventée. |
+| GM-13 | 01 | Sound-OS, volume modéré | Lancer successivement cloche, radio et bourdon, régler le volume et arrêter. | Trois vrais fichiers WAV locaux, aucun lien Internet, aucun pad muet faute de fichier ; arrêt et volume fonctionnels. |
+| GM-14 | 01 | Music-OS | Charger les deux boucles dans A/B, lancer une boucle, tester le fondu et arrêter. | Deux pads locaux utilisables ; pas d’authentification Spotify/YouTube. Ce sont des signaux synthétiques de recette. |
+| GM-15 | 01 | Storyboard M01 à M04 | Déclencher puis arrêter chaque moment ; ouvrir la scène associée. | Carte et titre projetables ; son de recette ; pas d’accès automatique à un écran ou périphérique inconnu. Les cartes du storyboard sont embarquées en data URI. |
+| GM-16 | 01 | Light-OS, trois tuiles nommées | Ouvrir le râtelier de campagne, vérifier les tuiles ; assigner vos lampes seulement pour le test matériel. | Tuiles présentes mais lightStates vides à livraison. La couleur de tuile n’est pas une commande de lampe ; la sortie physique reste à tester chez David. |
+| GM-17 | Tables séparées | Créer un univers de recette dans Table-OS | Atelier : importer les trois JSON de tables-a-importer, Ranger tel quel puis accepter ; tirer un objet et envoyer son butin. | Trois tables 1d6 couvrent 1 à 6 sans trou ; objet ajouté au pool de la campagne active ; tables de règles CH intactes. |
+| FIN-01 | 01/02/03 | Après une modification de chaque sous-système | Fermer et rouvrir GM-OS puis la même campagne. | PV, Fortune, effets, allocations, indices, inventaire et trame persistent ; aucune seconde récupération ni perte automatique. |
+| FIN-02 | 01 | Après modification du butin et révélation d’un indice | Exporter la campagne .gmos puis importer en Cloner. | Nouvelle campagne avec ses liens et ses médias ; l’original reste tel quel. Vérifier que les identifiants internes changent. |
+| FIN-03 | 01/02/03 | Campagne de recette altérée | Réimporter SON fichier d’origine avec Remplacer. | Retour aux valeurs de livraison de cette seule campagne. Les autres campagnes et leurs PJ restent inchangés. |
+| FIN-04 | 01 | Une campagne ayant été jouée | Importer en Rejouer et comparer les PJ à l’archive. | Parcours et indices réinitialisés, séances retirées ; les PJ restent tels quels. Rejouer n’est pas une remise à neuf des caractéristiques. |
+| FIN-05 | 01/02/03 | Une étape à consigner | Remplir resultats.csv : observé, verdict, reproduction ; joindre une capture si anomalie. | Distinguer PASSÉ, ÉCHEC, NON TESTÉ et NON APPLICABLE. Ne pas déduire la validation humaine des contrôles automatiques du pack. |
+
+## Fiches du laboratoire 02
+
+### Thomas D.
+
+- **HJ01 — Mort (D10 1)** — PV 0/12, Fortune 0/2.
+- **HJ04 — Estropié (D10 4)** — PV 0/12, Fortune 0/2.
+- **HJ07 — Commotion (D10 7)** — PV 0/12, Fortune 0/2.
+- **HJ10 — Essoufflé (D10 10)** — PV 0/12, Fortune 0/2.
+- **L01 — Standard · danger encore présent** — PV 0/12, Fortune 0/2.
+- **L04 — Matériel d20 et emplacement vide · Fortune 1** — PV 12/12, Fortune 1/2.
+
+### Marie C.
+
+- **HJ02 — Détruit (D10 2)** — PV 0/12, Fortune 1/2.
+- **HJ05 — Os brisés (D10 5)** — PV 0/12, Fortune 1/2.
+- **HJ08 — Titubant (D10 8)** — PV 0/12, Fortune 1/2.
+- **L02 — Pulp · premier D10 en attente** — PV 0/12, Fortune 1/2.
+- **L05 — Fortune 2 · défausse du MJ** — PV 12/12, Fortune 2/2.
+
+### Lucas R.
+
+- **HJ03 — Ravagé (D10 3)** — PV 0/12, Fortune 2/2.
+- **HJ06 — Inconscient (D10 6)** — PV 0/12, Fortune 2/2.
+- **HJ09 — Essoufflé (D10 9)** — PV 0/12, Fortune 2/2.
+- **L03 — Usure d4 et armure 1 PA · Fortune 0** — PV 1/12, Fortune 0/2.
+
+## Fiches du laboratoire 03
+
+### Thomas D.
+
+- **C1 — Tremblements** — PV 12/12, Fortune 0/2.
+- **C4 — Inconscience** — PV 12/12, Fortune 0/2.
+- **F1 — Amnésie** — PV 12/12, Fortune 0/2.
+- **F4 — Hystérie** — PV 12/12, Fortune 0/2.
+
+### Marie C.
+
+- **C2 — Confus** — PV 12/12, Fortune 1/2.
+- **C5 — Frayeur** — PV 12/12, Fortune 1/2.
+- **F2 — Évanouissement** — PV 12/12, Fortune 1/2.
+- **F5 — Paralysie** — PV 12/12, Fortune 1/2.
+
+### Lucas R.
+
+- **C3 — Immobile** — PV 12/12, Fortune 2/2.
+- **C6 — Hurlement** — PV 12/12, Fortune 2/2.
+- **F3 — Paranoïa** — PV 12/12, Fortune 2/2.
+- **F6 — Délire** — PV 12/12, Fortune 2/2.
