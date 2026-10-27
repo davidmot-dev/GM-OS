@@ -1,0 +1,228 @@
+{
+  "jeu": "barbarian",
+  "versionDuContrat": "1.7",
+  "accepte": true,
+  "polarite": {
+    "declaree": "light",
+    "attendue": "light"
+  },
+  "jetons": {
+    "appliques": [
+      "bg",
+      "surface",
+      "text",
+      "muted",
+      "accent",
+      "border",
+      "font-display",
+      "font-mono"
+    ],
+    "avecLesPersonnalites": [
+      "surface-2",
+      "accent-contrast",
+      "border-soft",
+      "success",
+      "danger",
+      "warning",
+      "info",
+      "font-body",
+      "title-tracking",
+      "kicker-tracking",
+      "title-transform",
+      "radius-sm",
+      "radius-md",
+      "radius-lg",
+      "border-width",
+      "border-style",
+      "elevation-1",
+      "elevation-2",
+      "elevation-3",
+      "glow",
+      "glow-strength",
+      "glass-bg",
+      "glass-border",
+      "glass-blur",
+      "frame-bg",
+      "frame-text",
+      "frame-accent",
+      "texture-bg",
+      "texture-panel",
+      "texture-opacity"
+    ],
+    "annonces": [],
+    "sansEffet": [],
+    "lusParPersonne": []
+  },
+  "contrastes": [
+    {
+      "avant": "text",
+      "fond": "bg",
+      "ratio": 12.07,
+      "minimum": 4.5,
+      "recommande": 7,
+      "verdict": "bon"
+    },
+    {
+      "avant": "text",
+      "fond": "surface",
+      "ratio": 14.33,
+      "minimum": 4.5,
+      "recommande": 7,
+      "verdict": "bon"
+    },
+    {
+      "avant": "muted",
+      "fond": "bg",
+      "ratio": 4.98,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "muted",
+      "fond": "surface",
+      "ratio": 5.91,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "accent",
+      "fond": "bg",
+      "ratio": 6.38,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "accent-contrast",
+      "fond": "accent",
+      "ratio": 8,
+      "minimum": 4.5,
+      "recommande": 7,
+      "verdict": "bon"
+    },
+    {
+      "avant": "success",
+      "fond": "bg",
+      "ratio": 4.52,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "danger",
+      "fond": "bg",
+      "ratio": 5.22,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "warning",
+      "fond": "bg",
+      "ratio": 5.61,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "info",
+      "fond": "bg",
+      "ratio": 5.35,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "frame-text",
+      "fond": "frame-bg",
+      "ratio": 14.39,
+      "minimum": 4.5,
+      "recommande": 7,
+      "verdict": "bon"
+    },
+    {
+      "avant": "frame-accent",
+      "fond": "frame-bg",
+      "ratio": 8.06,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "text",
+      "fond": "bg sous texture-bg",
+      "ratio": 11.08,
+      "minimum": 4.5,
+      "recommande": 7,
+      "verdict": "bon"
+    },
+    {
+      "avant": "muted",
+      "fond": "bg sous texture-bg",
+      "ratio": 4.57,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "accent",
+      "fond": "bg sous texture-bg",
+      "ratio": 5.85,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "success",
+      "fond": "bg sous texture-bg",
+      "ratio": 4.15,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "sous le recommandé"
+    },
+    {
+      "avant": "danger",
+      "fond": "bg sous texture-bg",
+      "ratio": 4.79,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "warning",
+      "fond": "bg sous texture-bg",
+      "ratio": 5.15,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "info",
+      "fond": "bg sous texture-bg",
+      "ratio": 4.91,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    },
+    {
+      "avant": "text",
+      "fond": "surface sous texture-panel",
+      "ratio": 13.11,
+      "minimum": 4.5,
+      "recommande": 7,
+      "verdict": "bon"
+    },
+    {
+      "avant": "muted",
+      "fond": "surface sous texture-panel",
+      "ratio": 5.41,
+      "minimum": 3,
+      "recommande": 4.5,
+      "verdict": "bon"
+    }
+  ],
+  "erreurs": [],
+  "avertissements": []
+}

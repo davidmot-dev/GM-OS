@@ -12994,10 +12994,33 @@ complètes, import global des tables et appareils restent à éprouver. Pouvoirs
 identifiés ; pas de budget novice revendiqué. Aucun src/electron ou profil personnel touché,
 aucun commit/push demandé.
 
+### 184 · Barbarians of Lemuria fini — pilote 2.0.0, moteur de fiches 19 — 27/10/2026
+
+David : *« j'ai créé un nouveau drivers Barbarian of Lemuria, j'ai créé le thème et la fiche de personnage, tu peux contrôler »*, puis, sur le constat, *« Tout, dans l'ordre »* ; GM-OS fermé. [Page du manuel](../User%20Guides/54-Jeu-Barbarians-of-Lemuria.md).
+
+- **Contrôle** : thème `barbarian` accepté (0/0), fiche `barbarian-of-lemuria-fr` acceptée ; **le pilote forgé réussissait tout** — chaque d6 comparé à « attribut + carrière + aptitude », zéro réussite exigée (vérifié avec `preparerLeJet`).
+- **Corpus relu 16/16** contre le livre (`OneDrive/…/Barbarian of Lemuria-vf.pdf`, PDF = imprimée + 2) : second avantage payant, Non-combattant désavantage, carrières au-delà de quatre, portées de la hache et de la massue, secourir un mourant, points de création non cumulables, foi sans jet ; retirés : un texte parasite de l'outil, des règles inventées (poursuite départagée, vents des nefs, sprint sans attaque, échelle des rangs).
+- **Le jet** : `jet.barbarians` (`dice/systemes/barbarians.ts`, cartes `BarbariansAuJet.tsx`) — 2d6 + seuil + difficulté − Défense ≥ 9, dés de bonus et de malus, doubles 6 et 1, Faveur divine, succès héroïque et légendaire, échec critique et son point, jet de réaction ; contrôle de la Forge.
+- **Pilote 2.0.0** (`outils/barbarian/finir_barbarian.py` → `corriges/BOL_driver_gmos_2.0.0`) : même identifiant ; fiche GM-OS sur les 45 clés de la fiche HTML (attributs −1 à 5, cinq carrières nommées, armes, équipement, Vitalité et son maximum, expérience) ; sept portées ; réaction Esprit + Initiative décroissante.
+- **Fiche** : moteur 18 → 19 (`outils/barbarian/integrer_au_moteur.mjs`), correspondance directe de 44 clés, portrait sur la fiche ; validateur 0/0.
+- **Vérifié** : essais du jet (10), du panneau (7), de la fiche (4), corpus et Forge ; `npx tsc -b`, lint ; e2e réel : jet, héroïsme et fiche remplie depuis GM-OS, cinq captures au manuel.
+- **Reste** : l'essai de David — réimporter `corriges/BOL_driver_gmos_2.0.0.gmos-driver` avec **Remplacer** ; un personnage créé sur la fiche forgée garde ses anciennes valeurs, sans qu'elles paraissent.
+
+### 185 · Forge — enrichir un pilote par un supplément — garé le 27/10/2026
+
+David : *« je veux pouvoir enrichir mes drivers avec des suppléments à part, je dois pouvoir indiquer à la forge que c'est un supplément et donc que les sujets doivent être plus libres et moins cadrés que lorsque je crée un nouveau driver »* — **à faire plus tard**, rien n'est commencé.
+
+- **Aujourd'hui** : la Forge ne connaît pas de supplément. Elle dérive toujours le **canevas fixe des quatorze sujets** (`forge/rules/canevas.ts`, `CANEVAS`), pensé pour un livre de base : résolution, degrés, santé, fiche… Un supplément (bestiaire, magie, région, règles optionnelles) n'y rentre pas ; ce qui ne se range pas finit en `hors_canevas`.
+- **Ce que David veut** : dire à la Forge « c'est un supplément de tel pilote » ; ses sujets se choisissent librement, d'après le livre, au lieu du canevas ; le résultat **enrichit** le pilote existant (corpus, tables, éventuellement champs) sans rien remplacer — la règle de la Forge (« elle enrichit au lieu de doubler ») vaut a fortiori.
+- **À trancher avec David avant de coder** : où vivent les fiches d'un supplément (sous-dossier du corpus du jeu, ou à côté) et comment l'Oracle les cite ; si un supplément peut ajouter des champs au pilote ou seulement du corpus ; qui propose les sujets (le carnet NotebookLM, ou David) ; la relecture contre le livre, comme pour le corpus de base.
+- **Premier geste** : relire la conduite de la Forge sur un pilote existant (enrichir, `hors_canevas`, budget de l'invite de `corpusDerivable.test.ts`), puis proposer le mode « supplément » à David.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 121 | **Forge — enrichir un pilote par un supplément** | ⏸️ garé le 27/10, § 185 ; rien de commencé | Trancher avec David : où vivent les fiches, champs ou corpus seul, qui choisit les sujets | Décision de David |
+| 120 | **Barbarians of Lemuria fini — pilote 2.0.0** | § 184 ; corpus relu 16/16, jet contre 9 avec héroïsme, fiche HTML au moteur 19 et reliée, thème contrôlé — 27/10 | Réimporter `corriges/BOL_driver_gmos_2.0.0` avec Remplacer ; un jet, une Faveur divine, la Fiche du jeu | L'essai de David |
 | 119 | **Campagnes de recette — Nephilim** | § 183 ; enquête, deux laboratoires, trois Sciences occultes, outils préparés et 70 cas | Importer 01-Le-Meridien-de-verre.gmos ; suivre PARCOURS-NEPHILIM.md | GM-05 transversal ; essais humains/matériel à faire |
 | 118 | **Campagnes de recette — Dune** | § 182 ; enquête, Maison, deux laboratoires, module de conflits préparé et 66 cas | Importer 01-Le-Sceau-de-Nereide.gmos ; ouvrir Maison et suivre MODULES-ET-MAISON.md | GM-05 transversal ; essais humains/matériel à faire |
 | 117 | **Campagnes de recette — Rêve de Dragon** | § 181 ; enquête, deux laboratoires, 69 cas, module TMR préparé et 14 tables conformes au moteur | Importer 01-Le-Moulin-des-heures-oubliees.gmos ; tables via Table-OS ; suivre PARCOURS-TMR.md | GM-05 transversal ; essais humains/matériel à faire |

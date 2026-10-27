@@ -1,0 +1,50 @@
+/* Barbarian of Lemuria — papier, encre et acier. Contrat GM-OS v1.7. */
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root[data-theme="barbarian"] {
+  color-scheme: light;
+
+  --rpg-bg: #e5e0d3;
+  --rpg-surface: #f6f3ea;
+  --rpg-surface-2: #d8d2c3;
+  --rpg-text: #24221c;
+  --rpg-muted: #625d50;
+  --rpg-accent: #3f5334;
+  --rpg-accent-contrast: #fff9e9;
+  --rpg-border: #847b65;
+  --rpg-border-soft: rgba(76, 68, 49, 0.24);
+
+  --rpg-success: #08724c;
+  --rpg-danger: #993c34;
+  --rpg-warning: #705008;
+  --rpg-info: #365c7c;
+
+  --rpg-font-display: "Rye", Georgia, serif;
+  --rpg-font-body: Georgia, "Times New Roman", serif;
+  --rpg-font-mono: "IBM Plex Mono", "Courier New", monospace;
+  --rpg-title-tracking: 0.015em;
+  --rpg-kicker-tracking: 0.08em;
+  --rpg-title-transform: uppercase;
+
+  --rpg-radius-sm: 0px;
+  --rpg-radius-md: 1px;
+  --rpg-radius-lg: 2px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 1px 0 rgba(36, 34, 28, 0.18);
+  --rpg-elevation-2: 0 8px 20px rgba(24, 28, 21, 0.20);
+  --rpg-elevation-3: 0 16px 40px rgba(24, 28, 21, 0.30);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(246, 243, 234, 0.95);
+  --rpg-glass-border: rgba(76, 68, 49, 0.45);
+  --rpg-glass-blur: 0px;
+
+  --rpg-frame-bg: #181c15;
+  --rpg-frame-text: #f1ead7;
+  --rpg-frame-accent: #c3b078;
+
+  --rpg-texture-bg: url('matieres/papier.svg');
+  --rpg-texture-panel: url('matieres/papier.svg');
+  --rpg-texture-opacity: 0.04;
+}

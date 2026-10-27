@@ -1,0 +1,189 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "barbarian-of-lemuria-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Barbarians of Lemuria (pilote 2.0.0, outils/barbarian/finir_barbarian.py) et le gabarit barbarian-of-lemuria-fr livré le 2026-10-27. Les champs du pilote reprennent un à un les clés de la fiche : aucune transformation.",
+  "champs": [
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "terre_natale",
+      "fiche": "identity.origin"
+    },
+    {
+      "gmos": "langues",
+      "fiche": "identity.languages"
+    },
+    {
+      "gmos": "description",
+      "fiche": "identity.description"
+    },
+    {
+      "gmos": "experience",
+      "fiche": "experience.current"
+    },
+    {
+      "gmos": "vigueur",
+      "fiche": "attributes.strength"
+    },
+    {
+      "gmos": "agilite",
+      "fiche": "attributes.agility"
+    },
+    {
+      "gmos": "esprit",
+      "fiche": "attributes.mind"
+    },
+    {
+      "gmos": "aura",
+      "fiche": "attributes.appeal"
+    },
+    {
+      "gmos": "initiative",
+      "fiche": "combat.initiative"
+    },
+    {
+      "gmos": "melee",
+      "fiche": "combat.melee"
+    },
+    {
+      "gmos": "tir",
+      "fiche": "combat.ranged"
+    },
+    {
+      "gmos": "defense",
+      "fiche": "combat.defense"
+    },
+    {
+      "gmos": "carriere1_nom",
+      "fiche": "careers.0.name"
+    },
+    {
+      "gmos": "carriere1",
+      "fiche": "careers.0.rank"
+    },
+    {
+      "gmos": "carriere2_nom",
+      "fiche": "careers.1.name"
+    },
+    {
+      "gmos": "carriere2",
+      "fiche": "careers.1.rank"
+    },
+    {
+      "gmos": "carriere3_nom",
+      "fiche": "careers.2.name"
+    },
+    {
+      "gmos": "carriere3",
+      "fiche": "careers.2.rank"
+    },
+    {
+      "gmos": "carriere4_nom",
+      "fiche": "careers.3.name"
+    },
+    {
+      "gmos": "carriere4",
+      "fiche": "careers.3.rank"
+    },
+    {
+      "gmos": "carriere5_nom",
+      "fiche": "careers.4.name"
+    },
+    {
+      "gmos": "carriere5",
+      "fiche": "careers.4.rank"
+    },
+    {
+      "gmos": "arme1",
+      "fiche": "weapons.0.name"
+    },
+    {
+      "gmos": "arme1_degats",
+      "fiche": "weapons.0.damage"
+    },
+    {
+      "gmos": "arme2",
+      "fiche": "weapons.1.name"
+    },
+    {
+      "gmos": "arme2_degats",
+      "fiche": "weapons.1.damage"
+    },
+    {
+      "gmos": "arme3",
+      "fiche": "weapons.2.name"
+    },
+    {
+      "gmos": "arme3_degats",
+      "fiche": "weapons.2.damage"
+    },
+    {
+      "gmos": "arme4",
+      "fiche": "weapons.3.name"
+    },
+    {
+      "gmos": "arme4_degats",
+      "fiche": "weapons.3.damage"
+    },
+    {
+      "gmos": "equipement1",
+      "fiche": "equipment.0.description"
+    },
+    {
+      "gmos": "equipement2",
+      "fiche": "equipment.1.description"
+    },
+    {
+      "gmos": "equipement3",
+      "fiche": "equipment.2.description"
+    },
+    {
+      "gmos": "equipement4",
+      "fiche": "equipment.3.description"
+    },
+    {
+      "gmos": "equipement5",
+      "fiche": "equipment.4.description"
+    },
+    {
+      "gmos": "equipement6",
+      "fiche": "equipment.5.description"
+    },
+    {
+      "gmos": "points_pouvoir",
+      "fiche": "resources.power"
+    },
+    {
+      "gmos": "points_heroisme",
+      "fiche": "resources.hero"
+    },
+    {
+      "gmos": "points_foi",
+      "fiche": "resources.faith"
+    },
+    {
+      "gmos": "vitalite",
+      "fiche": "resources.vitality"
+    },
+    {
+      "gmos": "avantages",
+      "fiche": "traits.advantages"
+    },
+    {
+      "gmos": "desavantages",
+      "fiche": "traits.disadvantages"
+    },
+    {
+      "gmos": "notes",
+      "fiche": "adventure.notes"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "identity.portrait",
+      "pourquoi": "Une image : elle reste sur la fiche, GM-OS a son propre portrait du personnage."
+    }
+  ]
+}

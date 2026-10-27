@@ -74,6 +74,9 @@ import {
     ProgressionSymbaroum, SuitesSymbaroum, TourSymbaroum, VoyageSymbaroum, type Options as OptionsDeSymbaroum,
 } from './SymbaroumAuJet';
 import { lireSymbaroum, sansCritiqueDeBase, type NatureDuTest } from '../../../dice/systemes/symbaroumRegles';
+import { PreparationBarbarians, SuitesBarbarians } from './BarbariansAuJet';
+import { CHOIX_DE_BARBARIANS, appliquerLeGeste, heroismeDeLaFiche, lancerBarbarians, modificateursDeBarbarians, soldeDesDes,
+    LIBELLES_DE_BARBARIANS, type ChoixDeBarbarians, type GesteDeBarbarians, type JetDeBarbarians } from '../../../dice/systemes/barbarians';
 import { CreationStarTrek, PreparationStarTrek, ReputationStarTrek, StressEtBlessuresStarTrek, SuitesStarTrek, TourStarTrek, type VaisseauPourLAide } from './StarTrekAuJet';
 import { CarnetDune, PreparationDune, SuitesDune } from './DuneAuJet';
 import { CHOIX_DUNE, CLE_DUNE, bilanDune, conserverDune, depenserDune, desDune, difficulteDune, entierDune, lireDune, lignesDune, noterDune, resultatDune,
@@ -377,6 +380,24 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setEcritsSymbaroum(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
         ecrireSurLaFiche?.(maj);
     };
+
+    /**
+     * **Barbarians of Lemuria** (2026-10-27) : la difficulté du livre, l'opposition, les
+     * dés de bonus et de malus ; ce que le dernier lancer savait, pour relancer à
+     * l'identique (Faveur divine) ; les points d'héroïsme écrits par les cartes.
+     */
+    const regleBarbarians = descripteur.barbarians;
+    const [choixBarbarians, setChoixBarbarians] = useState<ChoixDeBarbarians>(CHOIX_DE_BARBARIANS);
+    const [barbariansDuLancer, setBarbariansDuLancer] = useState<{ solde: number; modificateurs: number; reaction: boolean; titre: string; compte: number; pointAccorde: boolean } | null>(null);
+    const [ecritsBarbarians, setEcritsBarbarians] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const valeursBarbarians = useMemo(() => ({ ...valeurs,
+        ...(ecritsBarbarians.base === valeurs && ecritsBarbarians.personnageId === personnageId ? ecritsBarbarians.maj : {}),
+    }), [valeurs, ecritsBarbarians, personnageId]);
+    const ecrireBarbarians = (maj: Record<string, unknown>) => {
+        setEcritsBarbarians(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche?.(maj);
+    };
+    const heroismeBarbarians = regleBarbarians?.heroisme ? heroismeDeLaFiche(valeursBarbarians[regleBarbarians.heroisme]) : undefined;
 
     /**
      * **Star Trek jusqu'au bout** (2026-10-23) : la tâche complète — nature, marge,
@@ -1087,7 +1108,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         */
         const effetCH = descripteur.cthulhuHack ? modificateursCH(descripteur.cthulhuHack, valeursCH, jet.composantes[0]?.champ) : undefined;
         const modificateurCH = effetCH?.desavantage ? (modificateur === 'avantage' ? 'aucun' : 'desavantage') : modificateur;
-        const brutDuMoteur = descripteur.cthulhuHack
+        const soldeBarbarians = soldeDesDes(choixBarbarians.bonus, choixBarbarians.malus);
+        const modificateursBarbarians = modificateursDeBarbarians(jet.seuil, choixBarbarians);
+        const brutDuMoteur = regleBarbarians
+            ? lancerBarbarians(soldeBarbarians, modificateursBarbarians, () => DiceEngine.roll(6), regleBarbarians.cible ?? 9)
+            : descripteur.cthulhuHack
             ? DiceEngine.rollSauvegarde(jet.seuil, modificateurCH)
             : jet.garde
             ? resoudreLaGarde(Array.from({ length: jet.nombreDeDes }, () => DiceEngine.roll(10)), jet.garde.quota, jet.garde.seuil)
@@ -1179,6 +1204,19 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             const coutAide = coutDesAssistants(choixStarTrek.assistants.length);
             if (coutAide > 0 && monnaie && jet.cout.ressource) dits.push(...mouvoir(jet.cout.ressource, -coutAide, `${enTete}, assistants au-delà du premier`).avertissements, `${coutAide} pour les assistants`);
             setChoixStarTrek(c => ({ ...c, occasionParfaite: false }));
+        }
+        if (regleBarbarians) {
+            const reglage = [
+                choixBarbarians.difficulte !== 0 ? `difficulté ${choixBarbarians.difficulte > 0 ? '+' : ''}${choixBarbarians.difficulte}` : '',
+                choixBarbarians.opposition ? `${choixBarbarians.reaction ? 'Initiative' : 'Défense'} adverse ${choixBarbarians.opposition}` : '',
+                choixBarbarians.autre ? `autre ${choixBarbarians.autre > 0 ? '+' : ''}${choixBarbarians.autre}` : '',
+                soldeBarbarians > 0 ? `${soldeBarbarians} dé${soldeBarbarians > 1 ? 's' : ''} de bonus` : soldeBarbarians < 0 ? `${-soldeBarbarians} dé${soldeBarbarians < -1 ? 's' : ''} de malus` : '',
+            ].filter(Boolean).join(', ');
+            setBarbariansDuLancer(d => ({
+                solde: soldeBarbarians, modificateurs: modificateursBarbarians, reaction: choixBarbarians.reaction,
+                titre: `${choixBarbarians.reaction ? 'Réaction : ' : ''}${jet.composantes.map(c => c.label).join(' + ')}${reglage ? ` · ${reglage}` : ''}`,
+                compte: (d?.compte ?? 0) + 1, pointAccorde: false,
+            }));
         }
         if (regleSymbaroum) {
             const retenu = jet.composantes[0]?.champ;
@@ -1429,6 +1467,35 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     }
 
     /** Redit un jet complété — au journal, ou au meneur depuis la tablette. */
+    /** Un geste de Barbarians : il change le bilan, se paie ou se gagne en points d'héroïsme. */
+    const gesteBarbarians = (geste: GesteDeBarbarians) => {
+        const jetB = resultat as JetDeBarbarians | null;
+        if (!regleBarbarians || !jetB?.barbarians || !barbariansDuLancer) return;
+        const cout = geste === 'critique' ? 0 : 1;
+        if (cout && (heroismeBarbarians === undefined || heroismeBarbarians < cout)) return;
+        const apres = appliquerLeGeste(jetB, geste);
+        if (apres === jetB) return;
+        if (cout && regleBarbarians.heroisme) ecrireBarbarians({ [regleBarbarians.heroisme]: heroismeBarbarians! - cout });
+        setResultat(apres);
+        redire(`${barbariansDuLancer.titre} · ${LIBELLES_DE_BARBARIANS[apres.barbarians.bilan]}${cout ? ' (1 point d’héroïsme)' : ''}`, apres);
+    };
+    /** Faveur divine : 1 point d'héroïsme, tous les dés relancés, le second jet gardé (p. 58). */
+    const faveurDivineBarbarians = () => {
+        if (!regleBarbarians?.heroisme || !barbariansDuLancer || heroismeBarbarians === undefined || heroismeBarbarians < 1) return;
+        ecrireBarbarians({ [regleBarbarians.heroisme]: heroismeBarbarians - 1 });
+        const res = lancerBarbarians(barbariansDuLancer.solde, barbariansDuLancer.modificateurs, () => DiceEngine.roll(6), regleBarbarians.cible ?? 9);
+        setResultat(res);
+        setBarbariansDuLancer(d => d && { ...d, compte: d.compte + 1, pointAccorde: false });
+        redire(`${barbariansDuLancer.titre} · Faveur divine (1 point d’héroïsme)`, res);
+    };
+    /** Le point d'héroïsme que le MJ accorde sur un échec critique, au-delà de la réserve s'il le faut (p. 57). */
+    const accorderUnPointBarbarians = () => {
+        if (!regleBarbarians?.heroisme || !barbariansDuLancer || barbariansDuLancer.pointAccorde || heroismeBarbarians === undefined) return;
+        ecrireBarbarians({ [regleBarbarians.heroisme]: heroismeBarbarians + 1 });
+        setBarbariansDuLancer(d => d && { ...d, pointAccorde: true });
+        redire(`${barbariansDuLancer.titre} · échec critique`, { total: 0, modifier: 0, rolls: [], totalDisplay: `+1 point d’héroïsme accordé par le MJ → ${heroismeBarbarians + 1}` });
+    };
+
     const redire = (titre: string, res: RollResult) => {
         if (pourLesJoueurs && personnageId) {
             window.dispatchEvent(new CustomEvent('fiche:resultat', {
@@ -1754,7 +1821,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** Le jet gardé de Crimes : son bilan se nomme, il ne se compte pas contre une difficulté. */
     const gardeDuResultat = (resultat as JetGarde | null)?.garde;
     /** Une réserve, qui compte ses réussites — et non un verdict sur un seul dé. */
-    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat
+    const barbariansDuResultat = (resultat as JetDeBarbarians | null)?.barbarians;
+    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat && !barbariansDuResultat
         && (jet.desEchelonnes.length > 0 || jet.nombreDeDes + jet.desSecondaires > 1);
     const v = verdict(reussites, regleDune && duneDuLancer ? duneDuLancer.difficulte : jet.reussitesRequises);
     // Un dé écarté n'a rien déclenché : le compter ici annoncerait une
@@ -1772,7 +1840,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       si le jeu y a quelque chose : une difficulté, des réserves où puiser, la
       préparation d'Alien… — une étape vide numérotée mentirait sur l'ordre.
     */
-    const aPreparer = !!descripteur.cible || torg || !!destin || disponiblesPerso.length > 0
+    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || disponiblesPerso.length > 0
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
         || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable
@@ -1785,10 +1853,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       réussites, qui reste l'autorité sur une réserve. Il se lit en tête du
       résultat, à droite du titre.
     */
-    const verdictDuResultat = resultat && gardeDuResultat
-        // Le bilan du livre (p. 385), et non le degré générique du moteur.
+    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat)
+        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59), et non le degré générique du moteur.
         ? <span className={'font-black uppercase tracking-widest ' + (resultat.tagSuccess ? 'text-etat-succes' : 'text-etat-danger')}>
-            {gardeDuResultat.libelle}
+            {gardeDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
         </span>
         : resultat && !paniqueEnAttente
         && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
@@ -2286,6 +2354,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 { total: 0, modifier: 0, rolls: [], tagSuccess: true, totalDisplay: 'Réussie sans lancer : ni Impulsion ni complication (p. 254).' })}
                         />
                     )}
+                    {regleBarbarians && (
+                        <PreparationBarbarians choix={choixBarbarians} setChoix={setChoixBarbarians} seuil={jet.seuil} />
+                    )}
                     {regleSymbaroum && (
                         <PreparationSymbaroum
                             nature={jet.composantes[0]?.champ && jet.composantes[0].champ === regleSymbaroum.defense ? 'defense' : natureSymbaroum}
@@ -2453,8 +2524,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 {briseAlien && <p className="text-xs text-etat-danger">{synthetiqueAlien ? 'Arrêt du système : aucun test ordinaire ; réactivation et réparation par Comtech.' : `${etatCombatAlien.mort ? 'Mort' : 'Brisé'} : aucun test de compétence ordinaire. Les premiers soins et le Trépas ont leurs gestes séparés.`}</p>}
                 <div className="flex flex-wrap items-center gap-4">
                     {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système.
-                        Pas chez Crimes : le Potentiel dit le nombre de dés, rien ne s'y ajoute. */}
-                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde ? 'hidden' : ''}`}>
+                        Pas chez Crimes : le Potentiel dit le nombre de dés, rien ne s'y ajoute ;
+                        ni chez Barbarians, dont les dés de bonus et de malus se règlent à l'étape 2. */}
+                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians ? 'hidden' : ''}`}>
                         <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                         <button
                             onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -2817,6 +2889,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 ecrireDetermination={apres => regleStarTrek.determination && ecrireStarTrek({ [regleStarTrek.determination]: apres })}
                                 consigner={(titre, ligne) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
                         )}
+                        {regleBarbarians && barbariansDuLancer && barbariansDuResultat && (
+                            <SuitesBarbarians key={barbariansDuLancer.compte} jet={resultat as JetDeBarbarians} reaction={barbariansDuLancer.reaction}
+                                heroisme={ecrireSurLaFiche ? heroismeBarbarians : undefined} pointAccorde={barbariansDuLancer.pointAccorde}
+                                geste={gesteBarbarians} faveurDivine={faveurDivineBarbarians} accorderUnPoint={accorderUnPointBarbarians} />
+                        )}
                         {regleSymbaroum && symbaroumDuLancer && ecrireSurLaFiche && (
                             <SuitesSymbaroum key={symbaroumDuLancer.compte} regle={regleSymbaroum} nature={symbaroumDuLancer.nature}
                                 resultat={resultat} seuil={seuilDuLancer} avantage={symbaroumDuLancer.avantage}
@@ -2944,7 +3021,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         {/* Torg ne lance pas sous un seuil : son calcul dit déjà le ND. Une
                             réserve sans seuil (NOC, Alien) affichait « sous 0 ». */}
-                        {!descripteur.tableDeBonus && !destin && seuilDuLancer > 0 && (
+                        {!descripteur.tableDeBonus && !destin && !regleBarbarians && seuilDuLancer > 0 && (
                             <span className="ml-auto text-app-text/25 font-mono text-ui-10">sous {seuilDuLancer}</span>
                         )}
                     </div>

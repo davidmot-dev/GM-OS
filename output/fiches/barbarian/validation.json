@@ -1,0 +1,26 @@
+[
+  {
+    "fiche": "docs/fiches/Barbarian of Lemuria/barbarian-of-lemuria-fiche-interactive.html",
+    "gabarit": "barbarian-of-lemuria-fr",
+    "accepte": true,
+    "erreurs": [],
+    "avertissements": [
+      {
+        "gravite": "avertissement",
+        "regle": "§ 6",
+        "message": "Aucun gabarit « barbarian-of-lemuria-fr » dans le moteur : c'est une fiche nouvelle. Si elle remplace une fiche existante, elle doit reprendre son identifiant (alien-v2-normalise, blade-runner-fr, noc-reference, noc-cabale, star-trek-adventures-2e-dossier-personnel-fr, cthulhu-hack, nephilim-legende-fr, reve-de-dragon-voyageur-fr, crimes-fr, symbaroum-fr, dune-pj-fr, dune-maison-fr)."
+      },
+      {
+        "gravite": "avertissement",
+        "regle": "§ 7",
+        "message": "Aucune correspondance ne vise « barbarian-of-lemuria-fr » : la fiche s'affichera, mais rien de ce qu'on y saisit ne remontera dans GM-OS. Claude Code l'écrit après la livraison."
+      }
+    ],
+    "mesures": {
+      "pages": 2,
+      "champs": 45,
+      "cles": 45
+    },
+    "dansLeMoteur": false
+  }
+]

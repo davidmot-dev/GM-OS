@@ -1058,6 +1058,20 @@ export function controlerLePilote(
             if (!atteinte) avertir('jet.symbaroum.defense', `La Défense « ${symb.defense} » ne se choisit pas dans le jet : ajouter sa section aux composantes du seuil.`);
         }
     }
+    /*
+      Barbarians of Lemuria (2026-10-27) : la somme de 2d6 et du seuil composé contre 9.
+      Une difficulté en réussites ou un seuil déplaçable n'y ont pas de sens — le pilote
+      forgé déclarait les deux, et chaque jet réussissait d'office.
+    */
+    const bol = driver.jet?.barbarians;
+    if (bol) {
+        if (driver.jet?.sens !== 'superieur-ou-egal' || driver.jet?.cible || facesLancees(driver) !== 6 || !(driver.jet?.seuil ?? []).length) {
+            avertir('jet.barbarians', 'Le bloc Barbarians suppose des d6 additionnés à un seuil composé (p. 10) : déclarer « seuil » et « sens: superieur-ou-egal ».');
+        }
+        if (driver.jet?.difficulte) avertir('jet.difficulte', 'Barbarians compare une somme à 9 : la difficulté en réussites est ignorée, la difficulté du livre se règle au jet (p. 57).');
+        if (driver.jet?.modificateurDuSeuil) avertir('jet.modificateurDuSeuil', 'Barbarians règle la difficulté au jet (p. 57) : ce modificateur est ignoré.');
+        if (bol.heroisme && !tousLesChamps.has(bol.heroisme)) erreur('jet.barbarians.heroisme', `Barbarians lit les points d'héroïsme dans « ${bol.heroisme} », absent de la fiche.`);
+    }
     // Star Trek jusqu'au bout (2026-10-23) : chaque champ que `jet.starTrek` nomme, et le 2d20 qu'il suppose.
     const st = driver.jet?.starTrek;
     if (st) {

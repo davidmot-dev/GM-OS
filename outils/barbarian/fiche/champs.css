@@ -1,0 +1,14 @@
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-field{position:absolute;box-sizing:border-box;margin:0;min-width:0;min-height:0;border:0;border-radius:0;background:transparent;color:#111111;font:9px/1.15 Georgia,"Times New Roman",serif;padding:0 1px;resize:none;outline:0}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-textarea{padding:1px;line-height:1.25;overflow:auto}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-small{font-size:8px}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-number{text-align:center;font:14px/1 Georgia,"Times New Roman",serif;padding:0;font-variant-numeric:tabular-nums lining-nums;appearance:textfield;-moz-appearance:textfield}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-rank{font-size:11px}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-attribute{font-size:18px;font-weight:bold}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-resource{font-size:18px}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-center{text-align:center}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-number::-webkit-inner-spin-button,.sheet[data-template="barbarian-of-lemuria-fr"] .bol-number::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-field:focus{outline:.6px solid #246799;background:#eaf4ffb0}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-portrait{cursor:pointer;overflow:hidden;padding:0;display:block}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-portrait img{width:100%;height:100%;object-fit:contain;display:block}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-portrait img:not([src]){visibility:hidden}
+.sheet[data-template="barbarian-of-lemuria-fr"] .bol-portrait img[src=""]{visibility:hidden}

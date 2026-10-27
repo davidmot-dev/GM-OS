@@ -168,6 +168,21 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         scenes: c => scenesDeSymbaroum(c),
     },
     {
+        // Barbarians of Lemuria (2026-10-27) : Krongar, Vigueur 3 et Barbare 2 — 2d6 + 5 contre 9.
+        corpusId: 'barbarian', slug: 'barbarians', personnage: 'Krongar de Valgard',
+        sheetData: {
+            nom: 'Krongar de Valgard', terre_natale: 'Valgard', langues: 'Lémurien, valgardien',
+            vigueur: 3, agilite: 1, esprit: 0, aura: 0, initiative: 1, melee: 2, tir: 0, defense: 1,
+            carriere1_nom: 'Barbare', carriere1: 2, carriere2_nom: 'Mercenaire', carriere2: 1,
+            carriere3_nom: 'Voleur', carriere3: 1, carriere4_nom: 'Marin', carriere4: 0,
+            arme1: 'Épée valgardienne', arme1_degats: 'd6+3', equipement1: 'Armure légère (d6-3)',
+            vitalite: 13, vitalite_max: 13, points_heroisme: 5, experience: 2,
+            avantages: 'Arme favorite (épée valgardienne)', desavantages: 'Impétueux',
+        },
+        composantes: ['vigueur', 'carriere1'],
+        scenes: c => scenesDeBarbarians(c),
+    },
+    {
         // Crimes, C1 (2026-10-22) : Physique 5, Sport 2 → cinq d10, deux gardés à 8 (7 avec Escalade).
         corpusId: 'crime', slug: 'crimes', personnage: 'Léonce Varin',
         sheetData: { physique: 5, mental: 3, social: 2, sport: 2, combat: 1, traque: 1, specialties_sport_climbing: true },
@@ -952,6 +967,40 @@ async function scenesDeSymbaroum(c: ContexteDeScene): Promise<void> {
  * assistant, vaisseau, marge), ses suites, les cartes Stress et Réputation, et le
  * pupitre de la bataille spatiale dans l'habillage LCARS.
  */
+/**
+ * **Barbarians of Lemuria** (2026-10-27) : le jet réglé comme au livre — une porte Ardue,
+ * un dé de bonus —, ses suites (points d'héroïsme), puis la fiche HTML reliée.
+ */
+async function scenesDeBarbarians(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await panneau.locator('select').nth(0).selectOption('vigueur');
+    await panneau.locator('select').nth(1).selectOption('carriere1');
+    await panneau.getByLabel('Difficulté', { exact: true }).selectOption('-1');
+    await panneau.getByLabel('Dés de bonus', { exact: true }).fill('1');
+    const preparation = panneau.locator('[data-preparation-barbarians]');
+    await expect(preparation.locator('[data-composition-barbarians]')).toContainText('3d6, les deux meilleurs + 4');
+    await photographier(preparation, 'jeu-barbarians-preparation');
+    await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    const suites = panneau.locator('[data-suites-barbarians]');
+    await expect(suites).toBeVisible();
+    await expect(suites).toContainText('Points d’héroïsme (5 sur la fiche)');
+    await photographier(panneau, 'jeu-barbarians-suites');
+
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });
+    await creerLaFiche.click();
+    const ficheHtml = f.frameLocator('iframe').first();
+    await expect(ficheHtml.locator('[data-key="careers.0.name"]')).toHaveValue('Barbare', { timeout: 30_000 });
+    await expect(ficheHtml.locator('[data-key="attributes.strength"]')).toHaveValue('3');
+    await expect(ficheHtml.locator('[data-key="weapons.0.damage"]')).toHaveValue('d6+3');
+    await f.waitForTimeout(1_000);
+    await photographier(f.locator('body'), 'jeu-barbarians-fiche');
+}
+
 async function scenesDeDune(c: ContexteDeScene): Promise<void> {
     const f = gmos.fenetre;
     await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });

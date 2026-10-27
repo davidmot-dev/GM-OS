@@ -513,6 +513,13 @@ export interface DescripteurDeJet {
      */
     symbaroum?: import('./systemes/symbaroumRegles').RegleDeSymbaroum;
     /**
+     * **Barbarians of Lemuria** — 2026-10-27 (`systemes/barbarians.ts`) : les dés
+     * s'additionnent au seuil composé (attribut + carrière ou aptitude), la somme se
+     * compare à 9 ; dés de bonus et de malus, doubles 6 et 1, points d'héroïsme.
+     * Le panneau ne compte alors aucune réussite par dé.
+     */
+    barbarians?: import('./systemes/barbarians').RegleDeBarbarians;
+    /**
      * **Star Trek Adventures, jusqu'au bout** — 2026-10-23 (`systemes/starTrekRegles.ts`) :
      * au jet, la nature de la tâche, la marge de complication, l'opposition, les
      * assistants et l'aide du vaisseau, la Détermination ; après, les complications
@@ -1476,7 +1483,8 @@ export function preparerLeJet(
         */
         // Torg compare un total à un Niveau de Difficulté : il ne compte pas de réussites.
         // NOC compare aussi un niveau à la difficulté : sa difficulté n'est pas un compte de réussites.
-        reussitesRequises: descripteur.cible || descripteur.tableDeBonus || descripteur.destin ? 1 : bornes ? difficulte : 1,
+        // Barbarians compare une somme à 9 : une réussite ou aucune.
+        reussitesRequises: descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians ? 1 : bornes ? difficulte : 1,
         /*
           Une poignée échelonnée n'a pas UNE taille. On rend celle du plus gros
           dé, pour que les écrans qui écrivent « 2d10 » disent quelque chose de

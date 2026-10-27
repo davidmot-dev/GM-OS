@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-27",
+  "profilIsole": true,
+  "donnees": "Données d’usine fictives ; thème uniquement, pas de recette du pilote Barbarian",
+  "fond": "#e5e0d3",
+  "personnalites": true,
+  "policeTitre": true,
+  "policeChiffres": true,
+  "capturesInspectees": [
+    "01-cockpit.png",
+    "02-des.png",
+    "03-palette.png",
+    "04-ornements-icones.png"
+  ],
+  "cssSHA256": "6b3a773554c1c693db9392085f936e8a76f8fceed87437e08e61579ce0f2c4e5"
+}

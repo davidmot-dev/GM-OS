@@ -1,0 +1,73 @@
+# Table des matières — Barbarian of Lemuria-vf
+
+- Chapitre 1 : Bienvenue en Lémurie — 5
+- La Sword & Sorcery — 5
+- Barbarians of Lemuria — 6
+- Le jeu de rôle — 7
+- Glossaire des termes du jeu — 8
+- Des règles simples — 9
+- Tableau : le jet d’action — 10
+- Chapitre 2 : Créer un héros — 12
+- Origine et concept du personnage — 12
+- Attributs — 13
+- Aptitudes de combat — 15
+- Avantages et désavantages — 16
+- Vitalité — 16
+- Points d’héroïsme — 16
+- Points d’expérience — 16
+- Origines des héros — 16
+- Carrières héroïques — 24
+- Liste des avantages et désavantages — 40
+- Langues — 46
+- L’équipement des héros — 48
+- Table des armes — 49
+- Table des armures — 53
+- Résumé de la création d’un héros — 54
+- Chapitre 3 : Le chemin de la gloire — 56
+- Accomplir une action — 56
+- Table des modificateurs aux jets d’action — 57
+- Utiliser les points d’héroïsme — 58
+- Le fracas de l’acier : règles de combat — 60
+- Table d’ordre de réaction — 60
+- Table des modificateurs de portée — 62
+- Table générique des dégâts d’armes — 63
+- Options de combat — 64
+- Les blessures et la mort — 65
+- Chapitre 4 : Les guerres de Lémurie — 67
+- La guerre sur terre — 67
+- La guerre en mer — 72
+- Exemples de navires — 77
+- Chapitre 5 : Atlas de la Lémurie — 82
+- Histoire légendaire de la Lémurie — 82
+- Les dieux de Lémurie — 85
+- Les races de Lémurie — 90
+- Géographie de la Lémurie — 96
+- Carte de la Lémurie — 97
+- Bestiaire de la Lémurie — 108
+- Table de création des créatures — 109
+- Les morts-vivants — 127
+- Les démons — 129
+- Table de création des démons — 130
+- Personnages non joueurs — 132
+- Table de création des PNJ — 132
+- Exemples de PNJ — 133
+- Chapitre 6 : Les mystères de la Lémurie — 138
+- Les alchimistes — 138
+- Prêtres et druides — 145
+- Les sorciers — 148
+- Les cultes de Lémurie — 157
+- Chapitre 7 : Les sagas de Lémurie — 160
+- Maîtriser une partie — 160
+- Créer une aventure — 161
+- Récompenses — 164
+- Dépenser des points d’expérience — 165
+- Idées d’aventures — 167
+- Aventures — 170
+- Krongar et les plaines de la mort — 170
+- Krongar et les voleurs de Malakut — 174
+- Les Larmes de Jouvence — 180
+- La faim justifie les moyens — 188
+- L’île de Métunga — 196
+- Krongar et le générateur de sagas — 203
+- Tables récapitulatives — 209
+- Fiche de personnage — 213

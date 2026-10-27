@@ -46,6 +46,7 @@ sur demande explicite de David : « Je voudrais finir les améliorations du driv
 | Pilote | Avancement | État de la connaissance | Première amélioration ou prochaine étape proposée |
 | --- | --- | --- | --- |
 | [Alien](#alien) | 🟢 11 · 🟠 0 · 🔴 0 | A0–A9 validés par David ; **A10, préréglages et remise à zéro des modules, livré et essayé le 23/10** (registre § 163) ; campagne de recette avec trois modules préparés livrée le 26/10 (§ 180) | Essayer les 74 cas du cahier ; GM-05 transversal signalé ; aucun lot A0–A10 à refaire |
+| [Barbarians of Lemuria](#barbarians-of-lemuria) | 🟢 5 · 🟠 0 · 🔴 0 | **Nouveau pilote, fini le 27/10**, 2.0.0 (registre § 184) : corpus relu, jet contre 9 avec dés de bonus/malus et héroïsme, fiche HTML au moteur 19 reliée, thème contrôlé | Réimport avec Remplacer et essai de David |
 | [Blade Runner](#blade-runner) | 🟢 4 · 🟠 0 · 🔴 0 | **Fini le 24/10, pilote 2.0.0** (registre § 174) : audit, pupitre, mort et stabilisation, guérison, et au-delà ; **essayé par David le 25/10** | Rien : tous les lots faits |
 | [Crimes](#crimes) | 🟢 13 · 🟠 0 · 🔴 0 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** ; **tous les lots livrés et essayés le 23/10** : circonstances, hermétiques, opposition, psychologie et seuils, manœuvres, contacts, fortune, création (registre § 157–161) | Rien : tous les lots faits ; tir multiple, intimider, rivalités et fortune commune restent au meneur |
 | [Cthulhu Hack](#cthulhu-hack) | 🟢 5 · 🟠 0 · 🔴 0 | Cinq améliorations livrées et essayées par David le 23/10 contre le livre français (p. 31–32, 34, 42, 50–52), registre § 164 ; campagnes de recette livrées le 25/10 et rattachées aux trois joueurs existants (§ 178) | Essayer les 59 cas du cahier ; défaut transversal GM-05 (`gmSecrets` transmis aux tablettes) consigné au § 1 bis. Soins spéciaux et suites mentales restent des sujets d'audit séparés |
@@ -157,6 +158,32 @@ fiche HTML, MU/TH/UR et détecteur de mouvement. Ces outils ne sont pas à recon
 **A10 livré le 23/10 (registre § 163)**, demande de David : *« je veux pouvoir faire des pré-reglages et aussi avoir un bouton de reset pour tout remettre à zéro (pour les 3 modules MU/TH/UR) »* ; choix : préparation complète, remise à zéro qui garde les préréglages, exemple du relais livré. Logique commune `outils/alien/modules/prereglages.mjs`, panneau commun `prereglages-vues.mjs` ; données MU/TH/UR v5, détecteur v4, combat spatial v2, migrées sans perte. **Essai de David validé le 23/10** (« A10 testé, c'est bon. Commit et pousse »).
 **Cas témoin :** des six suivis d'une Panique effective de 10 annulent l'action ; un Point
 de Récit ne doit pas contourner cette conséquence. L'export réel a été vérifié le 20/10.
+
+## Barbarians of Lemuria
+
+**Référence :** [manuel 2.0.0](../User%20Guides/54-Jeu-Barbarians-of-Lemuria.md) ; registre § 184.
+**Statut : fini le 27/10/2026** contre le livre français (édition Mythic, `Barbarian of Lemuria-vf.pdf`, pages imprimées) ;
+pilote **2.0.0** (`Export Dirvers/corriges/BOL_driver_gmos_2.0.0.gmos-driver`), à réimporter avec **Remplacer**.
+
+**Livré par David le 27/10 :** le pilote forgé, le thème `barbarian` (accepté 0/0) et la fiche HTML
+`barbarian-of-lemuria-fr` (acceptée, deux avertissements attendus d'une fiche nouvelle).
+
+| Priorité | Amélioration | Réalisation |
+| --- | --- | --- |
+| 🟢 P0 | Le jet : le pilote forgé comparait chaque dé au seuil et n'exigeait aucune réussite — tout réussissait | **Livré le 27/10** : `jet.barbarians`, somme de 2d6 + attribut + carrière ou aptitude + difficulté − Défense contre 9 (p. 10, 56, 62) |
+| 🟢 P1 | Dés de bonus et de malus, doubles 6 et 1 | **Livré le 27/10** : 2 + n dés, les deux meilleurs ou les deux pires ; succès héroïque, sauf quand seul un double 6 réussit ; échec automatique (p. 8, 56-57) |
+| 🟢 P1 | Les points d'héroïsme au jet | **Livré le 27/10** : Faveur divine, succès héroïque et légendaire, échec critique et le point accordé, écrits sur la fiche (p. 57-59) ; jet de réaction et ordre du livre (p. 60) |
+| 🟢 P1 | La fiche HTML reliée | **Livré le 27/10** : moteur 19, fiche GM-OS sur les 45 clés, correspondance directe, portrait sur la fiche ; attributs −1 à 5, carrières nommées, Vitalité sous zéro |
+| 🟢 P0 avant extension | Corpus relu contre le livre | **Fait le 27/10** : 16/16, onze fiches corrigées |
+
+**Reste :** l'essai de David. À la table, par choix : les dégâts (au pupitre), la magie et ses
+conditions, la foi, l'alchimie, les batailles terrestres et navales.
+
+**Sujets à auditer :** un jet de dégâts guidé par la catégorie d'arme (d6M, d6B, Vigueur ou sa
+moitié, armure) ; le coût de la magie en points de pouvoir ; les points de vilenie des rivaux.
+
+**Cas témoin :** Krongar, Vigueur 3 et Barbare 2, enfonce une porte Ardue : 2d6 + 4, un 4 et un 6
+font 14, réussi ; un double 1 échoue même à +12.
 
 ## Blade Runner
 
