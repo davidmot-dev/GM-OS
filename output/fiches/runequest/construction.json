@@ -1,0 +1,40 @@
+{
+  "source": "[Runequest][7Ed.][FR] - Feuille de personnage.pdf",
+  "sha256": "950cd0948b8a7e24c397662f4ba4394982aaba46525197767902adeb261ddc39",
+  "templateId": "runequest-fr",
+  "pages": [
+    {
+      "id": "page-1",
+      "width": 622.346,
+      "height": 802.346,
+      "champs": 261
+    },
+    {
+      "id": "page-2",
+      "width": 622.346,
+      "height": 802.346,
+      "champs": 268
+    },
+    {
+      "id": "page-3",
+      "width": 622.346,
+      "height": 802.346,
+      "champs": 260
+    },
+    {
+      "id": "page-4",
+      "width": 612,
+      "height": 792,
+      "champs": 71
+    }
+  ],
+  "zones": 860,
+  "cles": 735,
+  "types": {
+    "text": 261,
+    "number": 254,
+    "checkbox": 178,
+    "textarea": 2,
+    "hotspot": 40
+  }
+}

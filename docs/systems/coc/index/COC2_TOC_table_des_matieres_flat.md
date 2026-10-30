@@ -1,0 +1,77 @@
+# Table des matières — COC
+
+- Crédits — 2
+- Introduction — 4
+- Qu’est-ce que le jeu de rôle ? — 4
+- Les ingrédients du jeu — 5
+- Comment joue-t-on ? — 7
+- Création de personnage — 11
+- Quel destin vous attend ? — 11
+- Donner corps à votre personnage — 14
+- Définir ses caractéristiques — 25
+- Calculer les caractéristiques secondaires — 27
+- Exemple de personnage — 27
+- Et après ? Expérience et progression — 28
+- Les voies — 29
+- Voie des armes de contact — 29
+- Voie des armes à distance — 30
+- Voie des armes lourdes — 30
+- Voie des arts et des artisans — 31
+- Voie de l’athlétisme — 33
+- Voie du combat à mains nues — 34
+- Voie des corporations — 34
+- Voie du crime — 35
+- Voie du discours — 36
+- Voie de la furtivité — 36
+- Voie de l’investigation — 37
+- Voie des langues — 38
+- Voie de la médecine — 38
+- Voie de la psychologie — 39
+- Voie de la technologie — 40
+- Voie des sciences — 41
+- Voie de la survie — 42
+- Voie des véhicules — 43
+- Biens et services — 44
+- Salaire médian — 44
+- Armes — 52
+- Protections — 54
+- Système de jeu — 55
+- Les actions — 56
+- Les épreuves — 61
+- États préjudiciables — 63
+- Interactions sociales — 65
+- Investigation — 67
+- Échelles et santé — 71
+- La santé physique — 71
+- La santé psychique — 77
+- L’échelle d’évolution — 80
+- Combats — 85
+- Round de combat — 85
+- Conditions favorables et défavorables — 87
+- Calcul des dommages — 88
+- Manœuvres de combat — 90
+- Règles optionnelles : combat tactique — 92
+- Armes — 93
+- Armures — 96
+- Poursuites — 97
+- Les véhicules employés — 97
+- Les conditions favorables et défavorables — 100
+- Les manœuvres périlleuses — 101
+- Résolution de la course poursuite et incidents — 101
+- Exemple de course poursuite — 107
+- Rencontres — 108
+- Personnages non joueurs — 108
+- Créatures — 114
+- Ligne de Rupture — 120
+- Introduction — 120
+- Les personnages — 121
+- Les PNJ (principaux adversaires) — 121
+- Acte I : La mission improbable — 123
+- Acte II : Double jeu — 126
+- Acte III : L’ultime confrontation — 129
+- Conclusion — 129
+- Big Apple’s Bombermen — 130
+- Introduction — 130
+- Conclusion — 138
+- Annexes — 139
+- Annexes — 140

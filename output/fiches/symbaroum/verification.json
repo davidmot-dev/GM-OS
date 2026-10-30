@@ -1,0 +1,10 @@
+{
+  "pages": 2,
+  "zones": 182,
+  "cles": 158,
+  "erreursJavaScript": [],
+  "requetesReseau": [],
+  "impression": "2 pages A4",
+  "fonctions": "Saisie des 158 clés, rangs exclusifs, portrait, zoom 20–400 %, clavier et molette, sauvegarde/rechargement, import/export, rejet sans perte, réinitialisation confirmée, mobile, import dans le moteur jetable",
+  "integration": "Gabarit et correspondance non installés dans GM-OS"
+}

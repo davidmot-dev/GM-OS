@@ -1,0 +1,48 @@
+{
+  "name": "RECETTE Port-Lenoir — incidents",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Incident 1",
+      "description": "Le téléphone sonne sans être raccordé.",
+      "effect": "Conséquence narrative à jouer ; aucun dommage chiffré automatique."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Incident 2",
+      "description": "Un marin refuse de prononcer un nom.",
+      "effect": "Conséquence narrative à jouer ; aucun dommage chiffré automatique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Incident 3",
+      "description": "La porte du hangar claque dans le vent.",
+      "effect": "Conséquence narrative à jouer ; aucun dommage chiffré automatique."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Incident 4",
+      "description": "Une coupure de courant efface la fin d’un appel.",
+      "effect": "Conséquence narrative à jouer ; aucun dommage chiffré automatique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Incident 5",
+      "description": "Un témoin reconnaît un des investigateurs.",
+      "effect": "Conséquence narrative à jouer ; aucun dommage chiffré automatique."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Incident 6",
+      "description": "La marée ferme l’accès le plus court.",
+      "effect": "Conséquence narrative à jouer ; aucun dommage chiffré automatique."
+    }
+  ]
+}

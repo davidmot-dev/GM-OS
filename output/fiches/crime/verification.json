@@ -1,0 +1,23 @@
+{
+  "pages": 2,
+  "zones": 344,
+  "cles": 206,
+  "erreursJavaScript": [],
+  "appelsReseau": [],
+  "verifications": [
+    "fonds et manifeste",
+    "coordonnées dans les pages",
+    "jauges cumulatives et retour à zéro",
+    "choix exclusifs",
+    "cases indépendantes",
+    "compteurs numériques",
+    "portrait : ajout, suppression et transport JSON",
+    "autosauvegarde et rechargement",
+    "export/import sans perte",
+    "rejet atomique des imports invalides",
+    "réinitialisation : annulation et confirmation",
+    "zoom 20–400 et raccourcis",
+    "impression : deux pages visibles, outils masqués",
+    "écran de 390 pixels"
+  ]
+}

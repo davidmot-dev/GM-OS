@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "gmos-campagnes-tests",
+  "version": "0.1.0",
+  "description": "Créer et vérifier des lots de campagnes de test GM-OS à partir du pilote et des règles du jeu : aventure originale, laboratoires, médias et cahier de recette.",
+  "author": {"name": "David"},
+  "keywords": ["GM-OS", "campagne", "recette", "pilote", "jeu de rôle", "tests"],
+  "extensions": {"com.openai": {"interface": {
+    "displayName": "GM-OS Campagnes de test",
+    "shortDescription": "Éprouver les pilotes de jeu",
+    "longDescription": "Prépare des campagnes de recette réutilisables pour GM-OS : une aventure originale et des laboratoires adaptés aux mécaniques du pilote fourni. Produit les archives .gmos, le cahier de cas, le CSV des résultats et les consignes d’import. Réutilise les identifiants des joueurs fournis, contrôle les archives et leurs médias et distingue les vérifications de structure, les essais dans GM-OS et la recette humaine. Fonctionne avec des fichiers joints dans ChatGPT ou dans un dépôt accessible à Codex ; aucun serveur ni accès automatique à l’application.",
+    "developerName": "David",
+    "category": "Productivity",
+    "capabilities": [],
+    "logo": "./assets/icon.svg",
+    "composerIcon": "./assets/icon.svg",
+    "defaultPrompt": [
+      "Crée un lot de campagnes de test pour ce jeu à partir de mon pilote et de mes règles.",
+      "Vérifie ce lot de recette et indique les mécaniques couvertes, les limites et les essais restant à jouer.",
+      "Prépare une aventure et deux laboratoires pour ces joueurs existants, sans modifier leurs personnages."
+    ]
+  }}}
+}

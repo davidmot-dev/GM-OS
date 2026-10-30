@@ -1,0 +1,108 @@
+{
+  "name": "RECETTE Vesper — objets",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Carnet de carbone",
+      "description": "Carnet de carbone",
+      "butin": [
+        {
+          "name": "Carnet de carbone",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette ; aucun débit ou bonus automatique sur les pistes NOC."
+        }
+      ]
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Mèche de lampe",
+      "description": "Mèche de lampe",
+      "butin": [
+        {
+          "name": "Mèche de lampe",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette ; aucun débit ou bonus automatique sur les pistes NOC."
+        }
+      ]
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Jetons de transit",
+      "description": "Jetons de transit",
+      "butin": [
+        {
+          "name": "Jetons de transit",
+          "type": "currency",
+          "quantite": 7,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette ; aucun débit ou bonus automatique sur les pistes NOC."
+        }
+      ]
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Pansements scellés",
+      "description": "Pansements scellés",
+      "butin": [
+        {
+          "name": "Pansements scellés",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette ; aucun débit ou bonus automatique sur les pistes NOC."
+        }
+      ]
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Clef de bac",
+      "description": "Clef de bac",
+      "butin": [
+        {
+          "name": "Clef de bac",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette ; aucun débit ou bonus automatique sur les pistes NOC."
+        }
+      ]
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Bobine de fil",
+      "description": "Bobine de fil",
+      "butin": [
+        {
+          "name": "Bobine de fil",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Objet de recette ; aucun débit ou bonus automatique sur les pistes NOC."
+        }
+      ]
+    }
+  ]
+}

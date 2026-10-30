@@ -1,0 +1,16 @@
+[
+  {
+    "fiche": "docs/fiches/Crimes/crimes-fiche-personnage-interactive.html",
+    "gabarit": "crimes-fr",
+    "accepte": true,
+    "erreurs": [],
+    "avertissements": [],
+    "mesures": {
+      "pages": 2,
+      "champs": 344,
+      "cles": 206
+    },
+    "dansLeMoteur": true,
+    "correspondance": "docs/systems/crime/fiche/correspondance.json"
+  }
+]

@@ -1,0 +1,130 @@
+# Table des matières — Symbaroum — Livre de Base
+
+- LIVRE 1 : LE MONDE DE SYMBAROUM
+- 1. SYMBAROUM VOUS ATTEND… — 10
+- 2. BIENVENUE À SYMBAROUM ! — 175
+- Le retour de la Reine — 18
+- La Terre Promise — 19
+- Us et Coutumes — 20
+- 3. FACTIONS — 26
+- Maisons nobles — 26
+- Les clans barbares — 29
+- L’Église de Prios — 31
+- L’Ordo Magica — 31
+- L’Armée de la reine — 32
+- Le Pacte de Fer — 33
+- 4. DAVOKAR — 35
+- Davokar clair — 35
+- Davokar sombre — 37
+- Voyager en Davokar — 38
+- 5. FORT CHARDON — 40
+- Historique — 42
+- Aperçu — 43
+- Aux alentours — 43
+- Curiosités — 44
+- Personnalités — 48
+- Zones de conflits — 50
+- Les personnages et Fort Chardon — 52
+- 6. YNDAROS — 55
+- Historique — 56
+- Aperçu — 57
+- 7. KARVOSTI — 65
+- Historique — 66
+- Aperçu — 66
+- LIVRE 2 : LE LIVRE DES JOUEURS
+- 8. INTRODUCTION — 74
+- Le rôle des joueurs — 74
+- Comment créer un personnage — 76
+- 9. ARCHÉTYPES — 84
+- Guerrier — 84
+- Mystique — 90
+- Roublards — 96
+- 10. ATTRIBUTS — 102
+- Les Attributs — 102
+- Tests — 103
+- 11. RACES — 104
+- Humains — 104
+- Changelins — 107
+- Ogres — 109
+- Gobelins — 109
+- 12. TRAITS — 110
+- 13. TALENTS — 114
+- 14. TRADITIONS MYSTIQUES — 128
+- Conjuration — 128
+- Magie — 129
+- Sorcellerie — 129
+- Théurgie — 130
+- Mystiques indépendants — 131
+- 15. POUVOIRS MYSTIQUES — 132
+- Rituels — 142
+- 16. ÉQUIPEMENT — 152
+- Armes — 152
+- Armures — 155
+- Qualités — 156
+- Biens et Services — 157
+- 17. RÈGLES DES JOUEURS — 161
+- Ordre des tours — 161
+- Actions en combat — 162
+- Dégâts et guérison — 164
+- Actions spéciales — 165
+- Autres règles importantes — 166
+- LIVRE 3 : LE LIVRE DU MENEUR DE JEU
+- 18. INTRODUCTION — 170
+- Avant la partie — 170
+- Pendant la partie — 172
+- Après la partie — 173
+- 19. RÈGLES DU MENEUR DE JEU — 175
+- La résolution de problèmes — 175
+- Conflits sociaux — 176
+- Combats — 177
+- Temps en jeu — 178
+- Ombre et Corruption — 180
+- Règles spéciales — 181
+- Règles optionnelles — 183
+- 20. RÈGLES DE CAMPAGNE — 188
+- Voyages et Rencontres — 189
+- Argent — 190
+- Artéfacts — 192
+- 21. AVENTURES — 194
+- L’aventure classique — 194
+- Panoramas — 196
+- Les scènes-clés — 196
+- Épreuves — 198
+- Récompenses — 198
+- Techniques de MJ — 200
+- 22. MONSTRES — 202
+- Catégories de monstres — 202
+- Traits monstrueux — 202
+- 23. MONSTRES ET ADVERSAIRES — 208
+- Elfes — 208
+- Trolls — 213
+- Adversaires humains — 216
+- Arachnides — 224
+- Prédateurs — 226
+- Reptiles — 228
+- Créatures ailées — 230
+- Abominations — 233
+- Morts-vivants — 236
+- SCÉNARIO : LA TERRE PROMISE
+- 24. LA TERRE PROMISE — 242
+- Tutoriel narratif — 243
+- Personnages prétirés — 246
+- 25. EN ROUTE POUR YNDAROS — 250
+- Scène 0 : Introduction — 250
+- Scène 1 : Mise à l’essai — 251
+- 26. EN COMPAGNIE DE VOLEURS — 252
+- Scène 2 : Trouver le voleur — 252
+- Scène 3 : Récupérer la Pierre Solaire — 253
+- 27. LA PASSE DES MONTAGNES — 256
+- Introduction pour le Meneur de Jeu — 256
+- Introduction pour les joueurs — 256
+- Scène 4 : Le coût du bois — 257
+- Scène intermédiaire : Tempête nocturne — 258
+- Scène 6 : L’ultimatum — 258
+- Scène 7 : Négociations tendues — 259
+- Scène 8 : Extradition ou combat — 259
+- Épilogue : Vision d’avenir — 262
+- 28. ANNEXES — 263
+- Artéfacts — 263
+- Lieux — 263
+- 29. INDEX — 266

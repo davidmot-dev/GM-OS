@@ -1,0 +1,11 @@
+{
+  "plugin_id": "plugins_6ae484c30bd4819186676a390b1b74bf",
+  "plugin_url": "https://chatgpt.com/plugins/plugins_6ae484c30bd4819186676a390b1b74bf",
+  "current_release_id": "pluginrel_6ae484c57abc8191a14e8ba38a59a34a",
+  "version": "0.1.0",
+  "scope": "USER",
+  "discoverability": "PRIVATE",
+  "created": "2026-10-30",
+  "verified_files": ["plugin.json", ".codex-plugin/plugin.json", "skills/campagnes-de-test/agents/openai.yaml", "skills/campagnes-de-test/SKILL.md", "skills/campagnes-de-test/scripts/gmos_bundle.py"],
+  "note": "Création et fichiers distants vérifiés ; aucun serveur ni outil MCP requis. Le service ajoute un manifeste de compatibilité et normalise l’identité de l’auteur avec celle du compte."
+}

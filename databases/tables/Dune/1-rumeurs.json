@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE Néréide — rumeurs",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Le sceau a été apposé deux fois.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Les ateliers tiennent leur propre carnet.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Un relais conserve les paquets refusés.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "La rivale cherche une caution.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Les gardes suivent un contrat écrit.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "L’acheteur a déjà versé une avance.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    }
+  ]
+}

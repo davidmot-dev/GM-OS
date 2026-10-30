@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE Néréide — incidents",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Un témoin demande une garantie.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Une citerne bloque le quai.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "L’audience est avancée dans la fiction.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Un message attend une authentification.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Une équipe refuse de couper le service.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Un intermédiaire propose un accord.",
+      "description": "Fiction originale de recette, sans effet mécanique automatique."
+    }
+  ]
+}

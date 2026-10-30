@@ -1,0 +1,35 @@
+{
+  "pages": 4,
+  "zones": 860,
+  "cles": 735,
+  "erreursJavaScript": [],
+  "requetesReseau": [],
+  "impression": [
+    [
+      0,
+      0,
+      622.07996,
+      802.07996
+    ],
+    [
+      0,
+      0,
+      622.07996,
+      802.07996
+    ],
+    [
+      0,
+      0,
+      622.07996,
+      802.07996
+    ],
+    [
+      0,
+      0,
+      612,
+      792
+    ]
+  ],
+  "fonctions": "Saisie et sauvegarde des 735 clés, jauges cumulatives, choix M/F exclusifs, états indépendants, import/export et rechargement, rejets sans perte, reset confirmé, zoom/clavier/molette, mobile, impression, import dans le moteur jetable et retour JSON v2",
+  "integration": "Modèle non installé dans builtinTemplates ; correspondance non écrite, conformément à l’atelier."
+}

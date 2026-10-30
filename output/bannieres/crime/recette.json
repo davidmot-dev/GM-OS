@@ -1,0 +1,26 @@
+{
+  "source": "output/bannieres/crime/Crimes-generation.png",
+  "sourceSize": [
+    2172,
+    724
+  ],
+  "crop": {
+    "x": 0,
+    "y": 126,
+    "width": 2172,
+    "height": 543
+  },
+  "native": "docs/systems/crime/Crimes Band-natif.jpg",
+  "bytes": 247051,
+  "upscaled": false,
+  "final": {
+    "fichier": "docs/systems/crime/Crimes Band.jpg",
+    "width": 2400,
+    "height": 600,
+    "bytes": 287642,
+    "jpegQuality": 92,
+    "scale": 1.1049723756906078,
+    "upscaleAuthorized": true,
+    "authorizationDate": "2026-10-19"
+  }
+}

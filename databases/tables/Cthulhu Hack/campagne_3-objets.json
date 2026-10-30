@@ -1,0 +1,108 @@
+{
+  "name": "RECETTE Port-Lenoir — objets trouvés",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Carnet sec",
+      "description": "Objet fictif de recette pour vérifier l’envoi au butin.",
+      "butin": [
+        {
+          "name": "Carnet sec",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun effet automatique sur les ressources CH."
+        }
+      ]
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Boîte d’allumettes",
+      "description": "Objet fictif de recette pour vérifier l’envoi au butin.",
+      "butin": [
+        {
+          "name": "Boîte d’allumettes",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun effet automatique sur les ressources CH."
+        }
+      ]
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Petit outil",
+      "description": "Objet fictif de recette pour vérifier l’envoi au butin.",
+      "butin": [
+        {
+          "name": "Petit outil",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun effet automatique sur les ressources CH."
+        }
+      ]
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Bandages",
+      "description": "Objet fictif de recette pour vérifier l’envoi au butin.",
+      "butin": [
+        {
+          "name": "Bandages",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun effet automatique sur les ressources CH."
+        }
+      ]
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Pièces du port",
+      "description": "Objet fictif de recette pour vérifier l’envoi au butin.",
+      "butin": [
+        {
+          "name": "Pièces du port",
+          "type": "currency",
+          "quantite": 7,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun effet automatique sur les ressources CH."
+        }
+      ]
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Clef sans étiquette",
+      "description": "Objet fictif de recette pour vérifier l’envoi au butin.",
+      "butin": [
+        {
+          "name": "Clef sans étiquette",
+          "type": "item",
+          "quantite": 1,
+          "rarity": "common",
+          "weight": 0,
+          "value": 0,
+          "description": "Aucun effet automatique sur les ressources CH."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE Orphée — signaux",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Relève incomplète",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Porte coincée",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Écho mobile sans identité",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Contrat contradictoire",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Demande du Vautour",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Horaires de Boréal",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    }
+  ]
+}

@@ -1,0 +1,643 @@
+# Index — Runequest — Livre de Base
+
+- Absorption — 317
+- Accélérer un vaisseau — 391
+- Accélérer/Ralentir le vent — 317
+- Actions multiples en combat — 195
+- Actions multiples hors combat — 195
+- Aéolianisme — 389
+- Agriculture — 58, 60-63, 66, 72, 79-81, 100, 113, 132, 139, 175, 293, 301, 307-308, 405, 417, 423
+- Ajouter une Passion — 236
+- Alchimie — 14, 58, 61, 66, 70, 139, 175, 290, 298
+- Altérer une créature — 317
+- Amour (famille) — 24, 27, 38-40, 46, 65-66, 69, 71, 75-77, 79, 91-92, 234-235, 291-292, 295, 300, 307, 310, 442
+- Amour (individu) — 27, 39, 235
+- Amputer l'esprit — 76, 288, 297, 318, 344, 349
+- Analyser la magie — 290, 298, 302, 318
+- Animation des morts — 391
+- Annuler l'armure — 391
+- Apaiser les eaux — 391
+- Appeler la lumière — 391
+- Appeler le froid — 391
+- Appeler les nuages — 77, 292, 294, 301, 318, 331, 341
+- Appeler un Fondateur — 306, 318
+- Apprenti — 25, 352, 404, 424
+- Apprêter le corps — 59, 61, 112, 139, 182
+- Aptitudes chamaniques — 359, 360
+- Aptitudes supérieures à 100 % — 144
+- Argan Argar — 18, 24, 47, 69, 71, 74-75, 110, 113, 274, 277, 289, 294, 311
+- Arme à distance — 61, 65, 69, 185, 193, 211, 214, 217, 295, 300, 302, 305
+- Arme de jet — 201, 211-213, 219, 434
+- Arme de mêlée — 61, 65, 185, 192, 197, 206-207, 221, 264, 300, 302, 305, 318, 334, 394
+- (Arme) de vérité — 318
+- Armure spirituelle — 369
+- Art — 58, 61, 65, 168, 187
+- Artisan — 28, 64, 413, 423
+- Artisanat — 59, 61, 64-66, 186, 207, 216, 296-297, 417, 423, 434
+- Artiste — 28, 65, 423
+- Assistant chaman — 28, 65, 319, 352-353, 368, 417, 423
+- Attaque critique — 198-202, 206, 224
+- Attaque mentale — 77, 261, 303-304, 318, 346
+- Attaquer — 197
+- Attaquer avec un avantage ou un désavantage — 223
+- Atténuer les dégâts — 391
+- Attirer la magie — 391
+- Attirer les esprits — 392
+- Attirer les projectiles — 392
+- Attirer un animal — 319
+- Attributs — 54
+- Augmentation — 45, 52, 81, 144, 164, 167, 189, 219, 262, 276, 309, 353, 357, 417-418, 420
+- Augmenter INT — 392
+- Augmenter les aptitudes — 144
+- Augmenter les compétences — 163, 168-169
+- Augures — 141, 420-422, 427
+- Auto résurrection — 361
+- Avaler — 295, 319
+- Aventuriers inexpérimentés — 25
+- Axis Mundi — 75, 77, 291, 306, 319, 351, 354, 377
+- Babeester Gor — 24, 47, 65, 71-72, 74-76, 119, 174, 272, 274, 277, 286, 289-290, 293, 299, 311, 404
+- Balayer les nuages — 77, 294, 301, 309, 319
+- Bandit — 26, 28, 65, 423
+- Baratin — 58, 61, 71, 75, 139, 141, 168-169, 175, 184, 295, 338, 340
+- Barrière protectrice — 74, 289, 319
+- Bataille — 26, 41, 43-46, 58, 61-62, 65, 71-73, 79-80, 82, 85-86, 139, 167, 176, 219, 223, 229, 289-290, 296-297, 301-302, 304-305, 308, 310, 423, 435, 441-442
+- Bénédiction de Kargan Tor — 392
+- Bénir la grossesse — 319
+- Bénir les animaux — 320
+- Bénir les récoltes — 320
+- Bénir un champion — 320
+- Bénir une tombe — 320
+- Berger — 66
+- Berserk — 320
+- Blocage spirituel — 321
+- Bond — 321
+- Bonus personnels aux compétences — 23, 25, 79
+- Bouclier — 60-63, 65-66, 69, 70-74, 76-77, 79-80, 82, 85, 87, 89, 144, 152, 157, 184, 186-187, 192, 194, 197-198, 200-202, 204-205, 207, 213, 217-222, 224-225, 261, 263, 265, 290, 292-294, 297, 299, 301, 309, 316, 322, 347, 363, 378, 379, 394, 399, 422, 433, 437, 441, 446
+- Bouclier adamantin — 322
+- Bouclier de feu — 322
+- Briser — 322
+- Brouillard — 322
+- Bureaucratie — 58, 61, 70, 139, 177, 423
+- Cacher un feu — 322
+- Camouflage — 59, 61, 65, 69, 71, 85, 87, 139, 142, 188-189, 295, 300, 310, 434
+- Canotage — 58, 61, 66, 75, 139, 164, 181, 292, 423
+- Caractéristiques — 23, 48, 51, 52-54, 57-58, 60, 65, 71-73, 81, 87, 141, 145, 153, 155, 179, 188, 192, 198, 215, 250, 256, 276-277, 280, 313, 320, 327, 332, 339, 343-344, 359, 365, 415, 417-418, 425, 432-433, 441
+- Caractéristiques maximales d'une espèce — 52
+- Cercle de protection — 392
+- CHA — 52
+- Chalana Arroy — 18, 24, 26, 47, 66, 74-77, 79, 104, 107, 110, 113, 119, 150, 175, 274, 277, 285-286, 290, 293, 298-299, 302, 306, 308, 311, 320, 334, 349, 389, 406
+- Chamans — 19, 64, 253, 258, 263, 265, 269, 291, 294, 306, 308, 351-359, 377, 379, 388
+- Chances de base — 60
+- Changer la direction du vent — 322
+- Chant — 58, 60-64, 66, 70-77, 79-80, 139, 144, 163, 168-169, 188, 241, 244, 246, 301-302, 368, 417, 423
+- Chant du réconfort — 323
+- Chantre sacré — 70, 76, 269, 272, 277-278, 280, 284, 286, 288, 292-293, 299, 302, 304, 309-310, 313-315, 418, 433, 436
+- Charisme — 52
+- Charme — 58, 61, 75, 139, 141, 169, 241, 295, 310, 443
+- Chars — 65, 165, 220
+- Chasseur — 66
+- Chute — 156, 167, 205
+- Clairvoyance — 76, 298, 323
+- Clarté de la logique — 76, 298, 389, 392
+- Cloche-Renommée — 440-443, 445, 452
+- Combat monté — 167, 219-220
+- Combat spirituel — 40, 43-44, 56, 59-64, 75, 77, 139, 142, 176, 182, 244, 247, 258, 260, 262, 287, 291, 306, 323, 326-327, 329, 331, 335-336, 338, 343-344, 353, 356-360, 362, 365-366, 368-371, 392, 399, 417-418, 423
+- Combattre avec deux armes — 224
+- Combattre en phalange — 222
+- Combattre la maladie — 77, 290, 307, 323
+- Comédie — 58, 61, 139, 169
+- Commander (espèce) — 323
+- Commander aux adorateurs — 301, 323
+- Commander aux prêtres — 323
+- Commander un esprit de culte — 323
+- Compétences chamaniques — 353
+- Compétences d'Agilité — 58, 164, 262, 346
+- Compétences de communication — 52, 58, 60, 168-171, 180, 188, 262, 323, 360
+- Compétences de Connaissances — 58, 175, 282, 434
+- Compétences de Discrétion — 59-60, 189
+- Compétences de Magie — 59, 168-169, 182, 184, 262, 417, 434
+- Compétences de Manipulation — 59, 185, 207, 211, 220, 225, 265, 417
+- Compétences de Perception — 59, 141, 188
+- Compétences martiales — 152-153, 161, 167, 197, 220
+- Compétences supérieures à 100 % en combat — 201
+- Compréhension des troupeaux — 59, 61, 75, 183, 291-292, 305-306
+- CON — 51
+- Conditions dans un enchantement — 250
+- Conducteur de char — 28, 66, 423
+- Conduite — 58, 65, 70, 153, 221-222, 229, 233, 302, 423
+- Conflits de personnalité — 230
+- Confusion — 256
+- Connaissance de la région — 61, 164, 177-179, 182, 241, 291, 442
+- Connaissance des animaux — 61, 64, 69, 75, 177, 291, 293, 352, 423
+- Connaissance des cieux — 61, 63, 79, 163, 177, 308
+- Connaissance des esprits — 59, 61, 64, 139, 183, 291, 353
+- Connaissance des minéraux — 61, 179
+- Connaissance des plantes — 61, 64, 66, 75, 179, 182, 290, 292-293, 352, 423
+- Connaissance des Races aînées — 40, 61, 164, 178
+- Connaissance du culte — 61, 73, 163, 177, 275, 289-293, 295-296, 298-299, 301, 303, 305-308, 448
+- Connaissances — 58, 61, 175, 177-181, 184, 397, 434
+- Consacrer une pierre de tonnerre — 324
+- Consacrer une teinture — 324
+- Contremagie — 258
+- Contrôler (espèce) — 435
+- Coordination — 258
+- Coup — 324
+- Coups visés — 197
+- Coupure — 324
+- Coût des sorts — 386
+- Coutumes — 58, 60-63, 66, 69-70, 117, 139, 168, 180, 298, 425
+- Création d'une matrice — 324
+- Créer de nouveaux sorts — 390
+- Créer l'obscurité — 325
+- Créer un aventurier — 23
+- Créer un brasier — 325
+- Créer un goût — 392
+- Créer un grand marché — 325
+- Créer un marché — 325
+- Créer un son — 393
+- Créer une crevasse — 325
+- Créer une image — 393
+- Créer une odeur — 393
+- Créer une ombre — 326
+- Créer une sensation — 393
+- Crémation des morts — 326
+- Croissance accélérée — 326
+- Cultes — 8, 13-15, 24-27, 45, 47, 64-66, 69-77, 79-80, 104, 110, 116, 128, 132, 150, 171, 174-175, 184, 191, 211, 227, 234, 244, 253, 269-272, 274-278, 280-284, 286, 288-302, 304, 306-308, 310-311, 313-316, 318, 320, 323, 326-327, 329, 337, 342-343, 351-352, 357, 377-379, 388, 404, 406, 422, 432, 435-437
+- Cultes associés — 283
+- Daimon — 440
+- Daka Fal — 25, 47, 64, 70, 75-76, 79, 119, 277, 291, 300, 311, 334-335, 352, 359, 363
+- Danse — 58-66, 70, 72, 75-77, 139, 144, 163, 168-169, 188, 244, 246-247, 293, 299, 353, 368, 432
+- Danse spirituelle — 59, 61, 64, 139, 183, 353, 355, 370
+- Daredart — 258
+- De gnome à gargouille — 326
+- Défenses du temple — 287
+- Dégâts aux armes — 200
+- Déguisement — 58, 61, 71, 139, 169, 423
+- Démoralisation — 258
+- Déplacement — 54, 59, 61, 71, 82, 102, 139, 150, 153, 161, 192-194, 195, 205, 214, 219-220, 247, 264-265, 271, 317, 326, 333, 348, 391, 394, 423
+- Déplacement silencieux — 59, 61, 71, 139, 144, 188, 189, 215-216, 265, 295, 300, 304, 310, 423, 434
+- Déshonneur — 237-238
+- Désincarnation — 326
+- Désincarné — 183, 185, 287, 326-327, 353, 356-358, 366, 370, 374-375, 394, 397
+- Désolidariser (partie du corps) — 327
+- Détecter (substance) — 259
+- Détecter la magie — 259
+- Détecter la vie — 259
+- Détecter l'ennemi — 259
+- Détecter l'honneur — 327
+- Détecter un esprit — 259
+- Détecter un mort-vivant — 259
+- Détecter un piège — 259
+- Détection d'assassin — 61, 183, 296
+- Détection du Chaos — 49, 59, 61, 77, 139, 163, 183, 305
+- Détruire l'éther — 327
+- Dévotion (divinité) — 26, 31, 32-33, 36, 38, 40-41, 43, 70, 83, 233-234, 276, 280
+- DEX — 52
+- Discours de vérité — 327
+- Disparition — 394
+- Dispersion de la magie — 327
+- Disruption — 259
+- Dissimulation — 59, 61, 69, 187, 189, 295, 303-304, 360, 382, 434, 436
+- Dissipation de la magie — 260
+- Distorsion — 260
+- Distraction — 260
+- Divination — 74, 271-272, 275, 295, 310, 317, 328, 379
+- Diviser les attaques — 202
+- Doigt de feu — 394
+- Dominer (animal) — 394
+- Dominer (esprit désincarné) — 394
+- Dominer (humanoïde) — 395
+- Dompter un taureau — 328
+- Don du Chaos — 328
+- Dons — 408
+- Drain de l'âme — 395
+- Drainer le corps — 395
+- Durée des sort — 386
+- Échec critique — 142-143, 145, 149, 153, 156, 163-171, 175-176, 179-188, 198-203, 206, 220-221, 224, 229, 236, 238, 241, 256, 264, 314, 326, 330, 335, 341-342, 345, 353-355, 368, 370, 375, 387, 392, 405, 422
+- Éclair — 328
+- Écoute — 48, 59, 61, 69, 71-73, 85, 139, 152, 188, 289, 290, 303-304, 308, 310
+- Écran spirituel — 260
+- Écrasement — 200, 203, 206-207, 219
+- Effets des dégâts — 146
+- Eiritha — 25-26, 47, 66, 69, 75, 77, 118-119, 121-122, 124, 274, 277, 291-293, 301, 306, 311
+- Élémentaires — 77, 93, 243, 247, 249-250, 273-274, 286, 304, 323, 336, 377
+- Élevage — 58, 60, 61-63, 66, 69, 75, 112-113, 139, 180, 292, 301, 417, 423, 446
+- Éleveurs de poneys — 24-25, 46, 62, 114
+- Éloquence — 30, 58, 61, 66, 70, 76, 79-80, 83, 85, 139, 141, 168-169, 175, 241, 293, 297-298, 301-302, 304, 306, 307, 338, 340, 417
+- Embrasement — 260
+- Empalement — 200, 202-204, 207, 291, 392
+- Empathie — 59, 61, 65-66, 69-70, 139, 168-170, 188, 235, 289, 293, 303-304, 307
+- ENC maximum — 56, 150-151, 167, 201
+- Enchantement — 247-251, 260-261, 274, 289, 290-293, 295, 297-300, 302, 303, 305-307, 309-310, 322, 324, 328-329, 336, 343, 360, 394-395, 397, 435-436
+- Enchantement (métal) — 328
+- Enchantement d'armure spirituelle — 329
+- Enchantement de lien — 249, 257, 260, 329, 336
+- Enchantement de lien d'esprit — 257, 261
+- Enchantement de matrice de sort — 257, 261, 336, 436
+- Enchantement de points de magie — 257, 261, 329, 336, 395, 435-436
+- Encombrement — 150
+- Enfant Trouvé — 47, 69, 75-76, 79, 118-119, 277, 295, 300, 306, 310-311
+- Engizi — 47, 66, 75, 100, 106, 274, 277, 292, 311
+- Enseignement de sort — 281
+- Entraînement — 63, 167, 187, 217, 219, 281, 353, 415-418
+- Entrave au Chaos — 329
+- Épier le chemin — 329
+- Épieu — 61-63, 72, 211, 219
+- Épreuves magiques — 230
+- Ernalda — 24-26, 38-39, 47, 65-66, 70, 74-77, 79, 81, 103, 106-107, 109-110, 112, 116, 128-129, 132, 150, 168, 233, 269, 272, 274, 277, 282, 284-285, 289-290, 292-294, 299, 301-302, 306, 308, 310-311, 332, 338
+- Ernaldori — 107, 287
+- Escalade — 58, 61, 66, 69, 71, 139, 165, 299-300, 302, 304, 310, 417, 434
+- Escamotage — 59, 61, 71, 139, 187-189, 295, 423, 434
+- Esprit allié — 277, 280-281, 286, 318, 327, 329
+- Esprit de représailles — 274, 282
+- Esprit gardien — 329
+- Esprit totem — 352, 354-362, 371, 378
+- Esprits ancestraux — 319, 335-336
+- Esprits de culte — 273-274
+- Esquive — 26, 58, 61, 75, 139, 144, 151, 157, 165, 192, 195, 197, 200-201, 205, 245, 295
+- Esrolia — 21, 23-24, 27-28, 30-42, 46, 53, 60, 65-66, 70-71, 92, 94, 99-100, 107, 109-110, 112-113, 117, 171, 177-179, 294
+- Eurmal — 18, 24, 47, 65-66, 70-71, 75-77, 104, 277, 294-295, 298-299, 302, 311, 389
+- Évaluation — 58, 61, 65, 69-70, 180, 298, 354, 434
+- Événements familiaux — 426
+- Exalter la Passion — 329
+- Excommunication — 329
+- Exorcisme — 358
+- Expérience supplémentaire — 81
+- Exposition à la chaleur — 161
+- Exposition au froid — 161
+- Extension — 330
+- Extinction — 261
+- Faim — 161
+- Faire face au Chaos — 330
+- Fanatisme — 261
+- Fermeture — 330
+- Fermier — 66
+- Feu — 157
+- Feu lunaire — 395
+- Flèche de feu — 261
+- Flotter — 330
+- Focus — 254
+- Folie — 330
+- FOR — 51
+- Force — 262
+- Force d'ours — 331
+- Force d'un sort — 385
+- Foudre — 331
+- Fracasser — 331
+- Fraternité du Croc noir — 379
+- Fructifier — 331
+- Fusion d'esprits — 331
+- Géomancie — 395
+- Glamour — 262
+- Glue — 263
+- Grands Prêtres et Archi-Prêtres — 281
+- Griffes — 331
+- Guérir du poison — 332
+- Guérir les blessures du Chaos — 332
+- Guérir toutes les maladies — 332
+- Guérisseur — 69
+- Guérison accélérée — 396
+- Guérison de blessure — 332
+- Guérison naturelle — 149
+- Guérison totale — 332
+- Guerrier — 69
+- Guildes — 66
+- Haine (Groupe ou Individu) — 27, 233
+- Hallucination — 332
+- Harmonie — 332
+- Héritage familial — 82
+- Homme cornu — 353
+- Honneur — 27, 29-37, 40-41, 43-45, 65, 70-73, 76-79, 225, 234, 241, 296-297, 301-302, 307-308, 310, 442-443
+- Humakt — 14, 24-26, 47, 71-73, 76, 104, 107, 119, 128, 132, 184, 244, 277, 286, 296-297, 304, 311, 332, 348-349, 404
+- Identifier un parfum — 332
+- Identifier un sort — 396
+- Identifier une entité de l'Autre monde — 396
+- Illusion auditive — 333
+- Illusion de mouvement — 333
+- Illusion gustative — 333
+- Illusion olfactive — 333
+- Illusion tactile — 333
+- Illusion visuelle — 333
+- Illusions — 333
+- Impôts — 407
+- Incarner un ancêtre — 334
+- Incendie — 396
+- Initiés — 274
+- Inspiration — 229, 233, 236, 304
+- Inspiration runique — 227
+- INT — 52
+- INT Libre — 384, 390
+- Intendance — 58, 61, 65-66, 69-70, 139, 180, 405, 416, 423-425
+- Intensité — 247, 333, 384-386, 393
+- Intervention divine — 272
+- Intimidation — 58-59, 61, 65, 74, 76-77, 139, 141, 170
+- Intrigue — 58, 60-61, 63, 70, 92, 139, 141, 170
+- Invention — 59, 61, 65-66, 71, 139, 187, 295, 434
+- Inviolable — 334
+- Invisibilité — 334
+- Invocation (entité) — 263
+- Invocation de l'esprit de culte — 334
+- Invocations maléfiques — 334
+- Invoquer (espèce) — 396
+- Invoquer un ancêtre — 335
+- Invoquer un ancêtre choisi — 336
+- Invoquer un élémentaire (type) — 336
+- Invoquer un esprit de la loi — 338
+- Invoquer un gardien du foyer — 338
+- Invoquer un mentor spirituel — 338
+- Issaries — 18, 24-26, 47, 65, 69, 75-77, 104, 106, 110, 113, 116, 119, 272, 277, 285, 290, 295, 298-299, 302, 304, 310-311, 346, 389, 408, 416
+- Jeu — 180
+- Lacération — 200, 203-204, 206-207, 210
+- Lame de feu — 263
+- Lance du soleil — 338
+- Lancer un sort runique — 314
+- Langue affûtée — 338
+- Langue étrangère — 60-63, 69, 171
+- Langue natale — 58, 60-63, 70, 72, 80, 170
+- Lanterne — 263
+- Lecture/Écriture — 58, 61, 69-70, 74, 76-77, 80, 139, 177, 180-181, 289, 298-299, 303-304, 388, 390, 398, 417, 423, 434
+- Lever le voile — 397
+- Lhankor Mhy — 11, 18, 24, 26, 47, 70-71, 75-77, 104, 110, 113, 116, 119, 126, 175, 185, 189, 271, 277, 283, 285, 290, 295, 298, 302, 311, 327, 381, 389, 404
+- Libérer un fantôme — 338
+- Lien — 27, 40, 73, 234-235, 249-250, 291, 304, 313-314, 318, 329, 331-332, 366, 388
+- Lier un élémentaire — 397
+- Lier un esprit — 397
+- Lier un fantôme — 338
+- Lire les pensées — 338
+- Liste des prix des biens et des services — 408
+- Localisation — 55-56, 81, 85, 87, 89, 91, 95, 97, 146-147, 148-150, 156-157, 166-168, 197-199, 204, 211, 214-216, 220-222, 224
+- Logicien — 397
+- Longue vue — 263
+- Loyauté (ville) — 27, 234
+- Loyauté (clan, tribu) — 27, 234
+- Loyauté (individu) — 27, 234
+- Loyauté (temple) — 27, 39-40, 65, 70, 74-77, 79, 83, 234, 276, 280, 289, 292-293, 295, 298-299, 301, 315
+- Lumière — 263
+- Lumière solaire — 338
+- Lune — 49
+- Magie curative — 149
+- Magie runique commune — 275, 317
+- Magie runique cumulable — 315
+- Magie runique spéciale — 77, 79, 276, 280, 288-293, 295, 297-303, 305-310, 313-314, 379, 406
+- Magie sympathique — 387
+- Main de fer — 263
+- Maîtriser les animaux — 339
+- Maladie — 154
+- Malani — 107
+- Malkioni — 388
+- Mange-Chêne — 379
+- Maran Gor — 24, 26, 47, 65, 72, 74-76, 116, 132, 133, 274, 277, 290, 293, 299, 311
+- Marchand — 71
+- Marchandage — 58, 60-61, 65, 69, 76, 112-113, 139, 141, 164, 174-175, 289, 298, 423
+- Marche des ténèbres — 339
+- Marche sur l'eau — 397
+- Mariage — 33, 42, 80-81, 237-238, 425-427
+- Matraque — 264
+- Méditation — 54, 59, 61, 64, 70, 73, 79-80, 139, 146, 183-184, 221, 244-245, 254, 257, 259, 314, 320, 326, 387, 390
+- Membres laïcs — 274
+- Mémoire totale — 397
+- Mentir — 339
+- Message du vent — 339
+- Métamorphose — 339
+- Météo — 159
+- Mobilité — 264
+- Modificateur de catégorie de compétences — 57
+- Modificateur des compétences d'Agilité — 58
+- Modificateur des compétences de Communication — 58
+- Modificateur des compétences de Connaissances — 58
+- Modificateur des compétences de Discrétion — 59
+- Modificateur des compétences de Magie — 59
+- Modificateur des compétences de Manipulation — 59
+- Modificateur des compétences de Perception — 59
+- Modificateurs de lieux sacrés — 185
+- Modificateurs de région d'origine — 53
+- Modificateurs de Temps sacré — 185
+- Monde des Esprits — 371
+- Monomythe — 381
+- Monte — 26, 58, 60-63, 69-70, 72-73, 77, 79-80, 153, 166-167, 195, 213, 219-220, 222, 297, 302, 304-307
+- Monteurs de l'Impala — 25, 46, 53, 62, 121
+- Monteurs du Bison — 25, 46, 53, 62, 119
+- Monteurs du Grand Lama — 25, 46, 53, 62, 119
+- Moral — 339
+- Morokanth — 118, 121, 125, 173, 317
+- Mort et dégâts permanents — 149
+- Mort paisible — 58, 61-63, 69, 75-77, 118, 122, 139, 181, 228, 292, 295-296, 300, 306
+- Mortelame — 264
+- Multiprojectile — 264
+- Multisort — 339
+- Mur de Flammes — 398
+- Mur de lumière — 264
+- Mur de ténèbres — 264
+- Musique — 59, 61, 66, 83, 139, 168, 187-188, 307, 393, 412
+- Nage — 58, 61, 66, 75, 139, 156, 164-165, 167, 292, 423, 434
+- Naïades — 292
+- Namolding — 440
+- Naissance — 28, 31, 34, 42, 80
+- Navigation — 58, 61, 139, 160, 164, 181
+- Négocier avec des esprits — 365
+- Neige — 340
+- Neutralisation de la magie — 398
+- Neutraliser (Rune) — 398
+- Neutraliser la magie spirituelle — 398
+- Niveau de vie — 64-66, 69-73, 403-404, 406, 422-423, 426
+- Noble — 71
+- Noyade et asphyxie — 156
+- Objets lancés — 159
+- Observation — 48, 59, 61, 65-66, 69, 71-73, 79-80, 139, 152-153, 161, 187-189, 227, 295-297, 299-306, 308, 310
+- Odayla — 26, 47, 65, 69, 75-77, 79, 104, 132, 273, 277, 291, 296, 300, 302, 310-311, 313
+- Œil de chat — 340
+- Offrandes de choses vivantes — 184, 316
+- Offrandes d'objets de valeur — 184, 316
+- Orandarna — 444
+- Orlanth — 14, 18, 24-26, 38-40, 42, 47, 65-66, 69-73, 75-77, 79-81, 103, 106-107, 109-110, 112, 119, 122, 125, 128, 132, 160, 166, 184, 191, 196, 233, 244-245, 269-270, 272-274, 277, 280, 282-285, 290, 292, 294-295, 298-302, 306, 310-311, 313, 348, 367, 372, 377, 389, 404
+- Orlanth Aventureux — 65, 72-73, 77, 79, 273, 280, 283-285, 294, 298, 301-302, 313
+- Orlanth Tempétueux — 72-73, 75, 77, 274, 283-284, 292, 294, 301, 302, 314
+- Ouverture des mers — 398
+- Paix — 340
+- Panique — 340
+- Parade — 76, 144, 147, 157, 163, 176, 192, 194-195, 197-202, 205-206, 217, 219, 222-225, 245, 247, 257, 265, 296, 418, 433-435
+- Parades enchaînées — 200
+- Parler à l'esprit — 399
+- Parler aux troupeaux — 340
+- Parler avec les insectes — 340
+- Passage — 340
+- Passe du Dragon — 11, 15, 17-19, 21, 23-26, 28, 31, 35, 37-39, 41, 43-44, 46, 70, 80, 99-103, 106-110, 112-114, 116-117, 122, 124-126, 128, 132-133, 139, 171, 173, 175, 178, 180-181, 210, 222, 234, 241, 269, 288, 291, 294, 303, 306-308, 351, 359, 377, 381, 390, 404, 407-408, 435, 437
+- Passé familial — 11, 23, 25-27, 29, 31, 42, 80, 82
+- Passions — 8, 11, 19, 24-29, 31, 37-38, 41-42, 64-66, 69-77, 79, 102, 141, 145, 192, 202, 230, 233-234, 236-237, 275-276, 280, 282-283, 287-293, 295-296, 298-301, 303, 305-308, 310, 329, 355, 365, 368, 392, 397, 399, 415, 432
+- Pâturages — 23-24, 27-28, 30, 32-38, 41, 46, 53, 62, 64, 69, 73, 99-100, 106, 114, 116-117, 126, 140, 173, 180, 294, 352, 411
+- Peau d'ours — 340
+- Pêcheur — 72
+- Peuple du Pur-sang — 79, 110, 114, 116-117, 173, 180, 294, 306-308
+- Peur — 340
+- Peur (Type ou Individu) — 26, 233
+- Phases lunaires — 139, 303
+- Philosophe — 72
+- Pistage — 59, 61, 65, 69, 75-76, 79, 139, 141, 152, 189, 289-290, 295, 300, 304-306, 310, 417, 423, 434
+- Pluie — 341
+- Points d'armure — 198, 216, 322, 325-326, 329, 340, 391, 437
+- Points de magie — 54
+- Points de rune — 11, 25, 73-74, 81, 125, 149, 184, 244, 247, 272-273, 275-278, 280-284, 286-288, 290-291, 294, 307, 310, 313-317, 324, 326, 329, 334-338, 342-347, 349, 379, 420, 436-437
+- Points de vie — 54
+- Poison — 157
+- Pol-Joni — 25-26, 62, 72-73, 108, 122, 124, 166
+- Portée des sorts — 385
+- Portée d'un sort de magie spirituelle — 255
+- Possession — 360, 370
+- POU — 52
+- Poursuites — 151
+- Pouvoir de la terre — 341
+- Pratiques rituelles — 245, 387
+- Prax — 14, 17, 19, 23, 25-28, 30-39, 42, 44, 65-66, 69-70, 72-73, 99-100, 108, 116, 118-119, 121-122, 124-126, 128, 130, 140, 166, 173, 177, 206, 219, 228, 230, 238, 255, 288, 291, 306, 328, 351, 355, 365, 372, 379
+- Premiers soins — 58, 60-61, 64-66, 69, 71-74, 139, 148-150, 181-183, 204, 290, 293, 296-297, 307, 352, 423
+- Préparation rituelle — 246
+- Préparer ou changer d'arme — 194
+- Préserver un objet — 399
+- Prêtre — 70
+- Prêtre runique — 70, 269, 272-273, 276-278, 280-282, 286, 288-290, 292, 294-295, 298-299, 302, 308, 310, 313-315, 378-379, 418, 433, 436
+- Prêtresse runique — 276-277, 292-293, 299, 304
+- Prêtres-Seigneurs runiques — 281
+- Protection — 265
+- Protection contre les armes — 399
+- Quête héroïque — 9-10, 141, 149, 230, 237, 286-287, 335, 343-344, 420-421
+- Quitter une mêlée — 195
+- Ralentissement — 265
+- Rançon — 8, 64-66, 69-73, 150, 235, 262, 276, 280, 359, 407, 422, 427
+- Rang d'action — 57, 192
+- Rang d'action de DEX — 57
+- Rang d'action de TAI — 57
+- Rang d'action d'un sort — 254
+- Recherche — 48, 52, 58-61, 70, 139, 142, 144, 153-154, 161, 185, 187, 189, 289-290, 300, 305, 308, 310, 361, 393, 398, 413, 434
+- Recherche en bibliothèque — 58, 61, 70, 139, 182, 413
+- Recherches — 180, 286, 375, 389-390, 413, 417, 418
+- Récoltes — 420-423, 426
+- Réconfort de l'esprit logique — 399
+- Reconstitution — 341
+- Récupération des points de Rune — 284, 315
+- Réflexion — 341
+- Régénérer un membre — 341
+- Remarques pour le combat — 225
+- Renforcement de filet — 342
+- Renforcer un sort — 387
+- Renvoi — 399
+- Renvoyer un élémentaire (type) — 342
+- Réparation — 265
+- Réparer la chair — 399
+- Repoussement — 146, 195, 222, 224
+- Repousser les morts-vivants — 342
+- Reproduction — 342
+- Réputation — 11, 19, 26, 29-33, 35-37, 40-46, 82-83, 170, 176, 179, 233, 237-239, 241
+- Résister aux sorts — 244
+- Respirer air/eau — 342
+- Restaurer la santé — 343
+- Résultats des attaques et des parades — 199
+- Résurrection — 74-75, 150, 290-291, 343
+- Réussite critique — 142-145, 149, 153, 164-165, 168-170, 175-176, 179-180, 182-188, 198, 200-203, 205-206, 214, 224, 229, 231, 236, 241, 314, 330, 341-342, 345, 353-355, 362, 368-369, 387, 390, 392, 394, 422
+- Réussite spéciale — 142-145, 148-150, 153, 164-165, 167-170, 175-177, 183-188, 198, 200-204, 206-208, 214, 223-224, 229, 231, 236-237, 241, 258, 318, 330, 341-342, 353-355, 368-369, 379, 391, 394, 422
+- Révéler une Rune — 399
+- Revenu de base — 63-66, 69-73, 422-423, 425
+- Revenus d'un aventurier — 422
+- Revigorer — 343, 435
+- Rire communicatif — 343
+- Round de mêlée — 54, 57, 82, 137, 139, 146, 150, 152-153, 156-157, 165, 181-182, 187, 189, 191-192, 194-195, 197, 202-204, 211, 213, 222-224, 258, 368, 370, 386, 396, 400
+- Runes — 6, 8, 11, 13, 15, 19, 23, 26, 45, 47-50, 53-54, 73, 81, 102, 114, 137, 191-192, 202, 227, 229-231, 237, 241, 243, 245, 248-249, 254, 283, 288, 313-314, 327, 348, 368, 374, 381-384, 386, 388-391, 396, 415, 418
+- Runes comme guide — 229
+- Runes conflictuelles — 230
+- Sacrifice — 316
+- Saisie — 146, 224
+- Sanctification — 343
+- Sans peur — 343
+- Sartar — 14, 18, 21, 23-24, 26-28, 30-32, 34-46, 53, 60, 65-66, 69-71, 80, 99-101, 103-104, 106-109, 124-126, 128, 138, 140, 171, 173, 177-179, 233, 235, 238, 282, 285, 301, 367, 372
+- Saut — 58, 61, 66, 69, 139, 152, 156-157, 167-168, 321, 434
+- Sauvegarde — 343
+- Sauvegarde contre les esprits — 399
+- Sceller l'âme — 344
+- Scribe — 73
+- Seconde vue — 265
+- Seigneur runique — 8, 70, 237, 269, 272-273, 277-278, 280-282, 286, 288, 290, 295, 297-298, 300, 302, 304-307, 310, 313-315, 379, 436
+- Sendestra — 444
+- Sentier — 344
+- Sept Mères — 26, 47, 65-66, 69-71, 73, 77, 119, 126, 128, 166, 178, 274, 277, 282, 302-305, 311, 314
+- Serment — 344
+- Silence — 265
+- Soif — 161
+- Soins — 265
+- Sommeil — 265
+- Sorcellerie lunar — 389
+- Sort à distance — 248
+- Sort de contact — 248
+- Sort instantané — 248
+- Sort temporaire — 248
+- Sous-cultes — 282
+- Stériliser la terre — 344
+- Stocker des biens de valeur — 406
+- Stopper un vaisseau — 399
+- Suites — 404
+- Survie — 58, 61-63, 65, 71, 118-119, 121, 139, 182, 295, 300, 306, 310, 317
+- Table de résistance — 145-147, 157, 159, 164, 224, 227, 244, 254, 256, 258, 260, 263, 274, 277, 280, 314, 323, 326, 332, 334, 338, 341, 378, 392, 398-399
+- Table de résultats des aptitudes — 143
+- Tabous — 363
+- TAI — 51
+- Taille des objets — 151
+- Tarsh lunar — 23, 26-27, 30-41, 43-44, 46, 53, 63, 65-66, 70-71, 99, 126, 128-129
+- Taureau Tempête — 14, 24-26, 47, 65, 72-73, 75, 77, 102, 110, 118-119, 122, 124, 163, 166, 183, 228, 272, 274, 277, 280, 283, 290-292, 294, 302, 305-306, 311, 320, 328, 330, 347, 377, 404
+- Techniques — 185, 381, 383-384, 386, 388-391, 437
+- Téléportation — 344
+- Téléportation guidée — 345
+- Températures et précipitations — 102, 104, 110, 116, 122, 129, 132
+- Temples — 283-286, 406
+- Temps de lancement des sorts — 386
+- Temps des compétences et des aptitudes — 139
+- Temps sacré — 140, 185, 315, 420
+- Ténèbres — 153, 174, 181, 382
+- Tenter à nouveau un test d'aptitude — 142
+- Test de caractéristique — 141
+- Test en opposition — 142
+- Tests d'expérience — 137, 229, 231, 236-237, 382, 415-416
+- Tir monté — 219
+- Tirer dans une mêlée — 214
+- Tirer sur des cibles mouvantes — 214
+- Tour complet — 137, 139, 148, 154, 168-169, 188-189
+- Tourment — 229
+- Traduction — 345
+- Trait mortel — 345
+- Traitement des maladies — 58, 61, 66, 74, 139, 182, 290, 423
+- Traitement du poison — 58, 61, 66, 74, 139, 182, 290
+- Transe de guérison — 345
+- Transe de la hache — 345
+- Transe de l'épée — 345
+- Transformation — 345
+- Trembleterre — 335
+- Tribu de l'Antilope noire — 26, 63, 122
+- Troquer un sort — 346
+- Trouver (substance) — 327
+- Trouver des esprits — 374
+- Trouver un ennemi — 347
+- Types d'armure — 216
+- Types de sorts — 247
+- Utiliser une sarisse contre une charge de cavalerie — 220
+- Vague scélérate — 400
+- Val d'Arfritha — 442
+- Vénération — 47, 59, 61, 70, 73, 75, 79-80, 83, 139, 184-185, 244-246, 271, 274-276, 278, 281, 283-284, 289-293, 295-303, 305-308, 310, 315-316, 325, 334-335, 389, 417-418, 420, 436
+- Vieillissement — 425
+- Vieux Tarsh — 23, 26-27, 29-30, 32-39, 44, 46, 53, 63, 65-66, 69, 71, 99, 122, 129-130, 132, 173, 202
+- Vigueur — 267
+- Vinga — 77, 79, 81, 113, 282-283, 301-302, 314
+- Visibilité — 161, 257, 267
+- Vision de l'âme — 347
+- Vitesse de guérison — 56
+- Vivelame — 267
+- Voir la vérité — 348
+- Vol — 348
+- Voler le souffle — 400
+- Voleur — 73
+- Vomieuvre — 449
+- Vortex spirituels — 374
+- Voyage spirituel — 59, 61, 64, 139, 185, 353, 370-371, 374-375, 423
+- Waha — 25-26, 47, 64, 69-70, 73, 75, 77, 79, 118-119, 121-122, 125, 228, 269, 274, 277, 292, 296, 306, 311, 317, 347, 352, 356, 359, 363, 371
+- Wyters — 286
+- Yelm — 21, 25, 47, 64, 69-70, 73, 75, 77, 79, 116, 128, 138, 159-160, 233, 271, 274, 277, 280, 286, 288, 290, 294, 301, 306-308, 310-311, 339, 349
+- Yelmalio — 24-26, 47, 66, 71, 73, 75, 79, 104, 108, 110, 119, 126, 128, 130, 220, 277, 280, 286, 294, 301, 308-311, 323, 404
+- Yeux de la rivière — 267
+- Yinkin — 47, 69, 75-77, 79, 81, 104, 132, 277, 291, 296, 300, 302, 310-311, 332, 377
+- Zorak Zoran — 271-272, 304, 306, 309, 436
+- Zzaburi — 389

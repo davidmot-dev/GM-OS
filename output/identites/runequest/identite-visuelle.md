@@ -1,0 +1,2 @@
+STYLE: traditional ink and gouache illustration, fine dark contour lines, matte opaque washes, softly mottled printed texture, earthy terracotta and ochre, muted jade and lapis blue, warm amber accents, subdued violet shadows, restrained saturation, diffuse atmospheric light, gently modeled volumes, ornamental Bronze Age visual language, mythic and solemn mood
+AVOID: photorealism, 3D render, anime, glossy surfaces, neon, medieval Gothic styling, readable text, watermarks

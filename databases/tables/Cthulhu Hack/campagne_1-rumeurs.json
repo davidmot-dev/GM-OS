@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE Port-Lenoir — rumeurs",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Rumeur 1",
+      "description": "La station répond même lorsqu’elle est débranchée."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Rumeur 2",
+      "description": "Une caisse porte le même numéro que la vanne du vieux plan."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Rumeur 3",
+      "description": "Le gardien a retourné la lentille pour parler à la terre."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Rumeur 4",
+      "description": "Alice a prêté son arrière-salle à une infirmière."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Rumeur 5",
+      "description": "Une voix de trop répond dans les appels du Saint-Elme."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Rumeur 6",
+      "description": "Le calque original se trouve encore aux archives."
+    }
+  ]
+}

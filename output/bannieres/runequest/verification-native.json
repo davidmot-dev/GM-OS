@@ -1,0 +1,22 @@
+{
+  "fichier": "output\\bannieres\\runequest\\RuneQuest Band-native.jpg",
+  "width": 2172,
+  "height": 543,
+  "bytes": 322140,
+  "quality": 93,
+  "source": {
+    "width": 2172,
+    "height": 724
+  },
+  "crop": {
+    "x": 0,
+    "y": 24,
+    "width": 2172,
+    "height": 543
+  },
+  "agrandissement": 1,
+  "aperçus": [
+    "output\\bannieres\\runequest\\apercu-1188.png",
+    "output\\bannieres\\runequest\\apercu-700.png"
+  ]
+}

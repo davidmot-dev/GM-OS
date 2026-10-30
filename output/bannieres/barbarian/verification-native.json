@@ -1,0 +1,17 @@
+{
+  "largeur": 2172,
+  "hauteur": 543,
+  "octets": 356688,
+  "ratio": 4,
+  "agrandissement": false,
+  "cadrageCentre": true,
+  "source": [
+    2172,
+    724
+  ],
+  "cible": [
+    2400,
+    600
+  ],
+  "agrandissementNecessairePourCible": 1.1049723756906078
+}

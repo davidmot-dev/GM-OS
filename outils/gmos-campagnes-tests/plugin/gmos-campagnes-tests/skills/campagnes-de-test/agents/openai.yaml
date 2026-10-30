@@ -1,0 +1,6 @@
+interface:
+  display_name: GM-OS Campagnes de test
+  short_description: Créer une campagne de recette
+  default_prompt: Crée un lot de campagnes de test pour ce jeu à partir de mon pilote, de mes règles et des joueurs fournis.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-27",
+  "fichier": "docs/systems/barbarian/Barbarian of Lemuria Band.jpg",
+  "format": "JPEG",
+  "largeur": 2400,
+  "hauteur": 600,
+  "ratio": 4,
+  "octets": 407423,
+  "qualiteJPEG": 90,
+  "fondOpaque": true,
+  "source": [
+    2172,
+    724
+  ],
+  "recadrageSource": [
+    0,
+    90.5,
+    2172,
+    543
+  ],
+  "agrandissement": {
+    "facteur": 1.1049723756906078,
+    "pourcent": 10.497237569060779,
+    "autoriseParDavid": "Oui, exporter en 2400 × 600"
+  },
+  "generateur": "outil natif image_gen",
+  "recetteVisuelle": [
+    "Panorama complet inspecté",
+    "En-têtes simulés 1188 × 54 et 700 × 54 inspectés",
+    "Aucun texte, logo ou personnage dans l’image finale"
+  ],
+  "sha256": "1c291bb007a9e43363966f5aa02bc4236f436bc8cea69a1de5aa630acccd1078"
+}
