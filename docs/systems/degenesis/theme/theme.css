@@ -1,0 +1,57 @@
+/* DEGENESIS — Katharsys : papier de cendre, encre noire et oxyde.
+   Contrat GM-OS v1.7. Polices d'approximation, pas celles du logotype. */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Crimson+Pro:wght@400;500;600;700&display=swap');
+
+:root[data-theme="degenesis"] {
+  color-scheme: light;
+
+  /* Pages crayeuses et panneaux clairs, lisibles jusque sur le fond. */
+  --rpg-bg: #e8e3da;
+  --rpg-surface: #f4f0e7;
+  --rpg-surface-2: #e1d9c9;
+  --rpg-text: #262725;
+  --rpg-muted: #605c56;
+  --rpg-accent: #8d3e32;
+  --rpg-accent-contrast: #fffaf2;
+  --rpg-border: #898276;
+  --rpg-border-soft: rgba(55, 49, 43, 0.24);
+
+  /* États : mousse, prune, ocre et ardoise ; distincts de l'oxyde actif. */
+  --rpg-success: #3d634e;
+  --rpg-danger: #703a81;
+  --rpg-warning: #695a00;
+  --rpg-info: #365a94;
+
+  /* Titres sobres et espacés, texte éditorial, chiffres à chasse fixe. */
+  --rpg-font-display: "Barlow Semi Condensed", Arial, sans-serif;
+  --rpg-font-body: "Crimson Pro", Georgia, serif;
+  --rpg-font-mono: "Courier New", monospace;
+  --rpg-title-tracking: 0.14em;
+  --rpg-kicker-tracking: 0.19em;
+  --rpg-title-transform: uppercase;
+
+  /* Géométrie sèche ; aucun halo, verre brillant ou arrondi hérité. */
+  --rpg-radius-sm: 0px;
+  --rpg-radius-md: 0px;
+  --rpg-radius-lg: 0px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 1px 2px rgba(18, 18, 16, 0.12);
+  --rpg-elevation-2: 0 8px 20px rgba(18, 18, 16, 0.20);
+  --rpg-elevation-3: 0 16px 36px rgba(18, 18, 16, 0.28);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(244, 240, 231, 0.95);
+  --rpg-glass-border: rgba(55, 49, 43, 0.30);
+  --rpg-glass-blur: 0px;
+
+  /* Le noir des cartouches du livre encadre le contenu crayeux. */
+  --rpg-frame-bg: #171918;
+  --rpg-frame-text: #ede8dc;
+  --rpg-frame-accent: #d5a486;
+
+  /* Motifs vectoriels originaux ; pas de scan ni de bruit non mesurable. */
+  --rpg-texture-bg: url('matieres/cendre.svg');
+  --rpg-texture-panel: url('matieres/fibres.svg');
+  --rpg-texture-opacity: 0.055;
+}
