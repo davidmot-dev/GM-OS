@@ -1,0 +1,48 @@
+{
+  "fichier": "output\\bannieres\\degenesis\\banniere-native.jpg",
+  "width": 2172,
+  "height": 543,
+  "bytes": 233007,
+  "format": "JPEG",
+  "opaque": true,
+  "quality": 93,
+  "sha256": "8c680310f43cffab883e730b99f64b7cd33d3b537fbae1eb1604dc2a611de70a",
+  "source": {
+    "fichier": "output\\bannieres\\degenesis\\source.png",
+    "width": 2172,
+    "height": 724,
+    "sha256": "3d3f44feb02298f83b1f86aac52c27d70cd35330e1d731cd4baa4663c5cfd82d",
+    "outil": "image_gen natif",
+    "definitionDemandee": "3840 × 1280 ou maximum natif disponible"
+  },
+  "crop": {
+    "x": 0,
+    "y": 0,
+    "width": 2172,
+    "height": 543
+  },
+  "agrandissement": 1,
+  "conformeDimensionsMinimum": false,
+  "limite": "Définition native inférieure à 2400 × 600 ; agrandissement soumis à accord.",
+  "apercus": [
+    "output\\bannieres\\degenesis\\apercu-1188-natif.png",
+    "output\\bannieres\\degenesis\\apercu-700-natif.png"
+  ],
+  "capturesExaminees": true,
+  "revueVisuelle": {
+    "date": "2026-10-30",
+    "imageComplete": "Examinée : panorama continu, aucun texte, logo ou figure au premier plan ; bords sombres et sujet central.",
+    "entetes": "Simulations 1188 × 54 et 700 × 54 examinées : arches et charpente reconnaissables ; titre et commandes lisibles avec le voile de démonstration.",
+    "captures": [
+      {
+        "fichier": "apercu-1188-natif.png",
+        "sha256": "560053de3ca18327bb87a3d0f0074a50b0400cc2115f54fa0e32f6a750e70cdb"
+      },
+      {
+        "fichier": "apercu-700-natif.png",
+        "sha256": "3003720c30562198e83432cece2bd59610d3c9acf539487d9c09897316e9638a"
+      }
+    ],
+    "limite": "Ces simulations ne sont pas des captures de GM-OS."
+  }
+}

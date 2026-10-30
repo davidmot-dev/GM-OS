@@ -1,0 +1,53 @@
+{
+  "fichier": "docs/systems/degenesis/Degenesis Band.jpg",
+  "width": 2400,
+  "height": 600,
+  "bytes": 245783,
+  "format": "JPEG",
+  "opaque": true,
+  "quality": 93,
+  "sha256": "95d9c81f98fa32711758571419276444833347cdd8dff837fb8d53a2314286b9",
+  "source": {
+    "fichier": "output\\bannieres\\degenesis\\source.png",
+    "width": 2172,
+    "height": 724,
+    "sha256": "3d3f44feb02298f83b1f86aac52c27d70cd35330e1d731cd4baa4663c5cfd82d",
+    "outil": "image_gen natif",
+    "definitionDemandee": "3840 × 1280 ou maximum natif disponible"
+  },
+  "crop": {
+    "x": 0,
+    "y": 0,
+    "width": 2172,
+    "height": 543
+  },
+  "agrandissement": 1.1049723756906078,
+  "conformeDimensionsMinimum": true,
+  "limite": "Agrandissement technique de 10,5 %, sans ajout de détails.",
+  "apercus": [
+    "output\\bannieres\\degenesis\\apercu-1188-final.png",
+    "output\\bannieres\\degenesis\\apercu-700-final.png"
+  ],
+  "capturesExaminees": true,
+  "revueVisuelle": {
+    "date": "2026-10-30",
+    "imageComplete": "Examinée : panorama continu, aucun texte, logo ou figure au premier plan ; bords sombres et sujet central.",
+    "entetes": "Simulations 1188 × 54 et 700 × 54 examinées : arches et charpente reconnaissables ; titre et commandes lisibles avec le voile de démonstration.",
+    "captures": [
+      {
+        "fichier": "apercu-1188-final.png",
+        "sha256": "be327064da2386d0fab7c23727a14b6c10857e08c5d242fd7473d932b6244ba8"
+      },
+      {
+        "fichier": "apercu-700-final.png",
+        "sha256": "833e316d9ba11891775cbc215b11cbe52c448696a49f1e4c65a5ec4e5bda59d0"
+      }
+    ],
+    "limite": "Ces simulations ne sont pas des captures de GM-OS."
+  },
+  "accordAgrandissement": {
+    "date": "2026-10-30",
+    "reponse": "Oui, exporter à 2 400 × 600",
+    "portee": "Agrandissement technique de 10,5 %, sans détails ajoutés."
+  }
+}

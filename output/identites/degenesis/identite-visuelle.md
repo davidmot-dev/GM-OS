@@ -1,0 +1,2 @@
+STYLE: gritty painterly illustration, rough ink contours, angular silhouettes, dry-brush strokes, dense charcoal shadows, chalky highlights, muted ash gray and umber palette, sparse moss and rust accents, tactile weathered surfaces, coarse paper grain, restrained saturation, diffuse natural light, deep atmospheric perspective, organic irregularities, somber visceral mood, deliberate pockets of negative space
+AVOID: photorealism, glossy 3D, anime, clean vector art, neon, candy colors, polished surfaces, readable text
