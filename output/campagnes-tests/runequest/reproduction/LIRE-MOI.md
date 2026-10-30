@@ -1,0 +1,1 @@
+Sources à replacer à leurs chemins indiqués dans REPRODUIRE.md, au sein du dépôt GM-OS avec ses dépendances déjà installées. Elles utilisent les types/fonctions réels et le relevé joueurs autorisé du dépôt. Aucun ancien contenu de campagne ou export personnel n’est inclus. Ce dossier n’est pas un exécutable autonome.

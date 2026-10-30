@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-30",
+  "autorisation": "David : Oui, autoriser cette relance hors bac à sable. Accord explicite après information sur l’accès potentiel au profil utilisateur ; interdiction de lire les données personnelles conservée.",
+  "essaisPrealables": [
+    {
+      "mode": "bac à sable",
+      "resultat": "ÉCHEC avant import",
+      "cause": "Processus GPU inutilisable, code -1073741515"
+    },
+    {
+      "mode": "hors bac à sable, temporaire dans le dépôt",
+      "resultat": "IMPORT REFUSÉ",
+      "cause": "La garde refuse une sauvegarde dans le dossier de l’application. Aucun contournement de cette garde."
+    }
+  ],
+  "relanceHorsBacASable": {
+    "statut": "AUTORISÉE EXPLICITEMENT PAR DAVID ET EXÉCUTÉE",
+    "refusInitial": "La revue automatique avait refusé sur la base de l’autorisation précédente limitée ; accord plus large obtenu ensuite.",
+    "profil": "Profil neuf créé par lancerGmOs dans le temporaire système, hors installation",
+    "isolation": [
+      "userData vérifié par le processus principal",
+      "USERPROFILE / APPDATA / LOCALAPPDATA temporaires",
+      "corpus / coffre / sauvegardes temporaires",
+      "ports 4100 / 4101, appareils désactivés, coffre de clés vide"
+    ],
+    "donneesPersonnelles": "Aucun import du vrai export dans l’application ; profils et anciens PJ de contrôle fictifs."
+  },
+  "importNatif": true,
+  "tablettesExecutees": [
+    360,
+    768,
+    1180
+  ],
+  "GM05": "ÉCHEC — 12 chemins gmSecrets reçus par les Hub joueurs",
+  "parcours": "Toutes les assertions d’import/remplacement/fiche/PM/persistance passent ; assertion finale de confidentialité en échec.",
+  "build": {
+    "commande": "npm.cmd run build",
+    "exitCode": 0,
+    "types": "tsc -b réussi"
+  },
+  "archives": [
+    {
+      "fichier": "01-Les-Bornes-du-gue.gmos",
+      "sha256": "1629688668042a79984fabd33c708b158f88af293a20dd3bbab4dcee1b76e902"
+    },
+    {
+      "fichier": "02-Aptitudes-Combat-et-Sante.gmos",
+      "sha256": "394a6f4b924f5d6911170439f6632561c0bee1234cd4e9bb0758b1547d4c737d"
+    },
+    {
+      "fichier": "03-Runes-Passions-et-Magie.gmos",
+      "sha256": "a95d6815a74c4411c7bb7dc365cb0a0706e3b07b59ecf58130b474fd9acabb04"
+    }
+  ]
+}

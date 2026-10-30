@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE RuneQuest — Paroles au gué",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Une date manque au sceau",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Le drain chante sous la pierre",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Oren doit un salaire",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Un témoin demande protection",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Luma connaît un détour",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "La récolte ne peut attendre",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    }
+  ]
+}

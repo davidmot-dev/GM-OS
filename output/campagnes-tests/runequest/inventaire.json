@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "genereLe": "2026-10-30T12:00:00.000Z",
+  "rattachement": {
+    "source": "Export Dirvers/RDD_campagne_gmos_1792944586235.gmos",
+    "sha256": "c99b8f87ecad7dee7104fcba1c6bd8a8639bd81c7b1c70ad2d4272cbd3c12b04",
+    "joueurs": [
+      {
+        "id": "p-1",
+        "realName": "Thomas D."
+      },
+      {
+        "id": "p-2",
+        "realName": "Marie C."
+      },
+      {
+        "id": "p-3",
+        "realName": "Lucas R."
+      }
+    ]
+  },
+  "pilote": {
+    "id": "custom-1793114851695",
+    "version": "2.0.0",
+    "source": "Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver",
+    "sha256": "f14f3d0a8a024c4b0e84386c9a9056bbe7e95200e8d79d9e5ea524d7cdfa36db"
+  },
+  "gabarit": {
+    "id": "tpl-1793114851695",
+    "champs": 313,
+    "html": "runequest-fr"
+  },
+  "archives": [
+    {
+      "fichier": "01-Les-Bornes-du-gue.gmos",
+      "campagne": "recette-rq-campagne-bornes",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "1629688668042a79984fabd33c708b158f88af293a20dd3bbab4dcee1b76e902"
+    },
+    {
+      "fichier": "02-Aptitudes-Combat-et-Sante.gmos",
+      "campagne": "recette-rq-corps-campagne-bornes",
+      "personnages": 9,
+      "medias": 39,
+      "sha256": "394a6f4b924f5d6911170439f6632561c0bee1234cd4e9bb0758b1547d4c737d"
+    },
+    {
+      "fichier": "03-Runes-Passions-et-Magie.gmos",
+      "campagne": "recette-rq-runes-campagne-bornes",
+      "personnages": 9,
+      "medias": 39,
+      "sha256": "a95d6815a74c4411c7bb7dc365cb0a0706e3b07b59ecf58130b474fd9acabb04"
+    }
+  ],
+  "modules": {
+    "specifiques": 0,
+    "outils": [
+      "Combat-OS",
+      "Atlas",
+      "Trame",
+      "Nexus Wiki",
+      "Table-OS",
+      "Storyboard",
+      "Sound-OS",
+      "Music-OS",
+      "Light-OS"
+    ]
+  },
+  "casDeRecette": 66,
+  "sourcesRegles": [
+    {
+      "fichier": "docs/systems/runequest/rules/composition-de-la-fiche-de-personnage.md",
+      "sha256": "fdbed7faab972c3e67f00658bbbf299200cb3d07bfb6fe0679424a0d514805ef"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/degats-et-types-de-degats.md",
+      "sha256": "5cedd0ec009bc1d974cf6646cd1b2bb98a8dcc0232791c767e84a7c7015b52b4"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/degres-de-reussite-et-critiques.md",
+      "sha256": "281c103ea5651f1838d1275b55dc4f05c0207d41abf9e18432f71019e4facc77"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/distances-et-portees.md",
+      "sha256": "3fda7fa6e5fae54fb0762cff57ffc2fccd1c19a631a1e164a3af39c9c0c724f6"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/environnement-et-dangers.md",
+      "sha256": "ae81bdccae37aed864d53a6b1550fc0d6d3c3a01b164b26bcd08e714b9120133"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/etats-et-conditions.md",
+      "sha256": "80a906f1ee18b623038b73913b70ee578c0204b4758d5335c62873a6d36bf86b"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/initiative-et-deroulement-du-tour.md",
+      "sha256": "434795c77f934f257e130adc479959e53b464b3688bde03a6b6006f58c2f5641"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/inventaire-des-mecaniques.md",
+      "sha256": "30b169065acf914ba7cd2a2fae7ee40c8cb62412eb3b0886e1ee8b4a69722fe8"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/jauges-et-ressources-individuelles.md",
+      "sha256": "5a398ddf6bf89845a39d99356c4568bcc009a64fe14ce517711b43a9c70c6df8"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/jets-opposes-aide-et-cooperation.md",
+      "sha256": "820c109dd7005d9b7040a4ad135e181154d30a25c4c5342b420ae9b2a64d8745"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/magie-runique-magie-divine.md",
+      "sha256": "f094460ae20e9ae401ac9c6bea2172f9494d61f7920bf2ce2fda9ded8f61f9cf"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/magie-spirituelle.md",
+      "sha256": "72154fe7333eb8208123c9b524d0ce3d01f71db89b8b0c3364cbacf500dd11fd"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/poursuites.md",
+      "sha256": "4ae962ce9c7be1454259b22b7e2ea0d8971037c00557fe9a0cb5d52731da4a41"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/resolution-des-jets.md",
+      "sha256": "28248e2483cb0f8e5b7eaf566d67ca06e0da208a5870dfd9ef232111519577ba"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/sante-et-blessures.md",
+      "sha256": "3ca7b65ad4950bc36e5670c46c9ac3915f5dba17f84021461c108602987de4c3"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/sorcellerie.md",
+      "sha256": "85550ef17df685baa6e279ad95db510b3acc2cdb5a1e9c06fa37abef9a5cf6a3"
+    },
+    {
+      "fichier": "docs/systems/runequest/rules/ton-registre-et-ambiance.md",
+      "sha256": "1b76e3834cf7f938b42b233866d30d5841acb34506f7603eb609ae658973f20f"
+    }
+  ]
+}

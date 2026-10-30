@@ -1,0 +1,128 @@
+[
+  {
+    "id": "commun",
+    "mecanique": "Nexus, joueurs, scènes et supports",
+    "source": "Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0",
+    "support": "natif",
+    "casIds": [
+      "RQ-COMMUN-01",
+      "RQ-COMMUN-02",
+      "RQ-COMMUN-03",
+      "RQ-COMMUN-04",
+      "RQ-COMMUN-05",
+      "RQ-COMMUN-06",
+      "RQ-COMMUN-07",
+      "RQ-COMMUN-08",
+      "RQ-COMMUN-09",
+      "RQ-COMMUN-10",
+      "RQ-COMMUN-11",
+      "RQ-COMMUN-12"
+    ],
+    "archive": "01-Les-Bornes-du-gue.gmos",
+    "limite": "Le test applicatif n’est déclaré fait que si son rapport existe et porte les mêmes SHA."
+  },
+  {
+    "id": "jets",
+    "mecanique": "D100, caractéristiques, augmentation et opposition",
+    "source": "Livre p. 141–146 et errata p. 142, 144, 147 ; runequest.ts",
+    "support": "natif",
+    "casIds": [
+      "RQ-JETS-01",
+      "RQ-JETS-02",
+      "RQ-JETS-03",
+      "RQ-JETS-04",
+      "RQ-JETS-05",
+      "RQ-JETS-06",
+      "RQ-JETS-07",
+      "RQ-JETS-08",
+      "RQ-JETS-09",
+      "RQ-JETS-10",
+      "RQ-JETS-11",
+      "RQ-JETS-12",
+      "RQ-JETS-13",
+      "RQ-JETS-14",
+      "RQ-JETS-15"
+    ],
+    "archive": "02-Aptitudes-Combat-et-Sante.gmos",
+    "limite": "Le test applicatif n’est déclaré fait que si son rapport existe et porte les mêmes SHA."
+  },
+  {
+    "id": "corps",
+    "mecanique": "Combat, localisations et soins",
+    "source": "Livre p. 55–57, 146–150, 191–224 ; manuel RuneQuest — combat",
+    "support": "manuel",
+    "casIds": [
+      "RQ-CORPS-01",
+      "RQ-CORPS-02",
+      "RQ-CORPS-03",
+      "RQ-CORPS-04",
+      "RQ-CORPS-05",
+      "RQ-CORPS-06",
+      "RQ-CORPS-07",
+      "RQ-CORPS-08",
+      "RQ-CORPS-09",
+      "RQ-CORPS-10",
+      "RQ-CORPS-11"
+    ],
+    "archive": "02-Aptitudes-Combat-et-Sante.gmos",
+    "limite": "Le cahier distingue test natif et conséquence/règle appliquée à la table."
+  },
+  {
+    "id": "magie",
+    "mecanique": "Runes, Passions, trois magies et réserves",
+    "source": "Livre p. 227–238, 244–257, 275, 313–315, 381–388 ; corpus relu",
+    "support": "manuel",
+    "casIds": [
+      "RQ-MAGIE-01",
+      "RQ-MAGIE-02",
+      "RQ-MAGIE-03",
+      "RQ-MAGIE-04",
+      "RQ-MAGIE-05",
+      "RQ-MAGIE-06",
+      "RQ-MAGIE-07",
+      "RQ-MAGIE-08",
+      "RQ-MAGIE-09",
+      "RQ-MAGIE-10",
+      "RQ-MAGIE-11",
+      "RQ-MAGIE-12",
+      "RQ-MAGIE-13",
+      "RQ-MAGIE-14",
+      "RQ-MAGIE-15",
+      "RQ-MAGIE-16"
+    ],
+    "archive": "03-Runes-Passions-et-Magie.gmos",
+    "limite": "Le cahier distingue test natif et conséquence/règle appliquée à la table."
+  },
+  {
+    "id": "fiche",
+    "mecanique": "Fiche HTML, tablettes et persistance",
+    "source": "Manuel RuneQuest ; correspondance runequest-fr ; moteur de fiches",
+    "support": "natif",
+    "casIds": [
+      "RQ-FICHE-01",
+      "RQ-FICHE-02",
+      "RQ-FICHE-03",
+      "RQ-FICHE-04",
+      "RQ-FICHE-05",
+      "RQ-FICHE-06",
+      "RQ-FICHE-07",
+      "RQ-FICHE-08"
+    ],
+    "archive": "01-Les-Bornes-du-gue.gmos",
+    "limite": "Le test applicatif n’est déclaré fait que si son rapport existe et porte les mêmes SHA."
+  },
+  {
+    "id": "table",
+    "mecanique": "Progression et décisions de la table",
+    "source": "Livre p. 137–161 et corpus relu ; limites du pilote",
+    "support": "manuel",
+    "casIds": [
+      "RQ-TABLE-01",
+      "RQ-TABLE-02",
+      "RQ-TABLE-03",
+      "RQ-TABLE-04"
+    ],
+    "archive": "01-Les-Bornes-du-gue.gmos",
+    "limite": "Le cahier distingue test natif et conséquence/règle appliquée à la table."
+  }
+]

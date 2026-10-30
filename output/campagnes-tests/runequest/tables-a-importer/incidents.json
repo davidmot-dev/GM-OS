@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE RuneQuest — Incidents de la traversée",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Corde détendue",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Bête effrayée",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Panier tombé",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Arrivée d’un messager",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Pieu qui cède",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Dispute entre porteurs",
+      "description": "Fiction originale, aucun effet mécanique automatique."
+    }
+  ]
+}
