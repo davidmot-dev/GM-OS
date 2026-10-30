@@ -54,6 +54,7 @@ sur demande explicite de David : « Je voudrais finir les améliorations du driv
 | [Nephilim Légende](#nephilim-légende) | 🟢 9 · 🟠 1 · 🔴 0 | **N1–N9 livrés et essayés le 23/10** (registre § 165) ; campagne et deux laboratoires livrés le 26/10, 70 cas (§ 183) | L'essai sur tablette physique |
 | [NOC](#noc) | 🟢 9 · 🟠 0 · 🔴 0 | **Tous les points validés par David le 25/10 : « ok tout fonctionne »** ; pilote 2.0.0, moteur de fiches 18, commit `bf83cbf6`. [Bilan](2026-10-25-noc-finir.md), registre § 177 ; campagne et Cabale de recette livrées (§ 179) | Essayer les 62 cas de recette ; GM-05 transversal signalé ; les portées et arbitrages narratifs restent à la Loi |
 | [Rêve de Dragon](#rêve-de-dragon) | 🟢 6 · 🟠 1 · 🔴 0 | Socle R0–R7, boucle TMR ; **pilote fini le 24/10**, 2.0.0 (registre § 168, [bilan](2026-10-24-reve-de-dragon-finir.md)) : phases du round, famine/potions, entraînement, Haut-Rêve, calendrier Clock-OS, PNJ ; campagne de recette avec carte TMR et 14 tables livrée le 26/10 (§ 181) | Réimport et essai de David avec les 69 cas ; GM-05 transversal signalé |
+| [RuneQuest](#runequest) | 🟢 1 · 🟠 7 · 🔴 0 | **Nouveau pilote, fini le 30/10**, 2.1.0 (registre § 187) : corpus relu 17/17 contre le livre et l'errata, d100 en cinq niveaux, test de caractéristique, résistance, augmentation, opposition, localisation ; coups localisés dans Combat-OS (armure, zone, total, effets) ; fiche HTML au moteur 20 reliée, thème contrôlé | Réimport avec Remplacer et essai de David |
 | [Star Trek Adventures](#star-trek-adventures) | 🟢 4 · 🟠 1 · 🔴 0 | Pilote et LCARS documentés ; **audit et toutes les améliorations livrés le 23/10** (registre § 167, [audit](2026-10-23-star-trek-ameliorations.md)), pilote 2.0.0, **essai de David validé le 24/10** | Essais matériels LCARS |
 | [Symbaroum](#symbaroum) | 🟢 10 · 🟠 0 · 🔴 0 | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), essai de David validé ; **S0, S2 et S5 à S9 livrés le 23/10** (§ 166), pilote 2.0.0 | Réimport du pilote 2.0.0 et essai de David |
 | [Torg Eternity](#torg-eternity) | 🟢 0 · 🟠 0 · 🔴 5 | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
@@ -496,6 +497,42 @@ demande de David (« on va finir reve de dragons »), contre le livre 2.3.1 :
 Conserver une seule réserve de rêve/fatigue sur la fiche. La position et le carnet TMR ne
 doivent pas devenir une seconde fiche de ressources. Les secrets astrologiques restent filtrés.
 
+## RuneQuest
+
+**Référence :** [manuel 2.1.0](../User%20Guides/54-Jeu-RuneQuest.md) ; registre § 187.
+**Statut : fini le 30/10/2026** contre le livre de base français (Deadcrows, 7e éd.,
+`DCRQK02 - Livre de Base.pdf`) **et son errata** (`… - Errata.pdf`), pages imprimées (PDF − 1) ;
+pilote **2.1.0** (`Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver`, coups localisés
+ajoutés le même jour), à réimporter avec **Remplacer**.
+
+**Livré par David le 30/10 :** le pilote forgé (`RQ_driver_gmos_1793346684184`), puis le thème
+`runequest` (accepté 0/0) et la fiche HTML `runequest-fr` (735 clés, acceptée), faits dans l'atelier
+GM-OS Studio ([livraison de la fiche](2026-10-30-fiche-runequest-studio.md)).
+
+| Priorité | Amélioration | Réalisation |
+| --- | --- | --- |
+| 🟠 P0 | Le jet : le pilote forgé ne rendait que réussite ou échec, ratait un 4 à 3 % et réussissait un 97 à 120 % | **Livré le 30/10** : `jet.runequest` (`dice/systemes/runequest.ts`), cinq niveaux lus sur les chances modifiées — critique au vingtième, spéciale au cinquième, échec critique aux 5 % des chances d'échec, arrondis au plus proche —, 01-05 et 96-00 toujours ; la table p. 143 retrouvée ligne à ligne par un essai. Essai de David attendu |
+| 🟠 P1 | Test de caractéristique et table de résistance | **Livré le 30/10** : une caractéristique retenue se teste ×5 à ×0,5 (p. 141) ou contre une passive, 50 % + 5 % par point (p. 145, errata p. 147). Essai de David attendu |
+| 🟠 P1 | Augmentation, nouvelle tentative, opposition, localisation | **Livré le 30/10** : augmentation +50/+30/+20/−20/−50 servie au jet suivant (p. 144-145), −25 % (p. 142), excédent au-delà de 100 % retiré aux deux camps et issue au meilleur niveau (p. 144, errata p. 142), D20 de localisation avec les PV de la zone (p. 146). Essai de David attendu |
+| 🟠 P1 | La fiche GM-OS et le pilote 2.0.0 | **Livré le 30/10** : 193 champs — compétences du livre par catégorie au lieu des sept catégories, six Runes élémentaires et cinq paires, six Passions nommées, armes, sept localisations ; identifiants en double retirés ; combat RA DEX + RA TAI croissant, santé en PV totaux ; portées de poursuite. Essai de David attendu |
+| 🟢 P0 avant extension | Corpus relu contre le livre et l'errata | **Fait le 30/10** : 17/17, quinze fiches corrigées et deux précisées (égalité en opposition, score réduit au-delà de 100 %, Confusion, sorcellerie, inspiration, maladies…), affirmations sans source retirées |
+| 🟠 P1 | La fiche HTML reliée | **Livré le 30/10** : moteur 19 → 20 (`outils/runequest/integrer_au_moteur.mjs`) ; fiche GM-OS étendue à 313 champs (compétences d'armes, deux cultes, Honneur et sept Passions à sujet, pièces) ; correspondance des 735 clés, 327 reliées, 408 absentes motivées (famille, ascendance, compagnon, récoltes, coches d'expérience) ; validateur 0/0 ; e2e : fiche créée et remplie depuis GM-OS. Essai de David attendu |
+| 🟠 P2 | Le thème `runequest` | **Livré le 30/10** par David, accepté 0/0 ; à activer dans une campagne. Essai de David attendu |
+| 🟠 P1 | Les coups localisés dans Combat-OS (demandés par David le 30/10 : « tu ne joues pas la localisation des dégâts dans Combat-OS ? ») | **Livré le 30/10**, pilote 2.1.0 : `combat.coupsLocalises` (`combat/logic/coupsDeRuneQuest.ts`) ; panneau des sept zones sur la carte de chaque combattant (D20 ou clic, dégâts, Encaisser, Soigner) ; armure retirée, membre plafonné au double en un coup, zone et total entamés, effets du livre dits au message et au journal (p. 146-148, relues en image) ; « Porter le coup » depuis le panneau de jet vers la cible ; sept champs `degats_<zone>` propres à GM-OS ; règle appliquée par `handleApplyImpact` (PJ, PNJ) et sur le plateau (adversaire autonome) ; e2e et capture `jeu-runequest-coups-localises`. Essai de David attendu |
+
+**Reste :** l'essai de David (pilote, fiche HTML, thème, coups localisés). À la table, par choix :
+les dégâts spéciaux, la magie (au panneau sous POU, une Rune ou le sort), les suites d'une
+localisation que GM-OS dit sans les appliquer (combat au sol, hémorragie, −1 PV par round).
+
+**Sujets à auditer :** les dérivés calculés (PV, ENC, bonus aux dégâts, modificateurs de catégorie)
+au lieu d'être saisis ; les dégâts spéciaux (empalement, lacération, écrasement) portés avec le
+coup localisé ; la ligne « Localiser le coup » du panneau, qui lit encore les PV de zone sur la
+fiche du lanceur ; les inspirations de Rune et de
+Passion avec leurs suites (tourment, désespoir) ; les tests d'expérience cochés.
+
+**Cas témoin :** Épée large 65 %, augmentée d'une réussite (+20), situation −10 : 75 %, critique
+01-04, spéciale 01-15, échec critique 00 ; à 56 %, un 02 est critique, un 99 un échec critique.
+
 ## Star Trek Adventures
 
 **Référence :** [audit et livraison du 23/10](2026-10-23-star-trek-ameliorations.md), contre le
@@ -652,7 +689,7 @@ propres :
 
 | Sujet commun | Pilotes concernés | Résultat recherché |
 | --- | --- | --- |
-| 🟠 Corpus et contrôles de la Forge | Tous, en priorité Symbaroum/Dune | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. **Crimes relu en entier le 23/10** (§ 160 : 19 fiches sur 19) ; Symbaroum corrigé le 23/10 (§ 166) ; Star Trek (§ 167) et Rêve de Dragon (§ 168) corrigés à leur livraison. **Symbaroum relu en entier le 24/10** (§ 172 : 13 sur 13, sept corrections, quatre affirmations sans source retirées). **Dune relu en entier le 24/10** (§ 173 : 20 sur 20 contre le livre et son errata). **Blade Runner relu en entier le 24/10** (§ 174 : 22 sur 22). **Compté le 24/10 — fiches encore `relu: false` :** Alien 23 sur 26, Cthulhu Hack 18, NOC 19, Nephilim 21, Rêve de Dragon 16 sur 21, Star Trek 15 sur 19, Torg 16, corpus 2d20 19, SRD YZE 17, Barbarian 16 ; Within n'a aucun corpus, et son pilote est retiré (David, 24/10 : pas la peine pour l'instant). **Reste :** les autres corpus, à relire quand leur jeu sera repris |
+| 🟠 Corpus et contrôles de la Forge | Tous, en priorité Symbaroum/Dune | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. **Crimes relu en entier le 23/10** (§ 160 : 19 fiches sur 19) ; Symbaroum corrigé le 23/10 (§ 166) ; Star Trek (§ 167) et Rêve de Dragon (§ 168) corrigés à leur livraison. **Symbaroum relu en entier le 24/10** (§ 172 : 13 sur 13, sept corrections, quatre affirmations sans source retirées). **Dune relu en entier le 24/10** (§ 173 : 20 sur 20 contre le livre et son errata). **Blade Runner relu en entier le 24/10** (§ 174 : 22 sur 22). **RuneQuest relu en entier le 30/10** (§ 187 : 17 sur 17 contre le livre et son errata). **Compté le 24/10 — fiches encore `relu: false` :** Alien 23 sur 26, Cthulhu Hack 18, NOC 19, Nephilim 21, Rêve de Dragon 16 sur 21, Star Trek 15 sur 19, Torg 16, corpus 2d20 19, SRD YZE 17, Barbarian 16 ; Within n'a aucun corpus, et son pilote est retiré (David, 24/10 : pas la peine pour l'instant). **Reste :** les autres corpus, à relire quand leur jeu sera repris |
 | 🟢 Modificateurs et contexte du jet | Symbaroum, Alien, puis audits des autres | Distinguer modificateur de seuil, nombre de dés, réussites exigées et meilleur/pire dé. **Avantage tactique livré le 22/10 (§ 155).** **Livré le 22/10 (registre § 149) :** `jet.modificateurDuSeuil`, capacité commune du moteur (tout jeu jeté sous un seuil additionné), avec opposition explicite ; Symbaroum la déclare. Les réussites exigées restent `difficulte` (Dune), le nombre de dés la réserve, meilleur/pire dé « Tirage ». **Rien de commun ne reste (24/10)** : le moteur est livré ; chaque jeu l'emploie dans son propre chantier (Crimes, Symbaroum, Star Trek, Nephilim, Rêve de Dragon et Blade Runner finis ; Dune, NOC et Torg dans leurs sections, Within en suspens) |
 | 🟢 Choix du paiement et bilan du jet | Dune, Star Trek | Conserver coût, source, effets immédiats et reliquat, sans double dépense ni perte anticipée. **Livré le 22/10 (registre § 151) :** `paiementAuChoix` (« dont en Menace », depuis la fiche et la tablette) ; l'Impulsion du jet que la réserve pleine ne garde pas reste sur le test (dépenser ou verser). Activé pour Dune (D2) et pour **Star Trek**, audité et fini le 23/10 (§ 167). **Rien de commun ne reste (24/10)** : les dépenses contextualisées et l'Impulsion bonus sont propres à Dune, dans sa section (développées et validées par David le 25/10, § 175) |
 | 🟢 Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu. **Livré le 22/10 (registre § 150) :** la fiche naît à sa santé de départ ; la Forge avertit d'une santé sans champ courant (Symbaroum corrigé, Crimes signalé) ; `franchissements` propose la séquelle permanente une fois par passage (NOC). Crimes C2 livré le 22/10 (§ 158 : Potentiel actuel, atteintes, bonne nuit). **Vérifié le 24/10 :** Crimes C6 livré (la carte de combat lit le Physique actuel, `CombatCard` → `physiqueActuel`, § 161) ; Cthulhu Hack fini le 23/10 (§ 164) ; agonie de Symbaroum (§ 166), Stress et blessures de Star Trek (§ 167), blessures et famine de Rêve de Dragon (§ 168). **Rien de commun ne reste** : la stabilisation de Blade Runner est livrée dans sa section le 24/10 (§ 174) |
@@ -662,7 +699,8 @@ propres :
 | 🟢 Documentation et recette | Tous | Page 53, page 54 du jeu et captures conformes aux fonctions réellement livrées. **Recette du 24/10** (registre § 171) : les onze jeux rejoués sur leur dernier pilote et comparés au manuel ; six captures et deux légendes mises à jour ; l'essai des captures photographie désormais en pixels CSS. Within n'a pas de page : son pilote est retiré |
 
 **Pour choisir une prochaine intervention (revu le 25/10) :** Alien, Crimes, Cthulhu Hack,
-Nephilim, Rêve de Dragon, Star Trek, Symbaroum et Blade Runner sont finis contre leur livre.
+Nephilim, Rêve de Dragon, Star Trek, Symbaroum et Blade Runner sont finis contre leur livre ;
+Barbarians of Lemuria (27/10) et RuneQuest (30/10) aussi, leur essai par David attendu.
 NOC est terminé et validé par David le 25/10 (§ 177) ; Torg reste à auditer ; Dune est validé
 par David le 25/10 (§ 175) ; Within est en suspens, son pilote retiré par David. Ce repérage n'impose pas un ordre entre les
 campagnes de David.

@@ -5,6 +5,7 @@ import type { HealthSystemType } from '../../../types/entity.types';
 import type { SheetTemplate, SheetSection, SheetFieldType } from '../../../data/defaultSheetTemplates';
 import { sectionDeLaComposante, type SensDuJet } from '../../dice/DescripteurDeJet';
 import { MECANIQUES_DE_CIBLE } from '../../dice/systemes';
+import { LOCALISATIONS } from '../../dice/systemes/runequest';
 import { GROUPES } from './GroupesDeChamps';
 import { champsDUneFormule, clefDeChamp } from '../../combat/logic/SanteDuCombattant';
 
@@ -1072,6 +1073,28 @@ export function controlerLePilote(
         if (driver.jet?.modificateurDuSeuil) avertir('jet.modificateurDuSeuil', 'Barbarians règle la difficulté au jet (p. 57) : ce modificateur est ignoré.');
         if (bol.heroisme && !tousLesChamps.has(bol.heroisme)) erreur('jet.barbarians.heroisme', `Barbarians lit les points d'héroïsme dans « ${bol.heroisme} », absent de la fiche.`);
     }
+    /*
+      RuneQuest (2026-10-30) : un d100 sous l'aptitude retenue, gradué sur les chances
+      modifiées. Une seule composante, puisque l'aptitude EST le score ; les
+      caractéristiques et les localisations nommées doivent exister sur la fiche.
+    */
+    const rq = driver.jet?.runequest;
+    if (rq) {
+        if (driver.jet?.sens !== 'sous-ou-egal' || driver.jet?.cible || facesLancees(driver) !== 100) {
+            avertir('jet.runequest', 'Le bloc RuneQuest suppose un d100 sous l’aptitude (p. 142) : déclarer « sens: sous-ou-egal », sans cible.');
+        }
+        if ((driver.jet?.seuil ?? []).length !== 1) {
+            avertir('jet.seuil', 'RuneQuest lance une aptitude à la fois — compétence, Rune, Passion ou caractéristique (p. 141) : le seuil doit avoir une seule composante.');
+        }
+        if (driver.jet?.difficulte) avertir('jet.difficulte', 'RuneQuest ne compte pas de réussites : la difficulté se règle en pourcentage au jet (p. 142).');
+        if (driver.jet?.modificateurDuSeuil) avertir('jet.modificateurDuSeuil', 'RuneQuest règle la situation au jet, en pourcentage : ce modificateur est ignoré.');
+        for (const champ of rq.caracteristiques ?? []) {
+            if (!tousLesChamps.has(champ)) erreur('jet.runequest.caracteristiques', `RuneQuest teste la caractéristique « ${champ} », absente de la fiche.`);
+        }
+        for (const [zone, champ] of Object.entries(rq.localisations ?? {})) {
+            if (champ && !tousLesChamps.has(champ)) erreur('jet.runequest.localisations', `La localisation ${zone} lit ses points de vie dans « ${champ} », absent de la fiche.`);
+        }
+    }
     // Star Trek jusqu'au bout (2026-10-23) : chaque champ que `jet.starTrek` nomme, et le 2d20 qu'il suppose.
     const st = driver.jet?.starTrek;
     if (st) {
@@ -1849,6 +1872,29 @@ export function controlerLePilote(
         for (const [cle, quoi] of [['resistance', 'la Résistance'], ['choc', 'le Choc']] as const) {
             if (!tousLesChamps.has(dommages[cle])) {
                 erreur(`combat.dommages.${cle}`, `Les dommages lisent ${quoi} dans « ${dommages[cle]} », absent de la fiche : chaque coup partirait de zéro.`);
+            }
+        }
+    }
+
+    // ---- Les coups localisés (RuneQuest, 2026-10-30) ------------------------
+    const localises = driver.combat?.coupsLocalises;
+    if (localises) {
+        if (localises.mecanique !== 'runequest') {
+            erreur('combat.coupsLocalises.mecanique', `« ${String(localises.mecanique)} » n'est pas une règle de coups localisés connue. La seule admise est : runequest.`);
+        }
+        const zones = Object.entries(localises.zones ?? {});
+        if (zones.length === 0) erreur('combat.coupsLocalises.zones', "Aucune zone n'est déclarée : le panneau des coups localisés ne paraîtrait pas.");
+        for (const [zone, champs] of zones) {
+            if (!LOCALISATIONS.some(l => l.cle === zone)) {
+                erreur(`combat.coupsLocalises.zones.${zone}`, `« ${zone} » n'est pas une localisation de la table du livre (${LOCALISATIONS.map(l => l.cle).join(', ')}).`);
+            }
+            for (const [cle, quoi] of [['pv', 'ses points de vie'], ['armure', 'son armure'], ['degats', 'ses dégâts reçus']] as const) {
+                const champ = champs?.[cle];
+                if (champ === undefined) {
+                    if (cle !== 'armure') erreur(`combat.coupsLocalises.zones.${zone}.${cle}`, `La zone « ${zone} » ne dit pas où vivent ${quoi}.`);
+                } else if (!tousLesChamps.has(champ)) {
+                    erreur(`combat.coupsLocalises.zones.${zone}.${cle}`, `La zone « ${zone} » lit ${quoi} dans « ${champ} », absent de la fiche.`);
+                }
             }
         }
     }

@@ -19,6 +19,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { HealthInterpreter, listeOuVide } from '../logic/HealthInterpreter';
 import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
 import { dommagesDeTorg, ajouterLeChoc, direLesDommages } from '../../combat/logic/dommagesDeTorg';
+import { coupLocaliseSelonLeJeu } from '../../combat/logic/coupsDeRuneQuest';
 import { cosmsDesIds, idsDesCosmsCourants, loiEnVigueur } from '../logic/cosmsCourants';
 import { champDeSantePrincipale, maximumDeLaJauge, santeAlignee, santePrincipaleDeLaFiche, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import { santePrincipaleDuPersonnage } from '../logic/santePrincipale';
@@ -884,6 +885,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             if (pilote?.combat.alien && estUnAndroide(pilote.combat.alien, fiche ?? {}) && !impactSaisi.isRecovery && immuniteSynthetique(impactSaisi.type ?? '')) {
                 return { impact: { ...impactSaisi, value: 0 }, fiche: {}, texte: 'Synthétique immunisé à ce péril : aucun dégât.' };
             }
+            // RuneQuest (2026-10-30) : un coup qui nomme sa zone passe par l'armure et la zone avant le total.
+            const localise = coupLocaliseSelonLeJeu(pilote?.combat?.coupsLocalises, fiche, impactSaisi);
+            if (localise) return localise;
             const regle = pilote?.combat?.dommages;
             if (!regle || regle.mecanique !== 'torg' || impactSaisi.isRecovery) return null;
             const resistance = valeurDuChamp(fiche, regle.resistance) ?? 0;

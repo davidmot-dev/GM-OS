@@ -156,7 +156,6 @@ const TOLERES: Record<string, string> = {
     'dejaConsigne': "garde anti-doublon du journal de combat, relue 16 fois chez elle",
     'ouvertureConsignee': "marque d'ouverture du combat, relue par son propre magasin",
     'faitsDArmes': "les hauts faits du combat, écrits et relus dans useCombatStore",
-    'consignerLOuvertureDuCombat': "appelée par les autres actions du combat",
     'setSonie': "appelée par la mesure de sonie du magasin de musique",
     'updateEntityNotes': "appelée par une autre action de useNPCStore",
     /*

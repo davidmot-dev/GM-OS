@@ -25,6 +25,7 @@ import { potentielActuel, quotaDeLaGarde, seuilDeLaGarde } from './systemes/pote
 import type { RegleDesJetsAlien } from './systemes/jetsAlien';
 import { jetDeNephilim, type ChoixDeNephilim, type JetDeNephilim, type RegleDeNephilim } from './systemes/nephilimRegles';
 import { estUnAndroide } from './systemes/paniqueAlien';
+import { CHOIX_DE_RUNEQUEST, calculerRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest } from './systemes/runequest';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 import type { EchelleDuJet } from './degresDeReussite';
 import {
@@ -520,6 +521,15 @@ export interface DescripteurDeJet {
      */
     barbarians?: import('./systemes/barbarians').RegleDeBarbarians;
     /**
+     * **RuneQuest** — 2026-10-30 (`systemes/runequest.ts`) : le d100 sous l'aptitude
+     * gradue en cinq niveaux lus sur les chances MODIFIÉES (critique au vingtième,
+     * spéciale au cinquième, échec critique dans les 5 % des chances d'échec),
+     * bornées à 05-95. Une caractéristique retenue se teste ×N ou sur la table de
+     * résistance ; modificateurs, augmentation, nouvelle tentative et opposition
+     * au-delà de 100 % se règlent au jet.
+     */
+    runequest?: import('./systemes/runequest').RegleDeRuneQuest;
+    /**
      * **Star Trek Adventures, jusqu'au bout** — 2026-10-23 (`systemes/starTrekRegles.ts`) :
      * au jet, la nature de la tâche, la marge de complication, l'opposition, les
      * assistants et l'aide du vaisseau, la Détermination ; après, les complications
@@ -583,6 +593,8 @@ export interface ChoixDuJoueur {
     modificateurDuSeuil?: number;
     /** Ce que le panneau règle pour Nephilim (`DescripteurDeJet.nephilim`), réserves de table comprises. */
     nephilim?: ChoixDeNephilim;
+    /** Ce que le panneau règle pour RuneQuest (`DescripteurDeJet.runequest`) ; absent : un jet sans modificateur. */
+    runequest?: Partial<ChoixDeRuneQuest>;
     /** La valeur de l'adversaire, quand le jet s'oppose à lui. Absente : pas d'opposition. */
     valeurAdverse?: number;
     /** L'Avantage tactique est coché (`modificateurDuSeuil.avantage`). */
@@ -689,6 +701,8 @@ export interface JetPrepare {
      * que le jeu ne le sait pas.*
      */
     echelle?: EchelleDuJet;
+    /** RuneQuest : le mode du test, les chances modifiées et l'aptitude adverse réduite. */
+    runequest?: CalculDeRuneQuest;
     nombreDeDes: number;
     /**
      * **Les dés de base quand ils n'ont pas tous la même taille.**
@@ -1194,6 +1208,29 @@ export function preparerLeJet(
     }
 
     /*
+      **RuneQuest** (2026-10-30) : l'aptitude retenue est le score ; une
+      caractéristique se teste ×N ou sur la table de résistance (p. 141, 145). Les
+      chances modifiées donnent l'échelle des cinq niveaux, posée ICI pour que le
+      pupitre, la tablette et le panneau lisent le même dé de la même façon.
+    */
+    let runequest: CalculDeRuneQuest | undefined;
+    if (descripteur.runequest && descripteur.sens === 'sous-ou-egal' && !descripteur.cible && composantes.length > 0) {
+        const retenue = composantes[0];
+        // Une arme ou une Passion se nomme sur la fiche (`libelleSur`) : « Épée large », pas « Arme de mêlée 1 ».
+        const champ = sections?.flatMap(s => s.fields).find(f => f.id === retenue.champ);
+        const nomSaisi = champ?.libelleSur ? String(valeursDeLaFiche[champ.libelleSur] ?? '').trim() : '';
+        const libelle = nomSaisi || champ?.label || retenue.champ;
+        runequest = calculerRuneQuest(
+            { label: libelle, valeur: retenue.valeur, caracteristique: (descripteur.runequest.caracteristiques ?? []).includes(retenue.champ) },
+            { ...CHOIX_DE_RUNEQUEST, ...choix.runequest },
+        );
+        seuil = runequest.echelle.chances;
+        echelle = runequest.echelle;
+        if (runequest.explication) explicationDuSeuil = runequest.explication;
+        remarques.push(...runequest.remarques);
+    }
+
+    /*
       **Le seuil que le meneur déplace** (Symbaroum, 2026-10-22). Seulement sur
       un seuil additionné qu'on jette dessous : une cible a sa colonne, Torg et
       NOC leur difficulté, et sur un jeu qui compte « au-dessus » ajouter au
@@ -1205,7 +1242,7 @@ export function preparerLeJet(
     const regle = descripteur.modificateurDuSeuil;
     let modificationDuSeuil: JetPrepare['modificationDuSeuil'];
     if (regle && descripteur.sens === 'sous-ou-egal' && composantes.length > 0
-        && !descripteur.cible && !descripteur.desEchelonnes && !descripteur.tableDeBonus && !descripteur.destin) {
+        && !descripteur.cible && !descripteur.desEchelonnes && !descripteur.tableDeBonus && !descripteur.destin && !runequest) {
         const demande = choix.modificateurDuSeuil ?? regle.defaut;
         const situation = Math.min(regle.max, Math.max(regle.min, demande));
         if (situation !== demande) remarques.push(`Modificateur ramené entre ${regle.min} et ${regle.max}.`);
@@ -1440,6 +1477,7 @@ export function preparerLeJet(
         modificationDuSeuil,
         ...(garde ? { garde } : {}),
         ...(nephilim ? { nephilim } : {}),
+        ...(runequest ? { runequest } : {}),
         echelle,
         /*
           Quand les dés sont échelonnés, c'est leur nombre qui fait foi : ils ne

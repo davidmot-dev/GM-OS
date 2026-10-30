@@ -183,6 +183,23 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         scenes: c => scenesDeBarbarians(c),
     },
     {
+        // RuneQuest (2026-10-30) : Vasana, l'aventurière du livre — Épée large 65 %, POU 15 (p. 52-57).
+        corpusId: 'runequest', slug: 'runequest', personnage: 'Vasana',
+        sheetData: {
+            nom: 'Vasana', patrie: 'Sartar', occupation: 'Guerrière', culte: 'Orlanth Aventureux', clan_tribu: 'Clan Ernaldori',
+            for: 16, con: 12, tai: 10, dex: 11, int: 15, pou: 15, cha: 19,
+            pv_max: 12, pm_max: 15, pr_max: 3, bonus_degats: '+1D4', ra_dex: 3, ra_tai: 2,
+            rune_air: 90, rune_lune: 60, rune_terre: 20, rune_mouvement: 75, rune_stase: 25,
+            passion1_nom: 'Honneur', passion1: 80, passion2_nom: 'Haine (Empire lunar)', passion2: 90, reputation: 13,
+            arme1_nom: 'Épée large', arme1: 65, arme1_degats: '1D8+1', arme1_ra: 2,
+            bouclier_nom: 'Bouclier moyen', bouclier: 55, observation: 30, esquive: 22,
+            pv_jambe_droite: 4, pv_jambe_gauche: 4, pv_abdomen: 4, pv_poitrine: 5, pv_bras_droit: 3, pv_bras_gauche: 3, pv_tete: 4,
+            points_de_vie: 12, points_de_magie: 15, points_de_rune: 3,
+        },
+        composantes: ['arme1'],
+        scenes: c => scenesDeRuneQuest(c),
+    },
+    {
         // Crimes, C1 (2026-10-22) : Physique 5, Sport 2 → cinq d10, deux gardés à 8 (7 avec Escalade).
         corpusId: 'crime', slug: 'crimes', personnage: 'Léonce Varin',
         sheetData: { physique: 5, mental: 3, social: 2, sport: 2, combat: 1, traque: 1, specialties_sport_climbing: true },
@@ -999,6 +1016,66 @@ async function scenesDeBarbarians(c: ContexteDeScene): Promise<void> {
     await expect(ficheHtml.locator('[data-key="weapons.0.damage"]')).toHaveValue('d6+3');
     await f.waitForTimeout(1_000);
     await photographier(f.locator('body'), 'jeu-barbarians-fiche');
+}
+
+/**
+ * **RuneQuest** (2026-10-30) : l'épée large de Vasana réglée — situation −10, augmentée
+ * d'une réussite (+20) —, le résultat et la localisation du coup, puis la table de
+ * résistance, POU 15 contre 14 : 55 % (p. 145-146).
+ */
+async function scenesDeRuneQuest(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await panneau.locator('select').nth(0).selectOption('arme1');
+    await panneau.getByLabel('Modificateur de situation', { exact: true }).fill('-10');
+    await panneau.getByLabel('Augmentation', { exact: true }).selectOption('20');
+    const preparation = panneau.locator('[data-preparation-runequest]');
+    await expect(preparation.locator('[data-composition-runequest]')).toContainText('Épée large 65 % + 20 augmentation − 10 situation = 75 %');
+    await photographier(preparation, 'jeu-runequest-preparation');
+    await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    const suites = panneau.locator('[data-suites-runequest]');
+    await expect(suites).toBeVisible();
+    await suites.getByRole('button', { name: 'Localiser le coup (1D20)', exact: true }).click();
+    await expect(suites.locator('[data-localisation-runequest]')).toContainText('PV sur la fiche');
+    await photographier(panneau, 'jeu-runequest-suites');
+
+    // La situation reste réglée d'un jet à l'autre ; l'augmentation, elle, n'a valu qu'une fois.
+    await panneau.getByLabel('Modificateur de situation', { exact: true }).fill('0');
+    await panneau.locator('select').nth(0).selectOption('pou');
+    await panneau.getByLabel('Test de caractéristique', { exact: true }).selectOption('resistance');
+    await panneau.getByLabel('Caractéristique passive', { exact: true }).fill('14');
+    await expect(preparation.locator('[data-composition-runequest]')).toContainText('= 55 %');
+    await photographier(preparation, 'jeu-runequest-resistance');
+
+    // La fiche HTML runequest-fr (30/10), remplie depuis GM-OS par la correspondance.
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });
+    await creerLaFiche.click();
+    const ficheHtml = f.frameLocator('iframe').first();
+    await expect(ficheHtml.locator('[data-key="identity.name"]')).toHaveValue('Vasana', { timeout: 30_000 });
+    await expect(ficheHtml.locator('[data-key="attributes.power"]')).toHaveValue('15');
+    await expect(ficheHtml.locator('[data-key="weapons.melee.0.name"]')).toHaveValue('Épée large');
+    await expect(ficheHtml.locator('[data-key="runes.air.level"]')).toHaveValue('90');
+    await expect(ficheHtml.locator('[data-key="passions.1.name"]')).toHaveValue('Haine (Empire lunar)');
+    await expect(ficheHtml.locator('[data-key="locations.chest.hp"]')).toHaveValue('5');
+    await f.waitForTimeout(1_000);
+    await photographier(f.locator('body'), 'jeu-runequest-fiche');
+
+    // Les coups localisés dans Combat-OS (30/10) : 8 au bras gauche (3 PV, 2 d'armure) — 6, le double.
+    await ecrireLaFiche(c, { pa_bras_gauche: 2, pa_tete: 2, pa_poitrine: 3, pa_abdomen: 3 });
+    const carte = await entrerEnCombat(c);
+    const coups = carte.locator('[data-coups-localises]');
+    await expect(coups).toBeVisible();
+    await coups.locator('[data-zone="bras-gauche"]').click();
+    await coups.getByLabel('Dégâts du coup', { exact: true }).fill('8');
+    await coups.getByRole('button', { name: 'Encaisser', exact: true }).click();
+    await expect(coups.locator('[data-zone="bras-gauche"]')).toHaveText('Bras gauche -3/3 · PA 2');
+    await expect.poll(() => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState()
+        .players.flatMap(p => p.characters).find(ch => ch.id === id)?.hp, c.personnage)).toBe(6);
+    await photographier(carte, 'jeu-runequest-coups-localises');
 }
 
 async function scenesDeDune(c: ContexteDeScene): Promise<void> {

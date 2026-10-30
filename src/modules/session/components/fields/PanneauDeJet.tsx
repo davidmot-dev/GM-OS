@@ -77,6 +77,8 @@ import { lireSymbaroum, sansCritiqueDeBase, type NatureDuTest } from '../../../d
 import { PreparationBarbarians, SuitesBarbarians } from './BarbariansAuJet';
 import { CHOIX_DE_BARBARIANS, appliquerLeGeste, heroismeDeLaFiche, lancerBarbarians, modificateursDeBarbarians, soldeDesDes,
     LIBELLES_DE_BARBARIANS, type ChoixDeBarbarians, type GesteDeBarbarians, type JetDeBarbarians } from '../../../dice/systemes/barbarians';
+import { PreparationRuneQuest, SuitesRuneQuest } from './RuneQuestAuJet';
+import { CHOIX_DE_RUNEQUEST, nommerLeJetDeRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest } from '../../../dice/systemes/runequest';
 import { CreationStarTrek, PreparationStarTrek, ReputationStarTrek, StressEtBlessuresStarTrek, SuitesStarTrek, TourStarTrek, type VaisseauPourLAide } from './StarTrekAuJet';
 import { CarnetDune, PreparationDune, SuitesDune } from './DuneAuJet';
 import { CHOIX_DUNE, CLE_DUNE, bilanDune, conserverDune, depenserDune, desDune, difficulteDune, entierDune, lireDune, lignesDune, noterDune, resultatDune,
@@ -400,6 +402,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const heroismeBarbarians = regleBarbarians?.heroisme ? heroismeDeLaFiche(valeursBarbarians[regleBarbarians.heroisme]) : undefined;
 
     /**
+     * **RuneQuest** (2026-10-30) : le test de caractéristique ou de résistance, la
+     * situation, l'augmentation, la nouvelle tentative et l'aptitude adverse ; ce que
+     * le dernier lancer savait, pour trancher l'opposition et localiser le coup.
+     */
+    const regleRuneQuest = descripteur.sens === 'sous-ou-egal' && !descripteur.cible ? descripteur.runequest : undefined;
+    const [choixRuneQuest, setChoixRuneQuest] = useState<ChoixDeRuneQuest>(CHOIX_DE_RUNEQUEST);
+    const [runequestDuLancer, setRuneQuestDuLancer] = useState<{ calcul: CalculDeRuneQuest; compte: number } | null>(null);
+
+    /**
      * **Star Trek jusqu'au bout** (2026-10-23) : la tâche complète — nature, marge,
      * opposition, assistants, vaisseau, Détermination — et ce que le dernier lancer
      * savait, pour le recompter après une relance.
@@ -559,6 +570,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             descripteur, regleDune ? valeursDune : descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : regleNephilim ? valeursNephilim : valeurs,
             {
                 ...(regleNephilim ? { nephilim: { ...choixNephilim, lieu: lieuN, conjonction: conjonctionN, intensite: intensiteN, seuilRK: seuilRKN } } : {}),
+                ...(regleRuneQuest ? { runequest: choixRuneQuest } : {}),
                 champs: choix, desSupplementaires: desAchetes, difficulte,
                 ajustementDeDifficulte: ajustementDeDifficulte + degresPuises, specialisation,
                 modificateurDuSeuil,
@@ -606,7 +618,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
+        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
     );
 
     /*
@@ -745,8 +757,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * La liste des moteurs qui résolvent eux-mêmes vit dans `DiceEngine`, et
      * nulle part ailleurs : recopiée ici, elle dériverait.
      */
-    const avantagePossible = descripteur.tableDeBonus
+    const avantagePossible = descripteur.tableDeBonus || regleRuneQuest
         // Torg n'a pas d'avantage : son dé se relance quand il explose, il ne se double pas.
+        // RuneQuest non plus : ses chances se règlent en pourcentage (p. 142, 144).
         ? false
         : descripteur.desEchelonnes
         // Sur les dés échelonnés, le livre les décrit explicitement : un
@@ -1165,6 +1178,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const desDuTestDune = regleDune ? desDune(brutDuMoteur.rolls.filter(d => !d.isDropped).map(d => Number(d.val)), seuilDuMoteur ?? jet.seuil, jet.doubleSous, choixDuneValide, () => DiceEngine.roll(20)) : null;
         const brut = desDuTestDune ? resultatDune(desDuTestDune, choixDune.marge, jet.reussitesRequises)
             : regleSymbaroum ? sansCritiqueDeBase(brutDuMoteur)
+            // RuneQuest : le degré du moteur, dit avec les mots du livre (p. 142).
+            : regleRuneQuest && jet.echelle ? nommerLeJetDeRuneQuest(brutDuMoteur, jet.echelle)
             : desStarTrek ? resultatDeStarTrek(desStarTrek, complicationStarTrek, jet.reussitesRequises)
             : brutDuMoteur;
         /*
@@ -1217,6 +1232,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 titre: `${choixBarbarians.reaction ? 'Réaction : ' : ''}${jet.composantes.map(c => c.label).join(' + ')}${reglage ? ` · ${reglage}` : ''}`,
                 compte: (d?.compte ?? 0) + 1, pointAccorde: false,
             }));
+        }
+        if (regleRuneQuest && jet.runequest) {
+            const calcul = jet.runequest;
+            setRuneQuestDuLancer(d => ({ calcul, compte: (d?.compte ?? 0) + 1 }));
+            // L'augmentation et la nouvelle tentative valent pour UN jet (p. 142, 144).
+            setChoixRuneQuest(c => ({ ...c, augmentation: 0, nouvelleTentative: false }));
         }
         if (regleSymbaroum) {
             const retenu = jet.composantes[0]?.champ;
@@ -1840,7 +1861,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       si le jeu y a quelque chose : une difficulté, des réserves où puiser, la
       préparation d'Alien… — une étape vide numérotée mentirait sur l'ordre.
     */
-    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || disponiblesPerso.length > 0
+    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleRuneQuest || disponiblesPerso.length > 0
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
         || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable
@@ -1853,10 +1874,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       réussites, qui reste l'autorité sur une réserve. Il se lit en tête du
       résultat, à droite du titre.
     */
-    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat)
-        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59), et non le degré générique du moteur.
+    const runequestDuResultat = (resultat as JetDeRuneQuest | null)?.runequest;
+    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || runequestDuResultat)
+        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, RuneQuest p. 142), et non le degré générique du moteur.
         ? <span className={'font-black uppercase tracking-widest ' + (resultat.tagSuccess ? 'text-etat-succes' : 'text-etat-danger')}>
-            {gardeDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
+            {gardeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
         </span>
         : resultat && !paniqueEnAttente
         && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
@@ -2357,6 +2379,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {regleBarbarians && (
                         <PreparationBarbarians choix={choixBarbarians} setChoix={setChoixBarbarians} seuil={jet.seuil} />
                     )}
+                    {regleRuneQuest && (
+                        <PreparationRuneQuest choix={choixRuneQuest} setChoix={setChoixRuneQuest} calcul={jet.runequest} />
+                    )}
                     {regleSymbaroum && (
                         <PreparationSymbaroum
                             nature={jet.composantes[0]?.champ && jet.composantes[0].champ === regleSymbaroum.defense ? 'defense' : natureSymbaroum}
@@ -2526,7 +2551,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système.
                         Pas chez Crimes : le Potentiel dit le nombre de dés, rien ne s'y ajoute ;
                         ni chez Barbarians, dont les dés de bonus et de malus se règlent à l'étape 2. */}
-                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians ? 'hidden' : ''}`}>
+                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleRuneQuest ? 'hidden' : ''}`}>
                         <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                         <button
                             onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -2888,6 +2913,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 }}
                                 ecrireDetermination={apres => regleStarTrek.determination && ecrireStarTrek({ [regleStarTrek.determination]: apres })}
                                 consigner={(titre, ligne) => redire(titre, { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
+                        )}
+                        {regleRuneQuest && runequestDuLancer && runequestDuResultat && (
+                            <SuitesRuneQuest key={runequestDuLancer.compte} jet={resultat as JetDeRuneQuest} calcul={runequestDuLancer.calcul}
+                                regle={regleRuneQuest} valeurs={valeurs} d20={() => DiceEngine.roll(20)} porterLeCoup={!pourLesJoueurs}
+                                augmenter={bonus => setChoixRuneQuest(c => ({ ...c, augmentation: bonus }))}
+                                retenter={() => setChoixRuneQuest(c => ({ ...c, nouvelleTentative: true }))}
+                                consigner={ligne => redire(dernierLancer?.titre ?? 'RuneQuest', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
                         )}
                         {regleBarbarians && barbariansDuLancer && barbariansDuResultat && (
                             <SuitesBarbarians key={barbariansDuLancer.compte} jet={resultat as JetDeBarbarians} reaction={barbariansDuLancer.reaction}

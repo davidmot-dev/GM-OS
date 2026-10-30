@@ -139,9 +139,9 @@ describe('les gabarits intégrés du moteur', () => {
         const version = Number(source.match(/const BUILTIN_VERSION=(\d+);/)?.[1]);
         const ids = MOTEURS.map(g => g.id).sort();
         expect({ version, ids }, 'liste changée : montez BUILTIN_VERSION dans le moteur, puis cette attente').toEqual({
-            // 19 : la fiche de Barbarians of Lemuria (2026-10-27).
-            version: 19,
-            ids: ['alien-v2-normalise', 'barbarian-of-lemuria-fr', 'blade-runner-fr', 'crimes-fr', 'cthulhu-hack', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr'],
+            // 19 : la fiche de Barbarians of Lemuria (2026-10-27) ; 20 : celle de RuneQuest (2026-10-30).
+            version: 20,
+            ids: ['alien-v2-normalise', 'barbarian-of-lemuria-fr', 'blade-runner-fr', 'crimes-fr', 'cthulhu-hack', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'runequest-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr'],
         });
     });
 });

@@ -1,0 +1,2901 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "runequest-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de RuneQuest (pilote 2.0.0) et le gabarit runequest-fr (fiche livrée le 2026-10-30). Écrite par outils/runequest/relier_fiche_runequest.py : les champs du pilote gardent leur identifiant ; famille, ascendance, compagnon, propriétés, récoltes et coches d'expérience restent sur la fiche.",
+  "champs": [
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "joueur",
+      "fiche": "identity.player"
+    },
+    {
+      "gmos": "patrie",
+      "fiche": "identity.origin"
+    },
+    {
+      "gmos": "tribu",
+      "fiche": "identity.tribe"
+    },
+    {
+      "gmos": "clan_tribu",
+      "fiche": "identity.clan"
+    },
+    {
+      "gmos": "occupation",
+      "fiche": "identity.occupation"
+    },
+    {
+      "gmos": "niveau_de_vie",
+      "fiche": "identity.living_standard"
+    },
+    {
+      "gmos": "genre",
+      "fiche": "identity.gender"
+    },
+    {
+      "gmos": "annee_naissance",
+      "fiche": "identity.birth_year"
+    },
+    {
+      "gmos": "age",
+      "fiche": "identity.age"
+    },
+    {
+      "gmos": "campagne",
+      "fiche": "identity.campaign"
+    },
+    {
+      "gmos": "rancon",
+      "fiche": "identity.ransom"
+    },
+    {
+      "gmos": "reputation",
+      "fiche": "identity.reputation"
+    },
+    {
+      "gmos": "revenu_de_base",
+      "fiche": "identity.base_income"
+    },
+    {
+      "gmos": "for",
+      "fiche": "attributes.strength"
+    },
+    {
+      "gmos": "con",
+      "fiche": "attributes.constitution"
+    },
+    {
+      "gmos": "tai",
+      "fiche": "attributes.size"
+    },
+    {
+      "gmos": "dex",
+      "fiche": "attributes.dexterity"
+    },
+    {
+      "gmos": "int",
+      "fiche": "attributes.intelligence"
+    },
+    {
+      "gmos": "pou",
+      "fiche": "attributes.power"
+    },
+    {
+      "gmos": "cha",
+      "fiche": "attributes.charisma"
+    },
+    {
+      "gmos": "bonus_degats",
+      "fiche": "combat.damage_bonus"
+    },
+    {
+      "gmos": "ra_tai",
+      "fiche": "combat.size_rank"
+    },
+    {
+      "gmos": "ra_dex",
+      "fiche": "combat.dexterity_rank"
+    },
+    {
+      "gmos": "vitesse_guerison",
+      "fiche": "health.healing"
+    },
+    {
+      "gmos": "notes_combat",
+      "fiche": "combat.notes"
+    },
+    {
+      "gmos": "points_de_vie",
+      "fiche": "health.current"
+    },
+    {
+      "gmos": "points_de_magie",
+      "fiche": "magic.current"
+    },
+    {
+      "gmos": "bouclier",
+      "fiche": "shield.parry"
+    },
+    {
+      "gmos": "bouclier_pv",
+      "fiche": "shield.hp"
+    },
+    {
+      "gmos": "bouclier_degats",
+      "fiche": "shield.damage"
+    },
+    {
+      "gmos": "degats_spirituels",
+      "fiche": "combat.spirit.damage"
+    },
+    {
+      "gmos": "notes_combat_spirituel",
+      "fiche": "combat.spirit.notes"
+    },
+    {
+      "gmos": "limite_magie_spirituelle",
+      "fiche": "magic.spirit.charisma_limit"
+    },
+    {
+      "gmos": "int_libre",
+      "fiche": "magic.sorcery.free_int"
+    },
+    {
+      "gmos": "notes_magie",
+      "fiche": "magic.notes"
+    },
+    {
+      "gmos": "culte_associe",
+      "fiche": "cults.associated"
+    },
+    {
+      "gmos": "enc_max",
+      "fiche": "equipment.encumbrance.maximum"
+    },
+    {
+      "gmos": "enc_porte",
+      "fiche": "equipment.encumbrance.current"
+    },
+    {
+      "gmos": "pv_tete",
+      "fiche": "locations.head.hp"
+    },
+    {
+      "gmos": "pa_tete",
+      "fiche": "locations.head.armor"
+    },
+    {
+      "gmos": "pv_bras_droit",
+      "fiche": "locations.right_arm.hp"
+    },
+    {
+      "gmos": "pa_bras_droit",
+      "fiche": "locations.right_arm.armor"
+    },
+    {
+      "gmos": "pv_bras_gauche",
+      "fiche": "locations.left_arm.hp"
+    },
+    {
+      "gmos": "pa_bras_gauche",
+      "fiche": "locations.left_arm.armor"
+    },
+    {
+      "gmos": "pv_poitrine",
+      "fiche": "locations.chest.hp"
+    },
+    {
+      "gmos": "pa_poitrine",
+      "fiche": "locations.chest.armor"
+    },
+    {
+      "gmos": "pv_abdomen",
+      "fiche": "locations.abdomen.hp"
+    },
+    {
+      "gmos": "pa_abdomen",
+      "fiche": "locations.abdomen.armor"
+    },
+    {
+      "gmos": "pv_jambe_droite",
+      "fiche": "locations.right_leg.hp"
+    },
+    {
+      "gmos": "pa_jambe_droite",
+      "fiche": "locations.right_leg.armor"
+    },
+    {
+      "gmos": "pv_jambe_gauche",
+      "fiche": "locations.left_leg.hp"
+    },
+    {
+      "gmos": "pa_jambe_gauche",
+      "fiche": "locations.left_leg.armor"
+    },
+    {
+      "gmos": "rune_feu_ciel",
+      "fiche": "runes.fire.level"
+    },
+    {
+      "gmos": "rune_tenebres",
+      "fiche": "runes.darkness.level"
+    },
+    {
+      "gmos": "rune_eau",
+      "fiche": "runes.water.level"
+    },
+    {
+      "gmos": "rune_terre",
+      "fiche": "runes.earth.level"
+    },
+    {
+      "gmos": "rune_air",
+      "fiche": "runes.air.level"
+    },
+    {
+      "gmos": "rune_lune",
+      "fiche": "runes.moon.level"
+    },
+    {
+      "gmos": "rune_homme",
+      "fiche": "runes.man.level"
+    },
+    {
+      "gmos": "rune_bete",
+      "fiche": "runes.beast.level"
+    },
+    {
+      "gmos": "rune_fertilite",
+      "fiche": "runes.fertility.level"
+    },
+    {
+      "gmos": "rune_harmonie",
+      "fiche": "runes.harmony.level"
+    },
+    {
+      "gmos": "rune_verite",
+      "fiche": "runes.truth.level"
+    },
+    {
+      "gmos": "rune_stase",
+      "fiche": "runes.stasis.level"
+    },
+    {
+      "gmos": "rune_mort",
+      "fiche": "runes.death.level"
+    },
+    {
+      "gmos": "rune_desordre",
+      "fiche": "runes.disorder.level"
+    },
+    {
+      "gmos": "rune_illusion",
+      "fiche": "runes.illusion.level"
+    },
+    {
+      "gmos": "rune_mouvement",
+      "fiche": "runes.movement.level"
+    },
+    {
+      "gmos": "passion_honneur",
+      "fiche": "passions.honor.level"
+    },
+    {
+      "gmos": "passion1_nom",
+      "fiche": "passions.0.name"
+    },
+    {
+      "gmos": "passion1_sujet",
+      "fiche": "passions.0.subject"
+    },
+    {
+      "gmos": "passion1",
+      "fiche": "passions.0.level"
+    },
+    {
+      "gmos": "passion2_nom",
+      "fiche": "passions.1.name"
+    },
+    {
+      "gmos": "passion2_sujet",
+      "fiche": "passions.1.subject"
+    },
+    {
+      "gmos": "passion2",
+      "fiche": "passions.1.level"
+    },
+    {
+      "gmos": "passion3_nom",
+      "fiche": "passions.2.name"
+    },
+    {
+      "gmos": "passion3_sujet",
+      "fiche": "passions.2.subject"
+    },
+    {
+      "gmos": "passion3",
+      "fiche": "passions.2.level"
+    },
+    {
+      "gmos": "passion4_nom",
+      "fiche": "passions.3.name"
+    },
+    {
+      "gmos": "passion4_sujet",
+      "fiche": "passions.3.subject"
+    },
+    {
+      "gmos": "passion4",
+      "fiche": "passions.3.level"
+    },
+    {
+      "gmos": "passion5_nom",
+      "fiche": "passions.4.name"
+    },
+    {
+      "gmos": "passion5_sujet",
+      "fiche": "passions.4.subject"
+    },
+    {
+      "gmos": "passion5",
+      "fiche": "passions.4.level"
+    },
+    {
+      "gmos": "passion6_nom",
+      "fiche": "passions.5.name"
+    },
+    {
+      "gmos": "passion6_sujet",
+      "fiche": "passions.5.subject"
+    },
+    {
+      "gmos": "passion6",
+      "fiche": "passions.5.level"
+    },
+    {
+      "gmos": "passion7_nom",
+      "fiche": "passions.6.name"
+    },
+    {
+      "gmos": "passion7_sujet",
+      "fiche": "passions.6.subject"
+    },
+    {
+      "gmos": "passion7",
+      "fiche": "passions.6.level"
+    },
+    {
+      "gmos": "arme1_nom",
+      "fiche": "weapons.melee.0.name"
+    },
+    {
+      "gmos": "arme1",
+      "fiche": "weapons.melee.0.chance"
+    },
+    {
+      "gmos": "arme1_degats",
+      "fiche": "weapons.melee.0.damage"
+    },
+    {
+      "gmos": "arme1_enc",
+      "fiche": "weapons.melee.0.encumbrance"
+    },
+    {
+      "gmos": "arme1_durabilite",
+      "fiche": "weapons.melee.0.durability"
+    },
+    {
+      "gmos": "arme1_ra",
+      "fiche": "weapons.melee.0.strike_rank"
+    },
+    {
+      "gmos": "arme2_nom",
+      "fiche": "weapons.melee.1.name"
+    },
+    {
+      "gmos": "arme2",
+      "fiche": "weapons.melee.1.chance"
+    },
+    {
+      "gmos": "arme2_degats",
+      "fiche": "weapons.melee.1.damage"
+    },
+    {
+      "gmos": "arme2_enc",
+      "fiche": "weapons.melee.1.encumbrance"
+    },
+    {
+      "gmos": "arme2_durabilite",
+      "fiche": "weapons.melee.1.durability"
+    },
+    {
+      "gmos": "arme2_ra",
+      "fiche": "weapons.melee.1.strike_rank"
+    },
+    {
+      "gmos": "arme3_nom",
+      "fiche": "weapons.melee.2.name"
+    },
+    {
+      "gmos": "arme3",
+      "fiche": "weapons.melee.2.chance"
+    },
+    {
+      "gmos": "arme3_degats",
+      "fiche": "weapons.melee.2.damage"
+    },
+    {
+      "gmos": "arme3_enc",
+      "fiche": "weapons.melee.2.encumbrance"
+    },
+    {
+      "gmos": "arme3_durabilite",
+      "fiche": "weapons.melee.2.durability"
+    },
+    {
+      "gmos": "arme3_ra",
+      "fiche": "weapons.melee.2.strike_rank"
+    },
+    {
+      "gmos": "arme4_nom",
+      "fiche": "weapons.melee.3.name"
+    },
+    {
+      "gmos": "arme4",
+      "fiche": "weapons.melee.3.chance"
+    },
+    {
+      "gmos": "arme4_degats",
+      "fiche": "weapons.melee.3.damage"
+    },
+    {
+      "gmos": "arme4_enc",
+      "fiche": "weapons.melee.3.encumbrance"
+    },
+    {
+      "gmos": "arme4_durabilite",
+      "fiche": "weapons.melee.3.durability"
+    },
+    {
+      "gmos": "arme4_ra",
+      "fiche": "weapons.melee.3.strike_rank"
+    },
+    {
+      "gmos": "tir1_nom",
+      "fiche": "weapons.ranged.0.name"
+    },
+    {
+      "gmos": "tir1",
+      "fiche": "weapons.ranged.0.chance"
+    },
+    {
+      "gmos": "tir1_degats",
+      "fiche": "weapons.ranged.0.damage"
+    },
+    {
+      "gmos": "tir1_enc",
+      "fiche": "weapons.ranged.0.encumbrance"
+    },
+    {
+      "gmos": "tir1_durabilite",
+      "fiche": "weapons.ranged.0.durability"
+    },
+    {
+      "gmos": "tir1_portee",
+      "fiche": "weapons.ranged.0.range"
+    },
+    {
+      "gmos": "tir1_cadence",
+      "fiche": "weapons.ranged.0.rate"
+    },
+    {
+      "gmos": "tir2_nom",
+      "fiche": "weapons.ranged.1.name"
+    },
+    {
+      "gmos": "tir2",
+      "fiche": "weapons.ranged.1.chance"
+    },
+    {
+      "gmos": "tir2_degats",
+      "fiche": "weapons.ranged.1.damage"
+    },
+    {
+      "gmos": "tir2_enc",
+      "fiche": "weapons.ranged.1.encumbrance"
+    },
+    {
+      "gmos": "tir2_durabilite",
+      "fiche": "weapons.ranged.1.durability"
+    },
+    {
+      "gmos": "tir2_portee",
+      "fiche": "weapons.ranged.1.range"
+    },
+    {
+      "gmos": "tir2_cadence",
+      "fiche": "weapons.ranged.1.rate"
+    },
+    {
+      "gmos": "tir3_nom",
+      "fiche": "weapons.ranged.2.name"
+    },
+    {
+      "gmos": "tir3",
+      "fiche": "weapons.ranged.2.chance"
+    },
+    {
+      "gmos": "tir3_degats",
+      "fiche": "weapons.ranged.2.damage"
+    },
+    {
+      "gmos": "tir3_enc",
+      "fiche": "weapons.ranged.2.encumbrance"
+    },
+    {
+      "gmos": "tir3_durabilite",
+      "fiche": "weapons.ranged.2.durability"
+    },
+    {
+      "gmos": "tir3_portee",
+      "fiche": "weapons.ranged.2.range"
+    },
+    {
+      "gmos": "tir3_cadence",
+      "fiche": "weapons.ranged.2.rate"
+    },
+    {
+      "gmos": "culte",
+      "fiche": "cults.0.name"
+    },
+    {
+      "gmos": "culte_rang",
+      "fiche": "cults.0.rank"
+    },
+    {
+      "gmos": "pr_max",
+      "fiche": "cults.0.rune_points.maximum"
+    },
+    {
+      "gmos": "points_de_rune",
+      "fiche": "cults.0.rune_points.current"
+    },
+    {
+      "gmos": "culte_2",
+      "fiche": "cults.1.name"
+    },
+    {
+      "gmos": "culte_2_rang",
+      "fiche": "cults.1.rank"
+    },
+    {
+      "gmos": "pr_max_2",
+      "fiche": "cults.1.rune_points.maximum"
+    },
+    {
+      "gmos": "points_de_rune_2",
+      "fiche": "cults.1.rune_points.current"
+    },
+    {
+      "gmos": "mod_agilite",
+      "fiche": "modifiers.agility"
+    },
+    {
+      "gmos": "mod_communication",
+      "fiche": "modifiers.communication"
+    },
+    {
+      "gmos": "mod_connaissances",
+      "fiche": "modifiers.knowledge"
+    },
+    {
+      "gmos": "mod_magie",
+      "fiche": "modifiers.magic"
+    },
+    {
+      "gmos": "mod_manipulation",
+      "fiche": "modifiers.manipulation"
+    },
+    {
+      "gmos": "mod_perception",
+      "fiche": "modifiers.perception"
+    },
+    {
+      "gmos": "mod_discretion",
+      "fiche": "modifiers.stealth"
+    },
+    {
+      "gmos": "mod_armes_melee",
+      "fiche": "modifiers.melee"
+    },
+    {
+      "gmos": "mod_armes_distance",
+      "fiche": "modifiers.ranged"
+    },
+    {
+      "gmos": "mod_boucliers",
+      "fiche": "modifiers.shields"
+    },
+    {
+      "gmos": "mod_armes_naturelles",
+      "fiche": "modifiers.natural"
+    },
+    {
+      "gmos": "richesse_roues",
+      "fiche": "wealth.wheels"
+    },
+    {
+      "gmos": "richesse_lunars",
+      "fiche": "wealth.lunars"
+    },
+    {
+      "gmos": "richesse_clacks",
+      "fiche": "wealth.clacks"
+    },
+    {
+      "gmos": "richesse_bolgs",
+      "fiche": "wealth.bolgs"
+    },
+    {
+      "gmos": "richesse_biens",
+      "fiche": "wealth.property"
+    },
+    {
+      "gmos": "sorts_spirituels",
+      "fiche": [
+        "magic.spirit.0",
+        "magic.spirit.1",
+        "magic.spirit.2",
+        "magic.spirit.3"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "sorts_runiques",
+      "fiche": [
+        "magic.rune.0",
+        "magic.rune.1",
+        "magic.rune.2",
+        "magic.rune.3",
+        "magic.rune.4"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "sorcellerie",
+      "fiche": [
+        "magic.sorcery.0",
+        "magic.sorcery.1",
+        "magic.sorcery.2"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "esprits_lies",
+      "fiche": [
+        "magic.extra.0",
+        "magic.extra.1",
+        "magic.extra.2",
+        "magic.extra.3"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "notes",
+      "fiche": [
+        "notes.0",
+        "notes.1",
+        "notes.2",
+        "notes.3",
+        "notes.4",
+        "notes.5"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "possessions",
+      "fiche": [
+        "equipment.0",
+        "equipment.1",
+        "equipment.2",
+        "equipment.3",
+        "equipment.4",
+        "equipment.5"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "canotage",
+      "fiche": "skills.boating.level"
+    },
+    {
+      "gmos": "conduite_de_char",
+      "fiche": "skills.drive.level"
+    },
+    {
+      "gmos": "escalade",
+      "fiche": "skills.climb.level"
+    },
+    {
+      "gmos": "esquive",
+      "fiche": "skills.dodge.level"
+    },
+    {
+      "gmos": "monte",
+      "fiche": "skills.ride.level"
+    },
+    {
+      "gmos": "monte_nom",
+      "fiche": "skills.ride.specialty"
+    },
+    {
+      "gmos": "nage",
+      "fiche": "skills.swim.level"
+    },
+    {
+      "gmos": "saut",
+      "fiche": "skills.jump.level"
+    },
+    {
+      "gmos": "art",
+      "fiche": "skills.art.level"
+    },
+    {
+      "gmos": "baratin",
+      "fiche": "skills.fast_talk.level"
+    },
+    {
+      "gmos": "chant",
+      "fiche": "skills.sing.level"
+    },
+    {
+      "gmos": "charme",
+      "fiche": "skills.charm.level"
+    },
+    {
+      "gmos": "comedie",
+      "fiche": "skills.act.level"
+    },
+    {
+      "gmos": "danse",
+      "fiche": "skills.dance.level"
+    },
+    {
+      "gmos": "deguisement",
+      "fiche": "skills.disguise.level"
+    },
+    {
+      "gmos": "eloquence",
+      "fiche": "skills.orate.level"
+    },
+    {
+      "gmos": "intimidation",
+      "fiche": "skills.intimidate.level"
+    },
+    {
+      "gmos": "intrigue",
+      "fiche": "skills.intrigue.level"
+    },
+    {
+      "gmos": "marchandage",
+      "fiche": "skills.bargain.level"
+    },
+    {
+      "gmos": "langue_etrangere_1",
+      "fiche": "skills.language.0.level"
+    },
+    {
+      "gmos": "langue_etrangere_1_nom",
+      "fiche": "skills.language.0.specialty"
+    },
+    {
+      "gmos": "langue_etrangere_2",
+      "fiche": "skills.language.1.level"
+    },
+    {
+      "gmos": "langue_etrangere_2_nom",
+      "fiche": "skills.language.1.specialty"
+    },
+    {
+      "gmos": "langue_natale",
+      "fiche": "skills.native_language.level"
+    },
+    {
+      "gmos": "langue_natale_nom",
+      "fiche": "skills.native_language.specialty"
+    },
+    {
+      "gmos": "agriculture",
+      "fiche": "skills.farming.level"
+    },
+    {
+      "gmos": "alchimie",
+      "fiche": "skills.alchemy.level"
+    },
+    {
+      "gmos": "bataille",
+      "fiche": "skills.battle.level"
+    },
+    {
+      "gmos": "bureaucratie",
+      "fiche": "skills.bureaucracy.level"
+    },
+    {
+      "gmos": "connaissance_animaux",
+      "fiche": "skills.animal_lore.level"
+    },
+    {
+      "gmos": "connaissance_cieux",
+      "fiche": "skills.celestial_lore.level"
+    },
+    {
+      "gmos": "connaissance_culte",
+      "fiche": "skills.cult_lore.0.level"
+    },
+    {
+      "gmos": "connaissance_culte_nom",
+      "fiche": "skills.cult_lore.0.specialty"
+    },
+    {
+      "gmos": "connaissance_culte_2",
+      "fiche": "skills.cult_lore.1.level"
+    },
+    {
+      "gmos": "connaissance_culte_2_nom",
+      "fiche": "skills.cult_lore.1.specialty"
+    },
+    {
+      "gmos": "connaissance_mineraux",
+      "fiche": "skills.mineral_lore.level"
+    },
+    {
+      "gmos": "connaissance_plantes",
+      "fiche": "skills.plant_lore.level"
+    },
+    {
+      "gmos": "connaissance_races_ainees",
+      "fiche": "skills.elder_race_lore.level"
+    },
+    {
+      "gmos": "connaissance_region_autre",
+      "fiche": "skills.region_lore.0.level"
+    },
+    {
+      "gmos": "connaissance_region_autre_nom",
+      "fiche": "skills.region_lore.0.specialty"
+    },
+    {
+      "gmos": "connaissance_region_autre_2",
+      "fiche": "skills.region_lore.1.level"
+    },
+    {
+      "gmos": "connaissance_region_autre_2_nom",
+      "fiche": "skills.region_lore.1.specialty"
+    },
+    {
+      "gmos": "connaissance_region",
+      "fiche": "skills.homeland_lore.level"
+    },
+    {
+      "gmos": "coutumes_autres",
+      "fiche": "skills.customs.level"
+    },
+    {
+      "gmos": "coutumes_autres_nom",
+      "fiche": "skills.customs.specialty"
+    },
+    {
+      "gmos": "coutumes",
+      "fiche": "skills.local_customs.level"
+    },
+    {
+      "gmos": "elevage",
+      "fiche": "skills.herding.level"
+    },
+    {
+      "gmos": "evaluation",
+      "fiche": "skills.evaluate.level"
+    },
+    {
+      "gmos": "intendance",
+      "fiche": "skills.manage.level"
+    },
+    {
+      "gmos": "jeu",
+      "fiche": "skills.game.level"
+    },
+    {
+      "gmos": "lecture_ecriture",
+      "fiche": "skills.read_write.0.level"
+    },
+    {
+      "gmos": "lecture_ecriture_2",
+      "fiche": "skills.read_write.1.level"
+    },
+    {
+      "gmos": "lecture_ecriture_2_nom",
+      "fiche": "skills.read_write.1.specialty"
+    },
+    {
+      "gmos": "mort_paisible",
+      "fiche": "skills.peaceful_cut.level"
+    },
+    {
+      "gmos": "navigation",
+      "fiche": "skills.navigation.level"
+    },
+    {
+      "gmos": "premiers_soins",
+      "fiche": "skills.first_aid.level"
+    },
+    {
+      "gmos": "recherche_bibliotheque",
+      "fiche": "skills.library_use.level"
+    },
+    {
+      "gmos": "traitement_maladies",
+      "fiche": "skills.treat_disease.level"
+    },
+    {
+      "gmos": "traitement_poison",
+      "fiche": "skills.treat_poison.level"
+    },
+    {
+      "gmos": "survie",
+      "fiche": "skills.survival.level"
+    },
+    {
+      "gmos": "appreter_le_corps",
+      "fiche": "skills.prepare_body.level"
+    },
+    {
+      "gmos": "comprehension_troupeaux",
+      "fiche": "skills.herd_understanding.level"
+    },
+    {
+      "gmos": "combat_spirituel",
+      "fiche": "skills.spirit_combat.level"
+    },
+    {
+      "gmos": "connaissance_esprits",
+      "fiche": "skills.spirit_lore.level"
+    },
+    {
+      "gmos": "danse_spirituelle",
+      "fiche": "skills.spirit_dance.level"
+    },
+    {
+      "gmos": "detection_assassin",
+      "fiche": "skills.sense_assassin.level"
+    },
+    {
+      "gmos": "detection_chaos",
+      "fiche": "skills.sense_chaos.level"
+    },
+    {
+      "gmos": "meditation",
+      "fiche": "skills.meditate.level"
+    },
+    {
+      "gmos": "veneration",
+      "fiche": "skills.worship.0.level"
+    },
+    {
+      "gmos": "veneration_nom",
+      "fiche": "skills.worship.0.specialty"
+    },
+    {
+      "gmos": "veneration_2",
+      "fiche": "skills.worship.1.level"
+    },
+    {
+      "gmos": "veneration_2_nom",
+      "fiche": "skills.worship.1.specialty"
+    },
+    {
+      "gmos": "voyage_spirituel",
+      "fiche": "skills.spirit_travel.level"
+    },
+    {
+      "gmos": "artisanat_1",
+      "fiche": "skills.craft.0.level"
+    },
+    {
+      "gmos": "artisanat_1_nom",
+      "fiche": "skills.craft.0.specialty"
+    },
+    {
+      "gmos": "artisanat_2",
+      "fiche": "skills.craft.1.level"
+    },
+    {
+      "gmos": "artisanat_2_nom",
+      "fiche": "skills.craft.1.specialty"
+    },
+    {
+      "gmos": "dissimulation",
+      "fiche": "skills.conceal.level"
+    },
+    {
+      "gmos": "escamotage",
+      "fiche": "skills.sleight.level"
+    },
+    {
+      "gmos": "invention",
+      "fiche": "skills.devise.level"
+    },
+    {
+      "gmos": "musique",
+      "fiche": "skills.instrument.level"
+    },
+    {
+      "gmos": "musique_nom",
+      "fiche": "skills.instrument.specialty"
+    },
+    {
+      "gmos": "empathie",
+      "fiche": "skills.insight_species.level"
+    },
+    {
+      "gmos": "empathie_1",
+      "fiche": "skills.insight.0.level"
+    },
+    {
+      "gmos": "empathie_1_nom",
+      "fiche": "skills.insight.0.specialty"
+    },
+    {
+      "gmos": "empathie_2",
+      "fiche": "skills.insight.1.level"
+    },
+    {
+      "gmos": "empathie_2_nom",
+      "fiche": "skills.insight.1.specialty"
+    },
+    {
+      "gmos": "ecoute",
+      "fiche": "skills.listen.level"
+    },
+    {
+      "gmos": "observation",
+      "fiche": "skills.scan.level"
+    },
+    {
+      "gmos": "recherche",
+      "fiche": "skills.search.level"
+    },
+    {
+      "gmos": "pistage",
+      "fiche": "skills.track.level"
+    },
+    {
+      "gmos": "camouflage",
+      "fiche": "skills.hide.level"
+    },
+    {
+      "gmos": "deplacement_silencieux",
+      "fiche": "skills.move_quietly.level"
+    },
+    {
+      "gmos": "autre_competence_1",
+      "fiche": "skills.other.0.level"
+    },
+    {
+      "gmos": "autre_competence_1_nom",
+      "fiche": "skills.other.0.name"
+    },
+    {
+      "gmos": "autre_competence_2",
+      "fiche": "skills.other.1.level"
+    },
+    {
+      "gmos": "autre_competence_2_nom",
+      "fiche": "skills.other.1.name"
+    },
+    {
+      "gmos": "autre_competence_3",
+      "fiche": "skills.other.2.level"
+    },
+    {
+      "gmos": "autre_competence_3_nom",
+      "fiche": "skills.other.2.name"
+    },
+    {
+      "gmos": "dague",
+      "fiche": "skills.melee.dagger.level"
+    },
+    {
+      "gmos": "epee_courte",
+      "fiche": "skills.melee.short_sword.level"
+    },
+    {
+      "gmos": "epee_large",
+      "fiche": "skills.melee.broadsword.level"
+    },
+    {
+      "gmos": "hache_1m",
+      "fiche": "skills.melee.one_hand_axe.level"
+    },
+    {
+      "gmos": "hache_2m",
+      "fiche": "skills.melee.two_hand_axe.level"
+    },
+    {
+      "gmos": "kopis",
+      "fiche": "skills.melee.kopis.level"
+    },
+    {
+      "gmos": "lance_1m",
+      "fiche": "skills.melee.one_hand_spear.level"
+    },
+    {
+      "gmos": "lance_2m",
+      "fiche": "skills.melee.two_hand_spear.level"
+    },
+    {
+      "gmos": "masse_1m",
+      "fiche": "skills.melee.one_hand_mace.level"
+    },
+    {
+      "gmos": "rapiere",
+      "fiche": "skills.melee.rapier.level"
+    },
+    {
+      "gmos": "sarisse",
+      "fiche": "skills.melee.pike.level"
+    },
+    {
+      "gmos": "autre_melee_1",
+      "fiche": "skills.melee.other.0.level"
+    },
+    {
+      "gmos": "autre_melee_1_nom",
+      "fiche": "skills.melee.other.0.name"
+    },
+    {
+      "gmos": "autre_melee_2",
+      "fiche": "skills.melee.other.1.level"
+    },
+    {
+      "gmos": "autre_melee_2_nom",
+      "fiche": "skills.melee.other.1.name"
+    },
+    {
+      "gmos": "autre_melee_3",
+      "fiche": "skills.melee.other.2.level"
+    },
+    {
+      "gmos": "autre_melee_3_nom",
+      "fiche": "skills.melee.other.2.name"
+    },
+    {
+      "gmos": "arc_composite",
+      "fiche": "skills.ranged.composite_bow.level"
+    },
+    {
+      "gmos": "arc_court",
+      "fiche": "skills.ranged.short_bow.level"
+    },
+    {
+      "gmos": "dague_lancer",
+      "fiche": "skills.ranged.throwing_dagger.level"
+    },
+    {
+      "gmos": "fronde",
+      "fiche": "skills.ranged.sling.level"
+    },
+    {
+      "gmos": "hache_lancer",
+      "fiche": "skills.ranged.throwing_axe.level"
+    },
+    {
+      "gmos": "javelot",
+      "fiche": "skills.ranged.javelin.level"
+    },
+    {
+      "gmos": "perche_lasso",
+      "fiche": "skills.ranged.staff_lasso.level"
+    },
+    {
+      "gmos": "autre_distance_1",
+      "fiche": "skills.ranged.other.0.level"
+    },
+    {
+      "gmos": "autre_distance_1_nom",
+      "fiche": "skills.ranged.other.0.name"
+    },
+    {
+      "gmos": "autre_distance_2",
+      "fiche": "skills.ranged.other.1.level"
+    },
+    {
+      "gmos": "autre_distance_2_nom",
+      "fiche": "skills.ranged.other.1.name"
+    },
+    {
+      "gmos": "petit_bouclier",
+      "fiche": "skills.shields.small.level"
+    },
+    {
+      "gmos": "bouclier_moyen",
+      "fiche": "skills.shields.medium.level"
+    },
+    {
+      "gmos": "grand_bouclier",
+      "fiche": "skills.shields.large.level"
+    },
+    {
+      "gmos": "autre_bouclier",
+      "fiche": "skills.shields.other.level"
+    },
+    {
+      "gmos": "autre_bouclier_nom",
+      "fiche": "skills.shields.other.name"
+    },
+    {
+      "gmos": "coup_de_pied",
+      "fiche": "skills.natural.kick.level"
+    },
+    {
+      "gmos": "poing",
+      "fiche": "skills.natural.fist.level"
+    },
+    {
+      "gmos": "agripper",
+      "fiche": "skills.natural.grapple.level"
+    },
+    {
+      "gmos": "arme_naturelle_1",
+      "fiche": "skills.natural.other.0.level"
+    },
+    {
+      "gmos": "arme_naturelle_1_nom",
+      "fiche": "skills.natural.other.0.name"
+    },
+    {
+      "gmos": "arme_naturelle_2",
+      "fiche": "skills.natural.other.1.level"
+    },
+    {
+      "gmos": "arme_naturelle_2_nom",
+      "fiche": "skills.natural.other.1.name"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "runes.fire.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.darkness.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.water.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.earth.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.air.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.moon.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.man.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.beast.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.fertility.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.harmony.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.truth.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.stasis.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.death.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.disorder.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.illusion.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "runes.movement.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "passions.honor.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "passions.0.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "passions.1.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "passions.2.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "passions.3.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "passions.4.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "passions.5.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "passions.6.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "weapons.melee.0.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "weapons.melee.1.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "weapons.melee.2.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "weapons.melee.3.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "weapons.ranged.0.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "weapons.ranged.1.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "weapons.ranged.2.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "combat.spirit.skill",
+      "pourquoi": "Répète la compétence Combat spirituel (skills.spirit_combat.level), que GM-OS lance."
+    },
+    {
+      "fiche": "combat.spirit.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "conditions.dead",
+      "pourquoi": "Les états Mort et Inconscient : la fiche les coche ; GM-OS dit l'état d'après les points de vie."
+    },
+    {
+      "fiche": "conditions.unconscious",
+      "pourquoi": "Les états Mort et Inconscient : la fiche les coche ; GM-OS dit l'état d'après les points de vie."
+    },
+    {
+      "fiche": "skills.boating.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.drive.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.climb.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.dodge.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.ride.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.swim.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.jump.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.art.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.fast_talk.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.sing.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.charm.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.act.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.dance.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.disguise.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.orate.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.intimidate.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.intrigue.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.bargain.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.language.0.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.language.1.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.native_language.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.farming.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.battle.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.customs.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.local_customs.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.herding.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.evaluate.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.manage.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.game.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.peaceful_cut.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.navigation.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.first_aid.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.treat_disease.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.treat_poison.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.survival.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.prepare_body.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.herd_understanding.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.spirit_combat.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.spirit_dance.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.sense_assassin.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.sense_chaos.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.meditate.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.worship.0.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.worship.1.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.spirit_travel.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.craft.0.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.craft.1.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.conceal.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.sleight.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.devise.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.instrument.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.insight_species.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.insight.0.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.insight.1.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.listen.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.scan.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.search.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.track.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.hide.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.move_quietly.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.other.0.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.other.1.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.other.2.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.dagger.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.short_sword.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.broadsword.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.one_hand_axe.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.two_hand_axe.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.kopis.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.one_hand_spear.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.two_hand_spear.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.one_hand_mace.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.rapier.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.pike.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.other.0.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.other.1.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.melee.other.2.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.ranged.composite_bow.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.ranged.short_bow.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.ranged.throwing_dagger.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.ranged.sling.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.ranged.throwing_axe.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.ranged.javelin.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.ranged.staff_lasso.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.ranged.other.0.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.ranged.other.1.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.shields.small.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.shields.medium.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.shields.large.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.shields.other.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.natural.kick.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.natural.fist.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.natural.grapple.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.natural.other.0.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "skills.natural.other.1.experience",
+      "pourquoi": "Une coche d'expérience : elle se coche et se lit sur la fiche ; GM-OS ne tient pas les tests d'expérience."
+    },
+    {
+      "fiche": "family.grandfather.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.grandfather.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.grandmother.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.grandmother.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.father.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.father.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.mother.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.mother.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.0.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.0.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.0.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.1.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.1.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.1.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.2.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.2.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.2.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.3.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.3.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.3.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.4.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.4.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.4.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.5.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.5.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.5.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.6.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.6.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.6.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.7.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.7.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.7.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.8.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.8.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.8.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.9.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.9.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.9.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.10.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.10.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.10.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.11.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.11.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.relatives.11.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.0.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.0.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.0.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.1.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.1.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.1.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.2.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.2.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.2.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.3.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.3.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.3.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.4.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.4.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.4.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.5.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.5.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.5.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.6.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.6.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.6.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.7.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.7.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.7.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.8.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.8.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.8.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.9.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.9.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.9.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.10.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.10.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.10.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.11.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.11.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.siblings.11.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.famous_ancestors",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.leaders",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.spouses.0.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.spouses.0.marriage_type",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.spouses.0.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.spouses.0.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.spouses.1.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.spouses.1.marriage_type",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.spouses.1.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.spouses.1.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.events",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.0.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.0.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.0.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.1.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.1.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.1.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.2.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.2.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.2.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.3.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.3.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.3.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.4.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.4.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.4.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.5.name",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.5.sex",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "family.children.5.dead",
+      "pourquoi": "La famille : elle se tient sur la fiche ; aucune règle de GM-OS ne la lit."
+    },
+    {
+      "fiche": "harvest.last_omen.notes",
+      "pourquoi": "Récoltes et revenus annuels : la vie entre les aventures, tenue sur la fiche."
+    },
+    {
+      "fiche": "harvest.last_omen.modifier",
+      "pourquoi": "Récoltes et revenus annuels : la vie entre les aventures, tenue sur la fiche."
+    },
+    {
+      "fiche": "harvest.raids.notes",
+      "pourquoi": "Récoltes et revenus annuels : la vie entre les aventures, tenue sur la fiche."
+    },
+    {
+      "fiche": "harvest.raids.modifier",
+      "pourquoi": "Récoltes et revenus annuels : la vie entre les aventures, tenue sur la fiche."
+    },
+    {
+      "fiche": "harvest.heroquest.notes",
+      "pourquoi": "Récoltes et revenus annuels : la vie entre les aventures, tenue sur la fiche."
+    },
+    {
+      "fiche": "harvest.heroquest.modifier",
+      "pourquoi": "Récoltes et revenus annuels : la vie entre les aventures, tenue sur la fiche."
+    },
+    {
+      "fiche": "harvest.last_harvest.notes",
+      "pourquoi": "Récoltes et revenus annuels : la vie entre les aventures, tenue sur la fiche."
+    },
+    {
+      "fiche": "harvest.last_harvest.modifier",
+      "pourquoi": "Récoltes et revenus annuels : la vie entre les aventures, tenue sur la fiche."
+    },
+    {
+      "fiche": "harvest.current_omen.notes",
+      "pourquoi": "Récoltes et revenus annuels : la vie entre les aventures, tenue sur la fiche."
+    },
+    {
+      "fiche": "harvest.current_omen.modifier",
+      "pourquoi": "Récoltes et revenus annuels : la vie entre les aventures, tenue sur la fiche."
+    },
+    {
+      "fiche": "income.base",
+      "pourquoi": "Répète le revenu de base de l'identité (identity.base_income), que GM-OS garde."
+    },
+    {
+      "fiche": "income.notes",
+      "pourquoi": "Récoltes et revenus annuels : la vie entre les aventures, tenue sur la fiche."
+    },
+    {
+      "fiche": "property.description.0",
+      "pourquoi": "Les propriétés : elles se décrivent sur la fiche, entre les aventures."
+    },
+    {
+      "fiche": "property.description.1",
+      "pourquoi": "Les propriétés : elles se décrivent sur la fiche, entre les aventures."
+    },
+    {
+      "fiche": "property.description.2",
+      "pourquoi": "Les propriétés : elles se décrivent sur la fiche, entre les aventures."
+    },
+    {
+      "fiche": "property.description.3",
+      "pourquoi": "Les propriétés : elles se décrivent sur la fiche, entre les aventures."
+    },
+    {
+      "fiche": "property.description.4",
+      "pourquoi": "Les propriétés : elles se décrivent sur la fiche, entre les aventures."
+    },
+    {
+      "fiche": "property.description.5",
+      "pourquoi": "Les propriétés : elles se décrivent sur la fiche, entre les aventures."
+    },
+    {
+      "fiche": "property.acres",
+      "pourquoi": "Les propriétés : elles se décrivent sur la fiche, entre les aventures."
+    },
+    {
+      "fiche": "property.tenants.0",
+      "pourquoi": "Les propriétés : elles se décrivent sur la fiche, entre les aventures."
+    },
+    {
+      "fiche": "property.tenants.1",
+      "pourquoi": "Les propriétés : elles se décrivent sur la fiche, entre les aventures."
+    },
+    {
+      "fiche": "companion.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.type",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attributes.strength",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attributes.constitution",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attributes.size",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attributes.dexterity",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attributes.intelligence",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attributes.power",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attributes.charisma",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.movement",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.health.maximum",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.magic.current",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.damage_bonus",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.dexterity_rank",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.size_rank",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.passions",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.runes",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.rune_points",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.magic.0",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.magic.1",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.note",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.ransom",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.0.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.0.chance",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.0.damage",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.0.range",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.0.strike_rank",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.0.points",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.1.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.1.chance",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.1.damage",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.1.range",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.1.strike_rank",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.1.points",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.2.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.2.chance",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.2.damage",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.2.range",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.2.strike_rank",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.attacks.2.points",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.skills.0",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.skills.1",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.skills.2",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.0.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.0.range",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.0.armor",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.0.hp",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.1.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.1.range",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.1.armor",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.1.hp",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.2.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.2.range",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.2.armor",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.2.hp",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.3.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.3.range",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.3.armor",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.3.hp",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.4.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.4.range",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.4.armor",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.4.hp",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.5.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.5.range",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.5.armor",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.5.hp",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.6.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.6.range",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.6.armor",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.6.hp",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.7.name",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.7.range",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.7.armor",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.locations.7.hp",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.health.current",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "companion.dead",
+      "pourquoi": "Le compagnon (monture, allié) : une seconde feuille sur la fiche ; GM-OS le suit comme un PNJ s'il combat."
+    },
+    {
+      "fiche": "history.origin",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.passions.love_family",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.passions.loyalty_clan",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.passions.loyalty_tribe",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.passions.hate",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.passions.other",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.lineage.favored_grandparent.name",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.lineage.favored_grandparent.occupation",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.lineage.favored_parent.name",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.lineage.favored_parent.occupation",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.lineage.other_grandparent.name",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.lineage.other_grandparent.occupation",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.lineage.other_parent.name",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.lineage.other_parent.occupation",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1582.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1582.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1582.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1597.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1597.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1597.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1602.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1602.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1602.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1603_1604.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1603_1604.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1603_1604.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1605.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1605.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.grandparent.1605.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1608.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1608.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1608.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1610.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1610.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1610.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1613.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1613.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1613.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1615.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1615.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1615.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1616.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1616.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1616.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1617.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1617.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1617.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1618.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1618.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1618.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1619.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1619.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1619.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1620.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1620.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1620.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1621.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1621.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.parent.1621.killed",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.adventurer.1622.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.adventurer.1622.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.adventurer.1623.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.adventurer.1623.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.adventurer.1624.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.adventurer.1624.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.adventurer.1625.events",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.adventurer.1625.results",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.treasures.0",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.ancestors.0",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.treasures.1",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    },
+    {
+      "fiche": "history.ancestors.1",
+      "pourquoi": "L'ascendance et ses événements : le passé familial vit sur la fiche."
+    }
+  ]
+}

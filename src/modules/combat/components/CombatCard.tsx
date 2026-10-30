@@ -18,6 +18,7 @@ import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
 import ActionsApprouvees from './ActionsApprouvees';
 import HorsJeuDuCombattant from './HorsJeuDuCombattant';
 import ProtectionDuCombattant from './ProtectionDuCombattant';
+import CoupsLocalisesDuCombattant from './CoupsLocalisesDuCombattant';
 import SanteAlien from '../../session/components/fields/SanteAlien';
 import ActionsAlien from './ActionsAlien';
 import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
@@ -573,6 +574,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             <HorsJeuDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
             {/* Blade Runner : la protection se lance à chaque coup subi. */}
             <ProtectionDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
+            {/* RuneQuest : le coup reçu passe par l'armure et la zone avant le total. */}
+            <CoupsLocalisesDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
             {activeDriver?.combat.alien?.actions&&<div className="mx-3 my-2"><ActionsAlien id={combatant.id}/></div>}
             {activeDriver?.combat.alien && <div className="mx-3 my-2"><SanteAlien regle={activeDriver.combat.alien}
                 valeurs={{ ...ficheLue.valeurs, [activeDriver.combat.alien.sante]: ficheLue.valeurs[activeDriver.combat.alien.sante] ?? combatant.hp ?? 0,

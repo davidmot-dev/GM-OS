@@ -629,6 +629,18 @@ export interface GameDriver {
          */
         dommages?: { mecanique: 'torg'; resistance: string; choc: string };
         /**
+         * **Les coups localisés** — RuneQuest, 2026-10-30
+         * (`combat/logic/coupsDeRuneQuest.ts`). Un coup qui nomme une zone retire
+         * l'armure de la zone, plafonne au double pour un membre, écrit les dégâts
+         * de la zone dans `degats` et ne retire au total que ce qu'elle retient. Les
+         * clés sont celles de la table du livre (`jambe-droite` … `tete`).
+         */
+        coupsLocalises?: {
+            mecanique: 'runequest';
+            zones: Partial<Record<'jambe-droite' | 'jambe-gauche' | 'abdomen' | 'poitrine' | 'bras-droit' | 'bras-gauche' | 'tete',
+                { pv: string; armure?: string; degats: string }>>;
+        };
+        /**
          * **Les limites de Blessures des adversaires** — Torg, 2026-10-14. Un sbire
          * (« — ») tombe à la première Blessure, un aguerri à la deuxième, un
          * adversaire chargé en possibilités comme un héros. Le panneau de santé
