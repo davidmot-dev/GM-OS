@@ -1,0 +1,58 @@
+/* RuneQuest : Aventures dans Glorantha — contrat GM-OS v1.7.
+   Références : pages fournies 5, 6, 13, 15, 21 et 26.
+   Polices libres d'approximation : Grenze et Source Serif 4. */
+@import url('https://fonts.googleapis.com/css2?family=Grenze:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap');
+
+:root[data-theme="runequest"] {
+  color-scheme: light;
+
+  /* Papier calcaire, encre charbon, cinabre des titres et des runes. */
+  --rpg-bg: #e4dfd4;
+  --rpg-surface: #f3eee3;
+  --rpg-surface-2: #e9dfca;
+  --rpg-text: #272923;
+  --rpg-muted: #615c50;
+  --rpg-accent: #8d2029;
+  --rpg-accent-contrast: #fff8e9;
+  --rpg-border: #877750;
+  --rpg-border-soft: rgba(96, 79, 48, 0.24);
+
+  /* États distincts du cinabre de sélection : jade, mûre, ocre, lapis. */
+  --rpg-success: #276347;
+  --rpg-danger: #a02d65;
+  --rpg-warning: #7c6310;
+  --rpg-info: #244d96;
+
+  /* Titres gravés et texte de livre ; chiffres stables pour le d100. */
+  --rpg-font-display: "Grenze", Georgia, serif;
+  --rpg-font-body: "Source Serif 4", Georgia, serif;
+  --rpg-font-mono: "Courier New", Consolas, monospace;
+  --rpg-title-tracking: 0.055em;
+  --rpg-kicker-tracking: 0.14em;
+  --rpg-title-transform: uppercase;
+
+  /* Cadres droits, léger relief de pierre et de papier, lumière mate. */
+  --rpg-radius-sm: 0px;
+  --rpg-radius-md: 1px;
+  --rpg-radius-lg: 1px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 2px 3px rgba(44, 41, 29, 0.12);
+  --rpg-elevation-2: 0 8px 20px rgba(44, 41, 29, 0.19);
+  --rpg-elevation-3: 0 18px 48px rgba(34, 36, 27, 0.28);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(243, 238, 227, 0.95);
+  --rpg-glass-border: rgba(99, 83, 49, 0.50);
+  --rpg-glass-blur: 0px;
+
+  /* Les frises vert-de-gris du livre deviennent le cadre de l'application. */
+  --rpg-frame-bg: #243f37;
+  --rpg-frame-text: #f2ebd9;
+  --rpg-frame-accent: #dfc18a;
+
+  /* Grain sans bruit multicolore, mesurable par le validateur. */
+  --rpg-texture-bg: url('matieres/papier.svg');
+  --rpg-texture-panel: url('matieres/papier.svg');
+  --rpg-texture-opacity: 0.045;
+}

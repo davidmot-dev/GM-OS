@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" fill="currentColor">
+  <path d="m3 15 16-2 8 2-17 1Zm70 9 11-2 17 1-9 2Zm53-16 18 1-4 1-16-1ZM27 66l23-2 9 2-27 1Zm74-13 16-1 9 2-18 1Zm39 34 25-2 7 2-22 1ZM6 117l20-2 14 1-24 2Zm57-16 15-2 7 1-14 2Zm26 42 24-2 11 2-30 1Zm49-13 15-1 13 2-23 1ZM26 169l16-2 20 1-28 2Zm113 1 18-2 9 1-19 2Z"/>
+  <g fill="none" stroke="currentColor" stroke-width="0.6">
+    <path d="m42 6-1 20m87 11 2 24M13 43l2 17m70 7-2 16m-39 8 2 23m76-20-2 24m-58 19 2 16m102-3-1 18"/>
+  </g>
+  <circle cx="34" cy="39" r="0.8"/><circle cx="94" cy="34" r="0.6"/>
+  <circle cx="160" cy="57" r="0.8"/><circle cx="63" cy="81" r="0.7"/>
+  <circle cx="30" cy="139" r="0.7"/><circle cx="104" cy="114" r="0.9"/>
+  <circle cx="77" cy="170" r="0.7"/><circle cx="172" cy="120" r="0.8"/>
+</svg>
