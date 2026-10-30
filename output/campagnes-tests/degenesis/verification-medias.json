@@ -1,0 +1,61 @@
+{
+  "reussi": true,
+  "horsLigne": true,
+  "imagesDecodees": 37,
+  "wavDecodes": 3,
+  "dureeWavSecondes": 4,
+  "archives": [
+    {
+      "fichier": "01-La-Station-des-Cendres.gmos",
+      "sha256": "ae34c1ad3d33fd44f17a55fe42e6d4ad4aecc23b8fe7437b24f66f443b53eb73"
+    },
+    {
+      "fichier": "02-Sante-et-Limites.gmos",
+      "sha256": "ac666ed17df27d652f44c76d550f79f53fe9dc8ca183faa57a40516cd068f225"
+    },
+    {
+      "fichier": "03-Reserves-et-Declencheurs.gmos",
+      "sha256": "a0e31dd89b30a8289ca612144d6678024bb722db172a9e54ed6ed8b4eaa253fe"
+    }
+  ],
+  "capturesExaminees": true,
+  "captures": [
+    {
+      "fichier": "captures/rendu-carte-filtres.jpg",
+      "sha256": "1a096258a23a94b0f727acde9795eab99302228786608455a2a18e18bfea21f0"
+    },
+    {
+      "fichier": "captures/rendu-carte-parvis.jpg",
+      "sha256": "9fbc3fa1e9659ca30b8f9e662a0a9cc6969dce810eb910056b8dab2e51fda343"
+    },
+    {
+      "fichier": "captures/rendu-carte-passerelle.jpg",
+      "sha256": "e9c53f0c33a788be85ce4f12c94143e6c9c3a2f698ac9bf73768343aad55c467"
+    },
+    {
+      "fichier": "captures/rendu-compagnie.jpg",
+      "sha256": "78712a7d0d49ab2912278fbd0d90c0034eeeeb03ff9ec3d5e62a8aa5922c7bf1"
+    },
+    {
+      "fichier": "captures/rendu-indice-croquis.jpg",
+      "sha256": "5905af7414e698820e0965f0a0c2d93f6be3c9e255a865ac8fb27ed02ac88344"
+    },
+    {
+      "fichier": "captures/rendu-indice-recu.jpg",
+      "sha256": "98991ec924b8c005ef6dce853ead3bf23be736a4577a67340416949893eb3d9e"
+    },
+    {
+      "fichier": "captures/rendu-pj-mira.jpg",
+      "sha256": "94bcf8f0ac4114c65350b64174865617d65e448835956794036029369324a4ea"
+    },
+    {
+      "fichier": "captures/rendu-pj-narek.jpg",
+      "sha256": "61d1567a6edce9db523ede5cd1ce99bf18a62385b1d9c723c60028808d6eb4c9"
+    },
+    {
+      "fichier": "captures/rendu-pj-sova.jpg",
+      "sha256": "f1782ac792b3132256da1652f316fbc4210551d845a035bda014b1ca9abf7b85"
+    }
+  ],
+  "revue": "Neuf rendus examinés : trois plans, compagnie, deux indices, trois cartouches PJ. Texte lisible, aucun recadrage ni chevauchement. Sons décodés, écoute humaine non exécutée. Après correction des catégories Atlas, nouveaux rapports sur les archives finales ; les neuf rendus sont identiques octet pour octet aux images examinées."
+}

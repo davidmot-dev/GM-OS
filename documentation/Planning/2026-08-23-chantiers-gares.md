@@ -458,6 +458,11 @@ secrets du plateau filtrés séparément, désir de Nalia révélé seulement ap
 **Nephilim confirme le 26/10** (§ 183) : douze chemins de gmSecrets dans les trames des
 trois Hub. Import, fiches, jets, Sapience et Traque aboutissent ; assertion finale GM-05 en échec.
 
+**Degenesis confirme le 30/10** (§ 189) : douze chemins `payload.session.sessions[*].gmSecrets`
+reçus par les trois Hub. Imports, remplacement, fiches, Égo et persistance aboutissent ;
+`e2e/campagneDeRecetteDegenesis.spec.ts` conserve son échec final. Preuves dans
+`output/campagnes-tests/degenesis/verification-electron.json` ; données fictives uniquement.
+
 **Ouverte le 2026-09-12, à la demande de David** : *« lors de tes tests E2E, où consignes-tu les
 différents bugs que tu aurais découverts ? »* — la réponse honnête était **nulle part de
 systématique**. Un défaut corrigé obtient sa section numérotée ; un défaut *constaté et différé*
@@ -13051,10 +13056,35 @@ David : *« Degenesis le livre de base est ici […] KATHARSYS_OCR.pdf »* (`/fi
 - **Vérifié** : règle (17, exemples du livre : Falberg, Garganti, Usudi, Kum, Vedran), porte des dégâts (7), panneau (5), initiative (1), contrôle (1) ; 3 982 essais des dés, du combat, de la session, de la Forge, des fiches, des magasins, du manuel et des correspondances (l'attente des gabarits intégrés passée à 21) ; `corpusDerivable` (130) ; `npx tsc -b`, eslint ; `npm run build` puis e2e des captures sur le seul pilote Degenesis — il a trouvé la ligne « Réserve 5 = 4 + 3 » et des « fléaux » sur les 1 (corrigés) ; cinq captures relues.
 - **Reste** : l'essai de David — réimporter `corriges/Degenesis_driver_gmos_finir.gmos-driver` avec **Remplacer** (les compétences d'un personnage créé sur la fiche forgée sont à ressaisir) ; un jet avec Égo et modificateurs, un coup qui passe en Traumatismes dans Combat-OS, le Jet système d'initiative ; la Fiche du jeu, saisir puis Sauvegarder ; activer le thème `degenesis` et la bannière.
 
+### 189 · Campagnes de recette Degenesis — 30/10/2026
+
+David : « utilise le plugin GM-OS Campagnes de test et Crée les campagnes de test de Degenesis
+avec ce pilote et ces règles, pour les joueurs de mon export fourni. »
+
+- **Livré par Codex** : [bilan](2026-10-30-campagne-recette-degenesis.md),
+  ZIP et trois archives dans `output/campagnes-tests/degenesis/`. **La Station des Cendres** :
+  aventure originale, trois PJ pour Thomas/Marie/Lucas, quatre actes et séances prévues,
+  seize scènes, huit lieux, douze PNJ/indices, trois rencontres évitables. Deux laboratoires
+  indépendants santé/limites et réserves/déclencheurs ; 21 nouveaux PJ et 66 cas humains vierges.
+- Pilote corrigé 2.0.0, 131 champs, fiche HTML moteur 21 reliée 129/129, corpus relu 16/16.
+  Aucun module spécifique compatible inventé. Médias embarqués : 36 SVG, bannière JPEG et trois
+  WAV synthétiques ; identité visuelle reprise. Sources `outils/campagnes-de-recette/degenesis*`,
+  `emballer-degenesis.mjs`, `e2e/campagneDeRecetteDegenesis.spec.ts`.
+- **Vérifié** : 67 tests passent, outil portable Nexus, médias décodés et neuf rendus examinés.
+  Build et lint ciblé sans erreur ; trois imports natifs, remplacement de 02 préservant 01,
+  anciens PJ/avatars sentinelles conservés ; trois Hub 360/768/1180, trois jets et débits d’Égo,
+  fiche HTML éditée, rechargement et Égo 8/9/10 conservés. Quatre captures applicatives examinées.
+- **GM-05 confirmé en échec** : douze chemins de secrets de séance transmis ; marqueurs fictifs,
+  assertion finale E2E conservée, aucun correctif applicatif. Voir § 1 bis et rapport du lot.
+- **Reste** : 66 cas **NON TESTÉS** par David, droits GM-06, partie complète, matériel et
+  correction séparée de GM-05. Essais exclusivement jetables, autorisés par David ; relance
+  hors bac à sable acceptée par revue automatique, aucun profil/sauvegarde personnel utilisé.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 125 | **Campagnes de recette — Degenesis** | § 189 ; aventure, deux laboratoires, 21 PJ, 66 cas humains ; 67 tests, imports et trois Hub éprouvés — 30/10 | Importer 01-La-Station-des-Cendres.gmos ; suivre le cahier | GM-05 confirmé ; essais humains et matériel à faire |
 | 124 | **Degenesis fini — pilote 2.0.0** | § 188 ; corpus relu 16/16, réserve de d6 à 4+ avec déclencheurs, échec critique, Égo et Traumatismes ; deux pistes de santé et attaque mentale ; initiative en succès ; fiche HTML au moteur 21 reliée (129/129), thème contrôlé — 30/10 | Réimporter `corriges/Degenesis_driver_gmos_finir` avec Remplacer ; un jet avec Égo, un coup en Traumatismes, l'initiative, la Fiche du jeu | L'essai de David |
 | 123 | **RuneQuest fini — pilote 2.1.0** | § 187 ; corpus relu 17/17 avec l'errata, d100 en cinq niveaux, caractéristique, résistance, augmentation, opposition, localisation ; coups localisés dans Combat-OS ; fiche HTML au moteur 20 reliée, thème contrôlé — 30/10 | Réimporter `corriges/RQ_driver_gmos_finir` avec Remplacer ; un jet d'épée, une résistance POU contre POU, un coup localisé, la Fiche du jeu | L'essai de David |
 | 122 | **Gardes et skills de Claude Code** | § 186 ; garde git et garde « GM-OS tourne-t-il ? » branchées et éprouvées, quatre skills de procédure — 28/10 | À la prochaine écriture dans `src/`, vérifier que la fenêtre de la garde s'ouvre | Rien |

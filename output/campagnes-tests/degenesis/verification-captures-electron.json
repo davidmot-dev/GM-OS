@@ -1,0 +1,24 @@
+{
+  "capturesExaminees": true,
+  "revue": "Archives finales après correction Atlas : campagne et trois fiches remplies examinées à 360/768/1180 px. Les petits champs demandent le zoom disponible sur téléphone ; page sans débordement. Pistes et valeurs sélectionnées cohérentes.",
+  "rapportElectronSHA256": "c16bc34822089b431cfac3301f020d46c37d66959a3d76bb53fa7660576a40a3",
+  "sourceE2ESHA256": "d27bf9d41298e081a6d09fac0955cd6bf0925c5efab94beaeb81c046a52625a8",
+  "captures": [
+    {
+      "fichier": "captures/01-campagne-importee.jpg",
+      "sha256": "7ede8db5b8cb4103e299b25d8649066deb9cfe5d7df8d50e1a11c0ec139876a9"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-1-360.jpg",
+      "sha256": "5b0fa59ae9615998d7b62dcbe24ab5942ce4349e57386fbadd88eff86c58d07c"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-2-768.jpg",
+      "sha256": "b74a98082aa1efe446e23369bf345e1d899c98bc843690d9262df7a33e4c4f6c"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-3-1180.jpg",
+      "sha256": "e420ee2938be83b4000c5b49548535c311bd256a376b54f13e7d75e1ab3507ec"
+    }
+  ]
+}

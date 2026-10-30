@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE Degenesis — Complications non bloquantes",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Retard de trente minutes",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Un outil doit être nettoyé",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Une copie exige un témoin",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Le détour demande une corde",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "Une promesse doit être précisée",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Le stock doit être recompté",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    }
+  ]
+}

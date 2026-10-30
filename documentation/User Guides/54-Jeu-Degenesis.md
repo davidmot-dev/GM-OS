@@ -117,3 +117,13 @@ Paramètres. Accepté par le validateur sans erreur ni avertissement. La banniè
   (p. 20).
 - **Les adversaires sans fiche** dans Combat-OS perdent leurs PV d'un bloc : les deux pistes ne se
   tiennent que sur une fiche.
+
+## Les campagnes de test
+
+[La Station des Cendres et ses deux laboratoires](../Planning/2026-10-30-campagne-recette-degenesis.md)
+sont livrés pour les trois joueurs de l’export : 21 nouveaux PJ, 66 cas humains **NON TESTÉS**.
+Importer d’abord `01-La-Station-des-Cendres.gmos`, puis les laboratoires santé et réserves.
+Les imports, le remplacement isolé, trois Hub et la persistance des fiches ont été éprouvés
+en instance jetable ; **GM-05 reste en échec : des secrets de séance sont transmis aux Hub**.
+Lire les anomalies du lot avant la table. Le matériel d’exercice a des valeurs choisies,
+sans création novice ni profil d’arme officiel revendiqués.

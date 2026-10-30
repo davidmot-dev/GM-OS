@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "genereLe": "2026-10-30T12:00:00.000Z",
+  "rattachement": {
+    "source": "Export Dirvers/RDD_campagne_gmos_1792944586235.gmos",
+    "sha256": "c99b8f87ecad7dee7104fcba1c6bd8a8639bd81c7b1c70ad2d4272cbd3c12b04",
+    "joueurs": [
+      {
+        "id": "p-1",
+        "realName": "Thomas D."
+      },
+      {
+        "id": "p-2",
+        "realName": "Marie C."
+      },
+      {
+        "id": "p-3",
+        "realName": "Lucas R."
+      }
+    ]
+  },
+  "pilote": {
+    "id": "custom-1793142284065",
+    "version": "2.0.0",
+    "source": "Export Dirvers/corriges/Degenesis_driver_gmos_finir.gmos-driver",
+    "sha256": "da91cbf8512d38d7fecaf4ee7bce0d42b0e87da1d0e4ba151ed12a0100700c2d"
+  },
+  "gabarit": {
+    "id": "tpl-1793142284072",
+    "champs": 131,
+    "html": "degenesis-fr"
+  },
+  "archives": [
+    {
+      "fichier": "01-La-Station-des-Cendres.gmos",
+      "campagne": "recette-dg-campagne-station",
+      "personnages": 3,
+      "medias": 40,
+      "sha256": "ae34c1ad3d33fd44f17a55fe42e6d4ad4aecc23b8fe7437b24f66f443b53eb73"
+    },
+    {
+      "fichier": "02-Sante-et-Limites.gmos",
+      "campagne": "recette-dg-sante-campagne-station",
+      "personnages": 9,
+      "medias": 40,
+      "sha256": "ac666ed17df27d652f44c76d550f79f53fe9dc8ca183faa57a40516cd068f225"
+    },
+    {
+      "fichier": "03-Reserves-et-Declencheurs.gmos",
+      "campagne": "recette-dg-reserve-campagne-station",
+      "personnages": 9,
+      "medias": 40,
+      "sha256": "a0e31dd89b30a8289ca612144d6678024bb722db172a9e54ed6ed8b4eaa253fe"
+    }
+  ],
+  "modules": {
+    "specifiques": 0,
+    "outils": [
+      "Combat-OS",
+      "Atlas",
+      "Trame",
+      "Nexus Wiki",
+      "Table-OS",
+      "Storyboard",
+      "Sound-OS",
+      "Music-OS",
+      "Light-OS"
+    ]
+  },
+  "casDeRecette": 66,
+  "sourcesRegles": [
+    {
+      "fichier": "docs/systems/degenesis/rules/composition-de-la-fiche-de-personnage.md",
+      "sha256": "3b9a4f4aee0b5095c15afd703356d5b0483d0dfd2f783ddcdf877945a64eaa31"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/degats-et-types-de-degats.md",
+      "sha256": "0499258a8e1e82687a3739821b4a3adcd39519fbf3c945b472ffb3d545e7c781"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/degres-de-reussite-et-critiques.md",
+      "sha256": "45d87c0000097d99f7ae10665533c2efea9a45a1537f5a8066d037fde92adde4"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/distances-et-portees.md",
+      "sha256": "e7ea0152b04cb0ee213a0f1e72bb78f87ae8ef994ac112cac97c0c6537343b7e"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/environnement-et-dangers.md",
+      "sha256": "209491ade1ec1284a05b2ac972af18b52c66f8303f12a58a8a2a9b23e269e209"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/etats-et-conditions.md",
+      "sha256": "2f406b04a9520a63eeac0af53e206b4d840bc4939d55ee57bc0c616e5b4eab4e"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/initiative-et-deroulement-du-tour.md",
+      "sha256": "3f97e4a4b9920cdba5008b7447e7ec33a2f85d76144e8749995c79802a011e20"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/inventaire-des-mecaniques.md",
+      "sha256": "3c4c0cfbda1328a9178949a9c49c5acbdf832f7b14f0461697b16013fc6ef6ef"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/jauges-et-ressources-individuelles.md",
+      "sha256": "552006fb8657a1527fbdac93105d38c085fcdd0dc1c68eab3932568809a0398b"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/jets-opposes-aide-et-cooperation.md",
+      "sha256": "67d3cf6180e1e9f93404d89a12078283704894b29457bebd294076320cc7ec8d"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/la-brulure-et-la-stimulation-des-chakras.md",
+      "sha256": "dc707bf816571a65e98e62c4ad7a59da4600eeb9d57686849a3cb34c182d3e81"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/les-potentiels.md",
+      "sha256": "7cd33b949c213aa7ad6afff23af0b1e8b52371e5d5a78d32ff2105ca6d64d861"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/poursuites.md",
+      "sha256": "70c328c6a6896e64795b4ef62b8541bcc1963b18fec2cd0794563adacc80e7ba"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/resolution-des-jets.md",
+      "sha256": "33279d597ffb17f846ee7a6114000ba5984417f098458f31349d7595b0299fc7"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/sante-et-blessures.md",
+      "sha256": "f5099c9640d73ea71df7667744acd35af5234010d2e8631868cd981c763fb22c"
+    },
+    {
+      "fichier": "docs/systems/degenesis/rules/ton-registre-et-ambiance.md",
+      "sha256": "3f78e8fdfb31c64a0dc02d9eae17a4e89f611a7ee623910503f4d4459a8d4649"
+    }
+  ]
+}

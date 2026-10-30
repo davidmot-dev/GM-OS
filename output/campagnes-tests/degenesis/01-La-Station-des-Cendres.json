@@ -1,0 +1,5478 @@
+{
+  "campaign": {
+    "id": "recette-dg-campagne-station",
+    "name": "RECETTE DEGENESIS — La Station des Cendres",
+    "system": "custom-1793142284065",
+    "activeLocationIds": [
+      "recette-dg-lieu-parvis"
+    ],
+    "wallpaperUrl": "recette-dg-media-banniere.jpg",
+    "themeDuJeu": true,
+    "identiteVisuelle": {
+      "style": "gritty painterly illustration, rough ink contours, angular silhouettes, dry-brush strokes, dense charcoal shadows, chalky highlights, muted ash gray and umber palette, sparse moss and rust accents, tactile weathered surfaces, coarse paper grain, restrained saturation, diffuse natural light, deep atmospheric perspective, organic irregularities, somber visceral mood, deliberate pockets of negative space",
+      "aEviter": "photorealism, glossy 3D, anime, clean vector art, neon, candy colors, polished surfaces, readable text",
+      "mode": "remplace"
+    },
+    "langueDeForge": "fr",
+    "description": "Aventure originale, relais fictif en Borca. Profils avancés aux valeurs choisies ; matériel d’exercice synthétique.",
+    "synopsis": "Un relais ferme ses portes après des malaises. Réparer les filtres, retrouver une caisse et publier des preuves sans exposer les malades.",
+    "gmNotes": "SECRET_MJ_DG_RECETTE : vanne inversée par accident ; caisse réservée à un troc ; horaires falsifiés pour couvrir la fermeture. Trois causes indépendantes. Les marqueurs servent uniquement à éprouver les droits."
+  },
+  "players": [
+    {
+      "id": "p-1",
+      "realName": "Thomas D.",
+      "avatarUrl": "",
+      "isOnline": false,
+      "characters": [
+        {
+          "id": "recette-dg-pj-narek",
+          "name": "Narek Voss",
+          "classRace": "Récupérateur et mécanicien",
+          "campaignId": "recette-dg-campagne-station",
+          "templateId": "tpl-1793142284072",
+          "systemId": "custom-1793142284065",
+          "portraitUrl": "recette-dg-media-pj-narek.svg",
+          "tokenUrl": "recette-dg-media-pj-narek.svg",
+          "hp": 18,
+          "maxHp": 18,
+          "healthSystem": {
+            "badges": [],
+            "type": "hp",
+            "data": {
+              "current": 18,
+              "max": 18
+            },
+            "state": "healthy"
+          },
+          "sheetData": {
+            "nom": "Narek Voss",
+            "genre": "",
+            "age": "29",
+            "taille": "1,75 m",
+            "poids": "70 kg",
+            "culture": "Borca — rattachement de fiction",
+            "concept": "Le Protecteur — interprétation libre de recette",
+            "culte": "Spitaliers",
+            "rang": "Profil de recette, rang non validé",
+            "physique": 3,
+            "agilite": 3,
+            "charisme": 3,
+            "intellect": 3,
+            "psyche": 3,
+            "instinct": 3,
+            "athletisme": 2,
+            "corps_a_corps": 2,
+            "force": 0,
+            "lutte": 0,
+            "resistance": 3,
+            "vigueur": 2,
+            "armes_a_projectiles": 0,
+            "artisanat": 0,
+            "dexterite": 0,
+            "furtivite": 0,
+            "mobilite": 2,
+            "navigation": 0,
+            "art": 0,
+            "commandement": 0,
+            "consideration": 0,
+            "expression": 0,
+            "negociation": 2,
+            "seduction": 0,
+            "concentration": 3,
+            "connaissance_des_artefacts": 0,
+            "legendes": 0,
+            "medecine": 3,
+            "science": 0,
+            "technologie": 4,
+            "domination": 0,
+            "foi": 0,
+            "reactivite": 3,
+            "ruse": 0,
+            "tromperie": 0,
+            "volonte": 3,
+            "dressage": 0,
+            "empathie": 0,
+            "orientation": 0,
+            "perception": 2,
+            "pulsions": 0,
+            "survie": 0,
+            "alliés": 1,
+            "autorite": 0,
+            "reseau": 1,
+            "renommee": 0,
+            "ressources": 1,
+            "secrets": 1,
+            "potentiel1_nom": "",
+            "potentiel1": 0,
+            "potentiel2_nom": "",
+            "potentiel2": 0,
+            "potentiel3_nom": "",
+            "potentiel3": 0,
+            "potentiel4_nom": "",
+            "potentiel4": 0,
+            "potentiel5_nom": "",
+            "potentiel5": 0,
+            "potentiel6_nom": "",
+            "potentiel6": 0,
+            "ego_jauge": 12,
+            "ego_max": 12,
+            "sporulations_jauge": 0,
+            "blessures_superficielles": 0,
+            "traumatismes": 0,
+            "sante": 18,
+            "arme1": "Arme d’exercice non létale — profil RECETTE",
+            "arme1_maniabilite": "0",
+            "arme1_portee": "Contact : décision du MJ",
+            "arme1_degats": "3 — valeur synthétique de recette",
+            "arme1_chargeur": "Sans objet",
+            "arme1_encombrement": 1,
+            "arme1_tech": "RECETTE",
+            "arme1_emplacements": 1,
+            "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+            "arme2": "",
+            "arme2_maniabilite": "",
+            "arme2_portee": "",
+            "arme2_degats": "",
+            "arme2_chargeur": "",
+            "arme2_encombrement": 0,
+            "arme2_tech": "",
+            "arme2_emplacements": 0,
+            "arme2_proprietes": "",
+            "arme3": "",
+            "arme3_maniabilite": "",
+            "arme3_portee": "",
+            "arme3_degats": "",
+            "arme3_chargeur": "",
+            "arme3_encombrement": 0,
+            "arme3_tech": "",
+            "arme3_emplacements": 0,
+            "arme3_proprietes": "",
+            "armure1": "Protection d’exercice RECETTE",
+            "armure1_valeur": 2,
+            "armure1_encombrement": 1,
+            "armure1_tech": "",
+            "armure1_emplacements": 0,
+            "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+            "armure2": "",
+            "armure2_valeur": 0,
+            "armure2_encombrement": 0,
+            "armure2_tech": "",
+            "armure2_emplacements": 0,
+            "armure2_proprietes": "",
+            "equipement1": "Trousse de diagnostic fictive",
+            "equipement1_encombrement": 1,
+            "equipement2": "Masque et filtres de fiction",
+            "equipement2_encombrement": 1,
+            "equipement3": "Lampe à manivelle",
+            "equipement3_encombrement": 1,
+            "equipement4": "",
+            "equipement4_encombrement": 0,
+            "equipement5": "",
+            "equipement5_encombrement": 0,
+            "equipement6": "",
+            "equipement6_encombrement": 0,
+            "encombrement_total1": 5,
+            "encombrement_total2": 0,
+            "encombrement_total3": 0,
+            "dinars_lc": "20 dinars / aucune LC",
+            "experience": 20
+          },
+          "description": "Manteau gris rapiécé, caisse à outils et masque soigneusement entretenu. Il préfère isoler un danger plutôt que désigner un coupable.",
+          "playerNotes": "Narek a réparé les filtres du relais de Silex. On lui demande de distinguer une panne, une négligence et une contamination réelle. Profil avancé aux valeurs choisies. Armement synthétique pour recette ; le MJ peut choisir un profil officiel à la table.",
+          "gmNotes": "SECRET_MJ_DG_RECETTE : Son ancien diagnostic était incomplet ; il veut le reconnaître avant que quelqu’un soit puni pour lui.",
+          "donneesModifieesLe": 1793361600000,
+          "inventory": "Trousse de diagnostic fictive\nMasque et filtres de fiction\nLampe à manivelle",
+          "inventoryItems": [
+            {
+              "id": "recette-dg-campagne-station-narek-objet-0",
+              "name": "Trousse de diagnostic fictive",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet original de recette ; pas d’effet automatique.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dg-campagne-station-narek-objet-1",
+              "name": "Masque et filtres de fiction",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet original de recette ; pas d’effet automatique.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dg-campagne-station-narek-objet-2",
+              "name": "Lampe à manivelle",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet original de recette ; pas d’effet automatique.",
+              "properties": {}
+            }
+          ],
+          "relations": [
+            {
+              "targetId": "recette-dg-pnj-ves",
+              "targetType": "npc",
+              "type": "ally",
+              "libelle": "Mandat de confiance",
+              "description": "Relation de fiction originale."
+            }
+          ],
+          "faction": "Mandataires du relais",
+          "hubOptions": {
+            "showHP": true,
+            "showMP": false,
+            "showAP": false,
+            "showInventory": true,
+            "showRelations": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "p-2",
+      "realName": "Marie C.",
+      "avatarUrl": "",
+      "isOnline": false,
+      "characters": [
+        {
+          "id": "recette-dg-pj-sova",
+          "name": "Sova Kern",
+          "classRace": "Éclaireuse et escorte",
+          "campaignId": "recette-dg-campagne-station",
+          "templateId": "tpl-1793142284072",
+          "systemId": "custom-1793142284065",
+          "portraitUrl": "recette-dg-media-pj-sova.svg",
+          "tokenUrl": "recette-dg-media-pj-sova.svg",
+          "hp": 19,
+          "maxHp": 19,
+          "healthSystem": {
+            "badges": [],
+            "type": "hp",
+            "data": {
+              "current": 19,
+              "max": 19
+            },
+            "state": "healthy"
+          },
+          "sheetData": {
+            "nom": "Sova Kern",
+            "genre": "",
+            "age": "29",
+            "taille": "1,75 m",
+            "poids": "70 kg",
+            "culture": "Borca — rattachement de fiction",
+            "concept": "La Gardienne — interprétation libre de recette",
+            "culte": "Hellvétiques",
+            "rang": "Profil de recette, rang non validé",
+            "physique": 4,
+            "agilite": 4,
+            "charisme": 3,
+            "intellect": 3,
+            "psyche": 3,
+            "instinct": 3,
+            "athletisme": 2,
+            "corps_a_corps": 2,
+            "force": 0,
+            "lutte": 0,
+            "resistance": 2,
+            "vigueur": 2,
+            "armes_a_projectiles": 4,
+            "artisanat": 0,
+            "dexterite": 0,
+            "furtivite": 0,
+            "mobilite": 3,
+            "navigation": 0,
+            "art": 0,
+            "commandement": 0,
+            "consideration": 0,
+            "expression": 0,
+            "negociation": 2,
+            "seduction": 0,
+            "concentration": 0,
+            "connaissance_des_artefacts": 0,
+            "legendes": 0,
+            "medecine": 0,
+            "science": 0,
+            "technologie": 0,
+            "domination": 0,
+            "foi": 0,
+            "reactivite": 3,
+            "ruse": 0,
+            "tromperie": 0,
+            "volonte": 3,
+            "dressage": 0,
+            "empathie": 0,
+            "orientation": 0,
+            "perception": 3,
+            "pulsions": 3,
+            "survie": 0,
+            "alliés": 1,
+            "autorite": 0,
+            "reseau": 1,
+            "renommee": 0,
+            "ressources": 1,
+            "secrets": 1,
+            "potentiel1_nom": "",
+            "potentiel1": 0,
+            "potentiel2_nom": "",
+            "potentiel2": 0,
+            "potentiel3_nom": "",
+            "potentiel3": 0,
+            "potentiel4_nom": "",
+            "potentiel4": 0,
+            "potentiel5_nom": "",
+            "potentiel5": 0,
+            "potentiel6_nom": "",
+            "potentiel6": 0,
+            "ego_jauge": 12,
+            "ego_max": 12,
+            "sporulations_jauge": 0,
+            "blessures_superficielles": 0,
+            "traumatismes": 0,
+            "sante": 19,
+            "arme1": "Arme d’exercice non létale — profil RECETTE",
+            "arme1_maniabilite": "0",
+            "arme1_portee": "Contact : décision du MJ",
+            "arme1_degats": "3 — valeur synthétique de recette",
+            "arme1_chargeur": "Sans objet",
+            "arme1_encombrement": 1,
+            "arme1_tech": "RECETTE",
+            "arme1_emplacements": 1,
+            "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+            "arme2": "",
+            "arme2_maniabilite": "",
+            "arme2_portee": "",
+            "arme2_degats": "",
+            "arme2_chargeur": "",
+            "arme2_encombrement": 0,
+            "arme2_tech": "",
+            "arme2_emplacements": 0,
+            "arme2_proprietes": "",
+            "arme3": "",
+            "arme3_maniabilite": "",
+            "arme3_portee": "",
+            "arme3_degats": "",
+            "arme3_chargeur": "",
+            "arme3_encombrement": 0,
+            "arme3_tech": "",
+            "arme3_emplacements": 0,
+            "arme3_proprietes": "",
+            "armure1": "Protection d’exercice RECETTE",
+            "armure1_valeur": 2,
+            "armure1_encombrement": 1,
+            "armure1_tech": "",
+            "armure1_emplacements": 0,
+            "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+            "armure2": "",
+            "armure2_valeur": 0,
+            "armure2_encombrement": 0,
+            "armure2_tech": "",
+            "armure2_emplacements": 0,
+            "armure2_proprietes": "",
+            "equipement1": "Corde de franchissement",
+            "equipement1_encombrement": 1,
+            "equipement2": "Jumelles de fiction",
+            "equipement2_encombrement": 1,
+            "equipement3": "Gourde et ration",
+            "equipement3_encombrement": 1,
+            "equipement4": "",
+            "equipement4_encombrement": 0,
+            "equipement5": "",
+            "equipement5_encombrement": 0,
+            "equipement6": "",
+            "equipement6_encombrement": 0,
+            "encombrement_total1": 5,
+            "encombrement_total2": 0,
+            "encombrement_total3": 0,
+            "dinars_lc": "20 dinars / aucune LC",
+            "experience": 20
+          },
+          "description": "Silhouette anguleuse, bottes couvertes de cendre ; elle compte les personnes avant de compter les colis.",
+          "playerNotes": "Sova escorte trois caisses de membranes filtrantes promises à la station. Son mandat protège les civils, même si le responsable local veut fermer les portes. Profil avancé aux valeurs choisies. Armement synthétique pour recette ; le MJ peut choisir un profil officiel à la table.",
+          "gmNotes": "SECRET_MJ_DG_RECETTE : Elle a promis à une réfugiée que personne ne serait abandonné sur le quai.",
+          "donneesModifieesLe": 1793361600000,
+          "inventory": "Corde de franchissement\nJumelles de fiction\nGourde et ration",
+          "inventoryItems": [
+            {
+              "id": "recette-dg-campagne-station-sova-objet-0",
+              "name": "Corde de franchissement",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet original de recette ; pas d’effet automatique.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dg-campagne-station-sova-objet-1",
+              "name": "Jumelles de fiction",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet original de recette ; pas d’effet automatique.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dg-campagne-station-sova-objet-2",
+              "name": "Gourde et ration",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet original de recette ; pas d’effet automatique.",
+              "properties": {}
+            }
+          ],
+          "relations": [
+            {
+              "targetId": "recette-dg-pnj-tala",
+              "targetType": "npc",
+              "type": "ally",
+              "libelle": "Mandat de confiance",
+              "description": "Relation de fiction originale."
+            }
+          ],
+          "faction": "Mandataires du relais",
+          "hubOptions": {
+            "showHP": true,
+            "showMP": false,
+            "showAP": false,
+            "showInventory": true,
+            "showRelations": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "p-3",
+      "realName": "Lucas R.",
+      "avatarUrl": "",
+      "isOnline": false,
+      "characters": [
+        {
+          "id": "recette-dg-pj-mira",
+          "name": "Mira Lenz",
+          "classRace": "Médiatrice et archiviste",
+          "campaignId": "recette-dg-campagne-station",
+          "templateId": "tpl-1793142284072",
+          "systemId": "custom-1793142284065",
+          "portraitUrl": "recette-dg-media-pj-mira.svg",
+          "tokenUrl": "recette-dg-media-pj-mira.svg",
+          "hp": 16,
+          "maxHp": 16,
+          "healthSystem": {
+            "badges": [],
+            "type": "hp",
+            "data": {
+              "current": 16,
+              "max": 16
+            },
+            "state": "healthy"
+          },
+          "sheetData": {
+            "nom": "Mira Lenz",
+            "genre": "",
+            "age": "29",
+            "taille": "1,75 m",
+            "poids": "70 kg",
+            "culture": "Borca — rattachement de fiction",
+            "concept": "La Chercheuse — interprétation libre de recette",
+            "culte": "Chroniqueurs",
+            "rang": "Profil de recette, rang non validé",
+            "physique": 3,
+            "agilite": 3,
+            "charisme": 4,
+            "intellect": 4,
+            "psyche": 3,
+            "instinct": 3,
+            "athletisme": 2,
+            "corps_a_corps": 2,
+            "force": 0,
+            "lutte": 0,
+            "resistance": 2,
+            "vigueur": 2,
+            "armes_a_projectiles": 0,
+            "artisanat": 0,
+            "dexterite": 0,
+            "furtivite": 0,
+            "mobilite": 2,
+            "navigation": 0,
+            "art": 0,
+            "commandement": 0,
+            "consideration": 0,
+            "expression": 3,
+            "negociation": 4,
+            "seduction": 0,
+            "concentration": 3,
+            "connaissance_des_artefacts": 0,
+            "legendes": 0,
+            "medecine": 0,
+            "science": 0,
+            "technologie": 0,
+            "domination": 0,
+            "foi": 3,
+            "reactivite": 3,
+            "ruse": 3,
+            "tromperie": 0,
+            "volonte": 0,
+            "dressage": 0,
+            "empathie": 0,
+            "orientation": 0,
+            "perception": 2,
+            "pulsions": 0,
+            "survie": 0,
+            "alliés": 1,
+            "autorite": 0,
+            "reseau": 1,
+            "renommee": 0,
+            "ressources": 1,
+            "secrets": 1,
+            "potentiel1_nom": "",
+            "potentiel1": 0,
+            "potentiel2_nom": "",
+            "potentiel2": 0,
+            "potentiel3_nom": "",
+            "potentiel3": 0,
+            "potentiel4_nom": "",
+            "potentiel4": 0,
+            "potentiel5_nom": "",
+            "potentiel5": 0,
+            "potentiel6_nom": "",
+            "potentiel6": 0,
+            "ego_jauge": 14,
+            "ego_max": 14,
+            "sporulations_jauge": 0,
+            "blessures_superficielles": 0,
+            "traumatismes": 0,
+            "sante": 16,
+            "arme1": "Arme d’exercice non létale — profil RECETTE",
+            "arme1_maniabilite": "0",
+            "arme1_portee": "Contact : décision du MJ",
+            "arme1_degats": "3 — valeur synthétique de recette",
+            "arme1_chargeur": "Sans objet",
+            "arme1_encombrement": 1,
+            "arme1_tech": "RECETTE",
+            "arme1_emplacements": 1,
+            "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+            "arme2": "",
+            "arme2_maniabilite": "",
+            "arme2_portee": "",
+            "arme2_degats": "",
+            "arme2_chargeur": "",
+            "arme2_encombrement": 0,
+            "arme2_tech": "",
+            "arme2_emplacements": 0,
+            "arme2_proprietes": "",
+            "arme3": "",
+            "arme3_maniabilite": "",
+            "arme3_portee": "",
+            "arme3_degats": "",
+            "arme3_chargeur": "",
+            "arme3_encombrement": 0,
+            "arme3_tech": "",
+            "arme3_emplacements": 0,
+            "arme3_proprietes": "",
+            "armure1": "Protection d’exercice RECETTE",
+            "armure1_valeur": 2,
+            "armure1_encombrement": 1,
+            "armure1_tech": "",
+            "armure1_emplacements": 0,
+            "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+            "armure2": "",
+            "armure2_valeur": 0,
+            "armure2_encombrement": 0,
+            "armure2_tech": "",
+            "armure2_emplacements": 0,
+            "armure2_proprietes": "",
+            "equipement1": "Carnet de copies",
+            "equipement1_encombrement": 1,
+            "equipement2": "Sceaux documentaires fictifs",
+            "equipement2_encombrement": 1,
+            "equipement3": "Petite lampe",
+            "equipement3_encombrement": 1,
+            "equipement4": "",
+            "equipement4_encombrement": 0,
+            "equipement5": "",
+            "equipement5_encombrement": 0,
+            "equipement6": "",
+            "equipement6_encombrement": 0,
+            "encombrement_total1": 5,
+            "encombrement_total2": 0,
+            "encombrement_total3": 0,
+            "dinars_lc": "20 dinars / aucune LC",
+            "experience": 20
+          },
+          "description": "Sac de feuillets cirés, crayon court, voix basse. Elle distingue un registre authentique de l’usage intéressé qu’on en fait.",
+          "playerNotes": "Mira doit remettre une copie des échanges du relais aux communautés voisines. Les poids, les horaires et les noms ont été falsifiés séparément. Profil avancé aux valeurs choisies. Armement synthétique pour recette ; le MJ peut choisir un profil officiel à la table.",
+          "gmNotes": "SECRET_MJ_DG_RECETTE : Elle souhaite publier les preuves sans publier les noms des malades.",
+          "donneesModifieesLe": 1793361600000,
+          "inventory": "Carnet de copies\nSceaux documentaires fictifs\nPetite lampe",
+          "inventoryItems": [
+            {
+              "id": "recette-dg-campagne-station-mira-objet-0",
+              "name": "Carnet de copies",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet original de recette ; pas d’effet automatique.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dg-campagne-station-mira-objet-1",
+              "name": "Sceaux documentaires fictifs",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet original de recette ; pas d’effet automatique.",
+              "properties": {}
+            },
+            {
+              "id": "recette-dg-campagne-station-mira-objet-2",
+              "name": "Petite lampe",
+              "type": "other",
+              "rarity": "common",
+              "quantity": 1,
+              "weight": 1,
+              "value": 0,
+              "description": "Objet original de recette ; pas d’effet automatique.",
+              "properties": {}
+            }
+          ],
+          "relations": [
+            {
+              "targetId": "recette-dg-pnj-nor",
+              "targetType": "npc",
+              "type": "ally",
+              "libelle": "Mandat de confiance",
+              "description": "Relation de fiction originale."
+            }
+          ],
+          "faction": "Mandataires du relais",
+          "hubOptions": {
+            "showHP": true,
+            "showMP": false,
+            "showAP": false,
+            "showInventory": true,
+            "showRelations": true
+          }
+        }
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "id": "recette-dg-pnj-eda",
+      "name": "Eda Rehn",
+      "type": "npc",
+      "role": "Responsable des soins",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-eda.svg",
+      "description": "Mains lavées, regard fatigué ; elle veut de l’air propre avant un discours.",
+      "roleplayingNotes": "Je vous donne les symptômes, pas les noms.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : Elle a retardé une annonce pour protéger deux familles.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Eda Rehn",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "Le Protecteur — interprétation libre de recette",
+        "culte": "Spitaliers",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 3,
+        "agilite": 3,
+        "charisme": 3,
+        "intellect": 3,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 3,
+        "vigueur": 2,
+        "armes_a_projectiles": 0,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 2,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 0,
+        "negociation": 2,
+        "seduction": 0,
+        "concentration": 3,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 3,
+        "science": 0,
+        "technologie": 4,
+        "domination": 0,
+        "foi": 0,
+        "reactivite": 3,
+        "ruse": 0,
+        "tromperie": 0,
+        "volonte": 3,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 2,
+        "pulsions": 0,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 12,
+        "ego_max": 12,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 18,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Trousse de diagnostic fictive",
+        "equipement1_encombrement": 1,
+        "equipement2": "Masque et filtres de fiction",
+        "equipement2_encombrement": 1,
+        "equipement3": "Lampe à manivelle",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 18,
+      "maxHp": 18,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 18,
+          "max": 18
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-dispensaire"
+      ],
+      "relations": [],
+      "faction": "Personnes du relais",
+      "isVisibleByPlayers": true
+    },
+    {
+      "id": "recette-dg-pnj-bor",
+      "name": "Bor Asten",
+      "type": "npc",
+      "role": "Intendant du relais",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-bor.svg",
+      "description": "Manteau net et liste de rationnement ; il veut préserver son autorité.",
+      "roleplayingNotes": "Sans ordre, chacun mourra de son côté.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : Il a falsifié des horaires afin de masquer sa décision d’arrêter la turbine.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Bor Asten",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "La Gardienne — interprétation libre de recette",
+        "culte": "Hellvétiques",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 4,
+        "agilite": 4,
+        "charisme": 3,
+        "intellect": 3,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 2,
+        "vigueur": 2,
+        "armes_a_projectiles": 4,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 3,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 0,
+        "negociation": 2,
+        "seduction": 0,
+        "concentration": 0,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 0,
+        "science": 0,
+        "technologie": 0,
+        "domination": 0,
+        "foi": 0,
+        "reactivite": 3,
+        "ruse": 0,
+        "tromperie": 0,
+        "volonte": 3,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 3,
+        "pulsions": 3,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 12,
+        "ego_max": 12,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 19,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Corde de franchissement",
+        "equipement1_encombrement": 1,
+        "equipement2": "Jumelles de fiction",
+        "equipement2_encombrement": 1,
+        "equipement3": "Gourde et ration",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 19,
+      "maxHp": 19,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 19,
+          "max": 19
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-poste"
+      ],
+      "relations": [],
+      "faction": "Intérêts du relais",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dg-pnj-ves",
+      "name": "Ves Orka",
+      "type": "npc",
+      "role": "Technicienne",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-ves.svg",
+      "description": "Des brûlures anciennes sur les poignets ; elle cherche une solution praticable.",
+      "roleplayingNotes": "Regardez la flèche sur le clapet. Moi aussi, je l’ai vue trop tard.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : Elle a posé la vanne à l’envers, puis signalé la faute dans un billet caché.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Ves Orka",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "La Chercheuse — interprétation libre de recette",
+        "culte": "Chroniqueurs",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 3,
+        "agilite": 3,
+        "charisme": 4,
+        "intellect": 4,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 2,
+        "vigueur": 2,
+        "armes_a_projectiles": 0,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 2,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 3,
+        "negociation": 4,
+        "seduction": 0,
+        "concentration": 3,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 0,
+        "science": 0,
+        "technologie": 0,
+        "domination": 0,
+        "foi": 3,
+        "reactivite": 3,
+        "ruse": 3,
+        "tromperie": 0,
+        "volonte": 0,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 2,
+        "pulsions": 0,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 14,
+        "ego_max": 14,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 16,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Carnet de copies",
+        "equipement1_encombrement": 1,
+        "equipement2": "Sceaux documentaires fictifs",
+        "equipement2_encombrement": 1,
+        "equipement3": "Petite lampe",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 16,
+      "maxHp": 16,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 16,
+          "max": 16
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-atelier"
+      ],
+      "relations": [],
+      "faction": "Personnes du relais",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dg-pnj-jaro",
+      "name": "Jaro Veit",
+      "type": "npc",
+      "role": "Chef de quai",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-jaro.svg",
+      "description": "Il répète les poids par cœur, mais refuse de montrer sa balance.",
+      "roleplayingNotes": "Une caisse compte comme une caisse.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : Il a réservé une caisse au troc pour racheter la dette de sa sœur.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Jaro Veit",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "Le Protecteur — interprétation libre de recette",
+        "culte": "Spitaliers",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 3,
+        "agilite": 3,
+        "charisme": 3,
+        "intellect": 3,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 3,
+        "vigueur": 2,
+        "armes_a_projectiles": 0,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 2,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 0,
+        "negociation": 2,
+        "seduction": 0,
+        "concentration": 3,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 3,
+        "science": 0,
+        "technologie": 4,
+        "domination": 0,
+        "foi": 0,
+        "reactivite": 3,
+        "ruse": 0,
+        "tromperie": 0,
+        "volonte": 3,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 2,
+        "pulsions": 0,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 12,
+        "ego_max": 12,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 18,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Trousse de diagnostic fictive",
+        "equipement1_encombrement": 1,
+        "equipement2": "Masque et filtres de fiction",
+        "equipement2_encombrement": 1,
+        "equipement3": "Lampe à manivelle",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 18,
+      "maxHp": 18,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 18,
+          "max": 18
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-quai"
+      ],
+      "relations": [],
+      "faction": "Intérêts du relais",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dg-pnj-lin",
+      "name": "Lin Berek",
+      "type": "npc",
+      "role": "Convoyeuse",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-lin.svg",
+      "description": "Une manche déchirée et un reçu soigneusement plié.",
+      "roleplayingNotes": "Mon reçu porte deux heures différentes.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : Elle a vu le chariot partir après la fermeture officielle.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Lin Berek",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "La Gardienne — interprétation libre de recette",
+        "culte": "Hellvétiques",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 4,
+        "agilite": 4,
+        "charisme": 3,
+        "intellect": 3,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 2,
+        "vigueur": 2,
+        "armes_a_projectiles": 4,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 3,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 0,
+        "negociation": 2,
+        "seduction": 0,
+        "concentration": 0,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 0,
+        "science": 0,
+        "technologie": 0,
+        "domination": 0,
+        "foi": 0,
+        "reactivite": 3,
+        "ruse": 0,
+        "tromperie": 0,
+        "volonte": 3,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 3,
+        "pulsions": 3,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 12,
+        "ego_max": 12,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 19,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Corde de franchissement",
+        "equipement1_encombrement": 1,
+        "equipement2": "Jumelles de fiction",
+        "equipement2_encombrement": 1,
+        "equipement3": "Gourde et ration",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 19,
+      "maxHp": 19,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 19,
+          "max": 19
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-parvis"
+      ],
+      "relations": [],
+      "faction": "Personnes du relais",
+      "isVisibleByPlayers": true
+    },
+    {
+      "id": "recette-dg-pnj-ost",
+      "name": "Ost Maren",
+      "type": "npc",
+      "role": "Garde inquiet",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-ost.svg",
+      "description": "Fusil bas, doigt loin de la détente ; il redoute une émeute.",
+      "roleplayingNotes": "Ne me forcez pas à choisir entre la porte et les gens.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : Il peut ouvrir un passage si les civils sont accompagnés.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Ost Maren",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "La Chercheuse — interprétation libre de recette",
+        "culte": "Chroniqueurs",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 3,
+        "agilite": 3,
+        "charisme": 4,
+        "intellect": 4,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 2,
+        "vigueur": 2,
+        "armes_a_projectiles": 0,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 2,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 3,
+        "negociation": 4,
+        "seduction": 0,
+        "concentration": 3,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 0,
+        "science": 0,
+        "technologie": 0,
+        "domination": 0,
+        "foi": 3,
+        "reactivite": 3,
+        "ruse": 3,
+        "tromperie": 0,
+        "volonte": 0,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 2,
+        "pulsions": 0,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 14,
+        "ego_max": 14,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 16,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Carnet de copies",
+        "equipement1_encombrement": 1,
+        "equipement2": "Sceaux documentaires fictifs",
+        "equipement2_encombrement": 1,
+        "equipement3": "Petite lampe",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 16,
+      "maxHp": 16,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 16,
+          "max": 16
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-quai"
+      ],
+      "relations": [],
+      "faction": "Personnes du relais",
+      "isVisibleByPlayers": true
+    },
+    {
+      "id": "recette-dg-pnj-tala",
+      "name": "Tala Sen",
+      "type": "npc",
+      "role": "Porte-parole des familles",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-tala.svg",
+      "description": "Elle connaît chaque personne qui attend dehors.",
+      "roleplayingNotes": "Nous accepterons une explication vérifiable.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : Elle sait où est la caisse mais veut un engagement sur la distribution.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Tala Sen",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "Le Protecteur — interprétation libre de recette",
+        "culte": "Spitaliers",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 3,
+        "agilite": 3,
+        "charisme": 3,
+        "intellect": 3,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 3,
+        "vigueur": 2,
+        "armes_a_projectiles": 0,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 2,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 0,
+        "negociation": 2,
+        "seduction": 0,
+        "concentration": 3,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 3,
+        "science": 0,
+        "technologie": 4,
+        "domination": 0,
+        "foi": 0,
+        "reactivite": 3,
+        "ruse": 0,
+        "tromperie": 0,
+        "volonte": 3,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 2,
+        "pulsions": 0,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 12,
+        "ego_max": 12,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 18,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Trousse de diagnostic fictive",
+        "equipement1_encombrement": 1,
+        "equipement2": "Masque et filtres de fiction",
+        "equipement2_encombrement": 1,
+        "equipement3": "Lampe à manivelle",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 18,
+      "maxHp": 18,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 18,
+          "max": 18
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-parvis"
+      ],
+      "relations": [],
+      "faction": "Personnes du relais",
+      "isVisibleByPlayers": true
+    },
+    {
+      "id": "recette-dg-pnj-nor",
+      "name": "Nor Iven",
+      "type": "npc",
+      "role": "Copiste",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-nor.svg",
+      "description": "Ses doigts tachés d’encre tremblent seulement quand Bor entre.",
+      "roleplayingNotes": "Les copies n’ont pas toutes le même âge.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : Il a conservé les originaux dans un double fond.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Nor Iven",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "La Gardienne — interprétation libre de recette",
+        "culte": "Hellvétiques",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 4,
+        "agilite": 4,
+        "charisme": 3,
+        "intellect": 3,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 2,
+        "vigueur": 2,
+        "armes_a_projectiles": 4,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 3,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 0,
+        "negociation": 2,
+        "seduction": 0,
+        "concentration": 0,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 0,
+        "science": 0,
+        "technologie": 0,
+        "domination": 0,
+        "foi": 0,
+        "reactivite": 3,
+        "ruse": 0,
+        "tromperie": 0,
+        "volonte": 3,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 3,
+        "pulsions": 3,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 12,
+        "ego_max": 12,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 19,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Corde de franchissement",
+        "equipement1_encombrement": 1,
+        "equipement2": "Jumelles de fiction",
+        "equipement2_encombrement": 1,
+        "equipement3": "Gourde et ration",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 19,
+      "maxHp": 19,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 19,
+          "max": 19
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-archives"
+      ],
+      "relations": [],
+      "faction": "Personnes du relais",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dg-pnj-ru",
+      "name": "Ru Falk",
+      "type": "npc",
+      "role": "Messagère",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-ru.svg",
+      "description": "Petite sacoche étanche ; elle repère les détours avant les raccourcis.",
+      "roleplayingNotes": "L’échelle tient. Le raccourci, je ne le promets pas.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : Elle a déjà franchi le détour sans toucher à la zone de dépôt.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Ru Falk",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "La Chercheuse — interprétation libre de recette",
+        "culte": "Chroniqueurs",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 3,
+        "agilite": 3,
+        "charisme": 4,
+        "intellect": 4,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 2,
+        "vigueur": 2,
+        "armes_a_projectiles": 0,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 2,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 3,
+        "negociation": 4,
+        "seduction": 0,
+        "concentration": 3,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 0,
+        "science": 0,
+        "technologie": 0,
+        "domination": 0,
+        "foi": 3,
+        "reactivite": 3,
+        "ruse": 3,
+        "tromperie": 0,
+        "volonte": 0,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 2,
+        "pulsions": 0,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 14,
+        "ego_max": 14,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 16,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Carnet de copies",
+        "equipement1_encombrement": 1,
+        "equipement2": "Sceaux documentaires fictifs",
+        "equipement2_encombrement": 1,
+        "equipement3": "Petite lampe",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 16,
+      "maxHp": 16,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 16,
+          "max": 16
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-passerelle"
+      ],
+      "relations": [],
+      "faction": "Personnes du relais",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dg-pnj-ilan",
+      "name": "Ilan Kest",
+      "type": "npc",
+      "role": "Veilleur des filtres",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-ilan.svg",
+      "description": "Il écoute la turbine comme un animal blessé.",
+      "roleplayingNotes": "Le bruit a changé avant les premiers malaises.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : Son relevé sonore date la panne ; il n’a aucune expertise médicale.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Ilan Kest",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "Le Protecteur — interprétation libre de recette",
+        "culte": "Spitaliers",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 3,
+        "agilite": 3,
+        "charisme": 3,
+        "intellect": 3,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 3,
+        "vigueur": 2,
+        "armes_a_projectiles": 0,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 2,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 0,
+        "negociation": 2,
+        "seduction": 0,
+        "concentration": 3,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 3,
+        "science": 0,
+        "technologie": 4,
+        "domination": 0,
+        "foi": 0,
+        "reactivite": 3,
+        "ruse": 0,
+        "tromperie": 0,
+        "volonte": 3,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 2,
+        "pulsions": 0,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 12,
+        "ego_max": 12,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 18,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Trousse de diagnostic fictive",
+        "equipement1_encombrement": 1,
+        "equipement2": "Masque et filtres de fiction",
+        "equipement2_encombrement": 1,
+        "equipement3": "Lampe à manivelle",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 18,
+      "maxHp": 18,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 18,
+          "max": 18
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-filtres"
+      ],
+      "relations": [],
+      "faction": "Personnes du relais",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dg-pnj-dara",
+      "name": "Dara Noll",
+      "type": "npc",
+      "role": "Témoin à protéger",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-dara.svg",
+      "description": "Elle réclame un masque neuf pour son voisin avant le sien.",
+      "roleplayingNotes": "Vous pouvez lire mon histoire sans écrire mon nom.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : La fumée de son atelier a aggravé ses symptômes.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Dara Noll",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "La Gardienne — interprétation libre de recette",
+        "culte": "Hellvétiques",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 4,
+        "agilite": 4,
+        "charisme": 3,
+        "intellect": 3,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 2,
+        "vigueur": 2,
+        "armes_a_projectiles": 4,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 3,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 0,
+        "negociation": 2,
+        "seduction": 0,
+        "concentration": 0,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 0,
+        "science": 0,
+        "technologie": 0,
+        "domination": 0,
+        "foi": 0,
+        "reactivite": 3,
+        "ruse": 0,
+        "tromperie": 0,
+        "volonte": 3,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 3,
+        "pulsions": 3,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 12,
+        "ego_max": 12,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 19,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Corde de franchissement",
+        "equipement1_encombrement": 1,
+        "equipement2": "Jumelles de fiction",
+        "equipement2_encombrement": 1,
+        "equipement3": "Gourde et ration",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 19,
+      "maxHp": 19,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 19,
+          "max": 19
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-dispensaire"
+      ],
+      "relations": [],
+      "faction": "Personnes du relais",
+      "isVisibleByPlayers": false
+    },
+    {
+      "id": "recette-dg-pnj-kel",
+      "name": "Kel Arno",
+      "type": "npc",
+      "role": "Négociateur du troc",
+      "status": "alive",
+      "campaignId": "recette-dg-campagne-station",
+      "avatar": "recette-dg-media-pnj-kel.svg",
+      "description": "Il veut récupérer sa créance sans combattre.",
+      "roleplayingNotes": "Rendez-moi quelque chose que je puisse emporter.",
+      "gmSecretInfo": "SECRET_MJ_DG_RECETTE : Il accepte des outils en échange de la caisse, si la dette est reconnue.",
+      "templateId": "tpl-1793142284072",
+      "sheetData": {
+        "nom": "Kel Arno",
+        "genre": "",
+        "age": "29",
+        "taille": "1,75 m",
+        "poids": "70 kg",
+        "culture": "Borca — rattachement de fiction",
+        "concept": "La Chercheuse — interprétation libre de recette",
+        "culte": "Chroniqueurs",
+        "rang": "Profil de recette, rang non validé",
+        "physique": 3,
+        "agilite": 3,
+        "charisme": 4,
+        "intellect": 4,
+        "psyche": 3,
+        "instinct": 3,
+        "athletisme": 2,
+        "corps_a_corps": 2,
+        "force": 0,
+        "lutte": 0,
+        "resistance": 2,
+        "vigueur": 2,
+        "armes_a_projectiles": 0,
+        "artisanat": 0,
+        "dexterite": 0,
+        "furtivite": 0,
+        "mobilite": 2,
+        "navigation": 0,
+        "art": 0,
+        "commandement": 0,
+        "consideration": 0,
+        "expression": 3,
+        "negociation": 4,
+        "seduction": 0,
+        "concentration": 3,
+        "connaissance_des_artefacts": 0,
+        "legendes": 0,
+        "medecine": 0,
+        "science": 0,
+        "technologie": 0,
+        "domination": 0,
+        "foi": 3,
+        "reactivite": 3,
+        "ruse": 3,
+        "tromperie": 0,
+        "volonte": 0,
+        "dressage": 0,
+        "empathie": 0,
+        "orientation": 0,
+        "perception": 2,
+        "pulsions": 0,
+        "survie": 0,
+        "alliés": 1,
+        "autorite": 0,
+        "reseau": 1,
+        "renommee": 0,
+        "ressources": 1,
+        "secrets": 1,
+        "potentiel1_nom": "",
+        "potentiel1": 0,
+        "potentiel2_nom": "",
+        "potentiel2": 0,
+        "potentiel3_nom": "",
+        "potentiel3": 0,
+        "potentiel4_nom": "",
+        "potentiel4": 0,
+        "potentiel5_nom": "",
+        "potentiel5": 0,
+        "potentiel6_nom": "",
+        "potentiel6": 0,
+        "ego_jauge": 14,
+        "ego_max": 14,
+        "sporulations_jauge": 0,
+        "blessures_superficielles": 0,
+        "traumatismes": 0,
+        "sante": 16,
+        "arme1": "Arme d’exercice non létale — profil RECETTE",
+        "arme1_maniabilite": "0",
+        "arme1_portee": "Contact : décision du MJ",
+        "arme1_degats": "3 — valeur synthétique de recette",
+        "arme1_chargeur": "Sans objet",
+        "arme1_encombrement": 1,
+        "arme1_tech": "RECETTE",
+        "arme1_emplacements": 1,
+        "arme1_proprietes": "Aucun profil d’arme officielle revendiqué ; dégâts saisis armure retirée.",
+        "arme2": "",
+        "arme2_maniabilite": "",
+        "arme2_portee": "",
+        "arme2_degats": "",
+        "arme2_chargeur": "",
+        "arme2_encombrement": 0,
+        "arme2_tech": "",
+        "arme2_emplacements": 0,
+        "arme2_proprietes": "",
+        "arme3": "",
+        "arme3_maniabilite": "",
+        "arme3_portee": "",
+        "arme3_degats": "",
+        "arme3_chargeur": "",
+        "arme3_encombrement": 0,
+        "arme3_tech": "",
+        "arme3_emplacements": 0,
+        "arme3_proprietes": "",
+        "armure1": "Protection d’exercice RECETTE",
+        "armure1_valeur": 2,
+        "armure1_encombrement": 1,
+        "armure1_tech": "",
+        "armure1_emplacements": 0,
+        "armure1_proprietes": "Valeurs choisies ; soustraire manuellement 2 avant les dégâts physiques.",
+        "armure2": "",
+        "armure2_valeur": 0,
+        "armure2_encombrement": 0,
+        "armure2_tech": "",
+        "armure2_emplacements": 0,
+        "armure2_proprietes": "",
+        "equipement1": "Carnet de copies",
+        "equipement1_encombrement": 1,
+        "equipement2": "Sceaux documentaires fictifs",
+        "equipement2_encombrement": 1,
+        "equipement3": "Petite lampe",
+        "equipement3_encombrement": 1,
+        "equipement4": "",
+        "equipement4_encombrement": 0,
+        "equipement5": "",
+        "equipement5_encombrement": 0,
+        "equipement6": "",
+        "equipement6_encombrement": 0,
+        "encombrement_total1": 5,
+        "encombrement_total2": 0,
+        "encombrement_total3": 0,
+        "dinars_lc": "20 dinars / aucune LC",
+        "experience": 20
+      },
+      "hp": 16,
+      "maxHp": 16,
+      "healthSystem": {
+        "badges": [],
+        "type": "hp",
+        "data": {
+          "current": 16,
+          "max": 16
+        },
+        "state": "healthy"
+      },
+      "linkedMapIds": [
+        "recette-dg-lieu-poste"
+      ],
+      "relations": [],
+      "faction": "Intérêts du relais",
+      "isVisibleByPlayers": false
+    }
+  ],
+  "atlasMaps": [
+    {
+      "id": "recette-dg-lieu-parvis",
+      "name": "Parvis du relais",
+      "type": "battlemap",
+      "narrativeDescription": "Une station de béton s’enfonce dans une forêt sombre. Des familles attendent sous les auvents ; la poussière colle aux vêtements.",
+      "gmNotes": "La fermeture est politique, pas une preuve de Sepsie.",
+      "campaignId": "recette-dg-campagne-station",
+      "fileUrl": "recette-dg-media-carte-parvis.svg",
+      "isVideo": false,
+      "isVisited": true,
+      "linkedEntities": [
+        {
+          "id": "recette-dg-lien-parvis-lin",
+          "name": "Lin Berek",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-lin"
+        },
+        {
+          "id": "recette-dg-lien-parvis-tala",
+          "name": "Tala Sen",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-tala"
+        },
+        {
+          "id": "recette-dg-lien-parvis-quai",
+          "name": "Quai des caisses",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-quai"
+        },
+        {
+          "id": "recette-dg-lien-parvis-dispensaire",
+          "name": "Dispensaire de fortune",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-dispensaire"
+        },
+        {
+          "id": "recette-dg-lien-parvis-poste",
+          "name": "Poste des transmissions",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-poste"
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-lieu-quai",
+      "name": "Quai des caisses",
+      "type": "dungeon",
+      "narrativeDescription": "Trois caisses intactes et une bâche déchirée. La grue est immobile ; une piste de chariot continue vers les ateliers.",
+      "gmNotes": "La caisse manquante est cachée pour le troc, sans contamination démontrée.",
+      "campaignId": "recette-dg-campagne-station",
+      "fileUrl": "recette-dg-media-carte-quai.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dg-lien-quai-jaro",
+          "name": "Jaro Veit",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-jaro"
+        },
+        {
+          "id": "recette-dg-lien-quai-ost",
+          "name": "Ost Maren",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-ost"
+        },
+        {
+          "id": "recette-dg-lien-quai-parvis",
+          "name": "Parvis du relais",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-parvis"
+        },
+        {
+          "id": "recette-dg-lien-quai-atelier",
+          "name": "Atelier des clapets",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-atelier"
+        },
+        {
+          "id": "recette-dg-lien-quai-archives",
+          "name": "Bureau des pesées",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-archives"
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-lieu-dispensaire",
+      "name": "Dispensaire de fortune",
+      "type": "dungeon",
+      "narrativeDescription": "Des lits de toile et des fiches anonymisées. Une conduite apporte de l’air tiède depuis les filtres.",
+      "gmNotes": "Deux malades souffrent de fumées industrielles ; seul un examen peut distinguer les causes.",
+      "campaignId": "recette-dg-campagne-station",
+      "fileUrl": "recette-dg-media-carte-dispensaire.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dg-lien-dispensaire-eda",
+          "name": "Eda Rehn",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-eda"
+        },
+        {
+          "id": "recette-dg-lien-dispensaire-dara",
+          "name": "Dara Noll",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-dara"
+        },
+        {
+          "id": "recette-dg-lien-dispensaire-parvis",
+          "name": "Parvis du relais",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-parvis"
+        },
+        {
+          "id": "recette-dg-lien-dispensaire-filtres",
+          "name": "Chambre des filtres",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-filtres"
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-lieu-atelier",
+      "name": "Atelier des clapets",
+      "type": "dungeon",
+      "narrativeDescription": "Les établis portent une graisse rouge. Une poignée neuve dépasse d’un tas de pièces anciennes.",
+      "gmNotes": "Une vanne a été inversée pendant une réparation urgente ; le technicien n’est pas un saboteur.",
+      "campaignId": "recette-dg-campagne-station",
+      "fileUrl": "recette-dg-media-carte-atelier.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dg-lien-atelier-ves",
+          "name": "Ves Orka",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-ves"
+        },
+        {
+          "id": "recette-dg-lien-atelier-quai",
+          "name": "Quai des caisses",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-quai"
+        },
+        {
+          "id": "recette-dg-lien-atelier-filtres",
+          "name": "Chambre des filtres",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-filtres"
+        },
+        {
+          "id": "recette-dg-lien-atelier-passerelle",
+          "name": "Passerelle de maintenance",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-passerelle"
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-lieu-archives",
+      "name": "Bureau des pesées",
+      "type": "dungeon",
+      "narrativeDescription": "Des tableaux horaires et des reçus sont cloués au mur ; les mêmes totaux reviennent trop régulièrement.",
+      "gmNotes": "Deux écritures : faux poids pour un détournement, faux horaires pour dissimuler la panne.",
+      "campaignId": "recette-dg-campagne-station",
+      "fileUrl": "recette-dg-media-carte-archives.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dg-lien-archives-nor",
+          "name": "Nor Iven",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-nor"
+        },
+        {
+          "id": "recette-dg-lien-archives-quai",
+          "name": "Quai des caisses",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-quai"
+        },
+        {
+          "id": "recette-dg-lien-archives-poste",
+          "name": "Poste des transmissions",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-poste"
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-lieu-filtres",
+      "name": "Chambre des filtres",
+      "type": "dungeon",
+      "narrativeDescription": "Le souffle des turbines fait vibrer les grilles. Une dérivation porte un dépôt ocre ; les membranes de rechange sont sèches.",
+      "gmNotes": "Danger réglé par le MJ. Ni les spores ni les radiations ne s’appliquent automatiquement à l’entrée.",
+      "campaignId": "recette-dg-campagne-station",
+      "fileUrl": "recette-dg-media-carte-filtres.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dg-lien-filtres-ilan",
+          "name": "Ilan Kest",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-ilan"
+        },
+        {
+          "id": "recette-dg-lien-filtres-atelier",
+          "name": "Atelier des clapets",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-atelier"
+        },
+        {
+          "id": "recette-dg-lien-filtres-dispensaire",
+          "name": "Dispensaire de fortune",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-dispensaire"
+        },
+        {
+          "id": "recette-dg-lien-filtres-passerelle",
+          "name": "Passerelle de maintenance",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-passerelle"
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-lieu-passerelle",
+      "name": "Passerelle de maintenance",
+      "type": "battlemap",
+      "narrativeDescription": "Une travée manque au-dessus d’un bassin vide. Une échelle de service offre un détour visible.",
+      "gmNotes": "Franchissement par corde, détour ou remise en place d’une travée ; aucun jet unique obligatoire.",
+      "campaignId": "recette-dg-campagne-station",
+      "fileUrl": "recette-dg-media-carte-passerelle.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dg-lien-passerelle-ru",
+          "name": "Ru Falk",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-ru"
+        },
+        {
+          "id": "recette-dg-lien-passerelle-atelier",
+          "name": "Atelier des clapets",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-atelier"
+        },
+        {
+          "id": "recette-dg-lien-passerelle-filtres",
+          "name": "Chambre des filtres",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-filtres"
+        },
+        {
+          "id": "recette-dg-lien-passerelle-poste",
+          "name": "Poste des transmissions",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-poste"
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-lieu-poste",
+      "name": "Poste des transmissions",
+      "type": "dungeon",
+      "narrativeDescription": "Un écran opaque sert de tableau d’annonce. Des témoins peuvent parler derrière une cloison sans donner leur nom.",
+      "gmNotes": "Le message final peut protéger les identités tout en exposant les responsabilités.",
+      "campaignId": "recette-dg-campagne-station",
+      "fileUrl": "recette-dg-media-carte-poste.svg",
+      "isVideo": false,
+      "isVisited": false,
+      "linkedEntities": [
+        {
+          "id": "recette-dg-lien-poste-bor",
+          "name": "Bor Asten",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-bor"
+        },
+        {
+          "id": "recette-dg-lien-poste-kel",
+          "name": "Kel Arno",
+          "category": "npc",
+          "entityId": "recette-dg-pnj-kel"
+        },
+        {
+          "id": "recette-dg-lien-poste-parvis",
+          "name": "Parvis du relais",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-parvis"
+        },
+        {
+          "id": "recette-dg-lien-poste-archives",
+          "name": "Bureau des pesées",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-archives"
+        },
+        {
+          "id": "recette-dg-lien-poste-passerelle",
+          "name": "Passerelle de maintenance",
+          "category": "lieu",
+          "mapId": "recette-dg-lieu-passerelle"
+        }
+      ]
+    }
+  ],
+  "clues": [
+    {
+      "id": "recette-dg-indice-recu",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Reçu à double horaire",
+      "content": "Le même convoi est marqué reçu avant puis après la fermeture. Ce document prouve une incohérence, pas une infection.",
+      "locationId": "recette-dg-lieu-parvis",
+      "ownerId": "recette-dg-pnj-lin",
+      "mediaUrl": "recette-dg-media-indice-recu.svg",
+      "isRevealed": true,
+      "revealedAt": 1793361600000
+    },
+    {
+      "id": "recette-dg-indice-pesee",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Poids répétés",
+      "content": "Quatre lignes portent exactement le même poids malgré des contenus différents. Comparer la balance, interroger Jaro ou consulter le reçu de Lin.",
+      "locationId": "recette-dg-lieu-archives",
+      "ownerId": "recette-dg-pnj-nor",
+      "mediaUrl": "recette-dg-media-indice-pesee.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dg-indice-graisse",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Trace du chariot",
+      "content": "La graisse rouge du quai correspond aux roues arrêtées derrière l’atelier. Tala connaît le trajet ; l’inventaire confirme la caisse manquante.",
+      "locationId": "recette-dg-lieu-quai",
+      "ownerId": "recette-dg-pnj-jaro",
+      "mediaUrl": "recette-dg-media-indice-graisse.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dg-indice-billet",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Billet de réparation",
+      "content": "Ves a écrit : « clapet inversé, remettre la flèche vers la turbine ». On peut aussi voir la flèche ou entendre le relevé d’Ilan.",
+      "locationId": "recette-dg-lieu-atelier",
+      "ownerId": "recette-dg-pnj-ves",
+      "mediaUrl": "recette-dg-media-indice-billet.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dg-indice-croquis",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Croquis de dérivation",
+      "content": "Le dessin relie le clapet à l’arrivée d’air du dispensaire. Vérifier sur place ou écouter Eda donne le même lien.",
+      "locationId": "recette-dg-lieu-atelier",
+      "ownerId": "recette-dg-pnj-ves",
+      "mediaUrl": "recette-dg-media-indice-croquis.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dg-indice-releve",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Relevé de vibrations",
+      "content": "La panne commence avant l’annonce de fermeture. Les horaires des soins et le témoignage de Ru permettent de le confirmer.",
+      "locationId": "recette-dg-lieu-filtres",
+      "ownerId": "recette-dg-pnj-ilan",
+      "mediaUrl": "recette-dg-media-indice-releve.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dg-indice-diagnostic",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Fiche anonymisée",
+      "content": "Deux cas portent une exposition à des fumées. Aucun document ne permet de déclarer tous les arrivants contaminés. Eda propose un examen individuel.",
+      "locationId": "recette-dg-lieu-dispensaire",
+      "ownerId": "recette-dg-pnj-eda",
+      "mediaUrl": "recette-dg-media-indice-diagnostic.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dg-indice-dette",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Reconnaissance de dette",
+      "content": "Jaro doit des outils à Kel. La caisse détournée est une garantie de troc, pas une arme. Tala et Kel peuvent le confirmer.",
+      "locationId": "recette-dg-lieu-poste",
+      "ownerId": "recette-dg-pnj-kel",
+      "mediaUrl": "recette-dg-media-indice-dette.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dg-indice-echelle",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Chemin de service",
+      "content": "Un croquis de Ru indique une échelle et un détour praticable. On les voit aussi depuis le quai.",
+      "locationId": "recette-dg-lieu-passerelle",
+      "ownerId": "recette-dg-pnj-ru",
+      "mediaUrl": "recette-dg-media-indice-echelle.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dg-indice-originaux",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Copies non retouchées",
+      "content": "Le double fond contient les horaires antérieurs. Nor les remet si l’on protège son nom ; les relevés du filtre prouvent la même chronologie.",
+      "locationId": "recette-dg-lieu-archives",
+      "ownerId": "recette-dg-pnj-nor",
+      "mediaUrl": "recette-dg-media-indice-originaux.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dg-indice-membrane",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Membrane de rechange",
+      "content": "La caisse cachée contient des membranes sèches ; examen, poids réel et inventaire concordent. Leur pose demande du temps et une procédure sûre.",
+      "locationId": "recette-dg-lieu-atelier",
+      "ownerId": "recette-dg-pnj-jaro",
+      "mediaUrl": "recette-dg-media-indice-membrane.svg",
+      "isRevealed": false
+    },
+    {
+      "id": "recette-dg-indice-mandat",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Proposition d’accord",
+      "content": "Air rétabli, distribution sous témoins, dette convertie en outils, identités médicales protégées. Chaque partie peut amender la proposition.",
+      "locationId": "recette-dg-lieu-poste",
+      "ownerId": "recette-dg-pnj-tala",
+      "mediaUrl": "recette-dg-media-indice-mandat.svg",
+      "isRevealed": false
+    }
+  ],
+  "wikiEntries": [
+    {
+      "id": "recette-dg-wiki-parvis",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Parvis du relais",
+      "content": "Une station de béton s’enfonce dans une forêt sombre. Des familles attendent sous les auvents ; la poussière colle aux vêtements.",
+      "category": "location",
+      "tags": [
+        "relais",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dg-media-carte-parvis.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dg-pnj-lin",
+        "recette-dg-pnj-tala"
+      ]
+    },
+    {
+      "id": "recette-dg-wiki-quai",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Quai des caisses",
+      "content": "Trois caisses intactes et une bâche déchirée. La grue est immobile ; une piste de chariot continue vers les ateliers.",
+      "category": "location",
+      "tags": [
+        "relais",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dg-media-carte-quai.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dg-pnj-jaro",
+        "recette-dg-pnj-ost"
+      ]
+    },
+    {
+      "id": "recette-dg-wiki-dispensaire",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Dispensaire de fortune",
+      "content": "Des lits de toile et des fiches anonymisées. Une conduite apporte de l’air tiède depuis les filtres.",
+      "category": "location",
+      "tags": [
+        "relais",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dg-media-carte-dispensaire.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dg-pnj-eda",
+        "recette-dg-pnj-dara"
+      ]
+    },
+    {
+      "id": "recette-dg-wiki-atelier",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Atelier des clapets",
+      "content": "Les établis portent une graisse rouge. Une poignée neuve dépasse d’un tas de pièces anciennes.",
+      "category": "location",
+      "tags": [
+        "relais",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dg-media-carte-atelier.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dg-pnj-ves"
+      ]
+    },
+    {
+      "id": "recette-dg-wiki-archives",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Bureau des pesées",
+      "content": "Des tableaux horaires et des reçus sont cloués au mur ; les mêmes totaux reviennent trop régulièrement.",
+      "category": "location",
+      "tags": [
+        "relais",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dg-media-carte-archives.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dg-pnj-nor"
+      ]
+    },
+    {
+      "id": "recette-dg-wiki-filtres",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Chambre des filtres",
+      "content": "Le souffle des turbines fait vibrer les grilles. Une dérivation porte un dépôt ocre ; les membranes de rechange sont sèches.",
+      "category": "location",
+      "tags": [
+        "relais",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dg-media-carte-filtres.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dg-pnj-ilan"
+      ]
+    },
+    {
+      "id": "recette-dg-wiki-passerelle",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Passerelle de maintenance",
+      "content": "Une travée manque au-dessus d’un bassin vide. Une échelle de service offre un détour visible.",
+      "category": "location",
+      "tags": [
+        "relais",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dg-media-carte-passerelle.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dg-pnj-ru"
+      ]
+    },
+    {
+      "id": "recette-dg-wiki-poste",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Poste des transmissions",
+      "content": "Un écran opaque sert de tableau d’annonce. Des témoins peuvent parler derrière une cloison sans donner leur nom.",
+      "category": "location",
+      "tags": [
+        "relais",
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dg-media-carte-poste.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dg-pnj-bor",
+        "recette-dg-pnj-kel"
+      ]
+    },
+    {
+      "id": "recette-dg-wiki-mandats",
+      "campaignId": "recette-dg-campagne-station",
+      "title": "Trois mandats et les limites de la recette",
+      "content": "Fiction originale. Les cartes et cartouches sont documentaires. Dangers, armure, Potentiels, Brûlure, actions supplémentaires, coopération et progression restent arbitrés par le meneur ; aucune zone de carte n’applique un effet.",
+      "category": "lore",
+      "tags": [
+        "recette"
+      ],
+      "imageUrls": [
+        "recette-dg-media-compagnie.svg"
+      ],
+      "linkedEntityIds": [
+        "recette-dg-pnj-eda"
+      ]
+    }
+  ],
+  "timelineEvents": [
+    {
+      "id": "recette-dg-chrono-0",
+      "campaignId": "recette-dg-campagne-station",
+      "date": "2026-10-26",
+      "title": "Clapet remplacé",
+      "description": "Repère de tri J-3, pas une date canonique du jeu.",
+      "type": "lore",
+      "locationId": "recette-dg-lieu-poste",
+      "involvedEntityIds": [
+        "recette-dg-pnj-bor"
+      ]
+    },
+    {
+      "id": "recette-dg-chrono-1",
+      "campaignId": "recette-dg-campagne-station",
+      "date": "2026-10-27",
+      "title": "Turbine arrêtée",
+      "description": "Repère de tri J-2, pas une date canonique du jeu.",
+      "type": "lore",
+      "locationId": "recette-dg-lieu-poste",
+      "involvedEntityIds": [
+        "recette-dg-pnj-bor"
+      ]
+    },
+    {
+      "id": "recette-dg-chrono-2",
+      "campaignId": "recette-dg-campagne-station",
+      "date": "2026-10-28",
+      "title": "Horaires retouchés",
+      "description": "Repère de tri J-1, pas une date canonique du jeu.",
+      "type": "lore",
+      "locationId": "recette-dg-lieu-poste",
+      "involvedEntityIds": [
+        "recette-dg-pnj-bor"
+      ]
+    },
+    {
+      "id": "recette-dg-chrono-3",
+      "campaignId": "recette-dg-campagne-station",
+      "date": "2026-10-29",
+      "title": "Convoi bloqué",
+      "description": "Repère de tri J0, pas une date canonique du jeu.",
+      "type": "lore",
+      "locationId": "recette-dg-lieu-poste",
+      "involvedEntityIds": [
+        "recette-dg-pnj-bor"
+      ]
+    }
+  ],
+  "actes": [
+    {
+      "id": "recette-dg-acte-1",
+      "campaignId": "recette-dg-campagne-station",
+      "ordre": 1,
+      "titre": "Le relais fermé",
+      "resume": "Le relais fermé",
+      "acheve": false,
+      "notesDuMeneur": "Chaque indice essentiel existe comme document, témoignage ou constat matériel."
+    },
+    {
+      "id": "recette-dg-acte-2",
+      "campaignId": "recette-dg-campagne-station",
+      "ordre": 2,
+      "titre": "Sous les filtres",
+      "resume": "Sous les filtres",
+      "acheve": false,
+      "notesDuMeneur": "Chaque indice essentiel existe comme document, témoignage ou constat matériel."
+    },
+    {
+      "id": "recette-dg-acte-3",
+      "campaignId": "recette-dg-campagne-station",
+      "ordre": 3,
+      "titre": "Les responsabilités",
+      "resume": "Les responsabilités",
+      "acheve": false,
+      "notesDuMeneur": "Chaque indice essentiel existe comme document, témoignage ou constat matériel."
+    },
+    {
+      "id": "recette-dg-acte-4",
+      "campaignId": "recette-dg-campagne-station",
+      "ordre": 4,
+      "titre": "Conséquences et ateliers",
+      "resume": "Conséquences et ateliers",
+      "acheve": false,
+      "notesDuMeneur": "Chaque indice essentiel existe comme document, témoignage ou constat matériel."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "recette-dg-scene-accueil",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-1",
+      "ordre": 1,
+      "titre": "Ceux qui restent dehors",
+      "lieuId": "recette-dg-lieu-parvis",
+      "entiteIds": [
+        "recette-dg-pnj-lin",
+        "recette-dg-pnj-tala"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-recu"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Écouter les attentes, compter les personnes et annoncer la mission. Les familles donnent le reçu sans test.",
+      "enjeux": "Écouter les attentes, compter les personnes et annoncer la mission. Les familles donnent le reçu sans test.",
+      "descriptionNarrative": "Une station de béton s’enfonce dans une forêt sombre. Des familles attendent sous les auvents ; la poussière colle aux vêtements. Écouter les attentes, compter les personnes et annoncer la mission. Les familles donnent le reçu sans test.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Elle a vu le chariot partir après la fermeture officielle. Elle sait où est la caisse mais veut un engagement sur la distribution.",
+      "repliques": "Lin Berek : Mon reçu porte deux heures différentes.\nTala Sen : Nous accepterons une explication vérifiable.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-quai",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-soins",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000,
+      "momentDeStoryboardId": "recette-dg-moment-accueil"
+    },
+    {
+      "id": "recette-dg-scene-quai",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-1",
+      "ordre": 2,
+      "titre": "Une caisse manque",
+      "lieuId": "recette-dg-lieu-quai",
+      "entiteIds": [
+        "recette-dg-pnj-jaro",
+        "recette-dg-pnj-ost"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-graisse"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Comparer les charges ou parler au chef de quai. Une fouille autorisée, le témoin ou la trace conduisent à l’atelier.",
+      "enjeux": "Comparer les charges ou parler au chef de quai. Une fouille autorisée, le témoin ou la trace conduisent à l’atelier.",
+      "descriptionNarrative": "Trois caisses intactes et une bâche déchirée. La grue est immobile ; une piste de chariot continue vers les ateliers. Comparer les charges ou parler au chef de quai. Une fouille autorisée, le témoin ou la trace conduisent à l’atelier.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Il a réservé une caisse au troc pour racheter la dette de sa sœur. Il peut ouvrir un passage si les civils sont accompagnés.",
+      "repliques": "Jaro Veit : Une caisse compte comme une caisse.\nOst Maren : Ne me forcez pas à choisir entre la porte et les gens.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-copies",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-atelier",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000
+    },
+    {
+      "id": "recette-dg-scene-soins",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-1",
+      "ordre": 3,
+      "titre": "Examiner sans stigmatiser",
+      "lieuId": "recette-dg-lieu-dispensaire",
+      "entiteIds": [
+        "recette-dg-pnj-eda",
+        "recette-dg-pnj-dara"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-diagnostic"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Proposer INT+Médecine (2), sans bloquer le témoignage en cas d’échec ; Eda fournit le minimum médical nécessaire.",
+      "enjeux": "Proposer INT+Médecine (2), sans bloquer le témoignage en cas d’échec ; Eda fournit le minimum médical nécessaire.",
+      "descriptionNarrative": "Des lits de toile et des fiches anonymisées. Une conduite apporte de l’air tiède depuis les filtres. Proposer INT+Médecine (2), sans bloquer le témoignage en cas d’échec ; Eda fournit le minimum médical nécessaire.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Elle a retardé une annonce pour protéger deux familles. La fumée de son atelier a aggravé ses symptômes.",
+      "repliques": "Eda Rehn : Je vous donne les symptômes, pas les noms.\nDara Noll : Vous pouvez lire mon histoire sans écrire mon nom.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-atelier",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-copies",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000
+    },
+    {
+      "id": "recette-dg-scene-copies",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-1",
+      "ordre": 4,
+      "titre": "Les deux écritures",
+      "lieuId": "recette-dg-lieu-archives",
+      "entiteIds": [
+        "recette-dg-pnj-nor"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-pesee",
+        "recette-dg-indice-originaux"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Comparer les registres, négocier la protection du copiste ou recouper les horaires publics.",
+      "enjeux": "Comparer les registres, négocier la protection du copiste ou recouper les horaires publics.",
+      "descriptionNarrative": "Des tableaux horaires et des reçus sont cloués au mur ; les mêmes totaux reviennent trop régulièrement. Comparer les registres, négocier la protection du copiste ou recouper les horaires publics.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Il a conservé les originaux dans un double fond.",
+      "repliques": "Nor Iven : Les copies n’ont pas toutes le même âge.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-atelier",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-ordre",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000
+    },
+    {
+      "id": "recette-dg-scene-atelier",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-2",
+      "ordre": 1,
+      "titre": "Le clapet retourné",
+      "lieuId": "recette-dg-lieu-atelier",
+      "entiteIds": [
+        "recette-dg-pnj-ves"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-billet",
+        "recette-dg-indice-croquis"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "INT+Technologie (2) précise la réparation ; le billet et la flèche expliquent la panne même sans réussite.",
+      "enjeux": "INT+Technologie (2) précise la réparation ; le billet et la flèche expliquent la panne même sans réussite.",
+      "descriptionNarrative": "Les établis portent une graisse rouge. Une poignée neuve dépasse d’un tas de pièces anciennes. INT+Technologie (2) précise la réparation ; le billet et la flèche expliquent la panne même sans réussite.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Elle a posé la vanne à l’envers, puis signalé la faute dans un billet caché.",
+      "repliques": "Ves Orka : Regardez la flèche sur le clapet. Moi aussi, je l’ai vue trop tard.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-souffle",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-cache",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000
+    },
+    {
+      "id": "recette-dg-scene-souffle",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-2",
+      "ordre": 2,
+      "titre": "Sous le souffle des turbines",
+      "lieuId": "recette-dg-lieu-filtres",
+      "entiteIds": [
+        "recette-dg-pnj-ilan"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-releve"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Préparer une zone sûre avant toute exposition. Les dangers et leur fréquence sont annoncés par le MJ ; le plan n’inflige rien automatiquement.",
+      "enjeux": "Préparer une zone sûre avant toute exposition. Les dangers et leur fréquence sont annoncés par le MJ ; le plan n’inflige rien automatiquement.",
+      "descriptionNarrative": "Le souffle des turbines fait vibrer les grilles. Une dérivation porte un dépôt ocre ; les membranes de rechange sont sèches. Préparer une zone sûre avant toute exposition. Les dangers et leur fréquence sont annoncés par le MJ ; le plan n’inflige rien automatiquement.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Son relevé sonore date la panne ; il n’a aucune expertise médicale.",
+      "repliques": "Ilan Kest : Le bruit a changé avant les premiers malaises.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-detour",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-cache",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000,
+      "momentDeStoryboardId": "recette-dg-moment-souffle"
+    },
+    {
+      "id": "recette-dg-scene-detour",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-2",
+      "ordre": 3,
+      "titre": "Le détour visible",
+      "lieuId": "recette-dg-lieu-passerelle",
+      "entiteIds": [
+        "recette-dg-pnj-ru"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-echelle"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Choisir l’échelle, la corde ou la réparation de la travée. Un échec complique le temps et le matériel, sans supprimer toute route.",
+      "enjeux": "Choisir l’échelle, la corde ou la réparation de la travée. Un échec complique le temps et le matériel, sans supprimer toute route.",
+      "descriptionNarrative": "Une travée manque au-dessus d’un bassin vide. Une échelle de service offre un détour visible. Choisir l’échelle, la corde ou la réparation de la travée. Un échec complique le temps et le matériel, sans supprimer toute route.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Elle a déjà franchi le détour sans toucher à la zone de dépôt.",
+      "repliques": "Ru Falk : L’échelle tient. Le raccourci, je ne le promets pas.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-cache",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-ordre",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000
+    },
+    {
+      "id": "recette-dg-scene-cache",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-2",
+      "ordre": 4,
+      "titre": "La garantie cachée",
+      "lieuId": "recette-dg-lieu-atelier",
+      "entiteIds": [
+        "recette-dg-pnj-jaro",
+        "recette-dg-pnj-tala"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-membrane"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Récupérer la caisse par accord, preuve ou échange d’outils. Le combat est une issue évitable.",
+      "enjeux": "Récupérer la caisse par accord, preuve ou échange d’outils. Le combat est une issue évitable.",
+      "descriptionNarrative": "Les établis portent une graisse rouge. Une poignée neuve dépasse d’un tas de pièces anciennes. Récupérer la caisse par accord, preuve ou échange d’outils. Le combat est une issue évitable.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Il a réservé une caisse au troc pour racheter la dette de sa sœur. Elle sait où est la caisse mais veut un engagement sur la distribution.",
+      "repliques": "Jaro Veit : Une caisse compte comme une caisse.\nTala Sen : Nous accepterons une explication vérifiable.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-ordre",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-creance",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000
+    },
+    {
+      "id": "recette-dg-scene-ordre",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-3",
+      "ordre": 1,
+      "titre": "L’annonce de fermeture",
+      "lieuId": "recette-dg-lieu-poste",
+      "entiteIds": [
+        "recette-dg-pnj-bor",
+        "recette-dg-pnj-nor"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-originaux"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Confronter les horaires sans exposer le copiste. CHA+Négociation (2) ou confrontation si Bor résiste ; les preuves restent accessibles.",
+      "enjeux": "Confronter les horaires sans exposer le copiste. CHA+Négociation (2) ou confrontation si Bor résiste ; les preuves restent accessibles.",
+      "descriptionNarrative": "Un écran opaque sert de tableau d’annonce. Des témoins peuvent parler derrière une cloison sans donner leur nom. Confronter les horaires sans exposer le copiste. CHA+Négociation (2) ou confrontation si Bor résiste ; les preuves restent accessibles.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Il a falsifié des horaires afin de masquer sa décision d’arrêter la turbine. Il a conservé les originaux dans un double fond.",
+      "repliques": "Bor Asten : Sans ordre, chacun mourra de son côté.\nNor Iven : Les copies n’ont pas toutes le même âge.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-creance",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-distribution",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000,
+      "momentDeStoryboardId": "recette-dg-moment-ordre"
+    },
+    {
+      "id": "recette-dg-scene-creance",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-3",
+      "ordre": 2,
+      "titre": "Une dette transportable",
+      "lieuId": "recette-dg-lieu-poste",
+      "entiteIds": [
+        "recette-dg-pnj-kel",
+        "recette-dg-pnj-jaro"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-dette"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Offrir des outils, une garantie ou une médiation. Aucune drogue nécessaire à la résolution.",
+      "enjeux": "Offrir des outils, une garantie ou une médiation. Aucune drogue nécessaire à la résolution.",
+      "descriptionNarrative": "Un écran opaque sert de tableau d’annonce. Des témoins peuvent parler derrière une cloison sans donner leur nom. Offrir des outils, une garantie ou une médiation. Aucune drogue nécessaire à la résolution.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Il accepte des outils en échange de la caisse, si la dette est reconnue. Il a réservé une caisse au troc pour racheter la dette de sa sœur.",
+      "repliques": "Kel Arno : Rendez-moi quelque chose que je puisse emporter.\nJaro Veit : Une caisse compte comme une caisse.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-reparer",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-distribution",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000
+    },
+    {
+      "id": "recette-dg-scene-reparer",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-3",
+      "ordre": 3,
+      "titre": "Rendre l’air",
+      "lieuId": "recette-dg-lieu-filtres",
+      "entiteIds": [
+        "recette-dg-pnj-ves",
+        "recette-dg-pnj-ilan"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-croquis",
+        "recette-dg-indice-membrane"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Réparer par coopération : aide à difficulté +1, déclencheurs en dés pour l’opérateur. Un échec appelle une nouvelle préparation, pas une fermeture définitive.",
+      "enjeux": "Réparer par coopération : aide à difficulté +1, déclencheurs en dés pour l’opérateur. Un échec appelle une nouvelle préparation, pas une fermeture définitive.",
+      "descriptionNarrative": "Le souffle des turbines fait vibrer les grilles. Une dérivation porte un dépôt ocre ; les membranes de rechange sont sèches. Réparer par coopération : aide à difficulté +1, déclencheurs en dés pour l’opérateur. Un échec appelle une nouvelle préparation, pas une fermeture définitive.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Elle a posé la vanne à l’envers, puis signalé la faute dans un billet caché. Son relevé sonore date la panne ; il n’a aucune expertise médicale.",
+      "repliques": "Ves Orka : Regardez la flèche sur le clapet. Moi aussi, je l’ai vue trop tard.\nIlan Kest : Le bruit a changé avant les premiers malaises.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-distribution",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000
+    },
+    {
+      "id": "recette-dg-scene-distribution",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-3",
+      "ordre": 4,
+      "titre": "Compter sous témoins",
+      "lieuId": "recette-dg-lieu-parvis",
+      "entiteIds": [
+        "recette-dg-pnj-tala",
+        "recette-dg-pnj-ost"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-mandat"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Répartir les filtres, publier les responsabilités et préserver les données médicales. Le MJ fait constater l’effet concret des choix.",
+      "enjeux": "Répartir les filtres, publier les responsabilités et préserver les données médicales. Le MJ fait constater l’effet concret des choix.",
+      "descriptionNarrative": "Une station de béton s’enfonce dans une forêt sombre. Des familles attendent sous les auvents ; la poussière colle aux vêtements. Répartir les filtres, publier les responsabilités et préserver les données médicales. Le MJ fait constater l’effet concret des choix.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Elle sait où est la caisse mais veut un engagement sur la distribution. Il peut ouvrir un passage si les civils sont accompagnés.",
+      "repliques": "Tala Sen : Nous accepterons une explication vérifiable.\nOst Maren : Ne me forcez pas à choisir entre la porte et les gens.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-message",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-retour",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000
+    },
+    {
+      "id": "recette-dg-scene-message",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-4",
+      "ordre": 1,
+      "titre": "Ce qui sera transmis",
+      "lieuId": "recette-dg-lieu-poste",
+      "entiteIds": [
+        "recette-dg-pnj-bor",
+        "recette-dg-pnj-eda",
+        "recette-dg-pnj-tala"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-mandat"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Trois fins possibles : accord surveillé, preuves publiques anonymisées ou évacuation ordonnée. L’accès aux soins ne dépend pas d’un seul jet.",
+      "enjeux": "Trois fins possibles : accord surveillé, preuves publiques anonymisées ou évacuation ordonnée. L’accès aux soins ne dépend pas d’un seul jet.",
+      "descriptionNarrative": "Un écran opaque sert de tableau d’annonce. Des témoins peuvent parler derrière une cloison sans donner leur nom. Trois fins possibles : accord surveillé, preuves publiques anonymisées ou évacuation ordonnée. L’accès aux soins ne dépend pas d’un seul jet.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Il a falsifié des horaires afin de masquer sa décision d’arrêter la turbine. Elle a retardé une annonce pour protéger deux familles. Elle sait où est la caisse mais veut un engagement sur la distribution.",
+      "repliques": "Bor Asten : Sans ordre, chacun mourra de son côté.\nEda Rehn : Je vous donne les symptômes, pas les noms.\nTala Sen : Nous accepterons une explication vérifiable.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-retour",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000,
+      "momentDeStoryboardId": "recette-dg-moment-message"
+    },
+    {
+      "id": "recette-dg-scene-retour",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-4",
+      "ordre": 2,
+      "titre": "Ce que chacun emporte",
+      "lieuId": "recette-dg-lieu-dispensaire",
+      "entiteIds": [
+        "recette-dg-pnj-dara",
+        "recette-dg-pnj-lin"
+      ],
+      "indiceIds": [
+        "recette-dg-indice-diagnostic"
+      ],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Consigner conséquences, promesses, butin et expérience décidée à la table ; pas de progression automatique revendiquée.",
+      "enjeux": "Consigner conséquences, promesses, butin et expérience décidée à la table ; pas de progression automatique revendiquée.",
+      "descriptionNarrative": "Des lits de toile et des fiches anonymisées. Une conduite apporte de l’air tiède depuis les filtres. Consigner conséquences, promesses, butin et expérience décidée à la table ; pas de progression automatique revendiquée.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : La fumée de son atelier a aggravé ses symptômes. Elle a vu le chariot partir après la fermeture officielle.",
+      "repliques": "Dara Noll : Vous pouvez lire mon histoire sans écrire mon nom.\nLin Berek : Mon reçu porte deux heures différentes.",
+      "origine": "preparee",
+      "importance": "principale",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-sante",
+          "libelle": "Suivre cette piste"
+        },
+        {
+          "vers": "recette-dg-scene-reserve",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000
+    },
+    {
+      "id": "recette-dg-scene-sante",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-4",
+      "ordre": 3,
+      "titre": "Atelier hors fiction : les deux pistes",
+      "lieuId": "recette-dg-lieu-atelier",
+      "entiteIds": [
+        "recette-dg-pnj-ves"
+      ],
+      "indiceIds": [],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Scène optionnelle de débrief. Ouvrir 02 pour dégâts, soin, Égo et persistance ; ne pas blesser les PJ de l’aventure pour préparer les seuils.",
+      "enjeux": "Scène optionnelle de débrief. Ouvrir 02 pour dégâts, soin, Égo et persistance ; ne pas blesser les PJ de l’aventure pour préparer les seuils.",
+      "descriptionNarrative": "Les établis portent une graisse rouge. Une poignée neuve dépasse d’un tas de pièces anciennes. Scène optionnelle de débrief. Ouvrir 02 pour dégâts, soin, Égo et persistance ; ne pas blesser les PJ de l’aventure pour préparer les seuils.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Elle a posé la vanne à l’envers, puis signalé la faute dans un billet caché.",
+      "repliques": "Ves Orka : Regardez la flèche sur le clapet. Moi aussi, je l’ai vue trop tard.",
+      "origine": "preparee",
+      "importance": "optionnelle",
+      "enchainements": [
+        {
+          "vers": "recette-dg-scene-reserve",
+          "libelle": "Suivre cette piste"
+        }
+      ],
+      "passages": [],
+      "creeeLe": 1793361600000
+    },
+    {
+      "id": "recette-dg-scene-reserve",
+      "campaignId": "recette-dg-campagne-station",
+      "acteId": "recette-dg-acte-4",
+      "ordre": 4,
+      "titre": "Atelier hors fiction : les déclencheurs",
+      "lieuId": "recette-dg-lieu-archives",
+      "entiteIds": [
+        "recette-dg-pnj-nor"
+      ],
+      "indiceIds": [],
+      "personnagesIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "resume": "Ouvrir 03 pour réserves, échecs, confrontation, initiative, Brûlure et Potentiels. Les résultats préparés sont des exercices, pas des dés truqués dans la partie.",
+      "enjeux": "Ouvrir 03 pour réserves, échecs, confrontation, initiative, Brûlure et Potentiels. Les résultats préparés sont des exercices, pas des dés truqués dans la partie.",
+      "descriptionNarrative": "Des tableaux horaires et des reçus sont cloués au mur ; les mêmes totaux reviennent trop régulièrement. Ouvrir 03 pour réserves, échecs, confrontation, initiative, Brûlure et Potentiels. Les résultats préparés sont des exercices, pas des dés truqués dans la partie.",
+      "notesDuMeneur": "SECRET_MJ_DG_RECETTE : Il a conservé les originaux dans un double fond.",
+      "repliques": "Nor Iven : Les copies n’ont pas toutes le même âge.",
+      "origine": "preparee",
+      "importance": "optionnelle",
+      "enchainements": [],
+      "passages": [],
+      "creeeLe": 1793361600000
+    }
+  ],
+  "rencontres": [
+    {
+      "id": "recette-dg-rencontre-0",
+      "campaignId": "recette-dg-campagne-station",
+      "sceneId": "recette-dg-scene-quai",
+      "nom": "La porte du quai",
+      "creeeLe": 1793361600000,
+      "notes": "Combat optionnel. Profils et armes synthétiques de recette. Défense et armure manuelles ; Jet système pour l’initiative.",
+      "lignes": [
+        {
+          "genre": "entite",
+          "entiteId": "recette-dg-pnj-ost",
+          "faction": "enemy"
+        },
+        {
+          "genre": "entite",
+          "entiteId": "recette-dg-pnj-lin",
+          "faction": "ally"
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-rencontre-1",
+      "campaignId": "recette-dg-campagne-station",
+      "sceneId": "recette-dg-scene-cache",
+      "nom": "La caisse cachée",
+      "creeeLe": 1793361600000,
+      "notes": "Combat optionnel. Profils et armes synthétiques de recette. Défense et armure manuelles ; Jet système pour l’initiative.",
+      "lignes": [
+        {
+          "genre": "entite",
+          "entiteId": "recette-dg-pnj-jaro",
+          "faction": "enemy"
+        },
+        {
+          "genre": "entite",
+          "entiteId": "recette-dg-pnj-tala",
+          "faction": "ally"
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-rencontre-2",
+      "campaignId": "recette-dg-campagne-station",
+      "sceneId": "recette-dg-scene-ordre",
+      "nom": "L’ordre contesté",
+      "creeeLe": 1793361600000,
+      "notes": "Combat optionnel. Profils et armes synthétiques de recette. Défense et armure manuelles ; Jet système pour l’initiative.",
+      "lignes": [
+        {
+          "genre": "entite",
+          "entiteId": "recette-dg-pnj-bor",
+          "faction": "enemy"
+        },
+        {
+          "genre": "entite",
+          "entiteId": "recette-dg-pnj-nor",
+          "faction": "ally"
+        }
+      ]
+    }
+  ],
+  "sessions": [
+    {
+      "id": "recette-dg-seance-1",
+      "campaignId": "recette-dg-campagne-station",
+      "number": 1,
+      "date": "2026-10-30",
+      "status": "planned",
+      "publicSummary": "Écouter les personnes et lire les premiers reçus.",
+      "gmSecrets": "SECRET_MJ_DG_RECETTE : la panne est accidentelle, le troc est volontaire et la falsification politique ; ne pas livrer les identités médicales.",
+      "sessionEntityIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "acteId": "recette-dg-acte-1",
+      "scenesPrevuesIds": [
+        "recette-dg-scene-accueil",
+        "recette-dg-scene-quai",
+        "recette-dg-scene-soins",
+        "recette-dg-scene-copies"
+      ],
+      "checklist": [
+        {
+          "id": "recette-dg-check-1",
+          "text": "Consigner les choix et vérifier les droits de diffusion.",
+          "isCompleted": false
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-seance-2",
+      "campaignId": "recette-dg-campagne-station",
+      "number": 2,
+      "date": "2026-10-30",
+      "status": "planned",
+      "publicSummary": "Comprendre la panne et retrouver les membranes.",
+      "gmSecrets": "SECRET_MJ_DG_RECETTE : la panne est accidentelle, le troc est volontaire et la falsification politique ; ne pas livrer les identités médicales.",
+      "sessionEntityIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "acteId": "recette-dg-acte-2",
+      "scenesPrevuesIds": [
+        "recette-dg-scene-atelier",
+        "recette-dg-scene-souffle",
+        "recette-dg-scene-detour",
+        "recette-dg-scene-cache"
+      ],
+      "checklist": [
+        {
+          "id": "recette-dg-check-2",
+          "text": "Consigner les choix et vérifier les droits de diffusion.",
+          "isCompleted": false
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-seance-3",
+      "campaignId": "recette-dg-campagne-station",
+      "number": 3,
+      "date": "2026-10-30",
+      "status": "planned",
+      "publicSummary": "Réparer et établir les responsabilités.",
+      "gmSecrets": "SECRET_MJ_DG_RECETTE : la panne est accidentelle, le troc est volontaire et la falsification politique ; ne pas livrer les identités médicales.",
+      "sessionEntityIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "acteId": "recette-dg-acte-3",
+      "scenesPrevuesIds": [
+        "recette-dg-scene-ordre",
+        "recette-dg-scene-creance",
+        "recette-dg-scene-reparer",
+        "recette-dg-scene-distribution"
+      ],
+      "checklist": [
+        {
+          "id": "recette-dg-check-3",
+          "text": "Consigner les choix et vérifier les droits de diffusion.",
+          "isCompleted": false
+        }
+      ]
+    },
+    {
+      "id": "recette-dg-seance-4",
+      "campaignId": "recette-dg-campagne-station",
+      "number": 4,
+      "date": "2026-10-30",
+      "status": "planned",
+      "publicSummary": "Décider ce qui sera transmis ; débrief puis laboratoires.",
+      "gmSecrets": "SECRET_MJ_DG_RECETTE : la panne est accidentelle, le troc est volontaire et la falsification politique ; ne pas livrer les identités médicales.",
+      "sessionEntityIds": [
+        "recette-dg-pj-narek",
+        "recette-dg-pj-sova",
+        "recette-dg-pj-mira"
+      ],
+      "acteId": "recette-dg-acte-4",
+      "scenesPrevuesIds": [
+        "recette-dg-scene-message",
+        "recette-dg-scene-retour",
+        "recette-dg-scene-sante",
+        "recette-dg-scene-reserve"
+      ],
+      "checklist": [
+        {
+          "id": "recette-dg-check-4",
+          "text": "Consigner les choix et vérifier les droits de diffusion.",
+          "isCompleted": false
+        }
+      ]
+    }
+  ],
+  "lootPool": [
+    {
+      "id": "recette-dg-objet-corde",
+      "name": "Corde",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet original de recette ; pas d’effet automatique.",
+      "properties": {},
+      "campaignId": "recette-dg-campagne-station"
+    },
+    {
+      "id": "recette-dg-objet-filtres",
+      "name": "Membranes sèches",
+      "type": "consumable",
+      "rarity": "common",
+      "quantity": 3,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet original de recette ; pas d’effet automatique.",
+      "properties": {},
+      "campaignId": "recette-dg-campagne-station"
+    },
+    {
+      "id": "recette-dg-objet-soins",
+      "name": "Bandages",
+      "type": "consumable",
+      "rarity": "common",
+      "quantity": 3,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet original de recette ; pas d’effet automatique.",
+      "properties": {},
+      "campaignId": "recette-dg-campagne-station"
+    },
+    {
+      "id": "recette-dg-objet-rations",
+      "name": "Rations",
+      "type": "consumable",
+      "rarity": "common",
+      "quantity": 6,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet original de recette ; pas d’effet automatique.",
+      "properties": {},
+      "campaignId": "recette-dg-campagne-station"
+    },
+    {
+      "id": "recette-dg-objet-outils",
+      "name": "Outils de troc",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet original de recette ; pas d’effet automatique.",
+      "properties": {},
+      "campaignId": "recette-dg-campagne-station"
+    },
+    {
+      "id": "recette-dg-objet-dinars",
+      "name": "Dinars de recette",
+      "type": "currency",
+      "rarity": "common",
+      "quantity": 101,
+      "weight": 1,
+      "value": 0,
+      "description": "Exercice de partage : 33 chacun et reliquat 2 ; comptabilité LC manuelle.",
+      "properties": {},
+      "campaignId": "recette-dg-campagne-station"
+    },
+    {
+      "id": "recette-dg-objet-registre",
+      "name": "Copie anonymisée",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet original de recette ; pas d’effet automatique.",
+      "properties": {},
+      "campaignId": "recette-dg-campagne-station"
+    },
+    {
+      "id": "recette-dg-objet-clapet",
+      "name": "Clapet de rechange",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet original de recette ; pas d’effet automatique.",
+      "properties": {},
+      "campaignId": "recette-dg-campagne-station"
+    }
+  ],
+  "lootReserve": [
+    {
+      "id": "recette-dg-objet-reserve",
+      "name": "Caisse des réparations",
+      "type": "other",
+      "rarity": "common",
+      "quantity": 1,
+      "weight": 1,
+      "value": 0,
+      "description": "Objet original de recette ; pas d’effet automatique.",
+      "properties": {},
+      "campaignId": "recette-dg-campagne-station"
+    }
+  ],
+  "lootHistory": [],
+  "messages": [],
+  "journaux": [],
+  "requiredDriverData": [
+    {
+      "dice": {
+        "defaultDice": "6d6",
+        "logic": "count-success",
+        "engine": "pool",
+        "successThreshold": 4
+      },
+      "jet": {
+        "reserve": {
+          "base": 0,
+          "max": 12,
+          "faces": 6,
+          "composantes": [
+            {
+              "id": "attribut",
+              "label": "Attribut",
+              "sectionId": "attributs"
+            },
+            {
+              "id": "competence",
+              "label": "Compétence",
+              "sectionId": "competences_phy",
+              "sectionsSupplementaires": [
+                "competences_agi",
+                "competences_cha",
+                "competences_int",
+                "competences_psy",
+                "competences_ins"
+              ]
+            }
+          ]
+        },
+        "sens": "superieur-ou-egal",
+        "difficulte": {
+          "min": 0,
+          "max": 12,
+          "defaut": 2
+        },
+        "degenesis": {
+          "traumatismes": "traumatismes",
+          "ego": "ego_jauge"
+        }
+      },
+      "tactical": {
+        "uniteDeDistance": "bande de portée de l'arme",
+        "ranges": {
+          "contact": {
+            "label": "Corps à corps (allonge de l’arme)",
+            "maxUnits": 1,
+            "modifier": 0
+          },
+          "courte": {
+            "label": "Portée normale",
+            "maxUnits": 2,
+            "modifier": 0
+          },
+          "moyenne": {
+            "label": "Portée longue",
+            "maxUnits": 3,
+            "modifier": -4
+          },
+          "longue": {
+            "label": "Portée extrême",
+            "maxUnits": 4,
+            "modifier": -8
+          }
+        },
+        "useTacticalAI": false
+      },
+      "combat": {
+        "initiativeFormula": "psyche + reactivite",
+        "initiativeSort": "desc",
+        "defaultHealthType": "hp",
+        "statsToTrack": [
+          {
+            "fieldId": "sante",
+            "label": "Santé",
+            "isMainHP": true,
+            "isResource": true,
+            "max": "(physique + resistance) * 2 + physique + psyche"
+          },
+          {
+            "fieldId": "blessures_superficielles",
+            "label": "Blessures superficielles",
+            "isMainHP": false,
+            "isResource": true,
+            "max": "(physique + resistance) * 2"
+          },
+          {
+            "fieldId": "traumatismes",
+            "label": "Traumatismes",
+            "isMainHP": false,
+            "isResource": true,
+            "max": "physique + psyche"
+          },
+          {
+            "fieldId": "ego_jauge",
+            "label": "Égo",
+            "isMainHP": false,
+            "isResource": true,
+            "max": "ego_max"
+          },
+          {
+            "fieldId": "sporulations_jauge",
+            "label": "Sporulations",
+            "isMainHP": false,
+            "isResource": true,
+            "max": "(psyche + foi + volonte) * 2"
+          }
+        ],
+        "initiativeEnReserve": {
+          "mecanique": "degenesis"
+        },
+        "santeDeDepart": "(physique + resistance) * 2 + physique + psyche",
+        "damageTypes": [
+          "physique",
+          "mental"
+        ],
+        "pistesDeSante": {
+          "mecanique": "degenesis",
+          "blessures": "blessures_superficielles",
+          "traumatismes": "traumatismes",
+          "ego": "ego_jauge"
+        }
+      },
+      "ui_config": {
+        "gauges": [
+          {
+            "fieldId": "ego_jauge",
+            "label": "Égo",
+            "color": "#3b82f6",
+            "style": "bar"
+          },
+          {
+            "fieldId": "sporulations_jauge",
+            "label": "Sporulations",
+            "color": "#10b981",
+            "style": "bar"
+          },
+          {
+            "fieldId": "blessures_superficielles",
+            "label": "Blessures superficielles",
+            "color": "#f59e0b",
+            "style": "bar"
+          },
+          {
+            "fieldId": "traumatismes",
+            "label": "Traumatismes",
+            "color": "#ef4444",
+            "style": "bar"
+          }
+        ]
+      },
+      "id": "custom-1793142284065",
+      "templateId": "tpl-1793142284072",
+      "author": "User",
+      "version": "2.0.0",
+      "name": "Degenesis",
+      "corpusId": "degenesis"
+    }
+  ],
+  "requiredTemplateData": [
+    {
+      "name": "Fiche de personnage",
+      "sections": [
+        {
+          "id": "l_humain",
+          "label": "L'humain",
+          "fields": [
+            {
+              "id": "nom",
+              "label": "Nom",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "genre",
+              "label": "Sexe",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "age",
+              "label": "Âge",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "taille",
+              "label": "Taille",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "poids",
+              "label": "Poids",
+              "type": "text",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "id": "origine",
+          "label": "Origine",
+          "fields": [
+            {
+              "id": "culture",
+              "label": "Culture",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "concept",
+              "label": "Concept",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "culte",
+              "label": "Culte",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "rang",
+              "label": "Rang",
+              "type": "text",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "id": "attributs",
+          "label": "Attributs",
+          "fields": [
+            {
+              "id": "physique",
+              "label": "Physique",
+              "type": "number",
+              "defaultValue": 1,
+              "max": 6
+            },
+            {
+              "id": "agilite",
+              "label": "Agilité",
+              "type": "number",
+              "defaultValue": 1,
+              "max": 6
+            },
+            {
+              "id": "charisme",
+              "label": "Charisme",
+              "type": "number",
+              "defaultValue": 1,
+              "max": 6
+            },
+            {
+              "id": "intellect",
+              "label": "Intellect",
+              "type": "number",
+              "defaultValue": 1,
+              "max": 6
+            },
+            {
+              "id": "psyche",
+              "label": "Psyché",
+              "type": "number",
+              "defaultValue": 1,
+              "max": 6
+            },
+            {
+              "id": "instinct",
+              "label": "Instinct",
+              "type": "number",
+              "defaultValue": 1,
+              "max": 6
+            }
+          ]
+        },
+        {
+          "id": "competences_phy",
+          "label": "Compétences — Physique",
+          "fields": [
+            {
+              "id": "athletisme",
+              "label": "Athlétisme",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "corps_a_corps",
+              "label": "Corps à corps",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "force",
+              "label": "Force",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "lutte",
+              "label": "Lutte",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "resistance",
+              "label": "Résistance",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "vigueur",
+              "label": "Vigueur",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            }
+          ]
+        },
+        {
+          "id": "competences_agi",
+          "label": "Compétences — Agilité",
+          "fields": [
+            {
+              "id": "armes_a_projectiles",
+              "label": "Armes à projectiles",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "artisanat",
+              "label": "Artisanat",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "dexterite",
+              "label": "Dextérité",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "furtivite",
+              "label": "Furtivité",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "mobilite",
+              "label": "Mobilité",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "navigation",
+              "label": "Navigation",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            }
+          ]
+        },
+        {
+          "id": "competences_cha",
+          "label": "Compétences — Charisme",
+          "fields": [
+            {
+              "id": "art",
+              "label": "Art",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "commandement",
+              "label": "Commandement",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "consideration",
+              "label": "Considération",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "expression",
+              "label": "Expression",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "negociation",
+              "label": "Négociation",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "seduction",
+              "label": "Séduction",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            }
+          ]
+        },
+        {
+          "id": "competences_int",
+          "label": "Compétences — Intellect",
+          "fields": [
+            {
+              "id": "concentration",
+              "label": "Concentration",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "connaissance_des_artefacts",
+              "label": "Connaissance des artefacts",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "legendes",
+              "label": "Légendes",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "medecine",
+              "label": "Médecine",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "science",
+              "label": "Science",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "technologie",
+              "label": "Technologie",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            }
+          ]
+        },
+        {
+          "id": "competences_psy",
+          "label": "Compétences — Psyché",
+          "fields": [
+            {
+              "id": "domination",
+              "label": "Domination",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "foi",
+              "label": "Foi",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "reactivite",
+              "label": "Réactivité",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "ruse",
+              "label": "Ruse",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "tromperie",
+              "label": "Tromperie",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "volonte",
+              "label": "Volonté",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            }
+          ]
+        },
+        {
+          "id": "competences_ins",
+          "label": "Compétences — Instinct",
+          "fields": [
+            {
+              "id": "dressage",
+              "label": "Dressage",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "empathie",
+              "label": "Empathie",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "orientation",
+              "label": "Orientation",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "perception",
+              "label": "Perception",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "pulsions",
+              "label": "Pulsions",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "survie",
+              "label": "Survie",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            }
+          ]
+        },
+        {
+          "id": "historiques",
+          "label": "Historiques",
+          "fields": [
+            {
+              "id": "alliés",
+              "label": "Alliés",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "autorite",
+              "label": "Autorité",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "reseau",
+              "label": "Réseau",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "renommee",
+              "label": "Renommée",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "ressources",
+              "label": "Ressources",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            },
+            {
+              "id": "secrets",
+              "label": "Secrets",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 6
+            }
+          ]
+        },
+        {
+          "id": "potentiels",
+          "label": "Potentiels",
+          "fields": [
+            {
+              "id": "potentiel1_nom",
+              "label": "Potentiel 1",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "potentiel1",
+              "label": "Niveau du Potentiel 1",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 3,
+              "libelleSur": "potentiel1_nom"
+            },
+            {
+              "id": "potentiel2_nom",
+              "label": "Potentiel 2",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "potentiel2",
+              "label": "Niveau du Potentiel 2",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 3,
+              "libelleSur": "potentiel2_nom"
+            },
+            {
+              "id": "potentiel3_nom",
+              "label": "Potentiel 3",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "potentiel3",
+              "label": "Niveau du Potentiel 3",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 3,
+              "libelleSur": "potentiel3_nom"
+            },
+            {
+              "id": "potentiel4_nom",
+              "label": "Potentiel 4",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "potentiel4",
+              "label": "Niveau du Potentiel 4",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 3,
+              "libelleSur": "potentiel4_nom"
+            },
+            {
+              "id": "potentiel5_nom",
+              "label": "Potentiel 5",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "potentiel5",
+              "label": "Niveau du Potentiel 5",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 3,
+              "libelleSur": "potentiel5_nom"
+            },
+            {
+              "id": "potentiel6_nom",
+              "label": "Potentiel 6",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "potentiel6",
+              "label": "Niveau du Potentiel 6",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 3,
+              "libelleSur": "potentiel6_nom"
+            }
+          ]
+        },
+        {
+          "id": "ego_et_sante",
+          "label": "Égo et santé",
+          "fields": [
+            {
+              "id": "ego_jauge",
+              "label": "Points d'Égo",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 24,
+              "maxSur": "ego_max"
+            },
+            {
+              "id": "ego_max",
+              "label": "Égo maximal — (INT+Concentration)×2 ou (INS+Pulsions)×2",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 24
+            },
+            {
+              "id": "sporulations_jauge",
+              "label": "Sporulations subies",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 24
+            },
+            {
+              "id": "blessures_superficielles",
+              "label": "Blessures superficielles subies",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 24
+            },
+            {
+              "id": "traumatismes",
+              "label": "Traumatismes subis",
+              "type": "number",
+              "defaultValue": 0,
+              "max": 12
+            },
+            {
+              "id": "sante",
+              "label": "Santé restante (les deux pistes)",
+              "type": "number",
+              "defaultValue": 0
+            }
+          ]
+        },
+        {
+          "id": "armes",
+          "label": "Armes",
+          "fields": [
+            {
+              "id": "arme1",
+              "label": "Arme 1",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme1_maniabilite",
+              "label": "Arme 1 — maniabilité (±D)",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme1_portee",
+              "label": "Arme 1 — portée (normale / longue)",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme1_degats",
+              "label": "Arme 1 — dégâts",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme1_chargeur",
+              "label": "Arme 1 — chargeur",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme1_encombrement",
+              "label": "Arme 1 — encombrement",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "arme1_tech",
+              "label": "Arme 1 — niveau Tech",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme1_emplacements",
+              "label": "Arme 1 — emplacements",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "arme1_proprietes",
+              "label": "Arme 1 — propriétés",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme2",
+              "label": "Arme 2",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme2_maniabilite",
+              "label": "Arme 2 — maniabilité (±D)",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme2_portee",
+              "label": "Arme 2 — portée (normale / longue)",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme2_degats",
+              "label": "Arme 2 — dégâts",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme2_chargeur",
+              "label": "Arme 2 — chargeur",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme2_encombrement",
+              "label": "Arme 2 — encombrement",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "arme2_tech",
+              "label": "Arme 2 — niveau Tech",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme2_emplacements",
+              "label": "Arme 2 — emplacements",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "arme2_proprietes",
+              "label": "Arme 2 — propriétés",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme3",
+              "label": "Arme 3",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme3_maniabilite",
+              "label": "Arme 3 — maniabilité (±D)",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme3_portee",
+              "label": "Arme 3 — portée (normale / longue)",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme3_degats",
+              "label": "Arme 3 — dégâts",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme3_chargeur",
+              "label": "Arme 3 — chargeur",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme3_encombrement",
+              "label": "Arme 3 — encombrement",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "arme3_tech",
+              "label": "Arme 3 — niveau Tech",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "arme3_emplacements",
+              "label": "Arme 3 — emplacements",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "arme3_proprietes",
+              "label": "Arme 3 — propriétés",
+              "type": "textarea",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "id": "armures",
+          "label": "Armures",
+          "fields": [
+            {
+              "id": "armure1",
+              "label": "Armure 1",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "armure1_valeur",
+              "label": "Armure 1 — valeur d’armure",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "armure1_encombrement",
+              "label": "Armure 1 — encombrement",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "armure1_tech",
+              "label": "Armure 1 — niveau Tech",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "armure1_emplacements",
+              "label": "Armure 1 — emplacements",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "armure1_proprietes",
+              "label": "Armure 1 — propriétés",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "armure2",
+              "label": "Armure 2",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "armure2_valeur",
+              "label": "Armure 2 — valeur d’armure",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "armure2_encombrement",
+              "label": "Armure 2 — encombrement",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "armure2_tech",
+              "label": "Armure 2 — niveau Tech",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "armure2_emplacements",
+              "label": "Armure 2 — emplacements",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "armure2_proprietes",
+              "label": "Armure 2 — propriétés",
+              "type": "textarea",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "id": "equipement",
+          "label": "Le bazar",
+          "fields": [
+            {
+              "id": "equipement1",
+              "label": "Équipement 1",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "equipement1_encombrement",
+              "label": "Équipement 1 — encombrement",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "equipement2",
+              "label": "Équipement 2",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "equipement2_encombrement",
+              "label": "Équipement 2 — encombrement",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "equipement3",
+              "label": "Équipement 3",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "equipement3_encombrement",
+              "label": "Équipement 3 — encombrement",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "equipement4",
+              "label": "Équipement 4",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "equipement4_encombrement",
+              "label": "Équipement 4 — encombrement",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "equipement5",
+              "label": "Équipement 5",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "equipement5_encombrement",
+              "label": "Équipement 5 — encombrement",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "equipement6",
+              "label": "Équipement 6",
+              "type": "textarea",
+              "defaultValue": ""
+            },
+            {
+              "id": "equipement6_encombrement",
+              "label": "Équipement 6 — encombrement",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "encombrement_total1",
+              "label": "Encombrement total — ligne 1",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "encombrement_total2",
+              "label": "Encombrement total — ligne 2",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "encombrement_total3",
+              "label": "Encombrement total — ligne 3",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "dinars_lc",
+              "label": "Dinars / LC",
+              "type": "text",
+              "defaultValue": ""
+            },
+            {
+              "id": "experience",
+              "label": "Expérience",
+              "type": "number",
+              "defaultValue": 0
+            }
+          ]
+        }
+      ],
+      "isBuiltin": false,
+      "id": "tpl-1793142284072"
+    }
+  ],
+  "moments": [
+    {
+      "id": "recette-dg-moment-accueil",
+      "campaignId": "recette-dg-campagne-station",
+      "name": "M01 — Ceux qui restent dehors",
+      "description": "Schéma original et signal synthétique ; aucun appareil configuré.",
+      "color": "#9c4937",
+      "icon": "Map",
+      "mapUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDEyMDAgODAwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiNlNmUyZDkiLz48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSIxMDUiIGZpbGw9IiMyNTI1MjUiLz48c3R5bGU+dGV4dHtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlmO2ZpbGw6IzI1MjUyNX08L3N0eWxlPjxwYXRoIGQ9Ik0zMCA3MTBIMTE3MCIgc3Ryb2tlPSIjOWM0OTM3IiBzdHJva2Utd2lkdGg9IjUiLz48dGV4dCB4PSI1MCIgeT0iNjYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI3MDAiIHN0eWxlPSJmaWxsOiNlNmUyZDkiPlBhcnZpcyBkdSByZWxhaXM8L3RleHQ+PHRleHQgeD0iNTUiIHk9IjE1NSIgZm9udC1zaXplPSIyMiI+VW5lIHN0YXRpb24gZGUgYsOpdG9uIHPigJllbmZvbmNlIGRhbnMgdW5lIGZvcsOqdCBzb21icmUuIERlcyBmYW1pbGxlcyBhdHRlbmRlbnQgc291cyBsZXM8L3RleHQ+PHRleHQgeD0iNTUiIHk9IjE4NyIgZm9udC1zaXplPSIyMiI+YXV2ZW50cyA7IGxhIHBvdXNzacOocmUgY29sbGUgYXV4IHbDqnRlbWVudHMuPC90ZXh0PjxyZWN0IHg9IjY1IiB5PSIyOTAiIHdpZHRoPSIzMTAiIGhlaWdodD0iMTU1IiBmaWxsPSIjYzljM2I2IiBzdHJva2U9IiMyNTI1MjUiIHN0cm9rZS13aWR0aD0iNCIvPjx0ZXh0IHg9Ijg1IiB5PSIzNTAiIGZvbnQtc2l6ZT0iMjUiPkF1dmVudDwvdGV4dD48cGF0aCBkPSJNMzc1IDM3MGg3MCIgc3Ryb2tlPSIjOWM0OTM3IiBzdHJva2Utd2lkdGg9IjgiLz48cmVjdCB4PSI0NDUiIHk9IjI5MCIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIxNTUiIGZpbGw9IiNjOWMzYjYiIHN0cm9rZT0iIzI1MjUyNSIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iNDY1IiB5PSIzNTAiIGZvbnQtc2l6ZT0iMjUiPlBvcnRlczwvdGV4dD48cGF0aCBkPSJNNzU1IDM3MGg3MCIgc3Ryb2tlPSIjOWM0OTM3IiBzdHJva2Utd2lkdGg9IjgiLz48cmVjdCB4PSI4MjUiIHk9IjI5MCIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIxNTUiIGZpbGw9IiNjOWMzYjYiIHN0cm9rZT0iIzI1MjUyNSIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iODQ1IiB5PSIzNTAiIGZvbnQtc2l6ZT0iMjUiPkF0dGVudGU8L3RleHQ+PHRleHQgeD0iNTUiIHk9IjUzMCIgZm9udC1zaXplPSIyMiI+QWNjw6hzIDogUXVhaSBkZXMgY2Fpc3NlcyDCtyBEaXNwZW5zYWlyZSBkZSBmb3J0dW5lIMK3IFBvc3RlIGRlcyB0cmFuc21pc3Npb25zPC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSI2MzUiIGZvbnQtc2l6ZT0iMjIiPlNjaMOpbWEgc2FucyDDqWNoZWxsZS4gRGlzdGFuY2VzLCBjb3V2ZXJ0IGV0IGRhbmdlcnMgYW5ub25jw6lzIHBhciBsZSBNSi48L3RleHQ+PHRleHQgeD0iNTAiIHk9Ijc2MCIgZm9udC1zaXplPSIxNSI+REVHRU5FU0lTIMK3IExBIFNUQVRJT04gREVTIENFTkRSRVMgwrcgRE9DVU1FTlQgT1JJR0lOQUwgREUgUkVDRVRURTwvdGV4dD48L3N2Zz4=",
+      "isMapVideo": false,
+      "soundAtmosphereId": "recette-dg-ambiance-station",
+      "soundPadId": "recette-dg-pad-turbine",
+      "titre": "Ceux qui restent dehors",
+      "titreDuree": 5
+    },
+    {
+      "id": "recette-dg-moment-souffle",
+      "campaignId": "recette-dg-campagne-station",
+      "name": "M02 — Sous le souffle des turbines",
+      "description": "Schéma original et signal synthétique ; aucun appareil configuré.",
+      "color": "#9c4937",
+      "icon": "Map",
+      "mapUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDEyMDAgODAwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiNlNmUyZDkiLz48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSIxMDUiIGZpbGw9IiMyNTI1MjUiLz48c3R5bGU+dGV4dHtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlmO2ZpbGw6IzI1MjUyNX08L3N0eWxlPjxwYXRoIGQ9Ik0zMCA3MTBIMTE3MCIgc3Ryb2tlPSIjOWM0OTM3IiBzdHJva2Utd2lkdGg9IjUiLz48dGV4dCB4PSI1MCIgeT0iNjYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI3MDAiIHN0eWxlPSJmaWxsOiNlNmUyZDkiPkNoYW1icmUgZGVzIGZpbHRyZXM8L3RleHQ+PHRleHQgeD0iNTUiIHk9IjE1NSIgZm9udC1zaXplPSIyMiI+TGUgc291ZmZsZSBkZXMgdHVyYmluZXMgZmFpdCB2aWJyZXIgbGVzIGdyaWxsZXMuIFVuZSBkw6lyaXZhdGlvbiBwb3J0ZSB1biBkw6lww7R0IG9jcmUgOzwvdGV4dD48dGV4dCB4PSI1NSIgeT0iMTg3IiBmb250LXNpemU9IjIyIj5sZXMgbWVtYnJhbmVzIGRlIHJlY2hhbmdlIHNvbnQgc8OoY2hlcy48L3RleHQ+PHJlY3QgeD0iNjUiIHk9IjI5MCIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIxNTUiIGZpbGw9IiNjOWMzYjYiIHN0cm9rZT0iIzI1MjUyNSIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iODUiIHk9IjM1MCIgZm9udC1zaXplPSIyNSI+VHVyYmluZTwvdGV4dD48cGF0aCBkPSJNMzc1IDM3MGg3MCIgc3Ryb2tlPSIjOWM0OTM3IiBzdHJva2Utd2lkdGg9IjgiLz48cmVjdCB4PSI0NDUiIHk9IjI5MCIgd2lkdGg9IjMxMCIgaGVpZ2h0PSIxNTUiIGZpbGw9IiNjOWMzYjYiIHN0cm9rZT0iIzI1MjUyNSIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iNDY1IiB5PSIzNTAiIGZvbnQtc2l6ZT0iMjUiPkTDqXJpdmF0aW9uPC90ZXh0PjxwYXRoIGQ9Ik03NTUgMzcwaDcwIiBzdHJva2U9IiM5YzQ5MzciIHN0cm9rZS13aWR0aD0iOCIvPjxyZWN0IHg9IjgyNSIgeT0iMjkwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjE1NSIgZmlsbD0iI2M5YzNiNiIgc3Ryb2tlPSIjMjUyNTI1IiBzdHJva2Utd2lkdGg9IjQiLz48dGV4dCB4PSI4NDUiIHk9IjM1MCIgZm9udC1zaXplPSIyNSI+TWVtYnJhbmVzPC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSI1MzAiIGZvbnQtc2l6ZT0iMjIiPkFjY8OocyA6IEF0ZWxpZXIgZGVzIGNsYXBldHMgwrcgRGlzcGVuc2FpcmUgZGUgZm9ydHVuZSDCtyBQYXNzZXJlbGxlIGRlIG1haW50ZW5hbmNlPC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSI2MzUiIGZvbnQtc2l6ZT0iMjIiPlNjaMOpbWEgc2FucyDDqWNoZWxsZS4gRGlzdGFuY2VzLCBjb3V2ZXJ0IGV0IGRhbmdlcnMgYW5ub25jw6lzIHBhciBsZSBNSi48L3RleHQ+PHRleHQgeD0iNTAiIHk9Ijc2MCIgZm9udC1zaXplPSIxNSI+REVHRU5FU0lTIMK3IExBIFNUQVRJT04gREVTIENFTkRSRVMgwrcgRE9DVU1FTlQgT1JJR0lOQUwgREUgUkVDRVRURTwvdGV4dD48L3N2Zz4=",
+      "isMapVideo": false,
+      "soundAtmosphereId": "recette-dg-ambiance-station",
+      "soundPadId": "recette-dg-pad-alarme",
+      "titre": "Sous le souffle des turbines",
+      "titreDuree": 5
+    },
+    {
+      "id": "recette-dg-moment-ordre",
+      "campaignId": "recette-dg-campagne-station",
+      "name": "M03 — L’annonce de fermeture",
+      "description": "Schéma original et signal synthétique ; aucun appareil configuré.",
+      "color": "#9c4937",
+      "icon": "Map",
+      "mapUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDEyMDAgODAwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiNlNmUyZDkiLz48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSIxMDUiIGZpbGw9IiMyNTI1MjUiLz48c3R5bGU+dGV4dHtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlmO2ZpbGw6IzI1MjUyNX08L3N0eWxlPjxwYXRoIGQ9Ik0zMCA3MTBIMTE3MCIgc3Ryb2tlPSIjOWM0OTM3IiBzdHJva2Utd2lkdGg9IjUiLz48dGV4dCB4PSI1MCIgeT0iNjYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI3MDAiIHN0eWxlPSJmaWxsOiNlNmUyZDkiPlBvc3RlIGRlcyB0cmFuc21pc3Npb25zPC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSIxNTUiIGZvbnQtc2l6ZT0iMjIiPlVuIMOpY3JhbiBvcGFxdWUgc2VydCBkZSB0YWJsZWF1IGTigJlhbm5vbmNlLiBEZXMgdMOpbW9pbnMgcGV1dmVudCBwYXJsZXIgZGVycmnDqHJlIHVuZTwvdGV4dD48dGV4dCB4PSI1NSIgeT0iMTg3IiBmb250LXNpemU9IjIyIj5jbG9pc29uIHNhbnMgZG9ubmVyIGxldXIgbm9tLjwvdGV4dD48cmVjdCB4PSI2NSIgeT0iMjkwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjE1NSIgZmlsbD0iI2M5YzNiNiIgc3Ryb2tlPSIjMjUyNTI1IiBzdHJva2Utd2lkdGg9IjQiLz48dGV4dCB4PSI4NSIgeT0iMzUwIiBmb250LXNpemU9IjI1Ij5Bbm5vbmNlPC90ZXh0PjxwYXRoIGQ9Ik0zNzUgMzcwaDcwIiBzdHJva2U9IiM5YzQ5MzciIHN0cm9rZS13aWR0aD0iOCIvPjxyZWN0IHg9IjQ0NSIgeT0iMjkwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjE1NSIgZmlsbD0iI2M5YzNiNiIgc3Ryb2tlPSIjMjUyNTI1IiBzdHJva2Utd2lkdGg9IjQiLz48dGV4dCB4PSI0NjUiIHk9IjM1MCIgZm9udC1zaXplPSIyNSI+RW50cmV0aWVuPC90ZXh0PjxwYXRoIGQ9Ik03NTUgMzcwaDcwIiBzdHJva2U9IiM5YzQ5MzciIHN0cm9rZS13aWR0aD0iOCIvPjxyZWN0IHg9IjgyNSIgeT0iMjkwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjE1NSIgZmlsbD0iI2M5YzNiNiIgc3Ryb2tlPSIjMjUyNTI1IiBzdHJva2Utd2lkdGg9IjQiLz48dGV4dCB4PSI4NDUiIHk9IjM1MCIgZm9udC1zaXplPSIyNSI+VHJhbnNtaXNzaW9uczwvdGV4dD48dGV4dCB4PSI1NSIgeT0iNTMwIiBmb250LXNpemU9IjIyIj5BY2PDqHMgOiBQYXJ2aXMgZHUgcmVsYWlzIMK3IEJ1cmVhdSBkZXMgcGVzw6llcyDCtyBQYXNzZXJlbGxlIGRlIG1haW50ZW5hbmNlPC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSI2MzUiIGZvbnQtc2l6ZT0iMjIiPlNjaMOpbWEgc2FucyDDqWNoZWxsZS4gRGlzdGFuY2VzLCBjb3V2ZXJ0IGV0IGRhbmdlcnMgYW5ub25jw6lzIHBhciBsZSBNSi48L3RleHQ+PHRleHQgeD0iNTAiIHk9Ijc2MCIgZm9udC1zaXplPSIxNSI+REVHRU5FU0lTIMK3IExBIFNUQVRJT04gREVTIENFTkRSRVMgwrcgRE9DVU1FTlQgT1JJR0lOQUwgREUgUkVDRVRURTwvdGV4dD48L3N2Zz4=",
+      "isMapVideo": false,
+      "soundAtmosphereId": "recette-dg-ambiance-station",
+      "soundPadId": "recette-dg-pad-turbine",
+      "titre": "L’annonce de fermeture",
+      "titreDuree": 5
+    },
+    {
+      "id": "recette-dg-moment-message",
+      "campaignId": "recette-dg-campagne-station",
+      "name": "M04 — Ce qui sera transmis",
+      "description": "Schéma original et signal synthétique ; aucun appareil configuré.",
+      "color": "#9c4937",
+      "icon": "Map",
+      "mapUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDEyMDAgODAwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiNlNmUyZDkiLz48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSIxMDUiIGZpbGw9IiMyNTI1MjUiLz48c3R5bGU+dGV4dHtmb250LWZhbWlseTpBcmlhbCxzYW5zLXNlcmlmO2ZpbGw6IzI1MjUyNX08L3N0eWxlPjxwYXRoIGQ9Ik0zMCA3MTBIMTE3MCIgc3Ryb2tlPSIjOWM0OTM3IiBzdHJva2Utd2lkdGg9IjUiLz48dGV4dCB4PSI1MCIgeT0iNjYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI3MDAiIHN0eWxlPSJmaWxsOiNlNmUyZDkiPlBvc3RlIGRlcyB0cmFuc21pc3Npb25zPC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSIxNTUiIGZvbnQtc2l6ZT0iMjIiPlVuIMOpY3JhbiBvcGFxdWUgc2VydCBkZSB0YWJsZWF1IGTigJlhbm5vbmNlLiBEZXMgdMOpbW9pbnMgcGV1dmVudCBwYXJsZXIgZGVycmnDqHJlIHVuZTwvdGV4dD48dGV4dCB4PSI1NSIgeT0iMTg3IiBmb250LXNpemU9IjIyIj5jbG9pc29uIHNhbnMgZG9ubmVyIGxldXIgbm9tLjwvdGV4dD48cmVjdCB4PSI2NSIgeT0iMjkwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjE1NSIgZmlsbD0iI2M5YzNiNiIgc3Ryb2tlPSIjMjUyNTI1IiBzdHJva2Utd2lkdGg9IjQiLz48dGV4dCB4PSI4NSIgeT0iMzUwIiBmb250LXNpemU9IjI1Ij5Bbm5vbmNlPC90ZXh0PjxwYXRoIGQ9Ik0zNzUgMzcwaDcwIiBzdHJva2U9IiM5YzQ5MzciIHN0cm9rZS13aWR0aD0iOCIvPjxyZWN0IHg9IjQ0NSIgeT0iMjkwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjE1NSIgZmlsbD0iI2M5YzNiNiIgc3Ryb2tlPSIjMjUyNTI1IiBzdHJva2Utd2lkdGg9IjQiLz48dGV4dCB4PSI0NjUiIHk9IjM1MCIgZm9udC1zaXplPSIyNSI+RW50cmV0aWVuPC90ZXh0PjxwYXRoIGQ9Ik03NTUgMzcwaDcwIiBzdHJva2U9IiM5YzQ5MzciIHN0cm9rZS13aWR0aD0iOCIvPjxyZWN0IHg9IjgyNSIgeT0iMjkwIiB3aWR0aD0iMzEwIiBoZWlnaHQ9IjE1NSIgZmlsbD0iI2M5YzNiNiIgc3Ryb2tlPSIjMjUyNTI1IiBzdHJva2Utd2lkdGg9IjQiLz48dGV4dCB4PSI4NDUiIHk9IjM1MCIgZm9udC1zaXplPSIyNSI+VHJhbnNtaXNzaW9uczwvdGV4dD48dGV4dCB4PSI1NSIgeT0iNTMwIiBmb250LXNpemU9IjIyIj5BY2PDqHMgOiBQYXJ2aXMgZHUgcmVsYWlzIMK3IEJ1cmVhdSBkZXMgcGVzw6llcyDCtyBQYXNzZXJlbGxlIGRlIG1haW50ZW5hbmNlPC90ZXh0Pjx0ZXh0IHg9IjU1IiB5PSI2MzUiIGZvbnQtc2l6ZT0iMjIiPlNjaMOpbWEgc2FucyDDqWNoZWxsZS4gRGlzdGFuY2VzLCBjb3V2ZXJ0IGV0IGRhbmdlcnMgYW5ub25jw6lzIHBhciBsZSBNSi48L3RleHQ+PHRleHQgeD0iNTAiIHk9Ijc2MCIgZm9udC1zaXplPSIxNSI+REVHRU5FU0lTIMK3IExBIFNUQVRJT04gREVTIENFTkRSRVMgwrcgRE9DVU1FTlQgT1JJR0lOQUwgREUgUkVDRVRURTwvdGV4dD48L3N2Zz4=",
+      "isMapVideo": false,
+      "soundAtmosphereId": "recette-dg-ambiance-station",
+      "soundPadId": "recette-dg-pad-alarme",
+      "titre": "Ce qui sera transmis",
+      "titreDuree": 5
+    }
+  ],
+  "atmospheres": [
+    {
+      "id": "recette-dg-ambiance-station",
+      "campagneId": "recette-dg-campagne-station",
+      "name": "RECETTE Degenesis — station",
+      "pads": {
+        "recette-dg-pad-turbine": {
+          "id": "recette-dg-pad-turbine",
+          "title": "turbine",
+          "filePath": "recette-dg-media-turbine.wav",
+          "volume": 0.2,
+          "color": "#9c4937",
+          "midiMapping": null,
+          "keyMapping": null,
+          "isActive": false,
+          "linkedLightSceneId": null
+        },
+        "recette-dg-pad-alarme": {
+          "id": "recette-dg-pad-alarme",
+          "title": "alarme",
+          "filePath": "recette-dg-media-alarme.wav",
+          "volume": 0.2,
+          "color": "#9c4937",
+          "midiMapping": null,
+          "keyMapping": null,
+          "isActive": false,
+          "linkedLightSceneId": null
+        },
+        "recette-dg-pad-annonce": {
+          "id": "recette-dg-pad-annonce",
+          "title": "annonce",
+          "filePath": "recette-dg-media-annonce.wav",
+          "volume": 0.2,
+          "color": "#9c4937",
+          "midiMapping": null,
+          "keyMapping": null,
+          "isActive": false,
+          "linkedLightSceneId": null
+        }
+      }
+    }
+  ],
+  "playlists": [
+    {
+      "id": "recette-dg-playlist-station",
+      "campagneId": "recette-dg-campagne-station",
+      "name": "RECETTE Degenesis — signaux",
+      "pads": [
+        {
+          "id": "recette-dg-musique-turbine",
+          "label": "turbine",
+          "url": "recette-dg-media-turbine.wav",
+          "type": "local",
+          "loopA": null,
+          "loopB": null
+        },
+        {
+          "id": "recette-dg-musique-alarme",
+          "label": "alarme",
+          "url": "recette-dg-media-alarme.wav",
+          "type": "local",
+          "loopA": null,
+          "loopB": null
+        }
+      ]
+    }
+  ],
+  "tuilesDeLumiere": [
+    {
+      "id": "SCENE_recette-dg-campagne-station_1",
+      "name": "Cendre",
+      "campagneId": "recette-dg-campagne-station",
+      "icon": "Lightbulb",
+      "color": "#9c4937",
+      "lightStates": {},
+      "sceneBrightness": 30
+    },
+    {
+      "id": "SCENE_recette-dg-campagne-station_2",
+      "name": "Oxyde",
+      "campagneId": "recette-dg-campagne-station",
+      "icon": "Lightbulb",
+      "color": "#9c4937",
+      "lightStates": {},
+      "sceneBrightness": 30
+    },
+    {
+      "id": "SCENE_recette-dg-campagne-station_3",
+      "name": "Clarté",
+      "campagneId": "recette-dg-campagne-station",
+      "icon": "Lightbulb",
+      "color": "#9c4937",
+      "lightStates": {},
+      "sceneBrightness": 30
+    }
+  ]
+}

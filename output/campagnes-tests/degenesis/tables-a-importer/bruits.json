@@ -1,0 +1,42 @@
+{
+  "name": "RECETTE Degenesis — Bruits du relais",
+  "dice": "1d6",
+  "entries": [
+    {
+      "min": 1,
+      "max": 1,
+      "title": "Le souffle saute un battement",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 2,
+      "max": 2,
+      "title": "Un volet métallique claque",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 3,
+      "max": 3,
+      "title": "Une voix demande un masque",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 4,
+      "max": 4,
+      "title": "Une roue grince derrière les caisses",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 5,
+      "max": 5,
+      "title": "La pluie frappe le béton",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    },
+    {
+      "min": 6,
+      "max": 6,
+      "title": "Le poste demande un témoin",
+      "description": "Fiction originale ; aucun effet mécanique automatique."
+    }
+  ]
+}

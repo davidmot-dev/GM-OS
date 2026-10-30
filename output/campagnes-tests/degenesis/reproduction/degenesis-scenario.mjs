@@ -1,0 +1,67 @@
+// Fiction originale de recette. Les noms de lieux et les personnes sont inventés.
+export const titre = 'La Station des Cendres';
+export const heros = [
+ {slug:'narek',nom:'Narek Voss',metier:'Récupérateur et mécanicien',culte:'Spitaliers',concept:'Le Protecteur — interprétation libre de recette',description:'Manteau gris rapiécé, caisse à outils et masque soigneusement entretenu. Il préfère isoler un danger plutôt que désigner un coupable.',histoire:'Narek a réparé les filtres du relais de Silex. On lui demande de distinguer une panne, une négligence et une contamination réelle.',motivation:'Son ancien diagnostic était incomplet ; il veut le reconnaître avant que quelqu’un soit puni pour lui.',materiel:['Trousse de diagnostic fictive','Masque et filtres de fiction','Lampe à manivelle'],competences:{physique:3,resistance:3,technologie:4,medecine:3,concentration:3,volonte:3}},
+ {slug:'sova',nom:'Sova Kern',metier:'Éclaireuse et escorte',culte:'Hellvétiques',concept:'La Gardienne — interprétation libre de recette',description:'Silhouette anguleuse, bottes couvertes de cendre ; elle compte les personnes avant de compter les colis.',histoire:'Sova escorte trois caisses de membranes filtrantes promises à la station. Son mandat protège les civils, même si le responsable local veut fermer les portes.',motivation:'Elle a promis à une réfugiée que personne ne serait abandonné sur le quai.',materiel:['Corde de franchissement','Jumelles de fiction','Gourde et ration'],competences:{physique:4,agilite:4,resistance:2,armes_a_projectiles:4,mobilite:3,perception:3,concentration:0,pulsions:3,volonte:3}},
+ {slug:'mira',nom:'Mira Lenz',metier:'Médiatrice et archiviste',culte:'Chroniqueurs',concept:'La Chercheuse — interprétation libre de recette',description:'Sac de feuillets cirés, crayon court, voix basse. Elle distingue un registre authentique de l’usage intéressé qu’on en fait.',histoire:'Mira doit remettre une copie des échanges du relais aux communautés voisines. Les poids, les horaires et les noms ont été falsifiés séparément.',motivation:'Elle souhaite publier les preuves sans publier les noms des malades.',materiel:['Carnet de copies','Sceaux documentaires fictifs','Petite lampe'],competences:{charisme:4,intellect:4,negociation:4,expression:3,ruse:3,concentration:3,foi:3,volonte:0}},
+];
+// slug, nom, type Atlas, description publique, note MJ, connexions
+export const lieux = [
+ ['parvis','Parvis du relais','exterior','Une station de béton s’enfonce dans une forêt sombre. Des familles attendent sous les auvents ; la poussière colle aux vêtements.','La fermeture est politique, pas une preuve de Sepsie.',['quai','dispensaire','poste']],
+ ['quai','Quai des caisses','interior','Trois caisses intactes et une bâche déchirée. La grue est immobile ; une piste de chariot continue vers les ateliers.','La caisse manquante est cachée pour le troc, sans contamination démontrée.',['parvis','atelier','archives']],
+ ['dispensaire','Dispensaire de fortune','interior','Des lits de toile et des fiches anonymisées. Une conduite apporte de l’air tiède depuis les filtres.','Deux malades souffrent de fumées industrielles ; seul un examen peut distinguer les causes.',['parvis','filtres']],
+ ['atelier','Atelier des clapets','interior','Les établis portent une graisse rouge. Une poignée neuve dépasse d’un tas de pièces anciennes.','Une vanne a été inversée pendant une réparation urgente ; le technicien n’est pas un saboteur.',['quai','filtres','passerelle']],
+ ['archives','Bureau des pesées','interior','Des tableaux horaires et des reçus sont cloués au mur ; les mêmes totaux reviennent trop régulièrement.','Deux écritures : faux poids pour un détournement, faux horaires pour dissimuler la panne.',['quai','poste']],
+ ['filtres','Chambre des filtres','interior','Le souffle des turbines fait vibrer les grilles. Une dérivation porte un dépôt ocre ; les membranes de rechange sont sèches.','Danger réglé par le MJ. Ni les spores ni les radiations ne s’appliquent automatiquement à l’entrée.',['atelier','dispensaire','passerelle']],
+ ['passerelle','Passerelle de maintenance','exterior','Une travée manque au-dessus d’un bassin vide. Une échelle de service offre un détour visible.','Franchissement par corde, détour ou remise en place d’une travée ; aucun jet unique obligatoire.',['atelier','filtres','poste']],
+ ['poste','Poste des transmissions','interior','Un écran opaque sert de tableau d’annonce. Des témoins peuvent parler derrière une cloison sans donner leur nom.','Le message final peut protéger les identités tout en exposant les responsabilités.',['parvis','archives','passerelle']],
+];
+// slug, nom, rôle, lieu, description, réplique, secret
+export const pnj = [
+ ['eda','Eda Rehn','Responsable des soins','dispensaire','Mains lavées, regard fatigué ; elle veut de l’air propre avant un discours.','Je vous donne les symptômes, pas les noms.','Elle a retardé une annonce pour protéger deux familles.'],
+ ['bor','Bor Asten','Intendant du relais','poste','Manteau net et liste de rationnement ; il veut préserver son autorité.','Sans ordre, chacun mourra de son côté.','Il a falsifié des horaires afin de masquer sa décision d’arrêter la turbine.'],
+ ['ves','Ves Orka','Technicienne','atelier','Des brûlures anciennes sur les poignets ; elle cherche une solution praticable.','Regardez la flèche sur le clapet. Moi aussi, je l’ai vue trop tard.','Elle a posé la vanne à l’envers, puis signalé la faute dans un billet caché.'],
+ ['jaro','Jaro Veit','Chef de quai','quai','Il répète les poids par cœur, mais refuse de montrer sa balance.','Une caisse compte comme une caisse.','Il a réservé une caisse au troc pour racheter la dette de sa sœur.'],
+ ['lin','Lin Berek','Convoyeuse','parvis','Une manche déchirée et un reçu soigneusement plié.','Mon reçu porte deux heures différentes.','Elle a vu le chariot partir après la fermeture officielle.'],
+ ['ost','Ost Maren','Garde inquiet','quai','Fusil bas, doigt loin de la détente ; il redoute une émeute.','Ne me forcez pas à choisir entre la porte et les gens.','Il peut ouvrir un passage si les civils sont accompagnés.'],
+ ['tala','Tala Sen','Porte-parole des familles','parvis','Elle connaît chaque personne qui attend dehors.','Nous accepterons une explication vérifiable.','Elle sait où est la caisse mais veut un engagement sur la distribution.'],
+ ['nor','Nor Iven','Copiste','archives','Ses doigts tachés d’encre tremblent seulement quand Bor entre.','Les copies n’ont pas toutes le même âge.','Il a conservé les originaux dans un double fond.'],
+ ['ru','Ru Falk','Messagère','passerelle','Petite sacoche étanche ; elle repère les détours avant les raccourcis.','L’échelle tient. Le raccourci, je ne le promets pas.','Elle a déjà franchi le détour sans toucher à la zone de dépôt.'],
+ ['ilan','Ilan Kest','Veilleur des filtres','filtres','Il écoute la turbine comme un animal blessé.','Le bruit a changé avant les premiers malaises.','Son relevé sonore date la panne ; il n’a aucune expertise médicale.'],
+ ['dara','Dara Noll','Témoin à protéger','dispensaire','Elle réclame un masque neuf pour son voisin avant le sien.','Vous pouvez lire mon histoire sans écrire mon nom.','La fumée de son atelier a aggravé ses symptômes.'],
+ ['kel','Kel Arno','Négociateur du troc','poste','Il veut récupérer sa créance sans combattre.','Rendez-moi quelque chose que je puisse emporter.','Il accepte des outils en échange de la caisse, si la dette est reconnue.'],
+];
+// Les indices essentiels ont trois voies : document, témoin, constat matériel.
+export const indices = [
+ ['recu','Reçu à double horaire','Le même convoi est marqué reçu avant puis après la fermeture. Ce document prouve une incohérence, pas une infection.','parvis','lin',true],
+ ['pesee','Poids répétés','Quatre lignes portent exactement le même poids malgré des contenus différents. Comparer la balance, interroger Jaro ou consulter le reçu de Lin.','archives','nor',false],
+ ['graisse','Trace du chariot','La graisse rouge du quai correspond aux roues arrêtées derrière l’atelier. Tala connaît le trajet ; l’inventaire confirme la caisse manquante.','quai','jaro',false],
+ ['billet','Billet de réparation','Ves a écrit : « clapet inversé, remettre la flèche vers la turbine ». On peut aussi voir la flèche ou entendre le relevé d’Ilan.','atelier','ves',false],
+ ['croquis','Croquis de dérivation','Le dessin relie le clapet à l’arrivée d’air du dispensaire. Vérifier sur place ou écouter Eda donne le même lien.','atelier','ves',false],
+ ['releve','Relevé de vibrations','La panne commence avant l’annonce de fermeture. Les horaires des soins et le témoignage de Ru permettent de le confirmer.','filtres','ilan',false],
+ ['diagnostic','Fiche anonymisée','Deux cas portent une exposition à des fumées. Aucun document ne permet de déclarer tous les arrivants contaminés. Eda propose un examen individuel.','dispensaire','eda',false],
+ ['dette','Reconnaissance de dette','Jaro doit des outils à Kel. La caisse détournée est une garantie de troc, pas une arme. Tala et Kel peuvent le confirmer.','poste','kel',false],
+ ['echelle','Chemin de service','Un croquis de Ru indique une échelle et un détour praticable. On les voit aussi depuis le quai.','passerelle','ru',false],
+ ['originaux','Copies non retouchées','Le double fond contient les horaires antérieurs. Nor les remet si l’on protège son nom ; les relevés du filtre prouvent la même chronologie.','archives','nor',false],
+ ['membrane','Membrane de rechange','La caisse cachée contient des membranes sèches ; examen, poids réel et inventaire concordent. Leur pose demande du temps et une procédure sûre.','atelier','jaro',false],
+ ['mandat','Proposition d’accord','Air rétabli, distribution sous témoins, dette convertie en outils, identités médicales protégées. Chaque partie peut amender la proposition.','poste','tala',false],
+];
+// slug, acte, titre, lieu, PNJ, indices, enjeu et alternatives, scènes suivantes
+export const scenes = [
+ ['accueil',1,'Ceux qui restent dehors','parvis',['lin','tala'],['recu'],'Écouter les attentes, compter les personnes et annoncer la mission. Les familles donnent le reçu sans test.',['quai','soins']],
+ ['quai',1,'Une caisse manque','quai',['jaro','ost'],['graisse'],'Comparer les charges ou parler au chef de quai. Une fouille autorisée, le témoin ou la trace conduisent à l’atelier.',['copies','atelier']],
+ ['soins',1,'Examiner sans stigmatiser','dispensaire',['eda','dara'],['diagnostic'],'Proposer INT+Médecine (2), sans bloquer le témoignage en cas d’échec ; Eda fournit le minimum médical nécessaire.',['atelier','copies']],
+ ['copies',1,'Les deux écritures','archives',['nor'],['pesee','originaux'],'Comparer les registres, négocier la protection du copiste ou recouper les horaires publics.',['atelier','ordre']],
+ ['atelier',2,'Le clapet retourné','atelier',['ves'],['billet','croquis'],'INT+Technologie (2) précise la réparation ; le billet et la flèche expliquent la panne même sans réussite.',['souffle','cache']],
+ ['souffle',2,'Sous le souffle des turbines','filtres',['ilan'],['releve'],'Préparer une zone sûre avant toute exposition. Les dangers et leur fréquence sont annoncés par le MJ ; le plan n’inflige rien automatiquement.',['detour','cache']],
+ ['detour',2,'Le détour visible','passerelle',['ru'],['echelle'],'Choisir l’échelle, la corde ou la réparation de la travée. Un échec complique le temps et le matériel, sans supprimer toute route.',['cache','ordre']],
+ ['cache',2,'La garantie cachée','atelier',['jaro','tala'],['membrane'],'Récupérer la caisse par accord, preuve ou échange d’outils. Le combat est une issue évitable.',['ordre','creance']],
+ ['ordre',3,'L’annonce de fermeture','poste',['bor','nor'],['originaux'],'Confronter les horaires sans exposer le copiste. CHA+Négociation (2) ou confrontation si Bor résiste ; les preuves restent accessibles.',['creance','distribution']],
+ ['creance',3,'Une dette transportable','poste',['kel','jaro'],['dette'],'Offrir des outils, une garantie ou une médiation. Aucune drogue nécessaire à la résolution.',['reparer','distribution']],
+ ['reparer',3,'Rendre l’air','filtres',['ves','ilan'],['croquis','membrane'],'Réparer par coopération : aide à difficulté +1, déclencheurs en dés pour l’opérateur. Un échec appelle une nouvelle préparation, pas une fermeture définitive.',['distribution']],
+ ['distribution',3,'Compter sous témoins','parvis',['tala','ost'],['mandat'],'Répartir les filtres, publier les responsabilités et préserver les données médicales. Le MJ fait constater l’effet concret des choix.',['message','retour']],
+ ['message',4,'Ce qui sera transmis','poste',['bor','eda','tala'],['mandat'],'Trois fins possibles : accord surveillé, preuves publiques anonymisées ou évacuation ordonnée. L’accès aux soins ne dépend pas d’un seul jet.',['retour']],
+ ['retour',4,'Ce que chacun emporte','dispensaire',['dara','lin'],['diagnostic'],'Consigner conséquences, promesses, butin et expérience décidée à la table ; pas de progression automatique revendiquée.',['sante','reserve']],
+ ['sante',4,'Atelier hors fiction : les deux pistes','atelier',['ves'],[],'Scène optionnelle de débrief. Ouvrir 02 pour dégâts, soin, Égo et persistance ; ne pas blesser les PJ de l’aventure pour préparer les seuils.',['reserve']],
+ ['reserve',4,'Atelier hors fiction : les déclencheurs','archives',['nor'],[],'Ouvrir 03 pour réserves, échecs, confrontation, initiative, Brûlure et Potentiels. Les résultats préparés sont des exercices, pas des dés truqués dans la partie.',[]],
+];

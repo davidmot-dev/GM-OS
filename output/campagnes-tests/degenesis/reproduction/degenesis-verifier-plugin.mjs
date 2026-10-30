@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {execFileSync} from 'node:child_process';
+const dir=path.resolve('output/campagnes-tests/degenesis');
+const racine=process.env.USERPROFILE;
+const python=process.env.GMOS_PYTHON??path.join(racine,'.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe');
+const script=process.env.GMOS_BUNDLE_TOOL??path.join(racine,'.codex/plugins/cache/created-by-me-remote/gmos-campagnes-tests/0.1.0/skills/campagnes-de-test/scripts/gmos_bundle.py');
+const inventaire=JSON.parse(fs.readFileSync(path.join(dir,'inventaire.json'),'utf8'));
+const rapports=inventaire.archives.map(a=>({fichier:a.fichier,...JSON.parse(execFileSync(python,['-B',script,'verify',path.join(dir,a.fichier)],{encoding:'utf8',env:{...process.env,PYTHONIOENCODING:'utf-8'}}))}));
+if(rapports.some(r=>!r.valid))throw Error('Archive refusée par l’utilitaire du plugin');
+fs.writeFileSync(path.join(dir,'verification-plugin.json'),JSON.stringify({outil:'GM-OS Campagnes de test / gmos_bundle.py verify',rapports},null,2)+'\n');
+console.log(JSON.stringify(rapports.map(({fichier,valid})=>({fichier,valid}))));

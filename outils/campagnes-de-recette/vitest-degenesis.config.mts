@@ -1,0 +1,2 @@
+import {defineConfig} from 'vitest/config';
+export default defineConfig({test:{environment:'jsdom',globals:true,setupFiles:['./src/test/setup.ts'],include:['outils/campagnes-de-recette/degenesis.test.ts','src/modules/dice/systemes/degenesis.test.ts','src/modules/combat/logic/pistesDeDegenesis.test.ts','src/modules/combat/initiativeDeDegenesis.test.ts','src/modules/session/components/fields/PanneauDeJet.degenesis.test.tsx']}});

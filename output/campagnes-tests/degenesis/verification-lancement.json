@@ -1,0 +1,45 @@
+{
+  "compilation": {
+    "commande": "npm.cmd run build",
+    "types": "tsc -b a permis la construction Vite",
+    "dist": "2026-10-30T18:37:33+01:00",
+    "electron": "2026-10-30T18:37:36+01:00"
+  },
+  "autorisation": "David : Oui, lancer les essais isolés",
+  "tentatives": [
+    {
+      "mode": "bac à sable",
+      "resultat": "Expiration 240 s et teardown 30 s ; electron-log-preload.js : EPERM lstat C:/Users/david"
+    },
+    {
+      "mode": "hors bac à sable",
+      "autorisation": "Escalade acceptée par revue automatique",
+      "resultat": "Trois imports et remplacement réussis ; Hub initial bloqué par les ports 4100/4101 occupés par l’ancien essai"
+    },
+    {
+      "mode": "hors bac à sable, ports libres",
+      "resultat": "Import et jet Hub360 réussis ; assertion aria-pressed inadaptée à la fiche intégrée, corrigée pour contrôler la classe active réelle"
+    },
+    {
+      "mode": "hors bac à sable, assertion de case adaptée",
+      "resultat": "Parcours intégral terminé ; test en échec uniquement GM-05 (12 chemins de secrets de séance). Import natif, remplacement, trois Hub, trois jets, Égo, fiches et rechargement réussis.",
+      "dureeSecondes": 50.4
+    },
+    {
+      "mode": "contrôle final des archives corrigées Atlas",
+      "dureeSecondes": 53.1,
+      "resultat": "Trois imports, remplacement, sentinelles, trois Hub, fiches, jets, Égo et rechargement réussis. Seul échec : GM-05, 12 chemins. Catégories des plans locales conformes à AtlasMap."
+    }
+  ],
+  "nettoyage": {
+    "profil": "gmos-e2e-BJp2EQ",
+    "processusFermes": 3,
+    "ports": "4100/4101 libérés",
+    "controle": "PID39064 et ses deux enfants portaient ce --user-data-dir exact ; dossier confirmé sous le temporaire système puis retiré"
+  },
+  "lint": {
+    "commande": "npx.cmd eslint outils/campagnes-de-recette/degenesis.test.ts outils/campagnes-de-recette/vitest-degenesis.config.mts e2e/campagneDeRecetteDegenesis.spec.ts",
+    "erreurs": 0,
+    "avertissement": "Configuration .mts ignorée par la configuration ESLint existante"
+  }
+}

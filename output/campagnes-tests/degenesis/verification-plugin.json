@@ -1,0 +1,44 @@
+{
+  "outil": "GM-OS Campagnes de test / gmos_bundle.py verify",
+  "rapports": [
+    {
+      "fichier": "01-La-Station-des-Cendres.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "ae34c1ad3d33fd44f17a55fe42e6d4ad4aecc23b8fe7437b24f66f443b53eb73",
+      "campaignId": "recette-dg-campagne-station",
+      "players": 3,
+      "characters": 3,
+      "assets": 40
+    },
+    {
+      "fichier": "02-Sante-et-Limites.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "ac666ed17df27d652f44c76d550f79f53fe9dc8ca183faa57a40516cd068f225",
+      "campaignId": "recette-dg-sante-campagne-station",
+      "players": 3,
+      "characters": 9,
+      "assets": 40
+    },
+    {
+      "fichier": "03-Reserves-et-Declencheurs.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "a0e31dd89b30a8289ca612144d6678024bb722db172a9e54ed6ed8b4eaa253fe",
+      "campaignId": "recette-dg-reserve-campagne-station",
+      "players": 3,
+      "characters": 9,
+      "assets": 40
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Replacer les sources à leurs chemins indiqués dans REPRODUIRE.md dans le dépôt GM-OS. Dépendances existantes et modules métier nécessaires ; ce dossier n’est pas autonome. Le relevé joueurs autorisé reste dans le dépôt ; aucun ancien contenu de campagne n’est inclus. GMOS_PYTHON et GMOS_BUNDLE_TOOL peuvent préciser les chemins de l’outil portable du plugin.

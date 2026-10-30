@@ -1,0 +1,17 @@
+{
+  "archives": [
+    {
+      "fichier": "01-La-Station-des-Cendres.gmos",
+      "sha256": "ae34c1ad3d33fd44f17a55fe42e6d4ad4aecc23b8fe7437b24f66f443b53eb73"
+    },
+    {
+      "fichier": "02-Sante-et-Limites.gmos",
+      "sha256": "ac666ed17df27d652f44c76d550f79f53fe9dc8ca183faa57a40516cd068f225"
+    },
+    {
+      "fichier": "03-Reserves-et-Declencheurs.gmos",
+      "sha256": "a0e31dd89b30a8289ca612144d6678024bb722db172a9e54ed6ed8b4eaa253fe"
+    }
+  ],
+  "assertions": "degenesis.test.ts ; résultat global verification-archives.json"
+}
