@@ -1,0 +1,19 @@
+{
+  "source": "Degenesis - Fiche PJ.pdf",
+  "sourceSHA256": "5ce30071896cfb53a17d3602bbacbb8d1e085d51ffb7944e4951212173d51662",
+  "htmlSHA256": "b0af7d1d070a37a07b0b62f10ea7303d7f0f18ccc34d6b7675f232518cc8c1b1",
+  "templateId": "degenesis-fr",
+  "pages": [
+    {
+      "id": "page-1",
+      "width": 595.22,
+      "height": 842
+    }
+  ],
+  "zones": 461,
+  "cles": 129,
+  "pistes": 58,
+  "hotspots": 390,
+  "creation": "Nouveau modèle ; aucune fiche Degenesis précédente trouvée dans le dépôt ou le moteur.",
+  "integration": "Modèle à importer ; ni builtinTemplates ni correspondance du pilote modifiés."
+}

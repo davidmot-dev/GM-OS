@@ -1,0 +1,42 @@
+{
+  "pages": 1,
+  "zones": 461,
+  "cles": 129,
+  "pistes": 58,
+  "hotspots": 390,
+  "htmlSHA256": "b0af7d1d070a37a07b0b62f10ea7303d7f0f18ccc34d6b7675f232518cc8c1b1",
+  "fondIdentiqueAuRenduSource": true,
+  "erreursJavaScript": [],
+  "requetesReseau": [],
+  "impression": [
+    0,
+    0,
+    594.95996,
+    841.91998
+  ],
+  "fonctions": "Saisie et sauvegarde des 129 clés, jauges cumulatives et remise à zéro, import/export et rechargement, rejets sans perte, reset confirmé, zoom/clavier/molette, mobile, impression sur une page, import dans un moteur jetable et retour JSON v2.",
+  "integration": "Modèle non installé dans builtinTemplates ; correspondance non écrite, conformément à l’atelier.",
+  "capturesExaminees": true,
+  "revueVisuelle": {
+    "date": "2026-10-30",
+    "captures": [
+      {
+        "fichier": "page-1-zones.png",
+        "sha256": "179bfb08bbc8aa33d9bad6323f1e71cd80b5cacdb92f01d21b9e0d8f4075189e"
+      },
+      {
+        "fichier": "page-1-remplie.png",
+        "sha256": "3a495a7d309cc38fce48dc87d24f15d69e416a2327f860e0646faec1b144cd47"
+      },
+      {
+        "fichier": "moteur-page-1.png",
+        "sha256": "e02b4fde7e9b5fd99e5c0be3cdb9e816183dcaa174a23dc9c2ea0fe2a4306b1b"
+      },
+      {
+        "fichier": "mobile-390.png",
+        "sha256": "f41b49e2a17397eeba4050ac471e0c35a2b84ec1151907cc93a3fae452f460c0"
+      }
+    ],
+    "constat": "Pistes calées sur les cases imprimées, champs de tableaux dans leurs cellules ; cultures et textes lisibles, aucune zone interactive en chevauchement. Fond inchangé. À petite largeur, zoom et défilement permettent de saisir les cases."
+  }
+}
