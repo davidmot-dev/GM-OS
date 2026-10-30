@@ -170,6 +170,14 @@ Playwright.
 - **`post-commit`** renvoie à NotebookLM (carnet « GM-OS ») **les guides modifiés** par le commit.
   Pour s'en passer : `GMOS_SANS_NOTEBOOKLM=1 git commit …` — à demander à David.
 
+**Les gardes de Claude Code** (`.claude/hooks/`, depuis le 28/10, registre § 186) ne valent que
+pour Claude Code, pas pour git ni pour Codex : `garde-git.mjs` fait confirmer toute commande git
+qui écrit ; `garde-gmos-tourne.mjs` refuse d'écrire dans `src/` ou `electron/` quand Vite répond
+sur 5173, et pose « GM-OS tourne-t-il ? » une fois par session sinon. Essais :
+`node --test .claude/hooks/gardes.test.mjs`. Les procédures répétées (finir un pilote, relire un
+corpus, campagne de recette, clore la session) sont dans `.claude/skills/` : lisibles par Codex
+comme des fichiers ; ce document et le registre font foi en cas d'écart.
+
 ---
 
 ## 7 · Les conventions d'écriture

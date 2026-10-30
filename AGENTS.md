@@ -32,7 +32,18 @@ cas de doute, demande à David avant d'agir.**
 > section et sa ligne de synthèse**, avec ses acquis, améliorations possibles et sujets à
 > auditer. Tenir aussi à jour les registres détaillés liés. Consigne de David du 20/10/2026.
 
+> 📋 **Les procédures qui reviennent sont des listes à cocher** dans `.claude/skills/` (Claude Code
+> les charge seul ; un autre agent les lit comme des fichiers) : `finir-un-pilote`,
+> `relire-un-corpus`, `campagne-de-recette`, `clore-la-session`. Elles renvoient aux documents
+> ci-dessus, qui font foi en cas d'écart. Posées le 28/10/2026 à la demande de David.
+
 ## Ce qui est interdit, et pourquoi
+
+> Deux de ces interdits sont **doublés par des gardes** pour Claude Code
+> (`.claude/hooks/`, branchées dans `.claude/settings.json`) : `garde-git.mjs` fait confirmer
+> toute commande git qui écrit ; `garde-gmos-tourne.mjs` refuse d'écrire dans `src/` ou
+> `electron/` quand Vite répond sur 5173 et pose la question une fois par session sinon. Elles
+> lisent le texte des commandes, pas leur effet : **la règle reste la tienne**.
 
 - ⛔ **Aucune commande git qui écrit** (`commit`, `push`, `stash`, `checkout`, `reset`, `rebase`,
   `worktree`, `clean`) sans demande explicite de David. *Une première version de la sauvegarde
