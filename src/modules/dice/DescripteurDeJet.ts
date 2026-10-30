@@ -26,6 +26,7 @@ import type { RegleDesJetsAlien } from './systemes/jetsAlien';
 import { jetDeNephilim, type ChoixDeNephilim, type JetDeNephilim, type RegleDeNephilim } from './systemes/nephilimRegles';
 import { estUnAndroide } from './systemes/paniqueAlien';
 import { CHOIX_DE_RUNEQUEST, calculerRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest } from './systemes/runequest';
+import { reserveDeDegenesis, type ChoixDeDegenesis, type ReserveDeDegenesis } from './systemes/degenesis';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 import type { EchelleDuJet } from './degresDeReussite';
 import {
@@ -530,6 +531,14 @@ export interface DescripteurDeJet {
      */
     runequest?: import('./systemes/runequest').RegleDeRuneQuest;
     /**
+     * **Degenesis** — 2026-10-30 (`systemes/degenesis.ts`) : la réserve (attribut +
+     * compétence) se modifie en dés, perd un dé par Traumatisme, gagne l'Égo dépensé ;
+     * au-delà de 12 dés, le surplus devient des succès d'office. Chaque 4+ est un
+     * succès, chaque 6 un déclencheur sur une réussite ; échec critique quand les 1
+     * dépassent les succès d'un échec.
+     */
+    degenesis?: import('./systemes/degenesis').RegleDeDegenesis;
+    /**
      * **Star Trek Adventures, jusqu'au bout** — 2026-10-23 (`systemes/starTrekRegles.ts`) :
      * au jet, la nature de la tâche, la marge de complication, l'opposition, les
      * assistants et l'aide du vaisseau, la Détermination ; après, les complications
@@ -595,6 +604,8 @@ export interface ChoixDuJoueur {
     nephilim?: ChoixDeNephilim;
     /** Ce que le panneau règle pour RuneQuest (`DescripteurDeJet.runequest`) ; absent : un jet sans modificateur. */
     runequest?: Partial<ChoixDeRuneQuest>;
+    /** Ce que le panneau règle pour Degenesis (`DescripteurDeJet.degenesis`) : modificateurs en dés, Égo dépensé. */
+    degenesis?: Partial<ChoixDeDegenesis>;
     /** La valeur de l'adversaire, quand le jet s'oppose à lui. Absente : pas d'opposition. */
     valeurAdverse?: number;
     /** L'Avantage tactique est coché (`modificateurDuSeuil.avantage`). */
@@ -703,6 +714,8 @@ export interface JetPrepare {
     echelle?: EchelleDuJet;
     /** RuneQuest : le mode du test, les chances modifiées et l'aptitude adverse réduite. */
     runequest?: CalculDeRuneQuest;
+    /** Degenesis : la valeur d'action modifiée, les dés lancés et les succès d'office. */
+    degenesis?: ReserveDeDegenesis;
     nombreDeDes: number;
     /**
      * **Les dés de base quand ils n'ont pas tous la même taille.**
@@ -1385,9 +1398,24 @@ export function preparerLeJet(
     const marquesDuPotentiel = garde?.atteintes ? garde.atteintes.base - garde.atteintes.actuel : 0;
     const reserveDeDepart = Math.max(0, (reserve?.base ?? 0) + deLaReserve.total - marquesDuPotentiel);
 
+    /*
+      **Degenesis** (2026-10-30) : la réserve se modifie en dés, perd un dé par
+      Traumatisme ; au-delà de douze, le surplus n'est pas perdu, il devient des
+      succès d'office (p. 18) — d'où l'absence d'avertissement de plafond.
+    */
+    const degenesis = descripteur.degenesis && reserve
+        ? reserveDeDegenesis(
+            reserveDeDepart,
+            choix.degenesis ?? {},
+            descripteur.degenesis.traumatismes ? lireLeChamp(valeursDeLaFiche, descripteur.degenesis.traumatismes).valeur ?? 0 : 0,
+        )
+        : undefined;
+    if (degenesis?.traumatismes) remarques.push(`${degenesis.traumatismes} Traumatisme${degenesis.traumatismes > 1 ? 's' : ''} : −${degenesis.traumatismes}D.`);
+    if (degenesis?.automatiques) remarques.push(`Valeur d'action ${degenesis.valeur} : 12 dés et ${degenesis.automatiques} succès d'office.`);
+
     // Les dés achetés ne franchissent pas le plafond du système : chez Dune,
     // cinq dés au total, quoi qu'on dépense.
-    const demandes = reserveDeDepart + Math.max(0, choix.desSupplementaires ?? 0);
+    const demandes = degenesis ? degenesis.des : reserveDeDepart + Math.max(0, choix.desSupplementaires ?? 0);
     const nombreDeDes = reserve?.sansPlafond ? demandes : Math.min(demandes, reserve?.max ?? 0);
     if (reserve && !reserve.sansPlafond && demandes > reserve.max) {
         avertissements.push(`Réserve plafonnée à ${reserve.max} dés.`);
@@ -1395,7 +1423,8 @@ export function preparerLeJet(
 
     // Le prix croît dé après dé : on additionne les échelons réellement
     // franchis, pas le nombre de dés fois un prix moyen.
-    const desAchetes = nombreDeDes - reserveDeDepart;
+    // Chez Degenesis, les dés en plus viennent des modificateurs et de l'Égo : aucun ne s'achète.
+    const desAchetes = degenesis ? 0 : nombreDeDes - reserveDeDepart;
     const echelons = reserve?.cout ?? [];
     const total = echelons.slice(0, Math.max(0, desAchetes)).reduce((s, c) => s + c, 0);
 
@@ -1478,6 +1507,7 @@ export function preparerLeJet(
         ...(garde ? { garde } : {}),
         ...(nephilim ? { nephilim } : {}),
         ...(runequest ? { runequest } : {}),
+        ...(degenesis ? { degenesis } : {}),
         echelle,
         /*
           Quand les dés sont échelonnés, c'est leur nombre qui fait foi : ils ne

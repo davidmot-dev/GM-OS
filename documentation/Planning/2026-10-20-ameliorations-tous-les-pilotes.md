@@ -50,6 +50,7 @@ sur demande explicite de David : « Je voudrais finir les améliorations du driv
 | [Blade Runner](#blade-runner) | 🟢 4 · 🟠 0 · 🔴 0 | **Fini le 24/10, pilote 2.0.0** (registre § 174) : audit, pupitre, mort et stabilisation, guérison, et au-delà ; **essayé par David le 25/10** | Rien : tous les lots faits |
 | [Crimes](#crimes) | 🟢 13 · 🟠 0 · 🔴 0 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** ; **tous les lots livrés et essayés le 23/10** : circonstances, hermétiques, opposition, psychologie et seuils, manœuvres, contacts, fortune, création (registre § 157–161) | Rien : tous les lots faits ; tir multiple, intimider, rivalités et fortune commune restent au meneur |
 | [Cthulhu Hack](#cthulhu-hack) | 🟢 5 · 🟠 0 · 🔴 0 | Cinq améliorations livrées et essayées par David le 23/10 contre le livre français (p. 31–32, 34, 42, 50–52), registre § 164 ; campagnes de recette livrées le 25/10 et rattachées aux trois joueurs existants (§ 178) | Essayer les 59 cas du cahier ; défaut transversal GM-05 (`gmSecrets` transmis aux tablettes) consigné au § 1 bis. Soins spéciaux et suites mentales restent des sujets d'audit séparés |
+| [Degenesis](#degenesis) | 🟢 1 · 🟠 6 · 🔴 0 | **Nouveau pilote, fini le 30/10**, 2.0.0 (registre § 188) : corpus relu 16/16 contre le livre, réserve de d6 à 4+ avec déclencheurs, échec critique, succès d'office au-delà de 12, Égo et Traumatismes ; deux pistes de santé et attaque mentale dans Combat-OS ; initiative en succès ; fiche HTML au moteur 21 reliée (129/129), thème contrôlé | Réimport avec Remplacer et essai de David |
 | [Dune](#dune) | 🟢 9 · 🟠 0 · 🔴 0 | D0–D8 et fiches PJ/Maison validés par David le 25/10, pilote 2.0.0 (§ 175–176), corpus relu (§ 173) ; campagne de recette avec Maison et conflits préparés livrée le 26/10 (§ 182) | Essayer les 66 cas du cahier ; GM-05 transversal signalé ; arbitrages narratifs au MJ |
 | [Nephilim Légende](#nephilim-légende) | 🟢 9 · 🟠 1 · 🔴 0 | **N1–N9 livrés et essayés le 23/10** (registre § 165) ; campagne et deux laboratoires livrés le 26/10, 70 cas (§ 183) | L'essai sur tablette physique |
 | [NOC](#noc) | 🟢 9 · 🟠 0 · 🔴 0 | **Tous les points validés par David le 25/10 : « ok tout fonctionne »** ; pilote 2.0.0, moteur de fiches 18, commit `bf83cbf6`. [Bilan](2026-10-25-noc-finir.md), registre § 177 ; campagne et Cabale de recette livrées (§ 179) | Essayer les 62 cas de recette ; GM-05 transversal signalé ; les portées et arbitrages narratifs restent à la Loi |
@@ -321,6 +322,40 @@ relever puis refaire tomber un personnage ne doit pas rejouer les pertes de son 
 Barèmes contrôlés dans l'édition fournie. Les soins spéciaux, séquelles mentales définitives,
 récupération mentale et cartes Contrecoups restent à auditer séparément ; ils ne sont pas
 comptés parmi ces cinq améliorations. Vérifications et export dans le registre lié.
+
+## Degenesis
+
+**Référence :** [manuel 2.0.0](../User%20Guides/54-Jeu-Degenesis.md) ; registre § 188.
+**Statut : fini le 30/10/2026** contre le livre de base français KatharSys
+(`Degenesis - KATHARSYS_OCR.pdf`), pages imprimées (PDF − 1) ; pilote **2.0.0**
+(`Export Dirvers/corriges/Degenesis_driver_gmos_finir.gmos-driver`), à réimporter avec **Remplacer**.
+
+**Livré le 30/10 :** le pilote forgé par David (`Degenesis_driver_gmos_1793367219023`) ; le thème
+`degenesis` (accepté 0/0), la fiche HTML `degenesis-fr` (129 clés) et la bannière, faits par Codex
+([fiche](2026-10-30-etat-et-reprise-codex-fiche-degenesis.md), [thème](2026-10-30-etat-et-reprise-codex-theme-degenesis.md),
+[bannière](2026-10-30-etat-et-reprise-codex-banniere-identite-degenesis.md)).
+
+| Priorité | Amélioration | Réalisation |
+| --- | --- | --- |
+| 🟠 P0 | Le jet : le pilote forgé prenait attribut + compétence pour le seuil de chaque dé, ne lançait aucun dé et exigeait quatre succès | **Livré le 30/10** : `jet.degenesis` (`dice/systemes/degenesis.ts`) ; réserve attribut + compétence, d6 réussis sur 4+ (`dice.successThreshold`), difficulté du livre en succès requis (Délicate 2 par défaut), modificateurs en dés, −1D par Traumatisme, Égo dépensé retiré de la fiche ; 12 dés au plus, le surplus en succès d'office ; déclencheurs « bien → légendaire » sur une réussite, échec critique quand les 1 dépassent les succès (p. 18-19, 100-106). Cartes `DegenesisAuJet.tsx`. Essai de David attendu |
+| 🟠 P1 | La fiche GM-OS et le pilote 2.0.0 | **Livré le 30/10** : 131 champs reprenant les 129 clés de la fiche HTML — 36 compétences au lieu de « Compétence 1 à 5 », six Potentiels, trois armes, deux armures, équipement — plus l'Égo maximal (à saisir) et la santé restante ; portées en bandes relatives à l'arme (−4D, −8D). Essai de David attendu |
+| 🟠 P1 | La santé à deux pistes et l'attaque mentale | **Livré le 30/10** : `combat.pistesDeSante` (`combat/logic/pistesDeDegenesis.ts`) à la porte des dégâts : Blessures superficielles jusqu'à (PHY+Résistance)×2, puis Traumatismes jusqu'à PHY+PSY ; la santé principale suit les deux pistes et se recalcule sur elles ; soin sur les Blessures ; dégât « mental » sur l'Égo (p. 94, 107). Essai de David attendu |
+| 🟠 P1 | L'initiative | **Livré le 30/10** : `combat.initiativeEnReserve` — PSY+Réactivité lancé en d6, score = succès, −1D par Traumatisme, actions en plus dites au journal (p. 100-101) ; le champ « reactivite » manquait au pilote forgé. Essai de David attendu |
+| 🟢 P0 avant extension | Corpus relu contre le livre | **Fait le 30/10** : 16/16 ; quatorze fiches corrigées, une conforme, la fiche du ton réécrite ; affirmations sans source retirées (défense active, double de la portée longue, incubation, couvert, cumuls de Potentiels) |
+| 🟠 P1 | La fiche HTML reliée | **Livré le 30/10** : moteur 20 → 21 (`outils/degenesis/integrer_au_moteur.mjs`), correspondance des 129 clés (`relier_fiche_degenesis.mjs`), validateur 0/0 ; e2e : fiche remplie depuis GM-OS. Essai de David attendu |
+| 🟠 P2 | Le thème `degenesis` et la bannière | **Livrés le 30/10** par Codex, thème accepté 0/0 ; à activer dans une campagne. Essai de David attendu |
+
+**Reste :** l'essai de David. À la table, par choix : l'armure (saisie déduite), la défense
+passive ou active, les Potentiels, la Brûlure et la Sporulation permanente ; les adversaires sans
+fiche perdent leurs PV d'un bloc.
+
+**Sujets à auditer :** l'Égo maximal calculé selon Concentration ou Pulsions au lieu d'être
+saisi ; l'Égo dépensé au Jet système d'initiative ; l'armure de la fiche retirée d'office ; les
+combinaisons de tests (déclencheurs reportés) et la coopération (déclencheurs en dés de bonus) au
+panneau ; les deux pistes sur un adversaire autonome.
+
+**Cas témoin :** Falberg, INS 2 + Dressage 1 : 3 dés, 2-4-6 contre 2 — réussite « bien » ;
+PHY+Résistance 4 : 10 dégâts → 8 Blessures superficielles et 2 Traumatismes (p. 18-19, 107).
 
 ## Dune
 
@@ -689,7 +724,7 @@ propres :
 
 | Sujet commun | Pilotes concernés | Résultat recherché |
 | --- | --- | --- |
-| 🟠 Corpus et contrôles de la Forge | Tous, en priorité Symbaroum/Dune | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. **Crimes relu en entier le 23/10** (§ 160 : 19 fiches sur 19) ; Symbaroum corrigé le 23/10 (§ 166) ; Star Trek (§ 167) et Rêve de Dragon (§ 168) corrigés à leur livraison. **Symbaroum relu en entier le 24/10** (§ 172 : 13 sur 13, sept corrections, quatre affirmations sans source retirées). **Dune relu en entier le 24/10** (§ 173 : 20 sur 20 contre le livre et son errata). **Blade Runner relu en entier le 24/10** (§ 174 : 22 sur 22). **RuneQuest relu en entier le 30/10** (§ 187 : 17 sur 17 contre le livre et son errata). **Compté le 24/10 — fiches encore `relu: false` :** Alien 23 sur 26, Cthulhu Hack 18, NOC 19, Nephilim 21, Rêve de Dragon 16 sur 21, Star Trek 15 sur 19, Torg 16, corpus 2d20 19, SRD YZE 17, Barbarian 16 ; Within n'a aucun corpus, et son pilote est retiré (David, 24/10 : pas la peine pour l'instant). **Reste :** les autres corpus, à relire quand leur jeu sera repris |
+| 🟠 Corpus et contrôles de la Forge | Tous, en priorité Symbaroum/Dune | Détecter une configuration mécaniquement trompeuse, pas seulement les champs inexistants ; références et exemples vérifiés. **Livré le 22/10 (registre § 148) :** la consigne dit que `jet.difficulte` compte des réussites sur plusieurs dés, jamais pour un seul dé, et que le seuil de chaque dé va dans `dice.successThreshold` ; le contrôle du pilote mesure la difficulté au plafond de la réserve. **Crimes relu en entier le 23/10** (§ 160 : 19 fiches sur 19) ; Symbaroum corrigé le 23/10 (§ 166) ; Star Trek (§ 167) et Rêve de Dragon (§ 168) corrigés à leur livraison. **Symbaroum relu en entier le 24/10** (§ 172 : 13 sur 13, sept corrections, quatre affirmations sans source retirées). **Dune relu en entier le 24/10** (§ 173 : 20 sur 20 contre le livre et son errata). **Blade Runner relu en entier le 24/10** (§ 174 : 22 sur 22). **RuneQuest relu en entier le 30/10** (§ 187 : 17 sur 17 contre le livre et son errata). **Degenesis relu en entier le 30/10** (§ 188 : 16 sur 16). **Compté le 24/10 — fiches encore `relu: false` :** Alien 23 sur 26, Cthulhu Hack 18, NOC 19, Nephilim 21, Rêve de Dragon 16 sur 21, Star Trek 15 sur 19, Torg 16, corpus 2d20 19, SRD YZE 17, Barbarian 16 ; Within n'a aucun corpus, et son pilote est retiré (David, 24/10 : pas la peine pour l'instant). **Reste :** les autres corpus, à relire quand leur jeu sera repris |
 | 🟢 Modificateurs et contexte du jet | Symbaroum, Alien, puis audits des autres | Distinguer modificateur de seuil, nombre de dés, réussites exigées et meilleur/pire dé. **Avantage tactique livré le 22/10 (§ 155).** **Livré le 22/10 (registre § 149) :** `jet.modificateurDuSeuil`, capacité commune du moteur (tout jeu jeté sous un seuil additionné), avec opposition explicite ; Symbaroum la déclare. Les réussites exigées restent `difficulte` (Dune), le nombre de dés la réserve, meilleur/pire dé « Tirage ». **Rien de commun ne reste (24/10)** : le moteur est livré ; chaque jeu l'emploie dans son propre chantier (Crimes, Symbaroum, Star Trek, Nephilim, Rêve de Dragon et Blade Runner finis ; Dune, NOC et Torg dans leurs sections, Within en suspens) |
 | 🟢 Choix du paiement et bilan du jet | Dune, Star Trek | Conserver coût, source, effets immédiats et reliquat, sans double dépense ni perte anticipée. **Livré le 22/10 (registre § 151) :** `paiementAuChoix` (« dont en Menace », depuis la fiche et la tablette) ; l'Impulsion du jet que la réserve pleine ne garde pas reste sur le test (dépenser ou verser). Activé pour Dune (D2) et pour **Star Trek**, audité et fini le 23/10 (§ 167). **Rien de commun ne reste (24/10)** : les dépenses contextualisées et l'Impulsion bonus sont propres à Dune, dans sa section (développées et validées par David le 25/10, § 175) |
 | 🟢 Santé et séquelles | Symbaroum, Crimes, Alien, Blade Runner, Cthulhu Hack, NOC | Une valeur courante de référence ; distinguer temporaire/permanent, soins et états propres au jeu. **Livré le 22/10 (registre § 150) :** la fiche naît à sa santé de départ ; la Forge avertit d'une santé sans champ courant (Symbaroum corrigé, Crimes signalé) ; `franchissements` propose la séquelle permanente une fois par passage (NOC). Crimes C2 livré le 22/10 (§ 158 : Potentiel actuel, atteintes, bonne nuit). **Vérifié le 24/10 :** Crimes C6 livré (la carte de combat lit le Physique actuel, `CombatCard` → `physiqueActuel`, § 161) ; Cthulhu Hack fini le 23/10 (§ 164) ; agonie de Symbaroum (§ 166), Stress et blessures de Star Trek (§ 167), blessures et famine de Rêve de Dragon (§ 168). **Rien de commun ne reste** : la stabilisation de Blade Runner est livrée dans sa section le 24/10 (§ 174) |
@@ -700,7 +735,7 @@ propres :
 
 **Pour choisir une prochaine intervention (revu le 25/10) :** Alien, Crimes, Cthulhu Hack,
 Nephilim, Rêve de Dragon, Star Trek, Symbaroum et Blade Runner sont finis contre leur livre ;
-Barbarians of Lemuria (27/10) et RuneQuest (30/10) aussi, leur essai par David attendu.
+Barbarians of Lemuria (27/10), RuneQuest et Degenesis (30/10) aussi, leur essai par David attendu.
 NOC est terminé et validé par David le 25/10 (§ 177) ; Torg reste à auditer ; Dune est validé
 par David le 25/10 (§ 175) ; Within est en suspens, son pilote retiré par David. Ce repérage n'impose pas un ordre entre les
 campagnes de David.

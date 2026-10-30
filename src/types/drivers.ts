@@ -641,6 +641,20 @@ export interface GameDriver {
                 { pv: string; armure?: string; degats: string }>>;
         };
         /**
+         * **Deux pistes de santé** — Degenesis, 2026-10-30
+         * (`combat/logic/pistesDeDegenesis.ts`). Les dégâts cochent `blessures`
+         * jusqu'à son maximum (`statsToTrack[].max`), puis `traumatismes` ; la santé
+         * principale perd ce que les deux retiennent. Une attaque mentale (type
+         * « mental ») se retire de `ego`.
+         */
+        pistesDeSante?: { mecanique: 'degenesis'; blessures: string; traumatismes: string; ego?: string };
+        /**
+         * **L'initiative en réserve** — Degenesis, 2026-10-30 : `initiativeFormula`
+         * donne le nombre de d6 (PSY + Réactivité), le score est le nombre de succès
+         * (4+), et chaque paire de 6 donne une action de plus (p. 100-101).
+         */
+        initiativeEnReserve?: { mecanique: 'degenesis' };
+        /**
          * **Les limites de Blessures des adversaires** — Torg, 2026-10-14. Un sbire
          * (« — ») tombe à la première Blessure, un aguerri à la deuxième, un
          * adversaire chargé en possibilités comme un héros. Le panneau de santé

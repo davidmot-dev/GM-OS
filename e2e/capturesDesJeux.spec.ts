@@ -200,6 +200,20 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         scenes: c => scenesDeRuneQuest(c),
     },
     {
+        // Degenesis (2026-10-30) : Falberg, le Préserviste spitalier du livre Katharsys (p. 18-21, 100-108).
+        corpusId: 'degenesis', slug: 'degenesis', personnage: 'Falberg',
+        sheetData: {
+            nom: 'Falberg', culture: 'Borca', concept: 'Le Gardien', culte: 'Spitaliers', rang: 'Préserviste',
+            physique: 4, agilite: 2, charisme: 2, intellect: 2, psyche: 3, instinct: 2,
+            corps_a_corps: 3, resistance: 2, athletisme: 2, dressage: 1, reactivite: 2, volonte: 2, concentration: 2, perception: 2,
+            ego_max: 8, ego_jauge: 8, sporulations_jauge: 0, blessures_superficielles: 0, traumatismes: 0, sante: 19,
+            arme1: 'Épée Preservalis', arme1_degats: '4+F/2', arme1_portee: '1', armure1: 'Combinaison de Préserviste', armure1_valeur: 3,
+            potentiel1_nom: 'Fanatisme', potentiel1: 1, dinars_lc: '40 LC', experience: 0,
+        },
+        composantes: ['physique', 'corps_a_corps'],
+        scenes: c => scenesDeDegenesis(c),
+    },
+    {
         // Crimes, C1 (2026-10-22) : Physique 5, Sport 2 → cinq d10, deux gardés à 8 (7 avec Escalade).
         corpusId: 'crime', slug: 'crimes', personnage: 'Léonce Varin',
         sheetData: { physique: 5, mental: 3, social: 2, sport: 2, combat: 1, traque: 1, specialties_sport_climbing: true },
@@ -1076,6 +1090,49 @@ async function scenesDeRuneQuest(c: ContexteDeScene): Promise<void> {
     await expect.poll(() => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState()
         .players.flatMap(p => p.characters).find(ch => ch.id === id)?.hp, c.personnage)).toBe(6);
     await photographier(carte, 'jeu-runequest-coups-localises');
+}
+
+/**
+ * **Degenesis** (2026-10-30) : l'attaque de Falberg réglée comme au livre — PHY+Corps à
+ * corps 7, deux pas rapides (−2D), un point d'Égo (+1D) —, le résultat, la fiche HTML
+ * reliée, puis 14 dégâts dans Combat-OS : 12 Blessures superficielles et 2 Traumatismes.
+ */
+async function scenesDeDegenesis(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await panneau.locator('select').nth(0).selectOption('physique');
+    await panneau.locator('select').nth(1).selectOption('corps_a_corps');
+    const preparation = panneau.locator('[data-preparation-degenesis]');
+    await preparation.getByRole('button', { name: 'Difficile (4)', exact: true }).click();
+    await preparation.getByRole('button', { name: 'Déplacement de plus de 2 m −2D', exact: true }).click();
+    await preparation.getByLabel('Égo dépensé', { exact: true }).selectOption('1');
+    await expect(preparation.locator('[data-composition-degenesis]')).toContainText("Valeur d'action 7 −2D +1D d'Égo = 6 : 6 dés");
+    await photographier(preparation, 'jeu-degenesis-preparation');
+    await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    await expect(panneau.getByText(/^(Réussite|Échec)/).first()).toBeVisible();
+    await expect.poll(() => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState()
+        .players.flatMap(p => p.characters).find(ch => ch.id === id)?.sheetData?.ego_jauge, c.personnage)).toBe(7);
+
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });
+    await creerLaFiche.click();
+    const ficheHtml = f.frameLocator('iframe').first();
+    await expect(ficheHtml.locator('[data-key="identity.name"]')).toHaveValue('Falberg', { timeout: 30_000 });
+    await expect(ficheHtml.locator('[data-key="identity.cult"]')).toHaveValue('Spitaliers');
+    await expect(ficheHtml.locator('[data-key="weapons.0.name"]')).toHaveValue('Épée Preservalis');
+    await f.waitForTimeout(1_000);
+    await photographier(f.locator('body'), 'jeu-degenesis-fiche');
+
+    // Les deux pistes (30/10) : 14 dégâts, 12 Blessures superficielles ((4 + 2) × 2) et 2 Traumatismes.
+    const carte = await entrerEnCombat(c, 14);
+    await expect.poll(() => f.evaluate(id => {
+        const ch = (window as unknown as Fenetre).useSessionOSStore.getState().players.flatMap(p => p.characters).find(x => x.id === id);
+        return [ch?.sheetData?.blessures_superficielles, ch?.sheetData?.traumatismes, ch?.hp];
+    }, c.personnage)).toEqual([12, 2, 5]);
+    await photographier(carte, 'jeu-degenesis-sante');
 }
 
 async function scenesDeDune(c: ContexteDeScene): Promise<void> {

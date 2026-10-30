@@ -20,6 +20,7 @@ import { HealthInterpreter, listeOuVide } from '../logic/HealthInterpreter';
 import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
 import { dommagesDeTorg, ajouterLeChoc, direLesDommages } from '../../combat/logic/dommagesDeTorg';
 import { coupLocaliseSelonLeJeu } from '../../combat/logic/coupsDeRuneQuest';
+import { pistesDeSanteSelonLeJeu } from '../../combat/logic/pistesDeDegenesis';
 import { cosmsDesIds, idsDesCosmsCourants, loiEnVigueur } from '../logic/cosmsCourants';
 import { champDeSantePrincipale, maximumDeLaJauge, santeAlignee, santePrincipaleDeLaFiche, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import { santePrincipaleDuPersonnage } from '../logic/santePrincipale';
@@ -888,6 +889,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             // RuneQuest (2026-10-30) : un coup qui nomme sa zone passe par l'armure et la zone avant le total.
             const localise = coupLocaliseSelonLeJeu(pilote?.combat?.coupsLocalises, fiche, impactSaisi);
             if (localise) return localise;
+            // Degenesis (2026-10-30) : Blessures superficielles puis Traumatismes ; l'attaque mentale va à l'Égo.
+            const pistes = pistesDeSanteSelonLeJeu(pilote?.combat?.pistesDeSante, fiche, impactSaisi, pilote?.combat?.statsToTrack);
+            if (pistes) return pistes;
             const regle = pilote?.combat?.dommages;
             if (!regle || regle.mecanique !== 'torg' || impactSaisi.isRecovery) return null;
             const resistance = valeurDuChamp(fiche, regle.resistance) ?? 0;

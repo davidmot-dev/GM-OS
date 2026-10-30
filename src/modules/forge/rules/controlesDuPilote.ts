@@ -1898,6 +1898,41 @@ export function controlerLePilote(
             }
         }
     }
+
+    // ---- Degenesis : deux pistes de santé, l'initiative en succès (2026-10-30) ----
+    const pistes = driver.combat?.pistesDeSante;
+    if (pistes) {
+        if (pistes.mecanique !== 'degenesis') {
+            erreur('combat.pistesDeSante.mecanique', `« ${String(pistes.mecanique)} » n'est pas une règle de pistes de santé connue. La seule admise est : degenesis.`);
+        }
+        for (const [cle, quoi] of [['blessures', 'les Blessures superficielles'], ['traumatismes', 'les Traumatismes'], ['ego', "l'Égo"]] as const) {
+            const champ = pistes[cle];
+            if (champ !== undefined && !tousLesChamps.has(champ)) {
+                erreur(`combat.pistesDeSante.${cle}`, `Les pistes de santé lisent ${quoi} dans « ${champ} », absent de la fiche.`);
+            }
+        }
+        for (const cle of ['blessures', 'traumatismes'] as const) {
+            if (!driver.combat?.statsToTrack?.find(s => s.fieldId === pistes[cle])?.max) {
+                avertir(`combat.pistesDeSante.${cle}`, `« ${pistes[cle]} » n'a pas de maximum (statsToTrack[].max) : sans lui, la frontière entre les pistes ne se lit pas, et les dégâts suivent la jauge seule.`);
+            }
+        }
+    }
+    if (driver.combat?.initiativeEnReserve && !driver.combat.initiativeFormula?.trim()) {
+        erreur('combat.initiativeEnReserve', "L'initiative en réserve lance autant de d6 que la formule d'initiative : elle est vide.");
+    }
+    const deg = driver.jet?.degenesis;
+    if (deg) {
+        if (driver.jet?.sens !== 'superieur-ou-egal' || !driver.jet?.reserve || facesLancees(driver) !== 6 || (driver.jet?.seuil ?? []).length) {
+            avertir('jet.degenesis', 'Le bloc Degenesis suppose une réserve de d6 (attribut + compétence) réussis sur 4 ou plus, sans seuil composé (p. 18) : déclarer « reserve.composantes » et « sens: superieur-ou-egal ».');
+        }
+        if (driver.dice?.successThreshold !== 4) {
+            avertir('dice.successThreshold', 'Chaque d6 de Degenesis réussit sur 4, 5 ou 6 (p. 18) : `dice.successThreshold` doit valoir 4.');
+        }
+        for (const [cle, quoi] of [['traumatismes', 'les Traumatismes'], ['ego', "l'Égo"]] as const) {
+            const champ = deg[cle];
+            if (champ !== undefined && !tousLesChamps.has(champ)) erreur(`jet.degenesis.${cle}`, `Degenesis lit ${quoi} dans « ${champ} », absent de la fiche.`);
+        }
+    }
     (driver.combat?.statsToTrack ?? []).forEach((stat, i) => {
         // Les gestes de la règle (le Choc de Torg) : un nom, et un effet chiffré.
         (stat.gestes ?? []).forEach((geste, j) => {

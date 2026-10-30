@@ -28,11 +28,14 @@ import { horlogeDeDefaite } from './logic/TacheDeDefaite';
 import { lireDune, santeDuConflitDune } from '../dice/systemes/duneRegles';
 import { comparerLInitiative, departager } from './logic/departageDInitiative';
 import { estHorsDeCombat, santeDeDepart, valeurDuChamp } from './logic/SanteDuCombattant';
+import { DiceEngine } from '../dice/DiceEngine';
+import { actionsDuRound, lancerDegenesis, reserveDeDegenesis } from '../dice/systemes/degenesis';
 // `logic/trame` ne connaît que des types : l'importer ne ferme aucun cycle,
 // contrairement au store de séance qui reste atteint par le global.
 import { etatDeLaScene } from '../session/logic/trame';
 import type { Scene } from '../../types/trame.types';
 import type { HealthSystem } from '../../types/entity.types';
+import type { GameDriver } from '../../types/drivers';
 import { estUnAndroide } from '../dice/systemes/paniqueAlien';
 import { CLE_COMBAT_ALIEN, demanderUnCritique, lireLeCombatAlien } from '../dice/systemes/combatAlien';
 import { immuniteSynthetique, projeterLaSanteSynthetique } from '../dice/systemes/synthetiquesAlien';
@@ -74,10 +77,11 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
 }
 
 /** Le pilote actif, lu par le global — un import direct fermerait un cycle. */
-function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'asc' | 'desc'; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien } } | undefined {
+function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'asc' | 'desc'; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien;
+    initiativeEnReserve?: GameDriver['combat']['initiativeEnReserve']; pistesDeSante?: GameDriver['combat']['pistesDeSante'] } } | undefined {
     try {
         return (window as unknown as {
-            useSessionOSStore?: { getState: () => { getActiveDriver?: () => { combat?: { santeDeDepart?: string; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien } } | undefined } };
+            useSessionOSStore?: { getState: () => { getActiveDriver?: () => ReturnType<typeof piloteActif> } };
         }).useSessionOSStore?.getState()?.getActiveDriver?.() ?? undefined;
     } catch {
         return undefined;
@@ -1069,6 +1073,15 @@ export const useCombatStore = create<CombatState>()(
                 }
 
                 const departagesDuPilote = departages;
+                /*
+                  **Degenesis** (2026-10-30) : la formule donne le nombre de d6, le score
+                  est le nombre de succès, moins un dé par Traumatisme ; chaque paire de
+                  déclencheurs donne une action de plus (p. 100-101). L'Égo dépensé ne se
+                  lance pas d'ici : il se joue au panneau de jet, et le score se corrige.
+                */
+                const enReserve = piloteActif()?.combat?.initiativeEnReserve?.mecanique === 'degenesis';
+                const champDesTraumatismes = piloteActif()?.combat?.pistesDeSante?.traumatismes;
+                const actionsDegenesis: string[] = [];
                 set((state) => {
                     const combatants = state.combatants;
                     if (combatants.length === 0) {
@@ -1098,6 +1111,13 @@ export const useCombatStore = create<CombatState>()(
                         } else if (cardPool.length > 0) {
                             if (cardIdx < cardPool.length) rolled = cardPool[cardIdx++];
                             else rolled = Math.floor(Math.random() * (cards || 10)) + 1;
+                        } else if (formula && enReserve) {
+                            const va = resolveInitiativeFormula({ formula, combatant: c, resolver, diceMax });
+                            const traumatismes = champDesTraumatismes && resolver ? resolver(champDesTraumatismes, c) : 0;
+                            const jet = lancerDegenesis(reserveDeDegenesis(va, {}, traumatismes), 1, () => DiceEngine.roll(6));
+                            rolled = jet.degenesis.succes;
+                            const actions = actionsDuRound(jet.degenesis.declencheurs);
+                            actionsDegenesis.push(`${c.name} ${rolled}${actions > 1 ? ` (${actions} actions)` : ''}`);
                         } else if (formula) {
                             rolled = resolveInitiativeFormula({
                                 formula,
@@ -1130,7 +1150,8 @@ export const useCombatStore = create<CombatState>()(
                     useJournalStore.getState().addEvent({
                         type: 'COMBAT',
                         title: 'Combat : Initiative',
-                        content: `Round ${state.round} - L'initiative a été tirée pour ${newCombatants.length} combattants.`,
+                        content: `Round ${state.round} - L'initiative a été tirée pour ${newCombatants.length} combattants.`
+                            + (actionsDegenesis.length ? ` Succès de PSY+Réactivité : ${actionsDegenesis.join(', ')}.` : ''),
                         sceneId: state.sceneId ?? undefined,
                         metadata: { round: state.round, count: newCombatants.length }
                     });

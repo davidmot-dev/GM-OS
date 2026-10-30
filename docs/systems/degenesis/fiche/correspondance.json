@@ -1,0 +1,524 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "degenesis-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Degenesis (pilote 2.0.0, outils/degenesis/finir_degenesis.py) et le gabarit degenesis-fr livré le 2026-10-30. Écrite par outils/degenesis/relier_fiche_degenesis.mjs : les 129 clés ont chacune leur champ. Pistes : l'Égo compte les points restants ; Sporulations, Blessures superficielles et Traumatismes ce qui a été subi. Le maximum d'Égo et la santé restante n'existent que dans GM-OS.",
+  "champs": [
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "genre",
+      "fiche": "identity.gender"
+    },
+    {
+      "gmos": "age",
+      "fiche": "identity.age"
+    },
+    {
+      "gmos": "taille",
+      "fiche": "identity.height"
+    },
+    {
+      "gmos": "poids",
+      "fiche": "identity.weight"
+    },
+    {
+      "gmos": "culture",
+      "fiche": "identity.culture"
+    },
+    {
+      "gmos": "concept",
+      "fiche": "identity.concept"
+    },
+    {
+      "gmos": "culte",
+      "fiche": "identity.cult"
+    },
+    {
+      "gmos": "rang",
+      "fiche": "identity.rank"
+    },
+    {
+      "gmos": "physique",
+      "fiche": "attributes.physical"
+    },
+    {
+      "gmos": "agilite",
+      "fiche": "attributes.agility"
+    },
+    {
+      "gmos": "charisme",
+      "fiche": "attributes.charisma"
+    },
+    {
+      "gmos": "intellect",
+      "fiche": "attributes.intellect"
+    },
+    {
+      "gmos": "psyche",
+      "fiche": "attributes.psyche"
+    },
+    {
+      "gmos": "instinct",
+      "fiche": "attributes.instinct"
+    },
+    {
+      "gmos": "athletisme",
+      "fiche": "skills.athletics"
+    },
+    {
+      "gmos": "corps_a_corps",
+      "fiche": "skills.melee"
+    },
+    {
+      "gmos": "force",
+      "fiche": "skills.strength"
+    },
+    {
+      "gmos": "lutte",
+      "fiche": "skills.brawl"
+    },
+    {
+      "gmos": "resistance",
+      "fiche": "skills.toughness"
+    },
+    {
+      "gmos": "vigueur",
+      "fiche": "skills.stamina"
+    },
+    {
+      "gmos": "armes_a_projectiles",
+      "fiche": "skills.projectile_weapons"
+    },
+    {
+      "gmos": "artisanat",
+      "fiche": "skills.crafting"
+    },
+    {
+      "gmos": "dexterite",
+      "fiche": "skills.dexterity"
+    },
+    {
+      "gmos": "furtivite",
+      "fiche": "skills.stealth"
+    },
+    {
+      "gmos": "mobilite",
+      "fiche": "skills.mobility"
+    },
+    {
+      "gmos": "navigation",
+      "fiche": "skills.navigation"
+    },
+    {
+      "gmos": "art",
+      "fiche": "skills.art"
+    },
+    {
+      "gmos": "commandement",
+      "fiche": "skills.leadership"
+    },
+    {
+      "gmos": "consideration",
+      "fiche": "skills.consideration"
+    },
+    {
+      "gmos": "expression",
+      "fiche": "skills.expression"
+    },
+    {
+      "gmos": "negociation",
+      "fiche": "skills.negotiation"
+    },
+    {
+      "gmos": "seduction",
+      "fiche": "skills.seduction"
+    },
+    {
+      "gmos": "concentration",
+      "fiche": "skills.concentration"
+    },
+    {
+      "gmos": "connaissance_des_artefacts",
+      "fiche": "skills.artifact_lore"
+    },
+    {
+      "gmos": "legendes",
+      "fiche": "skills.legends"
+    },
+    {
+      "gmos": "medecine",
+      "fiche": "skills.medicine"
+    },
+    {
+      "gmos": "science",
+      "fiche": "skills.science"
+    },
+    {
+      "gmos": "technologie",
+      "fiche": "skills.technology"
+    },
+    {
+      "gmos": "domination",
+      "fiche": "skills.domination"
+    },
+    {
+      "gmos": "foi",
+      "fiche": "skills.faith"
+    },
+    {
+      "gmos": "reactivite",
+      "fiche": "skills.reaction"
+    },
+    {
+      "gmos": "ruse",
+      "fiche": "skills.cunning"
+    },
+    {
+      "gmos": "tromperie",
+      "fiche": "skills.deception"
+    },
+    {
+      "gmos": "volonte",
+      "fiche": "skills.willpower"
+    },
+    {
+      "gmos": "dressage",
+      "fiche": "skills.animal_handling"
+    },
+    {
+      "gmos": "empathie",
+      "fiche": "skills.empathy"
+    },
+    {
+      "gmos": "orientation",
+      "fiche": "skills.orientation"
+    },
+    {
+      "gmos": "perception",
+      "fiche": "skills.perception"
+    },
+    {
+      "gmos": "pulsions",
+      "fiche": "skills.impulses"
+    },
+    {
+      "gmos": "survie",
+      "fiche": "skills.survival"
+    },
+    {
+      "gmos": "alliés",
+      "fiche": "origins.allies"
+    },
+    {
+      "gmos": "autorite",
+      "fiche": "origins.authority"
+    },
+    {
+      "gmos": "reseau",
+      "fiche": "origins.network"
+    },
+    {
+      "gmos": "renommee",
+      "fiche": "origins.renown"
+    },
+    {
+      "gmos": "ressources",
+      "fiche": "origins.resources"
+    },
+    {
+      "gmos": "secrets",
+      "fiche": "origins.secrets"
+    },
+    {
+      "gmos": "potentiel1_nom",
+      "fiche": "potentials.0.name"
+    },
+    {
+      "gmos": "potentiel1",
+      "fiche": "potentials.0.level"
+    },
+    {
+      "gmos": "potentiel2_nom",
+      "fiche": "potentials.1.name"
+    },
+    {
+      "gmos": "potentiel2",
+      "fiche": "potentials.1.level"
+    },
+    {
+      "gmos": "potentiel3_nom",
+      "fiche": "potentials.2.name"
+    },
+    {
+      "gmos": "potentiel3",
+      "fiche": "potentials.2.level"
+    },
+    {
+      "gmos": "potentiel4_nom",
+      "fiche": "potentials.3.name"
+    },
+    {
+      "gmos": "potentiel4",
+      "fiche": "potentials.3.level"
+    },
+    {
+      "gmos": "potentiel5_nom",
+      "fiche": "potentials.4.name"
+    },
+    {
+      "gmos": "potentiel5",
+      "fiche": "potentials.4.level"
+    },
+    {
+      "gmos": "potentiel6_nom",
+      "fiche": "potentials.5.name"
+    },
+    {
+      "gmos": "potentiel6",
+      "fiche": "potentials.5.level"
+    },
+    {
+      "gmos": "ego_jauge",
+      "fiche": "tracks.ego"
+    },
+    {
+      "gmos": "sporulations_jauge",
+      "fiche": "tracks.sporulation"
+    },
+    {
+      "gmos": "blessures_superficielles",
+      "fiche": "tracks.flesh_wounds"
+    },
+    {
+      "gmos": "traumatismes",
+      "fiche": "tracks.trauma"
+    },
+    {
+      "gmos": "arme1",
+      "fiche": "weapons.0.name"
+    },
+    {
+      "gmos": "arme1_maniabilite",
+      "fiche": "weapons.0.handling"
+    },
+    {
+      "gmos": "arme1_portee",
+      "fiche": "weapons.0.range"
+    },
+    {
+      "gmos": "arme1_degats",
+      "fiche": "weapons.0.damage"
+    },
+    {
+      "gmos": "arme1_chargeur",
+      "fiche": "weapons.0.magazine"
+    },
+    {
+      "gmos": "arme1_encombrement",
+      "fiche": "weapons.0.weight"
+    },
+    {
+      "gmos": "arme1_tech",
+      "fiche": "weapons.0.technology"
+    },
+    {
+      "gmos": "arme1_emplacements",
+      "fiche": "weapons.0.slots"
+    },
+    {
+      "gmos": "arme1_proprietes",
+      "fiche": "weapons.0.properties"
+    },
+    {
+      "gmos": "arme2",
+      "fiche": "weapons.1.name"
+    },
+    {
+      "gmos": "arme2_maniabilite",
+      "fiche": "weapons.1.handling"
+    },
+    {
+      "gmos": "arme2_portee",
+      "fiche": "weapons.1.range"
+    },
+    {
+      "gmos": "arme2_degats",
+      "fiche": "weapons.1.damage"
+    },
+    {
+      "gmos": "arme2_chargeur",
+      "fiche": "weapons.1.magazine"
+    },
+    {
+      "gmos": "arme2_encombrement",
+      "fiche": "weapons.1.weight"
+    },
+    {
+      "gmos": "arme2_tech",
+      "fiche": "weapons.1.technology"
+    },
+    {
+      "gmos": "arme2_emplacements",
+      "fiche": "weapons.1.slots"
+    },
+    {
+      "gmos": "arme2_proprietes",
+      "fiche": "weapons.1.properties"
+    },
+    {
+      "gmos": "arme3",
+      "fiche": "weapons.2.name"
+    },
+    {
+      "gmos": "arme3_maniabilite",
+      "fiche": "weapons.2.handling"
+    },
+    {
+      "gmos": "arme3_portee",
+      "fiche": "weapons.2.range"
+    },
+    {
+      "gmos": "arme3_degats",
+      "fiche": "weapons.2.damage"
+    },
+    {
+      "gmos": "arme3_chargeur",
+      "fiche": "weapons.2.magazine"
+    },
+    {
+      "gmos": "arme3_encombrement",
+      "fiche": "weapons.2.weight"
+    },
+    {
+      "gmos": "arme3_tech",
+      "fiche": "weapons.2.technology"
+    },
+    {
+      "gmos": "arme3_emplacements",
+      "fiche": "weapons.2.slots"
+    },
+    {
+      "gmos": "arme3_proprietes",
+      "fiche": "weapons.2.properties"
+    },
+    {
+      "gmos": "armure1",
+      "fiche": "armor.0.name"
+    },
+    {
+      "gmos": "armure1_valeur",
+      "fiche": "armor.0.rating"
+    },
+    {
+      "gmos": "armure1_encombrement",
+      "fiche": "armor.0.weight"
+    },
+    {
+      "gmos": "armure1_tech",
+      "fiche": "armor.0.technology"
+    },
+    {
+      "gmos": "armure1_emplacements",
+      "fiche": "armor.0.slots"
+    },
+    {
+      "gmos": "armure1_proprietes",
+      "fiche": "armor.0.properties"
+    },
+    {
+      "gmos": "armure2",
+      "fiche": "armor.1.name"
+    },
+    {
+      "gmos": "armure2_valeur",
+      "fiche": "armor.1.rating"
+    },
+    {
+      "gmos": "armure2_encombrement",
+      "fiche": "armor.1.weight"
+    },
+    {
+      "gmos": "armure2_tech",
+      "fiche": "armor.1.technology"
+    },
+    {
+      "gmos": "armure2_emplacements",
+      "fiche": "armor.1.slots"
+    },
+    {
+      "gmos": "armure2_proprietes",
+      "fiche": "armor.1.properties"
+    },
+    {
+      "gmos": "equipement1",
+      "fiche": "equipment.0.name"
+    },
+    {
+      "gmos": "equipement1_encombrement",
+      "fiche": "equipment.0.weight"
+    },
+    {
+      "gmos": "equipement2",
+      "fiche": "equipment.1.name"
+    },
+    {
+      "gmos": "equipement2_encombrement",
+      "fiche": "equipment.1.weight"
+    },
+    {
+      "gmos": "equipement3",
+      "fiche": "equipment.2.name"
+    },
+    {
+      "gmos": "equipement3_encombrement",
+      "fiche": "equipment.2.weight"
+    },
+    {
+      "gmos": "equipement4",
+      "fiche": "equipment.3.name"
+    },
+    {
+      "gmos": "equipement4_encombrement",
+      "fiche": "equipment.3.weight"
+    },
+    {
+      "gmos": "equipement5",
+      "fiche": "equipment.4.name"
+    },
+    {
+      "gmos": "equipement5_encombrement",
+      "fiche": "equipment.4.weight"
+    },
+    {
+      "gmos": "equipement6",
+      "fiche": "equipment.5.name"
+    },
+    {
+      "gmos": "equipement6_encombrement",
+      "fiche": "equipment.5.weight"
+    },
+    {
+      "gmos": "encombrement_total1",
+      "fiche": "equipment_totals.0.weight"
+    },
+    {
+      "gmos": "encombrement_total2",
+      "fiche": "equipment_totals.1.weight"
+    },
+    {
+      "gmos": "encombrement_total3",
+      "fiche": "equipment_totals.2.weight"
+    },
+    {
+      "gmos": "dinars_lc",
+      "fiche": "wealth.dinars_lc"
+    },
+    {
+      "gmos": "experience",
+      "fiche": "experience.total"
+    }
+  ],
+  "absents": []
+}

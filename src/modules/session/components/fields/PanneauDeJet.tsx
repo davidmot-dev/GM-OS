@@ -79,6 +79,8 @@ import { CHOIX_DE_BARBARIANS, appliquerLeGeste, heroismeDeLaFiche, lancerBarbari
     LIBELLES_DE_BARBARIANS, type ChoixDeBarbarians, type GesteDeBarbarians, type JetDeBarbarians } from '../../../dice/systemes/barbarians';
 import { PreparationRuneQuest, SuitesRuneQuest } from './RuneQuestAuJet';
 import { CHOIX_DE_RUNEQUEST, nommerLeJetDeRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest } from '../../../dice/systemes/runequest';
+import { CHOIX_DE_DEGENESIS, lancerDegenesis, type ChoixDeDegenesis, type JetDeDegenesis } from '../../../dice/systemes/degenesis';
+import { PreparationDegenesis, SuitesDegenesis } from './DegenesisAuJet';
 import { CreationStarTrek, PreparationStarTrek, ReputationStarTrek, StressEtBlessuresStarTrek, SuitesStarTrek, TourStarTrek, type VaisseauPourLAide } from './StarTrekAuJet';
 import { CarnetDune, PreparationDune, SuitesDune } from './DuneAuJet';
 import { CHOIX_DUNE, CLE_DUNE, bilanDune, conserverDune, depenserDune, desDune, difficulteDune, entierDune, lireDune, lignesDune, noterDune, resultatDune,
@@ -411,6 +413,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [runequestDuLancer, setRuneQuestDuLancer] = useState<{ calcul: CalculDeRuneQuest; compte: number } | null>(null);
 
     /**
+     * **Degenesis** (2026-10-30) : modificateurs en dés et Égo dépensé ; l'Égo se
+     * retire de la fiche au lancer, et ne vaut que pour la première action (p. 100).
+     */
+    const regleDegenesis = descripteur.degenesis;
+    const [choixDegenesis, setChoixDegenesis] = useState<ChoixDeDegenesis>(CHOIX_DE_DEGENESIS);
+    const egoDegenesis = regleDegenesis?.ego && ecrireSurLaFiche ? Math.max(0, Math.trunc(Number(valeurs[regleDegenesis.ego]) || 0)) : undefined;
+
+    /**
      * **Star Trek jusqu'au bout** (2026-10-23) : la tâche complète — nature, marge,
      * opposition, assistants, vaisseau, Détermination — et ce que le dernier lancer
      * savait, pour le recompter après une relance.
@@ -571,6 +581,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             {
                 ...(regleNephilim ? { nephilim: { ...choixNephilim, lieu: lieuN, conjonction: conjonctionN, intensite: intensiteN, seuilRK: seuilRKN } } : {}),
                 ...(regleRuneQuest ? { runequest: choixRuneQuest } : {}),
+                ...(regleDegenesis ? { degenesis: { ...choixDegenesis, ego: Math.min(choixDegenesis.ego, egoDegenesis ?? 0) } } : {}),
                 champs: choix, desSupplementaires: desAchetes, difficulte,
                 ajustementDeDifficulte: ajustementDeDifficulte + degresPuises, specialisation,
                 modificateurDuSeuil,
@@ -618,7 +629,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
+        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
     );
 
     /*
@@ -1125,6 +1136,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const modificateursBarbarians = modificateursDeBarbarians(jet.seuil, choixBarbarians);
         const brutDuMoteur = regleBarbarians
             ? lancerBarbarians(soldeBarbarians, modificateursBarbarians, () => DiceEngine.roll(6), regleBarbarians.cible ?? 9)
+            // Degenesis : 4+ réussit, les 6 déclenchent, le surplus au-delà de 12 dés est acquis (p. 18-19).
+            : regleDegenesis && jet.degenesis
+            ? lancerDegenesis(jet.degenesis, jet.reussitesRequises, () => DiceEngine.roll(6))
             : descripteur.cthulhuHack
             ? DiceEngine.rollSauvegarde(jet.seuil, modificateurCH)
             : jet.garde
@@ -1233,6 +1247,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 compte: (d?.compte ?? 0) + 1, pointAccorde: false,
             }));
         }
+        // L'Égo dépensé quitte la fiche et ne sert qu'à la première action du round (p. 100).
+        if (regleDegenesis?.ego && jet.degenesis?.ego && egoDegenesis !== undefined) {
+            ecrireSurLaFiche?.({ [regleDegenesis.ego]: Math.max(0, egoDegenesis - jet.degenesis.ego) });
+            dits.push(`Égo : ${egoDegenesis} → ${Math.max(0, egoDegenesis - jet.degenesis.ego)}`);
+            setChoixDegenesis(c => ({ ...c, ego: 0 }));
+        }
         if (regleRuneQuest && jet.runequest) {
             const calcul = jet.runequest;
             setRuneQuestDuLancer(d => ({ calcul, compte: (d?.compte ?? 0) + 1 }));
@@ -1275,6 +1295,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             ].join(' · ')
             : jet.composantes.length > 0
             ? jet.composantes.map(c => c.label).join(' + ')
+            // Degenesis : « Instinct + Dressage (VA 3) », les champs de la réserve par leur nom.
+            : jet.degenesis
+            ? `${jet.composantesDeLaReserve.map(c => template.sections.flatMap(sec => sec.fields).find(f => f.id === c.champ)?.label ?? c.label).join(' + ')} (VA ${jet.degenesis.valeur})`
             : jet.desEchelonnes.length > 0
                 ? jet.desEchelonnes.map(d => `${d.label} D${d.faces}`).join(' + ')
                 : `${jet.nombreDeDes}d${jet.faces}`)
@@ -1861,7 +1884,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       si le jeu y a quelque chose : une difficulté, des réserves où puiser, la
       préparation d'Alien… — une étape vide numérotée mentirait sur l'ordre.
     */
-    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleRuneQuest || disponiblesPerso.length > 0
+    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleRuneQuest || !!regleDegenesis || disponiblesPerso.length > 0
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
         || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable
@@ -1875,10 +1898,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       résultat, à droite du titre.
     */
     const runequestDuResultat = (resultat as JetDeRuneQuest | null)?.runequest;
-    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || runequestDuResultat)
-        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, RuneQuest p. 142), et non le degré générique du moteur.
+    const degenesisDuResultat = (resultat as JetDeDegenesis | null)?.degenesis;
+    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || runequestDuResultat || degenesisDuResultat)
+        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, RuneQuest p. 142, Degenesis p. 19), et non le degré générique du moteur.
         ? <span className={'font-black uppercase tracking-widest ' + (resultat.tagSuccess ? 'text-etat-succes' : 'text-etat-danger')}>
-            {gardeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
+            {gardeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
         </span>
         : resultat && !paniqueEnAttente
         && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
@@ -2034,8 +2058,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             un nombre tombé du ciel. */}
                         {jet.composantesDeLaReserve.length > 0 && (
                             <div className="flex items-baseline gap-2 text-xs">
-                                <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">{destin ? 'Domaine' : 'Réserve'}</span>
-                                <span className="font-mono text-lg font-black text-accent">{jet.nombreDeDes}</span>
+                                {/* Degenesis : la valeur d'action avant modificateurs ; les dés modifiés se lisent à l'étape « Préparer ». */}
+                                <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">{destin ? 'Domaine' : jet.degenesis ? "Valeur d'action" : 'Réserve'}</span>
+                                <span className="font-mono text-lg font-black text-accent">{jet.degenesis ? jet.degenesis.base : jet.nombreDeDes}</span>
                                 {regleJetAlien ? <span className="text-app-text/50">dés de base + {jet.desSecondaires} dés de Stress, après modificateurs</span> : <span className="text-app-text/30 font-mono">
                                     = {[
                                         ...(descripteur.reserve?.base ? [`${descripteur.reserve.base}`] : []),
@@ -2382,6 +2407,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {regleRuneQuest && (
                         <PreparationRuneQuest choix={choixRuneQuest} setChoix={setChoixRuneQuest} calcul={jet.runequest} />
                     )}
+                    {regleDegenesis && (
+                        <PreparationDegenesis choix={choixDegenesis} setChoix={setChoixDegenesis} reserve={jet.degenesis}
+                            difficulte={difficulte} setDifficulte={setDifficulte} ego={egoDegenesis} />
+                    )}
                     {regleSymbaroum && (
                         <PreparationSymbaroum
                             nature={jet.composantes[0]?.champ && jet.composantes[0].champ === regleSymbaroum.defense ? 'defense' : natureSymbaroum}
@@ -2551,7 +2580,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système.
                         Pas chez Crimes : le Potentiel dit le nombre de dés, rien ne s'y ajoute ;
                         ni chez Barbarians, dont les dés de bonus et de malus se règlent à l'étape 2. */}
-                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleRuneQuest ? 'hidden' : ''}`}>
+                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleRuneQuest || regleDegenesis ? 'hidden' : ''}`}>
                         <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                         <button
                             onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -2744,6 +2773,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 : seconde ? descripteur.reserve?.secondaire?.label
                                 : critique ? 'Critique'
                                 : complique ? 'Complication'
+                                // Degenesis : un 6 est un succès et un déclencheur (p. 19).
+                                : degenesisDuResultat && val === 6 ? 'Déclencheur'
                                 : d.isCritMax && compteDeReussites && !(descripteur.seuil ?? []).length && jet.desEchelonnes.length === 0 ? 'Succès'
                                 : undefined;
                             return (
@@ -2833,7 +2864,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         {/* L'excédent alimente la monnaie de table — et depuis
                             le mur n° 4, il y est réellement versé. */}
-                        {v.excedent > 0 && !regleJetAlien && !gardeDuResultat && (
+                        {/* Degenesis n'a pas de monnaie à nourrir : ses succès en trop ne valent rien hors des actions complexes. */}
+                        {v.excedent > 0 && !regleJetAlien && !gardeDuResultat && !degenesisDuResultat && (
                             <span className="text-etat-alerte/80 font-mono">
                                 +{v.excedent}{monnaie && jet.cout.ressource ? ` ${nomDe(jet.cout.ressource)}` : ' excédent'}
                             </span>
@@ -2921,6 +2953,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 retenter={() => setChoixRuneQuest(c => ({ ...c, nouvelleTentative: true }))}
                                 consigner={ligne => redire(dernierLancer?.titre ?? 'RuneQuest', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
                         )}
+                        {regleDegenesis && degenesisDuResultat && <SuitesDegenesis jet={resultat as JetDeDegenesis} />}
                         {regleBarbarians && barbariansDuLancer && barbariansDuResultat && (
                             <SuitesBarbarians key={barbariansDuLancer.compte} jet={resultat as JetDeBarbarians} reaction={barbariansDuLancer.reaction}
                                 heroisme={ecrireSurLaFiche ? heroismeBarbarians : undefined} pointAccorde={barbariansDuLancer.pointAccorde}

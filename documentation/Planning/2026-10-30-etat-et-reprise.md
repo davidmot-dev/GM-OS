@@ -79,3 +79,27 @@ le coup » à la cible ; un Soigner sur la zone.
 - `e2e/campagneDeRecetteRuneQuest.spec.ts` (autre agent) attend « PV sur la fiche » dans la ligne
   « Localiser le coup » : cette ligne lit encore les PV de zone du **lanceur** ; la corriger demande
   d'accorder les deux fichiers.
+
+## Suite du 30/10 — Degenesis fini
+
+David : « Degenesis le livre de base est ici […] KATHARSYS_OCR.pdf » (`/finir-un-pilote`), puis
+« Tout, dans l'ordre ». Livré (registre § 188) : `jet.degenesis` (`dice/systemes/degenesis.ts`,
+`DegenesisAuJet.tsx`), `combat.pistesDeSante` (`combat/logic/pistesDeDegenesis.ts`),
+`combat.initiativeEnReserve` (`rollAutoInitiative`) ; pilote **2.0.0**
+(`outils/degenesis/finir_degenesis.py` → `Export Dirvers/corriges/Degenesis_driver_gmos_finir`),
+fiche HTML au moteur **21** et correspondance 129/129 ; corpus relu 16/16 ; page
+[54-Jeu-Degenesis](../User%20Guides/54-Jeu-Degenesis.md).
+
+**Par quoi reprendre :** l'essai de David — réimporter le 2.0.0 avec Remplacer ; un jet PHY+Corps
+à corps avec Égo et « Déplacement −2D » ; dans Combat-OS, un coup qui dépasse les Blessures
+superficielles ; le Jet système d'initiative ; la Fiche du jeu, saisir puis Sauvegarder.
+
+**Ne pas repayer :**
+- Le livre est sur `\CLOUDDAVID\Media\Jeux de Rôle\…` : Python ne lit pas ce chemin accentué ; le
+  copier d'abord dans le dossier de travail par PowerShell (`Copy-Item -LiteralPath`). Il est
+  océrisé, sans couche doublée ; PDF = imprimée + 1.
+- La santé principale `sante` n'est pas sur la fiche HTML : `pistesDeDegenesis.ts` la recalcule sur
+  les deux pistes à chaque coup et ne l'écrit pas lui-même — la porte applique l'impact à la santé
+  lue sur la fiche **après** le correctif ; l'écrire aussi la comptait deux fois.
+- Les fichiers du corpus Degenesis sont en LF : une note de relecture en CRLF y mêle les fins de
+  ligne.
