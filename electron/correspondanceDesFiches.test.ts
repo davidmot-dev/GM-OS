@@ -140,9 +140,9 @@ describe('les gabarits intégrés du moteur', () => {
         const ids = MOTEURS.map(g => g.id).sort();
         expect({ version, ids }, 'liste changée : montez BUILTIN_VERSION dans le moteur, puis cette attente').toEqual({
             // 19 : la fiche de Barbarians of Lemuria (2026-10-27) ; 20 : celle de RuneQuest ; 21 : celle de Degenesis (2026-10-30) ;
-            // 22 : celle de COC 2 (2026-10-31).
-            version: 22,
-            ids: ['alien-v2-normalise', 'barbarian-of-lemuria-fr', 'blade-runner-fr', 'coc2-fr', 'crimes-fr', 'cthulhu-hack', 'degenesis-fr', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'runequest-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr'],
+            // 22 : celle de COC 2 (2026-10-31) ; 23 : celle de Shadowrun : Anarchy 2.0 (2026-10-31).
+            version: 23,
+            ids: ['alien-v2-normalise', 'barbarian-of-lemuria-fr', 'blade-runner-fr', 'coc2-fr', 'crimes-fr', 'cthulhu-hack', 'degenesis-fr', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'runequest-fr', 'shadowrun-anarchy2-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr'],
         });
     });
 });
@@ -160,6 +160,8 @@ it.each([
     'docs/fiches/Barbarian of Lemuria/barbarian-of-lemuria-fiche-interactive.html',
     // Chroniques Oubliées Contemporain (31/10).
     'docs/fiches/COC/coc2-fiche-personnage-interactive.html',
+    // Shadowrun : Anarchy 2.0 (31/10).
+    'docs/fiches/Shadowrun Anarchy/shadowrun-anarchy2-fiche-personnage-interactive.html',
 ])('%s : le gabarit intégré reprend la fiche livrée, CSS et largeurs comprises', (chemin) => {
     const fiche = fs.readFileSync(path.join(RACINE, chemin), 'utf8');
     const manifeste = JSON.parse(fiche.match(/<script\b[^>]*\bid="character-sheet-template"[^>]*>([\s\S]*?)<\/script>/)![1]);

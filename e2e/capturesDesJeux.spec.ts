@@ -236,6 +236,31 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         scenes: c => scenesDeCoc(c),
     },
     {
+        // Shadowrun : Anarchy 2.0 (2026-10-31) : Iron, la razorgirl des exemples du livre (p. 64, 72) ;
+        // Armes à distance (pistolets) 7 + Agilité 4, RR 1 de son Ares Predator ; puis une VD 10 contre 6/9/12 : une grave.
+        corpusId: 'shadowrun-anarchy', slug: 'shadowrun', personnage: 'Iron',
+        sheetData: {
+            pseudo: 'Iron', metatype: 'Humain', train_de_vie: 'Moyen',
+            mot_cle_1: 'Humaine des Barrens', mot_cle_2: 'Redmond', mot_cle_3: 'Razorgirl', mot_cle_4: 'Train de vie moyen', mot_cle_5: 'Ancienne Lone Star',
+            comportement_1: 'Protège son decker coûte que coûte', replique_1: '« Je couvre, tu cours. »',
+            force: 4, agilite: 4, volonte: 2, logique: 2, charisme: 2,
+            competence_1_nom: 'Armes à distance (pistolets)', competence_1: 7, competence_1_attribut: 4, competence_1_reserve: 11, competence_1_rr: 1,
+            competence_2_nom: 'Furtivité (discrétion physique)', competence_2: 3, competence_2_attribut: 4, competence_2_reserve: 9,
+            competence_3_nom: 'Athlétisme', competence_3: 3, competence_3_attribut: 4, competence_3_reserve: 7,
+            atout_1: 'Ares Predator VI, smartlink : RR 1 en Armes à distance (pistolets)', atout_2: 'Yeux cybernétiques : vision nocturne',
+            arme_1: 'Ares Predator VI', arme_1_type: 'VD 5',
+            armure_principale: 'Veste pare-balles', seuil_sans_armure_legere: 4, seuil_sans_armure_grave: 7, seuil_sans_armure_incapacitante: 10,
+            seuil_principale_legere: 6, seuil_principale_grave: 9, seuil_principale_incapacitante: 12,
+            seuil_mental_legere: 2, seuil_mental_grave: 5, seuil_mental_incapacitante: 8,
+            anarchy: 4, essence: 3.5, blessures_legeres: 0, blessures_graves: 0, blessures_incapacitantes: 0,
+            blessures_legeres_max: 2, blessures_graves_max: 1, moniteur: 0,
+        },
+        composantes: ['competence_1', 'agilite'],
+        casesCochees: 0,
+        coup: 10,
+        scenes: c => scenesDeShadowrun(c),
+    },
+    {
         // Crimes, C1 (2026-10-22) : Physique 5, Sport 2 → cinq d10, deux gardés à 8 (7 avec Escalade).
         corpusId: 'crime', slug: 'crimes', personnage: 'Léonce Varin',
         sheetData: { physique: 5, mental: 3, social: 2, sport: 2, combat: 1, traque: 1, specialties_sport_climbing: true },
@@ -1192,6 +1217,32 @@ async function scenesDeCoc(c: ContexteDeScene): Promise<void> {
     await expect(ficheHtml.locator('[data-key="paths.2.name"]')).toHaveValue('Voie de la survie');
     await f.waitForTimeout(1_000);
     await photographier(f.locator('body'), 'jeu-coc-fiche');
+}
+
+async function scenesDeShadowrun(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await panneau.locator('select').nth(0).selectOption('competence_1');
+    await panneau.locator('select').nth(1).selectOption('agilite');
+    const preparation = panneau.locator('[data-preparation-shadowrun]');
+    // La rafale d'Iron : un risque fort à RR 1, sept dés de risque sur onze (p. 72).
+    await preparation.getByRole('button', { name: 'Risquée (7)', exact: true }).click();
+    await expect(preparation.locator('[data-composition-shadowrun]')).toContainText('11 dés, dont 7 de risque (action normale : 5)');
+    await photographier(preparation, 'jeu-shadowrun-preparation');
+    await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    await expect(panneau.locator('[data-suites-shadowrun]')).toBeVisible();
+
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });
+    await creerLaFiche.click();
+    const ficheHtml = f.frameLocator('iframe').first();
+    await expect(ficheHtml.locator('[data-key="identity.name"]')).toHaveValue('Iron', { timeout: 30_000 });
+    await expect(ficheHtml.locator('[data-key="skills.0.name"]')).toHaveValue('Armes à distance (pistolets)');
+    await f.waitForTimeout(1_000);
+    await photographier(f.locator('body'), 'jeu-shadowrun-fiche');
 }
 
 async function scenesDeDune(c: ContexteDeScene): Promise<void> {

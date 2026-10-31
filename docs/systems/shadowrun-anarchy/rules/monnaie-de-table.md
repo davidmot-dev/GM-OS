@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Construire un plan » ; « Étape 1: Actions préparatoires » ; « Étape 2: Dans le feu de l’action » ; « La narration partagée dans Shadowrun: Anarchy 2.0 » ; « Narration partagée totale » ; « Réserve de menace » ; « Désastre »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: f0e8ef98
 ---
 
@@ -16,7 +16,7 @@ empreinte: f0e8ef98
 ## Règle
 Le jeu utilise deux ressources collectives partagées par la table: la réserve de planification et la réserve de menace.
 
-La réserve de planification appartient à toute l'équipe (section « Étape 1: Actions préparatoires »). Elle accumule les points d'Anarchy communs gagnés lors de la préparation par les tests de planification (section « Étape 1: Actions préparatoires »). En cours de mission, tout joueur peut y puiser pour financer des flashbacks (1 à 4 points) et franchir des obstacles (section « Étape 2: Dans le feu de l’action »). Les ressources individuelles sont traitées dans une autre règle.
+La réserve de planification appartient à toute l'équipe (section « Étape 1: Actions préparatoires »). Elle accumule les points d'Anarchy communs gagnés lors de la préparation par les tests de planification (section « Étape 1: Actions préparatoires »). En cours de mission, tout joueur peut y puiser pour tout bonus justifié par la planification, flashbacks compris (1 à 4 points) (section « Réserve de planification ou points d’Anarchy personnels? »). Les ressources individuelles sont traitées dans une autre règle.
 
 La réserve de menace est gérée par le meneur en narration partagée totale (section « Réserve de menace »). Elle mesure l'adversité et finance les réactions de l'opposition (section « Réserve de menace »).
 
@@ -28,9 +28,9 @@ Réserve de planification (section « Étape 1: Actions préparatoires », secti
 - Valeur de départ: 0 point.
 - Bornes: minimum 0, pas de maximum.
 - Évolution en crise: descend quand elle est consommée face aux périls.
-- Hausse: +1 point par succès aux tests de planification ou bonus du meneur.
-- Baisse: dépense volontaire de 1 à 4 points par flashback ou effet du plan.
-- Seuil: dépassée par la menace, elle provoque un désastre collectif.
+- Hausse: +1 point par succès aux tests de planification (2 succès par point si le temps manque).
+- Baisse: dépense volontaire pour un bonus justifié par le plan, dont les flashbacks (1 à 4 points); une carte du lieu fournie en échange de 2 points.
+- Seuil: en narration partagée totale, dépassée par la menace, elle provoque un désastre collectif.
 - Nature: s'accumule puis se dépense volontairement.
 
 Réserve de menace (section « Réserve de menace », section « Désastre »):
@@ -53,9 +53,11 @@ En narration partagée totale, la meneuse alimente la réserve de menace (sectio
 ## Cas limites
 Si la réserve de menace s'accumule au point de dépasser le total de la réserve de planification, la tension atteint son paroxysme et un désastre frappe l'équipe (section « Désastre »). Ce désastre provoque un incident majeur défini par le récit, et la réserve de menace retombe aussitôt à zéro (section « Désastre »).
 
-Les points de la réserve de planification ne s'utilisent que pour les flashbacks et effets du plan d'équipe; ils ne remplacent pas l'Anarchy individuelle pour les tests normaux (section « Étape 2: Dans le feu de l’action », section « Dépenser son Anarchy »).
+Les points de la réserve de planification paient tous les bonus d'Anarchy, à condition qu'ils soient justifiés par la planification; la réserve personnelle sert à tout moment, plan ou non (section « Réserve de planification ou points d’Anarchy personnels? »).
 
 En mode de jeu classique avec meneur sans narration partagée totale, la réserve de menace n'est pas employée (section « La narration partagée dans Shadowrun: Anarchy 2.0 »).
 
 ## Non couvert
 Les sources ne fixent pas de plafond maximum au nombre de points cumulables dans la réserve de planification ou dans la réserve de menace (section « Étape 1: Actions préparatoires », section « Réserve de menace »).
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : la réserve de planification paie tout bonus justifié par le plan ; retiré : « bonus du meneur » ; ajouté : la carte contre 2 points (p. 77-79, 127).*

@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Drones et véhicules » ; « Être la machine » ; « Consoles de commande pour rigger » ; « Modes de contrôle » ; « Contrôle manuel » ; « Véhicule autonome » ; « Plongée » ; « Siège du capitaine » ; « Priorité des modes de contrôle »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 99ccc1a7
 ---
 
@@ -34,11 +34,12 @@ Hiérarchie des modes de contrôle (du plus au moins prioritaire) (section « Pr
 Biofeedback en plongée selon les dommages du véhicule (section « Plongée »):
 - Dommage léger: aucune blessure.
 - Dommage grave: 1 blessure légère pour le rigger.
-- Dommage incapacitant: 1 blessure grave pour le rigger (au moins 1 blessure légère si l'appareil est incapacité).
+- Dommage incapacitant: 1 blessure grave pour le rigger.
+- Seule la case cochée compte: un troisième dommage léger, qui remplit la case grave, cause une blessure légère; étourdissante en cold-sim, létale en hot-sim.
 
 Connexion en hot-sim en plongée (section « Plongée »):
 - Avantage sur tous les tests de Pilotage (y compris en défense).
-- 1 blessure grave si le véhicule est incapacité.
+- Biofeedback létal au lieu d'étourdissant.
 
 Siège du capitaine (CCR) (section « Siège du capitaine »):
 - Action initiale: 1 action indépendante par véhicule.
@@ -51,7 +52,7 @@ Véhicule autonome (section « Véhicule autonome »):
 ## À la table
 Pendant son tour de narration, le rigger choisit son mode de contrôle pour intervenir aux commandes d'un véhicule ou d'une flotte de drones (section « Modes de contrôle », section « Drones et véhicules »).
 
-Lorsqu'il évolue en plongée (en RV avec CCV), le rigger prend les commandes mentales directes du véhicule: le pilotage ne consomme pas d'action significative et s'effectue comme un mouvement naturel du corps (section « Plongée »). Pour chaque manœuvre ou test de Pilotage requis, le joueur lance Pilotage + Agilité (ou Réactions) avec les bonus du mode de connexion retenu (section « Plongée », section « Être la machine »).
+Lorsqu'il évolue en plongée (en RV avec CCV), le rigger prend les commandes mentales directes du véhicule: le pilotage ne consomme pas d'action significative et s'effectue comme un mouvement naturel du corps (section « Plongée »). Pour chaque manœuvre ou test de Pilotage requis, le joueur lance Pilotage + Agilité avec les attributs et compétences du rigger et les bonus du mode de connexion retenu (section « Plongée », section « Être la machine »).
 
 Si le rigger utilise le mode Siège du capitaine avec une Console de commande pour rigger (CCR), il attribue des ordres à ses drones (section « Consoles de commande pour rigger », section « Siège du capitaine »). Chaque drone réalise une action indépendante par narration selon les instructions transmises par la CCR (section « Siège du capitaine »).
 
@@ -62,9 +63,11 @@ En cas de conflit d'ordres simultanés sur un même drone, la hiérarchie des mo
 
 Un rigger en plongée ne peut pas contrôler plusieurs véhicules simultanément en plongée directe: il doit basculer sur le mode Siège du capitaine via sa CCR pour gérer plusieurs drones en parallèle (section « Consoles de commande pour rigger », section « Siège du capitaine »).
 
-Si le véhicule dans lequel le rigger a plongé est totalement détruit ou incapacité, la rupture brutale du lien neuronal inflige un choc d'éjection et un biofeedback physique critique, risquant de faire perdre connaissance au rigger (section « Plongée »).
+Si le véhicule dans lequel le rigger a plongé subit un dommage incapacitant, le rigger encaisse une blessure grave, létale en hot-sim (section « Plongée »). On ne peut pas plonger dans un véhicule où un autre rigger est déjà plongé: la première commande de même niveau prévaut (section « Priorité des modes de contrôle »).
 
 Les affrontements opposant des véhicules ou les poursuites automobiles à grande vitesse font l'objet d'autres règles (section « Poursuites », section « Drones et véhicules »).
 
 ## Non couvert
 rien
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : biofeedback selon la case cochée, étourdissant ou létal ; retiré : « Réactions », le choc d'éjection à la destruction du véhicule (p. 230, 233).*

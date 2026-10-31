@@ -27,6 +27,7 @@ import { jetDeNephilim, type ChoixDeNephilim, type JetDeNephilim, type RegleDeNe
 import { estUnAndroide } from './systemes/paniqueAlien';
 import { CHOIX_DE_RUNEQUEST, calculerRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest } from './systemes/runequest';
 import { reserveDeDegenesis, type ChoixDeDegenesis, type ReserveDeDegenesis } from './systemes/degenesis';
+import { reserveDeShadowrun, rrBornee, type ChoixDeShadowrun, type ReserveDeShadowrun } from './systemes/shadowrun';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 import type { EchelleDuJet } from './degresDeReussite';
 import {
@@ -539,6 +540,14 @@ export interface DescripteurDeJet {
      */
     degenesis?: import('./systemes/degenesis').RegleDeDegenesis;
     /**
+     * **Shadowrun : Anarchy 2.0** — 2026-10-31 (`systemes/shadowrun.ts`) : la réserve
+     * (compétence + attribut, +2 de spécialisation) ne change jamais ; chaque 5+ est un
+     * succès, 4+ sous avantage, 6 seul sous désavantage ; les dés de risque doublent leurs
+     * succès et leurs 1 font les complications, que la RR de la ligne ignore. Une blessure
+     * grave impose le désavantage ; l'Essence annule des succès aux tests de magie.
+     */
+    shadowrun?: import('./systemes/shadowrun').RegleDeShadowrun;
+    /**
      * **Chroniques Oubliées Contemporain** — 2026-10-31 (`systemes/coc.ts`) : le d20 (ou
      * l'option du 3d6) s'ajoute à la caractéristique retenue et aux modificateurs du livre,
      * contre une difficulté de 5 à 25 ou la DEF de la cible ; réussite critique sur 20,
@@ -613,6 +622,8 @@ export interface ChoixDuJoueur {
     runequest?: Partial<ChoixDeRuneQuest>;
     /** Ce que le panneau règle pour Degenesis (`DescripteurDeJet.degenesis`) : modificateurs en dés, Égo dépensé. */
     degenesis?: Partial<ChoixDeDegenesis>;
+    /** Ce que le panneau règle pour Shadowrun (`DescripteurDeJet.shadowrun`) : risque, RR, avantage, spécialisation. */
+    shadowrun?: Partial<ChoixDeShadowrun>;
     /** La valeur de l'adversaire, quand le jet s'oppose à lui. Absente : pas d'opposition. */
     valeurAdverse?: number;
     /** L'Avantage tactique est coché (`modificateurDuSeuil.avantage`). */
@@ -723,6 +734,8 @@ export interface JetPrepare {
     runequest?: CalculDeRuneQuest;
     /** Degenesis : la valeur d'action modifiée, les dés lancés et les succès d'office. */
     degenesis?: ReserveDeDegenesis;
+    /** Shadowrun : la réserve, ses dés de risque, la RR, l'avantage et la RR lue sur la ligne de la compétence. */
+    shadowrun?: ReserveDeShadowrun & { rrDeLaCompetence?: number };
     nombreDeDes: number;
     /**
      * **Les dés de base quand ils n'ont pas tous la même taille.**
@@ -1420,9 +1433,36 @@ export function preparerLeJet(
     if (degenesis?.traumatismes) remarques.push(`${degenesis.traumatismes} Traumatisme${degenesis.traumatismes > 1 ? 's' : ''} : −${degenesis.traumatismes}D.`);
     if (degenesis?.automatiques) remarques.push(`Valeur d'action ${degenesis.valeur} : 12 dés et ${degenesis.automatiques} succès d'office.`);
 
+    /*
+      **Shadowrun : Anarchy** (2026-10-31) : *« aucune circonstance ne peut faire changer ce
+      nombre de dés »* (p. 64) — les circonstances déplacent la valeur du succès, et le risque
+      se prend DANS la réserve. La RR se lit sur la ligne de la compétence retenue, sauf si
+      le joueur la corrige.
+    */
+    const regleShadowrun = descripteur.shadowrun;
+    const champDeLaCompetence = choix.champs.competence;
+    const rrLue = regleShadowrun && champDeLaCompetence && regleShadowrun.rrDesCompetences?.[champDeLaCompetence]
+        ? rrBornee(lireLeChamp(valeursDeLaFiche, regleShadowrun.rrDesCompetences[champDeLaCompetence]).valeur ?? 0) : undefined;
+    const lu = (champ?: string) => (champ ? lireLeChamp(valeursDeLaFiche, champ).valeur ?? undefined : undefined);
+    const shadowrun = regleShadowrun && reserve
+        ? {
+            ...reserveDeShadowrun(
+                reserveDeDepart,
+                { ...choix.shadowrun, rr: choix.shadowrun?.rr ?? rrLue ?? 0 },
+                { graves: lu(regleShadowrun.blessures?.graves), incapacitantes: lu(regleShadowrun.blessures?.incapacitantes), essence: lu(regleShadowrun.essence) },
+                !!regleShadowrun.risqueAlternatif,
+            ),
+            ...(rrLue !== undefined ? { rrDeLaCompetence: rrLue } : {}),
+        }
+        : undefined;
+    if (shadowrun && (lu(regleShadowrun?.blessures?.incapacitantes) ?? 0) > 0) {
+        avertissements.push('Blessure incapacitante : aucune action qui demande un test (p. 68).');
+    }
+    if (shadowrun?.annules) remarques.push(`Essence : ${shadowrun.annules} succès annulé${shadowrun.annules > 1 ? 's' : ''} sur ce test de magie (p. 60).`);
+
     // Les dés achetés ne franchissent pas le plafond du système : chez Dune,
     // cinq dés au total, quoi qu'on dépense.
-    const demandes = degenesis ? degenesis.des : reserveDeDepart + Math.max(0, choix.desSupplementaires ?? 0);
+    const demandes = degenesis ? degenesis.des : shadowrun ? shadowrun.des + shadowrun.speciaux : reserveDeDepart + Math.max(0, choix.desSupplementaires ?? 0);
     const nombreDeDes = reserve?.sansPlafond ? demandes : Math.min(demandes, reserve?.max ?? 0);
     if (reserve && !reserve.sansPlafond && demandes > reserve.max) {
         avertissements.push(`Réserve plafonnée à ${reserve.max} dés.`);
@@ -1431,7 +1471,8 @@ export function preparerLeJet(
     // Le prix croît dé après dé : on additionne les échelons réellement
     // franchis, pas le nombre de dés fois un prix moyen.
     // Chez Degenesis, les dés en plus viennent des modificateurs et de l'Égo : aucun ne s'achète.
-    const desAchetes = degenesis ? 0 : nombreDeDes - reserveDeDepart;
+    // Chez Shadowrun non plus : la spécialisation et les dés spéciaux ne s'achètent pas.
+    const desAchetes = degenesis || shadowrun ? 0 : nombreDeDes - reserveDeDepart;
     const echelons = reserve?.cout ?? [];
     const total = echelons.slice(0, Math.max(0, desAchetes)).reduce((s, c) => s + c, 0);
 
@@ -1515,6 +1556,7 @@ export function preparerLeJet(
         ...(nephilim ? { nephilim } : {}),
         ...(runequest ? { runequest } : {}),
         ...(degenesis ? { degenesis } : {}),
+        ...(shadowrun ? { shadowrun } : {}),
         echelle,
         /*
           Quand les dés sont échelonnés, c'est leur nombre qui fait foi : ils ne

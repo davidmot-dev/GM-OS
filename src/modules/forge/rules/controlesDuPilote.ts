@@ -1962,6 +1962,49 @@ export function controlerLePilote(
             if (champ !== undefined && !tousLesChamps.has(champ)) erreur(`jet.degenesis.${cle}`, `Degenesis lit ${quoi} dans « ${champ} », absent de la fiche.`);
         }
     }
+    // ---- Shadowrun : Anarchy 2.0 : réserve, dés de risque, moniteur d'état (2026-10-31) ----
+    const sr = driver.jet?.shadowrun;
+    if (sr) {
+        if (driver.jet?.sens !== 'superieur-ou-egal' || !driver.jet?.reserve || facesLancees(driver) !== 6 || (driver.jet?.seuil ?? []).length) {
+            avertir('jet.shadowrun', 'Le bloc Shadowrun suppose une réserve de d6 (compétence + attribut), sans seuil composé (p. 64) : déclarer « reserve.composantes » et « sens: superieur-ou-egal ».');
+        }
+        if (driver.dice?.successThreshold !== 5) {
+            avertir('dice.successThreshold', 'Chaque d6 de Shadowrun réussit sur 5 ou 6 (p. 64) : `dice.successThreshold` doit valoir 5.');
+        }
+        if ((driver.jet?.reserve?.cout ?? []).length) {
+            avertir('jet.reserve.cout', 'Shadowrun ne vend pas de dés : la réserve ne change jamais (p. 64), et la réserve de planification paie des bonus (p. 78).');
+        }
+        const lus: [string, string | undefined][] = [
+            ['anarchy', sr.anarchy], ['essence', sr.essence],
+            ...Object.entries(sr.blessures ?? {}).map(([cle, champ]) => [`blessures.${cle}`, champ] as [string, string]),
+            ...Object.entries(sr.rrDesCompetences ?? {}).flatMap(([competence, rr]) => [
+                [`rrDesCompetences.${competence}`, competence], [`rrDesCompetences.${competence}`, rr],
+            ] as [string, string][]),
+        ];
+        for (const [ou, champ] of lus) {
+            if (champ !== undefined && !tousLesChamps.has(champ)) erreur(`jet.shadowrun.${ou}`, `Shadowrun lit « ${champ} », absent de la fiche.`);
+        }
+    }
+    const moniteurSR = driver.combat?.moniteurDEtat;
+    if (moniteurSR) {
+        if (moniteurSR.mecanique !== 'shadowrun') {
+            erreur('combat.moniteurDEtat.mecanique', `« ${String(moniteurSR.mecanique)} » n'est pas une règle de moniteur d'état connue. La seule admise est : shadowrun.`);
+        }
+        const champs: [string, string | undefined][] = [
+            ['legeres', moniteurSR.legeres], ['graves', moniteurSR.graves], ['incapacitantes', moniteurSR.incapacitantes],
+            ['sante', moniteurSR.sante], ['force', moniteurSR.force], ['volonte', moniteurSR.volonte],
+            ['capacites.legeres', moniteurSR.capacites?.legeres], ['capacites.graves', moniteurSR.capacites?.graves],
+            ...Object.entries(moniteurSR.seuils ?? {}).flatMap(([famille, g]) => Object.entries(g ?? {}).map(([gravite, champ]) => [`seuils.${famille}.${gravite}`, champ] as [string, string])),
+        ];
+        for (const [ou, champ] of champs) {
+            if (champ !== undefined && !tousLesChamps.has(champ)) erreur(`combat.moniteurDEtat.${ou}`, `Le moniteur d'état lit « ${champ} », absent de la fiche.`);
+        }
+        if (!driver.combat?.casesDeSante) {
+            avertir('combat.moniteurDEtat', 'Le moniteur d’état coche des cases (p. 68) : déclarer « combat.casesDeSante ».');
+        } else if (moniteurSR.sante && driver.combat.casesDeSante.champ !== moniteurSR.sante) {
+            avertir('combat.moniteurDEtat.sante', `Les cases suivent « ${driver.combat.casesDeSante.champ ?? '—'} » et le moniteur lit « ${moniteurSR.sante} » : les deux diraient deux blessures différentes.`);
+        }
+    }
     (driver.combat?.statsToTrack ?? []).forEach((stat, i) => {
         // Les gestes de la règle (le Choc de Torg) : un nom, et un effet chiffré.
         (stat.gestes ?? []).forEach((geste, j) => {

@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Test opposé » ; « Avantage / désavantage » ; « S’y mettre à plusieurs » ; « Test d’attaque » ; « Combat à distance » ; « Combat rapproché » ; « Pilotage »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 950a8725
 ---
 
@@ -28,18 +28,18 @@ Dans les oppositions particulières:
 - Succès nets: succès de l'initiateur moins succès de l'adversaire (section « Test opposé »).
 - Égalité: absence de départage ou réussite de l'initiateur (section « Test opposé »).
 - Aide et coopération: octroie un avantage au personnage aidé (succès sur 4, 5 et 6) (section « S’y mettre à plusieurs », section « Avantage / désavantage »).
-- Posture défensive en mêlée: +1 avantage au test de défense (section « Combat rapproché »).
-- Vitesse ou Maniabilité supérieure: +1 avantage au test de Pilotage (section « Pilotage »).
+- Posture défensive en mêlée: un avantage au test de défense (section « Combat rapproché »).
+- Vitesse ou Maniabilité supérieure: un avantage au test de Pilotage (section « Pilotage »).
 
 ## À la table
 Lorsqu'un joueur tente une action opposée, la meneuse de jeu détermine la réserve de l'initiateur et celle du défenseur (section « Test opposé »). Si un allié qualifié apporte son aide et en a les moyens matériels ou techniques, il procure un avantage au test principal (section « S’y mettre à plusieurs », section « Test d’attaque »).
 
 Les deux combattants ou opposants lancent simultanément leurs dés (Compétence + Attribut) (section « Test opposé »). Pour les seconds rôles, le meneur peut remplacer ce jet opposé par un seuil fixe moyen précalculé (section « Gestion des PNJ »).
 
-Chaque camp compte ses succès (5 et 6, ou 4 à 6 sous avantage) (section « Succès », section « Avantage / désavantage »). L'initiateur doit obtenir strictly plus de succès que son adversaire pour réussir (section « Test opposé »). L'écart forme les succès nets, ajoutés par exemple à la Valeur de Dommages d'une attaque (section « Combat à distance », section « Combat rapproché »). L'Anarchy permet d'ajouter un avantage ou une action (section « Dépenser son Anarchy »).
+Chaque camp compte ses succès (5 et 6, ou 4 à 6 sous avantage) (section « Succès », section « Avantage / désavantage »). L'initiateur doit obtenir strictement plus de succès que son adversaire pour réussir (section « Test opposé »). L'écart forme les succès nets, ajoutés par exemple à la Valeur de Dommages d'une attaque (section « Combat à distance », section « Combat rapproché »). L'Anarchy permet d'ajouter un avantage ou une action (section « Dépenser son Anarchy »).
 
 ## Cas limites
-En cas d'égalité de succès, les protagonistes ne se départagent pas; si la situation exige un vainqueur, l'initiateur l'emporte (section « Test opposé »). En combat rapproché, si le défenseur cherchait uniquement à se défendre et qu'une égalité survient, il est touché (section « Combat rapproché »).
+En cas d'égalité de succès, les protagonistes ne se départagent pas; si la situation exige un vainqueur, l'initiateur l'emporte (section « Test opposé »). En combat rapproché, si le défenseur cherchait uniquement à se défendre et qu'une égalité survient, il est touché (section « Combat rapproché »). Au combat à distance, la cible est touchée si l'attaquant obtient au moins autant de succès qu'elle (section « Combat à distance »).
 
 Faute de seuil fixe sur un test opposé, le meneur de jeu peut dévoiler la réserve adverse pour aider le joueur à évaluer son niveau de risque (section « Test opposé »).
 
@@ -49,3 +49,5 @@ Un personnage sans action disponible peut toujours se défendre en combat rappro
 
 ## Non couvert
 rien
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : l’égalité au tir touche, l’avantage n’est pas « +1 » (p. 64-67, 81-82, 230).*

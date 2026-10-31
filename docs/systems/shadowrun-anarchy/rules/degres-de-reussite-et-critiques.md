@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Test simple » ; « Test opposé » ; « Prendre des risques » ; « Réduire les risques » ; « Évaluer le risque »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 0b49b6a7
 ---
 
@@ -56,9 +56,11 @@ En parallèle de la réussite ou de l'échec du jet, le joueur compte les 1 appa
 ## Cas limites
 En cas de complication critique (deux 1 sur les dés de risque) lors d'un test dont le nombre de succès atteint pourtant le seuil, le meneur de jeu conserve la faculté d'imposer un échec si la nature de la complication le justifie (section « Prendre des risques »).
 
-En présence d'un désastre (trois 1 ou plus sur les dés de risque), l'échec est automatique et absolu: aucun nombre de succès obtenus par ailleurs ne peut racheter le jet (section « Prendre des risques »).
+En présence d'un désastre (trois 1 ou plus sur les dés de risque), le test est un échec indépendamment du nombre de succès, sauf exception laissée au meneur (section « Prendre des risques »).
 
 L'utilisation d'un point d'Anarchy pour relancer la totalité des dés ne permet pas d'effacer les 1 obtenus lors du premier jet: les complications générées par le jet initial restent définitivement acquises (section « Dépenser son Anarchy »).
 
 ## Non couvert
 rien
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : le désastre échoue « sauf exception » (p. 64, 70-71, 77).*

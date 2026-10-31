@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Blessures » ; « Moniteur d’état » ; « Effet des blessures » ; « Subir des dommages » ; « Guérison, soins et réparation » ; « Premiers soins et sorts » ; « Guérison naturelle » ; « Essence »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 6d8f29e6
 ---
 
@@ -18,7 +18,7 @@ La santé est suivie par le moniteur d'état (section « Moniteur d’état »).
 - VD <= Résistance: 0 blessure.
 - VD > Résistance: blessure légère (désavantage à tous les tests jusqu'à la fin de la prochaine narration) (section « Effet des blessures »).
 - VD > Résistance + 3: blessure grave (désavantage à tous les tests jusqu'à guérison) (section « Effet des blessures »).
-- VD > Résistance + 6: blessure incapacitante (empêche toute action et déplacement; mourant si létale) (section « Effet des blessures »).
+- VD > Résistance + 6: blessure incapacitante (empêche toute action et déplacement; si elle est létale, le meneur peut décider que le personnage est mourant) (section « Effet des blessures »).
 
 Remplir les cases d'un niveau fait monter les nouvelles blessures au degré supérieur (section « Subir des dommages »). La jauge descend par premiers soins, sorts ou repos (section « Guérison, soins et réparation »).
 
@@ -40,16 +40,18 @@ L'Essence est une jauge d'intégrité corporelle, démarrant à 6 (minimum 0) (s
 ## À la table
 Lorsqu'un personnage subit une attaque ou un effet nocif, la Valeur de Dommages (VD) est comparée à sa résistance (Force + Armure pour le physique, Volonté + Protection pour le mental) (section « Subir des dommages »). Selon le résultat, le joueur coche la case de blessure correspondante sur son moniteur d'état: légère, grave ou incapacitante (section « Moniteur d’état », section « Subir des dommages »).
 
-Si le personnage reçoit une blessure légère, le joueur applique un désavantage à tous ses tests jusqu'à la fin de la narration suivante (section « Effet des blessures »). Si la blessure est grave, le désavantage s'applique à l'ensemble de ses tests jusqu'à sa guérison (section « Effet des blessures »). Si la blessure est incapacitante, le personnage s'effondre, ne peut plus agir ni se déplacer, et devient mourant si les dommages sont physiques (section « Effet des blessures »).
+Si le personnage reçoit une blessure légère, le joueur applique un désavantage à tous ses tests jusqu'à la fin de la narration suivante (section « Effet des blessures »). Si la blessure est grave, le désavantage s'applique à l'ensemble de ses tests jusqu'à sa guérison (section « Effet des blessures »). Si la blessure est incapacitante, le personnage ne peut plus agir ni se déplacer; si elle est létale, le meneur peut décider qu'il est mourant (section « Effet des blessures »).
 
-Pour soigner un blessé, un allié effectue un test de premiers soins (Survie + Logique) ou lance un sort de soin (Sorcellerie + Volonté) pendant sa narration (section « Premiers soins et sorts »). En cas de réussite contre le seuil de la blessure, celle-ci est effacée du moniteur d'état (section « Premiers soins et sorts »). Un personnage mourant doit être stabilisé d'urgence par un test réussi contre un seuil de 3 (section « Premiers soins et sorts »).
+Pour soigner un blessé, un allié effectue un test de premiers soins (Survie + Logique), qui dure quelques minutes par case et ne se fait donc pas en plein combat, ou lance un sort de soin (Sorcellerie + Volonté), qui ne prend qu'une action (section « Premiers soins et sorts »). En cas de réussite contre le seuil de la blessure, celle-ci est effacée du moniteur d'état (section « Premiers soins et sorts »). Un personnage mourant doit être stabilisé d'urgence par un test réussi contre un seuil de 3 (section « Premiers soins et sorts »).
 
 ## Cas limites
 Si un personnage subit une blessure alors que toutes les cases de ce niveau sont déjà cochées sur son moniteur d'état, la blessure excédentaire monte automatiquement au niveau supérieur (section « Subir des dommages »).
 
 Lorsqu'un personnage atteint une Essence de 0 suite à la pose d'implants cybernétiques ou biologiques, sa mort est immédiate et irréversible (section « Essence »).
 
-Un test de premiers soins ou de sort de soin échoué sur une blessure ne peut pas être retenté immédiatement au cours de la même scène sans changer de méthode (section « Premiers soins et sorts », section « Réessayer une action échouée »).
+Une seule tentative de premiers soins et un seul sort sont permis par case; si les deux échouent, seule reste la guérison naturelle. Les dommages du drain ne se soignent que par guérison naturelle (section « Premiers soins et sorts »).
 
 ## Non couvert
 rien
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : mourant au choix du meneur sur une incapacitante létale, une tentative de premiers soins et un sort par case, drain (p. 59-60, 68-70).*

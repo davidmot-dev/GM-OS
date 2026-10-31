@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Pilotage » ; « Drones et véhicules »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 55148696
 ---
 
@@ -52,3 +52,5 @@ Si un pilote subit une complication ou un désastre à cause des dés de risque 
 
 ## Non couvert
 Les sources ne précisent pas de tableau de distances métriques exactes pour l'écartement entre véhicules lors d'une poursuite (section « Portées », section « Drones et véhicules »).
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; conforme (p. 53, 65, 230).*

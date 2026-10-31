@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Drain » ; « Attributs » ; « Premiers soins et sorts » ; « Lancement de sorts » ; « Contresort » ; « Invocation » ; « Bannissement » ; « Règle de risque alternative »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 741d4c2a
 ---
 
@@ -54,7 +54,7 @@ Si le drain inflige des blessures, le joueur ne peut pas recourir aux sorts de s
 ## Cas limites
 Le drain s'applique uniquement au moment du jet initial d'action magique et non pendant la durée où un sort est maintenu actif (section « Lancement de sorts »).
 
-Si le drain cause une blessure incapacitante, le personnage s'effondre inconscient, ce qui met fin immédiatement à tous ses sorts maintenus (section « Drain », section « Effets magiques continus »).
+Le drain s'ajoute à l'effet normal de la complication; sauf mention contraire, tous les tests de Sorcellerie et de Conjuration y sont sujets (section « Drain »).
 
 Lorsqu'un joueur dépense un point d'Anarchy pour relancer son jet de magie, le drain causé par les 1 du jet initial demeure acquis et ne peut pas être effacé par la relance (section « Dépenser son Anarchy », section « Drain »).
 
@@ -62,3 +62,5 @@ Sous la règle de risque alternative sans dés de risque, le drain survient uniq
 
 ## Non couvert
 Les sources ne proposent aucun produit chimique ou fétiche magique permettant de régénérer spécifiquement le drain en dehors de la guérison naturelle (section « Premiers soins et sorts »).
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : retiré l'effondrement qui mettrait fin aux sorts maintenus, ajouté que le drain s'ajoute à la complication (p. 69, 72, 170, 178).*

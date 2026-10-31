@@ -7,7 +7,7 @@ sujets_traites: 13 sur 14
 hors_categories: 5
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Inventaire des mécaniques
@@ -42,3 +42,5 @@ Voici les mécaniques CENTRALES propres à **Shadowrun: Anarchy 2.0** qui n'entr
 3. **Le Piratage et les Modes de connexion à la Matrice**: Infiltration matricielle s'effectuant en Réalité Augmentée (RA) ou Virtuelle (RV Cold-Sim ou Hot-Sim) offrant des actions gratuites ou des avantages en cybercombat au prix de risques de biofeedback physique/mental, sous la surveillance constante du DIEU qui déclenche la Convergence en cas de désastre.
 4. **Le Drain Magique**: Effet d'épuisement ou de blessure subi par les magiciens lors du lancement de sorts ou de l'invocation d'esprits, se déclenchant sous forme de pénalité supplémentaire lors des complications sur leurs tests magiques.
 5. **Le Rigging et la Plongée dans les véhicules**: Prise de contrôle directe d'un véhicule ou d'un drone en Réalité Virtuelle via une Interface Neurale Directe et un Câblage de Contrôle de Véhicule, transformant le pilotage en mouvement libre sans dépense d'action, mais retransmettant les dommages du véhicule au rigger sous forme de biofeedback.
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; conforme (p. 50-81, 127, 230).*

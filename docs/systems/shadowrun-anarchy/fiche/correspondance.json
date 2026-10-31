@@ -1,0 +1,493 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "shadowrun-anarchy2-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Shadowrun : Anarchy 2.0 (pilote 2.0.0, outils/shadowrun-anarchy/finir_shadowrun.py) et le gabarit shadowrun-anarchy2-fr livré le 2026-10-31. Écrite par outils/shadowrun-anarchy/relier_fiche_shadowrun.mjs : les 120 clés de valeur ont chacune leur champ. Les blessures comptent les cases cochées ; la RR de chaque compétence, ses pastilles cochées. Le métatype, le train de vie, les capacités et la position du moniteur n’existent que dans GM-OS.",
+  "champs": [
+    {
+      "gmos": "pseudo",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "mot_cle_1",
+      "fiche": "keywords.0"
+    },
+    {
+      "gmos": "mot_cle_2",
+      "fiche": "keywords.1"
+    },
+    {
+      "gmos": "mot_cle_3",
+      "fiche": "keywords.2"
+    },
+    {
+      "gmos": "mot_cle_4",
+      "fiche": "keywords.3"
+    },
+    {
+      "gmos": "mot_cle_5",
+      "fiche": "keywords.4"
+    },
+    {
+      "gmos": "comportement_1",
+      "fiche": "behaviours.0"
+    },
+    {
+      "gmos": "comportement_2",
+      "fiche": "behaviours.1"
+    },
+    {
+      "gmos": "comportement_3",
+      "fiche": "behaviours.2"
+    },
+    {
+      "gmos": "comportement_4",
+      "fiche": "behaviours.3"
+    },
+    {
+      "gmos": "replique_1",
+      "fiche": "cues.0"
+    },
+    {
+      "gmos": "replique_2",
+      "fiche": "cues.1"
+    },
+    {
+      "gmos": "replique_3",
+      "fiche": "cues.2"
+    },
+    {
+      "gmos": "replique_4",
+      "fiche": "cues.3"
+    },
+    {
+      "gmos": "force",
+      "fiche": "attributes.strength"
+    },
+    {
+      "gmos": "agilite",
+      "fiche": "attributes.agility"
+    },
+    {
+      "gmos": "volonte",
+      "fiche": "attributes.willpower"
+    },
+    {
+      "gmos": "logique",
+      "fiche": "attributes.logic"
+    },
+    {
+      "gmos": "charisme",
+      "fiche": "attributes.charisma"
+    },
+    {
+      "gmos": "competence_1_nom",
+      "fiche": "skills.0.name"
+    },
+    {
+      "gmos": "competence_1",
+      "fiche": "skills.0.rating"
+    },
+    {
+      "gmos": "competence_1_attribut",
+      "fiche": "skills.0.attribute"
+    },
+    {
+      "gmos": "competence_1_reserve",
+      "fiche": "skills.0.pool"
+    },
+    {
+      "gmos": "competence_1_rr",
+      "fiche": "skills.0.risk_reduction"
+    },
+    {
+      "gmos": "competence_2_nom",
+      "fiche": "skills.1.name"
+    },
+    {
+      "gmos": "competence_2",
+      "fiche": "skills.1.rating"
+    },
+    {
+      "gmos": "competence_2_attribut",
+      "fiche": "skills.1.attribute"
+    },
+    {
+      "gmos": "competence_2_reserve",
+      "fiche": "skills.1.pool"
+    },
+    {
+      "gmos": "competence_2_rr",
+      "fiche": "skills.1.risk_reduction"
+    },
+    {
+      "gmos": "competence_3_nom",
+      "fiche": "skills.2.name"
+    },
+    {
+      "gmos": "competence_3",
+      "fiche": "skills.2.rating"
+    },
+    {
+      "gmos": "competence_3_attribut",
+      "fiche": "skills.2.attribute"
+    },
+    {
+      "gmos": "competence_3_reserve",
+      "fiche": "skills.2.pool"
+    },
+    {
+      "gmos": "competence_3_rr",
+      "fiche": "skills.2.risk_reduction"
+    },
+    {
+      "gmos": "competence_4_nom",
+      "fiche": "skills.3.name"
+    },
+    {
+      "gmos": "competence_4",
+      "fiche": "skills.3.rating"
+    },
+    {
+      "gmos": "competence_4_attribut",
+      "fiche": "skills.3.attribute"
+    },
+    {
+      "gmos": "competence_4_reserve",
+      "fiche": "skills.3.pool"
+    },
+    {
+      "gmos": "competence_4_rr",
+      "fiche": "skills.3.risk_reduction"
+    },
+    {
+      "gmos": "competence_5_nom",
+      "fiche": "skills.4.name"
+    },
+    {
+      "gmos": "competence_5",
+      "fiche": "skills.4.rating"
+    },
+    {
+      "gmos": "competence_5_attribut",
+      "fiche": "skills.4.attribute"
+    },
+    {
+      "gmos": "competence_5_reserve",
+      "fiche": "skills.4.pool"
+    },
+    {
+      "gmos": "competence_5_rr",
+      "fiche": "skills.4.risk_reduction"
+    },
+    {
+      "gmos": "competence_6_nom",
+      "fiche": "skills.5.name"
+    },
+    {
+      "gmos": "competence_6",
+      "fiche": "skills.5.rating"
+    },
+    {
+      "gmos": "competence_6_attribut",
+      "fiche": "skills.5.attribute"
+    },
+    {
+      "gmos": "competence_6_reserve",
+      "fiche": "skills.5.pool"
+    },
+    {
+      "gmos": "competence_6_rr",
+      "fiche": "skills.5.risk_reduction"
+    },
+    {
+      "gmos": "competence_7_nom",
+      "fiche": "skills.6.name"
+    },
+    {
+      "gmos": "competence_7",
+      "fiche": "skills.6.rating"
+    },
+    {
+      "gmos": "competence_7_attribut",
+      "fiche": "skills.6.attribute"
+    },
+    {
+      "gmos": "competence_7_reserve",
+      "fiche": "skills.6.pool"
+    },
+    {
+      "gmos": "competence_7_rr",
+      "fiche": "skills.6.risk_reduction"
+    },
+    {
+      "gmos": "competence_8_nom",
+      "fiche": "skills.7.name"
+    },
+    {
+      "gmos": "competence_8",
+      "fiche": "skills.7.rating"
+    },
+    {
+      "gmos": "competence_8_attribut",
+      "fiche": "skills.7.attribute"
+    },
+    {
+      "gmos": "competence_8_reserve",
+      "fiche": "skills.7.pool"
+    },
+    {
+      "gmos": "competence_8_rr",
+      "fiche": "skills.7.risk_reduction"
+    },
+    {
+      "gmos": "competence_9_nom",
+      "fiche": "skills.8.name"
+    },
+    {
+      "gmos": "competence_9",
+      "fiche": "skills.8.rating"
+    },
+    {
+      "gmos": "competence_9_attribut",
+      "fiche": "skills.8.attribute"
+    },
+    {
+      "gmos": "competence_9_reserve",
+      "fiche": "skills.8.pool"
+    },
+    {
+      "gmos": "competence_9_rr",
+      "fiche": "skills.8.risk_reduction"
+    },
+    {
+      "gmos": "competence_10_nom",
+      "fiche": "skills.9.name"
+    },
+    {
+      "gmos": "competence_10",
+      "fiche": "skills.9.rating"
+    },
+    {
+      "gmos": "competence_10_attribut",
+      "fiche": "skills.9.attribute"
+    },
+    {
+      "gmos": "competence_10_reserve",
+      "fiche": "skills.9.pool"
+    },
+    {
+      "gmos": "competence_10_rr",
+      "fiche": "skills.9.risk_reduction"
+    },
+    {
+      "gmos": "competence_11_nom",
+      "fiche": "skills.10.name"
+    },
+    {
+      "gmos": "competence_11",
+      "fiche": "skills.10.rating"
+    },
+    {
+      "gmos": "competence_11_attribut",
+      "fiche": "skills.10.attribute"
+    },
+    {
+      "gmos": "competence_11_reserve",
+      "fiche": "skills.10.pool"
+    },
+    {
+      "gmos": "competence_11_rr",
+      "fiche": "skills.10.risk_reduction"
+    },
+    {
+      "gmos": "connaissances_liste",
+      "fiche": "knowledge.description"
+    },
+    {
+      "gmos": "atout_1",
+      "fiche": "assets.0.description"
+    },
+    {
+      "gmos": "atout_2",
+      "fiche": "assets.1.description"
+    },
+    {
+      "gmos": "atout_3",
+      "fiche": "assets.2.description"
+    },
+    {
+      "gmos": "atout_4",
+      "fiche": "assets.3.description"
+    },
+    {
+      "gmos": "atout_5",
+      "fiche": "assets.4.description"
+    },
+    {
+      "gmos": "atout_6",
+      "fiche": "assets.5.description"
+    },
+    {
+      "gmos": "atout_7",
+      "fiche": "assets.6.description"
+    },
+    {
+      "gmos": "atout_8",
+      "fiche": "assets.7.description"
+    },
+    {
+      "gmos": "atout_9",
+      "fiche": "assets.8.description"
+    },
+    {
+      "gmos": "atout_10",
+      "fiche": "assets.9.description"
+    },
+    {
+      "gmos": "atout_11",
+      "fiche": "assets.10.description"
+    },
+    {
+      "gmos": "arme_1",
+      "fiche": "weapons_spells.0.name"
+    },
+    {
+      "gmos": "arme_1_type",
+      "fiche": "weapons_spells.0.type"
+    },
+    {
+      "gmos": "arme_2",
+      "fiche": "weapons_spells.1.name"
+    },
+    {
+      "gmos": "arme_2_type",
+      "fiche": "weapons_spells.1.type"
+    },
+    {
+      "gmos": "arme_3",
+      "fiche": "weapons_spells.2.name"
+    },
+    {
+      "gmos": "arme_3_type",
+      "fiche": "weapons_spells.2.type"
+    },
+    {
+      "gmos": "arme_4",
+      "fiche": "weapons_spells.3.name"
+    },
+    {
+      "gmos": "arme_4_type",
+      "fiche": "weapons_spells.3.type"
+    },
+    {
+      "gmos": "equipement_1",
+      "fiche": "equipment.0"
+    },
+    {
+      "gmos": "equipement_2",
+      "fiche": "equipment.1"
+    },
+    {
+      "gmos": "equipement_3",
+      "fiche": "equipment.2"
+    },
+    {
+      "gmos": "equipement_4",
+      "fiche": "equipment.3"
+    },
+    {
+      "gmos": "equipement_5",
+      "fiche": "equipment.4"
+    },
+    {
+      "gmos": "armure_principale",
+      "fiche": "armour.primary.name"
+    },
+    {
+      "gmos": "armure_secondaire",
+      "fiche": "armour.secondary.name"
+    },
+    {
+      "gmos": "seuil_sans_armure_legere",
+      "fiche": "thresholds.unarmoured.light"
+    },
+    {
+      "gmos": "seuil_sans_armure_grave",
+      "fiche": "thresholds.unarmoured.serious"
+    },
+    {
+      "gmos": "seuil_sans_armure_incapacitante",
+      "fiche": "thresholds.unarmoured.incapacitating"
+    },
+    {
+      "gmos": "seuil_principale_legere",
+      "fiche": "thresholds.primary.light"
+    },
+    {
+      "gmos": "seuil_principale_grave",
+      "fiche": "thresholds.primary.serious"
+    },
+    {
+      "gmos": "seuil_principale_incapacitante",
+      "fiche": "thresholds.primary.incapacitating"
+    },
+    {
+      "gmos": "seuil_secondaire_legere",
+      "fiche": "thresholds.secondary.light"
+    },
+    {
+      "gmos": "seuil_secondaire_grave",
+      "fiche": "thresholds.secondary.serious"
+    },
+    {
+      "gmos": "seuil_secondaire_incapacitante",
+      "fiche": "thresholds.secondary.incapacitating"
+    },
+    {
+      "gmos": "seuil_mental_legere",
+      "fiche": "thresholds.mental.light"
+    },
+    {
+      "gmos": "seuil_mental_grave",
+      "fiche": "thresholds.mental.serious"
+    },
+    {
+      "gmos": "seuil_mental_incapacitante",
+      "fiche": "thresholds.mental.incapacitating"
+    },
+    {
+      "gmos": "piratage_des_de_risque",
+      "fiche": "hacking.minimum_risk_dice"
+    },
+    {
+      "gmos": "piratage_hausse_du_seuil",
+      "fiche": "hacking.threshold_increase"
+    },
+    {
+      "gmos": "anarchy",
+      "fiche": "tracks.anarchy"
+    },
+    {
+      "gmos": "essence",
+      "fiche": "tracks.essence"
+    },
+    {
+      "gmos": "blessures_legeres",
+      "fiche": "wounds.light"
+    },
+    {
+      "gmos": "blessures_graves",
+      "fiche": "wounds.serious"
+    },
+    {
+      "gmos": "blessures_incapacitantes",
+      "fiche": "wounds.incapacitating"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "portrait",
+      "pourquoi": "Une image : elle reste sur la fiche, GM-OS a son propre portrait du personnage."
+    }
+  ]
+}

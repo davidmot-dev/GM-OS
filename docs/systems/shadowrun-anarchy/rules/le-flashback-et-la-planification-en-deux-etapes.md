@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Construire un plan » ; « Étape 1: Actions préparatoires » ; « Étape 2: Dans le feu de l’action » ; « Dépenser son Anarchy »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: c4764bff
 ---
 
@@ -28,9 +28,9 @@ Réserve de planification (section « Étape 1: Actions préparatoires », secti
 - Valeur de départ: 0 point.
 - Bornes: minimum 0, aucun maximum.
 - Évolution en crise: descend quand elle est consommée.
-- Hausse: +1 point par succès aux tests de planification; bonus du meneur.
+- Hausse: +1 point par succès aux tests de planification.
 - Baisse: dépense volontaire de 1 à 4 points par flashback ou effet du plan.
-- Seuil: dépassée par la menace, elle déclenche un désastre collectif.
+- Seuil: en narration partagée totale, dépassée par la menace, elle déclenche un désastre collectif.
 - Nature: s'accumule puis se dépense volontairement.
 
 Valeurs des flashbacks (section « Dépenser son Anarchy », section « Étape 2: Dans le feu de l’action »):
@@ -40,18 +40,20 @@ Valeurs des flashbacks (section « Dépenser son Anarchy », section « Étape 2
 - Temps restreint: 2 succès nécessaires pour 1 point d'Anarchy.
 
 ## À la table
-Au début d'un contrat, l'équipe engage l'Étape 1: les actions préparatoires (section « Étape 1: Actions préparatoires »). Les joueurs s'accordent sur l'approche globale du plan sans s'attarder sur les détails logistiques (section « Étape 1: Actions préparatoires »). Chaque joueur choisit une compétence cohérente (comme Connaissances, Réseaux ou Piratage) et effectue un test de planification (section « Étape 1: Actions préparatoires »). Chaque succès ajoute un point d'Anarchy commun dans la réserve de planification collective (section « Étape 1: Actions préparatoires »).
+Au début d'un contrat, l'équipe engage l'Étape 1: les actions préparatoires (section « Étape 1: Actions préparatoires »). Les joueurs s'accordent sur l'approche globale du plan sans s'attarder sur les détails logistiques (section « Étape 1: Actions préparatoires »). Chaque joueur choisit une compétence cohérente (Perception + Logique, Piratage + Logique, Furtivité + Agilité, Réseau + Charisme, Électronique + Logique, Influence + Charisme…) et effectue un test de planification, risques compris (section « Étape 1: Actions préparatoires »). Chaque succès ajoute un point d'Anarchy commun dans la réserve de planification collective (section « Étape 1: Actions préparatoires »).
 
 Durant l'Étape 2, l'équipe affronte les obstacles sur le terrain (section « Étape 2: Dans le feu de l’action »). Lorsqu'une difficulté survient (un digicode imprévu, une patrouille, un besoin de matériel), un joueur annonce un flashback pendant sa narration (section « Étape 2: Dans le feu de l’action »). Le joueur décrit la scène passée où son personnage a anticipé ce problème (section « Étape 2: Dans le feu de l’action »).
 
-Après validation du récit rétroactif par le meneur, le joueur règle le coût en points d'Anarchy (section « Étape 2: Dans le feu de l’action »). Il prélevé ces points en priorité dans la réserve de planification commune (section « Étape 2: Dans le feu de l’action »). Si cette réserve est vide, le joueur peut dépenser ses points d'Anarchy personnels (section « Étape 2: Dans le feu de l’action », section « Dépenser son Anarchy »).
+Après validation du récit rétroactif par le meneur, le joueur règle le coût en points d'Anarchy (section « Étape 2: Dans le feu de l’action »). Il les prend dans la réserve de planification commune ou dans ses points d'Anarchy personnels, sans ordre imposé (section « Réserve de planification ou points d’Anarchy personnels? »). Un flashback qui revient à un usage classique de l'Anarchy (un équipement, un avantage) coûte ce prix; les autres coûtent 2 points par défaut (section « Étape 2: Dans le feu de l’action »).
 
 ## Cas limites
-Si un joueur propose un flashback tiré par les cheveux ou contredisant des faits établis, la meneuse de jeu peut augmenter le coût à 3 ou 4 points d'Anarchy, ou le refuser (section « Étape 2: Dans le feu de l’action »).
+Le meneur module le coût entre 1 et 4 selon la complexité, l'aide apportée, la facilité de mise en œuvre et la redondance; il accepte la plupart des propositions et ne refuse que le manque flagrant de réalisme ou une idée qui gâcherait la mission (section « Étape 2: Dans le feu de l’action »).
 
-Lorsqu'un flashback exige un test rétroactif (comme pirater un badge à l'avance), le test s'effectue immédiatement; en cas d'échec, les points sont consommés et l'obstacle demeure (section « Étape 2: Dans le feu de l’action »).
+Un flashback peut servir à un autre personnage si son joueur l'accepte: c'est pourquoi la réserve de planification est commune (section « Étape 2: Dans le feu de l’action »).
 
 Si la réserve de menace du meneur dépasse le total de la réserve de planification, la tension déclenche un désastre immédiat (section « Désastre »).
 
 ## Non couvert
 Les sources ne limitent pas le nombre de flashbacks qu'un personnage peut lancer dans une même scène tant qu'il a les points d'Anarchy nécessaires (section « Étape 2: Dans le feu de l’action »).
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : les compétences de planification du livre, pas de priorité entre réserves, critères du coût ; retiré : le test rétroactif, « bonus du meneur » (p. 77-80).*

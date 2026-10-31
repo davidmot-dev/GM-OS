@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« L’arsenal du decker » ; « Modes de connexion » ; « Pirater la Matrice » ; « Cybercombat »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 4e46c1a5
 ---
 
@@ -21,7 +21,7 @@ Les tests de piratage utilisent Piratage avec la Logique pour obtenir un accès,
 La connexion s'effectue selon trois modes (section « Modes de connexion »):
 - Réalité Augmentée (RA): le personnage reste actif physiquement. Les dommages s'appliquent à l'appareil (section « Modes de connexion »).
 - Réalité Virtuelle (RV) cold-sim: le personnage est inconscient. Avec IND cybernétique, il gagne une action de cybercombat gratuite par tour. Le biofeedback inflige des dommages mentaux (section « Modes de connexion »).
-- Réalité Virtuelle (RV) hot-sim: immersion offrant un avantage en cybercombat et une action gratuite par tour. Le biofeedback inflige des dommages physiques (section « Modes de connexion »).
+- Réalité Virtuelle (RV) hot-sim: immersion offrant un avantage en cybercombat et une action gratuite par tour. Le biofeedback inflige des dommages mentaux létaux (section « Modes de connexion »).
 
 L'élévation du niveau d'accès et les backdoors modifient le seuil (section « Pirater la Matrice »).
 
@@ -30,7 +30,7 @@ Effets des modes de connexion (section « Modes de connexion »):
 - RA: aucun bonus, dommages subis par l'appareil.
 - RV cold-sim (trodes): identique à la RA, sans choc d'éjection.
 - RV cold-sim (IND cybernétique): +1 action de cybercombat gratuite par tour; biofeedback étourdissant (Volonté); choc d'éjection = blessure légère.
-- RV hot-sim (IND cybernétique): +1 action de cybercombat gratuite par tour; avantage en cybercombat; biofeedback physique (Volonté); choc d'éjection = blessure grave.
+- RV hot-sim (IND cybernétique): +1 action de cybercombat gratuite par tour; avantage en cybercombat; biofeedback létal (Volonté); choc d'éjection = blessure grave.
 - Changements de mode: 1 par narration (RA/RV); 1 minute pour passer en hot-sim.
 
 Modificateurs de seuil d'accès (section « Pirater la Matrice »):
@@ -48,7 +48,7 @@ Pour obtenir un accès sur un appareil ou un serveur, le joueur réussit un test
 
 En RV, le decker dispose d'une action de cybercombat gratuite par tour (section « Modes de connexion »). L'affrontement contre une glace ou un pirate ennemi s'effectue par un test opposé de Piratage (cybercombat) + Volonté (section « Cybercombat »).
 
-Les dommages matriciels s'imputent sur le moniteur d'état de l'appareil (section « Cybercombat »). En RV, le biofeedback inflige des dommages mentaux en cold-sim et physiques en hot-sim (section « Modes de connexion »). Les complications sur les dés de risque renforcent la surveillance du DIEU, augmentant les dés de risque ou les seuils jusqu'à la convergence qui bricke le cyberdeck (section « Surveillance du DIEU et convergence »).
+Les dommages matriciels s'imputent sur le moniteur d'état de l'appareil (section « Cybercombat »). En RV avec IND cybernétique, le biofeedback, résisté par la Volonté, est étourdissant en cold-sim et létal en hot-sim (section « Modes de connexion »). Les complications sur les dés de risque renforcent la surveillance du DIEU, augmentant les dés de risque ou les seuils jusqu'à la convergence qui bricke le cyberdeck (section « Surveillance du DIEU et convergence »).
 
 ## Cas limites
 Le basculement de la RV cold-sim vers la hot-sim exige un redémarrage d'une minute du cyberdeck et de l'IND, réinitialisant tous les accès accumulés (section « Modes de connexion »).
@@ -57,9 +57,11 @@ Une déconnexion intempestive en RV déclenche un choc d'éjection infligeant un
 
 Le verrouillage de connexion bloque le decker en RV pendant un tour, l'empêchant de se déconnecter face aux contre-mesures (section « Modes de connexion », section « Cybercombat »).
 
-Les appareils sans défense matricielle active obtiennent zéro succès contre une attaque, sauf si un allié active une protection active (section « Protection active », section « Cybercombat »).
+Le propriétaire d'un PAN averti d'une tentative de piratage peut dépenser une action pour une protection active: un test d'Électronique (protection matricielle) + Logique dont les succès se retranchent de ceux du pirate; il peut confier cet accès au decker de l'équipe (section « Protection active »).
 
-Les glaces des serveurs n'utilisent pas de lancer de dés et appliquent un nombre fixe de succès égal à l'indice du serveur (section « Cybercombat »).
+Les Patrouilleuses d'un serveur ne lancent pas de dés: l'indice du serveur est leur nombre de succès en Perception (matricielle), opposé à la Furtivité (discrétion matricielle) + Logique du decker; les autres glaces attaquent en cybercombat normal (section « Cybercombat »).
 
 ## Non couvert
 Les sources mentionnent la technomancie dans le contexte historique mais ne proposent pas de règles chiffrées pour la jouer (section « Une nouvelle ère matricielle », section « Pirater la Matrice »).
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : biofeedback étourdissant ou létal et toujours résisté par la Volonté, protection active, Patrouilleuses (p. 210-217, 225-228).*

@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Plongée dans l’action » ; « Combat » ; « Combat à distance » ; « Combat rapproché » ; « Blessures » ; « Subir des dommages » ; « Dommages des appareils électroniques et des véhicules »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 00a485be
 ---
 
@@ -21,7 +21,7 @@ Les dommages subis se divisent en trois types (section « Subir des dommages »)
 - Les dommages mentaux, causés par les sorts de combat directs, le combat astral et le biofeedback, sont résistés par la Volonté et la Protection (section « Subir des dommages »).
 - Les dommages matriciels, causés par le cybercombat, sont résistés par le Firewall (section « Subir des dommages »).
 
-Pour les personnages et créatures, la VD finale est comparée à l'attribut de résistance additionné à la protection applicable (section « Subir des dommages »). Pour les objets technologiques (véhicules, drones, cyberdecks, glaces), la résistance applique des coefficients à la Structure ou au Firewall (section « Subir des dommages »).
+Pour les personnages et créatures, la VD finale est comparée à l'attribut de résistance additionné à la protection applicable (section « Subir des dommages »). Les appareils matriciels (cyberdecks, glaces) résistent comme les personnages, avec leur Firewall (FW, FW + 3, FW + 6); seuls les véhicules et drones appliquent des coefficients à la Structure (section « Subir des dommages »).
 
 ## Valeurs
 - Calcul de la VD finale: VD de base + succès nets (section « Combat à distance »).
@@ -30,11 +30,12 @@ Pour les personnages et créatures, la VD finale est comparée à l'attribut de 
   - VD > Force/Volonté + Armure/Protection: blessure légère.
   - VD > Force/Volonté + Armure/Protection + 3: blessure grave.
   - VD > Force/Volonté + Armure/Protection + 6: blessure incapacitante.
-- Échelle des seuils pour objets technologiques (section « Subir des dommages »):
-  - VD <= Structure/Firewall + Blindage: aucun dommage.
-  - VD > Structure/Firewall + Blindage: dommage léger.
-  - VD > (2 x Structure/Firewall) + Blindage: dommage grave.
-  - VD > (3 x Structure/Firewall) + Blindage: dommage incapacitant.
+- Appareils matriciels: VD > FW légère, > FW + 3 grave, > FW + 6 incapacitante (section « Subir des dommages »).
+- Échelle des seuils pour véhicules et drones (section « Subir des dommages »):
+  - VD <= Structure + Blindage: aucun dommage.
+  - VD > Structure + Blindage: dommage léger.
+  - VD > (2 x Structure) + Blindage: dommage grave.
+  - VD > (3 x Structure) + Blindage: dommage incapacitant.
 
 ## À la table
 Lors d'un combat, la résolution des dommages s'effectue en plusieurs étapes successives après la réussite d'un test d'attaque (section « Combat »).
@@ -51,16 +52,18 @@ Chaque attaque ne peut infliger au plus qu'une seule blessure ou un seul dommage
 ## Cas limites
 Si toutes les cases d'un niveau de blessure sont déjà cochées sur le moniteur d'état d'un personnage, toute nouvelle blessure reçue de ce même niveau est automatiquement aggravée et monte au degré supérieur (section « Subir des dommages »).
 
-Pour les objets technologiques, véhicules, drones et cyberdecks, le calcul des dommages applique une échelle multipliant la Structure ou le Firewall (section « Subir des dommages »):
-- Dommage léger: VD supérieure à Structure ou Firewall + Blindage.
-- Dommage grave: VD supérieure à deux fois la Structure ou le Firewall + Blindage.
-- Dommage incapacitant: VD supérieure à trois fois la Structure ou le Firewall + Blindage.
+Pour les véhicules et drones, le calcul des dommages multiplie la Structure (section « Subir des dommages »):
+- Dommage léger: VD supérieure à Structure + Blindage.
+- Dommage grave: VD supérieure à deux fois la Structure + Blindage.
+- Dommage incapacitant: VD supérieure à trois fois la Structure + Blindage.
 
-Le meneur de jeu peut appliquer optionnellement la formule des objets technologiques aux êtres vivants pour renforcer l'impact de la Force et accroître la létalité (section « Subir des dommages »).
+Le meneur de jeu peut appliquer optionnellement la formule des véhicules aux personnages, créatures et appareils matriciels, ce qui accroît l'importance de la Force et du Firewall (section « Subir des dommages »).
 
-En réalité virtuelle (RV), le biofeedback inflige des dommages mentaux en cold-sim et des dommages physiques en hot-sim, résistés par la Volonté du decker (section « Modes de connexion »).
+En réalité virtuelle (RV) avec IND cybernétique, le biofeedback inflige des dommages mentaux, résistés par la Volonté: étourdissants en cold-sim, létaux en hot-sim (section « Modes de connexion »).
 
 Les sorts de combat directs infligent des dommages mentaux comparés à la Volonté sans test de défense physique, tandis que les sorts indirects génèrent un effet physique infligeant des dommages physiques résistés par Force et Armure (section « Sorts de combat »).
 
 ## Non couvert
 rien
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : les appareils matriciels résistent avec FW, FW + 3, FW + 6 et seuls les véhicules multiplient la Structure ; le biofeedback reste mental, étourdissant ou létal (p. 66-69, 180, 212).*

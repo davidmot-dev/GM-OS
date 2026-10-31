@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Prendre des risques » ; « Réduire les risques » ; « Évaluer le risque »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: e7f5abe2
 ---
 
@@ -17,14 +17,14 @@ empreinte: e7f5abe2
 Chaque jet de dés constitue une prise de risque (section « Prendre des risques »). Avant d'effectuer un test, le joueur remplace une partie des dés de sa réserve par des dés de risque sans modifier le total de la réserve (section « Prendre des risques »).
 
 Les dés de risque apportent à la fois des bénéfices et des dangers (section « Prendre des risques »):
-- Les succès obtenus sur les dés de risque (résultats de 5 et 6) comptent double (section « Prendre des risques »).
+- Les succès obtenus sur les dés de risque comptent double, avantage et désavantage s'appliquant à eux aussi (section « Prendre des risques »).
 - Les résultats de 1 obtenus sur les dés de risque génèrent des complications (section « Prendre des risques »).
 
 Les conséquences des 1 sur les dés de risque dépendent de leur nombre (section « Prendre des risques »):
 - Aucun 1: aucun effet néfaste.
 - Un 1: complication mineure n'empêchant pas la réussite.
 - Deux 1: complication critique affectant le personnage ou l'équipe pour la scène.
-- Trois 1 ou plus: désastre entraînant généralement un échec automatique et un fiasco.
+- Trois 1 ou plus: désastre; sauf exception, le test échoue quels que soient les succès.
 
 Pour atténuer ce danger, les personnages utilisent la Réduction du Risque (RR) fournie par leurs atouts (section « Réduire les risques »). La capacité RR 1, RR 2 ou RR 3 permet d'ignorer un, deux ou trois 1 obtenus sur les dés de risque (section « Réduire les risques »). Les réductions de risque accordées par plusieurs atouts se cumulent jusqu'à une limite maximale de RR 3 (section « Réduire les risques »).
 
@@ -65,3 +65,5 @@ Si la table emploie la règle de risque alternative, les dés de risque ne sont 
 
 ## Non couvert
 rien
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : les (dés)avantages valent aussi pour les dés de risque, le désastre échoue sauf exception (p. 70-72, 77, 81).*

@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Avantage / désavantage » ; « Effet des blessures » ; « Premiers soins et sorts » ; « Guérison naturelle » ; « Stim patch » ; « Trauma patch » ; « Dépenser son Anarchy »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: ac275f34
 ---
 
@@ -20,7 +20,7 @@ Les états découlent du moniteur d'état:
 - Blessure légère: désavantage à tous les tests jusqu'à la fin de la narration suivante (section « Effet des blessures »).
 - Blessure grave: désavantage à tous les tests jusqu'à guérison (section « Effet des blessures »).
 - Blessure incapacitante: empêche toute action et tout déplacement (section « Effet des blessures »).
-- État mourant: survient lors d'une incapacité physique létale; exige une stabilisation (section « Effet des blessures »).
+- État mourant: sur une incapacité causée par une blessure létale, si le meneur le décide; exige une stabilisation (section « Effet des blessures »).
 
 Les conditions de test modifient la réussite (section « Avantage / désavantage »):
 - Désavantage: seul le 6 est un succès; causé par blessures, toxines ou drogues (section « Avantage / désavantage »).
@@ -28,7 +28,7 @@ Les conditions de test modifient la réussite (section « Avantage / désavantag
 
 Sortir d'un état ou d'une condition:
 - Soins: test de premiers soins, sort de soins ou repos (section « Premiers soins et sorts », section « Guérison naturelle »).
-- Stabilisation: test contre le seuil 3 ou trauma patch (section « Premiers soins et sorts », section « Trauma patch »).
+- Stabilisation: test contre le seuil 3, que le trauma patch facilite (section « Premiers soins et sorts », section « Trauma patch »).
 - Stim patch: ignore le désavantage grave au prix d'une blessure légère différée (section « Stim patch »).
 - Anarchy: 1 point d'Anarchy annule un désavantage (section « Dépenser son Anarchy »).
 
@@ -56,7 +56,7 @@ Pour contourner temporairement une condition défavorable, le joueur peut utilis
 - Dépenser un point d'Anarchy pour annuler un désavantage ou obtenir un avantage sur son jet (section « Dépenser son Anarchy »).
 - Recevoir un sort de soins lancé par un allié pour effacer immédiatement une case de blessure (section « Premiers soins et sorts »).
 
-En cas de blessure incapacitante létale, le personnage devient mourant et un coéquipier doit accomplir un test de premiers soins ou appliquer un trauma patch pour le stabiliser (section « Effet des blessures », section « Trauma patch »).
+En cas de blessure incapacitante létale, le meneur peut déclarer le personnage mourant; un coéquipier doit le stabiliser par un test de Survie (premiers soins) + Logique contre 3, avec un avantage s'il applique un trauma patch et dépense un point d'Anarchy (section « Effet des blessures », section « Trauma patch »).
 
 ## Cas limites
 Si un personnage subit plusieurs blessures légères consécutives, le désavantage associé s'étend jusqu'à la fin de la narration suivant la dernière blessure encaissée (section « Effet des blessures »).
@@ -69,3 +69,5 @@ La prise d'un stim patch soulage le désavantage d'une blessure grave mais infli
 
 ## Non couvert
 rien
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : mourant au choix du meneur, le trauma patch donne un avantage au test de stabilisation sans le remplacer (p. 68-70, 77).*

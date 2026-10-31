@@ -81,6 +81,8 @@ import { PreparationRuneQuest, SuitesRuneQuest } from './RuneQuestAuJet';
 import { CHOIX_DE_RUNEQUEST, nommerLeJetDeRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest } from '../../../dice/systemes/runequest';
 import { CHOIX_DE_DEGENESIS, lancerDegenesis, type ChoixDeDegenesis, type JetDeDegenesis } from '../../../dice/systemes/degenesis';
 import { PreparationDegenesis, SuitesDegenesis } from './DegenesisAuJet';
+import { CHOIX_DE_SHADOWRUN, lancerShadowrun, type ChoixDeShadowrun, type JetDeShadowrun } from '../../../dice/systemes/shadowrun';
+import { PreparationShadowrun, SuitesShadowrun } from './ShadowrunAuJet';
 import { CHOIX_DE_COC, ajouterLeHeros, etatDeSante, lancerCoc, malusDeSante, modeleDEvolution, preparerCoc,
     type ChoixDeCoc, type JetDeCoc, type PreparationDeCoc } from '../../../dice/systemes/coc';
 import { PreparationCoc, SuitesCoc } from './CocAuJet';
@@ -424,6 +426,22 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const egoDegenesis = regleDegenesis?.ego && ecrireSurLaFiche ? Math.max(0, Math.trunc(Number(valeurs[regleDegenesis.ego]) || 0)) : undefined;
 
     /**
+     * **Shadowrun : Anarchy 2.0** (2026-10-31) : seuil, risque, RR, avantage, spécialisation.
+     * L'Anarchy se lit et s'écrit sur la fiche : l'avantage se paie au lancer, la complication
+     * critique ou le désastre en rapportent, la relance en coûte un (p. 77). `anarchyApres`
+     * garde le compte entre le lancer et la relance, avant que la fiche ne revienne.
+     */
+    const regleShadowrun = descripteur.shadowrun;
+    const [choixShadowrunBrut, setChoixShadowrunBrut] = useState<ChoixDeShadowrun & { pour?: string }>(CHOIX_DE_SHADOWRUN);
+    const anarchyShadowrun = regleShadowrun?.anarchy && ecrireSurLaFiche ? Math.max(0, Math.trunc(Number(valeurs[regleShadowrun.anarchy]) || 0)) : undefined;
+    const [anarchyApres, setAnarchyApres] = useState<number | null>(null);
+    // La RR et le risque réglés valent pour UNE compétence : une autre ramène sa RR et le risque d'une action normale.
+    const choixShadowrun: ChoixDeShadowrun = useMemo(() => (choixShadowrunBrut.pour === choix.competence
+        ? choixShadowrunBrut : { ...choixShadowrunBrut, rr: undefined, desDeRisque: undefined }), [choixShadowrunBrut, choix.competence]);
+    const setChoixShadowrun = (maj: (c: ChoixDeShadowrun) => ChoixDeShadowrun) =>
+        setChoixShadowrunBrut(c => ({ ...maj(c.pour === choix.competence ? c : { ...c, rr: undefined, desDeRisque: undefined }), pour: choix.competence }));
+
+    /**
      * **Chroniques Oubliées Contemporain** (2026-10-31) : la difficulté ou la DEF, les
      * conditions, les aides, le dé bonus ou malus, l'état et les plages critiques ; ce que
      * le dernier lancer savait, pour l'échelle du héros ; les échelons écrits par les cartes.
@@ -606,6 +624,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 ...(regleNephilim ? { nephilim: { ...choixNephilim, lieu: lieuN, conjonction: conjonctionN, intensite: intensiteN, seuilRK: seuilRKN } } : {}),
                 ...(regleRuneQuest ? { runequest: choixRuneQuest } : {}),
                 ...(regleDegenesis ? { degenesis: { ...choixDegenesis, ego: Math.min(choixDegenesis.ego, egoDegenesis ?? 0) } } : {}),
+                ...(regleShadowrun ? { shadowrun: { ...choixShadowrun, anarchyPourAvantage: choixShadowrun.anarchyPourAvantage && (anarchyShadowrun ?? 0) > 0 } } : {}),
                 champs: choix, desSupplementaires: desAchetes, difficulte,
                 ajustementDeDifficulte: ajustementDeDifficulte + degresPuises, specialisation,
                 modificateurDuSeuil,
@@ -653,7 +672,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
+        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrun, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
     );
 
     /*
@@ -1175,6 +1194,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             // COC : d20 (ou 3d6) + caractéristique + modificateurs contre la difficulté (p. 56-59).
             : regleCoc && prepCoc
             ? lancerCoc(prepCoc, faces => DiceEngine.roll(faces))
+            // Shadowrun : 5+ réussit (4+ ou 6 selon l'avantage), les dés de risque doublent et compliquent (p. 64-71).
+            : regleShadowrun && jet.shadowrun
+            ? lancerShadowrun(jet.shadowrun, jet.reussitesRequises, () => DiceEngine.roll(6))
             // Degenesis : 4+ réussit, les 6 déclenchent, le surplus au-delà de 12 dés est acquis (p. 18-19).
             : regleDegenesis && jet.degenesis
             ? lancerDegenesis(jet.degenesis, jet.reussitesRequises, () => DiceEngine.roll(6))
@@ -1306,6 +1328,19 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             dits.push(`Égo : ${egoDegenesis} → ${Math.max(0, egoDegenesis - jet.degenesis.ego)}`);
             setChoixDegenesis(c => ({ ...c, ego: 0 }));
         }
+        // Shadowrun : l'avantage payé quitte la fiche, la complication critique ou le désastre y rapportent (p. 77).
+        const shadowrunDuJet = (res as JetDeShadowrun).shadowrun;
+        if (regleShadowrun?.anarchy && shadowrunDuJet && anarchyShadowrun !== undefined) {
+            const paye = jet.shadowrun?.sources.includes("point d'Anarchy") ? 1 : 0;
+            const apres = Math.max(0, anarchyShadowrun - paye + shadowrunDuJet.anarchyGagnee);
+            setAnarchyApres(apres);
+            if (apres !== anarchyShadowrun) {
+                ecrireSurLaFiche?.({ [regleShadowrun.anarchy]: apres });
+                dits.push(`Anarchy : ${anarchyShadowrun} → ${apres}${paye ? ' (avantage payé)' : ''}`
+                    + (shadowrunDuJet.anarchyGagnee ? ` (+${shadowrunDuJet.anarchyGagnee}, ${shadowrunDuJet.complication === 'desastre' ? 'désastre' : 'complication critique'})` : ''));
+            }
+            if (paye) setChoixShadowrun(c => ({ ...c, anarchyPourAvantage: false }));
+        }
         if (regleRuneQuest && jet.runequest) {
             const calcul = jet.runequest;
             setRuneQuestDuLancer(d => ({ calcul, compte: (d?.compte ?? 0) + 1 }));
@@ -1351,6 +1386,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             ? nomCoc
             : jet.composantes.length > 0
             ? jet.composantes.map(c => c.label).join(' + ')
+            // Shadowrun : « Armes à distance + Agilité (11 dés, 7 de risque) », la compétence par son libellé.
+            : jet.shadowrun
+            ? `${jet.composantesDeLaReserve.map(c => {
+                const f = template.sections.flatMap(sec => sec.fields).find(x => x.id === c.champ);
+                return (f?.libelleSur && String(valeurs[f.libelleSur] ?? '').trim()) || f?.label || c.label;
+            }).join(' + ')} (${jet.shadowrun.des} dés, ${jet.shadowrun.alternatif ? `${jet.shadowrun.speciaux} spéciaux` : `${jet.shadowrun.risque} de risque`}${jet.shadowrun.rr ? `, RR ${jet.shadowrun.rr}` : ''})`
             // Degenesis : « Instinct + Dressage (VA 3) », les champs de la réserve par leur nom.
             : jet.degenesis
             ? `${jet.composantesDeLaReserve.map(c => template.sections.flatMap(sec => sec.fields).find(f => f.id === c.champ)?.label ?? c.label).join(' + ')} (VA ${jet.degenesis.valeur})`
@@ -1507,6 +1548,27 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         }
     };
     const torgCritique = resultat?.degre === 'echec-total';
+
+    /**
+     * **Relancer en Shadowrun** (p. 77) : un point d'Anarchy, tous les dés relancés avec le
+     * même nombre de dés de risque et le même (dés)avantage ; la complication du premier jet
+     * reste, et un jet sans complication n'en gagne pas.
+     */
+    const relancerShadowrun = () => {
+        const premier = (resultat as JetDeShadowrun | null)?.shadowrun;
+        const avant = anarchyApres ?? anarchyShadowrun;
+        if (!premier || !regleShadowrun?.anarchy || avant === undefined || avant < 1) return;
+        const res = lancerShadowrun(
+            { des: premier.normaux.length + premier.risque.length, risque: premier.risque.length, speciaux: premier.speciaux.length,
+                valeurDuSucces: premier.valeurDuSucces, rr: premier.rr as 0 | 1 | 2 | 3, annules: premier.annules },
+            premier.seuil, () => DiceEngine.roll(6), premier.complication,
+        );
+        setResultat(res);
+        setAnarchyApres(avant - 1);
+        ecrireSurLaFiche?.({ [regleShadowrun.anarchy]: avant - 1 });
+        setMouvements(m => [...m, `Relance : Anarchy ${avant} → ${avant - 1}`]);
+        redire(`${dernierLancer?.titre ?? 'Test'} · relance`, res);
+    };
 
     /**
      * **L'Annulation des dommages** : une Possibilité, un test de Réalité
@@ -1958,7 +2020,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       si le jeu y a quelque chose : une difficulté, des réserves où puiser, la
       préparation d'Alien… — une étape vide numérotée mentirait sur l'ordre.
     */
-    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleCoc || !!regleRuneQuest || !!regleDegenesis || disponiblesPerso.length > 0
+    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleCoc || !!regleRuneQuest || !!regleDegenesis || !!regleShadowrun || disponiblesPerso.length > 0
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
         || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable
@@ -1973,10 +2035,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     */
     const runequestDuResultat = (resultat as JetDeRuneQuest | null)?.runequest;
     const degenesisDuResultat = (resultat as JetDeDegenesis | null)?.degenesis;
-    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || runequestDuResultat || degenesisDuResultat || cocDuResultat)
+    const shadowrunDuResultat = (resultat as JetDeShadowrun | null)?.shadowrun;
+    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || runequestDuResultat || degenesisDuResultat || shadowrunDuResultat || cocDuResultat)
         // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, RuneQuest p. 142, Degenesis p. 19, COC p. 58), et non le degré générique du moteur.
         ? <span className={'font-black uppercase tracking-widest ' + (resultat.tagSuccess ? 'text-etat-succes' : 'text-etat-danger')}>
-            {gardeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? cocDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
+            {gardeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? shadowrunDuResultat?.libelle ?? cocDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
         </span>
         : resultat && !paniqueEnAttente
         && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
@@ -2488,6 +2551,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {regleRuneQuest && (
                         <PreparationRuneQuest choix={choixRuneQuest} setChoix={setChoixRuneQuest} calcul={jet.runequest} />
                     )}
+                    {regleShadowrun && (
+                        <PreparationShadowrun choix={choixShadowrun} setChoix={setChoixShadowrun} reserve={jet.shadowrun}
+                            difficulte={difficulte} setDifficulte={setDifficulte} anarchy={anarchyShadowrun} />
+                    )}
                     {regleDegenesis && (
                         <PreparationDegenesis choix={choixDegenesis} setChoix={setChoixDegenesis} reserve={jet.degenesis}
                             difficulte={difficulte} setDifficulte={setDifficulte} ego={egoDegenesis} />
@@ -2661,7 +2728,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système.
                         Pas chez Crimes : le Potentiel dit le nombre de dés, rien ne s'y ajoute ;
                         ni chez Barbarians, dont les dés de bonus et de malus se règlent à l'étape 2. */}
-                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleCoc || regleRuneQuest || regleDegenesis ? 'hidden' : ''}`}>
+                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleCoc || regleRuneQuest || regleDegenesis || regleShadowrun ? 'hidden' : ''}`}>
                         <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                         <button
                             onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -2856,6 +2923,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 : complique ? 'Complication'
                                 // Degenesis : un 6 est un succès et un déclencheur (p. 19).
                                 : degenesisDuResultat && val === 6 ? 'Déclencheur'
+                                // Shadowrun : les dés de risque suivent les dés normaux ; leurs succès doublent, leurs 1 compliquent (p. 70).
+                                : shadowrunDuResultat && i >= shadowrunDuResultat.normaux.length + shadowrunDuResultat.risque.length ? 'Spécial'
+                                : shadowrunDuResultat && i >= shadowrunDuResultat.normaux.length ? (val === 1 ? 'Complic.' : d.isCritMax ? 'Risque ×2' : 'Risque')
+                                : shadowrunDuResultat && d.isCritMax ? 'Succès'
                                 // COC : le dé gardé dit son critique (p. 58).
                                 : cocDuResultat && d.isCritMax ? 'Critique'
                                 : cocDuResultat && d.isCritMin ? 'Échec crit.'
@@ -2949,7 +3020,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {/* L'excédent alimente la monnaie de table — et depuis
                             le mur n° 4, il y est réellement versé. */}
                         {/* Degenesis n'a pas de monnaie à nourrir : ses succès en trop ne valent rien hors des actions complexes. */}
-                        {v.excedent > 0 && !regleJetAlien && !gardeDuResultat && !degenesisDuResultat && (
+                        {v.excedent > 0 && !regleJetAlien && !gardeDuResultat && !degenesisDuResultat && !shadowrunDuResultat && (
                             <span className="text-etat-alerte/80 font-mono">
                                 +{v.excedent}{monnaie && jet.cout.ressource ? ` ${nomDe(jet.cout.ressource)}` : ' excédent'}
                             </span>
@@ -3038,6 +3109,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 consigner={ligne => redire(dernierLancer?.titre ?? 'RuneQuest', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
                         )}
                         {regleDegenesis && degenesisDuResultat && <SuitesDegenesis jet={resultat as JetDeDegenesis} />}
+                        {regleShadowrun && shadowrunDuResultat && (
+                            <SuitesShadowrun jet={resultat as JetDeShadowrun} anarchy={anarchyShadowrun === undefined ? undefined : anarchyApres ?? anarchyShadowrun}
+                                relancer={relancerShadowrun} />
+                        )}
                         {regleCoc && cocDuLancer && cocDuResultat && (
                             <SuitesCoc key={cocDuLancer.compte} jet={resultat as JetDeCoc} heros={herosCoc} des={cocDuLancer.prep.des}
                                 attaque={cocDuLancer.attaque} echelonGagne={cocDuLancer.echelonGagne}

@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Plongée dans l’action » ; « Tours et narrations » ; « Ordre des narrations » ; « Dépenser son Anarchy »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: cf63a164
 ---
 
@@ -50,3 +50,5 @@ Pour les seconds rôles dépourvus de points d'Anarchy, les atouts d'initiative 
 
 ## Non couvert
 Les sources ne proposent aucun jet de dés d'initiative ni aucun score d'initiative chiffré, l'ordre des tours étant déterminé par le récit (section « Ordre des narrations »). De plus, aucune règle ne donne de vitesse de déplacement mesurée en mètres par seconde (section « Déplacement »).
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; conforme (p. 65-66, 77, 81).*

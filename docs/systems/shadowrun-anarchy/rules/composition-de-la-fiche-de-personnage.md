@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Un personnage en détail » ; « Mots-clés » ; « Comportements et répliques » ; « Attributs » ; « Compétences » ; « Connaissances » ; « Atouts » ; « Équipement » ; « Moniteur d’état » ; « Points d’Anarchy » ; « FEUILLE DE PERSONNAGE »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 2e4df50c
 ---
 
@@ -27,9 +27,9 @@ Les jauges spécifiques, la création et le combat font l'objet d'autres règles
 
 ## Valeurs
 Composants de la fiche de personnage (section « Un personnage en détail », section « FEUILLE DE PERSONNAGE »):
-- Mots-clés: 5 au total (métatype/statut social, rôle, train de vie, 2 ouverts) (section « Mots-clés »).
+- Mots-clés: 5 au total (métatype/statut social, origine/lieu de résidence, rôle/occupation, train de vie, 1 ouvert) (section « Mots-clés »).
 - Comportements et répliques: 4 comportements et 4 répliques (section « Comportements et répliques »).
-- Échelle des attributs (humain): 1 (faible), 2 (moyenne), 3 (forte), 4 (exceptionnelle) (section « Attributs »).
+- Échelle des attributs (humain): 1 (faible), 2 (moyenne), 3 (forte), 4 (exceptionnelle); jusqu'à 5 en Charisme (elfe), Volonté (nain) ou Force (ork), 6 en Force (troll) (section « Attributs »).
 - Échelle des compétences: 0 (incompétent), 2 (entraîné), 4 (professionnel), 6 (expert), 8 (élite) (section « Compétences »).
 - Spécialisation de compétence: +2 aux dés (maximum 10) (section « Compétences »).
 - Réserve d'Anarchy initiale: 4 points (humains), 3 points (autres métatypes) (section « Points d’Anarchy »).
@@ -50,9 +50,11 @@ Si un personnage possède une spécialisation de compétence mais ne dispose pas
 
 Les Mots-clés et les Connaissances ne comportent aucune valeur chiffrée: ils servent à déterminer si le personnage possède l'expérience nécessaire dans un domaine sans nécessiter de compétence spécifique, sous le contrôle du meneur (section « Mots-clés », section « Connaissances »).
 
-Les atouts de type cyberware ou bioware sont inscrits dans la section Atouts de la fiche, mais leurs répercussions physiques réduisent l'Essence maximale du personnage, impactant de manière permanente la magie et les soins reçus (section « Atouts », section « Essence »).
+Les atouts de type cyberware ou bioware réduisent l'Essence, sans retour possible, ce qui pèse sur la magie et les soins reçus (section « Atouts », section « Essence »).
 
 Pour les PNJ et seconds rôles, la fiche est simplifiée: ils ne possèdent pas de points d'Anarchy individuels et leurs caractéristiques sont réduites à un profil synthétique (section « Seconds rôles », section « Gestion des PNJ »).
 
 ## Non couvert
 rien
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : les cinq mots-clés du livre, plafonds par métatype (p. 50-61).*

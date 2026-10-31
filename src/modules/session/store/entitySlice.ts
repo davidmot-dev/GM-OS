@@ -22,6 +22,7 @@ import { dommagesDeTorg, ajouterLeChoc, direLesDommages } from '../../combat/log
 import { coupLocaliseSelonLeJeu } from '../../combat/logic/coupsDeRuneQuest';
 import { pistesDeSanteSelonLeJeu } from '../../combat/logic/pistesDeDegenesis';
 import { encaissementSelonLeJeu } from '../../combat/logic/encaissementDeCoc';
+import { moniteurSelonLeJeu } from '../../combat/logic/moniteurDeShadowrun';
 import { cosmsDesIds, idsDesCosmsCourants, loiEnVigueur } from '../logic/cosmsCourants';
 import { champDeSantePrincipale, maximumDeLaJauge, santeAlignee, santePrincipaleDeLaFiche, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import { santePrincipaleDuPersonnage } from '../logic/santePrincipale';
@@ -896,6 +897,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             // COC (2026-10-31) : la RD retirée, la mort instantanée et les états franchis de l'échelle de santé.
             const encaisse = encaissementSelonLeJeu(pilote?.combat?.encaissement, fiche, impactSaisi);
             if (encaisse) return encaisse;
+            // Shadowrun : Anarchy (2026-10-31) : la VD contre les seuils, une case cochée, aggravée si pleine.
+            const moniteur = moniteurSelonLeJeu(pilote?.combat?.moniteurDEtat, fiche, impactSaisi);
+            if (moniteur) return moniteur;
             const regle = pilote?.combat?.dommages;
             if (!regle || regle.mecanique !== 'torg' || impactSaisi.isRecovery) return null;
             const resistance = valeurDuChamp(fiche, regle.resistance) ?? 0;

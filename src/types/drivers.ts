@@ -663,6 +663,22 @@ export interface GameDriver {
          */
         encaissement?: { mecanique: 'coc'; sante: string; rd?: string; constitution?: string; nombre?: number };
         /**
+         * **Le moniteur d'état de Shadowrun : Anarchy 2.0** — 2026-10-31
+         * (`combat/logic/moniteurDeShadowrun.ts`). La valeur saisie est la VD ; elle se compare
+         * aux `seuils` de la fiche (par famille : principale, secondaire, sans armure, mental),
+         * ou à `force`/`volonte` quand ils sont vides, et coche `legeres`, `graves` ou
+         * `incapacitantes` ; une case pleine passe au degré supérieur (p. 68-69). `sante` porte
+         * la position des cases (`casesDeSante.champ`) : la pire blessure.
+         */
+        moniteurDEtat?: {
+            mecanique: 'shadowrun';
+            legeres: string; graves: string; incapacitantes: string;
+            sante?: string;
+            capacites?: { legeres?: string; graves?: string };
+            seuils?: Partial<Record<'principale' | 'secondaire' | 'sans_armure' | 'mental', Partial<Record<'legere' | 'grave' | 'incapacitante', string>>>>;
+            force?: string; volonte?: string;
+        };
+        /**
          * **Les limites de Blessures des adversaires** — Torg, 2026-10-14. Un sbire
          * (« — ») tombe à la première Blessure, un aguerri à la deuxième, un
          * adversaire chargé en possibilités comme un héros. Le panneau de santé

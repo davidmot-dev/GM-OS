@@ -7,7 +7,7 @@ sources: "anarchy_v2_vf_web_v0.pdf"
 sections: "« Les tests » ; « Réserve de dés » ; « Succès » ; « Test simple » ; « Test opposé » ; « Avantage / désavantage » ; « S’y mettre à plusieurs » ; « Réessayer une action échouée » ; « Prendre des risques » ; « Réduire les risques » ; « Évaluer le risque »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: e211271e
 ---
 
@@ -41,7 +41,7 @@ Chaque test permet de remplacer des dés par des dés de risque (section « Pren
   - Aucun 1: aucune complication
   - Un 1: complication mineure
   - Deux 1: complication critique
-  - Trois 1 ou plus: désastre (échec automatique)
+  - Trois 1 ou plus: désastre (échec, sauf exception)
 - Réduction du Risque (section « Réduire les risques »): RR 1, RR 2 ou RR 3 (1 à 3 1 ignorés).
 
 ## À la table
@@ -62,3 +62,5 @@ Les avantages et désavantages multiples s'annulent mutuellement, le résultat n
 
 ## Non couvert
 rien
+
+*Relu le 2026-11-01 contre le livre (PDF = imprimée + 2) ; corrigé : le désastre fait échouer « sauf exception » (p. 64-65, 70-71, 77).*
