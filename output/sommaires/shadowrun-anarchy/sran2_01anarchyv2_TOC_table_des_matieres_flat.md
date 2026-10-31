@@ -1,0 +1,329 @@
+# Table des matières — Shadowrun : Anarchy 2.0
+
+- BIENVENUE DANS LES OMBRES, OMAE ! — 4
+- INTRODUCTION — 5
+- C’EST LA VIE… — 6
+- LE SIXIÈME MONDE — 14
+- Naissance d’un monde nouveau — 14
+- L’ascension des corporations — 14
+- Le Sixième Monde en un coup d’œil — 15
+- Jargon du Sixième Monde — 17
+- Chaos magique — 19
+- Nouvelles frontières nord-américaines — 24
+- Front matriciel — 25
+- Autres bouleversements mondiaux — 27
+- Principales organisations — 29
+- Le monde corporatiste — 29
+- Ce qu’il reste des États — 37
+- La pègre — 40
+- Vivre dans le Sixième Monde — 42
+- Au-delà de la classe sociale, les nouvelles castes — 42
+- Les SIN criminels — 44
+- Monnaies du monde — 46
+- Et donc, les runners — 47
+- CONCEPTS DE JEU — 48
+- Quelques mots sur le jeu de rôle — 48
+- Exemple de partie — 49
+- Un personnage en détail — 50
+- Métatype — 50
+- Mots-clés — 50
+- Comportements et répliques — 51
+- Attributs — 52
+- Compétences — 52
+- Compétences, spécialisations et attributs associés — 54
+- Connaissances — 58
+- Atouts — 58
+- Effets narratifs — 59
+- Essence — 60
+- Niveau de base des atouts — 61
+- Équipement — 61
+- Les tests — 64
+- Réserve de dés — 64
+- Succès — 64
+- Test simple — 64
+- Test opposé — 64
+- Exemple de tests — 64
+- Avantage / désavantage — 65
+- S’y mettre à plusieurs — 65
+- Réessayer une action échouée — 65
+- Plongée dans l’action — 65
+- Tours et narrations — 65
+- Portées — 66
+- Déplacement — 66
+- Combat — 66
+- Blessures — 68
+- Guérison, soins et réparation — 69
+- Dommages des appareils électroniques et des véhicules — 69
+- Rendre le jeu plus sombre et létal — 69
+- Prendre des risques — 70
+- Réduire les risques — 71
+- Évaluer le risque — 71
+- Exemple de prise de risque — 71
+- Règle de risque alternative — 72
+- Exemple de prise de risque en combat — 72
+- Exemples d’actions plus ou moins risquées — 73
+- Exemples de complications — 74
+- Points d’Anarchy — 77
+- Gagner de l’Anarchy — 77
+- Dépenser son Anarchy — 77
+- Construire un plan — 78
+- Étape 1 : Actions préparatoires — 78
+- Étape 2 : Dans le feu de l’action — 78
+- Réserve de planification ou points d’Anarchy personnels ? — 78
+- Que faire de la carte ? — 79
+- Exemple de planification — 80
+- Gestion des PNJ — 81
+- Premiers rôles — 81
+- Seconds rôles — 81
+- Valeurs moyennes des seconds rôles — 81
+- PNJ à la volée — 82
+- Création et progression des personnages — 83
+- Coût d’un personnage — 83
+- Pourquoi uniquement des nuyens ? — 83
+- Création de personnages — 84
+- Créer un runner cohérent — 84
+- Exemple de création de personnage — 85
+- PRÉTIRÉS — 87
+- Hercules — 88
+- Wild Jane — 90
+- Trash — 92
+- Gambit — 94
+- Charon — 96
+- Luna — 98
+- Casper — 100
+- Echo — 102
+- Drakk — 104
+- White_Rabbit — 106
+- Mictlan — 108
+- Capitán — 110
+- TISSER LES OMBRES — 112
+- Conseils pour préparer une aventure ou une campagne — 112
+- Types de missions — 112
+- Structure de mission typique — 112
+- Comment se déroule typiquement une partie de Shadowrun : Anarchy 2.0 ? — 112
+- Opérations courantes — 113
+- Missions atypiques — 114
+- Assurez l’investissement des joueurs — 115
+- Faites suer les joueurs — 116
+- Un défaut vaut mieux qu’un pro — 119
+- Dans l’intérêt du jeu — 119
+- Création d’une campagne étape par étape — 122
+- Gérer les thématiques sensibles et les aspirations des joueurs — 125
+- La narration partagée dans Shadowrun : Anarchy 2.0 — 126
+- Narration partagée partielle — 126
+- Narration partagée totale — 127
+- Générateur d’événement aléatoire — 128
+- Générateur aléatoire de run — 130
+- Conseils pour jouer en narration partagée — 131
+- UN MONDE ORDINAIRE — 132
+- La sécurité — 133
+- Sécurité périmétrique — 133
+- Capteurs et patrouilles — 133
+- Contourner la sécurité — 134
+- Alertes et réponses — 134
+- Quand faut y aller — 135
+- Savoir se faire discret — 135
+- Sélection d’équipement d’infiltration — 136
+- Y aller au bagou — 137
+- Sélection d’équipement d’escrocs — 139
+- Règle optionnelle : tests sociaux étendus — 139
+- La force brute — 140
+- Les armes — 142
+- Dissimulation des armes — 143
+- Atouts armes — 144
+- Armures — 148
+- Atouts armures — 149
+- Ordinaire, mais pas dénué d’atouts — 149
+- Chimie et botanique — 149
+- Drogues — 150
+- Toxines — 152
+- Exemple de grenade à gaz — 152
+- Augmentations — 153
+- IND & implantation d’équipement — 155
+- Céphaloware — 155
+- Implants oculaires — 156
+- Implants auriculaires — 157
+- Implants corporels — 158
+- Bioware — 159
+- Médikits et patchs — 160
+- Médikits et patchs — 160
+- La vie entre les runs — 161
+- Être ou ne pas être — 161
+- On est qui on connaît — 162
+- SIN et licenses — 162
+- Réseau — 163
+- Contacts — 164
+- Un lit où dormir — 164
+- Train de vie — 166
+- UN MONDE ÉVEILLÉ — 168
+- Les bases de la magie — 168
+- Les Éveillés — 168
+- L’astral et le mana — 169
+- Différents types d’Éveillés — 169
+- Drain — 170
+- Arpenter le plan astral — 172
+- Les traditions — 173
+- Combat astral — 173
+- Esprits mentors — 173
+- Suivre un esprit mentor — 174
+- Un talent extraordinaire dans un monde ordinaire — 175
+- La magie est partout — 177
+- Sorcellerie — 178
+- Lancement de sorts — 178
+- Lancement de sorts — 178
+- Sorts de combat — 180
+- Sorts de détection — 181
+- Sorts de santé — 182
+- Sorts d’illusion — 182
+- Sorts de manipulation — 183
+- Contresort — 184
+- Contresort — 184
+- Conjuration — 185
+- Une infinité d’esprits — 185
+- Réputation auprès des esprits — 185
+- Invocation — 187
+- Invocation — 188
+- Bannissement — 188
+- Bannissement — 188
+- Focus — 189
+- Focus — 189
+- Adeptes — 190
+- Pouvoirs d’adepte — 191
+- Phénomènes astraux — 192
+- Champs magiques — 192
+- Champs magiques — 193
+- Métaplans — 194
+- Alcheras — 194
+- Sécurité magique — 195
+- Obstacles et pièges — 195
+- Barrières mana — 196
+- Opposition — 197
+- Magie toxique — 197
+- D’où vient-elle ? — 197
+- Le reflet distordu de nos alliés — 198
+- Notre fratrie corrompue — 198
+- Magie toxique — 200
+- UN MONDE VIRTUEL — 201
+- La Matrice au quotidien — 201
+- Au service du citoyen — 201
+- Servir et protéger — 204
+- Dérives — 204
+- La Matrice pour les Ombres — 205
+- La pêche aux informations — 205
+- Recherche matricielle — 206
+- Appareils et serveurs — 206
+- La discrétion matricielle — 207
+- Repérer une icône — 207
+- Comment retrouver un appareil ? — 208
+- La communication en temps réel — 208
+- Utilisation tactique — 208
+- L’arsenal du decker — 209
+- Cyberdeck — 209
+- Cyberdecks et programmes — 210
+- Modes de connexion — 210
+- Modes de connexion — 212
+- Pirater la Matrice — 213
+- Niveaux d’accès — 213
+- Quel niveau d’accès pour faire quoi ? — 214
+- Se prémunir du piratage — 215
+- Protection matricielle — 216
+- Force brute et backdoors — 216
+- Obtenir et utiliser un niveau d’accès — 217
+- Surveillance du DIEU et convergence — 218
+- Qualité de connexion — 218
+- Bruit et brouillage — 219
+- Serveurs — 220
+- Défense des serveurs — 221
+- Indice des serveurs — 222
+- Fichiers — 223
+- Glaces — 223
+- Cryptage et bombes matricielles — 224
+- Cybercombat — 224
+- Cybercombat — 225
+- Exemple de run sous l’angle du decker — 226
+- UN MONDE MÉCANIQUE — 229
+- Des machines — 229
+- Au service du citoyen — 229
+- Drones et véhicules — 230
+- Asservies aux riggers — 230
+- Un truc en plus — 231
+- Le meilleur des mécanos — 231
+- Être la machine — 231
+- Consoles de commande pour rigger — 232
+- Modes de contrôle — 233
+- Maître des véhicules — 234
+- Rôles des véhicules — 234
+- Sélection d’engins — 234
+- Véhicules — 238
+- Rigger de drones — 239
+- Rôles des drones — 239
+- Sélection d’engins — 239
+- Drones — 241
+- Guerre technologique — 242
+- Guerre technologique — 242
+- L’ENFER, C’EST LES AUTRES — 243
+- Légende — 243
+- Ganger — 244
+- Ganger d’élite / Membre d’un syndicat du crime — 244
+- Ganger Éveillé — 245
+- Ganger adepte — 245
+- Ganger decker — 246
+- Go-ganger / rigger — 246
+- Agent de sécurité / Flic des rues — 247
+- Officier de sécurité / police — 247
+- Mage de sécurité / police — 248
+- Decker de sécurité / police — 248
+- Adepte de sécurité / police — 249
+- Rigger de sécurité / police — 249
+- Médecin de combat — 250
+- Mage d’élite de sécurité / police — 250
+- Officier d’élite de sécurité / police — 251
+- Adepte d’élite de sécurité / police — 251
+- Rigger d’élite de sécurité / police — 252
+- Militaire — 252
+- Decker d’élite de sécurité / police — 253
+- Commando militaire — 253
+- Johnson — 254
+- Employé corporatiste — 254
+- Enquêteur — 254
+- Cadre corporatiste — 255
+- Coyote / Contrebandier — 255
+- Barghest — 257
+- Chien de l’enfer — 257
+- Tigre cyber-augmenté Shiawase — 257
+- Basilic — 259
+- Cocatrix — 259
+- Goule — 259
+- Rat du diable — 260
+- Vampire — 260
+- Chien de garde — 261
+- Jeune dragon — 261
+- Veilleur — 262
+- Esprit des aînés — 262
+- Esprit des bêtes — 263
+- Esprit des plantes — 263
+- Esprit de l’air — 264
+- Esprit de l’eau — 264
+- Esprit du feu — 265
+- Esprit de la terre — 265
+- LA CITÉ ÉMERAUDE — 266
+- Seattle m’était conté — 266
+- Le joyau des Ombres — 270
+- Corporations et dragons — 271
+- Ordre — 273
+- Indices de sécurité — 275
+- Désordre — 276
+- Les gangs de Seattle — 278
+- Survol des districts — 280
+- Légende — 281
+- INFLAMMABLES — 284
+- Contexte — 284
+- Synopsis — 285
+- Who’s who — 286
+- Lieux importants — 291
+- Onction d’huile et de sang — 294
+- Un écrin de bonheur — 300
+- Petrichor — 307
+- Larmes de sang — 314
+- Épilogue : Le coven d’Urubia — 318
+- FEUILLE DE PERSONNAGE — 320

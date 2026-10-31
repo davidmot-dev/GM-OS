@@ -13080,10 +13080,67 @@ avec ce pilote et ces règles, pour les joueurs de mon export fourni. »
   correction séparée de GM-05. Essais exclusivement jetables, autorisés par David ; relance
   hors bac à sable acceptée par revue automatique, aucun profil/sauvegarde personnel utilisé.
 
+### 195 · Sommaire Shadowrun : Anarchy 2.0 — 31/10/2026
+
+David : « GM-OS Studio fait le TOC pour Shadowrun Anarchy », références dans
+`docs/Reference/_Shadowrun Anarchy/`.
+
+- **Livré** : `output/sommaires/shadowrun-anarchy/sran2_01anarchyv2_TOC_table_des_matieres_flat.md`,
+  **327 entrées** en Markdown plat UTF-8 ; intitulés et numéros imprimés conservés.
+- **Vérifié** : les deux pages du PDF TOC dédié, six colonnes examinées visuellement,
+  premières/dernières entrées et ordre de lecture ; caractères de parsing nettoyés sans
+  correction éditoriale. Vraies répétitions conservées. Rapport et empreintes à côté du fichier.
+  [Reprise](2026-10-31-etat-et-reprise-codex-toc-shadowrun-anarchy.md).
+- **Reste** : aucun reste de transcription ; utilisation/import du Markdown par David si souhaité.
+  Aucun pilote, code applicatif ou fichier source modifié, aucun commit demandé.
+
+### 196 · Shadowrun Anarchy 2.0 — thème, fiche, bannière et identité Studio — 31/10/2026
+
+David : « fais le thème, la fiche de personnage, la bannière et l’identité visuelle de Shadowrun
+Anarchy […] Fais l’ensemble de actions », références `docs/Reference/Shadowrun Anarchy/`.
+
+- **Livré** : `output/studio/shadowrun-anarchy/Shadowrun-Anarchy-Studio.zip`, les quatre
+  livrables séparés et guide. Thème `docs/systems/shadowrun-anarchy/theme/` : papier usé,
+  jaune/brun, deux matières, trois ornements et quinze icônes. Fiche dans `docs/fiches/Shadowrun
+  Anarchy/`, modèle **shadowrun-anarchy2-fr**, **une page / 146 zones / 121 clés**, portrait,
+  onze lignes de compétences et d’atouts, quatorze pistes numériques. Bannière JPEG
+  **2400 × 600 / 375 284 octets**, identité STYLE/AVOID **42/15 mots**.
+- **Vérifié** : thème accepté **0/0**, fiche acceptée **0/2 avertissements d’intégration** ;
+  **51 tests de contrat** passent, lint ciblé sans erreur. Deux planches du thème et six captures
+  de fiche examinées ; vingt SVG décodés. Parcours HTML hors ligne et modèle importé dans un
+  moteur de navigateur neuf, retour JSON v2 ; portrait, pistes, stockage, refus sans perte,
+  zoom, mobile et impression CSS. Zéro requête réseau/erreur JS. Pas d’essai de partie GM-OS.
+- **Accord de David** : « Oui, exporter à 2 400 × 600 », le 31/10, après explication de
+  l’agrandissement de 10,5 % depuis 2172 × 543 ; aucun détail ajouté. Image et deux simulations
+  d’en-tête 54 px examinées. Source et invite conservées.
+- **Reste** : activation/jugement de David ; intégration permanente et correspondance des 121 clés
+  par l’intégrateur (§ 7–8 du cahier). RD et seuils saisis explicitement, pas d’addition à deux
+  sources disponible dans le manifeste ; blessures en trois degrés distincts 3/2/1.
+  Aucun code applicatif, moteur permanent, pilote ou donnée personnelle modifié, aucun service
+  ou paquet ajouté, aucun commit demandé.
+  [Reprise](2026-10-31-etat-et-reprise-codex-studio-shadowrun-anarchy.md).
+
+**Suite du 31/10 — David : « une bannière dans une ambiance plus cyberpunk et action ».**
+Variante originale produite et enseignes nettoyées par génération/édition natives ; poursuite,
+pluie, cyan/magenta. JPEG natif 2172 × 543 / 379 367 octets et cadrages 54 px examinés,
+dans `output/bannieres/shadowrun-anarchy/cyberpunk-action/`. Accord d’agrandissement de 10,5 %
+demandé pour cette nouvelle source ; version 1 et ZIP Studio initial conservés. Voir la suite
+de la note de reprise pour l’export v2 après réponse.
+
+**Suite du 31/10 — identité cyberpunk colorée renforcée à la demande de David.**
+Bloc courant dans `output/identites/shadowrun-anarchy/identite-visuelle.md` : cyan électrique,
+magenta vif, ultraviolet et jaune acide, contrastes néon et reflets superposés, peinture
+texturée conservée. Validateur accepté **43/14 mots**, sens relu, empreinte consignée.
+Aucun aperçu généré ni pilote personnel modifié ; copier le bloc courant et essayer une image.
+Le ZIP Studio initial conserve l’identité précédente ; l’accord pour l’agrandissement de la
+nouvelle bannière reste indépendant et en attente.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 132 | **Shadowrun Anarchy — quatre ateliers Studio** | § 196 ; thème 0/0, fiche une page/121 clés, bannière 2400 × 600 ; identité révisée cyberpunk saturé 43/14 mots ; 51 tests, contrôles hors ligne — 31/10 | Suivre LIRE-MOI du lot Studio et prendre l’identité révisée dans output/identites/shadowrun-anarchy | Raccord de fiche et jugement de David ; aucun pilote mécanique audité |
+| 131 | **Sommaire Shadowrun : Anarchy 2.0** | § 195 ; 327 entrées, deux pages/six colonnes vérifiées, Markdown plat livré — 31/10 | Utiliser le Markdown dans output/sommaires/shadowrun-anarchy | Rien pour la transcription |
 | 125 | **Campagnes de recette — Degenesis** | § 189 ; aventure, deux laboratoires, 21 PJ, 66 cas humains ; 67 tests, imports et trois Hub éprouvés — 30/10 | Importer 01-La-Station-des-Cendres.gmos ; suivre le cahier | GM-05 confirmé ; essais humains et matériel à faire |
 | 124 | **Degenesis fini — pilote 2.0.0** | § 188 ; corpus relu 16/16, réserve de d6 à 4+ avec déclencheurs, échec critique, Égo et Traumatismes ; deux pistes de santé et attaque mentale ; initiative en succès ; fiche HTML au moteur 21 reliée (129/129), thème contrôlé — 30/10 | Réimporter `corriges/Degenesis_driver_gmos_finir` avec Remplacer ; un jet avec Égo, un coup en Traumatismes, l'initiative, la Fiche du jeu | L'essai de David |
 | 123 | **RuneQuest fini — pilote 2.1.0** | § 187 ; corpus relu 17/17 avec l'errata, d100 en cinq niveaux, caractéristique, résistance, augmentation, opposition, localisation ; coups localisés dans Combat-OS ; fiche HTML au moteur 20 reliée, thème contrôlé — 30/10 | Réimporter `corriges/RQ_driver_gmos_finir` avec Remplacer ; un jet d'épée, une résistance POU contre POU, un coup localisé, la Fiche du jeu | L'essai de David |

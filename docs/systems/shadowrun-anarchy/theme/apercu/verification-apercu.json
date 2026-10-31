@@ -1,0 +1,119 @@
+{
+  "type": "Planche hors ligne, pas une capture de GM-OS",
+  "reseau": "hors ligne ; requêtes bloquées",
+  "polices": "Arial et Courier New, replis système ; import de polices distant non essayé",
+  "svgDecodes": 20,
+  "erreursJavaScript": [],
+  "captures": [
+    {
+      "fichier": "theme-shadowrun-anarchy-bureau.png",
+      "largeur": 1440,
+      "sha256": "ac31c5cbacff3e2f5c3f205fff215c6934a3b09268b39ee85d8d6c5150ecf1d0"
+    },
+    {
+      "fichier": "theme-shadowrun-anarchy-mobile.png",
+      "largeur": 390,
+      "sha256": "c7c4d1a1bc6e5bc2c6a95f680b50893c47f376d845ae41804b381549112bbbba"
+    }
+  ],
+  "capturesExaminees": true,
+  "fichiers": [
+    {
+      "fichier": "theme.css",
+      "sha256": "ceaeea32f9107170fed95973ace6228307cf7bd006487cec9bb98a96d6e5263c"
+    },
+    {
+      "fichier": "intention.md",
+      "sha256": "f1b4045d820ddc1ca10950d03c62607c73ae6fb09fe952ac3ce496961c012668"
+    },
+    {
+      "fichier": "ornements.json",
+      "sha256": "ebc2613302f448953aa220b2cd67f678c922c757d6799862357fdcf5eebf748e"
+    },
+    {
+      "fichier": "icones.json",
+      "sha256": "5cfef49f34206b7b6f169d62ecea5dd53bc81d3e6aaf0e2fc9f156d3d4f651e1"
+    },
+    {
+      "fichier": "icones/tableau-de-bord.svg",
+      "sha256": "51b7b6e6a11349b17b7c198d2285c384d7cb4be425d53be81195393e4023f470"
+    },
+    {
+      "fichier": "icones/journal.svg",
+      "sha256": "98225ddef4f8ef8d89d7d33d41f26872d79807148b31fe8488eebc31815960c8"
+    },
+    {
+      "fichier": "icones/nexus.svg",
+      "sha256": "e325b863710b67946f5517d53d4de490a0d6342984a1a0d3f5e0e5818ee184cd"
+    },
+    {
+      "fichier": "icones/combat.svg",
+      "sha256": "e1bb6b4f006ce972079e2b09c6b370b45f46dfc255d70ea9ec0fb05e94ae5443"
+    },
+    {
+      "fichier": "icones/des.svg",
+      "sha256": "6c1ce6f434a1151087e59315614d9811a95500af26442df5ea2c7f51a5401467"
+    },
+    {
+      "fichier": "icones/pj.svg",
+      "sha256": "7aaec6fdaad23a91bb2bae93d8ded79953946848c9f2fa1a7677a63e3e552161"
+    },
+    {
+      "fichier": "icones/pnj.svg",
+      "sha256": "bf7e24eb1c9e5681d9ed3de177b251816cc71d962aa78f343e6764f77ee7c060"
+    },
+    {
+      "fichier": "icones/sante.svg",
+      "sha256": "a72e9e6f437fd572b8fb143b387cce63cb512d93329ab3c91a86a8ee27451453"
+    },
+    {
+      "fichier": "icones/initiative.svg",
+      "sha256": "8564bcc819805f13dd126d5e3336330c1927cc0861b122ca0f67e90a41aeb4ae"
+    },
+    {
+      "fichier": "icones/indice.svg",
+      "sha256": "19fa61f5bee6497166254d1b2fb98504a43b62f52ebff619bbe3ec801187036d"
+    },
+    {
+      "fichier": "icones/carte.svg",
+      "sha256": "938f1583623d97281b426567f0fcd5bcffb795667c9dc21b0947b83829f68b20"
+    },
+    {
+      "fichier": "icones/lieu.svg",
+      "sha256": "216174509015b723bb62afb31562e7e5c6ccf84123c994c6d109bfd91f012029"
+    },
+    {
+      "fichier": "icones/scene.svg",
+      "sha256": "d352e7e9d49a5fde5db7c5bc687332dbd8c88ba65a59f10bd3b362cafd1844d7"
+    },
+    {
+      "fichier": "icones/horloge.svg",
+      "sha256": "7f0bd75377fbfd22fb681579a20190b653af5eb4df4f64ffa167b61a378cde4b"
+    },
+    {
+      "fichier": "icones/butin.svg",
+      "sha256": "9021211e869867d0948ab17edb6834a672e19e89731fdc04f7936835a6c53649"
+    },
+    {
+      "fichier": "ornements/coin.svg",
+      "sha256": "e74fbb2fdc9b7d3410177b6e24f76019a6c48d95f9c56eab7d9a419e8ca5fd8d"
+    },
+    {
+      "fichier": "ornements/separateur.svg",
+      "sha256": "d6fd0aef443d23059491b37604026c0dba4fae41c3dc494ab5d2658eef845ca6"
+    },
+    {
+      "fichier": "ornements/fond.svg",
+      "sha256": "72f91bf2f21b22e58bbfa4e5bf061219446955ca390d8bab25c1ebaa39eef526"
+    },
+    {
+      "fichier": "matieres/fissures.svg",
+      "sha256": "d9e3709288d0173acec815de67cde777b09ccc1f68b75010819ac60dc6c3abfc"
+    },
+    {
+      "fichier": "matieres/trame.svg",
+      "sha256": "0fb325ef743391ffa8fba42aeacaa574e753cd624882399d5d94db41530e4785"
+    }
+  ],
+  "dateRevue": "2026-10-31"
+}

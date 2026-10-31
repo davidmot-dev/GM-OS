@@ -1,0 +1,21 @@
+{
+  "source": "docs/Reference/Shadowrun Anarchy/sran2_01anarchyv2_PJ.pdf",
+  "sourceSHA256": "4ff9eabc2ec0242535bd42501f85f0fcc488e9b21d98ddb3a818f27a55e08c6d",
+  "html": "docs/fiches/Shadowrun Anarchy/shadowrun-anarchy2-fiche-personnage-interactive.html",
+  "htmlSHA256": "73e68c6b500a08fa27bcac6ff80ba252d42a8669df91ed166e4af60119420aec",
+  "templateId": "shadowrun-anarchy2-fr",
+  "pages": [
+    {
+      "width": 600.945,
+      "height": 779.528,
+      "zones": 146
+    }
+  ],
+  "cles": 121,
+  "hotspots": 39,
+  "pistes": 14,
+  "portrait": true,
+  "calculs": "Aucun : saisie explicite RD et seuils, aucune règle non fournie ajoutée.",
+  "creation": "Nouveau modèle ; aucun modèle précédent Shadowrun Anarchy trouvé dans les fiches ou le moteur.",
+  "integration": "Autonome, pas de builtinTemplates ni de correspondance écrits."
+}

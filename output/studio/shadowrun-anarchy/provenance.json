@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-31",
+  "ateliers": [
+    "thème",
+    "fiche",
+    "bannière",
+    "identité"
+  ],
+  "sourcePDFIntacte": true,
+  "sources": [
+    {
+      "fichier": "docs/Reference/Shadowrun Anarchy/sran2_01anarchyv2_PJ.pdf",
+      "sha256": "4ff9eabc2ec0242535bd42501f85f0fcc488e9b21d98ddb3a818f27a55e08c6d"
+    },
+    {
+      "fichier": "docs/Reference/Shadowrun Anarchy/sran2_01anarchyv2_example.pdf",
+      "sha256": "526e03e31afd53e011e807e3b5e1b73185188370eb3b180c85d8b6f09562863b"
+    },
+    {
+      "fichier": "docs/Reference/Shadowrun Anarchy/Screenshot 2026-10-30 163416.png",
+      "sha256": "71d515a9a02eed0e91522618d8695a377bb591469bb9b63428512ae7e0534dd2"
+    },
+    {
+      "fichier": "docs/Reference/Shadowrun Anarchy/Screenshot 2026-10-30 163541.png",
+      "sha256": "980c565645553aff38e8603d6864d1dc1deb4104301d6efe4c81122da6b3399f"
+    },
+    {
+      "fichier": "docs/Reference/Shadowrun Anarchy/Screenshot 2026-10-30 163635.png",
+      "sha256": "f5a98e7dddfba7220dc7c82f4ad648857b4a489c837a4aa835f9363ed82be723"
+    }
+  ],
+  "livrables": [
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/theme/theme.css",
+      "octets": 1663,
+      "sha256": "ceaeea32f9107170fed95973ace6228307cf7bd006487cec9bb98a96d6e5263c"
+    },
+    {
+      "fichier": "docs/fiches/Shadowrun Anarchy/shadowrun-anarchy2-fiche-personnage-interactive.html",
+      "octets": 2499903,
+      "sha256": "73e68c6b500a08fa27bcac6ff80ba252d42a8669df91ed166e4af60119420aec"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/Shadowrun Anarchy Band.jpg",
+      "octets": 375284,
+      "sha256": "946e901e83391a3b06d69f64856b64c2c1e96624b0182c5733ccbb8227bf6b1d"
+    },
+    {
+      "fichier": "output/identites/shadowrun-anarchy/identite-visuelle.md",
+      "octets": 480,
+      "sha256": "be407783a8ec07833401abd4113b04e954c51081ed295c9b5b9b3d11c8871f6f"
+    }
+  ],
+  "controles": {
+    "theme": "accepté 0/0, 20 SVG et 2 planches relues",
+    "fiche": "acceptée 0/2 intégration, 121 clés, 146 zones, parcours autonome et moteur importé hors ligne, 6 captures relues",
+    "testsVitest": 51,
+    "banniere": "dimensions/poids/hash vérifiés, agrandissement autorisé, deux cadrages relus",
+    "identite": "42/15 mots, structure et sens relus"
+  },
+  "integration": "Déposé dans le dépôt ; pas de pilote, campagne, profil personnel ni moteur permanent modifié.",
+  "limites": "Correspondance et intégration permanente de la fiche à réaliser par l’intégrateur ; activation et jugement de David attendus."
+}

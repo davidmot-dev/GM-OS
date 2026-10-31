@@ -1,0 +1,2 @@
+STYLE: semi-realistic digital concept painting, visible energetic brushwork, broken textured edges, saturated cyberpunk palette, electric cyan and hot magenta, ultraviolet and acid yellow accents, deep indigo shadows, vivid neon rim lighting, layered colored reflections, controlled luminous bloom, cinematic contrast, atmospheric depth, gritty painted grain
+AVOID: photorealism, glossy 3D, anime, flat vectors, muted palettes, monochrome, pastel wash, readable text, logos

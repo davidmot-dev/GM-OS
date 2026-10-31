@@ -1,0 +1,56 @@
+{
+  "fichier": "output\\bannieres\\shadowrun-anarchy\\cyberpunk-action\\banniere-native-nettoyee.jpg",
+  "width": 2172,
+  "height": 543,
+  "bytes": 379367,
+  "format": "JPEG",
+  "opaque": true,
+  "quality": 93,
+  "sha256": "e91d39002d95f47f92c146f1101b80e93936d27ac11d831db37f3db9ecc54483",
+  "source": {
+    "fichier": "output\\bannieres\\shadowrun-anarchy\\cyberpunk-action\\source.png",
+    "width": 2172,
+    "height": 724,
+    "sha256": "eb1817e0ceaf65b000fff11ec4bcedcaca4b408cdb3ea3fe864f94d519f3b5a2",
+    "outil": "image_gen natif",
+    "definitionDemandee": "3840 × 960 ou minimum 2400 × 600 demandé ; marge verticale permise"
+  },
+  "crop": {
+    "x": 0,
+    "y": 90,
+    "width": 2172,
+    "height": 543
+  },
+  "agrandissement": 1,
+  "conformeDimensionsMinimum": false,
+  "limite": "Définition native inférieure à 2400 × 600 ; agrandissement soumis à accord.",
+  "apercus": [
+    "output\\bannieres\\shadowrun-anarchy\\cyberpunk-action\\apercu-1188-natif.png",
+    "output\\bannieres\\shadowrun-anarchy\\cyberpunk-action\\apercu-700-natif.png"
+  ],
+  "capturesExaminees": true,
+  "revue": {
+    "date": "2026-10-31",
+    "constat": "Poursuite identifiable dans les deux bandeaux, moto et arrière du véhicule au centre, zones de titre/commandes sombres. Drones et haut du véhicule partiellement coupés à 54 px. Signes parasites nettoyés ; aucun texte lisible ou logo constaté.",
+    "captures": [
+      {
+        "fichier": "output\\bannieres\\shadowrun-anarchy\\cyberpunk-action\\apercu-1188-natif.png",
+        "sha256": "61b7f9b05a9cdf83d0a2dc2bbc683ec7d2afc0d8160071de4fc8450e365f0ea0"
+      },
+      {
+        "fichier": "output\\bannieres\\shadowrun-anarchy\\cyberpunk-action\\apercu-700-natif.png",
+        "sha256": "3809668fae1b3ebbc35dd1dac8342b6318b3392f81ad4271c725f402cc9adfb9"
+      }
+    ]
+  },
+  "generation": {
+    "outil": "image_gen natif, génération puis édition ciblée",
+    "sourceInitiale": {
+      "fichier": "output/bannieres/shadowrun-anarchy/cyberpunk-action/source-initiale.png",
+      "sha256": "8908596ac3a1d1a56a7bb2f8d7ca30c254a4617f44c6726139fffa02c3a7e807"
+    },
+    "sourceSelectionnee": "output\\bannieres\\shadowrun-anarchy\\cyberpunk-action\\source.png",
+    "prompt": "prompt-generation.md",
+    "retouche": "prompt-retouche.md"
+  }
+}

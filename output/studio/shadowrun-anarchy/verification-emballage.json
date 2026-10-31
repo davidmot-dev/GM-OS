@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-31",
+  "fichiers": 88,
+  "lot": {
+    "fichier": "output/studio/shadowrun-anarchy/Shadowrun-Anarchy-Studio.zip",
+    "octets": 18391359,
+    "sha256": "0df7d971c9f1f29486b60edd1e84dd8b1e0947c0b3e904d75fc9236cbccf2862"
+  },
+  "theme": {
+    "fichier": "output/studio/shadowrun-anarchy/Shadowrun-Anarchy-theme.zip",
+    "octets": 234440,
+    "sha256": "3746678318e57a88a174ea79e8edf3c67f1aa89821c56b23b7138cf2964e73fb"
+  },
+  "controles": "Rapports, sources et captures concordants ; ZIP relu et empreintes des quatre livrables vérifiées."
+}

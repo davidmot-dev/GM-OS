@@ -1,0 +1,157 @@
+{
+  "date": "2026-10-31",
+  "source": {
+    "fichier": "docs\\Reference\\_Shadowrun Anarchy\\sran2_01anarchyv2_TOC.pdf",
+    "sha256": "0c7b2b5efeb0037d4eef9b5ea354558ba109cecede5aec4b3e8b9320cf68b652",
+    "pages_pdf": 2
+  },
+  "sortie": {
+    "fichier": "output\\sommaires\\shadowrun-anarchy\\sran2_01anarchyv2_TOC_table_des_matieres_flat.md",
+    "sha256": "93a6752f27ce91696aa85add3802ea5c5a166279abac638ce291440b1082d103",
+    "octets": 10536,
+    "entrees": 327,
+    "format": "Markdown plat UTF-8"
+  },
+  "revue_visuelle": true,
+  "colonnes": [
+    {
+      "page_pdf": 1,
+      "page_imprimee_du_sommaire": 2,
+      "colonne": 1,
+      "entrees": 55,
+      "premiere": {
+        "page_pdf": 1,
+        "colonne": 1,
+        "titre": "BIENVENUE DANS LES OMBRES, OMAE !",
+        "page_imprimee": 4
+      },
+      "derniere": {
+        "page_pdf": 1,
+        "colonne": 1,
+        "titre": "Rendre le jeu plus sombre et létal",
+        "page_imprimee": 69
+      }
+    },
+    {
+      "page_pdf": 1,
+      "page_imprimee_du_sommaire": 2,
+      "colonne": 2,
+      "entrees": 54,
+      "premiere": {
+        "page_pdf": 1,
+        "colonne": 2,
+        "titre": "Prendre des risques",
+        "page_imprimee": 70
+      },
+      "derniere": {
+        "page_pdf": 1,
+        "colonne": 2,
+        "titre": "Gérer les thématiques sensibles et les aspirations des joueurs",
+        "page_imprimee": 125
+      }
+    },
+    {
+      "page_pdf": 1,
+      "page_imprimee_du_sommaire": 2,
+      "colonne": 3,
+      "entrees": 57,
+      "premiere": {
+        "page_pdf": 1,
+        "colonne": 3,
+        "titre": "La narration partagée dans Shadowrun : Anarchy 2.0",
+        "page_imprimee": 126
+      },
+      "derniere": {
+        "page_pdf": 1,
+        "colonne": 3,
+        "titre": "Suivre un esprit mentor",
+        "page_imprimee": 174
+      }
+    },
+    {
+      "page_pdf": 2,
+      "page_imprimee_du_sommaire": 3,
+      "colonne": 1,
+      "entrees": 55,
+      "premiere": {
+        "page_pdf": 2,
+        "colonne": 1,
+        "titre": "Un talent extraordinaire dans un monde ordinaire",
+        "page_imprimee": 175
+      },
+      "derniere": {
+        "page_pdf": 2,
+        "colonne": 1,
+        "titre": "Modes de connexion",
+        "page_imprimee": 210
+      }
+    },
+    {
+      "page_pdf": 2,
+      "page_imprimee_du_sommaire": 3,
+      "colonne": 2,
+      "entrees": 54,
+      "premiere": {
+        "page_pdf": 2,
+        "colonne": 2,
+        "titre": "Modes de connexion",
+        "page_imprimee": 212
+      },
+      "derniere": {
+        "page_pdf": 2,
+        "colonne": 2,
+        "titre": "Rigger de sécurité / police",
+        "page_imprimee": 249
+      }
+    },
+    {
+      "page_pdf": 2,
+      "page_imprimee_du_sommaire": 3,
+      "colonne": 3,
+      "entrees": 52,
+      "premiere": {
+        "page_pdf": 2,
+        "colonne": 3,
+        "titre": "Médecin de combat",
+        "page_imprimee": 250
+      },
+      "derniere": {
+        "page_pdf": 2,
+        "colonne": 3,
+        "titre": "FEUILLE DE PERSONNAGE",
+        "page_imprimee": 320
+      }
+    }
+  ],
+  "controles": {
+    "six_colonnes_completes": true,
+    "ordre_lecture": true,
+    "premieres_dernieres_entrees": true,
+    "numeros_imprimes_conserves": true,
+    "repetitions_reelles_conservees": true,
+    "aucune_hierarchie_ajoutee": true,
+    "aucun_caractere_corrompu": true,
+    "hors_sommaire_exclu": true
+  },
+  "nettoyage": [
+    "Pointillés remplacés par le séparateur final",
+    "Titres répartis sur plusieurs lignes réunis",
+    "Marqueurs graphiques de rubrique retirés",
+    "2.0 vérifié visuellement aux deux occurrences où le point est mal extrait"
+  ],
+  "particularites": [
+    "SIN et licenses conservé tel qu’imprimé",
+    "Médikits et patchs, Lancement de sorts, Contresort, Bannissement, Focus et Guerre technologique répétés dans la source : entrées distinctes conservées"
+  ],
+  "rendus": [
+    {
+      "page_pdf": 1,
+      "sha256": "67d1f50f594e5631c618b52c55ef367c9cf8f5cb68454992905830399db662b5"
+    },
+    {
+      "page_pdf": 2,
+      "sha256": "f6cbedf6c2a835afb8016ba7fdb68186a4072378be61b1de331cc315a5cac866"
+    }
+  ],
+  "rendus_temporaires_supprimes_apres_revue": true
+}

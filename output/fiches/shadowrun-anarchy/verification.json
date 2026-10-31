@@ -1,0 +1,48 @@
+{
+  "pages": 1,
+  "zones": 146,
+  "cles": 121,
+  "pistes": 14,
+  "hotspots": 39,
+  "portrait": true,
+  "htmlSHA256": "73e68c6b500a08fa27bcac6ff80ba252d42a8669df91ed166e4af60119420aec",
+  "fondsIdentiquesAuxRendusSource": true,
+  "erreursJavaScript": [],
+  "requetesReseau": [],
+  "impression": {
+    "controle": "CSS print : page visible, dimensions natives, remplissage des pistes et portrait ; pas de PDF paginé ni imprimante physique éprouvés.",
+    "largeur": 801.25,
+    "hauteur": 1039.359375,
+    "saut": "auto"
+  },
+  "fonctions": "121 clés, 14 pistes numériques, portrait local/retrait confirmé, import/export/rechargement, refus sans perte, reset confirmé, zoom/clavier/molette, mobile, stockage indisponible, impression CSS et import du modèle dans le moteur jetable avec retour JSON v2.",
+  "integration": "Ni builtinTemplates ni correspondance écrits, conformément à l’atelier.",
+  "captures": [
+    {
+      "fichier": "page-vierge.png",
+      "sha256": "6a5bd37ec9e9d177d3a134707c82b4630bbe6af901f7f56766293140213a7966"
+    },
+    {
+      "fichier": "page-zones.png",
+      "sha256": "ae26d15bafc64387a45917fc4a269d6a253a293170a53379c8bea4e3a7b683fe"
+    },
+    {
+      "fichier": "page-remplie.png",
+      "sha256": "1a1869224ea2aa62d6630150ae7005686d859b40fee83204212134b98042c5f5"
+    },
+    {
+      "fichier": "impression.png",
+      "sha256": "d484be3242bfcb0d1a51bffd08e90495de3d08cf5461600e3b7d332c9d9c59e5"
+    },
+    {
+      "fichier": "mobile-390.png",
+      "sha256": "0e3747495cbdcdb1ae2917cc5a8343eab1dece010c6df0bd860ddb411aadf22e"
+    },
+    {
+      "fichier": "moteur-import.png",
+      "sha256": "62a35cfe8c68e437ae9ffb57da6c1386883db518a14f434077369abecdde01c5"
+    }
+  ],
+  "capturesExaminees": true,
+  "dateRevue": "2026-10-31"
+}

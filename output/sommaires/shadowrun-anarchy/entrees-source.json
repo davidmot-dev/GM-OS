@@ -1,0 +1,1964 @@
+[
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "BIENVENUE DANS LES OMBRES, OMAE !",
+    "page_imprimee": 4
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "INTRODUCTION",
+    "page_imprimee": 5
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "C’EST LA VIE…",
+    "page_imprimee": 6
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "LE SIXIÈME MONDE",
+    "page_imprimee": 14
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Naissance d’un monde nouveau",
+    "page_imprimee": 14
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "L’ascension des corporations",
+    "page_imprimee": 14
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Le Sixième Monde en un coup d’œil",
+    "page_imprimee": 15
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Jargon du Sixième Monde",
+    "page_imprimee": 17
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Chaos magique",
+    "page_imprimee": 19
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Nouvelles frontières nord-américaines",
+    "page_imprimee": 24
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Front matriciel",
+    "page_imprimee": 25
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Autres bouleversements mondiaux",
+    "page_imprimee": 27
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Principales organisations",
+    "page_imprimee": 29
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Le monde corporatiste",
+    "page_imprimee": 29
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Ce qu’il reste des États",
+    "page_imprimee": 37
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "La pègre",
+    "page_imprimee": 40
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Vivre dans le Sixième Monde",
+    "page_imprimee": 42
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Au-delà de la classe sociale, les nouvelles castes",
+    "page_imprimee": 42
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Les SIN criminels",
+    "page_imprimee": 44
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Monnaies du monde",
+    "page_imprimee": 46
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Et donc, les runners",
+    "page_imprimee": 47
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "CONCEPTS DE JEU",
+    "page_imprimee": 48
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Quelques mots sur le jeu de rôle",
+    "page_imprimee": 48
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Exemple de partie",
+    "page_imprimee": 49
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Un personnage en détail",
+    "page_imprimee": 50
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Métatype",
+    "page_imprimee": 50
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Mots-clés",
+    "page_imprimee": 50
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Comportements et répliques",
+    "page_imprimee": 51
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Attributs",
+    "page_imprimee": 52
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Compétences",
+    "page_imprimee": 52
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Compétences, spécialisations et attributs associés",
+    "page_imprimee": 54
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Connaissances",
+    "page_imprimee": 58
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Atouts",
+    "page_imprimee": 58
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Effets narratifs",
+    "page_imprimee": 59
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Essence",
+    "page_imprimee": 60
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Niveau de base des atouts",
+    "page_imprimee": 61
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Équipement",
+    "page_imprimee": 61
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Les tests",
+    "page_imprimee": 64
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Réserve de dés",
+    "page_imprimee": 64
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Succès",
+    "page_imprimee": 64
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Test simple",
+    "page_imprimee": 64
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Test opposé",
+    "page_imprimee": 64
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Exemple de tests",
+    "page_imprimee": 64
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Avantage / désavantage",
+    "page_imprimee": 65
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "S’y mettre à plusieurs",
+    "page_imprimee": 65
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Réessayer une action échouée",
+    "page_imprimee": 65
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Plongée dans l’action",
+    "page_imprimee": 65
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Tours et narrations",
+    "page_imprimee": 65
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Portées",
+    "page_imprimee": 66
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Déplacement",
+    "page_imprimee": 66
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Combat",
+    "page_imprimee": 66
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Blessures",
+    "page_imprimee": 68
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Guérison, soins et réparation",
+    "page_imprimee": 69
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Dommages des appareils électroniques et des véhicules",
+    "page_imprimee": 69
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 1,
+    "titre": "Rendre le jeu plus sombre et létal",
+    "page_imprimee": 69
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Prendre des risques",
+    "page_imprimee": 70
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Réduire les risques",
+    "page_imprimee": 71
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Évaluer le risque",
+    "page_imprimee": 71
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Exemple de prise de risque",
+    "page_imprimee": 71
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Règle de risque alternative",
+    "page_imprimee": 72
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Exemple de prise de risque en combat",
+    "page_imprimee": 72
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Exemples d’actions plus ou moins risquées",
+    "page_imprimee": 73
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Exemples de complications",
+    "page_imprimee": 74
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Points d’Anarchy",
+    "page_imprimee": 77
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Gagner de l’Anarchy",
+    "page_imprimee": 77
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Dépenser son Anarchy",
+    "page_imprimee": 77
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Construire un plan",
+    "page_imprimee": 78
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Étape 1 : Actions préparatoires",
+    "page_imprimee": 78
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Étape 2 : Dans le feu de l’action",
+    "page_imprimee": 78
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Réserve de planification ou points d’Anarchy personnels ?",
+    "page_imprimee": 78
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Que faire de la carte ?",
+    "page_imprimee": 79
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Exemple de planification",
+    "page_imprimee": 80
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Gestion des PNJ",
+    "page_imprimee": 81
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Premiers rôles",
+    "page_imprimee": 81
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Seconds rôles",
+    "page_imprimee": 81
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Valeurs moyennes des seconds rôles",
+    "page_imprimee": 81
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "PNJ à la volée",
+    "page_imprimee": 82
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Création et progression des personnages",
+    "page_imprimee": 83
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Coût d’un personnage",
+    "page_imprimee": 83
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Pourquoi uniquement des nuyens ?",
+    "page_imprimee": 83
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Création de personnages",
+    "page_imprimee": 84
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Créer un runner cohérent",
+    "page_imprimee": 84
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Exemple de création de personnage",
+    "page_imprimee": 85
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "PRÉTIRÉS",
+    "page_imprimee": 87
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Hercules",
+    "page_imprimee": 88
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Wild Jane",
+    "page_imprimee": 90
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Trash",
+    "page_imprimee": 92
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Gambit",
+    "page_imprimee": 94
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Charon",
+    "page_imprimee": 96
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Luna",
+    "page_imprimee": 98
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Casper",
+    "page_imprimee": 100
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Echo",
+    "page_imprimee": 102
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Drakk",
+    "page_imprimee": 104
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "White_Rabbit",
+    "page_imprimee": 106
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Mictlan",
+    "page_imprimee": 108
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Capitán",
+    "page_imprimee": 110
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "TISSER LES OMBRES",
+    "page_imprimee": 112
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Conseils pour préparer une aventure ou une campagne",
+    "page_imprimee": 112
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Types de missions",
+    "page_imprimee": 112
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Structure de mission typique",
+    "page_imprimee": 112
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Comment se déroule typiquement une partie de Shadowrun : Anarchy 2.0 ?",
+    "page_imprimee": 112
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Opérations courantes",
+    "page_imprimee": 113
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Missions atypiques",
+    "page_imprimee": 114
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Assurez l’investissement des joueurs",
+    "page_imprimee": 115
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Faites suer les joueurs",
+    "page_imprimee": 116
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Un défaut vaut mieux qu’un pro",
+    "page_imprimee": 119
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Dans l’intérêt du jeu",
+    "page_imprimee": 119
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Création d’une campagne étape par étape",
+    "page_imprimee": 122
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 2,
+    "titre": "Gérer les thématiques sensibles et les aspirations des joueurs",
+    "page_imprimee": 125
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "La narration partagée dans Shadowrun : Anarchy 2.0",
+    "page_imprimee": 126
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Narration partagée partielle",
+    "page_imprimee": 126
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Narration partagée totale",
+    "page_imprimee": 127
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Générateur d’événement aléatoire",
+    "page_imprimee": 128
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Générateur aléatoire de run",
+    "page_imprimee": 130
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Conseils pour jouer en narration partagée",
+    "page_imprimee": 131
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "UN MONDE ORDINAIRE",
+    "page_imprimee": 132
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "La sécurité",
+    "page_imprimee": 133
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Sécurité périmétrique",
+    "page_imprimee": 133
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Capteurs et patrouilles",
+    "page_imprimee": 133
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Contourner la sécurité",
+    "page_imprimee": 134
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Alertes et réponses",
+    "page_imprimee": 134
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Quand faut y aller",
+    "page_imprimee": 135
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Savoir se faire discret",
+    "page_imprimee": 135
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Sélection d’équipement d’infiltration",
+    "page_imprimee": 136
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Y aller au bagou",
+    "page_imprimee": 137
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Sélection d’équipement d’escrocs",
+    "page_imprimee": 139
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Règle optionnelle : tests sociaux étendus",
+    "page_imprimee": 139
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "La force brute",
+    "page_imprimee": 140
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Les armes",
+    "page_imprimee": 142
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Dissimulation des armes",
+    "page_imprimee": 143
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Atouts armes",
+    "page_imprimee": 144
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Armures",
+    "page_imprimee": 148
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Atouts armures",
+    "page_imprimee": 149
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Ordinaire, mais pas dénué d’atouts",
+    "page_imprimee": 149
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Chimie et botanique",
+    "page_imprimee": 149
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Drogues",
+    "page_imprimee": 150
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Toxines",
+    "page_imprimee": 152
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Exemple de grenade à gaz",
+    "page_imprimee": 152
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Augmentations",
+    "page_imprimee": 153
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "IND & implantation d’équipement",
+    "page_imprimee": 155
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Céphaloware",
+    "page_imprimee": 155
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Implants oculaires",
+    "page_imprimee": 156
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Implants auriculaires",
+    "page_imprimee": 157
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Implants corporels",
+    "page_imprimee": 158
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Bioware",
+    "page_imprimee": 159
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Médikits et patchs",
+    "page_imprimee": 160
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Médikits et patchs",
+    "page_imprimee": 160
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "La vie entre les runs",
+    "page_imprimee": 161
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Être ou ne pas être",
+    "page_imprimee": 161
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "On est qui on connaît",
+    "page_imprimee": 162
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "SIN et licenses",
+    "page_imprimee": 162
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Réseau",
+    "page_imprimee": 163
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Contacts",
+    "page_imprimee": 164
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Un lit où dormir",
+    "page_imprimee": 164
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Train de vie",
+    "page_imprimee": 166
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "UN MONDE ÉVEILLÉ",
+    "page_imprimee": 168
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Les bases de la magie",
+    "page_imprimee": 168
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Les Éveillés",
+    "page_imprimee": 168
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "L’astral et le mana",
+    "page_imprimee": 169
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Différents types d’Éveillés",
+    "page_imprimee": 169
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Drain",
+    "page_imprimee": 170
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Arpenter le plan astral",
+    "page_imprimee": 172
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Les traditions",
+    "page_imprimee": 173
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Combat astral",
+    "page_imprimee": 173
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Esprits mentors",
+    "page_imprimee": 173
+  },
+  {
+    "page_pdf": 1,
+    "colonne": 3,
+    "titre": "Suivre un esprit mentor",
+    "page_imprimee": 174
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Un talent extraordinaire dans un monde ordinaire",
+    "page_imprimee": 175
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "La magie est partout",
+    "page_imprimee": 177
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Sorcellerie",
+    "page_imprimee": 178
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Lancement de sorts",
+    "page_imprimee": 178
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Lancement de sorts",
+    "page_imprimee": 178
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Sorts de combat",
+    "page_imprimee": 180
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Sorts de détection",
+    "page_imprimee": 181
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Sorts de santé",
+    "page_imprimee": 182
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Sorts d’illusion",
+    "page_imprimee": 182
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Sorts de manipulation",
+    "page_imprimee": 183
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Contresort",
+    "page_imprimee": 184
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Contresort",
+    "page_imprimee": 184
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Conjuration",
+    "page_imprimee": 185
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Une infinité d’esprits",
+    "page_imprimee": 185
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Réputation auprès des esprits",
+    "page_imprimee": 185
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Invocation",
+    "page_imprimee": 187
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Invocation",
+    "page_imprimee": 188
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Bannissement",
+    "page_imprimee": 188
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Bannissement",
+    "page_imprimee": 188
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Focus",
+    "page_imprimee": 189
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Focus",
+    "page_imprimee": 189
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Adeptes",
+    "page_imprimee": 190
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Pouvoirs d’adepte",
+    "page_imprimee": 191
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Phénomènes astraux",
+    "page_imprimee": 192
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Champs magiques",
+    "page_imprimee": 192
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Champs magiques",
+    "page_imprimee": 193
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Métaplans",
+    "page_imprimee": 194
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Alcheras",
+    "page_imprimee": 194
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Sécurité magique",
+    "page_imprimee": 195
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Obstacles et pièges",
+    "page_imprimee": 195
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Barrières mana",
+    "page_imprimee": 196
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Opposition",
+    "page_imprimee": 197
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Magie toxique",
+    "page_imprimee": 197
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "D’où vient-elle ?",
+    "page_imprimee": 197
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Le reflet distordu de nos alliés",
+    "page_imprimee": 198
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Notre fratrie corrompue",
+    "page_imprimee": 198
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Magie toxique",
+    "page_imprimee": 200
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "UN MONDE VIRTUEL",
+    "page_imprimee": 201
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "La Matrice au quotidien",
+    "page_imprimee": 201
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Au service du citoyen",
+    "page_imprimee": 201
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Servir et protéger",
+    "page_imprimee": 204
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Dérives",
+    "page_imprimee": 204
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "La Matrice pour les Ombres",
+    "page_imprimee": 205
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "La pêche aux informations",
+    "page_imprimee": 205
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Recherche matricielle",
+    "page_imprimee": 206
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Appareils et serveurs",
+    "page_imprimee": 206
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "La discrétion matricielle",
+    "page_imprimee": 207
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Repérer une icône",
+    "page_imprimee": 207
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Comment retrouver un appareil ?",
+    "page_imprimee": 208
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "La communication en temps réel",
+    "page_imprimee": 208
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Utilisation tactique",
+    "page_imprimee": 208
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "L’arsenal du decker",
+    "page_imprimee": 209
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Cyberdeck",
+    "page_imprimee": 209
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Cyberdecks et programmes",
+    "page_imprimee": 210
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 1,
+    "titre": "Modes de connexion",
+    "page_imprimee": 210
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Modes de connexion",
+    "page_imprimee": 212
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Pirater la Matrice",
+    "page_imprimee": 213
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Niveaux d’accès",
+    "page_imprimee": 213
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Quel niveau d’accès pour faire quoi ?",
+    "page_imprimee": 214
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Se prémunir du piratage",
+    "page_imprimee": 215
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Protection matricielle",
+    "page_imprimee": 216
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Force brute et backdoors",
+    "page_imprimee": 216
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Obtenir et utiliser un niveau d’accès",
+    "page_imprimee": 217
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Surveillance du DIEU et convergence",
+    "page_imprimee": 218
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Qualité de connexion",
+    "page_imprimee": 218
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Bruit et brouillage",
+    "page_imprimee": 219
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Serveurs",
+    "page_imprimee": 220
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Défense des serveurs",
+    "page_imprimee": 221
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Indice des serveurs",
+    "page_imprimee": 222
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Fichiers",
+    "page_imprimee": 223
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Glaces",
+    "page_imprimee": 223
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Cryptage et bombes matricielles",
+    "page_imprimee": 224
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Cybercombat",
+    "page_imprimee": 224
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Cybercombat",
+    "page_imprimee": 225
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Exemple de run sous l’angle du decker",
+    "page_imprimee": 226
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "UN MONDE MÉCANIQUE",
+    "page_imprimee": 229
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Des machines",
+    "page_imprimee": 229
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Au service du citoyen",
+    "page_imprimee": 229
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Drones et véhicules",
+    "page_imprimee": 230
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Asservies aux riggers",
+    "page_imprimee": 230
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Un truc en plus",
+    "page_imprimee": 231
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Le meilleur des mécanos",
+    "page_imprimee": 231
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Être la machine",
+    "page_imprimee": 231
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Consoles de commande pour rigger",
+    "page_imprimee": 232
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Modes de contrôle",
+    "page_imprimee": 233
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Maître des véhicules",
+    "page_imprimee": 234
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Rôles des véhicules",
+    "page_imprimee": 234
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Sélection d’engins",
+    "page_imprimee": 234
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Véhicules",
+    "page_imprimee": 238
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Rigger de drones",
+    "page_imprimee": 239
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Rôles des drones",
+    "page_imprimee": 239
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Sélection d’engins",
+    "page_imprimee": 239
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Drones",
+    "page_imprimee": 241
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Guerre technologique",
+    "page_imprimee": 242
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Guerre technologique",
+    "page_imprimee": 242
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "L’ENFER, C’EST LES AUTRES",
+    "page_imprimee": 243
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Légende",
+    "page_imprimee": 243
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Ganger",
+    "page_imprimee": 244
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Ganger d’élite / Membre d’un syndicat du crime",
+    "page_imprimee": 244
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Ganger Éveillé",
+    "page_imprimee": 245
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Ganger adepte",
+    "page_imprimee": 245
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Ganger decker",
+    "page_imprimee": 246
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Go-ganger / rigger",
+    "page_imprimee": 246
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Agent de sécurité / Flic des rues",
+    "page_imprimee": 247
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Officier de sécurité / police",
+    "page_imprimee": 247
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Mage de sécurité / police",
+    "page_imprimee": 248
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Decker de sécurité / police",
+    "page_imprimee": 248
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Adepte de sécurité / police",
+    "page_imprimee": 249
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 2,
+    "titre": "Rigger de sécurité / police",
+    "page_imprimee": 249
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Médecin de combat",
+    "page_imprimee": 250
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Mage d’élite de sécurité / police",
+    "page_imprimee": 250
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Officier d’élite de sécurité / police",
+    "page_imprimee": 251
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Adepte d’élite de sécurité / police",
+    "page_imprimee": 251
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Rigger d’élite de sécurité / police",
+    "page_imprimee": 252
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Militaire",
+    "page_imprimee": 252
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Decker d’élite de sécurité / police",
+    "page_imprimee": 253
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Commando militaire",
+    "page_imprimee": 253
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Johnson",
+    "page_imprimee": 254
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Employé corporatiste",
+    "page_imprimee": 254
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Enquêteur",
+    "page_imprimee": 254
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Cadre corporatiste",
+    "page_imprimee": 255
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Coyote / Contrebandier",
+    "page_imprimee": 255
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Barghest",
+    "page_imprimee": 257
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Chien de l’enfer",
+    "page_imprimee": 257
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Tigre cyber-augmenté Shiawase",
+    "page_imprimee": 257
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Basilic",
+    "page_imprimee": 259
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Cocatrix",
+    "page_imprimee": 259
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Goule",
+    "page_imprimee": 259
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Rat du diable",
+    "page_imprimee": 260
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Vampire",
+    "page_imprimee": 260
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Chien de garde",
+    "page_imprimee": 261
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Jeune dragon",
+    "page_imprimee": 261
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Veilleur",
+    "page_imprimee": 262
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Esprit des aînés",
+    "page_imprimee": 262
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Esprit des bêtes",
+    "page_imprimee": 263
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Esprit des plantes",
+    "page_imprimee": 263
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Esprit de l’air",
+    "page_imprimee": 264
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Esprit de l’eau",
+    "page_imprimee": 264
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Esprit du feu",
+    "page_imprimee": 265
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Esprit de la terre",
+    "page_imprimee": 265
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "LA CITÉ ÉMERAUDE",
+    "page_imprimee": 266
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Seattle m’était conté",
+    "page_imprimee": 266
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Le joyau des Ombres",
+    "page_imprimee": 270
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Corporations et dragons",
+    "page_imprimee": 271
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Ordre",
+    "page_imprimee": 273
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Indices de sécurité",
+    "page_imprimee": 275
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Désordre",
+    "page_imprimee": 276
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Les gangs de Seattle",
+    "page_imprimee": 278
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Survol des districts",
+    "page_imprimee": 280
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Légende",
+    "page_imprimee": 281
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "INFLAMMABLES",
+    "page_imprimee": 284
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Contexte",
+    "page_imprimee": 284
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Synopsis",
+    "page_imprimee": 285
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Who’s who",
+    "page_imprimee": 286
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Lieux importants",
+    "page_imprimee": 291
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Onction d’huile et de sang",
+    "page_imprimee": 294
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Un écrin de bonheur",
+    "page_imprimee": 300
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Petrichor",
+    "page_imprimee": 307
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Larmes de sang",
+    "page_imprimee": 314
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "Épilogue : Le coven d’Urubia",
+    "page_imprimee": 318
+  },
+  {
+    "page_pdf": 2,
+    "colonne": 3,
+    "titre": "FEUILLE DE PERSONNAGE",
+    "page_imprimee": 320
+  }
+]

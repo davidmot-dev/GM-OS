@@ -1,0 +1,28 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import AdmZip from 'adm-zip';
+import {loadImage} from '@napi-rs/canvas';
+const dir='output/studio/shadowrun-anarchy',theme='docs/systems/shadowrun-anarchy/theme',fiche='docs/fiches/Shadowrun Anarchy/shadowrun-anarchy2-fiche-personnage-interactive.html',banner='docs/systems/shadowrun-anarchy/Shadowrun Anarchy Band.jpg';
+const hash=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex'),lire=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+const t=lire(theme+'/apercu/validation.json'),tq=lire(theme+'/apercu/verification-apercu.json'),f=lire('output/fiches/shadowrun-anarchy/validation.json')[0],fq=lire('output/fiches/shadowrun-anarchy/verification.json'),u=lire('output/fiches/shadowrun-anarchy/tests-contrats.json'),b=lire('output/bannieres/shadowrun-anarchy/verification-finale.json'),i=lire('output/identites/shadowrun-anarchy/validation.json');
+assert.ok(t.accepte&&t.erreurs.length===0&&t.avertissements.length===0);assert.ok(f.accepte&&f.erreurs.length===0&&f.avertissements.length===2);assert.ok(tq.capturesExaminees&&fq.capturesExaminees&&b.capturesExaminees);assert.equal(hash(fiche),fq.htmlSHA256);assert.ok(u.success&&u.numFailedTests===0&&u.numPassedTests===51);assert.ok(i.valid&&i.relectureSemantique);assert.equal(hash('output/identites/shadowrun-anarchy/identite-visuelle.md'),i.sha256);
+for(const a of tq.fichiers)assert.equal(hash(path.join(theme,a.fichier)),a.sha256,'Thème modifié après revue');
+for(const a of tq.captures)assert.equal(hash(path.join(theme,'apercu',a.fichier)),a.sha256);
+for(const a of fq.captures)assert.equal(hash(path.join('output/fiches/shadowrun-anarchy',a.fichier)),a.sha256);
+const image=await loadImage(banner);assert.equal(image.width,2400);assert.equal(image.height,600);assert.equal(hash(banner),b.sha256);assert.equal(fs.statSync(banner).size,b.bytes);assert.ok(b.bytes<=500000&&b.accord?.reponse==='Oui, exporter à 2 400 × 600');
+for(const a of b.revue.captures)assert.equal(hash(a.fichier),a.sha256);
+const sources=['sran2_01anarchyv2_PJ.pdf','sran2_01anarchyv2_example.pdf','Screenshot 2026-10-30 163416.png','Screenshot 2026-10-30 163541.png','Screenshot 2026-10-30 163635.png'].map(n=>'docs/Reference/Shadowrun Anarchy/'+n);
+const provenance={date:'2026-10-31',ateliers:['thème','fiche','bannière','identité'],sourcePDFIntacte:hash(sources[0])===lire('output/fiches/shadowrun-anarchy/construction.json').sourceSHA256,sources:sources.map(fichier=>({fichier,sha256:hash(fichier)})),livrables:[theme+'/theme.css',fiche,banner,'output/identites/shadowrun-anarchy/identite-visuelle.md'].map(fichier=>({fichier,octets:fs.statSync(fichier).size,sha256:hash(fichier)})),controles:{theme:'accepté 0/0, 20 SVG et 2 planches relues',fiche:'acceptée 0/2 intégration, 121 clés, 146 zones, parcours autonome et moteur importé hors ligne, 6 captures relues',testsVitest:u.numPassedTests,banniere:'dimensions/poids/hash vérifiés, agrandissement autorisé, deux cadrages relus',identite:'42/15 mots, structure et sens relus'},integration:'Déposé dans le dépôt ; pas de pilote, campagne, profil personnel ni moteur permanent modifié.',limites:'Correspondance et intégration permanente de la fiche à réaliser par l’intégrateur ; activation et jugement de David attendus.'};
+assert.ok(provenance.sourcePDFIntacte);fs.writeFileSync(dir+'/provenance.json',JSON.stringify(provenance,null,2)+'\n');
+const z=new AdmZip(),tz=new AdmZip();const ajouter=(zip,fichier,nom=fichier)=>zip.addFile(nom.replaceAll('\\','/'),fs.readFileSync(fichier));
+function dossier(rep,zip,prefixe=rep){for(const e of fs.readdirSync(rep,{withFileTypes:true})){const p=path.join(rep,e.name),n=path.posix.join(prefixe,e.name);if(e.isDirectory())dossier(p,zip,n);else ajouter(zip,p,n);}}
+dossier(theme,z);dossier(theme,tz,'theme');ajouter(z,fiche);ajouter(z,banner);dossier('outils/shadowrun-anarchy',z);dossier('output/bannieres/shadowrun-anarchy',z);dossier('output/identites/shadowrun-anarchy',z);
+for(const e of fs.readdirSync('output/fiches/shadowrun-anarchy',{withFileTypes:true}))if(e.isFile())ajouter(z,path.posix.join('output/fiches/shadowrun-anarchy',e.name));
+ajouter(z,dir+'/LIRE-MOI.md','LIRE-MOI.md');ajouter(z,dir+'/provenance.json','provenance.json');
+const date=new Date('2026-10-31T12:00:00.000Z');for(const zip of[z,tz])for(const e of zip.getEntries())e.header.time=date;
+const themeZip=dir+'/Shadowrun-Anarchy-theme.zip',lot=dir+'/Shadowrun-Anarchy-Studio.zip';tz.writeZip(themeZip);z.writeZip(lot);
+const retour=new AdmZip(lot);for(const a of provenance.livrables)assert.equal(createHash('sha256').update(retour.readFile(a.fichier)).digest('hex'),a.sha256);
+const emballage={date:'2026-10-31',fichiers:retour.getEntryCount(),lot:{fichier:lot,octets:fs.statSync(lot).size,sha256:hash(lot)},theme:{fichier:themeZip,octets:fs.statSync(themeZip).size,sha256:hash(themeZip)},controles:'Rapports, sources et captures concordants ; ZIP relu et empreintes des quatre livrables vérifiées.'};
+fs.writeFileSync(dir+'/verification-emballage.json',JSON.stringify(emballage,null,2)+'\n');console.log(JSON.stringify(emballage,null,2));

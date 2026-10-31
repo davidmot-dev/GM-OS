@@ -1,0 +1,46 @@
+{
+  "fichier": "output\\bannieres\\shadowrun-anarchy\\banniere-native.jpg",
+  "width": 2172,
+  "height": 543,
+  "bytes": 362116,
+  "format": "JPEG",
+  "opaque": true,
+  "quality": 93,
+  "sha256": "cab3313af8a2d2bdc383c7e0d7b1994b012cbee81002f6a2f744f21f539ca86c",
+  "source": {
+    "fichier": "output\\bannieres\\shadowrun-anarchy\\source.png",
+    "width": 2172,
+    "height": 724,
+    "sha256": "118eecff28a1169d6d82b254c1a60b576c3f145e40c66ef8c53e473e9acdf116",
+    "outil": "image_gen natif",
+    "definitionDemandee": "3840 × 1280 ou maximum natif disponible"
+  },
+  "crop": {
+    "x": 0,
+    "y": 90,
+    "width": 2172,
+    "height": 543
+  },
+  "agrandissement": 1,
+  "conformeDimensionsMinimum": false,
+  "limite": "Définition native inférieure à 2400 × 600 ; agrandissement soumis à accord.",
+  "apercus": [
+    "output\\bannieres\\shadowrun-anarchy\\apercu-1188-natif.png",
+    "output\\bannieres\\shadowrun-anarchy\\apercu-700-natif.png"
+  ],
+  "capturesExaminees": true,
+  "revue": {
+    "date": "2026-10-31",
+    "constat": "Ville centrale reconnaissable, bords sombres ; pas de texte ni logo ; silhouette fantastique hors du bandeau étroit, non essentielle.",
+    "captures": [
+      {
+        "fichier": "output\\bannieres\\shadowrun-anarchy\\apercu-1188-natif.png",
+        "sha256": "6ab7b968323d7af550112dd79f6ccaa999459d69d4cfc51b24553be3beca93a5"
+      },
+      {
+        "fichier": "output\\bannieres\\shadowrun-anarchy\\apercu-700-natif.png",
+        "sha256": "e65c7fb77135922a3eb184223170dbd04bc54d887cefb2f7c4e2ce523f5c4fa8"
+      }
+    ]
+  }
+}

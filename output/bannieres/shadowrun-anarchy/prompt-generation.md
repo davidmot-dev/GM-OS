@@ -1,0 +1,10 @@
+# Invite de génération native — Shadowrun Anarchy
+
+Use case: stylized-concept.
+Asset type: opaque panoramic game-master application header illustration.
+Theme: near-future urban fantasy megacity, industrial streets beneath corporate towers, rain and restrained technological unease, a subtle coexistence of advanced technology and the uncanny. Create an original environment, no imitation of a known cover or film.
+Scene: a continuous ultra-wide nighttime panorama across an elevated maintenance walkway above a dense rain-soaked city canyon. Layered concrete and steel towers recede into atmospheric haze, pipes, antennae, a few tiny unmanned aircraft far away. A distant narrow rooftop carries a barely visible winged reptilian silhouette, integrated into the skyline rather than dominant. All narrative motifs are within a thin horizontal band through the vertical center. No foreground characters.
+Composition: request the largest native resolution available, ideally 3840 by 1280 px or larger, composed for a central 4:1 crop and ultimately a 2400 by 600 px header. Leftmost 20 percent and rightmost 30 percent dark and quiet for overlaid UI. Upper and lower thirds calm shadow and mist. Central structures identifiable when displayed as a very shallow 54-pixel-high strip. Continuous panorama, level horizon, no split panels.
+Lighting & palette: muted midnight blue and charcoal, restrained petrol cyan, a few subdued amber glints; limited saturation, soft indirect light, contained highlights, dark edges, no bright signage.
+Style: semi-realistic digital concept painting, loose visible brushwork, layered color glazing, broken textured edges, detailed focal shapes fading into atmospheric depth, cinematic scale, uneven matte surfaces, expressive painterly marks, subtle gritty grain.
+Exclusions: no readable text, letters, numbers, logos, brands, signatures, watermarks, borders, frames, interface, close-up faces, foreground figures, glowing eyes, glaring lights, polished 3D, photorealistic camera rendering, flat vector art or anime.

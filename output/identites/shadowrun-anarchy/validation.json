@@ -1,0 +1,23 @@
+{
+  "valid": true,
+  "values": {
+    "STYLE": {
+      "text": "semi-realistic digital concept painting, visible energetic brushwork, broken textured edges, saturated cyberpunk palette, electric cyan and hot magenta, ultraviolet and acid yellow accents, deep indigo shadows, vivid neon rim lighting, layered colored reflections, controlled luminous bloom, cinematic contrast, atmospheric depth, gritty painted grain",
+      "words": 43,
+      "max": 60
+    },
+    "AVOID": {
+      "text": "photorealism, glossy 3D, anime, flat vectors, muted palettes, monochrome, pastel wash, readable text, logos",
+      "words": 14,
+      "max": 15
+    }
+  },
+  "errors": [],
+  "relectureSemantique": true,
+  "date": "2026-10-31",
+  "sha256": "33654f89424e56ad386b2633e38b221041e4c35b08b1d9c9dd24d52a35272131",
+  "revision": "Cyberpunk colore accentue a la demande de David",
+  "apercuGenere": false,
+  "applicationDansPilote": false,
+  "zipStudioInitialInchange": true
+}

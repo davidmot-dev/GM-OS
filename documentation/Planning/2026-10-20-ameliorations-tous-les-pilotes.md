@@ -56,6 +56,7 @@ sur demande explicite de David : « Je voudrais finir les améliorations du driv
 | [NOC](#noc) | 🟢 9 · 🟠 0 · 🔴 0 | **Tous les points validés par David le 25/10 : « ok tout fonctionne »** ; pilote 2.0.0, moteur de fiches 18, commit `bf83cbf6`. [Bilan](2026-10-25-noc-finir.md), registre § 177 ; campagne et Cabale de recette livrées (§ 179) | Essayer les 62 cas de recette ; GM-05 transversal signalé ; les portées et arbitrages narratifs restent à la Loi |
 | [Rêve de Dragon](#rêve-de-dragon) | 🟢 6 · 🟠 1 · 🔴 0 | Socle R0–R7, boucle TMR ; **pilote fini le 24/10**, 2.0.0 (registre § 168, [bilan](2026-10-24-reve-de-dragon-finir.md)) : phases du round, famine/potions, entraînement, Haut-Rêve, calendrier Clock-OS, PNJ ; campagne de recette avec carte TMR et 14 tables livrée le 26/10 (§ 181) | Réimport et essai de David avec les 69 cas ; GM-05 transversal signalé |
 | [RuneQuest](#runequest) | 🟢 1 · 🟠 7 · 🔴 0 | **Nouveau pilote, fini le 30/10**, 2.1.0 (registre § 187) : corpus relu 17/17 contre le livre et l'errata, d100 en cinq niveaux, test de caractéristique, résistance, augmentation, opposition, localisation ; coups localisés dans Combat-OS (armure, zone, total, effets) ; fiche HTML au moteur 20 reliée, thème contrôlé | Réimport avec Remplacer et essai de David |
+| [Shadowrun Anarchy](#shadowrun-anarchy) | 🟢 0 · 🟠 3 · 🔴 0 | **Préparation graphique livrée le 31/10**, § 196 : thème accepté 0/0, fiche autonome une page/121 clés importée dans un moteur jetable, bannière et identité ; identité révisée en cyberpunk saturé cyan/magenta/violet à la demande de David, bloc validé 43/14 mots ; 51 tests de contrat passent. Aucun pilote mécanique audité dans ces ateliers | Raccord permanent de la fiche ; activation et jugement de David |
 | [Star Trek Adventures](#star-trek-adventures) | 🟢 4 · 🟠 1 · 🔴 0 | Pilote et LCARS documentés ; **audit et toutes les améliorations livrés le 23/10** (registre § 167, [audit](2026-10-23-star-trek-ameliorations.md)), pilote 2.0.0, **essai de David validé le 24/10** | Essais matériels LCARS |
 | [Symbaroum](#symbaroum) | 🟢 10 · 🟠 0 · 🔴 0 | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), essai de David validé ; **S0, S2 et S5 à S9 livrés le 23/10** (§ 166), pilote 2.0.0 | Réimport du pilote 2.0.0 et essai de David |
 | [Torg Eternity](#torg-eternity) | 🟢 0 · 🟠 0 · 🔴 5 | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
@@ -569,6 +570,35 @@ Passion avec leurs suites (tourment, désespoir) ; les tests d'expérience coch�
 
 **Cas témoin :** Épée large 65 %, augmentée d'une réussite (+20), situation −10 : 75 %, critique
 01-04, spéciale 01-15, échec critique 00 ; à 56 %, un 02 est critique, un 99 un échec critique.
+
+## Shadowrun Anarchy
+
+**Préparation de Shadowrun : Anarchy 2.0**, ateliers Studio du 31/10/2026 ;
+[reprise](2026-10-31-etat-et-reprise-codex-studio-shadowrun-anarchy.md), registre **§ 196**.
+Références : PDF PJ d’une page, quatre pages example et trois illustrations dans
+`docs/Reference/Shadowrun Anarchy/`. Dossier réel du corpus : `shadowrun-anarchy`.
+Le sommaire a déjà été livré au § 195. Ces ateliers ne créent ni n’auditent un pilote mécanique.
+
+| Priorité | Amélioration | Réalisation |
+| --- | --- | --- |
+| 🟠 P2 | Thème d’interface | **Livré le 31/10** : papier usé, cadre jaune, titres bruns, deux matières, trois ornements, quinze icônes ; validateur **0 erreur / 0 avertissement**. Vingt SVG décodés et planches 1440/390 px examinées hors ligne ; jugement de David attendu |
+| 🟠 P1 | Fiche HTML du jeu | **Livrée le 31/10**, modèle shadowrun-anarchy2-fr, une page native 600,945 × 779,528 points, **146 zones / 121 clés**, portrait, **39 hotspots / 14 pistes**. Validateur **0 erreur / 2 avertissements d’intégration** ; saisie/import/export/rechargement, portrait, refus sans perte, reset, zoom, mobile, impression CSS et import du modèle dans un moteur jetable vérifiés ; six captures examinées. Intégration permanente et correspondance attendues |
+| 🟠 P2 | Bannière et identité d’images | **Livrées le 31/10** : JPEG opaque **2400 × 600 / 375 284 octets**, agrandissement de 10,5 % autorisé par David, sans détail ajouté ; deux cadrages 54 px examinés hors GM-OS. Identité révisée le même jour à sa demande : cyberpunk saturé, cyan/magenta/ultraviolet et accents jaune acide, peinture texturée ; bloc anglais STYLE/AVOID **43/14 mots**, validateur et sens relus dans `output/identites/shadowrun-anarchy/`. Le ZIP Studio initial conserve le bloc précédent. Choix dans le pilote et essai d’image par David attendus |
+
+**Vérifications :** 51 tests de contrat passent ; lint ciblé sans erreur. Rapport, captures et
+empreintes dans `output/studio/shadowrun-anarchy/`, `output/fiches/shadowrun-anarchy/` et
+`theme/apercu/`. HTML reproduit octet pour octet depuis la recette et le PDF original intact.
+
+**Limites :** Barlow Condensed approche les fontes de titre ; les planches utilisent les replis
+système et ne prouvent pas le téléchargement de polices. Le thème ne change pas la géométrie
+de GM-OS. La fiche garde son fond PDF ; RD, attribut et seuils restent saisissables, car le
+manifeste ne propose pas d’addition à deux sources. Trois degrés de blessures distincts 3/2/1,
+cercles pâles compris ; aucun transfert automatique entre degrés. Portrait recadré dans l’ellipse
+intérieure. Aucune mécanique, partie, connexion Hub ou impression physique éprouvée dans cet atelier.
+
+**Sujets à auditer lors d’un chantier de pilote demandé :** édition et export du pilote,
+raccord des 121 clés, règles de risque/RR, Anarchy, dégâts par degré, Magie/Matrice/rigging et
+planification. Le corpus préexistant n’est pas relu par ces ateliers graphiques.
 
 ## Star Trek Adventures
 
