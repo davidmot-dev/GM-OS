@@ -128,3 +128,18 @@ que dans GM-OS.
   du piratage sont sur la fiche, à appliquer à la main.
 - Les variantes « plus sombre » (p. 69) : blessures légères qui durent, guérison plus lente.
 - Les **dommages des véhicules** (Structure × 2, × 3) : le meneur saisit la gravité à la main.
+
+## Les campagnes de recette
+
+Lot du **01/11/2026**, dans `output/campagnes-tests/shadowrun-anarchy/` : importer d’abord
+**01-La-Derniere-Couleur.gmos**, mission originale de deux à quatre séances pour Vif,
+Prisme et Sillage. Les trois joueurs existants sont conservés. Deux laboratoires indépendants
+complètent la mission : **02-Moniteur-et-Seuils.gmos** et **03-Risque-Anarchy-et-Matrice.gmos**.
+Pour remettre un laboratoire à zéro, réimporter uniquement celui-ci avec **Remplacer**.
+
+Le ZIP contient les archives, les médias embarqués, la matrice, les **64 cas humains** et le
+CSV vierge. **22 nouveaux PJ**, profils aux valeurs choisies hors budget novice officiel.
+Les imports, le remplacement isolé et les trois Hub ont été éprouvés en instance jetable,
+avec jets et sauvegarde de la fiche HTML. **GM-05 reste en échec : des secrets de séance
+sont transmis aux Hub joueurs** ; marqueurs fictifs uniquement dans la recette.
+Voir le rapport et les anomalies du lot. Partie complète, matériel et cas humains restent à jouer.

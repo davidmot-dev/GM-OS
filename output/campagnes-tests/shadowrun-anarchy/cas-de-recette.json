@@ -1,0 +1,578 @@
+[
+  {
+    "id": "JET-01",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00, compétence 1 à 5 et attribut Logique 5",
+    "action": "Composer compétence 1 + Logique, seuil 3, risque 0",
+    "attendu": "10 d6 ; 5/6 succès ; aucun 1 normal ne provoque de complication.",
+    "source": "docs/systems/shadowrun-anarchy/rules/resolution-des-jets.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "JET-02",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00, même réserve",
+    "action": "Cocher spécialisation puis lancer",
+    "attendu": "12 d6 ; aucun autre modificateur ne change la réserve.",
+    "source": "docs/systems/shadowrun-anarchy/rules/resolution-des-jets.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "JET-03",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00, réserve 10",
+    "action": "Essayer seuils 2, 3, 4, 6 et 8",
+    "attendu": "Le panneau reprend le seuil choisi ; réussite si succès au moins égaux au seuil.",
+    "source": "docs/systems/shadowrun-anarchy/rules/resolution-des-jets.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "JET-04",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00, succès contrôlés dans test automatisé",
+    "action": "Résoudre 7 succès au seuil 3",
+    "attendu": "Réussite exceptionnelle à 4 succès nets ; 6 succès restent une réussite ordinaire.",
+    "source": "docs/systems/shadowrun-anarchy/rules/resolution-des-jets.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "JET-05",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00, compétence absente",
+    "action": "Composer seulement Logique",
+    "attendu": "5 dés ; absence de compétence vaut zéro, pas refus.",
+    "source": "docs/systems/shadowrun-anarchy/rules/resolution-des-jets.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "RIS-01",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00, RR 0",
+    "action": "Choisir normale puis risquée",
+    "attendu": "Repères 2 puis 4 dés de risque, bornés à la réserve ; les succès de risque valent double.",
+    "source": "docs/systems/shadowrun-anarchy/rules/la-prise-de-risque-des-de-risque-et-reduction-du-risque.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "RIS-02",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R01, RR 1",
+    "action": "Choisir normale",
+    "attendu": "5 dés de risque ; le premier 1 de risque est ignoré.",
+    "source": "docs/systems/shadowrun-anarchy/rules/la-prise-de-risque-des-de-risque-et-reduction-du-risque.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "RIS-03",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R02, RR 2",
+    "action": "Choisir normale",
+    "attendu": "8 dés de risque ; deux 1 ignorés.",
+    "source": "docs/systems/shadowrun-anarchy/rules/la-prise-de-risque-des-de-risque-et-reduction-du-risque.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "RIS-04",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R03, RR 3",
+    "action": "Choisir suicidaire",
+    "attendu": "Repère borné à la réserve ; RR ne dépasse jamais 3.",
+    "source": "docs/systems/shadowrun-anarchy/rules/la-prise-de-risque-des-de-risque-et-reduction-du-risque.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "RIS-05",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00, résultats contrôlés : 1/2/3 uns de risque",
+    "action": "Résoudre chaque jet avec RR 0",
+    "attendu": "Mineure/critique/désastre ; gains Anarchy 0/+1/+2 ; désastre fait échouer.",
+    "source": "docs/systems/shadowrun-anarchy/rules/la-prise-de-risque-des-de-risque-et-reduction-du-risque.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "RIS-06",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00",
+    "action": "Saisir moins de zéro puis plus que la réserve de risque",
+    "attendu": "Valeurs bornées entre zéro et la réserve ; aucun dé supplémentaire ajouté.",
+    "source": "docs/systems/shadowrun-anarchy/rules/la-prise-de-risque-des-de-risque-et-reduction-du-risque.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "AVA-01",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00",
+    "action": "Activer avantage de situation",
+    "attendu": "4+ réussit, réserve inchangée.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jets-opposes-aide-et-cooperation.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "AVA-02",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00",
+    "action": "Activer désavantage",
+    "attendu": "6 seul réussit.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jets-opposes-aide-et-cooperation.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "AVA-03",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R04, grave 1",
+    "action": "Choisir avantage de situation",
+    "attendu": "Avantage et blessure grave s’annulent : 5+.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jets-opposes-aide-et-cooperation.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "AVA-04",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "Deux PJ, tests opposés avec 4 succès chacun",
+    "action": "Comparer les deux jets",
+    "attendu": "Égalité non départagée ; si un vainqueur est indispensable, arbitrer l’initiateur selon le corpus. Pas de succès net inventé.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jets-opposes-aide-et-cooperation.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "AVA-05",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "PJ aidant qualifié",
+    "action": "Déclarer son aide avant le test",
+    "attendu": "Avantage justifié ; aucune addition libre de dés.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jets-opposes-aide-et-cooperation.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "ANA-01",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R05, Anarchy 0",
+    "action": "Essayer avantage payant puis relance",
+    "attendu": "Dépense impossible ; aucun compteur négatif.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jauges-et-ressources-individuelles.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "ANA-02",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00, Anarchy 4 et risque 0",
+    "action": "Acheter avantage puis lancer",
+    "attendu": "Anarchy 3 ; succès 4+ ; mouvement consigné.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jauges-et-ressources-individuelles.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "ANA-03",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00, Anarchy disponible, complication initiale critique",
+    "action": "Relancer tous les dés pour 1 Anarchy",
+    "attendu": "Même nombre de dés ; critique conservée, aucun deuxième gain de complication.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jauges-et-ressources-individuelles.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "ANA-04",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00, jet initial sans complication",
+    "action": "Relancer avec des 1 de risque",
+    "attendu": "Aucune nouvelle complication ; Anarchy diminuée de 1.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jauges-et-ressources-individuelles.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "ANA-05",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R06 Essence 5, R07 Essence 3",
+    "action": "Cocher magie sur un jet",
+    "attendu": "Respectivement 1 et 2 succès annulés ; réserve inchangée.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jauges-et-ressources-individuelles.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "ANA-06",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R08 Essence 1",
+    "action": "Jouer une interaction sociale",
+    "attendu": "Désavantage social arbitré manuellement ; le panneau ne le déduit pas automatiquement.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jauges-et-ressources-individuelles.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "ANA-07",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R09 Essence 0",
+    "action": "Consulter la fiche sans tenter une action de fiction",
+    "attendu": "Mort selon la règle ; le champ seul ne bloque pas automatiquement toutes les actions : limite à relever.",
+    "source": "docs/systems/shadowrun-anarchy/rules/jauges-et-ressources-individuelles.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "SAN-01",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S00, seuils physiques 6/9/12, sain",
+    "action": "Appliquer VD 6 physique",
+    "attendu": "Aucune blessure.",
+    "source": "docs/systems/shadowrun-anarchy/rules/sante-et-blessures.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "SAN-02",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S00 sain",
+    "action": "Appliquer VD 7 physique",
+    "attendu": "Une légère, position 1.",
+    "source": "docs/systems/shadowrun-anarchy/rules/sante-et-blessures.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "SAN-03",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S00 sain",
+    "action": "Appliquer VD 9 puis rejouer avec VD 10",
+    "attendu": "9 : légère ; 10 : grave, position 3.",
+    "source": "docs/systems/shadowrun-anarchy/rules/sante-et-blessures.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "SAN-04",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S00 sain",
+    "action": "Appliquer VD 12 puis rejouer avec VD 13",
+    "attendu": "12 : grave ; 13 : incapacitante, position 4.",
+    "source": "docs/systems/shadowrun-anarchy/rules/sante-et-blessures.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "SAN-05",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S02, deux légères",
+    "action": "Appliquer VD 7",
+    "attendu": "La nouvelle légère devient grave ; deux légères conservées.",
+    "source": "docs/systems/shadowrun-anarchy/rules/sante-et-blessures.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "SAN-06",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S03, deux légères et une grave",
+    "action": "Appliquer VD 7",
+    "attendu": "Incapacitante ; aucun compteur au-delà de sa capacité.",
+    "source": "docs/systems/shadowrun-anarchy/rules/sante-et-blessures.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "SAN-07",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S05, capacité légère 3 et grave 2, légères 2",
+    "action": "Appliquer deux fois VD 7",
+    "attendu": "Troisième légère puis première grave ; positions 3 puis 4.",
+    "source": "docs/systems/shadowrun-anarchy/rules/sante-et-blessures.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "SAN-08",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S06, légère 1, grave 1, incapacitante 1",
+    "action": "Soigner une blessure puis recharger",
+    "attendu": "Incapacitante effacée en premier ; légère et grave conservées.",
+    "source": "docs/systems/shadowrun-anarchy/rules/sante-et-blessures.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "DEG-01",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S00 sain, principale 6, secondaire 4, sans armure 3, mental 5",
+    "action": "Rejouer VD 6 dans chacune des quatre familles",
+    "attendu": "Principale : zéro ; secondaire/sans armure/mental : une légère.",
+    "source": "docs/systems/shadowrun-anarchy/rules/degats-et-types-de-degats.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "DEG-02",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S07, seuils tous à zéro, Force 3 Volonté 4",
+    "action": "Appliquer VD 4 physique puis mental en réinitialisant",
+    "attendu": "Physique : légère ; mental : aucune blessure.",
+    "source": "docs/systems/shadowrun-anarchy/rules/degats-et-types-de-degats.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "DEG-03",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S00, dégâts létaux ou étourdissants",
+    "action": "Infliger une incapacitante et annoncer le type",
+    "attendu": "Compteur incapacitante natif ; état mourant décidé par MJ si létal.",
+    "source": "docs/systems/shadowrun-anarchy/rules/degats-et-types-de-degats.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "ETA-01",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S01, légère 1",
+    "action": "Cocher légère récente au jet puis terminer la prochaine narration",
+    "attendu": "6 seul réussit quand coché ; retirer manuellement le marqueur au bon terme.",
+    "source": "docs/systems/shadowrun-anarchy/rules/etats-et-conditions.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "ETA-02",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S04, incapacitante 1",
+    "action": "Ouvrir le panneau de test",
+    "attendu": "Test annoncé impossible ; ne pas résoudre une action du personnage.",
+    "source": "docs/systems/shadowrun-anarchy/rules/etats-et-conditions.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "ETA-03",
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "precondition": "S08, Essence 2",
+    "action": "Préparer soin d’une blessure grave",
+    "attendu": "Seuil 5+2=7 ; une seule tentative de premiers soins et un sort par case, à noter manuellement.",
+    "source": "docs/systems/shadowrun-anarchy/rules/etats-et-conditions.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "TOUR-01",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Rencontre du dépôt préparée",
+    "action": "Importer la rencontre et ordonner les narrations à la table",
+    "attendu": "Participants corrects ; ordre décidé sans jet d’initiative inventé.",
+    "source": "docs/systems/shadowrun-anarchy/rules/initiative-et-deroulement-du-tour.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "TOUR-02",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "PJ avec 1 Anarchy",
+    "action": "Dépenser pour une action supplémentaire",
+    "attendu": "Retirer 1 sur la jauge et jouer l’action ; pas de gain d’action automatique annoncé.",
+    "source": "docs/systems/shadowrun-anarchy/rules/initiative-et-deroulement-du-tour.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "POR-01",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Passerelle, carte schématique",
+    "action": "Annoncer une distance puis un déplacement",
+    "attendu": "Le MJ fixe portée et accès ; aucun bonus automatique au déplacement de pion.",
+    "source": "docs/systems/shadowrun-anarchy/rules/distances-et-portees.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "POU-01",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Scène de la rampe",
+    "action": "Choisir course ou traces du leurre",
+    "attendu": "Pilotage + Agilité et risque annoncés ; perdre laisse deux voies vers Azur.",
+    "source": "docs/systems/shadowrun-anarchy/rules/poursuites.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "DRA-01",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R06, magie et complication mineure",
+    "action": "Noter le drain puis narration suivante",
+    "attendu": "Désavantage magique temporaire saisi à la main.",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-drain-magique.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "DRA-02",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R06, complication critique puis désastre en essais distincts",
+    "action": "Appliquer les conséquences du drain",
+    "attendu": "Une légère puis une incapacitante ; ne pas transformer ces conséquences en VD de seuil.",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-drain-magique.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "DRA-03",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "Blessure explicitement étiquetée drain dans les notes",
+    "action": "Proposer premiers soins et magie",
+    "attendu": "Refus par le MJ ; repos naturel seulement. Ne pas annoncer un refus automatique de GM-OS.",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-drain-magique.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "MAT-01",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "Vif, champs piratage renseignés, corpus ouvert",
+    "action": "Déclarer RA, cold-sim puis hot-sim",
+    "attendu": "Reporter les modificateurs et risques du corpus avant chaque jet ; le déplacement de carte ne les règle pas.",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-piratage-et-les-modes-de-connexion-a-la-matrice.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "MAT-02",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "Mode cold-sim ou hot-sim déclaré",
+    "action": "Subir un biofeedback",
+    "attendu": "Mental étourdissant ou mental létal ; pas de dégât physique automatique en hot-sim.",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-piratage-et-les-modes-de-connexion-a-la-matrice.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "RIG-01",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Sillage et drone de maintenance",
+    "action": "Comparer plongée, siège, manuel, autonome",
+    "attendu": "Priorité plongée > siège > manuel > autonome ; première commande de même niveau prévaut.",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-rigging-et-la-plongee-dans-les-vehicules.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "RIG-02",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Rigger en plongée, case grave du véhicule cochée",
+    "action": "Appliquer le biofeedback",
+    "attendu": "Une légère au rigger ; mental étourdissant cold-sim, létal hot-sim ; gravité véhicule arbitrée.",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-rigging-et-la-plongee-dans-les-vehicules.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "FLA-01",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Scène préparer, réserve à zéro",
+    "action": "Réussir 3 succès en planification",
+    "attendu": "Ajouter manuellement 3 points, ou 1 si temps limité (2 succès par point).",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-flashback-et-la-planification-en-deux-etapes.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "FLA-02",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Réserve 4, flashback de coût 2 justifié par le plan",
+    "action": "Payer le flashback",
+    "attendu": "Réserve 2 ; aucun achat de dés supplémentaires.",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-flashback-et-la-planification-en-deux-etapes.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "TAB-01",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "Réserve de planification, trois Hub",
+    "action": "Augmenter puis dépenser 1",
+    "attendu": "Réserve commune synchronisée, minimum zéro ; joueurs autorisés.",
+    "source": "docs/systems/shadowrun-anarchy/rules/monnaie-de-table.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "TAB-02",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "Réserve de menace, Hub joueur",
+    "action": "Essayer de modifier la menace",
+    "attendu": "Réserve visible, modification réservée au MJ.",
+    "source": "docs/systems/shadowrun-anarchy/rules/monnaie-de-table.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "TAB-03",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "Mode narration totale, menace 5 planification 4",
+    "action": "Arbitrer le dépassement",
+    "attendu": "Désastre collectif et menace remise à zéro par le MJ.",
+    "source": "docs/systems/shadowrun-anarchy/rules/monnaie-de-table.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "FIC-01",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Vif, fiche HTML intégrée moteur 23",
+    "action": "Ouvrir, changer pseudo et compétence, sauvegarder puis recharger",
+    "attendu": "Valeurs GM-OS et fiche HTML cohérentes via les 120 clés reliées.",
+    "source": "docs/systems/shadowrun-anarchy/rules/composition-de-la-fiche-de-personnage.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "FIC-02",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Sillage, capacité du moniteur ajustée",
+    "action": "Ouvrir la fiche HTML",
+    "attendu": "Capacité GM-OS conservée ; cinq champs GM-OS sans équivalent HTML restent documentés.",
+    "source": "docs/systems/shadowrun-anarchy/rules/composition-de-la-fiche-de-personnage.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "FIC-03",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Fin de mission",
+    "action": "Attribuer progression avec le livre",
+    "attendu": "Décision et saisie manuelles ; aucun gain automatique inventé.",
+    "source": "docs/systems/shadowrun-anarchy/rules/composition-de-la-fiche-de-personnage.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "TON-01",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Les quatre actes de 01",
+    "action": "Résoudre sans violence ni intrusion Matrice",
+    "attendu": "Copies, témoins et intervention manuelle permettent une issue complète.",
+    "source": "docs/systems/shadowrun-anarchy/rules/ton-registre-et-ambiance.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "INV-01",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "Pilote et corpus du lot",
+    "action": "Comparer les mécaniques ci-dessus à la fiche",
+    "attendu": "Aucune mécanique COC/RuneQuest/Degenesis transplantée ; règles manuelles identifiées.",
+    "source": "docs/systems/shadowrun-anarchy/rules/inventaire-des-mecaniques.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "CRIT-01",
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "precondition": "R00, succès élevés et 3 uns non réduits",
+    "action": "Résoudre au seuil 3",
+    "attendu": "Désastre : échec malgré les succès ; +2 Anarchy.",
+    "source": "docs/systems/shadowrun-anarchy/rules/degres-de-reussite-et-critiques.md",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "GM-01",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Trois joueurs existants et PJ sentinelles fictifs",
+    "action": "Importer 01, 02 puis 03",
+    "attendu": "Trois identités conservées avec leurs avatars et anciens PJ ; nouveaux PJ ajoutés, pas de doublon.",
+    "source": "src/modules/system/archive/NexusService.ts",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "GM-02",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Note ajoutée à 01 et labo 02 modifié",
+    "action": "Réimporter seulement 02 avec Remplacer",
+    "attendu": "02 réinitialisé ; note et PJ de 01 conservés.",
+    "source": "src/modules/system/archive/NexusService.ts",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "GM-03",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Trois Hub 360/768/1180",
+    "action": "Lancer chacun un test et sauvegarder une fiche",
+    "attendu": "Trois jets reçus par le MJ et valeurs conservées après rechargement.",
+    "source": "src/modules/system/archive/NexusService.ts",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "GM-04",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "SECRET_MJ_SHADOWRUN_RECETTE dans les champs privés fictifs",
+    "action": "Inspecter les trames de chaque Hub",
+    "attendu": "Zéro marqueur privé transmis ; toute fuite est un ÉCHEC GM-05.",
+    "source": "src/modules/system/archive/NexusService.ts",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  },
+  {
+    "id": "GM-05",
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "precondition": "Hub d’un joueur",
+    "action": "Tenter édition du PJ d’un autre joueur",
+    "attendu": "Accès refusé ; relever toute modification acceptée.",
+    "source": "src/modules/system/archive/NexusService.ts",
+    "preuvePrevue": "Capture, valeurs avant/après et contrôle après rechargement."
+  }
+]

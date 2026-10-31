@@ -1,0 +1,8 @@
+{
+  "date": "2026-11-01",
+  "commande": "npm.cmd run build",
+  "reussi": true,
+  "codeSortie": 0,
+  "lint": "8 sources ciblées : zéro erreur ; configuration .mts ignorée par ESLint",
+  "profil": "helper e2e/lancerGmOs.ts, profil/corpus/coffre/sauvegardes jetables, ports locaux et appareils désactivés"
+}

@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-01",
+  "capturesExaminees": true,
+  "captures": [
+    {
+      "fichier": "captures/01-campagne-importee.jpg",
+      "sha256": "458fbd62bbca1d00af63122c56410fd6def6441ca9dd860f5e57a7921aa205ca"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-1-360.jpg",
+      "sha256": "65a44e767179db93f777848613c4246345102ec110a3b9bb78244c00085a0228"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-2-768.jpg",
+      "sha256": "d400e3ee51f6c0db95613ffef42d888130f5c307e9c14c0429c8d1d658819f53"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-3-1180.jpg",
+      "sha256": "9b869dc59fb6bfe51f4c36ebc735c1e32c2d7761da3bb26ca263a553e4a2a8c8"
+    }
+  ],
+  "rapportElectronSHA256": "777fa6cd2a84b1670d3c1473711f7bc0aa242e39d8f367206938189bd6d4a09a",
+  "sourceE2ESHA256": "60bf83d1df0efa5e2d679f2dd11bf5104714f534a801b15094a92be8a1fded6a",
+  "observations": "Campagne importée et trois fiches HTML visibles, Logique 3/4/5 et Anarchy 3/2/2 ; réserves planification/menace présentes. Sur mobile, fiche ajustée à 49 %, zoom disponible. Certains longs textes sont tronqués par les zones fixes du modèle PDF ; les notes du PJ conservent les explications complètes.",
+  "autorisation": "David : Oui, lancer les essais isolés",
+  "confidentialite": "ÉCHEC GM-05, 12 chemins de secrets fictifs de séance ; assertion stricte conservée."
+}

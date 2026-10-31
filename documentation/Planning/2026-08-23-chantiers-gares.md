@@ -469,6 +469,12 @@ fiches HTML et rechargement aboutissent ; assertion finale stricte conservée en
 `e2e/campagneDeRecetteCoc.spec.ts`. Rapport `output/campagnes-tests/coc/verification-electron.json`,
 marqueurs fictifs uniquement ; correction applicative toujours séparée.
 
+**Shadowrun Anarchy confirme le 01/11** (§ 198) : douze chemins
+`payload.session.sessions[*].gmSecrets` reçus par les Hub 360/768/1180 ; imports,
+remplacement, jets, dépense Anarchy, fiches HTML et persistance aboutissent. Assertion finale
+stricte conservée en échec dans `e2e/campagneDeRecetteShadowrun.spec.ts` ; rapport
+`output/campagnes-tests/shadowrun-anarchy/verification-electron.json`, marqueurs fictifs uniquement.
+
 **Ouverte le 2026-09-12, à la demande de David** : *« lors de tes tests E2E, où consignes-tu les
 différents bugs que tu aurais découverts ? »* — la réponse honnête était **nulle part de
 systématique**. Un défaut corrigé obtient sa section numérotée ; un défaut *constaté et différé*
@@ -13262,10 +13268,36 @@ David : *« Shadowrun Anarchy, le livre de base est ici […] sran2_01anarchyv2_
 - **Vérifié** : règle (15, exemples du livre : Lightning, Iron et les gangers, la rafale d'Iron, Rolling Thunder), porte des dégâts (8, magasin compris : un coup compté une fois), panneau (5), contrôle du pilote (1) ; 881 essais des dés, de la Forge, du panneau, des correspondances et des fiches (l'attente des gabarits intégrés passée à 23) ; `corpusDerivable` et la Forge (548) ; manuel (26) ; `npx tsc -b`, eslint ; `npm run build` puis e2e des captures sur le seul pilote Shadowrun ; six captures relues.
 - **Reste** : l'essai de David — réimporter `corriges/SR_Anarchy_driver_gmos_finir.gmos-driver` avec **Remplacer** (libellés des compétences, atouts et équipement d'un personnage créé sur la fiche forgée sont à ressaisir) ; un test avec des dés de risque, puis Relancer ; une VD dans Combat-OS ; la Fiche du jeu, saisir puis Sauvegarder. À juger : les cases qui montrent la pire blessure (deux légères allumées devant une grave). Non automatisés : drain, surveillance de DIEU, dommages des véhicules, variantes « plus sombre ».
 
+### 198 · Campagnes de recette Shadowrun Anarchy — La Dernière Couleur — 01/11/2026
+
+David : « GM-OS Campagnes de test pour le jeu Shadowrun Anarchy ».
+
+- **Livré** : `output/campagnes-tests/shadowrun-anarchy/Shadowrun-Anarchy-Campagnes-de-recette.zip`,
+  trois archives, **22 nouveaux PJ** rattachés aux trois joueurs du relevé autorisé,
+  **64 cas humains**, matrice, CSV vierge, guide, rapports et reproduction.
+  Mission cyberpunk originale de quatre actes/douze scènes, six lieux, neuf PNJ et neuf indices,
+  trois rencontres optionnelles ; laboratoires moniteur/seuils et risque/Anarchy/Matrice.
+- **Vérifié** : **72 tests ciblés passent**, trois contrôles structurels du plugin acceptés ;
+  28 SVG + un JPEG et trois WAV décodés hors ligne, neuf rendus et quatre captures applicatives
+  examinés. Compilation/types et lint ciblé passent. Imports natifs, remplacement isolé de 02,
+  anciens PJ/avatars sentinelles conservés, trois Hub 360/768/1180, trois jets reçus, Anarchy −1,
+  fiche HTML reliée et Logique 3/4/5 sauvegardée puis persistante après rechargement.
+- **Échec conservé** : GM-05, douze chemins de secrets de séance fictifs dans les trames ;
+  assertion finale stricte en échec. Aucune correction applicative glissée dans le lot.
+- **Autorisation** : David, 01/11, « Oui, lancer les essais isolés ». Profil/corpus/coffre/
+  sauvegardes jetables, appareils désactivés ; aucun accès aux données personnelles.
+  Aucun `src/` ou `electron/` écrit, aucun paquet ajouté, aucun commit demandé.
+- **Reste** : importer 01 et jouer les 64 cas, juger les profils aux valeurs choisies, matériel,
+  partie complète et GM-06. Drain, rigging, planification et Matrice restent arbitrés ;
+  aucune création novice officielle ou module spécifique revendiqué.
+  [Livraison](2026-11-01-campagne-recette-shadowrun-anarchy.md) ;
+  [reprise](2026-11-01-etat-et-reprise-codex-campagnes-shadowrun-anarchy.md).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 134 | **Campagnes de recette — Shadowrun Anarchy** | § 198 ; mission et deux laboratoires, 22 PJ, 64 cas humains ; 72 tests, trois imports et Hub éprouvés — 01/11 | Importer 01-La-Derniere-Couleur.gmos puis suivre le cahier | GM-05 confirmé ; recette humaine et matériel |
 | 133 | **Shadowrun : Anarchy 2.0 fini — pilote 2.0.0** | § 197 ; corpus relu 19/19 (16 corrigées), réserve compétence + attribut à 5+, dés de risque doublés et complications, RR de la ligne, avantage borné, Anarchy (avantage, relance, gains) ; moniteur d'état contre les seuils de la fiche, aggravation ; fiche HTML au moteur 23 reliée (120/121) — 01/11 | Réimporter `corriges/SR_Anarchy_driver_gmos_finir` avec Remplacer ; un test à dés de risque et sa relance, une VD dans Combat-OS, la Fiche du jeu | L'essai de David |
 | 132 | **Shadowrun Anarchy — quatre ateliers Studio** | § 196 ; thème 0/0, fiche une page/121 clés, bannière 2400 × 600 ; identité révisée cyberpunk saturé 43/14 mots ; 51 tests, contrôles hors ligne — 31/10 | Suivre LIRE-MOI du lot Studio et prendre l’identité révisée dans output/identites/shadowrun-anarchy | Jugement de David ; fiche intégrée au moteur 23 et reliée, pilote fini au § 197 |
 | 131 | **Sommaire Shadowrun : Anarchy 2.0** | § 195 ; 327 entrées, deux pages/six colonnes vérifiées, Markdown plat livré — 31/10 | Utiliser le Markdown dans output/sommaires/shadowrun-anarchy | Rien pour la transcription |

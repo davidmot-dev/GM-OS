@@ -1,0 +1,266 @@
+[
+  {
+    "id": "JET",
+    "mecanique": "Réserve, seuils, spécialisation",
+    "source": "docs/systems/shadowrun-anarchy/rules/resolution-des-jets.md",
+    "support": "natif",
+    "casIds": [
+      "JET-01",
+      "JET-02",
+      "JET-03",
+      "JET-04",
+      "JET-05"
+    ],
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "limite": "Opposition et répétition arbitrées."
+  },
+  {
+    "id": "RIS",
+    "mecanique": "Dés de risque et RR",
+    "source": "docs/systems/shadowrun-anarchy/rules/la-prise-de-risque-des-de-risque-et-reduction-du-risque.md",
+    "support": "natif",
+    "casIds": [
+      "RIS-01",
+      "RIS-02",
+      "RIS-03",
+      "RIS-04",
+      "RIS-05",
+      "RIS-06"
+    ],
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "limite": "Complications narratives et échec forcé critique au MJ."
+  },
+  {
+    "id": "AVA",
+    "mecanique": "Avantage et opposition",
+    "source": "docs/systems/shadowrun-anarchy/rules/jets-opposes-aide-et-cooperation.md",
+    "support": "natif",
+    "casIds": [
+      "AVA-01",
+      "AVA-02",
+      "AVA-03",
+      "AVA-04",
+      "AVA-05"
+    ],
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "limite": "Opposition à égalité et aide qualifiée arbitrées."
+  },
+  {
+    "id": "ANA",
+    "mecanique": "Anarchy et Essence",
+    "source": "docs/systems/shadowrun-anarchy/rules/jauges-et-ressources-individuelles.md",
+    "support": "natif",
+    "casIds": [
+      "ANA-01",
+      "ANA-02",
+      "ANA-03",
+      "ANA-04",
+      "ANA-05",
+      "ANA-06",
+      "ANA-07"
+    ],
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "limite": "Gains narratifs et changement de scénario manuels ; maximum 99 du champ ne constitue pas une règle de jeu."
+  },
+  {
+    "id": "SAN",
+    "mecanique": "Seuils et aggravation",
+    "source": "docs/systems/shadowrun-anarchy/rules/sante-et-blessures.md",
+    "support": "natif",
+    "casIds": [
+      "SAN-01",
+      "SAN-02",
+      "SAN-03",
+      "SAN-04",
+      "SAN-05",
+      "SAN-06",
+      "SAN-07",
+      "SAN-08"
+    ],
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "limite": "Compteurs font foi ; position graphique indique la pire blessure."
+  },
+  {
+    "id": "DEG",
+    "mecanique": "Familles de dégâts et VD finale",
+    "source": "docs/systems/shadowrun-anarchy/rules/degats-et-types-de-degats.md",
+    "support": "natif",
+    "casIds": [
+      "DEG-01",
+      "DEG-02",
+      "DEG-03"
+    ],
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "limite": "Le MJ ajoute les succès nets à la VD avant saisie."
+  },
+  {
+    "id": "ETA",
+    "mecanique": "Effets et soins",
+    "source": "docs/systems/shadowrun-anarchy/rules/etats-et-conditions.md",
+    "support": "natif",
+    "casIds": [
+      "ETA-01",
+      "ETA-02",
+      "ETA-03"
+    ],
+    "archive": "02-Moniteur-et-Seuils.gmos",
+    "limite": "Durée des légères, stabilisation et éligibilité des soins au MJ."
+  },
+  {
+    "id": "TOUR",
+    "mecanique": "Narrations et combat",
+    "source": "docs/systems/shadowrun-anarchy/rules/initiative-et-deroulement-du-tour.md",
+    "support": "manuel",
+    "casIds": [
+      "TOUR-01",
+      "TOUR-02"
+    ],
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "limite": "Aucun jet d’initiative ni coût d’action automatique."
+  },
+  {
+    "id": "POR",
+    "mecanique": "Distances",
+    "source": "docs/systems/shadowrun-anarchy/rules/distances-et-portees.md",
+    "support": "manuel",
+    "casIds": [
+      "POR-01"
+    ],
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "limite": "Plans sans échelle et portée à annoncer."
+  },
+  {
+    "id": "POU",
+    "mecanique": "Poursuite",
+    "source": "docs/systems/shadowrun-anarchy/rules/poursuites.md",
+    "support": "manuel",
+    "casIds": [
+      "POU-01"
+    ],
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "limite": "Écart et conséquences suivis dans les notes."
+  },
+  {
+    "id": "DRA",
+    "mecanique": "Drain",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-drain-magique.md",
+    "support": "manuel",
+    "casIds": [
+      "DRA-01",
+      "DRA-02",
+      "DRA-03"
+    ],
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "limite": "Le logiciel ne mémorise pas l’origine drain et ne refuse pas ses soins."
+  },
+  {
+    "id": "MAT",
+    "mecanique": "Matrice et connexion",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-piratage-et-les-modes-de-connexion-a-la-matrice.md",
+    "support": "manuel",
+    "casIds": [
+      "MAT-01",
+      "MAT-02"
+    ],
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "limite": "Mode, risque minimum, seuil et surveillance de DIEU non automatisés."
+  },
+  {
+    "id": "RIG",
+    "mecanique": "Rigging",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-rigging-et-la-plongee-dans-les-vehicules.md",
+    "support": "manuel",
+    "casIds": [
+      "RIG-01",
+      "RIG-02"
+    ],
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "limite": "Aucun simulateur de flotte ; résistance véhicule contradictoire dans le livre, arbitrage explicite."
+  },
+  {
+    "id": "FLA",
+    "mecanique": "Flashback et préparation",
+    "source": "docs/systems/shadowrun-anarchy/rules/le-flashback-et-la-planification-en-deux-etapes.md",
+    "support": "manuel",
+    "casIds": [
+      "FLA-01",
+      "FLA-02"
+    ],
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "limite": "Réserves disponibles, transfert de succès et paiement justifié à la table."
+  },
+  {
+    "id": "TAB",
+    "mecanique": "Réserves collectives",
+    "source": "docs/systems/shadowrun-anarchy/rules/monnaie-de-table.md",
+    "support": "natif",
+    "casIds": [
+      "TAB-01",
+      "TAB-02",
+      "TAB-03"
+    ],
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "limite": "Menace seulement en narration partagée totale ; alimentation et désastre manuels."
+  },
+  {
+    "id": "FIC",
+    "mecanique": "Fiche et progression",
+    "source": "docs/systems/shadowrun-anarchy/rules/composition-de-la-fiche-de-personnage.md",
+    "support": "natif",
+    "casIds": [
+      "FIC-01",
+      "FIC-02",
+      "FIC-03"
+    ],
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "limite": "Profils aux valeurs choisies ; aucun budget novice ni catalogue officiel d’atouts revendiqué."
+  },
+  {
+    "id": "TON",
+    "mecanique": "Mission originale et limites",
+    "source": "docs/systems/shadowrun-anarchy/rules/ton-registre-et-ambiance.md",
+    "support": "manuel",
+    "casIds": [
+      "TON-01"
+    ],
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "limite": "Médias schématiques ; pas de portrait illustré."
+  },
+  {
+    "id": "INV",
+    "mecanique": "Inventaire des mécaniques",
+    "source": "docs/systems/shadowrun-anarchy/rules/inventaire-des-mecaniques.md",
+    "support": "à vérifier",
+    "casIds": [
+      "INV-01"
+    ],
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "limite": "Matrice de synthèse, pas toutes les combinaisons ni tous les atouts."
+  },
+  {
+    "id": "CRIT",
+    "mecanique": "Réussite exceptionnelle et complications",
+    "source": "docs/systems/shadowrun-anarchy/rules/degres-de-reussite-et-critiques.md",
+    "support": "natif",
+    "casIds": [
+      "CRIT-01"
+    ],
+    "archive": "03-Risque-Anarchy-et-Matrice.gmos",
+    "limite": "Échec forcé sur critique au MJ."
+  },
+  {
+    "id": "GM",
+    "mecanique": "Import, droits et secrets",
+    "source": "src/modules/system/archive/NexusService.ts",
+    "support": "à vérifier",
+    "casIds": [
+      "GM-01",
+      "GM-02",
+      "GM-03",
+      "GM-04",
+      "GM-05"
+    ],
+    "archive": "01-La-Derniere-Couleur.gmos",
+    "limite": "Essais applicatifs à autoriser ; GM-05 historique à revérifier."
+  }
+]

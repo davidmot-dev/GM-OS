@@ -1,0 +1,44 @@
+{
+  "outil": "GM-OS Campagnes de test / gmos_bundle.py verify",
+  "rapports": [
+    {
+      "fichier": "01-La-Derniere-Couleur.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "63da922511e76732f791ee77eddab3414f9faa63cc247d88a7ff248aceb8d33e",
+      "campaignId": "recette-shadowrun-campagne-couleur",
+      "players": 3,
+      "characters": 3,
+      "assets": 32
+    },
+    {
+      "fichier": "02-Moniteur-et-Seuils.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "9175e03f8079ccf6ae73ebcae2009eb6106168687b1c23bb6390387556ab2260",
+      "campaignId": "recette-shadowrun-sante-campagne-couleur",
+      "players": 3,
+      "characters": 9,
+      "assets": 32
+    },
+    {
+      "fichier": "03-Risque-Anarchy-et-Matrice.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "6907996c46f3fbce9af3a801205d6589a40add510c035eac4d5bb2c9e03003a1",
+      "campaignId": "recette-shadowrun-risques-campagne-couleur",
+      "players": 3,
+      "characters": 10,
+      "assets": 32
+    }
+  ]
+}

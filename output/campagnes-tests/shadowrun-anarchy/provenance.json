@@ -1,0 +1,185 @@
+{
+  "version": 1,
+  "genereLe": "2026-11-01T12:00:00.000Z",
+  "rattachement": {
+    "source": "Export Dirvers/RDD_campagne_gmos_1792944586235.gmos",
+    "sha256": "c99b8f87ecad7dee7104fcba1c6bd8a8639bd81c7b1c70ad2d4272cbd3c12b04",
+    "joueurs": [
+      {
+        "id": "p-1",
+        "realName": "Thomas D."
+      },
+      {
+        "id": "p-2",
+        "realName": "Marie C."
+      },
+      {
+        "id": "p-3",
+        "realName": "Lucas R."
+      }
+    ]
+  },
+  "pilote": {
+    "id": "custom-1793480750141",
+    "version": "2.0.0",
+    "source": "Export Dirvers/corriges/SR_Anarchy_driver_gmos_finir.gmos-driver",
+    "sha256": "a24f788278dbdd5b1276cfa300f3815acc3be8cd0f8edd7ac0e500c6e7a5e978"
+  },
+  "gabarit": {
+    "id": "tpl-1793480750142",
+    "champs": 125,
+    "html": "shadowrun-anarchy2-fr"
+  },
+  "archives": [
+    {
+      "fichier": "01-La-Derniere-Couleur.gmos",
+      "campagne": "recette-shadowrun-campagne-couleur",
+      "personnages": 3,
+      "medias": 32,
+      "sha256": "63da922511e76732f791ee77eddab3414f9faa63cc247d88a7ff248aceb8d33e"
+    },
+    {
+      "fichier": "02-Moniteur-et-Seuils.gmos",
+      "campagne": "recette-shadowrun-sante-campagne-couleur",
+      "personnages": 9,
+      "medias": 32,
+      "sha256": "9175e03f8079ccf6ae73ebcae2009eb6106168687b1c23bb6390387556ab2260"
+    },
+    {
+      "fichier": "03-Risque-Anarchy-et-Matrice.gmos",
+      "campagne": "recette-shadowrun-risques-campagne-couleur",
+      "personnages": 10,
+      "medias": 32,
+      "sha256": "6907996c46f3fbce9af3a801205d6589a40add510c035eac4d5bb2c9e03003a1"
+    }
+  ],
+  "modules": {
+    "specifiques": 0
+  },
+  "casDeRecette": 64,
+  "sourcesRegles": [
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/composition-de-la-fiche-de-personnage.md",
+      "sha256": "a55cd59737251d3f54a6207f16ec3a268ddf7c691d706e89dc530ececc17ea45"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/degats-et-types-de-degats.md",
+      "sha256": "98bdd097d4a2dab5da7450e79adbf3c68342c172f9dd4e1852cffda44090d40b"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/degres-de-reussite-et-critiques.md",
+      "sha256": "5d8dbc5e2e79873131eb1bb9b5ec89e9f7f5bbae2b5c6119619457a9fbce4d47"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/distances-et-portees.md",
+      "sha256": "2c71da9e72c2e4c055f3d6995308928eaf67bfd60a1eace936889182d8625307"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/etats-et-conditions.md",
+      "sha256": "d8f2986df6d2c7c6a6cb60fd03b0371a42bb8a41e45b54710b3d34aa47d1e5b0"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/initiative-et-deroulement-du-tour.md",
+      "sha256": "b7754752292725d86ad65629cb756ff0b57a77dd2b9faabbc9b45d708261ce7f"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/inventaire-des-mecaniques.md",
+      "sha256": "2a8773dfb28ebfe11dc548badf1697638a4c7472f4b4db74fe6d0e5b5e037bbf"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/jauges-et-ressources-individuelles.md",
+      "sha256": "c2e27e1a2a91ff3cb600c02f9688b70e64e35676e0be5252e6e974fda920cfa5"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/jets-opposes-aide-et-cooperation.md",
+      "sha256": "6ccab36eb6dc90a06f88a8986585977c7f9737bb402bdb484e018e970305525d"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/la-prise-de-risque-des-de-risque-et-reduction-du-risque.md",
+      "sha256": "b95063616d0a40b78cd985761cce7ffefa2c4a3fa693da34e9001098bc6b1320"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/le-drain-magique.md",
+      "sha256": "23ed3d1a67db4e9dda2dafadf34fe52aed0c6733a950ab157c466f428b172c1f"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/le-flashback-et-la-planification-en-deux-etapes.md",
+      "sha256": "689ce5ec595ad860118a55084f1e3ed6b4f8cdc40b4a2da31b47d3c4a117f3b7"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/le-piratage-et-les-modes-de-connexion-a-la-matrice.md",
+      "sha256": "4c18f3b73c032e218d7ba4f13a36f7abee9ad7c8a658c822a5ba53b8f8095fa8"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/le-rigging-et-la-plongee-dans-les-vehicules.md",
+      "sha256": "c347968abb864e711b5851dfb71c667a04cea7ea1b3c06f132df3199cb42c5f9"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/monnaie-de-table.md",
+      "sha256": "9604a5c240961e607f375d1963a79005d69b415bbdc2749a4c9a5f0f22488450"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/poursuites.md",
+      "sha256": "f015b13f4f2d6c94dc3cc851adca972bb825e73babb57ea2cc41bf713941f0e0"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/resolution-des-jets.md",
+      "sha256": "71b683f805bb8d552d575c2086daaca24d93fe08e659c906013c245db96cc72c"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/sante-et-blessures.md",
+      "sha256": "9d91761bc155068fdcd8b8481e7844651f0a3b1cbf1e76096cd606248fafcd98"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/rules/ton-registre-et-ambiance.md",
+      "sha256": "b13fb687ec8c410ade98382d49bcda27705db593504d6c53e43b7421470e8203"
+    }
+  ],
+  "generateur": "shadowrun.mjs v1",
+  "gmosVersion": "6.5.0",
+  "node": "v24.13.1",
+  "sourcesTechniques": [
+    {
+      "fichier": "src/modules/dice/systemes/shadowrun.ts",
+      "sha256": "662bb7522e4f2539330c855ffb59a1c3df6e38e265c3f69202ee3257d9d1151a"
+    },
+    {
+      "fichier": "src/modules/combat/logic/moniteurDeShadowrun.ts",
+      "sha256": "201ce13e618fa0364bbed4535870a58087f8fb66e554de249e24427921ad39f8"
+    },
+    {
+      "fichier": "src/modules/session/logic/HealthInterpreter.ts",
+      "sha256": "a72468e585d59b7f059cba6f5f139632a7c9c599619dae5ff1e0c0272836527a"
+    },
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/fiche/correspondance.json",
+      "sha256": "e92b009bb96a291d155e0f717fc79dfe4cfff679a3619a2b874cd363f9e94182"
+    },
+    {
+      "fichier": "docs/fiches/Shadowrun Anarchy/shadowrun-anarchy2-fiche-personnage-interactive.html",
+      "sha256": "73e68c6b500a08fa27bcac6ff80ba252d42a8669df91ed166e4af60119420aec"
+    },
+    {
+      "fichier": "docs/fiches/Character_Sheet_Manager.html",
+      "sha256": "5ca2cfd809aa13048dad5ef9f497f9a979effa122ebe9b881a7ea4d9a5b72c75"
+    },
+    {
+      "fichier": "documentation/User Guides/54-Jeu-Shadowrun-Anarchy.md",
+      "sha256": "99b488b30aa8fa15545adc74e0195ef4a44d4c25c30dccdc646a1c712040cfd0"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/cthulhu-hack-joueurs.json",
+      "sha256": "0032dc5a6bec43dbf515ade46ce461b71858a2a5e2cb81bb27f1380d95d912fa"
+    }
+  ],
+  "sourcesVisuelles": [
+    {
+      "fichier": "docs/systems/shadowrun-anarchy/Shadowrun Anarchy Band.jpg",
+      "sha256": "946e901e83391a3b06d69f64856b64c2c1e96624b0182c5733ccbb8227bf6b1d"
+    },
+    {
+      "fichier": "output/identites/shadowrun-anarchy/identite-visuelle.md",
+      "sha256": "33654f89424e56ad386b2633e38b221041e4c35b08b1d9c9dd24d52a35272131"
+    }
+  ]
+}
