@@ -30,6 +30,7 @@ import { comparerLInitiative, departager } from './logic/departageDInitiative';
 import { estHorsDeCombat, santeDeDepart, valeurDuChamp } from './logic/SanteDuCombattant';
 import { DiceEngine } from '../dice/DiceEngine';
 import { actionsDuRound, lancerDegenesis, reserveDeDegenesis } from '../dice/systemes/degenesis';
+import { malusDeSante } from '../dice/systemes/coc';
 // `logic/trame` ne connaît que des types : l'importer ne ferme aucun cycle,
 // contrairement au store de séance qui reste atteint par le global.
 import { etatDeLaScene } from '../session/logic/trame';
@@ -78,7 +79,8 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
 
 /** Le pilote actif, lu par le global — un import direct fermerait un cycle. */
 function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'asc' | 'desc'; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien;
-    initiativeEnReserve?: GameDriver['combat']['initiativeEnReserve']; pistesDeSante?: GameDriver['combat']['pistesDeSante'] } } | undefined {
+    initiativeEnReserve?: GameDriver['combat']['initiativeEnReserve']; pistesDeSante?: GameDriver['combat']['pistesDeSante'];
+    encaissement?: GameDriver['combat']['encaissement'] }; jet?: { coc?: { des?: 'd20' | '3d6' } } } | undefined {
     try {
         return (window as unknown as {
             useSessionOSStore?: { getState: () => { getActiveDriver?: () => ReturnType<typeof piloteActif> } };
@@ -1082,6 +1084,10 @@ export const useCombatStore = create<CombatState>()(
                 const enReserve = piloteActif()?.combat?.initiativeEnReserve?.mecanique === 'degenesis';
                 const champDesTraumatismes = piloteActif()?.combat?.pistesDeSante?.traumatismes;
                 const actionsDegenesis: string[] = [];
+                // COC (2026-10-31) : l'état de santé retire son malus à l'Init. (p. 71) — Blessé, −5.
+                const encaissementCoc = piloteActif()?.combat?.encaissement;
+                const desCoc = piloteActif()?.jet?.coc?.des ?? 'd20';
+                const malusCoc: string[] = [];
                 set((state) => {
                     const combatants = state.combatants;
                     if (combatants.length === 0) {
@@ -1125,6 +1131,8 @@ export const useCombatStore = create<CombatState>()(
                                 resolver,
                                 diceMax
                             });
+                            const malus = encaissementCoc?.mecanique === 'coc' && resolver ? malusDeSante(resolver(encaissementCoc.sante, c), desCoc) : 0;
+                            if (malus) { rolled -= malus; malusCoc.push(`${c.name} −${malus}`); }
                         } else {
                             rolled = Math.floor(Math.random() * diceMax) + 1;
                         }
@@ -1151,7 +1159,8 @@ export const useCombatStore = create<CombatState>()(
                         type: 'COMBAT',
                         title: 'Combat : Initiative',
                         content: `Round ${state.round} - L'initiative a été tirée pour ${newCombatants.length} combattants.`
-                            + (actionsDegenesis.length ? ` Succès de PSY+Réactivité : ${actionsDegenesis.join(', ')}.` : ''),
+                            + (actionsDegenesis.length ? ` Succès de PSY+Réactivité : ${actionsDegenesis.join(', ')}.` : '')
+                            + (malusCoc.length ? ` État de santé : ${malusCoc.join(', ')}.` : ''),
                         sceneId: state.sceneId ?? undefined,
                         metadata: { round: state.round, count: newCombatants.length }
                     });

@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-31",
+  "jeu": "Chroniques Oubliées Contemporain, deuxième édition",
+  "templateId": "coc2-fr",
+  "pdf": {
+    "fichier": "docs/Reference/COC/COC2_01_Livre_de_Regles_Fiche PJ.pdf",
+    "sha256": "633ba29927a6bd152a45bb3d4530dbd857fb8267da7f7f9c87143a3e2fc86e9a"
+  },
+  "html": {
+    "fichier": "docs/fiches/COC/coc2-fiche-personnage-interactive.html",
+    "sha256": "9a93eca39a85e72d46234448bad9cf09ae0b3120bee02ecd8ac8eddb78b46488"
+  },
+  "sources": [
+    {
+      "fichier": "outils/coc/construire-fiche.mjs",
+      "sha256": "35ed894f0badef96357380cb360ed1ad2f3de43972cccc2b4fe9042bfd20bce0"
+    },
+    {
+      "fichier": "outils/coc/verifier-fiche.mjs",
+      "sha256": "a962f25a0bea228f06c94d5501690dc11e49b73427da394af308d0e366a0bd0c"
+    },
+    {
+      "fichier": "outils/coc/fiche/runtime.js",
+      "sha256": "2295e1418f73a5cdd282f06f4c0aff84a894e43b12bb619f04f9c1a812679765"
+    },
+    {
+      "fichier": "outils/coc/fiche/interface.css",
+      "sha256": "2a9b195931952ffe5c98454eba96623ff0a41f9a9b3841014aa4882e02cfecfc"
+    },
+    {
+      "fichier": "outils/coc/fiche/champs.css",
+      "sha256": "aacb66c657201bb1f70f1bbff864cd63d26c763d360b9e6392bfd60116c33356"
+    }
+  ],
+  "fonds": [
+    {
+      "fichier": "source-1.png",
+      "sha256": "0db111a5d0f575decd91a9e353739ff7e0636455d8957ceac0ca4154c8485fb6"
+    },
+    {
+      "fichier": "source-2.png",
+      "sha256": "74baa9069ec1014eba4be639f405a73bef822c7cdee1ecda6a1dfd2aacd8164a"
+    }
+  ],
+  "verification": {
+    "pages": 2,
+    "zones": 189,
+    "cles": 151,
+    "testsReussis": 40,
+    "capturesExaminees": true,
+    "erreursValidateur": 0,
+    "avertissementsValidateur": 2
+  },
+  "integration": "Modèle non installé dans le moteur permanent ; aucune correspondance de pilote créée."
+}

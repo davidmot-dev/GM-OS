@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "genereLe": "2026-10-31T12:00:00.000Z",
+  "rattachement": {
+    "source": "Export Dirvers/RDD_campagne_gmos_1792944586235.gmos",
+    "sha256": "c99b8f87ecad7dee7104fcba1c6bd8a8639bd81c7b1c70ad2d4272cbd3c12b04",
+    "joueurs": [
+      {
+        "id": "p-1",
+        "realName": "Thomas D."
+      },
+      {
+        "id": "p-2",
+        "realName": "Marie C."
+      },
+      {
+        "id": "p-3",
+        "realName": "Lucas R."
+      }
+    ]
+  },
+  "pilote": {
+    "id": "custom-1793122664880",
+    "version": "2.0.0",
+    "source": "Export Dirvers/corriges/coc/COC_driver_gmos_finir.gmos-driver",
+    "sha256": "480a5274ba6df0d1bed6a9f325b2e92fe0826f65e6f26de23e6c5723159659e9"
+  },
+  "gabarit": {
+    "id": "tpl-1793122664880",
+    "champs": 162,
+    "html": "coc2-fr"
+  },
+  "archives": [
+    {
+      "fichier": "01-Les-Minutes-de-Verre.gmos",
+      "campagne": "recette-coc-campagne-minutes",
+      "personnages": 3,
+      "medias": 40,
+      "sha256": "24e4fe9176ee62fb39174326328275fda1058c447ed870af5ad6e94645675842"
+    },
+    {
+      "fichier": "02-Sante-et-Etats.gmos",
+      "campagne": "recette-coc-sante-campagne-minutes",
+      "personnages": 9,
+      "medias": 40,
+      "sha256": "6606b5ddef665cf449d1a02f5d4869bd4aee1fa6f383a171c494f43814d4c9b0"
+    },
+    {
+      "fichier": "03-Heros-Blues-et-Tests.gmos",
+      "campagne": "recette-coc-evolution-campagne-minutes",
+      "personnages": 12,
+      "medias": 40,
+      "sha256": "7f7a672fde88b57d3f5a696b9c2305aefcbc4d7d2652383c81e2a178e01bbe6f"
+    }
+  ],
+  "modules": {
+    "specifiques": 0
+  },
+  "casDeRecette": 70,
+  "sourcesRegles": [
+    {
+      "fichier": "docs/systems/coc/rules/composition-de-la-fiche-de-personnage.md",
+      "sha256": "f4f9b5d55cdc0e86ea5bf113e2860884c43b2279cb1b1c50d03598b9794f59e0"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/degats-et-types-de-degats.md",
+      "sha256": "8128d05cf82d52f1c4b8e0302e0dc041be69cbce5873a2237814d6898e9540e7"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/degres-de-reussite-et-critiques.md",
+      "sha256": "38f4811ea9257a52e963bdf33f5e857e0aa3255a16083aa037118a068a019790"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/distances-et-portees.md",
+      "sha256": "71c82974febb050d7338ef537d5b8f4842af632e721ffe1b75da1e26fa7bdca2"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/environnement-et-dangers.md",
+      "sha256": "f9602067ed30a56a705851a87f052f70c56e5b21c7b89bdaa84c05f69be925a7"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/etats-et-conditions.md",
+      "sha256": "1b71f8858a7cc1610f22d29e9f6bb99f66ba67a5e8ffcf7cef656a49ea4d6d23"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/initiative-et-deroulement-du-tour.md",
+      "sha256": "69c86ad3b5294619ec70100401dc148b602afbcfff92441651bf661600838df4"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/inventaire-des-mecaniques.md",
+      "sha256": "65b933984249b361f8360daeb3e14f1b0645d6e2e3861fc108e4660f75f80800"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/jauges-et-ressources-individuelles.md",
+      "sha256": "e02b50dcafbb7229072a266c183fc5f834e521d2190365c465fb9c3a7afa8351"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/jets-opposes-aide-et-cooperation.md",
+      "sha256": "1512762bf55dcbc44ce7a4a32c408cf1746eef946e7967a630ea5ee82a8d2390"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/l-investigation-par-evidences-et-recherche-a-seuils-multiples.md",
+      "sha256": "bb9f511b8ff54723b28e47bef0d44c9b0bcc0ef727059a481364e7819a5606ca"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/la-gestion-simplifiee-des-adversaires-par-roles-et-bandes-de-sbires.md",
+      "sha256": "f8c391e94f7cf6c18a5ab3e679895f7392ca5fa2a81d93fbd6c17872cdc538e4"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/le-systeme-d-interactions-sociales-par-approches-et-sentiments.md",
+      "sha256": "f4ef5770917c2b6829ea32c30ee4849d4754f86894eae55c8fec8fc785ada0fe"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/les-voies-et-rangs-de-capacites.md",
+      "sha256": "00eb3053e31cdad5614177f3fb45c873f4f8146c284bf5470cce363506939c94"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/poursuites.md",
+      "sha256": "8831242f52ba6db64ca8c33389aa2f5ee0bcc102f5efa4b55f1e9dfc8ed923a3"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/resolution-des-jets.md",
+      "sha256": "aa9cb311ee124fc206f8b9ef7ea19b0fc4d5218dcb46a5dca25eb9ad3ba1ae0c"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/sante-et-blessures.md",
+      "sha256": "1c1320cbf433ad4928b7e70dea908e308aff4a4c51d44b8d7afb90edf355d870"
+    },
+    {
+      "fichier": "docs/systems/coc/rules/ton-registre-et-ambiance.md",
+      "sha256": "a766cd042fb641b99417ac15b5b7b1aab37b38f343888e4a8582415a9795918a"
+    }
+  ]
+}

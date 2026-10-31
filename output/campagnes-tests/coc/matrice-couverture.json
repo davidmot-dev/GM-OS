@@ -1,0 +1,162 @@
+[
+  {
+    "id": "GM",
+    "mecanique": "Import, joueurs et droits",
+    "source": "Types Nexus v1, NexusService, e2e/lancerGmOs.ts ; relevé autorisé cthulhu-hack-joueurs.json",
+    "support": "natif",
+    "casIds": [
+      "GM-01",
+      "GM-02",
+      "GM-03",
+      "GM-04",
+      "GM-05",
+      "GM-06",
+      "GM-07"
+    ],
+    "archive": "01-Les-Minutes-de-Verre.gmos",
+    "limite": "Confidentialité et droits à éprouver ; aucun secret réel dans les preuves."
+  },
+  {
+    "id": "AV",
+    "mecanique": "Enquête, Trame et médias",
+    "source": "coc-scenario.mjs (fiction originale) ; corpus l-investigation-par-evidences-et-recherche-a-seuils-multiples.md, livre p. 67-68",
+    "support": "natif",
+    "casIds": [
+      "AV-01",
+      "AV-02",
+      "AV-03",
+      "AV-04",
+      "AV-05",
+      "AV-06",
+      "AV-07",
+      "AV-08"
+    ],
+    "archive": "01-Les-Minutes-de-Verre.gmos",
+    "limite": "Évidences sans jet ; les plans sont schématiques et les portraits sont des cartouches documentaires."
+  },
+  {
+    "id": "JE",
+    "mecanique": "Tests d20, conditions et critiques",
+    "source": "Livre COC2 p. 56-61, 87-88 ; rules/resolution-des-jets.md ; coc.ts",
+    "support": "natif",
+    "casIds": [
+      "JE-01",
+      "JE-02",
+      "JE-03",
+      "JE-04",
+      "JE-05",
+      "JE-06",
+      "JE-07",
+      "JE-08",
+      "JE-09",
+      "JE-10",
+      "JE-11",
+      "JE-12"
+    ],
+    "archive": "03-Heros-Blues-et-Tests.gmos",
+    "limite": "Dés préparés dans les cas chiffrés ; les lancers UI sont aléatoires. Prendre son temps et impossible restent soumis au MJ."
+  },
+  {
+    "id": "SA",
+    "mecanique": "Santé, RD et seuils",
+    "source": "Livre COC2 p. 71-73, 88 ; rules/sante-et-blessures.md ; encaissementDeCoc.ts ; HealthInterpreter.ts",
+    "support": "natif",
+    "casIds": [
+      "SA-01",
+      "SA-02",
+      "SA-03",
+      "SA-04",
+      "SA-05",
+      "SA-06",
+      "SA-07",
+      "SA-08",
+      "SA-09",
+      "SA-10",
+      "SA-11",
+      "SA-12"
+    ],
+    "archive": "02-Sante-et-Etats.gmos",
+    "limite": "Actions perdues, tests CON, séquelles, guérison hebdomadaire et DEF corrigée sont suivis par le MJ ; ne pas confondre cases subies et PV restants."
+  },
+  {
+    "id": "ET",
+    "mecanique": "États préjudiciables et arbitrages",
+    "source": "Livre p. 63-65, 85-86 ; rules/etats-et-conditions.md ; initiative-et-deroulement-du-tour.md",
+    "support": "manuel",
+    "casIds": [
+      "ET-01",
+      "ET-02",
+      "ET-03",
+      "ET-04"
+    ],
+    "archive": "02-Sante-et-Etats.gmos",
+    "limite": "Le panneau applique l’état choisi ; restrictions d’action, Init./DEF et déplacements supplémentaires restent au MJ."
+  },
+  {
+    "id": "HE",
+    "mecanique": "Échelle du héros",
+    "source": "Livre p. 80-82 ; rules/jauges-et-ressources-individuelles.md ; bonusDuHeros/ajouterLeHeros",
+    "support": "natif",
+    "casIds": [
+      "HE-01",
+      "HE-02",
+      "HE-03",
+      "HE-04",
+      "HE-05",
+      "HE-06",
+      "HE-07",
+      "HE-08"
+    ],
+    "archive": "03-Heros-Blues-et-Tests.gmos",
+    "limite": "Au test seulement dans le panneau ; Init., DEF, DM et mouvement suivent une dépense arbitrée. Une réussite grâce au héros ne regagne pas un échelon."
+  },
+  {
+    "id": "BL",
+    "mecanique": "Échelle du blues",
+    "source": "Livre p. 84 ; rules/jauges-et-ressources-individuelles.md ; preparerCoc",
+    "support": "natif",
+    "casIds": [
+      "BL-01",
+      "BL-02",
+      "BL-03",
+      "BL-04",
+      "BL-05"
+    ],
+    "archive": "03-Heros-Blues-et-Tests.gmos",
+    "limite": "Un seul modèle d’évolution par PJ ; augmentation, régression et conséquences fictionnelles décidées à la table."
+  },
+  {
+    "id": "MA",
+    "mecanique": "Enquête, opposition, social, Voies et dangers",
+    "source": "Corpus COC2 : investigation p.67-68, opposition p.59-61, social p.65-67, Voies p.28-29, poursuites p.97-107, PNJ p.108-111, dangers p.61-65",
+    "support": "manuel",
+    "casIds": [
+      "MA-01",
+      "MA-02",
+      "MA-03",
+      "MA-04",
+      "MA-05",
+      "MA-06",
+      "MA-07",
+      "MA-08",
+      "MA-09",
+      "MA-10"
+    ],
+    "archive": "01-Les-Minutes-de-Verre.gmos",
+    "limite": "Les feuilles n’inventent pas de modules. Capacités officielles non extraites du seul corpus de synthèse ; compléter avec le livre pour une création réglementaire."
+  },
+  {
+    "id": "OP",
+    "mecanique": "Option 3d6 séparée",
+    "source": "Livre p.60-61 ; pilote COC_driver_gmos_finir_3d6.gmos-driver ; coc.ts ; manuel 54-Jeu-COC.md",
+    "support": "à vérifier",
+    "casIds": [
+      "OP-01",
+      "OP-02",
+      "OP-03",
+      "OP-04"
+    ],
+    "archive": "03-Heros-Blues-et-Tests.gmos",
+    "limite": "Même ID que le d20 : remplacement volontaire hors partie puis retour au d20. Critiques18/3 = convention GM-OS signalée, non chiffrée dans le livre."
+  }
+]

@@ -1,0 +1,44 @@
+{
+  "outil": "GM-OS Campagnes de test / gmos_bundle.py verify",
+  "rapports": [
+    {
+      "fichier": "01-Les-Minutes-de-Verre.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "24e4fe9176ee62fb39174326328275fda1058c447ed870af5ad6e94645675842",
+      "campaignId": "recette-coc-campagne-minutes",
+      "players": 3,
+      "characters": 3,
+      "assets": 40
+    },
+    {
+      "fichier": "02-Sante-et-Etats.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "6606b5ddef665cf449d1a02f5d4869bd4aee1fa6f383a171c494f43814d4c9b0",
+      "campaignId": "recette-coc-sante-campagne-minutes",
+      "players": 3,
+      "characters": 9,
+      "assets": 40
+    },
+    {
+      "fichier": "03-Heros-Blues-et-Tests.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "7f7a672fde88b57d3f5a696b9c2305aefcbc4d7d2652383c81e2a178e01bbe6f",
+      "campaignId": "recette-coc-evolution-campagne-minutes",
+      "players": 3,
+      "characters": 12,
+      "assets": 40
+    }
+  ]
+}

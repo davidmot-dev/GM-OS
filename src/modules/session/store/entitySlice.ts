@@ -16,11 +16,12 @@ import { projeterSanteVoyageur } from '../logic/santeDuVoyageur';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 // import { useJournalStore } from '../../journal/useJournalStore'; // Broken by circular dependency
-import { HealthInterpreter, listeOuVide } from '../logic/HealthInterpreter';
+import { HealthInterpreter, casesAligneesSurLaFiche, listeOuVide } from '../logic/HealthInterpreter';
 import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
 import { dommagesDeTorg, ajouterLeChoc, direLesDommages } from '../../combat/logic/dommagesDeTorg';
 import { coupLocaliseSelonLeJeu } from '../../combat/logic/coupsDeRuneQuest';
 import { pistesDeSanteSelonLeJeu } from '../../combat/logic/pistesDeDegenesis';
+import { encaissementSelonLeJeu } from '../../combat/logic/encaissementDeCoc';
 import { cosmsDesIds, idsDesCosmsCourants, loiEnVigueur } from '../logic/cosmsCourants';
 import { champDeSantePrincipale, maximumDeLaJauge, santeAlignee, santePrincipaleDeLaFiche, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import { santePrincipaleDuPersonnage } from '../logic/santePrincipale';
@@ -892,6 +893,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             // Degenesis (2026-10-30) : Blessures superficielles puis Traumatismes ; l'attaque mentale va à l'Égo.
             const pistes = pistesDeSanteSelonLeJeu(pilote?.combat?.pistesDeSante, fiche, impactSaisi, pilote?.combat?.statsToTrack);
             if (pistes) return pistes;
+            // COC (2026-10-31) : la RD retirée, la mort instantanée et les états franchis de l'échelle de santé.
+            const encaisse = encaissementSelonLeJeu(pilote?.combat?.encaissement, fiche, impactSaisi);
+            if (encaisse) return encaisse;
             const regle = pilote?.combat?.dommages;
             if (!regle || regle.mecanique !== 'torg' || impactSaisi.isRecovery) return null;
             const resistance = valeurDuChamp(fiche, regle.resistance) ?? 0;
@@ -943,7 +947,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
 
             const xeno=piloteOuvert?.combat.alien?lireLeCombatAlien(entity.sheetData??{}).xenomorphe:undefined;
             const humainAlien = !!piloteOuvert?.combat.alien && (!!xeno || lireLeCombatAlien(entity.sheetData ?? {}).humain || estUnAndroide(piloteOuvert.combat.alien, entity.sheetData ?? {}));
-            const baseHealth = humainAlien ? santeAlignee(entity.healthSystem || HealthInterpreter.createDefault('hp'),santePrincipaleDeLaFiche(piloteOuvert,xeno?.etat==='ruse'?{...entity.sheetData,[piloteOuvert!.combat.alien!.sante]:1}:entity.sheetData)) ?? HealthInterpreter.createDefault('hp') : entity.healthSystem || HealthInterpreter.createDefault('hp');
+            const baseHealth = humainAlien ? santeAlignee(entity.healthSystem || HealthInterpreter.createDefault('hp'),santePrincipaleDeLaFiche(piloteOuvert,xeno?.etat==='ruse'?{...entity.sheetData,[piloteOuvert!.combat.alien!.sante]:1}:entity.sheetData)) ?? HealthInterpreter.createDefault('hp') : casesAligneesSurLaFiche(entity.healthSystem, piloteOuvert?.combat, entity.sheetData) || HealthInterpreter.createDefault('hp');
             const updatedHealth = HealthInterpreter.calculateNextState(baseHealth, impact);
             const newHp = (updatedHealth.data.current as number) ?? entity.hp;
             
@@ -1012,7 +1016,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             const actuel = get().players.find(p => p.id === player.id)?.characters.find(c => c.id === targetId) ?? character;
             const principale = santePrincipaleDuPersonnage(actuel, piloteDuPJ, campaigns,
                 (get() as unknown as { customSheetTemplates?: SheetTemplate[] }).customSheetTemplates);
-            const baseHealth = santeAlignee(actuel.healthSystem || character.healthSystem || HealthInterpreter.createDefault('hp'), principale)
+            // Les cases d'un jeu qui en compte suivent la fiche, même nées sous une autre santé (COC, 2026-10-31).
+            const baseHealth = santeAlignee(casesAligneesSurLaFiche(actuel.healthSystem || character.healthSystem, piloteDuPJ?.combat, actuel.sheetData)
+                || HealthInterpreter.createDefault('hp'), principale)
                 ?? HealthInterpreter.createDefault('hp');
             const updatedHealth = HealthInterpreter.calculateNextState(baseHealth, impact);
             const newHp = (updatedHealth.data.current as number) ?? character.hp;

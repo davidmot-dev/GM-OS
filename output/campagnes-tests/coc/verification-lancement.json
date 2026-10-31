@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-31",
+  "build": {
+    "commande": "npm.cmd run build",
+    "sortie": 0,
+    "types": "tsc -b inclus",
+    "avertissements": [
+      "Vite : taille de chunks et imports statiques/dynamiques",
+      "Browserslist : données anciennes"
+    ]
+  },
+  "lint": {
+    "sortie": 0,
+    "erreurs": 0,
+    "avertissement": "vitest-coc.config.mts hors configuration ESLint"
+  },
+  "recetteApplicative": "EXÉCUTÉE EN INSTANCE JETABLE ; parcours fonctionnel réussi, assertion de confidentialité GM-05 en ÉCHEC (12 chemins).",
+  "fichiers": [
+    {
+      "fichier": "dist/index.html",
+      "sha256": "6ed5f01cb45df4b643b2974df43dee29afec7d90d4233bf476199491371e51dc"
+    },
+    {
+      "fichier": "dist-electron/main.js",
+      "sha256": "f6c87db604cfb28461f47b80ba9b4f40d9a7540dac76da06f838981ef3087c75"
+    },
+    {
+      "fichier": "dist-electron/preload.mjs",
+      "sha256": "e92119ad6459cae0149a5fdb9120ee4be484de3d39b154cf30416a262b73e83a"
+    },
+    {
+      "fichier": "e2e/campagneDeRecetteCoc.spec.ts",
+      "sha256": "8e263d1513adac67c8f8e8c27b969a0a464fbbab8f9c151146ed5f581d71dbad"
+    }
+  ],
+  "autorisation": {
+    "date": "2026-10-31",
+    "reponse": "Oui, lancer les essais isolés",
+    "portee": "Services locaux et données jetables, sans lecture des données personnelles."
+  },
+  "tentatives": [
+    {
+      "mode": "bac à sable",
+      "commande": "npx.cmd playwright test e2e/campagneDeRecetteCoc.spec.ts --reporter=list --output=output/campagnes-tests/coc/traces-electron",
+      "sortie": 1,
+      "dureeTestSecondes": 3.3,
+      "resultat": "Avant import : electron-log-preload.js EPERM lstat C:/Users/david ; GPU process inaccessible ; fermeture de la fenêtre.",
+      "profilJetable": "gmos-e2e-Q8fv5Y",
+      "aucunImportEffectue": true
+    },
+    {
+      "mode": "relance hors bac à sable",
+      "resultat": "NON EXÉCUTÉE : refus de la revue automatique",
+      "motif": "La relance peut techniquement accéder au profil utilisateur ; l’accord COC vise les essais isolés et ne couvre pas cette permission plus large.",
+      "suite": "Autorisation explicite plus large demandée ; aucun contournement exécuté."
+    },
+    {
+      "mode": "hors bac à sable autorisé explicitement",
+      "resultat": "Parcours achevé, imports/remplacement/sentinelles/trois Hub/fiches/jets/Héros/rechargement réussis. Test en échec uniquement GM-05 : douze chemins gmSecrets de séance transmis.",
+      "dureeTestSecondes": 52,
+      "sortie": 1
+    }
+  ],
+  "autorisationRelance": {
+    "date": "2026-10-31",
+    "reponse": "Oui, autoriser cette relance hors bac à sable",
+    "portee": "Profils/corpus/sauvegardes jetables ; interdiction de lire les données personnelles maintenue.",
+    "revue": "Nouvelle demande d’escalade acceptée après l’accord explicite."
+  },
+  "nettoyagePremiereTentative": {
+    "processus53304": "absent après fermeture",
+    "profil": "gmos-e2e-Q8fv5Y absent après fermeture"
+  },
+  "nettoyageFinal": {
+    "fermeture": "application.close et retrait du profil par le helper, finally exécuté",
+    "ports": "aucun service en écoute sur les ports de test4100/4101 après le parcours"
+  }
+}

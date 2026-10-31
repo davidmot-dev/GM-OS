@@ -539,6 +539,13 @@ export interface DescripteurDeJet {
      */
     degenesis?: import('./systemes/degenesis').RegleDeDegenesis;
     /**
+     * **Chroniques Oubliées Contemporain** — 2026-10-31 (`systemes/coc.ts`) : le d20 (ou
+     * l'option du 3d6) s'ajoute à la caractéristique retenue et aux modificateurs du livre,
+     * contre une difficulté de 5 à 25 ou la DEF de la cible ; réussite critique sur 20,
+     * échec critique sur 1, dé bonus et dé malus. Le panneau ne compte aucune réussite par dé.
+     */
+    coc?: import('./systemes/coc').RegleDeCoc;
+    /**
      * **Star Trek Adventures, jusqu'au bout** — 2026-10-23 (`systemes/starTrekRegles.ts`) :
      * au jet, la nature de la tâche, la marge de complication, l'opposition, les
      * assistants et l'aide du vaisseau, la Détermination ; après, les complications
@@ -1551,8 +1558,8 @@ export function preparerLeJet(
         */
         // Torg compare un total à un Niveau de Difficulté : il ne compte pas de réussites.
         // NOC compare aussi un niveau à la difficulté : sa difficulté n'est pas un compte de réussites.
-        // Barbarians compare une somme à 9 : une réussite ou aucune.
-        reussitesRequises: descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians ? 1 : bornes ? difficulte : 1,
+        // Barbarians compare une somme à 9, COC un d20 + caractéristique à la difficulté : une réussite ou aucune.
+        reussitesRequises: descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians || descripteur.coc ? 1 : bornes ? difficulte : 1,
         /*
           Une poignée échelonnée n'a pas UNE taille. On rend celle du plus gros
           dé, pour que les écrans qui écrivent « 2d10 » disent quelque chose de

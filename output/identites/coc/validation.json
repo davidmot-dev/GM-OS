@@ -1,0 +1,36 @@
+{
+  "valid": true,
+  "values": {
+    "STYLE": {
+      "text": "painterly digital illustration, semi-realistic graphic novel rendering, angular shapes, faceted shading, selective dark contours, crisp silhouettes, bold value grouping, violet shadows, muted teal midtones, warm amber accents, directional light, restrained rim highlights, visible brushwork, matte surfaces, cinematic depth, subtle grain, energetic pulp mood",
+      "words": 43,
+      "max": 60
+    },
+    "AVOID": {
+      "text": "photorealism, glossy 3D, anime, chibi, flat vector art, neon overload, readable text, logos",
+      "words": 13,
+      "max": 15
+    }
+  },
+  "errors": [],
+  "date": "2026-10-31",
+  "relectureSemantique": true,
+  "fichier": {
+    "chemin": "output/identites/coc/identite-visuelle.md",
+    "sha256": "1530924372b23a0085e963678c5fa433e0ebab046250fd7cd51f8bc7231628ba"
+  },
+  "references": [
+    {
+      "fichier": "docs/Reference/COC/Screenshot 2026-10-31 102732.png",
+      "sha256": "5f294c7b3665a8d1787cd660cbd2af187b78a320fc84ea670f4107efc5a82481"
+    },
+    {
+      "fichier": "docs/Reference/COC/Screenshot 2026-10-31 102808.png",
+      "sha256": "9fb1a057ada340b4492e1503f25c5d0be29912f5c821354af985ddf9b2062bc2"
+    },
+    {
+      "fichier": "docs/Reference/COC/Screenshot 2026-10-31 102843.png",
+      "sha256": "194bd0fd8bf12149ef964e99d3abd229bbcbd971e447c56fcb9929e9f8f760b5"
+    }
+  ]
+}

@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« INVESTIGATION » ; « UNE AFFAIRE D’ÉVIDENCE » ; « TESTS D’INVESTIGATION » ; « DURÉE D’UNE RECHERCHE »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: b95f0ab8
 ---
 
@@ -61,3 +61,5 @@ En situation calme, un personnage peut prendre son temps pour retenir un résult
 
 ## Non couvert
 rien
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; conforme (p. 59-60, 67-68).*

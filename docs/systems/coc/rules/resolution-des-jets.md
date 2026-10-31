@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« RÈGLE DE JEU ESSENTIELLE: LE TEST » ; « RÉSOLUTION D'UN TEST » ; « DÉTERMINER LA DIFFICULTÉ » ; « RÉUSSITE ET ÉCHEC CRITIQUE » ; « DÉ BONUS ET DÉ MALUS » ; « PRENDRE SON TEMPS » ; « RÉSOUDRE DES ACTIONS EN MODE RAPIDE ET FURIEUX! » ; « TESTS EN OPPOSITION » ; « TESTS EN COOPÉRATION » ; « SÉRIE DE TESTS »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 342a4849
 ---
 
@@ -34,6 +34,7 @@ En opposition, le plus haut résultat l'emporte. En coopération, chaque assista
 - Option Prendre son temps: valeur de 10 au d20; durée décalée d'un cran vers le bas (2d6 tours vers 2d6 minutes, 2d6 minutes vers 2d6 heures, 2d6 heures vers 2d6 jours, 2d6 jours vers 2d6 semaines)
 - Option Rapide et Furieux: réussite automatique si modificateurs supérieurs ou égaux au seuil
 - Test en coopération: bonus de +2 par assistant
+- Option du 3d6 (p. 60-61): 3d6 additionnés, 4d6 en gardant les trois meilleurs avec un dé bonus, 2d6 avec un dé malus; difficultés 8, 11, 14, 17, 20
 
 ## À la table
 Lorsqu'un joueur annonce une action dont l'issue est incertaine, le meneur de jeu demande un test (section « QUAND EFFECTUER UN TEST? »). Le joueur lance un d20, ajoute sa caractéristique concernée et les modificateurs de voies ou d'environnement (section « RÉSOLUTION D'UN TEST »). Le résultat est comparé à la difficulté: un total égal ou supérieur est une réussite, un total inférieur est un échec (section « DÉTERMINER LA DIFFICULTÉ »).
@@ -55,3 +56,5 @@ En opposition, une réussite critique l'emporte toujours sur une réussite norma
 
 ## Non couvert
 rien
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; ajouté : l'option du 3d6 ; conforme (p. 8, 56-61).*

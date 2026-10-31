@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-31",
+  "capturesExaminees": true,
+  "rapportElectronSHA256": "0bd520d6a6d22d377976017da8a72a0e3eba5f0384d24528145c40269d974120",
+  "sourceE2ESHA256": "8e263d1513adac67c8f8e8c27b969a0a464fbbab8f9c151146ed5f581d71dbad",
+  "captures": [
+    {
+      "fichier": "captures/01-campagne-importee.jpg",
+      "sha256": "6bf8f618d66f96c8561ef0633b196f37f063446aa0170523f8ddd5b3e4faab9a"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-1-360.jpg",
+      "sha256": "9470fb64cf27ab7bd2fede26fa3664c64442e5e7e1a748478b1622f863876b1c"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-2-768.jpg",
+      "sha256": "d1f4da4743a8c2155bda553aceb9eb6f5d2b4c4a9ce61cf5ced57ae5cc9a5ec0"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-3-1180.jpg",
+      "sha256": "84671090960476804f09fe9470bc576bc6be39835a57ff6f313657891411ce56"
+    }
+  ],
+  "constat": "Import visible, noms des trois nouveaux PJ, seconde page et échelons lisibles à leur zoom ; commandes accessibles, aucun débordement horizontal de la page dans les trois Hub. À 360 px le PDF est réduit, zoom disponible. Pas de tablette physique éprouvée."
+}

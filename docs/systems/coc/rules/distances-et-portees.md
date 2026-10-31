@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« PORTÉE ET DISTANCES » ; « CONDITIONS FAVORABLES ET DÉFAVORABLES » ; « ACTIONS POSSIBLES LORS D’UN ROUND DE COMBAT » ; « ARMES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 61623b1e
 ---
 
@@ -36,6 +36,7 @@ Utiliser une arme à feu au corps-à-corps inflige un malus (section « CONDITIO
   - Cible à une portée de plus que l'arme: malus de -2
   - Cible à deux portées de plus que l'arme: malus de -5
 - Arme à feu au corps-à-corps: malus de -2
+- Option: DEF fixe de 15 contre toute attaque à distance (p. 87)
 
 ## À la table
 Lors d'une séquence de combat, le meneur de jeu ou le joueur évalue la distance séparant l'attaquant de sa cible avant d'effectuer un test d'attaque à distance (section « Portée et distances »). Si le personnage doit se rapprocher ou s'éloigner, chaque action de mouvement lui permet de parcourir environ 10 mètres sur le terrain (section « Actions possibles lors d’un round de combat »).
@@ -47,9 +48,11 @@ Lors d'une poursuite, les cinq catégories de portée d'armes correspondent dire
 ## Cas limites
 Les modificateurs liés à la portée se cumulent avec les autres conditions du tir (couvert de la cible, obscurité, tir depuis un véhicule en mouvement), sans jamais dépasser le plafond global de +10 ou le plancher de -10 aux tests d'attaque (section « Conditions favorables et défavorables »).
 
-L'utilisation d'une arme à feu longue (fusil de chasse, fusil d'assaut, fusil de précision) au corps-à-corps est impossible pour mettre en joue ou ajuster une cible (section « Règles optionnelles: combat tactique ») et inflige un malus de condition défavorable (section « Conditions favorables et défavorables »).
+L'utilisation d'une arme à feu longue (fusil de chasse, fusil d'assaut, fusil de précision) ne peut pas être utilisée au corps-à-corps, ni pour mettre en joue ou ajuster un tir (section « Règles optionnelles: combat tactique ») et inflige un malus de condition défavorable (section « Conditions favorables et défavorables »).
 
 Sur un terrain difficile en combat (pente forte, boue, gravats, encombrement), la distance franchie lors d'une action de mouvement est divisée par deux, réduisant le déplacement à 5 mètres environ (section « Actions possibles lors d’un round de combat »).
 
 ## Non couvert
 rien
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; corrigé : l'arme longue au corps-à-corps ; ajouté : l'option de la DEF à 15 (p. 86-88, 93, 96).*

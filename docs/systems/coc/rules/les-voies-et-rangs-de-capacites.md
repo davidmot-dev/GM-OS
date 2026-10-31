@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« VOIES » ; « CAPACITÉS » ; « VOIES ET RANGS À LA CRÉATION » ; « ET APRÈS? EXPÉRIENCE ET PROGRESSION » ; « LES VOIES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: fb0e42a0
 ---
 
@@ -46,7 +46,7 @@ En cours de partie, les capacités conférées par les rangs de voies s'applique
 ## Cas limites
 Un personnage ne peut pas sauter de rang: l'acquisition doit obligatoirement suivre l'ordre croissant du rang 1 au rang 5 (section « ET APRÈS? EXPÉRIENCE ET PROGRESSION »). Il est également impossible d'acquérir plus d'un rang à la fois au moment d'utiliser ses points d'expérience (section « ET APRÈS? EXPÉRIENCE ET PROGRESSION »).
 
-Sauf dérogation explicite accordée par le meneur de jeu, un personnage est strictly limité à un maximum absolu de 6 voies au total sur sa fiche (section « VOIES ET RANGS À LA CRÉATION »).
+Sauf dérogation explicite accordée par le meneur de jeu, un personnage est strictement limité à un maximum absolu de 6 voies au total sur sa fiche (section « VOIES ET RANGS À LA CRÉATION »).
 
 Les points d'expérience ne peuvent jamais servir à acheter directement des points de caractéristiques principales: la valeur d'une caractéristique ne progresse que lorsqu'un personnage atteint le rang 5 d'une de ses voies de base (section « ET APRÈS? EXPÉRIENCE ET PROGRESSION »).
 
@@ -54,3 +54,5 @@ En cas de contradiction entre la règle générale du système et le descriptif 
 
 ## Non couvert
 rien
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; conforme (p. 5, 14, 28-29).*

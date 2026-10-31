@@ -1074,6 +1074,35 @@ export function controlerLePilote(
         if (bol.heroisme && !tousLesChamps.has(bol.heroisme)) erreur('jet.barbarians.heroisme', `Barbarians lit les points d'héroïsme dans « ${bol.heroisme} », absent de la fiche.`);
     }
     /*
+      Chroniques Oubliées Contemporain (2026-10-31) : un d20 (ou 3d6) ajouté à UNE
+      caractéristique, contre une difficulté réglée au jet. Le pilote forgé additionnait
+      Agilité et Intelligence, exigeait dix réussites d'un dé et comptait un 1 double.
+    */
+    const coc = driver.jet?.coc;
+    if (coc) {
+        if (driver.jet?.sens !== 'superieur-ou-egal' || driver.jet?.cible || (driver.jet?.seuil ?? []).length !== 1) {
+            avertir('jet.coc', 'Le bloc COC suppose un d20 ajouté à une seule caractéristique (p. 56) : déclarer une seule composante de « seuil » et « sens: superieur-ou-egal ».');
+        }
+        if (driver.jet?.difficulte) avertir('jet.difficulte', 'COC compare un total à la difficulté (p. 58) : la difficulté en réussites est ignorée, elle se règle au jet.');
+        if (driver.jet?.critique !== undefined || driver.jet?.complication !== undefined) {
+            avertir('jet.critique', 'COC lit ses critiques sur le dé gardé — le 20 réussit, le 1 échoue (p. 58) : « critique » et « complication » compteraient un 1 double et un 20 pour une complication.');
+        }
+        for (const champ of [coc.sante, coc.volonte, coc.evolution?.champ, coc.evolution?.modele, ...(coc.physiques ?? []), ...(coc.attaques ?? [])]) {
+            if (champ && !tousLesChamps.has(champ)) erreur('jet.coc', `COC lit « ${champ} », absent de la fiche.`);
+        }
+    }
+    const encaissement = driver.combat?.encaissement;
+    if (encaissement) {
+        for (const [ou, champ] of [['sante', encaissement.sante], ['rd', encaissement.rd], ['constitution', encaissement.constitution]] as const) {
+            if (champ && !tousLesChamps.has(champ)) erreur(`combat.encaissement.${ou}`, `L'encaissement de COC lit « ${champ} », absent de la fiche.`);
+        }
+        if (!driver.combat?.casesDeSante) {
+            avertir('combat.encaissement', 'L’encaissement de COC noircit les cases de santé (p. 71) : déclarer « combat.casesDeSante ».');
+        } else if (driver.combat.casesDeSante.champ !== encaissement.sante) {
+            avertir('combat.encaissement.sante', `Les cases suivent « ${driver.combat.casesDeSante.champ ?? '—'} » et l’encaissement lit « ${encaissement.sante} » : la RD et la mort instantanée liraient une autre échelle.`);
+        }
+    }
+    /*
       RuneQuest (2026-10-30) : un d100 sous l'aptitude retenue, gradué sur les chances
       modifiées. Une seule composante, puisque l'aptitude EST le score ; les
       caractéristiques et les localisations nommées doivent exister sur la fiche.

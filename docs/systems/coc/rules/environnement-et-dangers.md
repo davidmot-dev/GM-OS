@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« LES ÉPREUVES » ; « ORIENTATION » ; « CHUTE » ; « FEU » ; « MALADIES ET POISONS » ; « FAIM ET SOIF » ; « ÉQUIPEMENT INADAPTÉ »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 94585567
 ---
 
@@ -40,7 +40,7 @@ La privation d'eau ou de nourriture inflige des dommages quotidiens après l'ép
 - Guérison des affections: 3 succès cumulés (réussite simple = 1, critique = 2); enduire une arme: INT/AGI diff. 10
 - Faim et soif: 1d4 DM/jour sans eau, 1 DM/jour sans nourriture, 1d4+1 DM/jour si cumulés
 - Équipement inadapté:
-  - 0 °C à 30 °C: +5 diff. CON, 1d4 DM/jour
+  - Proche de 0 °C ou au-dessus de 30 °C: +5 diff. CON, 1d4 DM/jour
   - < 0 °C ou > 50 °C: +10 diff. CON, 2d4 DM/jour
 
 ## À la table
@@ -65,3 +65,5 @@ L'asphyxie due à la fumée ou à la noyade ainsi que la fatigue des marches quo
 
 ## Non couvert
 rien
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; corrigé : les températures de l'équipement inadapté (p. 61-65).*

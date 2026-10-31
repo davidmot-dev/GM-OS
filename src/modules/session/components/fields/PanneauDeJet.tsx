@@ -81,6 +81,9 @@ import { PreparationRuneQuest, SuitesRuneQuest } from './RuneQuestAuJet';
 import { CHOIX_DE_RUNEQUEST, nommerLeJetDeRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest } from '../../../dice/systemes/runequest';
 import { CHOIX_DE_DEGENESIS, lancerDegenesis, type ChoixDeDegenesis, type JetDeDegenesis } from '../../../dice/systemes/degenesis';
 import { PreparationDegenesis, SuitesDegenesis } from './DegenesisAuJet';
+import { CHOIX_DE_COC, ajouterLeHeros, etatDeSante, lancerCoc, malusDeSante, modeleDEvolution, preparerCoc,
+    type ChoixDeCoc, type JetDeCoc, type PreparationDeCoc } from '../../../dice/systemes/coc';
+import { PreparationCoc, SuitesCoc } from './CocAuJet';
 import { CreationStarTrek, PreparationStarTrek, ReputationStarTrek, StressEtBlessuresStarTrek, SuitesStarTrek, TourStarTrek, type VaisseauPourLAide } from './StarTrekAuJet';
 import { CarnetDune, PreparationDune, SuitesDune } from './DuneAuJet';
 import { CHOIX_DUNE, CLE_DUNE, bilanDune, conserverDune, depenserDune, desDune, difficulteDune, entierDune, lireDune, lignesDune, noterDune, resultatDune,
@@ -421,6 +424,27 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const egoDegenesis = regleDegenesis?.ego && ecrireSurLaFiche ? Math.max(0, Math.trunc(Number(valeurs[regleDegenesis.ego]) || 0)) : undefined;
 
     /**
+     * **Chroniques Oubliées Contemporain** (2026-10-31) : la difficulté ou la DEF, les
+     * conditions, les aides, le dé bonus ou malus, l'état et les plages critiques ; ce que
+     * le dernier lancer savait, pour l'échelle du héros ; les échelons écrits par les cartes.
+     */
+    const regleCoc = descripteur.coc;
+    const [choixCoc, setChoixCoc] = useState<ChoixDeCoc>(CHOIX_DE_COC);
+    const [cocDuLancer, setCocDuLancer] = useState<{ prep: PreparationDeCoc; titre: string; attaque: boolean; compte: number; echelonGagne: boolean } | null>(null);
+    const [ecritsCoc, setEcritsCoc] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const valeursCoc = useMemo(() => ({ ...valeurs,
+        ...(ecritsCoc.base === valeurs && ecritsCoc.personnageId === personnageId ? ecritsCoc.maj : {}),
+    }), [valeurs, ecritsCoc, personnageId]);
+    const ecrireCoc = (maj: Record<string, unknown>) => {
+        setEcritsCoc(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche?.(maj);
+    };
+    const evolutionCoc = regleCoc?.evolution;
+    const modeleCoc = evolutionCoc ? modeleDEvolution(valeursCoc[evolutionCoc.modele ?? '']) : undefined;
+    const herosCoc = evolutionCoc && modeleCoc === 'heros' && ecrireSurLaFiche
+        ? Math.max(0, Math.min(20, Math.trunc(Number(valeursCoc[evolutionCoc.champ]) || 0))) : undefined;
+
+    /**
      * **Star Trek jusqu'au bout** (2026-10-23) : la tâche complète — nature, marge,
      * opposition, assistants, vaisseau, Détermination — et ce que le dernier lancer
      * savait, pour le recompter après une relance.
@@ -756,6 +780,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     */
     const seuilDuMoteur = jet.composantes.length > 0 ? jet.seuil : dice.successThreshold;
 
+    // COC : la caractéristique, l'attaque ou l'arme retenue, et ce que le livre y ajoute (p. 56-59).
+    const champCoc = jet.composantes[0]?.champ;
+    const prepCoc = useMemo(() => (regleCoc ? preparerCoc(regleCoc, choixCoc, { valeur: jet.seuil, champ: champCoc }, valeursCoc) : null),
+        [regleCoc, choixCoc, jet.seuil, champCoc, valeursCoc]);
+    const attaqueCoc = !!champCoc && !!regleCoc?.attaques?.includes(champCoc);
+    // « Couteau », « Agilité (AGI) » : le champ retenu, ou l'arme sous le nom écrit sur la fiche.
+    const champCocDeLaFiche = regleCoc ? template.sections.flatMap(s => s.fields).find(f => f.id === champCoc) : undefined;
+    const nomCoc = (champCocDeLaFiche?.libelleSur && String(valeursCoc[champCocDeLaFiche.libelleSur] ?? '').trim()) || champCocDeLaFiche?.label || champCoc || '';
+    const echelonsCoc = regleCoc?.sante ? Math.trunc(Number(valeursCoc[regleCoc.sante]) || 0) : 0;
+    const etatDeSanteCoc = etatDeSante(echelonsCoc);
+
     /**
      * L'Avantage ne s'offre que là où il veut dire quelque chose.
      *
@@ -768,9 +803,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * La liste des moteurs qui résolvent eux-mêmes vit dans `DiceEngine`, et
      * nulle part ailleurs : recopiée ici, elle dériverait.
      */
-    const avantagePossible = descripteur.tableDeBonus || regleRuneQuest
+    const avantagePossible = descripteur.tableDeBonus || regleRuneQuest || regleCoc
         // Torg n'a pas d'avantage : son dé se relance quand il explose, il ne se double pas.
         // RuneQuest non plus : ses chances se règlent en pourcentage (p. 142, 144).
+        // COC règle son dé bonus et son dé malus à l'étape « Préparer » (p. 59).
         ? false
         : descripteur.desEchelonnes
         // Sur les dés échelonnés, le livre les décrit explicitement : un
@@ -1136,6 +1172,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const modificateursBarbarians = modificateursDeBarbarians(jet.seuil, choixBarbarians);
         const brutDuMoteur = regleBarbarians
             ? lancerBarbarians(soldeBarbarians, modificateursBarbarians, () => DiceEngine.roll(6), regleBarbarians.cible ?? 9)
+            // COC : d20 (ou 3d6) + caractéristique + modificateurs contre la difficulté (p. 56-59).
+            : regleCoc && prepCoc
+            ? lancerCoc(prepCoc, faces => DiceEngine.roll(faces))
             // Degenesis : 4+ réussit, les 6 déclenchent, le surplus au-delà de 12 dés est acquis (p. 18-19).
             : regleDegenesis && jet.degenesis
             ? lancerDegenesis(jet.degenesis, jet.reussitesRequises, () => DiceEngine.roll(6))
@@ -1247,6 +1286,20 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 compte: (d?.compte ?? 0) + 1, pointAccorde: false,
             }));
         }
+        if (regleCoc && prepCoc) {
+            const reglage = [
+                `${attaqueCoc ? 'DEF' : 'difficulté'} ${prepCoc.difficulte}`,
+                ...prepCoc.modificateurs.map(m => `${m.label} ${m.valeur > 0 ? '+' : '−'}${Math.abs(m.valeur)}`),
+                prepCoc.solde > 0 ? 'dé bonus' : prepCoc.solde < 0 ? 'dé malus' : '',
+                choixCoc.facon === 'temps' ? 'pris son temps' : '',
+            ].filter(Boolean).join(', ');
+            setCocDuLancer(d => ({
+                prep: prepCoc, attaque: attaqueCoc, compte: (d?.compte ?? 0) + 1, echelonGagne: false,
+                titre: `${nomCoc} · ${reglage}`,
+            }));
+            // Prendre son temps et le mode rapide valent pour UN test.
+            if (choixCoc.facon !== 'lancer') setChoixCoc(c => ({ ...c, facon: 'lancer' }));
+        }
         // L'Égo dépensé quitte la fiche et ne sert qu'à la première action du round (p. 100).
         if (regleDegenesis?.ego && jet.degenesis?.ego && egoDegenesis !== undefined) {
             ecrireSurLaFiche?.({ [regleDegenesis.ego]: Math.max(0, egoDegenesis - jet.degenesis.ego) });
@@ -1293,6 +1346,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 jet.garde.niveau > 0 ? `${jet.garde.competence?.label ?? 'Compétence'} ${jet.garde.niveau}` : 'sans compétence',
                 ...(jet.garde.specialisation ? [jet.garde.specialisation.label] : []),
             ].join(' · ')
+            // COC : le champ ou l'arme retenus, et non « Caractéristique ou attaque ».
+            : regleCoc && nomCoc
+            ? nomCoc
             : jet.composantes.length > 0
             ? jet.composantes.map(c => c.label).join(' + ')
             // Degenesis : « Instinct + Dressage (VA 3) », les champs de la réserve par leur nom.
@@ -1538,6 +1594,23 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ecrireBarbarians({ [regleBarbarians.heroisme]: heroismeBarbarians + 1 });
         setBarbariansDuLancer(d => d && { ...d, pointAccorde: true });
         redire(`${barbariansDuLancer.titre} · échec critique`, { total: 0, modifier: 0, rolls: [], totalDisplay: `+1 point d’héroïsme accordé par le MJ → ${heroismeBarbarians + 1}` });
+    };
+
+    /** L'échelle du héros : un ou deux échelons pour un bonus au test qui vient d'être fait (p. 81-82). */
+    const depenserLeHerosCoc = (echelons: number, bonus: number) => {
+        const jetC = resultat as JetDeCoc | null;
+        if (!evolutionCoc || !jetC?.coc || !cocDuLancer || herosCoc === undefined || herosCoc < echelons) return;
+        ecrireCoc({ [evolutionCoc.champ]: herosCoc - echelons });
+        const apres = ajouterLeHeros(jetC, cocDuLancer.prep, bonus);
+        setResultat(apres);
+        redire(`${cocDuLancer.titre} · héros +${bonus} (${echelons} échelon${echelons > 1 ? 's' : ''})`, apres);
+    };
+    /** Une réussite ou un échec critique fait progresser le héros d'un échelon (p. 81). */
+    const gagnerUnEchelonCoc = () => {
+        if (!evolutionCoc || !cocDuLancer || cocDuLancer.echelonGagne || herosCoc === undefined) return;
+        ecrireCoc({ [evolutionCoc.champ]: Math.min(20, herosCoc + 1) });
+        setCocDuLancer(d => d && { ...d, echelonGagne: true });
+        redire(`${cocDuLancer.titre} · échelle du héros`, { total: 0, modifier: 0, rolls: [], totalDisplay: `Critique : +1 échelon → ${Math.min(20, herosCoc + 1)}` });
     };
 
     const redire = (titre: string, res: RollResult) => {
@@ -1866,7 +1939,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const gardeDuResultat = (resultat as JetGarde | null)?.garde;
     /** Une réserve, qui compte ses réussites — et non un verdict sur un seul dé. */
     const barbariansDuResultat = (resultat as JetDeBarbarians | null)?.barbarians;
-    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat && !barbariansDuResultat
+    const cocDuResultat = (resultat as JetDeCoc | null)?.coc;
+    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat && !barbariansDuResultat && !cocDuResultat
         && (jet.desEchelonnes.length > 0 || jet.nombreDeDes + jet.desSecondaires > 1);
     const v = verdict(reussites, regleDune && duneDuLancer ? duneDuLancer.difficulte : jet.reussitesRequises);
     // Un dé écarté n'a rien déclenché : le compter ici annoncerait une
@@ -1884,7 +1958,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       si le jeu y a quelque chose : une difficulté, des réserves où puiser, la
       préparation d'Alien… — une étape vide numérotée mentirait sur l'ordre.
     */
-    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleRuneQuest || !!regleDegenesis || disponiblesPerso.length > 0
+    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleCoc || !!regleRuneQuest || !!regleDegenesis || disponiblesPerso.length > 0
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
         || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable
@@ -1899,10 +1973,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     */
     const runequestDuResultat = (resultat as JetDeRuneQuest | null)?.runequest;
     const degenesisDuResultat = (resultat as JetDeDegenesis | null)?.degenesis;
-    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || runequestDuResultat || degenesisDuResultat)
-        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, RuneQuest p. 142, Degenesis p. 19), et non le degré générique du moteur.
+    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || runequestDuResultat || degenesisDuResultat || cocDuResultat)
+        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, RuneQuest p. 142, Degenesis p. 19, COC p. 58), et non le degré générique du moteur.
         ? <span className={'font-black uppercase tracking-widest ' + (resultat.tagSuccess ? 'text-etat-succes' : 'text-etat-danger')}>
-            {gardeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
+            {gardeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? cocDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
         </span>
         : resultat && !paniqueEnAttente
         && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
@@ -2003,7 +2077,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {((descripteur.seuil ?? []).length > 0 || descripteur.cible) && (
                             <div className="flex items-baseline gap-2 text-xs">
                                 <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">
-                                    {descripteur.cible ? 'Chances' : descripteur.tableDeBonus || destin ? 'Niveau' : 'Seuil'}
+                                    {/* COC : la valeur s'ajoute au d20 (« bonus après 1D20 + » de la feuille), ce n'est pas un seuil. */}
+                                    {descripteur.cible ? 'Chances' : descripteur.tableDeBonus || destin ? 'Niveau' : regleCoc ? 'Bonus' : 'Seuil'}
                                 </span>
                                 <span className="font-mono text-lg font-black text-accent">
                                     {jet.seuil}{descripteur.cible ? ' %' : ''}
@@ -2404,6 +2479,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {regleBarbarians && (
                         <PreparationBarbarians choix={choixBarbarians} setChoix={setChoixBarbarians} seuil={jet.seuil} />
                     )}
+                    {regleCoc && prepCoc && (
+                        <PreparationCoc choix={choixCoc} setChoix={setChoixCoc} prep={prepCoc} attaque={attaqueCoc}
+                            physiqueParDefaut={!!champCoc && (regleCoc.physiques ?? []).includes(champCoc)}
+                            sante={etatDeSanteCoc ? `${etatDeSanteCoc.label}, −${malusDeSante(echelonsCoc, prepCoc.des)}` : undefined}
+                            blues={modeleCoc === 'blues'} />
+                    )}
                     {regleRuneQuest && (
                         <PreparationRuneQuest choix={choixRuneQuest} setChoix={setChoixRuneQuest} calcul={jet.runequest} />
                     )}
@@ -2580,7 +2661,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système.
                         Pas chez Crimes : le Potentiel dit le nombre de dés, rien ne s'y ajoute ;
                         ni chez Barbarians, dont les dés de bonus et de malus se règlent à l'étape 2. */}
-                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleRuneQuest || regleDegenesis ? 'hidden' : ''}`}>
+                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleCoc || regleRuneQuest || regleDegenesis ? 'hidden' : ''}`}>
                         <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                         <button
                             onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -2775,6 +2856,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 : complique ? 'Complication'
                                 // Degenesis : un 6 est un succès et un déclencheur (p. 19).
                                 : degenesisDuResultat && val === 6 ? 'Déclencheur'
+                                // COC : le dé gardé dit son critique (p. 58).
+                                : cocDuResultat && d.isCritMax ? 'Critique'
+                                : cocDuResultat && d.isCritMin ? 'Échec crit.'
                                 : d.isCritMax && compteDeReussites && !(descripteur.seuil ?? []).length && jet.desEchelonnes.length === 0 ? 'Succès'
                                 : undefined;
                             return (
@@ -2954,6 +3038,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 consigner={ligne => redire(dernierLancer?.titre ?? 'RuneQuest', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
                         )}
                         {regleDegenesis && degenesisDuResultat && <SuitesDegenesis jet={resultat as JetDeDegenesis} />}
+                        {regleCoc && cocDuLancer && cocDuResultat && (
+                            <SuitesCoc key={cocDuLancer.compte} jet={resultat as JetDeCoc} heros={herosCoc} des={cocDuLancer.prep.des}
+                                attaque={cocDuLancer.attaque} echelonGagne={cocDuLancer.echelonGagne}
+                                depenser={depenserLeHerosCoc} gagner={gagnerUnEchelonCoc} />
+                        )}
                         {regleBarbarians && barbariansDuLancer && barbariansDuResultat && (
                             <SuitesBarbarians key={barbariansDuLancer.compte} jet={resultat as JetDeBarbarians} reaction={barbariansDuLancer.reaction}
                                 heroisme={ecrireSurLaFiche ? heroismeBarbarians : undefined} pointAccorde={barbariansDuLancer.pointAccorde}
@@ -3086,7 +3175,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         {/* Torg ne lance pas sous un seuil : son calcul dit déjà le ND. Une
                             réserve sans seuil (NOC, Alien) affichait « sous 0 ». */}
-                        {!descripteur.tableDeBonus && !destin && !regleBarbarians && seuilDuLancer > 0 && (
+                        {!descripteur.tableDeBonus && !destin && !regleBarbarians && !regleCoc && seuilDuLancer > 0 && (
                             <span className="ml-auto text-app-text/25 font-mono text-ui-10">sous {seuilDuLancer}</span>
                         )}
                     </div>

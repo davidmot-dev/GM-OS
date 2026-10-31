@@ -1,0 +1,2 @@
+STYLE: painterly digital illustration, semi-realistic graphic novel rendering, angular shapes, faceted shading, selective dark contours, crisp silhouettes, bold value grouping, violet shadows, muted teal midtones, warm amber accents, directional light, restrained rim highlights, visible brushwork, matte surfaces, cinematic depth, subtle grain, energetic pulp mood
+AVOID: photorealism, glossy 3D, anime, chibi, flat vector art, neon overload, readable text, logos

@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« ÉTATS PRÉJUDICIABLES » ; « ESSOUFFLEMENT ET ASPHYXIE » ; « FATIGUE ET ÉPUISEMENT »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 7cfd0e02
 ---
 
@@ -53,14 +53,16 @@ En combat ou en scène d'action, les effets s'appliquent immédiatement au tour 
 - Surpris: malus de -5 en Défense et incapacité d'agir au premier round (section « ÉTATS PRÉJUDICIABLES » et section « SURPRISE! »).
 - Renversé: malus de -5 en attaque et Défense, nécessite 1 action d'attaque pour se relever (section « ÉTATS PRÉJUDICIABLES »).
 
-Après un effort prolongé ou une apnée dépassant Constitution + 3 tours, le personnage devient Essoufflé puis Asphyxié (section « ESSOUFFLEMENT ET ASPHYXIE »). Après une marche de plus de 8 heures par jour, un test de Constitution manqué le rend Fatigué puis Épuisé (section « FATIGUE ET ÉPUISEMENT »).
+Après un effort prolongé ou une apnée dépassant Constitution + 3 tours, le personnage devient Essoufflé puis Asphyxié (section « ESSOUFFLEMENT ET ASPHYXIE »). Après une troisième période de marche de 4 h, ou sans 8 h de repos entre deux journées, un test de Constitution manqué le rend Fatigué puis Épuisé (section « FATIGUE ET ÉPUISEMENT »).
 
 ## Cas limites
 Les malus des états préjudiciables ne se cumulent pas: seul le malus le plus élevé s'applique (section « ÉTATS PRÉJUDICIABLES »).
 
-Pour sortir d'un état, le personnage remplit la condition requise: 1 action d'attaque pour se relever de Renversé (section « ÉTATS PRÉJUDICIABLES »), 1 round de repos pour dissiper Essoufflé (section « ESSOUFFLEMENT ET ASPHYXIE »), ou 1 jour de repos par niveau pour effacer Fatigué et Épuisé (section « FATIGUE ET ÉPUISEMENT »).
+Pour sortir d'un état, le personnage remplit la condition requise: 1 action d'attaque pour se relever de Renversé (section « ÉTATS PRÉJUDICIABLES »), reprendre son souffle pour Essoufflé (le livre n'en chiffre pas la durée), ou 1 jour de repos par niveau pour effacer Fatigué et Épuisé (section « FATIGUE ET ÉPUISEMENT »).
 
 Contre un personnage Immobilisé ou Inconscient, les attaques au contact touchent automatiquement en réussite critique sans jet (section « ÉTATS PRÉJUDICIABLES »).
 
 ## Non couvert
 rien
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; retiré : le round de repos qui dissiperait l'essoufflement ; corrigé : la marche (p. 63-65).*

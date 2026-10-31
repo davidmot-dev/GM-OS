@@ -1,0 +1,1942 @@
+[
+  {
+    "page": "page-1",
+    "fields": [
+      {
+        "key": "identity.name",
+        "label": "Nom du personnage",
+        "type": "text",
+        "x": 202.5,
+        "y": 44,
+        "w": 232.5,
+        "h": 21,
+        "className": "coc-field coc-text coc-name"
+      },
+      {
+        "key": "identity.player",
+        "label": "Joueur",
+        "type": "text",
+        "x": 41,
+        "y": 88.5,
+        "w": 140,
+        "h": 12,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "identity.age",
+        "label": "Âge",
+        "type": "number",
+        "x": 200,
+        "y": 89,
+        "w": 14.5,
+        "h": 11.5,
+        "className": "coc-field coc-number coc-small-number"
+      },
+      {
+        "key": "identity.origin",
+        "label": "Origine",
+        "type": "text",
+        "x": 226,
+        "y": 88.5,
+        "w": 74.5,
+        "h": 12,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "identity.profile",
+        "label": "Profil",
+        "type": "text",
+        "x": 315.5,
+        "y": 88.5,
+        "w": 123,
+        "h": 12,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "attributes.agility",
+        "label": "AGI",
+        "type": "number",
+        "x": 73.5,
+        "y": 158.5,
+        "w": 25.5,
+        "h": 20,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "attribute_notes.agility",
+        "label": "AGI — notes",
+        "type": "textarea",
+        "x": 108.5,
+        "y": 158.5,
+        "w": 72,
+        "h": 20,
+        "className": "coc-field coc-textarea coc-notes"
+      },
+      {
+        "key": "attributes.constitution",
+        "label": "CON",
+        "type": "number",
+        "x": 73.5,
+        "y": 186,
+        "w": 25.5,
+        "h": 20,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "attribute_notes.constitution",
+        "label": "CON — notes",
+        "type": "textarea",
+        "x": 108.5,
+        "y": 186,
+        "w": 72,
+        "h": 20,
+        "className": "coc-field coc-textarea coc-notes"
+      },
+      {
+        "key": "attributes.strength",
+        "label": "FOR",
+        "type": "number",
+        "x": 73.5,
+        "y": 215,
+        "w": 25.5,
+        "h": 20,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "attribute_notes.strength",
+        "label": "FOR — notes",
+        "type": "textarea",
+        "x": 108.5,
+        "y": 215,
+        "w": 72,
+        "h": 20,
+        "className": "coc-field coc-textarea coc-notes"
+      },
+      {
+        "key": "attributes.perception",
+        "label": "PER",
+        "type": "number",
+        "x": 73.5,
+        "y": 245.5,
+        "w": 25.5,
+        "h": 20,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "attribute_notes.perception",
+        "label": "PER — notes",
+        "type": "textarea",
+        "x": 108.5,
+        "y": 245.5,
+        "w": 72,
+        "h": 20,
+        "className": "coc-field coc-textarea coc-notes"
+      },
+      {
+        "key": "attributes.charisma",
+        "label": "CHA",
+        "type": "number",
+        "x": 73.5,
+        "y": 276,
+        "w": 25.5,
+        "h": 20,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "attribute_notes.charisma",
+        "label": "CHA — notes",
+        "type": "textarea",
+        "x": 108.5,
+        "y": 276,
+        "w": 72,
+        "h": 20,
+        "className": "coc-field coc-textarea coc-notes"
+      },
+      {
+        "key": "attributes.intellect",
+        "label": "INT",
+        "type": "number",
+        "x": 73.5,
+        "y": 305.5,
+        "w": 25.5,
+        "h": 20,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "attribute_notes.intellect",
+        "label": "INT — notes",
+        "type": "textarea",
+        "x": 108.5,
+        "y": 305.5,
+        "w": 72,
+        "h": 20,
+        "className": "coc-field coc-textarea coc-notes"
+      },
+      {
+        "key": "attributes.willpower",
+        "label": "VOL",
+        "type": "number",
+        "x": 73.5,
+        "y": 335,
+        "w": 25.5,
+        "h": 20,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "attribute_notes.willpower",
+        "label": "VOL — notes",
+        "type": "textarea",
+        "x": 108.5,
+        "y": 335,
+        "w": 72,
+        "h": 20,
+        "className": "coc-field coc-textarea coc-notes"
+      },
+      {
+        "key": "combat.melee",
+        "label": "ATC",
+        "type": "number",
+        "x": 89,
+        "y": 376,
+        "w": 23,
+        "h": 16.5,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "combat.ranged",
+        "label": "ATD",
+        "type": "number",
+        "x": 89,
+        "y": 403.5,
+        "w": 23,
+        "h": 16.5,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "combat.defense",
+        "label": "DEF",
+        "type": "number",
+        "x": 157.5,
+        "y": 376,
+        "w": 23,
+        "h": 16.5,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "combat.initiative",
+        "label": "INIT.",
+        "type": "number",
+        "x": 157.5,
+        "y": 403.5,
+        "w": 23,
+        "h": 16.5,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "combat.cg",
+        "label": "CG",
+        "type": "number",
+        "x": 157.5,
+        "y": 430,
+        "w": 23,
+        "h": 16.5,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "combat.damage_bonus",
+        "label": "BDM",
+        "type": "text",
+        "x": 89,
+        "y": 430,
+        "w": 23,
+        "h": 16.5,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "profile.description",
+        "label": "Description",
+        "type": "textarea",
+        "x": 198,
+        "y": 145,
+        "w": 240,
+        "h": 32,
+        "className": "coc-field coc-textarea"
+      },
+      {
+        "key": "profile.sequelae",
+        "label": "Séquelles",
+        "type": "textarea",
+        "x": 44,
+        "y": 479.5,
+        "w": 136.5,
+        "h": 57,
+        "className": "coc-field coc-textarea"
+      },
+      {
+        "key": "traits.0.description",
+        "label": "Avantage ou désavantage 1",
+        "type": "textarea",
+        "x": 198,
+        "y": 210,
+        "w": 186.5,
+        "h": 17.5,
+        "className": "coc-field coc-textarea"
+      },
+      {
+        "key": "traits.0.value",
+        "label": "Avantage ou désavantage 1 — valeur",
+        "type": "number",
+        "x": 392,
+        "y": 210,
+        "w": 45,
+        "h": 17.5,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "traits.1.description",
+        "label": "Avantage ou désavantage 2",
+        "type": "textarea",
+        "x": 198,
+        "y": 233.5,
+        "w": 186.5,
+        "h": 17.5,
+        "className": "coc-field coc-textarea"
+      },
+      {
+        "key": "traits.1.value",
+        "label": "Avantage ou désavantage 2 — valeur",
+        "type": "number",
+        "x": 392,
+        "y": 233.5,
+        "w": 45,
+        "h": 17.5,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "traits.2.description",
+        "label": "Avantage ou désavantage 3",
+        "type": "textarea",
+        "x": 198,
+        "y": 257,
+        "w": 186.5,
+        "h": 17.5,
+        "className": "coc-field coc-textarea"
+      },
+      {
+        "key": "traits.2.value",
+        "label": "Avantage ou désavantage 3 — valeur",
+        "type": "number",
+        "x": 392,
+        "y": 257,
+        "w": 45,
+        "h": 17.5,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "equipment.0",
+        "label": "Équipement — première ligne",
+        "type": "text",
+        "x": 267.5,
+        "y": 291,
+        "w": 169.5,
+        "h": 12.5,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "equipment.1",
+        "label": "Équipement — seconde ligne",
+        "type": "text",
+        "x": 198.5,
+        "y": 306.5,
+        "w": 238.5,
+        "h": 12,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "weapons.0.name",
+        "label": "Arme 1",
+        "type": "textarea",
+        "x": 198.5,
+        "y": 347,
+        "w": 105.5,
+        "h": 16,
+        "className": "coc-field coc-textarea"
+      },
+      {
+        "key": "weapons.0.attack_bonus",
+        "label": "Arme 1 — bonus après 1D20 +",
+        "type": "number",
+        "x": 351,
+        "y": 347,
+        "w": 13.5,
+        "h": 16,
+        "className": "coc-field coc-number coc-small-number"
+      },
+      {
+        "key": "weapons.0.critical_bonus",
+        "label": "Arme 1 — BC",
+        "type": "number",
+        "x": 374,
+        "y": 347,
+        "w": 27,
+        "h": 16,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "weapons.0.damage",
+        "label": "Arme 1 — DM",
+        "type": "text",
+        "x": 410,
+        "y": 347,
+        "w": 27.5,
+        "h": 16,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "weapons.0.notes_range",
+        "label": "Arme 1 — notes et portée",
+        "type": "text",
+        "x": 269.5,
+        "y": 376,
+        "w": 168,
+        "h": 11.5,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "weapons.1.name",
+        "label": "Arme 2",
+        "type": "textarea",
+        "x": 198.5,
+        "y": 402.5,
+        "w": 105.5,
+        "h": 16,
+        "className": "coc-field coc-textarea"
+      },
+      {
+        "key": "weapons.1.attack_bonus",
+        "label": "Arme 2 — bonus après 1D20 +",
+        "type": "number",
+        "x": 351,
+        "y": 402.5,
+        "w": 13.5,
+        "h": 16,
+        "className": "coc-field coc-number coc-small-number"
+      },
+      {
+        "key": "weapons.1.critical_bonus",
+        "label": "Arme 2 — BC",
+        "type": "number",
+        "x": 374,
+        "y": 402.5,
+        "w": 27,
+        "h": 16,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "weapons.1.damage",
+        "label": "Arme 2 — DM",
+        "type": "text",
+        "x": 410,
+        "y": 402.5,
+        "w": 27.5,
+        "h": 16,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "weapons.1.notes_range",
+        "label": "Arme 2 — notes et portée",
+        "type": "text",
+        "x": 269.5,
+        "y": 431.5,
+        "w": 168,
+        "h": 11.5,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "weapons.2.name",
+        "label": "Arme 3",
+        "type": "textarea",
+        "x": 198.5,
+        "y": 456,
+        "w": 105.5,
+        "h": 16,
+        "className": "coc-field coc-textarea"
+      },
+      {
+        "key": "weapons.2.attack_bonus",
+        "label": "Arme 3 — bonus après 1D20 +",
+        "type": "number",
+        "x": 351,
+        "y": 456,
+        "w": 13.5,
+        "h": 16,
+        "className": "coc-field coc-number coc-small-number"
+      },
+      {
+        "key": "weapons.2.critical_bonus",
+        "label": "Arme 3 — BC",
+        "type": "number",
+        "x": 374,
+        "y": 456,
+        "w": 27,
+        "h": 16,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "weapons.2.damage",
+        "label": "Arme 3 — DM",
+        "type": "text",
+        "x": 410,
+        "y": 456,
+        "w": 27.5,
+        "h": 16,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "weapons.2.notes_range",
+        "label": "Arme 3 — notes et portée",
+        "type": "text",
+        "x": 269.5,
+        "y": 485,
+        "w": 168,
+        "h": 11.5,
+        "className": "coc-field coc-text"
+      },
+      {
+        "key": "armor.name",
+        "label": "Protection",
+        "type": "textarea",
+        "x": 198.5,
+        "y": 520,
+        "w": 164,
+        "h": 17,
+        "className": "coc-field coc-textarea"
+      },
+      {
+        "key": "armor.reduction",
+        "label": "RD",
+        "type": "number",
+        "x": 374,
+        "y": 520,
+        "w": 27,
+        "h": 17,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "armor.penalty",
+        "label": "Malus de protection",
+        "type": "number",
+        "x": 410.5,
+        "y": 520,
+        "w": 26.5,
+        "h": 17,
+        "className": "coc-field coc-number"
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 1",
+        "type": "hotspot",
+        "x": 44.775,
+        "y": 566,
+        "w": 17.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 1
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 2",
+        "type": "hotspot",
+        "x": 63.275,
+        "y": 566,
+        "w": 15,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 2
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 3",
+        "type": "hotspot",
+        "x": 79.275,
+        "y": 566,
+        "w": 16.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 3
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 4",
+        "type": "hotspot",
+        "x": 96.775,
+        "y": 566,
+        "w": 15.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 4
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 5",
+        "type": "hotspot",
+        "x": 113.275,
+        "y": 566,
+        "w": 28.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 5
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 6",
+        "type": "hotspot",
+        "x": 142.775,
+        "y": 566,
+        "w": 20.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 6
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 7",
+        "type": "hotspot",
+        "x": 164.275,
+        "y": 566,
+        "w": 16,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 7
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 8",
+        "type": "hotspot",
+        "x": 181.275,
+        "y": 566,
+        "w": 15,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 8
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 9",
+        "type": "hotspot",
+        "x": 197.275,
+        "y": 566,
+        "w": 15.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 9
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 10",
+        "type": "hotspot",
+        "x": 213.775,
+        "y": 566,
+        "w": 27.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 10
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 11",
+        "type": "hotspot",
+        "x": 242.275,
+        "y": 566,
+        "w": 19.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 11
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 12",
+        "type": "hotspot",
+        "x": 262.775,
+        "y": 566,
+        "w": 15.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 12
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 13",
+        "type": "hotspot",
+        "x": 279.275,
+        "y": 566,
+        "w": 16.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 13
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 14",
+        "type": "hotspot",
+        "x": 296.775,
+        "y": 566,
+        "w": 14.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 14
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 15",
+        "type": "hotspot",
+        "x": 312.275,
+        "y": 566,
+        "w": 29,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 15
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 16",
+        "type": "hotspot",
+        "x": 342.275,
+        "y": 566,
+        "w": 18.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 16
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 17",
+        "type": "hotspot",
+        "x": 361.775,
+        "y": 566,
+        "w": 15.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 17
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 18",
+        "type": "hotspot",
+        "x": 378.275,
+        "y": 566,
+        "w": 15,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 18
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 19",
+        "type": "hotspot",
+        "x": 394.275,
+        "y": 566,
+        "w": 19,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 19
+      },
+      {
+        "key": "tracks.health",
+        "label": "Échelle de santé — 20",
+        "type": "hotspot",
+        "x": 414.275,
+        "y": 566,
+        "w": 33.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 20
+      }
+    ]
+  },
+  {
+    "page": "page-2",
+    "fields": [
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 1",
+        "type": "hotspot",
+        "x": 33.5,
+        "y": 562.5,
+        "w": 17.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 1
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 2",
+        "type": "hotspot",
+        "x": 52,
+        "y": 562.5,
+        "w": 15,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 2
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 3",
+        "type": "hotspot",
+        "x": 68,
+        "y": 562.5,
+        "w": 16.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 3
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 4",
+        "type": "hotspot",
+        "x": 85.5,
+        "y": 562.5,
+        "w": 15.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 4
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 5",
+        "type": "hotspot",
+        "x": 102,
+        "y": 562.5,
+        "w": 28.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 5
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 6",
+        "type": "hotspot",
+        "x": 131.5,
+        "y": 562.5,
+        "w": 20.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 6
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 7",
+        "type": "hotspot",
+        "x": 153,
+        "y": 562.5,
+        "w": 16,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 7
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 8",
+        "type": "hotspot",
+        "x": 170,
+        "y": 562.5,
+        "w": 15,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 8
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 9",
+        "type": "hotspot",
+        "x": 186,
+        "y": 562.5,
+        "w": 15.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 9
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 10",
+        "type": "hotspot",
+        "x": 202.5,
+        "y": 562.5,
+        "w": 27.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 10
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 11",
+        "type": "hotspot",
+        "x": 231,
+        "y": 562.5,
+        "w": 19.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 11
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 12",
+        "type": "hotspot",
+        "x": 251.5,
+        "y": 562.5,
+        "w": 15.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 12
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 13",
+        "type": "hotspot",
+        "x": 268,
+        "y": 562.5,
+        "w": 16.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 13
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 14",
+        "type": "hotspot",
+        "x": 285.5,
+        "y": 562.5,
+        "w": 14.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 14
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 15",
+        "type": "hotspot",
+        "x": 301,
+        "y": 562.5,
+        "w": 29,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 15
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 16",
+        "type": "hotspot",
+        "x": 331,
+        "y": 562.5,
+        "w": 18.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 16
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 17",
+        "type": "hotspot",
+        "x": 350.5,
+        "y": 562.5,
+        "w": 15.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 17
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 18",
+        "type": "hotspot",
+        "x": 367,
+        "y": 562.5,
+        "w": 15,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 18
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 19",
+        "type": "hotspot",
+        "x": 383,
+        "y": 562.5,
+        "w": 19,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 19
+      },
+      {
+        "key": "tracks.scale",
+        "label": "Échelle de la page 2 — 20",
+        "type": "hotspot",
+        "x": 403,
+        "y": 562.5,
+        "w": 33.5,
+        "h": 10,
+        "className": "coc-field coc-hotspot",
+        "value": 20
+      },
+      {
+        "key": "paths.0.name",
+        "label": "Voie 1 — nom",
+        "type": "text",
+        "x": 67,
+        "y": 52.5,
+        "w": 96.5,
+        "h": 8.5,
+        "className": "coc-field coc-text coc-path-name"
+      },
+      {
+        "key": "paths.0.ranks.0.acquired",
+        "label": "Voie 1, rang 1 — acquis",
+        "type": "checkbox",
+        "x": 34.8,
+        "y": 70.55,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.0.ranks.0.name",
+        "label": "Voie 1, rang 1 — nom de capacité",
+        "type": "text",
+        "x": 82,
+        "y": 70,
+        "w": 81,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.0.ranks.0.description",
+        "label": "Voie 1, rang 1 — description",
+        "type": "textarea",
+        "x": 33,
+        "y": 82.5,
+        "w": 130,
+        "h": 24,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.0.ranks.1.acquired",
+        "label": "Voie 1, rang 2 — acquis",
+        "type": "checkbox",
+        "x": 34.8,
+        "y": 116.55,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.0.ranks.1.name",
+        "label": "Voie 1, rang 2 — nom de capacité",
+        "type": "text",
+        "x": 82,
+        "y": 115,
+        "w": 81,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.0.ranks.1.description",
+        "label": "Voie 1, rang 2 — description",
+        "type": "textarea",
+        "x": 33,
+        "y": 127.5,
+        "w": 130,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.0.ranks.2.acquired",
+        "label": "Voie 1, rang 3 — acquis",
+        "type": "checkbox",
+        "x": 34.8,
+        "y": 163.55,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.0.ranks.2.name",
+        "label": "Voie 1, rang 3 — nom de capacité",
+        "type": "text",
+        "x": 82,
+        "y": 160.5,
+        "w": 81,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.0.ranks.2.description",
+        "label": "Voie 1, rang 3 — description",
+        "type": "textarea",
+        "x": 33,
+        "y": 173,
+        "w": 130,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.0.ranks.3.acquired",
+        "label": "Voie 1, rang 4 — acquis",
+        "type": "checkbox",
+        "x": 34.8,
+        "y": 209.1,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.0.ranks.3.name",
+        "label": "Voie 1, rang 4 — nom de capacité",
+        "type": "text",
+        "x": 82,
+        "y": 206,
+        "w": 81,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.0.ranks.3.description",
+        "label": "Voie 1, rang 4 — description",
+        "type": "textarea",
+        "x": 33,
+        "y": 218.5,
+        "w": 130,
+        "h": 25,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.0.ranks.4.acquired",
+        "label": "Voie 1, rang 5 — acquis",
+        "type": "checkbox",
+        "x": 34.8,
+        "y": 254.5,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.0.ranks.4.name",
+        "label": "Voie 1, rang 5 — nom de capacité",
+        "type": "text",
+        "x": 82,
+        "y": 252,
+        "w": 81,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.0.ranks.4.description",
+        "label": "Voie 1, rang 5 — description",
+        "type": "textarea",
+        "x": 33,
+        "y": 264.5,
+        "w": 130,
+        "h": 23.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.1.name",
+        "label": "Voie 2 — nom",
+        "type": "text",
+        "x": 206,
+        "y": 52.5,
+        "w": 95.5,
+        "h": 8.5,
+        "className": "coc-field coc-text coc-path-name"
+      },
+      {
+        "key": "paths.1.ranks.0.acquired",
+        "label": "Voie 2, rang 1 — acquis",
+        "type": "checkbox",
+        "x": 174.2,
+        "y": 70.55,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.1.ranks.0.name",
+        "label": "Voie 2, rang 1 — nom de capacité",
+        "type": "text",
+        "x": 221.5,
+        "y": 70,
+        "w": 79.5,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.1.ranks.0.description",
+        "label": "Voie 2, rang 1 — description",
+        "type": "textarea",
+        "x": 172.5,
+        "y": 82.5,
+        "w": 128.5,
+        "h": 24,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.1.ranks.1.acquired",
+        "label": "Voie 2, rang 2 — acquis",
+        "type": "checkbox",
+        "x": 174.2,
+        "y": 116.55,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.1.ranks.1.name",
+        "label": "Voie 2, rang 2 — nom de capacité",
+        "type": "text",
+        "x": 221.5,
+        "y": 115,
+        "w": 79.5,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.1.ranks.1.description",
+        "label": "Voie 2, rang 2 — description",
+        "type": "textarea",
+        "x": 172.5,
+        "y": 127.5,
+        "w": 128.5,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.1.ranks.2.acquired",
+        "label": "Voie 2, rang 3 — acquis",
+        "type": "checkbox",
+        "x": 174.2,
+        "y": 163.55,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.1.ranks.2.name",
+        "label": "Voie 2, rang 3 — nom de capacité",
+        "type": "text",
+        "x": 221.5,
+        "y": 160.5,
+        "w": 79.5,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.1.ranks.2.description",
+        "label": "Voie 2, rang 3 — description",
+        "type": "textarea",
+        "x": 172.5,
+        "y": 173,
+        "w": 128.5,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.1.ranks.3.acquired",
+        "label": "Voie 2, rang 4 — acquis",
+        "type": "checkbox",
+        "x": 174.2,
+        "y": 209.1,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.1.ranks.3.name",
+        "label": "Voie 2, rang 4 — nom de capacité",
+        "type": "text",
+        "x": 221.5,
+        "y": 206,
+        "w": 79.5,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.1.ranks.3.description",
+        "label": "Voie 2, rang 4 — description",
+        "type": "textarea",
+        "x": 172.5,
+        "y": 218.5,
+        "w": 128.5,
+        "h": 25,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.1.ranks.4.acquired",
+        "label": "Voie 2, rang 5 — acquis",
+        "type": "checkbox",
+        "x": 174.2,
+        "y": 254.5,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.1.ranks.4.name",
+        "label": "Voie 2, rang 5 — nom de capacité",
+        "type": "text",
+        "x": 221.5,
+        "y": 252,
+        "w": 79.5,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.1.ranks.4.description",
+        "label": "Voie 2, rang 5 — description",
+        "type": "textarea",
+        "x": 172.5,
+        "y": 264.5,
+        "w": 128.5,
+        "h": 23.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.2.name",
+        "label": "Voie 3 — nom",
+        "type": "text",
+        "x": 343.5,
+        "y": 52.5,
+        "w": 96.5,
+        "h": 8.5,
+        "className": "coc-field coc-text coc-path-name"
+      },
+      {
+        "key": "paths.2.ranks.0.acquired",
+        "label": "Voie 3, rang 1 — acquis",
+        "type": "checkbox",
+        "x": 311.65,
+        "y": 70.55,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.2.ranks.0.name",
+        "label": "Voie 3, rang 1 — nom de capacité",
+        "type": "text",
+        "x": 359.5,
+        "y": 70,
+        "w": 80,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.2.ranks.0.description",
+        "label": "Voie 3, rang 1 — description",
+        "type": "textarea",
+        "x": 310.5,
+        "y": 82.5,
+        "w": 129,
+        "h": 24,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.2.ranks.1.acquired",
+        "label": "Voie 3, rang 2 — acquis",
+        "type": "checkbox",
+        "x": 311.65,
+        "y": 116.55,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.2.ranks.1.name",
+        "label": "Voie 3, rang 2 — nom de capacité",
+        "type": "text",
+        "x": 359.5,
+        "y": 115,
+        "w": 80,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.2.ranks.1.description",
+        "label": "Voie 3, rang 2 — description",
+        "type": "textarea",
+        "x": 310.5,
+        "y": 127.5,
+        "w": 129,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.2.ranks.2.acquired",
+        "label": "Voie 3, rang 3 — acquis",
+        "type": "checkbox",
+        "x": 311.65,
+        "y": 163.55,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.2.ranks.2.name",
+        "label": "Voie 3, rang 3 — nom de capacité",
+        "type": "text",
+        "x": 359.5,
+        "y": 160.5,
+        "w": 80,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.2.ranks.2.description",
+        "label": "Voie 3, rang 3 — description",
+        "type": "textarea",
+        "x": 310.5,
+        "y": 173,
+        "w": 129,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.2.ranks.3.acquired",
+        "label": "Voie 3, rang 4 — acquis",
+        "type": "checkbox",
+        "x": 311.65,
+        "y": 209.1,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.2.ranks.3.name",
+        "label": "Voie 3, rang 4 — nom de capacité",
+        "type": "text",
+        "x": 359.5,
+        "y": 206,
+        "w": 80,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.2.ranks.3.description",
+        "label": "Voie 3, rang 4 — description",
+        "type": "textarea",
+        "x": 310.5,
+        "y": 218.5,
+        "w": 129,
+        "h": 25,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.2.ranks.4.acquired",
+        "label": "Voie 3, rang 5 — acquis",
+        "type": "checkbox",
+        "x": 311.65,
+        "y": 254.5,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.2.ranks.4.name",
+        "label": "Voie 3, rang 5 — nom de capacité",
+        "type": "text",
+        "x": 359.5,
+        "y": 252,
+        "w": 80,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.2.ranks.4.description",
+        "label": "Voie 3, rang 5 — description",
+        "type": "textarea",
+        "x": 310.5,
+        "y": 264.5,
+        "w": 129,
+        "h": 23.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.3.name",
+        "label": "Voie 4 — nom",
+        "type": "text",
+        "x": 67,
+        "y": 297.855,
+        "w": 96.5,
+        "h": 8.5,
+        "className": "coc-field coc-text coc-path-name"
+      },
+      {
+        "key": "paths.3.ranks.0.acquired",
+        "label": "Voie 4, rang 1 — acquis",
+        "type": "checkbox",
+        "x": 34.8,
+        "y": 315.905,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.3.ranks.0.name",
+        "label": "Voie 4, rang 1 — nom de capacité",
+        "type": "text",
+        "x": 82,
+        "y": 315.355,
+        "w": 81,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.3.ranks.0.description",
+        "label": "Voie 4, rang 1 — description",
+        "type": "textarea",
+        "x": 33,
+        "y": 327.855,
+        "w": 130,
+        "h": 24,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.3.ranks.1.acquired",
+        "label": "Voie 4, rang 2 — acquis",
+        "type": "checkbox",
+        "x": 34.8,
+        "y": 361.905,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.3.ranks.1.name",
+        "label": "Voie 4, rang 2 — nom de capacité",
+        "type": "text",
+        "x": 82,
+        "y": 360.355,
+        "w": 81,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.3.ranks.1.description",
+        "label": "Voie 4, rang 2 — description",
+        "type": "textarea",
+        "x": 33,
+        "y": 372.855,
+        "w": 130,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.3.ranks.2.acquired",
+        "label": "Voie 4, rang 3 — acquis",
+        "type": "checkbox",
+        "x": 34.8,
+        "y": 408.905,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.3.ranks.2.name",
+        "label": "Voie 4, rang 3 — nom de capacité",
+        "type": "text",
+        "x": 82,
+        "y": 405.855,
+        "w": 81,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.3.ranks.2.description",
+        "label": "Voie 4, rang 3 — description",
+        "type": "textarea",
+        "x": 33,
+        "y": 418.355,
+        "w": 130,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.3.ranks.3.acquired",
+        "label": "Voie 4, rang 4 — acquis",
+        "type": "checkbox",
+        "x": 34.8,
+        "y": 454.455,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.3.ranks.3.name",
+        "label": "Voie 4, rang 4 — nom de capacité",
+        "type": "text",
+        "x": 82,
+        "y": 451.355,
+        "w": 81,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.3.ranks.3.description",
+        "label": "Voie 4, rang 4 — description",
+        "type": "textarea",
+        "x": 33,
+        "y": 463.855,
+        "w": 130,
+        "h": 25,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.3.ranks.4.acquired",
+        "label": "Voie 4, rang 5 — acquis",
+        "type": "checkbox",
+        "x": 34.8,
+        "y": 499.855,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.3.ranks.4.name",
+        "label": "Voie 4, rang 5 — nom de capacité",
+        "type": "text",
+        "x": 82,
+        "y": 497.355,
+        "w": 81,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.3.ranks.4.description",
+        "label": "Voie 4, rang 5 — description",
+        "type": "textarea",
+        "x": 33,
+        "y": 509.855,
+        "w": 130,
+        "h": 23.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.4.name",
+        "label": "Voie 5 — nom",
+        "type": "text",
+        "x": 206,
+        "y": 297.855,
+        "w": 95.5,
+        "h": 8.5,
+        "className": "coc-field coc-text coc-path-name"
+      },
+      {
+        "key": "paths.4.ranks.0.acquired",
+        "label": "Voie 5, rang 1 — acquis",
+        "type": "checkbox",
+        "x": 174.2,
+        "y": 315.905,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.4.ranks.0.name",
+        "label": "Voie 5, rang 1 — nom de capacité",
+        "type": "text",
+        "x": 221.5,
+        "y": 315.355,
+        "w": 79.5,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.4.ranks.0.description",
+        "label": "Voie 5, rang 1 — description",
+        "type": "textarea",
+        "x": 172.5,
+        "y": 327.855,
+        "w": 128.5,
+        "h": 24,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.4.ranks.1.acquired",
+        "label": "Voie 5, rang 2 — acquis",
+        "type": "checkbox",
+        "x": 174.2,
+        "y": 361.905,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.4.ranks.1.name",
+        "label": "Voie 5, rang 2 — nom de capacité",
+        "type": "text",
+        "x": 221.5,
+        "y": 360.355,
+        "w": 79.5,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.4.ranks.1.description",
+        "label": "Voie 5, rang 2 — description",
+        "type": "textarea",
+        "x": 172.5,
+        "y": 372.855,
+        "w": 128.5,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.4.ranks.2.acquired",
+        "label": "Voie 5, rang 3 — acquis",
+        "type": "checkbox",
+        "x": 174.2,
+        "y": 408.905,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.4.ranks.2.name",
+        "label": "Voie 5, rang 3 — nom de capacité",
+        "type": "text",
+        "x": 221.5,
+        "y": 405.855,
+        "w": 79.5,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.4.ranks.2.description",
+        "label": "Voie 5, rang 3 — description",
+        "type": "textarea",
+        "x": 172.5,
+        "y": 418.355,
+        "w": 128.5,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.4.ranks.3.acquired",
+        "label": "Voie 5, rang 4 — acquis",
+        "type": "checkbox",
+        "x": 174.2,
+        "y": 454.455,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.4.ranks.3.name",
+        "label": "Voie 5, rang 4 — nom de capacité",
+        "type": "text",
+        "x": 221.5,
+        "y": 451.355,
+        "w": 79.5,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.4.ranks.3.description",
+        "label": "Voie 5, rang 4 — description",
+        "type": "textarea",
+        "x": 172.5,
+        "y": 463.855,
+        "w": 128.5,
+        "h": 25,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.4.ranks.4.acquired",
+        "label": "Voie 5, rang 5 — acquis",
+        "type": "checkbox",
+        "x": 174.2,
+        "y": 499.855,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.4.ranks.4.name",
+        "label": "Voie 5, rang 5 — nom de capacité",
+        "type": "text",
+        "x": 221.5,
+        "y": 497.355,
+        "w": 79.5,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.4.ranks.4.description",
+        "label": "Voie 5, rang 5 — description",
+        "type": "textarea",
+        "x": 172.5,
+        "y": 509.855,
+        "w": 128.5,
+        "h": 23.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.5.name",
+        "label": "Voie 6 — nom",
+        "type": "text",
+        "x": 343.5,
+        "y": 297.855,
+        "w": 96.5,
+        "h": 8.5,
+        "className": "coc-field coc-text coc-path-name"
+      },
+      {
+        "key": "paths.5.ranks.0.acquired",
+        "label": "Voie 6, rang 1 — acquis",
+        "type": "checkbox",
+        "x": 311.65,
+        "y": 315.905,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.5.ranks.0.name",
+        "label": "Voie 6, rang 1 — nom de capacité",
+        "type": "text",
+        "x": 359.5,
+        "y": 315.355,
+        "w": 80,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.5.ranks.0.description",
+        "label": "Voie 6, rang 1 — description",
+        "type": "textarea",
+        "x": 310.5,
+        "y": 327.855,
+        "w": 129,
+        "h": 24,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.5.ranks.1.acquired",
+        "label": "Voie 6, rang 2 — acquis",
+        "type": "checkbox",
+        "x": 311.65,
+        "y": 361.905,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.5.ranks.1.name",
+        "label": "Voie 6, rang 2 — nom de capacité",
+        "type": "text",
+        "x": 359.5,
+        "y": 360.355,
+        "w": 80,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.5.ranks.1.description",
+        "label": "Voie 6, rang 2 — description",
+        "type": "textarea",
+        "x": 310.5,
+        "y": 372.855,
+        "w": 129,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.5.ranks.2.acquired",
+        "label": "Voie 6, rang 3 — acquis",
+        "type": "checkbox",
+        "x": 311.65,
+        "y": 408.905,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.5.ranks.2.name",
+        "label": "Voie 6, rang 3 — nom de capacité",
+        "type": "text",
+        "x": 359.5,
+        "y": 405.855,
+        "w": 80,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.5.ranks.2.description",
+        "label": "Voie 6, rang 3 — description",
+        "type": "textarea",
+        "x": 310.5,
+        "y": 418.355,
+        "w": 129,
+        "h": 24.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.5.ranks.3.acquired",
+        "label": "Voie 6, rang 4 — acquis",
+        "type": "checkbox",
+        "x": 311.65,
+        "y": 454.455,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.5.ranks.3.name",
+        "label": "Voie 6, rang 4 — nom de capacité",
+        "type": "text",
+        "x": 359.5,
+        "y": 451.355,
+        "w": 80,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.5.ranks.3.description",
+        "label": "Voie 6, rang 4 — description",
+        "type": "textarea",
+        "x": 310.5,
+        "y": 463.855,
+        "w": 129,
+        "h": 25,
+        "className": "coc-field coc-textarea coc-rank-description"
+      },
+      {
+        "key": "paths.5.ranks.4.acquired",
+        "label": "Voie 6, rang 5 — acquis",
+        "type": "checkbox",
+        "x": 311.65,
+        "y": 499.855,
+        "w": 6.75,
+        "h": 6.75,
+        "className": "coc-field coc-checkbox"
+      },
+      {
+        "key": "paths.5.ranks.4.name",
+        "label": "Voie 6, rang 5 — nom de capacité",
+        "type": "text",
+        "x": 359.5,
+        "y": 497.355,
+        "w": 80,
+        "h": 10,
+        "className": "coc-field coc-text coc-rank-name"
+      },
+      {
+        "key": "paths.5.ranks.4.description",
+        "label": "Voie 6, rang 5 — description",
+        "type": "textarea",
+        "x": 310.5,
+        "y": 509.855,
+        "w": 129,
+        "h": 23.5,
+        "className": "coc-field coc-textarea coc-rank-description"
+      }
+    ]
+  }
+]

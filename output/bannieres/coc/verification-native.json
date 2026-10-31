@@ -1,0 +1,47 @@
+{
+  "fichier": "output\\bannieres\\coc\\banniere-native.jpg",
+  "width": 2172,
+  "height": 543,
+  "bytes": 250860,
+  "format": "JPEG",
+  "opaque": true,
+  "quality": 93,
+  "sha256": "6ede4e574174569a638d532153ccd44b8022c31ce5e4b1915085f5b84ebd2f0e",
+  "source": {
+    "fichier": "output\\bannieres\\coc\\source.png",
+    "width": 2172,
+    "height": 724,
+    "sha256": "2f7d1e84b899b5811d97c5a063e1b89fbf5252f2f80486263963d31caaaa5bd3",
+    "outil": "image_gen natif",
+    "definitionDemandee": "3840 × 1280 ou maximum natif disponible"
+  },
+  "crop": {
+    "x": 0,
+    "y": 90,
+    "width": 2172,
+    "height": 543
+  },
+  "agrandissement": 1,
+  "conformeDimensionsMinimum": false,
+  "limite": "Définition native inférieure à 2400 × 600 ; agrandissement soumis à accord.",
+  "apercus": [
+    "output\\bannieres\\coc\\apercu-1188-natif.png",
+    "output\\bannieres\\coc\\apercu-700-natif.png"
+  ],
+  "capturesExaminees": true,
+  "revue": {
+    "date": "2026-10-31",
+    "portee": "JPEG et deux simulations d’en-tête de 54 px hors GM-OS",
+    "resultat": "Pont central reconnaissable ; bords calmes ; pas de texte ni logo dans l’illustration.",
+    "apercus": [
+      {
+        "fichier": "output\\bannieres\\coc\\apercu-1188-natif.png",
+        "sha256": "1bfd29b62222c1a8939be03424e442b580998d4753e2d9d902727310b85973e1"
+      },
+      {
+        "fichier": "output\\bannieres\\coc\\apercu-700-natif.png",
+        "sha256": "f62c8d2a10858d3af80bf9efb0c77881f734321d82771a9cf8a127f6fc63a8e2"
+      }
+    ]
+  }
+}

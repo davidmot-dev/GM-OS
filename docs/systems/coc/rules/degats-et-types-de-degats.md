@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« CALCUL DES DOMMAGES » ; « ARMES » ; « ARMURES » ; « PIÈGES ET GRENADES » ; « ENDOMMAGER UNE STRUCTURE »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 0bb3b1f1
 ---
 
@@ -60,3 +60,5 @@ Frapper une structure à mains nues inflige à l'attaquant 1 dommage sur un succ
 
 ## Non couvert
 Le système ne détaille pas de résistance spécifique par type de dégâts élémentaires (froid, acide, électricité) distincte de la Réduction des Dommages générale, hormis les règles du feu et des explosifs.
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; conforme (p. 88-96, 98).*

@@ -1,0 +1,612 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "coc2-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Chroniques Oubliées Contemporain (pilote 2.0.0, outils/coc/finir_coc.py) et le gabarit coc2-fr livré le 2026-10-31. Écrite par outils/coc/relier_fiche_coc.mjs : les 151 clés ont chacune leur champ. Échelles : la santé compte les échelons noircis, l'évolution l'échelon atteint. Les rubriques de « Donner corps à votre personnage », le modèle de l'échelle d'évolution et l'expérience n'existent que dans GM-OS.",
+  "champs": [
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "joueur",
+      "fiche": "identity.player"
+    },
+    {
+      "gmos": "age",
+      "fiche": "identity.age"
+    },
+    {
+      "gmos": "origines",
+      "fiche": "identity.origin"
+    },
+    {
+      "gmos": "metier",
+      "fiche": "identity.profile"
+    },
+    {
+      "gmos": "agilite",
+      "fiche": "attributes.agility"
+    },
+    {
+      "gmos": "note_agilite",
+      "fiche": "attribute_notes.agility"
+    },
+    {
+      "gmos": "constitution",
+      "fiche": "attributes.constitution"
+    },
+    {
+      "gmos": "note_constitution",
+      "fiche": "attribute_notes.constitution"
+    },
+    {
+      "gmos": "force",
+      "fiche": "attributes.strength"
+    },
+    {
+      "gmos": "note_force",
+      "fiche": "attribute_notes.strength"
+    },
+    {
+      "gmos": "perception",
+      "fiche": "attributes.perception"
+    },
+    {
+      "gmos": "note_perception",
+      "fiche": "attribute_notes.perception"
+    },
+    {
+      "gmos": "charisme",
+      "fiche": "attributes.charisma"
+    },
+    {
+      "gmos": "note_charisme",
+      "fiche": "attribute_notes.charisma"
+    },
+    {
+      "gmos": "intelligence",
+      "fiche": "attributes.intellect"
+    },
+    {
+      "gmos": "note_intelligence",
+      "fiche": "attribute_notes.intellect"
+    },
+    {
+      "gmos": "volonte",
+      "fiche": "attributes.willpower"
+    },
+    {
+      "gmos": "note_volonte",
+      "fiche": "attribute_notes.willpower"
+    },
+    {
+      "gmos": "attaque_au_contact",
+      "fiche": "combat.melee"
+    },
+    {
+      "gmos": "attaque_a_distance",
+      "fiche": "combat.ranged"
+    },
+    {
+      "gmos": "defense",
+      "fiche": "combat.defense"
+    },
+    {
+      "gmos": "initiative",
+      "fiche": "combat.initiative"
+    },
+    {
+      "gmos": "capacite_de_guerison",
+      "fiche": "combat.cg"
+    },
+    {
+      "gmos": "bonus_dommages_au_contact",
+      "fiche": "combat.damage_bonus"
+    },
+    {
+      "gmos": "description",
+      "fiche": "profile.description"
+    },
+    {
+      "gmos": "sequelles",
+      "fiche": "profile.sequelae"
+    },
+    {
+      "gmos": "trait1",
+      "fiche": "traits.0.description"
+    },
+    {
+      "gmos": "trait1_valeur",
+      "fiche": "traits.0.value"
+    },
+    {
+      "gmos": "trait2",
+      "fiche": "traits.1.description"
+    },
+    {
+      "gmos": "trait2_valeur",
+      "fiche": "traits.1.value"
+    },
+    {
+      "gmos": "trait3",
+      "fiche": "traits.2.description"
+    },
+    {
+      "gmos": "trait3_valeur",
+      "fiche": "traits.2.value"
+    },
+    {
+      "gmos": "biens",
+      "fiche": "equipment.0"
+    },
+    {
+      "gmos": "equipement2",
+      "fiche": "equipment.1"
+    },
+    {
+      "gmos": "arme1",
+      "fiche": "weapons.0.name"
+    },
+    {
+      "gmos": "arme1_attaque",
+      "fiche": "weapons.0.attack_bonus"
+    },
+    {
+      "gmos": "arme1_bc",
+      "fiche": "weapons.0.critical_bonus"
+    },
+    {
+      "gmos": "arme1_dm",
+      "fiche": "weapons.0.damage"
+    },
+    {
+      "gmos": "arme1_notes",
+      "fiche": "weapons.0.notes_range"
+    },
+    {
+      "gmos": "arme2",
+      "fiche": "weapons.1.name"
+    },
+    {
+      "gmos": "arme2_attaque",
+      "fiche": "weapons.1.attack_bonus"
+    },
+    {
+      "gmos": "arme2_bc",
+      "fiche": "weapons.1.critical_bonus"
+    },
+    {
+      "gmos": "arme2_dm",
+      "fiche": "weapons.1.damage"
+    },
+    {
+      "gmos": "arme2_notes",
+      "fiche": "weapons.1.notes_range"
+    },
+    {
+      "gmos": "arme3",
+      "fiche": "weapons.2.name"
+    },
+    {
+      "gmos": "arme3_attaque",
+      "fiche": "weapons.2.attack_bonus"
+    },
+    {
+      "gmos": "arme3_bc",
+      "fiche": "weapons.2.critical_bonus"
+    },
+    {
+      "gmos": "arme3_dm",
+      "fiche": "weapons.2.damage"
+    },
+    {
+      "gmos": "arme3_notes",
+      "fiche": "weapons.2.notes_range"
+    },
+    {
+      "gmos": "protections",
+      "fiche": "armor.name"
+    },
+    {
+      "gmos": "protection_rd",
+      "fiche": "armor.reduction"
+    },
+    {
+      "gmos": "protection_malus",
+      "fiche": "armor.penalty"
+    },
+    {
+      "gmos": "echelle_de_sante",
+      "fiche": "tracks.health"
+    },
+    {
+      "gmos": "echelle_evolution",
+      "fiche": "tracks.scale"
+    },
+    {
+      "gmos": "voie1",
+      "fiche": "paths.0.name"
+    },
+    {
+      "gmos": "voie1_rang1",
+      "fiche": "paths.0.ranks.0.acquired"
+    },
+    {
+      "gmos": "voie1_rang1_nom",
+      "fiche": "paths.0.ranks.0.name"
+    },
+    {
+      "gmos": "voie1_rang1_description",
+      "fiche": "paths.0.ranks.0.description"
+    },
+    {
+      "gmos": "voie1_rang2",
+      "fiche": "paths.0.ranks.1.acquired"
+    },
+    {
+      "gmos": "voie1_rang2_nom",
+      "fiche": "paths.0.ranks.1.name"
+    },
+    {
+      "gmos": "voie1_rang2_description",
+      "fiche": "paths.0.ranks.1.description"
+    },
+    {
+      "gmos": "voie1_rang3",
+      "fiche": "paths.0.ranks.2.acquired"
+    },
+    {
+      "gmos": "voie1_rang3_nom",
+      "fiche": "paths.0.ranks.2.name"
+    },
+    {
+      "gmos": "voie1_rang3_description",
+      "fiche": "paths.0.ranks.2.description"
+    },
+    {
+      "gmos": "voie1_rang4",
+      "fiche": "paths.0.ranks.3.acquired"
+    },
+    {
+      "gmos": "voie1_rang4_nom",
+      "fiche": "paths.0.ranks.3.name"
+    },
+    {
+      "gmos": "voie1_rang4_description",
+      "fiche": "paths.0.ranks.3.description"
+    },
+    {
+      "gmos": "voie1_rang5",
+      "fiche": "paths.0.ranks.4.acquired"
+    },
+    {
+      "gmos": "voie1_rang5_nom",
+      "fiche": "paths.0.ranks.4.name"
+    },
+    {
+      "gmos": "voie1_rang5_description",
+      "fiche": "paths.0.ranks.4.description"
+    },
+    {
+      "gmos": "voie2",
+      "fiche": "paths.1.name"
+    },
+    {
+      "gmos": "voie2_rang1",
+      "fiche": "paths.1.ranks.0.acquired"
+    },
+    {
+      "gmos": "voie2_rang1_nom",
+      "fiche": "paths.1.ranks.0.name"
+    },
+    {
+      "gmos": "voie2_rang1_description",
+      "fiche": "paths.1.ranks.0.description"
+    },
+    {
+      "gmos": "voie2_rang2",
+      "fiche": "paths.1.ranks.1.acquired"
+    },
+    {
+      "gmos": "voie2_rang2_nom",
+      "fiche": "paths.1.ranks.1.name"
+    },
+    {
+      "gmos": "voie2_rang2_description",
+      "fiche": "paths.1.ranks.1.description"
+    },
+    {
+      "gmos": "voie2_rang3",
+      "fiche": "paths.1.ranks.2.acquired"
+    },
+    {
+      "gmos": "voie2_rang3_nom",
+      "fiche": "paths.1.ranks.2.name"
+    },
+    {
+      "gmos": "voie2_rang3_description",
+      "fiche": "paths.1.ranks.2.description"
+    },
+    {
+      "gmos": "voie2_rang4",
+      "fiche": "paths.1.ranks.3.acquired"
+    },
+    {
+      "gmos": "voie2_rang4_nom",
+      "fiche": "paths.1.ranks.3.name"
+    },
+    {
+      "gmos": "voie2_rang4_description",
+      "fiche": "paths.1.ranks.3.description"
+    },
+    {
+      "gmos": "voie2_rang5",
+      "fiche": "paths.1.ranks.4.acquired"
+    },
+    {
+      "gmos": "voie2_rang5_nom",
+      "fiche": "paths.1.ranks.4.name"
+    },
+    {
+      "gmos": "voie2_rang5_description",
+      "fiche": "paths.1.ranks.4.description"
+    },
+    {
+      "gmos": "voie3",
+      "fiche": "paths.2.name"
+    },
+    {
+      "gmos": "voie3_rang1",
+      "fiche": "paths.2.ranks.0.acquired"
+    },
+    {
+      "gmos": "voie3_rang1_nom",
+      "fiche": "paths.2.ranks.0.name"
+    },
+    {
+      "gmos": "voie3_rang1_description",
+      "fiche": "paths.2.ranks.0.description"
+    },
+    {
+      "gmos": "voie3_rang2",
+      "fiche": "paths.2.ranks.1.acquired"
+    },
+    {
+      "gmos": "voie3_rang2_nom",
+      "fiche": "paths.2.ranks.1.name"
+    },
+    {
+      "gmos": "voie3_rang2_description",
+      "fiche": "paths.2.ranks.1.description"
+    },
+    {
+      "gmos": "voie3_rang3",
+      "fiche": "paths.2.ranks.2.acquired"
+    },
+    {
+      "gmos": "voie3_rang3_nom",
+      "fiche": "paths.2.ranks.2.name"
+    },
+    {
+      "gmos": "voie3_rang3_description",
+      "fiche": "paths.2.ranks.2.description"
+    },
+    {
+      "gmos": "voie3_rang4",
+      "fiche": "paths.2.ranks.3.acquired"
+    },
+    {
+      "gmos": "voie3_rang4_nom",
+      "fiche": "paths.2.ranks.3.name"
+    },
+    {
+      "gmos": "voie3_rang4_description",
+      "fiche": "paths.2.ranks.3.description"
+    },
+    {
+      "gmos": "voie3_rang5",
+      "fiche": "paths.2.ranks.4.acquired"
+    },
+    {
+      "gmos": "voie3_rang5_nom",
+      "fiche": "paths.2.ranks.4.name"
+    },
+    {
+      "gmos": "voie3_rang5_description",
+      "fiche": "paths.2.ranks.4.description"
+    },
+    {
+      "gmos": "voie4",
+      "fiche": "paths.3.name"
+    },
+    {
+      "gmos": "voie4_rang1",
+      "fiche": "paths.3.ranks.0.acquired"
+    },
+    {
+      "gmos": "voie4_rang1_nom",
+      "fiche": "paths.3.ranks.0.name"
+    },
+    {
+      "gmos": "voie4_rang1_description",
+      "fiche": "paths.3.ranks.0.description"
+    },
+    {
+      "gmos": "voie4_rang2",
+      "fiche": "paths.3.ranks.1.acquired"
+    },
+    {
+      "gmos": "voie4_rang2_nom",
+      "fiche": "paths.3.ranks.1.name"
+    },
+    {
+      "gmos": "voie4_rang2_description",
+      "fiche": "paths.3.ranks.1.description"
+    },
+    {
+      "gmos": "voie4_rang3",
+      "fiche": "paths.3.ranks.2.acquired"
+    },
+    {
+      "gmos": "voie4_rang3_nom",
+      "fiche": "paths.3.ranks.2.name"
+    },
+    {
+      "gmos": "voie4_rang3_description",
+      "fiche": "paths.3.ranks.2.description"
+    },
+    {
+      "gmos": "voie4_rang4",
+      "fiche": "paths.3.ranks.3.acquired"
+    },
+    {
+      "gmos": "voie4_rang4_nom",
+      "fiche": "paths.3.ranks.3.name"
+    },
+    {
+      "gmos": "voie4_rang4_description",
+      "fiche": "paths.3.ranks.3.description"
+    },
+    {
+      "gmos": "voie4_rang5",
+      "fiche": "paths.3.ranks.4.acquired"
+    },
+    {
+      "gmos": "voie4_rang5_nom",
+      "fiche": "paths.3.ranks.4.name"
+    },
+    {
+      "gmos": "voie4_rang5_description",
+      "fiche": "paths.3.ranks.4.description"
+    },
+    {
+      "gmos": "voie5",
+      "fiche": "paths.4.name"
+    },
+    {
+      "gmos": "voie5_rang1",
+      "fiche": "paths.4.ranks.0.acquired"
+    },
+    {
+      "gmos": "voie5_rang1_nom",
+      "fiche": "paths.4.ranks.0.name"
+    },
+    {
+      "gmos": "voie5_rang1_description",
+      "fiche": "paths.4.ranks.0.description"
+    },
+    {
+      "gmos": "voie5_rang2",
+      "fiche": "paths.4.ranks.1.acquired"
+    },
+    {
+      "gmos": "voie5_rang2_nom",
+      "fiche": "paths.4.ranks.1.name"
+    },
+    {
+      "gmos": "voie5_rang2_description",
+      "fiche": "paths.4.ranks.1.description"
+    },
+    {
+      "gmos": "voie5_rang3",
+      "fiche": "paths.4.ranks.2.acquired"
+    },
+    {
+      "gmos": "voie5_rang3_nom",
+      "fiche": "paths.4.ranks.2.name"
+    },
+    {
+      "gmos": "voie5_rang3_description",
+      "fiche": "paths.4.ranks.2.description"
+    },
+    {
+      "gmos": "voie5_rang4",
+      "fiche": "paths.4.ranks.3.acquired"
+    },
+    {
+      "gmos": "voie5_rang4_nom",
+      "fiche": "paths.4.ranks.3.name"
+    },
+    {
+      "gmos": "voie5_rang4_description",
+      "fiche": "paths.4.ranks.3.description"
+    },
+    {
+      "gmos": "voie5_rang5",
+      "fiche": "paths.4.ranks.4.acquired"
+    },
+    {
+      "gmos": "voie5_rang5_nom",
+      "fiche": "paths.4.ranks.4.name"
+    },
+    {
+      "gmos": "voie5_rang5_description",
+      "fiche": "paths.4.ranks.4.description"
+    },
+    {
+      "gmos": "voie6",
+      "fiche": "paths.5.name"
+    },
+    {
+      "gmos": "voie6_rang1",
+      "fiche": "paths.5.ranks.0.acquired"
+    },
+    {
+      "gmos": "voie6_rang1_nom",
+      "fiche": "paths.5.ranks.0.name"
+    },
+    {
+      "gmos": "voie6_rang1_description",
+      "fiche": "paths.5.ranks.0.description"
+    },
+    {
+      "gmos": "voie6_rang2",
+      "fiche": "paths.5.ranks.1.acquired"
+    },
+    {
+      "gmos": "voie6_rang2_nom",
+      "fiche": "paths.5.ranks.1.name"
+    },
+    {
+      "gmos": "voie6_rang2_description",
+      "fiche": "paths.5.ranks.1.description"
+    },
+    {
+      "gmos": "voie6_rang3",
+      "fiche": "paths.5.ranks.2.acquired"
+    },
+    {
+      "gmos": "voie6_rang3_nom",
+      "fiche": "paths.5.ranks.2.name"
+    },
+    {
+      "gmos": "voie6_rang3_description",
+      "fiche": "paths.5.ranks.2.description"
+    },
+    {
+      "gmos": "voie6_rang4",
+      "fiche": "paths.5.ranks.3.acquired"
+    },
+    {
+      "gmos": "voie6_rang4_nom",
+      "fiche": "paths.5.ranks.3.name"
+    },
+    {
+      "gmos": "voie6_rang4_description",
+      "fiche": "paths.5.ranks.3.description"
+    },
+    {
+      "gmos": "voie6_rang5",
+      "fiche": "paths.5.ranks.4.acquired"
+    },
+    {
+      "gmos": "voie6_rang5_nom",
+      "fiche": "paths.5.ranks.4.name"
+    },
+    {
+      "gmos": "voie6_rang5_description",
+      "fiche": "paths.5.ranks.4.description"
+    }
+  ],
+  "absents": []
+}

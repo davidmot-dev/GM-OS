@@ -1,0 +1,17 @@
+{
+  "archives": [
+    {
+      "fichier": "01-Les-Minutes-de-Verre.gmos",
+      "sha256": "24e4fe9176ee62fb39174326328275fda1058c447ed870af5ad6e94645675842"
+    },
+    {
+      "fichier": "02-Sante-et-Etats.gmos",
+      "sha256": "6606b5ddef665cf449d1a02f5d4869bd4aee1fa6f383a171c494f43814d4c9b0"
+    },
+    {
+      "fichier": "03-Heros-Blues-et-Tests.gmos",
+      "sha256": "7f7a672fde88b57d3f5a696b9c2305aefcbc4d7d2652383c81e2a178e01bbe6f"
+    }
+  ],
+  "assertions": "coc.test.ts ; résultat global verification-archives.json"
+}

@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« TESTS EN OPPOSITION » ; « TESTS EN COOPÉRATION » ; « SÉRIE DE TESTS »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: e49b83d4
 ---
 
@@ -44,3 +44,5 @@ Le nombre maximal d'assistants pouvant intervenir lors d'un test en coopération
 
 ## Non couvert
 rien
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; conforme (p. 59-61).*

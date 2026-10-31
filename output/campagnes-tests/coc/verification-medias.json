@@ -1,0 +1,61 @@
+{
+  "reussi": true,
+  "horsLigne": true,
+  "imagesDecodees": 37,
+  "wavDecodes": 3,
+  "dureeWavSecondes": 4,
+  "archives": [
+    {
+      "fichier": "01-Les-Minutes-de-Verre.gmos",
+      "sha256": "24e4fe9176ee62fb39174326328275fda1058c447ed870af5ad6e94645675842"
+    },
+    {
+      "fichier": "02-Sante-et-Etats.gmos",
+      "sha256": "6606b5ddef665cf449d1a02f5d4869bd4aee1fa6f383a171c494f43814d4c9b0"
+    },
+    {
+      "fichier": "03-Heros-Blues-et-Tests.gmos",
+      "sha256": "7f7a672fde88b57d3f5a696b9c2305aefcbc4d7d2652383c81e2a178e01bbe6f"
+    }
+  ],
+  "capturesExaminees": true,
+  "captures": [
+    {
+      "fichier": "captures/rendu-carte-parvis.jpg",
+      "sha256": "3a88668136097e7f9e0eb92e9cab8a4d7584a90cf6a4b2e0bf1bee9bc73678c5"
+    },
+    {
+      "fichier": "captures/rendu-carte-passerelle.jpg",
+      "sha256": "61f97cedcdc658e1fc33a95f6ef1ddc3fc3cb3440981ec5e1cb4b46b5dd49810"
+    },
+    {
+      "fichier": "captures/rendu-carte-station.jpg",
+      "sha256": "509d0023bfa9360e57e591d54eb7b1e33df7e7017b9a5413aac6d619cf11c0ca"
+    },
+    {
+      "fichier": "captures/rendu-compagnie.jpg",
+      "sha256": "60117e22272170a775884910ebabf48c0839fd417804d8001a0793fb41820180"
+    },
+    {
+      "fichier": "captures/rendu-indice-boitier.jpg",
+      "sha256": "fb798b78cd7555b139b7ca92e9403137a4881eecdcb4ccfa1e679a4c9d06a935"
+    },
+    {
+      "fichier": "captures/rendu-indice-journal.jpg",
+      "sha256": "dbaa3aa8b8c9c37c12a6b006a29274ab3bea664464ec77935d8946aca4a3ca53"
+    },
+    {
+      "fichier": "captures/rendu-pj-ines.jpg",
+      "sha256": "76392728397d5b4103a504a4f527e809ae48af8e39363146f5e5c66bc91c50d2"
+    },
+    {
+      "fichier": "captures/rendu-pj-mael.jpg",
+      "sha256": "260a02bbe6c5400b986687c0fffbf11d44c1b906a80ed9b43360fed2287b0245"
+    },
+    {
+      "fichier": "captures/rendu-pj-sami.jpg",
+      "sha256": "268e5fd3c5085c688ac72743fbb592783153a2ab1702194939703c5bf1e17145"
+    }
+  ],
+  "relecture": "31/10/2026 : neuf rendus lisibles examinés ; schémas et cartouches documentaires, pas des illustrations de personnages ; écoute humaine non exécutée."
+}

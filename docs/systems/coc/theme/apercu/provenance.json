@@ -1,0 +1,158 @@
+{
+  "date": "2026-10-31",
+  "jeu": "Chroniques Oubliées Contemporain, deuxième édition",
+  "dossier": "coc",
+  "pilote": {
+    "id": "custom-1793122664880",
+    "version": "1.0.0",
+    "corpusId": "coc",
+    "usage": "identification du dossier uniquement"
+  },
+  "sources": [
+    {
+      "fichier": "docs/Reference/COC/COC2_01_Livre_de_Regles_Fiche PJ.pdf",
+      "sha256": "633ba29927a6bd152a45bb3d4530dbd857fb8267da7f7f9c87143a3e2fc86e9a"
+    },
+    {
+      "fichier": "docs/Reference/COC/COC2_01_Livre_de_Regles_web_v0.pdf",
+      "sha256": "acbe73a34f250cd8ca8e5f6af7bccd25d31e76e65bd06980e63ca35807d686fa"
+    },
+    {
+      "fichier": "docs/Reference/COC/COC2_TOC.png",
+      "sha256": "800005e156bdc167bf04b04922f4bc961671f4257a1bdf1035364bfa577254b7"
+    },
+    {
+      "fichier": "docs/Reference/COC/Screenshot 2026-10-31 102732.png",
+      "sha256": "5f294c7b3665a8d1787cd660cbd2af187b78a320fc84ea670f4107efc5a82481"
+    },
+    {
+      "fichier": "docs/Reference/COC/Screenshot 2026-10-31 102808.png",
+      "sha256": "9fb1a057ada340b4492e1503f25c5d0be29912f5c821354af985ddf9b2062bc2"
+    },
+    {
+      "fichier": "docs/Reference/COC/Screenshot 2026-10-31 102843.png",
+      "sha256": "194bd0fd8bf12149ef964e99d3abd229bbcbd971e447c56fcb9929e9f8f760b5"
+    },
+    {
+      "fichier": "Export Dirvers/COC_driver_gmos_1793367242142.gmos-driver",
+      "sha256": "1d9eafa94378e3b14470c301ff84b5d4f3b6b436fea7a4ce2754770e9efca3a4"
+    }
+  ],
+  "fichiersDuTheme": [
+    {
+      "fichier": "theme.css",
+      "sha256": "14bd50e826b8713a4df18cdefdc945aebde862e7fa1c1404be0a73db5f19e5f8"
+    },
+    {
+      "fichier": "intention.md",
+      "sha256": "df685b02e02cd0d83869025edf59079a6ee6af4e3895baacd55322641799ce74"
+    },
+    {
+      "fichier": "ornements.json",
+      "sha256": "ebc2613302f448953aa220b2cd67f678c922c757d6799862357fdcf5eebf748e"
+    },
+    {
+      "fichier": "icones.json",
+      "sha256": "b86305e08a8ee5231c82c0f94a36f68e3deb111dba238d384697f1e2cefdc741"
+    },
+    {
+      "fichier": "icones/tableau-de-bord.svg",
+      "sha256": "146e56577534bfdef375da36b3c4cdf1a19e8c6fa7991d94f6bc13f2254ce368"
+    },
+    {
+      "fichier": "icones/journal.svg",
+      "sha256": "9db55397643c71df1c8d72c694a97d236f0ba4ac7b4b4a7832dd35e2f3e8349a"
+    },
+    {
+      "fichier": "icones/des.svg",
+      "sha256": "fe486b52245199b8adcbadc18732f4b9fd477ff414c31a7edfbf7afe9eb00546"
+    },
+    {
+      "fichier": "icones/pj.svg",
+      "sha256": "8128d018100047c19f0a5a5baccc9b93e88339f088ac665d6b2dff0e2b258ea1"
+    },
+    {
+      "fichier": "icones/pnj.svg",
+      "sha256": "cfd5db6cc277b36e5c225ec253ba1dfbfd4fba8cec06c86010ded67dac2a53e5"
+    },
+    {
+      "fichier": "icones/sante.svg",
+      "sha256": "3f9fe1403ec83d62891033f469a6f98f0da9766e50d6073967091a937c10f7ec"
+    },
+    {
+      "fichier": "icones/initiative.svg",
+      "sha256": "2686960c9a52bd95f138e7dfdef8a68dce477af322ee0fa34c642f8734575025"
+    },
+    {
+      "fichier": "icones/indice.svg",
+      "sha256": "7eddedb55da425dc80324ba58987f9b09dfd3d4a1c78a3b9413fbce5affb4ea3"
+    },
+    {
+      "fichier": "icones/carte.svg",
+      "sha256": "a0f0f6e1202c57bcac67c0b9bd487fbf4f01ef435a97091dd9722eba3429cc35"
+    },
+    {
+      "fichier": "icones/lieu.svg",
+      "sha256": "3791f66132b53d9e50c0c34d6a9d1f8236f125432382983fb86152a3e247cffc"
+    },
+    {
+      "fichier": "icones/scene.svg",
+      "sha256": "a78f42073fc83a75e6088eaa4cf3360f7f8b5b4eaeb98b0af6d1d3b90e8b63e9"
+    },
+    {
+      "fichier": "icones/horloge.svg",
+      "sha256": "ca9a939f6ecdb4d3e9a449cc9a81203b43f2de2a940cc92c7d0dc92f897cad32"
+    },
+    {
+      "fichier": "icones/butin.svg",
+      "sha256": "fa4c90810e8b9abc3ef1b1b30df7f67ffdd8b5e283c46e6ac28fc2ebed98e860"
+    },
+    {
+      "fichier": "icones/nexus.svg",
+      "sha256": "a6c0c0f6924bf06523f0052e9ebb1ac62d81912fe8976bedc3297c9bbc9ca7ae"
+    },
+    {
+      "fichier": "icones/combat.svg",
+      "sha256": "831e93f5db4334cb46846c29c4de3a7a0f08bdb2ed67d45f61c083a9409e38ca"
+    },
+    {
+      "fichier": "ornements/coin.svg",
+      "sha256": "c1de9d1a31969bff280b62fb62355b27d240074935566b6e0c60b41863013f5c"
+    },
+    {
+      "fichier": "ornements/separateur.svg",
+      "sha256": "1a263b618a8b811eea8c1c0fceb462c606fe036afee620534af83035c0b69228"
+    },
+    {
+      "fichier": "ornements/fond.svg",
+      "sha256": "11113db24c04f748ed531a75e4a1b73cad670bba53b0639e7729f67268f9b5ed"
+    },
+    {
+      "fichier": "matieres/facettes.svg",
+      "sha256": "3d6f427fdbaee7960f836ecddd1f97b7eb1c2534050ba86f294c6e998d7cb141"
+    },
+    {
+      "fichier": "matieres/papier.svg",
+      "sha256": "c836e52eabf8a16707c3d529adba9c1256f405a2c5e2de54429f36dbfc44ea42"
+    }
+  ],
+  "validation": {
+    "accepte": true,
+    "erreurs": 0,
+    "avertissements": 0,
+    "testsReussis": 79
+  },
+  "apercus": [
+    {
+      "fichier": "theme-coc-bureau.png",
+      "largeur": 1440,
+      "sha256": "c6ab73c4ddd8af6c875cca69cd166887c2cea8b94e06f68cc56f7753679cf8a0"
+    },
+    {
+      "fichier": "theme-coc-mobile.png",
+      "largeur": 390,
+      "sha256": "09f262a4608f1e7dca81bb72ec08db5b79f6596138bb6fabb529a29b0b24c468"
+    }
+  ],
+  "limites": "Planche hors ligne avec polices de repli ; activation réelle dans GM-OS non exécutée"
+}

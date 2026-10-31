@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« CALCULER LES CARACTÉRISTIQUES SECONDAIRES » ; « ROUND DE COMBAT » ; « INITIATIVE ET ORDRE DES ATTAQUANTS » ; « SURPRISE! » ; « ACTIONS POSSIBLES LORS D’UN ROUND DE COMBAT » ; « RÈGLES OPTIONNELLES: COMBAT TACTIQUE »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 0f54beff
 ---
 
@@ -35,7 +35,7 @@ En règle optionnelle de combat tactique, les participants résolvent leur premi
   2. 1 action de mouvement + 1 action d'attaque
   3. 2 actions de mouvement
 - Distance d'une action de mouvement: 10 mètres environ
-- Actions gratuites: illimitées (lâcher un objet, parler)
+- Actions gratuites: en plus des actions normales, même d'une action limitée (lâcher un objet, quelques mots)
 - Option combat tactique: déroulement en 2 tours d'initiative par round
 
 ## À la table
@@ -58,3 +58,5 @@ Dans la règle optionnelle du combat tactique, chaque participant résout sa pre
 
 ## Non couvert
 rien
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; corrigé : les actions gratuites, que le livre ne dit pas illimitées (p. 27, 85-86, 92-93).*

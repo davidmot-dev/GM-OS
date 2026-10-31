@@ -463,6 +463,12 @@ reçus par les trois Hub. Imports, remplacement, fiches, Égo et persistance abo
 `e2e/campagneDeRecetteDegenesis.spec.ts` conserve son échec final. Preuves dans
 `output/campagnes-tests/degenesis/verification-electron.json` ; données fictives uniquement.
 
+**COC2 confirme le 31/10** (§ 194) : douze chemins `payload.session.sessions[*].gmSecrets`
+reçus par les Hub 360/768/1180. Trois imports, remplacement, sentinelles, jets, dépenses Héros,
+fiches HTML et rechargement aboutissent ; assertion finale stricte conservée en échec dans
+`e2e/campagneDeRecetteCoc.spec.ts`. Rapport `output/campagnes-tests/coc/verification-electron.json`,
+marqueurs fictifs uniquement ; correction applicative toujours séparée.
+
 **Ouverte le 2026-09-12, à la demande de David** : *« lors de tes tests E2E, où consignes-tu les
 différents bugs que tu aurais découverts ? »* — la réponse honnête était **nulle part de
 systématique**. Un défaut corrigé obtient sa section numérotée ; un défaut *constaté et différé*
@@ -13080,6 +13086,114 @@ avec ce pilote et ces règles, pour les joueurs de mon export fourni. »
   correction séparée de GM-05. Essais exclusivement jetables, autorisés par David ; relance
   hors bac à sable acceptée par revue automatique, aucun profil/sauvegarde personnel utilisé.
 
+### 190 · Thème COC — Chroniques Oubliées Contemporain 2 — 31/10/2026
+
+David : « GM-OS Studio fais le thème de COC, les différents fichiers de référence sont ici
+C:\Projet_David\GM-OS-v5\docs\Reference\COC ».
+
+- **Livré par Codex, atelier thème GM-OS Studio** : `docs/systems/coc/theme/`,
+  jetons et intention, deux matières, trois ornements et quinze icônes originales en SVG.
+  Papier ivoire, titres prune, cadre violet et accent orange ; angles presque droits,
+  relief discret, aucun halo. Le pilote fourni confirme `corpusId: coc` (1.0.0).
+- **Vérifié** : validateur réel accepté 0 erreur / 0 avertissement ; 79 tests du contrat passent.
+  Texte sur matière 11,14 / 13,11 ; secondaire 4,77 / 5,62 ; accent sur matière 6,73.
+  Vingt SVG décodés ; planches 1440/390 px examinées, zéro erreur JS et aucun débordement.
+  Rapports et script reproductible dans `theme/apercu/` ; ce sont des démonstrations hors ligne,
+  **pas des captures de GM-OS**. [Reprise](2026-10-31-etat-et-reprise-codex-theme-coc.md).
+- **Limites** : Exo 2 / Source Sans 3 approchent les polices NatomPro / HypatiaSansPro ; replis
+  système sur les planches. Le contrat ne sépare pas les titres prune et les filets orange :
+  l’orange est repris dans le cadre. Illustrations et pages sources non embarquées.
+- **Reste** : activer le thème et les personnalités dans une campagne COC puis jugement de David
+  en situation. Aucun audit, réglage mécanique ou changement de fiche dans cet atelier ;
+  aucun service ni écriture de code applicatif, aucun commit demandé.
+
+### 191 · Fiche COC2 — deux pages fidèles au PDF — 31/10/2026
+
+David : « GM-OS Studio fais la fiches de personnage de COC, le fichiers de référence est ici
+C:\Projet_David\GM-OS-v5\docs\Reference\COC ».
+
+- **Livré par Codex, atelier fiche GM-OS Studio** :
+  `docs/fiches/COC/coc2-fiche-personnage-interactive.html`, modèle `coc2-fr`,
+  **deux pages, 189 zones / 151 clés**, trente cases de capacités et deux pistes de vingt
+  hotspots numériques. PDF et fonds préservés, format natif 473,386 × 609,449 points.
+  [Bilan](2026-10-31-fiche-coc-studio.md), [reprise](2026-10-31-etat-et-reprise-codex-fiche-coc.md).
+- Première page : identité, sept caractéristiques et notes, combat, avantages/désavantages,
+  équipement, trois armes, protection, séquelles et santé. Deuxième : six Voies de cinq rangs
+  avec case/nom/description, échelle indépendante ; aucun portrait ou calcul de règle inventé.
+- **Vérifié** : validateur accepté **0 erreur / 2 avertissements d’intégration**, **40 tests**
+  du contrat et du constructeur passent. HTML autonome : saisie, sauvegarde, import/export,
+  reset confirmé, navigation, zoom, mobile et impression CSS des deux pages. Moteur en navigateur
+  neuf : import du modèle, saisie sur les deux pages et export JSON v2 retourné au HTML autonome.
+  Captures examinées ; zéro requête réseau et zéro erreur JS. Preuves `output/fiches/coc/`.
+- **Reste** : intégrer le gabarit au moteur et monter sa version, puis correspondance de ses
+  151 clés avec le pilote COC par l’intégrateur (§ 7–8 du cahier). Essais GM-OS/Hub et de David
+  après ce raccord. Aucun moteur permanent, PDF, thème, `src/` ou `electron/` modifié.
+  Aucun service ni profil personnel utilisé ; fichiers non commités.
+
+### 192 · Bannière et identité d’images COC2 — 31/10/2026
+
+David : « GM-OS Studio fais la bannière et l’identité visuelle de COC ».
+
+- **Livré par Codex, ateliers bannière et identité GM-OS Studio** :
+  `docs/systems/coc/COC Band.jpg`, JPEG opaque **2 400 × 600 px / 264 716 octets** ;
+  panorama original de canal urbain, violet, bleu pétrole et ambre, sans texte ni logo.
+  Identité générique en anglais dans `output/identites/coc/identite-visuelle.md` :
+  **STYLE 43 mots / AVOID 13 mots**, validateur accepté et sens relu.
+- **Vérifié** : source native 2 172 × 724 px, recadrée à 2 172 × 543 ; agrandissement
+  de **10,5 % explicitement autorisé par David** (« Oui, exporter à 2 400 × 600 »),
+  sans détail supplémentaire. JPEG final et simulations d’en-tête 1188/700 × 54 px examinés ;
+  pont central lisible, bords calmes. Simulations hors GM-OS. Invite exacte, empreintes,
+  contrôles et source conservés dans `output/bannieres/coc/`.
+  [Reprise](2026-10-31-etat-et-reprise-codex-banniere-identite-coc.md).
+- **Reste** : sélectionner le JPEG dans « Bannière de l’en-tête » et copier Style / À éviter
+  dans l’identité visuelle du pilote, puis jugement de David en situation. Aucun pilote,
+  campagne, profil personnel, `src/` ou `electron/` modifié ; aucun commit demandé.
+
+### 193 · Chroniques Oubliées Contemporain fini — pilote 2.0.0, d20 + caractéristique, échelle de santé en cases — 31/10/2026
+
+David : *« COC le livre de base est ici […] COC2_01_Livre_de_Regles_web_v0.pdf »* (`/finir-un-pilote`), puis, sur le constat, *« Tout, dans l'ordre »*, *« Une échelle, son modèle choisi »*, *« [l'option 3d6] Réglable dans le pilote »* ; GM-OS fermé. Thème, fiche HTML, bannière et identité livrés le même jour par Codex (§ 190-192). [Page du manuel](../User%20Guides/54-Jeu-COC.md).
+
+- **Contrôle** de l'export forgé (`COC_driver_gmos_1793367242142`) : avec `preparerLeJet`, le saut de haie (AGI 3 contre 10, p. 8) donnait un seuil de 3 par dé et **dix réussites exigées d'un seul d20** — tous les tests échouaient ; `critique: 1` comptait un 1 double, `complication: 20` faisait du 20 une complication ; AGI et INT additionnées ; l'échelle de santé en points de vie qui baissent ; trois échelles d'évolution ; portées à modificateur fixe.
+- **Le jet** : `jet.coc` (`dice/systemes/coc.ts`, cartes `CocAuJet.tsx`, branché dans `preparerLeJet` et `PanneauDeJet`) — d20 + une caractéristique, l'ATC, l'ATD ou le bonus d'une arme nommée (`motif`), contre la difficulté ou la DEF ; plages critiques réglables ; dé bonus et malus ; conditions, aides, état préjudiciable, prendre son temps, mode rapide ; malus de santé sur les actions physiques ; blues avant, héros après (+2/+5, doublé, Légende, échelon gagné sur un critique) ; `des: '3d6'`. Le titre du jet nomme le champ ou l'arme ; la ligne du calcul dit « Bonus », plus « Seuil ».
+- **Combat** : `combat.casesDeSante` (vingt cases, états à 5/10/15/20) et `combat.encaissement` (`combat/logic/encaissementDeCoc.ts`, à la porte `handleApplyImpact`) — RD de la protection sauf dégât « sans protection », mort instantanée au-delà de 20 + CON, coup de grâce, états franchis au journal ; malus de santé à l'initiative (`rollAutoInitiative`). **Commun** : `casesAligneesSurLaFiche` (`HealthInterpreter.ts`) donne les cases du pilote à un personnage né sous une autre santé et les aligne sur le champ de la fiche avant le coup ; le badge de santé dit le seuil nommé du jeu (« Affaibli », « Choqué » chez NOC) au lieu de « Blessé ». Contrôles de la Forge pour `jet.coc` et `combat.encaissement`.
+- **Pilote 2.0.0** (`outils/coc/finir_coc.py` → `corriges/coc/COC_driver_gmos_finir`, `--3d6` pour la variante) : mêmes identifiants ; 162 champs (les 151 clés de la fiche HTML, les rubriques « Donner corps » du pilote forgé, le modèle d'évolution, l'expérience) ; une échelle d'évolution ; portées du livre sans modificateur fixe. **Zéro constat de la Forge**, variante 3d6 comprise.
+- **Fiche HTML** : moteur **21 → 22** (`outils/coc/integrer_au_moteur.mjs`), correspondance 151/151 (`outils/coc/relier_fiche_coc.mjs`), validateur 0/0 ; thème revalidé 0/0.
+- **Corpus relu 18/18** (PDF = imprimée + 3) : douze fiches corrigées — l'état affaibli (ne pas perdre sa prochaine action), l'état blessé, la séquelle, le héros qui se dépense **après** le test et ses gains, le repos qui apaise le blues, la coercition qui dégrade sur un succès, les critiques sociaux et leur choix, les DM des occupants (VIT en d6), les températures, la santé des PNJ ; ajoutés : l'option du 3d6, braver une condition, la DEF à 15, la valse à trois temps ; retirés : le cumul héros + blues, les sbires éliminés par tranche de DM, le premier rôle et sa garde, le round de repos de l'essoufflement ; le départ au 10e ramené au scénario *Ligne de rupture*.
+- **Vérifié** : règle (21, exemples du livre : la haie, Amelia, le revolver, les 7 + 4 DM, le 13e échelon du héros), panneau (10), porte des dégâts (7), initiative (1), contrôle (1) ; 3 908 essais des dés, du combat, de la session, de la Forge, des fiches, du manuel et des correspondances (l'attente des gabarits intégrés passée à 22) ; `corpusDerivable` (130) ; `npx tsc -b`, eslint ; `npm run build` puis e2e des captures sur le seul pilote COC — il a trouvé le badge « Blessé » à 13 échelons et une jauge de santé « 13 / 13 » (corrigés) ; cinq captures relues.
+- **Reste** : l'essai de David — réimporter `corriges/coc/COC_driver_gmos_finir.gmos-driver` avec **Remplacer** (voies, armes et traits d'un personnage créé sur la fiche forgée sont à ressaisir ; sa santé passe aux cases au premier coup) ; un test d'AGI, une attaque à l'arme contre une DEF avec dé bonus, l'échelle du héros ; 15 DM sur un PJ protégé dans Combat-OS ; la Fiche du jeu, saisir puis Sauvegarder ; activer le thème `coc` et la bannière.
+
+### 194 · Campagnes de recette COC2 — Les Minutes de Verre — 31/10/2026
+
+David : « utilise le plugin GM-OS Campagnes de test et Crée les campagnes de test de COC avec
+ce pilote et ces règles, pour les joueurs de mon export fourni ».
+
+- **Livré par Codex** : `output/campagnes-tests/coc/COC2-Campagnes-de-recette.zip`,
+  trois archives `.gmos`, enquête originale de deux à quatre séances et deux laboratoires
+  Santé/états et Héros/Blues/tests ; **24 nouveaux PJ** rattachés aux trois joueurs autorisés,
+  quatre actes, seize scènes, huit lieux, douze PNJ et douze indices ; **70 cas humains vierges**.
+  [Bilan](2026-10-31-campagne-recette-coc.md),
+  [reprise](2026-10-31-etat-et-reprise-codex-campagnes-coc.md).
+- **Pilote réel** : COC 2.0.0 du § 193, d20, gabarit 162 champs, modèle coc2-fr au moteur 22.
+  Variante 3d6 fournie à part, même ID : remplacement explicite puis retour au d20.
+  Aucun module spécifique inventé. Profils aux valeurs choisies ; Voies officielles à compléter
+  avec le livre avant une partie réglementaire ; V01 porte un texte technique NON CANONIQUE.
+- **Vérifié hors ligne** : **71 tests passent**, fonctions réelles du moteur, types, liens,
+  validateurs Nexus/pilote, santé via la porte des dégâts, Héros/Blues, option 3d6 et raccord
+  HTML. Trois archives acceptées par le contrôle structurel partiel du plugin. 37 images et
+  trois WAV décodés, neuf rendus examinés ; `npm run build` (dont `tsc -b`) réussi, lint ciblé
+  sans erreur. Rapports et ZIP liés aux mêmes SHA-256 ; aucune recette humaine prévalidée.
+- **Vérifié en application** : trois imports natifs, remplacement isolé de 02, trois anciens PJ
+  et avatars fictifs conservés, rechargement, note de 01 et échelons 8/9/10 persistants ;
+  trois Hub 360/768/1180, trois jets reçus, trois dépenses Héros et fiches HTML liées ; quatre
+  captures examinées. Parcours de 52 s, **seul échec GM-05**, douze chemins de secrets de séance.
+  Marqueurs fictifs et assertion zéro fuite conservés ; § 1 bis actualisé.
+- **Accords de David, 31/10** : « Oui, lancer les essais isolés », puis « Oui, autoriser cette
+  relance hors bac à sable » après échec EPERM/GPU et refus initial de la revue automatique.
+  Relance ensuite acceptée, avec les mêmes données jetables ; historique dans le lot.
+- **Reste** : 70 cas humains NON TESTÉS, droits GM-06, matériel, Voies et partie complète ;
+  correction séparée de GM-05.
+  Aucun `src/`, `electron/`, profil ni sauvegarde personnel écrit ; aucun commit demandé.
+
 ### 195 · Sommaire Shadowrun : Anarchy 2.0 — 31/10/2026
 
 David : « GM-OS Studio fait le TOC pour Shadowrun Anarchy », références dans
@@ -13141,6 +13255,11 @@ nouvelle bannière reste indépendant et en attente.
 | --- | --- | --- | --- | --- |
 | 132 | **Shadowrun Anarchy — quatre ateliers Studio** | § 196 ; thème 0/0, fiche une page/121 clés, bannière 2400 × 600 ; identité révisée cyberpunk saturé 43/14 mots ; 51 tests, contrôles hors ligne — 31/10 | Suivre LIRE-MOI du lot Studio et prendre l’identité révisée dans output/identites/shadowrun-anarchy | Raccord de fiche et jugement de David ; aucun pilote mécanique audité |
 | 131 | **Sommaire Shadowrun : Anarchy 2.0** | § 195 ; 327 entrées, deux pages/six colonnes vérifiées, Markdown plat livré — 31/10 | Utiliser le Markdown dans output/sommaires/shadowrun-anarchy | Rien pour la transcription |
+| 130 | **Campagnes de recette — COC2** | § 194 ; enquête et deux laboratoires, 24 PJ, 70 cas humains ; 71 tests, trois imports et Hub éprouvés — 31/10 | Importer 01-Les-Minutes-de-Verre.gmos ; suivre le cahier | GM-05 confirmé ; recette humaine, Voies et matériel |
+| 129 | **Chroniques Oubliées Contemporain fini — pilote 2.0.0** | § 193 ; corpus relu 18/18, d20 + caractéristique contre la difficulté ou la DEF, critiques sur 20 et 1, dé bonus/malus ; échelle de santé en vingt cases (RD, mort instantanée, malus d'état) ; héros ou blues ; option du 3d6 ; fiche HTML au moteur 22 reliée (151/151), thème contrôlé — 31/10 | Réimporter `corriges/coc/COC_driver_gmos_finir` avec Remplacer ; un test, une attaque à l'arme avec dé bonus, l'échelle du héros, 15 DM dans Combat-OS, la Fiche du jeu | L'essai de David |
+| 128 | **Bannière et identité COC2** | § 192 ; JPEG 2400 × 600, 265 Ko, agrandissement autorisé ; identité 43/13 mots et cadrages examinés — 31/10 | Sélectionner le JPEG et copier Style / À éviter dans le pilote | Jugement de David dans GM-OS |
+| 127 | **Fiche COC2 — atelier Studio** | § 191 ; deux pages fidèles, 189 zones / 151 clés, 40 tests et moteur jetable vérifiés — 31/10 | Ouvrir la Fiche du jeu d'un personnage COC | Intégrée au moteur 22 et reliée au § 193 ; essai de David |
+| 126 | **Thème COC — Contemporain 2** | § 190 ; thème accepté 0/0, deux matières, trois ornements, quinze icônes ; 79 tests et planches hors ligne — 31/10 | Activer thème du jeu et personnalités dans une campagne COC | Jugement de David dans GM-OS |
 | 125 | **Campagnes de recette — Degenesis** | § 189 ; aventure, deux laboratoires, 21 PJ, 66 cas humains ; 67 tests, imports et trois Hub éprouvés — 30/10 | Importer 01-La-Station-des-Cendres.gmos ; suivre le cahier | GM-05 confirmé ; essais humains et matériel à faire |
 | 124 | **Degenesis fini — pilote 2.0.0** | § 188 ; corpus relu 16/16, réserve de d6 à 4+ avec déclencheurs, échec critique, Égo et Traumatismes ; deux pistes de santé et attaque mentale ; initiative en succès ; fiche HTML au moteur 21 reliée (129/129), thème contrôlé — 30/10 | Réimporter `corriges/Degenesis_driver_gmos_finir` avec Remplacer ; un jet avec Égo, un coup en Traumatismes, l'initiative, la Fiche du jeu | L'essai de David |
 | 123 | **RuneQuest fini — pilote 2.1.0** | § 187 ; corpus relu 17/17 avec l'errata, d100 en cinq niveaux, caractéristique, résistance, augmentation, opposition, localisation ; coups localisés dans Combat-OS ; fiche HTML au moteur 20 reliée, thème contrôlé — 30/10 | Réimporter `corriges/RQ_driver_gmos_finir` avec Remplacer ; un jet d'épée, une résistance POU contre POU, un coup localisé, la Fiche du jeu | L'essai de David |

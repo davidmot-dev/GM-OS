@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« LES VÉHICULES EMPLOYÉS » ; « LES CONDITIONS FAVORABLES ET DÉFAVORABLES » ; « LES MANŒUVRES PÉRILLEUSES » ; « RÉSOLUTION DE LA COURSE POURSUITE ET INCIDENTS » ; « LES DISTANCES D’UNE COURSE-POURSUITE » ; « CALCUL DES DOMMAGES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 8afb280c
 ---
 
@@ -40,10 +40,12 @@ Au contact, le poursuivant peut dépasser, causer un incident ou infliger des d�
 - Incidents (1d6): 1-2 (Avarie: 6 DM, malus -5), 3-5 (Erreur: 1 distance perdue), 6 (Sortie de route)
 - Structure de véhicule: malus -5 si DM ≥ STR / 2; hors d'usage si DM ≥ STR
 - Collision: 1d6 + mod. Taille et Vitesse (doublé en choc frontal)
-- Occupants: VIT - RD (-1d6 si ceinture); +6 sur échec critique
+- Occupants: autant de d6 que la VIT du véhicule, moins la RD (−1d6 avec ceinture ou airbag); +6 DM sur échec critique
+- Braver une condition défavorable: le malus est ignoré, la plage d'échec critique s'élargit d'autant
+- Mode rapide et furieux: 3 tests opposés d'AGI; 2 sur 3 ou une réussite critique l'emportent
 
 ## À la table
-Lors d'une poursuite à pied ou en véhicule, le meneur de jeu positionne les belligérants sur l'échelle des distances relatives, souvent à la distance Proche (section « LES DISTANCES D’UNE COURSE-POURSUITE »).
+Lors d'une poursuite à pied ou en véhicule, le meneur de jeu positionne les belligérants sur l'échelle des distances relatives, à la distance que dictent les circonstances du récit (section « LES DISTANCES D’UNE COURSE-POURSUITE »).
 
 À chaque tour, le poursuivant et le poursuivi réalisent un test opposé de manœuvre (section « RÉSOLUTION DE LA COURSE POURSUITE ET INCIDENTS »). À pied, chaque participant lance 1d20 + Force + voie de l'athlétisme; en véhicule, il lance 1d20 + Agilité + voie des véhicules + modificateurs de vitesse du véhicule (section « LES VÉHICULES EMPLOYÉS » et section « LES CONDITIONS FAVORABLES ET DÉFAVORABLES »).
 
@@ -60,3 +62,5 @@ Si un véhicule subit des dommages égaux ou supérieurs à la moitié de son É
 
 ## Non couvert
 rien
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; corrigé : les DM des occupants (VIT en d6), la distance de départ ; ajouté : braver une condition, le mode rapide (p. 97-107).*

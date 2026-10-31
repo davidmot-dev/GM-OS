@@ -1,0 +1,2 @@
+import {defineConfig} from 'vitest/config';
+export default defineConfig({test:{environment:'jsdom',globals:true,setupFiles:['./src/test/setup.ts'],include:['outils/campagnes-de-recette/coc.test.ts','src/modules/dice/systemes/coc.test.ts','src/modules/combat/logic/encaissementDeCoc.test.ts','src/modules/combat/initiativeDeCoc.test.ts','src/modules/forge/rules/controlesDuPilote.coc.test.ts','src/modules/session/components/fields/PanneauDeJet.coc.test.tsx']}});

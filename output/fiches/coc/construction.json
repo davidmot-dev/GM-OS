@@ -1,0 +1,27 @@
+{
+  "source": "COC2_01_Livre_de_Regles_Fiche PJ.pdf",
+  "sourceSHA256": "633ba29927a6bd152a45bb3d4530dbd857fb8267da7f7f9c87143a3e2fc86e9a",
+  "htmlSHA256": "9a93eca39a85e72d46234448bad9cf09ae0b3120bee02ecd8ac8eddb78b46488",
+  "templateId": "coc2-fr",
+  "pages": [
+    {
+      "id": "page-1",
+      "width": 473.386,
+      "height": 609.449,
+      "zones": 73
+    },
+    {
+      "id": "page-2",
+      "width": 473.386,
+      "height": 609.449,
+      "zones": 116
+    }
+  ],
+  "zones": 189,
+  "cles": 151,
+  "hotspots": 40,
+  "pistes": 2,
+  "casesIndependantes": 30,
+  "creation": "Nouveau modèle ; aucune fiche COC2 précédente trouvée dans docs/fiches ni dans le moteur.",
+  "integration": "Modèle à importer ; ni builtinTemplates ni correspondance du pilote modifiés."
+}

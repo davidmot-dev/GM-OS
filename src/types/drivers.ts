@@ -655,6 +655,14 @@ export interface GameDriver {
          */
         initiativeEnReserve?: { mecanique: 'degenesis' };
         /**
+         * **L'encaissement de COC** — Chroniques Oubliées Contemporain, 2026-10-31 : les DM
+         * noircissent les `casesDeSante` ; la RD de `rd` s'en retire (p. 88), plus de 20 +
+         * `constitution` en une fois tuent sur le coup, un coup sur un mourant appelle le
+         * coup de grâce (p. 73). `sante` est le champ des échelons noircis, et son état retire
+         * aussi son malus à l'initiative (p. 71).
+         */
+        encaissement?: { mecanique: 'coc'; sante: string; rd?: string; constitution?: string; nombre?: number };
+        /**
          * **Les limites de Blessures des adversaires** — Torg, 2026-10-14. Un sbire
          * (« — ») tombe à la première Blessure, un aguerri à la deuxième, un
          * adversaire chargé en possibilités comme un héros. Le panneau de santé

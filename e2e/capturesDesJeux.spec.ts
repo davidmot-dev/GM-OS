@@ -214,6 +214,28 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         scenes: c => scenesDeDegenesis(c),
     },
     {
+        // COC (2026-10-31) : Amelia Steele, la chasseuse de trésors du livre de règles (p. 27-28, 89) ;
+        // gilet rembourré (RD 2), puis le revolver de l'exemple : 15 DM, 13 échelons noircis.
+        corpusId: 'coc', slug: 'coc', personnage: 'Amelia Steele',
+        sheetData: {
+            nom: 'Amelia Steele', joueur: 'Sébastien', age: 32, origines: 'Astoria (Queens)', metier: 'Chasseuse de trésors',
+            agilite: 2, constitution: 1, force: 1, perception: 2, charisme: 2, intelligence: 0, volonte: 1,
+            attaque_au_contact: 1, attaque_a_distance: 2, initiative: 12, defense: 14, bonus_dommages_au_contact: 2, capacite_de_guerison: 4,
+            trait1: 'Endurante, Force de la nature, Inébranlable, Remarquable', trait1_valeur: 5,
+            trait2: 'Code de conduite, Ennemi juré (présence globale), Toxicomane (alcool)', trait2_valeur: -5,
+            arme1: 'Couteau', arme1_attaque: 2, arme1_dm: '1d6+2', arme1_bc: 6, arme2: 'Mains nues', arme2_attaque: 1, arme2_dm: '1d4+2', arme2_bc: 4,
+            protections: 'Gilet rembourré', protection_rd: 2, protection_malus: -1,
+            biens: 'Son Bowie fétiche, sa moto, son équipement de randonnée', equipement2: 'Un étui à cigares et une flasque de whisky',
+            modele_evolution: 'Héros', echelle_evolution: 12, echelle_de_sante: 0,
+            voie1: 'Voie des corporations', voie1_rang1: true, voie2: 'Voie des armes de contact', voie2_rang1: true,
+            voie3: 'Voie de la survie', voie3_rang1: true, voie3_rang2: true,
+        },
+        composantes: ['agilite'],
+        casesCochees: 0,
+        coup: 15,
+        scenes: c => scenesDeCoc(c),
+    },
+    {
         // Crimes, C1 (2026-10-22) : Physique 5, Sport 2 → cinq d10, deux gardés à 8 (7 avec Escalade).
         corpusId: 'crime', slug: 'crimes', personnage: 'Léonce Varin',
         sheetData: { physique: 5, mental: 3, social: 2, sport: 2, combat: 1, traque: 1, specialties_sport_climbing: true },
@@ -1133,6 +1155,43 @@ async function scenesDeDegenesis(c: ContexteDeScene): Promise<void> {
         return [ch?.sheetData?.blessures_superficielles, ch?.sheetData?.traumatismes, ch?.hp];
     }, c.personnage)).toEqual([12, 2, 5]);
     await photographier(carte, 'jeu-degenesis-sante');
+}
+
+/**
+ * **COC** (2026-10-31) : l'attaque d'Amelia au couteau (+2) contre la DEF 14 d'un gangster,
+ * une condition défavorable et un dé bonus — affaiblie par le coup de la scène commune (−3) ;
+ * puis l'échelle du héros, et la fiche HTML reliée.
+ */
+async function scenesDeCoc(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await panneau.locator('select').nth(0).selectOption('arme1_attaque');
+    const preparation = panneau.locator('[data-preparation-coc]');
+    await expect(preparation.getByText('DEF de la cible', { exact: true })).toBeVisible();
+    await preparation.getByLabel('Difficulté', { exact: true }).fill('14');
+    await preparation.getByLabel('Conditions favorables moins défavorables', { exact: true }).fill('-1');
+    await preparation.getByLabel('Dés bonus', { exact: true }).fill('1');
+    await expect(preparation.locator('[data-composition-coc]')).toContainText('2d20, le meilleur + 2 − 2 (1 condition défavorable) − 3 (Affaibli) = − 3 au dé, contre 14');
+    await photographier(preparation, 'jeu-coc-preparation');
+    await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    const heros = panneau.locator('[data-heros-coc]');
+    await expect(heros).toBeVisible();
+    await heros.getByRole('button', { name: '+5 (1 échelon)', exact: true }).click();
+    await expect.poll(() => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState()
+        .players.flatMap(p => p.characters).find(ch => ch.id === id)?.sheetData?.echelle_evolution, c.personnage)).toBe(11);
+
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });
+    await creerLaFiche.click();
+    const ficheHtml = f.frameLocator('iframe').first();
+    await expect(ficheHtml.locator('[data-key="identity.name"]')).toHaveValue('Amelia Steele', { timeout: 30_000 });
+    await expect(ficheHtml.locator('[data-key="weapons.0.name"]')).toHaveValue('Couteau');
+    await expect(ficheHtml.locator('[data-key="paths.2.name"]')).toHaveValue('Voie de la survie');
+    await f.waitForTimeout(1_000);
+    await photographier(f.locator('body'), 'jeu-coc-fiche');
 }
 
 async function scenesDeDune(c: ContexteDeScene): Promise<void> {

@@ -1,0 +1,15 @@
+.sheet[data-template="coc2-fr"] .coc-field{position:absolute;box-sizing:border-box;margin:0;min-width:0;min-height:0;border:0;border-radius:0;background:transparent;color:#28172f;font:8px/1.2 Arial,sans-serif;padding:0 1px;resize:none;outline:0}
+.sheet[data-template="coc2-fr"] .coc-number{text-align:center;font:10px/1 "Courier New",monospace;padding:0;font-variant-numeric:tabular-nums;appearance:textfield;-moz-appearance:textfield}
+.sheet[data-template="coc2-fr"] .coc-small-number{font-size:8px}
+.sheet[data-template="coc2-fr"] .coc-number::-webkit-inner-spin-button,.sheet[data-template="coc2-fr"] .coc-number::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.sheet[data-template="coc2-fr"] .coc-textarea{padding:0 1px;line-height:9px;overflow:auto}
+.sheet[data-template="coc2-fr"] .coc-notes{font-size:7px;line-height:8px}
+.sheet[data-template="coc2-fr"] .coc-name{font-size:14px;font-weight:700;text-align:center}
+.sheet[data-template="coc2-fr"] .coc-path-name{font-size:8px;font-weight:700}
+.sheet[data-template="coc2-fr"] .coc-rank-name{font-size:7px;font-weight:700}
+.sheet[data-template="coc2-fr"] .coc-rank-description{font-size:7px;line-height:8px}
+.sheet[data-template="coc2-fr"] .coc-field:focus{outline:.6px solid #643474;background:rgba(245,239,248,.85)}
+.sheet[data-template="coc2-fr"] .coc-hotspot{padding:0;cursor:pointer;touch-action:manipulation;clip-path:polygon(0 0,calc(100% - 3px) 0,100% 50%,calc(100% - 3px) 100%,0 100%,3px 50%)}
+.sheet[data-template="coc2-fr"] .coc-hotspot.active::after{content:"";position:absolute;inset:0;background:rgba(10,0,18,.42);box-shadow:inset 0 -1.4px 0 #ffffff;pointer-events:none}
+.sheet[data-template="coc2-fr"] .coc-checkbox{appearance:none;-webkit-appearance:none;padding:0;cursor:pointer;touch-action:manipulation}
+.sheet[data-template="coc2-fr"] .coc-checkbox:checked{background:#51275f;box-shadow:inset 0 0 0 1px #ffffff}

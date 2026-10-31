@@ -1,0 +1,54 @@
+/* Chroniques Oubliées Contemporain, deuxième édition — contrat GM-OS v1.7.
+   Papier ivoire, titres prune, cadre violet et repères orange.
+   Polices d'approche : Exo 2 et Source Sans 3 ; originaux non embarqués. */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap');
+
+:root[data-theme="coc"] {
+  color-scheme: light;
+
+  --rpg-bg: #eeeae1;
+  --rpg-surface: #fffdf7;
+  --rpg-surface-2: #e9e1eb;
+  --rpg-text: #252332;
+  --rpg-muted: #625a69;
+  --rpg-accent: #633471;
+  --rpg-accent-contrast: #fffdf7;
+  --rpg-border: rgba(99, 52, 113, 0.48);
+  --rpg-border-soft: rgba(99, 52, 113, 0.18);
+
+  --rpg-success: #37674b;
+  --rpg-danger: #ae3542;
+  --rpg-warning: #8b590c;
+  --rpg-info: #3554aa;
+
+  --rpg-font-display: "Exo 2", Arial, sans-serif;
+  --rpg-font-body: "Source Sans 3", Arial, sans-serif;
+  --rpg-font-mono: "Courier New", monospace;
+  --rpg-title-tracking: 0.015em;
+  --rpg-kicker-tracking: 0.10em;
+  --rpg-title-transform: uppercase;
+
+  --rpg-radius-sm: 1px;
+  --rpg-radius-md: 2px;
+  --rpg-radius-lg: 2px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+
+  --rpg-elevation-1: 0 2px 0 rgba(53, 36, 63, 0.06);
+  --rpg-elevation-2: 0 8px 20px rgba(53, 36, 63, 0.12);
+  --rpg-elevation-3: 0 18px 44px rgba(53, 36, 63, 0.18);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+
+  --rpg-glass-bg: rgba(255, 253, 247, 0.95);
+  --rpg-glass-border: rgba(99, 52, 113, 0.22);
+  --rpg-glass-blur: 0px;
+
+  --rpg-frame-bg: #35243f;
+  --rpg-frame-text: #f5f1e9;
+  --rpg-frame-accent: #ffb36f;
+
+  --rpg-texture-bg: url('matieres/facettes.svg');
+  --rpg-texture-panel: url('matieres/papier.svg');
+  --rpg-texture-opacity: 0.065;
+}

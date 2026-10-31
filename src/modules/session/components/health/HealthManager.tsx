@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSessionOSStore, type HealthSystem, type PersistenceBadge } from '../../useSessionOSStore';
-import { HealthInterpreter, nombreOuRepli, listeOuVide, objetOuVide } from '../../logic/HealthInterpreter';
+import { HealthInterpreter, nombreOuRepli, listeOuVide, objetOuVide, seuilAtteint } from '../../logic/HealthInterpreter';
 import { santePrincipaleDuPersonnage } from '../../logic/santePrincipale';
 import { santeAlignee } from '../../../combat/logic/SanteDuCombattant';
 import type { PlayerCharacter } from '../../store/types';
@@ -401,11 +401,15 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
               health.state === 'wounded' ? 'bg-etat-alerte/10 text-etat-alerte border-etat-alerte/20' :
               'bg-etat-alerte/10 text-etat-alerte border-etat-alerte/20'
           }`}>
+              {/* Le seuil que le jeu nomme passe avant le mot générique (COC, 2026-10-31) : à 13
+                  échelons, Amelia est « Affaibli », et « Blessé » est l'état suivant du livre. */}
+              {(health.type === 'boxes' && seuilAtteint(health)) || <>
               {health.state === 'healthy' && 'Stable'}
               {health.state === 'scratched' && 'Égratigné'}
               {health.state === 'wounded' && 'Blessé'}
               {health.state === 'critical' && 'Critique'}
               {health.state === 'dead' && 'K.O'}
+              </>}
           </div>
       </div>
   );

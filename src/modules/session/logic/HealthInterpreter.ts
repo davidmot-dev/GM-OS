@@ -122,6 +122,35 @@ function casesDuPilote(cases: CasesDeSante): HealthSystem {
     };
 }
 
+/**
+ * **Les cases suivent la fiche** — COC, 2026-10-31. Quand le jeu compte sa santé en cases,
+ * un personnage né sous une autre santé (le pilote forgé de COC la comptait en points de
+ * vie) reçoit les cases du pilote ; et des cases dont le compte diffère du champ de la fiche
+ * (`casesDeSante.champ`, corrigé à la main ou dans la fiche HTML) le rejoignent, avant que le
+ * coup s'applique. Le nombre de cases d'une santé déjà en cases ne change pas : un sbire de
+ * COC peut n'en avoir que quatre (p. 92).
+ */
+export function casesAligneesSurLaFiche(
+    sante: HealthSystem | undefined,
+    combat: { defaultHealthType?: string; casesDeSante?: CasesDeSante } | undefined,
+    fiche: Record<string, unknown> | undefined,
+): HealthSystem | undefined {
+    const cases = combat?.casesDeSante;
+    if (combat?.defaultHealthType !== 'boxes' || !cases) return sante;
+    const base = sante?.type === 'boxes' ? sante : casesDuPilote(cases);
+    const brut = cases.champ ? fiche?.[cases.champ] : undefined;
+    const lu = brut === undefined || brut === null || brut === '' ? NaN : Math.trunc(Number(brut));
+    const boxes = listeOuVide<{ label: string; filled?: boolean }>(base.data.boxes);
+    if (!Number.isFinite(lu) || boxes.filter(b => b.filled).length === Math.max(0, Math.min(boxes.length, lu))) return base;
+    const compte = Math.max(0, Math.min(boxes.length, lu));
+    const seuils = listeOuVide<SeuilDeCases>(base.data.seuils);
+    return {
+        ...base,
+        data: { ...base.data, boxes: boxes.map((b, i) => ({ ...b, filled: i < compte })) },
+        state: seuils.length ? etatDesCases(seuils, compte) : compte > 0 ? 'wounded' : 'healthy',
+    };
+}
+
 export const HealthInterpreter = {
     /**
      * Creates a default health system structure for a given type.

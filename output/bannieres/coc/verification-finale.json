@@ -1,0 +1,53 @@
+{
+  "fichier": "docs/systems/coc/COC Band.jpg",
+  "width": 2400,
+  "height": 600,
+  "bytes": 264716,
+  "format": "JPEG",
+  "opaque": true,
+  "quality": 93,
+  "sha256": "c52bd9b42293944055888c5622c4484f9f8a953b6c653cc923b598feb4682146",
+  "source": {
+    "fichier": "output\\bannieres\\coc\\source.png",
+    "width": 2172,
+    "height": 724,
+    "sha256": "2f7d1e84b899b5811d97c5a063e1b89fbf5252f2f80486263963d31caaaa5bd3",
+    "outil": "image_gen natif",
+    "definitionDemandee": "3840 × 1280 ou maximum natif disponible"
+  },
+  "crop": {
+    "x": 0,
+    "y": 90,
+    "width": 2172,
+    "height": 543
+  },
+  "agrandissement": 1.1049723756906078,
+  "conformeDimensionsMinimum": true,
+  "limite": "Agrandissement technique de 10,5 %, sans ajout de détails.",
+  "apercus": [
+    "output\\bannieres\\coc\\apercu-1188-final.png",
+    "output\\bannieres\\coc\\apercu-700-final.png"
+  ],
+  "capturesExaminees": true,
+  "revue": {
+    "date": "2026-10-31",
+    "portee": "JPEG et deux simulations d’en-tête de 54 px hors GM-OS",
+    "resultat": "Pont central reconnaissable ; bords calmes ; pas de texte ni logo dans l’illustration.",
+    "apercus": [
+      {
+        "fichier": "output\\bannieres\\coc\\apercu-1188-final.png",
+        "sha256": "39bed33316444a1e09d60ef767c19f66487765f46676a7d03ca6a36c062f4885"
+      },
+      {
+        "fichier": "output\\bannieres\\coc\\apercu-700-final.png",
+        "sha256": "54da64576243d7a77d932b57315ac106fd75622e5b87a78ff5d9b2afd33b1cb4"
+      }
+    ]
+  },
+  "accord": {
+    "date": "2026-10-31",
+    "auteur": "David",
+    "reponse": "Oui, exporter à 2 400 × 600",
+    "contexte": "Agrandissement de 10,5 % annoncé, sans ajout de détails."
+  }
+}

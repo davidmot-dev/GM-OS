@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« LES PERSONNAGES » ; « DONNER CORPS À VOTRE PERSONNAGE » ; « CHOISIR SES TRAITS DISTINCTIFS » ; « DÉFINIR SES CARACTÉRISTIQUES » ; « CALCULER LES CARACTÉRISTIQUES SECONDAIRES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 0ff3f0a5
 ---
 
@@ -56,3 +56,5 @@ Si l'Échelle de santé comporte moins de 20 échelons en raison du profil du pe
 
 ## Non couvert
 rien
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; conforme (p. 15-19, 25-28).*

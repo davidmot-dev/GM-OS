@@ -7,7 +7,7 @@ sources: "COC2_01_Livre_de_Regles_web_v0.pdf"
 sections: "« RÉUSSITE ET ÉCHEC CRITIQUE » ; « RÉUSSITE CRITIQUE » ; « ÉCHEC CRITIQUE » ; « CALCUL DES DOMMAGES » ; « LES MANŒUVRES PÉRILLEUSES » ; « MESURER LA QUALITÉ D’UNE ŒUVRE OU D’UNE PERFORMANCE ARTISTIQUE » ; « TESTS D'INVESTIGATION »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: f3737352
 ---
 
@@ -53,3 +53,5 @@ Augmenter la plage de réussite critique lors d'une manœuvre périlleuse élarg
 
 ## Non couvert
 rien
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; conforme (p. 33, 58-60, 68, 88, 101).*

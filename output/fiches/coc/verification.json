@@ -1,0 +1,78 @@
+{
+  "pages": 2,
+  "zones": 189,
+  "cles": 151,
+  "pistes": 2,
+  "hotspots": 40,
+  "casesIndependantes": 30,
+  "htmlSHA256": "9a93eca39a85e72d46234448bad9cf09ae0b3120bee02ecd8ac8eddb78b46488",
+  "fondsIdentiquesAuxRendusSource": true,
+  "erreursJavaScript": [],
+  "requetesReseau": [],
+  "impression": {
+    "controle": "CSS print : deux pages visibles, dimensions natives et saut de page vérifiés ; cases acquises visibles",
+    "pages": [
+      {
+        "largeur": 631.171875,
+        "hauteur": 812.59375,
+        "saut": "page"
+      },
+      {
+        "largeur": 631.171875,
+        "hauteur": 812.59375,
+        "saut": "auto"
+      }
+    ]
+  },
+  "fonctions": "Saisie de 151 clés, pistes cumulatives et zéro, 30 cases indépendantes, import/export/rechargement, refus sans perte, reset confirmé, navigation, zoom/clavier/molette, mobile, impression CSS, import dans un moteur jetable et retour JSON v2.",
+  "integration": "Modèle non installé dans builtinTemplates ; correspondance non écrite, conformément à l’atelier.",
+  "capturesExaminees": true,
+  "revuLe": "2026-10-31",
+  "revue": "Deux pages : champs alignés, libellés et formules imprimés préservés ; six Voies complètes, échelles distinctes. Captures autonomes, Zones, impression CSS, mobile et moteur examinées.",
+  "captures": [
+    {
+      "fichier": "impression-page-1.png",
+      "sha256": "d184b4c8f2e61caa8006972ed8de422b9d0afd23db3b9c4fda3cd7e7d727eba3"
+    },
+    {
+      "fichier": "impression-page-2.png",
+      "sha256": "fd7471eb8677a9d44d4f8404a83fe37ceb5a1c90ac740a088829562dd925fabc"
+    },
+    {
+      "fichier": "mobile-390.png",
+      "sha256": "8c61a15f635e2fb69b0e13b24046ca1832c360fdc8efa8b80af713c40d25a377"
+    },
+    {
+      "fichier": "moteur-page-1.png",
+      "sha256": "dded636f3ebfd14ff8bb5b113116e5e5131938eab30686694e6196426044968d"
+    },
+    {
+      "fichier": "moteur-page-2.png",
+      "sha256": "10a01d6269a92910a3b9b88e7dbe4a6667c380e998e915fd03e0434490b09675"
+    },
+    {
+      "fichier": "page-1-remplie.png",
+      "sha256": "cf8492be5639190bf5230383395fab90ddb73ff9ea8935681ff6b57533e3b01b"
+    },
+    {
+      "fichier": "page-1-vierge.png",
+      "sha256": "93ef0cb24a23cbc12b1230058290b5094f1ea080cb92901ca380877e6e163d62"
+    },
+    {
+      "fichier": "page-1-zones.png",
+      "sha256": "91b2d86e06aeea7e6faa5a3d1a762d64051b59a2e8994f6ace4636cd6a98c4cf"
+    },
+    {
+      "fichier": "page-2-remplie.png",
+      "sha256": "c2a3fcc1f89c439303e4b1f39630cd56d0630fa664704ec11d951dfa91f92497"
+    },
+    {
+      "fichier": "page-2-vierge.png",
+      "sha256": "4e0c4536d4a6108ee4ae79bb554bbc88b6def59e6ab68faafaa8687306dbaf5c"
+    },
+    {
+      "fichier": "page-2-zones.png",
+      "sha256": "f84d720f0086113232d6bc629a70cd1bfe88750c8c7d6bb0c50c5de33cf2c524"
+    }
+  ]
+}
