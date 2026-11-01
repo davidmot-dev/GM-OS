@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import {
-    AUGMENTATIONS_DE_RUNEQUEST, LIBELLES_DE_L_OPPOSITION, LIBELLES_DE_RUNEQUEST, MULTIPLICATEURS_DE_RUNEQUEST,
+    AUGMENTATIONS_DE_RUNEQUEST, LIBELLES_DE_L_OPPOSITION, LIBELLES_DE_RUNEQUEST, MULTIPLICATEURS_DE_RUNEQUEST, LOCALISATIONS,
     degreAdverse, issueDeLOpposition, localisationDuCoup, niveauDeRuneQuest, plagesDeRuneQuest,
-    type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest, type RegleDeRuneQuest,
+    type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest, type RegleDeRuneQuest, type Localisation,
 } from '../../../dice/systemes/runequest';
 import { useCombatStore } from '../../../combat/useCombatStore';
 import { porterUnCoupLocalise } from '../../../combat/coupsLocalises';
@@ -101,7 +101,6 @@ export const SuitesRuneQuest: React.FC<{
     jet: JetDeRuneQuest;
     calcul: CalculDeRuneQuest;
     regle: RegleDeRuneQuest;
-    valeurs: Record<string, unknown>;
     /** Lance un D20, pour la localisation. */
     d20: () => number;
     /** Sert ce résultat d'augmentation au prochain jet (p. 144-145). */
@@ -111,11 +110,11 @@ export const SuitesRuneQuest: React.FC<{
     consigner: (ligne: string) => void;
     /** Au meneur seulement : porter le coup localisé à un combattant (`porterUnCoupLocalise`). */
     porterLeCoup?: boolean;
-}> = ({ jet, calcul, regle, valeurs, d20, augmenter, retenter, consigner, porterLeCoup = false }) => {
+}> = ({ jet, calcul, regle, d20, augmenter, retenter, consigner, porterLeCoup = false }) => {
     const [deAdverse, setDeAdverse] = useState('');
     const [issue, setIssue] = useState<string | null>(null);
     const [localisation, setLocalisation] = useState<string | null>(null);
-    const [zoneTouchee, setZoneTouchee] = useState<string | null>(null);
+    const [zoneTouchee, setZoneTouchee] = useState<Localisation | null>(null);
     const niveau = jet.runequest.niveau;
     const bonus = AUGMENTATIONS_DE_RUNEQUEST[niveau];
     const reussi = niveau !== 'echec' && niveau !== 'echec-critique';
@@ -132,9 +131,9 @@ export const SuitesRuneQuest: React.FC<{
     const localiser = () => {
         const de = d20();
         const zone = localisationDuCoup(de);
-        const champPV = regle.localisations?.[zone.cle];
-        const pv = champPV !== undefined ? valeurs[champPV] : undefined;
-        const texte = `Localisation : ${de} → ${zone.label}${pv !== undefined && pv !== '' ? ` (${String(pv)} PV sur la fiche)` : ''} (p. 146).`;
+        // La localisation ne dépend pas du lanceur. Les PV se lisent sur la cible
+        // choisie ci-dessous, qui peut encore changer après le D20 (RQ-A2, 01/11/2026).
+        const texte = `Localisation : ${de} → ${zone.label} (p. 146).`;
         setLocalisation(texte);
         setZoneTouchee(zone.cle);
         consigner(texte);
@@ -157,7 +156,7 @@ export const SuitesRuneQuest: React.FC<{
                 <button type="button" className={bouton} onClick={localiser} title="1D20 sur la table des localisations (p. 146).">Localiser le coup (1D20)</button>
                 {localisation && <span data-localisation-runequest className="font-bold">{localisation}</span>}
             </div>
-            {porterLeCoup && zoneTouchee && <PorterLeCoup zone={zoneTouchee} />}
+            {porterLeCoup && zoneTouchee && <PorterLeCoup zone={zoneTouchee} regle={regle} />}
             <div className="flex flex-wrap items-center gap-2">
                 <button type="button" className={bouton} onClick={() => augmenter(bonus)}
                     title="Ce jet était un test d'augmentation : son niveau s'applique à l'aptitude lancée ensuite (p. 144-145).">
@@ -179,7 +178,7 @@ export const SuitesRuneQuest: React.FC<{
  * le tour, l'attaquant d'ordinaire. Les dégâts saisis passent par l'armure, la zone et
  * le total, par la même porte que la carte du combattant.
  */
-const PorterLeCoup: React.FC<{ zone: string }> = ({ zone }) => {
+const PorterLeCoup: React.FC<{ zone: Localisation; regle: RegleDeRuneQuest }> = ({ zone, regle }) => {
     const combattants = useCombatStore(s => s.combatants);
     const cibleDuTour = useCombatStore(s => s.combatants[s.currentTurnIdx]?.targetId ?? '');
     const [cible, setCible] = useState(cibleDuTour);
@@ -187,6 +186,11 @@ const PorterLeCoup: React.FC<{ zone: string }> = ({ zone }) => {
     const [porte, setPorte] = useState<string | null>(null);
     if (combattants.length === 0) return null;
     const vise = combattants.find(c => c.id === cible);
+    const champPV = regle.localisations?.[zone];
+    const valeurPV = champPV ? vise?.sheetData?.[champPV] : undefined;
+    const pv = (typeof valeurPV === 'number' || (typeof valeurPV === 'string' && valeurPV.trim() !== ''))
+        && Number.isFinite(Number(valeurPV)) ? Number(valeurPV) : undefined;
+    const libelleZone = LOCALISATIONS.find(l => l.cle === zone)!.label;
     const n = Math.max(0, entier(points));
     const porter = () => {
         if (!vise || n === 0) return;
@@ -203,6 +207,10 @@ const PorterLeCoup: React.FC<{ zone: string }> = ({ zone }) => {
                     {combattants.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
             </label>
+            <span data-pv-cible-runequest aria-live="polite">
+                {vise ? `${vise.name} · ${libelleZone} : ${pv === undefined ? 'PV inconnus sur la fiche' : `${pv} PV max. sur la fiche`}`
+                    : 'Choisir une cible pour lire les PV de la zone.'}
+            </span>
             <input aria-label="Dégâts portés" type="number" min={0} value={points} placeholder="Dégâts" className={`w-16 ${champ}`}
                 onChange={e => setPoints(e.target.value)} />
             <button type="button" className={bouton} disabled={!vise || n === 0} onClick={porter}

@@ -1098,9 +1098,38 @@ async function scenesDeRuneQuest(c: ContexteDeScene): Promise<void> {
     await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
     const suites = panneau.locator('[data-suites-runequest]');
     await expect(suites).toBeVisible();
-    await suites.getByRole('button', { name: 'Localiser le coup (1D20)', exact: true }).click();
-    await expect(suites.locator('[data-localisation-runequest]')).toContainText('PV sur la fiche');
-    await photographier(panneau, 'jeu-runequest-suites');
+    // RQ-A2 (01/11) : les valeurs de deux cibles fictives diffèrent de celles de Vasana.
+    const combatAvant = await f.evaluate(champs => {
+        const combat = (window as unknown as Fenetre).useCombatStore;
+        const { combatants, currentTurnIdx } = combat.getState();
+        combat.setState({ currentTurnIdx: 0, combatants: [
+            { id: 'rq-broo', name: 'Broo', init: 1, isPlayer: false, faction: 'enemy', statuses: [], targetId: 'rq-broo',
+                sheetData: Object.fromEntries(champs.map(champ => [champ, 7])) },
+            { id: 'rq-guerrier', name: 'Guerrier', init: 2, isPlayer: false, faction: 'enemy', statuses: [],
+                sheetData: Object.fromEntries(champs.map(champ => [champ, 3])) },
+        ] });
+        return { combatants, currentTurnIdx };
+    }, Object.values(c.pilote.gameDriver.jet?.runequest?.localisations ?? {}));
+    try {
+        await suites.getByRole('button', { name: 'Localiser le coup (1D20)', exact: true }).click();
+        const localisation = suites.locator('[data-localisation-runequest]');
+        await expect(localisation).toContainText('Localisation :');
+        await expect(localisation).not.toContainText('PV');
+        const resultat = await localisation.textContent();
+        const pv = suites.locator('[data-pv-cible-runequest]');
+        await expect(pv).toContainText('Broo');
+        await expect(pv).toContainText('7 PV max. sur la fiche');
+        await suites.getByLabel('Cible du coup', { exact: true }).selectOption('rq-guerrier');
+        await expect(pv).toContainText('Guerrier');
+        await expect(pv).toContainText('3 PV max. sur la fiche');
+        await expect(localisation).toHaveText(resultat!);
+        await suites.getByLabel('Cible du coup', { exact: true }).selectOption('');
+        await expect(pv).toHaveText('Choisir une cible pour lire les PV de la zone.');
+        await suites.getByLabel('Cible du coup', { exact: true }).selectOption('rq-broo');
+        await photographier(panneau, 'jeu-runequest-suites');
+    } finally {
+        await f.evaluate(avant => (window as unknown as Fenetre).useCombatStore.setState(avant), combatAvant);
+    }
 
     // La situation reste réglée d'un jet à l'autre ; l'augmentation, elle, n'a valu qu'une fois.
     await panneau.getByLabel('Modificateur de situation', { exact: true }).fill('0');

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, act } from '@testing-library/react';
 
 const consigner = vi.fn();
 vi.mock('../../../journal/consignerLeJet', () => ({ consignerLeJet: (...a: unknown[]) => consigner(...a) }));
@@ -116,19 +116,20 @@ describe('le jet de RuneQuest au panneau', () => {
         expect(screen.getByText(/Il l’emporte/)).toBeTruthy();
     });
 
-    it('localise le coup au D20 et dit les PV de la zone (p. 146)', () => {
+    it('localise le coup sans attribuer les PV du lanceur à la cible (p. 146)', () => {
         monter('epee_large');
         faces(30);
         lancer();
         d20(12);
         fireEvent.click(screen.getByText('Localiser le coup (1D20)'));
-        expect(screen.getByText(/12 → Poitrine \(5 PV sur la fiche\)/)).toBeTruthy();
+        expect(screen.getByText('Localisation : 12 → Poitrine (p. 146).')).toBeTruthy();
+        expect(JSON.stringify(consigner.mock.calls)).not.toContain('5 PV');
     });
 
     describe('le coup localisé, porté depuis le jet (2026-10-30)', () => {
         const combat = useCombatStore.getState();
-        const broo = { id: 'broo', name: 'Broo', isPlayer: false, hp: 12, hpMax: 12, statuses: [], sheetData: {} } as unknown as Combatant;
-        const vasana = { id: 'vasana', name: 'Vasana', isPlayer: false, hp: 12, hpMax: 12, statuses: [], targetId: 'broo', sheetData: {} } as unknown as Combatant;
+        const broo = { id: 'broo', name: 'Broo', isPlayer: false, hp: 12, hpMax: 12, statuses: [], sheetData: { pv_poitrine: 7 } } as unknown as Combatant;
+        const vasana = { id: 'vasana', name: 'Vasana', isPlayer: false, hp: 12, hpMax: 12, statuses: [], targetId: 'broo', sheetData: { pv_poitrine: 3 } } as unknown as Combatant;
         beforeEach(() => useCombatStore.setState({ combatants: [vasana, broo], currentTurnIdx: 0 }));
         afterEach(() => useCombatStore.setState(combat, true));
 
@@ -140,6 +141,35 @@ describe('le jet de RuneQuest au panneau', () => {
             fireEvent.click(screen.getByText('Localiser le coup (1D20)'));
             expect((screen.getByLabelText('Cible du coup') as HTMLSelectElement).value).toBe('broo');
             expect(screen.getByText('Porter le coup')).toBeTruthy();
+            expect(screen.getByText('Broo · Poitrine : 7 PV max. sur la fiche')).toBeTruthy();
+        });
+
+        it('change les PV affichés avec la cible, sans relancer la localisation ni modifier le lanceur', () => {
+            const panneau = monter('epee_large');
+            faces(30); lancer(); d20(12);
+            fireEvent.click(screen.getByText('Localiser le coup (1D20)'));
+            fireEvent.change(screen.getByLabelText('Cible du coup'), { target: { value: 'vasana' } });
+            expect(screen.getByText('Vasana · Poitrine : 3 PV max. sur la fiche')).toBeTruthy();
+            expect(panneau.querySelector('[data-localisation-runequest]')!.textContent).toBe('Localisation : 12 → Poitrine (p. 146).');
+            expect(JSON.stringify(consigner.mock.calls)).not.toContain('5 PV');
+            expect(VALEURS.pv_poitrine).toBe(5);
+            expect(useCombatStore.getState().combatants).toEqual([vasana, broo]);
+        });
+
+        it.each([undefined, '', '   ', null, 'inconnu'])('annonce les PV inconnus pour une valeur cible %s, sans reprendre ceux du lanceur', valeur => {
+            useCombatStore.setState({ combatants: [vasana, { ...broo, sheetData: { pv_poitrine: valeur } }] });
+            monter('epee_large'); faces(30); lancer(); d20(12);
+            fireEvent.click(screen.getByText('Localiser le coup (1D20)'));
+            expect(screen.getByText('Broo · Poitrine : PV inconnus sur la fiche')).toBeTruthy();
+            fireEvent.change(screen.getByLabelText('Cible du coup'), { target: { value: '' } });
+            expect(screen.getByText('Choisir une cible pour lire les PV de la zone.')).toBeTruthy();
+        });
+
+        it('actualise les PV de la cible depuis Combat-OS et conserve un zéro explicite', () => {
+            monter('epee_large'); faces(30); lancer(); d20(12);
+            fireEvent.click(screen.getByText('Localiser le coup (1D20)'));
+            act(() => useCombatStore.setState({ combatants: [vasana, { ...broo, sheetData: { pv_poitrine: 0 } }] }));
+            expect(screen.getByText('Broo · Poitrine : 0 PV max. sur la fiche')).toBeTruthy();
         });
 
         it('ne se propose pas sur la tablette d’un joueur', () => {
@@ -150,6 +180,8 @@ describe('le jet de RuneQuest au panneau', () => {
             d20(12);
             fireEvent.click(screen.getByText('Localiser le coup (1D20)'));
             expect(screen.queryByText('Porter le coup')).toBeNull();
+            expect(screen.queryByLabelText('Cible du coup')).toBeNull();
+            expect(screen.queryByText(/PV max. sur la fiche/)).toBeNull();
         });
     });
 });

@@ -1,7 +1,8 @@
 # 🏺 Jeu — RuneQuest
 
 > **Pilote décrit :** « RuneQuest », forgé par David, exporté le 2026-10-30, **fini le
-> 2026-10-30**, version 2.1.0 — les coups localisés de Combat-OS ajoutés le même jour
+> 2026-10-30**, version 2.1.0 — les coups localisés de Combat-OS ajoutés le même jour,
+> affichage des PV de la cible corrigé le **2026-11-01** dans l'application
 > (`Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver`, construit par
 > `outils/runequest/finir_runequest.py`). Thème `runequest` et fiche de personnage
 > HTML `runequest-fr` livrés le même jour, la fiche reliée champ par champ. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
@@ -12,6 +13,14 @@ chances **modifiées** : réussite critique, réussite spéciale, réussite, éc
 Autour de lui : le test de caractéristique, la table de résistance, l'augmentation, la nouvelle
 tentative, l'opposition et la localisation du coup. Dans Combat-OS, les **coups localisés** :
 l'armure de la zone, ses points de vie et ceux du total, et l'effet du livre.
+
+**Campagnes de recette révisées le 01/11/2026 :** le lot dans
+`output/campagnes-tests/runequest/` embarque le pilote **2.1.0, 320 champs**, 21 PJ et
+78 cas, dont douze **RQ-LOCAL** pour les coups localisés. Si le pilote installé est encore
+2.0.0, importer d'abord le fichier `RuneQuest-2.1.0.gmos-driver` avec **Remplacer** : une
+campagne Nexus conserve une dépendance déjà présente du même ID. Pour retrouver les états
+préparés, remplacer uniquement le laboratoire voulu ; préserver une aventure déjà jouée.
+Les maxima de zone et les dégâts reçus sont distincts : C07 bras 0/3, C08 tête −4/4.
 
 > Règles relues contre le livre de base français (Deadcrows, 7e édition) **et son errata** le
 > 2026-10-30 — pages imprimées 6-12, 45-63, 82, 137-161, 191-224, 227-238, 244-257, 275,
@@ -78,9 +87,11 @@ Retenir une **caractéristique** fait paraître un menu :
   réussite** gagne ; deux niveaux égaux font une **égalité** ; deux échecs, deux perdants.
   Au-delà de 100 %, l'excédent de la meilleure aptitude s'est retiré **aux deux camps** avant le
   jet, et critique et spéciale se lisent sur le score réduit (p. 144).
-- **Localiser le coup (1D20)** : la table du livre, de la jambe droite (1-4) à la tête (19-20),
-  avec les points de vie de la zone lus sur la fiche (p. 146). Au meneur, une ligne de plus :
-  la **cible** — par défaut celle du combattant dont c'est le tour —, les **dégâts**, et
+- **Localiser le coup (1D20)** : la table du livre, de la jambe droite (1-4) à la tête (19-20)
+  (p. 146). Au meneur, une ligne de plus : la **cible** — par défaut celle du combattant
+  dont c'est le tour — et les **PV maximum de la zone sur sa fiche**. Changer la cible
+  actualise ces PV sans relancer le D20. Ce sont les maxima, pas les PV restants après
+  blessures ; une valeur absente est indiquée comme inconnue. Puis viennent les **dégâts** et
   **« Porter le coup »**, qui passe par l'armure et la zone de la cible comme sur sa carte de
   combat (ci-dessous). Pas sur la tablette d'un joueur.
 - **Augmenter le prochain jet** : ce jet était un test d'augmentation ; son niveau s'inscrit dans

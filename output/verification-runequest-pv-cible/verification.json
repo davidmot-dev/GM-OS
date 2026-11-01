@@ -1,0 +1,57 @@
+{
+  "date": "2026-11-01",
+  "lot": "RQ-A2",
+  "statut": "livré, nouvel essai de David attendu",
+  "avant": {
+    "passes": 7,
+    "echecs": 9
+  },
+  "apres": {
+    "passes": 89,
+    "echecs": 0,
+    "fichiers": 3
+  },
+  "panneauEtManuel": {
+    "passes": 42,
+    "echecs": 0,
+    "doublonsPanneau": 16
+  },
+  "lint": "réussi, quatre fichiers",
+  "buildEtTypes": "npm run build (tsc -b && vite build) réussi",
+  "electron": {
+    "reussite": true,
+    "tests": 1,
+    "dureeTotaleSecondes": 27.4,
+    "commande": "npx playwright test e2e/capturesDesJeux.spec.ts --grep RuneQuest --workers=1 --reporter=list",
+    "assertions": [
+      "Broo : 7 PV maximum",
+      "Guerrier : 3 PV maximum",
+      "D20 inchangé au changement de cible",
+      "sans cible : invitation explicite"
+    ],
+    "pilote": "2.1.0, 320 champs, reconstruit sous tmp depuis 2.0.0 et le générateur existant ; aucune archive de campagne remplacée"
+  },
+  "sources": {
+    "src/modules/session/components/fields/RuneQuestAuJet.tsx": "13c2da524744bdeffae3382a4bb6b3cae3c946f8958427d7c79830dcff773c71",
+    "src/modules/session/components/fields/PanneauDeJet.tsx": "3045e36133bcc61efc95c897ba5e2d5d09859372bd5998e03659a627129922c5",
+    "src/modules/session/components/fields/PanneauDeJet.runequest.test.tsx": "421c0da9398e5bdfbf796f073ea6f1b777b0f15995a16280c69465e82dc83084",
+    "e2e/capturesDesJeux.spec.ts": "731d1046d3f3734adfc01dd8e4e5ec27c80e8d51bca3b87145d6c3534c9d0d20",
+    "outils/runequest/finir_runequest.py": "b5841da698dec05853b9d1e434809f275b7b61ed8526716b397e7fe2b188675b",
+    "tmp/rq-pv-cible/pilotes/RQ.gmos-driver": "7286377295766cdef6cac1a2b6693dd3386fe8b96ad0bac34be6c508e5e478fe"
+  },
+  "captures": {
+    "jeu-runequest-coups-localises.jpg": "dab62913c20b72dcccec93f3b282095701956b5d8d4c0a19ff33713a23a3fe81",
+    "jeu-runequest-fiche.jpg": "6be62822fb09917d26e569dbaf398ebb3bc83d851984334a015e9e1ed7118a18",
+    "jeu-runequest-jet-lance.jpg": "8571fd23a1f4a93a1e0b0daad242ce40ece99a333a8daff92889118c516d8557",
+    "jeu-runequest-jet.jpg": "9a5e50085fb2951f37b4b2a8e629a571ea67c6eedf7ddcbd8dd3683b59e6617d",
+    "jeu-runequest-preparation.jpg": "ed728ecbc7ee94bb30e621b62ed0898e8e7980e1eb260cd566fd4a06e64a5c5e",
+    "jeu-runequest-resistance.jpg": "ef491cd4e6c79b3d6131a68e2012fe34dc61d2cdf197505f45d389425eeee8ec",
+    "jeu-runequest-suites.jpg": "1cb69d0495259dd1ff06aa5989f33b3db56941742f0542de25b000e573ea85fd"
+  },
+  "captureExamineeEtCopiee": "jeu-runequest-suites.jpg",
+  "limites": [
+    "Les valeurs montrées sont les PV maximum de la fiche, pas les PV restants.",
+    "RQ-A1 : recette 2.1.0 encore à faire.",
+    "GM-05 et fonctions précédemment livrées validés globalement par David ; aucun résultat par appareil inventé."
+  ]
+}
