@@ -2,7 +2,7 @@
   {
     "id": "commun",
     "mecanique": "Nexus, joueurs, scènes et supports",
-    "source": "Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0",
+    "source": "Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0",
     "support": "natif",
     "casIds": [
       "RQ-COMMUN-01",
@@ -66,6 +66,28 @@
     ],
     "archive": "02-Aptitudes-Combat-et-Sante.gmos",
     "limite": "Le cahier distingue test natif et conséquence/règle appliquée à la table."
+  },
+  {
+    "id": "local",
+    "mecanique": "Coups localisés 2.1.0, cible, armure et soins",
+    "source": "Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2",
+    "support": "natif",
+    "casIds": [
+      "RQ-LOCAL-01",
+      "RQ-LOCAL-02",
+      "RQ-LOCAL-03",
+      "RQ-LOCAL-04",
+      "RQ-LOCAL-05",
+      "RQ-LOCAL-06",
+      "RQ-LOCAL-07",
+      "RQ-LOCAL-08",
+      "RQ-LOCAL-09",
+      "RQ-LOCAL-10",
+      "RQ-LOCAL-11",
+      "RQ-LOCAL-12"
+    ],
+    "archive": "02-Aptitudes-Combat-et-Sante.gmos",
+    "limite": "Le test applicatif n’est déclaré fait que si son rapport existe et porte les mêmes SHA."
   },
   {
     "id": "magie",

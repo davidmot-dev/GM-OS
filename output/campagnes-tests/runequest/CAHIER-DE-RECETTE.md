@@ -1,6 +1,6 @@
 # RuneQuest — cahier de recette
 
-**66 cas humains NON TESTÉS par David.** Les essais automatiques ne cochent pas ce cahier. Pour un tirage aléatoire, noter le total réellement obtenu ; les limites déterministes sont vérifiées à part sur le moteur.
+**78 cas humains NON TESTÉS par David.** Les essais automatiques ne cochent pas ce cahier. Pour un tirage aléatoire, noter le total réellement obtenu ; les limites déterministes sont vérifiées à part sur le moteur.
 
 ## RQ-COMMUN-01
 
@@ -12,7 +12,7 @@ Geste : Importer 01 telle quelle.
 
 Attendu : Une campagne, trois nouveaux PJ, trois joueurs réutilisés ; aucun PJ ancien déplacé.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -28,7 +28,7 @@ Geste : Comparer les trois listes de PJ.
 
 Attendu : 3 + 9 + 9 = 21 nouveaux PJ, tous d’ID distinct, mêmes joueurs p-1/p-2/p-3.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -44,7 +44,7 @@ Geste : Réimporter uniquement 02 avec Remplacer.
 
 Attendu : Profils C01–C09 réinitialisés ; note et PJ de 01 conservés.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -60,7 +60,7 @@ Geste : Ouvrir Atlas, les huit lieux et les liens de voisinage.
 
 Attendu : Plans locaux décodés ; liens vers les bons lieux et PNJ.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -76,7 +76,7 @@ Geste : Suivre S01 puis S05 et S11 dans la Trame.
 
 Attendu : Actes, lieux, témoins, indices et embranchements disponibles ; pas de résultat préjoué.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -92,7 +92,7 @@ Geste : Révéler l’ordre puis consulter depuis un Hub.
 
 Attendu : Seuls les indices révélés deviennent publics ; vérifier aussi après rechargement.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -108,7 +108,7 @@ Geste : Ouvrir sa relation et la fiche du témoin.
 
 Attendu : La relation vise le bon PNJ dans la même campagne.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -124,7 +124,7 @@ Geste : Déclencher son plan et son signal.
 
 Attendu : Carte embarquée affichée ; signal synthétique local, pas de service audio distant.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -140,7 +140,7 @@ Geste : Écouter les trois signaux de 4 secondes et la liste locale.
 
 Attendu : Fichiers locaux lisibles ; les sons ne sont ni enregistrements de rivière ni voix.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -156,7 +156,7 @@ Geste : Ouvrir les trois tuiles.
 
 Attendu : Tuiles sans lampe assignée ; aucune sortie matérielle prétendue configurée.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -172,7 +172,7 @@ Geste : Partager entre trois PJ puis recharger.
 
 Attendu : 33 par PJ et reliquat 2 si la table choisit cette répartition ; pas de conversion en PM/PR.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -188,7 +188,7 @@ Geste : Importer par Table-OS → Atelier, puis Ranger tel quel.
 
 Attendu : Trois tables originales 1d6 indépendantes ; tables de règles conservées.
 
-Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.0.0
+Source : Manuel GM-OS ; format Nexus v1 ; pilote RuneQuest 2.1.0
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 
@@ -458,7 +458,7 @@ Précondition : C09, armure jambe droite 5, PV zone 2, PV totaux 8
 
 Geste : Comparer la fiche puis décrire un coup sur cette jambe.
 
-Attendu : Armure et PV locaux lisibles ; les localisations ne sont pas automatiquement déduites avec les PV totaux.
+Attendu : Armure 5, maximum local 2 et total 8 distincts. Utiliser le panneau Coups localisés pour appliquer la zone et le total ; suivre les cas LOCAL.
 
 Source : Livre p. 55–57, 146–150, 191–224 ; manuel RuneQuest — combat
 
@@ -486,7 +486,7 @@ Statut : **NON TESTÉ**
 
 Archive : 02-Aptitudes-Combat-et-Sante.gmos · support manuel
 
-Précondition : C07, bras droit à 0
+Précondition : C07, bras droit 0/3 : maximum 3 et dégâts reçus 3
 
 Geste : Ouvrir la fiche et arbitrer l’usage du bras.
 
@@ -502,7 +502,7 @@ Statut : **NON TESTÉ**
 
 Archive : 02-Aptitudes-Combat-et-Sante.gmos · support manuel
 
-Précondition : C08, tête −4 (double des 4 PV de zone), PV totaux 4
+Précondition : C08, tête −4/4 : maximum 4, dégâts reçus 8, PV totaux 4
 
 Geste : Examiner les valeurs ; suivre le traitement à la table.
 
@@ -605,6 +605,198 @@ Geste : Comparer catégorie de poursuite et portée de l’arme.
 Attendu : Catégories sans modificateur automatique de tir ; pénalité choisie selon les règles de l’arme.
 
 Source : Livre p. 55–57, 146–150, 191–224 ; manuel RuneQuest — combat
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-01
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : Pilote 2.0.0 déjà installé sous le même ID
+
+Geste : Importer explicitement RuneQuest-2.1.0.gmos-driver avec Remplacer avant les campagnes.
+
+Attendu : Version 2.1.0, 320 champs, sept compteurs degats_<zone> et combat.coupsLocalises ; Nexus seul ne garantit pas ce remplacement.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-02
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : C07 ajouté à Combat-OS
+
+Geste : Lire la carte du bras droit.
+
+Attendu : Bras droit 0/3 ; maximum 3 inchangé, dégâts reçus 3, total 9/12.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-03
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : C08 ajouté à Combat-OS
+
+Geste : Lire la carte de tête.
+
+Attendu : Tête −4/4 ; maximum 4 et dégâts reçus 8 séparés ; effet au double annoncé, hémorragie à suivre à la table.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-04
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : C09 initial : total 8, jambe droite 2/2, PA 5
+
+Geste : Sélectionner la jambe droite, saisir 5 puis Encaisser.
+
+Attendu : Armure arrête tout : dégâts locaux 0 et total 8 inchangés ; pas de double retrait de PA.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-05
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : C09 initial : total 8, jambe droite 2/2, PA 5
+
+Geste : Sélectionner la jambe droite, saisir 10 puis Encaisser.
+
+Attendu : 10 − 5 = 5 nets, plafonnés à 4 ; dégâts locaux 4, zone −2/2, total 4 ; maximum 2 conservé.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-06
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : C09 après le cas précédent
+
+Geste : Saisir 99 puis Soigner sur la même zone.
+
+Attendu : Seuls 4 points rendus : dégâts locaux 0, jambe 2/2, total 8 ; les autres blessures ne sont pas effacées.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-07
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : C07 avec 3 dégâts au bras droit, total 9
+
+Geste : Soigner 2 puis recharger.
+
+Attendu : Dégâts locaux 1, bras 2/3, total 11 ; valeurs persistées dans la fiche et Combat-OS.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-08
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : PNJ lié : total 12, bras droit maximum 3, PA 2, dégâts 0
+
+Geste : Sur sa carte, Encaisser 8 au bras droit.
+
+Attendu : 6 dégâts retenus sur le bras et le total : zone −3/3, total 6 ; fiche du PNJ et journal actualisés.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-09
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : Adversaire autonome préparé avec les mêmes valeurs
+
+Geste : Encaisser le même coup via sa carte.
+
+Attendu : Même zone −3/3 et total 6 sur le plateau ; aucun faux personnage de campagne créé.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-10
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : PJ et PNJ dans Combat-OS ; panneau de jet du PJ
+
+Geste : Lancer puis Localiser le coup, choisir le PNJ et Porter le coup avec 2 dégâts.
+
+Attendu : PV maximum de la cible explicitement nommés ; armure de la zone retirée une fois, seule la cible reçoit le net ; lanceur inchangé.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-11
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : Deux cibles aux maxima de zone différents
+
+Geste : Changer la cible après le D20 puis sélectionner une cible sans valeur.
+
+Attendu : PV affichés changent sans nouveau D20 ; valeur manquante inconnue, aucun repli sur le lanceur. La tablette garde la localisation seule.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
+
+Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
+
+Statut : **NON TESTÉ**
+
+## RQ-LOCAL-12
+
+Archive : 02-Aptitudes-Combat-et-Sante.gmos · support natif
+
+Précondition : 01 avec une note et un coup déjà porté, 02 blessé pendant les essais
+
+Geste : Recharger puis réimporter uniquement 02 avec Remplacer.
+
+Attendu : Zone et total persistent avant remplacement ; 02 revient aux dégâts préparés C07=3/C08=8/C09=0 ; note et blessure de 01 conservées.
+
+Source : Livre p. 146–148 ; combat.coupsLocalises ; coupsDeRuneQuest.ts ; guide RuneQuest, correction RQ-A2
 
 Preuve : Valeur avant/après, capture si utile et contrôle après rechargement
 

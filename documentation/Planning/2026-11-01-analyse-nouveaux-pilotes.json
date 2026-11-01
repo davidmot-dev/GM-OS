@@ -1,0 +1,144 @@
+{
+  "date": "2026-11-01",
+  "base": "0a9431efa2b9839b379fea5b28b68b035537d140",
+  "nature": "Analyse et documentation uniquement ; aucune réalisation des lots proposés.",
+  "tests": {
+    "success": true,
+    "passes": 177,
+    "echecs": 0,
+    "fichiers": [
+      {
+        "fichier": "src/modules/dice/systemes/coc.test.ts",
+        "passes": 21
+      },
+      {
+        "fichier": "src/modules/dice/systemes/degenesis.test.ts",
+        "passes": 17
+      },
+      {
+        "fichier": "src/modules/dice/systemes/runequest.test.ts",
+        "passes": 59
+      },
+      {
+        "fichier": "src/modules/dice/systemes/shadowrun.test.ts",
+        "passes": 15
+      },
+      {
+        "fichier": "src/modules/combat/logic/coupsDeRuneQuest.test.ts",
+        "passes": 14
+      },
+      {
+        "fichier": "src/modules/combat/logic/encaissementDeCoc.test.ts",
+        "passes": 7
+      },
+      {
+        "fichier": "src/modules/combat/logic/moniteurDeShadowrun.test.ts",
+        "passes": 8
+      },
+      {
+        "fichier": "src/modules/combat/logic/pistesDeDegenesis.test.ts",
+        "passes": 7
+      },
+      {
+        "fichier": "src/modules/session/components/fields/PanneauDeJet.coc.test.tsx",
+        "passes": 10
+      },
+      {
+        "fichier": "src/modules/session/components/fields/PanneauDeJet.degenesis.test.tsx",
+        "passes": 5
+      },
+      {
+        "fichier": "src/modules/session/components/fields/PanneauDeJet.runequest.test.tsx",
+        "passes": 9
+      },
+      {
+        "fichier": "src/modules/session/components/fields/PanneauDeJet.shadowrun.test.tsx",
+        "passes": 5
+      }
+    ]
+  },
+  "sources": [
+    {
+      "fichier": "outils/runequest/finir_runequest.py",
+      "sha256": "b5841da698dec05853b9d1e434809f275b7b61ed8526716b397e7fe2b188675b"
+    },
+    {
+      "fichier": "src/modules/session/components/fields/RuneQuestAuJet.tsx",
+      "sha256": "f8be03105e0bd1cd8989367158796ca84629736f6985b7da3a7a2b20a2c4860f"
+    },
+    {
+      "fichier": "src/modules/combat/logic/coupsDeRuneQuest.ts",
+      "sha256": "884412e8cd2b31c698d8112dc106feaa8744928304176c137faf05e028ff9e21"
+    },
+    {
+      "fichier": "src/modules/combat/useCombatStore.ts",
+      "sha256": "03a9c41b69279eb2e1d833d7dcd3e938a7d043161b74a6788a5e16fde665fe3f"
+    },
+    {
+      "fichier": "outils/degenesis/finir_degenesis.py",
+      "sha256": "712cb8c883e201c0b0b254ef710b317b54eec079d990a2bf24dcfc908756d9b5"
+    },
+    {
+      "fichier": "src/modules/combat/logic/pistesDeDegenesis.ts",
+      "sha256": "4379d883c1e657ac934531920e7192c567416cd4986b1cde48705bdc68384a2a"
+    },
+    {
+      "fichier": "src/modules/dice/systemes/coc.ts",
+      "sha256": "59ebf308f6c73963c58c97d1608e38014ccfe84b905fb1ee82f3921e731da603"
+    },
+    {
+      "fichier": "src/modules/combat/logic/encaissementDeCoc.ts",
+      "sha256": "38f31c787338fe818607c6b4413d985402fda8fca55667acf6a278bf1adb4501"
+    },
+    {
+      "fichier": "src/modules/combat/logic/moniteurDeShadowrun.ts",
+      "sha256": "201ce13e618fa0364bbed4535870a58087f8fb66e554de249e24427921ad39f8"
+    },
+    {
+      "fichier": "outils/shadowrun-anarchy/finir_shadowrun.py",
+      "sha256": "4a5ec7caa03e98d52a18e0157d70fd55f128340aadbfbbab50c67c03052594ae"
+    }
+  ],
+  "recettes": [
+    {
+      "jeu": "runequest",
+      "pilote": "custom-1793114851695",
+      "version": "2.0.0",
+      "casHumains": 66,
+      "source": "output/campagnes-tests/runequest/inventaire.json",
+      "sha256": "c85b260ba660b3ec050a87d5e5cf91eb217bbcfbcf18cca57e0d4ee17c3f3c98",
+      "rapportElectron": "output/campagnes-tests/runequest/verification-electron.json",
+      "GM05": 12
+    },
+    {
+      "jeu": "degenesis",
+      "pilote": "custom-1793142284065",
+      "version": "2.0.0",
+      "casHumains": 66,
+      "source": "output/campagnes-tests/degenesis/inventaire.json",
+      "sha256": "ff574c5e82db92780da20ade85aecce85087aa2a9e8971cd5a6c59246d911f0b",
+      "rapportElectron": "output/campagnes-tests/degenesis/verification-electron.json",
+      "GM05": 12
+    },
+    {
+      "jeu": "coc",
+      "pilote": "custom-1793122664880",
+      "version": "2.0.0",
+      "casHumains": 70,
+      "source": "output/campagnes-tests/coc/inventaire.json",
+      "sha256": "5e413a4460957597fe8947764f8cd4439ec5fc399eedf4bd1735aef6195ec734",
+      "rapportElectron": "output/campagnes-tests/coc/verification-electron.json",
+      "GM05": 12
+    },
+    {
+      "jeu": "shadowrun-anarchy",
+      "pilote": "custom-1793480750141",
+      "version": "2.0.0",
+      "casHumains": 64,
+      "source": "output/campagnes-tests/shadowrun-anarchy/inventaire.json",
+      "sha256": "e428554f8e0a41819de43fcd834afb5cea010a5aa4362ea52bde72ae7a123808",
+      "rapportElectron": "output/campagnes-tests/shadowrun-anarchy/verification-electron.json",
+      "GM05": 12
+    }
+  ]
+}

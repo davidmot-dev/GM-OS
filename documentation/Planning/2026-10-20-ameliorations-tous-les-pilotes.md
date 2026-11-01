@@ -41,6 +41,107 @@ Cette hiérarchie commune ne remplace pas les priorités détaillées des audits
 développement n'est autorisé par la demande de synthèse seule. **Dune a été repris le 25/10**,
 sur demande explicite de David : « Je voudrais finir les améliorations du driver Dune ».
 
+**Analyse des quatre nouveaux pilotes — 01/11/2026**, base de code 0a9431ef :
+RuneQuest 2.1.0 (recette initiale 2.0.0, **alignée sur 2.1.0 par RQ-A1**, § 202), Degenesis 2.0.0, COC **Chroniques
+Oubliées Contemporain 2e édition** 2.0.0, Shadowrun **Anarchy 2.0** 2.0.0. Ce n'est ni
+L'Appel de Cthulhu ni un autre Shadowrun. Les six propositions ajoutées par jeu sont distinctes du socle livré ;
+leur état est actualisé ci-dessous à chaque réalisation et validation.
+Un traitement laissé au MJ n'est pas, à lui seul, un défaut du pilote.
+
+Lecture croisée : générateurs/exports conservés dans les lots, règles déjà relues, code,
+manuels et rapports des quatre recettes. **177 tests ciblés / 12 fichiers passent** le 01/11
+(jets, quatre portes de dégâts et quatre panneaux). Aucun nouvel essai Electron ni lecture
+des campagnes personnelles ; les preuves d'import/Hub citées restent celles des lots datés.
+[Périmètre et constats](2026-11-01-analyse-nouveaux-pilotes.md), registre **§ 199**.
+
+## Résumé et plan d’action à cocher — les quatre nouveaux pilotes
+
+**GM-05 corrigé et validé par David le 01/11/2026.** 70 tests ciblés et quatre tests
+Electron passent : douze Hub simulés sans fuite, résumés publics reçus et secrets conservés
+chez le MJ, y compris après reconnexion. [Bilan](2026-11-01-correction-gm05.md), registre § 200.
+Les échecs GM-05 des anciennes recettes restent des constats historiques avant ce correctif.
+
+**Validation de David le 01/11 :** « ok c’est essayé c’est bon... J’ai fait tout les autres tests en attentes aussi. On passe au point 2 affichage des PV ». Les fonctions déjà livrées des quatre pilotes passent au vert sur cette validation globale ; les rapports/CSV historiques ne sont pas réécrits ni détaillés a posteriori. Les propositions non réalisées restent à faire. **RQ-A2 est validé** par David : « ok c’est bon on fait RQ-A1 ». **RQ-A1 est livré et validé par David**, registre § 202 : trois archives 2.1.0, 320 champs, 78 cas dont douze LOCAL ; preuves séparées des rapports historiques.
+
+**Plan du 01/11/2026, à remplir par David.** Les quatre pilotes ont déjà leurs jets,
+leur santé centrale et leur fiche HTML reliée. Le travail proposé concerne surtout
+les suites de combat, les ressources et les procédures encore manuelles.
+
+| Jeu | Résumé du travail restant |
+| --- | --- |
+| RuneQuest | Recette 2.1.0 et affichage des PV de cible validés ; compléter dégâts spéciaux et rangs d’action |
+| Degenesis | Relier l’Égo de l’initiative à la première action, puis aider défense, armure et contamination |
+| COC Contemporain 2 | Relier l’arme aux dégâts, appliquer les conséquences des blessures et distinguer les rôles des PNJ |
+| Shadowrun Anarchy | Suivre le drain et ses soins, préparer la Matrice, puis fiabiliser Anarchy et réserves collectives |
+| Commun | GM-05 validé ; sécuriser la reprise des anciennes fiches et compléter les essais de droits/variantes |
+
+**Mode d’emploi :** remplacer [ ] par [x] quand le lot est réalisé **et essayé par David**.
+S’il est livré mais encore à essayer, laisser la case vide et écrire « livré, à essayer » à côté.
+Les identifiants renvoient aux constats et critères détaillés dans les sections des jeux et
+dans « Améliorations communes ». Les cases ne remplacent pas leurs indicateurs d’avancement.
+
+**Jeu à travailler en premier après les urgences :** ____________________
+**Prochain lot choisi :** ____________________
+**Date / notes de suivi :** ____________________
+
+### 1. Corriger les urgences et remettre la recette à niveau
+
+- [x] **NP-C1 · P0 — GM-05 : corrigé et essayé (01/11).** Validation de David ; quatre contrôles applicatifs passent sur douze Hub.
+- [x] **RQ-A2 · P0 — Cible RuneQuest : livré et validé par David (01/11).** Les PV maximum de zone suivent la cible sélectionnée ; valeur absente annoncée inconnue, aucune reprise des PV du lanceur.
+- [x] **RQ-A1 · P1 — Recette RuneQuest : livré et validé par David (01/11).** Trois archives 2.1.0/320 champs, 78 cas dont douze LOCAL ; import, remplacement, coups localisés et trois Hub éprouvés en instance jetable.
+
+### 2. Sécuriser les reprises et les essais communs
+
+- [ ] **NP-C2 · P1 — Anciennes fiches :** proposer un diagnostic et un aperçu de conversion, avec conservation des valeurs et retour arrière.
+- [ ] **NP-C3 · P1 — Droits et variantes :** vérifier le refus d’éditer le PJ d’autrui, puis les imports COC 3d6 et Shadowrun alternatif.
+
+### 3. Compléter RuneQuest
+
+- [ ] **RQ-A3 · P1 — Dégâts :** relier arme, spéciale/critique, parade et armure au coup localisé.
+- [ ] **RQ-A4 · P1 — Rangs d’action :** distinguer mêlée, tir et magie ; gérer délais, égalités et limite de 12.
+- [ ] **RQ-A5 · P2 — Dérivés :** proposer PV, zones, bonus de dégâts et ENC calculés, sans effacer les blessures existantes.
+- [ ] **RQ-A6 · P2 — Magie et progression :** suivre coûts PM/PR, culte utilisé, inspiration et expérience, avec validation du MJ.
+
+### 4. Compléter Degenesis
+
+- [ ] **DEG-A1 · P1 — Égo du round :** payer une seule fois à l’initiative, reporter le bonus à la première action puis l’épuiser.
+- [ ] **DEG-A2 · P1 — Combat :** préparer défense, armure et dégâts nets ; suivre l’action utilisée pour une défense active.
+- [ ] **DEG-A3 · P2 — Maxima :** calculer Égo et Sporulation selon la branche choisie, avec explication du calcul.
+- [ ] **DEG-A4 · P2 — Jets liés :** assister coopération, combinaisons et confrontations, sans compter deux fois les déclencheurs.
+- [ ] **DEG-A5 · P2 — Contamination :** séparer permanent et temporaire ; suivre Brûlure et Potentiels explicitement sélectionnés.
+- [ ] **DEG-A6 · P2 — Adversaires :** donner aux adversaires autonomes les deux pistes et l’Égo, comme aux PNJ avec fiche.
+
+### 5. Compléter COC Contemporain 2
+
+- [ ] **COC-A1 · P1 — Dégâts :** lancer les DM de l’arme, appliquer FOR et bonus critique, puis retirer la RD une seule fois.
+- [ ] **COC-A2 · P1 — Blessures :** suivre DEF effective, tests de CON, actions perdues et durée des conséquences.
+- [ ] **COC-A3 · P1 — PNJ :** distinguer rôles, critiques autorisés, santé Pulp et bandes de sbires.
+- [ ] **COC-A4 · P2 — Héroïsme :** appliquer les bonus hors test à leur bonne destination et pour la bonne durée.
+- [ ] **COC-A5 · P2 — Choc :** préparer l’événement psychique, son test, son état et ses conséquences.
+- [ ] **COC-A6 · P2 — Voies :** intégrer d’abord quelques capacités officielles choisies, avec rang, effet, coût et source vérifiés.
+
+### 6. Compléter Shadowrun Anarchy
+
+- [ ] **SR-A1 · P1 — Drain :** conserver l’origine des blessures, refuser les soins interdits et suivre les malus temporaires.
+- [ ] **SR-A3 · P1 — Matrice :** préparer mode de connexion, accès, Firewall, backdoor, risque minimum et surveillance.
+- [ ] **SR-A2 · P2 — Cohérence :** aider les calculs de réserve/seuils et vérifier Anarchy au-delà de 99 ainsi que les suites d’Essence.
+- [ ] **SR-A4 · P2 — Planification :** suivre préparation, paiement du flashback et menace, avec un seul débit et les bons droits.
+- [ ] **SR-A5 · P2 — Opposition :** traiter les égalités et profils adverses ; éprouver la variante alternative déjà codée.
+- [ ] **SR-A6 · P3 — Rigging :** choisir d’abord la référence de résistance avec David, puis suivre véhicule, mode et biofeedback.
+
+### 7. Clore le lot choisi avant d’en commencer un autre
+
+**Lot concerné par cette validation :** ____________________
+
+- [ ] Les tests ciblés et le cas de recette du lot passent ; les limites restantes sont notées.
+- [ ] L’import, la sauvegarde et le Hub ont été vérifiés quand le changement les concerne.
+- [ ] David a essayé le résultat ; date et observations : ____________________
+- [ ] Le manuel, les preuves, le registre et l’avancement de cette synthèse sont à jour.
+
+**Suivi : 27 lots proposés + 4 contrôles de clôture.** Toutes les cases commencent vides ;
+les **177 tests du socle déjà passés** ne valident pas les fonctions futures.
+Avant toute modification du code applicatif, vérifier avec David que GM-OS est fermé.
+
 ## Vue d'ensemble
 
 | Pilote | Avancement | État de la connaissance | Première amélioration ou prochaine étape proposée |
@@ -48,16 +149,16 @@ sur demande explicite de David : « Je voudrais finir les améliorations du driv
 | [Alien](#alien) | 🟢 11 · 🟠 0 · 🔴 0 | A0–A9 validés par David ; **A10, préréglages et remise à zéro des modules, livré et essayé le 23/10** (registre § 163) ; campagne de recette avec trois modules préparés livrée le 26/10 (§ 180) | Essayer les 74 cas du cahier ; GM-05 transversal signalé ; aucun lot A0–A10 à refaire |
 | [Barbarians of Lemuria](#barbarians-of-lemuria) | 🟢 5 · 🟠 0 · 🔴 0 | **Nouveau pilote, fini le 27/10**, 2.0.0 (registre § 184) : corpus relu, jet contre 9 avec dés de bonus/malus et héroïsme, fiche HTML au moteur 19 reliée, thème contrôlé | Réimport avec Remplacer et essai de David |
 | [Blade Runner](#blade-runner) | 🟢 4 · 🟠 0 · 🔴 0 | **Fini le 24/10, pilote 2.0.0** (registre § 174) : audit, pupitre, mort et stabilisation, guérison, et au-delà ; **essayé par David le 25/10** | Rien : tous les lots faits |
-| [Chroniques Oubliées Contemporain](#chroniques-oubliées-contemporain) | 🟢 1 · 🟠 9 · 🔴 0 | **Nouveau pilote, fini le 31/10**, 2.0.0 (§ 193) : corpus relu 18/18, d20 + caractéristique, RD et vingt cases, Héros ou Blues, option 3d6 ; fiche au moteur 22 reliée (151/151), thème et visuels (§ 190-192) ; **lot de recette éprouvé (§ 194)**, 24 PJ, 70 cas, 71 tests, trois imports et Hub | Réimport et essai de David ; GM-05 confirmé, Voies à compléter |
+| [Chroniques Oubliées Contemporain](#chroniques-oubliées-contemporain) | 🟢 10 · 🟠 0 · 🔴 6 | **Nouveau pilote, fini le 31/10**, 2.0.0 (§ 193) : corpus relu 18/18, d20 + caractéristique, RD et vingt cases, Héros ou Blues, option 3d6 ; fiche au moteur 22 reliée (151/151), thème et visuels (§ 190-192) ; **lot de recette éprouvé (§ 194)**, 24 PJ, 70 cas, 71 tests, trois imports et Hub  **Fonctions livrées validées par David le 01/11.** | Arme → DM/critique, états/DEF, rôles PNJ et Pulp ; puis Héros hors test, choc, Voies ; socle et GM-05 validés le 01/11 |
 | [Crimes](#crimes) | 🟢 13 · 🟠 0 · 🔴 0 | Audit du manuel ; **C0 relu et validé le 23/10, C1 à C3, C5 et C6 livrés et essayés le 22/10** ; **tous les lots livrés et essayés le 23/10** : circonstances, hermétiques, opposition, psychologie et seuils, manœuvres, contacts, fortune, création (registre § 157–161) | Rien : tous les lots faits ; tir multiple, intimider, rivalités et fortune commune restent au meneur |
 | [Cthulhu Hack](#cthulhu-hack) | 🟢 5 · 🟠 0 · 🔴 0 | Cinq améliorations livrées et essayées par David le 23/10 contre le livre français (p. 31–32, 34, 42, 50–52), registre § 164 ; campagnes de recette livrées le 25/10 et rattachées aux trois joueurs existants (§ 178) | Essayer les 59 cas du cahier ; défaut transversal GM-05 (`gmSecrets` transmis aux tablettes) consigné au § 1 bis. Soins spéciaux et suites mentales restent des sujets d'audit séparés |
-| [Degenesis](#degenesis) | 🟢 1 · 🟠 6 · 🔴 0 | **Nouveau pilote, fini le 30/10**, 2.0.0 (registre § 188) : corpus relu 16/16 contre le livre, réserve de d6 à 4+ avec déclencheurs, échec critique, succès d'office au-delà de 12, Égo et Traumatismes ; deux pistes de santé et attaque mentale dans Combat-OS ; initiative en succès ; fiche HTML au moteur 21 reliée (129/129), thème contrôlé ; lot de recette § 189 : 21 PJ, 66 cas, imports et trois Hub éprouvés | Importer 01 ; essai de David, GM-05 confirmé |
+| [Degenesis](#degenesis) | 🟢 7 · 🟠 0 · 🔴 6 | **Nouveau pilote, fini le 30/10**, 2.0.0 (registre § 188) : corpus relu 16/16 contre le livre, réserve de d6 à 4+ avec déclencheurs, échec critique, succès d'office au-delà de 12, Égo et Traumatismes ; deux pistes de santé et attaque mentale dans Combat-OS ; initiative en succès ; fiche HTML au moteur 21 reliée (129/129), thème contrôlé ; lot de recette § 189 : 21 PJ, 66 cas, imports et trois Hub éprouvés. **Fonctions livrées validées par David le 01/11.** | Égo initiative/première action, armure et défense, maxima explicites, contamination permanente ; socle et GM-05 validés le 01/11 |
 | [Dune](#dune) | 🟢 9 · 🟠 0 · 🔴 0 | D0–D8 et fiches PJ/Maison validés par David le 25/10, pilote 2.0.0 (§ 175–176), corpus relu (§ 173) ; campagne de recette avec Maison et conflits préparés livrée le 26/10 (§ 182) | Essayer les 66 cas du cahier ; GM-05 transversal signalé ; arbitrages narratifs au MJ |
 | [Nephilim Légende](#nephilim-légende) | 🟢 9 · 🟠 1 · 🔴 0 | **N1–N9 livrés et essayés le 23/10** (registre § 165) ; campagne et deux laboratoires livrés le 26/10, 70 cas (§ 183) | L'essai sur tablette physique |
 | [NOC](#noc) | 🟢 9 · 🟠 0 · 🔴 0 | **Tous les points validés par David le 25/10 : « ok tout fonctionne »** ; pilote 2.0.0, moteur de fiches 18, commit `bf83cbf6`. [Bilan](2026-10-25-noc-finir.md), registre § 177 ; campagne et Cabale de recette livrées (§ 179) | Essayer les 62 cas de recette ; GM-05 transversal signalé ; les portées et arbitrages narratifs restent à la Loi |
 | [Rêve de Dragon](#rêve-de-dragon) | 🟢 6 · 🟠 1 · 🔴 0 | Socle R0–R7, boucle TMR ; **pilote fini le 24/10**, 2.0.0 (registre § 168, [bilan](2026-10-24-reve-de-dragon-finir.md)) : phases du round, famine/potions, entraînement, Haut-Rêve, calendrier Clock-OS, PNJ ; campagne de recette avec carte TMR et 14 tables livrée le 26/10 (§ 181) | Réimport et essai de David avec les 69 cas ; GM-05 transversal signalé |
-| [RuneQuest](#runequest) | 🟢 1 · 🟠 7 · 🔴 0 | **Nouveau pilote, fini le 30/10**, 2.1.0 (registre § 187) : corpus relu 17/17 contre le livre et l'errata, d100 en cinq niveaux, test de caractéristique, résistance, augmentation, opposition, localisation ; coups localisés dans Combat-OS (armure, zone, total, effets) ; fiche HTML au moteur 20 reliée, thème contrôlé | Réimport avec Remplacer et essai de David |
-| [Shadowrun Anarchy](#shadowrun-anarchy) | 🟢 0 · 🟠 6 · 🔴 0 | **Pilote fini le 01/11**, 2.0.0 (registre § 197) : corpus relu 19/19 contre le livre, réserve compétence + attribut à 5+, dés de risque doublés et complications, RR de la ligne, Anarchy (avantage, relance, gains) ; moniteur d'état contre les seuils de la fiche ; fiche HTML au moteur 23 reliée (120/121). Thème, fiche, bannière et identité livrés le 31/10 (§ 196) ; **lot de recette éprouvé le 01/11 (§ 198)** : 22 PJ, 64 cas, 72 tests, imports et trois Hub | Réimport avec Remplacer et essai de David ; GM-05 confirmé ; 64 cas humains et matériel à jouer |
+| [RuneQuest](#runequest) | 🟢 10 · 🟠 0 · 🔴 4 | **Nouveau pilote, fini le 30/10**, 2.1.0 (registre § 187) : corpus relu 17/17 contre le livre et l'errata, d100 en cinq niveaux, test de caractéristique, résistance, augmentation, opposition, localisation ; coups localisés dans Combat-OS (armure, zone, total, effets) ; fiche HTML au moteur 20 reliée, thème contrôlé. **Fonctions livrées validées par David le 01/11.** | RQ-A1 (2.1.0, 78 cas), RQ-A2 et GM-05 validés par David le 01/11 ; dégâts spéciaux/RA puis dérivés/magie restent à faire |
+| [Shadowrun Anarchy](#shadowrun-anarchy) | 🟢 6 · 🟠 0 · 🔴 6 | **Pilote fini le 01/11**, 2.0.0 (registre § 197) : corpus relu 19/19 contre le livre, réserve compétence + attribut à 5+, dés de risque doublés et complications, RR de la ligne, Anarchy (avantage, relance, gains) ; moniteur d'état contre les seuils de la fiche ; fiche HTML au moteur 23 reliée (120/121). Thème, fiche, bannière et identité livrés le 31/10 (§ 196) ; **lot de recette éprouvé le 01/11 (§ 198)** : 22 PJ, 64 cas, 72 tests, imports et trois Hub. **Fonctions livrées validées par David le 01/11.** | Drain/soins, Matrice préparée, cohérence des dérivés et Anarchy, réserves/opposition ; rigging après arbitrage ; socle et GM-05 validés le 01/11 |
 | [Star Trek Adventures](#star-trek-adventures) | 🟢 4 · 🟠 1 · 🔴 0 | Pilote et LCARS documentés ; **audit et toutes les améliorations livrés le 23/10** (registre § 167, [audit](2026-10-23-star-trek-ameliorations.md)), pilote 2.0.0, **essai de David validé le 24/10** | Essais matériels LCARS |
 | [Symbaroum](#symbaroum) | 🟢 10 · 🟠 0 · 🔴 0 | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), essai de David validé ; **S0, S2 et S5 à S9 livrés le 23/10** (§ 166), pilote 2.0.0 | Réimport du pilote 2.0.0 et essai de David |
 | [Torg Eternity](#torg-eternity) | 🟢 0 · 🟠 0 · 🔴 5 | Nombreuses fonctions livrées ; limites documentées | Atouts/capacités structurés et échanges des Cartes du Destin |
@@ -180,7 +281,7 @@ pilote **2.0.0** (`Export Dirvers/corriges/BOL_driver_gmos_2.0.0.gmos-driver`), 
 | 🟢 P1 | La fiche HTML reliée | **Livré le 27/10** : moteur 19, fiche GM-OS sur les 45 clés, correspondance directe, portrait sur la fiche ; attributs −1 à 5, carrières nommées, Vitalité sous zéro |
 | 🟢 P0 avant extension | Corpus relu contre le livre | **Fait le 27/10** : 16/16, onze fiches corrigées |
 
-**Reste :** l'essai de David. À la table, par choix : les dégâts (au pupitre), la magie et ses
+**Reste :** les propositions ci-dessus ; les fonctions livrées ont été validées par David le 01/11. À la table, par choix : les dégâts (au pupitre), la magie et ses
 conditions, la foi, l'alchimie, les batailles terrestres et navales.
 
 **Sujets à auditer :** un jet de dégâts guidé par la catégorie d'arme (d6M, d6B, Vigueur ou sa
@@ -219,6 +320,8 @@ demande une sauvegarde d'Endurance chaque Quart jusqu'à sa stabilisation.
 
 ## Chroniques Oubliées Contemporain
 
+**Validation globale des fonctions déjà livrées par David le 01/11/2026**, citation et portée dans le plan à cocher ; les propositions ci-dessous restent séparées.
+
 **Référence :** [manuel 2.0.0](../User%20Guides/54-Jeu-COC.md) ; registre § 193.
 **Statut : fini le 31/10/2026** contre le livre de règles de la 2e édition
 (`COC2_01_Livre_de_Regles_web_v0.pdf`, NAS), pages imprimées (PDF − 3) ; pilote **2.0.0**
@@ -234,18 +337,43 @@ l'identité d'images (§ 192), faits par Codex
 
 | Priorité | Amélioration | Réalisation |
 | --- | --- | --- |
-| 🟠 P0 | Le jet : le pilote forgé additionnait AGI et INT pour le seuil de chaque dé et exigeait dix réussites d'un d20 — tout échouait ; un 1 comptait double, un 20 était une complication | **Livré le 31/10** : `jet.coc` (`dice/systemes/coc.ts`) ; d20 + une caractéristique, l'ATC, l'ATD ou le bonus d'une arme nommée, contre la difficulté (5 à 25) ou la DEF ; 20 naturel réussite critique, 1 naturel échec critique, plages élargies ; dé bonus et dé malus ; conditions (±2/5/10), aides (+2), état préjudiciable, prendre son temps, mode rapide ; malus de l'état de santé sur les actions physiques (p. 56-65, 71, 87-88). Cartes `CocAuJet.tsx`. Essai de David attendu |
-| 🟠 P1 | La fiche GM-OS et le pilote 2.0.0 | **Livré le 31/10** : 162 champs — les 151 clés de la fiche HTML (trois traits, trois armes, la protection, six voies de cinq rangs) et les rubriques « Donner corps » du pilote forgé, le modèle d'évolution, l'expérience ; portées du livre sans modificateur fixe. Essai de David attendu |
-| 🟠 P1 | L'échelle de santé | **Livré le 31/10** : vingt cases noircies (`combat.casesDeSante`, états à 5/10/15/20) ; `combat.encaissement` (`combat/logic/encaissementDeCoc.ts`) retire la RD, tue au-delà de 20 + CON, appelle le coup de grâce, dit l'état franchi ; malus de l'état à l'initiative ; les cases suivent la fiche et remplacent une santé en PV au premier coup (`casesAligneesSurLaFiche`) ; le badge dit le seuil du jeu (p. 71-73, 88). Essai de David attendu |
-| 🟠 P1 | Une échelle d'évolution, héros ou blues (décision de David du 31/10) | **Livré le 31/10** : une jauge et son modèle sur la fiche ; héros : +2/+5 pour un échelon, doublé pour deux, Légende +10, +1 échelon sur un critique ; blues : ±1/3/5/10 sur la VOL, la coercition et les autres interactions (p. 80-84). Essai de David attendu |
-| 🟠 P2 | L'option du 3d6 (réglable dans le pilote, décision de David du 31/10) | **Livré le 31/10** : `jet.coc.des: '3d6'` ; 3d6, 4d6 les trois meilleurs, 2d6 ; difficultés 8-20 ; modificateurs réduits ; critique lu sur 18 et 3, que le livre ne chiffre pas (p. 60-61). Essai de David attendu |
+| 🟢 P0 | Le jet : le pilote forgé additionnait AGI et INT pour le seuil de chaque dé et exigeait dix réussites d'un d20 — tout échouait ; un 1 comptait double, un 20 était une complication | **Livré le 31/10** : `jet.coc` (`dice/systemes/coc.ts`) ; d20 + une caractéristique, l'ATC, l'ATD ou le bonus d'une arme nommée, contre la difficulté (5 à 25) ou la DEF ; 20 naturel réussite critique, 1 naturel échec critique, plages élargies ; dé bonus et dé malus ; conditions (±2/5/10), aides (+2), état préjudiciable, prendre son temps, mode rapide ; malus de l'état de santé sur les actions physiques (p. 56-65, 71, 87-88). Cartes `CocAuJet.tsx`. Validé par David le 01/11 |
+| 🟢 P1 | La fiche GM-OS et le pilote 2.0.0 | **Livré le 31/10** : 162 champs — les 151 clés de la fiche HTML (trois traits, trois armes, la protection, six voies de cinq rangs) et les rubriques « Donner corps » du pilote forgé, le modèle d'évolution, l'expérience ; portées du livre sans modificateur fixe. Validé par David le 01/11 |
+| 🟢 P1 | L'échelle de santé | **Livré le 31/10** : vingt cases noircies (`combat.casesDeSante`, états à 5/10/15/20) ; `combat.encaissement` (`combat/logic/encaissementDeCoc.ts`) retire la RD, tue au-delà de 20 + CON, appelle le coup de grâce, dit l'état franchi ; malus de l'état à l'initiative ; les cases suivent la fiche et remplacent une santé en PV au premier coup (`casesAligneesSurLaFiche`) ; le badge dit le seuil du jeu (p. 71-73, 88). Validé par David le 01/11 |
+| 🟢 P1 | Une échelle d'évolution, héros ou blues (décision de David du 31/10) | **Livré le 31/10** : une jauge et son modèle sur la fiche ; héros : +2/+5 pour un échelon, doublé pour deux, Légende +10, +1 échelon sur un critique ; blues : ±1/3/5/10 sur la VOL, la coercition et les autres interactions (p. 80-84). Validé par David le 01/11 |
+| 🟢 P2 | L'option du 3d6 (réglable dans le pilote, décision de David du 31/10) | **Livré le 31/10** : `jet.coc.des: '3d6'` ; 3d6, 4d6 les trois meilleurs, 2d6 ; difficultés 8-20 ; modificateurs réduits ; critique lu sur 18 et 3, que le livre ne chiffre pas (p. 60-61). Validé par David le 01/11 |
 | 🟢 P0 avant extension | Corpus relu contre le livre | **Fait le 31/10** : 18/18 ; douze fiches corrigées, six conformes ; retirés : le cumul du héros et du blues, les sbires éliminés par tranche de DM, le premier rôle et sa garde, le round de repos de l'essoufflement ; le départ des vétérans au 10e ramené à son scénario |
-| 🟠 P1 | La fiche HTML COC2 reliée | **Livré le 31/10** : moteur 21 → 22 (`outils/coc/integrer_au_moteur.mjs`), correspondance des 151 clés (`outils/coc/relier_fiche_coc.mjs`), validateur 0/0 ; e2e : fiche remplie depuis GM-OS. Essai de David attendu |
-| 🟠 P2 | Thème d’interface COC | **Livré le 31/10** par Codex : papier ivoire, prune et orange, deux matières, trois ornements, quinze icônes ; validateur 0/0, revalidé au contrôle. Activation et jugement de David attendus |
-| 🟠 P2 | Bannière et identité d’images COC2 | **Livrées le 31/10** par Codex : JPEG 2400 × 600, agrandissement de 10,5 % autorisé ; STYLE / AVOID 43/13 mots, déjà dans le pilote. Sélection et jugement de David attendus |
-| 🟠 P1 | Campagnes de recette COC2 | **Livrées et éprouvées le 31/10**, [bilan](2026-10-31-campagne-recette-coc.md), registre § 194 : Les Minutes de Verre et deux laboratoires ; 24 nouveaux PJ pour les trois joueurs autorisés ; 70 cas humains NON TESTÉS ; 71 tests passent, trois imports, remplacement isolé, sentinelles, trois Hub, jets, dépenses Héros, fiches HTML et rechargement aboutissent. **GM-05 seul échec : douze chemins de secrets de séance**, § 1 bis. Profils aux valeurs choisies, Voies officielles à compléter avec le livre |
+| 🟢 P1 | La fiche HTML COC2 reliée | **Livré le 31/10** : moteur 21 → 22 (`outils/coc/integrer_au_moteur.mjs`), correspondance des 151 clés (`outils/coc/relier_fiche_coc.mjs`), validateur 0/0 ; e2e : fiche remplie depuis GM-OS. Validé par David le 01/11 |
+| 🟢 P2 | Thème d’interface COC | **Livré le 31/10** par Codex : papier ivoire, prune et orange, deux matières, trois ornements, quinze icônes ; validateur 0/0, revalidé au contrôle. Validés par David le 01/11 |
+| 🟢 P2 | Bannière et identité d’images COC2 | **Livrées le 31/10** par Codex : JPEG 2400 × 600, agrandissement de 10,5 % autorisé ; STYLE / AVOID 43/13 mots, déjà dans le pilote. Validés par David le 01/11 |
+| 🟢 P1 | Campagnes de recette COC2 | **Livrées et éprouvées le 31/10**, [bilan](2026-10-31-campagne-recette-coc.md), registre § 194 : Les Minutes de Verre et deux laboratoires ; 24 nouveaux PJ pour les trois joueurs autorisés ; 70 cas humains indiqués NON TESTÉS dans le rapport initial ; validation globale de David le 01/11 ; 71 tests passent, trois imports, remplacement isolé, sentinelles, trois Hub, jets, dépenses Héros, fiches HTML et rechargement aboutissent. **GM-05 seul échec du rapport initial : douze chemins de secrets de séance**, corrigé et validé au § 200. Profils aux valeurs choisies, Voies officielles à compléter avec le livre |
 
-**Reste :** l'essai de David. À la table, par choix : les DM de l'arme et son bonus critique, les
+**Analyse complémentaire du 01/11/2026 — propositions COC-A1 à COC-A6.**
+Le jet, la RD, les vingt cases, Héros/Blues et le raccord HTML sont acquis ; les extensions
+ci-dessous complètent les procédures. La relecture porte sur le code courant et le corpus
+déjà relu, pas sur une nouvelle lecture intégrale du livre.
+Sources : [dégâts](../../docs/systems/coc/rules/degats-et-types-de-degats.md),
+[santé](../../docs/systems/coc/rules/sante-et-blessures.md),
+[rôles et bandes](../../docs/systems/coc/rules/la-gestion-simplifiee-des-adversaires-par-roles-et-bandes-de-sbires.md),
+[règle du jet](../../src/modules/dice/systemes/coc.ts),
+[porte des dégâts](../../src/modules/combat/logic/encaissementDeCoc.ts).
+
+| Priorité / lot proposé | Constat vérifié au 01/11 | Amélioration proposée et critère de recette |
+| --- | --- | --- |
+| 🔴 P1 · COC-A1 — De l'arme aux dommages | Les bonus d'attaque se lancent, mais dés de DM, FOR et bonus critique restent saisis séparément. La RD et la santé sont déjà natives | Ajouter une résolution explicite arme/type/critique, aperçu des DM puis transfert à la cible ; retirer la RD une seule fois. Rejouer les 15 DM de l'exemple contre RD 2 : 13 cases. Ne pas doubler tous les DM pour simuler le bonus critique fixe |
+| 🔴 P1 · COC-A2 — États de santé jusqu'au tour suivant | L'état modifie les tests physiques et le Jet système d'initiative ; les effets CON, action perdue, déplacement, inconscience et le malus de DEF sont surtout des messages ou des saisies | Proposer les tests de CON et des effets datés, afficher la DEF effective sans écraser sa base, laisser confirmer l'issue au MJ. À 10 cases : −3 en DEF et CON 10 pour la prochaine action ; un rechargement ne rejoue pas la perte d'action |
+| 🔴 P1 · COC-A3 — PNJ par rôle et bandes | Le pilote n'expose pas de procédure de rôle/Pulp ; le calcul du critique borne son seuil au maximum naturel et ne possède pas de choix « aucun critique ». Une simple plage ne neutralise donc pas le 20 d'un figurant | Ajouter rôle, mode standard/Pulp, capacités, santé et règle de critique distincts. Vérifier figurant sans critique sur 20 ; 4/12/24 échelons en Pulp, états tous les 6 pour un premier rôle ; bande de trois sbires : une touche en retire un, sans jet de DM. Ne pas appliquer ces règles Pulp à tous les PNJ |
+| 🔴 P2 · COC-A4 — Héroïsme hors du test | Dépenser des échelons pour le résultat du test et appliquer le Blues sont livrés ; bonus d'Init., DEF, DM ou mouvement restent manuels | Proposer la destination et la durée du bonus, débiter une seule fois l'échelle, tracer l'effet jusqu'à son expiration. Vérifier que l'achat d'un bonus de DEF ne modifie pas simultanément le test déjà lancé ; conserver un seul modèle Héros ou Blues |
+| 🔴 P2 · COC-A5 — Santé psychique et choc | Le panneau sait lancer VOL et régler une plage d'échec critique ; rang de l'événement, état de choc et suivi des conséquences n'ont pas de parcours dédié | Préparer un événement avec son rang, lancer VOL sous les paramètres du corpus, proposer l'état et sa durée avec validation du MJ. Garder distincts choc ponctuel, état du Blues et séquelle ; ne pas dépenser une seconde échelle d'évolution |
+| 🔴 P2 · COC-A6 — Capacités de Voies vérifiables | Les six Voies et leurs cinq rangs sont des champs reliés, sans moteur d'effets ; les PJ de recette n'ont pas de capacités officielles préremplies | Outiller d'abord un petit ensemble de capacités choisies dans le livre : rang, texte sourcé, effet déclaré, coût et durée, puis aperçu avant application. Une case de rang seule ne doit produire aucun bonus inventé ; suivre une capacité du formulaire au Hub et au journal |
+
+**À cadrer avant extension :** la variante 3d6 existe déjà. Son import/remplacement réel
+reste à essayer ; les critiques 18/3 sont une convention GM-OS explicitée dans le manuel,
+pas une règle chiffrée du livre. Conserver un choix documenté, sans annoncer une correction
+canonique. Poursuites et approches/sentiments peuvent rester des aides au MJ après ces lots.
+GM-05 et migration des anciennes fiches relèvent des priorités communes en fin de document.
+
+**Reste :** les propositions ci-dessus ; les fonctions livrées ont été validées par David le 01/11. À la table, par choix : les DM de l'arme et son bonus critique, les
 manœuvres (−5 en « Autre »), l'échelle des PNJ selon leur rôle, les poursuites, la santé
 psychique et ses états de choc, les égalités d'initiative (PJ d'abord).
 
@@ -367,6 +495,8 @@ comptés parmi ces cinq améliorations. Vérifications et export dans le registr
 
 ## Degenesis
 
+**Validation globale des fonctions déjà livrées par David le 01/11/2026**, citation et portée dans le plan à cocher ; les propositions ci-dessous restent séparées.
+
 **Référence :** [manuel 2.0.0](../User%20Guides/54-Jeu-Degenesis.md) ; registre § 188.
 **Statut : fini le 30/10/2026** contre le livre de base français KatharSys
 (`Degenesis - KATHARSYS_OCR.pdf`), pages imprimées (PDF − 1) ; pilote **2.0.0**
@@ -377,19 +507,43 @@ comptés parmi ces cinq améliorations. Vérifications et export dans le registr
 ([fiche](2026-10-30-etat-et-reprise-codex-fiche-degenesis.md), [thème](2026-10-30-etat-et-reprise-codex-theme-degenesis.md),
 [bannière](2026-10-30-etat-et-reprise-codex-banniere-identite-degenesis.md)).
 
-**Recette livrée le 30/10 :** [La Station des Cendres et deux laboratoires](2026-10-30-campagne-recette-degenesis.md), registre § 189 ; 21 nouveaux PJ pour les trois joueurs de l’export, 66 cas humains **NON TESTÉS**. **67 tests passent** ; imports natifs, remplacement isolé, trois Hub et Égo persisté éprouvés en instance jetable. **GM-05 confirmé en échec** : douze secrets de séance transmis, assertion conservée. Les essais de David et du matériel restent à faire.
+**Recette livrée le 30/10 :** [La Station des Cendres et deux laboratoires](2026-10-30-campagne-recette-degenesis.md), registre § 189 ; 21 nouveaux PJ pour les trois joueurs de l’export, 66 cas humains **NON TESTÉS**. **67 tests passent** ; imports natifs, remplacement isolé, trois Hub et Égo persisté éprouvés en instance jetable. **GM-05 confirmé dans le rapport initial** : douze secrets de séance transmis, assertion historique conservée ; corrigé et validé au § 200. Validation globale de David le 01/11 ; les résultats détaillés par appareil ne sont pas fournis.
 
 | Priorité | Amélioration | Réalisation |
 | --- | --- | --- |
-| 🟠 P0 | Le jet : le pilote forgé prenait attribut + compétence pour le seuil de chaque dé, ne lançait aucun dé et exigeait quatre succès | **Livré le 30/10** : `jet.degenesis` (`dice/systemes/degenesis.ts`) ; réserve attribut + compétence, d6 réussis sur 4+ (`dice.successThreshold`), difficulté du livre en succès requis (Délicate 2 par défaut), modificateurs en dés, −1D par Traumatisme, Égo dépensé retiré de la fiche ; 12 dés au plus, le surplus en succès d'office ; déclencheurs « bien → légendaire » sur une réussite, échec critique quand les 1 dépassent les succès (p. 18-19, 100-106). Cartes `DegenesisAuJet.tsx`. Essai de David attendu |
-| 🟠 P1 | La fiche GM-OS et le pilote 2.0.0 | **Livré le 30/10** : 131 champs reprenant les 129 clés de la fiche HTML — 36 compétences au lieu de « Compétence 1 à 5 », six Potentiels, trois armes, deux armures, équipement — plus l'Égo maximal (à saisir) et la santé restante ; portées en bandes relatives à l'arme (−4D, −8D). Essai de David attendu |
-| 🟠 P1 | La santé à deux pistes et l'attaque mentale | **Livré le 30/10** : `combat.pistesDeSante` (`combat/logic/pistesDeDegenesis.ts`) à la porte des dégâts : Blessures superficielles jusqu'à (PHY+Résistance)×2, puis Traumatismes jusqu'à PHY+PSY ; la santé principale suit les deux pistes et se recalcule sur elles ; soin sur les Blessures ; dégât « mental » sur l'Égo (p. 94, 107). Essai de David attendu |
-| 🟠 P1 | L'initiative | **Livré le 30/10** : `combat.initiativeEnReserve` — PSY+Réactivité lancé en d6, score = succès, −1D par Traumatisme, actions en plus dites au journal (p. 100-101) ; le champ « reactivite » manquait au pilote forgé. Essai de David attendu |
+| 🟢 P0 | Le jet : le pilote forgé prenait attribut + compétence pour le seuil de chaque dé, ne lançait aucun dé et exigeait quatre succès | **Livré le 30/10** : `jet.degenesis` (`dice/systemes/degenesis.ts`) ; réserve attribut + compétence, d6 réussis sur 4+ (`dice.successThreshold`), difficulté du livre en succès requis (Délicate 2 par défaut), modificateurs en dés, −1D par Traumatisme, Égo dépensé retiré de la fiche ; 12 dés au plus, le surplus en succès d'office ; déclencheurs « bien → légendaire » sur une réussite, échec critique quand les 1 dépassent les succès (p. 18-19, 100-106). Cartes `DegenesisAuJet.tsx`. Validé par David le 01/11 |
+| 🟢 P1 | La fiche GM-OS et le pilote 2.0.0 | **Livré le 30/10** : 131 champs reprenant les 129 clés de la fiche HTML — 36 compétences au lieu de « Compétence 1 à 5 », six Potentiels, trois armes, deux armures, équipement — plus l'Égo maximal (à saisir) et la santé restante ; portées en bandes relatives à l'arme (−4D, −8D). Validé par David le 01/11 |
+| 🟢 P1 | La santé à deux pistes et l'attaque mentale | **Livré le 30/10** : `combat.pistesDeSante` (`combat/logic/pistesDeDegenesis.ts`) à la porte des dégâts : Blessures superficielles jusqu'à (PHY+Résistance)×2, puis Traumatismes jusqu'à PHY+PSY ; la santé principale suit les deux pistes et se recalcule sur elles ; soin sur les Blessures ; dégât « mental » sur l'Égo (p. 94, 107). Validé par David le 01/11 |
+| 🟢 P1 | L'initiative | **Livré le 30/10** : `combat.initiativeEnReserve` — PSY+Réactivité lancé en d6, score = succès, −1D par Traumatisme, actions en plus dites au journal (p. 100-101) ; le champ « reactivite » manquait au pilote forgé. Validé par David le 01/11 |
 | 🟢 P0 avant extension | Corpus relu contre le livre | **Fait le 30/10** : 16/16 ; quatorze fiches corrigées, une conforme, la fiche du ton réécrite ; affirmations sans source retirées (défense active, double de la portée longue, incubation, couvert, cumuls de Potentiels) |
-| 🟠 P1 | La fiche HTML reliée | **Livré le 30/10** : moteur 20 → 21 (`outils/degenesis/integrer_au_moteur.mjs`), correspondance des 129 clés (`relier_fiche_degenesis.mjs`), validateur 0/0 ; e2e : fiche remplie depuis GM-OS. Essai de David attendu |
-| 🟠 P2 | Le thème `degenesis` et la bannière | **Livrés le 30/10** par Codex, thème accepté 0/0 ; à activer dans une campagne. Essai de David attendu |
+| 🟢 P1 | La fiche HTML reliée | **Livré le 30/10** : moteur 20 → 21 (`outils/degenesis/integrer_au_moteur.mjs`), correspondance des 129 clés (`relier_fiche_degenesis.mjs`), validateur 0/0 ; e2e : fiche remplie depuis GM-OS. Validé par David le 01/11 |
+| 🟢 P2 | Le thème `degenesis` et la bannière | **Livrés le 30/10** par Codex, thème accepté 0/0 ; à activer dans une campagne. Validé par David le 01/11 |
 
-**Reste :** l'essai de David. À la table, par choix : l'armure (saisie déduite), la défense
+**Analyse complémentaire du 01/11/2026 — propositions DEG-A1 à DEG-A6.**
+La réserve, les déclencheurs, le débit d'Égo au test, les Traumatismes et les deux pistes
+sont livrés. Les limites suivantes sont encore visibles dans les lecteurs du code.
+Sources : [round et initiative](../../docs/systems/degenesis/rules/initiative-et-deroulement-du-tour.md),
+[ressources](../../docs/systems/degenesis/rules/jauges-et-ressources-individuelles.md),
+[Brûlure](../../docs/systems/degenesis/rules/la-brulure-et-la-stimulation-des-chakras.md),
+[réserves et résolution](../../src/modules/dice/systemes/degenesis.ts),
+[pistes](../../src/modules/combat/logic/pistesDeDegenesis.ts),
+[Jet système](../../src/modules/combat/useCombatStore.ts).
+
+| Priorité / lot proposé | Constat vérifié au 01/11 | Amélioration proposée et critère de recette |
+| --- | --- | --- |
+| 🔴 P1 · DEG-A1 — Égo de l'initiative et première action | Le Jet système appelle la réserve avec des choix vides ; le panneau de test débite son Égo, mais sans souvenir partagé de la première action du round. Les actions supplémentaires sont dites au journal | Choisir 0–3 Égo avant initiative, débiter une fois, reporter les dés sur la première action puis les consommer ; suivre les actions disponibles et la surprise. Avec 2 Égo : +2D à initiative et première action, un seul débit de 2, aucun bonus sur la seconde ; rechargement sans second paiement |
+| 🔴 P1 · DEG-A2 — Arme, défense et dégâts nets | Les circonstances sont saisissables ; armure, déclencheurs de dégâts et défense active restent arbitrés. La porte des pistes attend des dégâts déjà réduits | Choisir explicitement arme et protection active, calculer l'aperçu brut/déclencheurs/armure, puis envoyer le net aux pistes. Déclarer l'action de défense utilisée plutôt que multiplier librement les réactions ; 10 DM contre armure 3 doivent transmettre 7, pas déduire encore 3 au suivi de santé. Aucun cumul automatique des deux armures |
+| 🔴 P2 · DEG-A3 — Maxima calculés et choix exclusifs | Égo maximal est un champ à saisir ; les formules dépendent de Concentration ou Pulsions, et Foi ou Volonté pour la Sporulation. La santé a déjà ses maxima natifs | Déclarer la branche retenue, calculer et expliquer les maxima, avertir d'une exclusivité contradictoire. INT 3 + Concentration 2 donne Égo max 10 ; une variation ne doit ni remplir gratuitement la jauge ni effacer les points permanents |
+| 🔴 P2 · DEG-A4 — Coopération, combinaisons et confrontation | Le moteur compte les succès et les 6 ; il ne prépare pas la transmission des déclencheurs entre plusieurs jets ni une comparaison complète des deux camps | Proposer aide, test en chaîne et opposition comme procédures séparées. Pour la coopération, 2 déclencheurs apportent 2D au bénéficiaire ; en combinaison, reporter selon le corpus sans les compter deux fois ; à succès égaux, comparer les 6 avant l'arbitrage final. Conserver plafond de 12 dés et surplus en succès d'office |
+| 🔴 P2 · DEG-A5 — Sporulation permanente, Brûlure et Potentiels | La piste de contamination existe, mais le permanent n'est pas isolé ; Brûlure et six textes de Potentiels n'ont pas de suivi d'effets | Séparer subi/permanent, enregistrer les traitements et un usage de Brûlure avec puissance/durée, puis un choix explicite du Potentiel applicable. Puissance 2 : Égo et contamination évoluent de 2 selon leurs bornes ; la fin du bonus ne retire pas la contamination permanente. Valider chaque effet de Potentiel, sans interpréter automatiquement tout texte libre |
+| 🔴 P2 · DEG-A6 — Adversaire autonome à deux pistes | PJ et PNJ avec fiche passent par la porte des pistes ; l'adversaire de plateau sans fiche reste sur le suivi de PV générique | Donner à cet adversaire les valeurs minimales du système et utiliser la même résolution, y compris dégâts mentaux sur Égo. Rejouer la même attaque contre un PNJ lié et autonome : Blessures/Traumatismes identiques ; si les maxima manquent, demander une préparation explicite plutôt que prétendre calculer les pistes |
+
+**Décision de périmètre :** conserver défense, cumul éventuel d'armures et Potentiels sous
+validation du MJ tant que leurs entrées ne sont pas structurées. La présence de deux champs
+d'armure n'autorise pas à additionner leurs protections. Ces propositions n'invalident pas
+les 66 cas de recette déjà livrés ; elles demandent des cas supplémentaires après développement.
+
+**Reste :** les propositions ci-dessus ; les fonctions livrées ont été validées par David le 01/11. À la table, par choix : l'armure (saisie déduite), la défense
 passive ou active, les Potentiels, la Brûlure et la Sporulation permanente ; les adversaires sans
 fiche perdent leurs PV d'un bloc.
 
@@ -578,6 +732,8 @@ doivent pas devenir une seconde fiche de ressources. Les secrets astrologiques r
 
 ## RuneQuest
 
+**Validation globale des fonctions déjà livrées par David le 01/11/2026**, citation et portée dans le plan à cocher ; les propositions ci-dessous restent séparées.
+
 **Référence :** [manuel 2.1.0](../User%20Guides/54-Jeu-RuneQuest.md) ; registre § 187.
 **Statut : fini le 30/10/2026** contre le livre de base français (Deadcrows, 7e éd.,
 `DCRQK02 - Livre de Base.pdf`) **et son errata** (`… - Errata.pdf`), pages imprimées (PDF − 1) ;
@@ -590,29 +746,55 @@ GM-OS Studio ([livraison de la fiche](2026-10-30-fiche-runequest-studio.md)).
 
 | Priorité | Amélioration | Réalisation |
 | --- | --- | --- |
-| 🟠 P0 | Le jet : le pilote forgé ne rendait que réussite ou échec, ratait un 4 à 3 % et réussissait un 97 à 120 % | **Livré le 30/10** : `jet.runequest` (`dice/systemes/runequest.ts`), cinq niveaux lus sur les chances modifiées — critique au vingtième, spéciale au cinquième, échec critique aux 5 % des chances d'échec, arrondis au plus proche —, 01-05 et 96-00 toujours ; la table p. 143 retrouvée ligne à ligne par un essai. Essai de David attendu |
-| 🟠 P1 | Test de caractéristique et table de résistance | **Livré le 30/10** : une caractéristique retenue se teste ×5 à ×0,5 (p. 141) ou contre une passive, 50 % + 5 % par point (p. 145, errata p. 147). Essai de David attendu |
-| 🟠 P1 | Augmentation, nouvelle tentative, opposition, localisation | **Livré le 30/10** : augmentation +50/+30/+20/−20/−50 servie au jet suivant (p. 144-145), −25 % (p. 142), excédent au-delà de 100 % retiré aux deux camps et issue au meilleur niveau (p. 144, errata p. 142), D20 de localisation avec les PV de la zone (p. 146). Essai de David attendu |
-| 🟠 P1 | La fiche GM-OS et le pilote 2.0.0 | **Livré le 30/10** : 193 champs — compétences du livre par catégorie au lieu des sept catégories, six Runes élémentaires et cinq paires, six Passions nommées, armes, sept localisations ; identifiants en double retirés ; combat RA DEX + RA TAI croissant, santé en PV totaux ; portées de poursuite. Essai de David attendu |
+| 🟢 P0 | Le jet : le pilote forgé ne rendait que réussite ou échec, ratait un 4 à 3 % et réussissait un 97 à 120 % | **Livré le 30/10** : `jet.runequest` (`dice/systemes/runequest.ts`), cinq niveaux lus sur les chances modifiées — critique au vingtième, spéciale au cinquième, échec critique aux 5 % des chances d'échec, arrondis au plus proche —, 01-05 et 96-00 toujours ; la table p. 143 retrouvée ligne à ligne par un essai. Validé par David le 01/11 |
+| 🟢 P1 | Test de caractéristique et table de résistance | **Livré le 30/10** : une caractéristique retenue se teste ×5 à ×0,5 (p. 141) ou contre une passive, 50 % + 5 % par point (p. 145, errata p. 147). Validé par David le 01/11 |
+| 🟢 P1 | Augmentation, nouvelle tentative, opposition, localisation | **Livré le 30/10** : augmentation +50/+30/+20/−20/−50 servie au jet suivant (p. 144-145), −25 % (p. 142), excédent au-delà de 100 % retiré aux deux camps et issue au meilleur niveau (p. 144, errata p. 142), D20 de localisation (p. 146), affichage des PV de cible corrigé séparément dans RQ-A2. Validé par David le 01/11 |
+| 🟢 P1 | La fiche GM-OS et le pilote 2.0.0 | **Livré le 30/10** : 193 champs — compétences du livre par catégorie au lieu des sept catégories, six Runes élémentaires et cinq paires, six Passions nommées, armes, sept localisations ; identifiants en double retirés ; combat RA DEX + RA TAI croissant, santé en PV totaux ; portées de poursuite. Validé par David le 01/11 |
 | 🟢 P0 avant extension | Corpus relu contre le livre et l'errata | **Fait le 30/10** : 17/17, quinze fiches corrigées et deux précisées (égalité en opposition, score réduit au-delà de 100 %, Confusion, sorcellerie, inspiration, maladies…), affirmations sans source retirées |
-| 🟠 P1 | La fiche HTML reliée | **Livré le 30/10** : moteur 19 → 20 (`outils/runequest/integrer_au_moteur.mjs`) ; fiche GM-OS étendue à 313 champs (compétences d'armes, deux cultes, Honneur et sept Passions à sujet, pièces) ; correspondance des 735 clés, 327 reliées, 408 absentes motivées (famille, ascendance, compagnon, récoltes, coches d'expérience) ; validateur 0/0 ; e2e : fiche créée et remplie depuis GM-OS. Essai de David attendu |
-| 🟠 P2 | Le thème `runequest` | **Livré le 30/10** par David, accepté 0/0 ; à activer dans une campagne. Essai de David attendu |
-| 🟠 P1 | Les coups localisés dans Combat-OS (demandés par David le 30/10 : « tu ne joues pas la localisation des dégâts dans Combat-OS ? ») | **Livré le 30/10**, pilote 2.1.0 : `combat.coupsLocalises` (`combat/logic/coupsDeRuneQuest.ts`) ; panneau des sept zones sur la carte de chaque combattant (D20 ou clic, dégâts, Encaisser, Soigner) ; armure retirée, membre plafonné au double en un coup, zone et total entamés, effets du livre dits au message et au journal (p. 146-148, relues en image) ; « Porter le coup » depuis le panneau de jet vers la cible ; sept champs `degats_<zone>` propres à GM-OS ; règle appliquée par `handleApplyImpact` (PJ, PNJ) et sur le plateau (adversaire autonome) ; e2e et capture `jeu-runequest-coups-localises`. Essai de David attendu |
+| 🟢 P1 | La fiche HTML reliée | **Livré le 30/10** : moteur 19 → 20 (`outils/runequest/integrer_au_moteur.mjs`) ; fiche GM-OS étendue à 313 champs (compétences d'armes, deux cultes, Honneur et sept Passions à sujet, pièces) ; correspondance des 735 clés, 327 reliées, 408 absentes motivées (famille, ascendance, compagnon, récoltes, coches d'expérience) ; validateur 0/0 ; e2e : fiche créée et remplie depuis GM-OS. Validé par David le 01/11 |
+| 🟢 P2 | Le thème `runequest` | **Livré le 30/10** par David, accepté 0/0 ; à activer dans une campagne. Validé par David le 01/11 |
+| 🟢 P1 | Les coups localisés dans Combat-OS (demandés par David le 30/10 : « tu ne joues pas la localisation des dégâts dans Combat-OS ? ») | **Livré le 30/10**, pilote 2.1.0 : `combat.coupsLocalises` (`combat/logic/coupsDeRuneQuest.ts`) ; panneau des sept zones sur la carte de chaque combattant (D20 ou clic, dégâts, Encaisser, Soigner) ; armure retirée, membre plafonné au double en un coup, zone et total entamés, effets du livre dits au message et au journal (p. 146-148, relues en image) ; « Porter le coup » depuis le panneau de jet vers la cible ; sept champs `degats_<zone>` propres à GM-OS ; règle appliquée par `handleApplyImpact` (PJ, PNJ) et sur le plateau (adversaire autonome) ; e2e et capture `jeu-runequest-coups-localises`. Validé par David le 01/11 |
 
-**Reste :** l'essai de David (pilote, fiche HTML, thème, coups localisés). À la table, par choix :
+**Analyse complémentaire du 01/11/2026 — propositions RQ-A1 à RQ-A6.**
+Le d100, les cinq niveaux, l'opposition et les coups localisés sont livrés. Deux écarts précis
+doivent être traités avant d'élargir l'automatisation : version de recette et affichage de cible.
+Sources : [inventaire du lot](../../output/campagnes-tests/runequest/inventaire.json),
+[générateur 2.1.0](../../outils/runequest/finir_runequest.py),
+[suites du jet](../../src/modules/session/components/fields/RuneQuestAuJet.tsx),
+[coups localisés](../../src/modules/combat/logic/coupsDeRuneQuest.ts),
+[dégâts](../../docs/systems/runequest/rules/degats-et-types-de-degats.md),
+[rangs d'action](../../docs/systems/runequest/rules/initiative-et-deroulement-du-tour.md).
+
+| Priorité / lot proposé | Constat vérifié au 01/11 | Amélioration proposée et critère de recette |
+| --- | --- | --- |
+| 🟢 P1 · RQ-A1 — Recette alignée sur 2.1.0 | **Livré le 01/11**, registre § 202 : trois archives avec pilote 2.1.0/320 champs et sept compteurs de dégâts ; C07 bras 0/3, C08 tête −4/4 ; 21 PJ, 78 cas dont douze LOCAL ; ancien ZIP/CSV/rapports conservés à part | 96 tests passent ; pilote historique 2.0.0 conservé par Nexus puis remplacé explicitement par 2.1.0 ; imports, armure/plafond/soins, PJ/PNJ/autonome, Porter le coup, persistance et remplacement isolé de 02, trois Hub et zéro fuite éprouvés ; validation de David le 01/11 : « ok c’est bien, c’est testé. Commit et pousse ». [Confirmation](../../output/campagnes-tests/runequest/VALIDATION-DAVID.md). [Reprise](2026-11-01-etat-et-reprise-codex-runequest-recette-210.md) |
+| 🟢 P0 · RQ-A2 — PV affichés du bon combattant | **Livré et validé par David le 01/11**, registre § 201 : localisation/journal sans PV du lanceur ; nom de cible + zone + PV maximum de sa fiche, actualisés au changement de cible et de fiche ; valeur absente inconnue, zéro conservé ; détails au meneur seulement | 89 tests ciblés, lint et build/types réussis ; essai Electron et capture dans la [reprise](2026-11-01-etat-et-reprise-codex-runequest-pv-cible.md). David : « ok c’est bon on fait RQ-A1 » ; nouvel essai d’intégration au § 202 |
+| 🔴 P1 · RQ-A3 — Résultat d'attaque jusqu'au coup | Le résultat spécial/critique est connu, mais « Porter le coup » reçoit une zone et un nombre ; la routine retire toujours l'armure. Dégâts d'arme, bonus, empalement/lacération/écrasement et parade restent à préparer à la table | Ajouter un aperçu selon arme et résultat de combat, avec bypass d'armure explicite sur critique et validation des effets. À dégâts et zone identiques, l'attaque ordinaire retire l'armure ; le critique l'ignore. Préserver le plafond d'un membre et ne pas appliquer deux fois bonus, soins ou dégâts totaux |
+| 🔴 P1 · RQ-A4 — Rang d'action selon l'action | Le pilote trie RA DEX + RA TAI ; les RA d'armes sont stockés mais pas inclus dans une préparation d'action. Un tir ou un sort n'utilise pas automatiquement le même total qu'une mêlée | Préparer intention, arme/sort, délais et RA final ; distinguer mêlée et tir/magie, départager par DEX et gérer la limite 12. À RA final 13, ne pas présenter l'action comme exécutée durant le round courant ; conserver la décision de report du MJ |
+| 🔴 P2 · RQ-A5 — Dérivés explicables | PV maximum, zones, bonus de dégâts, ENC, vitesse de guérison et modificateurs de catégorie restent principalement saisis | Proposer un calcul depuis les caractéristiques, avec détail et dérogation explicite. Une modification de CON/TAI prépare les nouveaux maxima et zones sans soigner gratuitement ni effacer les dégâts subis ; comparer plusieurs valeurs frontières aux tables relues du livre |
+| 🔴 P2 · RQ-A6 — Magie, inspiration et progression assistées | Runes/Passions, PM et deux réserves de PR sont reliés ; coût des sorts, récupération, suites d'inspiration, INT libre et coches d'expérience ne sont pas des procédures persistantes complètes | Commencer par lancement avec coût annoncé et bon culte, puis issue d'inspiration et coche d'expérience nommée ; prévoir annulation et journal. Un coût payé sur le culte 2 ne débite ni culte 1 ni deux fois après reload. Ne pas appliquer l'augmentation générique comme toute la règle d'inspiration ; laisser les effets de sort au MJ hors catalogue vérifié |
+
+**Après ces lots :** organiser les effets temporisés de blessures (hémorragie, perte de PV au
+round, incapacité), annoncés mais non appliqués par le moteur. Les 408 clés HTML absentes sont
+motivées : famille/ascendance/compagnon ne sont pas toutes des défauts de raccord à corriger.
+Les statuts et coches utiles à la procédure de jeu sont à sélectionner, sans imposer de relier
+les 735 clés. Le lot courant est aligné en 2.1.0 ; l'ancien lot 2.0.0 reste conservé comme historique.
+
+**Reste :** RQ-A3 à RQ-A6 ; RQ-A1, RQ-A2 et les fonctions précédemment livrées sont validés par David le 01/11. Le cahier et le CSV initiaux restent vierges faute de résultats détaillés par cas ; validation globale consignée séparément. À la table, par choix :
 les dégâts spéciaux, la magie (au panneau sous POU, une Rune ou le sort), les suites d'une
 localisation que GM-OS dit sans les appliquer (combat au sol, hémorragie, −1 PV par round).
 
 **Sujets à auditer :** les dérivés calculés (PV, ENC, bonus aux dégâts, modificateurs de catégorie)
 au lieu d'être saisis ; les dégâts spéciaux (empalement, lacération, écrasement) portés avec le
-coup localisé ; la ligne « Localiser le coup » du panneau, qui lit encore les PV de zone sur la
-fiche du lanceur ; les inspirations de Rune et de
+coup localisé ; les inspirations de Rune et de
 Passion avec leurs suites (tourment, désespoir) ; les tests d'expérience cochés.
 
 **Cas témoin :** Épée large 65 %, augmentée d'une réussite (+20), situation −10 : 75 %, critique
 01-04, spéciale 01-15, échec critique 00 ; à 56 %, un 02 est critique, un 99 un échec critique.
 
 ## Shadowrun Anarchy
+
+**Validation globale des fonctions déjà livrées par David le 01/11/2026**, citation et portée dans le plan à cocher ; les propositions ci-dessous restent séparées.
 
 **Préparation de Shadowrun : Anarchy 2.0**, ateliers Studio du 31/10/2026 ;
 [reprise](2026-10-31-etat-et-reprise-codex-studio-shadowrun-anarchy.md), registre **§ 196**.
@@ -624,19 +806,19 @@ Le sommaire a déjà été livré au § 195. Les ateliers du 31/10 n’auditaien
 chantier du § 197 l’a fait.
 
 **Campagnes de recette livrées et éprouvées le 01/11**, § 198 : mission originale et deux
-laboratoires, 22 PJ pour les trois joueurs, 64 cas humains NON TESTÉS ; 72 tests passent,
+laboratoires, 22 PJ pour les trois joueurs, 64 cas humains NON TESTÉS dans le rapport initial ; validation globale de David le 01/11 ; 72 tests passent,
 imports/remplacement/rechargement et trois Hub 360/768/1180 vérifiés, jets et Anarchy,
-fiche HTML sauvegardée. **GM-05 confirmé : secrets de séance transmis aux Hub**, assertion
-finale conservée en échec. [Livraison](2026-11-01-campagne-recette-shadowrun-anarchy.md).
+fiche HTML sauvegardée. **GM-05 confirmé dans le rapport initial : secrets de séance transmis aux Hub**, assertion
+finale conservée en échec historique ; corrigé et validé au § 200. [Livraison](2026-11-01-campagne-recette-shadowrun-anarchy.md).
 
 | Priorité | Amélioration | Réalisation |
 | --- | --- | --- |
-| 🟠 P2 | Thème d’interface | **Livré le 31/10** : papier usé, cadre jaune, titres bruns, deux matières, trois ornements, quinze icônes ; validateur **0 erreur / 0 avertissement**. Vingt SVG décodés et planches 1440/390 px examinées hors ligne ; jugement de David attendu |
-| 🟠 P0 | Le jet | **Livré le 01/11** (§ 197) : le pilote forgé formait un seuil de 9 par d6, ne lançait aucun dé et exigeait trois réussites — tout échouait. `jet.shadowrun` : réserve compétence + attribut (+2 de spécialisation) qui ne change jamais, 5+ (4+ sous avantage, 6 sous désavantage, borné à un), seuil 2-8, succès nets, réussite exceptionnelle ; dés de risque pris dans la réserve (table p. 71, action normale par défaut), succès doublés, complications mineure, critique, désastre ; RR lue sur la ligne de la compétence ; règle alternative réglable (`risqueAlternatif`). Essai de David attendu |
-| 🟠 P0 | Points d’Anarchy | **Livrés le 01/11** : avantage payé au lancer, +1 sur complication critique, +2 sur désastre, **Relancer** qui garde la complication du premier jet (p. 77) ; 4 au départ pour un humain, 3 sinon. Les autres gains et dépenses restent sur la jauge. Essai de David attendu |
-| 🟠 P1 | Moniteur d’état | **Livré le 01/11** : `combat.moniteurDEtat` — la VD contre les seuils de la fiche (principale, secondaire, sans armure, mental), une blessure par coup, aggravée quand ses cases sont pleines ; désavantage d’une grave au jet ; soin de la plus grave d’abord. Les quatre cases montrent la pire blessure : à juger par David |
-| 🟠 P1 | Fiche HTML du jeu | **Reliée le 01/11** : moteur **23**, correspondance 120/121 (portrait laissé à la fiche), validateur 0/0. Livrée le 31/10, modèle shadowrun-anarchy2-fr, une page native 600,945 × 779,528 points, **146 zones / 121 clés**, portrait, **39 hotspots / 14 pistes**. Validateur **0 erreur / 2 avertissements d’intégration** ; saisie/import/export/rechargement, portrait, refus sans perte, reset, zoom, mobile, impression CSS et import du modèle dans un moteur jetable vérifiés ; six captures examinées. Raccord permanent réalisé au § 197 ; essai de David attendu |
-| 🟠 P2 | Bannière et identité d’images | **Livrées le 31/10** : JPEG opaque **2400 × 600 / 375 284 octets**, agrandissement de 10,5 % autorisé par David, sans détail ajouté ; deux cadrages 54 px examinés hors GM-OS. Identité révisée le même jour à sa demande : cyberpunk saturé, cyan/magenta/ultraviolet et accents jaune acide, peinture texturée ; bloc anglais STYLE/AVOID **43/14 mots**, validateur et sens relus dans `output/identites/shadowrun-anarchy/`. Le ZIP Studio initial conserve le bloc précédent. Choix dans le pilote et essai d’image par David attendus |
+| 🟢 P2 | Thème d’interface | **Livré le 31/10** : papier usé, cadre jaune, titres bruns, deux matières, trois ornements, quinze icônes ; validateur **0 erreur / 0 avertissement**. Vingt SVG décodés et planches 1440/390 px examinées hors ligne ; validé par David le 01/11 |
+| 🟢 P0 | Le jet | **Livré le 01/11** (§ 197) : le pilote forgé formait un seuil de 9 par d6, ne lançait aucun dé et exigeait trois réussites — tout échouait. `jet.shadowrun` : réserve compétence + attribut (+2 de spécialisation) qui ne change jamais, 5+ (4+ sous avantage, 6 sous désavantage, borné à un), seuil 2-8, succès nets, réussite exceptionnelle ; dés de risque pris dans la réserve (table p. 71, action normale par défaut), succès doublés, complications mineure, critique, désastre ; RR lue sur la ligne de la compétence ; règle alternative réglable (`risqueAlternatif`). Validé par David le 01/11 |
+| 🟢 P0 | Points d’Anarchy | **Livrés le 01/11** : avantage payé au lancer, +1 sur complication critique, +2 sur désastre, **Relancer** qui garde la complication du premier jet (p. 77) ; 4 au départ pour un humain, 3 sinon. Les autres gains et dépenses restent sur la jauge. Validé par David le 01/11 |
+| 🟢 P1 | Moniteur d’état | **Livré le 01/11** : `combat.moniteurDEtat` — la VD contre les seuils de la fiche (principale, secondaire, sans armure, mental), une blessure par coup, aggravée quand ses cases sont pleines ; désavantage d’une grave au jet ; soin de la plus grave d’abord. Les quatre cases montrent la pire blessure : validées par David le 01/11 |
+| 🟢 P1 | Fiche HTML du jeu | **Reliée le 01/11** : moteur **23**, correspondance 120/121 (portrait laissé à la fiche), validateur 0/0. Livrée le 31/10, modèle shadowrun-anarchy2-fr, une page native 600,945 × 779,528 points, **146 zones / 121 clés**, portrait, **39 hotspots / 14 pistes**. Validateur **0 erreur / 2 avertissements d’intégration** ; saisie/import/export/rechargement, portrait, refus sans perte, reset, zoom, mobile, impression CSS et import du modèle dans un moteur jetable vérifiés ; six captures examinées. Raccord permanent réalisé au § 197 ; validé par David le 01/11 |
+| 🟢 P2 | Bannière et identité d’images | **Livrées le 31/10** : JPEG opaque **2400 × 600 / 375 284 octets**, agrandissement de 10,5 % autorisé par David, sans détail ajouté ; deux cadrages 54 px examinés hors GM-OS. Identité révisée le même jour à sa demande : cyberpunk saturé, cyan/magenta/ultraviolet et accents jaune acide, peinture texturée ; bloc anglais STYLE/AVOID **43/14 mots**, validateur et sens relus dans `output/identites/shadowrun-anarchy/`. Le ZIP Studio initial conserve le bloc précédent. Validés par David le 01/11 |
 
 **Vérifications :** 51 tests de contrat passent ; lint ciblé sans erreur. Rapport, captures et
 empreintes dans `output/studio/shadowrun-anarchy/`, `output/fiches/shadowrun-anarchy/` et
@@ -647,7 +829,7 @@ système et ne prouvent pas le téléchargement de polices. Le thème ne change 
 de GM-OS. La fiche garde son fond PDF ; RD, attribut et seuils restent saisissables, car le
 manifeste ne propose pas d’addition à deux sources. Trois degrés de blessures distincts 3/2/1,
 cercles pâles compris ; le passage au degré supérieur se fait dans GM-OS, pas sur la fiche. Portrait
-recadré dans l’ellipse intérieure. Connexions Hub éprouvées au § 198 ; partie complète et impression physique restent à essayer.
+recadré dans l’ellipse intérieure. Connexions Hub éprouvées au § 198 ; la validation globale de David est consignée ci-dessus, sans mesure détaillée d’impression physique.
 
 **Vérifications du § 197 :** règle (15 essais, exemples du livre : Lightning, Iron et les
 gangers, la rafale d’Iron, Rolling Thunder), porte des dégâts (8), panneau (5), contrôle du
@@ -658,7 +840,31 @@ seul pilote Shadowrun, six captures relues. Corpus relu **19/19**, seize fiches 
 risque ; 2 succès normaux + 2 de risque = 6, deux 1 dont un annulé : réussite, complication
 mineure ; VD 5 + 3 nets = 8 contre 6/9/12 : blessure légère (p. 72).
 
-**Reste et sujets à auditer :** l’essai de David (réimport avec **Remplacer**) ; non automatisés :
+**Analyse complémentaire du 01/11/2026 — propositions SR-A1 à SR-A6.**
+Le risque, RR, Anarchy au jet, moniteur et raccord 120 clés sont livrés ; les lectures suivantes
+repèrent les procédures encore manuelles. Aucun second moteur de jet n'est à créer.
+Sources : [drain](../../docs/systems/shadowrun-anarchy/rules/le-drain-magique.md),
+[Matrice](../../docs/systems/shadowrun-anarchy/rules/le-piratage-et-les-modes-de-connexion-a-la-matrice.md),
+[planification](../../docs/systems/shadowrun-anarchy/rules/monnaie-de-table.md),
+[rigging](../../docs/systems/shadowrun-anarchy/rules/le-rigging-et-la-plongee-dans-les-vehicules.md),
+[moniteur](../../src/modules/combat/logic/moniteurDeShadowrun.ts),
+[champs du pilote](../../outils/shadowrun-anarchy/finir_shadowrun.py).
+
+| Priorité / lot proposé | Constat vérifié au 01/11 | Amélioration proposée et critère de recette |
+| --- | --- | --- |
+| 🔴 P1 · SR-A1 — Blessures, drain et soins admissibles | La grave pèse déjà sur le jet ; légère récente cochée manuellement. Le moniteur ne conserve ni origine drain ni autorisation des soins : son bouton de soin retire simplement la pire blessure | Ajouter origine et terme de la blessure/du malus, conséquences du drain proposées après le jet magique, repos et soins distingués. Une blessure de drain ne doit pas être effacée par premiers soins ou magie ; le désavantage temporaire expire au bon terme de narration, pas au simple passage d'un round |
+| 🔴 P2 · SR-A2 — Cohérence des champs et des ressources | Réserve de compétence et seuils sont des nombres saisis ; les calculs du panneau ne réécrivent pas ces dérivés. Anarchy est déclarée max 99 malgré l'absence de plafond dans la règle ; Essence 0 ne marque pas à elle seule un état terminal | Proposer réserve/seuils dérivés avec dérogation explicite, supprimer ou rendre cohérent le plafond d'Anarchy dans tous les lecteurs, faire confirmer les suites d'Essence. Tester Anarchy 99 → 100 et une variation d'attribut sans effacer les blessures ; préserver les protections propres au profil, sans les deviner depuis leur nom |
+| 🔴 P1 · SR-A3 — Piratage préparé et surveillance | La fiche contient minimum de risque et hausse du seuil ; mode RA/RV, accès, backdoor et surveillance de DIEU sont réglés à la main | Préparer un contexte de tentative : Firewall, accès visé, préparation, mode et minimum de risque ; garder la progression de surveillance et proposer les conséquences. Accès Aucun → Administrateur : +2 au seuil avant backdoor ; hot-sim : biofeedback mental létal, pas physique. Ne pas donner d'action/avantage RV à une connexion qui ne les permet pas |
+| 🔴 P2 · SR-A4 — Planification, flashback et menace | Les deux réserves sont natives et leurs droits déclarés ; succès de préparation, paiement de flashback, alimentation de menace et désastre sont manuels | Proposer crédit des succès, paiement personnel/collectif validé et coût de flashback (1–4), sans achat de dés. En narration totale seulement, proposer les mouvements de menace et le dépassement ; 4 en planification, flashback 2 → 2, un seul débit et même valeur après reconnexion |
+| 🔴 P2 · SR-A5 — Opposition et rôles adverses | Le panneau compare les succès à un seuil fixe, y compris celui saisi depuis l'adversaire ; il ne tranche pas la règle d'égalité ni la valeur moyenne d'un second rôle. Le dé spécial alternatif est déjà implémenté | Ajouter une comparaison explicitement opposée, égalité non départagée et arbitrage quand un vainqueur est nécessaire ; proposer le profil de second rôle. Deux camps à 4 succès ne deviennent pas automatiquement une victoire du lanceur. Tester séparément l'import de la variante alternative, sans la réimplémenter |
+| 🔴 P3 · SR-A6 — Rigging et véhicule, après arbitrage | Aucun suivi natif des modes de contrôle, de l'appareil et de son biofeedback ; contradiction du livre sur la résistance des véhicules déjà consignée | Fixer d'abord avec David la référence de résistance, puis suivre appareil/rigger séparément, priorité des modes et nature du biofeedback. Une case grave cochée sur l'appareil provoque une légère au rigger, selon le mode ; ne pas copier le moniteur humanoïde comme règle universelle de Structure |
+
+**À conserver comme choix de table :** narration, contenu d'un flashback et effets ouverts
+des atouts. Les capacités proposées doivent assister leurs coûts et leur suivi, pas inventer
+un catalogue de sorts ou automatiser une décision d'auteur. Les variantes « plus sombre »
+demandent une option explicite avant tout changement de durée ou de guérison.
+
+**Reste et sujets à auditer :** les fonctions livrées sont validées par David le 01/11 ; non automatisés :
 drain (p. 170), surveillance de DIEU (p. 218), dommages des véhicules (Structure × 2, × 3), variantes
 « plus sombre » (p. 69), valeur moyenne des seconds rôles (p. 81) ; le livre se contredit sur la
 résistance des véhicules (p. 68 : Structure × 2 et × 3 ; p. 230 : Structure comme la Force).
@@ -828,9 +1034,26 @@ propres :
 | 🟢 **Onglet « Lancer un test »** — livré le 22/10 (`6f709c79`, registre § 147) | Tous | Le test a son onglet sur la fiche du meneur (Formulaire / Lancer un test / Fiche du jeu) et sur la tablette (Vue synthétique / Lancer un test / Ma fiche / groupe), d'après les maquettes Stitch retenues : étapes Composer, Préparer, Lancer les dés, Résultat ; dés nommés ; blocs propres au jeu en cartes repliables (Alien : dernier test, blessures, Stress et Panique ; RdD : mécaniques du Voyageur). Aucun pilote modifié. Captures du manuel refaites pour les dix jeux. **Essai de David validé le 22/10** |
 | 🟢 Documentation et recette | Tous | Page 53, page 54 du jeu et captures conformes aux fonctions réellement livrées. **Recette du 24/10** (registre § 171) : les onze jeux rejoués sur leur dernier pilote et comparés au manuel ; six captures et deux légendes mises à jour ; l'essai des captures photographie désormais en pixels CSS. Within n'a pas de page : son pilote est retiré |
 
-**Pour choisir une prochaine intervention (revu le 25/10) :** Alien, Crimes, Cthulhu Hack,
+**Priorités transversales réévaluées le 01/11 (les quatre nouveaux pilotes).**
+Les validations du 22–24/10 ci-dessus restent des acquis dans leur périmètre ; elles ne
+valident pas la confidentialité de tous les champs ajoutés depuis. Les recettes ultérieures
+conservent le constat historique GM-05 ; le correctif du 01/11 est vérifié séparément au § 200.
+Ne pas relire « rien ne reste » comme une clôture des nouveaux cas encore ouverts.
+
+| Priorité / lot proposé | Constat et périmètre | Résultat attendu et preuve à obtenir |
+| --- | --- | --- |
+| 🟢 P0 · NP-C1 — Secrets de séance / GM-05 | **Corrigé et validé par David le 01/11**, § 200 : gmSecrets vidé par le filtre commun, état privé MJ conservé. Les quatre rapports de recette en échec décrivent la version précédente | 70 tests ciblés, build/types et lint passent ; quatre tests Electron sur douze Hub passent, synchronisation initiale/différentielle/reconnexion, résumés publics reçus et zéro fuite. Essai de David validé ; les archives historiques ne sont pas réécrites |
+| 🔴 P1 · NP-C2 — Anciennes fiches et versions | Les quatre manuels décrivent des rubriques déplacées ou à ressaisir ; un pilote de même ID conservé à l'import n'est pas nécessairement la dernière version. RuneQuest avait ce décalage 2.0.0/2.1.0, corrigé par RQ-A1 ; la dépendance déjà installée reste à remplacer explicitement | Prévoir diagnostic de version et aperçu de conversion à valider, jamais conversion depuis le seul nom des champs. Tester une copie fictive ancienne, conservation des notes/valeurs et retour arrière par export ; ne pas lire ou migrer les campagnes personnelles pour cet audit |
+| 🔴 P1 · NP-C3 — Droits et variantes encore non éprouvés | GM-06 (édition du PJ d'autrui) n'est pas une panne démontrée par ces rapports ; c'est un essai restant. COC 3d6 et Shadowrun alternatif sont codés, mais pas validés par l'import des variantes dans leurs parcours E2E | Ajouter tests de refus d'écriture et persistance, puis imports isolés des variantes et retour au standard. Distinguer preuve automatisée, cas humains encore NON TESTÉS et tablette physique ; ne pas transformer une absence d'essai en bug confirmé |
+
+**Suite choisie par David :** NP-C1, RQ-A2 et RQ-A1 validés ; choisir ensuite un lot restant,
+puis un lot central du jeu effectivement joué : DEG-A1, COC-A1/A2/A3 ou SR-A1/A3. Calculs,
+progression et confort viennent ensuite. Le rigging reste conditionné à l'arbitrage de sa
+référence. Les autres propositions restent à choisir ; le présent suivi ne choisit pas la campagne de David.
+
+**Pour choisir une prochaine intervention (historique du 25/10, complété par l’analyse ci-dessus) :** Alien, Crimes, Cthulhu Hack,
 Nephilim, Rêve de Dragon, Star Trek, Symbaroum et Blade Runner sont finis contre leur livre ;
-Barbarians of Lemuria (27/10), RuneQuest et Degenesis (30/10) aussi, leur essai par David attendu.
+Barbarians of Lemuria (27/10), RuneQuest et Degenesis (30/10) aussi ; les fonctions livrées des quatre nouveaux pilotes sont validées globalement par David le 01/11.
 NOC est terminé et validé par David le 25/10 (§ 177) ; Torg reste à auditer ; Dune est validé
 par David le 25/10 (§ 175) ; Within est en suspens, son pilote retiré par David. Ce repérage n'impose pas un ordre entre les
 campagnes de David.

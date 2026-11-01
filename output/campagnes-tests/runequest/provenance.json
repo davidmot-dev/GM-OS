@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "genereLe": "2026-10-30T12:00:00.000Z",
+  "version": 2,
+  "genereLe": "2026-11-01T12:00:00.000Z",
   "rattachement": {
     "source": "Export Dirvers/RDD_campagne_gmos_1792944586235.gmos",
     "sha256": "c99b8f87ecad7dee7104fcba1c6bd8a8639bd81c7b1c70ad2d4272cbd3c12b04",
@@ -19,15 +19,17 @@
       }
     ]
   },
+  "exportOriginePresent": false,
+  "releveAutoriseSHA256": "0032dc5a6bec43dbf515ade46ce461b71858a2a5e2cb81bb27f1380d95d912fa",
   "pilote": {
     "id": "custom-1793114851695",
-    "version": "2.0.0",
-    "source": "Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver",
-    "sha256": "f14f3d0a8a024c4b0e84386c9a9056bbe7e95200e8d79d9e5ea524d7cdfa36db"
+    "version": "2.1.0",
+    "source": "output\\campagnes-tests\\runequest\\RuneQuest-2.1.0.gmos-driver",
+    "sha256": "8c2907d80f2c5e6799cb28fe7571f60a09163caa20423bcadf3684d2a79ff13b"
   },
   "gabarit": {
     "id": "tpl-1793114851695",
-    "champs": 313,
+    "champs": 320,
     "html": "runequest-fr"
   },
   "archives": [
@@ -36,21 +38,21 @@
       "campagne": "recette-rq-campagne-bornes",
       "personnages": 3,
       "medias": 39,
-      "sha256": "1629688668042a79984fabd33c708b158f88af293a20dd3bbab4dcee1b76e902"
+      "sha256": "f9de892dd24ed078f218e29985018f5f12f39d574061e196f787487dcff0cc37"
     },
     {
       "fichier": "02-Aptitudes-Combat-et-Sante.gmos",
       "campagne": "recette-rq-corps-campagne-bornes",
       "personnages": 9,
       "medias": 39,
-      "sha256": "394a6f4b924f5d6911170439f6632561c0bee1234cd4e9bb0758b1547d4c737d"
+      "sha256": "41243e5e8b2da51ed25ac2a8278cdb1a2ed65a74822d9c252ee8ee957ee7c2ca"
     },
     {
       "fichier": "03-Runes-Passions-et-Magie.gmos",
       "campagne": "recette-rq-runes-campagne-bornes",
       "personnages": 9,
       "medias": 39,
-      "sha256": "a95d6815a74c4411c7bb7dc365cb0a0706e3b07b59ecf58130b474fd9acabb04"
+      "sha256": "b37c84fc58dff402302b849f705bb8c95fa35369420fa8e6e1fb5c2d84694caa"
     }
   ],
   "modules": {
@@ -67,7 +69,7 @@
       "Light-OS"
     ]
   },
-  "casDeRecette": 66,
+  "casDeRecette": 78,
   "sourcesRegles": [
     {
       "fichier": "docs/systems/runequest/rules/composition-de-la-fiche-de-personnage.md",
@@ -138,6 +140,30 @@
       "sha256": "1b76e3834cf7f938b42b233866d30d5841acb34506f7603eb609ae658973f20f"
     }
   ],
-  "generateur": "runequest.mjs v1",
-  "gmosVersion": "6.5.0"
+  "generateur": "runequest.mjs v2 — RQ-A1",
+  "gmosVersion": "6.5.0",
+  "preparationPilote": {
+    "script": "outils/runequest/finir_runequest.py",
+    "sha256": "b5841da698dec05853b9d1e434809f275b7b61ed8526716b397e7fe2b188675b",
+    "base": "historique/2026-10-30-2.0.0/RuneQuest-2.0.0.gmos-driver",
+    "limite": "Export corrigé d’origine absent ; pilote reconstruit depuis le lot historique par le générateur versionné, sans accès aux campagnes personnelles."
+  },
+  "sourcesDeLaRevision": {
+    "outils/campagnes-de-recette/runequest.mjs": "001f1fa9dfd759c9998b0d839b391040e2d034c0092bb0802fc04d167cd9353b",
+    "outils/campagnes-de-recette/runequest-recette.mjs": "d2d301b2c39154fa18075f073b93f45db906bacc4064448c785a375ca321b2ad",
+    "outils/campagnes-de-recette/runequest.test.ts": "4749fb76f55fb8afb79533f8a2b8a9993877719cc8655dacb587b3d477516135",
+    "outils/campagnes-de-recette/emballer-runequest.mjs": "37b60b0a9a5afddbe81a2a53acf60fdbfde01d1d24ccf62fb2efb9dfa020be8f",
+    "outils/campagnes-de-recette/runequest-verifier-plugin.mjs": "2e529195bd9233690ec4221c2c193f56bb43d85bc4fe4ad3a63eb7cb27d1ad8f",
+    "e2e/campagneDeRecetteRuneQuest.spec.ts": "2eafa171b8a19d80830d202842cc5b5604d70662a4d3e3640b59df1dd9eca842",
+    "e2e/runequestCoupsDeRecette.ts": "c5dbb1de358b70007c4d11439d905ba57826fea567f602977b99637bed49ea5e",
+    "src/modules/session/components/fields/RuneQuestAuJet.tsx": "13c2da524744bdeffae3382a4bb6b3cae3c946f8958427d7c79830dcff773c71",
+    "src/modules/remote/logic/caviardageDesJoueurs.ts": "04b88370dc581ce59b03c2516b24e8d8aecb5bceb0d71b8ad3b9684db70d68f7"
+  },
+  "verifications": {
+    "tests": 96,
+    "electron": true,
+    "build": "npm run build réussi le 01/11, tsc -b inclus",
+    "lint": "sources de la révision vérifiées",
+    "recetteHumaine": "78 cas NON TESTÉS ; les validations précédentes ne les préremplissent pas"
+  }
 }

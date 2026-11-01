@@ -438,6 +438,11 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**GM-05 — corrigé et validé par David le 01/11/2026 (§ 200).** Le filtre commun vide désormais
+les secrets de séance ; quatre tests applicatifs passent sur douze Hub (initial/différentiel/
+reconnexion), les résumés publics restent reçus et les secrets du MJ intacts. Les reproductions
+ci-dessous sont conservées comme historique avant correction, pas comme état du code corrigé.
+
 **25/10/2026 — Secrets de séance transmis aux tablettes (GM-05, § 178).** La campagne de
 recette CH place un marqueur fictif dans `GameSession.gmSecrets`. Après import des trois
 archives et connexion des joueurs, il est reçu dans `payload.session.sessions[*].gmSecrets`
@@ -13044,6 +13049,8 @@ David : *« je voudrais que tu réfléchisses si des skills pourraient t'aider d
 
 ### 187 · RuneQuest fini — pilote 2.1.0, d100 en cinq niveaux, coups localisés — 30/10/2026
 
+> **Suivi du 01/11 :** fonctions livrées validées globalement par David ; historique de livraison ci-dessous conservé. État courant dans la synthèse des pilotes et au § 201.
+
 David : *« Runequest le livre de base est ici […] et les errata sont ici […] »* (`/finir-un-pilote`), puis, sur le constat, *« Tout, dans l'ordre A-B-C-D »*, avec le test de caractéristique, la table de résistance, l'augmentation et la localisation des coups ; GM-OS fermé. Thème et fiche HTML : *« Je les fais ensuite »*. [Page du manuel](../User%20Guides/54-Jeu-RuneQuest.md).
 
 - **Contrôle** de l'export forgé (`RQ_driver_gmos_1793346684184`) : deux erreurs de la Forge (`allonge_arme` inconnu, santé de départ en phrase) ; avec `preparerLeJet`, **réussite ou échec seulement**, 01-05 et 96-00 ignorés, une caractéristique lancée sous sa valeur brute ; fiche aux sept catégories au lieu des compétences, trois « affinités », Passions et Réputation en jauges, une seule valeur de PV localisés, `points_de_magie` et `points_de_rune` en double.
@@ -13057,6 +13064,8 @@ David : *« Runequest le livre de base est ici […] et les errata sont ici […
 
 ### 188 · Degenesis fini — pilote 2.0.0, réserve de d6 et déclencheurs, deux pistes de santé — 30/10/2026
 
+> **Suivi du 01/11 :** fonctions livrées validées globalement par David ; historique de livraison ci-dessous conservé. État courant dans la synthèse des pilotes et au § 201.
+
 David : *« Degenesis le livre de base est ici […] KATHARSYS_OCR.pdf »* (`/finir-un-pilote`), puis, sur le constat, *« Tout, dans l'ordre »* ; GM-OS fermé. Thème, fiche HTML et bannière livrés le même jour par Codex. [Page du manuel](../User%20Guides/54-Jeu-Degenesis.md).
 
 - **Contrôle** de l'export forgé (`Degenesis_driver_gmos_1793367219023`) : avec `preparerLeJet` sur Falberg (INS 2 + Dressage 1, p. 18), **aucun dé lancé** — attribut + compétence pris pour le seuil de chaque dé, réserve de base à zéro, quatre succès exigés ; fiche à cinq « Compétence 1-5 » ; santé `physique + résistance * 2` sur un champ absent ; initiative sur `reactivite`, absent ; portées incohérentes.
@@ -13069,6 +13078,8 @@ David : *« Degenesis le livre de base est ici […] KATHARSYS_OCR.pdf »* (`/fi
 - **Reste** : l'essai de David — réimporter `corriges/Degenesis_driver_gmos_finir.gmos-driver` avec **Remplacer** (les compétences d'un personnage créé sur la fiche forgée sont à ressaisir) ; un jet avec Égo et modificateurs, un coup qui passe en Traumatismes dans Combat-OS, le Jet système d'initiative ; la Fiche du jeu, saisir puis Sauvegarder ; activer le thème `degenesis` et la bannière.
 
 ### 189 · Campagnes de recette Degenesis — 30/10/2026
+
+> **Suivi du 01/11 :** validation globale de David des essais en attente ; GM-05 corrigé et validé au § 200. Les cas et rapports initiaux ci-dessous restent historiques, sans résultats détaillés inventés.
 
 David : « utilise le plugin GM-OS Campagnes de test et Crée les campagnes de test de Degenesis
 avec ce pilote et ces règles, pour les joueurs de mon export fourni. »
@@ -13157,6 +13168,8 @@ David : « GM-OS Studio fais la bannière et l’identité visuelle de COC ».
 
 ### 193 · Chroniques Oubliées Contemporain fini — pilote 2.0.0, d20 + caractéristique, échelle de santé en cases — 31/10/2026
 
+> **Suivi du 01/11 :** fonctions livrées validées globalement par David ; historique de livraison ci-dessous conservé. État courant dans la synthèse des pilotes et au § 201.
+
 David : *« COC le livre de base est ici […] COC2_01_Livre_de_Regles_web_v0.pdf »* (`/finir-un-pilote`), puis, sur le constat, *« Tout, dans l'ordre »*, *« Une échelle, son modèle choisi »*, *« [l'option 3d6] Réglable dans le pilote »* ; GM-OS fermé. Thème, fiche HTML, bannière et identité livrés le même jour par Codex (§ 190-192). [Page du manuel](../User%20Guides/54-Jeu-COC.md).
 
 - **Contrôle** de l'export forgé (`COC_driver_gmos_1793367242142`) : avec `preparerLeJet`, le saut de haie (AGI 3 contre 10, p. 8) donnait un seuil de 3 par dé et **dix réussites exigées d'un seul d20** — tous les tests échouaient ; `critique: 1` comptait un 1 double, `complication: 20` faisait du 20 une complication ; AGI et INT additionnées ; l'échelle de santé en points de vie qui baissent ; trois échelles d'évolution ; portées à modificateur fixe.
@@ -13169,6 +13182,8 @@ David : *« COC le livre de base est ici […] COC2_01_Livre_de_Regles_web_v0.pd
 - **Reste** : l'essai de David — réimporter `corriges/coc/COC_driver_gmos_finir.gmos-driver` avec **Remplacer** (voies, armes et traits d'un personnage créé sur la fiche forgée sont à ressaisir ; sa santé passe aux cases au premier coup) ; un test d'AGI, une attaque à l'arme contre une DEF avec dé bonus, l'échelle du héros ; 15 DM sur un PJ protégé dans Combat-OS ; la Fiche du jeu, saisir puis Sauvegarder ; activer le thème `coc` et la bannière.
 
 ### 194 · Campagnes de recette COC2 — Les Minutes de Verre — 31/10/2026
+
+> **Suivi du 01/11 :** validation globale de David des essais en attente ; GM-05 corrigé et validé au § 200. Les cas et rapports initiaux ci-dessous restent historiques, sans résultats détaillés inventés.
 
 David : « utilise le plugin GM-OS Campagnes de test et Crée les campagnes de test de COC avec
 ce pilote et ces règles, pour les joueurs de mon export fourni ».
@@ -13257,6 +13272,8 @@ nouvelle bannière reste indépendant et en attente.
 
 ### 197 · Shadowrun : Anarchy 2.0 fini — pilote 2.0.0, réserve et dés de risque, moniteur d'état — 31/10-01/11/2026
 
+> **Suivi du 01/11 :** fonctions livrées validées globalement par David ; historique de livraison ci-dessous conservé. État courant dans la synthèse des pilotes et au § 201.
+
 David : *« Shadowrun Anarchy, le livre de base est ici […] sran2_01anarchyv2_web_v1.pdf »* (`/finir-un-pilote`), puis *« gm-os est fermé »*. Thème, fiche HTML, bannière et identité livrés le 31/10 par Codex (§ 196). [Page du manuel](../User%20Guides/54-Jeu-Shadowrun-Anarchy.md).
 
 - **Contrôle** de l'export forgé (`SR_Anarchy_driver_gmos_1793483272825`) : avec `preparerLeJet`, le soin de Lightning (Sorcellerie 5 + Volonté 4, seuil 3, p. 64) donnait un **seuil de 9 par d6**, **zéro dé** et trois réussites exigées — tous les tests échouaient, la Forge le disait ; des dés vendus contre la réserve de planification ; cinq « Compétence 1-5 » ; attributs bornés à 4 ; Anarchy jusqu'à 100 ; santé en zone de texte.
@@ -13269,6 +13286,8 @@ David : *« Shadowrun Anarchy, le livre de base est ici […] sran2_01anarchyv2_
 - **Reste** : l'essai de David — réimporter `corriges/SR_Anarchy_driver_gmos_finir.gmos-driver` avec **Remplacer** (libellés des compétences, atouts et équipement d'un personnage créé sur la fiche forgée sont à ressaisir) ; un test avec des dés de risque, puis Relancer ; une VD dans Combat-OS ; la Fiche du jeu, saisir puis Sauvegarder. À juger : les cases qui montrent la pire blessure (deux légères allumées devant une grave). Non automatisés : drain, surveillance de DIEU, dommages des véhicules, variantes « plus sombre ».
 
 ### 198 · Campagnes de recette Shadowrun Anarchy — La Dernière Couleur — 01/11/2026
+
+> **Suivi du 01/11 :** validation globale de David des essais en attente ; GM-05 corrigé et validé au § 200. Les cas et rapports initiaux ci-dessous restent historiques, sans résultats détaillés inventés.
 
 David : « GM-OS Campagnes de test pour le jeu Shadowrun Anarchy ».
 
@@ -13293,22 +13312,90 @@ David : « GM-OS Campagnes de test pour le jeu Shadowrun Anarchy ».
   [Livraison](2026-11-01-campagne-recette-shadowrun-anarchy.md) ;
   [reprise](2026-11-01-etat-et-reprise-codex-campagnes-shadowrun-anarchy.md).
 
+### 199 · Analyse des améliorations RuneQuest, Degenesis, COC et Shadowrun — 01/11/2026
+
+**Complément demandé par David :** « fais moi un résumé et un plan d’action avec des checkbox que je peux remplir ». Résumé et plan ajoutés en tête de la synthèse : 27 lots à cocher, quatre contrôles de clôture, identifiants conservés et toutes les cases initialement vides. Aucun développement lancé.
+
+David : « peux-tu faire une analyse pour identifié les améliorations des nouveaux pilotes
+- Runequest - Degenesis - COC et Shadowrun. Mets à jour le fichier d'améliorations tous les pilotes ».
+
+- **Produit** : [synthèse des pilotes](2026-10-20-ameliorations-tous-les-pilotes.md),
+  **24 propositions** identifiées (six par jeu), trois priorités communes, avec priorités,
+  constats, sources et critères de recette futurs. Acquis et essais de David attendus conservés,
+  compteurs des quatre lignes de la vue d'ensemble recalculés.
+- **Constats** : la recette RuneQuest embarque encore **2.0.0**, 313 champs et aucun
+  `combat.coupsLocalises`, contre le générateur courant **2.1.0** ; affichage des PV de zone
+  lus chez le lanceur malgré une cible distincte. Degenesis : Égo de l'initiative/première
+  action non coordonné ; COC : chaîne de dégâts, conséquences et rôles PNJ incomplets ;
+  Shadowrun : origine drain non suivie, contexte Matrice et dérivés encore manuels.
+- **Priorités communes** : GM-05 (P0, confirmé dans les quatre recettes), reprise des anciennes
+  fiches/versions avec aperçu et validation, droits GM-06 et import des variantes à éprouver.
+  GM-06 est un essai manquant, pas une nouvelle panne démontrée.
+- **Vérifié** : lecture du code, générateurs, corpus déjà relus, manuels et rapports datés ;
+  **177 tests ciblés passent / 12 fichiers**, `--maxWorkers=4`. Contrôle des compteurs et liens
+  documentaires. Pas de nouveau serveur ni E2E ; les preuves applicatives restent celles des lots.
+- **Reste** : David choisit le lot à développer ; aucun des 27 sujets proposé comme réalisé.
+  Aucun `src/`, `electron/`, pilote ou donnée personnelle modifié, aucun paquet, aucun Git
+  d'écriture. Non commité. [Analyse](2026-11-01-analyse-nouveaux-pilotes.md),
+  [preuves](2026-11-01-analyse-nouveaux-pilotes.json),
+  [reprise](2026-11-01-etat-et-reprise-codex-analyse-pilotes.md).
+
+### 200 · Corriger GM-05 — secrets de séance conservés chez le MJ — 01/11/2026
+
+David : « ok commence le point 1 corriger la fuite des secrets », puis « GM-OS est fermé, tu peux corriger ».
+
+- **Livré** : gmSecrets ajouté à la liste récursive des champs vidés dans
+  src/modules/remote/logic/caviardageDesJoueurs.ts. Fonction déjà utilisée dans les trois
+  sorties renderer/serveur/fenêtres publiques ; aucune modification du pilote ni des données.
+- **Régression et vérification** : huit assertions rouges avant correction ; **70 tests / quatre
+  fichiers passent** après, lint ciblé et build/types réussis. **Quatre tests Electron passent**
+  (e2e/secretsDeSeance.spec.ts), douze Hub 360/768/1180 : zéro marqueur secret en initial,
+  différentiel et reconnexion, résumés publics reçus, secrets conservés sur le MJ.
+  Douze captures examinées ; rapports/empreintes sous output/verification-gm05/.
+- **Isolement** : autorisations d'essais des quatre jeux conservées ; profils, corpus, coffre,
+  sauvegardes et ports jetables, appareils désactivés ; aucun accès aux données personnelles.
+  Première préparation du test corrigée pour retirer la démo active du magasin temporaire.
+- **Validation de David le 01/11** : « ok c’est essayé c’est bon... J’ai fait tout les autres tests en attentes aussi ». NP-C1 est coché, fonctions livrées des quatre pilotes validées globalement. Aucun résultat détaillé par cas ou appareil n’est inventé.
+  Les anciens ZIP/rapports restent intacts ; le correctif ne retire pas une copie déjà reçue
+  avant correction. Aucun commit demandé. [Bilan](2026-11-01-correction-gm05.md).
+
+### 201 · RuneQuest RQ-A2 — PV de la cible au panneau de jet — 01/11/2026
+
+David : « On passe au point 2 affichage des PV », puis « GM-OS est fermé, tu peux corriger ».
+
+- **Livré :** la localisation et son journal ne reprennent plus les PV du lanceur. La ligne de cible affiche nom, zone et PV maximum sur sa fiche ; changement de cible et mise à jour Combat-OS reflétés sans relancer le D20. Valeur absente/vide/invalide inconnue, zéro explicite conservé ; détails au meneur seulement.
+- **Vérifications :** neuf tests rouges avant correction ; **89 tests ciblés passent**, lint et build/types réussis. Essai Electron isolé et capture : voir la [reprise](2026-11-01-etat-et-reprise-codex-runequest-pv-cible.md). Manuels 53/54, capture des suites et synthèse actualisés.
+- **Validation de David le 01/11 :** « ok c’est bon on fait RQ-A1 ». RQ-A2 coché/vert ; recette alignée séparément au § 202. Aucun paquet ni Git d’écriture ; données personnelles non lues.
+
+### 202 · RQ-A1 — campagnes RuneQuest alignées sur 2.1.0 — 01/11/2026
+
+David : « ok c'est bon on fait RQ-A1 » ; validation de RQ-A2 consignée au § 201.
+
+- **Livré :** trois archives 2.1.0, gabarit 320 champs, 21 PJ aux mêmes IDs pour les trois joueurs ; maxima et dégâts locaux séparés, C07/C08 corrigés ; 78 cas humains dont douze LOCAL, nouveau CSV vierge. Ancien ZIP, pilote, CSV et rapports 2.0.0 conservés à part, hors du ZIP courant.
+- **Vérifié :** 96 tests, lint et build/types passent ; un E2E Electron : ancien pilote conservé par Nexus puis remplacé explicitement, trois imports, sentinelles, PJ/PNJ/autonome, armure/plafond/soins, Porter le coup, persistance, remise à zéro de 02 sans changer note/blessure de 01 ; trois Hub, HTML/PM, zéro marqueur secret. Plugin structurel, 39 médias décodés, neuf rendus et sept captures examinés ; rapports liés aux SHA, refus d’un rapport périmé testé sur une copie jetable, ZIP rouvert.
+- **Sources/isolement :** export 2.1.0 et export des joueurs absents : pilote reconstruit par le générateur versionné depuis l'historique et relevé minimal autorisé réutilisé, absence signalée en provenance. Essais isolés/hors bac à sable déjà autorisés, aucun accès personnel, aucun src/ ou electron/ modifié par ce lot, aucun paquet ni Git d’écriture.
+- **Validation de David le 01/11 :** « ok c’est bien, c’est testé. Commit et pousse ». RQ-A1 coché/vert, publication Git demandée ; [confirmation](../../output/campagnes-tests/runequest/VALIDATION-DAVID.md). Aucun résultat individuel inventé, cahier/CSV initiaux et ZIP inchangés. RQ-A3 à A6 restent à faire. [Reprise et livraison](2026-11-01-etat-et-reprise-codex-runequest-recette-210.md).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 134 | **Campagnes de recette — Shadowrun Anarchy** | § 198 ; mission et deux laboratoires, 22 PJ, 64 cas humains ; 72 tests, trois imports et Hub éprouvés — 01/11 | Importer 01-La-Derniere-Couleur.gmos puis suivre le cahier | GM-05 confirmé ; recette humaine et matériel |
-| 133 | **Shadowrun : Anarchy 2.0 fini — pilote 2.0.0** | § 197 ; corpus relu 19/19 (16 corrigées), réserve compétence + attribut à 5+, dés de risque doublés et complications, RR de la ligne, avantage borné, Anarchy (avantage, relance, gains) ; moniteur d'état contre les seuils de la fiche, aggravation ; fiche HTML au moteur 23 reliée (120/121) — 01/11 | Réimporter `corriges/SR_Anarchy_driver_gmos_finir` avec Remplacer ; un test à dés de risque et sa relance, une VD dans Combat-OS, la Fiche du jeu | L'essai de David |
-| 132 | **Shadowrun Anarchy — quatre ateliers Studio** | § 196 ; thème 0/0, fiche une page/121 clés, bannière 2400 × 600 ; identité révisée cyberpunk saturé 43/14 mots ; 51 tests, contrôles hors ligne — 31/10 | Suivre LIRE-MOI du lot Studio et prendre l’identité révisée dans output/identites/shadowrun-anarchy | Jugement de David ; fiche intégrée au moteur 23 et reliée, pilote fini au § 197 |
+| 138 | **RuneQuest — recette 2.1.0** | § 202 ; RQ-A1 livré et validé par David, 96 tests, E2E et trois Hub passent, 78 cas — 01/11 | RQ-A1 coché ; commit et push demandés | Aucun pour RQ-A1 ; historique 2.0.0 conservé |
+| 137 | **RuneQuest — PV de cible** | § 201 ; RQ-A2 livré et validé par David — 01/11 ; 89 tests, lint, build et E2E passent | RQ-A2 coché ; suite RQ-A1 au § 202 | Aucun pour ce correctif |
+| 136 | **GM-05 — secrets de séance** | § 200 ; corrigé et validé par David — 01/11 ; 70 tests et quatre E2E, douze Hub sans fuite | NP-C1 coché ; suite RQ-A2 | Aucun pour ce correctif ; anciens rapports conservés |
+| 135 | **Analyse des quatre nouveaux pilotes** | § 199 ; synthèse actualisée, 24 propositions et trois sujets communs ; 177 tests ciblés passent — 01/11 | GM-05/RQ-A2/RQ-A1 validés ; choisir un lot restant | Autres propositions à choisir ; analyse initiale conservée |
+| 134 | **Campagnes de recette — Shadowrun Anarchy** | § 198 ; mission et deux laboratoires, 22 PJ, 64 cas humains ; 72 tests, trois imports et Hub éprouvés — 01/11 | Importer 01-La-Derniere-Couleur.gmos puis suivre le cahier | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
+| 133 | **Shadowrun : Anarchy 2.0 fini — pilote 2.0.0** | § 197 ; corpus relu 19/19 (16 corrigées), réserve compétence + attribut à 5+, dés de risque doublés et complications, RR de la ligne, avantage borné, Anarchy (avantage, relance, gains) ; moniteur d'état contre les seuils de la fiche, aggravation ; fiche HTML au moteur 23 reliée (120/121) — 01/11 | Réimporter `corriges/SR_Anarchy_driver_gmos_finir` avec Remplacer ; un test à dés de risque et sa relance, une VD dans Combat-OS, la Fiche du jeu | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
+| 132 | **Shadowrun Anarchy — quatre ateliers Studio** | § 196 ; thème 0/0, fiche une page/121 clés, bannière 2400 × 600 ; identité révisée cyberpunk saturé 43/14 mots ; 51 tests, contrôles hors ligne — 31/10 | Suivre LIRE-MOI du lot Studio et prendre l’identité révisée dans output/identites/shadowrun-anarchy | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
 | 131 | **Sommaire Shadowrun : Anarchy 2.0** | § 195 ; 327 entrées, deux pages/six colonnes vérifiées, Markdown plat livré — 31/10 | Utiliser le Markdown dans output/sommaires/shadowrun-anarchy | Rien pour la transcription |
-| 130 | **Campagnes de recette — COC2** | § 194 ; enquête et deux laboratoires, 24 PJ, 70 cas humains ; 71 tests, trois imports et Hub éprouvés — 31/10 | Importer 01-Les-Minutes-de-Verre.gmos ; suivre le cahier | GM-05 confirmé ; recette humaine, Voies et matériel |
-| 129 | **Chroniques Oubliées Contemporain fini — pilote 2.0.0** | § 193 ; corpus relu 18/18, d20 + caractéristique contre la difficulté ou la DEF, critiques sur 20 et 1, dé bonus/malus ; échelle de santé en vingt cases (RD, mort instantanée, malus d'état) ; héros ou blues ; option du 3d6 ; fiche HTML au moteur 22 reliée (151/151), thème contrôlé — 31/10 | Réimporter `corriges/coc/COC_driver_gmos_finir` avec Remplacer ; un test, une attaque à l'arme avec dé bonus, l'échelle du héros, 15 DM dans Combat-OS, la Fiche du jeu | L'essai de David |
-| 128 | **Bannière et identité COC2** | § 192 ; JPEG 2400 × 600, 265 Ko, agrandissement autorisé ; identité 43/13 mots et cadrages examinés — 31/10 | Sélectionner le JPEG et copier Style / À éviter dans le pilote | Jugement de David dans GM-OS |
-| 127 | **Fiche COC2 — atelier Studio** | § 191 ; deux pages fidèles, 189 zones / 151 clés, 40 tests et moteur jetable vérifiés — 31/10 | Ouvrir la Fiche du jeu d'un personnage COC | Intégrée au moteur 22 et reliée au § 193 ; essai de David |
-| 126 | **Thème COC — Contemporain 2** | § 190 ; thème accepté 0/0, deux matières, trois ornements, quinze icônes ; 79 tests et planches hors ligne — 31/10 | Activer thème du jeu et personnalités dans une campagne COC | Jugement de David dans GM-OS |
-| 125 | **Campagnes de recette — Degenesis** | § 189 ; aventure, deux laboratoires, 21 PJ, 66 cas humains ; 67 tests, imports et trois Hub éprouvés — 30/10 | Importer 01-La-Station-des-Cendres.gmos ; suivre le cahier | GM-05 confirmé ; essais humains et matériel à faire |
-| 124 | **Degenesis fini — pilote 2.0.0** | § 188 ; corpus relu 16/16, réserve de d6 à 4+ avec déclencheurs, échec critique, Égo et Traumatismes ; deux pistes de santé et attaque mentale ; initiative en succès ; fiche HTML au moteur 21 reliée (129/129), thème contrôlé — 30/10 | Réimporter `corriges/Degenesis_driver_gmos_finir` avec Remplacer ; un jet avec Égo, un coup en Traumatismes, l'initiative, la Fiche du jeu | L'essai de David |
-| 123 | **RuneQuest fini — pilote 2.1.0** | § 187 ; corpus relu 17/17 avec l'errata, d100 en cinq niveaux, caractéristique, résistance, augmentation, opposition, localisation ; coups localisés dans Combat-OS ; fiche HTML au moteur 20 reliée, thème contrôlé — 30/10 | Réimporter `corriges/RQ_driver_gmos_finir` avec Remplacer ; un jet d'épée, une résistance POU contre POU, un coup localisé, la Fiche du jeu | L'essai de David |
+| 130 | **Campagnes de recette — COC2** | § 194 ; enquête et deux laboratoires, 24 PJ, 70 cas humains ; 71 tests, trois imports et Hub éprouvés — 31/10 | Importer 01-Les-Minutes-de-Verre.gmos ; suivre le cahier | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
+| 129 | **Chroniques Oubliées Contemporain fini — pilote 2.0.0** | § 193 ; corpus relu 18/18, d20 + caractéristique contre la difficulté ou la DEF, critiques sur 20 et 1, dé bonus/malus ; échelle de santé en vingt cases (RD, mort instantanée, malus d'état) ; héros ou blues ; option du 3d6 ; fiche HTML au moteur 22 reliée (151/151), thème contrôlé — 31/10 | Réimporter `corriges/coc/COC_driver_gmos_finir` avec Remplacer ; un test, une attaque à l'arme avec dé bonus, l'échelle du héros, 15 DM dans Combat-OS, la Fiche du jeu | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
+| 128 | **Bannière et identité COC2** | § 192 ; JPEG 2400 × 600, 265 Ko, agrandissement autorisé ; identité 43/13 mots et cadrages examinés — 31/10 | Sélectionner le JPEG et copier Style / À éviter dans le pilote | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
+| 127 | **Fiche COC2 — atelier Studio** | § 191 ; deux pages fidèles, 189 zones / 151 clés, 40 tests et moteur jetable vérifiés — 31/10 | Ouvrir la Fiche du jeu d'un personnage COC | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
+| 126 | **Thème COC — Contemporain 2** | § 190 ; thème accepté 0/0, deux matières, trois ornements, quinze icônes ; 79 tests et planches hors ligne — 31/10 | Activer thème du jeu et personnalités dans une campagne COC | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
+| 125 | **Campagnes de recette — Degenesis** | § 189 ; aventure, deux laboratoires, 21 PJ, 66 cas humains ; 67 tests, imports et trois Hub éprouvés — 30/10 | Importer 01-La-Station-des-Cendres.gmos ; suivre le cahier | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
+| 124 | **Degenesis fini — pilote 2.0.0** | § 188 ; corpus relu 16/16, réserve de d6 à 4+ avec déclencheurs, échec critique, Égo et Traumatismes ; deux pistes de santé et attaque mentale ; initiative en succès ; fiche HTML au moteur 21 reliée (129/129), thème contrôlé — 30/10 | Réimporter `corriges/Degenesis_driver_gmos_finir` avec Remplacer ; un jet avec Égo, un coup en Traumatismes, l'initiative, la Fiche du jeu | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
+| 123 | **RuneQuest fini — pilote 2.1.0** | § 187 ; corpus relu 17/17 avec l'errata, d100 en cinq niveaux, caractéristique, résistance, augmentation, opposition, localisation ; coups localisés dans Combat-OS ; fiche HTML au moteur 20 reliée, thème contrôlé — 30/10 | Réimporter `corriges/RQ_driver_gmos_finir` avec Remplacer ; un jet d'épée, une résistance POU contre POU, un coup localisé, la Fiche du jeu | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
 | 122 | **Gardes et skills de Claude Code** | § 186 ; garde git et garde « GM-OS tourne-t-il ? » branchées et éprouvées, quatre skills de procédure — 28/10 | À la prochaine écriture dans `src/`, vérifier que la fenêtre de la garde s'ouvre | Rien |
 | 121 | **Forge — enrichir un pilote par un supplément** | ⏸️ garé le 27/10, § 185 ; rien de commencé | Trancher avec David : où vivent les fiches, champs ou corpus seul, qui choisit les sujets | Décision de David |
 | 120 | **Barbarians of Lemuria fini — pilote 2.0.0** | § 184 ; corpus relu 16/16, jet contre 9 avec héroïsme, fiche HTML au moteur 19 et reliée, thème contrôlé — 27/10 | Réimporter `corriges/BOL_driver_gmos_2.0.0` avec Remplacer ; un jet, une Faveur divine, la Fiche du jeu | L'essai de David |

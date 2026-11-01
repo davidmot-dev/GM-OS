@@ -321,18 +321,25 @@
             "bouclier_pv": 12,
             "pv_jambe_droite": 4,
             "pa_jambe_droite": 0,
+            "degats_jambe_droite": 0,
             "pv_jambe_gauche": 4,
             "pa_jambe_gauche": 0,
+            "degats_jambe_gauche": 0,
             "pv_abdomen": 4,
             "pa_abdomen": 0,
+            "degats_abdomen": 0,
             "pv_poitrine": 5,
             "pa_poitrine": 0,
+            "degats_poitrine": 0,
             "pv_bras_droit": 3,
-            "pa_bras_droit": 0,
+            "pa_bras_droit": 2,
+            "degats_bras_droit": 0,
             "pv_bras_gauche": 3,
-            "pa_bras_gauche": 0,
+            "pa_bras_gauche": 2,
+            "degats_bras_gauche": 0,
             "pv_tete": 4,
             "pa_tete": 0,
+            "degats_tete": 0,
             "points_de_vie": 12,
             "points_de_magie": 0,
             "points_de_rune": 3,
@@ -353,12 +360,12 @@
             "richesse_bolgs": 0,
             "richesse_biens": 0,
             "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué. M01 : voir le cahier de recette.",
-            "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+            "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
           },
           "description": "Voyageur au manteau rapiécé, patient tant que les serments sont tenus.",
           "playerNotes": "Mandaté par trois familles pour garder le passage ouvert sans provoquer une vendetta.",
           "gmNotes": "SECRET_MJ_RQ_RECETTE : Il a promis à Sera de ne tirer son épée que pour protéger un témoin.",
-          "donneesModifieesLe": 1793361600000,
+          "donneesModifieesLe": 1793534400000,
           "inventory": "Épée large\nBouclier moyen\nCorde\nManteau\nTrois rations",
           "inventoryItems": [
             {
@@ -728,18 +735,25 @@
             "bouclier_pv": 12,
             "pv_jambe_droite": 4,
             "pa_jambe_droite": 0,
+            "degats_jambe_droite": 0,
             "pv_jambe_gauche": 4,
             "pa_jambe_gauche": 0,
+            "degats_jambe_gauche": 0,
             "pv_abdomen": 4,
             "pa_abdomen": 0,
+            "degats_abdomen": 0,
             "pv_poitrine": 5,
             "pa_poitrine": 0,
+            "degats_poitrine": 0,
             "pv_bras_droit": 3,
-            "pa_bras_droit": 0,
+            "pa_bras_droit": 2,
+            "degats_bras_droit": 0,
             "pv_bras_gauche": 3,
-            "pa_bras_gauche": 0,
+            "pa_bras_gauche": 2,
+            "degats_bras_gauche": 0,
             "pv_tete": 4,
             "pa_tete": 0,
+            "degats_tete": 0,
             "points_de_vie": 13,
             "points_de_magie": 15,
             "points_de_rune": 3,
@@ -760,12 +774,12 @@
             "richesse_bolgs": 0,
             "richesse_biens": 0,
             "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué. M04 : voir le cahier de recette.",
-            "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+            "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
           },
           "description": "Voyageur au manteau rapiécé, patient tant que les serments sont tenus.",
           "playerNotes": "Mandaté par trois familles pour garder le passage ouvert sans provoquer une vendetta.",
           "gmNotes": "SECRET_MJ_RQ_RECETTE : Il a promis à Sera de ne tirer son épée que pour protéger un témoin.",
-          "donneesModifieesLe": 1793361600000,
+          "donneesModifieesLe": 1793534400000,
           "inventory": "Épée large\nBouclier moyen\nCorde\nManteau\nTrois rations",
           "inventoryItems": [
             {
@@ -1135,18 +1149,25 @@
             "bouclier_pv": 12,
             "pv_jambe_droite": 4,
             "pa_jambe_droite": 0,
+            "degats_jambe_droite": 0,
             "pv_jambe_gauche": 4,
             "pa_jambe_gauche": 0,
+            "degats_jambe_gauche": 0,
             "pv_abdomen": 4,
             "pa_abdomen": 0,
+            "degats_abdomen": 0,
             "pv_poitrine": 5,
             "pa_poitrine": 0,
+            "degats_poitrine": 0,
             "pv_bras_droit": 3,
-            "pa_bras_droit": 0,
+            "pa_bras_droit": 2,
+            "degats_bras_droit": 0,
             "pv_bras_gauche": 3,
-            "pa_bras_gauche": 0,
+            "pa_bras_gauche": 2,
+            "degats_bras_gauche": 0,
             "pv_tete": 4,
             "pa_tete": 0,
+            "degats_tete": 0,
             "points_de_vie": 12,
             "points_de_magie": 12,
             "points_de_rune": 3,
@@ -1167,12 +1188,12 @@
             "richesse_bolgs": 0,
             "richesse_biens": 0,
             "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué. M07 : voir le cahier de recette.",
-            "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+            "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
           },
           "description": "Voyageur au manteau rapiécé, patient tant que les serments sont tenus.",
           "playerNotes": "Mandaté par trois familles pour garder le passage ouvert sans provoquer une vendetta.",
           "gmNotes": "SECRET_MJ_RQ_RECETTE : Il a promis à Sera de ne tirer son épée que pour protéger un témoin.",
-          "donneesModifieesLe": 1793361600000,
+          "donneesModifieesLe": 1793534400000,
           "inventory": "Épée large\nBouclier moyen\nCorde\nManteau\nTrois rations",
           "inventoryItems": [
             {
@@ -1550,18 +1571,25 @@
             "bouclier_pv": 12,
             "pv_jambe_droite": 4,
             "pa_jambe_droite": 0,
+            "degats_jambe_droite": 0,
             "pv_jambe_gauche": 4,
             "pa_jambe_gauche": 0,
+            "degats_jambe_gauche": 0,
             "pv_abdomen": 4,
             "pa_abdomen": 0,
+            "degats_abdomen": 0,
             "pv_poitrine": 5,
             "pa_poitrine": 0,
+            "degats_poitrine": 0,
             "pv_bras_droit": 3,
-            "pa_bras_droit": 0,
+            "pa_bras_droit": 2,
+            "degats_bras_droit": 0,
             "pv_bras_gauche": 3,
-            "pa_bras_gauche": 0,
+            "pa_bras_gauche": 2,
+            "degats_bras_gauche": 0,
             "pv_tete": 4,
             "pa_tete": 0,
+            "degats_tete": 0,
             "points_de_vie": 12,
             "points_de_magie": 1,
             "points_de_rune": 3,
@@ -1582,12 +1610,12 @@
             "richesse_bolgs": 0,
             "richesse_biens": 0,
             "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué. M02 : voir le cahier de recette.",
-            "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+            "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
           },
           "description": "Mains tachées de plantes, mémoire précise des dettes et des bêtes perdues.",
           "playerNotes": "Elle cherche sa sœur de lait, partie réparer une borne et revenue sans son sac.",
           "gmNotes": "SECRET_MJ_RQ_RECETTE : Elle sait que sa famille a déplacé jadis un repère ; elle refuse une vengeance collective.",
-          "donneesModifieesLe": 1793361600000,
+          "donneesModifieesLe": 1793534400000,
           "inventory": "Lance\nBandages\nSac de plantes\nGourde\nTrois rations",
           "inventoryItems": [
             {
@@ -1957,18 +1985,25 @@
             "bouclier_pv": 12,
             "pv_jambe_droite": 4,
             "pa_jambe_droite": 0,
+            "degats_jambe_droite": 0,
             "pv_jambe_gauche": 4,
             "pa_jambe_gauche": 0,
+            "degats_jambe_gauche": 0,
             "pv_abdomen": 4,
             "pa_abdomen": 0,
+            "degats_abdomen": 0,
             "pv_poitrine": 5,
             "pa_poitrine": 0,
+            "degats_poitrine": 0,
             "pv_bras_droit": 3,
-            "pa_bras_droit": 0,
+            "pa_bras_droit": 2,
+            "degats_bras_droit": 0,
             "pv_bras_gauche": 3,
-            "pa_bras_gauche": 0,
+            "pa_bras_gauche": 2,
+            "degats_bras_gauche": 0,
             "pv_tete": 4,
             "pa_tete": 0,
+            "degats_tete": 0,
             "points_de_vie": 12,
             "points_de_magie": 12,
             "points_de_rune": 3,
@@ -1989,12 +2024,12 @@
             "richesse_bolgs": 0,
             "richesse_biens": 0,
             "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué. M05 : voir le cahier de recette.",
-            "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+            "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
           },
           "description": "Mains tachées de plantes, mémoire précise des dettes et des bêtes perdues.",
           "playerNotes": "Elle cherche sa sœur de lait, partie réparer une borne et revenue sans son sac.",
           "gmNotes": "SECRET_MJ_RQ_RECETTE : Elle sait que sa famille a déplacé jadis un repère ; elle refuse une vengeance collective.",
-          "donneesModifieesLe": 1793361600000,
+          "donneesModifieesLe": 1793534400000,
           "inventory": "Lance\nBandages\nSac de plantes\nGourde\nTrois rations",
           "inventoryItems": [
             {
@@ -2364,18 +2399,25 @@
             "bouclier_pv": 12,
             "pv_jambe_droite": 4,
             "pa_jambe_droite": 0,
+            "degats_jambe_droite": 0,
             "pv_jambe_gauche": 4,
             "pa_jambe_gauche": 0,
+            "degats_jambe_gauche": 0,
             "pv_abdomen": 4,
             "pa_abdomen": 0,
+            "degats_abdomen": 0,
             "pv_poitrine": 5,
             "pa_poitrine": 0,
+            "degats_poitrine": 0,
             "pv_bras_droit": 3,
-            "pa_bras_droit": 0,
+            "pa_bras_droit": 2,
+            "degats_bras_droit": 0,
             "pv_bras_gauche": 3,
-            "pa_bras_gauche": 0,
+            "pa_bras_gauche": 2,
+            "degats_bras_gauche": 0,
             "pv_tete": 4,
             "pa_tete": 0,
+            "degats_tete": 0,
             "points_de_vie": 12,
             "points_de_magie": 12,
             "points_de_rune": 1,
@@ -2396,12 +2438,12 @@
             "richesse_bolgs": 0,
             "richesse_biens": 0,
             "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué. M08 : voir le cahier de recette.",
-            "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+            "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
           },
           "description": "Mains tachées de plantes, mémoire précise des dettes et des bêtes perdues.",
           "playerNotes": "Elle cherche sa sœur de lait, partie réparer une borne et revenue sans son sac.",
           "gmNotes": "SECRET_MJ_RQ_RECETTE : Elle sait que sa famille a déplacé jadis un repère ; elle refuse une vengeance collective.",
-          "donneesModifieesLe": 1793361600000,
+          "donneesModifieesLe": 1793534400000,
           "inventory": "Lance\nBandages\nSac de plantes\nGourde\nTrois rations",
           "inventoryItems": [
             {
@@ -2779,18 +2821,25 @@
             "bouclier_pv": 12,
             "pv_jambe_droite": 4,
             "pa_jambe_droite": 0,
+            "degats_jambe_droite": 0,
             "pv_jambe_gauche": 4,
             "pa_jambe_gauche": 0,
+            "degats_jambe_gauche": 0,
             "pv_abdomen": 4,
             "pa_abdomen": 0,
+            "degats_abdomen": 0,
             "pv_poitrine": 5,
             "pa_poitrine": 0,
+            "degats_poitrine": 0,
             "pv_bras_droit": 3,
-            "pa_bras_droit": 0,
+            "pa_bras_droit": 2,
+            "degats_bras_droit": 0,
             "pv_bras_gauche": 3,
-            "pa_bras_gauche": 0,
+            "pa_bras_gauche": 2,
+            "degats_bras_gauche": 0,
             "pv_tete": 4,
             "pa_tete": 0,
+            "degats_tete": 0,
             "points_de_vie": 12,
             "points_de_magie": 12,
             "points_de_rune": 0,
@@ -2811,12 +2860,12 @@
             "richesse_bolgs": 0,
             "richesse_biens": 0,
             "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué. M03 : voir le cahier de recette.",
-            "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+            "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
           },
           "description": "Tablettes enveloppées de laine, curieux des mots que les puissants omettent.",
           "playerNotes": "Envoyé copier un accord de pâture ; il découvre que trois versions portent le même sceau.",
           "gmNotes": "SECRET_MJ_RQ_RECETTE : Son maître attend une version propre ; il préfère une vérité embarrassante.",
-          "donneesModifieesLe": 1793361600000,
+          "donneesModifieesLe": 1793534400000,
           "inventory": "Dague\nTablettes vierges\nStylet\nCire\nTrois rations",
           "inventoryItems": [
             {
@@ -3186,18 +3235,25 @@
             "bouclier_pv": 12,
             "pv_jambe_droite": 4,
             "pa_jambe_droite": 0,
+            "degats_jambe_droite": 0,
             "pv_jambe_gauche": 4,
             "pa_jambe_gauche": 0,
+            "degats_jambe_gauche": 0,
             "pv_abdomen": 4,
             "pa_abdomen": 0,
+            "degats_abdomen": 0,
             "pv_poitrine": 5,
             "pa_poitrine": 0,
+            "degats_poitrine": 0,
             "pv_bras_droit": 3,
-            "pa_bras_droit": 0,
+            "pa_bras_droit": 2,
+            "degats_bras_droit": 0,
             "pv_bras_gauche": 3,
-            "pa_bras_gauche": 0,
+            "pa_bras_gauche": 2,
+            "degats_bras_gauche": 0,
             "pv_tete": 4,
             "pa_tete": 0,
+            "degats_tete": 0,
             "points_de_vie": 12,
             "points_de_magie": 12,
             "points_de_rune": 3,
@@ -3218,12 +3274,12 @@
             "richesse_bolgs": 0,
             "richesse_biens": 0,
             "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué. M06 : voir le cahier de recette.",
-            "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+            "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
           },
           "description": "Tablettes enveloppées de laine, curieux des mots que les puissants omettent.",
           "playerNotes": "Envoyé copier un accord de pâture ; il découvre que trois versions portent le même sceau.",
           "gmNotes": "SECRET_MJ_RQ_RECETTE : Son maître attend une version propre ; il préfère une vérité embarrassante.",
-          "donneesModifieesLe": 1793361600000,
+          "donneesModifieesLe": 1793534400000,
           "inventory": "Dague\nTablettes vierges\nStylet\nCire\nTrois rations",
           "inventoryItems": [
             {
@@ -3593,18 +3649,25 @@
             "bouclier_pv": 12,
             "pv_jambe_droite": 4,
             "pa_jambe_droite": 0,
+            "degats_jambe_droite": 0,
             "pv_jambe_gauche": 4,
             "pa_jambe_gauche": 0,
+            "degats_jambe_gauche": 0,
             "pv_abdomen": 4,
             "pa_abdomen": 0,
+            "degats_abdomen": 0,
             "pv_poitrine": 5,
             "pa_poitrine": 0,
+            "degats_poitrine": 0,
             "pv_bras_droit": 3,
-            "pa_bras_droit": 0,
+            "pa_bras_droit": 2,
+            "degats_bras_droit": 0,
             "pv_bras_gauche": 3,
-            "pa_bras_gauche": 0,
+            "pa_bras_gauche": 2,
+            "degats_bras_gauche": 0,
             "pv_tete": 4,
             "pa_tete": 0,
+            "degats_tete": 0,
             "points_de_vie": 12,
             "points_de_magie": 2,
             "points_de_rune": 3,
@@ -3625,12 +3688,12 @@
             "richesse_bolgs": 0,
             "richesse_biens": 0,
             "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué. M09 : voir le cahier de recette.",
-            "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+            "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
           },
           "description": "Tablettes enveloppées de laine, curieux des mots que les puissants omettent.",
           "playerNotes": "Envoyé copier un accord de pâture ; il découvre que trois versions portent le même sceau.",
           "gmNotes": "SECRET_MJ_RQ_RECETTE : Son maître attend une version propre ; il préfère une vérité embarrassante.",
-          "donneesModifieesLe": 1793361600000,
+          "donneesModifieesLe": 1793534400000,
           "inventory": "Dague\nTablettes vierges\nStylet\nCire\nTrois rations",
           "inventoryItems": [
             {
@@ -3996,18 +4059,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -4028,7 +4098,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -4341,18 +4411,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -4373,7 +4450,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -4686,18 +4763,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -4718,7 +4802,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -5031,18 +5115,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -5063,7 +5154,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -5376,18 +5467,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -5408,7 +5506,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -5721,18 +5819,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -5753,7 +5858,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -6066,18 +6171,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -6098,7 +6210,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -6411,18 +6523,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -6443,7 +6562,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -6756,18 +6875,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -6788,7 +6914,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -7101,18 +7227,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -7133,7 +7266,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -7446,18 +7579,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -7478,7 +7618,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -7791,18 +7931,25 @@
         "bouclier_pv": 12,
         "pv_jambe_droite": 4,
         "pa_jambe_droite": 0,
+        "degats_jambe_droite": 0,
         "pv_jambe_gauche": 4,
         "pa_jambe_gauche": 0,
+        "degats_jambe_gauche": 0,
         "pv_abdomen": 4,
         "pa_abdomen": 0,
+        "degats_abdomen": 0,
         "pv_poitrine": 5,
         "pa_poitrine": 0,
+        "degats_poitrine": 0,
         "pv_bras_droit": 3,
-        "pa_bras_droit": 0,
+        "pa_bras_droit": 2,
+        "degats_bras_droit": 0,
         "pv_bras_gauche": 3,
-        "pa_bras_gauche": 0,
+        "pa_bras_gauche": 2,
+        "degats_bras_gauche": 0,
         "pv_tete": 4,
         "pa_tete": 0,
+        "degats_tete": 0,
         "points_de_vie": 12,
         "points_de_magie": 12,
         "points_de_rune": 3,
@@ -7823,7 +7970,7 @@
         "richesse_bolgs": 0,
         "richesse_biens": 0,
         "notes": "Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.",
-        "notes_combat": "L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels."
+        "notes_combat": "Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer."
       },
       "hp": 12,
       "maxHp": 12,
@@ -8152,7 +8299,7 @@
       "ownerId": "recette-rq-runes-pnj-sera",
       "mediaUrl": "recette-rq-media-indice-accord.svg",
       "isRevealed": true,
-      "revealedAt": 1793361600000
+      "revealedAt": 1793534400000
     },
     {
       "id": "recette-rq-runes-indice-corde",
@@ -8555,7 +8702,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000,
+      "creeeLe": 1793534400000,
       "momentDeStoryboardId": "recette-rq-runes-moment-accueil"
     },
     {
@@ -8606,7 +8753,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     },
     {
       "id": "recette-rq-runes-scene-clos",
@@ -8651,7 +8798,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     },
     {
       "id": "recette-rq-runes-scene-premier-serment",
@@ -8696,7 +8843,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     },
     {
       "id": "recette-rq-runes-scene-bronze",
@@ -8742,7 +8889,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000,
+      "creeeLe": 1793534400000,
       "momentDeStoryboardId": "recette-rq-runes-moment-bronze"
     },
     {
@@ -8787,7 +8934,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     },
     {
       "id": "recette-rq-runes-scene-source",
@@ -8833,7 +8980,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000,
+      "creeeLe": 1793534400000,
       "momentDeStoryboardId": "recette-rq-runes-moment-source"
     },
     {
@@ -8880,7 +9027,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     },
     {
       "id": "recette-rq-runes-scene-protection",
@@ -8925,7 +9072,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     },
     {
       "id": "recette-rq-runes-scene-urgence",
@@ -8966,7 +9113,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     },
     {
       "id": "recette-rq-runes-scene-assemblee",
@@ -9014,7 +9161,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000,
+      "creeeLe": 1793534400000,
       "momentDeStoryboardId": "recette-rq-runes-moment-assemblee"
     },
     {
@@ -9057,7 +9204,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     },
     {
       "id": "recette-rq-runes-scene-depart",
@@ -9102,7 +9249,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     },
     {
       "id": "recette-rq-runes-scene-corps",
@@ -9140,7 +9287,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     },
     {
       "id": "recette-rq-runes-scene-runes",
@@ -9178,7 +9325,7 @@
         }
       ],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     },
     {
       "id": "recette-rq-runes-scene-bilan",
@@ -9211,7 +9358,7 @@
       "importance": "optionnelle",
       "enchainements": [],
       "passages": [],
-      "creeeLe": 1793361600000
+      "creeeLe": 1793534400000
     }
   ],
   "rencontres": [],
@@ -9220,7 +9367,7 @@
       "id": "recette-rq-runes-seance-1",
       "campaignId": "recette-rq-runes-campagne-bornes",
       "number": 1,
-      "date": "2026-10-30",
+      "date": "2026-11-01",
       "status": "planned",
       "publicSummary": "Garder le passage ouvert.",
       "gmSecrets": "SECRET_MJ_RQ_RECETTE : deux causes différentes, un retard volontaire et une fuite accidentelle ; aucune magie obligatoire.",
@@ -9254,7 +9401,7 @@
       "id": "recette-rq-runes-seance-2",
       "campaignId": "recette-rq-runes-campagne-bornes",
       "number": 2,
-      "date": "2026-10-30",
+      "date": "2026-11-01",
       "status": "planned",
       "publicSummary": "Comparer les copies et réparer la source.",
       "gmSecrets": "SECRET_MJ_RQ_RECETTE : deux causes différentes, un retard volontaire et une fuite accidentelle ; aucune magie obligatoire.",
@@ -9288,7 +9435,7 @@
       "id": "recette-rq-runes-seance-3",
       "campaignId": "recette-rq-runes-campagne-bornes",
       "number": 3,
-      "date": "2026-10-30",
+      "date": "2026-11-01",
       "status": "planned",
       "publicSummary": "Protéger les témoins.",
       "gmSecrets": "SECRET_MJ_RQ_RECETTE : deux causes différentes, un retard volontaire et une fuite accidentelle ; aucune magie obligatoire.",
@@ -9322,7 +9469,7 @@
       "id": "recette-rq-runes-seance-4",
       "campaignId": "recette-rq-runes-campagne-bornes",
       "number": 4,
-      "date": "2026-10-30",
+      "date": "2026-11-01",
       "status": "planned",
       "publicSummary": "Clore la fiction puis ouvrir les ateliers.",
       "gmSecrets": "SECRET_MJ_RQ_RECETTE : deux causes différentes, un retard volontaire et une fuite accidentelle ; aucune magie obligatoire.",
@@ -9599,7 +9746,47 @@
             "isResource": true,
             "max": "pr_max_2"
           }
-        ]
+        ],
+        "coupsLocalises": {
+          "mecanique": "runequest",
+          "zones": {
+            "jambe-droite": {
+              "pv": "pv_jambe_droite",
+              "armure": "pa_jambe_droite",
+              "degats": "degats_jambe_droite"
+            },
+            "jambe-gauche": {
+              "pv": "pv_jambe_gauche",
+              "armure": "pa_jambe_gauche",
+              "degats": "degats_jambe_gauche"
+            },
+            "abdomen": {
+              "pv": "pv_abdomen",
+              "armure": "pa_abdomen",
+              "degats": "degats_abdomen"
+            },
+            "poitrine": {
+              "pv": "pv_poitrine",
+              "armure": "pa_poitrine",
+              "degats": "degats_poitrine"
+            },
+            "bras-droit": {
+              "pv": "pv_bras_droit",
+              "armure": "pa_bras_droit",
+              "degats": "degats_bras_droit"
+            },
+            "bras-gauche": {
+              "pv": "pv_bras_gauche",
+              "armure": "pa_bras_gauche",
+              "degats": "degats_bras_gauche"
+            },
+            "tete": {
+              "pv": "pv_tete",
+              "armure": "pa_tete",
+              "degats": "degats_tete"
+            }
+          }
+        }
       },
       "ui_config": {
         "themeColor": "#CD7F32",
@@ -9627,7 +9814,7 @@
       "id": "custom-1793114851695",
       "templateId": "tpl-1793114851695",
       "author": "User",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "corpusId": "runequest"
     }
   ],
@@ -11485,6 +11672,12 @@
               "defaultValue": 0
             },
             {
+              "id": "degats_jambe_droite",
+              "label": "Jambe droite — dégâts reçus",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
               "id": "pv_jambe_gauche",
               "label": "Jambe gauche — points de vie",
               "type": "number",
@@ -11493,6 +11686,12 @@
             {
               "id": "pa_jambe_gauche",
               "label": "Jambe gauche — armure",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "degats_jambe_gauche",
+              "label": "Jambe gauche — dégâts reçus",
               "type": "number",
               "defaultValue": 0
             },
@@ -11509,6 +11708,12 @@
               "defaultValue": 0
             },
             {
+              "id": "degats_abdomen",
+              "label": "Abdomen — dégâts reçus",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
               "id": "pv_poitrine",
               "label": "Poitrine — points de vie",
               "type": "number",
@@ -11517,6 +11722,12 @@
             {
               "id": "pa_poitrine",
               "label": "Poitrine — armure",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "degats_poitrine",
+              "label": "Poitrine — dégâts reçus",
               "type": "number",
               "defaultValue": 0
             },
@@ -11533,6 +11744,12 @@
               "defaultValue": 0
             },
             {
+              "id": "degats_bras_droit",
+              "label": "Bras droit — dégâts reçus",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
               "id": "pv_bras_gauche",
               "label": "Bras gauche — points de vie",
               "type": "number",
@@ -11545,6 +11762,12 @@
               "defaultValue": 0
             },
             {
+              "id": "degats_bras_gauche",
+              "label": "Bras gauche — dégâts reçus",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
               "id": "pv_tete",
               "label": "Tête — points de vie",
               "type": "number",
@@ -11553,6 +11776,12 @@
             {
               "id": "pa_tete",
               "label": "Tête — armure",
+              "type": "number",
+              "defaultValue": 0
+            },
+            {
+              "id": "degats_tete",
+              "label": "Tête — dégâts reçus",
               "type": "number",
               "defaultValue": 0
             }

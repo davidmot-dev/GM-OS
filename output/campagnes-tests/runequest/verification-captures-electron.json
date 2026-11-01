@@ -1,40 +1,38 @@
 {
-  "date": "2026-10-30",
+  "date": "2026-11-01",
   "capturesExaminees": true,
-  "rapportElectronSHA256": "6abb0ad0227069e20d8b7bd7126761cfd2964793519d25eeca0447d74351e74e",
-  "sourceE2ESHA256": "cb4d64df7496a51220645f38eb4721093a2171b9aaa665e31034cc4cdc809d13",
+  "rapportElectronSHA256": "1ac9da5e125285e27d22155e8b8b969af0da14b65cf0932db4eb34f919f3b6e4",
+  "sourceE2ESHA256": "2eafa171b8a19d80830d202842cc5b5604d70662a4d3e3640b59df1dd9eca842",
+  "helperE2ESHA256": "c5dbb1de358b70007c4d11439d905ba57826fea567f602977b99637bed49ea5e",
   "captures": [
     {
       "fichier": "captures/01-campagne-importee.jpg",
-      "sha256": "c961f7099d0421147bf0546ba44f2e8bcd569e6e23cd734ee4635ab299be5121"
+      "sha256": "5d692585eff63234aa50dd71516d76d5f57a7cd3dab3ef43163b5c89b04213d5"
     },
     {
       "fichier": "captures/03-fiche-joueur-1-360.jpg",
-      "sha256": "5a4414e84a155dd6668d311aa3d17f0124fdab1f780297b778ab980624db24ac"
+      "sha256": "bb4f6e27e5b2cb50696e50d570a2d080e21ec1dd08a991c1880ea3c0a4072127"
     },
     {
       "fichier": "captures/03-fiche-joueur-2-768.jpg",
-      "sha256": "89f443aaf8141b7c0b0017ab870ea010b1541992eeeb8bb9c610b33194ab16da"
+      "sha256": "0a2021884a67a2a1a182da19bb4e504c4041a0f682d0c54f469566a328269543"
     },
     {
       "fichier": "captures/03-fiche-joueur-3-1180.jpg",
-      "sha256": "736ab283a4df4bd55daa12caf835944b3b17fa8943d68e5846f7fe66a57dfd1b"
+      "sha256": "051d22a8b80a36bc8df2af7a94b365eed16acdf1c79858e1267539bf40252774"
+    },
+    {
+      "fichier": "captures/04-coup-plafonne-c09.jpg",
+      "sha256": "4da8f83c577fcf4ca17ea8c33a18a2d5cfbb48a6a43fd8a77f22fb256e6e4ae7"
+    },
+    {
+      "fichier": "captures/05-coups-pnj-et-autonome.jpg",
+      "sha256": "78b0cda264bfd2b86823a1a8ced0a6200c1c8485fa164e29c53a71d220c4a524"
+    },
+    {
+      "fichier": "captures/06-coup-depuis-le-jet.jpg",
+      "sha256": "5bff6ce51f39061ea86a549889065f09f295c54412b891ea3646db9d6db2c34e"
     }
   ],
-  "constat": "Campagne affichée ; trois fiches HTML aux bonnes identités, cadrées dans les Hub 360/768/1180 sans débordement horizontal. Les petites valeurs du PDF nécessitent le zoom prévu dans la fiche. Les assertions lisent aussi FOR, nom et pourcentage de l’arme principale.",
-  "resultatE2E": "ÉCHEC unique sur GM-05 : 12 chemins gmSecrets ; assertions antérieures abouties.",
-  "archives": [
-    {
-      "fichier": "01-Les-Bornes-du-gue.gmos",
-      "sha256": "1629688668042a79984fabd33c708b158f88af293a20dd3bbab4dcee1b76e902"
-    },
-    {
-      "fichier": "02-Aptitudes-Combat-et-Sante.gmos",
-      "sha256": "394a6f4b924f5d6911170439f6632561c0bee1234cd4e9bb0758b1547d4c737d"
-    },
-    {
-      "fichier": "03-Runes-Passions-et-Magie.gmos",
-      "sha256": "a95d6815a74c4411c7bb7dc365cb0a0706e3b07b59ecf58130b474fd9acabb04"
-    }
-  ]
+  "revue": "Sept captures examinées en planche ; coup depuis le jet examiné en taille native : cible Sera Main-Lente, bras gauche 3 PV maximum, 8−2=6 dégâts, zone −3/3 ; trois fiches Hub aux tailles prévues, C09 et PNJ/autonome visibles."
 }

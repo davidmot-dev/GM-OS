@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-30",
+  "capturesExaminees": true,
+  "rapportElectronSHA256": "6abb0ad0227069e20d8b7bd7126761cfd2964793519d25eeca0447d74351e74e",
+  "sourceE2ESHA256": "cb4d64df7496a51220645f38eb4721093a2171b9aaa665e31034cc4cdc809d13",
+  "captures": [
+    {
+      "fichier": "captures/01-campagne-importee.jpg",
+      "sha256": "c961f7099d0421147bf0546ba44f2e8bcd569e6e23cd734ee4635ab299be5121"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-1-360.jpg",
+      "sha256": "5a4414e84a155dd6668d311aa3d17f0124fdab1f780297b778ab980624db24ac"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-2-768.jpg",
+      "sha256": "89f443aaf8141b7c0b0017ab870ea010b1541992eeeb8bb9c610b33194ab16da"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-3-1180.jpg",
+      "sha256": "736ab283a4df4bd55daa12caf835944b3b17fa8943d68e5846f7fe66a57dfd1b"
+    }
+  ],
+  "constat": "Campagne affichée ; trois fiches HTML aux bonnes identités, cadrées dans les Hub 360/768/1180 sans débordement horizontal. Les petites valeurs du PDF nécessitent le zoom prévu dans la fiche. Les assertions lisent aussi FOR, nom et pourcentage de l’arme principale.",
+  "resultatE2E": "ÉCHEC unique sur GM-05 : 12 chemins gmSecrets ; assertions antérieures abouties.",
+  "archives": [
+    {
+      "fichier": "01-Les-Bornes-du-gue.gmos",
+      "sha256": "1629688668042a79984fabd33c708b158f88af293a20dd3bbab4dcee1b76e902"
+    },
+    {
+      "fichier": "02-Aptitudes-Combat-et-Sante.gmos",
+      "sha256": "394a6f4b924f5d6911170439f6632561c0bee1234cd4e9bb0758b1547d4c737d"
+    },
+    {
+      "fichier": "03-Runes-Passions-et-Magie.gmos",
+      "sha256": "a95d6815a74c4411c7bb7dc365cb0a0706e3b07b59ecf58130b474fd9acabb04"
+    }
+  ]
+}

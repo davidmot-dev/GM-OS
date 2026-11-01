@@ -1,5 +1,7 @@
 # Campagnes de recette RuneQuest — 30/10/2026, Codex
 
+> **Suivi du 01/11 :** RQ-A2 validé par David ; RQ-A1 livré en 2.1.0/320 champs, 78 cas. Le texte ci-dessous conserve son état de livraison initial ; [reprise courante](2026-11-01-etat-et-reprise-codex-runequest-recette-210.md).
+
 ## Ce que la session a produit
 
 David : « utilise le plugin GM-OS Campagnes de test et Crée les campagnes de test de RuneQuest avec ce pilote et ces règles, pour les joueurs de mon export fourni ».

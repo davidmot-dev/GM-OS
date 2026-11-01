@@ -1,6 +1,33 @@
 {
-  "reussi": false,
+  "reussi": true,
   "importNatif": true,
+  "pilote210RemplaceExplicitement": true,
+  "dependance200ConserveeParNexus": true,
+  "coupsLocalises": {
+    "reussi": true,
+    "pj": true,
+    "pnjLie": true,
+    "autonome": true,
+    "armure": true,
+    "plafond": true,
+    "soinBorne": true,
+    "depuisLeJet": true,
+    "persistanceAttendues": {
+      "c07": {
+        "degats_bras_droit": 1,
+        "points_de_vie": 11
+      },
+      "npc01": {
+        "id": "recette-rq-pnj-sera",
+        "champ": "degats_bras_gauche",
+        "degats": 6,
+        "hp": 6
+      }
+    }
+  },
+  "persistanceCoups": true,
+  "reinitialisationCompteurs": true,
+  "blessure01Conservee": true,
   "remplacementIsole": true,
   "reload": true,
   "joueursExistantsConserves": true,
@@ -35,90 +62,17 @@
   "archives": [
     {
       "fichier": "01-Les-Bornes-du-gue.gmos",
-      "sha256": "1629688668042a79984fabd33c708b158f88af293a20dd3bbab4dcee1b76e902"
+      "sha256": "f9de892dd24ed078f218e29985018f5f12f39d574061e196f787487dcff0cc37"
     },
     {
       "fichier": "02-Aptitudes-Combat-et-Sante.gmos",
-      "sha256": "394a6f4b924f5d6911170439f6632561c0bee1234cd4e9bb0758b1547d4c737d"
+      "sha256": "41243e5e8b2da51ed25ac2a8278cdb1a2ed65a74822d9c252ee8ee957ee7c2ca"
     },
     {
       "fichier": "03-Runes-Passions-et-Magie.gmos",
-      "sha256": "a95d6815a74c4411c7bb7dc365cb0a0706e3b07b59ecf58130b474fd9acabb04"
+      "sha256": "b37c84fc58dff402302b849f705bb8c95fa35369420fa8e6e1fb5c2d84694caa"
     }
   ],
-  "secretsNonDiffuses": false,
-  "anomalies": [
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.0.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    },
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.1.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    },
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.2.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    },
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.3.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    },
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.4.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    },
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.5.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    },
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.6.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    },
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.7.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    },
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.8.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    },
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.9.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    },
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.10.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    },
-    {
-      "cas": "GM-05",
-      "chemin": "payload.session.sessions.11.gmSecrets",
-      "attendu": "secret absent des trames joueur",
-      "observe": "marqueur secret présent"
-    }
-  ]
+  "secretsNonDiffuses": true,
+  "anomalies": []
 }

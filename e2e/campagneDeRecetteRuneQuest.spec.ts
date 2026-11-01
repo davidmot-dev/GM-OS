@@ -2,10 +2,12 @@ import { test, expect, chromium, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
+import AdmZip from 'adm-zip';
 import { lancerGmOs, attendreLHydratation, ouvrirLeModule, ongletDeLaFiche } from './lancerGmOs';
 import { PORT_FICHES_PAR_DEFAUT } from '../electron/portsDeGmOs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { useDiceStore } from '../src/stores/useDiceStore';
+import {verifierLesCoupsRuneQuest} from './runequestCoupsDeRecette';
 type FenetreRecette = Window & { useSessionOSStore: typeof useSessionOSStore; useDiceStore: typeof useDiceStore };
 const SORTIE = path.resolve('output/campagnes-tests/runequest');
 const C = 'recette-rq-campagne-bornes';
@@ -43,6 +45,8 @@ test('les trois archives RuneQuest et les fiches fonctionnent sur trois Hub', as
             campaigns: [{ id: 'recette-sentinelle', name: 'SENTINELLE — ne pas modifier', system: 'generic', activeLocationIds: [] }],
             players, entities: [], sessions: [], actes: [], scenes: [], atlasMaps: [], clues: [], rencontres: [], activeCampaignId: null, currentView: 'library',
         }), preexistants);
+        const ancien=JSON.parse(new AdmZip(path.join(SORTIE,'historique/2026-10-30-2.0.0/RuneQuest-2.0.0.gmos-driver')).readAsText('state.json'));
+        await f.evaluate(({gameDriver,sheetTemplate})=>(window as unknown as FenetreRecette).useSessionOSStore.setState({customGameDrivers:[gameDriver],customSheetTemplates:[sheetTemplate]}),ancien);
         const verifierLesExistants = async () => {
             const existants = await f.evaluate(() => (window as unknown as FenetreRecette).useSessionOSStore.getState().players.map(p => ({
                 id: p.id, realName: p.realName, avatarUrl: p.avatarUrl, characters: p.characters.filter(c => c.campaignId === 'recette-sentinelle'),
@@ -61,6 +65,15 @@ test('les trois archives RuneQuest et les fiches fonctionnent sur trois Hub', as
             if (await fermer.isVisible()) await fermer.click();
         };
         await importer('01-Les-Bornes-du-gue.gmos', C);
+        // Nexus conserve la dépendance du même ID : le guide doit demander son remplacement explicite.
+        expect(await f.evaluate(()=>(window as unknown as FenetreRecette).useSessionOSStore.getState().getActiveDriver()?.version)).toBe('2.0.0');
+        await gmos.application.evaluate(({dialog},cible)=>{dialog.showOpenDialog=async()=>({canceled:false,filePaths:[cible]});},path.join(SORTIE,'RuneQuest-2.1.0.gmos-driver'));
+        await f.evaluate(()=>{const s=(window as unknown as FenetreRecette).useSessionOSStore.getState();s.setTemplateDashboardTab('drivers');s.setCurrentView('templates');});
+        await f.getByRole('button',{name:'IMPORTER DRIVER',exact:true}).click();
+        await f.locator('#nexus-conflict-replace').click();
+        await expect.poll(()=>f.evaluate(()=>(window as unknown as FenetreRecette).useSessionOSStore.getState().getActiveDriver()?.version)).toBe('2.1.0');
+        const fermerPilote=f.locator('#nexus-bilan-fermer');if(await fermerPilote.isVisible())await fermerPilote.click();
+        await f.evaluate(()=>(window as unknown as FenetreRecette).useSessionOSStore.getState().setCurrentView('library'));
         await expect(f.getByText('RECETTE RUNEQUEST — Les Bornes du gué').first()).toBeVisible();
         await image(f, '01-campagne-importee');
         await importer('02-Aptitudes-Combat-et-Sante.gmos', 'recette-rq-corps-campagne-bornes');
@@ -76,9 +89,16 @@ test('les trois archives RuneQuest et les fiches fonctionnent sur trois Hub', as
         expect(inventaire.joueurs.reduce((n, p) => n + p.personnages, 0)).toBe(21);
         await verifierLesExistants();
         expect(inventaire.pnj).toBe(36); expect(inventaire.lieux).toBe(24); expect(inventaire.scenes).toBe(48); expect(inventaire.indices).toBe(36);
+        const coupsLocalises=await verifierLesCoupsRuneQuest(gmos,image);
+        // Les blessures préparées/modifiées doivent survivre avant la remise à zéro du seul laboratoire.
+        await f.reload();await attendreLHydratation(gmos);
+        expect(await f.evaluate(()=>(window as unknown as FenetreRecette).useSessionOSStore.getState().players.flatMap(p=>p.characters).find(c=>c.name.startsWith('C07'))!.sheetData)).toMatchObject(coupsLocalises.persistanceAttendues.c07);
         await f.evaluate(campagne=>{const s=(window as unknown as FenetreRecette).useSessionOSStore.getState();const c=s.players[0].characters.find(c=>c.campaignId===campagne)!;s.updateCharacter(s.players[0].id,c.id,{playerNotes:'TRACE ENQUÊTE À CONSERVER'});const p=s.players.find(p=>p.characters.some(c=>c.name.startsWith('C02')))!;s.updateCharacter(p.id,p.characters.find(c=>c.name.startsWith('C02'))!.id,{playerNotes:'LABO À EFFACER'});},C);
         await importer('02-Aptitudes-Combat-et-Sante.gmos','recette-rq-corps-campagne-bornes',true);
         expect(await f.evaluate(()=>(window as unknown as FenetreRecette).useSessionOSStore.getState().players.flatMap(p=>p.characters).find(c=>c.name.startsWith('C02'))!.playerNotes)).not.toBe('LABO À EFFACER');
+        expect(await f.evaluate(()=>(window as unknown as FenetreRecette).useSessionOSStore.getState().players.flatMap(p=>p.characters).find(c=>c.name.startsWith('C07'))!.sheetData)).toMatchObject({pv_bras_droit:3,degats_bras_droit:3,points_de_vie:9});
+        const blessure01=coupsLocalises.persistanceAttendues.npc01;
+        expect(await f.evaluate(id=>(window as unknown as FenetreRecette).useSessionOSStore.getState().entities.find(e=>e.id===id),blessure01.id)).toMatchObject({hp:blessure01.hp,sheetData:{[blessure01.champ]:blessure01.degats}});
         await f.evaluate(campagne=>{const st=(window as unknown as FenetreRecette).useSessionOSStore,s=st.getState();s.setActiveCampaign(campagne);s.setCurrentView('trame');st.setState({sessions:s.sessions.map(se=>se.campaignId===campagne&&se.number===1?{...se,status:'active' as const}:se)});},C);
         const pcs=await f.evaluate(campagne=>(window as unknown as FenetreRecette).useSessionOSStore.getState().players.map(p=>p.characters.find(c=>c.campaignId===campagne)!),C);
         expect((await f.evaluate(()=>window.appBridge!.modulesDuJeu!.lire())).modules).toHaveLength(0);
@@ -94,7 +114,7 @@ test('les trois archives RuneQuest et les fiches fonctionnent sur trois Hub', as
             await tablette.getByTitle('Fiche Personnage',{exact:true}).click();await ongletDeLaFiche(tablette,'Lancer un test');
             const panneau=tablette.locator('[data-panneau-de-jet]').first();await panneau.locator('select').nth(0).selectOption('arme1');await expect(panneau.locator('[data-preparation-runequest]')).toBeVisible();
             const avant=await f.evaluate(()=>(window as unknown as FenetreRecette).useDiceStore.getState().history.length);await panneau.getByRole('button',{name:'Lancer',exact:true}).click();
-            await expect.poll(()=>f.evaluate(()=>(window as unknown as FenetreRecette).useDiceStore.getState().history.length)).toBeGreaterThan(avant);jets++;await panneau.getByRole('button',{name:'Localiser le coup (1D20)',exact:true}).click();await expect(panneau.locator('[data-localisation-runequest]')).toContainText('PV sur la fiche');localisations++;
+            await expect.poll(()=>f.evaluate(()=>(window as unknown as FenetreRecette).useDiceStore.getState().history.length)).toBeGreaterThan(avant);jets++;await panneau.getByRole('button',{name:'Localiser le coup (1D20)',exact:true}).click();await expect(panneau.locator('[data-localisation-runequest]')).toContainText('Localisation :');await expect(panneau.locator('[data-localisation-runequest]')).not.toContainText('PV');await expect(panneau.locator('[data-pv-cible-runequest]')).toHaveCount(0);localisations++;
             await ongletDeLaFiche(tablette,'Ma fiche');const html=tablette.frameLocator('iframe:visible');
             await expect(html.locator('[data-key="identity.name"]')).toHaveValue(pc.name,{timeout:30_000});await expect(html.locator('[data-key="attributes.strength"]')).toHaveValue(String(pc.sheetData.for));
             await expect(html.locator('[data-key="weapons.melee.0.name"]')).toHaveValue(String(pc.sheetData.arme1_nom));
@@ -109,7 +129,7 @@ test('les trois archives RuneQuest et les fiches fonctionnent sur trois Hub', as
         await expect.poll(()=>f.evaluate(()=>(window as unknown as FenetreRecette).useSessionOSStore.getState().players.flatMap(p=>p.characters).length)).toBe(24);
         expect(await f.evaluate(campagne=>(window as unknown as FenetreRecette).useSessionOSStore.getState().players[0].characters.find(c=>c.campaignId===campagne)!.playerNotes,C)).toBe('TRACE ENQUÊTE À CONSERVER');
         expect(await f.evaluate(ids=>(window as unknown as FenetreRecette).useSessionOSStore.getState().players.flatMap(p=>p.characters).filter(c=>ids.includes(c.id)).map(c=>c.sheetData.points_de_magie),pcs.map(c=>c.id))).toEqual([8,9,10]);
-        fs.writeFileSync(path.join(SORTIE,'verification-electron.json'),JSON.stringify({reussi:fuites.size===0,importNatif:true,remplacementIsole:true,reload:true,joueursExistantsConserves:true,anciensPJConserves:3,joueurs:inventaire.joueurs,ficheHTML:true,pmTablettes:pm,localisationsTablettes:localisations,jetsRecusParMJ:jets,tablettes:[360,768,1180],modulesSpecifiques:0,
+        fs.writeFileSync(path.join(SORTIE,'verification-electron.json'),JSON.stringify({reussi:fuites.size===0,importNatif:true,pilote210RemplaceExplicitement:true,dependance200ConserveeParNexus:true,coupsLocalises,persistanceCoups:true,reinitialisationCompteurs:true,blessure01Conservee:true,remplacementIsole:true,reload:true,joueursExistantsConserves:true,anciensPJConserves:3,joueurs:inventaire.joueurs,ficheHTML:true,pmTablettes:pm,localisationsTablettes:localisations,jetsRecusParMJ:jets,tablettes:[360,768,1180],modulesSpecifiques:0,
         archives:['01-Les-Bornes-du-gue.gmos','02-Aptitudes-Combat-et-Sante.gmos','03-Runes-Passions-et-Magie.gmos'].map(fichier=>({fichier,sha256:createHash('sha256').update(fs.readFileSync(path.join(SORTIE,fichier))).digest('hex')})),secretsNonDiffuses:fuites.size===0,anomalies:[...fuites].map(chemin=>({cas:'GM-05',chemin,attendu:'secret absent des trames joueur',observe:'marqueur secret présent'}))},null,2));
         expect.soft(fuites.size,'GM-05 : secrets de séance reçus ; voir verification-electron.json').toBe(0);
     }finally{await gmos.fermer();}

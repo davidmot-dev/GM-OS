@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-01",
+  "reussi": true,
+  "archives": [
+    {
+      "fichier": "01-Les-Bornes-du-gue.gmos",
+      "campagne": "recette-rq-campagne-bornes",
+      "personnages": 3,
+      "medias": 39,
+      "sha256": "f9de892dd24ed078f218e29985018f5f12f39d574061e196f787487dcff0cc37"
+    },
+    {
+      "fichier": "02-Aptitudes-Combat-et-Sante.gmos",
+      "campagne": "recette-rq-corps-campagne-bornes",
+      "personnages": 9,
+      "medias": 39,
+      "sha256": "41243e5e8b2da51ed25ac2a8278cdb1a2ed65a74822d9c252ee8ee957ee7c2ca"
+    },
+    {
+      "fichier": "03-Runes-Passions-et-Magie.gmos",
+      "campagne": "recette-rq-runes-campagne-bornes",
+      "personnages": 9,
+      "medias": 39,
+      "sha256": "b37c84fc58dff402302b849f705bb8c95fa35369420fa8e6e1fb5c2d84694caa"
+    }
+  ],
+  "anciensIdentifiantsConserves": true,
+  "nouveauxCSVHumainsVierge": 78,
+  "historique": {
+    "fichiersVerifies": 14,
+    "zipSHA256": "35389326103ccdcee9e635f5071b31d487646cc3575614275d956c7b83061a28",
+    "csvSHA256": "807b1bcc9cef46be777c5cb63b7393f0ae65c27b5d2002e2b36e5fcb1369894b"
+  },
+  "refusRapportPerime": true,
+  "zipInchangeApresRefus": true,
+  "sourcesSHAConcordantes": true
+}

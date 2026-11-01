@@ -1,0 +1,20 @@
+{
+  "dateConservation": "2026-11-01",
+  "raison": "RQ-A1 : lot 2.0.0 conservé avant mise à niveau 2.1.0 ; résultats historiques inchangés",
+  "fichiers": {
+    "RuneQuest-Campagnes-de-recette.zip": "35389326103ccdcee9e635f5071b31d487646cc3575614275d956c7b83061a28",
+    "RuneQuest-2.0.0.gmos-driver": "f14f3d0a8a024c4b0e84386c9a9056bbe7e95200e8d79d9e5ea524d7cdfa36db",
+    "resultats.csv": "807b1bcc9cef46be777c5cb63b7393f0ae65c27b5d2002e2b36e5fcb1369894b",
+    "inventaire.json": "c85b260ba660b3ec050a87d5e5cf91eb217bbcfbcf18cca57e0d4ee17c3f3c98",
+    "provenance.json": "895c9e28fa714a10702e64eee19b708ea8fbcedc79320bc864ed7d1394c510bf",
+    "RAPPORT-DE-VERIFICATION.md": "5faa0a1d0b4ab351162e7a07e8384663391402541870086c392b4ee1865d7e5d",
+    "ANOMALIES-CONNUES.md": "4e83e2374c4cf58f9ccb58b450c021b91443094043c7a5f0476e1ec2b18db890",
+    "verification-archives.json": "010df2ac8322e7739a3ce317610fbe303e0aae98f35387c0aea33b566c942dd9",
+    "verification-contexte.json": "d53ee8702b654cc01b644f45859b1b53b653034672486421bc234cd356f387af",
+    "verification-plugin.json": "02ceecd8c945dc1177ad81d1016fa0a359361e3bae7918c15370e825f5054d23",
+    "verification-electron.json": "6abb0ad0227069e20d8b7bd7126761cfd2964793519d25eeca0447d74351e74e",
+    "verification-medias.json": "49d27ea9831627b4e79198e62f3c7e685420ddcf8150a8b4438ced47f501a3f6",
+    "verification-captures-electron.json": "96b246fe5fa2ae8c17eb42221ac9739814687d4a27768cd1700dd461915b8101",
+    "verification-lancement.json": "10b2887685ff86b2f83ee5a67429315c4bfa767075e534724a86bfe93e87e336"
+  }
+}

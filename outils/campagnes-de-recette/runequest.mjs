@@ -7,15 +7,20 @@ import {empreinte,lignesSVG,signalWav} from './archives-de-recette.mjs';
 import {herosRuneQuest as heros,lieuxRuneQuest as lieux,pnjRuneQuest as pnj,indicesRuneQuest as indices,scenesRuneQuest as scenes,titreRuneQuest as titre} from './runequest-scenario.mjs';
 import {ecrireRecetteRuneQuest} from './runequest-recette.mjs';
 const {santeAlignee,santePrincipaleDeLaFiche}=await import('../../src/modules/combat/logic/SanteDuCombattant.ts');
-const SORTIE=path.resolve('output/campagnes-tests/runequest'),SOURCE='Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver';
-export const DATE_RQ='2026-10-30T12:00:00.000Z';
+const SORTIE=path.resolve('output/campagnes-tests/runequest'),EXPORT='Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver';
+const SOURCE=process.env.GMOS_PILOTE_RUNEQUEST??(fs.existsSync(EXPORT)?EXPORT:path.join(SORTIE,'RuneQuest-2.1.0.gmos-driver'));
+export const DATE_RQ='2026-11-01T12:00:00.000Z';
 const INSTANT=Date.parse(DATE_RQ),VERSION=JSON.parse(fs.readFileSync('package.json','utf8')).version;
 const {gameDriver:pilote,sheetTemplate:fiche}=JSON.parse(new AdmZip(SOURCE).readAsText('state.json'));
-assert.equal(pilote.id,'custom-1793114851695');assert.equal(pilote.version,'2.0.0');assert.equal(fiche.id,'tpl-1793114851695');assert.equal(fiche.sections.flatMap(s=>s.fields).length,313);
+assert.equal(pilote.id,'custom-1793114851695');assert.equal(pilote.version,'2.1.0');assert.equal(fiche.id,'tpl-1793114851695');assert.equal(fiche.sections.flatMap(s=>s.fields).length,320);
 assert.ok(pilote.jet.runequest);assert.equal(pilote.combat.initiativeFormula,'ra_dex + ra_tai');
+assert.equal(pilote.combat.coupsLocalises?.mecanique,'runequest');assert.equal(Object.keys(pilote.combat.coupsLocalises.zones).length,7);
 const rattachement=JSON.parse(fs.readFileSync(new URL('./cthulhu-hack-joueurs.json',import.meta.url),'utf8'));
 // Seul le relevé autorisé de joueurs est réutilisé ; aucun ancien PJ ni contenu privé.
-assert.equal(empreinte(fs.readFileSync(rattachement.source)),rattachement.sha256,'L’export fourni a changé : revérifier le relevé.');
+const exportOriginePresent=fs.existsSync(rattachement.source);
+if(exportOriginePresent)assert.equal(empreinte(fs.readFileSync(rattachement.source)),rattachement.sha256,'L’export fourni a changé : revérifier le relevé.');
+// L'export d'origine n'est plus présent : le relevé minimal déjà autorisé reste la source,
+// sans rechercher ni relire d'anciennes campagnes personnelles.
 assert.deepEqual(rattachement.joueurs.map(p=>p.id),['p-1','p-2','p-3']);
 const champs=new Map(fiche.sections.flatMap(s=>s.fields).map(f=>[f.id,f]));
 const id=(type,slug)=>`recette-rq-${type}-${slug}`,ref=(slug,ext='svg')=>`recette-rq-media-${slug}.${ext}`,C=id('campagne','bornes');
@@ -43,10 +48,10 @@ function valeurs(h,maj={}){
   langue_natale_nom:'Heortling',langue_natale:65,connaissance_culte_nom:h.culte,connaissance_culte:50,veneration_nom:h.culte,veneration:50,culte:h.culte,culte_rang:'Initié — profil de recette',culte_2:'Culte associé choisi pour la recette',culte_2_rang:'Initié — réserve indépendante',culte_associe:'Démonstration de deux réserves séparées',
   arme1_nom:h.slug==='delea'?'Lance courte':h.slug==='koros'?'Dague':'Épée large',arme1:50,arme1_degats:h.slug==='koros'?'1D4+2':'1D8+1',arme1_ra:h.slug==='delea'?2:3,arme1_enc:1,arme1_durabilite:12,bouclier_nom:'Bouclier moyen',bouclier:50,bouclier_pv:12,bouclier_degats:'1D4',bouclier_ra:3,
   tir1_nom:'Javelot',tir1:40,tir1_degats:'1D10',tir1_ra:3,tir1_enc:1,tir1_durabilite:8,tir1_portee:'20 m — portée choisie pour le cas',tir1_cadence:'Selon déclaration de la table',
-  pv_jambe_droite:4,pv_jambe_gauche:4,pv_abdomen:4,pv_poitrine:5,pv_bras_droit:3,pv_bras_gauche:3,pv_tete:4,
+  pv_jambe_droite:4,pv_jambe_gauche:4,pv_abdomen:4,pv_poitrine:5,pv_bras_droit:3,pv_bras_gauche:3,pv_tete:4,pa_bras_droit:2,pa_bras_gauche:2,
   sorts_spirituels:'Soins (1) : vérifier le coût et l’effet au livre ; dépense à la main après le jet.',sorts_runiques:'RECETTE : exercice abstrait à 1 PR, sans effet officiel revendiqué ; tester les suites du résultat et les deux réserves.',sorcellerie:'RECETTE : exercice abstrait avec une Rune et une technique maîtrisées ; coût minimal 2 PM, manipulation à la table.',limite_magie_spirituelle:12,int_libre:10,
   autre_competence_1_nom:'Sorcellerie — exercice de RECETTE',autre_competence_1:45,lecture_ecriture:50,combat_spirituel:50,
-  possessions:h.materiel.join('\n'),richesse_lunars:20,notes:'Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.',notes_combat:'L’initiative du pilote est RA DEX + RA TAI. Ajouter le RA de l’arme à la table. Les dégâts localisés et les conséquences restent manuels.',notes_magie:'Aucun coût magique automatique du pilote ; tests POU×5, Rune et compétence du sort au panneau, puis comptabilité manuelle.'},h.competences,maj);
+  possessions:h.materiel.join('\n'),richesse_lunars:20,notes:'Profil avancé aux valeurs choisies pour éprouver le pilote, pas une création novice par budget. Dérivés saisis, aucun calcul automatique du personnage revendiqué.',notes_combat:'Initiative RA DEX + RA TAI ; ajouter le RA de l’arme à la table. Coups localisés natifs : maxima pv_<zone> distincts des dégâts degats_<zone> ; armure retirée, membre plafonné au double, soin de zone et total. Effets temporisés et dégâts spéciaux à arbitrer.',notes_magie:'Aucun coût magique automatique du pilote ; tests POU×5, Rune et compétence du sort au panneau, puis comptabilité manuelle.'},h.competences,maj);
  for(const k of Object.keys(v))assert.ok(champs.has(k),'Champ inventé : '+k);
  return v;
 }
@@ -84,7 +89,7 @@ function labo(suffixe,nom){
 }
 const corps=labo('corps','RECETTE RUNEQUEST — Laboratoire 02 · Aptitudes, combat et santé');
 const runes=labo('runes','RECETTE RUNEQUEST — Laboratoire 03 · Runes, Passions et magie');
-const corpsCas=[['C01',{arme1:3}],['C02',{arme1:56}],['C03',{arme1:120}],['C04',{arme1:140}],['C05',{points_de_vie:2}],['C06',{points_de_vie:0}],['C07',{pv_bras_droit:0,points_de_vie:9}],['C08',{pv_tete:-4,points_de_vie:4}],['C09',{pa_jambe_droite:5,pv_jambe_droite:2,points_de_vie:8}]];
+const corpsCas=[['C01',{arme1:3}],['C02',{arme1:56}],['C03',{arme1:120}],['C04',{arme1:140}],['C05',{points_de_vie:2}],['C06',{points_de_vie:0}],['C07',{pv_bras_droit:3,degats_bras_droit:3,points_de_vie:9}],['C08',{pv_tete:4,degats_tete:8,points_de_vie:4}],['C09',{pa_jambe_droite:5,pv_jambe_droite:2,points_de_vie:8}]];
 const runesCas=[['M01',{points_de_magie:0}],['M02',{points_de_magie:1}],['M03',{points_de_rune:0}],['M04',{pou:15,pm_max:15,points_de_magie:15,pv_max:13,points_de_vie:13}],['M05',{rune_air:90}],['M06',{passion1:85}],['M07',{autre_competence_1:55,int:16,lecture_ecriture:65,int_libre:12}],['M08',{points_de_rune:1,points_de_rune_2:0}],['M09',{int_libre:0,points_de_magie:2}]];
 for(const[s,cas]of[[corps,corpsCas],[runes,runesCas]]){
  for(const[n,[code,maj]]of cas.entries())s.players[n%3].characters.push(personnage(heros[n%3],n%3,s.campaign.id,code,maj));
@@ -93,16 +98,16 @@ for(const[s,cas]of[[corps,corpsCas],[runes,runesCas]]){
 }
 function ecrire(nom,etat){
  const zip=new AdmZip(),assetMap=[...medias].map(([originalRef,f])=>({originalRef,relativePath:f.chemin,checksum:empreinte(f.contenu),sizeBytes:f.contenu.length,mimeType:f.mime}));
- const manifeste={schemaVersion:1,bundleType:'campaign',bundleId:etat.campaign.id+'-v1',campaignId:etat.campaign.id,campaignName:etat.campaign.name,exportedAt:DATE_RQ,gmosVersion:VERSION,requiredDriverIds:[pilote.id],requiredTemplateIds:[fiche.id],assetMap,stats:{entityCount:etat.entities.length,sessionCount:etat.sessions.length,atlasMapCount:etat.atlasMaps.length,wikiEntryCount:etat.wikiEntries.length,clueCount:etat.clues.length,assetCount:assetMap.length,totalSizeBytes:assetMap.reduce((s,a)=>s+a.sizeBytes,0)}};
+ const manifeste={schemaVersion:1,bundleType:'campaign',bundleId:etat.campaign.id+'-v2',campaignId:etat.campaign.id,campaignName:etat.campaign.name,exportedAt:DATE_RQ,gmosVersion:VERSION,requiredDriverIds:[pilote.id],requiredTemplateIds:[fiche.id],assetMap,stats:{entityCount:etat.entities.length,sessionCount:etat.sessions.length,atlasMapCount:etat.atlasMaps.length,wikiEntryCount:etat.wikiEntries.length,clueCount:etat.clues.length,assetCount:assetMap.length,totalSizeBytes:assetMap.reduce((s,a)=>s+a.sizeBytes,0)}};
  for(const[n,c]of[['manifest.json',JSON.stringify(manifeste,null,2)],['state.json',JSON.stringify(etat,null,2)]])zip.addFile(n,Buffer.from(c));
  for(const f of medias.values()){zip.addFile(f.chemin,f.contenu);fs.mkdirSync(path.dirname(path.join(SORTIE,f.chemin)),{recursive:true});fs.writeFileSync(path.join(SORTIE,f.chemin),f.contenu);}
  for(const e of zip.getEntries())e.header.time=new Date(DATE_RQ);zip.writeZip(path.join(SORTIE,nom));
  fs.writeFileSync(path.join(SORTIE,nom.replace('.gmos','.json')),JSON.stringify(etat,null,2)+'\n');return {fichier:nom,campagne:etat.campaign.id,personnages:etat.players.flatMap(p=>p.characters).length,medias:medias.size,sha256:empreinte(fs.readFileSync(path.join(SORTIE,nom)))};
 }
 const archives=[ecrire('01-Les-Bornes-du-gue.gmos',scenario),ecrire('02-Aptitudes-Combat-et-Sante.gmos',corps),ecrire('03-Runes-Passions-et-Magie.gmos',runes)];
-fs.copyFileSync(SOURCE,path.join(SORTIE,'RuneQuest-2.0.0.gmos-driver'));
+if(path.resolve(SOURCE)!==path.join(SORTIE,'RuneQuest-2.1.0.gmos-driver'))fs.copyFileSync(SOURCE,path.join(SORTIE,'RuneQuest-2.1.0.gmos-driver'));
 const cas=ecrireRecetteRuneQuest(SORTIE,{scenario,corps,runes,archives,rattachement,pilote,fiche,date:DATE_RQ});
 const sourcesRegles=fs.readdirSync('docs/systems/runequest/rules').filter(n=>n.endsWith('.md')).map(n=>{const p='docs/systems/runequest/rules/'+n,b=fs.readFileSync(p);assert.match(b.toString('utf8'),/relu: true/);return {fichier:p,sha256:empreinte(b)};});
-const inventaire={version:1,genereLe:DATE_RQ,rattachement,pilote:{id:pilote.id,version:pilote.version,source:SOURCE,sha256:empreinte(fs.readFileSync(SOURCE))},gabarit:{id:fiche.id,champs:champs.size,html:'runequest-fr'},archives,modules:{specifiques:0,outils:['Combat-OS','Atlas','Trame','Nexus Wiki','Table-OS','Storyboard','Sound-OS','Music-OS','Light-OS']},casDeRecette:cas.length,sourcesRegles};
-fs.writeFileSync(path.join(SORTIE,'inventaire.json'),JSON.stringify(inventaire,null,2)+'\n');fs.writeFileSync(path.join(SORTIE,'provenance.json'),JSON.stringify({...inventaire,generateur:'runequest.mjs v1',gmosVersion:VERSION},null,2)+'\n');
+const inventaire={version:2,genereLe:DATE_RQ,rattachement,exportOriginePresent,releveAutoriseSHA256:empreinte(fs.readFileSync(new URL('./cthulhu-hack-joueurs.json',import.meta.url))),pilote:{id:pilote.id,version:pilote.version,source:path.relative(process.cwd(),SOURCE),sha256:empreinte(fs.readFileSync(SOURCE))},gabarit:{id:fiche.id,champs:champs.size,html:'runequest-fr'},archives,modules:{specifiques:0,outils:['Combat-OS','Atlas','Trame','Nexus Wiki','Table-OS','Storyboard','Sound-OS','Music-OS','Light-OS']},casDeRecette:cas.length,sourcesRegles};
+fs.writeFileSync(path.join(SORTIE,'inventaire.json'),JSON.stringify(inventaire,null,2)+'\n');fs.writeFileSync(path.join(SORTIE,'provenance.json'),JSON.stringify({...inventaire,generateur:'runequest.mjs v2 — RQ-A1',gmosVersion:VERSION,preparationPilote:{script:'outils/runequest/finir_runequest.py',sha256:empreinte(fs.readFileSync('outils/runequest/finir_runequest.py')),base:'historique/2026-10-30-2.0.0/RuneQuest-2.0.0.gmos-driver',limite:'Export corrigé d’origine absent ; pilote reconstruit depuis le lot historique par le générateur versionné, sans accès aux campagnes personnelles.'}},null,2)+'\n');
 console.log(JSON.stringify({sortie:SORTIE,archives,casDeRecette:cas.length},null,2));
