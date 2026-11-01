@@ -12,6 +12,7 @@ const SECRETS = [
     'SECRET-NOTE-PRIVEE', 'SECRET-MESSAGE', 'SECRET-AVIS', 'SECRET-ACTE', 'SECRET-SCENE',
     'SECRET-INDICE-CACHE', 'SECRET-WIKI', 'SECRET-LIEU', 'SECRET-CAMPAGNE', 'SECRET-PERSONNAGE',
     'SECRET-ENTITE', 'SECRET-JEU-ENTITE', 'SECRET-COMBATTANT', 'SECRET-OBJECTIF-ALIEN', 'SECRET-INDICE-NON-REVELE',
+    'SECRET-SEANCE-ACTIVE', 'SECRET-SEANCE-PREVUE', 'SECRET-SEANCE-TERMINEE',
 ];
 
 const CHARGE = {
@@ -24,7 +25,11 @@ const CHARGE = {
         clues: [{ id: 'c1', content: 'SECRET-INDICE-CACHE', isRevealed: false }],
     },
     session: {
-        sessions: [{ id: 'se1', title: 'Séance 1', feedbacks: [{ texte: 'SECRET-AVIS' }] }],
+        sessions: [
+            { id: 'se1', title: 'Séance 1', status: 'active', publicSummary: 'Résumé public actif', gmSecrets: 'SECRET-SEANCE-ACTIVE', feedbacks: [{ texte: 'SECRET-AVIS' }] },
+            { id: 'se2', title: 'Séance 2', status: 'planned', publicSummary: 'Résumé public prévu', gmSecrets: 'SECRET-SEANCE-PREVUE' },
+            { id: 'se3', title: 'Séance 3', status: 'completed', publicSummary: 'Résumé public terminé', gmSecrets: 'SECRET-SEANCE-TERMINEE' },
+        ],
         clues: [
             { id: 'i1', title: 'La lettre', content: 'Indice trouvé', isRevealed: true },
             { id: 'i2', title: 'Le registre', content: 'SECRET-INDICE-NON-REVELE', isRevealed: false },
@@ -58,7 +63,7 @@ describe('ce que la table des joueurs ne reçoit jamais', () => {
         expect(c.session.atlasMaps[0].narrativeDescription).toBe('Un port gris');
         expect(c.session.players[0].characters[0].playerNotes).toBe('Mes notes');
         expect(c.session.entities[0]).toMatchObject({ description: 'Un homme pâle', gmSecretInfo: MASQUE, roleplayingNotes: MASQUE });
-        expect(c.session.sessions[0]).toEqual({ id: 'se1', title: 'Séance 1' });
+        expect(c.session.sessions).toEqual(CHARGE.session.sessions.map(({ feedbacks: _avis, ...s }) => ({ ...s, gmSecrets: '' })));
         expect(c.session.clues).toEqual([{ id: 'i1', title: 'La lettre', content: 'Indice trouvé', isRevealed: true }]);
         expect(c.combat.round).toBe(2);
     });
@@ -73,6 +78,28 @@ describe('ce que la table des joueurs ne reçoit jamais', () => {
         expect(caviarderPourLesJoueurs({ type: 'FULL_RESET' })).toEqual({ type: 'FULL_RESET' });
         expect(caviarderPourLesJoueurs(null)).toBeNull();
         expect(caviarderPourLesJoueurs('texte')).toBe('texte');
+    });
+});
+
+/** GM-05 : le même filtre protège les messages complets, partiels et déjà caviardés. */
+describe('secrets de séance GM-05', () => {
+    it.each([
+        { session: { sessions: [{ id: 'active', gmSecrets: 'SECRET-GM05-PARTIEL', publicSummary: 'Public' }] } },
+        { session: { sessions: [{ id: 'active', gmSecrets: 'SECRET-GM05-PARTIEL' }] } },
+        { enveloppe: { session: { sessions: [{ gmSecrets: 'SECRET-GM05-PARTIEL' }] } } },
+    ])('retire le texte secret à toute profondeur sans modifier le message MJ', charge => {
+        const avant = structuredClone(charge);
+        const publique = caviarderPourLesJoueurs(charge);
+        expect(JSON.stringify(publique)).not.toContain('SECRET-GM05-PARTIEL');
+        expect(charge).toEqual(avant);
+    });
+
+    it('reste idempotent entre renderer, serveur et fenêtre publique', () => {
+        const premiere = caviarderPourLesJoueurs(CHARGE);
+        const suivante = caviarderPourLesJoueurs(premiere, null);
+        expect(suivante).toEqual(premiere);
+        expect(suivante.session.sessions[0].gmSecrets).toBe('');
+        expect(suivante.session.sessions[0].publicSummary).toBe('Résumé public actif');
     });
 });
 

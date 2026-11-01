@@ -50,6 +50,10 @@ Si vous quittez avant le choix, confirmez avec **Oui, quitter**, ou touchez **No
 **Chroniques de séance**. En portrait, ces blocs se suivent ; en paysage, les informations
 occupent la colonne à droite de la projection. Faites défiler pour lire un résumé long.
 
+Les **Chroniques de séance** transmettent le résumé public. Les secrets de séance restent
+chez le meneur et ne sont pas envoyés aux Hub joueurs. Après une mise à jour de GM-OS,
+reconnectez les Hub pour recevoir la nouvelle synchronisation.
+
 Les six onglets gardent leur nom dans la barre du bas ; **Fiche**, **Notes**, **Messages** et
 **Quitter** sont sur la rangée suivante. Le bouton **Initiative** en haut ouvre l'ordre du
 combat ; **Fermer** revient à Direct.

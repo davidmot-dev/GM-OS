@@ -1,0 +1,29 @@
+{
+  "jeu": "runequest",
+  "reussi": true,
+  "archive": "01-Les-Bornes-du-gue.gmos",
+  "sha256": "1629688668042a79984fabd33c708b158f88af293a20dd3bbab4dcee1b76e902",
+  "publicsRecus": 3,
+  "tablettes": [
+    {
+      "largeur": 360,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    },
+    {
+      "largeur": 768,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    },
+    {
+      "largeur": 1180,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    }
+  ],
+  "secretsConservesChezLeMJ": true,
+  "fuites": []
+}

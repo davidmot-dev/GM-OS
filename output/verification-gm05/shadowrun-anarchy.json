@@ -1,0 +1,29 @@
+{
+  "jeu": "shadowrun-anarchy",
+  "reussi": true,
+  "archive": "01-La-Derniere-Couleur.gmos",
+  "sha256": "63da922511e76732f791ee77eddab3414f9faa63cc247d88a7ff248aceb8d33e",
+  "publicsRecus": 3,
+  "tablettes": [
+    {
+      "largeur": 360,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    },
+    {
+      "largeur": 768,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    },
+    {
+      "largeur": 1180,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    }
+  ],
+  "secretsConservesChezLeMJ": true,
+  "fuites": []
+}

@@ -1,0 +1,29 @@
+{
+  "jeu": "coc",
+  "reussi": true,
+  "archive": "01-Les-Minutes-de-Verre.gmos",
+  "sha256": "24e4fe9176ee62fb39174326328275fda1058c447ed870af5ad6e94645675842",
+  "publicsRecus": 3,
+  "tablettes": [
+    {
+      "largeur": 360,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    },
+    {
+      "largeur": 768,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    },
+    {
+      "largeur": 1180,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    }
+  ],
+  "secretsConservesChezLeMJ": true,
+  "fuites": []
+}

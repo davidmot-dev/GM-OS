@@ -30,8 +30,12 @@ import { indicesPourLeLecteur } from '../../session/logic/indicesDuLecteur';
 
 /** Ce qui est masqué, à toute profondeur : le texte devient `•••••`. */
 const MASQUES = new Set(['gmSecretInfo', 'roleplayingNotes']);
-/** Ce qui est vidé, à toute profondeur : les notes du meneur, sur un lieu, une campagne, un personnage, une scène. */
-const VIDES = new Set(['gmNotes', 'notesDuMeneur']);
+/**
+ * Notes et secrets du meneur, à toute profondeur. GM-05, 01/11/2026 : les séances
+ * prévues et passées partent aussi dans la synchronisation ; leur gmSecrets doit
+ * rester sur le MJ, même si la tablette n'affiche que le résumé public.
+ */
+const VIDES = new Set(['gmNotes', 'notesDuMeneur', 'gmSecrets']);
 /** Ce qui ne part pas du tout, à la racine de la charge. */
 const RETIRES_A_LA_RACINE = new Set(['messages', 'lectureDuMeneur']);
 

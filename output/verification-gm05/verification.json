@@ -1,0 +1,241 @@
+{
+  "date": "2026-11-01",
+  "lot": "NP-C1 / GM-05",
+  "autorisationFermeture": "GM-OS est fermé, tu peux corriger",
+  "correction": "gmSecrets ajouté aux clés vidées récursivement, filtre commun renderer/serveur/fenêtres publiques ; charge MJ inchangée.",
+  "avant": {
+    "passes": 19,
+    "echecs": 8
+  },
+  "unitaire": {
+    "passes": 70,
+    "echecs": 0,
+    "fichiers": 4
+  },
+  "build": {
+    "commande": "npm.cmd run build",
+    "reussi": true,
+    "types": true
+  },
+  "lint": {
+    "reussi": true,
+    "fichiers": [
+      "src/modules/remote/logic/caviardageDesJoueurs.ts",
+      "src/modules/remote/logic/caviardageDesJoueurs.test.ts",
+      "e2e/secretsDeSeance.spec.ts"
+    ]
+  },
+  "applicatif": {
+    "tests": 4,
+    "reussis": 4,
+    "hubSimules": 12,
+    "largeurs": [
+      360,
+      768,
+      1180
+    ],
+    "phases": [
+      "initiale",
+      "differentielle",
+      "reconnexion"
+    ],
+    "rapports": [
+      {
+        "jeu": "runequest",
+        "reussi": true,
+        "archive": "01-Les-Bornes-du-gue.gmos",
+        "sha256": "1629688668042a79984fabd33c708b158f88af293a20dd3bbab4dcee1b76e902",
+        "publicsRecus": 3,
+        "tablettes": [
+          {
+            "largeur": 360,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          },
+          {
+            "largeur": 768,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          },
+          {
+            "largeur": 1180,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          }
+        ],
+        "secretsConservesChezLeMJ": true,
+        "fuites": [],
+        "fichier": "output/verification-gm05/runequest.json",
+        "rapportSHA256": "2e93463d2dad1eafa7fb8b0b32c644f7072140a6a16ad0508f31c57eff15e8f5"
+      },
+      {
+        "jeu": "degenesis",
+        "reussi": true,
+        "archive": "01-La-Station-des-Cendres.gmos",
+        "sha256": "ae34c1ad3d33fd44f17a55fe42e6d4ad4aecc23b8fe7437b24f66f443b53eb73",
+        "publicsRecus": 3,
+        "tablettes": [
+          {
+            "largeur": 360,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          },
+          {
+            "largeur": 768,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          },
+          {
+            "largeur": 1180,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          }
+        ],
+        "secretsConservesChezLeMJ": true,
+        "fuites": [],
+        "fichier": "output/verification-gm05/degenesis.json",
+        "rapportSHA256": "87e52caf2ea3a2956a452ff3fcbdfd55d6a7440827de2f68f05908f65d53c403"
+      },
+      {
+        "jeu": "coc",
+        "reussi": true,
+        "archive": "01-Les-Minutes-de-Verre.gmos",
+        "sha256": "24e4fe9176ee62fb39174326328275fda1058c447ed870af5ad6e94645675842",
+        "publicsRecus": 3,
+        "tablettes": [
+          {
+            "largeur": 360,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          },
+          {
+            "largeur": 768,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          },
+          {
+            "largeur": 1180,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          }
+        ],
+        "secretsConservesChezLeMJ": true,
+        "fuites": [],
+        "fichier": "output/verification-gm05/coc.json",
+        "rapportSHA256": "9ffb86e2afbdc2f7be027013cfeaa3aa4d5f7f74c363acf600db06588bdb3da0"
+      },
+      {
+        "jeu": "shadowrun-anarchy",
+        "reussi": true,
+        "archive": "01-La-Derniere-Couleur.gmos",
+        "sha256": "63da922511e76732f791ee77eddab3414f9faa63cc247d88a7ff248aceb8d33e",
+        "publicsRecus": 3,
+        "tablettes": [
+          {
+            "largeur": 360,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          },
+          {
+            "largeur": 768,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          },
+          {
+            "largeur": 1180,
+            "publicRecu": true,
+            "miseAJourRecue": true,
+            "reconnexion": true
+          }
+        ],
+        "secretsConservesChezLeMJ": true,
+        "fuites": [],
+        "fichier": "output/verification-gm05/shadowrun-anarchy.json",
+        "rapportSHA256": "2402b210529177d1299ca630acd66e3654fef4da066027578c6938f0f54c9e21"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "fichier": "src/modules/remote/logic/caviardageDesJoueurs.ts",
+      "sha256": "04b88370dc581ce59b03c2516b24e8d8aecb5bceb0d71b8ad3b9684db70d68f7"
+    },
+    {
+      "fichier": "src/modules/remote/logic/caviardageDesJoueurs.test.ts",
+      "sha256": "8186244995cfe1edb75d8ed422896e8d1ffd5fcad4123bf98dfb9e126d1dbc06"
+    },
+    {
+      "fichier": "e2e/secretsDeSeance.spec.ts",
+      "sha256": "012b6d8a3a2e4a78b7323d0b0b393f56272cfeb2817ae6ce4a37692624972aca"
+    }
+  ],
+  "captures": [
+    {
+      "fichier": "runequest-360.jpg",
+      "sha256": "cb2d8193a63d0223d266170387636b2cb2c12aa0dfb5280a37a704d4f4f78a23"
+    },
+    {
+      "fichier": "runequest-768.jpg",
+      "sha256": "73e618cb903fd55b008b4e6a9031bdcdd2f1a689a645731f32256d77cc5b6258"
+    },
+    {
+      "fichier": "runequest-1180.jpg",
+      "sha256": "f997c41fc115bc4112c6e968f3122922cd00c1068e062008caa433f023cac5a5"
+    },
+    {
+      "fichier": "degenesis-360.jpg",
+      "sha256": "5c9e777114a63c6e12b7f5246d48d1b0e54f4ac7c112221ab3e388430120e883"
+    },
+    {
+      "fichier": "degenesis-768.jpg",
+      "sha256": "a821f3b01ba8f3e14e3b8679210b955f7a9b161aef5a619a38ca7a9f985514e5"
+    },
+    {
+      "fichier": "degenesis-1180.jpg",
+      "sha256": "b9223f5940493c0c864955587713f96c67c15b44ab57c23d177af2582057600f"
+    },
+    {
+      "fichier": "coc-360.jpg",
+      "sha256": "0078e757ef3fd92472e002fd950db89472e795ecfdca9fd099d0e312109d0cd4"
+    },
+    {
+      "fichier": "coc-768.jpg",
+      "sha256": "82d658fe1f45dab84bac933f5ca29c9147ac3bafd36b095e8b1f4d2d55516a45"
+    },
+    {
+      "fichier": "coc-1180.jpg",
+      "sha256": "19ed2556cf640b14342a9df1be0dc3b2b8371ea6e033a7c50ac0deb6fb78c372"
+    },
+    {
+      "fichier": "shadowrun-anarchy-360.jpg",
+      "sha256": "615c3999b28d5afa269528963e38591e5e17be8ddaeb20c0890f088848cbbe75"
+    },
+    {
+      "fichier": "shadowrun-anarchy-768.jpg",
+      "sha256": "d35d28390324e98a8ed7668d6c4cfaa970ada335c2f074671c844b2d2f85cae4"
+    },
+    {
+      "fichier": "shadowrun-anarchy-1180.jpg",
+      "sha256": "8234b087c6ab5b9ad5eb86a4e9fc4bcd5a28a2cdb29df949ce5821cf6db36a3c"
+    }
+  ],
+  "capturesExaminees": true,
+  "limites": [
+    "Pas de tablette physique ni essai de David",
+    "Fenêtres publiques protégées par le même filtre ; pas de parcours visuel de projecteur",
+    "Ne purge pas une ancienne copie déjà envoyée à un appareil : redémarrer la version corrigée et reconnecter les Hub",
+    "Recette RuneQuest 2.0.0 : contrôle de confidentialité, pas validation des coups localisés 2.1.0"
+  ],
+  "isolement": "Helper e2e/lancerGmOs.ts ; profils, USERPROFILE, corpus, coffre, sauvegardes et ports jetables, réseau externe des Hub bloqué, aucun profil GM-OS personnel consulté."
+}

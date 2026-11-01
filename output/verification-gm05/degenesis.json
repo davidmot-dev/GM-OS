@@ -1,0 +1,29 @@
+{
+  "jeu": "degenesis",
+  "reussi": true,
+  "archive": "01-La-Station-des-Cendres.gmos",
+  "sha256": "ae34c1ad3d33fd44f17a55fe42e6d4ad4aecc23b8fe7437b24f66f443b53eb73",
+  "publicsRecus": 3,
+  "tablettes": [
+    {
+      "largeur": 360,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    },
+    {
+      "largeur": 768,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    },
+    {
+      "largeur": 1180,
+      "publicRecu": true,
+      "miseAJourRecue": true,
+      "reconnexion": true
+    }
+  ],
+  "secretsConservesChezLeMJ": true,
+  "fuites": []
+}
