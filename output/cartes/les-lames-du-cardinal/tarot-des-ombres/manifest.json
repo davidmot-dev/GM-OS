@@ -1,0 +1,1938 @@
+{
+  "tool_version": "1.1.0",
+  "pymupdf_version": "2.0",
+  "pillow_version": "12.1.1",
+  "dpi": 300,
+  "sources": [
+    {
+      "id": "s0",
+      "filename": "Le Tarot des Ombres - PrintPlay - LES LAMES DU CARDINAL  -.pdf",
+      "sha256": "138acc025a63fb15f2f55b86a11ddabcb93be79c70c85398571fc21ebb91fef5"
+    }
+  ],
+  "output_format": "JPEG",
+  "jpeg_quality": 95,
+  "jpeg_subsampling": 0,
+  "start_indices": {
+    "tarot-des-ombres": 1
+  },
+  "numbering_confirmed": true,
+  "decks": {
+    "tarot-des-ombres": {
+      "faces": 78,
+      "start_index": 1,
+      "end_index": 78,
+      "back": "tarot-des-ombres/back.jpg"
+    }
+  },
+  "cards": [
+    {
+      "source": "s0",
+      "page": 1,
+      "deck": "tarot-des-ombres",
+      "role": "back",
+      "bbox": [
+        0.07213292657523569,
+        0.04276093076292627,
+        0.3578474522742392,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Dos commun bleu et or de la page 1, six exemplaires visuellement identiques ; conserver le cadre bleu-gris.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/back.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "01953c26aabf6b31593437cdeb7f061aad96328d2c166da303e201c1fa8e9adc"
+    },
+    {
+      "source": "s0",
+      "page": 1,
+      "deck": "tarot-des-ombres",
+      "role": "duplicate-back",
+      "bbox": [
+        0.3578457723812148,
+        0.04276093076292627,
+        0.6435602980802183,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Dos commun bleu et or de la page 1, six exemplaires visuellement identiques ; conserver le cadre bleu-gris.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 1,
+      "deck": "tarot-des-ombres",
+      "role": "duplicate-back",
+      "bbox": [
+        0.6435602980802183,
+        0.04276093076292627,
+        0.9292748237792218,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Dos commun bleu et or de la page 1, six exemplaires visuellement identiques ; conserver le cadre bleu-gris.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 1,
+      "deck": "tarot-des-ombres",
+      "role": "duplicate-back",
+      "bbox": [
+        0.07213292657523569,
+        0.4232322512442243,
+        0.3578474522742392,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Dos commun bleu et or de la page 1, six exemplaires visuellement identiques ; conserver le cadre bleu-gris.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 1,
+      "deck": "tarot-des-ombres",
+      "role": "duplicate-back",
+      "bbox": [
+        0.3578457723812148,
+        0.4232322512442243,
+        0.6435602980802183,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Dos commun bleu et or de la page 1, six exemplaires visuellement identiques ; conserver le cadre bleu-gris.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 1,
+      "deck": "tarot-des-ombres",
+      "role": "duplicate-back",
+      "bbox": [
+        0.6435602980802183,
+        0.4232322512442243,
+        0.9292748237792218,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Dos commun bleu et or de la page 1, six exemplaires visuellement identiques ; conserver le cadre bleu-gris.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.04276093076292627,
+        0.3571418972039861,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/1.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "283010581ac447206e44fe975ef93723194d22129183d5880367c5cf4af98721"
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.04276093076292627,
+        0.6428564229029896,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/2.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "710455b2829788212e81bd3dd00be0d6addd891d18a5ebf1b56b7298ff4484c5"
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.04276093076292627,
+        0.9285692687089687,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/3.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "cd0eeac41844e981c8d125df9c1cd4cb7e52a1b86b06302392aacb6aeaf115ba"
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.4232322512442243,
+        0.3571435770970105,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/4.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "528a7e6b32f0aa4dd28e0d68b138dba3bbb4107c8b73d5db31b1f566935c9094"
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.4232322512442243,
+        0.6428564229029896,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/5.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "d2e2560d9555ed32c43c8ee08df1417c74bcc596b281a5bec2e8098d6c78fadf"
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.4232322512442243,
+        0.9285692687089687,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/6.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "6beda3bc437331cc99b3e7a5c56e84fa75503f29b3cf28796a4b0cebd3c31a7c"
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.04276093076292627,
+        0.3578457723812148,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/7.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "1017a3c40506350b02d97659133fa47e623691a5935576ae2019600ac7996af8"
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.04276093076292627,
+        0.6435602980802183,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/8.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "3e7c64a3279c83115dc92cec1d980f69ed72087aa28312a551784ef519b8bc4c"
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435602980802183,
+        0.04276093076292627,
+        0.9292748237792218,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/9.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "bd4eeb9b770a7de8388ab844a82899e546dac4871e69a315a2f9fbfc2d2e5f21"
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.4232322512442243,
+        0.3578457723812148,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/10.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "15602e7454169aa26e2abaf8a224c3e8f6054e59835d9a75c97b86763f7417fc"
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.4232322512442243,
+        0.6435602980802183,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/11.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "3e23f1d35f3f851dc54b69e5cc730d828a6d63720e38b3d276e2b55733922c38"
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435602980802183,
+        0.4232322512442243,
+        0.9292748237792218,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/12.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "9125d55fb92f26bd5872e3aea22c66c69d75209c84efe187ea4f0892be0353df"
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.04276093076292627,
+        0.3571435770970105,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/13.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "9d5ff77eb3011db761f91909cc7fcb9be28af36e47d879ae6d87fce8f57567c0"
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.04276093076292627,
+        0.6428564229029896,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/14.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "acd0a9dd3067bfc981aa612f9335105f1135f80110ac81507be703481d5d4928"
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.04276093076292627,
+        0.9285692687089687,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/15.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "d0a167e60770d8e5144587b42adc24136708660f167197d0aa995663609e4690"
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.4232322512442243,
+        0.3571435770970105,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/16.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "e7274165d64f81431d7bf7a5a157886bbfdfd3535704d2da8a7f09048512e261"
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.4232322512442243,
+        0.6428564229029896,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/17.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "819f7a16c2ab31455d8ae73d06f4b434e86fce242ca321b65b0d4edf680aac53"
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.4232322512442243,
+        0.9285692687089687,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/18.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "2eb454086e375518a364d4d8820bf3564e1e3451c91b5ad2db94c3e18d363cc2"
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.04276093076292627,
+        0.3578474522742392,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/19.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "e42f9044630ab850dc18c9dad6d099c1f17f6e5ac6e9eaf9b07b225a3d9952db"
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.04276093076292627,
+        0.6435602980802183,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/20.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "ad1feeb1b383545e862119f51d0f666314dac797bdd6b184f4b0ac892301f0b1"
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435619779732427,
+        0.04276093076292627,
+        0.9292748237792218,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/21.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "709018e21e885c05227fb3fd812d4e747d68267873bdc8aa7c79d2bae9cfbbeb"
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.4232322512442243,
+        0.3578474522742392,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/22.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "650dc703b4b77b85033f1e8def35b531eeac759a5b0bf4d9fae9f74708aa2ec8"
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.4232322512442243,
+        0.6435602980802183,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/23.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "1920284ea0388a2b613524cb94bb2592c67c4714bdd0d6e7eaf9e1c9a262c879"
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435602980802183,
+        0.4232322512442243,
+        0.9292748237792218,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/24.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "79d50f6b057db4579e718ef3d99b71e6cdb53431c13af2861cbcd2b7b19c4907"
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.04276093076292627,
+        0.3571435770970105,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/25.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "8faafe37441dfa3d10fa4196b59824351300b2ef42a2b9c25c59440c1c01eae2"
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.04276093076292627,
+        0.6428564229029896,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/26.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "c3a2424a9a193ab3dd245344eb95d17559b418511ca012c0e548d3ead0481d0f"
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.04276093076292627,
+        0.9285692687089687,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/27.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "e573e7d5c7dc8854767fdf131441c92be40f5eeaa812fba1303e692971b09807"
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.4232322512442243,
+        0.3571435770970105,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/28.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "526479eef1a889719ef4e14dc6ff373b1571a96376331e6b3b2dd7726ccc8c7e"
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.4232322512442243,
+        0.6428564229029896,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/29.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "86ac5021af5aa0aa749230a424a71d3c9b1fc914b61960c834fea0efad0fef04"
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.4232322512442243,
+        0.9285692687089687,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/30.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "06da0074b82146fabd03766305ae1d3cac8b833de0de29917506ab2dc99efbbe"
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.04276093076292627,
+        0.3578457723812148,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/31.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "17f9fde6aaadd38253b982adf769e4856c9e7c701cdb643184f60bb302f287b4"
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.04276093076292627,
+        0.6435602980802183,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/32.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "a842a42deb80b3b7a4f8905f22ed529b79c8782072e375fd1479f40bef0e16a9"
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435619779732427,
+        0.04276093076292627,
+        0.9292748237792218,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/33.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "f2e4fb44a25a151ba5095f2db9ad7aee1565b436663610c161538cda4c659d23"
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.4232322512442243,
+        0.3578457723812148,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/34.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "46ac86bf2b566a1d3c5a111034964b499c475cccbde3b05f48558df928896613"
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.4232322512442243,
+        0.6435602980802183,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/35.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "140a836eb9d1ea6404aa74085368ae207f1cccbe42c261fd671dcc7341a37d6c"
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435619779732427,
+        0.4232322512442243,
+        0.9292748237792218,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/36.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "17b336a25f9db525ddb67fdb22556df6e049392aabd6240412d64a928f3bd85f"
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.04276093076292627,
+        0.3571435770970105,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/37.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "a6676695cbf67edc9f27ccc814a70858e6a0f045b59a49f35e8bd3430211cd04"
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.04276093076292627,
+        0.6428564229029896,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/38.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "269a0a699896c2b4721898eb63da350380d433bbc87e86976edbe1fc531dc16f"
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.04276093076292627,
+        0.9285692687089687,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/39.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "a94e43049036be049e98a3b0396add034e32f9fc2a4ae3fe0fdb9490dffeba0b"
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.4232322512442243,
+        0.3571435770970105,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/40.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "3703d95e2401adfce5777e8f28963ef0fd63b868a7d51ee3fe5e37f6fe6d8c1a"
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.4232322512442243,
+        0.6428564229029896,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/41.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "9ac840cad83e425c02e30115e4452cbfac9c55235c04ca9029566970ef9414aa"
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.4232322512442243,
+        0.9285692687089687,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/42.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "9f4904c3e2d3dc7dd549fd90ed4703d05cf5288c16e0e4685d1a6ed33a899411"
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.04276093076292627,
+        0.3578474522742392,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/43.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "3bbdd550118e0dc464abcc117d959c4e24c5f29c246bfc6683cb0756e3ee65d6"
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.04276093076292627,
+        0.6435602980802183,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/44.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "b7ad24f7e588a1e5611fdcf6b7faa35d2026c90d669a4a038de82b67c6034c15"
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435619779732427,
+        0.04276093076292627,
+        0.9292748237792218,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/45.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "ebdae6b1fed7fbf4db6bcfbcca54b42269bd8f76bc4f43da66895cb7a244b94b"
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.4232322512442243,
+        0.3578457723812148,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/46.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "5a3e78090c1e579cf6752c8857f0a89f6df55c69a43d0e6bfc81c4ba4a8afc81"
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.4232322512442243,
+        0.6435602980802183,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/47.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "ef03631c731e5690aefac9238155dc0e704521d03de87a4f881640f9e1e0932f"
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435602980802183,
+        0.4232322512442243,
+        0.9292748237792218,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/48.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "7bea55c6bf6b33ba056d09b56b4d4bbd8f3e1de4b03bd81ec2368f5c063104b8"
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.04276093076292627,
+        0.3571418972039861,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/49.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "f606d218fa9ba2f38dbed5026c79097193341d956024a5922fd97ba98e8ca973"
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.04276093076292627,
+        0.6428564229029896,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/50.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "45e61d16cbc15c93350bed3dba2c7c3365973daa4dcd2db9d3dea4619aa4b0ca"
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.04276093076292627,
+        0.9285692687089687,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/51.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "d902e67057094c6bd390cad9d8c1798bfcdd385ec0ec42bf899a64358aeaf748"
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.4232322512442243,
+        0.3571418972039861,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/52.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "8a853b67ccc64e748a3fcda999c2cab12c77717762b76d3e28235f5276ac1457"
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.4232322512442243,
+        0.6428564229029896,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/53.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "12e14e5c4bb7d08ab478ac8e000ed457f2e770e5fbccd9d0fbe7f0851b36ba53"
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.4232322512442243,
+        0.9285692687089687,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/54.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "8d14e8be0d82241d7061d113c7771f9ea72e731aa347e497f043185f25942e51"
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.04276093076292627,
+        0.3578457723812148,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/55.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "997689cff17971ed56a2e1ee971e944f431b2a3d0876b64484fd2bc7ecc4cf2a"
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.04276093076292627,
+        0.6435602980802183,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/56.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "0c6084b4b80f775d8d40a737fcce30f02160f86e7b3f14f9b1f045d8165e5430"
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435619779732427,
+        0.04276093076292627,
+        0.9292748237792218,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/57.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "64cb42e17180184f1e777bca0f914732a43326f5510a106d493d935c4e692e80"
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.4232322512442243,
+        0.3578474522742392,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/58.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "40e03071cf12037a0920e06c4c1eab272e87097c3196f30431b3cb7e8f5efbf2"
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.4232322512442243,
+        0.6435602980802183,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/59.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "9ba278633b298e55634b97023fdc5a13d9e7518b8b23453ec2b154725a13837f"
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435619779732427,
+        0.4232322512442243,
+        0.9292748237792218,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/60.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "5add306ba5b5d67bbcd689335369d818bc38bb422ea9f32c9961a9b86cc5a01b"
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.04276093076292627,
+        0.3571418972039861,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/61.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "6cfaf9cbd60b7b9912e604f42bfdc52737f58d2edd361f0fbab463b0b8516c09"
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.04276093076292627,
+        0.6428564229029896,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/62.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "a44173e0acecaa0926c726abb6a2515e61f3070a1c22902241a4f9b4f4ac9003"
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.04276093076292627,
+        0.9285692687089687,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/63.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "c37e42ccd9f402484a3394e7a164e387aa35380d5ff6dbd58c2c82e6eb60129f"
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.4232322512442243,
+        0.3571418972039861,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/64.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "8ebf67efd739dd23baae6ae4b7f174fafd2520164e90c8c3a106d445f7772af8"
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.4232322512442243,
+        0.6428564229029896,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/65.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "819bfc0762a505b49fafbdf8bd189d181859670df421baff6f5febf525725515"
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.4232322512442243,
+        0.9285692687089687,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/66.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "22d3689369167f8e41ed1a9125aa1df0f441fb4a17229681abc6bfe139fdbb4f"
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.04276093076292627,
+        0.3578474522742392,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/67.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "2a204046d6bb108b04881f18887326f3528d8b5ca833b742275b13a03e4b0a2b"
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.04276093076292627,
+        0.6435602980802183,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/68.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "00d6463efa8c19ff6908cb6c944113bca12012a55a7ea05bacc1be049c1d4b98"
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435602980802183,
+        0.04276093076292627,
+        0.9292748237792218,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/69.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "8ff2c1968e18fa36866f8d781206fcae4944d6db5adf7ef9b6cb7c1eca115e03"
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07213292657523569,
+        0.4232322512442243,
+        0.3578474522742392,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/70.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "57c4db214270a19c6caa8d92b20905664f4f084b82fcdc30084f2ae1111536cc"
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3578457723812148,
+        0.4232322512442243,
+        0.6435602980802183,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/71.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "2aaef3a34bde2a96ad9ac3f14c84a284e3da5cd2d155574c8dff811a911c6a2c"
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6435619779732427,
+        0.4232322512442243,
+        0.9292748237792218,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/72.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "a8452548d2ad862e3e93ac15eabc63f600d92799eb230a08c2d385e79cb0b320"
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.04276093076292627,
+        0.3571418972039861,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 1,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/73.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "46eecbfcbbe17b3e3c626cca25194e3bb9dd5595485ab0747d2c01fb2afdb1f9"
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.04276093076292627,
+        0.6428564229029896,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 2,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/74.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "592665e7cebb288c5ab7594fe88b9ea7210dae00129d76e8fded4c97599fdcbb"
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.04276093076292627,
+        0.9285692687089687,
+        0.4232322512442243
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 3,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/75.jpg",
+      "size_pixels": [
+        709,
+        1335
+      ],
+      "sha256": "94efb30a20550f7dea2bbe366f6cc8189faa1435bad96d191d5dd2f557352dbe"
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.07142905139800698,
+        0.4232322512442243,
+        0.3571435770970105,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 4,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/76.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "8b6e3f0ac742fb10eff79f5920adf3dd6ba5307932a1fd50c482e378c3830019"
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.3571418972039861,
+        0.4232322512442243,
+        0.6428564229029896,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 5,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/77.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "58c1f80d3d73d8890a7eb2561af9b4041071175049a333b095649a5dc20db2ba"
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "tarot-des-ombres",
+      "role": "face",
+      "bbox": [
+        0.6428564229029896,
+        0.4232322512442243,
+        0.9285692687089687,
+        0.8037035717255223
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Face complète : illustration, chiffres et titre conservés ; haut du graphisme à l’endroit. Les inscriptions tête-bêche des mineures sont intentionnelles.",
+      "source_position": 6,
+      "crop_evidence": "Limite du placement PDF, clip 170,079 × 320,315 points ; marges blanches extérieures de la planche exclues.",
+      "output": "tarot-des-ombres/78.jpg",
+      "size_pixels": [
+        709,
+        1334
+      ],
+      "sha256": "c439e7b45249d84924e52cbd246caedca63fe350daf47b246314d3ccf47f57f3"
+    }
+  ],
+  "ignored": []
+}
