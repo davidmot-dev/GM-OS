@@ -46,6 +46,17 @@ describe('périmètre', () => {
         });
     });
 
+    it('retient les fiches d\'un supplément du jeu (§ 185, 01/11/2026)', () => {
+        // Le sous-dossier `supplements/` est sous `systems/alien/` : l'Oracle le
+        // lit avec le jeu, sans réglage de plus. Un supplément d'un autre jeu non.
+        const s = selectContext([
+            fiche('systems/alien/supplements/colonial-marines/rules/armes-de-poing.md', 'Armes de poing'),
+            fiche('systems/blade-runner/supplements/case-file/rules/armes-de-poing.md', 'Armes de poing'),
+        ], REQ);
+
+        expect(s.retenus.map(r => r.path)).toEqual(['systems/alien/supplements/colonial-marines/rules/armes-de-poing.md']);
+    });
+
     it('écarte les campagnes d\'un autre jeu', () => {
         // Le cas réel : en séance Alien, l'Oracle recevait Trinité Fatale (CoC)
         // et la Vallée du Vent Glacé (D&D).

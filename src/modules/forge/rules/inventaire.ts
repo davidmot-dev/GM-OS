@@ -247,6 +247,72 @@ export function lireInventaire(markdown: string): EntreeInventaire[] {
   return [...canevas, ...horsCanevas];
 }
 
+/**
+ * L'inventaire d'un **supplément** : les sujets que le carnet propose, et eux
+ * seuls — § 185 du registre, 01/11/2026.
+ *
+ * Pas de canevas à compléter : un supplément ne traite pas les quatorze sujets
+ * du livre de base, et les ajouter « non lus » ferait croire qu'il les omet.
+ * David : *« les sujets doivent être plus libres et moins cadrés »* ; il choisit
+ * ensuite lesquels forger.
+ *
+ * Le tableau a trois colonnes (`gabaritInventaireDeSupplement`) :
+ * Sujet | Mécanique | Sections. Un sujet rendu deux fois ne fait qu'une entrée —
+ * deux lignes au même slug écriraient le même fichier.
+ */
+export function lireInventaireDeSupplement(markdown: string): EntreeInventaire[] {
+  const vus = new Set<string>();
+  const entrees: EntreeInventaire[] = [];
+  for (const ligne of markdown.replace(/\r\n/g, '\n').split('\n')) {
+    const cellules = cellulesDeLigne(ligne);
+    if (!cellules || cellules.length < 2 || estEnteteTableau(cellules)) continue;
+    const sujet = retirerNumerotation(cellules[0] ?? '');
+    const clef = sansAccent(sujet);
+    if (!sujet || vus.has(clef)) continue;
+    vus.add(clef);
+    entrees.push({
+      sujet,
+      horsCanevas: false,
+      traite: 'oui',
+      mecanique: cellules[1] ?? '',
+      sections: decouperSections(cellules[2] ?? ''),
+      lu: true,
+    });
+  }
+  return entrees;
+}
+
+/**
+ * L'inventaire d'un supplément converti en fiche de son corpus.
+ *
+ * Son sujet nomme le supplément : « Inventaire des mécaniques » tout court
+ * aurait doublé, auprès de l'Oracle, la synthèse du livre de base.
+ */
+export function ficheInventaireDeSupplement(
+  brut: string,
+  systeme: string,
+  supplement: { slug: string; titre: string },
+): string {
+  const sujets = lireInventaireDeSupplement(brut).length;
+  const sujet = `Inventaire du supplément ${supplement.titre}`;
+  const echappe = (v: string) => `"${v.replace(/"/g, '\\"')}"`;
+  const entete = [
+    `sujet: ${echappe(sujet)}`,
+    `systeme: ${systeme}`,
+    `supplement: ${supplement.slug}`,
+    `couverture: ${sujets > 0 ? 'complète' : 'absente'}`,
+    'hors_canevas: false',
+    `sujets_proposes: ${sujets}`,
+    'genere_par: notebooklm',
+    'gabarit: v3',
+    'relu: false',
+  ];
+  const corps = brut.replace(/\r\n/g, '\n').trim();
+  const aUnTitre = /^\s*#\s+\S/.test(corps.split('\n')[0] ?? '');
+  const titre = aUnTitre ? '' : `# ${sujet}\n\n`;
+  return `---\n${entete.join('\n')}\n---\n\n${titre}${corps}\n`;
+}
+
 /** Nombre de sujets du canevas que le livre traite, au moins partiellement. */
 export function couverture(entrees: readonly EntreeInventaire[]): { traites: number; total: number } {
   const canevas = entrees.filter(e => !e.horsCanevas);

@@ -1,0 +1,131 @@
+[
+  {
+    "titre": "Spécialités militaires (SM)",
+    "mecanique": "Présente dix spécialités militaires (Aide-soignant militaire, Chef de convoyeur aérien, Fusilier, Guetteur avancé, Marine Comtech, Marine VCB, Mitrailleur, Marine d'assaut, Spécialiste NRBC, Tireur dédié) définissant l'attribut clef, les compétences prioritaires et le choix de talents accessibles.",
+    "sections": [
+      "SPÉCIALITÉS MILITAIRES (SM)"
+    ]
+  },
+  {
+    "titre": "Événements de terrain",
+    "mecanique": "Propose trois tables aléatoires fondées sur deux dés à six faces pour déterminer trente-six événements d'historique qui attribuent des bonus permanents de compétences, d'attributs, de talents ou du matériel spécialisé.",
+    "sections": [
+      "ÉVÉNEMENTS DE TERRAIN"
+    ]
+  },
+  {
+    "titre": "Nouveaux talents de Marines",
+    "mecanique": "Définit cinq talents exclusifs (À terre!, Armes lourdes, Court-circuit, Pilote tout-terrain, Télécommande) octroyant des modificateurs de plus deux aux jets de compétences ou des malus de défense aux ennemis.",
+    "sections": [
+      "NOUVEAUX TALENTS"
+    ]
+  },
+  {
+    "titre": "Armes de poing (Pistolets)",
+    "mecanique": "Fournit les caractéristiques chiffrées de quatre pistolets (TX-9, Weyland ES-4, Norcomm QSZ-203, VP-70MA6) avec leur bonus, des dégâts de un, une portée moyenne et des effets de perforation d'armure ou d'injection.",
+    "sections": [
+      "PISTOLETS"
+    ]
+  },
+  {
+    "titre": "Fusils d'assaut et fusils spécialisés",
+    "mecanique": "Détaille six armes d'épaule et modules (AK-104S, AK-4047, F903WE, NSG23, Armat P9, ID23) disposant de dégâts de deux, du tir automatique, de la perforation d'armure ou de détonations explosives de Puissance neuf.",
+    "sections": [
+      "FUSILS"
+    ]
+  },
+  {
+    "titre": "Armes lourdes et d'appui",
+    "mecanique": "Aligne six armes lourdes (AEL Weyland 72A, PIG M78, Phalanx AU-102-20, U4A2, M5A3, RPG122) infligeant des dégâts de quatre à sept à portée longue ou extrême avec la propriété perce-armure.",
+    "sections": [
+      "ARMES LOURDES"
+    ]
+  },
+  {
+    "titre": "Explosifs, mines et armes chimiques",
+    "mecanique": "Regroupe neuf types d'explosifs et munitions (M40, Type 4, M111, M20, M108, M230, QTC) aux valeurs de Puissance de neuf à douze, ainsi que le gaz CN-20 imposant un test d'Endurance avec un malus de trois.",
+    "sections": [
+      "EXPLOSIFS ET MUNITIONS",
+      "ARMES CHIMIQUES"
+    ]
+  },
+  {
+    "titre": "Équipements de protection et armures",
+    "mecanique": "Catalogue divers uniformes, gilets et combinaisons (M3, HAZMAT, G, 6B90, CM4, CCC5) apportant de deux à six points de Protection, des réserves d'air et des bonus aux tests de Mobilité ou d'Endurance.",
+    "sections": [
+      "COMBINAISONS ET ARMURES",
+      "AUTRE ÉQUIPEMENT"
+    ]
+  },
+  {
+    "titre": "Véhicules terrestres et blindés",
+    "mecanique": "Renseigne onze véhicules blindés et pièces d'artillerie (M577, M579, Stinger XT-37, MX11A1, Ridgeway M40-E, BP-33, M201, M292A2) définis par leur vitesse, leur capacité, leur coque de sept à douze et leur Protection de cinq à douze.",
+    "sections": [
+      "VÉHICULES"
+    ]
+  },
+  {
+    "titre": "Aéronefs et chasseurs aérospatiaux",
+    "mecanique": "Fiche trois aéronefs de combat (UD-4L Cheyenne, EVAC-3, MiG-730) dotés d'une maniabilité de plus deux à plus trois, d'une vitesse de cinq à six, d'une coque de cinq à sept et d'un armement lourd embarqué.",
+    "sections": [
+      "VÉHICULES"
+    ]
+  },
+  {
+    "titre": "Vaisseaux spatiaux et modules",
+    "mecanique": "Spécifie quatre classes de vaisseaux (Kremlin VP-153D, Mantis V-10A, RF-30F, Bougainville) avec leur vitesse supraluminique de trois à six, leur coque de deux à quinze, leur Protection et leurs modules internes.",
+    "sections": [
+      "VAISSEAUX SPATIAUX"
+    ]
+  },
+  {
+    "titre": "Procédures de combat d'escouade et tirs d'appui",
+    "mecanique": "Établit les règles de gestion simplifiée des PNJ au combat, la résolution des embuscades avec action gratuite et la procédure de demande de tir d'appui aérien ou d'artillerie sur test de Commandement modifié.",
+    "sections": [
+      "PROCÉDURES DE COMBAT"
+    ]
+  },
+  {
+    "titre": "Typologie et organisation des missions",
+    "mecanique": "Présente une table aléatoire au dé à six faces pour déterminer quatorze types de missions (Reconnaissance, Assaut, Défense, Sabotage, Chasse aux bestioles, Pacification) avec leurs exigences matérielles et tactiques.",
+    "sections": [
+      "MISSIONS"
+    ]
+  },
+  {
+    "titre": "Événements de temps libre",
+    "mecanique": "Fournit deux tables d'événements aléatoires d'escouade (au jet de deux dés à six faces) et personnels (au jet d'un dé à six faces) offrant des opportunités d'Objectif ou des complications entre les missions.",
+    "sections": [
+      "TEMPS LIBRE"
+    ]
+  },
+  {
+    "titre": "Soldats en Matrice Artificielle (SMA)",
+    "mecanique": "Règle une option de création autorisant une Force maximale de sept, plafonnant l'Esprit et l'Empathie à trois, et imposant le talent Folie meurtrière comme premier talent de carrière.",
+    "sections": [
+      "LES SOLDATS EN MATRICE ARTIFICIELLE"
+    ]
+  },
+  {
+    "titre": "Exocombinaison Berserker (EXOM Mark I)",
+    "mecanique": "Définit le profil d'une exocombinaison accordant dix points de Protection, huit en Réserve d'air, un bonus de plus trois en Force et Combat à distance, l'immunité à l'acide et cinq armes intégrées.",
+    "sections": [
+      "LE PROJET BERSERKER"
+    ]
+  },
+  {
+    "titre": "Nouvelles variantes de Xénomorphes et Anathèmes",
+    "mecanique": "Décrit les profils chiffrés et tables d'attaques des Biodrones XX121B (durée de vie limitée à six jours), des Gorebursters XX121AB (Infection de Virulence six) et des Anathèmes (mutations cellulaires en trois stades).",
+    "sections": [
+      "XÉNOMORPHES XX121 DE TYPE ABERRANT",
+      "LE PROJET FORCE VIVE"
+    ]
+  },
+  {
+    "titre": "Effets des bombardements de substance noire",
+    "mecanique": "Structure une table de portée à trois zones (Épicentre de zéro à un kilomètre, Zone létale d'un à deux kilomètres, Zone de mutation de deux à quatre kilomètres) imposant la pétrification, la désintégration ou la mutation.",
+    "sections": [
+      "LES BOMBARDEMENTS FRONTALIERS"
+    ]
+  }
+]

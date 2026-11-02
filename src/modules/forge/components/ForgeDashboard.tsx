@@ -5,6 +5,8 @@ import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles, ChevronRight, Shield, 
 import { forgeService } from '../ForgeService';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import ForgeProgress from '../rules/components/ForgeProgress';
+import ChoixDuLivre from '../rules/components/ChoixDuLivre';
+import { useSupplementsDuJeu } from '../rules/useSupplementsDuJeu';
 import RevueDuPilote from './RevueDuPilote';
 import PanneauDesPersonas from '../corpus/PanneauDesPersonas';
 import PanneauDesFiches from '../corpus/PanneauDesFiches';
@@ -184,6 +186,8 @@ const ForgeDashboard: React.FC = () => {
   const corpusVise = brainstormStore.corpusCible
     ? corpusChoisi(brainstormStore.corpusCible, dossiersSystemes)
     : null;
+  // Le livre documenté : base ou supplément (§ 185), choisi avant l'analyse.
+  const { supplements, declarer: declarerUnSupplement } = useSupplementsDuJeu(corpusVise);
 
   /**
    * Les corpus qui se déclarent **famille**, et celui qu'on a désigné.
@@ -1348,6 +1352,24 @@ const ForgeDashboard: React.FC = () => {
                       <span className="text-etat-alerte/70 not-italic"> — existe deja, sera rejoint</span>
                     )}
                   </p>
+                )}
+
+                {corpusVise && (
+                  <>
+                    <div className="h-px bg-app-text/5 my-1" />
+                    <ChoixDuLivre
+                      supplements={supplements}
+                      supplement={brainstormStore.supplementCible}
+                      onChoisir={brainstormStore.setSupplementCible}
+                      onDeclarer={titre => {
+                        void declarerUnSupplement(titre).then(declare => {
+                          if (declare) brainstormStore.setSupplementCible(declare);
+                          else gmToast("Le supplément n'a pas pu être déclaré.", 'error');
+                        });
+                      }}
+                      sourcesRetenues={brainstormStore.selectedSourceIds}
+                    />
+                  </>
                 )}
 
                 <div className="h-px bg-app-text/5 my-1" />

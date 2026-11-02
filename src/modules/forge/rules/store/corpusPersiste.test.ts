@@ -51,7 +51,18 @@ describe('le corpus documenté survit à la série', () => {
         expect(state.corpusCible).toBe('dune');
         // Une série restaurée de mémoire prétendrait connaître un état que seul
         // le disque atteste : l'avancement se relit dans `rules/`, pas ici.
-        expect(Object.keys(state)).toEqual(['corpusCible']);
+        // Le supplément visé est un réglage du travail au même titre que le
+        // corpus (§ 185, 01/11/2026) ; les sujets retenus, eux, vivent sur le disque.
+        expect(Object.keys(state)).toEqual(['corpusCible', 'supplementCible']);
+    });
+
+    it('oublie le supplément quand on change de jeu', () => {
+        useBrainstormStore.getState().setCorpusCible('alien');
+        useBrainstormStore.getState().setSupplementCible({ slug: 'colonial-marines', titre: 'Colonial Marines' });
+        useBrainstormStore.getState().setCorpusCible('alien');
+        expect(useBrainstormStore.getState().supplementCible?.slug).toBe('colonial-marines');
+        useBrainstormStore.getState().setCorpusCible('dune');
+        expect(useBrainstormStore.getState().supplementCible).toBeNull();
     });
 
     it('se remet à zéro explicitement, pour changer de livre', () => {

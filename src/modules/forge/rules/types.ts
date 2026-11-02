@@ -74,6 +74,13 @@ export interface BrainstormState {
    * souvient du livre qu'elle documente d'une séance à l'autre.
    */
   corpusCible: string | null;
+  /**
+   * Le supplément documenté, ou `null` pour le livre de base — § 185, 01/11/2026.
+   * Ses fiches vont dans `systems/<jeu>/supplements/<slug>/` (`corpusDeSupplement`).
+   * Persisté avec le corpus, et effacé quand le corpus change : un supplément
+   * appartient à un seul jeu.
+   */
+  supplementCible: { slug: string; titre: string } | null;
   selectedSourceIds: string[];
   customSubject: string;
   /** Sujets dont une fiche a été rédigée, écrite ou non. */
@@ -84,6 +91,7 @@ export interface BrainstormState {
   // Actions
   setNotebook: (id: string, titre?: string) => void;
   setCorpusCible: (dossier: string | null) => void;
+  setSupplementCible: (supplement: { slug: string; titre: string } | null) => void;
   setSources: (ids: string[]) => void;
   /**
    * Enregistre le catalogue des sources du carnet ouvert **et** élague la

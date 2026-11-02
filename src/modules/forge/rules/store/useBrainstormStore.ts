@@ -89,13 +89,29 @@ export const useBrainstormStore = create<BrainstormState>()(persist((set) => ({
   notebookTitre: null,
   sourcesDuCarnet: [],
   corpusCible: null,
+  supplementCible: null,
   selectedSourceIds: [],
   customSubject: '',
   forgedCandidateIds: [],
   savedCandidateIds: [],
 
   setNotebook: (id, titre) => set({ notebookId: id, notebookTitre: titre ?? null }),
-  setCorpusCible: (corpusCible) => set({ corpusCible }),
+  // Changer de jeu quitte le supplément : il appartient au jeu d'avant.
+  setCorpusCible: (corpusCible) => set((state) => ({
+    corpusCible,
+    ...(corpusCible === state.corpusCible ? {} : { supplementCible: null }),
+  })),
+  /*
+    Changer de livre change la liste des sujets : on repart de l'inventaire du
+    livre choisi, relu sur le disque s'il y est (§ 185, 01/11/2026).
+  */
+  setSupplementCible: (supplementCible) => set({
+    supplementCible,
+    candidates: [],
+    inventaireBrut: null,
+    activeCard: null,
+    error: null,
+  }),
   setSources: (ids) => set({ selectedSourceIds: ids }),
 
   /**
@@ -218,5 +234,5 @@ export const useBrainstormStore = create<BrainstormState>()(persist((set) => ({
    * revue. Une série reprise depuis le disque est vraie ; une série restaurée de
    * mémoire prétendrait connaître un état que le disque seul atteste.
    */
-  partialize: (state) => ({ corpusCible: state.corpusCible }),
+  partialize: (state) => ({ corpusCible: state.corpusCible, supplementCible: state.supplementCible }),
 }));

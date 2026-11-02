@@ -123,6 +123,11 @@ export interface Corpus {
      * lignes : elle enverrait treize fiches Dune dans le corpus d'un autre jeu.
      */
     contradiction?: string;
+    /**
+     * Slug du supplément quand ce corpus en est un — `colonial-marines`. La
+     * racine est alors `systems/<jeu>/supplements/<slug>` (`corpusDeSupplement`).
+     */
+    supplement?: string;
 }
 
 export interface DemandeCorpus {
@@ -296,6 +301,67 @@ export function cheminDesArchives(corpus: Corpus): string {
 /** Dossier des index de livre, d'où `bookIndex.chargerIndex` charge. */
 export function cheminDeLIndex(corpus: Corpus): string {
     return `${corpus.racine}/index`;
+}
+
+/**
+ * Ce que `bookIndex.chargerIndex` attend pour trouver l'index : le chemin sous
+ * `systems/`. C'est l'identifiant pour un jeu (`alien`), et le sous-chemin pour
+ * un supplément (`alien/supplements/colonial-marines`) — dont le livre n'est
+ * pas celui du jeu, ni ses pages.
+ */
+export function systemePourLIndex(corpus: Corpus): string {
+    return corpus.racine.replace(new RegExp(`^${DOSSIER_SYSTEMES}/`), '');
+}
+
+/** Sous un corpus de jeu, le dossier qui range ses suppléments. */
+export const DOSSIER_DES_SUPPLEMENTS = 'supplements';
+
+/**
+ * Le corpus d'un **supplément** du jeu — § 185 du registre, 01/11/2026.
+ *
+ * David : *« je veux pouvoir enrichir mes drivers avec des suppléments à part »*.
+ * Il a choisi un **sous-dossier dédié** : `systems/alien/supplements/colonial-marines/`,
+ * avec ses `rules/`, `drafts/`, `rules-v1/` et `index/`. Tous les chemins
+ * ci-dessus suivent la racine, donc la Forge y écrit sans rien savoir de plus.
+ *
+ * **Pourquoi pas dans `rules/` du jeu.** La dérivation du pilote lit `rules/`
+ * à plat (`lectureDuCorpus`) et borne chaque groupe de fiches : quinze fiches
+ * d'armes et de spécialités y auraient débordé l'invite et mêlé un livre
+ * optionnel au livre de base. L'Oracle, lui, les lit quand même : il prend tout
+ * ce qui est sous `systems/<jeu>/` (`ragSelection.classe`).
+ *
+ * `id` reste celui du jeu : c'est le `systeme:` des fiches, et le supplément
+ * appartient au jeu. Un supplément de supplément n'existe pas : on repart
+ * toujours de la racine du jeu.
+ */
+export function corpusDeSupplement(corpusDuJeu: Corpus, nom: string): Corpus | null {
+    const dossier = slug(nom);
+    if (!dossier) return null;
+    return {
+        racine: `${racineDuJeu(corpusDuJeu)}/${DOSSIER_DES_SUPPLEMENTS}/${dossier}`,
+        id: corpusDuJeu.id,
+        raison: 'choisi',
+        aCreer: false,
+        supplement: dossier,
+    };
+}
+
+/**
+ * La liste des suppléments d'un jeu, avec leur titre.
+ *
+ * Un fichier plutôt qu'un listage de dossiers : `ai:list-dir` ne rend que des
+ * fichiers, et le titre (« Colonial Marines Operations Manual ») ne se retrouve
+ * pas depuis un slug. Le JSON n'est pas indexé par l'Oracle.
+ */
+export function cheminDesSupplements(corpus: Corpus): string {
+    return `${racineDuJeu(corpus)}/${DOSSIER_DES_SUPPLEMENTS}/supplements.json`;
+}
+
+/** La racine du jeu, que le corpus soit le sien ou celui d'un de ses suppléments. */
+function racineDuJeu(corpus: Corpus): string {
+    return corpus.supplement
+        ? corpus.racine.replace(new RegExp(`/${DOSSIER_DES_SUPPLEMENTS}/[^/]+$`), '')
+        : corpus.racine;
 }
 
 /**

@@ -28,6 +28,15 @@ de David (`/finir-un-pilote`, livre de base sur le NAS). Rien n'est commité.
 - **Le manuel** : page 54, lignes au 53, six captures `jeu-shadowrun-*` (scène ajoutée dans
   `e2e/capturesDesJeux.spec.ts`).
 
+**Forge — mode supplément, étape 1** (registre § 185, ligne 121), à la demande de David : *« on
+avait mis un dév en attente pour les suppléments JdR »*, puis *« oui je veux commencer
+maintenant »*, avec le *Colonial Marines Operations Manual* d'Alien. Quatre décisions de David
+(sous-dossier `supplements/`, corpus d'abord, le carnet propose et David choisit, langue du jeu).
+Livré : chemins (`corpusSysteme.ts`), gabarits, inventaire libre, `supplements.ts`,
+`ChoixDuLivre.tsx`, atelier et liste des sujets, sommaire du supplément dans
+`docs/systems/alien/supplements/colonial-marines/index/`, guide `50-Forge-des-systemes.md`
+(« Documenter un supplément »). Suite complète verte. Rien n'est commité.
+
 ## Par quoi reprendre
 
 1. **L'essai de David** : réimporter `Export Dirvers/corriges/SR_Anarchy_driver_gmos_finir.gmos-driver`
@@ -49,3 +58,8 @@ de David (`/finir-un-pilote`, livre de base sur le NAS). Rien n'est commité.
   compétence (`pour`) et reviennent d'eux-mêmes quand elle change.
 - ⛔ Le skill `finir-un-pilote` dit « ne jamais commiter `Export Dirvers/` », alors que le dossier
   est suivi et que des essais lisent ses `corriges/`. Question posée à David, sans réponse.
+- **Colonial Marines, le livre du carnet est l'édition française** :
+  `\\CLOUDDAVID\Media\Jeux de Rôle\03. Futur\1. Space Opera\Aliens\ALIEN (Arkhane Asylum)\ALN-Marines Coloniaux_FR.pdf`
+  (101 Mo) ; PDF = imprimée + 3 ; texte doublé ; les tableaux de véhicules et d'événements ne sont
+  lisibles qu'en image. Le tableau des explosifs y est mal titré (« BONUS » pour les dégâts).
+  Les noms anglais se vérifient contre l'édition anglaise (même dossier).

@@ -12,6 +12,11 @@ import {
     sousDossiersDuCorpus,
     corpusOrphelins,
     deplierLigatures,
+    corpusChoisi,
+    corpusDeSupplement,
+    cheminDesArchives,
+    cheminDesSupplements,
+    systemePourLIndex,
 } from './corpusSysteme';
 
 /**
@@ -418,5 +423,46 @@ describe('ligatures', () => {
     it('ne touche pas à ce qui n\'est pas une ligature', () => {
         expect(slug("Dune : Aventures dans l'Imperium")).toBe('dune-aventures-dans-l-imperium');
         expect(deplierLigatures('Blade Runner')).toBe('Blade Runner');
+    });
+});
+
+/**
+ * Le corpus d'un supplément — § 185 du registre, 01/11/2026. David a choisi un
+ * sous-dossier dédié : `systems/<jeu>/supplements/<slug>/`, que l'Oracle lit
+ * avec le jeu et que la dérivation du pilote (`rules/` du jeu) ne voit pas.
+ */
+describe('corpusDeSupplement', () => {
+    const alien = corpusChoisi('alien', ['alien']);
+
+    it('range le supplément sous le jeu, avec tous ses dossiers', () => {
+        const cm = corpusDeSupplement(alien, 'Colonial Marines')!;
+        expect(cm.racine).toBe('systems/alien/supplements/colonial-marines');
+        expect(cm.supplement).toBe('colonial-marines');
+        expect(cheminDesFiches(cm)).toBe('systems/alien/supplements/colonial-marines/rules');
+        expect(cheminDesBrouillons(cm)).toBe('systems/alien/supplements/colonial-marines/drafts');
+        expect(cheminDesArchives(cm)).toBe('systems/alien/supplements/colonial-marines/rules-v1');
+        expect(cheminDeLIndex(cm)).toBe('systems/alien/supplements/colonial-marines/index');
+    });
+
+    it('garde l\'identifiant du jeu : c\'est le `systeme:` des fiches', () => {
+        expect(corpusDeSupplement(alien, 'Colonial Marines')!.id).toBe('alien');
+    });
+
+    it('cherche l\'index du supplément, pas celui du livre de base', () => {
+        expect(systemePourLIndex(alien)).toBe('alien');
+        expect(systemePourLIndex(corpusDeSupplement(alien, 'Colonial Marines')!))
+            .toBe('alien/supplements/colonial-marines');
+    });
+
+    it('repart toujours de la racine du jeu', () => {
+        const cm = corpusDeSupplement(alien, 'Colonial Marines')!;
+        expect(corpusDeSupplement(cm, 'Destroyer of Worlds')!.racine)
+            .toBe('systems/alien/supplements/destroyer-of-worlds');
+        expect(cheminDesSupplements(cm)).toBe('systems/alien/supplements/supplements.json');
+        expect(cheminDesSupplements(alien)).toBe('systems/alien/supplements/supplements.json');
+    });
+
+    it('refuse un nom vide', () => {
+        expect(corpusDeSupplement(alien, '  ')).toBeNull();
     });
 });

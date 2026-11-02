@@ -5,7 +5,7 @@ import { attenteAnnoncee, budgetDuMoment } from '../ai/budgetsDeTemps';
 import type { GameDriver } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 import type { BrainstormCandidate, BrainstormCard } from './rules/types';
-import { gabaritInventaire, gabaritFicheRegle, gabaritFichePratique, promptVoix, promptPersonas } from './rules/gabarits';
+import { gabaritInventaire, gabaritInventaireDeSupplement, gabaritFicheRegle, gabaritFichePratique, promptVoix, promptPersonas, type OptionsGabarit } from './rules/gabarits';
 import { lireInventaire } from './rules/inventaire';
 import { retirerLesRenvoisDuCarnet } from './renvoisDuCarnet';
 import { convertirFiche } from './rules/conversion';
@@ -19,7 +19,7 @@ import {
   type GroupeDeChamps,
 } from './rules/GroupesDeChamps';
 import { sourceDuGroupe } from './rules/familleDuCorpus';
-import { slugFiche } from './rules/canevas';
+import { slugFiche, type SujetCanevas } from './rules/canevas';
 import { extrairePersonas, controlerPersonas, type Personas } from './rules/personas';
 import { budgetEnCaracteres, direLEcart, preparerLeTexte } from './rules/budgetDeLaForge';
 import { OPTIONS_PAR_DEFAUT } from '../../../electron/optionsDuModele';
@@ -94,6 +94,16 @@ export interface OptionsForgeFiche {
   moitieDeja?: string;
   /** Appelé dès que la première moitié est là, avant la seconde requête. */
   surMoitie?: (regle: string) => void;
+  /**
+   * La fiche est celle d'un **supplément** — § 185, 01/11/2026. Son slug part
+   * dans l'en-tête (`supplement:`), son titre et la langue dans les gabarits.
+   */
+  supplement?: { slug: string; titre: string; langue?: string };
+  /**
+   * Les sujets sur lesquels rabattre celui que rend le carnet. Pour un
+   * supplément, ce sont ceux que David a retenus : son canevas à lui.
+   */
+  canevas?: readonly SujetCanevas[];
 }
 
 export interface InventaireForge {
@@ -593,6 +603,26 @@ export class ForgeService {
   }
 
   /**
+   * Étape 1 bis — l'inventaire libre d'un **supplément** (§ 185, 01/11/2026).
+   *
+   * Rend le markdown brut : la liste des sujets se lit à l'écran
+   * (`lireInventaireDeSupplement`), là où David choisit lesquels forger.
+   */
+  public async inventaireDeSupplement(
+    notebookId: string,
+    supplement: { titre: string; langue?: string },
+    sourceIds?: string[],
+  ): Promise<string> {
+    return retirerLesRenvoisDuCarnet(
+      await this.interrogerCarnet(
+        notebookId,
+        gabaritInventaireDeSupplement(supplement.titre, { langue: supplement.langue }),
+        sourceIds,
+      ),
+    );
+  }
+
+  /**
    * Étape 2 — une fiche par sujet (gabarit 2), convertie localement.
    *
    * La v0 demandait « du Markdown riche, structuré » : ni les six sections, ni
@@ -612,9 +642,12 @@ export class ForgeService {
   ): Promise<BrainstormCard> {
     // Première moitié : la règle et ses valeurs. Elle porte les métadonnées, donc
     // elle suffit à classer la fiche même si la seconde échoue.
+    const gabarit: OptionsGabarit | undefined = options?.supplement
+      ? { supplement: options.supplement.titre, langue: options.supplement.langue }
+      : undefined;
     const regle = options?.moitieDeja
       ?? retirerLesRenvoisDuCarnet(
-        await this.interrogerCarnet(notebookId, gabaritFicheRegle(candidate.title), sourceIds),
+        await this.interrogerCarnet(notebookId, gabaritFicheRegle(candidate.title, gabarit), sourceIds),
       );
 
     // On la remet à l'appelant AVANT la seconde requête : une moitié acquise ne
@@ -623,13 +656,18 @@ export class ForgeService {
     options?.surMoitie?.(regle);
 
     const pratique = retirerLesRenvoisDuCarnet(
-      await this.interrogerCarnet(notebookId, gabaritFichePratique(candidate.title), sourceIds),
+      await this.interrogerCarnet(notebookId, gabaritFichePratique(candidate.title, gabarit), sourceIds),
     );
 
     const contenu = `${regle.trim()}
 
 ${pratique.trim()}`;
-    const fiche = convertirFiche(contenu, { systeme: systemId, sujetDemande: candidate.title });
+    const fiche = convertirFiche(contenu, {
+      systeme: systemId,
+      sujetDemande: candidate.title,
+      ...(options?.canevas ? { canevas: options.canevas } : {}),
+      ...(options?.supplement ? { champsSupplementaires: { supplement: options.supplement.slug } } : {}),
+    });
 
     return {
       ...candidate,

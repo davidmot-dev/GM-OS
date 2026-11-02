@@ -41,6 +41,14 @@ Pour chaque affirmation de la fiche : la trouver dans le livre, avec sa page imp
 - **Ce qu'un scénario fixe n'est pas une règle générale** (« le ver arrive après trois rounds »
   venait de l'aventure d'introduction). **Un talent n'est pas une règle commune. Le roman n'est
   pas le livre.**
+- **Lire la source que cite la fiche** (`sources:` dans l'en-tête) : c'est l'édition que voit le
+  carnet. Colonial Marines (02/11) citait l'édition française quand on relisait l'anglaise.
+- **Les noms d'origine entre parenthèses** (« Fusilier (Rifleman) ») sont traduits à rebours par
+  le carnet, qui ne voit qu'une édition : les vérifier contre l'autre. Sur Colonial Marines, une
+  soixantaine étaient faux, dont deux talents intervertis.
+- **Un en-tête de tableau peut mentir** : le tableau français des explosifs titrait « BONUS » sa
+  colonne de dégâts, et la fiche avait suivi. Confronter les valeurs à leur sens, ou à l'autre
+  édition ; un texte doublé (« 11 200 $200 $ ») se lit « 1 | 200 $ », pas « 1 200 $ ».
 - Réparer les bégaiements de génération (« de de de deux », « à de cinq ») en une passe Python
   (`re`), pas en `perl` sans `use utf8` (les accents du motif ne correspondent plus).
 

@@ -34,6 +34,7 @@
  */
 
 import { CANEVAS } from './canevas';
+import { nomDeLaLangue } from './langueDeForge';
 
 export interface OptionsGabarit {
   /**
@@ -44,6 +45,16 @@ export interface OptionsGabarit {
    * pour un prompt destiné à être copié à la main.
    */
   studio?: boolean;
+  /**
+   * Titre du **supplément** dont la fiche est tirée — § 185, 01/11/2026.
+   * Absent pour le livre de base, dont les gabarits ne changent pas d'un mot.
+   */
+  supplement?: string;
+  /**
+   * Langue de la prose (`fr`, `en`…). Seul le mode supplément la pose : le
+   * livre de Colonial Marines est anglais, le corpus d'Alien français.
+   */
+  langue?: string;
 }
 
 /** La ligne d'archive, ajoutée seulement pour un usage manuel. */
@@ -106,6 +117,96 @@ scénarios inclus.
 Le sujet « Composition de la fiche de personnage » fait exception à la première
 de ces exclusions, et à elle seule : on veut la LISTE de ce qu'une fiche finie
 porte comme valeurs chiffrées, jamais la manière de les choisir.`;
+}
+
+/**
+ * La consigne de langue d'une fiche de supplément.
+ *
+ * **Les titres de section restent dans la langue du livre**, et c'est la ligne
+ * qui compte : ils sont confrontés à l'index du supplément, écrit dans sa
+ * langue. Un titre traduit s'y lirait comme un titre inventé.
+ *
+ * Le nom original entre parenthèses, décision de David du 01/11 : c'est lui que
+ * le meneur retrouve dans le livre, et l'Oracle avec lui.
+ */
+function consigneDeLangueDuSupplement(langue: string | undefined): string {
+  const nom = nomDeLaLangue(langue);
+  if (!nom) return '';
+  return `- Écris toute la prose en ${nom}, même si le livre est dans une autre
+  langue. Donne entre parenthèses le nom ORIGINAL de chaque terme de jeu la
+  première fois qu'il paraît — spécialité, talent, arme, véhicule, grade —, par
+  exemple « Fusilier (Rifleman) ». Les titres de section des métadonnées, eux,
+  restent RECOPIÉS dans la langue du livre.
+`;
+}
+
+/**
+ * Gabarit 1 bis — l'inventaire d'un **supplément** — § 185, 01/11/2026.
+ *
+ * David : *« je dois pouvoir indiquer à la forge que c'est un supplément et donc
+ * que les sujets doivent être plus libres et moins cadrés »*. Le canevas des
+ * quatorze sujets est fait pour un livre de base ; un supplément ajoute
+ * justement ce que le gabarit 1 exclut — spécialités, talents, armes et
+ * véhicules chiffrés, créatures, procédures de campagne (le *Colonial Marines
+ * Operations Manual* d'Alien n'est presque que cela). Le carnet propose donc ses
+ * sujets, et David choisit lesquels forger.
+ *
+ * Ce qui reste exclu : l'histoire et l'univers, le texte des scénarios — ni
+ * l'un ni l'autre n'est une règle, et la campagne relève de la Forge de campagne.
+ */
+export function gabaritInventaireDeSupplement(titre: string, options?: OptionsGabarit): string {
+  return `Tu analyses UNIQUEMENT les sources de ce carnet, qui sont le SUPPLÉMENT
+« ${titre} » d'un jeu de rôle. Ne complète jamais avec des connaissances
+extérieures, ni avec le livre de base.
+
+${consigneStudio(options, 'Génère un Markdown que tu sauveras dans le studio.')}Réponds DIRECTEMENT par le tableau demandé, dans ta réponse elle-même. Ne
+dépose rien ailleurs et ne réponds pas par un compte rendu de ce que tu aurais
+produit : ta réponse est le livrable.
+
+Dresse la liste des RÈGLES que ce supplément apporte, un sujet par ligne, pour
+en tirer ensuite une fiche par sujet. Retiens tout ce qui se joue avec des
+valeurs ou une procédure : options de création (carrières, spécialités,
+talents, grades), équipement chiffré (armes, armures, véhicules, vaisseaux),
+créatures et menaces avec leurs caractéristiques, règles de combat, de campagne
+ou d'unité, tables aléatoires, règles optionnelles. Regroupe ce qui va
+ensemble : « Armes de poing » est un sujet, chaque pistolet n'en est pas un.
+Entre dix et vingt-cinq sujets, dans l'ordre du livre.
+
+N'en fais PAS un sujet : l'histoire et l'univers, la géographie, les factions
+décrites sans règle, le texte des scénarios et des missions. Si une règle
+modifie une règle du livre de base, garde-la et dis ce qu'elle change.
+
+Réponds par un TABLEAU MARKDOWN (avec des barres verticales), colonnes :
+Sujet | Mécanique | Sections.
+
+La colonne « Sujet » nomme le sujet en quelques mots${options?.langue && nomDeLaLangue(options.langue) ? `, en ${nomDeLaLangue(options.langue)}, avec le nom original entre parenthèses s'il diffère` : ''}.
+La colonne « Mécanique » résume en une à deux phrases les éléments CONCRETS :
+valeurs, dés, nombre d'entrées d'une liste.
+La colonne « Sections » donne les TITRES EXACTS des chapitres ou sections du
+livre, RECOPIÉS dans la langue du livre, tels qu'ils y sont écrits. N'indique
+aucun numéro de page et aucun numéro de référence interne du carnet.
+
+N'invente rien. Écris tous les symboles en toutes lettres.`;
+}
+
+/**
+ * Ce que le mode supplément ajoute aux consignes d'une fiche. Vide pour le
+ * livre de base.
+ *
+ * **Le tableau se recopie, et la longueur suit.** La fiche d'un supplément est
+ * souvent une liste chiffrée — dix armes de poing et leurs cinq colonnes. La
+ * borne des 2 500 caractères la tronquerait ; on l'élève pour ce cas seul, en
+ * sachant qu'une réponse plus longue approche le délai du serveur (356 s mesurées
+ * sur le gabarit entier, le 2026-08-10).
+ */
+function consignesDuSupplement(options: OptionsGabarit | undefined): string {
+  if (!options?.supplement) return '';
+  return `- Ce sujet vient du SUPPLÉMENT « ${options.supplement} ». Appuie-toi sur
+  lui seul. Si la règle modifie une règle du livre de base, dis ce qui change.
+- Un tableau du livre (armes, véhicules, spécialités, grades) se recopie en
+  TABLEAU MARKDOWN, toutes ses lignes et toutes ses colonnes, sans rien omettre ;
+  la fiche peut alors atteindre 4 000 caractères.
+${consigneDeLangueDuSupplement(options.langue)}`;
 }
 
 /**
@@ -202,7 +303,7 @@ Règles de rédaction :
   SEUIL, et si elle se dépense (on la consomme volontairement) ou si elle
   s'accumule (elle subit les événements).
 ${REGLES_COMMUNES}
-- N'écris PAS les sections « À la table », « Cas limites » ni « Non couvert » :
+${consignesDuSupplement(options)}- N'écris PAS les sections « À la table », « Cas limites » ni « Non couvert » :
   elles font l'objet d'une seconde demande.`;
 }
 
@@ -243,7 +344,8 @@ Règles de rédaction :
 - Si les sources ne couvrent pas ce sujet, écris-le dans « Non couvert » et
   garde les deux autres sections courtes. Ne renvoie jamais une réponse vide.
 - Ne réécris ni la règle ni les valeurs chiffrées : elles sont déjà posées.
-${REGLES_COMMUNES}`;
+${REGLES_COMMUNES}
+${consignesDuSupplement(options)}`.trimEnd();
 }
 
 /**

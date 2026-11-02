@@ -17,16 +17,29 @@ import DiscoveryUI from './DiscoveryUI';
 import ForgeProgress from './ForgeProgress';
 import {
   corpusChoisi,
+  corpusDeSupplement,
   cheminDesFiches,
   cheminDesBrouillons,
   cheminDesArchives,
   cheminDesPersonas,
+  systemePourLIndex,
 } from '../../../../../electron/corpusSysteme';
 import { fichesSupplantees, sujetDuFrontmatter } from '../fichesSupplantees';
 import { aEteRetouchee } from '../empreinteDeLaFiche';
 import { slugFiche } from '../canevas';
-import { ficheInventaire, lireInventaire } from '../inventaire';
+import { ficheInventaire, ficheInventaireDeSupplement, lireInventaire, lireInventaireDeSupplement } from '../inventaire';
 import { slug } from '../../../../../electron/corpusSysteme';
+import { lireNature } from '../familleDuCorpus';
+import {
+  ajouterLeSujet,
+  candidatsDesSujets,
+  canevasDesCandidats,
+  ecarterLeSujet,
+  lireLesSujets,
+  renommerLeSujet,
+  sujetsDeLInventaire,
+  sujetsDesCandidats,
+} from '../supplements';
 import type { BrainstormCandidate } from '../types';
 
 /** Ce que rend `ai:resolve-sections` — cf. `verifierLesCitations` dans `electron/bookIndex.ts`. */
@@ -60,7 +73,7 @@ interface ResolutionDesSections {
  * plus d'autorité, il ne peut pas être celui qui reçoit le moins de revue.
  */
 export const BrainstormOverlay: React.FC = () => {
-  const { t } = useTranslation(['modules', 'common']);
+  const { t, i18n } = useTranslation(['modules', 'common']);
   const brainstormStore = useBrainstormStore();
   const { customSubject, setCandidates, notebookId, selectedSourceIds, setProcessing, setError } = brainstormStore;
   // Rien de la campagne ouverte n'entre ici : l'atelier documente un livre.
@@ -124,10 +137,51 @@ export const BrainstormOverlay: React.FC = () => {
    * relevé en pleine forge le 2026-08-10. Les dépendances réelles sont le
    * dossier choisi et l'inventaire des dossiers, tous deux stables.
    */
-  const corpus = useMemo(
+  const corpusDuJeu = useMemo(
     () => (brainstormStore.corpusCible ? corpusChoisi(brainstormStore.corpusCible, dossiersSystemes) : null),
     [brainstormStore.corpusCible, dossiersSystemes],
   );
+
+  /**
+   * Le corpus où l'on écrit : celui du jeu, ou celui du supplément choisi —
+   * § 185, 01/11/2026. Tous les chemins (`rules/`, `drafts/`, `rules-v1/`,
+   * `index/`) suivent sa racine ; c'est ce qui laisse le reste de l'atelier
+   * inchangé.
+   */
+  const supplement = brainstormStore.supplementCible;
+  const corpus = useMemo(
+    () => (corpusDuJeu && supplement ? corpusDeSupplement(corpusDuJeu, supplement.slug) : corpusDuJeu),
+    [corpusDuJeu, supplement],
+  );
+
+  /**
+   * La langue des fiches d'un supplément : celle du corpus du jeu, sinon celle
+   * de l'interface — décision de David du 01/11. Lue comme le fait la Forge
+   * Système (`langueDuCorpus` du tableau de bord) : `corpus.json` d'abord.
+   */
+  const [langueDuJeu, setLangueDuJeu] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    if (!corpusDuJeu) return;
+    let annule = false;
+    void (async () => {
+      const brut = await window.appBridge?.ai?.readDoc?.(`${corpusDuJeu.racine}/corpus.json`).catch(() => null);
+      if (!annule) setLangueDuJeu(lireNature(brut)?.langue ?? i18n.language);
+    })();
+    return () => { annule = true; };
+  }, [corpusDuJeu, i18n.language]);
+
+  /** Les sujets retenus d'un supplément, écrits dès qu'ils changent. */
+  const cheminDesSujets = corpus?.supplement ? `${corpus.racine}/sujets.json` : '';
+  const enregistrerLesSujets = useCallback(async (candidats: BrainstormCandidate[]) => {
+    if (!cheminDesSujets) return;
+    await window.appBridge?.ai?.writeDoc?.(cheminDesSujets, JSON.stringify(sujetsDesCandidats(candidats), null, 2));
+  }, [cheminDesSujets]);
+
+  /** Les trois gestes du choix des sujets : la liste change, le disque suit. */
+  const changerLesSujets = (candidats: BrainstormCandidate[]) => {
+    setCandidates(candidats);
+    void enregistrerLesSujets(candidats);
+  };
 
   /**
    * Ce qui est déjà forgé, lu sur le disque et non en mémoire de session.
@@ -192,7 +246,7 @@ export const BrainstormOverlay: React.FC = () => {
     }
     let abandonne = false;
     setResolutionEnCours(true);
-    resoudre(corpus.id, carte.content)
+    resoudre(systemePourLIndex(corpus), carte.content)
       .then(r => { if (!abandonne) setResolution(r); })
       .catch(() => { if (!abandonne) setResolution(null); })
       .finally(() => { if (!abandonne) setResolutionEnCours(false); });
@@ -201,6 +255,12 @@ export const BrainstormOverlay: React.FC = () => {
 
   /** Les candidats tirés d'un inventaire, quelle qu'en soit la provenance. */
   const construireCandidats = useCallback((inventaire: string) => {
+    // Un supplément n'a pas de canevas : ses sujets sont ceux que le carnet
+    // propose, et David les choisit ensuite (§ 185, 01/11/2026).
+    if (supplement) {
+      setCandidates(candidatsDesSujets(sujetsDeLInventaire(lireInventaireDeSupplement(inventaire))), inventaire);
+      return;
+    }
     const candidats = lireInventaire(inventaire).map(entree => ({
       id: slugFiche(entree.sujet),
       title: entree.sujet,
@@ -230,7 +290,7 @@ export const BrainstormOverlay: React.FC = () => {
         : candidats,
       inventaire,
     );
-  }, [customSubject, setCandidates]);
+  }, [customSubject, setCandidates, supplement]);
 
   /**
    * Reprend l'inventaire déjà enregistré, sans rien demander au carnet.
@@ -247,10 +307,20 @@ export const BrainstormOverlay: React.FC = () => {
     if (!corpus) return false;
     const chemin = `${cheminDesFiches(corpus)}/inventaire-des-mecaniques.md`;
     const enregistre = await window.appBridge?.ai?.readDoc?.(chemin);
-    if (!enregistre) return false;
-    construireCandidats(enregistre.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '').trim());
+    const brut = enregistre ? enregistre.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '').trim() : null;
+    // Pour un supplément, les sujets retenus l'emportent sur la liste brute :
+    // ce sont les choix de David, et les relire de l'inventaire les déferait.
+    if (cheminDesSujets) {
+      const sujets = lireLesSujets(await window.appBridge?.ai?.readDoc?.(cheminDesSujets).catch(() => null));
+      if (sujets) {
+        setCandidates(candidatsDesSujets(sujets), brut ?? undefined);
+        return true;
+      }
+    }
+    if (!brut) return false;
+    construireCandidats(brut);
     return true;
-  }, [corpus, construireCandidats]);
+  }, [corpus, construireCandidats, cheminDesSujets, setCandidates]);
 
   const handleDiscover = useCallback(async () => {
     if (!notebookId) return;
@@ -258,6 +328,18 @@ export const BrainstormOverlay: React.FC = () => {
     if (gen === null) return;
     setProcessing(true);
     try {
+      if (supplement) {
+        const inventaire = await forgeService.inventaireDeSupplement(
+          notebookId,
+          { titre: supplement.titre, langue: langueDuJeu },
+          selectedSourceIds,
+        );
+        if (gen !== generationCourante()) return;   // abandonnée entre-temps
+        const candidats = candidatsDesSujets(sujetsDeLInventaire(lireInventaireDeSupplement(inventaire)));
+        setCandidates(candidats, inventaire);
+        await enregistrerLesSujets(candidats);
+        return;
+      }
       const { inventaire } = await forgeService.discoverCandidates(
         notebookId,
         selectedSourceIds
@@ -270,7 +352,7 @@ export const BrainstormOverlay: React.FC = () => {
     } finally {
       libererLeCarnet(gen);
     }
-  }, [notebookId, selectedSourceIds, t, setProcessing, setError, construireCandidats]);
+  }, [notebookId, selectedSourceIds, t, setProcessing, setError, construireCandidats, supplement, langueDuJeu, setCandidates, enregistrerLesSujets]);
 
   /**
    * Le sujet libre se répercute sans repayer l'inventaire.
@@ -284,16 +366,24 @@ export const BrainstormOverlay: React.FC = () => {
   useEffect(() => {
     if (brainstormStore.step !== 'discovery') return;
     if (!brainstormStore.inventaireBrut) return;
+    // Pas pour un supplément : la liste y est celle que David a retenue, et la
+    // reconstruire depuis l'inventaire brut déferait ses renommages et ses
+    // écarts — l'essai « reprend les sujets retenus » l'a attrapé le 01/11.
+    if (supplement) return;
     construireCandidats(brainstormStore.inventaireBrut);
-  }, [brainstormStore.customSubject, brainstormStore.inventaireBrut, brainstormStore.step, construireCandidats]);
+  }, [brainstormStore.customSubject, brainstormStore.inventaireBrut, brainstormStore.step, construireCandidats, supplement]);
 
   useEffect(() => {
     if (brainstormStore.step === 'discovery' && brainstormStore.candidates.length === 0 && !brainstormStore.isProcessing && !brainstormStore.error) {
       // Le disque d'abord : une requête au carnet ne se paie que si rien n'a
       // encore été enregistré pour ce corpus.
-      reprendreInventaire().then(repris => { if (!repris) handleDiscover(); });
+      //
+      // Un supplément ne part jamais seul vers le carnet : sans les sources
+      // restreintes à son PDF, l'inventaire lirait aussi le livre de base. La
+      // requête attend le bouton (§ 185, 01/11/2026).
+      reprendreInventaire().then(repris => { if (!repris && !supplement) handleDiscover(); });
     }
-  }, [brainstormStore.step, brainstormStore.candidates.length, brainstormStore.isProcessing, brainstormStore.error, handleDiscover, reprendreInventaire]);
+  }, [brainstormStore.step, brainstormStore.candidates.length, brainstormStore.isProcessing, brainstormStore.error, handleDiscover, reprendreInventaire, supplement]);
 
   /**
    * Cesse d'attendre la requête en cours.
@@ -322,11 +412,11 @@ export const BrainstormOverlay: React.FC = () => {
     if (!brut || !corpus) return;
     brainstormStore.reviewCard({
       id: 'inventaire-des-mecaniques',
-      title: 'Inventaire des mécaniques',
+      title: supplement ? `Inventaire du supplément ${supplement.titre}` : 'Inventaire des mécaniques',
       category: 'rule',
       summary: '',
       tags: [],
-      content: ficheInventaire(brut, corpus.id),
+      content: supplement ? ficheInventaireDeSupplement(brut, corpus.id, supplement) : ficheInventaire(brut, corpus.id),
       systemId: corpus.id,
       forgedAt: Date.now(),
       slug: 'inventaire-des-mecaniques',
@@ -370,6 +460,12 @@ export const BrainstormOverlay: React.FC = () => {
           // La première moitié part sur le disque AVANT la seconde requête :
           // c'est ce qui rend la scission utile plutôt que seulement plus lente.
           surMoitie: (regle) => { void window.appBridge?.ai?.writeDoc?.(cheminBrouillon, regle); },
+          // Un supplément : son titre et la langue du jeu dans les gabarits, et
+          // les sujets retenus comme canevas de la conversion.
+          ...(supplement ? {
+            supplement: { ...supplement, langue: langueDuJeu },
+            canevas: canevasDesCandidats(brainstormStore.candidates),
+          } : {}),
         },
       );
       if (gen !== generationCourante()) return;   // abandonnée entre-temps
@@ -862,6 +958,20 @@ export const BrainstormOverlay: React.FC = () => {
             </div>
           )}
 
+          {/*
+            Le livre se choisit dans le panneau de gauche, avant d'ouvrir
+            l'atelier (§ 185, 01/11). L'alerte reste aussi ici, à côté du
+            bouton qui lance l'inventaire.
+          */}
+          {supplement && brainstormStore.step === 'discovery' && !brainstormStore.isProcessing
+            && brainstormStore.selectedSourceIds.length === 0 && (
+            <p className="mb-6 flex items-start gap-2 px-6 py-4 rounded-2xl border border-etat-alerte/20 bg-etat-alerte/5 text-xs text-etat-alerte/80 leading-relaxed">
+              <AlertTriangle size={14} className="mt-0.5 shrink-0" />
+              Aucune source retenue : l'inventaire lirait tout le carnet, livre de base compris. Fermez
+              l'atelier et ne cochez que le PDF du supplément dans le Bac à contexte.
+            </p>
+          )}
+
           {brainstormStore.step === 'discovery' && (
             <>
               <DiscoveryUI
@@ -870,8 +980,24 @@ export const BrainstormOverlay: React.FC = () => {
                 onSelect={handleForge}
                 onAbandon={handleAbandon}
                 onEnregistrerInventaire={brainstormStore.inventaireBrut ? handleRevoirInventaire : undefined}
+                {...(supplement ? {
+                  supplement: supplement.titre,
+                  onRelancer: () => {
+                    const relancer = () => { void handleDiscover(); };
+                    if (brainstormStore.candidates.length === 0) return relancer();
+                    gmConfirm(
+                      "Redemander l'inventaire au carnet remplace la liste des sujets retenus, "
+                      + 'renommages compris. Les fiches déjà publiées restent sur le disque.',
+                      relancer, undefined, 'REDEMANDER', 'ANNULER',
+                    );
+                  },
+                  onRenommer: (id: string, titre: string) => changerLesSujets(renommerLeSujet(brainstormStore.candidates, id, titre)),
+                  onEcarter: (id: string) => changerLesSujets(ecarterLeSujet(brainstormStore.candidates, id)),
+                  onAjouter: (titre: string) => changerLesSujets(ajouterLeSujet(brainstormStore.candidates, titre)),
+                } : {})}
               />
-              {!brainstormStore.isProcessing && brainstormStore.candidates.length > 0 && (
+              {/* Les personas sont la voix du jeu, pas d'un supplément. */}
+              {!supplement && !brainstormStore.isProcessing && brainstormStore.candidates.length > 0 && (
                 <div className="max-w-4xl mx-auto px-6 pb-6 flex justify-center">
                   <button
                     onClick={handlePersonas}

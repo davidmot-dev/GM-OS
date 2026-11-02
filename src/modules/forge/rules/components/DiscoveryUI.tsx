@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Sparkles, Zap, ChevronRight, RefreshCw, CheckCircle2, MinusCircle, HelpCircle, Save, FileClock } from 'lucide-react';
+import { Sparkles, Zap, ChevronRight, RefreshCw, CheckCircle2, MinusCircle, HelpCircle, Save, FileClock, Pencil, Trash2, Plus } from 'lucide-react';
 import { useBrainstormStore } from '../store/useBrainstormStore';
 import ForgeProgress from './ForgeProgress';
 import type { BrainstormCandidate } from '../types';
@@ -37,6 +37,15 @@ interface DiscoveryUIProps {
   onRelancer?: () => void;
   /** Forge la fiche du sujet retenu. La liste ne décide pas, elle propose. */
   onSelect: (candidate: BrainstormCandidate) => void;
+  /**
+   * Titre du supplément documenté — § 185, 01/11/2026. Avec lui, la liste n'est
+   * plus le canevas : ce sont les sujets que le carnet propose, et David les
+   * renomme, les écarte ou en ajoute avant de forger.
+   */
+  supplement?: string;
+  onRenommer?: (id: string, titre: string) => void;
+  onEcarter?: (id: string) => void;
+  onAjouter?: (titre: string) => void;
 }
 
 const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
@@ -46,9 +55,25 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
   onRelancer,
   fichesPubliees = [],
   brouillonsEnAttente = [],
+  supplement,
+  onRenommer,
+  onEcarter,
+  onAjouter,
 }) => {
   const { t } = useTranslation(['modules']);
   const { candidates, isProcessing, startDiscovery } = useBrainstormStore();
+  /** Le sujet en cours de renommage, et le texte tapé. */
+  const [enEdition, setEnEdition] = useState<{ id: string; titre: string } | null>(null);
+  const [ajout, setAjout] = useState('');
+  const validerLeRenommage = () => {
+    if (enEdition && enEdition.titre.trim()) onRenommer?.(enEdition.id, enEdition.titre);
+    setEnEdition(null);
+  };
+  const ajouter = () => {
+    if (!ajout.trim()) return;
+    onAjouter?.(ajout);
+    setAjout('');
+  };
 
   const duCanevas = candidates.filter(c => !c.tags.includes('hors canevas'));
   const traites = duCanevas.filter(c => etat(c) === 'traite').length;
@@ -74,16 +99,23 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
           </div>
           <div>
             <h3 className="text-2xl font-black uppercase tracking-tighter text-app-text font-display">{t('session.forge_module.atelier.inventory_title')}</h3>
-            <p className="text-xs text-app-text/40 uppercase tracking-widest">{t('session.forge_module.atelier.inventory_subtitle')}</p>
+            <p className="text-xs text-app-text/40 uppercase tracking-widest">
+              {supplement
+                ? `Supplément « ${supplement} » — les sujets proposés par le carnet, à retenir ou non`
+                : t('session.forge_module.atelier.inventory_subtitle')}
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
           {candidates.length > 0 && (
             <div className="text-right">
-              <p className="text-ui-10 font-black uppercase tracking-widest text-gm-violet/60">
-                {t('session.forge_module.atelier.coverage', { traites, total: duCanevas.length })}
-              </p>
+              {/* Un supplément n'a pas de canevas : il n'y a pas de couverture à compter. */}
+              {!supplement && (
+                <p className="text-ui-10 font-black uppercase tracking-widest text-gm-violet/60">
+                  {t('session.forge_module.atelier.coverage', { traites, total: duCanevas.length })}
+                </p>
+              )}
               {/*
                 L'avancement de la serie, lu sur le disque. C'est la reponse a
                 « ou en suis-je ? » quand on reprend treize fiches en plusieurs
@@ -125,11 +157,35 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
           const enregistre = fichesPubliees.includes(candidate.id);
           const enBrouillon = !enregistre && brouillonsEnAttente.includes(candidate.id);
 
+          if (supplement && enEdition?.id === candidate.id) {
+            return (
+              <div key={idx} className="bg-app-surface/60 border border-gm-violet/50 p-6 rounded-[2rem] flex items-center gap-3">
+                <input
+                  autoFocus
+                  value={enEdition.titre}
+                  onChange={e => setEnEdition({ id: candidate.id, titre: e.target.value })}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') validerLeRenommage();
+                    if (e.key === 'Escape') { e.stopPropagation(); setEnEdition(null); }
+                  }}
+                  aria-label="Nouveau nom du sujet"
+                  className="flex-1 bg-app-text/5 border border-app-text/10 rounded-xl px-4 py-3 text-sm text-app-text focus:outline-none focus:border-gm-violet/50"
+                />
+                <button type="button" onClick={validerLeRenommage} className="px-4 py-3 rounded-xl bg-gm-violet text-app-bg text-ui-10 font-black uppercase tracking-widest">
+                  Renommer
+                </button>
+              </div>
+            );
+          }
+
           return (
+            // L'enveloppe est la case de la grille ; le bouton doit la remplir
+            // (`w-full h-full`), sinon il prend la largeur de son texte : les
+            // cartes débordaient l'une sur l'autre (vu par David le 01/11).
+            <div key={idx} className="relative group/sujet min-w-0">
             <button
-              key={idx}
               onClick={() => onSelect(candidate)}
-              className={`group relative bg-app-surface/60 border p-6 rounded-[2rem] text-left transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-6 shadow-xl ${
+              className={`group relative w-full h-full bg-app-surface/60 border p-6 rounded-[2rem] text-left transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-6 shadow-xl ${
                 statut === 'traite' ? 'border-app-border/10 hover:border-gm-violet/50 hover:bg-gm-violet/5' : 'border-app-border/10 opacity-60 hover:opacity-100'
               }`}
             >
@@ -169,16 +225,88 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
               </div>
               <ChevronRight className="text-app-text/20 group-hover:text-gm-violet group-hover:translate-x-1 transition-all shrink-0" size={20} />
             </button>
+            {/*
+              Renommer et écarter, hors du bouton de la carte : un bouton dans
+              un bouton n'est pas du HTML valide, et le clic forgerait la fiche.
+              Une fiche déjà publiée ne se renomme pas ici — son fichier garde
+              son nom ; on écarte seulement de la liste.
+            */}
+            {supplement && (
+              <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover/sujet:opacity-100 focus-within:opacity-100 transition-opacity">
+                {!enregistre && (
+                  <button
+                    type="button"
+                    onClick={() => setEnEdition({ id: candidate.id, titre: candidate.title })}
+                    title="Renommer le sujet"
+                    aria-label={`Renommer ${candidate.title}`}
+                    className="p-2 rounded-lg bg-app-bg/80 text-app-text/40 hover:text-gm-violet"
+                  >
+                    <Pencil size={14} />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => onEcarter?.(candidate.id)}
+                  title="Écarter le sujet"
+                  aria-label={`Écarter ${candidate.title}`}
+                  className="p-2 rounded-lg bg-app-bg/80 text-app-text/40 hover:text-etat-danger"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            )}
+            </div>
           );
         })}
 
-        {candidates.length === 0 && (
+        {candidates.length === 0 && !supplement && (
           <div className="col-span-2 py-20 bg-app-surface/20 border-2 border-dashed border-app-border/10 rounded-[3rem] flex flex-col items-center justify-center text-center opacity-40 italic">
              <RefreshCw size={48} className="mb-4" />
              <p>{t('session.forge_module.atelier.discovery_empty')}</p>
           </div>
         )}
+
+        {/*
+          Un supplément n'interroge pas le carnet de lui-même : il faut d'abord
+          retenir sa source, sinon l'inventaire lirait aussi le livre de base.
+        */}
+        {candidates.length === 0 && supplement && (
+          <div className="col-span-2 py-16 bg-app-surface/20 border-2 border-dashed border-app-border/10 rounded-[3rem] flex flex-col items-center justify-center text-center gap-4">
+            <p className="text-sm text-app-text/50 max-w-md">
+              Aucun inventaire pour ce supplément. Retenez sa seule source dans le Bac à contexte,
+              puis demandez au carnet la liste de ses règles.
+            </p>
+            <button
+              type="button"
+              onClick={() => (onRelancer ? onRelancer() : startDiscovery())}
+              className="flex items-center gap-2 px-6 py-3 bg-gm-violet text-app-bg rounded-xl text-ui-10 font-black uppercase tracking-widest"
+            >
+              <Sparkles size={14} /> Demander l'inventaire
+            </button>
+          </div>
+        )}
       </div>
+
+      {supplement && candidates.length > 0 && (
+        <div className="flex items-center gap-3">
+          <input
+            value={ajout}
+            onChange={e => setAjout(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') ajouter(); }}
+            placeholder="Ajouter un sujet que le carnet n'a pas proposé"
+            aria-label="Sujet à ajouter"
+            className="flex-1 bg-app-text/5 border border-app-text/10 rounded-xl px-4 py-3 text-xs text-app-text/80 focus:outline-none focus:border-gm-violet/50 placeholder:text-app-text/20"
+          />
+          <button
+            type="button"
+            disabled={!ajout.trim()}
+            onClick={ajouter}
+            className="flex items-center gap-2 px-5 py-3 rounded-xl text-ui-10 font-black uppercase tracking-widest bg-gm-violet text-app-bg disabled:bg-app-text/5 disabled:text-app-text/10"
+          >
+            <Plus size={14} /> Ajouter
+          </button>
+        </div>
+      )}
     </div>
   );
 };

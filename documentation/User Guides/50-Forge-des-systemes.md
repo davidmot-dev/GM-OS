@@ -74,7 +74,39 @@ Une case décide du sort de la fiche de personnage :
 
 ---
 
-## 📖 L'éditeur de règles — sept sections
+## 📚 Documenter un supplément
+
+*Depuis le 2026-11-01.* L'**Atelier de règles** documente aussi les suppléments d'un jeu : un
+bestiaire, un livre de magie, un manuel d'équipement. Exemple : le *Colonial Marines Operations
+Manual* d'Alien.
+
+1. Dans le panneau de gauche, choisissez le **corpus du jeu** (`alien`), puis, juste dessous, sous
+   « Livre documenté », le **supplément**, ou tapez son titre et **Déclarer**.
+2. Dans le **Bac à contexte**, cochez **la seule source** du supplément. Sans cela, l'inventaire
+   lirait aussi le livre de base, et une alerte le signale.
+3. **Analyser les sources** ouvre l'atelier, sans rien demander au carnet ; cliquez **Demander
+   l'inventaire**. Le carnet propose dix à vingt-cinq sujets : spécialités, talents,
+   armes, véhicules, créatures, règles de campagne. Il laisse de côté l'histoire, l'univers et les
+   scénarios.
+4. **Choisissez** : renommez un sujet (crayon), écartez-le (corbeille), ajoutez-en un. Vos choix sont
+   enregistrés et reviennent à la réouverture.
+5. **Forgez et relisez** chaque fiche, comme pour le livre de base. Les tableaux du livre sont
+   recopiés en tableau.
+
+| Ce qui change pour un supplément | Pourquoi |
+| :--- | :--- |
+| Les fiches vont dans `docs/systems/<jeu>/supplements/<supplément>/rules/` | L'Oracle les cite avec le jeu ; le pilote et sa forge ne les lisent pas |
+| Pas de liste fixe de quatorze sujets | Elle est faite pour un livre de base, et un supplément traite justement ce qu'elle exclut |
+| Fiches dans la langue du corpus du jeu, avec le nom original entre parenthèses | « Fusilier (Rifleman) » : c'est le nom qu'on retrouve dans le livre |
+| Les titres de section sont confrontés au sommaire du supplément | Déposé dans `supplements/<supplément>/index/` |
+| Pas de personas | Ce sont les voix du jeu, pas d'un livre |
+
+> Le supplément **n'ajoute encore aucun champ au pilote** : on documente d'abord. Décision de David
+> du 2026-11-01 ; les champs viendront après l'essai de Colonial Marines.
+
+---
+
+## 📖 L'éditeur de règles — huit sections
 
 On y arrive depuis Session-OS, par les **Règles** (le *Grimoire*).
 

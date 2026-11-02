@@ -172,7 +172,12 @@ describe('sections citées par une fiche', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('index réels', () => {
-    const SYSTEMES = ['alien', 'blade-runner', 'dune'] as const;
+    /*
+      Le supplément Colonial Marines d'Alien (§ 185, 01/11/2026) : son index vit
+      sous `systems/alien/supplements/colonial-marines/index/`, et la Forge le
+      demande par ce sous-chemin (`systemePourLIndex`).
+    */
+    const SYSTEMES = ['alien', 'blade-runner', 'dune', 'alien/supplements/colonial-marines'] as const;
 
     it.each(SYSTEMES)('« %s » : l\'index se charge et contient des entrées', (systeme) => {
         const livre = chargerIndex(DOCS, systeme);
@@ -221,6 +226,21 @@ describe('index réels', () => {
         }
     });
 
+    it('Colonial Marines : le sommaire est celui de l\'édition du carnet, en français', () => {
+        /**
+         * Le carnet de David porte l'édition française (« ALN-Marines
+         * Coloniaux_FR.pdf ») ; un premier sommaire tiré de l'anglais ne
+         * reconnaissait aucun des titres que citent les fiches (01/11/2026).
+         * L'anglais reste dans `index/_sources/`, que le chargeur ignore.
+         */
+        const r = creerResolveur(chargerIndex(DOCS, 'alien/supplements/colonial-marines'));
+        for (const [titre, page] of [['PISTOLETS', 66], ['SPÉCIALITÉS MILITAIRES (SM)', 54], ['NOUVEAUX TALENTS', 60], ['TEMPS LIBRE', 131]] as const) {
+            const res = r.resoudre(titre);
+            expect(res.statut, `${titre} irrésolu`).not.toBe('introuvable');
+            expect(JSON.stringify(res), titre).toContain(String(page));
+        }
+    });
+
     it('n\'invente pas de correspondance pour un titre étranger', () => {
         const r = creerResolveur(chargerIndex(DOCS, 'alien'));
         const res = r.resoudre('Règles de conduite du Bene Gesserit sur Arrakis');
@@ -240,7 +260,11 @@ describe('index réels', () => {
          * Les seuils sont sous les valeurs relevées après correction
          * (539 / 298 / 357) : ils attrapent un effondrement, pas une variation.
          */
-        const plancher: Record<string, number> = { dune: 450, 'blade-runner': 250, alien: 300 };
+        const plancher: Record<string, number> = {
+            dune: 450, 'blade-runner': 250, alien: 300,
+            // Le sommaire seul, 347 lignes dont beaucoup se répètent d'une mission à l'autre.
+            'alien/supplements/colonial-marines': 200,
+        };
         for (const systeme of SYSTEMES) {
             const taille = creerResolveur(chargerIndex(DOCS, systeme)).taille;
             expect(taille, `${systeme} : ${taille} titres uniques`).toBeGreaterThan(plancher[systeme]);
