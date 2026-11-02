@@ -32,6 +32,9 @@ import { lireProgressionAlien } from '../../../dice/systemes/progressionAlien';
 import { CLE_COMBAT_ALIEN, lireLeCombatAlien, malusDesBlessures, preparerLeTir, rechargerUneArme } from '../../../dice/systemes/combatAlien';
 import { systemeArrete } from '../../../dice/systemes/synthetiquesAlien';
 import { PreparationAlien, SuitesDuJetAlien } from './JetsAlien';
+import { EquipementPorte } from './EquipementPorte';
+import { effetsAuJet, valeurDesEffetsCoches } from '../../../equipement/equiperLaFiche';
+import type { ObjetDuCatalogue } from '../../../../types/drivers';
 import { CLE_JET_ALIEN, REGLAGES_ALIEN, actualiserLeJetAlien, composerLesDesAlien, equipementsAlien, lireLeJetAlien, resultatDuJetAlien, type JetAlien } from '../../../dice/systemes/jetsAlien';
 import {
     appliquerLaPaniqueAlien, cumulAlien, desApresTremblement, estUnAndroide,
@@ -157,11 +160,17 @@ interface PanneauDeJetProps {
      * proposent pas : on ne dépense pas ce qu'on ne saurait décompter.
      */
     ecrireSurLaFiche?: (maj: Record<string, unknown>) => void;
+    /**
+     * Les objets du catalogue que le personnage porte (Sac à dos et armes de la
+     * fiche) — registre § 203, étape E, 02/11/2026. Leurs effets qui visent un
+     * champ du jet sont rappelés, avec une case ; aucun n'est coché d'office.
+     */
+    objetsPortes?: ObjetDuCatalogue[];
 }
 
 const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false, personnageId,
-    ecrireSurLaFiche,
+    ecrireSurLaFiche, objetsPortes,
 }) => {
     /** Champ retenu pour chaque composante — `{ competence: 'combat' }`. */
     const [choix, setChoix] = useState<Record<string, string>>({});
@@ -207,6 +216,20 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const suitesAlien = descripteur.panique?.suites;
     const regleJetAlien = descripteur.alien;
     const [reglagesAlien, setReglagesAlien] = useState(REGLAGES_ALIEN);
+    /*
+      L'équipement porté (§ 203, étape E) : les effets qui visent un champ
+      choisi pour ce jet, et ceux que le meneur a cochés. Une case cochée dont
+      l'effet ne vise plus le jet ne compte pas : seuls les effets listés sont
+      sommés.
+    */
+    // Pas les dés secondaires : le café agit sur le Niveau de Stress, il ne donne pas de dé de base (audit du 02/11).
+    const effetsDuJet = useMemo(() => {
+        const secondaires = new Set((descripteur.reserve?.secondaire?.composantes ?? []).map(c => c.id));
+        return effetsAuJet(objetsPortes ?? [], Object.entries(choix).filter(([id]) => !secondaires.has(id)).map(([, champ]) => champ));
+    }, [objetsPortes, choix, descripteur.reserve]);
+    const [effetsCoches, setEffetsCoches] = useState<ReadonlySet<string>>(new Set());
+    const bonusDEquipement = valeurDesEffetsCoches(effetsDuJet, effetsCoches);
+    const objetsDuBonus = effetsDuJet.filter(e => effetsCoches.has(e.cle)).map(e => e.objet).join(', ');
     const dernierJetAlien = useRef<JetAlien | undefined>(undefined);
     // Les écritures locales ne complètent que la version de fiche qui les a
     // produites ; une nouvelle fiche reçue fait autorité sans effet de remise à zéro.
@@ -658,12 +681,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             if (regleJetAlien) {
                 const blessure = combatAlien && !estUnAndroide(suitesAlien, valeursAlien) ? malusDesBlessures(lireLeCombatAlien(valeursAlien),regleJetAlien.competences[choix[regleJetAlien.competence]]) : 0;
                 const tir = combatAlien && regleJetAlien.competences[choix[regleJetAlien.competence]] === 'distance' ? preparerLeTir(reglagesAlien,equipementAlien) : undefined;
-                const apres = composerLesDesAlien(prepare.nombreDeDes, stress + (estUnAndroide(suitesAlien,valeursAlien) ? 0 : tir?.stress ?? 0), reglagesAlien, equipementAlien?.bonus, tremblement + blessure + (tir?.bonus ?? 0));
+                const apres = composerLesDesAlien(prepare.nombreDeDes, stress + (estUnAndroide(suitesAlien,valeursAlien) ? 0 : tir?.stress ?? 0), reglagesAlien, equipementAlien?.bonus, tremblement + blessure + (tir?.bonus ?? 0) + bonusDEquipement);
                 const arme = lireLeCombatAlien(valeursAlien).armes[equipementAlien?.id ?? ''];
                 const erreurMunition = tir && equipementAlien?.proprietes?.munitions && (!arme || arme.vide) ? 'Arme vide ou chargeur non confirmé : préparer les munitions avant de tirer.' : undefined;
                 return { ...prepare, nombreDeDes: apres.base, desSecondaires: apres.stress,
                     avertissements: [...prepare.avertissements, ...[equipementAlien?.erreur,tir?.erreur,erreurMunition].filter((x): x is string => !!x)],
-                    remarques: [...prepare.remarques, `Base ${prepare.nombreDeDes} + arme ${equipementAlien?.bonus ?? 0} + outil/talent ${reglagesAlien.outil} + situation ${reglagesAlien.situation} + aide ${apres.aide}${tremblement ? ` −2 Tremblement` : ''}${tir ? ` ; tir ${tir.bonus >= 0 ? '+' : ''}${tir.bonus}, Stress préalable +${estUnAndroide(suitesAlien,valeursAlien) ? 0 : tir.stress}` : ''}${blessure ? ` ; blessures ${blessure}` : ''} → ${apres.base} dés de base, ${apres.stress} de Stress.`, ...(apres.base + apres.stress === 0 ? ['Aucun dé ne reste : ce test est impossible. Changez de stratégie.'] : [])] };
+                    remarques: [...prepare.remarques, `Base ${prepare.nombreDeDes} + arme ${equipementAlien?.bonus ?? 0} + outil/talent ${reglagesAlien.outil}${bonusDEquipement ? ` + équipement ${bonusDEquipement > 0 ? '+' : ''}${bonusDEquipement} (${objetsDuBonus})` : ''} + situation ${reglagesAlien.situation} + aide ${apres.aide}${tremblement ? ` −2 Tremblement` : ''}${tir ? ` ; tir ${tir.bonus >= 0 ? '+' : ''}${tir.bonus}, Stress préalable +${estUnAndroide(suitesAlien,valeursAlien) ? 0 : tir.stress}` : ''}${blessure ? ` ; blessures ${blessure}` : ''} → ${apres.base} dés de base, ${apres.stress} de Stress.`, ...(apres.base + apres.stress === 0 ? ['Aucun dé ne reste : ce test est impossible. Changez de stratégie.'] : [])] };
             }
             if (effet?.malusAgilite && enPanique && Object.values(choix).includes(suitesAlien.agilite)) {
                 const apres = desApresTremblement(prepare.nombreDeDes, prepare.desSecondaires, effet.malusAgilite);
@@ -672,7 +695,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrun, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
+        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrun, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
     );
 
     /*
@@ -2457,6 +2480,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     )}
 
                     {regleJetAlien && <PreparationAlien reglages={reglagesAlien} changer={setReglagesAlien} equipements={equipements} tir={tirAlien} />}
+                    {regleJetAlien && effetsDuJet.length > 0 && <EquipementPorte effets={effetsDuJet} coches={effetsCoches} total={bonusDEquipement}
+                        basculer={cle => setEffetsCoches(c => { const s = new Set(c); if (s.has(cle)) s.delete(cle); else s.add(cle); return s; })} />}
                     {combatAlien && equipementAlien?.proprietes?.munitions && <MunitionsAlien arme={equipementAlien} suivi={etatCombatAlien}
                         rapide={String(valeursAlien[combatAlien.talents] ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes('rechargement rapide')}
                         agir={(action,nombre,vide) => {

@@ -35,7 +35,7 @@ maintenant »*, avec le *Colonial Marines Operations Manual* d'Alien. Quatre dé
 Livré : chemins (`corpusSysteme.ts`), gabarits, inventaire libre, `supplements.ts`,
 `ChoixDuLivre.tsx`, atelier et liste des sujets, sommaire du supplément dans
 `docs/systems/alien/supplements/colonial-marines/index/`, guide `50-Forge-des-systemes.md`
-(« Documenter un supplément »). Suite complète verte. Rien n'est commité.
+(« Documenter un supplément »). Suite complète verte. **Commité et poussé le 02/11** (`46047760`).
 
 ## Par quoi reprendre
 
@@ -48,7 +48,17 @@ Livré : chemins (`corpusSysteme.ts`), gabarits, inventaire libre, `supplements.
    [`2026-11-02-catalogue-d-equipement.md`](2026-11-02-catalogue-d-equipement.md)) : quatre familles
    décidées par David le 02/11. **Étape A livrée** (modèle et contrôle) ; les écrans passent par
    Stitch (consigne de David) ; **étape B livrée** (section « Équipement » de l'éditeur du pilote,
-   d'après l'écran Stitch retenu) ; attend l'essai de David, puis l'étape C.
+   d'après l'écran Stitch retenu), **commitée et poussée le 02/11** (`a0299fc1`) ; attend l'essai de
+   David. **Étape C** : la lecture des tableaux est livrée (`depuisLeCorpus.ts`, 66 objets de
+   Colonial Marines) ; le livre de base est **transcrit** depuis le PDF en image, décision de David
+   (`docs/systems/alien/rules/equipement-*-du-livre-de-base.md`, 89 objets). **L'aperçu est
+   livré** (`RemplirDepuisLeCorpus.tsx`, écran Stitch retenu au premier tour) ; attend l'essai de
+   David : « Équipement » → « Remplir depuis le corpus » → « Verser au catalogue ». **Étape D
+   livrée** : « Prendre dans le catalogue » sur la fiche d'un personnage d'Alien
+   (`PrendreDansLeCatalogue.tsx`, `equiperLaFiche.ts`). **Étape E livrée** : onglet Matériel (Sac à dos) et carte « Équipement porté » au jet d'Alien,
+   dont l'écran a été généré par le **MCP Stitch**, branché ce jour-là. **Essayée par David le soir même** (« ok ca marche »), après trois corrections : compétences
+   préfixées « Es_ », faux effet des Palmes, cible d'un effet choisie dans une liste. C, D et E
+   commitées et poussées le 02/11 au soir, avec les captures du manuel.
 
 1. **L'essai de David** : réimporter `Export Dirvers/corriges/SR_Anarchy_driver_gmos_finir.gmos-driver`
    avec **Remplacer** ; sur un personnage, un test avec des dés de risque (bouton « Risquée »), puis
@@ -74,3 +84,8 @@ Livré : chemins (`corpusSysteme.ts`), gabarits, inventaire libre, `supplements.
   Les noms anglais se vérifient contre l'édition anglaise (même dossier).
 - ⛔ Le skill `finir-un-pilote` dit « ne jamais commiter `Export Dirvers/` », alors que le dossier
   est suivi et que des essais lisent ses `corriges/`. Question posée à David, sans réponse.
+- **Le livre de base d'Alien** : `\\CLOUDDAVID\Media\Jeux de Rôle\03. Futur\1. Space Opera\Aliens\ALIEN (Arkhane Asylum)\ALIEN_le_jeu_de_rôle.pdf`
+  (60 Mo) ; PDF = imprimée + 3 ; texte doublé ; chapitre 6, « Équipement », p. 116-149 ; l'errata 2021
+  ne le touche pas.
+- ⚠️ **La validation du push compile l'arbre de travail, pas les commits** : un fichier en cours, non
+  commité, qui ne compile pas fait échouer le push des commits (02/11).

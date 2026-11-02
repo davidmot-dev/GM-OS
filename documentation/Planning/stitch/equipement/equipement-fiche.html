@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html class="h-full" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Catalogue - Armes &amp; Protections</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = { theme: { extend: {
+      colors: {
+        parchment: { 50: '#fbf9f5', 100: '#f6f3eb', 200: '#eee8dc', 300: '#e2d8c7' },
+        crimson: { 700: '#b91c1c', 800: '#991b1b' },
+        amberAccent: { 600: '#d97706', 700: '#b45309', 800: '#92400e' }
+      },
+      fontFamily: { serifDisplay: ['"Cinzel"', 'Georgia', 'serif'], sans: ['"Inter"', 'system-ui', 'sans-serif'] }
+    } } }
+  </script>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&display=swap');
+    .font-cinzel { font-family: 'Cinzel', Georgia, serif; }
+  </style>
+</head>
+<body class="bg-parchment-100 text-stone-800 antialiased min-h-screen relative font-sans overflow-x-hidden">
+<!-- Fond allégé par Claude : la fiche d'origine est la capture de David. -->
+<div aria-hidden="true" class="min-h-screen p-8 max-w-7xl mx-auto flex flex-col gap-6 opacity-85">
+<section class="bg-parchment-50 p-6 rounded-2xl border border-stone-300 shadow-sm mt-4">
+<div class="flex items-center justify-between border-b border-stone-200 pb-3 mb-4">
+<h2 class="text-sm font-bold uppercase tracking-widest text-crimson-800">ARMES &amp; PROTECTIONS</h2>
+<button class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-stone-300 text-stone-700 bg-white" type="button">Prendre dans le catalogue</button>
+</div>
+</section>
+</div>
+<div aria-modal="true" class="fixed inset-0 bg-[#140f0a]/45 backdrop-blur-[2px] z-40 flex items-center justify-center p-4 sm:p-6 md:p-8" role="dialog">
+<div class="bg-white rounded-3xl border border-stone-200 shadow-2xl w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden text-stone-800">
+<header class="px-7 pt-6 pb-4 border-b border-stone-100 relative">
+<div class="flex items-start justify-between gap-4">
+<div>
+<h2 class="text-xl sm:text-2xl font-bold font-cinzel italic tracking-wide text-stone-900">Prendre dans le catalogue</h2>
+<p class="mt-1 text-sm text-stone-600 leading-snug">L'objet choisi s'ajoute aux champs de la fiche. Rien n'est enregistré avant « Sauvegarder ».</p>
+</div>
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-stone-400 shrink-0 -mt-1 text-2xl font-light" type="button">×</button>
+</div>
+<nav class="flex items-center gap-3 mt-5">
+<button class="px-4 py-2 text-sm font-semibold rounded-xl bg-amber-50 text-amberAccent-800 border border-amberAccent-700/30 flex items-center gap-2" type="button"><span>Armes</span><span class="px-2 py-0.5 text-xs rounded-full bg-amberAccent-700 text-white font-bold">54</span></button>
+<button class="px-4 py-2 text-sm font-medium rounded-xl text-stone-600 border border-transparent flex items-center gap-2" type="button"><span>Protections</span><span class="px-2 py-0.5 text-xs rounded-full bg-stone-200 text-stone-700 font-medium">11</span></button>
+</nav>
+</header>
+<div class="px-7 py-5 overflow-y-auto flex flex-col gap-5">
+<div class="relative"><input class="w-full pl-10 pr-4 py-2.5 text-sm bg-parchment-50 border border-stone-200 rounded-xl placeholder-stone-400 text-stone-800" placeholder="Chercher dans le catalogue..." type="search"/></div>
+<div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-semibold" role="toolbar">
+<button class="whitespace-nowrap px-3.5 py-1.5 rounded-full border border-stone-200 bg-white text-stone-600" type="button">Pistolets</button>
+<button class="whitespace-nowrap px-3.5 py-1.5 rounded-full border border-amberAccent-700 bg-amber-50 text-amberAccent-800 font-bold" type="button">Fusils</button>
+<button class="whitespace-nowrap px-3.5 py-1.5 rounded-full border border-stone-200 bg-white text-stone-600" type="button">Armes lourdes</button>
+<button class="whitespace-nowrap px-3.5 py-1.5 rounded-full border border-stone-200 bg-white text-stone-600" type="button">Combat rapproché</button>
+<button class="whitespace-nowrap px-3.5 py-1.5 rounded-full border border-stone-200 bg-white text-stone-600" type="button">Explosifs, mines et armes chimiques</button>
+</div>
+<div class="border border-stone-200 rounded-2xl overflow-hidden bg-white">
+<table class="w-full text-left border-collapse text-xs">
+<thead class="bg-stone-50 text-stone-500 border-b border-stone-200 uppercase tracking-wider text-[11px] font-bold">
+<tr><th class="py-3 px-4">Arme</th><th class="py-3 px-3 w-16 text-center">Bonus</th><th class="py-3 px-3 w-16 text-center">Dégâts</th><th class="py-3 px-3 w-20">Portée</th><th class="py-3 px-4">Propriétés</th><th class="py-3 px-3 w-16 text-right">Page</th></tr>
+</thead>
+<tbody class="divide-y divide-stone-100 text-stone-700 text-xs">
+<tr class="bg-amber-50/70 text-stone-900 border-l-4 border-l-amberAccent-700 font-medium"><td class="py-3 px-4 font-semibold text-amberAccent-800">Fusil à impulsion Armat M41A</td><td class="py-3 px-3 text-center text-stone-800">+1</td><td class="py-3 px-3 text-center text-stone-800 font-semibold">2</td><td class="py-3 px-3 text-stone-800">Longue</td><td class="py-3 px-4 text-stone-700">Lance-grenades intégré, Mode auto, Perce-armure</td><td class="py-3 px-3 text-right text-stone-500">p. 120</td></tr>
+<tr class="border-l-4 border-l-transparent"><td class="py-3 px-4 font-medium text-stone-900">Fusil à lunette M42A</td><td class="py-3 px-3 text-center">+2</td><td class="py-3 px-3 text-center font-medium">2</td><td class="py-3 px-3">Extrême</td><td class="py-3 px-4 text-stone-600">Perce-armure</td><td class="py-3 px-3 text-right text-stone-500">p. 120</td></tr>
+<tr class="border-l-4 border-l-transparent"><td class="py-3 px-4 font-medium text-stone-900">Fusil à pompe Armat modèle 37A2 calibre 12</td><td class="py-3 px-3 text-center">+2</td><td class="py-3 px-3 text-center font-medium">3</td><td class="py-3 px-3">Courte</td><td class="py-3 px-4 text-stone-600">Protection doublée</td><td class="py-3 px-3 text-right text-stone-500">p. 120</td></tr>
+<tr class="border-l-4 border-l-transparent"><td class="py-3 px-4 font-medium text-stone-900">Fusil d'assaut à impulsion AK-4047</td><td class="py-3 px-3 text-center text-stone-400">—</td><td class="py-3 px-3 text-center font-medium">2</td><td class="py-3 px-3">Longue</td><td class="py-3 px-4 text-stone-600">Mode auto</td><td class="py-3 px-3 text-right text-stone-500">p. 120</td></tr>
+</tbody>
+</table>
+</div>
+<aside class="p-4 rounded-2xl bg-parchment-50 border border-stone-200">
+<h3 class="text-xs font-bold uppercase tracking-wider text-stone-700 mb-2.5">Ce qui sera écrit sur la fiche</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs">
+<div class="flex items-baseline gap-2 py-0.5"><span class="text-stone-500 font-semibold min-w-[70px]">Armes :</span><span class="text-emerald-700 font-bold">+</span><span class="text-stone-800 font-medium truncate">Fusil à impulsion Armat M41A</span></div>
+<div class="flex items-baseline gap-2 py-0.5"><span class="text-stone-500 font-semibold min-w-[70px]">Bonus :</span><span class="text-emerald-700 font-bold">+</span><span class="text-stone-800 font-medium">+1</span></div>
+<div class="flex items-baseline gap-2 py-0.5"><span class="text-stone-500 font-semibold min-w-[70px]">Dégâts :</span><span class="text-emerald-700 font-bold">+</span><span class="text-stone-800 font-medium">2</span></div>
+<div class="flex items-baseline gap-2 py-0.5"><span class="text-stone-500 font-semibold min-w-[70px]">Portée :</span><span class="text-emerald-700 font-bold">+</span><span class="text-stone-800 font-medium">Longue</span></div>
+<div class="flex items-baseline gap-2 py-0.5 sm:col-span-2"><span class="text-stone-500 font-semibold min-w-[70px]">Propriétés :</span><span class="text-emerald-700 font-bold">+</span><span class="text-stone-800 font-medium">Lance-grenades intégré, Mode auto, Perce-armure</span></div>
+</div>
+</aside>
+</div>
+<footer class="px-7 py-4 bg-stone-50 border-t border-stone-200 flex items-center justify-end gap-4 shrink-0">
+<button class="px-4 py-2.5 text-sm font-semibold text-stone-600 rounded-xl min-h-[44px]" type="button">Annuler</button>
+<button class="px-6 py-2.5 text-sm font-semibold text-white bg-amberAccent-700 rounded-xl flex items-center justify-center min-h-[44px]" type="button">Ajouter à la fiche</button>
+</footer>
+</div>
+</div>
+</body></html>

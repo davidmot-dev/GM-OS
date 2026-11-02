@@ -40,6 +40,8 @@ import type { PlayerCharacter } from '../store/types';
 import { PanneauRepriseVoyageur } from './PanneauRepriseVoyageur';
 import { estUneFicheDeVoyageur, lireFicheDeVoyageur, calculDeVoyageurHorsTable, CALCULS_DU_VOYAGEUR, CLE_REPRISE } from '../logic/ficheDeVoyageur';
 import { avecOrigine } from '../logic/origineDesModifications';
+import { champsDEquipement, objetsPortes, sectionDuCatalogue as sectionAvecLeCatalogue } from '../../equipement/equiperLaFiche';
+import PrendreDansLeCatalogue from './PrendreDansLeCatalogue';
 
 
 // --- Sub-components ---
@@ -97,6 +99,24 @@ const CharacterSheetEditor: React.FC = () => {
      * pour un seul nombre — et celui-ci perdrait toujours.
      */
     const santeSuitLaFiche = !!piloteDeLaFiche?.combat?.santeDeDepart?.trim();
+
+    /**
+     * « Prendre dans le catalogue » (§ 203, étape D, 02/11/2026) : le bouton se
+     * pose sur la section qui porte le champ des armes, ou de la protection, que
+     * le pilote déclare — jamais sur une section nommée en dur. Sans catalogue,
+     * ou sans ces champs, il n'y a pas de bouton.
+     */
+    const [prendreDansLeCatalogue, setPrendreDansLeCatalogue] = React.useState(false);
+    const sectionDuCatalogue = React.useMemo(
+        () => sectionAvecLeCatalogue(piloteDeLaFiche, editor.template?.sections),
+        [piloteDeLaFiche, editor.template],
+    );
+    // Ce que le personnage porte (§ 203, étape E) : le panneau de jet en rappelle les effets.
+    const objetsDuPersonnage = React.useMemo(
+        () => objetsPortes(piloteDeLaFiche?.catalogue, editor.character?.inventoryItems ?? [], champsDEquipement(piloteDeLaFiche ?? undefined),
+            { ...editor.character?.sheetData, ...editor.localData }),
+        [piloteDeLaFiche, editor.character, editor.localData],
+    );
 
     const { evaluateFormula } = useSheetCalculator(editor.character as PlayerCharacter | null, editor.template, editor.localData);
     const [isAddingItem, setIsAddingItem] = React.useState(false);
@@ -323,6 +343,7 @@ const CharacterSheetEditor: React.FC = () => {
                             valeurs={{...character.sheetData, ...editor.localData}}
                             campaignId={activeCampaignId ?? undefined}
                             ressourcesDeTable={ressourcesDeLaTable(piloteDeLaFiche!, campaigns.find(c => c.id === activeCampaignId))}
+                            objetsPortes={objetsDuPersonnage}
                             // Le Vécu, l'Espoir, la Singularité dépensés au jet se décomptent sur la fiche.
                             ecrireSurLaFiche={maj => {
                                 if (editor.character && editor.selectedPlayer) {
@@ -676,9 +697,18 @@ const CharacterSheetEditor: React.FC = () => {
                         {template.sections.map(section => {
                             const gauges = gaugeFields(section);
                             const others = otherFields(section);
+                            const avecLeCatalogue = section.id === sectionDuCatalogue;
                             return (
                                 <div key={section.id} className="space-y-3">
-                                    <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2">{section.label}</h3>
+                                    <h3 className={`text-ui-10 font-black uppercase tracking-[0.2em] text-accent border-b border-accent/20 pb-2 ${avecLeCatalogue ? 'flex items-center justify-between gap-3' : ''}`}>
+                                        {section.label}
+                                        {avecLeCatalogue && (
+                                            <button type="button" onClick={() => setPrendreDansLeCatalogue(true)}
+                                                className="flex items-center gap-1.5 rounded-lg border border-app-border px-3 py-1.5 text-ui-12 font-semibold normal-case tracking-normal text-app-text hover:border-accent/50 hover:text-accent">
+                                                <Package size={14} /> Prendre dans le catalogue
+                                            </button>
+                                        )}
+                                    </h3>
 
                                     {/* Gauges: 2-column grid */}
                                     {gauges.length > 0 && (
@@ -735,6 +765,14 @@ const CharacterSheetEditor: React.FC = () => {
                             );
                         })}
                     </div>
+
+                    {prendreDansLeCatalogue && piloteDeLaFiche && (
+                        <PrendreDansLeCatalogue driver={piloteDeLaFiche} fiche={{ ...character.sheetData, ...editor.localData }}
+                            onEcrire={modifies => Object.entries(modifies).forEach(([id, v]) => updateLocal(id, v))}
+                            sac={character.inventoryItems ?? []}
+                            onRanger={item => { addInventoryItem(item); gmToast(`« ${item.name} » rangé dans le Sac à dos`); }}
+                            onFermer={() => setPrendreDansLeCatalogue(false)} />
+                    )}
 
                     {/* === UNIVERSAL SECTIONS (always visible) === */}
 

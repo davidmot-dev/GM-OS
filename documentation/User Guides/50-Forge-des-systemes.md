@@ -156,7 +156,9 @@ Le catalogue des objets du jeu, en quatre familles : **armes**, **protections**,
 5. **« Emporte »** se choisit dans le catalogue, jamais au clavier. Par exemple, la combinaison
    CCC5 emporte son canon AK-104S. Corriger le canon corrige donc tout ce qui l'emporte.
 6. **Les effets** (« +2 aux tests de Mobilité sous l'eau ») disent la compétence qu'ils visent et
-   leur condition. Ils seront **rappelés** au jet et jamais appliqués d'office, car leurs
+   leur condition. La compétence se **choisit dans la liste** des champs de la fiche
+   (« Ag_Mobilité — Compétences »). Une cible absente de la fiche s'affiche en ocre, « … — absent
+   de la fiche » : le jet ne la retrouverait pas, choisissez la bonne. Ils seront **rappelés** au jet et jamais appliqués d'office, car leurs
    conditions se jugent à la table.
 
 Le contrôle du pilote s'affiche **sous l'objet concerné**, à deux niveaux :
@@ -166,9 +168,46 @@ Le contrôle du pilote s'affiche **sous l'objet concerné**, à deux niveaux :
 - **en ocre**, ce qui se lit mais ne se compte pas, comme « Puissance 9 » dans une colonne de
   nombres.
 
-> ⚠️ **Ce qui ne marche pas encore.** Une fiche de personnage ne s'équipe pas encore depuis le
-> catalogue, et le catalogue ne se remplit pas encore depuis le corpus. Ce sont les étapes suivantes
-> du chantier : [le plan](../Planning/2026-11-02-catalogue-d-equipement.md).
+#### Remplir le catalogue depuis le corpus
+
+*Depuis le 2026-11-02.* Le bouton **« Remplir depuis le corpus »**, à côté de « Ajouter un objet »,
+lit les tableaux des fiches de règles relues du jeu et de ses suppléments. Il n'interroge aucun
+carnet : les chiffres viennent des fiches, qui ont été relues contre le livre.
+
+1. **« Livres lus »** : cochez les livres à lire. Un livre sans fiche d'équipement est grisé.
+2. **Le bilan** dit combien d'objets seraient ajoutés ou complétés, combien de colonnes déclarées et
+   combien d'objets rangés dans leur porteur. Par exemple, « compris dans la CCC5 » range le canon
+   AK-104S dans ce que la combinaison emporte.
+3. **« Objets »** montre ce qui serait ajouté, par famille et par catégorie, avec les colonnes du jeu.
+4. **« À regarder »**, en ocre :
+   - ce que vous avez corrigé et que la fiche dit autrement ; c'est **votre valeur qui reste** ;
+   - un porteur introuvable ;
+   - une ligne de tableau illisible.
+5. **« Verser au catalogue »** enregistre. Rien n'est enregistré avant.
+
+Les tableaux qui ne décrivent pas d'équipement (tables de D66, terrains, spécialités) sont écartés,
+et la fenêtre les nomme. On peut relancer le remplissage sans risque : il ne remplit que les cases
+vides.
+
+![Remplir depuis le corpus : les deux livres d'Alien, 154 objets, les colonnes et les rattachements](captures/jeu-alien-catalogue-remplir.jpg)
+
+![La section Équipement : le fusil M41A déplié, ses caractéristiques, ses propriétés et sa source](captures/jeu-alien-catalogue-section.jpg)
+
+> **Pour Alien**, le livre de base a quatre fiches d'équipement, transcrites depuis le PDF
+> (`docs/systems/alien/rules/equipement-*`), et *Colonial Marines* en a huit. Lus ensemble, ils
+> donnent 154 objets. Le TPB M577 et le fusil AK-4047 portent un nom différent dans chaque livre,
+> donc ils apparaissent deux fois.
+
+> **Sur la fiche du personnage** (depuis le 2026-11-02, pour Alien) : le bouton « Prendre dans le
+> catalogue » écrit une arme ou une protection dans les champs que le jet lit déjà. Voir
+> [le manuel d'Alien](./54-Jeu-Alien.md#prendre-une-arme-ou-une-protection-dans-le-catalogue--02112026).
+
+> **Au jet** (depuis le 2026-11-02, pour Alien) : les effets des objets portés qui visent la
+> compétence lancée sont rappelés dans « Équipement porté », chacun avec une case. Rien n'est coché
+> d'office.
+
+> ⚠️ **Ce qui ne marche pas encore.** Seul Alien déclare les champs qui reçoivent une arme et
+> applique les effets cochés aux dés : [le plan](../Planning/2026-11-02-catalogue-d-equipement.md).
 
 ---
 

@@ -88,6 +88,23 @@ describe('EditeurDuCatalogue', () => {
         expect(dernier().objets[0].valeurs).not.toHaveProperty('portee');
     });
 
+    it('fait choisir la compétence d’un effet dans les champs de la fiche, et signale une cible inconnue', () => {
+        // David, 02/11 : « je n'arrive pas à configurer les palmes » — la cible était une case libre.
+        const palmes: CatalogueDEquipement = { colonnes: {}, objets: [
+            { id: 'palmes-m11', famille: 'materiel', nom: 'Palmes', valeurs: {}, effets: [{ cible: 'eau', valeur: 2, texte: 'Bonus de +2 aux tests de Mobilité sous l’eau' }] },
+        ] };
+        const onUpdate = vi.fn();
+        render(<EditeurDuCatalogue driver={pilote(palmes)} onUpdate={onUpdate}
+            champsDeLaFiche={[{ id: 'mobilite', label: 'Ag_Mobilité — Compétences' }, { id: 'observation', label: 'Es_Observation — Compétences' }]} />);
+        fireEvent.click(screen.getByRole('tab', { name: /Matériel/ }));
+        fireEvent.click(screen.getByText('Palmes'));
+        const cible = screen.getByLabelText('Compétence visée') as HTMLSelectElement;
+        expect(cible.value).toBe('eau');
+        expect(within(cible).getByRole('option', { name: 'eau — absent de la fiche' })).toBeTruthy();
+        fireEvent.change(cible, { target: { value: 'mobilite' } });
+        expect(onUpdate.mock.calls.at(-1)![0].catalogue.objets[0].effets[0]).toMatchObject({ cible: 'mobilite', valeur: 2 });
+    });
+
     it('filtre la liste par la recherche', () => {
         monter(CATALOGUE);
         fireEvent.change(screen.getByLabelText('Chercher un objet'), { target: { value: 'breche' } });

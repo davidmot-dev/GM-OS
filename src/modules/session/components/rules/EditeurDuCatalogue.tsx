@@ -7,6 +7,7 @@ import {
     controlerLeCatalogue, modifierUneColonne, modifierUnObjet, objetsDeLaFamille, rangDuConstat,
     rangerParCategorie, retirerUneColonne, retirerUnObjet, valeursDeLaColonne, type ConstatDuCatalogue,
 } from '../../../equipement/catalogue';
+import RemplirDepuisLeCorpus from './RemplirDepuisLeCorpus';
 
 /**
  * **La section « Équipement » de l'éditeur du pilote** — registre § 203,
@@ -31,17 +32,22 @@ interface EditeurDuCatalogueProps {
     champsDeLaFiche?: { id: string; label: string }[];
 }
 
+/** Une liste stable : un `[]` par défaut, neuf à chaque rendu, relancerait le calcul de l'aperçu. */
+const AUCUN_CHAMP: { id: string; label: string }[] = [];
 const CHAMP = 'w-full rounded-xl border border-app-border/20 bg-app-bg/40 px-3 py-2 text-sm text-app-text outline-none focus:border-accent/50';
 const LIBELLE = 'mb-1.5 block text-ui-12 font-black uppercase tracking-[0.15em] text-app-muted';
 const PASTILLE = 'inline-flex items-center gap-1 rounded-full border border-app-border/20 bg-app-text/5 px-2.5 py-0.5 text-ui-12 font-medium text-app-text';
 
-const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdate, champsDeLaFiche = [] }) => {
+const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdate, champsDeLaFiche = AUCUN_CHAMP }) => {
     const catalogue = driver.catalogue;
     const [famille, setFamille] = useState<FamilleDObjet>('arme');
     const [recherche, setRecherche] = useState('');
     const [deplie, setDeplie] = useState<string | null>(null);
     const [nouvelleColonne, setNouvelleColonne] = useState<string | null>(null);
     const [nouvelObjet, setNouvelObjet] = useState<string | null>(null);
+    const [remplir, setRemplir] = useState(false);
+    // Les effets rejoignent les champs par leur libellé seul : « Machines lourdes », pas « Machines lourdes — Compétences ».
+    const champsSansSection = useMemo(() => champsDeLaFiche.map(c => ({ id: c.id, label: c.label.split(' — ')[0] })), [champsDeLaFiche]);
 
     const enregistrer = (suivant: CatalogueDEquipement) => onUpdate({ catalogue: suivant });
     const base = () => catalogue ?? catalogueVide();
@@ -150,6 +156,10 @@ const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdat
                     <input value={recherche} onChange={e => setRecherche(e.target.value)} placeholder="Chercher un objet" aria-label="Chercher un objet"
                         className={`${CHAMP} rounded-2xl pl-10`} />
                 </label>
+                <button onClick={() => setRemplir(true)}
+                    className="flex items-center gap-1.5 whitespace-nowrap rounded-2xl border border-accent/60 px-4 py-2.5 text-sm font-semibold text-accent shadow-sm hover:bg-accent/10">
+                    <BookOpen size={16} /> Remplir depuis le corpus
+                </button>
                 {nouvelObjet === null ? (
                     <button onClick={() => setNouvelObjet('')}
                         className="flex items-center gap-1.5 whitespace-nowrap rounded-2xl bg-accent px-5 py-2.5 text-sm font-semibold text-app-bg shadow-sm hover:opacity-90">
@@ -200,6 +210,11 @@ const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdat
                     </div>
                 ))}
             </div>
+
+            {remplir && (
+                <RemplirDepuisLeCorpus driver={driver} champsDeLaFiche={champsSansSection}
+                    onVerser={enregistrer} onFermer={() => setRemplir(false)} />
+            )}
         </div>
     );
 };
@@ -300,7 +315,6 @@ const FicheDeLObjet: React.FC<{
     const emportes = objet.contient ?? [];
     const nomDe = (id: string) => catalogue.objets.find(o => o.id === id)?.nom ?? id;
     const choix = catalogue.objets.filter(o => o.id !== objet.id && !emportes.includes(o.id));
-    const listeDesCibles = `cibles-${objet.id}`;
     const texte = (v: string) => (v.trim() ? v : undefined);
 
     return (
@@ -346,18 +360,38 @@ const FicheDeLObjet: React.FC<{
             <div>
                 <div className="flex items-center justify-between"><span className={LIBELLE}>Effets</span>
                     <span className="text-ui-12 text-app-muted">Rappelés au jet, jamais appliqués d'office</span></div>
-                <datalist id={listeDesCibles}>{champsDeLaFiche.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}</datalist>
                 <div className="space-y-2 rounded-xl border border-app-border/20 bg-app-bg/40 p-3">
                     {effets.length === 0 && <p className="text-sm italic text-app-muted">Aucun effet.</p>}
-                    {effets.map((e, i) => (
-                        <div key={i} className="grid grid-cols-[1fr_10rem_5rem_10rem_auto] items-center gap-2">
+                    {effets.map((e, i) => {
+                        /*
+                          La cible se CHOISIT parmi les champs de la fiche, comme
+                          « Emporte » : David tapait « Ag_Mobilité » dans une
+                          case libre (02/11), l'effet visait un champ inexistant
+                          et le jet ne le retrouvait jamais. Une cible inconnue
+                          de la fiche reste affichée, en alerte, pour être
+                          corrigée plutôt que perdue.
+                        */
+                        const inconnue = !!e.cible && champsDeLaFiche.length > 0 && !champsDeLaFiche.some(c => c.id === e.cible);
+                        return (
+                        <div key={i} className="grid grid-cols-[1fr_14rem_5rem_10rem_auto] items-center gap-2">
                             <input value={e.texte} onChange={ev => changerLEffet(i, { texte: ev.target.value })} aria-label="Texte de l'effet" placeholder="+2 aux tests de Mobilité sous l'eau" className={CHAMP} />
-                            <input value={e.cible} list={listeDesCibles} onChange={ev => changerLEffet(i, { cible: ev.target.value })} aria-label="Compétence visée" placeholder="Compétence visée" className={CHAMP} />
+                            {champsDeLaFiche.length > 0 ? (
+                                <select value={e.cible} onChange={ev => changerLEffet(i, { cible: ev.target.value })} aria-label="Compétence visée"
+                                    title={inconnue ? `« ${e.cible} » n'est pas un champ de la fiche : le jet ne retrouvera pas cet effet.` : undefined}
+                                    className={`${CHAMP} ${inconnue ? '!border-etat-alerte text-etat-alerte' : ''}`}>
+                                    <option value="">Compétence visée…</option>
+                                    {inconnue && <option value={e.cible}>{e.cible} — absent de la fiche</option>}
+                                    {champsDeLaFiche.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+                                </select>
+                            ) : (
+                                <input value={e.cible} onChange={ev => changerLEffet(i, { cible: ev.target.value })} aria-label="Compétence visée" placeholder="Compétence visée" className={CHAMP} />
+                            )}
                             <input value={e.valeur ?? ''} type="number" onChange={ev => changerLEffet(i, { valeur: ev.target.value === '' ? undefined : Number(ev.target.value) })} aria-label="Valeur de l'effet" placeholder="±" className={`${CHAMP} text-center font-mono`} />
                             <input value={e.condition ?? ''} onChange={ev => changerLEffet(i, { condition: texte(ev.target.value) })} aria-label="Condition de l'effet" placeholder="Condition" className={CHAMP} />
                             <button aria-label="Retirer l'effet" onClick={() => onChange({ effets: effets.filter((_, j) => j !== i) })} className="rounded-lg p-1.5 text-app-muted hover:text-etat-danger"><Trash2 size={15} /></button>
                         </div>
-                    ))}
+                        );
+                    })}
                     <button onClick={() => onChange({ effets: [...effets, { cible: '', texte: '' }] })}
                         className="inline-flex items-center gap-1 rounded-xl border border-app-border/30 px-3 py-1.5 text-ui-12 font-semibold text-app-muted hover:border-accent/50 hover:text-accent">
                         <Plus size={14} /> Ajouter un effet

@@ -432,6 +432,56 @@ colonnes : une ligne par arme, dans le même ordre. Ces valeurs circulent aussi 
 depuis la fiche HTML. L'ancien texte d'armes est conservé : répartir ses valeurs dans
 les colonnes, sans perdre les notes existantes. Un bonus non numérique est signalé.
 
+### Prendre une arme ou une protection dans le catalogue — 02/11/2026
+
+*Depuis le 2026-11-02 (registre § 203, étape D).* Quand le pilote a un **catalogue d'équipement**
+(éditeur du pilote, section Équipement ; [guide 50](./50-Forge-des-systemes.md)), la section
+**Armes & protections** de la fiche porte un bouton **« Prendre dans le catalogue »**. Plus besoin de
+recopier « +1 », « 2 », « Longue » à la main.
+
+1. Choisissez l'onglet **Armes** ou **Protections**, puis la catégorie (Pistolets, Fusils…), ou
+   cherchez par le nom.
+2. Cliquez l'objet. L'encadré **« Ce qui sera écrit sur la fiche »** montre chaque ligne ajoutée.
+   - **Une arme** ajoute une ligne aux noms, bonus, dégâts, portées et propriétés, toutes au même
+     rang. Un bonus que le livre laisse vide (« – ») s'écrit 0. Si un champ portait déjà une
+     ligne de plus que les autres, l'arme vient après elle : aucune ligne n'est écrasée.
+   - **Une protection** remplace la valeur de **Protection - Niveau**, et l'encadré montre
+     l'ancienne et la nouvelle (« 6 → 2 »).
+   - **Un objet qui en emporte un autre** propose de l'ajouter aussi. Par exemple, la combinaison
+     CCC5 emporte son canon AK-104S. Décochez la case pour ne prendre que la combinaison.
+3. **« Ajouter à la fiche »**, puis **« Sauvegarder »**. Rien n'est enregistré avant, et la fiche
+   HTML suit à la sauvegarde.
+
+![Prendre dans le catalogue : les fusils des deux livres, le M41A choisi et ce qui sera écrit sur la fiche](captures/jeu-alien-catalogue-fiche.jpg)
+
+Le panneau de jet propose aussitôt l'arme ajoutée, avec ses chiffres.
+
+**L'onglet Matériel** (palmes, jumelles, médikit…) range l'objet dans le **Sac à dos**, relié au
+catalogue. Une protection prise y entre aussi. Le Sac à dos s'enregistre aussitôt, comme son
+bouton « + » ; un objet déjà rangé n'est pas doublé.
+
+### L'équipement porté, rappelé au jet — 02/11/2026
+
+*Depuis le 2026-11-02 (registre § 203, étape E).* Dans **Préparer le test Alien**, l'encadré
+**« Équipement porté »** liste les effets des objets que le personnage porte et qui visent le jet :
+la compétence ou l'attribut choisis. Les objets portés sont ceux du Sac à dos reliés au catalogue
+et les armes nommées sur la fiche.
+
+- Chaque ligne donne l'objet, l'effet, sa **condition** (« sous l'eau ») et sa valeur.
+- **Rien n'est coché d'office** : la condition se juge à la table. Cochez ce qui joue ici.
+- Les cases cochées s'ajoutent aux dés de base, comme le bonus d'outil, et le détail du jet les
+  nomme : « équipement +2 (Jumelles) ».
+- Changer de compétence retire les effets qui ne la visent plus.
+
+![Équipement porté : les Jumelles, cochées, apportent +2 au jet d'Observation](captures/jeu-alien-equipement-porte.jpg)
+
+![Le panneau de jet : « équipement +2 (Jumelles) » dans le détail, 7 dés de base](captures/jeu-alien-equipement-porte-jet.jpg)
+
+> Un objet qui n'apporte rien au jet n'a sans doute pas d'effet au catalogue : regardez sa fiche
+> dans l'éditeur du pilote, section Équipement. Un catalogue rempli avant le 2026-11-02 au soir
+> avait perdu les effets des compétences préfixées (« Es_Observation ») ; relancer **« Remplir
+> depuis le corpus »** les ajoute, sans rien changer d'autre.
+
 Avant de lancer, **Préparer le test Alien** permet de choisir l'arme puis de saisir le
 bonus d'outil/talent, le modificateur de situation (positif ou négatif) et l'aide.
 Maman valide leur pertinence. Chaque personne qui aide apporte +1, au plus trois,

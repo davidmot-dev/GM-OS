@@ -76,10 +76,8 @@ Ensuite, hors de ce chantier : Loot-OS qui distribue un objet du catalogue, les 
 
 ## Questions ouvertes
 
-1. **Le livre de base d'Alien n'a pas de fiche d'équipement relue.** Son gabarit d'inventaire exclut
-   l'équipement, et `weapons_armor_gear_vehicles.md` est une extraction brute aux colonnes mêlées.
-   Deux voies : forger et relire des fiches d'équipement du livre de base, comme pour le supplément ; ou
-   transcrire les tableaux depuis le PDF lu en image, puis relecture de David. À décider à l'étape C.
+1. ~~**Le livre de base d'Alien n'a pas de fiche d'équipement relue.**~~ **Tranché le 02/11** : David
+   choisit la transcription depuis le PDF lu en image (voir « Avancement », étape C).
 2. **Où vit le bouton de l'étape D** : sur la fiche GM-OS du personnage (à localiser dans le gabarit
    d'Alien), probablement à côté des champs d'armes.
 
@@ -119,6 +117,124 @@ Ensuite, hors de ce chantier : Loot-OS qui distribue un objet du catalogue, les 
   - `npx tsc -b` et eslint passent.
 
   Le guide 50 décrit la section. **Reste l'essai de David à l'écran** (voir « Garde-fous »).
+- **Commit et push le 02/11** à la demande de David : `46047760` (supplément, § 185) et `a0299fc1`
+  (catalogue, étapes A et B).
+- **Étape C, la lecture livrée le 02/11** (GM-OS fermé) ; l'aperçu attend son écran Stitch.
+  - **Livre de base, décision de David** : *« Je transcris »*. Quatre fiches écrites depuis le PDF
+    lu en image (PDF = imprimée + 3 ; l'errata 2021 ne touche pas le chapitre) :
+    `docs/systems/alien/rules/equipement-{armes,protections,materiel,vehicules}-du-livre-de-base.md`,
+    `hors_canevas: true` et un `sujet:` hors du canevas, donc sans poids sur l'invite de la Forge.
+    Chaque tableau porte sa page imprimée dans son titre (« Tableau des Armes lourdes (p. 124) »).
+  - **`src/modules/equipement/depuisLeCorpus.ts`**, `remplirDepuisLesFiches(catalogue, fiches,
+    champsDeLaFiche)` : rend le catalogue proposé et un journal (objets ajoutés et complétés,
+    colonnes déclarées, écarts conservés, rattachements, renvois non résolus, lignes non lues,
+    tableaux écartés). Règles :
+    - la famille se lit à la première colonne (« Arme », « Armure », « Véhicule », « Tenue »,
+      « Appareil »…) ; les autres tableaux (D66, terrains, spécialités) sont écartés et nommés ;
+    - poids, coût et « Spécial » vont au socle ; les autres colonnes deviennent celles du jeu,
+      rapprochées par leur libellé, en nombre si la moitié des valeurs en sont ;
+    - la page vient du titre du tableau, sinon de la section résolue par l'index du livre ;
+    - les propriétés d'une arme sont les morceaux courts de « Spécial » ; le texte entier va dans la
+      description ;
+    - les effets : un nombre **signé** et les libellés des champs de la fiche autour de lui, ce qui
+      rejoint `machines_lourdes` ou `soins_medicaux` ; « Soins médicaux 6 » n'est pas un effet ;
+    - « compris dans la CCC5 » rattache l'objet à son porteur (`contient`), par un mot entier du nom ;
+    - on remplit ce qui est vide, on ne remplace rien, et l'écart est dit.
+  - **Chiffres** : Colonial Marines, 66 objets (26 armes, 5 protections, 23 véhicules, 12 matériel),
+    16 colonnes, 2 rattachements, 12 tableaux écartés ; livre de base, 89 objets (28, 6, 6, 49).
+    Lus ensemble : le casque M10 trouve l'armure M3, le Cheyenne présent dans les deux livres n'est
+    pas doublé (154 objets).
+  - **Essais** : `depuisLeCorpus.test.ts` (10), sur les vraies fiches lues par `import.meta.glob`.
+  - **L'aperçu livré le même jour** (GM-OS fermé), d'après l'écran Stitch retenu au premier tour :
+    `src/modules/session/components/rules/RemplirDepuisLeCorpus.tsx`, ouvert par le bouton « Remplir
+    depuis le corpus » de la section ; `src/modules/equipement/livresDuJeu.ts` lit le livre de base
+    puis chaque supplément déclaré (`ai.listDir`, `ai.readDoc`, et `ai.resolveSections` dans l'index
+    de chaque livre). Les effets rejoignent les champs par leur libellé sans la section.
+    Essais : `RemplirDepuisLeCorpus.test.tsx` (6), `livresDuJeu.test.ts` (2). Guide 50 :
+    « Remplir le catalogue depuis le corpus ».
+  - **Reste de C** : l'essai de David à l'écran.
+- **Étape D livrée le 02/11** (GM-OS fermé ; écran Stitch retenu au premier tour, capture de la
+  section « Armes & protections » fournie par David).
+  - `src/modules/equipement/equiperLaFiche.ts` : `champsDEquipement` lit les champs déclarés par le
+    pilote (`jet.alien.equipement`, `combat.alien.proprietesArmes`, `combat.alien.protection`) ;
+    `sectionDuCatalogue` choisit la section qui reçoit le bouton ; `ecrituresDeLObjet` dit ce qui
+    sera écrit ; `appliquerLesEcritures` l'écrit.
+  - Une arme prend le rang qui suit **le plus long** de ses champs : aucune ligne n'est écrasée, les
+    lignes d'une arme restent appariées. Un bonus absent s'écrit 0.
+  - Une protection remplace la valeur, et l'encadré dit « 6 → 2 » ; la sauvegarde reste le geste
+    de David, donc pas de confirmation de plus. Un objet qui en emporte d'autres les propose
+    (case cochée par défaut).
+  - `src/modules/session/components/PrendreDansLeCatalogue.tsx`, ouvert depuis
+    `CharacterSheetEditor` ; les valeurs vont dans la saisie en cours (`updateLocal`).
+  - Essais : `equiperLaFiche.test.ts` (7, dont la lecture par `equipementsAlien` de l'arme
+    ajoutée), `PrendreDansLeCatalogue.test.tsx` (4). Manuel `54-Jeu-Alien.md` (« Prendre une arme
+    ou une protection dans le catalogue ») et guide 50 à jour.
+  - **Reste de D** : seul Alien déclare ses champs d'armes.
+- **Essai de David, 02/11** : *« ok ca marche bien »* — B, C et D essayés à l'écran.
+- **Étape E, commencée le 02/11.** Question posée à David : d'où le jet tire-t-il les objets portés ?
+  Trois voies (Sac à dos, champ Inventaire de la fiche, tout le catalogue) ; il choisit **le Sac à
+  dos**.
+  - « Prendre dans le catalogue » gagne un onglet **Matériel** ; le matériel, et la protection
+    prise, entrent au Sac à dos par `objetPourLeSac`, reliés au catalogue par
+    `properties.catalogueId`, sans doublon. Le Sac à dos s'enregistre aussitôt, comme son bouton
+    « + » : la fenêtre le dit.
+  - `objetsPortes` : le Sac à dos relié au catalogue, et les armes nommées sur la fiche.
+    `effetsAuJet` : les effets qui visent un champ du jet. `valeurDesEffetsCoches` : leur somme.
+  - Essais : `equiperLaFiche.test.ts` (10), `PrendreDansLeCatalogue.test.tsx` (5).
+  - **La carte « Équipement porté » livrée le 02/11** : `fields/EquipementPorte.tsx`, sous la
+    préparation d'Alien dans `PanneauDeJet.tsx` (prop `objetsPortes`, calculée par
+    `CharacterSheetEditor`). Rien de coché par défaut ; la somme cochée s'ajoute aux dés au même
+    endroit que le bonus d'outil (`composerLesDesAlien`), et le détail du jet la nomme. Essai :
+    `PanneauDeJet.equipement.test.tsx` (3). Manuel 54-Alien et guide 50.
+  - **Écran généré par le MCP Stitch**, branché le 02/11 à la demande de David : la clé était déjà
+    dans `STITCH_API_KEY`, celle de Codex ; `claude mcp add … -s user`, avec la clé lue dans la
+    variable. La modification de l'écran « Fiche de Lambert : Lancer un test » du projet de la
+    refonte (228 écrans) a dépassé le délai deux fois sans rien produire. La génération dans un
+    projet neuf, « GM-OS — Catalogue d'équipement (étape E) », a abouti ; son image n'est arrivée
+    qu'en vignette du projet, pas encore dans la liste des écrans. Retenue au premier tour :
+    `stitch/equipement/equipement-jet.png`. À l'intégration, la carte prend la grammaire de
+    `PreparationAlien`, en 12 px.
+  - **Défaut vu par David à l'écran, le même soir** : *« je ne vois pas les jumelles pour le
+    bonus »*. Son gabarit d'Alien préfixe les compétences de leur attribut (« Es_Observation »,
+    « Ag_Combat à distance ») ; le remplissage cherchait « es_observation » dans « Modificateur de +2
+    en Observation », ne trouvait rien, et versait les Jumelles **sans effet**. Les essais
+    employaient des libellés sans préfixe. Corrigé dans `depuisLeCorpus.ts` (`nomsDuChamp`) : le
+    libellé, le libellé sans son préfixe, et l'identifiant (`soins_medicaux` → « soins medicaux »).
+    Essai ajouté avec les libellés réels. Un catalogue déjà rempli reçoit les effets manquants au
+    prochain « Remplir depuis le corpus » (on remplit ce qui est vide).
+  - **Audit des effets, à la question de David** (*« est-ce qu'il a d'autres équipement sans leurs
+    bonus ? »*) : les deux livres lus avec ses identifiants et des libellés préfixés donnent 30
+    objets à effets. Deux défauts corrigés :
+    - les Palmes M11 recevaient aussi « Réserve d'Eau +2 » : le « eau » de « sous l'eau » était pris
+      pour le champ Eau. Désormais, seul le nom qui touche le nombre est retenu, et les suivants
+      seulement s'ils y sont liés par « et » ou une virgule ;
+    - au jet, les effets sur le Niveau de Stress (café, pilules, alcool) se proposaient comme des dés
+      de base ; le panneau ne rapproche plus les composantes secondaires.
+
+    La grenade G2, « Effet étourdissant (-2) », reste sans effet, et c'est juste : le -2 frappe le
+    test d'Endurance de la cible (p. 125).
+  - **Vérifié sur l'export de David du 02/11, 22 h 30** (*« je n'ai pas l'impression que les
+    équipements ont hérité des bonus »*) : le catalogue porte ses 30 effets, et le jet réel (son
+    pilote, son gabarit) affiche les Jumelles au Sac à dos. Seules les Palmes gardaient « eau +2 ».
+  - **Défaut de l'éditeur, vu par David** (*« je n'arrive pas à configurer les palmes »*) : la cible
+    d'un effet était une case libre avec des suggestions d'identifiants ; taper « Ag_Mobilité » visait
+    un champ inexistant. C'est maintenant une liste des champs de la fiche (le libellé affiché,
+    l'identifiant enregistré), et une cible inconnue s'affiche en alerte. Essai dans
+    `EditeurDuCatalogue.test.tsx`.
+  - **Essai de David, 02/11 au soir** : *« ok ca marche »* — Palmes reconfigurées par la liste,
+    effets rappelés au jet. **Les cinq étapes sont essayées.**
+  - **Captures du manuel**, à la demande de David (*« fais le maintenant »*) : scène
+    `sceneDuCatalogueAlien` de `e2e/capturesDesJeux.spec.ts`, jouée en tête des scènes d'Alien
+    (l'éditeur du pilote ne s'ouvre plus une fois une séance ouverte) ; le profil jetable reçoit les
+    `rules/`, `index/` et `supplements/` d'Alien. Lancée sur l'export de David du 02/11 seul
+    (`GMOS_PILOTES_DES_JEUX`), images dans un dossier de travail (`GMOS_SORTIE_CAPTURES_JEUX`) pour
+    n'écraser aucune image suivie ; cinq images neuves `jeu-alien-catalogue-{remplir,section,fiche}`
+    et `jeu-alien-equipement-porte{,-jet}`, relues, insérées aux guides 50 et 54.
+  - **Reste** : les autres jeux (leurs champs d'équipement et l'application des effets cochés), la
+    tablette (Hub), qui ne reçoit pas l'équipement porté.
+  - **À savoir** : la famille des véhicules reçoit 11 colonnes, car les vaisseaux de Colonial
+    Marines ont les leurs (Équipage, Troupes, Longueur, Cadence FTL, Signature, Propulseurs).
+    Le TPB M577 et le fusil AK-4047 portent deux noms selon le livre, donc font deux objets.
 
 ## Étape B — le prompt Stitch (02/11)
 
@@ -230,6 +346,172 @@ Ce rendu est rangé dans `stitch/equipement/equipement-armes.png` et `.html`.
 **Ensuite** (historique du premier tour) : David rapporte l'image et l'export HTML. Claude rend le HTML à 1440 px pour le juger
 (l'image de Stitch peut retarder sur son code), retire les inventions par un prompt correctif, et
 range le retenu dans `stitch/equipement/`.
+
+## Étape C — le prompt Stitch de l'aperçu (02/11)
+
+L'aperçu est un écran neuf : il passe par Stitch (consigne de David). **Dans la même conversation**
+que l'écran retenu de l'étape B, qui sert de fond. Les chiffres sont ceux que rend
+`remplirDepuisLesFiches` sur les 18 fiches relues. Le cas dessiné suppose que David a déjà créé le
+VP-70MA6 à la main pendant l'essai de B et changé son bonus : c'est ce qui montre la règle « on
+remplit, on ne remplace pas ».
+
+```text
+Même logiciel, même conversation : pars de l'écran « Équipement » que tu as dessiné. Ajoute dans
+son en-tête, à gauche de « Ajouter un objet », un bouton au contour seul « Remplir depuis le
+corpus ». Dessine la fenêtre qu'il ouvre, centrée sur la section assombrie, dans le même style
+(cartes très arrondies, petites capitales espacées, accent doré, thème clair).
+
+Ce que fait la fenêtre : lire les tableaux des fiches de règles relues du jeu et montrer ce qu'ils
+ajouteraient au catalogue. Rien n'est enregistré avant « Verser au catalogue ». Ce qui existe déjà
+n'est jamais remplacé.
+
+De haut en bas :
+1. Titre « Remplir depuis le corpus ». Une phrase : « Les tableaux des fiches relues. On remplit ce
+   qui est vide ; ce que vous avez corrigé reste tel quel. »
+2. « Livres lus », deux lignes à cocher :
+   - Livre de base — « aucune fiche d'équipement relue », grisée, non cochable ;
+   - Colonial Marines Operations Manual — « 8 fiches d'équipement sur 18 », cochée.
+3. Une ligne de bilan, en chiffres : 65 objets à ajouter · 1 objet complété · 16 colonnes à déclarer
+   · 2 rattachements.
+4. « Objets », une ligne repliable par famille avec son compte : Armes 25 · Protections 5 ·
+   Véhicules 23 · Matériel 12. Armes est dépliée, rangée par catégorie avec son compte :
+   Pistolets 3 · Armes lourdes 6 · Fusils 6 · Explosifs, mines et armes chimiques 10. Sous
+   Pistolets, trois lignes alignées en colonnes (Bonus · Dégâts · Portée · page) :
+   - Pistolet à air comprimé pour injection chimique et biologique Bionational TX-9 — +1 · 1 ·
+     Moyenne — p. 66
+   - Pistolet électrostatique semi-automatique Weyland ES-4 — +1 · 1 · Moyenne — p. 66
+   - Pistolet semi-automatique Norcomm QSZ-203 — +1 · 1 · Moyenne — p. 66
+5. « Colonnes à déclarer », en pastilles par famille : Armes : Bonus, Dégâts (nombres), Portée
+   (texte) · Protections : Protection, Réserve d'air · Véhicules : Passagers, Maniabilité, Vitesse,
+   Coque, Protection, Équipage, Troupes, Longueur, Cadence FTL, Signature, Propulseurs.
+6. « Rattachés » : « Combinaison de compression offensive CCC5 emporte Canon à impulsion intégré
+   Norcomm AK-104S » ; « Fusil d'assaut Weyland-Yutani NSG23 emporte Incinérateur amovible ID23 ».
+7. « À regarder », bordé d'ocre discret, deux lignes :
+   - « Pistolet semi-automatique VP-70MA6 · Bonus : catalogue +3, fiche +2 — gardé +3 » ;
+   - « Casque pare-balles M10 : “compris dans l'armure personnelle M3” — porteur absent du
+     catalogue ».
+8. Une ligne repliée : « 12 tableaux écartés (tables de D66, terrains, spécialités) ».
+9. En pied, à droite : « Annuler » (texte) et « Verser au catalogue » (bouton plein doré).
+
+C'est TOUT. N'ajoute rien : pas de barre de progression, pas d'IA, pas d'import de fichier, pas de
+statistiques, aucun chiffre qui ne soit pas ci-dessus. Libellés en français. Rien en dessous de
+12 px ; texte courant contraste ≥ 4,5.
+```
+
+**Premier tour (02/11) — retenu.** David a rapporté l'image et le HTML. Le rendu de Claude à 1440 px
+(fenêtre haute, pour voir tout le contenu de la fenêtre) ne trouve aucun texte sous 12 px, et Stitch
+n'a rien inventé de fonctionnel. Rangé dans `stitch/equipement/equipement-apercu.png` et `.html`, avec
+un fond allégé : c'est l'écran de l'étape B.
+
+**Pour l'intégration** :
+
+- les catégories d'une famille en pastilles qui filtrent la liste (idée de Stitch, gardée) ; la grille
+  suit les colonnes de la famille, comme dans la section ;
+- chaque colonne à déclarer dit sa nature (Stitch ne l'écrit que pour Dégâts et Portée) ;
+- le bilan en texte courant, pas en chasse fixe, qui se coupait mal ;
+- l'étiquette « ignoré » des tableaux écartés est retirée : la ligne le dit déjà ; dépliée, elle les
+  nomme fiche par fiche ;
+- « Livres lus » liste le livre de base et les suppléments du jeu ; un livre sans tableau d'équipement
+  est grisé ;
+- « À regarder » réunit les écarts conservés, les renvois non résolus et les lignes non lues ;
+- les couleurs sont les jetons du thème, l'en-tête reprend celui des fenêtres de l'éditeur.
+
+## Étape D — le prompt Stitch (02/11)
+
+David : *« ok on passe à l'étape D »*. La fiche du personnage est dessinée champ par champ par
+`CharacterSheetEditor`, selon le gabarit du pilote, qui vit dans les données de David. Il a donc
+fourni la capture de la section « Armes & protections » d'un personnage d'Alien : papier beige,
+intertitre rouge, six champs (armes, protection, bonus, dégâts, portées, propriétés, une ligne par
+arme). **Une conversation Stitch neuve**, puisque l'habillage n'est pas celui de l'éditeur du
+pilote.
+
+Ce que l'étape écrira : pour une arme, une ligne dans chacun des champs que lit `equipementsAlien`
+(`jet.alien.equipement` : noms, bonus, dégâts, portées) et dans `combat.alien.proprietesArmes` ;
+pour une protection, `combat.alien.protection`, avec une confirmation s'il est déjà rempli.
+
+```text
+Même logiciel que la capture jointe : c'est la section « Armes & protections » de la fiche d'un
+personnage d'Alien, dans l'éditeur de fiche. Garde EXACTEMENT ce style : fond papier beige,
+intertitre rouge en petites capitales espacées, champs encadrés d'un filet fin, libellés en
+petites capitales grises.
+
+1. Dans la ligne de l'intertitre « ARMES & PROTECTIONS », à droite, ajoute un petit bouton au
+   contour seul « Prendre dans le catalogue ». Ne change rien d'autre à la section.
+
+2. Dessine la fenêtre que ce bouton ouvre, centrée sur la fiche assombrie, dans le même style.
+   - Titre « Prendre dans le catalogue ». Une phrase : « L'objet choisi s'ajoute aux champs de la
+     fiche. Rien n'est enregistré avant « Sauvegarder ». »
+   - Deux onglets avec leur compte : Armes 54 · Protections 11. Armes est ouvert.
+   - Un champ « Chercher dans le catalogue ».
+   - Des pastilles de catégorie : Pistolets · Fusils · Armes lourdes · Combat rapproché ·
+     Explosifs, mines et armes chimiques. « Fusils » est choisie.
+   - La liste, alignée en colonnes sous un en-tête discret « Arme · Bonus · Dégâts · Portée ·
+     Propriétés · Page » :
+     - Fusil à impulsion Armat M41A — +1 · 2 · Longue — Lance-grenades intégré, Mode auto,
+       Perce-armure — p. 120 (cette ligne est sélectionnée, bordée d'accent)
+     - Fusil à lunette M42A — +2 · 2 · Extrême — Perce-armure — p. 120
+     - Fusil à pompe Armat modèle 37A2 calibre 12 — +2 · 3 · Courte — Protection doublée — p. 120
+     - Fusil d'assaut à impulsion AK-4047 — — · 2 · Longue — Mode auto — p. 120
+   - Sous la liste, un encadré « Ce qui sera écrit sur la fiche », une ligne par champ :
+     Armes : + Fusil à impulsion Armat M41A · Bonus : + +1 · Dégâts : + 2 · Portée : + Longue ·
+     Propriétés : + Lance-grenades intégré, Mode auto, Perce-armure
+   - En pied, à droite : « Annuler » (texte) et « Ajouter à la fiche » (bouton plein).
+
+C'est TOUT. N'ajoute rien : pas d'image d'objet, pas de prix, pas de poids, pas de statistiques,
+pas d'IA, aucun chiffre qui ne soit pas ci-dessus. Libellés en français. Rien en dessous de
+12 px ; texte courant contraste ≥ 4,5.
+```
+
+**Premier tour (02/11) — retenu.** Le rendu de Claude à 1440 px est fidèle à l'image ; Stitch n'a
+rien inventé dans la fenêtre. Son fond, une fiche « USCSS Nostromo » refaite, n'est pas repris : la
+section réelle est celle de la capture. Rangé dans `stitch/equipement/equipement-fiche.png` et
+`.html`, fond allégé. **Pour l'intégration** :
+
+- l'en-tête du tableau était en 11 px : il passe à 12 px (`text-ui-12`) ;
+- les colonnes du tableau suivent celles que le jeu déclare pour la famille, comme ailleurs ;
+- le bouton s'affiche dans la section qui porte le champ des noms d'armes déclaré par le pilote,
+  pas dans une section nommée en dur ;
+- l'onglet Protections montre « Protection : 0 → 6 », et un objet qui en emporte d'autres
+  (la CCC5 et son canon) propose de les ajouter aussi ;
+- les couleurs sont les jetons du thème de la fiche.
+
+## Étape E — le prompt Stitch (02/11)
+
+**Joindre** : `documentation/User Guides/captures/jeu-alien-jet.jpg`, le panneau de jet d'Alien
+photographié par `e2e/capturesDesJeux.spec.ts` (instance jetable, données fictives). David a
+demandé pourquoi Claude ne prenait pas lui-même la capture par Playwright : elle existait déjà, il
+aurait fallu commencer par là. **Aucun MCP Stitch n'est branché** dans la session ; en brancher un
+est une installation, à la demande de David. **Une conversation Stitch neuve.**
+
+La troisième ligne d'effet (lampe-torche, « dans l'obscurité ») est inventée pour montrer une
+condition : le livre ne chiffre pas la lampe.
+
+```text
+Même logiciel que la capture jointe : c'est le panneau de jet d'un personnage d'Alien, avec ses
+étapes numérotées « 1 Composer », « 2 Préparer le test Alien », « 3 Lancer les dés ». Garde
+EXACTEMENT ce style : thème sombre, cartes à filet fin, titres d'étape en capitales espacées,
+libellés gris au-dessus des champs.
+
+Ne redessine que les étapes 1 et 2, avec ces changements :
+
+1. Dans « Composer », la compétence choisie est « Observation (3) », l'attribut « Esprit (4) ».
+   La ligne de détail devient : « Base 7 + arme 0 + outil/talent 0 + équipement +2 + situation 0
+   + aide 0 → 9 dés de base, 2 de Stress. » La réserve affiche 9.
+
+2. Dans « Préparer le test Alien », sous les champs existants et au-dessus de la phrase sur
+   l'aide, ajoute un encadré « Équipement porté ». Une phrase discrète : « Les effets des objets
+   portés qui visent ce jet. Cochez ceux qui jouent ici ; rien n'est appliqué d'office. »
+   Puis une ligne par effet, chacune avec une case à cocher, le nom de l'objet, le texte de
+   l'effet, sa condition s'il en a une, et sa valeur alignée à droite :
+   - [ ] Combinaison de compression offensive CCC5 — Malus de -1 aux tests d'Observation — −1
+   - [x] Jumelles — Modificateur de +2 en Observation — +2
+   - [ ] Lampe-torche à faisceau concentré — +1 en Observation — dans l'obscurité — +1
+   La deuxième est cochée. Sous la liste, à droite : « Équipement : +2 ».
+
+C'est TOUT. N'ajoute rien : pas d'image, pas d'icône d'objet, pas de statistiques, pas d'IA,
+aucun chiffre qui ne soit pas ci-dessus. Libellés en français. Rien en dessous de 12 px ; texte
+courant contraste ≥ 4,5.
+```
 
 ## Garde-fous
 

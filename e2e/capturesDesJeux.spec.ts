@@ -397,7 +397,10 @@ test.beforeAll(async () => {
                 fs.copyFileSync(path.join(ICI, '..', 'docs', 'fiches', 'Character_Sheet_Manager.html'), path.join(cible, 'Character_Sheet_Manager.html'));
             }
             for (const { mise } of JEUX) {
-                for (const dossier of ['fiche', 'theme']) {
+                // Alien remplit son catalogue d'équipement depuis ses fiches relues (§ 203, 02/11/2026) :
+                // il emporte aussi ses règles, son sommaire et son supplément.
+                const dossiers = mise.corpusId === 'alien' ? ['fiche', 'theme', 'rules', 'index', 'supplements'] : ['fiche', 'theme'];
+                for (const dossier of dossiers) {
                     const source = path.join(ICI, '..', 'docs', 'systems', mise.corpusId, dossier);
                     if (fs.existsSync(source)) {
                         fs.cpSync(source, path.join(profil, 'corpus', 'systems', mise.corpusId, dossier), { recursive: true });
@@ -446,7 +449,7 @@ for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
         if (['dune', 'noc'].includes(mise.corpusId)) test.setTimeout(180_000);
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
-        if (['alien','crime','cthulhu hack','star-trek'].includes(mise.corpusId)) test.setTimeout(240_000);
+        if (['alien','crime','cthulhu hack','star-trek'].includes(mise.corpusId)) test.setTimeout(mise.corpusId === 'alien' ? 360_000 : 240_000);
         const f = gmos.fenetre;
         const campagne = campagneDe(mise.slug);
 
@@ -1798,6 +1801,8 @@ async function scenesDuPiloteFiniBR(c: ContexteDeScene): Promise<void> {
 async function scenesDAlien(c: ContexteDeScene): Promise<void> {
     const jet = (c.pilote.gameDriver as { jet?: { alien?: { combat?: unknown }; forcer?: unknown; panique?: { suites?: unknown } } }).jet;
     const composantes = ['force', 'combat_rapproche', 'niveau_de_stress'];
+    // En tête : l'éditeur du pilote ne s'ouvre plus une fois qu'une scène a ouvert la séance.
+    if (jet?.alien) await sceneDuCatalogueAlien(c);
     if (jet?.panique) {
         const panneau = await jeterJusqua(c, composantes, p => p.getByRole('button', { name: 'Test de Panique', exact: true }));
         await panneau.getByRole('button', { name: 'Test de Panique', exact: true }).click();
@@ -1824,6 +1829,70 @@ async function scenesDAlien(c: ContexteDeScene): Promise<void> {
     if ((jet?.alien?.combat as {survie?:unknown}|undefined)?.survie) await sceneDeSurvieAlien(c);
     if ((jet?.alien?.combat as {actions?:boolean}|undefined)?.actions) await sceneDesActionsXenoAlien(c);
     if ((jet?.alien?.combat as {progression?:unknown}|undefined)?.progression) await sceneDeProgressionAlien(c);
+}
+
+/**
+ * **Le catalogue d'équipement** (§ 203, 02/11/2026) : le remplir depuis les
+ * fiches relues, la section de l'éditeur, « Prendre dans le catalogue » sur la
+ * fiche, et l'équipement porté rappelé au jet. Le catalogue part vide, pour que
+ * l'aperçu montre ce que les livres apportent.
+ */
+async function sceneDuCatalogueAlien(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    const fenetre = await gmos.application.browserWindow(f);
+    await f.evaluate(campagne => {
+        const s = (window as unknown as Fenetre).useSessionOSStore.getState();
+        const id = s.campaigns.find(x => x.id === campagne)!.system;
+        s.updateGameDriver(id, { catalogue: { colonnes: {}, objets: [] } });
+        s.setEditingDriverId(id);
+    }, c.campagne);
+    await vue(c.campagne, 'driver-editor');
+    // Le bouton de la liste des sections s'appelle « 06. Équipement … objet(s) au catalogue ».
+    await f.getByRole('button', { name: /objet\(s\) au catalogue/ }).first().click();
+    await fenetre.evaluate(w => w.setContentSize(1440, 1700));
+
+    // 1. L'aperçu : rien n'est versé avant « Verser au catalogue ».
+    await f.getByRole('button', { name: /Remplir depuis le corpus/ }).click();
+    const apercu = f.getByRole('dialog', { name: 'Remplir depuis le corpus' });
+    await expect(apercu.getByRole('status')).toContainText(/[1-9]\d* objet\(s\) à ajouter/, { timeout: 30_000 });
+    await photographier(apercu.locator('[data-cadre-de-surcouche]'), 'jeu-alien-catalogue-remplir');
+    await apercu.getByRole('button', { name: /Verser au catalogue/ }).click();
+    await expect(apercu).toHaveCount(0);
+
+    // 2. La section, filtrée sur le M41A, l'objet déplié.
+    const section = f.locator('div.space-y-12', { has: f.getByRole('heading', { name: /Équipement/ }) }).first();
+    await section.getByLabel('Chercher un objet').fill('M41A');
+    await section.getByText('Fusil à impulsion Armat M41A', { exact: true }).click();
+    await photographier(section, 'jeu-alien-catalogue-section');
+
+    // 3. Sur la fiche : le M41A pris dans le catalogue, puis les Jumelles au Sac à dos.
+    await ecrireLaFiche(c, { esprit: 4, observation: 1, niveau_de_stress: 1 });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage }, 'Formulaire');
+    await f.getByRole('button', { name: /Prendre dans le catalogue/ }).click();
+    let prendre = f.getByRole('dialog', { name: 'Prendre dans le catalogue' });
+    await prendre.getByRole('tab', { name: 'Fusils', exact: true }).click();
+    await prendre.getByRole('option', { name: /Fusil à impulsion Armat M41A/ }).first().click();
+    await expect(prendre.getByRole('complementary', { name: 'Ce qui sera écrit sur la fiche' })).toBeVisible();
+    await photographier(prendre.locator('[data-cadre-de-surcouche]'), 'jeu-alien-catalogue-fiche');
+    await prendre.getByRole('button', { name: /Ajouter à la fiche/ }).click();
+    await f.getByRole('button', { name: /Prendre dans le catalogue/ }).click();
+    prendre = f.getByRole('dialog', { name: 'Prendre dans le catalogue' });
+    await prendre.getByRole('tab', { name: /Matériel/ }).click();
+    await prendre.getByLabel('Chercher dans le catalogue').fill('Jumelles');
+    await prendre.getByRole('option', { name: /Jumelles/ }).first().click();
+    await prendre.getByRole('button', { name: /Ajouter à la fiche/ }).click();
+
+    // 4. Au jet d'Observation : les Jumelles rappelées, cochées par le meneur.
+    await ongletDeLaFiche(f, 'Lancer un test');
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    for (const [i, champ] of ['esprit', 'observation', 'niveau_de_stress'].entries()) await panneau.locator('select').nth(i).selectOption(champ);
+    const porte = panneau.getByRole('region', { name: 'Équipement porté' });
+    await expect(porte).toBeVisible();
+    await porte.getByRole('checkbox', { name: /Jumelles/ }).check();
+    await expect(panneau.getByText(/équipement \+2 \(Jumelles\)/).first()).toBeVisible();
+    await photographier(porte, 'jeu-alien-equipement-porte');
+    await photographierLePanneau(panneau, 'jeu-alien-equipement-porte-jet');
+    await fenetre.evaluate(w => w.setContentSize(1440, 900));
 }
 
 /** A6 : plusieurs cartes, une Santé, critique particulier et vraie aspersion sur le PJ. */
