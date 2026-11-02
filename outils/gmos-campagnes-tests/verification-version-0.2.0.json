@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-01",
+  "plugin_id": "plugins_6ae484c30bd4819186676a390b1b74bf",
+  "plugin_url": "https://chatgpt.com/plugins/plugins_6ae484c30bd4819186676a390b1b74bf",
+  "version": "0.2.0",
+  "current_release_id": "pluginrel_6ae784876888819193041fb11ecaaf72",
+  "scope": "USER",
+  "discoverability": "PRIVATE",
+  "archive": "dist/gmos-campagnes-tests-0.2.0.zip",
+  "sha256Archive": "a83a1bffe0fda57288fca7df5767fc5c5fb8b5dfe334e878523c4806d8c1371e",
+  "publicationRelue": true,
+  "fichiers": [
+    {
+      "path": ".codex-plugin/plugin.json",
+      "sha256Distant": "e6503de5ddda2fffe8ed1eabc5e40c74001f0294c8ba5ed1c5eaa93153740afe",
+      "verifie": true
+    },
+    {
+      "path": "README.md",
+      "sha256Distant": "3c4a3885eb1861bccdfe94700d95b7967d9482719a2e785d4f8ee9a0a8455d95",
+      "verifie": true
+    },
+    {
+      "path": "assets/icon.svg",
+      "sha256Distant": "d2629928c134f773be71c56e3c431f65b0630de50ab12cadaecb8aacbeb37d75",
+      "verifie": true
+    },
+    {
+      "path": "plugin.json",
+      "sha256Distant": "c491d5754340d66e4dec47ba01fcc8aba51329f44c071a1b59be892ec2e0c7a5",
+      "verifie": true
+    },
+    {
+      "path": "skills/campagnes-de-test/SKILL.md",
+      "sha256Distant": "c0caf6426e8de29007ff175dfbed3115bb389fd1e262fc0ca804e24701beaf13",
+      "verifie": true
+    },
+    {
+      "path": "skills/campagnes-de-test/agents/openai.yaml",
+      "sha256Distant": "5b3dba029ee8b3c83eb3cef99ec3e3423dc892c4a84862be37bd067db37b3edc",
+      "verifie": true
+    },
+    {
+      "path": "skills/campagnes-de-test/references/campagne-complete.md",
+      "sha256Distant": "6e4ea671b3b4d2bcf0a521fb0fa7ab127d7b8ae65464bbe820244e7c3780bd72",
+      "verifie": true
+    },
+    {
+      "path": "skills/campagnes-de-test/references/contrat-livraison.md",
+      "sha256Distant": "1ac5b5c731f840beac29e2fb8fb0cf17eaa98b66342aa6223f4c01efa75200e6",
+      "verifie": true
+    },
+    {
+      "path": "skills/campagnes-de-test/references/exemples.md",
+      "sha256Distant": "a6d5c0c84f3e3b614680942025d1834eed4a24d5da4729eba83bf46e4af9296e",
+      "verifie": true
+    },
+    {
+      "path": "skills/campagnes-de-test/references/format-nexus-v1.md",
+      "sha256Distant": "ffa93ea8b4a186f831eee3f6c0acd82d96f1f5e626fa2eb4fa9533dd039486bc",
+      "verifie": true
+    },
+    {
+      "path": "skills/campagnes-de-test/references/methode.md",
+      "sha256Distant": "a1ebff0b66990f8f1e36c76af57b8f227cb0c74ba21b66803740f867065cb291",
+      "verifie": true
+    },
+    {
+      "path": "skills/campagnes-de-test/references/verification.md",
+      "sha256Distant": "7d8cf5a694e19d243a3011bdf2debc91986f7fe561af2e26acb69ebb57161916",
+      "verifie": true
+    },
+    {
+      "path": "skills/campagnes-de-test/scripts/gmos_bundle.py",
+      "sha256Distant": "b002ef2a9715a09f66a1958e65e779be3c9532b327d3d8616443e1c769e03eda",
+      "verifie": true
+    }
+  ],
+  "testsUtilitaire": {
+    "passes": 12,
+    "donnees": "fictives, temporaires, hors ligne",
+    "casAjoute": "archive unique, douze séances et ateliers dans la même campagne"
+  },
+  "controles": [
+    "Identité et public conservés",
+    "Trois prompts de lancement conservés exactement",
+    "Manifestes portable et compatibilité synchronisés",
+    "Liens Markdown et YAML contrôlés",
+    "Utilitaire et icône inchangés",
+    "Paquet rouvert et comparé",
+    "Treize fichiers relus après publication"
+  ],
+  "portee": "Instructions publiées et contrôles structurels ; aucune nouvelle campagne jouable générée ou importée et aucun ancien lot converti."
+}

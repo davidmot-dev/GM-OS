@@ -12,6 +12,8 @@ Chaque asset : `originalRef` (référence dans l'état), `relativePath` (chemin 
 
 Les champs facultatifs (actes, scènes, rencontres, moments, atmosphères, playlists, lumières, réserves, butin, modules…) ont des types spécifiques. **Ne pas les inventer à partir de leurs noms.** Les générateurs existants sont des exemples ; les types actuels et les exports autorisés déterminent leur forme.
 
+Le défaut du plugin depuis le 01/11/2026 est un seul .gmos de campagne complète : actes narratifs et acte d'ateliers hors fiction partagent le même campaignId. Cela n'ajoute aucun type natif ni commande de restauration. Les repères du cahier et ETATS-DE-REFERENCE.md sont des aides externes ; Nexus Remplacer restaure la campagne entière.
+
 Les paquets Deck-OS voyagent avec le **pilote** ; la pioche/défausse d'une table n'est pas un état portable de campagne. Ne pas réintroduire `deckSessionStates` pour préparer un test.
 
 ## Utilitaire Python

@@ -1,11 +1,28 @@
 {
   "plugin_id": "plugins_6ae484c30bd4819186676a390b1b74bf",
   "plugin_url": "https://chatgpt.com/plugins/plugins_6ae484c30bd4819186676a390b1b74bf",
-  "current_release_id": "pluginrel_6ae484c57abc8191a14e8ba38a59a34a",
-  "version": "0.1.0",
+  "current_release_id": "pluginrel_6ae784876888819193041fb11ecaaf72",
+  "version": "0.2.0",
   "scope": "USER",
   "discoverability": "PRIVATE",
   "created": "2026-10-30",
-  "verified_files": ["plugin.json", ".codex-plugin/plugin.json", "skills/campagnes-de-test/agents/openai.yaml", "skills/campagnes-de-test/SKILL.md", "skills/campagnes-de-test/scripts/gmos_bundle.py"],
-  "note": "Création et fichiers distants vérifiés ; aucun serveur ni outil MCP requis. Le service ajoute un manifeste de compatibilité et normalise l’identité de l’auteur avec celle du compte."
+  "verified_files": [
+    ".codex-plugin/plugin.json",
+    "README.md",
+    "assets/icon.svg",
+    "plugin.json",
+    "skills/campagnes-de-test/SKILL.md",
+    "skills/campagnes-de-test/agents/openai.yaml",
+    "skills/campagnes-de-test/references/campagne-complete.md",
+    "skills/campagnes-de-test/references/contrat-livraison.md",
+    "skills/campagnes-de-test/references/exemples.md",
+    "skills/campagnes-de-test/references/format-nexus-v1.md",
+    "skills/campagnes-de-test/references/methode.md",
+    "skills/campagnes-de-test/references/verification.md",
+    "skills/campagnes-de-test/scripts/gmos_bundle.py"
+  ],
+  "note": "Mise à jour du plugin privé existant vers une campagne complète unique et ateliers intégrés ; treize fichiers distants relus, identité et prompts conservés.",
+  "updated": "2026-11-01",
+  "previous_release_id": "pluginrel_6ae484c57abc8191a14e8ba38a59a34a",
+  "verification": "verification-version-0.2.0.json"
 }

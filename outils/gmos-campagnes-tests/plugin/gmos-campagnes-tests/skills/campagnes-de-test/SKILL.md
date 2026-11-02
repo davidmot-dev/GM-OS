@@ -1,11 +1,15 @@
 ---
 name: campagnes-de-test
-description: "Créer, adapter, auditer ou régénérer une campagne de test GM-OS pour un jeu de rôle : archives .gmos, aventure originale, PJ/PNJ, laboratoires des mécaniques et cahier de recette. Utiliser dès que GM-OS Campagnes de test est invoqué ou pour systématiser une recette de pilote, avec des fichiers joints ou un dépôt accessible."
+description: "Créer, adapter, auditer ou régénérer une campagne complète de test GM-OS pour un jeu de rôle : un seul .gmos, intrigue suivie, PJ/PNJ, ateliers de recette intégrés et cahier de tests. Utiliser dès que GM-OS Campagnes de test est invoqué ou pour systématiser une recette de pilote, avec des fichiers joints ou un dépôt accessible."
 ---
 
 # GM-OS Campagnes de test
 
 Tu fabriques des **données de recette jouables** pour GM-OS, en français. Une campagne sert à éprouver un pilote, ses fiches et ses outils. Livre des fichiers réels ; un plan ou une liste de tests ne remplace pas les archives demandées. Ce plugin fournit une méthode et un utilitaire Python sans paquet externe ; il ne contient ni serveur, ni moteur de règles universel, ni connexion automatique à GM-OS.
+
+**Défaut depuis le 01/11/2026, demandé par David : une campagne complète dans un seul fichier `.gmos`.** Intrigue et ateliers d'essais appartiennent à la même campagne. Il ne suffit pas de réunir trois laboratoires ou de renommer une courte aventure : prépare une continuité jouable, généralement **10 à 15 séances**, avec arcs, conséquences et fins alternatives. Lis le [contrat de campagne complète](references/campagne-complete.md).
+
+Les formulations héritées « lot de campagnes », « aventure et deux laboratoires » ou les anciens prompts du plugin désignent désormais **un seul `.gmos` avec des ateliers intégrés**. Ne crée plusieurs campagnes distinctes que sur demande explicite de découpage. Les lots historiques ne sont ni fusionnés ni régénérés par cette nouvelle règle seule.
 
 ## 1. Commencer avec les sources disponibles
 
@@ -19,15 +23,16 @@ Tu fabriques des **données de recette jouables** pour GM-OS, en français. Une 
 
 Construis `matrice-couverture.json` : pour chaque mécanique, indique `id`, `mecanique`, `source`, `support` (natif, manuel, absent, à vérifier), `casIds`, `archive` et `limite`. Aucune ligne sans source vérifiable. Distingue règles du jeu et possibilités réelles du pilote.
 
-Le lot habituel comporte trois archives : **01**, aventure originale pour la table ; **02**, laboratoire des états et limites ; **03**, laboratoire des mécaniques distinctives. Adapte les deux laboratoires au jeu. Ne transplante pas une économie, santé, magie ou module d'un autre jeu. L'utilisateur peut demander un lot plus petit ou d'autres découpages.
+Le lot habituel comporte **une archive de campagne** : histoire complète et ateliers des états/limites et mécaniques distinctives dans sa Trame. Tous les cas de la matrice renvoient à ce même fichier, avec un repère d'acte, scène et personnage dans le cahier. Adapte les ateliers au jeu. Ne transplante pas une économie, santé, magie ou module d'un autre jeu. Un découpage en plusieurs `.gmos` demande un choix explicite de l'utilisateur.
 
-Par défaut, une table de trois PJ et une aventure de deux à quatre séances permettent une recette maniable ; adapte le nombre de PJ aux joueurs fournis. Propose des rôles complémentaires. Les profils avancés aux valeurs choisies sont permis en les signalant ; ne revendique pas une création novice réglementaire sans la vérifier.
+Par défaut, prépare une campagne d'environ **10 à 15 séances**, avec un PJ principal par joueur fourni et des rôles complémentaires. Adapte la longueur à une contrainte explicite ou à la matière réelle ; pas de séances vides pour atteindre un quota. Ajoute seulement les personnages de recette nécessaires, nommés clairement et rattachés à cette même campagne ; leurs scènes restent hors de la fiction principale. Les profils avancés aux valeurs choisies sont permis en les signalant ; ne revendique pas une création novice réglementaire sans la vérifier.
 
 ## 3. Générer la fiction et les états
 
-- Aventure originale : situation, enjeux, PNJ motivés, lieux, indices accessibles par plusieurs voies, scènes reliées, issues multiples et rencontres préparées. Aucun indice indispensable derrière un unique jet. Ne copie pas un scénario publié.
-- Prépare Atlas, Trame, séances **prévues**, indices, Wiki, inventaires et butin. Les éléments facultatifs ne sont inclus que si leur format et leurs liens sont connus. Les laboratoires sont clairement hors fiction et réinitialisables indépendamment.
-- Conserve les vrais IDs des joueurs, crée des IDs de campagne et de PJ distincts dans chaque archive. Même joueur dans les trois archives ; personnages nouveaux différents. Préfixe stable du lot et date de génération fixe explicite ; ne reprends pas la date historique d'un autre lot.
+- Campagne originale : intrigue principale, arcs secondaires liés, factions et PNJ motivés, lieux, indices accessibles par plusieurs voies, scènes reliées, rencontres préparées et plusieurs fins. Chaque séance prévue a de la matière jouable : ouverture, enjeux, scènes et pistes, réactions adverses, issues possibles et transition. Les conséquences relient les séances, sans présumer les choix ni les résultats des joueurs. Aucun indice indispensable derrière un unique jet. Ne copie pas un scénario publié.
+- Prépare Atlas, Trame, séances **prévues**, indices, Wiki, inventaires et butin. Les éléments facultatifs ne sont inclus que si leur format et leurs liens sont connus. Place les ateliers dans un acte distinct **« ATELIERS DE RECETTE — hors fiction »** de la même Trame, accessibles sans résoudre l'histoire et sans devenir des étapes narratives obligatoires.
+- Conserve les vrais IDs des joueurs ; crée **un seul ID de campagne** pour histoire, ateliers et leurs contenus. Les nouveaux PJ ont des IDs propres, sans recopier les anciens. Réserve les personnages `[RECETTE]` aux scènes d'essai ; ne les ajoute pas à toutes les scènes de l'histoire. Préfixe stable et date fixe explicite ; ne reprends pas la date historique d'un autre lot.
+- Prépare **ETATS-DE-REFERENCE.md** : cas, personnage/objet ciblé, valeurs initiales et procédure locale de remise en état. Remettre un essai à zéro ne doit pas effacer l'avancée de l'histoire. **Nexus Remplacer réimporte toute la campagne, pas un atelier** : ne le présente jamais comme une remise à zéro partielle. Sans fonction native vérifiée, indique une restauration manuelle des seuls champs d'essai ; n'invente ni bouton ni import d'états. Ne restaure rien chez l'utilisateur sans demande.
 - Reprends les IDs et types **exacts** des champs du gabarit. Initialise PV, santé, consommations et suivi par les fonctions réelles du moteur quand accessibles. Sinon, pars d'un export de référence autorisé et marque les valeurs/états non vérifiés ; ne forge pas un objet interne complexe.
 - Les modules spécifiques doivent être compatibles et préparés par leurs constructeurs/commandes/validateurs réels. Aucun module compatible ? Explique ce qui reste manuel. « Créer un module si nécessaire » n'autorise pas à inventer un faux module ni à changer le code de l'application : consigne le besoin de développement séparément.
 - Médias : crée des plans/documentaires originaux en SVG et, si utile, des WAV synthétiques. Nomme honnêtement ces médias ; ne présente pas un cartouche comme un portrait illustré ni un signal comme une voix enregistrée. Une vraie illustration demandée passe par l'outil d'images disponible. Vérifie les fichiers et regarde les rendus. Images et sons voyagent dans l'archive.
@@ -35,7 +40,7 @@ Par défaut, une table de trois PJ et une aventure de deux à quatre séances pe
 
 ## 4. Cahier de recette et vérifications
 
-Chaque cas a `id`, `archive`, `precondition`, `action`, `attendu`, une source et une preuve prévue. Prépare cas normaux, seuils, refus, épuisements, persistance et cas limites pertinents. Le nombre de cas découle de la couverture ; ne promets pas « toutes les combinaisons ».
+Chaque cas a `id`, `archive`, `precondition`, `action`, `attendu`, une source, une preuve prévue et un repère lisible vers son acte/scène/personnage. Tous visent l'unique archive du mode par défaut. Prépare cas normaux, seuils, refus, épuisements, persistance, remise en état locale et cas limites pertinents. Le nombre de cas découle de la couverture ; ne promets pas « toutes les combinaisons ».
 
 Lis [la checklist](references/verification.md). Exécute les contrôles accessibles ; garde leurs résultats, erreurs et SHA-256 dans un rapport. **Structure**, **règles**, **import réel**, **tablettes**, **matériel** et **recette humaine** sont des niveaux différents. `gmos_bundle.py verify` est un contrôle structurel partiel, pas le validateur de l'application ni un test de partie.
 
@@ -50,7 +55,7 @@ Utilise Python 3 et la bibliothèque standard, sans installer de paquet :
 ```text
 python scripts/gmos_bundle.py inspect pilote.gmos-driver
 python scripts/gmos_bundle.py verify campagne.gmos
-python scripts/gmos_bundle.py build --state state.json --assets assets.json --date 2026-10-30T12:00:00Z --gmos-version 6.5.0 --output 01-aventure.gmos
+python scripts/gmos_bundle.py build --state state.json --assets assets.json --date 2026-11-01T12:00:00Z --gmos-version 6.5.0 --output 01-campagne-complete.gmos
 python scripts/gmos_bundle.py cases --source cas-de-recette.json --output resultats.csv
 ```
 
@@ -58,9 +63,9 @@ Les chemins sont relatifs au dossier de ce skill ; adapte la date et la version 
 
 ## 6. Livrer et reprendre
 
-Livre ZIP du lot, les trois `.gmos` (ou le découpage demandé), pilote utilisé séparément si autorisé et nécessaire, médias embarqués, cahier, matrice, CSV vierge, guide d'import, rapport, anomalies et recette de régénération. L'emballage final doit porter les empreintes des archives effectivement vérifiées ; si elles changent, relance les contrôles dépendants.
+Livre ZIP du lot avec **un seul `.gmos` de campagne**, pilote utilisé séparément si autorisé et nécessaire, médias embarqués, cahier, matrice, CSV vierge, états de référence, guide d'import, rapport, anomalies et recette de régénération. Un `.gmos-driver` installe le pilote et ne crée pas une deuxième campagne. L'emballage final doit porter les empreintes du fichier effectivement vérifié ; s'il change, relance les contrôles dépendants.
 
-Explique quel fichier importer en premier, comment remplacer **le seul laboratoire voulu**, et comment vérifier les dépendances déjà installées. Ne remplace aucun pilote ou personnage existant à la place du meneur. Sépare les actions faites de celles à faire dans GM-OS. Dans le dépôt : `output/campagnes-tests/<jeu>/`, sources sous `outils/campagnes-de-recette/`, note sous `documentation/Planning/` ; respecte les fichiers déjà modifiés par un autre agent.
+Explique l'ordre : pilote si nécessaire (version à vérifier, remplacement explicite), **unique fichier de campagne**, puis tables Table-OS facultatives. Indique où ouvrir les ateliers dans la Trame et comment rétablir leurs seules valeurs de référence. Ne propose pas de cloner ou remplacer toute la campagne par défaut pour recommencer un essai. Ne remplace aucun pilote ou personnage existant à la place du meneur. Sépare les actions faites de celles à faire dans GM-OS. Dans le dépôt : `output/campagnes-tests/<jeu>/`, sources sous `outils/campagnes-de-recette/`, note sous `documentation/Planning/` ; respecte les fichiers déjà modifiés par un autre agent.
 
 ## Garde-fous
 

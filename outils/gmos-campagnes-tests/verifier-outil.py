@@ -39,6 +39,34 @@ class Outil(unittest.TestCase):
         with self.assertRaises(FileExistsError): self.build()
         self.assertEqual(b.sha(Path(self.args.output).read_bytes()), r['sha256'])
 
+    def test_archive_unique_douze_seances_et_ateliers_integres(self):
+        """Contrôle structurel seulement : cette fixture n'est pas une histoire livrée."""
+        self.state['actes'] = [
+            {'id': f'acte-{n}', 'campaignId': 'test-c', 'ordre': n, 'titre': f'Acte fictif {n}'}
+            for n in range(1, 5)
+        ] + [{'id': 'acte-recette', 'campaignId': 'test-c', 'ordre': 5, 'titre': 'ATELIERS DE RECETTE — hors fiction'}]
+        self.state['scenes'] = [
+            {'id': f'scene-{n}', 'campaignId': 'test-c', 'acteId': f'acte-{(n-1)//3+1}',
+             'personnagesIds': ['test-pj'], 'entiteIds': [], 'indiceIds': []}
+            for n in range(1, 13)
+        ] + [{'id': 'atelier-jets', 'campaignId': 'test-c', 'acteId': 'acte-recette',
+              'personnagesIds': ['test-pj'], 'entiteIds': [], 'indiceIds': []}]
+        self.state['sessions'] = [
+            {'id': f'seance-{n}', 'campaignId': 'test-c', 'number': n, 'status': 'planned',
+             'scenesPrevuesIds': [f'scene-{n}']}
+            for n in range(1, 13)
+        ]
+        self.assertTrue(self.build()['valid'])
+        self.assertEqual(len(list(self.dir.glob('*.gmos'))), 1)
+        z, manifeste, state, _ = b.ouvrir(self.args.output)
+        try:
+            self.assertEqual(manifeste['campaignId'], 'test-c')
+            self.assertEqual(len(state['sessions']), 12)
+            self.assertEqual(state['scenes'][-1]['acteId'], 'acte-recette')
+            self.assertEqual({x['campaignId'] for x in state['scenes'] + state['sessions']}, {'test-c'})
+        finally:
+            z.close()
+
     def test_media_et_corruption(self):
         (self.dir/'plan.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg"/>')
         (self.dir/'assets.json').write_bytes(b.json_octets([{'originalRef': 'plan.svg', 'relativePath': 'assets/plan.svg', 'source': 'plan.svg', 'mimeType': 'image/svg+xml'}]))

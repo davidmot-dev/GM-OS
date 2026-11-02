@@ -1,8 +1,10 @@
-# Choisir des laboratoires adaptés au jeu
+# Choisir des ateliers intégrés adaptés au jeu
 
 Exemples méthodologiques tirés de lots GM-OS vérifiés en octobre 2026. Ce ne sont pas des catalogues de règles ; partir de la version fournie pour un nouveau jeu. Aucun nom ni identifiant personnel n'est fixé par le plugin.
 
-| Jeu | Laboratoire des états | Laboratoire distinctif | Décision à conserver |
+Ces lots historiques avaient souvent trois archives. **Depuis le 01/11, ne pas recopier ce découpage** : préparer une campagne complète dans un seul .gmos, avec ces familles de cas dans l'acte hors fiction de sa Trame. Les anciens lots restent des références de règles et de preuves, pas le modèle de découpage des futures créations.
+
+| Jeu | Atelier des états | Atelier distinctif | Décision à conserver |
 | --- | --- | --- | --- |
 | Rêve de Dragon | Corps, blessures, repos, progression | Haut-Rêve, ressources et TMR | Préparer chaque voyageur via les fonctions métier et le vrai module, jamais par un objet approximatif |
 | Nephilim | Santé, Chutes, Stase | Arts occultes et réserves | Absence de module spécifique compatible dans le lot examiné : utiliser les cartes natives, sans module emprunté |

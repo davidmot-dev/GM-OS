@@ -19,6 +19,9 @@ lire(root);
 const manifest=JSON.parse(Buffer.from(files[name+'/plugin.json']).toString('utf8'));
 assert.equal(manifest.$schema,'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json');assert.equal(manifest.name,name);assert.match(manifest.version,/^\d+\.\d+\.\d+$/);
 const ui=manifest.extensions['com.openai'].interface;
+const compat=JSON.parse(Buffer.from(files[name+'/.codex-plugin/plugin.json']).toString('utf8'));
+assert.equal(compat.name,manifest.name);assert.equal(compat.version,manifest.version);assert.equal(compat.description,manifest.description);
+assert.deepEqual(compat.author,manifest.author);assert.deepEqual(compat.interface,ui);assert.equal(compat.skills,'./skills');
 assert.ok(ui.shortDescription.length<=30);assert.ok(ui.displayName.length<=30);assert.ok(Array.isArray(ui.capabilities));assert.equal(ui.category,'Productivity');
 for(const field of ['logo','composerIcon'])assert.ok(files[name+'/'+ui[field].replace(/^\.\//,'')]);
 for(const prompt of ui.defaultPrompt)assert.ok(prompt.length<=128&&!prompt.includes('\n'));
@@ -28,10 +31,17 @@ for(const p of skills){
  const meta=YAML.parse(fm[1]);assert.equal(meta.name,path.posix.basename(path.posix.dirname(p)));assert.ok(meta.description.length>0);
  for(const m of text.matchAll(/\]\(([^)]+)\)/g)){const dest=path.posix.normalize(path.posix.join(path.posix.dirname(p),m[1]));assert.ok(files[dest],'Référence absente : '+dest);}
 }
+for(const [p,b]of Object.entries(files).filter(([p])=>p.endsWith('.md'))){
+ const text=Buffer.from(b).toString('utf8');
+ for(const m of text.matchAll(/\]\(([^)#]+)(?:#[^)]*)?\)/g)){
+  if(/^(https?:|#)/.test(m[1]))continue;
+  const dest=path.posix.normalize(path.posix.join(path.posix.dirname(p),m[1]));assert.ok(files[dest],'Référence Markdown absente : '+dest);
+ }
+}
 const agent=YAML.parse(Buffer.from(files[name+'/skills/campagnes-de-test/agents/openai.yaml']).toString('utf8'));assert.equal(typeof agent.policy.allow_implicit_invocation,'boolean');assert.ok(agent.interface.display_name&&agent.interface.short_description&&agent.interface.default_prompt);
 for(const [p,b]of Object.entries(files)){assert.ok(b.length<1024*1024,'Fichier trop gros : '+p);assert.ok(!/\.(gmos|gmos-driver|pdf|zip|pyc)$/.test(p),'Donnée de jeu dans le plugin');}
 const dist=path.join(ici,'dist');fs.mkdirSync(dist,{recursive:true});
-const archive=path.join(dist,name+'-'+manifest.version+'.zip'),bytes=zipSync(files,{level:9,mtime:new Date('2026-10-30T12:00:00Z')});
+const archive=path.join(dist,name+'-'+manifest.version+'.zip'),bytes=zipSync(files,{level:9,mtime:new Date('2026-11-01T12:00:00Z')});
 fs.writeFileSync(archive,bytes);
 const reread=unzipSync(fs.readFileSync(archive));assert.deepEqual(Object.keys(reread).sort(),Object.keys(files).sort());
 for(const p of Object.keys(files))assert.equal(sha(reread[p]),sha(files[p]),'Archive différente : '+p);
