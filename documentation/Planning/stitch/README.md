@@ -23,6 +23,7 @@
 | [`surcouches/`](./surcouches/) | **Le cadre commun des surcouches, et ses fenêtres** — deuxième tour, prompt 15 |
 | [`preparation/`](./preparation/) | **La préparation retenue** — deuxième tour, prompt 16 écran par écran |
 | [`outillage/`](./outillage/) | **Médiathèque, Paramètres, atelier du thème, Nexus, navigateur, aide retenus** — deuxième tour, prompt 17 |
+| [`equipement/`](./equipement/) | **La section « Équipement » de l'éditeur du pilote retenue** — catalogue d'équipement (registre § 203, étape B), deux tours le 02/11 ; [prompts](../2026-11-02-catalogue-d-equipement.md) |
 | [`personnalites/`](./personnalites/) | **Les quatre personnalités** (prompt 8) et **leurs valeurs** dans le vocabulaire du contrat — étape T2.3, [`valeurs.md`](./personnalites/valeurs.md) |
 
 Les exports bruts de Stitch vivent dans `Stitch/` à la racine, **exclu de git** : ce sont des

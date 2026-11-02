@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="fr"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GM-OS — Éditeur de Pilote : Équipement</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            theme: {
+              bg: '#f8f6f0',
+              panel: '#ffffff',
+              card: '#ffffff',
+              cardBorder: '#e8e2d2',
+              cardBorderHover: '#dcd3bd',
+              gold: '#c29b38',
+              goldHover: '#ad8729',
+              goldLight: '#fbf7ed',
+              goldBorder: '#e6d5a7',
+              text: '#1f242e',
+              textMuted: '#636c7a',
+              textSubtle: '#8892a0',
+              danger: '#b93838',
+              dangerBg: '#fdf2f2',
+              dangerBorder: '#f5c6c6',
+              warning: '#a16207',
+              warningBg: '#fefce8',
+              warningBorder: '#fef08a'
+            }
+          },
+          fontFamily: {
+            title: ['Cinzel', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #f8f6f0;
+      color: #1f242e;
+      font-family: 'Inter', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .caps-spaced {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+  </style>
+<style>
+  .text-theme-textSubtle { color: #525b68 !important; }
+  .caps-spaced { color: #475161; }
+  .text-theme-textMuted { color: #4b5563 !important; }
+</style></head>
+<body class="p-6 md:p-8 max-w-[940px] mx-auto min-h-screen">
+
+  <!-- 1. En-tête : Titre en capitales italiques, sous-titre souligné, description -->
+  <header class="mb-7">
+    <div class="flex items-center gap-3 mb-2">
+      <div class="w-10 h-10 rounded-2xl bg-theme-goldLight border border-theme-goldBorder flex items-center justify-center text-theme-gold shadow-sm">
+        <span class="material-symbols-outlined text-[24px]">swords</span>
+      </div>
+      <div>
+        <h1 class="font-title italic tracking-wider text-2xl md:text-3xl text-theme-text font-bold uppercase leading-none">
+          ÉQUIPEMENT
+        </h1>
+        <div class="mt-1">
+          <span class="text-sm font-semibold tracking-wide text-theme-gold border-b-2 border-theme-gold pb-0.5 inline-block">
+            Catalogue du jeu
+          </span>
+        </div>
+      </div>
+    </div>
+    <p class="text-sm text-theme-textMuted leading-relaxed max-w-3xl mt-3 pl-0.5">
+      Les armes, protections, véhicules et le matériel du jeu, avec leurs caractéristiques. Une fiche de personnage s'équipe ici au lieu de recopier les chiffres.
+    </p>
+  </header>
+
+  <!-- 2. Quatre onglets avec leur compte -->
+  <nav class="flex flex-wrap items-center gap-2 mb-6" aria-label="Catégories d'équipement">
+    <!-- Armes (4) - Actif -->
+    <button class="px-5 py-2.5 rounded-full bg-theme-panel border-2 border-theme-gold text-theme-gold font-semibold text-sm shadow-sm flex items-center gap-2 transition">
+      <span class="">Armes</span>
+      <span class="px-2 py-0.5 rounded-full bg-theme-goldLight text-xs font-mono font-bold text-theme-gold border border-theme-goldBorder">4</span>
+    </button>
+    <!-- Protections (2) -->
+    <button class="px-5 py-2.5 rounded-full bg-theme-panel border border-theme-cardBorder text-theme-textMuted hover:text-theme-text hover:border-theme-cardBorderHover font-medium text-sm shadow-sm flex items-center gap-2 transition">
+      <span class="">Protections</span>
+      <span class="px-2 py-0.5 rounded-full bg-stone-100 text-xs font-mono text-theme-textSubtle">2</span>
+    </button>
+    <!-- Véhicules (1) -->
+    <button class="px-5 py-2.5 rounded-full bg-theme-panel border border-theme-cardBorder text-theme-textMuted hover:text-theme-text hover:border-theme-cardBorderHover font-medium text-sm shadow-sm flex items-center gap-2 transition">
+      <span class="">Véhicules</span>
+      <span class="px-2 py-0.5 rounded-full bg-stone-100 text-xs font-mono text-theme-textSubtle">1</span>
+    </button>
+    <!-- Matériel (1) -->
+    <button class="px-5 py-2.5 rounded-full bg-theme-panel border border-theme-cardBorder text-theme-textMuted hover:text-theme-text hover:border-theme-cardBorderHover font-medium text-sm shadow-sm flex items-center gap-2 transition">
+      <span class="">Matériel</span>
+      <span class="px-2 py-0.5 rounded-full bg-stone-100 text-xs font-mono text-theme-textSubtle">1</span>
+    </button>
+  </nav>
+
+  <!-- 3. Carte « Les colonnes des armes » -->
+  <section class="bg-theme-panel rounded-3xl p-6 mb-7 border border-theme-cardBorder shadow-sm"><div class="flex items-center justify-between mb-4 pb-2 border-b border-stone-100"><h2 class="caps-spaced text-theme-text">Les colonnes des armes</h2></div><div class="space-y-3"><div class="flex items-center justify-between gap-3 p-2.5 rounded-2xl bg-stone-50 border border-stone-200"><div class="flex items-center gap-2 pl-2"><span class="font-medium text-sm text-theme-text">Bonus</span></div><div class="flex items-center gap-3"><div class="inline-flex rounded-xl p-0.5 bg-stone-200 border border-stone-300 text-xs font-semibold"><span class="px-3 py-1 rounded-lg bg-theme-panel text-theme-text shadow-xs">Nombre</span><span class="px-3 py-1 text-theme-textSubtle cursor-pointer hover:text-theme-text">Texte</span></div><button class="w-8 h-8 rounded-xl hover:bg-stone-200 text-theme-textSubtle hover:text-theme-danger flex items-center justify-center transition" title="Supprimer la colonne"><span class="material-symbols-outlined text-[18px]">delete</span></button></div></div><div class="flex items-center justify-between gap-3 p-2.5 rounded-2xl bg-stone-50 border border-stone-200"><div class="flex items-center gap-2 pl-2"><span class="font-medium text-sm text-theme-text">Dégâts</span></div><div class="flex items-center gap-3"><div class="inline-flex rounded-xl p-0.5 bg-stone-200 border border-stone-300 text-xs font-semibold"><span class="px-3 py-1 rounded-lg bg-theme-panel text-theme-text shadow-xs">Nombre</span><span class="px-3 py-1 text-theme-textSubtle cursor-pointer hover:text-theme-text">Texte</span></div><button class="w-8 h-8 rounded-xl hover:bg-stone-200 text-theme-textSubtle hover:text-theme-danger flex items-center justify-center transition" title="Supprimer la colonne"><span class="material-symbols-outlined text-[18px]">delete</span></button></div></div><div class="flex items-center justify-between gap-3 p-2.5 rounded-2xl bg-stone-50 border border-stone-200"><div class="flex items-center gap-2 pl-2"><span class="font-medium text-sm text-theme-text">Portée</span></div><div class="flex items-center gap-3"><div class="inline-flex rounded-xl p-0.5 bg-stone-200 border border-stone-300 text-xs font-semibold"><span class="px-3 py-1 text-theme-textSubtle cursor-pointer hover:text-theme-text">Nombre</span><span class="px-3 py-1 rounded-lg bg-theme-panel text-theme-text shadow-xs">Texte</span></div><button class="w-8 h-8 rounded-xl hover:bg-stone-200 text-theme-textSubtle hover:text-theme-danger flex items-center justify-center transition" title="Supprimer la colonne"><span class="material-symbols-outlined text-[18px]">delete</span></button></div></div></div><div class="mt-4 pt-2"><button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl border border-dashed border-theme-gold text-theme-gold hover:bg-theme-goldLight text-xs font-semibold uppercase tracking-wider transition"><span class="material-symbols-outlined text-[18px]">add</span><span class="">Ajouter une colonne</span></button></div></section>
+
+  <!-- 4. Barre de recherche et bouton d'ajout d'objet -->
+  <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
+    <div class="relative flex-1">
+      <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-theme-textSubtle text-[20px]">search</span>
+      <input type="text" placeholder="Chercher un objet" class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-theme-panel border border-theme-cardBorder text-sm text-theme-text focus:outline-none focus:border-theme-gold shadow-xs placeholder-theme-textSubtle">
+    </div>
+    <button class="px-5 py-2.5 rounded-2xl bg-theme-gold hover:bg-theme-goldHover text-white text-sm font-semibold shadow-sm flex items-center justify-center gap-1.5 transition whitespace-nowrap"><span class="material-symbols-outlined text-[18px]">add</span><span class="">Ajouter un objet</span></button>
+  </div>
+
+  <!-- 5. Liste des armes par catégories -->
+  <div class="space-y-6"><!-- Catégorie 1 : Pistolets --><div><div class="flex items-center justify-between mb-2 px-1"><h3 class="caps-spaced text-theme-textMuted">Pistolets</h3><span class="text-xs font-mono text-theme-textSubtle font-medium">3 objets</span></div><!-- Ligne d'en-tête de colonnes discrète --><div class="hidden md:grid grid-cols-12 gap-3 px-5 py-2 mb-2 text-xs caps-spaced text-theme-textSubtle font-semibold"><div class="col-span-5">Arme</div><div class="col-span-1 text-center">Bonus</div><div class="col-span-1 text-center">Dégâts</div><div class="col-span-2 text-center">Portée</div><div class="col-span-2 text-left">Propriétés</div><div class="col-span-1 text-right">Source</div></div><div class="space-y-3"><!-- Arme 1 : VP-70MA6 (DÉPLIÉE) --><article class="bg-theme-panel rounded-3xl border-2 border-theme-gold shadow-sm overflow-hidden transition"><!-- En-tête de ligne pliable --><div class="p-4 sm:p-5 grid grid-cols-1 md:grid-cols-12 items-center gap-3 bg-theme-goldLight border-b border-theme-goldBorder cursor-pointer"><div class="md:col-span-5 flex items-center gap-2"><span class="material-symbols-outlined text-theme-gold text-[20px]">expand_less</span><div><h4 class="font-bold text-base text-theme-text">Pistolet semi-automatique VP-70MA6</h4><p class="text-xs text-theme-textMuted italic">VP-70MA6 Semi-Automatic Pistol</p></div></div><div class="md:col-span-1 text-center"><span class="px-2 py-0.5 rounded-md bg-theme-panel border border-stone-200 font-bold font-mono text-xs text-theme-text inline-block min-w-[32px]">+2</span></div><div class="md:col-span-1 text-center"><span class="px-2 py-0.5 rounded-md bg-theme-panel border border-stone-200 font-bold font-mono text-xs text-theme-text inline-block min-w-[32px]">1</span></div><div class="md:col-span-2 text-center"><span class="px-2 py-0.5 rounded-md bg-theme-panel border border-stone-200 font-medium text-xs text-theme-text inline-block">Moyenne</span></div><div class="md:col-span-2 flex items-center"><span class="text-xs text-theme-textSubtle font-mono">—</span></div><div class="md:col-span-1 text-right"><span class="text-xs font-mono text-theme-textSubtle bg-stone-100 px-2 py-0.5 rounded-md inline-block">p. 66</span></div></div><!-- Fiche dépliée de l'objet (VP-70MA6) --><div class="p-5 sm:p-6 bg-theme-panel space-y-5"><!-- Ligne 1 : Nom, Nom original, Catégorie --><div class="grid grid-cols-1 sm:grid-cols-3 gap-4"><div><label class="block caps-spaced text-theme-textSubtle mb-1.5">Nom</label><div class="text-sm font-semibold text-theme-text p-2.5 rounded-2xl bg-stone-50 border border-stone-200">Pistolet semi-automatique VP-70MA6</div></div><div><label class="block caps-spaced text-theme-textSubtle mb-1.5">Nom original</label><div class="text-sm font-normal text-theme-textMuted italic p-2.5 rounded-2xl bg-stone-50 border border-stone-200">VP-70MA6 Semi-Automatic Pistol</div></div><div><label class="block caps-spaced text-theme-textSubtle mb-1.5">Catégorie</label><div class="text-sm font-medium text-theme-text p-2.5 rounded-2xl bg-stone-50 border border-stone-200">Pistolets</div></div></div><!-- Ligne 2 : Étiquettes --><div class=""><label class="block caps-spaced text-theme-textSubtle mb-1.5">Étiquettes</label><div class="flex flex-wrap items-center gap-2 p-2.5 rounded-2xl bg-stone-50 border border-stone-200 min-h-[46px]"><button class="inline-flex items-center gap-1 px-3 py-1 rounded-full border border-dashed border-stone-300 text-xs font-medium text-theme-textSubtle hover:border-theme-gold hover:text-theme-gold transition"><span class="material-symbols-outlined text-[16px]">add</span><span class="">Ajouter</span></button></div></div><!-- Ligne 3 : Renommé en CARACTÉRISTIQUES --><div><label class="block caps-spaced text-theme-textSubtle mb-1.5">Caractéristiques</label><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div class="p-3 rounded-2xl bg-stone-50 border border-stone-200"><span class="text-xs text-theme-textSubtle block font-medium">Bonus</span><span class="text-base font-bold font-mono text-theme-text">+2</span></div><div class="p-3 rounded-2xl bg-stone-50 border border-stone-200"><span class="text-xs text-theme-textSubtle block font-medium">Dégâts</span><span class="text-base font-bold font-mono text-theme-text">1</span></div><div class="p-3 rounded-2xl bg-stone-50 border border-stone-200"><span class="text-xs text-theme-textSubtle block font-medium">Portée</span><span class="text-base font-medium text-theme-text">Moyenne</span></div></div></div><!-- Ligne 4 : Propriétés, Poids, Coût --><div class="grid grid-cols-1 sm:grid-cols-3 gap-4"><div><label class="block caps-spaced text-theme-textSubtle mb-1.5">Propriétés</label><div class="flex flex-wrap items-center gap-1.5 p-2 rounded-2xl bg-stone-50 border border-stone-200 min-h-[44px]"><button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full border border-dashed border-stone-300 text-xs font-medium text-theme-textSubtle hover:border-theme-gold hover:text-theme-gold transition"><span class="material-symbols-outlined text-[16px]">add</span><span class="">Ajouter</span></button></div></div><div><label class="block caps-spaced text-theme-textSubtle mb-1.5">Poids</label><div class="text-sm font-bold font-mono text-theme-text p-2.5 rounded-2xl bg-stone-50 border border-stone-200">½</div></div><div><label class="block caps-spaced text-theme-textSubtle mb-1.5">Coût</label><div class="text-sm font-bold font-mono text-theme-text p-2.5 rounded-2xl bg-stone-50 border border-stone-200">250 $</div></div></div><!-- Ligne 5 : Description (vide) --><div><label class="block caps-spaced text-theme-textSubtle mb-1.5">Description</label><div class="p-3 rounded-2xl bg-stone-50 border border-dashed border-stone-200 text-xs text-theme-textSubtle italic min-h-[52px] flex items-center">(Aucune description renseignée)</div></div><!-- Ligne 6 : Effets --><div><div class="flex items-center justify-between mb-1.5"><label class="caps-spaced text-theme-textSubtle">Effets</label><span class="text-xs text-theme-textSubtle">Texte, compétence visée, valeur, condition</span></div><div class="p-4 rounded-2xl bg-stone-50 border border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-3"><span class="text-xs text-theme-textSubtle italic">Aucun effet spécifique</span><button class="px-3.5 py-1.5 rounded-xl border border-stone-300 hover:border-theme-gold text-theme-textMuted hover:text-theme-gold text-xs font-semibold transition">Ajouter un effet</button></div></div><!-- Ligne 7 : Emporte (vide) --><div><label class="block caps-spaced text-theme-textSubtle mb-1.5">Emporte</label><div class="p-4 rounded-2xl bg-stone-50 border border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-3"><span class="text-xs text-theme-textSubtle italic">N'emporte aucun objet supplémentaire</span><button class="px-3.5 py-1.5 rounded-xl border border-stone-300 hover:border-theme-gold text-theme-textMuted hover:text-theme-gold text-xs font-semibold transition">Choisir dans le catalogue</button></div></div><!-- Ligne 8 : Source en deux champs distincts et bouton suppression --><div class="pt-4 border-t border-stone-200"><div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4"><div><label class="block caps-spaced text-theme-textSubtle mb-1.5">Livre</label><div class="text-sm font-semibold text-theme-text p-2.5 rounded-2xl bg-stone-50 border border-stone-200 flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-theme-textSubtle">menu_book</span><span class="">Marines Coloniaux</span></div></div><div><label class="block caps-spaced text-theme-textSubtle mb-1.5">Page</label><div class="text-sm font-semibold font-mono text-theme-text p-2.5 rounded-2xl bg-stone-50 border border-stone-200">66</div></div></div><div class="flex justify-end"><button class="text-xs font-medium text-theme-danger hover:underline flex items-center gap-1 transition" title="Supprimer cet objet de la base"><span class="material-symbols-outlined text-[16px]">delete</span><span class="">Supprimer l'objet</span></button></div></div></div></article><!-- Arme 2 : Norcomm QSZ-203 --><article class="bg-theme-panel rounded-3xl p-4 sm:p-5 border border-theme-cardBorder hover:border-theme-cardBorderHover shadow-xs transition cursor-pointer"><div class="grid grid-cols-1 md:grid-cols-12 items-center gap-3"><div class="md:col-span-5 flex items-center gap-2"><span class="material-symbols-outlined text-theme-textSubtle text-[20px]">expand_more</span><h4 class="font-bold text-base text-theme-text">Pistolet semi-automatique Norcomm QSZ-203</h4></div><div class="md:col-span-1 text-center"><span class="px-2 py-0.5 rounded-md bg-stone-100 font-bold font-mono text-xs text-theme-text inline-block min-w-[32px]">+1</span></div><div class="md:col-span-1 text-center"><span class="px-2 py-0.5 rounded-md bg-stone-100 font-bold font-mono text-xs text-theme-text inline-block min-w-[32px]">1</span></div><div class="md:col-span-2 text-center"><span class="px-2 py-0.5 rounded-md bg-stone-100 font-medium text-xs text-theme-text inline-block">Moyenne</span></div><div class="md:col-span-2 flex items-center"><span class="px-2.5 py-1 rounded-full bg-stone-100 text-theme-text border border-stone-200 text-xs font-medium">Perce-armure</span></div><div class="md:col-span-1 text-right"><span class="text-xs font-mono text-theme-textSubtle bg-stone-100 px-2 py-0.5 rounded-md inline-block">p. 66</span></div></div></article><!-- Arme 3 : Weyland ES-4 --><article class="bg-theme-panel rounded-3xl p-4 sm:p-5 border border-theme-cardBorder hover:border-theme-cardBorderHover shadow-xs transition cursor-pointer"><div class="grid grid-cols-1 md:grid-cols-12 items-center gap-3"><div class="md:col-span-5 flex items-center gap-2"><span class="material-symbols-outlined text-theme-textSubtle text-[20px]">expand_more</span><h4 class="font-bold text-base text-theme-text">Pistolet électrostatique semi-automatique Weyland ES-4</h4></div><div class="md:col-span-1 text-center"><span class="px-2 py-0.5 rounded-md bg-stone-100 font-bold font-mono text-xs text-theme-text inline-block min-w-[32px]">+1</span></div><div class="md:col-span-1 text-center"><span class="px-2 py-0.5 rounded-md bg-stone-100 font-bold font-mono text-xs text-theme-text inline-block min-w-[32px]">1</span></div><div class="md:col-span-2 text-center"><span class="px-2 py-0.5 rounded-md bg-stone-100 font-medium text-xs text-theme-text inline-block">Moyenne</span></div><div class="md:col-span-2 flex flex-wrap items-center gap-1.5"><span class="px-2.5 py-1 rounded-full bg-stone-100 text-theme-text border border-stone-200 text-xs font-medium">Sonne la cible</span><span class="px-2.5 py-1 rounded-full bg-stone-100 text-theme-text border border-stone-200 text-xs font-medium">Perce-armure</span></div><div class="md:col-span-1 text-right"><span class="text-xs font-mono text-theme-textSubtle bg-stone-100 px-2 py-0.5 rounded-md inline-block">p. 66</span></div></div></article></div></div><!-- Catégorie 2 : Explosifs --><div><div class="flex items-center justify-between mb-2 px-1"><h3 class="caps-spaced text-theme-textMuted">Explosifs</h3><span class="text-xs font-mono text-theme-textSubtle font-medium">1 objet</span></div><!-- Ligne d'en-tête de colonnes discrète --><div class="hidden md:grid grid-cols-12 gap-3 px-5 py-2 mb-2 text-xs caps-spaced text-theme-textSubtle font-semibold"><div class="col-span-5">Arme</div><div class="col-span-1 text-center">Bonus</div><div class="col-span-1 text-center">Dégâts</div><div class="col-span-2 text-center">Portée</div><div class="col-span-2 text-left">Propriétés</div><div class="col-span-1 text-right">Source</div></div><div class="space-y-3"><!-- Arme 4 : Charge de brèche Armat Type 4 --><article class="bg-theme-panel rounded-3xl p-4 sm:p-5 border border-theme-cardBorder hover:border-theme-cardBorderHover shadow-xs transition cursor-pointer"><div class="grid grid-cols-1 md:grid-cols-12 items-center gap-3 mb-2"><div class="md:col-span-5 flex items-center gap-2"><span class="material-symbols-outlined text-theme-textSubtle text-[20px]">expand_more</span><h4 class="font-bold text-base text-theme-text">Charge de brèche Armat Type 4</h4></div><div class="md:col-span-1 text-center"><span class="px-2 py-0.5 rounded-md bg-stone-50 border border-dashed border-stone-200 text-theme-textSubtle font-mono text-xs inline-block min-w-[32px]">—</span></div><div class="md:col-span-1 text-center"><span class="px-2 py-0.5 rounded-md bg-stone-100 text-theme-text border border-stone-200 font-bold font-mono text-xs inline-block">Puissance 9</span></div><div class="md:col-span-2 text-center"><span class="px-2 py-0.5 rounded-md bg-stone-50 border border-dashed border-stone-200 text-theme-textSubtle text-xs inline-block min-w-[32px]">—</span></div><div class="md:col-span-2 flex items-center"><span class="text-xs text-theme-textSubtle font-mono">—</span></div><div class="md:col-span-1 text-right"><span class="text-xs text-theme-textSubtle font-medium italic">pas de page</span></div></div><!-- Avertissement ocre discret --><div class="mt-2.5 p-2.5 rounded-2xl bg-theme-warningBg border border-theme-warningBorder flex items-center gap-2 text-xs text-theme-warning font-medium"><span class="material-symbols-outlined text-[18px]">warning</span><span class="">« Puissance 9 » n'est pas un nombre : une mécanique qui lit les dégâts ne le comptera pas.</span></div></article></div></div></div>
+
+
+
+
+
+</body></html>

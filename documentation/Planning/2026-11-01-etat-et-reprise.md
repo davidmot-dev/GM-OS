@@ -39,6 +39,17 @@ Livré : chemins (`corpusSysteme.ts`), gabarits, inventaire libre, `supplements.
 
 ## Par quoi reprendre
 
+0. **Le mode supplément** : David a forgé tout Colonial Marines (18 fiches) ; **relu le 02/11**
+   contre l'édition française du carnet (§ 185 : deux erreurs de chiffres dans les explosifs, une
+   soixantaine de noms anglais rétablis, coquilles du livre signalées). Le choix du livre est passé
+   dans le panneau de gauche et la grille des sujets est réparée, deux défauts vus par David à
+   l'écran. L'essai de l'index français est ajouté (`electron/bookIndex.test.ts`).
+   **L'étape 2 devient le catalogue d'équipement** (registre § 203, plan
+   [`2026-11-02-catalogue-d-equipement.md`](2026-11-02-catalogue-d-equipement.md)) : quatre familles
+   décidées par David le 02/11. **Étape A livrée** (modèle et contrôle) ; les écrans passent par
+   Stitch (consigne de David) ; **étape B livrée** (section « Équipement » de l'éditeur du pilote,
+   d'après l'écran Stitch retenu) ; attend l'essai de David, puis l'étape C.
+
 1. **L'essai de David** : réimporter `Export Dirvers/corriges/SR_Anarchy_driver_gmos_finir.gmos-driver`
    avec **Remplacer** ; sur un personnage, un test avec des dés de risque (bouton « Risquée »), puis
    **Relancer** ; une VD dans Combat-OS (type physique) ; la **Fiche du jeu**, saisir puis Sauvegarder.
@@ -56,10 +67,10 @@ Livré : chemins (`corpusSysteme.ts`), gabarits, inventaire libre, `supplements.
   Structure comme la Force) ; le moniteur ne l'automatise pas.
 - `PanneauDeJet.tsx` n'utilise pas `useEffect` : la RR et le risque réglés sont attachés à la
   compétence (`pour`) et reviennent d'eux-mêmes quand elle change.
-- ⛔ Le skill `finir-un-pilote` dit « ne jamais commiter `Export Dirvers/` », alors que le dossier
-  est suivi et que des essais lisent ses `corriges/`. Question posée à David, sans réponse.
 - **Colonial Marines, le livre du carnet est l'édition française** :
   `\\CLOUDDAVID\Media\Jeux de Rôle\03. Futur\1. Space Opera\Aliens\ALIEN (Arkhane Asylum)\ALN-Marines Coloniaux_FR.pdf`
   (101 Mo) ; PDF = imprimée + 3 ; texte doublé ; les tableaux de véhicules et d'événements ne sont
   lisibles qu'en image. Le tableau des explosifs y est mal titré (« BONUS » pour les dégâts).
   Les noms anglais se vérifient contre l'édition anglaise (même dossier).
+- ⛔ Le skill `finir-un-pilote` dit « ne jamais commiter `Export Dirvers/` », alors que le dossier
+  est suivi et que des essais lisent ses `corriges/`. Question posée à David, sans réponse.

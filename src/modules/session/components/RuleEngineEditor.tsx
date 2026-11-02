@@ -9,7 +9,7 @@ import { modulesDuPilote } from '../../modulesDuJeu/catalogue';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { 
     Sparkles, Brain, ArrowLeft, PenTool, Music, Beaker, User,
-    BookOpen, Dice5, Zap, Map, Archive, type LucideIcon, Eye 
+    BookOpen, Dice5, Zap, Map, Archive, Swords, type LucideIcon, Eye 
 } from 'lucide-react';
 import type { GameDriver, TacticalConfig } from '../../../types/drivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -19,6 +19,7 @@ import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
 import PanneauDesPersonas from '../../forge/corpus/PanneauDesPersonas';
 import EditeurDuJet from './rules/EditeurDuJet';
 import EditeurDesTablesDeButin from './rules/EditeurDesTablesDeButin';
+import EditeurDuCatalogue from './rules/EditeurDuCatalogue';
 import ChoixDeLaBanniere from './rules/ChoixDeLaBanniere';
 import { TYPES_NUMERIQUES } from '../../forge/rules/controlesDuPilote';
 
@@ -73,6 +74,7 @@ export const RuleEngineEditor: React.FC = () => {
         tactical: t('modules:session.rule_engine_editor.agencement.resume_portees', { count: Object.keys(tactical?.ranges ?? {}).length }),
         ai: t('modules:session.rule_engine_editor.agencement.resume_personas', { count: Object.keys(driver.aiPersonas ?? {}).length }),
         loot: t('modules:session.rule_engine_editor.agencement.resume_butin', { count: driver.lootTables?.length ?? 0 }),
+        equipement: `${driver.catalogue?.objets.length ?? 0} objet(s) au catalogue`,
         notebook: driver.defaultNotebookUrl ? t('modules:session.rule_engine_editor.agencement.resume_carnet') : t('modules:session.rule_engine_editor.agencement.resume_sans_carnet'),
     };
 
@@ -82,6 +84,7 @@ export const RuleEngineEditor: React.FC = () => {
         { id: 'tactical', label: t('modules:session.rule_engine_editor.nav.tactical'), icon: Map, color: 'text-gm-emerald', bg: 'bg-gm-emerald/10' },
         { id: 'ai', label: t('modules:session.rule_engine_editor.nav.ai'), icon: Sparkles, color: 'text-gm-violet', bg: 'bg-gm-violet/10' },
         { id: 'loot', label: t('modules:session.rule_engine_editor.nav.loot'), icon: Archive, color: 'text-gm-gold', bg: 'bg-gm-gold/10' },
+        { id: 'equipement', label: 'Équipement', icon: Swords, color: 'text-gm-gold', bg: 'bg-gm-gold/10' },
         { id: 'notebook', label: t('modules:session.rule_engine_editor.nav.notebook'), icon: BookOpen, color: 'text-etat-info', bg: 'bg-etat-info/10' },
         { id: 'modules-du-jeu', label: 'Modules du jeu', icon: Blocks, color: 'text-accent', bg: 'bg-accent/10' },
     ] as const;
@@ -748,6 +751,24 @@ export const RuleEngineEditor: React.FC = () => {
                                 </header>
 
                                 <EditeurDesTablesDeButin driver={driver} onUpdate={handleUpdate} />
+                            </div>
+                        )}
+
+                        {/* Le catalogue d'équipement du jeu — § 203, étape B (02/11/2026). */}
+                        {activeSection === 'equipement' && (
+                            <div className="space-y-12">
+                                <header className="space-y-2 mb-10">
+                                    <h2 className="text-3xl font-black text-app-text tracking-tight uppercase italic flex items-center gap-4 font-display">
+                                        <Swords className="text-accent" size={32} />
+                                        Équipement <span className="text-accent/40 underline decoration-accent/40">Catalogue du jeu</span>
+                                    </h2>
+                                    <p className="text-app-text/60 text-sm max-w-2xl leading-relaxed">
+                                        Les armes, protections, véhicules et le matériel du jeu, avec leurs caractéristiques. Une fiche de personnage s'équipe ici au lieu de recopier les chiffres.
+                                    </p>
+                                </header>
+
+                                <EditeurDuCatalogue driver={driver} onUpdate={handleUpdate}
+                                    champsDeLaFiche={(gabaritDuPilote?.sections ?? []).flatMap(s => (s.fields ?? []).map(f => ({ id: f.id, label: `${f.label} — ${s.label || s.id}` })))} />
                             </div>
                         )}
 

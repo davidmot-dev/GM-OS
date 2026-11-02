@@ -13402,10 +13402,27 @@ David : « ok c'est bon on fait RQ-A1 » ; validation de RQ-A2 consignée au § 
 - **Sources/isolement :** export 2.1.0 et export des joueurs absents : pilote reconstruit par le générateur versionné depuis l'historique et relevé minimal autorisé réutilisé, absence signalée en provenance. Essais isolés/hors bac à sable déjà autorisés, aucun accès personnel, aucun src/ ou electron/ modifié par ce lot, aucun paquet ni Git d’écriture.
 - **Validation de David le 01/11 :** « ok c’est bien, c’est testé. Commit et pousse ». RQ-A1 coché/vert, publication Git demandée ; [confirmation](../../output/campagnes-tests/runequest/VALIDATION-DAVID.md). Aucun résultat individuel inventé, cahier/CSV initiaux et ZIP inchangés. RQ-A3 à A6 restent à faire. [Reprise et livraison](2026-11-01-etat-et-reprise-codex-runequest-recette-210.md).
 
+### 203 · Le catalogue d'équipement du pilote — plan — 02/11/2026
+
+David, après la relecture de Colonial Marines (§ 185) : *« Est-ce qu'on ne devrait pas faire une section équipement dans le pilote ? »*, puis *« Oui c'est bien »* sur le découpage. **Plan seul, aucun code** : [`2026-11-02-catalogue-d-equipement.md`](2026-11-02-catalogue-d-equipement.md).
+
+- **Constat** : une arme n'existe que sur la fiche d'un personnage (pour Alien, des lignes de texte relues par `equipementsAlien`) ; le pilote ne porte que des tables de butin ; l'objet d'inventaire a un `properties` libre que rien ne lit. Rien de tel n'était au registre.
+- **Décisions de David** : quatre familles — armes, protections, véhicules, matériel (à effets éventuels ; implants et objets magiques en sont, avec une étiquette) ; un objet peut en contenir d'autres par référence ; les effets du matériel sont **rappelés** au jet, pas appliqués, leurs conditions étant narratives.
+- **Modèle** : `catalogue?` dans `GameDriver`, socle commun et colonnes déclarées par chaque jeu.
+- **Étapes** : A modèle et contrôle ; B section « Équipement » de l'éditeur du pilote ; C remplissage déterministe depuis les tableaux des fiches relues (Colonial Marines d'abord, sans carnet) ; D « Prendre dans le catalogue » sur la fiche Alien ; E rappel des effets au panneau de jet.
+- **Question ouverte** : le livre de base d'Alien n'a pas de fiche d'équipement relue (son inventaire l'exclut) — forger et relire, ou transcrire depuis le PDF en image.
+- **Étape A livrée le 02/11** (GM-OS fermé, dit David) : types `FamilleDObjet`, `ColonneDuCatalogue`, `EffetDObjet`, `ObjetDuCatalogue`, `CatalogueDEquipement` et `catalogue?` dans `GameDriver` ; `src/modules/equipement/catalogue.ts` (contrôle, objets contenus, famille, identifiant) branché dans `controlerLePilote`. Vérifié : `catalogue.test.ts` (12), 580 essais de la Forge et de l'équipement, `tsc -b`, eslint.
+- **Consigne de David, 02/11** : *« Pour le design d'écran passe par stitch »* — étapes B, D, E, selon la méthode de la refonte (§ 76).
+- **Prompt Stitch de l'étape B écrit le 02/11**, sur la capture de la section « Tables de butin » fournie par David : dans le plan, § « Étape B — le prompt Stitch », avec des exemples tirés des fiches relues.
+- **Écran retenu le 02/11**, après deux tours de Stitch : `stitch/equipement/equipement-armes.png`. La grille des lignes suivra les colonnes déclarées par le jeu.
+- **Étape B livrée le 02/11** (GM-OS fermé) : `EditeurDuCatalogue.tsx`, la section « Équipement » de l'éditeur du pilote ; ses gestes sont des fonctions pures de `catalogue.ts`. La grille suit les colonnes déclarées, « Emporte » se choisit dans le catalogue, et les constats s'affichent sous l'objet qu'ils visent. Vérifié : 25 essais neufs, puis la suite complète (793 fichiers, 9 555 essais) ; son seul échec était le manuel des jeux sans ligne pour `catalogue`, ajoutée au 53. `tsc -b` et eslint passent. Le guide 50 décrit la section.
+- **Reste** : l'essai de David (B), puis C (remplissage depuis les fiches relues), D, E.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 139 | **Catalogue d'équipement du pilote** | 🟠 § 203 : étapes A (modèle et contrôle) et B (section « Équipement » de l'éditeur) livrées le 02/11 ; quatre familles, colonnes déclarées par le jeu ; écrans par Stitch (consigne de David) | Essai de David : éditeur du pilote Alien → « Équipement », une colonne, un objet, « Emporte » ; puis étape C | L'essai de David |
 | 138 | **RuneQuest — recette 2.1.0** | § 202 ; RQ-A1 livré et validé par David, 96 tests, E2E et trois Hub passent, 78 cas — 01/11 | RQ-A1 coché ; commit et push demandés | Aucun pour RQ-A1 ; historique 2.0.0 conservé |
 | 137 | **RuneQuest — PV de cible** | § 201 ; RQ-A2 livré et validé par David — 01/11 ; 89 tests, lint, build et E2E passent | RQ-A2 coché ; suite RQ-A1 au § 202 | Aucun pour ce correctif |
 | 136 | **GM-05 — secrets de séance** | § 200 ; corrigé et validé par David — 01/11 ; 70 tests et quatre E2E, douze Hub sans fuite | NP-C1 coché ; suite RQ-A2 | Aucun pour ce correctif ; anciens rapports conservés |

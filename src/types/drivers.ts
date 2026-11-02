@@ -52,6 +52,86 @@ export interface VocabulaireDuButin {
     raretes?: Array<{ id: string; label: string }>;
 }
 
+/**
+ * **Le catalogue d'équipement du jeu** — registre § 203, 02/11/2026.
+ *
+ * David : *« Est-ce qu'on ne devrait pas faire une section équipement dans le
+ * pilote ? »* Une arme n'existait que sur la fiche d'un personnage, recopiée à
+ * la main (pour Alien, des lignes de texte que relit `equipementsAlien`) ; une
+ * faute de frappe changeait le jet. Les chiffres du livre, eux, sont relus
+ * dans le corpus.
+ *
+ * **Quatre familles**, décidées par David : les armes, les protections, les
+ * véhicules, le matériel. Un implant ou un anneau magique est du matériel à
+ * effets, avec une étiquette. **Le socle est commun, les colonnes sont celles
+ * du jeu** : Alien déclare bonus, dégâts et portée ; on ne type pas d'avance
+ * les armes de RuneQuest. Plan : `documentation/Planning/2026-11-02-catalogue-d-equipement.md`.
+ */
+export type FamilleDObjet = 'arme' | 'protection' | 'vehicule' | 'materiel';
+
+/** Une caractéristique qu'un jeu donne à une famille — « Dégâts », « Réserve d'air ». */
+export interface ColonneDuCatalogue {
+    /** La clé des `valeurs` de l'objet — `degats`. */
+    id: string;
+    libelle: string;
+    /**
+     * `nombre` : ce que lit une mécanique (le bonus d'une arme d'Alien). Une
+     * valeur écrite en toutes lettres y est signalée, pas refusée : les dégâts
+     * d'une grenade s'écrivent « Puissance 9 ».
+     */
+    nature: 'nombre' | 'texte';
+}
+
+/**
+ * Ce qu'un objet change — les palmes M11 : +2 en Mobilité sous l'eau.
+ *
+ * **Rappelé au jet, jamais appliqué d'office** (décision de David, 02/11) : la
+ * condition est narrative, et un bonus ajouté sans savoir si l'on est sous
+ * l'eau se tromperait en silence.
+ */
+export interface EffetDObjet {
+    /** Ce que l'effet vise : une compétence, un attribut, une ressource — `mobilite`. */
+    cible: string;
+    valeur?: number;
+    /** « sous l'eau », « dans l'environnement correspondant ». */
+    condition?: string;
+    /** L'effet tel que le livre le dit. */
+    texte: string;
+}
+
+export interface ObjetDuCatalogue {
+    id: string;
+    famille: FamilleDObjet;
+    nom: string;
+    /** Le nom de l'autre édition — « M108 Buckshot Canisters ». */
+    nomOriginal?: string;
+    /** Le classement du livre — « Pistolets », « Armes lourdes ». */
+    categorie?: string;
+    /** « implant », « magique » : de quoi filtrer, pas une famille. */
+    etiquettes?: string[];
+    /** Les caractéristiques, par identifiant de colonne de la famille. */
+    valeurs: Record<string, string | number>;
+    /** « Perce-armure », « Mode automatique ». */
+    proprietes?: string[];
+    poids?: string;
+    cout?: string;
+    description?: string;
+    effets?: EffetDObjet[];
+    /**
+     * Les objets qu'il emporte, **par référence** : la CCC5 et son AK-104S, le
+     * M577 et ses tourelles. On corrige le M41A une fois, et chaque véhicule
+     * qui l'embarque suit.
+     */
+    contient?: string[];
+    /** D'où viennent les chiffres — le livre ou le supplément, la page imprimée, la fiche relue. */
+    source?: { livre: string; page?: number; fiche?: string };
+}
+
+export interface CatalogueDEquipement {
+    colonnes: Partial<Record<FamilleDObjet, ColonneDuCatalogue[]>>;
+    objets: ObjetDuCatalogue[];
+}
+
 export interface LootTable {
     id: string;
     name: string;
@@ -721,6 +801,12 @@ export interface GameDriver {
      */
     cosms?: CosmDuJeu[];
     lootTables?: LootTable[]; // Optional tables for item/treasure generation
+    /**
+     * L'équipement du jeu, ses chiffres pris au livre — § 203, voir
+     * `CatalogueDEquipement`. Absent : le jeu n'a pas de catalogue, et les
+     * fiches s'équipent à la main comme avant.
+     */
+    catalogue?: CatalogueDEquipement;
     /** Les mots de ce jeu pour la monnaie et la rareté — voir `VocabulaireDuButin`. */
     vocabulaireDuButin?: VocabulaireDuButin;
     defaultNotebookUrl?: string; // Default NotebookLM for this system

@@ -118,6 +118,7 @@ On y arrive depuis Session-OS, par les **Règles** (le *Grimoire*).
 | **Tactique** | Les seuils de portée du Cortex et leurs modificateurs |
 | **Intelligence** | Les consignes des huit personas, réécrites pour ce jeu |
 | **Trésors** | Les tables de butin, et le **vocabulaire** du jeu : sa monnaie, ses raretés |
+| **Équipement** | Le **catalogue** du jeu : armes, protections, véhicules, matériel, avec leurs caractéristiques |
 | **Connaissance** | Le carnet NotebookLM de référence pour ce système |
 
 > ⛔ **Ce guide n'en décrivait que trois** — le moteur de dés, le combat et le Cortex. L'**Atelier**,
@@ -137,6 +138,37 @@ s'appelle sa monnaie, quels sont ses rangs de rareté. Sans ce vocabulaire, Loot
 il dira « pièces » là où votre jeu dit « eddies ».
 
 → [Guide de Loot-OS](./42-Butin-ecrire-les-tables.md)
+
+### La section Équipement
+
+Le catalogue des objets du jeu, en quatre familles : **armes**, **protections**, **véhicules** et
+**matériel**. Les implants et les objets magiques sont du matériel avec une étiquette. Livrée le
+02/11/2026 (registre § 203).
+
+1. **Choisissez la famille** dans les quatre onglets. Le chiffre de chaque onglet compte ses objets.
+2. **Déclarez ses colonnes** dans « Les colonnes des … ». Ce sont les caractéristiques que ce jeu
+   donne à cette famille : Bonus, Dégâts, Portée pour les armes d'Alien. Une colonne est un
+   **nombre** ou un **texte**. En retirer une efface aussi ses valeurs, et GM-OS demande d'abord
+   combien d'objets elle touche.
+3. **Ajoutez un objet** : « Ajouter un objet », son nom, « Créer ». Il s'ouvre aussitôt.
+4. **Remplissez sa fiche** : nom original, catégorie (les objets se rangent sous elle), étiquettes,
+   une case par colonne, propriétés, poids, coût, description et source (livre, page).
+5. **« Emporte »** se choisit dans le catalogue, jamais au clavier. Par exemple, la combinaison
+   CCC5 emporte son canon AK-104S. Corriger le canon corrige donc tout ce qui l'emporte.
+6. **Les effets** (« +2 aux tests de Mobilité sous l'eau ») disent la compétence qu'ils visent et
+   leur condition. Ils seront **rappelés** au jet et jamais appliqués d'office, car leurs
+   conditions se jugent à la table.
+
+Le contrôle du pilote s'affiche **sous l'objet concerné**, à deux niveaux :
+
+- **en rouge**, ce qui casserait un geste : un objet emporté introuvable, une valeur hors des
+  colonnes déclarées ;
+- **en ocre**, ce qui se lit mais ne se compte pas, comme « Puissance 9 » dans une colonne de
+  nombres.
+
+> ⚠️ **Ce qui ne marche pas encore.** Une fiche de personnage ne s'équipe pas encore depuis le
+> catalogue, et le catalogue ne se remplit pas encore depuis le corpus. Ce sont les étapes suivantes
+> du chantier : [le plan](../Planning/2026-11-02-catalogue-d-equipement.md).
 
 ---
 
