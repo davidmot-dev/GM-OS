@@ -3129,6 +3129,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {regleRuneQuest && runequestDuLancer && runequestDuResultat && (
                             <SuitesRuneQuest key={runequestDuLancer.compte} jet={resultat as JetDeRuneQuest} calcul={runequestDuLancer.calcul}
                                 regle={regleRuneQuest} d20={() => DiceEngine.roll(20)} porterLeCoup={!pourLesJoueurs}
+                                valeurs={valeurs} de={faces => DiceEngine.roll(faces)}
                                 augmenter={bonus => setChoixRuneQuest(c => ({ ...c, augmentation: bonus }))}
                                 retenter={() => setChoixRuneQuest(c => ({ ...c, nouvelleTentative: true }))}
                                 consigner={ligne => redire(dernierLancer?.titre ?? 'RuneQuest', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />

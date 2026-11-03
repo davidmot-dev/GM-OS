@@ -1,8 +1,9 @@
 # 🏺 Jeu — RuneQuest
 
 > **Pilote décrit :** « RuneQuest », forgé par David, exporté le 2026-10-30, **fini le
-> 2026-10-30**, version 2.1.0 — les coups localisés de Combat-OS ajoutés le même jour,
-> affichage des PV de la cible corrigé le **2026-11-01** dans l'application
+> 2026-10-30**, version **2.2.0** — les coups localisés de Combat-OS ajoutés le même jour,
+> affichage des PV de la cible corrigé le **2026-11-01** dans l'application ; **dégâts de
+> l'attaque et rangs d'action selon l'action** le **2026-11-03** (RQ-A3, RQ-A4)
 > (`Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver`, construit par
 > `outils/runequest/finir_runequest.py`). Thème `runequest` et fiche de personnage
 > HTML `runequest-fr` livrés le même jour, la fiche reliée champ par champ. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
@@ -12,7 +13,14 @@ Réputation ou une caractéristique. Le résultat se lit en **cinq niveaux**, ca
 chances **modifiées** : réussite critique, réussite spéciale, réussite, échec, échec critique.
 Autour de lui : le test de caractéristique, la table de résistance, l'augmentation, la nouvelle
 tentative, l'opposition et la localisation du coup. Dans Combat-OS, les **coups localisés** :
-l'armure de la zone, ses points de vie et ceux du total, et l'effet du livre.
+l'armure de la zone, ses points de vie et ceux du total, et l'effet du livre. Depuis la
+version 2.2.0, une attaque prépare ses **dégâts** — arme, bonus, dégâts spéciaux, parade ou
+esquive — jusqu'au coup porté, et Combat-OS compose le **rang d'action** selon l'action déclarée.
+
+**Pilote 2.2.0 — 03/11/2026, à réimporter avec « Remplacer ».** Même identifiant, même fiche de
+320 champs : rien n'est à ressaisir. Le pilote nomme désormais les armes de la feuille (score,
+nom, dégâts, RA, durabilité), le bonus aux dégâts et la CON (`jet.runequest`), et passe Combat-OS
+en mode **rangs d'action** (`combat.rangsDAction`). Le lot de recette de `output/` reste en 2.1.0.
 
 **Campagnes de recette révisées le 01/11/2026 :** le lot dans
 `output/campagnes-tests/runequest/` embarque le pilote **2.1.0, 320 champs**, 21 PJ et
@@ -113,6 +121,45 @@ Retenir une **caractéristique** fait paraître un menu :
 Rien ne s'écrit sur la fiche du lanceur : la localisation et l'issue d'une opposition vont au
 journal ; un coup porté s'écrit sur la fiche de la cible.
 
+### Les dégâts de l'attaque
+
+![Une spéciale d'épée large parée par une arme de durabilité 12 : 17 dégâts, 5 passent vers une zone adjacente](captures/jeu-runequest-degats.jpg)
+
+Quand l'aptitude lancée est le score d'une **arme de la feuille** (mêlée, distance ou bouclier),
+un bloc **Dégâts** paraît sous le résultat :
+
+- **Arme** : celle du jet, ou une autre arme renseignée ; ses dégâts sont lus sur la fiche.
+- **Dégâts spéciaux** : proposés d'après le nom de l'arme et les tables du livre (p. 208-212) —
+  une arme de taille et d'estoc (épée large, dague) choisit **empalement ou lacération avant le
+  test** (p. 203) ; un nom inconnu se choisit.
+- **Bonus aux dégâts** : entier en mêlée, **moitié** pour une arme lancée (javelot, hache de
+  lancer, p. 212), **aucun** pour un arc ou une fronde. Si la fiche note les dégâts bonus compris
+  (« 1D8+1+1D4 », comme les prétirés), le bonus n'est compté **qu'une fois**, et c'est dit.
+- **Défense** : aucune, parade ou esquive, et son niveau. La case de la table du livre — attaques
+  contre parades p. 199, esquives p. 201 — s'affiche en une phrase : dégâts normaux, spéciaux ou
+  maximaux, armure retirée ou ignorée, excédent vers la zone touchée ou une zone **adjacente**,
+  échecs critiques. Une parade demande la **durabilité de l'arme qui pare** : elle bloque jusque-là.
+
+La formule suit le résultat (p. 200-204) :
+
+| Résultat | Dégâts | Armure |
+| :--- | :--- | :--- |
+| Réussite | arme + bonus — épée large 1D8+1 + 1D4 | retirée |
+| Spéciale, empalement ou lacération | dés **et** constante de l'arme doublés, bonus une fois — 2D8+2 + 1D4 | retirée |
+| Spéciale, écrasement | arme + bonus + **maximum du bonus** — massue 2D8 + 1D4 + 4 | retirée |
+| Critique | **maximum** des dégâts spéciaux + bonus lancé — épée large 18 + 1D4 | **ignorée** |
+
+**Lancer les dégâts** écrit au journal le total, son détail et ce qui passe la parade. Au
+meneur, la ligne **Porter le coup** se remplit : les dégâts qui passent, la **zone** (celle du
+D20, modifiable pour une zone adjacente) et l'étiquette **armure retirée** ou **armure ignorée**.
+Un coup critique traverse l'armure de la zone ; le plafond d'un membre (le double de ses PV)
+tient toujours. Une **lacération** qui égale les PV de la zone appelle le test de (CON − dégâts)
+×5 pour rester conscient, calculé sur la CON de la cible (p. 204). Un coup porté vide le champ :
+il ne se porte pas deux fois.
+
+Les **pertes de durabilité** des armes et les **tables d'échecs critiques** sont annoncées, pas
+écrites sur les fiches (choix de David, 03/11).
+
 ## La fiche du personnage
 
 ![La fiche HTML de RuneQuest, remplie depuis GM-OS](captures/jeu-runequest-fiche.jpg)
@@ -157,11 +204,41 @@ Paramètres. Accepté par le validateur sans erreur ni avertissement.
 
 ## Le combat
 
-Combat-OS range les combattants par **rang d'action de DEX + rang d'action de TAI**, du plus bas
-au plus haut (p. 57, 193) ; le rang de l'arme s'ajoute à la table. La santé suivie est celle des
+Combat-OS range les combattants par **rang d'action**, du plus bas au plus haut, selon l'action
+que chacun déclare (ci-dessous). La santé suivie est celle des
 **points de vie totaux**, plafonnés par la fiche. Les portées sont les catégories de poursuite du
 livre, de Côte à côte à Hors de portée (p. 152-153), sans modificateur : celui d'une arme à
 distance dépend de sa portée (p. 213).
+
+### Les rangs d'action
+
+![Le panneau des rangs d'action : déclarations, RA composé, ordre du round](captures/jeu-runequest-rangs-d-action.jpg)
+
+Dans la colonne de Combat-OS, le panneau **Rangs d'action** remplace le tirage d'initiative. Pour
+chaque combattant, le meneur déclare l'**action** (p. 192, phase 1) :
+
+| Action | Rang d'action | Exemple du livre |
+| :--- | :--- | :--- |
+| Mêlée | le **RA de l'arme** noté sur la fiche, qui comprend déjà DEX, TAI et allonge | Vasana, épée large : 7 |
+| Tir | le RA de l'arme à distance, la **DEX seule** | son arc composite : 3 |
+| Magie spirituelle | RA de DEX + 1 par point de magie au-delà du premier ; **+5** pour passer d'une arme au sort | Démoralisation (2 PM) : 4 |
+| Magie runique | RA 1, +1 par point de renforcement au-delà du premier | — |
+| Sorcellerie | un round complet, puis le RA de DEX du round suivant, **+2 par PM supplémentaire** | Damastol, 7 PM : RA 5, deux rounds plus tard |
+
+S'y ajoutent les délais du round : **+5** par arme ou sort à préparer (dégainer, recharger), **+1**
+par tranche de 3 m de déplacement, la **surprise** (+3 à moins de 3 m, +1 de 4 à 9 m), et un
+ajustement libre (p. 192-195, 386). Sans RA d'arme sur la fiche — un adversaire —, on le saisit ;
+à défaut, DEX + TAI, sans l'allonge, et c'est dit.
+
+**Ordonner le round** range le plateau du RA 1 au RA 12 ; à égalité, la **DEX la plus haute**
+d'abord ; à DEX égale, les deux actions sont **simultanées**, sans dé (p. 192). L'ordre va au
+journal.
+
+**Au-delà de 12, rien ne s'exécute dans le round** (p. 194) : la ligne passe en rouge et le
+combattant reste en fin de plateau. Le meneur décide : **Reporter** l'action au round suivant
+(RA réduit de 12), ou **Renoncer**. Un sort se poursuit : **Poursuivre** le place où il agit —
+37 RA font trois rounds complets et un effet au RA 1 du quatrième. **Round suivant** garde les
+intentions et efface les délais.
 
 ### Les coups localisés
 
@@ -198,8 +275,10 @@ poison, une chute, une hémorragie ne visent pas de zone (« sauf cas particulie
 
 ## Ce qui reste à la table
 
-- **Les dégâts spéciaux** : empalement, lacération, écrasement sur une spéciale ; maximum sans
-  armure sur une critique (p. 202-204).
+- **La durabilité des armes** et les **tables d'échecs critiques** : le bloc des dégâts les
+  annonce, la meneuse les note (p. 198-200).
+- **L'arme fichée** d'un empalement (la dégager, ½ dégâts par round en se déplaçant, p. 203-204)
+  et les **attaques divisées** au-delà de 100 % (p. 202).
 - **La magie** : POU×5 pour la magie spirituelle, l'affinité runique pour un sort runique, la
   compétence du sort en sorcellerie ; ces tests se font au panneau, sous l'aptitude voulue.
 - **Les effets d'une localisation** se disent, ils ne s'appliquent pas seuls : le combat au sol

@@ -2,10 +2,16 @@ import React, { useState } from 'react';
 import {
     AUGMENTATIONS_DE_RUNEQUEST, LIBELLES_DE_L_OPPOSITION, LIBELLES_DE_RUNEQUEST, MULTIPLICATEURS_DE_RUNEQUEST, LOCALISATIONS,
     degreAdverse, issueDeLOpposition, localisationDuCoup, niveauDeRuneQuest, plagesDeRuneQuest,
-    type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest, type RegleDeRuneQuest, type Localisation,
+    type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest, type RegleDeRuneQuest, type Localisation, type NiveauDeRuneQuest,
 } from '../../../dice/systemes/runequest';
+import {
+    LIBELLES_DES_SPECIAUX, apresLaParade, composerLesDegats, direLIssue, issueDuCoup, lancerLesDegats,
+    lireLesDegats, retirerLeBonusCompris, speciauxDeLArme, testDeLaceration, usageDuBonusDeLArme,
+    type DegatsSpeciaux, type GenreDeDefense, type UsageDuBonus,
+} from '../../../dice/systemes/degatsDeRuneQuest';
 import { useCombatStore } from '../../../combat/useCombatStore';
 import { porterUnCoupLocalise } from '../../../combat/coupsLocalises';
+import { useSessionOSStore } from '../../useSessionOSStore';
 
 /**
  * **Le jet de RuneQuest** — 30/10/2026, à la demande de David (« finir le pilote »).
@@ -14,6 +20,10 @@ import { porterUnCoupLocalise } from '../../../combat/coupsLocalises';
  * l'aptitude adverse. Après : l'opposition tranchée, la localisation du coup, et le
  * résultat servi d'augmentation au jet suivant. Rien ne s'écrit sur la fiche du lanceur ;
  * au meneur, le coup localisé se porte à un combattant de Combat-OS (2026-10-30).
+ *
+ * Depuis RQ-A3 (03/11/2026, « on va faire RQ-A3 et RQ-A4 ») : une attaque avec une arme
+ * de la feuille prépare ses dégâts — arme, bonus, dégâts spéciaux, défense — et le coup
+ * porté reçoit ce qui passe, l'armure ignorée sur un critique (`degatsDeRuneQuest.ts`).
  */
 const bouton = 'px-2 py-0.5 rounded-md border border-app-border/40 text-ui-10 font-bold hover:border-accent/50 disabled:opacity-30';
 const etiquette = 'font-black uppercase tracking-widest text-ui-9 text-app-text/60';
@@ -110,11 +120,18 @@ export const SuitesRuneQuest: React.FC<{
     consigner: (ligne: string) => void;
     /** Au meneur seulement : porter le coup localisé à un combattant (`porterUnCoupLocalise`). */
     porterLeCoup?: boolean;
-}> = ({ jet, calcul, regle, d20, augmenter, retenter, consigner, porterLeCoup = false }) => {
+    /** La fiche du lanceur : ses armes et son bonus aux dégâts (RQ-A3). */
+    valeurs?: Record<string, unknown>;
+    /** Lance un dé, pour les dégâts. */
+    de?: (faces: number) => number;
+}> = ({ jet, calcul, regle, d20, augmenter, retenter, consigner, porterLeCoup = false, valeurs = {}, de = d20 }) => {
     const [deAdverse, setDeAdverse] = useState('');
     const [issue, setIssue] = useState<string | null>(null);
     const [localisation, setLocalisation] = useState<string | null>(null);
     const [zoneTouchee, setZoneTouchee] = useState<Localisation | null>(null);
+    const [degats, setDegats] = useState<DegatsPrets | null>(null);
+    // Une attaque avec une arme que le pilote déclare (2.2.0) : ses dégâts se préparent ici.
+    const attaque = !!calcul.champ && !!regle.armes?.some(a => a.score === calcul.champ);
     const niveau = jet.runequest.niveau;
     const bonus = AUGMENTATIONS_DE_RUNEQUEST[niveau];
     const reussi = niveau !== 'echec' && niveau !== 'echec-critique';
@@ -152,11 +169,15 @@ export const SuitesRuneQuest: React.FC<{
                     {issue && <span className="font-bold">{issue}</span>}
                 </div>
             )}
+            {attaque && (
+                <DegatsRuneQuest regle={regle} valeurs={valeurs} champLance={calcul.champ!} niveau={niveau} de={de}
+                    consigner={consigner} onLance={setDegats} />
+            )}
             <div className="flex flex-wrap items-center gap-2">
                 <button type="button" className={bouton} onClick={localiser} title="1D20 sur la table des localisations (p. 146).">Localiser le coup (1D20)</button>
                 {localisation && <span data-localisation-runequest className="font-bold">{localisation}</span>}
             </div>
-            {porterLeCoup && zoneTouchee && <PorterLeCoup zone={zoneTouchee} regle={regle} />}
+            {porterLeCoup && zoneTouchee && <PorterLeCoup key={`${zoneTouchee}-${degats?.cle ?? 0}`} zone={zoneTouchee} regle={regle} degats={degats ?? undefined} />}
             <div className="flex flex-wrap items-center gap-2">
                 <button type="button" className={bouton} onClick={() => augmenter(bonus)}
                     title="Ce jet était un test d'augmentation : son niveau s'applique à l'aptitude lancée ensuite (p. 144-145).">
@@ -172,18 +193,163 @@ export const SuitesRuneQuest: React.FC<{
     );
 };
 
+/** Les dégâts lancés, prêts à porter : ce qui passe la défense, et si l'armure compte. */
+interface DegatsPrets {
+    cle: number;
+    passent: number;
+    sansArmure: boolean;
+    adjacente: boolean;
+    /** Une lacération : le test contre l'inconscience se lit sur la zone touchée (p. 204). */
+    laceration: boolean;
+}
+
+const texteDe = (v: unknown) => (v === undefined || v === null ? '' : String(v).trim());
+
+/**
+ * **Les dégâts de l'attaque** — RQ-A3, 03/11/2026. L'arme de la feuille, son type de
+ * dégâts spéciaux (choisi avant le test pour une arme de taille et d'estoc, p. 203), la
+ * part du bonus, puis la défense : la case des tables p. 199 et 201 dit ce qui passe.
+ * Rien ne s'écrit : le résultat part au coup localisé, que la meneuse porte.
+ */
+const DegatsRuneQuest: React.FC<{
+    regle: RegleDeRuneQuest;
+    valeurs: Record<string, unknown>;
+    champLance: string;
+    niveau: NiveauDeRuneQuest;
+    de: (faces: number) => number;
+    consigner: (ligne: string) => void;
+    onLance: (d: DegatsPrets) => void;
+}> = ({ regle, valeurs, champLance, niveau, de, consigner, onLance }) => {
+    // L'arme lancée, et les autres armes renseignées : on attaque parfois avec une autre que celle du score.
+    const armes = (regle.armes ?? []).map(a => ({ ...a, libelle: texteDe(valeurs[a.nom ?? '']) || a.score }))
+        .filter(a => a.score === champLance || texteDe(valeurs[a.degats]) !== '');
+    const premiere = armes.find(a => a.score === champLance) ?? armes[0];
+    const [score, setScore] = useState(premiere?.score ?? '');
+    const arme = armes.find(a => a.score === score) ?? premiere;
+    const speciauxDuNom = speciauxDeLArme(arme?.libelle ?? '');
+    const [special, setSpecial] = useState<DegatsSpeciaux | ''>(speciauxDuNom[0] ?? '');
+    const [usage, setUsage] = useState<UsageDuBonus>(usageDuBonusDeLArme(arme?.libelle ?? '', arme?.genre ?? 'melee'));
+    const [defense, setDefense] = useState<GenreDeDefense>('aucune');
+    const [niveauDeDefense, setNiveauDeDefense] = useState<NiveauDeRuneQuest>('reussite');
+    const [durabilite, setDurabilite] = useState('');
+    const [lance, setLance] = useState<string | null>(null);
+    // Chaque lancer a son numéro : le coup porté se remet à zéro avec lui.
+    const [lancers, setLancers] = useState(0);
+    if (!arme) return null;
+
+    const texteDuBonus = texteDe(valeurs[regle.bonusAuxDegats ?? '']);
+    const bonus = lireLesDegats(texteDuBonus) ?? [];
+    const lu = lireLesDegats(texteDe(valeurs[arme.degats]));
+    const { arme: termes, compris } = retirerLeBonusCompris(lu ?? [], bonus);
+    const issue = issueDuCoup(niveau, defense, niveauDeDefense);
+    const composition = composerLesDegats({ arme: termes, bonus, usage, niveau: issue.degats, special: special || undefined });
+    const dura = durabilite.trim() === '' ? undefined : entier(durabilite);
+    const changer = <T,>(poser: (v: T) => void) => (v: T) => { poser(v); setLance(null); };
+
+    const lancer = () => {
+        const { total, detail } = lancerLesDegats(composition, de);
+        const apres = apresLaParade(total, issue, dura);
+        const texte = `Dégâts (${arme.libelle}) : ${total} (${detail})`
+            + (issue.bloque ? ` − ${dura ?? '?'} durabilité = ${apres.passent} passent` : '')
+            + (issue.sansArmure ? ', armure ignorée' : '') + '.'
+            + (apres.note ? ` ${apres.note}` : '');
+        setLance(texte);
+        setLancers(n => n + 1);
+        consigner(texte);
+        onLance({
+            cle: lancers + 1, passent: apres.passent, sansArmure: issue.sansArmure, adjacente: issue.bloque && issue.zone === 'adjacente',
+            laceration: special === 'laceration' && (issue.degats === 'speciaux' || issue.degats === 'speciaux-max'),
+        });
+    };
+
+    return (
+        <div data-degats-runequest className="flex flex-col gap-1.5 border-t border-app-border/30 pt-2">
+            <span className={etiquette}>Dégâts</span>
+            <div className="flex flex-wrap items-center gap-3">
+                <label className="flex items-center gap-1">Arme
+                    <select aria-label="Arme de l’attaque" className={champ} value={arme.score} onChange={e => {
+                        const a = armes.find(x => x.score === e.target.value)!;
+                        setScore(a.score);
+                        setSpecial(speciauxDeLArme(a.libelle)[0] ?? '');
+                        setUsage(usageDuBonusDeLArme(a.libelle, a.genre));
+                        setLance(null);
+                    }}>
+                        {armes.map(a => <option key={a.score} value={a.score}>{a.libelle} — {texteDe(valeurs[a.degats]) || '?'}</option>)}
+                    </select>
+                </label>
+                <label className="flex items-center gap-1" title="Une arme de taille et d'estoc choisit avant le test (p. 203).">Dégâts spéciaux
+                    <select aria-label="Dégâts spéciaux" className={champ} value={special} onChange={e => changer(setSpecial)(e.target.value as DegatsSpeciaux | '')}>
+                        {!special && <option value="">— choisir —</option>}
+                        {(speciauxDuNom.length ? speciauxDuNom : (Object.keys(LIBELLES_DES_SPECIAUX) as DegatsSpeciaux[])).map(k =>
+                            <option key={k} value={k}>{LIBELLES_DES_SPECIAUX[k]}</option>)}
+                    </select>
+                </label>
+                <label className="flex items-center gap-1" title="Une arme lancée n'a que la moitié du bonus ; un arc ou une fronde n'en a pas (p. 212).">Bonus aux dégâts
+                    <select aria-label="Bonus aux dégâts" className={champ} value={usage} onChange={e => changer(setUsage)(e.target.value as UsageDuBonus)}>
+                        <option value="entier">Entier ({texteDuBonus || 'aucun'})</option>
+                        <option value="moitie">Moitié — arme lancée</option>
+                        <option value="aucun">Aucun — arc ou fronde</option>
+                    </select>
+                </label>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+                <label className="flex items-center gap-1">Défense
+                    <select aria-label="Défense" className={champ} value={defense} onChange={e => changer(setDefense)(e.target.value as GenreDeDefense)}>
+                        <option value="aucune">Aucune</option>
+                        <option value="parade">Parade</option>
+                        <option value="esquive">Esquive</option>
+                    </select>
+                </label>
+                {defense !== 'aucune' && (
+                    <label className="flex items-center gap-1">Niveau de la défense
+                        <select aria-label="Niveau de la défense" className={champ} value={niveauDeDefense} onChange={e => changer(setNiveauDeDefense)(e.target.value as NiveauDeRuneQuest)}>
+                            {NIVEAUX.map(n => <option key={n} value={n}>{LIBELLES_DE_RUNEQUEST[n]}</option>)}
+                        </select>
+                    </label>
+                )}
+                {defense === 'parade' && (
+                    <label className="flex items-center gap-1" title="Une parade bloque jusqu'aux points de durabilité actuels de l'arme ou du bouclier (p. 198).">Durabilité de l’arme qui pare
+                        <input aria-label="Durabilité de l’arme qui pare" type="number" min={0} value={durabilite} className={`w-14 ${champ}`}
+                            onChange={e => changer(setDurabilite)(e.target.value)} />
+                    </label>
+                )}
+            </div>
+            <span data-issue-runequest className="rounded-md border border-app-border/40 px-2 py-1">{direLIssue(issue, defense)}</span>
+            {(lu === null || compris || composition.remarques.length > 0) && (
+                <span className="text-app-text/60">
+                    {lu === null ? `Dégâts de l’arme illisibles (« ${texteDe(valeurs[arme.degats])} »). ` : ''}
+                    {compris ? `Le bonus ${texteDuBonus} était compris dans les dégâts de l’arme : il n’est compté qu’une fois. ` : ''}
+                    {composition.remarques.join(' ')}
+                </span>
+            )}
+            {composition.parts.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-mono font-bold" data-formule-runequest>{composition.formule}</span>
+                    <button type="button" className={bouton} onClick={lancer}>Lancer les dégâts</button>
+                    {lance && <span data-degats-lances className="font-bold">{lance}</span>}
+                </div>
+            )}
+        </div>
+    );
+};
+
 /**
  * **Le coup localisé, porté à un combattant** — demandé par David le 2026-10-30. La
  * zone vient du D20 ci-dessus ; la cible par défaut est celle du combattant dont c'est
  * le tour, l'attaquant d'ordinaire. Les dégâts saisis passent par l'armure, la zone et
  * le total, par la même porte que la carte du combattant.
  */
-const PorterLeCoup: React.FC<{ zone: Localisation; regle: RegleDeRuneQuest }> = ({ zone, regle }) => {
+const PorterLeCoup: React.FC<{ zone: Localisation; regle: RegleDeRuneQuest; degats?: DegatsPrets }> = ({ zone: tiree, regle, degats }) => {
     const combattants = useCombatStore(s => s.combatants);
     const cibleDuTour = useCombatStore(s => s.combatants[s.currentTurnIdx]?.targetId ?? '');
+    // Lu sans abonnement : le pilote ne change pas pendant le coup, et un objet neuf ferait boucler React.
+    const champsDesZones = useSessionOSStore.getState().getActiveDriver()?.combat?.coupsLocalises?.zones;
     const [cible, setCible] = useState(cibleDuTour);
-    const [points, setPoints] = useState('');
+    // Les dégâts lancés arrivent tout prêts ; une parade peut envoyer l'excédent à une zone adjacente (p. 199).
+    const [zone, setZone] = useState<Localisation>(tiree);
+    const [points, setPoints] = useState(degats ? String(degats.passent) : '');
     const [porte, setPorte] = useState<string | null>(null);
+    const sansArmure = !!degats?.sansArmure;
     if (combattants.length === 0) return null;
     const vise = combattants.find(c => c.id === cible);
     const champPV = regle.localisations?.[zone];
@@ -192,9 +358,17 @@ const PorterLeCoup: React.FC<{ zone: Localisation; regle: RegleDeRuneQuest }> = 
         && Number.isFinite(Number(valeurPV)) ? Number(valeurPV) : undefined;
     const libelleZone = LOCALISATIONS.find(l => l.cle === zone)!.label;
     const n = Math.max(0, entier(points));
+    // La lacération : si les dégâts nets égalent les PV de la zone, test de (CON − dégâts) ×5 (p. 204).
+    const champArmure = champsDesZones?.[zone]?.armure;
+    const armure = champArmure ? Number(vise?.sheetData?.[champArmure]) : 0;
+    const net = Math.max(0, n - (sansArmure || !Number.isFinite(armure) ? 0 : armure));
+    const con = regle.con ? Number(vise?.sheetData?.[regle.con]) : NaN;
+    const testLaceration = degats?.laceration && pv !== undefined && net > 0 && net >= pv && Number.isFinite(con)
+        ? `Lacération : test de (CON ${con} − ${net}) ×5 = ${testDeLaceration(con, net)} % pour rester conscient (p. 204).` : null;
     const porter = () => {
         if (!vise || n === 0) return;
-        porterUnCoupLocalise(vise, zone, n);
+        porterUnCoupLocalise(vise, zone, n, false, sansArmure);
+        // Un coup se porte une fois : le champ se vide, et d'autres dégâts se ressaisissent.
         setPorte(`Porté à ${vise.name}.`);
         setPoints('');
     };
@@ -207,6 +381,11 @@ const PorterLeCoup: React.FC<{ zone: Localisation; regle: RegleDeRuneQuest }> = 
                     {combattants.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
             </label>
+            <label className="flex items-center gap-1">Zone
+                <select aria-label="Zone du coup" value={zone} onChange={e => setZone(e.target.value as Localisation)} className={champ}>
+                    {LOCALISATIONS.map(l => <option key={l.cle} value={l.cle}>{l.label}{l.cle === tiree ? ' (tirée)' : ''}</option>)}
+                </select>
+            </label>
             <span data-pv-cible-runequest aria-live="polite">
                 {vise ? `${vise.name} · ${libelleZone} : ${pv === undefined ? 'PV inconnus sur la fiche' : `${pv} PV max. sur la fiche`}`
                     : 'Choisir une cible pour lire les PV de la zone.'}
@@ -214,9 +393,12 @@ const PorterLeCoup: React.FC<{ zone: Localisation; regle: RegleDeRuneQuest }> = 
             <input aria-label="Dégâts portés" type="number" min={0} value={points} placeholder="Dégâts" className={`w-16 ${champ}`}
                 onChange={e => setPoints(e.target.value)} />
             <button type="button" className={bouton} disabled={!vise || n === 0} onClick={porter}
-                title="L'armure de la zone se retire ; un membre ne prend pas plus du double de ses PV en un coup (p. 146-148).">
+                title="L'armure de la zone se retire, sauf sur un critique ; un membre ne prend pas plus du double de ses PV en un coup (p. 146-148, 200).">
                 Porter le coup
             </button>
+            {degats && <span data-armure-runequest className="rounded border border-app-border/40 px-1 italic text-app-text/60">{sansArmure ? 'armure ignorée' : 'armure retirée'}</span>}
+            {degats?.adjacente && zone === tiree && <span className="text-app-text/60">L’excédent va à une localisation adjacente : choisir la zone.</span>}
+            {testLaceration && <span data-laceration-runequest className="font-bold">{testLaceration}</span>}
             {porte && <span className="font-bold">{porte}</span>}
         </div>
     );

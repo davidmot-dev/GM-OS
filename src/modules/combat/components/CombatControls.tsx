@@ -16,6 +16,7 @@ import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 import PanneauDAlternance from './PanneauDAlternance';
 import PanneauDuPaquetDAction from './PanneauDuPaquetDAction';
 import PanneauDesPhases from './PanneauDesPhases';
+import PanneauDesRangsDAction from './PanneauDesRangsDAction';
 import LoisDuCosm from '../../session/components/LoisDuCosm';
 import { useCosmsCourants } from '../../session/hooks/useCosmsCourants';
 import { decrireLaSante } from '../logic/SanteDuCombattant';
@@ -87,6 +88,8 @@ const CombatControls: React.FC = () => {
     const parLePaquet = activeDriver?.combat.initiative?.mode === 'paquet';
     /** Rêve de Dragon : sept phases, l'initiative par arme (2026-10-24). */
     const parPhases = activeDriver?.combat.initiative?.mode === 'phases';
+    /** RuneQuest : le rang d'action selon l'action déclarée (RQ-A4, 2026-11-03). */
+    const parRangs = activeDriver?.combat.initiative?.mode === 'rangs-d-action';
     const cosmsCourants = useCosmsCourants();
 
     const handleAddCombatant = () => {
@@ -364,6 +367,8 @@ const CombatControls: React.FC = () => {
                 <LoisDuCosm cosms={cosmsCourants} compact />
                 {parPhases ? (
                     <PanneauDesPhases />
+                ) : parRangs ? (
+                    <PanneauDesRangsDAction />
                 ) : parLePaquet ? (
                     <PanneauDuPaquetDAction />
                 ) : alternance ? (

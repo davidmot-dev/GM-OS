@@ -65,6 +65,8 @@ export interface CoupLocalise {
     /** Ce que la zone et le total subissent : le net, plafonné au double pour un membre. */
     retenus: number;
     plafonne: boolean;
+    /** Une attaque critique ignore l'armure de la zone (p. 200) — RQ-A3, 03/11/2026. */
+    sansArmure: boolean;
     degatsApres: number;
     atteinte: Atteinte;
     effet: string;
@@ -94,10 +96,13 @@ function effetDe(zone: ZoneDuCombattant, atteinte: Atteinte): string {
     }
 }
 
-/** Un coup porté à la zone : `bruts` est le jet de dégâts, armure non retirée. */
-export function porterLeCoup(zone: ZoneDuCombattant, bruts: number): CoupLocalise {
+/**
+ * Un coup porté à la zone : `bruts` est le jet de dégâts, armure non retirée. Un coup
+ * critique (`sansArmure`) la traverse ; le plafond d'un membre tient toujours (RQ-A3).
+ */
+export function porterLeCoup(zone: ZoneDuCombattant, bruts: number, sansArmure = false): CoupLocalise {
     const entiers = Math.max(0, Math.trunc(bruts));
-    const net = Math.max(0, entiers - zone.armure);
+    const net = Math.max(0, entiers - (sansArmure ? 0 : zone.armure));
     const retenus = zone.membre && zone.pv > 0 ? Math.min(net, 2 * zone.pv) : net;
     const degatsApres = zone.degats + retenus;
     /*
@@ -111,7 +116,7 @@ export function porterLeCoup(zone: ZoneDuCombattant, bruts: number): CoupLocalis
         : (zone.membre ? net : degatsApres) >= 2 * zone.pv ? 'double'
         : degatsApres >= zone.pv ? 'hors-d-usage'
         : 'touchee';
-    return { zone, bruts: entiers, net, retenus, plafonne: retenus < net, degatsApres, atteinte, effet: effetDe(zone, atteinte) };
+    return { zone, bruts: entiers, net, retenus, plafonne: retenus < net, sansArmure, degatsApres, atteinte, effet: effetDe(zone, atteinte) };
 }
 
 /** Un soin porté à la zone : il ne rend pas plus que ce qu'elle a perdu. */
@@ -131,7 +136,8 @@ const restants = (zone: ZoneDuCombattant, degats: number) => `${zone.pv - degats
 
 export function direLeCoup(coup: CoupLocalise): string {
     const { zone } = coup;
-    const calcul = zone.armure > 0 ? `${coup.bruts} − ${zone.armure} d'armure = ${coup.net}` : `${coup.net}`;
+    const calcul = coup.sansArmure && zone.armure > 0 ? `${coup.net} (armure ignorée)`
+        : zone.armure > 0 ? `${coup.bruts} − ${zone.armure} d'armure = ${coup.net}` : `${coup.net}`;
     const plafond = coup.plafonne ? `, ${coup.retenus} retenus (un membre ne prend pas plus du double)` : '';
     return `${zone.label} : ${calcul} dégâts${plafond} ; ${zone.label.toLowerCase()} à ${restants(zone, coup.degatsApres)}${coup.effet ? ` — ${coup.effet}` : ''}.`;
 }
@@ -150,7 +156,7 @@ export function coupLocaliseSelonLeJeu(
     const zone = zonesDuCombattant(regle, fiche).find(z => z.cle === impact.location);
     if (!zone) return null;
     // La zone se dit dans le texte : le jeton (`bras-gauche`) n'a pas sa place au journal.
-    const { location: _zone, ...sansZone } = impact;
+    const { location: _zone, sansArmure, ...sansZone } = impact;
     if (impact.isRecovery) {
         const soin = soignerLaZone(zone, impact.value);
         return {
@@ -159,7 +165,7 @@ export function coupLocaliseSelonLeJeu(
             texte: `${zone.label} : ${soin.rendus} point${soin.rendus > 1 ? 's' : ''} rendu${soin.rendus > 1 ? 's' : ''} à la zone et au total ; ${zone.label.toLowerCase()} à ${restants(zone, soin.degatsApres)}.`,
         };
     }
-    const coup = porterLeCoup(zone, impact.value);
+    const coup = porterLeCoup(zone, impact.value, sansArmure);
     return {
         impact: { ...sansZone, value: coup.retenus },
         fiche: { [zone.champDesDegats]: coup.degatsApres },

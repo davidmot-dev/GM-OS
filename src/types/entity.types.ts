@@ -17,6 +17,8 @@ export interface DamageImpact {
     value: number;
     type?: string;
     location?: string;
+    /** RuneQuest : une attaque critique ignore l'armure de la zone (p. 200), RQ-A3. */
+    sansArmure?: boolean;
     isRecovery?: boolean;
 }
 

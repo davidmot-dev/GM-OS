@@ -40,8 +40,12 @@ export type Camp = 'joueurs' | 'adversaires';
  * `phases` : Rêve de Dragon (2026-10-24). Sept phases par round ; tirs, lancers
  * et mêlée s'y départagent par « facteur de l'arme + 1d6 »
  * (`dice/systemes/roundDeReveDeDragon.ts`).
+ *
+ * `rangs-d-action` : RuneQuest (RQ-A4, 2026-11-03). Le meneur déclare l'action de
+ * chacun ; le rang d'action se compose selon l'arme ou le sort et ses délais, de 1 à
+ * 12 (`dice/systemes/rangsDActionDeRuneQuest.ts`).
  */
-export type ModeDInitiative = 'formule' | 'alternance' | 'paquet' | 'phases';
+export type ModeDInitiative = 'formule' | 'alternance' | 'paquet' | 'phases' | 'rangs-d-action';
 
 /** L'ordre d'action se joue-t-il par camps, sans initiative chiffrée à saisir ? */
 export const initiativeParCamps = (mode: ModeDInitiative | undefined): boolean =>

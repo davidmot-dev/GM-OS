@@ -715,6 +715,12 @@ export interface GameDriver {
          * de la zone dans `degats` et ne retire au total que ce qu'elle retient. Les
          * clés sont celles de la table du livre (`jambe-droite` … `tete`).
          */
+        /**
+         * **Les rangs d'action selon l'action** — RuneQuest, RQ-A4, 03/11/2026
+         * (`dice/systemes/rangsDActionDeRuneQuest.ts`), avec `initiative.mode:
+         * 'rangs-d-action'`. Les armes et leur RA se lisent dans `jet.runequest.armes`.
+         */
+        rangsDAction?: { mecanique: 'runequest'; dex?: string; raDex: string; raTai?: string };
         coupsLocalises?: {
             mecanique: 'runequest';
             zones: Partial<Record<'jambe-droite' | 'jambe-gauche' | 'abdomen' | 'poitrine' | 'bras-droit' | 'bras-gauche' | 'tete',

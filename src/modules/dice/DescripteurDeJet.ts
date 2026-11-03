@@ -1253,10 +1253,13 @@ export function preparerLeJet(
         const champ = sections?.flatMap(s => s.fields).find(f => f.id === retenue.champ);
         const nomSaisi = champ?.libelleSur ? String(valeursDeLaFiche[champ.libelleSur] ?? '').trim() : '';
         const libelle = nomSaisi || champ?.label || retenue.champ;
-        runequest = calculerRuneQuest(
-            { label: libelle, valeur: retenue.valeur, caracteristique: (descripteur.runequest.caracteristiques ?? []).includes(retenue.champ) },
-            { ...CHOIX_DE_RUNEQUEST, ...choix.runequest },
-        );
+        runequest = {
+            ...calculerRuneQuest(
+                { label: libelle, valeur: retenue.valeur, caracteristique: (descripteur.runequest.caracteristiques ?? []).includes(retenue.champ) },
+                { ...CHOIX_DE_RUNEQUEST, ...choix.runequest },
+            ),
+            champ: retenue.champ,
+        };
         seuil = runequest.echelle.chances;
         echelle = runequest.echelle;
         if (runequest.explication) explicationDuSeuil = runequest.explication;

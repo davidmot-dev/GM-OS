@@ -45,6 +45,31 @@ export interface RegleDeRuneQuest {
     caracteristiques?: string[];
     /** Les points de vie de chaque localisation, pour dire au jet ce que vaut la zone touchée. */
     localisations?: Partial<Record<Localisation, string>>;
+    /**
+     * Les armes de la feuille (pilote 2.2.0, RQ-A3 et RQ-A4, 03/11/2026) : le score lancé,
+     * puis ce qui se lit sans se lancer. Une attaque avec `score` prépare ses dégâts
+     * (`degatsDeRuneQuest.ts`) ; Combat-OS y lit le RA de l'arme (`rangsDActionDeRuneQuest.ts`).
+     */
+    armes?: ArmeDeRuneQuest[];
+    /** Le bonus aux dégâts de la feuille, en texte (« +1D4 », p. 56). */
+    bonusAuxDegats?: string;
+    /** La CON de la cible, pour le test d'une lacération (p. 204). */
+    con?: string;
+}
+
+export interface ArmeDeRuneQuest {
+    /** Le score de l'arme, l'aptitude lancée. */
+    score: string;
+    /** Le nom saisi (« Épée large »). */
+    nom?: string;
+    /** Les dégâts de l'arme, en texte (« 1D8+1 »). */
+    degats: string;
+    /** Le RA de l'arme, total déjà calculé sur la feuille (p. 192). */
+    ra?: string;
+    /** Les points de durabilité, pour parer (p. 198). */
+    durabilite?: string;
+    /** Mêlée, à distance ou bouclier : le bonus d'une arme à distance est réduit (p. 212). */
+    genre: 'melee' | 'distance' | 'bouclier';
 }
 
 /** Les multiplicateurs du test de caractéristique (p. 141). */
@@ -154,6 +179,8 @@ export function plagesDeRuneQuest(echelle: EchelleDuJet): string {
 /** Le calcul des chances, tel que le panneau le montre et que le dé le lit. */
 export interface CalculDeRuneQuest {
     mode: 'aptitude' | 'caracteristique' | 'resistance';
+    /** Le champ de l'aptitude lancée : une arme de `RegleDeRuneQuest.armes` prépare ses dégâts (RQ-A3). */
+    champ?: string;
     /** Les chances modifiées, avant d'être bornées à 5-95 : c'est sur elles que se lisent critique et spéciale. */
     chancesModifiees: number;
     echelle: EchelleDuJet;

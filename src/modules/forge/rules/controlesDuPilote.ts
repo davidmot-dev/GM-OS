@@ -1124,6 +1124,15 @@ export function controlerLePilote(
         for (const [zone, champ] of Object.entries(rq.localisations ?? {})) {
             if (champ && !tousLesChamps.has(champ)) erreur('jet.runequest.localisations', `La localisation ${zone} lit ses points de vie dans « ${champ} », absent de la fiche.`);
         }
+        // Les armes (RQ-A3, 2026-11-03) : chaque champ nommé doit exister, et le score se lancer.
+        for (const arme of rq.armes ?? []) {
+            for (const champ of [arme.score, arme.nom, arme.degats, arme.ra, arme.durabilite]) {
+                if (champ && !tousLesChamps.has(champ)) erreur('jet.runequest.armes', `L'arme « ${arme.score} » lit « ${champ} », absent de la fiche.`);
+            }
+        }
+        for (const champ of [rq.bonusAuxDegats, rq.con]) {
+            if (champ && !tousLesChamps.has(champ)) erreur('jet.runequest', `RuneQuest lit « ${champ} », absent de la fiche.`);
+        }
     }
     // Star Trek jusqu'au bout (2026-10-23) : chaque champ que `jet.starTrek` nomme, et le 2d20 qu'il suppose.
     const st = driver.jet?.starTrek;
@@ -1608,8 +1617,20 @@ export function controlerLePilote(
     }
 
     const modeDInitiative = typeof driver.combat?.initiative === 'object' ? driver.combat.initiative?.mode : undefined;
-    if (modeDInitiative !== undefined && !['formule', 'alternance', 'paquet', 'phases'].includes(modeDInitiative)) {
-        erreur('combat.initiative.mode', `« ${String(modeDInitiative)} » n'est pas un ordre d'action connu : formule, alternance (Dune), paquet (Torg) ou phases (Rêve de Dragon).`);
+    if (modeDInitiative !== undefined && !['formule', 'alternance', 'paquet', 'phases', 'rangs-d-action'].includes(modeDInitiative)) {
+        erreur('combat.initiative.mode', `« ${String(modeDInitiative)} » n'est pas un ordre d'action connu : formule, alternance (Dune), paquet (Torg), phases (Rêve de Dragon) ou rangs-d-action (RuneQuest).`);
+    }
+    // RuneQuest (RQ-A4, 2026-11-03) : les rangs d'action lisent la DEX, les RA de DEX et de TAI, et les armes du jet.
+    const rangs = driver.combat?.rangsDAction;
+    if (modeDInitiative === 'rangs-d-action' && !rangs) {
+        erreur('combat.rangsDAction', "Le mode « rangs-d-action » lit le RA de DEX sur la fiche : déclarer `combat.rangsDAction`.");
+    }
+    if (rangs) {
+        if (rangs.mecanique !== 'runequest') erreur('combat.rangsDAction.mecanique', `« ${String(rangs.mecanique)} » n'est pas une règle de rangs d'action connue. La seule admise est : runequest.`);
+        for (const cle of ['dex', 'raDex', 'raTai'] as const) {
+            const champ = rangs[cle];
+            if (champ && !tousLesChamps.has(champ)) erreur(`combat.rangsDAction.${cle}`, `Les rangs d'action lisent « ${champ} », absent de la fiche.`);
+        }
     }
     // Torg : Inspiration et Fatigués de la carte d'Action ajoutent ou retirent du Choc.
     if (modeDInitiative === 'paquet' && !driver.combat?.dommages?.choc) {

@@ -191,7 +191,8 @@ const MISES_EN_SCENE: MiseEnScene[] = [
             pv_max: 12, pm_max: 15, pr_max: 3, bonus_degats: '+1D4', ra_dex: 3, ra_tai: 2,
             rune_air: 90, rune_lune: 60, rune_terre: 20, rune_mouvement: 75, rune_stase: 25,
             passion1_nom: 'Honneur', passion1: 80, passion2_nom: 'Haine (Empire lunar)', passion2: 90, reputation: 13,
-            arme1_nom: 'Épée large', arme1: 65, arme1_degats: '1D8+1', arme1_ra: 2,
+            arme1_nom: 'Épée large', arme1: 65, arme1_degats: '1D8+1', arme1_ra: 7,
+            tir1_nom: 'Arc composite', tir1: 45, tir1_degats: '1D8+1', tir1_ra: 3,
             bouclier_nom: 'Bouclier moyen', bouclier: 55, observation: 30, esquive: 22,
             pv_jambe_droite: 4, pv_jambe_gauche: 4, pv_abdomen: 4, pv_poitrine: 5, pv_bras_droit: 3, pv_bras_gauche: 3, pv_tete: 4,
             points_de_vie: 12, points_de_magie: 15, points_de_rune: 3,
@@ -1085,7 +1086,8 @@ async function scenesDeBarbarians(c: ContexteDeScene): Promise<void> {
 /**
  * **RuneQuest** (2026-10-30) : l'épée large de Vasana réglée — situation −10, augmentée
  * d'une réussite (+20) —, le résultat et la localisation du coup, puis la table de
- * résistance, POU 15 contre 14 : 55 % (p. 145-146).
+ * résistance, POU 15 contre 14 : 55 % (p. 145-146). Depuis le 03/11 (RQ-A3, RQ-A4) : les
+ * dégâts d'une spéciale parée, et les rangs d'action dans Combat-OS.
  */
 async function scenesDeRuneQuest(c: ContexteDeScene): Promise<void> {
     const f = gmos.fenetre;
@@ -1130,7 +1132,32 @@ async function scenesDeRuneQuest(c: ContexteDeScene): Promise<void> {
         await expect(pv).toHaveText('Choisir une cible pour lire les PV de la zone.');
         await suites.getByLabel('Cible du coup', { exact: true }).selectOption('rq-broo');
         await photographier(panneau, 'jeu-runequest-suites');
+
+        // RQ-A3 (03/11) : une spéciale à 09, parée par une arme de durabilité 12 — 17 dégâts, 5 passent.
+        await f.evaluate(() => {
+            const w = window as unknown as { __hasardDOrigine?: () => number };
+            w.__hasardDOrigine = Math.random;
+            // d100 : 0 puis 9 ; dégâts : d8 6, d8 6, d4 3 ; localisation : d20 16 (bras gauche).
+            const file = [0.001, 0.901, 0.626, 0.626, 0.501, 0.751];
+            Math.random = () => file.shift() ?? 0.5;
+        });
+        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+        const degats = panneau.locator('[data-degats-runequest]');
+        await expect(degats).toBeVisible();
+        await expect(degats.locator('[data-formule-runequest]')).toHaveText('2D8+2 + 1D4');
+        await degats.getByLabel('Défense', { exact: true }).selectOption('parade');
+        await degats.getByLabel('Niveau de la défense', { exact: true }).selectOption('reussite');
+        await degats.getByLabel('Durabilité de l’arme qui pare', { exact: true }).fill('12');
+        await degats.getByRole('button', { name: 'Lancer les dégâts', exact: true }).click();
+        await expect(degats.locator('[data-degats-lances]')).toContainText('17 (2D8+2 : 14 · 1D4 : 3) − 12 durabilité = 5 passent');
+        await panneau.getByRole('button', { name: 'Localiser le coup (1D20)', exact: true }).click();
+        await expect(panneau.getByLabel('Dégâts portés', { exact: true })).toHaveValue('5');
+        await photographierLePanneau(panneau, 'jeu-runequest-degats');
     } finally {
+        await f.evaluate(() => {
+            const w = window as unknown as { __hasardDOrigine?: () => number };
+            if (w.__hasardDOrigine) Math.random = w.__hasardDOrigine;
+        });
         await f.evaluate(avant => (window as unknown as Fenetre).useCombatStore.setState(avant), combatAvant);
     }
 
@@ -1169,6 +1196,21 @@ async function scenesDeRuneQuest(c: ContexteDeScene): Promise<void> {
     await expect.poll(() => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState()
         .players.flatMap(p => p.characters).find(ch => ch.id === id)?.hp, c.personnage)).toBe(6);
     await photographier(carte, 'jeu-runequest-coups-localises');
+
+    // RQ-A4 (03/11) : les rangs d'action — Vasana à l'épée large (RA 7) après 3 m, un broo qui dégaine (9 + 5 = 14).
+    await f.evaluate(() => (window as unknown as Fenetre).useCombatStore.getState().addCombatant(
+        { name: 'Broo', init: 0, isPlayer: false, faction: 'enemy', statuses: [], sheetData: { dex: 9, ra_dex: 3, ra_tai: 1 } } as never));
+    const rangs = f.locator('section[aria-label="Rangs d’action de RuneQuest"]');
+    await expect(rangs).toBeVisible({ timeout: 15_000 });
+    await rangs.getByLabel(`Déplacement de ${c.nom}`, { exact: true }).fill('1');
+    await rangs.getByLabel('RA de l’arme de Broo', { exact: true }).fill('9');
+    await rangs.getByLabel('Préparations de Broo', { exact: true }).fill('1');
+    await expect(rangs.getByLabel(`Déclaration de ${c.nom}`).locator('[data-rang-runequest]')).toHaveText('RA 8 = 7 arme + 1 déplacement');
+    await expect(rangs.getByLabel('Déclaration de Broo').locator('[data-rang-runequest]')).toContainText('RA 14 : au-delà de 12');
+    await rangs.getByRole('button', { name: 'Ordonner le round' }).click();
+    // La notification du coup localisé dure trois secondes : elle couvrirait le panneau.
+    await f.waitForTimeout(3_500);
+    await photographierLePanneau(rangs, 'jeu-runequest-rangs-d-action');
 }
 
 /**

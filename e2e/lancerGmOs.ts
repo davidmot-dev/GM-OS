@@ -93,6 +93,12 @@ export interface OptionsDeLancement {
      * `userData`. Tout ce qu'elle y écrit reste dans le profil, et part avec lui.
      */
     preparerLeProfil?: (profil: string) => void;
+
+    /**
+     * Filme la fenêtre dans ce dossier — pour un clip qui montre un geste à David
+     * (`e2e/clipDuCombatRuneQuest.spec.ts`, 03/11/2026). La vidéo est finie à la fermeture.
+     */
+    video?: { dossier: string; largeur: number; hauteur: number };
 }
 
 export interface GmOsLance {
@@ -139,6 +145,7 @@ export async function lancerGmOs(options: OptionsDeLancement = {}): Promise<GmOs
             `--user-data-dir=${profil}`,
         ],
         cwd: racine,
+        ...(options.video ? { recordVideo: { dir: options.video.dossier, size: { width: options.video.largeur, height: options.video.hauteur } } } : {}),
         env: {
             ...environnementPropre(),
             ...ports.variables,

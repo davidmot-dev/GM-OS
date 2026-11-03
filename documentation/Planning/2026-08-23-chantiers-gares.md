@@ -13448,10 +13448,44 @@ David, le 02/11 : **« on va continuer avec NP-C2 et NP-c3 des amélioration »*
   `e2e/reprisesEtVariantesDesPilotes.spec.ts` ; [suivi et checklist](2026-11-03-np-c2-c3-reprises-droits-variantes.md),
   [reprise Codex](2026-11-03-etat-et-reprise-codex-np-c2-c3.md). Manuel et synthèse actualisés.
 
+### 205 · RuneQuest RQ-A3 et RQ-A4 — dégâts de l'attaque et rangs d'action — 03/11/2026
+
+David : « on va faire RQ-A3 et RQ-A4 du fichier des améliorations tous les pilotes ». Choix du
+03/11 : **pilote 2.2.0** qui déclare les champs ; parade et esquive **jusqu'aux dégâts portés**,
+durabilités et échecs critiques annoncés sans écriture ; les deux écrans dessinés dans Stitch
+(`stitch/runequest-degats/`, `stitch/runequest-rangs/`, projet 8352739217093926431) et validés.
+
+- **Livre relu en image** (PDF − 1) : tables attaques/parades p. 199 et esquives p. 201,
+  modificateurs du RA p. 193 ; dégâts spéciaux p. 203-204, armes p. 208-212, sorcellerie p. 386.
+  Le RA d'une arme sur la feuille est un **total** (Vasana, DEX 11 et TAI 10 : épée large 7, arc 3,
+  p. 85) ; les prétirés notent les dégâts **bonus compris** (« 1D8+1+1D4 »).
+- **RQ-A3** — `dice/systemes/degatsDeRuneQuest.ts` : formules lues, bonus compris retiré, type
+  spécial d'après le nom de l'arme, bonus entier/moitié (arme lancée)/aucun (arc), spéciale
+  (empalement et lacération doublent dés et constante ; écrasement + maximum du bonus), critique
+  (maximum + bonus lancé, armure ignorée), les deux tables 5 × 5, durabilité qui bloque, test de
+  lacération. Bloc « Dégâts » dans `RuneQuestAuJet.tsx` ; « Porter le coup » prérempli, zone
+  modifiable, `DamageImpact.sansArmure` traversé par `coupsDeRuneQuest.ts` (plafond du membre
+  gardé), un seul port par lancer.
+- **RQ-A4** — `dice/systemes/rangsDActionDeRuneQuest.ts` et `PanneauDesRangsDAction.tsx`
+  (`combat.initiative.mode: 'rangs-d-action'`, magasin `useRangsDActionStore`, réservé au MJ) :
+  mêlée, tir, magie spirituelle/runique/sorcellerie, préparation, déplacement, surprise ; ordre
+  par RA puis DEX, simultané à DEX égale ; au-delà de 12 : hors du round, Reporter/Poursuivre/Renoncer.
+- **Pilote 2.2.0** (`outils/runequest/finir_runequest.py` → `Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver`,
+  bâti sur le 2.1.0 livré, mêmes identifiants, 320 champs) : `jet.runequest.armes` (huit armes),
+  `bonusAuxDegats`, `con`, `combat.rangsDAction` ; contrôles de la Forge étendus, zéro constat.
+- **Vérifié :** 16 + 9 essais de règles, 10 + 8 de composants, contrôles du pilote et coups critiques ;
+  suite complète (9 669 essais) puis les deux échecs attendus corrigés (manuel, registre des purges) ;
+  `tsc -b` et lint ; construction ; e2e des captures RuneQuest (dés imposés) : `jeu-runequest-degats`
+  et `jeu-runequest-rangs-d-action`, relues. Pilote 2.2.0 : 7 essais, zéro constat de la Forge.
+- **Validation de David le 03/11 :** « ok on a fini RQ-A3 et RQ-A4 qui sont testé. Tu peux faire
+  un commit et pousser ». RQ-A3 et RQ-A4 cochés/verts dans la synthèse des pilotes.
+- **Reste :** le lot de recette de `output/` reste en 2.1.0 ; RQ-A5 et RQ-A6.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 141 | **RuneQuest — RQ-A3 et RQ-A4** | 🟢 § 205 ; dégâts de l'attaque et rangs d'action livrés, pilote 2.2.0, validés par David — 03/11 | Commit et push demandés ; ensuite RQ-A5 ou RQ-A6 | Rien |
 | 140 | **NP-C2 / NP-C3 — fiches, droits, variantes** | 🟢 § 204 ; livré, 252 tests ciblés et six parcours Electron verts ; huit captures relues, validé par David — 03/11 | Commit et push demandés ; puis choisir un autre lot | Rien pour NP-C2/NP-C3 ; aucune nouvelle preuve instrumentée de tablette physique |
 | 139 | **Catalogue d'équipement du pilote** | 🟢 § 203 : pour Alien, étapes A à E livrées le 02/11 et essayées par David (« ok ca marche ») ; A et B poussées (`a0299fc1`) ; C (66 objets de Colonial Marines, 89 du livre de base transcrit), D et E non commitées | Commit et push sur demande ; ensuite, un autre jeu | Rien |
 | 138 | **RuneQuest — recette 2.1.0** | § 202 ; RQ-A1 livré et validé par David, 96 tests, E2E et trois Hub passent, 78 cas — 01/11 | RQ-A1 coché ; commit et push demandés | Aucun pour RQ-A1 ; historique 2.0.0 conservé |

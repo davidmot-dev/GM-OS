@@ -20,9 +20,10 @@ import { raconterLImpact } from './logic/RecitDeLImpact';
  * dans Combat-OS — n'a pas de fiche de campagne : la même règle s'applique ici, sur
  * le plateau.
  */
-export function porterUnCoupLocalise(c: Combatant, zone: string, points: number, soin = false): void {
+export function porterUnCoupLocalise(c: Combatant, zone: string, points: number, soin = false, sansArmure = false): void {
     if (!soin) useCombatStore.getState().consignerLOuvertureDuCombat();
-    const impact = { value: Math.max(0, Math.trunc(points)), isRecovery: soin, location: zone };
+    // Un coup critique ignore l'armure (RQ-A3, 03/11/2026) : la règle le lit sur l'impact.
+    const impact = { value: Math.max(0, Math.trunc(points)), isRecovery: soin, location: zone, ...(sansArmure ? { sansArmure } : {}) };
     const session = useSessionOSStore.getState();
     if (c.isPlayer && c.sourcePlayerId) return session.handleApplyImpact(c.sourcePlayerId, 'pc', impact);
     if (c.sourceEntityId) return session.handleApplyImpact(c.sourceEntityId, 'npc', impact);

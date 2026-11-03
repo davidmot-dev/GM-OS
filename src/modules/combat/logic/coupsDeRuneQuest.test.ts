@@ -96,6 +96,14 @@ describe('à la porte des dégâts', () => {
         expect(r?.texte).toMatch(/^Tête : 10 − 1 d'armure = 9 dégâts ; tête à -5\/4 PV — au double/);
     });
 
+    it('un coup critique ignore l’armure, garde le plafond du membre, et ne la laisse pas fuir au journal (RQ-A3, p. 200)', () => {
+        const r = coupLocaliseSelonLeJeu(REGLE, fiche, { value: 10, location: 'tete', sansArmure: true });
+        expect(r?.impact).toEqual({ value: 10 });
+        expect(r?.texte).toMatch(/^Tête : 10 \(armure ignorée\) dégâts/);
+        expect(porterLeCoup(zone('bras-droit', 2, 3), 8, true)).toMatchObject({ net: 8, retenus: 4, plafonne: true, atteinte: 'triple' });
+        expect(porterLeCoup(zone('bras-droit', 2, 3), 8)).toMatchObject({ net: 5, retenus: 4 });
+    });
+
     it('rend les points d’un soin à la zone et au total', () => {
         const r = coupLocaliseSelonLeJeu(REGLE, fiche, { value: 5, location: 'bras-gauche', isRecovery: true });
         expect(r?.impact).toEqual({ value: 2, isRecovery: true });

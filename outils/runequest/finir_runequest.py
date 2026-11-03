@@ -25,7 +25,12 @@
 #   dégâts dans Combat-OS ? ») : chaque zone reçoit ses dégâts (`degats_<zone>`, propres à GM-OS, la
 #   feuille n'a pas de case pour eux) ; `combat.coupsLocalises` déclare la zone, son armure et ses
 #   points de vie pour Combat-OS (armure retirée, membre plafonné au double, effets p. 146-148) ;
-# - version 2.1.0.
+# - les dégâts et les rangs d'action (2.2.0, RQ-A3 et RQ-A4, demandés par David le 03/11/2026, « on va
+#   faire RQ-A3 et RQ-A4 ») : `jet.runequest.armes` nomme, pour chaque arme de la feuille, son score,
+#   son nom, ses dégâts, son RA et sa durabilité ; `bonusAuxDegats` et `con` pour les dégâts spéciaux
+#   et la lacération (p. 199-204) ; `combat.initiative` passe en « rangs-d-action » et
+#   `combat.rangsDAction` lit DEX, RA de DEX et RA de TAI (p. 192-195) ;
+# - version 2.2.0.
 #
 # Usage : python -I -X utf8 outils/runequest/finir_runequest.py <export forgé> <sortie .gmos-driver>
 import json, os, sys, zipfile
@@ -259,6 +264,15 @@ jet['sens'] = 'sous-ou-egal'
 jet['runequest'] = {
     'caracteristiques': caracteristiques,
     'localisations': {cle.replace('_', '-'): f'pv_{cle}' for cle, _, _ in LOCALISATIONS},
+    # Les armes de la feuille (RQ-A3) : le RA noté est un total (DEX + TAI + allonge, p. 192 ; Vasana p. 85).
+    'armes': [
+        {'score': f'{prefixe}{i}', 'nom': f'{prefixe}{i}_nom', 'degats': f'{prefixe}{i}_degats', 'ra': f'{prefixe}{i}_ra',
+         'durabilite': f'{prefixe}{i}_durabilite', 'genre': genre}
+        for prefixe, genre, combien in (('arme', 'melee', 4), ('tir', 'distance', 3)) for i in range(1, combien + 1)
+    ] + [{'score': 'bouclier', 'nom': 'bouclier_nom', 'degats': 'bouclier_degats', 'ra': 'bouclier_ra',
+          'durabilite': 'bouclier_pv', 'genre': 'bouclier'}],
+    'bonusAuxDegats': 'bonus_degats',
+    'con': 'con',
 }
 
 pilote['tactical']['ranges'] = {
@@ -272,6 +286,9 @@ pilote['tactical']['ranges'] = {
 combat = pilote['combat']
 combat['initiativeFormula'] = 'ra_dex + ra_tai'
 combat['initiativeSort'] = 'asc'
+# Le rang d'action selon l'action (RQ-A4) : arme, tir ou sort, délais, limite de 12 (p. 192-195, 386).
+combat['initiative'] = {'mode': 'rangs-d-action'}
+combat['rangsDAction'] = {'mecanique': 'runequest', 'dex': 'dex', 'raDex': 'ra_dex', 'raTai': 'ra_tai'}
 combat['defaultHealthType'] = 'hp'
 combat['santeDeDepart'] = 'pv_max'
 combat['damageTypes'] = ['empalement', 'lacération', 'écrasement']
@@ -291,7 +308,7 @@ pilote['ui_config']['gauges'] = [
     {'fieldId': 'points_de_magie', 'label': 'Points de magie (PM)', 'color': '#3b82f6', 'style': 'bar'},
     {'fieldId': 'points_de_rune', 'label': 'Points de Rune (PR)', 'color': '#a855f7', 'style': 'bar'},
 ]
-pilote['version'] = '2.1.0'
+pilote['version'] = '2.2.0'
 
 ids = [f['id'] for s in etat['sheetTemplate']['sections'] for f in s['fields']]
 doublons = sorted({i for i in ids if ids.count(i) > 1})
@@ -299,7 +316,7 @@ if doublons:
     sys.exit(f'Identifiants en double : {", ".join(doublons)}.')
 champs = set(ids)
 lus = caracteristiques + list(jet['runequest']['localisations'].values()) + ['pv_max', 'pm_max', 'pr_max', 'ra_dex', 'ra_tai']     + [c for z in combat['coupsLocalises']['zones'].values() for c in z.values()] \
-    + [g['fieldId'] for g in pilote['ui_config']['gauges']]
+    + [g['fieldId'] for g in pilote['ui_config']['gauges']]     + [c for a in jet['runequest']['armes'] for c in (a['score'], a['nom'], a['degats'], a['ra'], a['durabilite'])]     + ['bonus_degats', 'con', 'dex']
 manquants = [c for c in lus if c not in champs]
 if manquants:
     sys.exit(f'Champs attendus absents de la fiche : {", ".join(manquants)}.')
