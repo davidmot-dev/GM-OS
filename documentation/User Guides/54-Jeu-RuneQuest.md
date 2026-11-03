@@ -1,9 +1,10 @@
 # 🏺 Jeu — RuneQuest
 
 > **Pilote décrit :** « RuneQuest », forgé par David, exporté le 2026-10-30, **fini le
-> 2026-10-30**, version **2.2.0** — les coups localisés de Combat-OS ajoutés le même jour,
+> 2026-10-30**, version **2.3.0** — les coups localisés de Combat-OS ajoutés le même jour,
 > affichage des PV de la cible corrigé le **2026-11-01** dans l'application ; **dégâts de
-> l'attaque et rangs d'action selon l'action** le **2026-11-03** (RQ-A3, RQ-A4)
+> l'attaque et rangs d'action selon l'action** le **2026-11-03** (RQ-A3, RQ-A4) ; **attributs
+> calculés, magie, inspiration et expérience** le même jour (RQ-A5, RQ-A6)
 > (`Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver`, construit par
 > `outils/runequest/finir_runequest.py`). Thème `runequest` et fiche de personnage
 > HTML `runequest-fr` livrés le même jour, la fiche reliée champ par champ. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
@@ -16,9 +17,16 @@ tentative, l'opposition et la localisation du coup. Dans Combat-OS, les **coups 
 l'armure de la zone, ses points de vie et ceux du total, et l'effet du livre. Depuis la
 version 2.2.0, une attaque prépare ses **dégâts** — arme, bonus, dégâts spéciaux, parade ou
 esquive — jusqu'au coup porté, et Combat-OS compose le **rang d'action** selon l'action déclarée.
+Depuis la 2.3.0, les **attributs** se calculent depuis les caractéristiques, un **sort** se paie
+selon le niveau du jet, l'**inspiration** tient toute la situation, et l'**expérience** se coche
+puis se teste en fin de saison.
 
-**Pilote 2.2.0 — 03/11/2026, à réimporter avec « Remplacer ».** Même identifiant, même fiche de
-320 champs : rien n'est à ressaisir. Le pilote nomme désormais les armes de la feuille (score,
+**Pilote 2.3.0 — 03/11/2026, à réimporter avec « Remplacer ».** Même identifiant, même fiche de
+320 champs : rien n'est à ressaisir. Le pilote nomme ce que lisent les attributs calculés
+(`jet.runequest.derives`), la magie des deux cultes (`jet.runequest.magie`) et la progression
+— Runes, paires opposées, Passions, modificateur de chaque section (`jet.runequest.progression`).
+
+**Pilote 2.2.0 — 03/11/2026.** Le pilote nomme désormais les armes de la feuille (score,
 nom, dégâts, RA, durabilité), le bonus aux dégâts et la CON (`jet.runequest`), et passe Combat-OS
 en mode **rangs d'action** (`combat.rangsDAction`). Le lot de recette de `output/` reste en 2.1.0.
 
@@ -118,8 +126,79 @@ Retenir une **caractéristique** fait paraître un menu :
   que la table applique (p. 229, 236).
 - **Tenter à nouveau (−25 %)**, sur un échec, si la meneuse le permet (p. 142).
 
-Rien ne s'écrit sur la fiche du lanceur : la localisation et l'issue d'une opposition vont au
-journal ; un coup porté s'écrit sur la fiche de la cible.
+La localisation et l'issue d'une opposition vont au journal ; un coup porté s'écrit sur la fiche
+de la cible. Sur la fiche du lanceur ne s'écrit que ce que la meneuse décide par un geste : le
+sort payé, l'inspiration, la coche d'expérience (ci-dessous).
+
+### Lancer un sort
+
+![Un sort runique payé : deux points de Rune du culte d'Orlanth](captures/jeu-runequest-magie.jpg)
+
+Un test sous le **POU** ouvre le bloc **Magie** en magie spirituelle, une **Rune** en magie
+runique ; pour un autre jet (une compétence de sorcellerie), **« Ce jet lance un sort… »**
+l'ouvre. On y saisit le type, le nom, le coût, le culte qui paie et les PM ajoutés ; le coût
+suit le **niveau du jet**, comme le livre le dit :
+
+| Magie | Réussite critique | Réussite | Échec | Échec critique |
+| --- | --- | --- | --- | --- |
+| Spirituelle (p. 254) | les PM du sort | les PM du sort | rien | rien |
+| Runique (p. 314) | **aucun point de Rune** | les PR du culte | rien (1 PM si le sort était renforcé) | les PR |
+| Sorcellerie | 1 PM | tous les PM | 1 PM | tous les PM |
+
+**Payer le sort** débite la fiche et le dit au journal ; **Annuler le paiement** remet les
+valeurs d'avant. Un sort runique se paie avec les points de Rune **de son culte**, jamais d'un
+autre (p. 313) ; s'il n'en reste pas assez, le paiement est refusé. À 0 PM, l'aventurier sombre
+dans l'inconscience (p. 54) : GM-OS le rappelle.
+
+### L'inspiration
+
+![La Haine (Empire lunar) inspire l'épée large : +30 % pour la situation](captures/jeu-runequest-inspiration.jpg)
+
+Un test sous une **Rune** ou une **Passion** propose aussi le bloc **Inspiration** (p. 228-229,
+236). Sur une réussite, on choisit l'aptitude inspirée : **+50 %** sur une critique, **+30 %**
+sur une spéciale, **+20 %** sur une réussite, **jusqu'à la fin de la situation** — et non pour le
+seul jet suivant, comme l'augmentation. Le bonus s'ajoute à chaque jet de cette aptitude, au
+pupitre comme sur la tablette ; il ne se cumule pas avec une augmentation, la meilleure seule
+compte. La source gagne un test d'expérience.
+
+Les suites d'un échec se **proposent**, et s'appliquent par un geste :
+
+- par une **Passion**, l'aventurier est **découragé** : −10 % à **tous** les tests tant que dure
+  la situation ;
+- par une **Rune** : −20 % aux tests qui font appel à **cette Rune**, jusqu'à une journée entière
+  de méditation ;
+- un **échec critique** fait lancer la perte de 1D10 % (la Rune opposée monte d'autant ; une
+  Passion tombée à 0 se raye de la feuille) et la durée du **tourment** ou du **désespoir** sur
+  1D10.
+
+Une seule tentative par situation, même par une autre Rune ou Passion ; une Rune qui a inspiré ne
+sert plus de la session. **Fin de la situation**, **Journée de méditation** et **Nouvelle
+session** lèvent ces limites, dans la carte ci-dessous.
+
+### Magie et progression
+
+![Les ressources, l'inspiration en cours et les tests d'expérience de Vasana](captures/jeu-runequest-progression.jpg)
+
+La carte **Magie et progression**, à côté du test :
+
+- les **points de magie** et les **points de Rune** de chaque culte ;
+- **Repos de 6 h** : le quart du POU, arrondi au plus proche (Vasana, POU 15, en regagne 4) ;
+  **Journée entière** : les PM au maximum (p. 54) ;
+- le **jour saint** : le culte, l'importance du jour, le statut (lu dans le rang du culte :
+  initié, ou Chantre sacré, Prêtre runique, Seigneur runique) et la situation (+50 % dans un
+  grand temple). **Test de Vénération** lance le D100, dépense les 2 PM de la cérémonie et rend
+  les points de Rune de la table, plafonnés au maximum du culte (p. 315) ;
+- l'**inspiration en cours** et les malus, avec **Fin de la situation**, **Journée de
+  méditation** et **Nouvelle session** ;
+- les **tests d'expérience** (p. 415) : une réussite propose **« Cocher l'expérience »** au jet,
+  et la carte en coche d'autres. En **fin de saison**, on choisit pour chaque coche **+1D6 %** ou
+  **+3 %** — à annoncer avant — puis **Lancer les tests** : 1D100 plus le modificateur de
+  catégorie (aucun pour une Rune ou une Passion) doit dépasser le score, ou atteindre 100. **Rien
+  ne s'écrit sans « Confirmer »** ; une Rune d'une paire plafonne à 99 % et son opposée baisse
+  d'autant. Puis **Effacer les coches**.
+
+La Réputation ne progresse pas par l'expérience (p. 237) : elle ne se coche pas. Le dernier geste
+sur les ressources s'**annule**.
 
 ### Les dégâts de l'attaque
 
@@ -192,9 +271,33 @@ La fiche GM-OS suit la même feuille (p. 52-63) :
   que dans GM-OS, la feuille n'a pas de case pour eux ;
 - les jauges de **points de vie**, **de magie** et **de Rune**, plafonnées par les maximums.
 
-Les dérivés ne se calculent pas seuls : on les saisit d'après les tables du livre. Les points de
-vie maximum, le déplacement et le rang d'action d'une arme à distance n'ont pas de case sur la
-feuille : ils vivent dans GM-OS.
+Les dérivés se **proposent** depuis les caractéristiques (carte « Attributs calculés »,
+ci-dessous) ; on peut toujours garder une valeur saisie. Les points de vie maximum, le
+déplacement et le rang d'action d'une arme à distance n'ont pas de case sur la feuille : ils
+vivent dans GM-OS.
+
+### Les attributs calculés
+
+![Les attributs de Vasana, calculés depuis ses caractéristiques](captures/jeu-runequest-attributs.jpg)
+
+Dans l'onglet **Lancer un test**, la carte **Attributs calculés** reprend les tables du livre
+(p. 54-59) : points de vie (CON modifiée par la TAI et le POU), points de vie des sept zones
+selon les PV totaux, points de magie (le POU), bonus aux dégâts (FOR + TAI), dégâts de combat
+spirituel (POU + CHA), vitesse de guérison (CON), ENC maximum (moyenne de FOR et CON, sans
+dépasser la FOR), rangs d'action de DEX et de TAI, et les sept modificateurs de catégorie. Les
+modificateurs d'armes que la feuille imprime à part prennent celui de **Manipulation** : le
+livre y range toutes les armes (p. 59).
+
+Chaque ligne dit la valeur de la fiche, celle des tables, le **détail** et la page ;
+**Appliquer** l'écrit, **Appliquer tout** écrit toutes celles qui diffèrent. Il faut que les
+sept caractéristiques soient saisies, et la fiche sauvegardée.
+
+- Un maximum qui change **garde les blessures** : 12 PV dont 3 perdus, passés à 14, en laissent
+  11. Les dégâts reçus par les zones ne bougent pas ; seuls leurs maxima changent.
+- Les **compétences ne bougent pas** quand un modificateur de catégorie change : leur score mêle
+  base, culture, occupation et expérience. L'écart est seulement annoncé.
+- Le livre ne dit pas comment arrondir l'ENC quand la moyenne tombe sur une demie : GM-OS
+  l'arrondit au plus proche, et le détail le dit.
 
 ## Le thème
 
@@ -279,8 +382,9 @@ poison, une chute, une hémorragie ne visent pas de zone (« sauf cas particulie
   annonce, la meneuse les note (p. 198-200).
 - **L'arme fichée** d'un empalement (la dégager, ½ dégâts par round en se déplaçant, p. 203-204)
   et les **attaques divisées** au-delà de 100 % (p. 202).
-- **La magie** : POU×5 pour la magie spirituelle, l'affinité runique pour un sort runique, la
-  compétence du sort en sorcellerie ; ces tests se font au panneau, sous l'aptitude voulue.
+- **Les effets d'un sort**, sa portée et sa durée : GM-OS paie le sort, la meneuse dit ce qu'il
+  fait (p. 254, 313-314). La limite de magie spirituelle (CHA) et l'INT libre se surveillent à la
+  table.
 - **Les effets d'une localisation** se disent, ils ne s'appliquent pas seuls : le combat au sol
   (attaque divisée par deux, +40 % pour l'adversaire), l'hémorragie et ses minutes, le PV perdu
   à chaque round d'une tête au double se jouent à la table (p. 147-148).

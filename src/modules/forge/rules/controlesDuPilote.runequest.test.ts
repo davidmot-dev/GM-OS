@@ -31,3 +31,17 @@ it('le mode « rangs-d-action » sans sa déclaration est une erreur', () => {
     const r = controlerLePilote(pilote({ initiative: { mode: 'rangs-d-action' } }, {}), fiche);
     expect(r.some(c => c.ou === 'combat.rangsDAction' && c.gravite === 'erreur')).toBe(true);
 });
+
+it('la Forge refuse des attributs, une magie et une progression qui lisent des champs absents (RQ-A5, RQ-A6)', () => {
+    const r = controlerLePilote(pilote({}, {
+        derives: { caracteristiques: { for: 'for_absente' }, pvMax: 'pv_max_absent', zones: { tete: 'pv_tete_absent' }, modificateursDArmes: [{ champ: 'mod_armes_absent', libelle: 'Armes' }] },
+        magie: { pm: 'pm_absent', pou: 'dex', cultes: [{ nom: 'culte_absent', pr: 'pr_absent' }] },
+        progression: { runes: ['rune_absente'], opposees: [], passions: [], categories: { section_absente: 'mod_absent', combat: 'dex' } },
+    }), fiche);
+    const erreurs = r.filter(c => c.gravite === 'erreur').map(c => `${c.ou} ${c.message}`);
+    for (const absent of ['for_absente', 'pv_max_absent', 'pv_tete_absent', 'mod_armes_absent', 'pm_absent', 'culte_absent', 'pr_absent', 'rune_absente', 'mod_absent']) {
+        expect(erreurs.some(e => e.includes(`« ${absent} »`)), absent).toBe(true);
+    }
+    expect(erreurs.some(e => e.startsWith('jet.runequest.progression.categories') && e.includes('« section_absente »'))).toBe(true);
+    expect(erreurs.some(e => e.includes('« dex »'))).toBe(false);
+});

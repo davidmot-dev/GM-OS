@@ -13481,10 +13481,48 @@ durabilités et échecs critiques annoncés sans écriture ; les deux écrans de
   un commit et pousser ». RQ-A3 et RQ-A4 cochés/verts dans la synthèse des pilotes.
 - **Reste :** le lot de recette de `output/` reste en 2.1.0 ; RQ-A5 et RQ-A6.
 
+### 206 · RuneQuest RQ-A5 et RQ-A6 — attributs calculés, magie, inspiration et expérience — 03/11/2026
+
+David : « on va faire RQ-A5 et RQ-A6 ». Choix du 03/11 : les **compétences ne bougent pas** quand
+un modificateur de catégorie change (l'écart s'annonce) ; le sort se **saisit au lancement** ;
+**coches et test assisté** en fin de saison ; l'inspiration tient **la situation**, ses suites se
+proposent. Trois écrans dessinés dans Stitch (projet 8352739217093926431 :
+`stitch/runequest-derives/`, `stitch/runequest-magie/`, `stitch/runequest-progression/`) et validés
+par David (« oui je valide les écrans Stitch »), corrigés d'après le livre.
+
+- **Livre relu en image** (PDF − 1) : attributs p. 54-59 (Vasana en cas témoin) ; inspiration
+  p. 228-229 et 236 — la maquette se trompait sur les suites : Passion ratée −10 % à **tous** les
+  tests de la situation, Rune ratée −20 % aux tests **de cette Rune** jusqu'à une journée de
+  méditation ; lancer runique p. 314 — **aucun PR sur un critique**, 1 PM sur un échec renforcé,
+  les PR sur un échec critique ; magie spirituelle p. 254 ; récupération des PR p. 315 (Vénération,
+  2 PM, table par jour saint et statut) ; expérience p. 415.
+- **RQ-A5** — `dice/systemes/derivesDeRuneQuest.ts` : toutes les tables, au-delà de leurs bornes
+  comprises ; lignes avec détail et page, `appliquerLesDerives` déplace PV/PM actuels avec le
+  maximum, ne touche pas `degats_<zone>`. Carte « Attributs calculés » (`CartesRuneQuest.tsx`),
+  onglet « Lancer un test », comme les cartes du Voyageur.
+- **RQ-A6** — `magieDeRuneQuest.ts` (coût selon le niveau, paiement par le culte du sort, repos,
+  journée, jour saint) et `progressionDeRuneQuest.ts` (état sous `_gmos_runequest` : inspiration,
+  malus, Runes de la session, coches ; test et gain d'expérience). Au résultat du jet
+  (`RuneQuestAuJet.tsx`) : blocs « Magie », « Inspiration », « Cocher l'expérience », écrits par
+  `ecrireSurLaFiche`. Le descripteur ajoute l'inspiration et les malus au jet (`ChoixDeRuneQuest.ajustements`),
+  sans cumul avec l'augmentation : pupitre et tablette lisent le même seuil. Carte « Magie et
+  progression ».
+- **Pilote 2.3.0** (`outils/runequest/finir_runequest.py` → `Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver`,
+  bâti sur le 2.2.0, mêmes identifiants, 320 champs) : `jet.runequest.derives`, `magie` (deux cultes),
+  `progression` (16 Runes, 5 paires, 8 Passions, sections → modificateurs, armes en Manipulation) ;
+  contrôles de la Forge étendus, zéro constat.
+- **Vérifié :** 12 essais des dérivés, 81 de la magie, de la progression et du jet, 10 de
+  composants, 10 du pilote, 153 des contrôles ; `tsc -b` et lint.
+- ⚠️ Le commit de RQ-A3/A4 (`edc53c3e`, poussé) contient `Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver`,
+  que le skill `finir-un-pilote` interdit de commiter : à retirer du suivi si David le demande.
+- **Reste :** réimport du 2.3.0 avec **Remplacer** et essai de David ; le lot de recette de
+  `output/` reste en 2.1.0.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 142 | **RuneQuest — RQ-A5 et RQ-A6** | 🟠 § 206 ; attributs calculés, sort payé, inspiration et expérience livrés, pilote 2.3.0 — 03/11 | Réimporter le pilote 2.3.0 avec « Remplacer », puis appliquer les attributs, payer un sort, inspirer, cocher et tester une fin de saison | Essai de David |
 | 141 | **RuneQuest — RQ-A3 et RQ-A4** | 🟢 § 205 ; dégâts de l'attaque et rangs d'action livrés, pilote 2.2.0, validés par David — 03/11 | Commit et push demandés ; ensuite RQ-A5 ou RQ-A6 | Rien |
 | 140 | **NP-C2 / NP-C3 — fiches, droits, variantes** | 🟢 § 204 ; livré, 252 tests ciblés et six parcours Electron verts ; huit captures relues, validé par David — 03/11 | Commit et push demandés ; puis choisir un autre lot | Rien pour NP-C2/NP-C3 ; aucune nouvelle preuve instrumentée de tablette physique |
 | 139 | **Catalogue d'équipement du pilote** | 🟢 § 203 : pour Alien, étapes A à E livrées le 02/11 et essayées par David (« ok ca marche ») ; A et B poussées (`a0299fc1`) ; C (66 objets de Colonial Marines, 89 du livre de base transcrit), D et E non commitées | Commit et push sur demande ; ensuite, un autre jeu | Rien |

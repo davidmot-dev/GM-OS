@@ -448,7 +448,8 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
-        if (['dune', 'noc'].includes(mise.corpusId)) test.setTimeout(180_000);
+        // RuneQuest joue aussi la magie, l'inspiration et les cartes de la fiche depuis RQ-A6 (03/11).
+        if (['dune', 'noc', 'runequest'].includes(mise.corpusId)) test.setTimeout(180_000);
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
         if (['alien','crime','cthulhu hack','star-trek'].includes(mise.corpusId)) test.setTimeout(mise.corpusId === 'alien' ? 360_000 : 240_000);
         const f = gmos.fenetre;
@@ -1168,6 +1169,54 @@ async function scenesDeRuneQuest(c: ContexteDeScene): Promise<void> {
     await panneau.getByLabel('Caractéristique passive', { exact: true }).fill('14');
     await expect(preparation.locator('[data-composition-runequest]')).toContainText('= 55 %');
     await photographier(preparation, 'jeu-runequest-resistance');
+
+    // RQ-A6 (03/11) : un sort runique sous l'affinité de l'Air (90 %), réussi à 30 — 2 PR d'Orlanth ;
+    // puis la Haine (Empire lunar) en spéciale à 12 inspire l'épée large, +30 % pour la situation.
+    await f.evaluate(() => {
+        const w = window as unknown as { __hasardDOrigine?: () => number };
+        w.__hasardDOrigine = Math.random;
+        // d100 : 3 puis 0 (le second jet a sa file, posée juste avant lui).
+        const file = [0.301, 0.001];
+        Math.random = () => file.shift() ?? 0.5;
+    });
+    try {
+        await panneau.locator('select').nth(0).selectOption('rune_air');
+        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+        const sortilege = panneau.locator('[data-magie-runequest]');
+        await expect(sortilege).toBeVisible();
+        await sortilege.getByLabel('Sort', { exact: true }).fill('Vent tempétueux');
+        await sortilege.getByLabel('Coût du sort', { exact: true }).fill('2');
+        await sortilege.getByRole('button', { name: 'Payer le sort', exact: true }).click();
+        await expect(sortilege.locator('[data-paiement-runequest]')).toContainText('Vent tempétueux : payé 2 PR (Orlanth Aventureux, reste 1)');
+        await photographier(panneau.locator('[data-suites-runequest]'), 'jeu-runequest-magie');
+        await sortilege.getByRole('button', { name: 'Annuler le paiement', exact: true }).click();
+
+        await panneau.locator('select').nth(0).selectOption('passion2');
+        // Le paiement et le journal tirent aussi au hasard : la file du d100 se pose juste avant le jet — 1 puis 2.
+        await f.evaluate(() => { const file = [0.101, 0.201]; Math.random = () => file.shift() ?? 0.5; });
+        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+        const inspiration = panneau.locator('[data-inspiration-runequest]');
+        await inspiration.getByLabel('Aptitude inspirée', { exact: true }).selectOption('arme1');
+        await inspiration.getByRole('button', { name: 'Inspirer', exact: true }).click();
+        await expect(inspiration.locator('[data-inspiration-faite]')).toContainText('+30 % à Épée large');
+        await photographier(panneau.locator('[data-suites-runequest]'), 'jeu-runequest-inspiration');
+    } finally {
+        await f.evaluate(() => {
+            const w = window as unknown as { __hasardDOrigine?: () => number };
+            if (w.__hasardDOrigine) Math.random = w.__hasardDOrigine;
+        });
+    }
+    await panneau.locator('select').nth(0).selectOption('arme1');
+    await expect(preparation.locator('[data-composition-runequest]')).toContainText('+ 30 inspiration (Haine (Empire lunar))');
+    const progression = f.locator('[data-carte-du-jeu="magie-progression-runequest"]');
+    await expect(progression.locator('[data-inspiration-en-cours]')).toContainText('Épée large +30 %');
+    await expect(progression.locator('[data-coche="passion2"]')).toBeVisible();
+    await photographier(progression, 'jeu-runequest-progression');
+    // RQ-A5 (03/11) : les attributs de Vasana, que le livre calcule p. 54-59.
+    const attributs = f.locator('[data-carte-du-jeu="attributs-runequest"]');
+    await expect(attributs.locator('[data-derive="pv-max"]')).toContainText('identique');
+    await expect(attributs.locator('[data-derive="categorie-communication"]')).toContainText('+10 %');
+    await photographierLePanneau(attributs, 'jeu-runequest-attributs');
 
     // La fiche HTML runequest-fr (30/10), remplie depuis GM-OS par la correspondance.
     await ongletDeLaFiche(f, 'Fiche du jeu');

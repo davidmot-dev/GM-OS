@@ -55,6 +55,12 @@ export interface RegleDeRuneQuest {
     bonusAuxDegats?: string;
     /** La CON de la cible, pour le test d'une lacération (p. 204). */
     con?: string;
+    /** Les attributs calculés depuis les caractéristiques (pilote 2.3.0, RQ-A5, `derivesDeRuneQuest.ts`). */
+    derives?: import('./derivesDeRuneQuest').RegleDesDerives;
+    /** Les PM, les cultes et leurs points de Rune (pilote 2.3.0, RQ-A6, `magieDeRuneQuest.ts`). */
+    magie?: import('./magieDeRuneQuest').RegleDeLaMagie;
+    /** Runes, Passions et catégories, pour l'inspiration et l'expérience (2.3.0, RQ-A6, `progressionDeRuneQuest.ts`). */
+    progression?: import('./progressionDeRuneQuest').RegleDeLaProgression;
 }
 
 export interface ArmeDeRuneQuest {
@@ -132,6 +138,12 @@ export interface ChoixDeRuneQuest {
     augmentation: number;
     /** L'aptitude adverse dans une opposition, modificateurs compris. Absente : pas d'opposition. */
     adverse?: number;
+    /**
+     * Ce que l'état de la fiche ajoute au jet de cette aptitude (RQ-A6, 03/11/2026,
+     * `progressionDeRuneQuest.ts`) : le bonus d'une inspiration en cours, le −10 % d'une
+     * Passion ratée, le −20 % d'une Rune ratée. Ils durent la situation, pas un seul jet.
+     */
+    ajustements?: { valeur: number; libelle: string; inspiration?: boolean }[];
 }
 
 export const CHOIX_DE_RUNEQUEST: ChoixDeRuneQuest = {
@@ -223,7 +235,20 @@ export function calculerRuneQuest(
 
     const parts: string[] = [];
     let total = base;
-    if (choix.augmentation) { total += choix.augmentation; parts.push(`${signe(choix.augmentation)} augmentation`); }
+    /*
+      L'inspiration ne se cumule pas avec une augmentation par une compétence (p. 144, 229,
+      236) : quand les deux sont des bonus, la meilleure seule compte, et on le dit.
+    */
+    const inspiration = choix.ajustements?.find(a => a.inspiration && a.valeur > 0);
+    const sansCumul = !!inspiration && choix.augmentation > 0;
+    const augmentationRetenue = sansCumul && inspiration!.valeur >= choix.augmentation ? 0 : choix.augmentation;
+    if (sansCumul) remarques.push(`L’inspiration ne se cumule pas avec l’augmentation : ${augmentationRetenue ? 'l’augmentation' : 'l’inspiration'}, la meilleure, est seule retenue (p. 229, 236).`);
+    if (augmentationRetenue) { total += augmentationRetenue; parts.push(`${signe(augmentationRetenue)} augmentation`); }
+    for (const a of choix.ajustements ?? []) {
+        if (!a.valeur || (a === inspiration && sansCumul && augmentationRetenue)) continue;
+        total += a.valeur;
+        parts.push(`${signe(a.valeur)} ${a.libelle}`);
+    }
     if (choix.modificateur) { total += choix.modificateur; parts.push(`${signe(choix.modificateur)} situation`); }
     if (choix.nouvelleTentative) { total -= 25; parts.push('− 25 nouvelle tentative'); }
 

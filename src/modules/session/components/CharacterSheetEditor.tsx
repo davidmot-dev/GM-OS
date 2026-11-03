@@ -31,6 +31,8 @@ import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator, Dices } from 'lucide-react';
 import OngletsDeLaFiche from './OngletsDeLaFiche';
 import { CarteDuJeu } from './fields/EtapesDuJet';
+import { AttributsCalculesRuneQuest, MagieEtProgressionRuneQuest } from './fields/CartesRuneQuest';
+import { consignerLeJet } from '../../journal/consignerLeJet';
 import FicheHote from '../../fiches/FicheHote';
 import { useCorrespondanceDuJeu } from '../../fiches/useCorrespondanceDuJeu';
 import { ressourcesDeLaTable } from '../../table/reservesDuGroupe';
@@ -372,6 +374,34 @@ const CharacterSheetEditor: React.FC = () => {
                                     }} />
                             </CarteDuJeu>
                         )}
+
+                        {/*
+                            **RuneQuest : attributs calculés, magie et progression** (RQ-A5, RQ-A6,
+                            2026-11-03, écrans de Stitch validés par David) — à côté du test, comme
+                            les mécaniques du Voyageur ; une saisie non sauvegardée se sauvegarde d'abord.
+                        */}
+                        {piloteDeLaFiche?.jet?.runequest && editor.selectedPlayer && (() => {
+                            const rq = piloteDeLaFiche.jet.runequest;
+                            const donnees = { ...character.sheetData, ...editor.localData };
+                            const appliquer = (maj: Record<string, unknown>) => {
+                                if (editor.aDesChangements) { gmToast('Sauvegardez les saisies de la fiche avant ce geste.', 'warning'); return; }
+                                avecOrigine('jet', () => updateCharacter(editor.selectedPlayer!.id, character.id, { sheetData: { ...character.sheetData, ...maj } }));
+                            };
+                            const consigner = (ligne: string) => consignerLeJet({ titre: `${character.name} — RuneQuest`, totalDisplay: ligne });
+                            return <>
+                                {rq.derives && (
+                                    <CarteDuJeu id="attributs-runequest" titre="Attributs calculés">
+                                        <AttributsCalculesRuneQuest key={`attributs-${character.id}`} regle={rq.derives} valeurs={donnees} appliquer={appliquer} consigner={consigner} />
+                                    </CarteDuJeu>
+                                )}
+                                {(rq.magie || rq.progression) && (
+                                    <CarteDuJeu id="magie-progression-runequest" titre="Magie et progression">
+                                        <MagieEtProgressionRuneQuest key={`magie-${character.id}`} regle={rq} sections={template.sections} valeurs={donnees}
+                                            appliquer={appliquer} consigner={consigner} />
+                                    </CarteDuJeu>
+                                )}
+                            </>;
+                        })()}
 
                         {/*
                             **Les mécaniques du Voyageur, avec le test** — David, le

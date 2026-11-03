@@ -30,7 +30,12 @@
 #   son nom, ses dégâts, son RA et sa durabilité ; `bonusAuxDegats` et `con` pour les dégâts spéciaux
 #   et la lacération (p. 199-204) ; `combat.initiative` passe en « rangs-d-action » et
 #   `combat.rangsDAction` lit DEX, RA de DEX et RA de TAI (p. 192-195) ;
-# - version 2.2.0.
+# - les attributs calculés, la magie et la progression (2.3.0, RQ-A5 et RQ-A6, demandés par David le
+#   03/11/2026, « on va faire RQ-A5 et RQ-A6 ») : `jet.runequest.derives` nomme les caractéristiques, les
+#   attributs, les zones et les modificateurs de catégorie (p. 54-59) ; `jet.runequest.magie`, les PM et,
+#   par culte, sa réserve de points de Rune et sa Vénération (p. 54, 313-315) ; `jet.runequest.progression`,
+#   les Runes et leurs paires, les Passions et le modificateur de chaque section (p. 228-236, 415) ;
+# - version 2.3.0.
 #
 # Usage : python -I -X utf8 outils/runequest/finir_runequest.py <export forgé> <sortie .gmos-driver>
 import json, os, sys, zipfile
@@ -273,6 +278,39 @@ jet['runequest'] = {
           'durabilite': 'bouclier_pv', 'genre': 'bouclier'}],
     'bonusAuxDegats': 'bonus_degats',
     'con': 'con',
+    # Les attributs calculés (2.3.0, RQ-A5) : tables p. 54-59 ; les dégâts des zones ne bougent pas.
+    'derives': {
+        'caracteristiques': {id: id for id in caracteristiques},
+        'pvMax': 'pv_max', 'pv': 'points_de_vie', 'pmMax': 'pm_max', 'pm': 'points_de_magie',
+        'bonusAuxDegats': 'bonus_degats', 'degatsSpirituels': 'degats_spirituels', 'vitesseGuerison': 'vitesse_guerison',
+        'encMax': 'enc_max', 'raDex': 'ra_dex', 'raTai': 'ra_tai',
+        'zones': {cle.replace('_', '-'): f'pv_{cle}' for cle, _, _ in LOCALISATIONS},
+        'modificateurs': {c: f'mod_{c}' for c in ('agilite', 'communication', 'connaissances', 'magie', 'manipulation', 'perception', 'discretion')},
+        # La feuille imprime ces modificateurs à part ; le livre range toutes les armes en Manipulation (p. 59).
+        'modificateursDArmes': [{'champ': f'mod_{c}', 'libelle': label} for c, label in (
+            ('armes_melee', 'Armes de mêlée'), ('armes_distance', 'Armes à distance'), ('boucliers', 'Boucliers'),
+            ('armes_naturelles', 'Armes naturelles'))],
+    },
+    # La magie (2.3.0, RQ-A6) : PM, POU, et pour chaque culte sa réserve de PR et sa Vénération (p. 54, 313-315).
+    'magie': {
+        'pm': 'points_de_magie', 'pmMax': 'pm_max', 'pou': 'pou',
+        'cultes': [
+            {'nom': 'culte', 'rang': 'culte_rang', 'pr': 'points_de_rune', 'prMax': 'pr_max', 'veneration': 'veneration'},
+            {'nom': 'culte_2', 'rang': 'culte_2_rang', 'pr': 'points_de_rune_2', 'prMax': 'pr_max_2', 'veneration': 'veneration_2'},
+        ],
+    },
+    # L'inspiration et l'expérience (2.3.0, RQ-A6) : Runes, paires opposées, Passions, catégories (p. 228-236, 415).
+    'progression': {
+        'runes': [f'rune_{c}' for c in ('tenebres', 'eau', 'terre', 'feu_ciel', 'air', 'lune', 'fertilite', 'mort', 'harmonie',
+                                         'desordre', 'stase', 'mouvement', 'verite', 'illusion', 'homme', 'bete')],
+        'opposees': [[f'rune_{a}', f'rune_{b}'] for a, b in (('fertilite', 'mort'), ('harmonie', 'desordre'), ('stase', 'mouvement'),
+                                                              ('verite', 'illusion'), ('homme', 'bete'))],
+        'passions': ['passion_honneur'] + [f'passion{i}' for i in range(1, 8)],
+        # Les armes sont des compétences de Manipulation (p. 59).
+        'categories': {f'competences_{c}': f'mod_{c}' for c in ('agilite', 'communication', 'connaissances', 'magie', 'manipulation',
+                                                                  'perception', 'discretion')}
+            | {'competences_armes': 'mod_manipulation', 'armes': 'mod_manipulation'},
+    },
 }
 
 pilote['tactical']['ranges'] = {
@@ -308,7 +346,7 @@ pilote['ui_config']['gauges'] = [
     {'fieldId': 'points_de_magie', 'label': 'Points de magie (PM)', 'color': '#3b82f6', 'style': 'bar'},
     {'fieldId': 'points_de_rune', 'label': 'Points de Rune (PR)', 'color': '#a855f7', 'style': 'bar'},
 ]
-pilote['version'] = '2.2.0'
+pilote['version'] = '2.3.0'
 
 ids = [f['id'] for s in etat['sheetTemplate']['sections'] for f in s['fields']]
 doublons = sorted({i for i in ids if ids.count(i) > 1})
@@ -317,6 +355,16 @@ if doublons:
 champs = set(ids)
 lus = caracteristiques + list(jet['runequest']['localisations'].values()) + ['pv_max', 'pm_max', 'pr_max', 'ra_dex', 'ra_tai']     + [c for z in combat['coupsLocalises']['zones'].values() for c in z.values()] \
     + [g['fieldId'] for g in pilote['ui_config']['gauges']]     + [c for a in jet['runequest']['armes'] for c in (a['score'], a['nom'], a['degats'], a['ra'], a['durabilite'])]     + ['bonus_degats', 'con', 'dex']
+rq = jet['runequest']
+lus += [v for k, v in rq['derives'].items() if isinstance(v, str)] + list(rq['derives']['caracteristiques'].values()) \
+    + list(rq['derives']['zones'].values()) + list(rq['derives']['modificateurs'].values()) \
+    + [m['champ'] for m in rq['derives']['modificateursDArmes']] \
+    + [rq['magie'][k] for k in ('pm', 'pmMax', 'pou')] + [v for c in rq['magie']['cultes'] for v in c.values()] \
+    + rq['progression']['runes'] + rq['progression']['passions'] + list(rq['progression']['categories'].values())
+sections_de_la_fiche = {s['id'] for s in etat['sheetTemplate']['sections']}
+sans_section = [s for s in rq['progression']['categories'] if s not in sections_de_la_fiche]
+if sans_section:
+    sys.exit(f'Sections de compétences absentes de la fiche : {", ".join(sans_section)}.')
 manquants = [c for c in lus if c not in champs]
 if manquants:
     sys.exit(f'Champs attendus absents de la fiche : {", ".join(manquants)}.')

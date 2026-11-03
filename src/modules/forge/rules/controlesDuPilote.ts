@@ -1133,6 +1133,34 @@ export function controlerLePilote(
         for (const champ of [rq.bonusAuxDegats, rq.con]) {
             if (champ && !tousLesChamps.has(champ)) erreur('jet.runequest', `RuneQuest lit « ${champ} », absent de la fiche.`);
         }
+        // Les attributs calculés, la magie et la progression (RQ-A5, RQ-A6, 2026-11-03) : tout champ nommé existe.
+        const absent = (chemin: string, champ: string | undefined, quoi: string) => {
+            if (champ && !tousLesChamps.has(champ)) erreur(chemin, `${quoi} lit « ${champ} », absent de la fiche.`);
+        };
+        if (rq.derives) {
+            const d = rq.derives;
+            for (const [car, champ] of Object.entries(d.caracteristiques ?? {})) absent('jet.runequest.derives.caracteristiques', champ, `Le calcul des attributs (${car.toUpperCase()})`);
+            for (const champ of [d.pvMax, d.pv, d.pmMax, d.pm, d.bonusAuxDegats, d.degatsSpirituels, d.vitesseGuerison, d.encMax, d.raDex, d.raTai]) {
+                absent('jet.runequest.derives', champ, 'Le calcul des attributs');
+            }
+            for (const champ of [...Object.values(d.zones ?? {}), ...Object.values(d.modificateurs ?? {}), ...(d.modificateursDArmes ?? []).map(m => m.champ)]) {
+                absent('jet.runequest.derives', champ, 'Le calcul des attributs');
+            }
+        }
+        if (rq.magie) {
+            for (const champ of [rq.magie.pm, rq.magie.pmMax, rq.magie.pou]) absent('jet.runequest.magie', champ, 'La magie');
+            for (const culte of rq.magie.cultes ?? []) {
+                for (const champ of [culte.nom, culte.rang, culte.pr, culte.prMax, culte.veneration]) absent('jet.runequest.magie.cultes', champ, 'Un culte');
+            }
+        }
+        if (rq.progression) {
+            const p = rq.progression;
+            for (const champ of [...(p.runes ?? []), ...(p.passions ?? []), ...(p.opposees ?? []).flat()]) absent('jet.runequest.progression', champ, 'La progression');
+            for (const [section, mod] of Object.entries(p.categories ?? {})) {
+                if (!sections.some(s => s.id === section)) erreur('jet.runequest.progression.categories', `La progression range la section « ${section} », absente de la fiche.`);
+                absent('jet.runequest.progression.categories', mod, `La section « ${section} »`);
+            }
+        }
     }
     // Star Trek jusqu'au bout (2026-10-23) : chaque champ que `jet.starTrek` nomme, et le 2d20 qu'il suppose.
     const st = driver.jet?.starTrek;

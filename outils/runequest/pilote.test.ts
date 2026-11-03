@@ -3,14 +3,15 @@ import AdmZip from 'adm-zip';
 import { describe, it, expect } from 'vitest';
 import { controlerLePilote } from '../../src/modules/forge/rules/controlesDuPilote';
 import { preparerLeJet } from '../../src/modules/dice/DescripteurDeJet';
+import { calculerLesDerives } from '../../src/modules/dice/systemes/derivesDeRuneQuest';
 
 /**
- * **Le pilote RuneQuest remis à David** (2.1.0 le 30/10/2026, 2.2.0 le 03/11 : RQ-A3 et RQ-A4,
+ * **Le pilote RuneQuest remis à David** (2.1.0 le 30/10/2026, 2.2.0 le 03/11 : RQ-A3 et RQ-A4, 2.3.0 le même jour : RQ-A5 et RQ-A6,
  * `finir_runequest.py`). Sauté
  * tant que le fichier n'est pas là : `Export Dirvers/` ne se commite pas.
  */
 const fichier = 'Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver';
-describe.skipIf(!fs.existsSync(fichier))('export RuneQuest 2.2.0 fourni à David', () => {
+describe.skipIf(!fs.existsSync(fichier))('export RuneQuest 2.3.0 fourni à David', () => {
     const x = JSON.parse(new AdmZip(fichier).getEntry('state.json')!.getData().toString('utf8'));
     const sections = x.sheetTemplate.sections;
     const defauts = Object.fromEntries(sections.flatMap((s: { fields: { id: string; defaultValue?: unknown }[] }) =>
@@ -20,7 +21,7 @@ describe.skipIf(!fs.existsSync(fichier))('export RuneQuest 2.2.0 fourni à David
         expect(controlerLePilote(x.gameDriver, x.sheetTemplate)).toEqual([]);
         expect(x.gameDriver.id).toBe('custom-1793114851695');
         expect(x.sheetTemplate.id).toBe('tpl-1793114851695');
-        expect(x.gameDriver.version).toBe('2.2.0');
+        expect(x.gameDriver.version).toBe('2.3.0');
         const ids = sections.flatMap((s: { fields: { id: string }[] }) => s.fields.map(f => f.id));
         expect(new Set(ids).size).toBe(ids.length);
     });
@@ -66,5 +67,32 @@ describe.skipIf(!fs.existsSync(fichier))('export RuneQuest 2.2.0 fourni à David
     it('nomme le champ lancé, pour retrouver l’arme', () => {
         const jet = preparerLeJet(x.gameDriver.jet, { ...defauts, arme1: 65 }, { champs: { aptitude: 'arme1' } }, sections);
         expect(jet.runequest?.champ).toBe('arme1');
+    });
+
+    it('calcule les attributs de Vasana sur la fiche du pilote (RQ-A5, p. 54-59)', () => {
+        const vasana = { ...defauts, for: 16, con: 12, tai: 10, dex: 11, int: 15, pou: 15, cha: 19 };
+        const d = calculerLesDerives(x.gameDriver.jet.runequest.derives, vasana);
+        const valeur = (cle: string) => d.lignes.find(l => l.cle === cle)?.calcule;
+        expect(d.manquantes).toEqual([]);
+        expect([valeur('pv-max'), valeur('bonus-degats'), valeur('enc-max'), valeur('zone-poitrine'), valeur('categorie-magie')]).toEqual([12, '+1D4', 14, 5, 10]);
+        expect(d.lignes.filter(l => l.cle.startsWith('armes-')).map(l => l.calcule)).toEqual([5, 5, 5, 5]);
+    });
+
+    it('nomme la magie des deux cultes et la progression (RQ-A6)', () => {
+        const rq = x.gameDriver.jet.runequest;
+        expect(rq.magie.cultes.map((c: { pr: string; veneration: string }) => [c.pr, c.veneration])).toEqual([['points_de_rune', 'veneration'], ['points_de_rune_2', 'veneration_2']]);
+        expect(rq.progression.runes).toHaveLength(16);
+        expect(rq.progression.opposees).toContainEqual(['rune_stase', 'rune_mouvement']);
+        expect(rq.progression.categories.competences_armes).toBe('mod_manipulation');
+    });
+
+    it('ajoute l’inspiration en cours au jet de l’aptitude inspirée, et à elle seule (RQ-A6, p. 236)', () => {
+        const etat = { version: 1, situationTentee: true, malusDesRunes: {}, runesInspirees: [], coches: ['passion1'],
+            inspiration: { source: 'passion1', sourceLibelle: 'Haine', genre: 'passion', niveau: 'reussite-speciale', aptitude: 'arme1', aptitudeLibelle: 'Épée large', bonus: 30 } };
+        const fiche = { ...defauts, arme1: 65, esquive: 35, _gmos_runequest: etat };
+        const inspire = preparerLeJet(x.gameDriver.jet, fiche, { champs: { aptitude: 'arme1' } }, sections);
+        expect(inspire.seuil).toBe(95);
+        expect(inspire.runequest?.explication).toContain('+ 30 inspiration (Haine)');
+        expect(preparerLeJet(x.gameDriver.jet, fiche, { champs: { aptitude: 'esquive' } }, sections).seuil).toBe(35);
     });
 });

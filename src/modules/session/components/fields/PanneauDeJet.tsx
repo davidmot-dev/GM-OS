@@ -439,6 +439,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const regleRuneQuest = descripteur.sens === 'sous-ou-egal' && !descripteur.cible ? descripteur.runequest : undefined;
     const [choixRuneQuest, setChoixRuneQuest] = useState<ChoixDeRuneQuest>(CHOIX_DE_RUNEQUEST);
     const [runequestDuLancer, setRuneQuestDuLancer] = useState<{ calcul: CalculDeRuneQuest; compte: number } | null>(null);
+    // RQ-A6 (2026-11-03) : le sort payé, l'inspiration, la coche d'expérience s'écrivent sur la
+    // fiche ; le jet suivant les lit aussitôt, sans attendre la fiche renvoyée par le magasin.
+    const [ecritsRuneQuest, setEcritsRuneQuest] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const valeursRuneQuest = useMemo(() => ({ ...valeurs,
+        ...(ecritsRuneQuest.base === valeurs && ecritsRuneQuest.personnageId === personnageId ? ecritsRuneQuest.maj : {}),
+    }), [valeurs, ecritsRuneQuest, personnageId]);
+    const ecrireRuneQuest = (maj: Record<string, unknown>) => {
+        if (!Object.keys(maj).length) return;
+        setEcritsRuneQuest(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche?.(maj);
+    };
 
     /**
      * **Degenesis** (2026-10-30) : modificateurs en dés et Égo dépensé ; l'Égo se
@@ -642,7 +653,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const jet = useMemo(
         () => {
             const prepare = preparerLeJet(
-            descripteur, regleDune ? valeursDune : descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : regleNephilim ? valeursNephilim : valeurs,
+            descripteur, regleDune ? valeursDune : descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : regleNephilim ? valeursNephilim : regleRuneQuest ? valeursRuneQuest : valeurs,
             {
                 ...(regleNephilim ? { nephilim: { ...choixNephilim, lieu: lieuN, conjonction: conjonctionN, intensite: intensiteN, seuilRK: seuilRKN } } : {}),
                 ...(regleRuneQuest ? { runequest: choixRuneQuest } : {}),
@@ -695,7 +706,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrun, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
+        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrun, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
     );
 
     /*
@@ -3129,7 +3140,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {regleRuneQuest && runequestDuLancer && runequestDuResultat && (
                             <SuitesRuneQuest key={runequestDuLancer.compte} jet={resultat as JetDeRuneQuest} calcul={runequestDuLancer.calcul}
                                 regle={regleRuneQuest} d20={() => DiceEngine.roll(20)} porterLeCoup={!pourLesJoueurs}
-                                valeurs={valeurs} de={faces => DiceEngine.roll(faces)}
+                                valeurs={valeursRuneQuest} de={faces => DiceEngine.roll(faces)}
+                                ecrire={ecrireSurLaFiche ? ecrireRuneQuest : undefined} sections={template.sections}
                                 augmenter={bonus => setChoixRuneQuest(c => ({ ...c, augmentation: bonus }))}
                                 retenter={() => setChoixRuneQuest(c => ({ ...c, nouvelleTentative: true }))}
                                 consigner={ligne => redire(dernierLancer?.titre ?? 'RuneQuest', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />

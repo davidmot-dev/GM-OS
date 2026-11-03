@@ -26,6 +26,7 @@ import type { RegleDesJetsAlien } from './systemes/jetsAlien';
 import { jetDeNephilim, type ChoixDeNephilim, type JetDeNephilim, type RegleDeNephilim } from './systemes/nephilimRegles';
 import { estUnAndroide } from './systemes/paniqueAlien';
 import { CHOIX_DE_RUNEQUEST, calculerRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest } from './systemes/runequest';
+import { ajustementsDuJet, lireLEtat } from './systemes/progressionDeRuneQuest';
 import { reserveDeDegenesis, type ChoixDeDegenesis, type ReserveDeDegenesis } from './systemes/degenesis';
 import { reserveDeShadowrun, rrBornee, type ChoixDeShadowrun, type ReserveDeShadowrun } from './systemes/shadowrun';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
@@ -1253,10 +1254,16 @@ export function preparerLeJet(
         const champ = sections?.flatMap(s => s.fields).find(f => f.id === retenue.champ);
         const nomSaisi = champ?.libelleSur ? String(valeursDeLaFiche[champ.libelleSur] ?? '').trim() : '';
         const libelle = nomSaisi || champ?.label || retenue.champ;
+        // L'inspiration en cours et les malus d'une inspiration ratée, gardés sur la fiche (RQ-A6, 2026-11-03) :
+        // ils valent pour toute la situation, au pupitre comme à la tablette.
+        const ajustements = [
+            ...(choix.runequest?.ajustements ?? []),
+            ...(descripteur.runequest.progression ? ajustementsDuJet(lireLEtat(valeursDeLaFiche), retenue.champ) : []),
+        ];
         runequest = {
             ...calculerRuneQuest(
                 { label: libelle, valeur: retenue.valeur, caracteristique: (descripteur.runequest.caracteristiques ?? []).includes(retenue.champ) },
-                { ...CHOIX_DE_RUNEQUEST, ...choix.runequest },
+                { ...CHOIX_DE_RUNEQUEST, ...choix.runequest, ...(ajustements.length ? { ajustements } : {}) },
             ),
             champ: retenue.champ,
         };

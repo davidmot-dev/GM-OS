@@ -12,6 +12,12 @@ import {
 import { useCombatStore } from '../../../combat/useCombatStore';
 import { porterUnCoupLocalise } from '../../../combat/coupsLocalises';
 import { useSessionOSStore } from '../../useSessionOSStore';
+import type { SheetSection } from '../../../../data/defaultSheetTemplates';
+import { coutDuSort, nomDuCulte, payerLeSort, LIBELLES_DES_MAGIES, type GenreDeMagie, type Paiement } from '../../../dice/systemes/magieDeRuneQuest';
+import {
+    cocher, ecrireLEtat, finDeLaSituation, genreDeLaSource, inspirationImpossible, inspirer, lireLEtat, perteDInspiration, BONUS_D_INSPIRATION,
+} from '../../../dice/systemes/progressionDeRuneQuest';
+import { aptitudesDeLaFiche, libelleDuChamp } from './runequestALaFiche';
 
 /**
  * **Le jet de RuneQuest** — 30/10/2026, à la demande de David (« finir le pilote »).
@@ -24,6 +30,10 @@ import { useSessionOSStore } from '../../useSessionOSStore';
  * Depuis RQ-A3 (03/11/2026, « on va faire RQ-A3 et RQ-A4 ») : une attaque avec une arme
  * de la feuille prépare ses dégâts — arme, bonus, dégâts spéciaux, défense — et le coup
  * porté reçoit ce qui passe, l'armure ignorée sur un critique (`degatsDeRuneQuest.ts`).
+ *
+ * Depuis RQ-A6 (03/11/2026, « on va faire RQ-A5 et RQ-A6 ») : le jet **écrit** sur la fiche
+ * du lanceur ce que la meneuse décide — le sort payé, l'inspiration et ses malus, la coche
+ * d'expérience — quand le panneau lui en donne le moyen (`ecrire`).
  */
 const bouton = 'px-2 py-0.5 rounded-md border border-app-border/40 text-ui-10 font-bold hover:border-accent/50 disabled:opacity-30';
 const etiquette = 'font-black uppercase tracking-widest text-ui-9 text-app-text/60';
@@ -124,7 +134,14 @@ export const SuitesRuneQuest: React.FC<{
     valeurs?: Record<string, unknown>;
     /** Lance un dé, pour les dégâts. */
     de?: (faces: number) => number;
-}> = ({ jet, calcul, regle, d20, augmenter, retenter, consigner, porterLeCoup = false, valeurs = {}, de = d20 }) => {
+    /**
+     * Écrit sur la fiche du lanceur (RQ-A6, 03/11/2026) : le sort payé, l'inspiration, la
+     * coche d'expérience. Absente, ces blocs ne se proposent pas.
+     */
+    ecrire?: (maj: Record<string, unknown>) => void;
+    /** Les sections de la fiche, pour nommer les aptitudes. */
+    sections?: SheetSection[];
+}> = ({ jet, calcul, regle, d20, augmenter, retenter, consigner, porterLeCoup = false, valeurs = {}, de = d20, ecrire, sections = [] }) => {
     const [deAdverse, setDeAdverse] = useState('');
     const [issue, setIssue] = useState<string | null>(null);
     const [localisation, setLocalisation] = useState<string | null>(null);
@@ -178,6 +195,15 @@ export const SuitesRuneQuest: React.FC<{
                 {localisation && <span data-localisation-runequest className="font-bold">{localisation}</span>}
             </div>
             {porterLeCoup && zoneTouchee && <PorterLeCoup key={`${zoneTouchee}-${degats?.cle ?? 0}`} zone={zoneTouchee} regle={regle} degats={degats ?? undefined} />}
+            {ecrire && regle.magie && (
+                <MagieAuJet regle={regle} valeurs={valeurs} champ={calcul.champ} niveau={niveau} ecrire={ecrire} consigner={consigner} />
+            )}
+            {ecrire && regle.progression && calcul.champ && genreDeLaSource(regle.progression, calcul.champ) && (
+                <InspirationAuJet regle={regle} valeurs={valeurs} sections={sections} champ={calcul.champ} niveau={niveau} de={de} ecrire={ecrire} consigner={consigner} />
+            )}
+            {ecrire && regle.progression && calcul.champ && reussi && calcul.mode === 'aptitude' && (
+                <CocherLExperience regle={regle} valeurs={valeurs} sections={sections} champ={calcul.champ} ecrire={ecrire} consigner={consigner} />
+            )}
             <div className="flex flex-wrap items-center gap-2">
                 <button type="button" className={bouton} onClick={() => augmenter(bonus)}
                     title="Ce jet était un test d'augmentation : son niveau s'applique à l'aptitude lancée ensuite (p. 144-145).">
@@ -401,5 +427,221 @@ const PorterLeCoup: React.FC<{ zone: Localisation; regle: RegleDeRuneQuest; dega
             {testLaceration && <span data-laceration-runequest className="font-bold">{testLaceration}</span>}
             {porte && <span className="font-bold">{porte}</span>}
         </div>
+    );
+};
+
+/**
+ * **Payer le sort** — RQ-A6, 03/11/2026. Le sort se saisit au lancement (choix de David) ;
+ * son coût suit le niveau du jet, comme le livre le dit pour chaque magie (p. 254, 314,
+ * sorcellerie) ; le culte du sort paie ses points de Rune, jamais un autre (p. 313).
+ * Un seul paiement par lancer, qu'on peut annuler.
+ */
+const MagieAuJet: React.FC<{
+    regle: RegleDeRuneQuest;
+    valeurs: Record<string, unknown>;
+    champ?: string;
+    niveau: NiveauDeRuneQuest;
+    ecrire: (maj: Record<string, unknown>) => void;
+    consigner: (ligne: string) => void;
+}> = ({ regle, valeurs, champ: champLance, niveau, ecrire, consigner }) => {
+    const magie = regle.magie!;
+    const parDefaut: GenreDeMagie | null = champLance === magie.pou ? 'spirituelle'
+        : champLance && regle.progression?.runes.includes(champLance) ? 'runique' : null;
+    const [ouvert, setOuvert] = useState(parDefaut !== null);
+    const [genre, setGenre] = useState<GenreDeMagie>(parDefaut ?? 'spirituelle');
+    const [sort, setSort] = useState('');
+    const [cout, setCout] = useState('1');
+    const [plus, setPlus] = useState('0');
+    const [culte, setCulte] = useState(0);
+    const [paiement, setPaiement] = useState<Paiement | null>(null);
+    const [refus, setRefus] = useState<string | null>(null);
+    if (!ouvert) {
+        return (
+            <button type="button" className={`${bouton} self-start`} onClick={() => setOuvert(true)}
+                title="Payer un sort lancé par ce jet : POU×5, affinité runique ou compétence de sorcellerie.">
+                Ce jet lance un sort…
+            </button>
+        );
+    }
+    const prix = coutDuSort(genre, niveau, entier(cout), genre === 'sorcellerie' ? 0 : entier(plus));
+    const nomCulte = nomDuCulte(magie, valeurs, culte);
+    const prActuels = Number(valeurs[magie.cultes[culte]?.pr ?? '']) || 0;
+    const pmActuels = Number(valeurs[magie.pm]) || 0;
+    const reste = [
+        prix.pr ? `PR ${nomCulte} ${prActuels - prix.pr}` : '',
+        prix.pm ? `PM ${pmActuels - prix.pm}` : '',
+    ].filter(Boolean).join(', ');
+    const payer = () => {
+        const p = payerLeSort(magie, valeurs, prix, culte, sort);
+        if (p.refus) { setRefus(p.refus); return; }
+        setRefus(null);
+        if (Object.keys(p.maj).length) ecrire(p.maj);
+        consigner([p.ligne, ...p.alertes].join(' '));
+        setPaiement(p);
+    };
+    const annuler = () => {
+        if (!paiement) return;
+        ecrire(paiement.avant);
+        consigner(`Paiement annulé : ${paiement.ligne}`);
+        setPaiement(null);
+    };
+    return (
+        <div data-magie-runequest className="flex flex-col gap-1.5 border-t border-app-border/30 pt-2">
+            <span className={etiquette}>Magie</span>
+            <div className="flex flex-wrap items-center gap-3">
+                <label className="flex items-center gap-1">Type
+                    <select aria-label="Type de magie" className={champ} value={genre} disabled={!!paiement} onChange={e => setGenre(e.target.value as GenreDeMagie)}>
+                        {(Object.keys(LIBELLES_DES_MAGIES) as GenreDeMagie[]).map(g => <option key={g} value={g}>{LIBELLES_DES_MAGIES[g]}</option>)}
+                    </select>
+                </label>
+                <label className="flex items-center gap-1">Sort
+                    <input aria-label="Sort" value={sort} disabled={!!paiement} placeholder="Vent tempétueux" className={`w-40 ${champ}`} onChange={e => setSort(e.target.value)} />
+                </label>
+                <label className="flex items-center gap-1" title={genre === 'sorcellerie' ? 'Le total : Runes, techniques et intensité.' : genre === 'runique' ? 'En points de Rune.' : 'En points de magie.'}>Coût
+                    <input aria-label="Coût du sort" type="number" min={0} value={cout} disabled={!!paiement} className={`w-14 ${champ}`} onChange={e => setCout(e.target.value)} />
+                </label>
+                {genre === 'runique' && (
+                    <label className="flex items-center gap-1">Payé par
+                        <select aria-label="Culte qui paie" className={champ} value={culte} disabled={!!paiement} onChange={e => setCulte(Number(e.target.value))}>
+                            {magie.cultes.map((c, i) => <option key={c.pr} value={i}>Culte {i + 1} — {nomDuCulte(magie, valeurs, i)} (PR {Number(valeurs[c.pr]) || 0}/{Number(valeurs[c.prMax ?? '']) || 0})</option>)}
+                        </select>
+                    </label>
+                )}
+                {genre !== 'sorcellerie' && (
+                    <label className="flex items-center gap-1" title="Des PM ajoutés pour percer un Bouclier ou une Contremagie (p. 254, 314).">PM en plus
+                        <input aria-label="PM en plus" type="number" min={0} value={plus} disabled={!!paiement} className={`w-14 ${champ}`} onChange={e => setPlus(e.target.value)} />
+                    </label>
+                )}
+            </div>
+            <span className="text-app-text/70" data-cout-runequest>{prix.explication}</span>
+            {!paiement && (
+                <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-bold">{prix.pm || prix.pr
+                        ? `Coût : ${[prix.pr ? `${prix.pr} PR (${nomCulte})` : '', prix.pm ? `${prix.pm} PM` : ''].filter(Boolean).join(' et ')} — il restera ${reste}.`
+                        : 'Rien à payer.'}</span>
+                    {(prix.pm > 0 || prix.pr > 0) && <button type="button" className={bouton} onClick={payer}>Payer le sort</button>}
+                </div>
+            )}
+            {refus && <span className="font-bold text-etat-danger">{refus}</span>}
+            {paiement && (
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-app-border/40 px-2 py-1">
+                    <span data-paiement-runequest>Payé : {paiement.ligne}{paiement.alertes.length ? ` ${paiement.alertes.join(' ')}` : ''} · journal</span>
+                    <button type="button" className={bouton} onClick={annuler}>Annuler le paiement</button>
+                </div>
+            )}
+        </div>
+    );
+};
+
+/**
+ * **Ce jet était un test d'inspiration** — RQ-A6, 03/11/2026. Une Rune ou une Passion
+ * inspire une aptitude choisie pour toute la situation (p. 229, 236) ; un échec pose le
+ * malus du livre ; un échec critique fait lancer la perte de 1D10 % et la durée du trouble.
+ * Rien ne s'applique sans un geste de la meneuse.
+ */
+const InspirationAuJet: React.FC<{
+    regle: RegleDeRuneQuest;
+    valeurs: Record<string, unknown>;
+    sections: SheetSection[];
+    champ: string;
+    niveau: NiveauDeRuneQuest;
+    de: (faces: number) => number;
+    ecrire: (maj: Record<string, unknown>) => void;
+    consigner: (ligne: string) => void;
+}> = ({ regle, valeurs, sections, champ: champLance, niveau, de, ecrire, consigner }) => {
+    const progression = regle.progression!;
+    const genre = genreDeLaSource(progression, champLance)!;
+    const source = { champ: champLance, libelle: libelleDuChamp(sections, valeurs, champLance), genre };
+    const competences = aptitudesDeLaFiche(progression, sections, valeurs).filter(a => a.genre === 'competence');
+    const [aptitude, setAptitude] = useState(competences[0]?.champ ?? '');
+    const [fait, setFait] = useState<string | null>(null);
+    const etat = lireLEtat(valeurs);
+    const impossible = inspirationImpossible(etat, champLance, genre);
+    const bonus = BONUS_D_INSPIRATION[niveau];
+    const page = genre === 'rune' ? 'p. 229' : 'p. 236';
+    const libelleAptitude = competences.find(a => a.champ === aptitude)?.libelle ?? aptitude;
+
+    const appliquer = () => {
+        const issue = inspirer(etat, source, niveau, { champ: aptitude, libelle: libelleAptitude });
+        let maj = ecrireLEtat(issue.etat);
+        let ligne = issue.ligne;
+        if (issue.echecCritique) {
+            const perte = perteDInspiration(progression, valeurs, source, de(10), de(10));
+            maj = { ...perte.maj, ...maj };
+            ligne = `${ligne} ${perte.ligne}`;
+        }
+        ecrire(maj);
+        consigner(ligne);
+        setFait(ligne);
+    };
+    const finir = () => {
+        ecrire(ecrireLEtat(finDeLaSituation(lireLEtat(valeurs))));
+        consigner(`Fin de la situation : l’inspiration (${source.libelle}) prend fin.`);
+        setFait(null);
+    };
+
+    return (
+        <div data-inspiration-runequest className="flex flex-col gap-1.5 border-t border-app-border/30 pt-2">
+            <span className={etiquette}>Inspiration ({page})</span>
+            {fait ? (
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-app-border/40 px-2 py-1">
+                    <span data-inspiration-faite>{fait}</span>
+                    {bonus && <button type="button" className={bouton} onClick={finir}>Fin de la situation</button>}
+                </div>
+            ) : impossible ? (
+                <span className="text-app-text/60">{impossible}</span>
+            ) : bonus ? (
+                <div className="flex flex-wrap items-center gap-2">
+                    <label className="flex items-center gap-1">Aptitude inspirée
+                        <select aria-label="Aptitude inspirée" className={champ} value={aptitude} onChange={e => setAptitude(e.target.value)}>
+                            {competences.map(a => <option key={a.champ} value={a.champ}>{a.libelle} ({a.valeur})</option>)}
+                        </select>
+                    </label>
+                    <span className="font-bold">+{bonus} % à {libelleAptitude} jusqu’à la fin de la situation (une seule inspiration par situation).</span>
+                    <button type="button" className={bouton} disabled={!aptitude} onClick={appliquer}>Inspirer</button>
+                </div>
+            ) : (
+                <div className="flex flex-col gap-1 rounded-md border border-etat-danger/40 px-2 py-1">
+                    <span className={etiquette}>L’inspiration échoue</span>
+                    {niveau === 'echec' ? (
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span>{genre === 'passion'
+                                ? 'Découragé : −10 % à tous les tests suivants tant que dure la situation.'
+                                : `−20 % à tous les tests suivants faisant appel à ${source.libelle}, jusqu’à une journée entière de méditation.`}</span>
+                            <button type="button" className={bouton} onClick={appliquer}>Appliquer</button>
+                        </div>
+                    ) : (
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span>Échec critique : {source.libelle} perd 1D10 %{genre === 'rune' ? ' (l’opposée monte d’autant)' : ''}, et {genre === 'rune' ? 'le tourment' : 'le désespoir'}, dont la durée se lit sur 1D10.</span>
+                            <button type="button" className={bouton} onClick={appliquer}>Lancer 1D10</button>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+};
+
+/** **Cocher l'expérience** d'une aptitude réussie (RQ-A6, p. 415) ; ni la Réputation, ni une caractéristique. */
+const CocherLExperience: React.FC<{
+    regle: RegleDeRuneQuest;
+    valeurs: Record<string, unknown>;
+    sections: SheetSection[];
+    champ: string;
+    ecrire: (maj: Record<string, unknown>) => void;
+    consigner: (ligne: string) => void;
+}> = ({ regle, valeurs, sections, champ: champLance, ecrire, consigner }) => {
+    const progression = regle.progression!;
+    const cochable = aptitudesDeLaFiche(progression, sections, valeurs).some(a => a.champ === champLance);
+    if (!cochable) return null;
+    const etat = lireLEtat(valeurs);
+    const libelle = libelleDuChamp(sections, valeurs, champLance);
+    if (etat.coches.includes(champLance)) return <span className="italic text-app-text/60" data-experience-cochee>Expérience cochée — {libelle}.</span>;
+    return (
+        <button type="button" className={`${bouton} self-start`} data-cocher-experience
+            title="Une réussite qui compte vaut un test d'expérience en fin de saison, si la meneuse l'accorde (p. 415)."
+            onClick={() => { ecrire(ecrireLEtat(cocher(etat, champLance))); consigner(`Test d’expérience coché : ${libelle}.`); }}>
+            Cocher l’expérience — {libelle}
+        </button>
     );
 };
