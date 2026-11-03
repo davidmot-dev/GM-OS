@@ -6,6 +6,14 @@ comment on lance les dés, quelles réserves la table partage, comment on encais
 mécanique une fois**, et dit **où la voir**. Une page par jeu dit ensuite ce que *son* pilote en
 fait.
 
+**Anciennes fiches et variantes, 03/11/2026 :** le meneur dispose du
+[diagnostic et de la reprise de fiche PJ](./63-Fiche-de-personnage-HTML.md#reprendre-une-ancienne-fiche) :
+référence installée, correspondances choisies, aperçu, sauvegarde JSON et restauration protégée.
+L'import d'une campagne signale les dépendances locales différentes qu'il conserve. Les six essais
+applicatifs des droits, reprises et variantes COC 3d6/Shadowrun alternatif passent le 03/11 ;
+validation globale de David reçue le même jour.
+
+
 **Dune, 25/10/2026 :** `dune` sur le descripteur de jet ouvre les maximes, la Détermination,
 l'assistance, les oppositions et le bilan d'Impulsion du test. `repriseDune` sur l'initiative
 permet de rejouer le même personnage, avec +1 difficulté, et fait payer les PNJ ennemis en

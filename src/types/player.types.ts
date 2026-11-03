@@ -107,6 +107,14 @@ export interface PlayerCharacter {
     systemId?: string;
     /** Le gabarit de fiche. Il découle du pilote (`driver.templateId`). */
     templateId: string;
+    /** NP-C2 (02/11/2026) : référence connue à la création ou après une reprise validée.
+     * Absente sur les anciennes fiches : leur version n'est jamais devinée. */
+    referenceDeFiche?: {
+        piloteId: string;
+        version: string;
+        gabaritId: string;
+        structure: string;
+    };
     /**
      * L'identifiant de sa fiche HTML dans la bibliothèque du moteur.
      *

@@ -1,0 +1,9 @@
+{
+  "jeu": "runequest",
+  "sauvegardeTelechargee": true,
+  "liaisonExplicite": true,
+  "anciennesClesConservees": true,
+  "notesEtSanteConservees": true,
+  "restaurationDepuisExport": true,
+  "persistanceApresRechargement": true
+}

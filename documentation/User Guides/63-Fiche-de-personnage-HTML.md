@@ -9,6 +9,43 @@ tablette du joueur.
 
 ---
 
+## Reprendre une ancienne fiche
+
+Depuis le 03/11/2026, le meneur peut ouvrir **Formulaire → Diagnostic et reprise de fiche**
+sur un PJ. Le panneau affiche le pilote installé, sa version, le gabarit attendu et la dernière
+référence enregistrée. Une référence inconnue signifie que GM-OS ne connaît pas la version de
+création ; ce n'est pas une preuve que la fiche est périmée. Les nouveaux PJ retiennent leur
+référence à la création. Le Voyageur conserve son panneau de reprise spécifique.
+
+1. Sauvegarder ou abandonner les saisies en cours du formulaire.
+2. Lire les clés hors gabarit, les valeurs incompatibles et les champs absents. Les anciennes
+   clés sont conservées ; aucun rapprochement n'est déduit du nom d'un champ.
+3. Choisir explicitement les valeurs anciennes à copier vers les champs actuels et relire
+   **l'aperçu avant/après**. Une cible déjà remplie peut être remplacée par ce choix.
+4. **Télécharger la sauvegarde avant reprise**, puis **Appliquer cette reprise**. Le JSON
+   conserve les rubriques avant et après la reprise et désigne ce PJ précis.
+5. Pour revenir en arrière, choisir ce JSON sous **Sauvegarde de reprise à restaurer**, vérifier
+   l'aperçu puis **Restaurer les anciennes valeurs**. Si les rubriques reprises ont changé entre
+   temps, la restauration refuse de les écraser. La sauvegarde d'un autre PJ est refusée.
+
+La reprise conserve les notes, l'inventaire, la santé et les anciennes clés. Les champs absents
+reçoivent les valeurs initiales du gabarit, montrées avant l'application. Si le gabarit change,
+le lien vers l'ancienne fiche HTML est détaché ; cette fiche reste dans la bibliothèque. Relier
+ensuite la fiche adaptée au jeu. Le JSON ne remplace pas une sauvegarde complète : il ne
+restaure ni un pilote remplacé, ni toute une campagne, ni une bibliothèque HTML.
+
+Pour changer le pilote installé, importer son **.gmos-driver** dans Nexus avec **Remplacer**.
+Importer une campagne ne remplace pas un pilote déjà présent du même identifiant ; le bilan
+signale désormais une différence de version, de règles ou de gabarit, même si le numéro de
+version est identique entre deux variantes. Voir [Nexus](./90-Nexus-OS-emporter-une-campagne.md).
+
+![Le diagnostic et le retour arrière après une reprise de PJ RuneQuest fictif](captures/fiche-diagnostic-reprise.jpg)
+
+*NP-C2 vérifié le 03/11/2026 : tests structurels et quatre reprises réelles avec restauration
+passent ; huit captures relues sur l’ensemble NP-C2/NP-C3. Validation globale de David :
+« ok tout est testé, commit et pousse ». Aucune campagne personnelle ouverte.*
+
+
 ## 1. Ce que c'est vraiment
 
 Ce n'est pas une image ni un PDF : c'est un **moteur de fiches** — une page HTML qui sait afficher

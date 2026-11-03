@@ -23,6 +23,7 @@
 
 import { clonerLaCampagne, type Fabrique } from './clonerLaCampagne';
 import { rejouerLaCampagne } from './rejouerLaCampagne';
+import { signalerDependancesConservees } from './versionsDesDependances';
 import { recenserLArchive, enUneLigne, direLesIntrouvables } from './recensementDeLArchive';
 import {
     rassemblerLesMedias, recenserLesMedias, planifierLImportDesMedias, pointerVersLesMediasEntres, completerImageOs,
@@ -2043,6 +2044,8 @@ export class NexusService {
 
                 try {
                     this.emitProgress('injecting', 85, i18next.t('modules:system.nexus.messages.injecting_campaign'));
+                    bilan.push(...signalerDependancesConservees(finalState.requiredDriverData, store.customGameDrivers,
+                        finalState.requiredTemplateData, store.customSheetTemplates));
                     this.injectState(finalState);
 
                     /*

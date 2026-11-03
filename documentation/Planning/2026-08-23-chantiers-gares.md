@@ -13427,10 +13427,32 @@ David, après la relecture de Colonial Marines (§ 185) : *« Est-ce qu'on ne de
 - **Essai de David, 02/11 au soir** : *« ok ca marche »* — les cinq étapes sont essayées.
 - **Reste** : les autres jeux ; la tablette (Hub).
 
+### 204 · NP-C2 / NP-C3 — anciennes fiches, droits et variantes — 03/11/2026
+
+David, le 02/11 : **« on va continuer avec NP-C2 et NP-c3 des amélioration »** ;
+**« GM-OS est fermé, tu peux modifier »**.
+
+- **NP-C2 réalisé :** panneau de diagnostic et reprise dans le formulaire du PJ,
+  version installée et référence connue, correspondances choisies, aperçu avant/après,
+  sauvegarde JSON avant application et restauration protégée. Anciennes clés, notes,
+  inventaire et santé conservés ; aucune version historique devinée. Voyageur inchangé.
+- **Nexus :** avertir lorsqu'un pilote de même ID est conservé mais diffère de l'archive,
+  y compris deux variantes de même version. Aucun remplacement silencieux.
+- **NP-C3 éprouvé :** six parcours Electron (quatre droits/anciennes fiches, COC 3d6 et
+  Shadowrun alternatif avec retour standard), refus d'autrui et témoin positif,
+  protection des notes MJ, persistance et captures. Six parcours passent, huit captures relues ; aucun bug GM-06 trouvé.
+- **Vérifié :** 252 tests ciblés, 22 fichiers ; types et lint valides, construction finale
+  réussie ; six tests Playwright passent (quatre droits/reprises et deux variantes).
+- **Reste :** aucun développement ou essai NP-C2/NP-C3 en attente ; validation globale de David le 03/11 : « ok tout est testé, commit et pousse ». Aucune nouvelle preuve instrumentée de tablette physique. Aucun profil personnel lu ni installation.
+- Ancres : `repriseDeFiche.ts`, `PanneauRepriseDeFiche.tsx`, `versionsDesDependances.ts`,
+  `e2e/reprisesEtVariantesDesPilotes.spec.ts` ; [suivi et checklist](2026-11-03-np-c2-c3-reprises-droits-variantes.md),
+  [reprise Codex](2026-11-03-etat-et-reprise-codex-np-c2-c3.md). Manuel et synthèse actualisés.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 140 | **NP-C2 / NP-C3 — fiches, droits, variantes** | 🟢 § 204 ; livré, 252 tests ciblés et six parcours Electron verts ; huit captures relues, validé par David — 03/11 | Commit et push demandés ; puis choisir un autre lot | Rien pour NP-C2/NP-C3 ; aucune nouvelle preuve instrumentée de tablette physique |
 | 139 | **Catalogue d'équipement du pilote** | 🟢 § 203 : pour Alien, étapes A à E livrées le 02/11 et essayées par David (« ok ca marche ») ; A et B poussées (`a0299fc1`) ; C (66 objets de Colonial Marines, 89 du livre de base transcrit), D et E non commitées | Commit et push sur demande ; ensuite, un autre jeu | Rien |
 | 138 | **RuneQuest — recette 2.1.0** | § 202 ; RQ-A1 livré et validé par David, 96 tests, E2E et trois Hub passent, 78 cas — 01/11 | RQ-A1 coché ; commit et push demandés | Aucun pour RQ-A1 ; historique 2.0.0 conservé |
 | 137 | **RuneQuest — PV de cible** | § 201 ; RQ-A2 livré et validé par David — 01/11 ; 89 tests, lint, build et E2E passent | RQ-A2 coché ; suite RQ-A1 au § 202 | Aucun pour ce correctif |

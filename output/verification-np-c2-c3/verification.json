@@ -1,0 +1,126 @@
+{
+  "date": "2026-11-03",
+  "base": "0792cb85",
+  "parcoursReussis": 6,
+  "droitsEtReprises": 4,
+  "variantes": 2,
+  "capturesRelues": 8,
+  "testsCibles": {
+    "fichiers": 22,
+    "tests": 252
+  },
+  "typage": true,
+  "lint": true,
+  "construction": true,
+  "validationDavid": "ok tout est testé, commit et pousse",
+  "isolation": "Profils, téléchargements JSON, corpus, sauvegardes et ports de test jetables ; aucune lecture des données personnelles GM-OS.",
+  "tablettePhysique": "Aucune nouvelle preuve instrumentée sur matériel physique ; validation globale de David conservée séparément.",
+  "source": {
+    "fichier": "e2e/reprisesEtVariantesDesPilotes.spec.ts",
+    "sha256": "d35711c1fc39fc6f8ac601eb13b4a5ff33d9603986a72290978550b024caf76a"
+  },
+  "executions": [
+    {
+      "selection": "GM-06",
+      "reussis": 4,
+      "duree": "1.4m"
+    },
+    {
+      "selection": "importe la variante",
+      "reussis": 2,
+      "duree": "35.3s"
+    }
+  ],
+  "fichiers": [
+    {
+      "fichier": "coc-droits.json",
+      "octets": 218,
+      "sha256": "f77ee3ab1cef22273798f47c5549b696a70ff2cbf0e5c556a66fe99f5104ed01"
+    },
+    {
+      "fichier": "coc-reprise.jpg",
+      "octets": 75951,
+      "sha256": "6879c05c5af13149cb7152f8accbaf5d75c42701994f1d442c05ee9c5357fb38"
+    },
+    {
+      "fichier": "coc-reprise.json",
+      "octets": 225,
+      "sha256": "ce263a94c56afb73df5a26d8f88d42f305844dc4556acfa06faae51be68f41ee"
+    },
+    {
+      "fichier": "coc-standard.jpg",
+      "octets": 42720,
+      "sha256": "f08dc99d6087185da05e0bcb487dd6356b07904da4c20b0005810f40452cd529"
+    },
+    {
+      "fichier": "coc-variante.jpg",
+      "octets": 43023,
+      "sha256": "cb384627794c3883090925fd429f95ffd3abaef49d53d94d286704a4095c7ac2"
+    },
+    {
+      "fichier": "coc-variantes.json",
+      "octets": 189,
+      "sha256": "705594cae37a63935a555176bda6e2dd8bc761ec52fb3e07bbd7dca15e60cbee"
+    },
+    {
+      "fichier": "degenesis-droits.json",
+      "octets": 224,
+      "sha256": "4645a22e38edaa4c37e87a417107b50501aef8f898679b859435fb01ffc3073b"
+    },
+    {
+      "fichier": "degenesis-reprise.jpg",
+      "octets": 77479,
+      "sha256": "91f3093c6827eea1a50b0a4d35294f8c75afa8b70083398d20c1601d10eba1d7"
+    },
+    {
+      "fichier": "degenesis-reprise.json",
+      "octets": 231,
+      "sha256": "e0de2743a2b057251e4ac1013103e2948f99c4e68911f57fa42a96b2014acded"
+    },
+    {
+      "fichier": "runequest-droits.json",
+      "octets": 224,
+      "sha256": "e0431c4b0593de3706f522f60f7ff65cda8c27370b8356f6fef7b2d1ee0b7df3"
+    },
+    {
+      "fichier": "runequest-reprise.jpg",
+      "octets": 76388,
+      "sha256": "a5b9795c248b1e24d7ef2d49fe4b4533d34000154c8acc731431231e4782f8cb"
+    },
+    {
+      "fichier": "runequest-reprise.json",
+      "octets": 231,
+      "sha256": "7839050c52c611d8d3785d54394241826dc6847683469c801cbf169c1115e080"
+    },
+    {
+      "fichier": "shadowrun-anarchy-droits.json",
+      "octets": 232,
+      "sha256": "d0032850dabff4f97f1865bb5d7318662e2c385c2b2df1f8feb0ba29ea7751c2"
+    },
+    {
+      "fichier": "shadowrun-anarchy-reprise.jpg",
+      "octets": 78339,
+      "sha256": "6a5c6139d0e56e43b1426491321d0854f8bc8f9bfc9a40bec8df63f9f4a1dfc5"
+    },
+    {
+      "fichier": "shadowrun-anarchy-reprise.json",
+      "octets": 239,
+      "sha256": "5374ee26870c39abd4d24e2bcf667452ee3ac5c9fbc12365274206dd8538252b"
+    },
+    {
+      "fichier": "shadowrun-anarchy-standard.jpg",
+      "octets": 56046,
+      "sha256": "bfb4ba3669d3c75e09d3683f76a591b802565ce63ada5aa1c926a73db304dca6"
+    },
+    {
+      "fichier": "shadowrun-anarchy-variante.jpg",
+      "octets": 43150,
+      "sha256": "fffd12730760e03984985b4dd05ee314a0c27cd8b3d3f9ea2b1eecfde765b02a"
+    },
+    {
+      "fichier": "shadowrun-anarchy-variantes.json",
+      "octets": 202,
+      "sha256": "54f9696a446f496c29ebdced3ae1dba0023fe3b9daa28a781d4f3ccd40ec552f"
+    }
+  ]
+}

@@ -34,6 +34,16 @@ livre au lieu des sept catégories, les compétences d'armes, les Runes une à u
 Passions nommées, deux cultes, les sept localisations. Un personnage créé avec la fiche forgée garde ses anciennes valeurs, sans qu'elles
 paraissent : il faut le ressaisir.
 
+**Anciennes fiches — NP-C2, 03/11/2026.** Le meneur peut maintenant préparer une
+[reprise avec aperçu et sauvegarde](./63-Fiche-de-personnage-HTML.md#reprendre-une-ancienne-fiche)
+depuis le formulaire du PJ. Les anciennes clés restent présentes ; les correspondances se
+choisissent explicitement, sans déduire une conversion de leurs noms. Les notes et la santé
+ne sont pas remises à zéro. L'import d'une campagne conserve un pilote de même ID et signale
+les différences ; pour changer ce pilote, importer son .gmos-driver avec **Remplacer**.
+252 tests ciblés et six parcours Electron passent le 03/11 ; huit captures relues.
+Validation globale de David : « ok tout est testé, commit et pousse ».
+
+
 ---
 
 ## Le test d'aptitude

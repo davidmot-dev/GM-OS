@@ -38,6 +38,7 @@ import type { Rapprochement } from '../../fiches/rapprochementDeLaFiche';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
 import type { PlayerCharacter } from '../store/types';
 import { PanneauRepriseVoyageur } from './PanneauRepriseVoyageur';
+import { PanneauRepriseDeFiche } from './PanneauRepriseDeFiche';
 import { estUneFicheDeVoyageur, lireFicheDeVoyageur, calculDeVoyageurHorsTable, CALCULS_DU_VOYAGEUR, CLE_REPRISE } from '../logic/ficheDeVoyageur';
 import { avecOrigine } from '../logic/origineDesModifications';
 import { champsDEquipement, objetsPortes, sectionDuCatalogue as sectionAvecLeCatalogue } from '../../equipement/equiperLaFiche';
@@ -680,6 +681,14 @@ const CharacterSheetEditor: React.FC = () => {
 
                     {/* Right Col: Sheet Sections */}
                     <div className="col-span-9 space-y-6">
+                        {!estUneFicheDeVoyageur(template) && editor.selectedPlayer && piloteDeLaFiche && (
+                            <PanneauRepriseDeFiche key={character.id} personnage={character}
+                                joueurId={editor.selectedPlayer.id} pilote={piloteDeLaFiche}
+                                gabarit={useSessionOSStore.getState().customSheetTemplates.find(t => t.id === piloteDeLaFiche.templateId) ?? template}
+                                brouillon={editor.aDesChangements}
+                                appliquer={changements => avecOrigine('meneur', () =>
+                                    updateCharacter(editor.selectedPlayer!.id, character.id, changements))} />
+                        )}
                         {estUneFicheDeVoyageur(template) && editor.character && editor.selectedPlayer && (
                             <PanneauRepriseVoyageur key={editor.character.id} fiche={template}
                                 donnees={editor.character.sheetData ?? {}}

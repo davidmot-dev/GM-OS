@@ -7,6 +7,7 @@ import { ficheNeuve } from './ficheNeuve';
 import { horlogeDeDefaite } from '../../combat/logic/TacheDeDefaite';
 import { champDeSantePrincipale, santeDeDepart, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import { HealthInterpreter } from './HealthInterpreter';
+import { referenceDeFiche } from './repriseDeFiche';
 
 /**
  * **Ce qu'un personnage reçoit en naissant dans un jeu** : sa fiche remplie de
@@ -21,8 +22,8 @@ import { HealthInterpreter } from './HealthInterpreter';
  */
 export function naissanceDansLeJeu(
     pilote: GameDriver | undefined,
-    gabarit: Pick<SheetTemplate, 'sections'> | undefined,
-): Pick<PlayerCharacter, 'sheetData' | 'healthSystem' | 'hp' | 'maxHp'> {
+    gabarit: (Pick<SheetTemplate, 'sections'> & Partial<Pick<SheetTemplate, 'id'>>) | undefined,
+): Pick<PlayerCharacter, 'sheetData' | 'healthSystem' | 'hp' | 'maxHp' | 'referenceDeFiche'> {
     const valeurs = ficheNeuve(gabarit);
     const lue = santeDeDepart(
         pilote?.combat?.santeDeDepart,
@@ -47,6 +48,7 @@ export function naissanceDansLeJeu(
         : HealthInterpreter.createDefault(modele, { cases: pilote?.combat?.casesDeSante });
 
     return {
+        ...(pilote && gabarit?.id ? { referenceDeFiche: referenceDeFiche(pilote, { id: gabarit.id, sections: gabarit.sections }) } : {}),
         sheetData: valeurs,
         healthSystem: modele === 'hp'
             ? { ...sante, data: { ...sante.data, current: depart, max: depart } }

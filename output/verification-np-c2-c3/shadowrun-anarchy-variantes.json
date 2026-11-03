@@ -1,0 +1,9 @@
+{
+  "jeu": "shadowrun-anarchy",
+  "importVariante": true,
+  "retourStandard": true,
+  "personnagesConserves": true,
+  "jetsEffectues": 2,
+  "persistance": true,
+  "fixtureAlternativeTemporaire": true
+}

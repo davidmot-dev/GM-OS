@@ -28,6 +28,16 @@ caractéristiques, l'identité, les rubriques de la personnalité et l'échelle 
 identifiant ; un personnage créé avec la fiche forgée garde ses anciennes valeurs, mais ses voies,
 armes et traits sont à ressaisir. Sa santé passe aux cases au premier coup reçu.
 
+**Anciennes fiches — NP-C2, 03/11/2026.** Le meneur peut maintenant préparer une
+[reprise avec aperçu et sauvegarde](./63-Fiche-de-personnage-HTML.md#reprendre-une-ancienne-fiche)
+depuis le formulaire du PJ. Les anciennes clés restent présentes ; les correspondances se
+choisissent explicitement, sans déduire une conversion de leurs noms. Les notes et la santé
+ne sont pas remises à zéro. L'import d'une campagne conserve un pilote de même ID et signale
+les différences ; pour changer ce pilote, importer son .gmos-driver avec **Remplacer**.
+252 tests ciblés et six parcours Electron passent le 03/11 ; huit captures relues.
+Validation globale de David : « ok tout est testé, commit et pousse ».
+
+
 ---
 
 ## Le test
@@ -122,6 +132,10 @@ entourage, histoire, p. 15-18), le **modèle** de l'échelle d'évolution et les
 d'expérience** (un par séance, p. 28).
 
 ## L'option du 3d6
+
+![Un jet 3d6 après import et remplacement explicite du pilote](captures/jeu-coc-3d6.jpg)
+
+Import 3d6, lancer et retour au d20 éprouvés le 03/11 ; les personnages et leurs valeurs restent conservés.
 
 Le livre propose de remplacer le d20 par **3d6** pour un ton plus dramatique (p. 60-61). Le
 pilote la règle dans `jet.coc.des` : la variante est prête,

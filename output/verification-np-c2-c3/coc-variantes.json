@@ -1,0 +1,9 @@
+{
+  "jeu": "coc",
+  "importVariante": true,
+  "retourStandard": true,
+  "personnagesConserves": true,
+  "jetsEffectues": 2,
+  "persistance": true,
+  "fixtureAlternativeTemporaire": false
+}

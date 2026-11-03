@@ -12,6 +12,19 @@ vous ayez à y penser.
 
 ---
 
+## Pilote conservé et anciennes fiches
+
+L'import d'une campagne ajoute ses pilotes manquants, mais **conserve un pilote déjà installé
+de même identifiant**. Depuis le 03/11/2026, son bilan avertit si la version, les règles de jet
+ou de combat, ou le gabarit embarqué diffèrent de ceux du poste. Deux variantes peuvent avoir
+le même numéro de version : ce numéro seul ne suffit pas à conclure qu'elles sont identiques.
+
+Pour changer le pilote, importer son **.gmos-driver** séparément avec **Remplacer**. Vérifier
+ensuite les PJ via **Formulaire → Diagnostic et reprise de fiche**. Cette reprise volontaire
+montre les valeurs avant/après et demande de télécharger son JSON de retour arrière ; elle
+ne migre aucune campagne à son ouverture. Voir [la méthode](./63-Fiche-de-personnage-HTML.md#reprendre-une-ancienne-fiche).
+
+
 ## 📤 Exporter une campagne
 
 **Bibliothèque → Gérer la campagne → panneau « Nexus-OS — Portabilité & Archivage de Campagne » →

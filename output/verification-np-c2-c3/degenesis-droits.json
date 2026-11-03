@@ -1,0 +1,13 @@
+{
+  "jeu": "degenesis",
+  "refus": [
+    "sheetData",
+    "narratif",
+    "PV",
+    "alias"
+  ],
+  "ecriturePropre": true,
+  "notesMJProtegees": true,
+  "persistanceApresRechargement": true,
+  "donneesPersonnelles": false
+}

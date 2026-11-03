@@ -26,6 +26,16 @@ et trois compteurs de blessures remplacent les zones de texte du pilote forgé. 
 gardent leur identifiant ; un personnage créé avec la fiche forgée garde ces valeurs, mais le
 libellé de ses compétences, ses atouts et son équipement sont à ressaisir.
 
+**Anciennes fiches — NP-C2, 03/11/2026.** Le meneur peut maintenant préparer une
+[reprise avec aperçu et sauvegarde](./63-Fiche-de-personnage-HTML.md#reprendre-une-ancienne-fiche)
+depuis le formulaire du PJ. Les anciennes clés restent présentes ; les correspondances se
+choisissent explicitement, sans déduire une conversion de leurs noms. Les notes et la santé
+ne sont pas remises à zéro. L'import d'une campagne conserve un pilote de même ID et signale
+les différences ; pour changer ce pilote, importer son .gmos-driver avec **Remplacer**.
+252 tests ciblés et six parcours Electron passent le 03/11 ; huit captures relues.
+Validation globale de David : « ok tout est testé, commit et pousse ».
+
+
 ---
 
 ## Le test
@@ -120,6 +130,15 @@ valeur ont chacune leur champ dans GM-OS (`docs/systems/shadowrun-anarchy/fiche/
 Le portrait reste sur la fiche. Une saisie GM-OS ne part vers la fiche HTML qu'après
 **Sauvegarder**. Le métatype, le train de vie, les capacités du moniteur et sa position n'existent
 que dans GM-OS.
+
+## L'option de risque alternative
+
+![Les dés spéciaux du risque alternatif après import d’une variante de pilote](captures/jeu-shadowrun-alternatif.jpg)
+
+Une variante de pilote activant la règle de risque alternative affiche les dés spéciaux
+à la place des dés de risque (p. 72). L'import avec **Remplacer**, le lancer et le retour
+au standard ont été éprouvés le 03/11 sur une copie jetable du pilote ; aucune variante
+officielle ajoutée au dépôt. Les personnages et leurs valeurs restent conservés.
 
 ## Ce qui n'est pas automatisé
 
