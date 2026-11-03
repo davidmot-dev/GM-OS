@@ -21,7 +21,7 @@ Depuis la 2.3.0, les **attributs** se calculent depuis les caractéristiques, un
 selon le niveau du jet, l'**inspiration** tient toute la situation, et l'**expérience** se coche
 puis se teste en fin de saison.
 
-**Pilote 2.3.0 — 03/11/2026, à réimporter avec « Remplacer ».** Même identifiant, même fiche de
+**Pilote 2.3.0 — 03/11/2026, réimporté avec « Remplacer » et essayé par David le jour même.** Même identifiant, même fiche de
 320 champs : rien n'est à ressaisir. Le pilote nomme ce que lisent les attributs calculés
 (`jet.runequest.derives`), la magie des deux cultes (`jet.runequest.magie`) et la progression
 — Runes, paires opposées, Passions, modificateur de chaque section (`jet.runequest.progression`).

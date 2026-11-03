@@ -13515,14 +13515,17 @@ par David (« oui je valide les écrans Stitch »), corrigés d'après le livre.
   composants, 10 du pilote, 153 des contrôles ; `tsc -b` et lint.
 - ⚠️ Le commit de RQ-A3/A4 (`edc53c3e`, poussé) contient `Export Dirvers/corriges/RQ_driver_gmos_finir.gmos-driver`,
   que le skill `finir-un-pilote` interdit de commiter : à retirer du suivi si David le demande.
-- **Reste :** réimport du 2.3.0 avec **Remplacer** et essai de David ; le lot de recette de
-  `output/` reste en 2.1.0.
+- **Commit** `9c44c044`, poussé sur `production` le 03/11 (« commit et pousse »).
+- **Validation de David le 03/11 :** pilote 2.3.0 réimporté, puis « ok tout est testé ». RQ-A5 et
+  RQ-A6 cochés/verts dans la synthèse des pilotes ; RuneQuest à 🟢 14 · 🟠 0 · 🔴 0.
+- **Reste :** le lot de recette de `output/` reste en 2.1.0 ; les effets temporisés des blessures
+  (hémorragie, perte de PV au round) restent annoncés, non appliqués.
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 142 | **RuneQuest — RQ-A5 et RQ-A6** | 🟠 § 206 ; attributs calculés, sort payé, inspiration et expérience livrés, pilote 2.3.0 — 03/11 | Réimporter le pilote 2.3.0 avec « Remplacer », puis appliquer les attributs, payer un sort, inspirer, cocher et tester une fin de saison | Essai de David |
+| 142 | **RuneQuest — RQ-A5 et RQ-A6** | 🟢 § 206 ; attributs calculés, sort payé, inspiration et expérience livrés, pilote 2.3.0, validés par David — 03/11 | Rien pour RQ-A1 à RQ-A6 ; ensuite un autre lot (Degenesis, COC, Shadowrun) | Rien |
 | 141 | **RuneQuest — RQ-A3 et RQ-A4** | 🟢 § 205 ; dégâts de l'attaque et rangs d'action livrés, pilote 2.2.0, validés par David — 03/11 | Commit et push demandés ; ensuite RQ-A5 ou RQ-A6 | Rien |
 | 140 | **NP-C2 / NP-C3 — fiches, droits, variantes** | 🟢 § 204 ; livré, 252 tests ciblés et six parcours Electron verts ; huit captures relues, validé par David — 03/11 | Commit et push demandés ; puis choisir un autre lot | Rien pour NP-C2/NP-C3 ; aucune nouvelle preuve instrumentée de tablette physique |
 | 139 | **Catalogue d'équipement du pilote** | 🟢 § 203 : pour Alien, étapes A à E livrées le 02/11 et essayées par David (« ok ca marche ») ; A et B poussées (`a0299fc1`) ; C (66 objets de Colonial Marines, 89 du livre de base transcrit), D et E non commitées | Commit et push sur demande ; ensuite, un autre jeu | Rien |
