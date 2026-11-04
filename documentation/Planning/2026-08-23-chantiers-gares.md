@@ -13621,6 +13621,29 @@ Potentiels : un choix explicite au jet, avec leurs dés saisis, sans interpréte
   cochés/verts dans la synthèse des pilotes ; Degenesis à 🟢 13 · 🟠 0 · 🔴 0.
 - **Reste :** rien pour DEG-A1 à DEG-A6.
 
+### 210 · Le bestiaire du pilote — plan, garé le 04/11/2026
+
+David : *« maintenant on est capable de gérer les suppléments et les équipements d'un pilote. Je
+pense qu'il faudrait aussi être capable d'intégrer automatiquement les bestiaires à partir des
+bouquins de règles / suppléments »*, puis *« écris le plan »*. **Plan seul, aucun code** :
+[`2026-11-04-bestiaire-du-pilote.md`](2026-11-04-bestiaire-du-pilote.md).
+
+- **Constat** : `useBestiaireStore` ne range que les gabarits fabriqués dans l'atelier des
+  adversaires, chez le meneur, hors du pilote ; rien n'y entre depuis un livre. Les créatures
+  existent pourtant, relues, dans les corpus de suppléments (Colonial Marines : Biodrone,
+  Goreburster, Anathèmes), mais **en phrases**, pas en tableaux.
+- **Proposition**, sur le modèle du catalogue (§ 203) : `bestiaire?` dans `GameDriver`, colonnes du
+  jeu reliées aux champs de la fiche ; étapes A modèle et contrôle, B section de l'éditeur, C tableau
+  de profil imposé aux fiches relues puis lecture déterministe, D « Prendre dans le bestiaire »
+  (Combat-OS, rencontres, atelier), E le propre de chaque jeu (Alien : nourrir `XenomorpheAlien`).
+- **À trancher avec David** : où vivent les créatures (pilote recommandé) ; l'extraction (tableau
+  relu recommandé, ou IA validée) ; le premier jeu (Alien et Colonial Marines recommandés).
+- **Coexistence des deux bestiaires** (question de David) : réponse consignée dans le plan, à
+  confirmer — deux sources distinctes réunies dans les listes, « Décliner » une créature du livre en
+  variante du meneur, rien ne passe en silence de l'une à l'autre.
+- **Garé le 04/11** : *« commit le plan et consigne le pour plus tard »*. Rien n'est commencé.
+- **Reste** : à la reprise, les trois décisions de David et la coexistence, puis l'étape A.
+
 ### 211 · Shadowrun Anarchy — SR-A1, SR-A2 et SR-A3 — 04/11/2026
 
 David : « on va commencer SR-A1, SR-A2 et SR-A3 ». Il confirme « GM-OS est fermé », autorise l’ajout au registre en conservant les changements existants et les essais/services locaux en profil jetable.
@@ -13636,6 +13659,7 @@ David : « on va commencer SR-A1, SR-A2 et SR-A3 ». Il confirme « GM-OS est fe
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
 | 147 | **Shadowrun — SR-A1/A2/A3** | 🟢 § 211 ; pilote 2.1.0 livré et validé par David — 04/11 | Rien pour ce lot ; choisir SR-A4/A5/A6 séparément | Rien pour SR-A1/A2/A3 |
+| 146 | **Le bestiaire du pilote** | 🅿️ garé § 210 ; plan écrit, rien commencé — 04/11 | À la reprise : trancher les trois décisions du plan et confirmer la coexistence, puis l'étape A (modèle et contrôle) | Reprise par David |
 | 145 | **Degenesis — DEG-A5 et DEG-A6** | 🟢 § 209 ; carte « Sporulation et Brûlure » (Germe, exposition, EX, Brûlure, stimulation aux jets, Argus, Potentiel), adversaires sans fiche à deux pistes, pilote 2.3.0, validés par David — 04/11 | Rien : DEG-A1 à DEG-A6 tous faits ; ensuite un autre lot (COC, Shadowrun) | Rien |
 | 144 | **Degenesis — DEG-A3 et DEG-A4** | 🟢 § 208 ; carte « Maxima » (branches, Égo maximal), aide, combinaison, confrontation et action complexe livrées, pilote 2.2.0, validées par David — 04/11 | Rien pour DEG-A1 à DEG-A4 ; ensuite DEG-A5 et DEG-A6 | Rien |
 | 143 | **Degenesis — DEG-A1 et DEG-A2** | 🟢 § 207 ; round (Égo payé une fois, actions), défense passive ou active, dégâts nets livrés, pilote 2.1.0, validés par David — 04/11 | Rien pour DEG-A1 et DEG-A2 ; ensuite DEG-A3 et DEG-A4 | Rien |
