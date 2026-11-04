@@ -13616,14 +13616,16 @@ Potentiels : un choix explicite au jet, avec leurs dés saisis, sans interpréte
   autonome, et `applyDamage`), 2 du round, 3 de la carte, 2 du panneau de jet, 1 des contrôles,
   1 du pilote ; suite complète (822 fichiers) ; `tsc -b` et lint ; construction ; e2e des captures
   Degenesis : `jeu-degenesis-sporulation` et `jeu-degenesis-adversaire`, relues.
-- **Reste :** réimport du 2.3.0 avec **Remplacer** et essai de David. DEG-A1 à DEG-A6 sont alors
-  tous livrés.
+- **Commit** `69c8fe90`, poussé sur `production` le 04/11 (« Commit et pousse tout »).
+- **Validation de David le 04/11 :** pilote 2.3.0 réimporté, puis « ok c'est bon ». DEG-A5 et DEG-A6
+  cochés/verts dans la synthèse des pilotes ; Degenesis à 🟢 13 · 🟠 0 · 🔴 0.
+- **Reste :** rien pour DEG-A1 à DEG-A6.
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 145 | **Degenesis — DEG-A5 et DEG-A6** | 🟠 § 209 ; carte « Sporulation et Brûlure » (Germe, exposition, EX, Brûlure, stimulation aux jets, Argus, Potentiel), adversaires sans fiche à deux pistes, pilote 2.3.0 — 04/11 | Réimporter le pilote 2.3.0 avec « Remplacer », puis inhaler une Brûlure, lancer le test du Germe, préparer un adversaire au round et le frapper | Essai de David |
+| 145 | **Degenesis — DEG-A5 et DEG-A6** | 🟢 § 209 ; carte « Sporulation et Brûlure » (Germe, exposition, EX, Brûlure, stimulation aux jets, Argus, Potentiel), adversaires sans fiche à deux pistes, pilote 2.3.0, validés par David — 04/11 | Rien : DEG-A1 à DEG-A6 tous faits ; ensuite un autre lot (COC, Shadowrun) | Rien |
 | 144 | **Degenesis — DEG-A3 et DEG-A4** | 🟢 § 208 ; carte « Maxima » (branches, Égo maximal), aide, combinaison, confrontation et action complexe livrées, pilote 2.2.0, validées par David — 04/11 | Rien pour DEG-A1 à DEG-A4 ; ensuite DEG-A5 et DEG-A6 | Rien |
 | 143 | **Degenesis — DEG-A1 et DEG-A2** | 🟢 § 207 ; round (Égo payé une fois, actions), défense passive ou active, dégâts nets livrés, pilote 2.1.0, validés par David — 04/11 | Rien pour DEG-A1 et DEG-A2 ; ensuite DEG-A3 et DEG-A4 | Rien |
 | 142 | **RuneQuest — RQ-A5 et RQ-A6** | 🟢 § 206 ; attributs calculés, sort payé, inspiration et expérience livrés, pilote 2.3.0, validés par David — 03/11 | Rien pour RQ-A1 à RQ-A6 ; ensuite un autre lot (Degenesis, COC, Shadowrun) | Rien |
