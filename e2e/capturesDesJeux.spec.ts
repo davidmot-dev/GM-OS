@@ -1482,6 +1482,13 @@ async function scenesDeShadowrun(c: ContexteDeScene): Promise<void> {
     await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
     await expect(panneau.locator('[data-suites-shadowrun]')).toBeVisible();
 
+    // SR-A1/A2/A3 (04/11/2026) : les cartes du pilote 2.1.0, en plus du jet historique.
+    // Le parcours déterministe e2e/shadowrunAvance.spec.ts photographie un drain réel et la Matrice préparée.
+    if (c.pilote.gameDriver.jet?.shadowrun?.suivi) {
+        await photographier(f.locator('[data-carte-du-jeu="suivi-shadowrun"]'), 'jeu-shadowrun-suivi');
+        await photographier(panneau.locator('[data-matrice-shadowrun]'), 'jeu-shadowrun-connexion');
+    }
+
     await ongletDeLaFiche(f, 'Fiche du jeu');
     const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
     await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });

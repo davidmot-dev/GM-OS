@@ -108,4 +108,17 @@ describe('à la porte des dégâts', () => {
         expect([iron.sheetData?.blessures_legeres, iron.sheetData?.blessures_graves]).toEqual([2, 1]);
         expect(iron.sheetData?.moniteur).toBe(3);
     });
+
+    it('SR-A2 : confirmer la mort par Essence marque le personnage, survit à une ancienne fiche et bloque les soins', () => {
+        const r = { ...REGLE, suivi: true };
+        useSessionOSStore.setState({ customGameDrivers: [{ ...SR, jet: { shadowrun: { essence: 'essence', suivi: r } }, combat: { ...SR.combat, moniteurDEtat: r } }] } as never);
+        const suivi = { version: 1, blessures: [], legereRecente: false, drainMineur: false, effetsAppliques: [], essenceMortConfirmee: true };
+        useSessionOSStore.getState().updateCharacter('p', 'iron', { sheetData: { ...ORK, essence: 0, __shadowrun: suivi } });
+        expect(useSessionOSStore.getState().players[0].characters[0].healthSystem?.state).toBe('dead');
+        useSessionOSStore.getState().updateCharacter('p', 'iron', { sheetData: { ...ORK, essence: 0 } });
+        const avant = useSessionOSStore.getState().players[0].characters[0];
+        expect(avant.sheetData?.__shadowrun).toEqual(suivi);
+        useSessionOSStore.getState().handleApplyImpact('iron', 'pc', { value: 1, isRecovery: true });
+        expect(useSessionOSStore.getState().players[0].characters[0]).toEqual(avant);
+    });
 });

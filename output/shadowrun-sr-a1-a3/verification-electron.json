@@ -1,0 +1,13 @@
+{
+  "importPilote": "2.1.0",
+  "drainProtege": true,
+  "anarchy100": true,
+  "derivesSansEffacerBlessure": true,
+  "seuilAdministrateur": 6,
+  "backdoorUneHeure": 4,
+  "surveillance": true,
+  "accesEtRedemarrageHotSim": true,
+  "biofeedback": "mental létal",
+  "persistance": true,
+  "donneesPersonnelles": false
+}

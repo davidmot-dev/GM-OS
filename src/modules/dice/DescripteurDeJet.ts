@@ -29,6 +29,8 @@ import { CHOIX_DE_RUNEQUEST, calculerRuneQuest, type CalculDeRuneQuest, type Cho
 import { ajustementsDuJet, lireLEtat } from './systemes/progressionDeRuneQuest';
 import { reserveDeDegenesis, type ChoixDeDegenesis, type ReserveDeDegenesis } from './systemes/degenesis';
 import { reserveDeShadowrun, rrBornee, type ChoixDeShadowrun, type ReserveDeShadowrun } from './systemes/shadowrun';
+import { lireSuiviShadowrun } from './systemes/suiviDeShadowrun';
+import { lireMatriceShadowrun, preparerMatriceShadowrun } from './systemes/matriceDeShadowrun';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 import type { EchelleDuJet } from './degresDeReussite';
 import {
@@ -1455,12 +1457,16 @@ export function preparerLeJet(
     const rrLue = regleShadowrun && champDeLaCompetence && regleShadowrun.rrDesCompetences?.[champDeLaCompetence]
         ? rrBornee(lireLeChamp(valeursDeLaFiche, regleShadowrun.rrDesCompetences[champDeLaCompetence]).valeur ?? 0) : undefined;
     const lu = (champ?: string) => (champ ? lireLeChamp(valeursDeLaFiche, champ).valeur ?? undefined : undefined);
+    const suiviSR = regleShadowrun?.suivi ? lireSuiviShadowrun(valeursDeLaFiche) : undefined;
+    const matriceSR = regleShadowrun?.matrice && choix.shadowrun?.matrice
+        ? preparerMatriceShadowrun(lireMatriceShadowrun(regleShadowrun.matrice, valeursDeLaFiche), choix.shadowrun.matrice) : undefined;
     const shadowrun = regleShadowrun && reserve
         ? {
             ...reserveDeShadowrun(
                 reserveDeDepart,
                 { ...choix.shadowrun, rr: choix.shadowrun?.rr ?? rrLue ?? 0 },
-                { graves: lu(regleShadowrun.blessures?.graves), incapacitantes: lu(regleShadowrun.blessures?.incapacitantes), essence: lu(regleShadowrun.essence) },
+                { graves: lu(regleShadowrun.blessures?.graves), incapacitantes: lu(regleShadowrun.blessures?.incapacitantes), essence: lu(regleShadowrun.essence),
+                    legereRecente: suiviSR?.legereRecente, drainMineur: suiviSR?.drainMineur, avantageMatrice: matriceSR?.avantage },
                 !!regleShadowrun.risqueAlternatif,
             ),
             ...(rrLue !== undefined ? { rrDeLaCompetence: rrLue } : {}),
@@ -1470,6 +1476,16 @@ export function preparerLeJet(
         avertissements.push('Blessure incapacitante : aucune action qui demande un test (p. 68).');
     }
     if (shadowrun?.annules) remarques.push(`Essence : ${shadowrun.annules} succès annulé${shadowrun.annules > 1 ? 's' : ''} sur ce test de magie (p. 60).`);
+    if (shadowrun && regleShadowrun?.suivi && lu(regleShadowrun.essence) !== undefined && lu(regleShadowrun.essence)! <= 0)
+        avertissements.push(suiviSR?.essenceMortConfirmee ? 'Mort par Essence confirmée : aucun test possible (p. 60).' : 'Essence 0 : confirmer la mort dans le suivi du personnage (p. 60).');
+    if (shadowrun && matriceSR) {
+        if (matriceSR.refus) avertissements.push(matriceSR.refus);
+        if (shadowrun.alternatif && matriceSR.minimum > 0) avertissements.push('Surveillance DIEU et risque alternatif : arbitrage du meneur requis pour le minimum de dés de risque.');
+        if (!shadowrun.alternatif) {
+            if (matriceSR.minimum > shadowrun.des) avertissements.push(`Minimum de risque ${matriceSR.minimum} supérieur à la réserve ${shadowrun.des} : tentative impossible.`);
+            shadowrun.risque = Math.min(shadowrun.des, Math.max(shadowrun.risque, matriceSR.minimum));
+        }
+    }
 
     // Les dés achetés ne franchissent pas le plafond du système : chez Dune,
     // cinq dés au total, quoi qu'on dépense.
@@ -1612,7 +1628,7 @@ export function preparerLeJet(
         // Torg compare un total à un Niveau de Difficulté : il ne compte pas de réussites.
         // NOC compare aussi un niveau à la difficulté : sa difficulté n'est pas un compte de réussites.
         // Barbarians compare une somme à 9, COC un d20 + caractéristique à la difficulté : une réussite ou aucune.
-        reussitesRequises: descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians || descripteur.coc ? 1 : bornes ? difficulte : 1,
+        reussitesRequises: matriceSR?.seuil ?? (descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians || descripteur.coc ? 1 : bornes ? difficulte : 1),
         /*
           Une poignée échelonnée n'a pas UNE taille. On rend celle du plus gros
           dé, pour que les écrans qui écrivent « 2d10 » disent quelque chose de

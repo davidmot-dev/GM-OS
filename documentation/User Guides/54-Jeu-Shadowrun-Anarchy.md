@@ -1,8 +1,8 @@
 # 🕶️ Jeu — Shadowrun : Anarchy 2.0
 
 > **Pilote décrit :** « Shadowrun: Anarchy 2.0 », forgé par David, exporté le 2026-10-31, **fini le
-> 2026-10-31**, version 2.0.0 (`Export Dirvers/corriges/SR_Anarchy_driver_gmos_finir.gmos-driver`,
-> construit par `outils/shadowrun-anarchy/finir_shadowrun.py`). Thème `shadowrun-anarchy`, fiche de
+> 2026-10-31**, amélioré le **04/11/2026, version 2.1.0** (`Export Dirvers/corriges/Shadowrun-Anarchy-2.1.0.gmos-driver`,
+> construit par `outils/shadowrun-anarchy/ameliorer_shadowrun.mjs` depuis le pilote 2.0.0). Thème `shadowrun-anarchy`, fiche de
 > personnage HTML, bannière et identité livrés le même jour par Codex. Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
@@ -106,9 +106,77 @@ incapacitante (p. 69). Un atout porte les légères à trois et les graves à de
 
 Les **compteurs** de la fiche font foi — les jauges « Blessures légères » et « Blessures graves »
 de la carte les montrent. Les quatre **cases** de la carte disent la **pire** blessure : une grave
-seule allume aussi les deux cases légères devant elle. **Soins** efface la blessure la plus grave
-d'abord, dans l'ordre de la guérison naturelle (p. 70) ; le seuil d'un soin monte d'un succès à
+seule allume aussi les deux cases légères devant elle. Depuis la version **2.1.0**, le suivi
+conserve aussi l’**origine** de chaque blessure. Le raccourci **Soins** vise la plus grave avec
+les restrictions des premiers soins ; pour choisir la case et la méthode, ouvrir la carte
+**Blessures, drain et cohérence** dans **Lancer un test**. Le seuil d'un soin monte d'un succès à
 Essence 4 ou moins, de deux à 2 ou moins (p. 60).
+
+## Drain et soins — SR-A1
+
+![Une blessure de drain refuse les premiers soins et garde son malus jusqu’à la prochaine narration](captures/jeu-shadowrun-drain.jpg)
+
+Avant une action de Sorcellerie ou de Conjuration, cocher **Test de magie**, puis
+**Action soumise au drain**. Le résultat propose le drain de la complication : désavantage
+aux activités magiques jusqu’à la fin de la prochaine narration pour une mineure, blessure
+légère pour une critique, incapacitante pour un désastre (p. 170). Faire l’éventuelle relance,
+puis **Confirmer les conséquences drain / Matrice** ; une même conséquence ne se paie
+qu’une fois. Les choix sont ceux du lancer, même si la préparation change ensuite.
+
+Une blessure de drain aggravée conserve son origine : **repos uniquement**. La carte permet
+de choisir une autre case soignable, de confirmer un soin réussi ou de noter son échec ;
+une tentative de premiers soins et un sort par case (p. 69). Les anciennes cases sont
+**d’origine inconnue** : renseigner leur origine avant les soins. Le repos dans de bonnes
+conditions commence par la plus grave : 72 h pour une incapacitante, 24 h pour une grave,
+8 h par légère (p. 70). Stabiliser d’abord un mourant ; les adaptations du meneur et les
+variantes de guérison restent à arbitrer à la table.
+
+Le bouton **Fin de la prochaine narration** expire les malus temporaires de blessure légère
+et de drain ; il ne soigne aucune case. Un passage de round ou un rechargement ne les efface pas.
+
+## Réserves, seuils et Essence — SR-A2
+
+Dans le formulaire, choisir éventuellement l’**attribut lié** de chaque compétence ; sans
+ce lien explicite, son attribut numérique reste la référence. La carte **Réserves et seuils
+calculés** compare la fiche et les calculs, avec **Appliquer** ou **Garder ma valeur** pour
+consigner une dérogation. Modifier un attribut ne remet pas les blessures à zéro.
+
+Les **indices explicites** des protections principale, secondaire et mentale alimentent
+leurs seuils. Vides, ils ne sont jamais déduits du nom d’une armure ; les seuils déjà saisis
+restent conservés. Les seuils sans armure suivent la Force. **Anarchy est sans plafond**,
+y compris au-delà de 99. À Essence 1 ou moins, le meneur peut cocher le désavantage social
+au jet. À Essence 0, la carte demande **Confirmer la mort par Essence** ; la confirmation
+marque le personnage mort et les soins ne le ramènent pas (p. 60).
+
+## Matrice et surveillance — SR-A3
+
+![Piratage préparé et surveillance conservée, hot-sim avec biofeedback mental létal](captures/jeu-shadowrun-matrice.jpg)
+
+Déclarer **Cyberdeck disponible** et **IND disponible**, puis le **mode de connexion**.
+RA et cold-sim avec trodes n’accordent ni action gratuite ni avantage. Une IND cybernétique
+en RV donne une action gratuite de cybercombat par tour ; le hot-sim ajoute l’avantage
+**uniquement en cybercombat**. Le biofeedback se résiste par la Volonté : mental étourdissant
+en cold-sim, **mental létal** en hot-sim. Les dommages matriciels de l’appareil restent séparés.
+
+Ajouter les PAN/serveurs et leur **Firewall effectif** (en tenant compte de la Logique si
+applicable, p. 216). Chaque cible garde son accès. Dans le panneau, cocher **Tentative de
+piratage**, choisir l’accès visé et la durée de backdoor : Aucun → Administrateur ajoute
+**2** au Firewall avant la réduction de backdoor ; Utilisateur → Administrateur ajoute 1
+(p. 217). Le seuil est calculé et le risque minimum imposé. Un minimum supérieur à la
+réserve empêche le test. En cybercombat, saisir le seuil opposé ; les pénalités de surveillance
+ne s’y appliquent pas.
+
+Après le jet et son éventuelle relance, confirmer les conséquences : accès acquis en cas
+de réussite, **+2 dés de risque minimum** par complication mineure, **+1 au seuil** par critique.
+Un désastre provoque la **convergence** : cyberdeck brické, choc d’éjection selon le mode,
+intervention d’élite à mettre en scène (p. 218). Le choc du personnage est inscrit une fois.
+
+Un redémarrage fait perdre les accès ; **Confirmer redémarrage et 1 h hors ligne** efface aussi
+les malus de DIEU. Il ne répare pas un cyberdeck brické : confirmer séparément sa réparation
+ou son remplacement. Passer en hot-sim confirme une minute de redémarrage et la perte des
+accès (p. 212). La limite d’un changement RA/RV par narration reste à respecter à la table.
+Sous la variante de risque alternatif, un minimum de dés de risque dû à DIEU demande un
+arbitrage explicite ; le panneau bloque ce cas au lieu d’inventer une conversion.
 
 ## Les points d'Anarchy
 
@@ -143,8 +211,8 @@ officielle ajoutée au dépôt. Les personnages et leurs valeurs restent conserv
 ## Ce qui n'est pas automatisé
 
 - L'**ordre des narrations** se décide à la table (p. 66) : pas de jet d'initiative.
-- Le **drain**, le **piratage** et la surveillance de DIEU : les seuils et les dés de risque minimum
-  du piratage sont sur la fiche, à appliquer à la main.
+- La protection active matricielle, les dommages détaillés du cyberdeck, le verrouillage de
+  connexion et la mise en scène de l’intervention d’élite après convergence.
 - Les variantes « plus sombre » (p. 69) : blessures légères qui durent, guérison plus lente.
 - Les **dommages des véhicules** (Structure × 2, × 3) : le meneur saisit la gravité à la main.
 
@@ -162,3 +230,6 @@ Les imports, le remplacement isolé et les trois Hub ont été éprouvés en ins
 avec jets et sauvegarde de la fiche HTML. **GM-05 reste en échec : des secrets de séance
 sont transmis aux Hub joueurs** ; marqueurs fictifs uniquement dans la recette.
 Voir le rapport et les anomalies du lot. Partie complète, matériel et cas humains restent à jouer.
+
+*Relu le 04/11/2026 pour SR-A1/A2/A3, livre p. 60, 68-70, 170, 212, 216-218 ;
+parcours Electron sur profil jetable et captures relues. Pilote 2.1.0 validé par David le 04/11 : « ok c'est bon, c'est testé ».*

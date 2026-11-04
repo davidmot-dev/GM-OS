@@ -95,6 +95,9 @@ import { bonusDeLaStimulation } from '../../../dice/systemes/contaminationDeDege
 import { lireLEtatDegenesis } from '../../../dice/systemes/maximaDeDegenesis';
 import { CHOIX_DE_SHADOWRUN, lancerShadowrun, type ChoixDeShadowrun, type JetDeShadowrun } from '../../../dice/systemes/shadowrun';
 import { PreparationShadowrun, SuitesShadowrun } from './ShadowrunAuJet';
+import { MatriceShadowrun } from './CartesShadowrun';
+import { appliquerDrainShadowrun, ajouterBlessureShadowrun, ecrireSuiviShadowrun, positionShadowrun } from '../../../dice/systemes/suiviDeShadowrun';
+import { lireMatriceShadowrun, ecrireMatriceShadowrun, consequenceMatriceShadowrun, effetsModeShadowrun } from '../../../dice/systemes/matriceDeShadowrun';
 import { CHOIX_DE_COC, ajouterLeHeros, etatDeSante, lancerCoc, malusDeSante, modeleDEvolution, preparerCoc,
     type ChoixDeCoc, type JetDeCoc, type PreparationDeCoc } from '../../../dice/systemes/coc';
 import { PreparationCoc, SuitesCoc } from './CocAuJet';
@@ -551,6 +554,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * garde le compte entre le lancer et la relance, avant que la fiche ne revienne.
      */
     const regleShadowrun = descripteur.shadowrun;
+    const [suiteShadowrun, setSuiteShadowrun] = useState<{ id: string; drain: boolean; matrice?: ChoixDeShadowrun['matrice'];
+        mode?: Parameters<typeof effetsModeShadowrun>[0]; complication: JetDeShadowrun['shadowrun']['complication']; reussi: boolean; appliquee?: boolean }>();
     const [choixShadowrunBrut, setChoixShadowrunBrut] = useState<ChoixDeShadowrun & { pour?: string }>(CHOIX_DE_SHADOWRUN);
     const anarchyShadowrun = regleShadowrun?.anarchy && ecrireSurLaFiche ? Math.max(0, Math.trunc(Number(valeurs[regleShadowrun.anarchy]) || 0)) : undefined;
     const [anarchyApres, setAnarchyApres] = useState<number | null>(null);
@@ -1497,6 +1502,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         }
         // Shadowrun : l'avantage payé quitte la fiche, la complication critique ou le désastre y rapportent (p. 77).
         const shadowrunDuJet = (res as JetDeShadowrun).shadowrun;
+        if (shadowrunDuJet) setSuiteShadowrun({ id: crypto.randomUUID(), drain: choixShadowrun.magie && !!choixShadowrun.drain,
+            matrice: choixShadowrun.matrice ? { ...choixShadowrun.matrice } : undefined,
+            mode: regleShadowrun?.matrice ? lireMatriceShadowrun(regleShadowrun.matrice, valeurs).mode : undefined,
+            complication: shadowrunDuJet.complication, reussi: shadowrunDuJet.reussi });
         if (regleShadowrun?.anarchy && shadowrunDuJet && anarchyShadowrun !== undefined) {
             const paye = jet.shadowrun?.sources.includes("point d'Anarchy") ? 1 : 0;
             const apres = Math.max(0, anarchyShadowrun - paye + shadowrunDuJet.anarchyGagnee);
@@ -1731,10 +1740,35 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             premier.seuil, () => DiceEngine.roll(6), premier.complication,
         );
         setResultat(res);
+        setSuiteShadowrun(s => s ? { ...s, reussi: res.shadowrun.reussi } : s);
         setAnarchyApres(avant - 1);
         ecrireSurLaFiche?.({ [regleShadowrun.anarchy]: avant - 1 });
         setMouvements(m => [...m, `Relance : Anarchy ${avant} → ${avant - 1}`]);
         redire(`${dernierLancer?.titre ?? 'Test'} · relance`, res);
+    };
+
+    const appliquerSuiteShadowrun = () => {
+        if (!suiteShadowrun || suiteShadowrun.appliquee || !regleShadowrun || !ecrireSurLaFiche) return;
+        let maj: Record<string, unknown> = {};
+        if (suiteShadowrun.drain && regleShadowrun.suivi)
+            maj = appliquerDrainShadowrun(regleShadowrun.suivi, valeurs, suiteShadowrun.complication, `drain-${suiteShadowrun.id}`);
+        if (suiteShadowrun.matrice && regleShadowrun.matrice) {
+            const m = lireMatriceShadowrun(regleShadowrun.matrice, valeurs);
+            const apres = consequenceMatriceShadowrun(m, suiteShadowrun.matrice, suiteShadowrun.complication, suiteShadowrun.reussi, suiteShadowrun.id);
+            maj = { ...maj, ...ecrireMatriceShadowrun(regleShadowrun.matrice, apres) };
+            // Le choc d'éjection appartient au personnage ; les dommages de l'appareil restent séparés.
+            const ejection = effetsModeShadowrun(suiteShadowrun.mode ?? m.mode).ejection;
+            if (suiteShadowrun.complication === 'desastre' && ejection && regleShadowrun.suivi) {
+                const r = regleShadowrun.suivi;
+                const fiche = { ...valeurs, ...maj };
+                const s = ajouterBlessureShadowrun(r, fiche, ejection, 'mental', `ejection-${suiteShadowrun.id}`);
+                maj = { ...maj, ...ecrireSuiviShadowrun(r, s, false), ...(r.sante ? { [r.sante]: positionShadowrun(r, s, fiche) } : {}) };
+            }
+        }
+        ecrireSurLaFiche(maj);
+        setSuiteShadowrun(s => s ? { ...s, appliquee: true } : s);
+        redire('Shadowrun · conséquences confirmées', { total: 0, rolls: [], modifier: 0,
+            totalDisplay: `Drain / Matrice : conséquences ${suiteShadowrun.complication} confirmées une seule fois.` });
     };
 
     /**
@@ -2724,6 +2758,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         <PreparationShadowrun choix={choixShadowrun} setChoix={setChoixShadowrun} reserve={jet.shadowrun}
                             difficulte={difficulte} setDifficulte={setDifficulte} anarchy={anarchyShadowrun} />
                     )}
+                    {regleShadowrun?.matrice && ecrireSurLaFiche && <MatriceShadowrun regle={regleShadowrun} valeurs={valeurs}
+                        appliquer={ecrireSurLaFiche} consigner={texte => consignerLeJet({ titre: 'Shadowrun · Matrice', totalDisplay: texte })}
+                        choix={choixShadowrun} setChoix={setChoixShadowrun} />}
                     {regleDegenesis && (
                         <PreparationDegenesis choix={choixDegenesis} setChoix={setChoixDegenesis} reserve={jet.degenesis}
                             difficulte={difficulte} setDifficulte={setDifficulte} ego={egoDegenesis}
@@ -3315,7 +3352,16 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         {regleShadowrun && shadowrunDuResultat && (
                             <SuitesShadowrun jet={resultat as JetDeShadowrun} anarchy={anarchyShadowrun === undefined ? undefined : anarchyApres ?? anarchyShadowrun}
-                                relancer={relancerShadowrun} />
+                                relancer={suiteShadowrun?.appliquee ? undefined : relancerShadowrun} />
+                        )}
+                        {regleShadowrun && suiteShadowrun && ecrireSurLaFiche && (suiteShadowrun.drain || suiteShadowrun.matrice) && (
+                            <div className="flex flex-col gap-2 text-xs" data-consequences-shadowrun>
+                                <span>Effectuez l’éventuelle relance avant de confirmer les conséquences.</span>
+                                {suiteShadowrun.drain && <span>Drain proposé : {suiteShadowrun.complication === 'mineure' ? 'désavantage magique jusqu’à la fin de la prochaine narration' : suiteShadowrun.complication === 'critique' ? 'une blessure légère, repos uniquement' : suiteShadowrun.complication === 'desastre' ? 'une blessure incapacitante, repos uniquement' : 'aucun'} (p. 170).</span>}
+                                {suiteShadowrun.matrice && <span>Matrice : accès obtenu si réussite ; surveillance DIEU selon la complication. En cas de désastre : cyberdeck brické, choc d’éjection selon la connexion, intervention d’élite (p. 218).</span>}
+                                <button type="button" className="rounded-md border border-app-border/40 px-2 py-1 disabled:opacity-30" disabled={suiteShadowrun.appliquee}
+                                    onClick={appliquerSuiteShadowrun}>{suiteShadowrun.appliquee ? 'Conséquences appliquées' : 'Confirmer les conséquences drain / Matrice'}</button>
+                            </div>
                         )}
                         {regleCoc && cocDuLancer && cocDuResultat && (
                             <SuitesCoc key={cocDuLancer.compte} jet={resultat as JetDeCoc} heros={herosCoc} des={cocDuLancer.prep.des}

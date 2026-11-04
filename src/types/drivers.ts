@@ -758,6 +758,8 @@ export interface GameDriver {
          */
         moniteurDEtat?: {
             mecanique: 'shadowrun';
+            /** SR-A1 : conserve les origines et les tentatives par case (p. 69). */
+            suivi?: boolean;
             legeres: string; graves: string; incapacitantes: string;
             sante?: string;
             capacites?: { legeres?: string; graves?: string };

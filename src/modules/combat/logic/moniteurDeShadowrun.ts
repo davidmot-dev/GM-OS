@@ -1,10 +1,11 @@
-import type { GameDriver } from '../../../types/drivers';
 import type { DamageImpact } from '../../../types/entity.types';
 import {
     CAPACITES_DU_MONITEUR, EFFETS_DES_GRAVITES, LIBELLES_DES_GRAVITES, encaisserShadowrun, graviteDe, seuilsDeBlessure,
-    type Gravite, type Moniteur,
+    type Gravite, type Moniteur, type RegleDuMoniteurShadowrun,
 } from '../../dice/systemes/shadowrun';
 import { valeurDuChamp } from './SanteDuCombattant';
+import { ajouterBlessureShadowrun, suivreLesCompteurs, compteursShadowrun, ecrireSuiviShadowrun,
+    refusDuSoinShadowrun, HEURES_DE_REPOS, lireSuiviShadowrun } from '../../dice/systemes/suiviDeShadowrun';
 
 /**
  * **Le moniteur d'état de Shadowrun : Anarchy 2.0 à la porte des dégâts** — 31/10/2026, à la
@@ -20,7 +21,7 @@ import { valeurDuChamp } from './SanteDuCombattant';
  * **pire** blessure : les légères, puis la grave, puis l'incapacitante. Un soin efface les
  * blessures les plus graves d'abord, dans l'ordre de la guérison naturelle (p. 70).
  */
-export type RegleDuMoniteur = NonNullable<GameDriver['combat']['moniteurDEtat']>;
+export type RegleDuMoniteur = RegleDuMoniteurShadowrun;
 
 type Seuils = Record<Gravite, number>;
 const CLES: Record<Gravite, keyof Moniteur> = { legere: 'legeres', grave: 'graves', incapacitante: 'incapacitantes' };
@@ -54,8 +55,10 @@ export function moniteurSelonLeJeu(
     regle: RegleDuMoniteur | undefined,
     fiche: Record<string, unknown> | undefined,
     impact: DamageImpact,
-): { impact: DamageImpact; fiche: Record<string, number>; texte: string } | null {
+): { impact: DamageImpact; fiche: Record<string, unknown>; texte: string } | null {
     if (!regle || regle.mecanique !== 'shadowrun') return null;
+    if (regle.suivi && lireSuiviShadowrun(fiche ?? {}).essenceMortConfirmee)
+        return { impact: { ...impact, value: 0 }, fiche: {}, texte: 'Mort par Essence confirmée : les soins ne ramènent pas le personnage (p. 60).' };
     const compte = (champ: string | undefined) => Math.max(0, Math.trunc(champ ? valeurDuChamp(fiche, champ) ?? 0 : 0));
     const capacites: Moniteur = {
         legeres: Math.max(1, compte(regle.capacites?.legeres) || CAPACITES_DU_MONITEUR.legeres),
@@ -79,6 +82,19 @@ export function moniteurSelonLeJeu(
     };
 
     if (impact.isRecovery) {
+        if (regle.suivi) {
+            const s = suivreLesCompteurs(regle, fiche ?? {});
+            const soin = impact.shadowrun?.soin ?? 'premiers-soins';
+            const ordre = { incapacitante: 0, grave: 1, legere: 2 };
+            const candidates = [...s.blessures].sort((a, b) => ordre[a.gravite] - ordre[b.gravite]);
+            const b = impact.shadowrun?.blessureId ? candidates.find(x => x.id === impact.shadowrun!.blessureId) : candidates[0];
+            const refus = b && (refusDuSoinShadowrun(b, soin)
+                || (soin === 'repos' && b.id !== candidates[0]?.id ? 'Le repos soigne la plus grave blessure en premier (p. 70).' : undefined)
+                || (soin === 'repos' && (impact.shadowrun?.heures ?? 0) < HEURES_DE_REPOS[b.gravite] ? `Repos insuffisant : ${HEURES_DE_REPOS[b.gravite]} heures requises (p. 70).` : undefined));
+            if (!b || refus || impact.value <= 0) return { impact: { ...impact, value: 0 }, fiche: {}, texte: refus ?? 'Aucune blessure à soigner.' };
+            const apres = { ...s, blessures: s.blessures.filter(x => x.id !== b.id) };
+            return { impact: vers(compteursShadowrun(apres)), fiche: ecrireSuiviShadowrun(regle, apres, false), texte: `Blessure ${b.gravite} (${b.origine}) soignée : ${soin}.` };
+        }
         const apres = { ...avant };
         let soignees = 0;
         for (let n = 0; n < Math.max(0, Math.trunc(impact.value)); n++) {
@@ -97,7 +113,7 @@ export function moniteurSelonLeJeu(
     }
 
     const { seuils, source } = seuilsSelonLeType(regle, fiche, impact.type ?? '');
-    const gravite = graviteDe(impact.value, seuils);
+    const gravite = impact.shadowrun?.gravite ?? graviteDe(impact.value, seuils);
     if (!gravite) {
         return {
             impact: { ...impact, value: 0 }, fiche: {},
@@ -105,8 +121,10 @@ export function moniteurSelonLeJeu(
         };
     }
     const e = encaisserShadowrun(gravite, avant, capacites);
+    const suivi = regle.suivi ? ajouterBlessureShadowrun(regle, fiche ?? {}, gravite,
+        impact.shadowrun?.origine ?? (/mental/i.test(impact.type ?? '') ? 'mental' : 'physique'), crypto.randomUUID()) : undefined;
     return {
-        impact: vers(e.moniteur), fiche: ecrire(e.moniteur),
+        impact: vers(e.moniteur), fiche: suivi ? ecrireSuiviShadowrun(regle, suivi, false) : ecrire(e.moniteur),
         texte: `VD ${impact.value} contre ${seuils.legere}/${seuils.grave}/${seuils.incapacitante} (${source}) : `
             + `${LIBELLES_DES_GRAVITES[gravite].toLowerCase()}`
             + (e.aggravee ? `, cases pleines : aggravée en ${LIBELLES_DES_GRAVITES[e.cochee].toLowerCase()} (p. 69)` : '')

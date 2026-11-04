@@ -27,6 +27,10 @@ import type { DegreDeReussite } from '../degresDeReussite';
 
 /** Ce que le pilote nomme pour Shadowrun (`jet.shadowrun`). */
 export interface RegleDeShadowrun {
+    /** SR-A1/A2/A3 — capacités explicites du pilote, jamais reconnues par son nom. */
+    suivi?: RegleDuMoniteurShadowrun;
+    derives?: import('./suiviDeShadowrun').RegleDesDerivesShadowrun;
+    matrice?: import('./matriceDeShadowrun').RegleMatriceShadowrun;
     /** Les points d'Anarchy du personnage : relancer, obtenir un avantage (p. 77). */
     anarchy?: string;
     /** L'Essence : elle annule des succès aux tests de magie (p. 60). */
@@ -40,6 +44,15 @@ export interface RegleDeShadowrun {
     rrDesCompetences?: Record<string, string>;
     /** La règle de risque alternative (p. 72) : des dés spéciaux au lieu des dés de risque. */
     risqueAlternatif?: boolean;
+}
+
+/** Contrat pur partagé par le pilote, les dégâts et le suivi ; aucun magasin dans les types. */
+export interface RegleDuMoniteurShadowrun {
+    mecanique: 'shadowrun'; suivi?: boolean;
+    legeres: string; graves: string; incapacitantes: string; sante?: string;
+    capacites?: { legeres?: string; graves?: string };
+    seuils?: Partial<Record<'principale' | 'secondaire' | 'sans_armure' | 'mental', Partial<Record<'legere' | 'grave' | 'incapacitante', string>>>>;
+    force?: string; volonte?: string;
 }
 
 /** L'échelle de difficulté du livre : le seuil, en succès (p. 64). */
@@ -104,6 +117,9 @@ export interface ChoixDeShadowrun {
     blessureLegereRecente: boolean;
     /** Un test lié à la magie : l'Essence perdue y annule des succès (p. 60). */
     magie: boolean;
+    drain?: boolean;
+    social?: boolean;
+    matrice?: import('./matriceDeShadowrun').ContexteMatriceShadowrun;
 }
 
 export const CHOIX_DE_SHADOWRUN: ChoixDeShadowrun = {
@@ -151,6 +167,9 @@ export interface EtatDuPersonnage {
     graves?: number;
     incapacitantes?: number;
     essence?: number;
+    legereRecente?: boolean;
+    drainMineur?: boolean;
+    avantageMatrice?: boolean;
 }
 
 /** Réserve = Compétence (+2 spécialisation) + Attribut ; l'avantage se borne à un (p. 64-65). */
@@ -168,7 +187,10 @@ export function reserveDeShadowrun(
     if (situation < 0) { somme -= 1; sources.push('désavantage de situation'); }
     if (choix.anarchyPourAvantage) { somme += 1; sources.push("point d'Anarchy"); }
     if (entier(etat.graves) > 0) { somme -= 1; sources.push('blessure grave'); }
-    if (choix.blessureLegereRecente) { somme -= 1; sources.push('blessure légère récente'); }
+    if (choix.blessureLegereRecente || etat.legereRecente) { somme -= 1; sources.push('blessure légère récente'); }
+    if (choix.magie && etat.drainMineur) { somme -= 1; sources.push('drain jusqu’à la fin de la prochaine narration'); }
+    if (choix.social && etat.essence !== undefined && etat.essence <= 1) { somme -= 1; sources.push('Essence : test social'); }
+    if (etat.avantageMatrice) { somme += 1; sources.push('cybercombat en RV hot-sim'); }
     const avantage = borne(somme, -1, 1) as -1 | 0 | 1;
     return {
         base: entier(base), specialisation, des,

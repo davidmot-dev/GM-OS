@@ -103,6 +103,8 @@ export const PreparationShadowrun: React.FC<{
                     <input type="checkbox" checked={choix.magie} onChange={e => setChoix(c => ({ ...c, magie: e.target.checked }))} />
                     Test de magie
                 </label>
+                {choix.magie && <label className="flex items-center gap-1"><input type="checkbox" checked={!!choix.drain} onChange={e => setChoix(c => ({ ...c, drain: e.target.checked }))} /> Action soumise au drain (Sorcellerie / Conjuration)</label>}
+                <label className="flex items-center gap-1"><input type="checkbox" checked={!!choix.social} onChange={e => setChoix(c => ({ ...c, social: e.target.checked }))} /> Test social affecté par l’Essence (choix du meneur)</label>
             </div>
             {reserve && (
                 <span data-composition-shadowrun className="text-app-text/60">

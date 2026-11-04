@@ -12,6 +12,10 @@
 // ─────────────────────────────────────────────
 
 export interface DamageImpact {
+    /** SR-A1 : une blessure directe de drain, ou une méthode de soins explicite. */
+    shadowrun?: { gravite?: import('../modules/dice/systemes/shadowrun').Gravite;
+        origine?: import('../modules/dice/systemes/suiviDeShadowrun').OrigineDeBlessure;
+        soin?: import('../modules/dice/systemes/suiviDeShadowrun').SoinShadowrun; blessureId?: string; heures?: number };
     /** Les périls Alien ne tirent pas les critiques humains ; suffoquer n'est pas subir des dégâts. */
     procedureAlien?: 'survie' | 'suffocation' | 'acide';
     value: number;

@@ -19,6 +19,10 @@ cas de doute, demande à David avant d'agir.**
 > [`documentation/Architecture/Flux-des-constructeurs.md`](documentation/Architecture/Flux-des-constructeurs.md).
 > Les sources des deux constructeurs sont dans `outils/`.
 
+> **Pilotes à réimporter :** les livrer dans `Export Dirvers/corriges/` (nom réel du dossier
+> du dépôt), avec un lien vers ce fichier dans les consignes de réimport. Une copie dans
+> `output/` ne suffit pas. Consigne de David du 04/11/2026.
+
 > Ce que chaque jeu change à l'écran est décrit dans le **manuel des jeux** :
 > [`documentation/User Guides/53-Les-jeux-et-leurs-mecaniques.md`](documentation/User%20Guides/53-Les-jeux-et-leurs-mecaniques.md)
 > et une page `54-Jeu-….md` par jeu. **Un pilote nouveau ou amélioré s'y reporte**, captures

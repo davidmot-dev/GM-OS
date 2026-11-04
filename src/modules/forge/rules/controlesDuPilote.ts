@@ -2091,6 +2091,10 @@ export function controlerLePilote(
         }
         const lus: [string, string | undefined][] = [
             ['anarchy', sr.anarchy], ['essence', sr.essence],
+            ...Object.entries(sr.matrice ?? {}).map(([cle, champ]) => [`matrice.${cle}`, champ] as [string, string]),
+            ...(sr.derives?.attributs ?? []).map(champ => ['derives.attributs', champ] as [string, string]),
+            ...(sr.derives?.competences ?? []).flatMap(c => Object.entries(c).map(([cle, champ]) => [`derives.competences.${cle}`, champ] as [string, string])),
+            ...(sr.derives?.seuils ?? []).flatMap(c => Object.entries(c).map(([cle, champ]) => [`derives.seuils.${cle}`, champ] as [string, string])),
             ...Object.entries(sr.blessures ?? {}).map(([cle, champ]) => [`blessures.${cle}`, champ] as [string, string]),
             ...Object.entries(sr.rrDesCompetences ?? {}).flatMap(([competence, rr]) => [
                 [`rrDesCompetences.${competence}`, competence], [`rrDesCompetences.${competence}`, rr],
@@ -2099,6 +2103,8 @@ export function controlerLePilote(
         for (const [ou, champ] of lus) {
             if (champ !== undefined && !tousLesChamps.has(champ)) erreur(`jet.shadowrun.${ou}`, `Shadowrun lit « ${champ} », absent de la fiche.`);
         }
+        if (sr.suivi && (!driver.combat?.moniteurDEtat?.suivi || JSON.stringify(sr.suivi) !== JSON.stringify(driver.combat.moniteurDEtat)))
+            erreur('jet.shadowrun.suivi', 'Le suivi du jet et le moniteur du combat doivent désigner les mêmes compteurs et capacités.');
     }
     const moniteurSR = driver.combat?.moniteurDEtat;
     if (moniteurSR) {

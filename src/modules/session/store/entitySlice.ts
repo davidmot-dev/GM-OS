@@ -23,6 +23,8 @@ import { coupLocaliseSelonLeJeu } from '../../combat/logic/coupsDeRuneQuest';
 import { pistesDeSanteSelonLeJeu } from '../../combat/logic/pistesDeDegenesis';
 import { encaissementSelonLeJeu } from '../../combat/logic/encaissementDeCoc';
 import { moniteurSelonLeJeu } from '../../combat/logic/moniteurDeShadowrun';
+import { CLE_SUIVI_SHADOWRUN, lireSuiviShadowrun } from '../../dice/systemes/suiviDeShadowrun';
+import { CLE_MATRICE_SHADOWRUN } from '../../dice/systemes/matriceDeShadowrun';
 import { cosmsDesIds, idsDesCosmsCourants, loiEnVigueur } from '../logic/cosmsCourants';
 import { champDeSantePrincipale, maximumDeLaJauge, santeAlignee, santePrincipaleDeLaFiche, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import { santePrincipaleDuPersonnage } from '../logic/santePrincipale';
@@ -265,7 +267,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
         set((state) => ({
             entities: state.entities.map((e) => {
                 if (e.id !== id) return e;
-                const conserves=Object.fromEntries([CLE_COMBAT_ALIEN,CLE_SURVIE_ALIEN].filter(cle=>e.sheetData?.[cle]&&updates.sheetData&&!Object.hasOwn(updates.sheetData,cle)).map(cle=>[cle,e.sheetData![cle]]));
+                const conserves=Object.fromEntries([CLE_COMBAT_ALIEN,CLE_SURVIE_ALIEN,CLE_SUIVI_SHADOWRUN,CLE_MATRICE_SHADOWRUN,'__shadowrunDerogations'].filter(cle=>e.sheetData?.[cle]&&updates.sheetData&&!Object.hasOwn(updates.sheetData,cle)).map(cle=>[cle,e.sheetData![cle]]));
                 const sheetData = updates.sheetData ? {...updates.sheetData,...conserves}:undefined;
                 const base = { ...e, ...updates, ...(sheetData ? {sheetData} : {}) };
                 const newEntity = base.sheetData?.__rddSante231 ? actualiserPersonnageDeVoyageur(base,
@@ -589,7 +591,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                                 if (c.id !== characterId) return c;
                                 // Une fiche HTML ancienne ne connaît pas le suivi de Panique :
                                 // son écriture ne doit effacer ni les reçus ni les demandes.
-                                const suivis = Object.fromEntries([CLE_PANIQUE_ALIEN, CLE_JET_ALIEN, CLE_COMBAT_ALIEN, CLE_SURVIE_ALIEN, CLE_PROGRESSION_ALIEN, CLE_CTHULHU_HACK]
+                                const suivis = Object.fromEntries([CLE_PANIQUE_ALIEN, CLE_JET_ALIEN, CLE_COMBAT_ALIEN, CLE_SURVIE_ALIEN, CLE_PROGRESSION_ALIEN, CLE_CTHULHU_HACK, CLE_SUIVI_SHADOWRUN, CLE_MATRICE_SHADOWRUN, '__shadowrunDerogations']
                                     .filter(cle => c.sheetData?.[cle] && updates.sheetData && !Object.hasOwn(updates.sheetData, cle))
                                     .map(cle => [cle, c.sheetData![cle]]));
                                 const sheetData = updates.sheetData ? { ...updates.sheetData, ...suivis } : undefined;
@@ -605,6 +607,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                                 const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
                                 const pilote = piloteDuPersonnage(updated, etat.campaigns ?? [], etat.customGameDrivers ?? [], etat.activeCampaignId);
                                 updated.healthSystem = projeterLaSanteSynthetique(pilote?.combat.alien, updated.sheetData ?? {}, lireLeCombatAlien(updated.sheetData ?? {}), updated.healthSystem);
+                                if (pilote?.jet?.shadowrun?.suivi && lireSuiviShadowrun(updated.sheetData ?? {}).essenceMortConfirmee) {
+                                    updated.healthSystem = { ...(updated.healthSystem ?? HealthInterpreter.createDefault('boxes', { cases: pilote.combat.casesDeSante })), state: 'dead' };
+                                }
                                 if (pilote?.jet?.cthulhuHack) {
                                     const r = pilote.jet.cthulhuHack;
                                     updated.sheetData={...Object.fromEntries(r.armures.filter(a=>c.sheetData?.[a.protection]!==undefined&&!Object.hasOwn(updated.sheetData??{},a.protection)).map(a=>[a.protection,c.sheetData![a.protection]])),...updated.sheetData};
@@ -623,7 +628,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             ),
         }));
         const c = get().players.find(p => p.id === playerId)?.characters.find(c => c.id === characterId);
-        if (c?.healthSystem?.data.alienSynthetique || c?.healthSystem?.data.cthulhuHack) plateauDeCombat()?.refleterLaFiche?.(characterId, { hp: c.hp, healthSystem: c.healthSystem, sheetData: c.sheetData });
+        if (c?.healthSystem?.data.alienSynthetique || c?.healthSystem?.data.cthulhuHack || c?.sheetData?.[CLE_SUIVI_SHADOWRUN]) plateauDeCombat()?.refleterLaFiche?.(characterId, { hp: c.hp, healthSystem: c.healthSystem, sheetData: c.sheetData });
     },
 
     updateCharacterSheetData: (playerId, characterId, fieldId, value) => {
@@ -942,6 +947,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             const entity = entities.find((e) => e.id === targetId);
             if (!entity) return;
             const regle = selonLeJeu(piloteOuvert, entity.sheetData);
+            if (piloteOuvert?.jet?.shadowrun?.suivi && lireSuiviShadowrun(entity.sheetData ?? {}).essenceMortConfirmee) {
+                gmToast('Mort par Essence confirmée : aucun soin ni dégât à appliquer (p. 60).', 'info'); return;
+            }
             const impact = regle?.impact ?? impactSaisi;
             plateauDeCombat()?.noterUnCoup?.(targetId, impact);
             if (regle && Object.keys(regle.fiche).length > 0) {
@@ -1004,6 +1012,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             if (!player || !character) return;
             const piloteDuPJ = piloteDuPersonnage(character, campaigns, customGameDrivers, activeCampaignId);
             const regle = selonLeJeu(piloteDuPJ, character.sheetData);
+            if (piloteDuPJ?.jet?.shadowrun?.suivi && lireSuiviShadowrun(character.sheetData ?? {}).essenceMortConfirmee) {
+                gmToast('Mort par Essence confirmée : aucun soin ni dégât à appliquer (p. 60).', 'info'); return;
+            }
             const impact = regle?.impact ?? impactSaisi;
             plateauDeCombat()?.noterUnCoup?.(targetId, impact);
             if (regle && Object.keys(regle.fiche).length > 0) {

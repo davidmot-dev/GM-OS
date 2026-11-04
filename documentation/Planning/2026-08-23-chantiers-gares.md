@@ -13621,10 +13621,21 @@ Potentiels : un choix explicite au jet, avec leurs dés saisis, sans interpréte
   cochés/verts dans la synthèse des pilotes ; Degenesis à 🟢 13 · 🟠 0 · 🔴 0.
 - **Reste :** rien pour DEG-A1 à DEG-A6.
 
+### 211 · Shadowrun Anarchy — SR-A1, SR-A2 et SR-A3 — 04/11/2026
+
+David : « on va commencer SR-A1, SR-A2 et SR-A3 ». Il confirme « GM-OS est fermé », autorise l’ajout au registre en conservant les changements existants et les essais/services locaux en profil jetable.
+
+- **Livré et validé par David le 04/11** : pilote 2.1.0, drain et origines par case, soins admissibles, malus au terme de narration ; dérivés proposés avec dérogation, Anarchy sans plafond et suites d’Essence ; Matrice préparée, accès par cible, surveillance et convergence confirmées.
+- **Validation** : Validation de David le 04/11/2026 : « ok c'est bon, c'est testé ». Elle porte sur SR-A1, SR-A2 et SR-A3 du pilote 2.1.0 ; les limites documentées et SR-A4/A5/A6 restent séparés.
+- **Ancres** : `suiviDeShadowrun.ts`, `matriceDeShadowrun.ts`, `CartesShadowrun.tsx`, `moniteurDeShadowrun.ts`, `PanneauDeJet.tsx` ; générateur `outils/shadowrun-anarchy/ameliorer_shadowrun.mjs`.
+- **Vérifications et limites** : [suivi détaillé](2026-11-04-shadowrun-sr-a1-a3.md), livre p. 60, 68-70, 170, 212, 216-218 relu directement ; parcours Electron jetable passé, captures relues ; tests, types, lint et construction consignés dans le suivi.
+- **Reprendre** : SR-A1/A2/A3 validés, choisir séparément SR-A4/A5/A6 ; aucun essai en attente pour ce lot. David rappelle le 04/11 que les pilotes à réimporter doivent se trouver dans `Export Dirvers/corriges/` ; copie vérifiée par SHA-256 et consigne ajoutée à `AGENTS.md`. Après validation, David demande « commit » le 04/11 ; aucun push demandé. Les changements préexistants du registre sont conservés.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 147 | **Shadowrun — SR-A1/A2/A3** | 🟢 § 211 ; pilote 2.1.0 livré et validé par David — 04/11 | Rien pour ce lot ; choisir SR-A4/A5/A6 séparément | Rien pour SR-A1/A2/A3 |
 | 145 | **Degenesis — DEG-A5 et DEG-A6** | 🟢 § 209 ; carte « Sporulation et Brûlure » (Germe, exposition, EX, Brûlure, stimulation aux jets, Argus, Potentiel), adversaires sans fiche à deux pistes, pilote 2.3.0, validés par David — 04/11 | Rien : DEG-A1 à DEG-A6 tous faits ; ensuite un autre lot (COC, Shadowrun) | Rien |
 | 144 | **Degenesis — DEG-A3 et DEG-A4** | 🟢 § 208 ; carte « Maxima » (branches, Égo maximal), aide, combinaison, confrontation et action complexe livrées, pilote 2.2.0, validées par David — 04/11 | Rien pour DEG-A1 à DEG-A4 ; ensuite DEG-A5 et DEG-A6 | Rien |
 | 143 | **Degenesis — DEG-A1 et DEG-A2** | 🟢 § 207 ; round (Égo payé une fois, actions), défense passive ou active, dégâts nets livrés, pilote 2.1.0, validés par David — 04/11 | Rien pour DEG-A1 et DEG-A2 ; ensuite DEG-A3 et DEG-A4 | Rien |

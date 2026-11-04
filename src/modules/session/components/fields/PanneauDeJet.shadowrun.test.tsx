@@ -116,4 +116,32 @@ describe('le test de Shadowrun au panneau', () => {
         expect(panneau.querySelector('[data-composition-shadowrun]')!.textContent).toContain('Réserve 11 +2 de spécialisation = 13 dés');
         expect(screen.getByText(/Essence : 1 succès annulé sur ce test de magie/)).toBeTruthy();
     });
+
+    it('SR-A2 : une complication critique fait passer Anarchy de 99 à 100 sans plafond', () => {
+        const { ecrire } = monter({ ...IRON, anarchy: 99, competence_1_rr: 0 });
+        faces(2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1);
+        lancer();
+        expect(ecrire).toHaveBeenCalledWith({ anarchy: 100 });
+    });
+
+    it('SR-A1 : drain confirmé une fois, relance comprise ; les choix suivants ne changent pas son origine', () => {
+        const suivi = { mecanique: 'shadowrun' as const, suivi: true, legeres: 'blessures_legeres', graves: 'blessures_graves',
+            incapacitantes: 'blessures_incapacitantes', sante: 'moniteur' };
+        const ecrire = vi.fn();
+        render(<PanneauDeJet descripteur={{ ...JET, shadowrun: { ...JET.shadowrun, suivi } }} dice={DICE} template={FICHE}
+            valeurs={{ ...IRON, competence_1_rr: 0 }} ecrireSurLaFiche={ecrire} />);
+        fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: 'competence_1' } });
+        fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'agilite' } });
+        fireEvent.click(screen.getByLabelText('Test de magie'));
+        fireEvent.click(screen.getByLabelText(/Action soumise au drain/));
+        faces(2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1);
+        lancer();
+        fireEvent.click(screen.getByText("Relancer — 1 point d'Anarchy"));
+        const confirmation = screen.getByText('Confirmer les conséquences drain / Matrice');
+        fireEvent.click(confirmation);
+        expect(ecrire.mock.calls.at(-1)![0]).toMatchObject({ blessures_legeres: 1, __shadowrun: { blessures: [{ origine: 'drain' }] } });
+        const compte = ecrire.mock.calls.length;
+        fireEvent.click(screen.getByText('Conséquences appliquées'));
+        expect(ecrire.mock.calls).toHaveLength(compte);
+    });
 });
