@@ -3,7 +3,9 @@
 > **Pilote décrit :** « Degenesis », forgé par David, exporté le 2026-10-30, **fini le
 > 2026-10-30**, version 2.0.0 (`outils/degenesis/finir_degenesis.py`), puis **2.1.0 le 2026-11-03**
 > pour le round et l'attaque, DEG-A1 et DEG-A2 (`outils/degenesis/combat_degenesis.py`), puis **2.2.0 le
-> 2026-11-04** pour les maxima et les jets liés, DEG-A3 et DEG-A4 (`outils/degenesis/maxima_et_jets_lies_degenesis.py` →
+> 2026-11-04** pour les maxima et les jets liés, DEG-A3 et DEG-A4 (`outils/degenesis/maxima_et_jets_lies_degenesis.py`), puis
+> **2.3.0 le 2026-11-04** pour la Sporulation, la Brûlure et les adversaires sans fiche, DEG-A5 et DEG-A6
+> (`outils/degenesis/contamination_degenesis.py` →
 > `Export Dirvers/corriges/Degenesis_driver_gmos_finir.gmos-driver`, à réimporter avec « Remplacer »). Thème `degenesis`, fiche de personnage HTML
 > et bannière livrés le même jour par Codex. Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
@@ -169,8 +171,53 @@ main.
   chirurgie ou dix jours de repos chacun (p. 112-113).
 - Un dégât de type **« mental »** ne touche pas la chair : il se retire de l'**Égo**. À zéro, le
   personnage s'effondre ; PSY+Foi ou Volonté (2) le relève à 1 point, une seule fois (p. 107).
-- Les **Sporulations** montent jusqu'à **(PSY+Foi/Volonté)×2** ; au-delà, un test par point en
-  excès, et chaque échec donne un point permanent (p. 186) — cela reste à la table.
+- Les **Sporulations** montent jusqu'à **(PSY+Foi/Volonté)×2** ; au-delà, le test du Germe — voir
+  [la Sporulation et la Brûlure](#la-sporulation-et-la-brûlure).
+
+### Les adversaires sans fiche
+
+![L'Usudi préparé au round : 12 dégâts, Blessures 10/10 et Traumatismes 2/5](captures/jeu-degenesis-adversaire.jpg)
+
+Un combattant du plateau sans fiche de campagne (DEG-A6, 04/11/2026, dessiné dans Stitch et validé
+par David) se **prépare** dans le panneau « Round de Degenesis », sous « Avant l'initiative » :
+**PHY, Résistance, PSY et Égo**, puis « Préparer ». Ils s'écrivent sur sa fiche de plateau ; ses
+maxima se calculent comme pour un PJ — Blessures (PHY+Résistance)×2, Traumatismes PHY+PSY — et
+ses coups passent par **la même porte** : Blessures superficielles puis Traumatismes, « mortel »
+droit aux Traumatismes, « mental » sur son Égo. La même attaque donne donc les mêmes pistes à un
+PNJ de la Galerie et à un adversaire autonome. Le panneau dit ensuite « Blessures 10 / 10 ·
+Traumatismes 2 / 5 · Égo 4 / 4 ». **Non préparé**, il est marqué « à préparer » : ses coups restent
+en PV, et un avertissement le rappelle — GM-OS ne prétend pas calculer des pistes sans maxima.
+
+## La Sporulation et la Brûlure
+
+![La carte « Sporulation et Brûlure » : 15 / 10, un point permanent, Argus en cours](captures/jeu-degenesis-sporulation.jpg)
+
+À l'onglet du test, la carte **« Sporulation et Brûlure »** (DEG-A5, 04/11/2026, dessinée dans
+Stitch et validée par David) :
+
+- **La jauge** des Sporulations, les points **permanents** en sombre ; les seuils (p. 186) :
+  **Mollusk** dès 1, **Stigmates** à 50 % du maximum, **Porteur du Germe** dès un point permanent,
+  **Léperos** quand la moitié de l'échelle est permanente.
+- **Le test du Germe** : au-delà du maximum, un test de PSY + Foi ou Volonté (la branche des
+  « Maxima ») par point d'excédent pas encore testé, de difficulté l'excédent ; GM-OS les lance
+  (choix de David) et chaque échec ajoute un point permanent.
+- **L'exposition** : le niveau du tableau de la p. 186 (légère sporination 1 … saturation 10), les
+  succès d'office de l'**hermétique**, puis « Test PHY + Résistance » ; un échec ajoute 1 ou 1D.
+- **La dose d'EX** retire 1D, jamais les points permanents, une fois par jour (p. 177) ;
+  « **Nouveau jour** » rend 1 Égo au réveil et rouvre l'EX.
+- **La Brûlure** : le Chakra (Bion, Gloire, Unité, Muse, Argus, Discordia), légère (Puissance 1) ou
+  intense (1D), « Inhaler » — l'Égo remonte de la Puissance (sans dépasser son maximum), la
+  Sporulation monte d'autant, et la **stimulation en cours** s'affiche ; la suivante la remplace,
+  « Terminer » la retire, la Sporulation reste (p. 188-190). La **Discordia** n'en donne aucune :
+  un attribut tiré au dé tombe à 1, ou monte à 6 sur un 6, pendant six heures (p. 190).
+
+La stimulation se **propose aux jets** (choix de David), cochée d'office quand le jet correspond :
+**Muse** +Puissance D à INS + Perception ou Empathie, **Unité** à CHA + Négociation ou Expression,
+**Gloire** +Puissance succès d'office en PSY + Foi/Volonté et PHY +Puissance/2 (arrondi au-dessus)
+sur un jet de Physique, **Bion** +Puissance succès d'office en PHY + Résistance, **Discordia**
+l'écart de l'attribut touché. L'**Argus** ajoute ses dés à l'initiative du round, et la case « Pris
+par surprise » disparaît. Au même endroit, un **Potentiel** de la fiche se choisit explicitement,
+avec les dés que le meneur lui accorde ; son texte n'est pas interprété.
 
 ## La fiche du personnage
 
@@ -217,13 +264,14 @@ Paramètres. Accepté par le validateur sans erreur ni avertissement. La banniè
 - **La contre-attaque** d'une parade à trois déclencheurs est annoncée, pas lancée ; les attaques
   mentales (PSY + Foi ou Volonté, sans action) se règlent au panneau, sans bloc d'attaque.
 - **Rafale, Régularité, Terrifiant, Incendiaire** et les autres propriétés restent au meneur.
-- **Les Potentiels**, les rangs de Culte et la **Brûlure** (Égo et Sporulation +Puissance,
-  p. 187-190) — DEG-A5.
+- **Les effets des Potentiels** (dépense d'Égo, déclencheurs) et les rangs de Culte : le Potentiel
+  se choisit au jet, ses dés se saisissent. La durée d'une stimulation se compte à la table
+  (« Terminer ») ; la Gloire ne monte pas F aux dégâts ; le transfert de la Muse et la paix de
+  l'Unité se jouent au récit.
 - **L'aide d'un PNJ** : seuls les personnages des joueurs se proposent comme aidés ; un PNJ qui
   aide se règle en dés ajoutés à la main.
-- **Les adversaires sans fiche** dans Combat-OS perdent leurs PV d'un bloc : les deux pistes ne se
-  tiennent que sur une fiche (DEG-A6). Ils se défendent pourtant, si leur fiche de plateau porte
-  AGI et Mobilité.
+- **Un adversaire sans fiche non préparé** perd ses PV d'un bloc ; préparé au round, il a ses deux
+  pistes. Sa défense active lit AGI et Mobilité sur sa fiche de plateau.
 
 ## Les campagnes de test
 

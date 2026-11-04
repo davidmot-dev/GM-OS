@@ -111,3 +111,59 @@ describe('le round de Degenesis', () => {
         expect(kum.textContent).not.toContain('+1D d’Égo');
     });
 });
+
+describe('DEG-A5 et DEG-A6 au round (04/11)', () => {
+    const PILOTE = {
+        ...DEG,
+        jet: { ...DEG.jet, degenesis: { ...DEG.jet.degenesis, maxima: {
+            ego: { champ: 'ego_max', jauge: 'ego_jauge', branches: [] },
+            blessures: { jauge: 'blessures_superficielles', champs: ['physique', 'resistance'] },
+            traumatismes: { jauge: 'traumatismes', champs: ['physique', 'psyche'] },
+            abreviations: { physique: 'PHY', resistance: 'Résistance', psyche: 'PSY' },
+        } } },
+        combat: { ...DEG.combat,
+            statsToTrack: [
+                { fieldId: 'blessures_superficielles', max: '(physique + resistance) * 2' },
+                { fieldId: 'traumatismes', max: 'physique + psyche' },
+                { fieldId: 'ego_jauge', max: 'ego_max' },
+            ],
+            pistesDeSante: { mecanique: 'degenesis', blessures: 'blessures_superficielles', traumatismes: 'traumatismes', ego: 'ego_jauge' } },
+    };
+
+    it('la meute sans fiche se prépare : PHY 3, Résistance 2, PSY 2, Égo 4 → Blessures 0/10, Traumatismes 0/5', () => {
+        useSessionOSStore.setState({ customGameDrivers: [PILOTE] } as never);
+        render(<PanneauDuRoundDeDegenesis />);
+        const bloc = document.querySelector('[data-adversaire-degenesis="cb-usudis"]') as HTMLElement;
+        expect(bloc.textContent).toContain('à préparer');
+        expect(document.querySelector('[data-adversaire-degenesis="cb-kum"]')).toBeNull();
+        fireEvent.change(screen.getByLabelText("PHY de Meute d'Usudis"), { target: { value: '3' } });
+        fireEvent.change(screen.getByLabelText("Résistance de Meute d'Usudis"), { target: { value: '2' } });
+        fireEvent.change(screen.getByLabelText("PSY de Meute d'Usudis"), { target: { value: '2' } });
+        fireEvent.change(screen.getByLabelText("Égo de Meute d'Usudis"), { target: { value: '4' } });
+        fireEvent.click(screen.getByText('Préparer'));
+        const meute = useCombatStore.getState().combatants.find(c => c.id === 'cb-usudis')!;
+        expect(meute).toMatchObject({ hp: 15, hpMax: 15 });
+        expect(meute.sheetData).toMatchObject({ physique: 3, resistance: 2, psyche: 2, ego_max: 4, ego_jauge: 4, blessures_superficielles: 0, traumatismes: 0 });
+        expect(bloc.querySelector('[data-pistes-adversaire]')!.textContent).toContain('Blessures 0 / 10 · Traumatismes 0 / 5 · Égo 4 / 4');
+        // Préparée, elle garde sa réserve dite à la main : la formule demande aussi la Réactivité.
+        expect(screen.getByLabelText("PSY + Réactivité de Meute d'Usudis")).toBeTruthy();
+    });
+
+    it('l’Argus de Vedran, Puissance 2 : deux dés de plus à l’initiative, la surprise impossible', () => {
+        const s = useSessionOSStore.getState();
+        const [vedran, kum] = s.players[0].characters;
+        useSessionOSStore.setState({ players: [{ ...s.players[0], characters: [
+            { ...vedran, sheetData: { ...vedran.sheetData, _gmos_degenesis: { version: 1, stimulation: { chakra: 'argus', puissance: 2 } } } }, kum,
+        ] }] } as never);
+        render(<PanneauDuRoundDeDegenesis />);
+        const vedranAvant = screen.getByLabelText('Initiative de Vedran');
+        expect(vedranAvant.textContent).toContain('Argus : +2D à l’initiative, ne peut être pris par surprise');
+        expect(vedranAvant.textContent).not.toContain('Pris par surprise');
+        // La meute 0 dé (rien de déclaré), Kum 3, Vedran 4 + 2.
+        faces(5, 5, 5, /* Vedran */ 6, 6, 6, 6, 6, 6);
+        fireEvent.click(screen.getByText('Lancer l’initiative'));
+        expect(de).toHaveBeenCalledTimes(9);
+        expect(useRoundDeDegenesisStore.getState().etats['cb-vedran']).toMatchObject({ score: 6 });
+        expect(String(consigne.mock.calls.at(-1)?.[0]?.content)).toContain("+2D d'Argus");
+    });
+});

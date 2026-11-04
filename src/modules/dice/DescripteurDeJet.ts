@@ -1441,7 +1441,8 @@ export function preparerLeJet(
         )
         : undefined;
     if (degenesis?.traumatismes) remarques.push(`${degenesis.traumatismes} Traumatisme${degenesis.traumatismes > 1 ? 's' : ''} : −${degenesis.traumatismes}D.`);
-    if (degenesis?.automatiques) remarques.push(`Valeur d'action ${degenesis.valeur} : 12 dés et ${degenesis.automatiques} succès d'office.`);
+    // DEG-A5 : des succès d'office viennent aussi des Chakras ou de l'hermétique, pas seulement du plafond de 12.
+    if (degenesis?.automatiques) remarques.push(`Valeur d'action ${degenesis.valeur} : ${degenesis.des} dés et ${degenesis.automatiques} succès d'office.`);
 
     /*
       **Shadowrun : Anarchy** (2026-10-31) : *« aucune circonstance ne peut faire changer ce

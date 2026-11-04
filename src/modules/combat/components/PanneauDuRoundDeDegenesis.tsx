@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dices, SkipForward } from 'lucide-react';
 import { useCombatStore } from '../useCombatStore';
 import { useRoundDeDegenesisStore } from '../useRoundDeDegenesisStore';
@@ -13,6 +13,9 @@ import {
 } from '../../dice/systemes/combatDeDegenesis';
 import { EGO_PAR_ROUND } from '../../dice/systemes/degenesis';
 import type { Combatant } from '../types';
+import { argusDe } from '../../dice/systemes/contaminationDeDegenesis';
+import { lireLEtatDegenesis } from '../../dice/systemes/maximaDeDegenesis';
+import { champsAPreparer, estUnAdversaireAutonome, pistesDeLAdversaire, preparerLAdversaire } from '../logic/adversairesDeDegenesis';
 
 /**
  * **Le round de Degenesis** — DEG-A1, 03/11/2026 (`combat.initiativeEnReserve`), dessiné dans
@@ -29,7 +32,7 @@ const classe = 'min-w-0 rounded border border-app-border/50 bg-app-bg px-2 py-1 
 const petitBouton = 'flex-1 px-2 py-0.5 rounded border border-app-border/40 text-ui-10 hover:border-accent/50 disabled:opacity-30';
 const entier = (v: unknown) => Math.trunc(Number(v) || 0);
 
-interface Lu { va: number; aUneFiche: boolean; traumatismes: number; ego?: number }
+interface Lu { va: number; aUneFiche: boolean; traumatismes: number; ego?: number; argus: number }
 
 function lire(c: Combatant): Lu {
     const pilote = useSessionOSStore.getState().getActiveDriver();
@@ -40,7 +43,13 @@ function lire(c: Combatant): Lu {
     const regle = pilote?.jet?.degenesis;
     const champEgo = regle?.ego;
     const ego = champEgo && v[champEgo] !== undefined && String(v[champEgo]).trim() !== '' ? Math.max(0, entier(v[champEgo])) : undefined;
-    return { va, aUneFiche: !!formule && formule.split(/[^\p{L}_]+/u).filter(Boolean).some(n => cle(n) !== undefined), traumatismes: regle?.traumatismes ? Math.max(0, entier(v[regle.traumatismes])) : 0, ego };
+    // Tous les champs de la formule, et non un seul : un adversaire préparé (DEG-A6) porte PSY sans Réactivité.
+    return {
+        va, aUneFiche: !!formule && formule.split(/[^\p{L}_]+/u).filter(Boolean).every(n => cle(n) !== undefined),
+        traumatismes: regle?.traumatismes ? Math.max(0, entier(v[regle.traumatismes])) : 0, ego,
+        // DEG-A5 : l'Argus ajoute sa Puissance en dés d'initiative et empêche la surprise (p. 190).
+        argus: argusDe(lireLEtatDegenesis(v).stimulation),
+    };
 }
 
 const Pips: React.FC<{ e: EtatDuRound }> = ({ e }) => (
@@ -50,6 +59,59 @@ const Pips: React.FC<{ e: EtatDuRound }> = ({ e }) => (
         ))}
     </span>
 );
+
+/**
+ * **Préparer un adversaire sans fiche** — DEG-A6, 04/11/2026, dessiné dans Stitch
+ * (`stitch/degenesis-adversaire/`) et validé par David. PHY, Résistance, PSY et Égo écrits sur
+ * sa fiche de plateau : ses coups suivent ensuite les deux pistes, comme ceux d'un PJ.
+ */
+const PreparerLAdversaire: React.FC<{ c: Combatant }> = ({ c }) => {
+    const pilote = useSessionOSStore(s => s.getActiveDriver());
+    const updateCombatant = useCombatStore(s => s.updateCombatant);
+    const maxima = pilote?.jet?.degenesis?.maxima;
+    const pistes = pilote?.combat?.pistesDeSante;
+    const stats = pilote?.combat?.statsToTrack;
+    const champs = maxima ? champsAPreparer(maxima) : [];
+    const [saisie, setSaisie] = useState<Record<string, string>>(() => Object.fromEntries(
+        [...champs, '__ego'].map(k => [k, String((k === '__ego' ? c.sheetData?.[maxima?.ego.champ ?? ''] : c.sheetData?.[k]) ?? '')])));
+    if (!estUnAdversaireAutonome(c) || !maxima || !pistes) return null;
+    const p = pistesDeLAdversaire(pistes, stats, c.sheetData);
+    const libelle = (k: string) => maxima.abreviations?.[k] ?? k;
+    const preparer = () => {
+        const r = preparerLAdversaire(maxima, pistes, stats, c.sheetData,
+            Object.fromEntries(champs.map(k => [k, entier(saisie[k])])), entier(saisie.__ego));
+        if (!r) return;
+        updateCombatant(c.id, { sheetData: r.sheetData, hp: r.hp, hpMax: r.hpMax });
+        const ap = pistesDeLAdversaire(pistes, stats, r.sheetData)!;
+        useJournalStore.getState().addEvent({
+            type: 'COMBAT', title: `${c.name} préparé`,
+            content: `${champs.map(k => `${libelle(k)} ${entier(saisie[k])}`).join(', ')}, Égo ${entier(saisie.__ego)} : Blessures superficielles 0/${ap.maxBlessures}, Traumatismes 0/${ap.maxTraumatismes} (p. 94).`,
+            sceneId: useCombatStore.getState().sceneId ?? undefined,
+        });
+    };
+    return (
+        <div data-adversaire-degenesis={c.id} className="space-y-1.5 border-t border-app-border/20 pt-1.5">
+            {p
+                ? <p className="text-ui-10 text-app-text/70" data-pistes-adversaire>
+                    <span className="font-bold text-accent">{c.name}</span> — Blessures {p.blessures} / {p.maxBlessures} · Traumatismes {p.traumatismes} / {p.maxTraumatismes}
+                    {p.ego !== undefined ? ` · Égo ${p.ego} / ${p.maxEgo}` : ''}
+                </p>
+                : <p className="text-ui-10 italic text-app-text/50"><span className="mr-1 rounded border border-etat-alerte/60 bg-etat-alerte/10 px-1 not-italic font-black uppercase tracking-widest text-ui-9 text-etat-alerte">à préparer</span>ses coups restent en PV</p>}
+            <div className="grid grid-cols-2 gap-1">
+                {[...champs, '__ego'].map(k => (
+                    <label key={k} className="flex items-center justify-between gap-1 rounded border border-app-border/30 px-1.5 text-ui-10 text-app-text/60">
+                        {k === '__ego' ? 'Égo' : libelle(k)}
+                        <input aria-label={`${k === '__ego' ? 'Égo' : libelle(k)} de ${c.name}`} type="number" min={0} className={`w-10 ${classe}`} value={saisie[k] ?? ''}
+                            onChange={e => setSaisie(s => ({ ...s, [k]: e.target.value }))} />
+                    </label>
+                ))}
+            </div>
+            <button className="w-full rounded bg-accent px-2 py-1 text-ui-10 font-black uppercase tracking-widest text-app-on-accent hover:opacity-90" onClick={preparer}>
+                {p ? 'Préparer de nouveau' : 'Préparer'}
+            </button>
+        </div>
+    );
+};
 
 const PanneauDuRoundDeDegenesis: React.FC = () => {
     const combattants = useCombatStore(s => s.combatants);
@@ -66,8 +128,9 @@ const PanneauDuRoundDeDegenesis: React.FC = () => {
         const resultats: Record<string, EtatDuRound> = {};
         const dits: string[] = [];
         for (const c of combattants) {
-            const l = lus[c.id], d = decl(c);
-            const va = l.aUneFiche ? l.va : entier(d.va);
+            const l = lus[c.id], d0 = decl(c);
+            const d = l.argus ? { ...d0, surpris: false } : d0;
+            const va = (l.aUneFiche ? l.va : entier(d.va)) + l.argus;
             const r = lancerLInitiative(va, l.traumatismes, d, l.ego, () => DiceEngine.roll(6));
             resultats[c.id] = r.etat;
             const champEgo = useSessionOSStore.getState().getActiveDriver()?.jet?.degenesis?.ego;
@@ -76,6 +139,7 @@ const PanneauDuRoundDeDegenesis: React.FC = () => {
             dits.push(`${c.name} ${r.etat.score}`
                 + (r.etat.actions > 1 ? ` (${r.etat.actions} actions)` : '')
                 + (r.egoPaye > 0 ? `, +${r.egoPaye}D d'Égo (Égo ${l.ego} → ${l.ego! - r.egoPaye})` : '')
+                + (l.argus ? `, +${l.argus}D d'Argus` : '')
                 + (d.surpris ? ', surpris' : ''));
         }
         const ordre = ordonnerLInitiative(combattants.map(c => ({ id: c.id, score: resultats[c.id].score, joueur: c.isPlayer })));
@@ -134,11 +198,14 @@ const PanneauDuRoundDeDegenesis: React.FC = () => {
                                             onChange={e => declarer(c.id, { va: Number(e.target.value) })} />
                                     </label>
                                 )}
-                                <label className="flex items-center gap-1.5 text-ui-11 text-app-text/70">
-                                    <input type="checkbox" checked={d.surpris} onChange={e => declarer(c.id, { surpris: e.target.checked })} />
-                                    Pris par surprise
-                                </label>
-                                {d.surpris && <p className="text-ui-10 italic text-app-text/50">Surpris : aucun Égo (p. 100).</p>}
+                                {l.argus > 0
+                                    ? <p className="text-ui-10 italic text-accent">Argus : +{l.argus}D à l’initiative, ne peut être pris par surprise (p. 190).</p>
+                                    : <label className="flex items-center gap-1.5 text-ui-11 text-app-text/70">
+                                        <input type="checkbox" checked={d.surpris} onChange={e => declarer(c.id, { surpris: e.target.checked })} />
+                                        Pris par surprise
+                                    </label>}
+                                {d.surpris && !l.argus && <p className="text-ui-10 italic text-app-text/50">Surpris : aucun Égo (p. 100).</p>}
+                                <PreparerLAdversaire c={c} />
                             </div>
                         );
                     })}

@@ -70,3 +70,25 @@ it('la Forge refuse des maxima et des réserves de confrontation qui lisent des 
     expect(ou('jet.degenesis.reserves[0].competences[1]')).toBe(true);
     expect(ou('jet.degenesis.reserves[0].competences[0]')).toBe(false);
 });
+
+it('la Forge refuse une contamination qui lit des champs absents (DEG-A5, 04/11)', () => {
+    const d = {
+        dice: { engine: 'pool', successThreshold: 4 },
+        jet: { sens: 'superieur-ou-egal', reserve: { base: 0, max: 12, faces: 6 }, degenesis: { contamination: {
+            sporulations: 'spores_absentes', physique: 'psyche', resistance: ['psyche', 'resistance_absente'],
+            attributs: ['psyche'], mental: [['psyche', 'foi_absente']], social: [], sens: [],
+            potentiels: [{ nom: 'pot_absent', niveau: 'reactivite' }],
+        } } },
+        combat: { statsToTrack: [] },
+    } as unknown as GameDriver;
+    const r = controlerLePilote(d, fiche);
+    const ou = (cle: string, gravite = 'erreur') => r.some(c => c.ou === cle && c.gravite === gravite);
+    expect(ou('jet.degenesis.contamination.sporulations')).toBe(true);
+    expect(ou('jet.degenesis.contamination.resistance[1]')).toBe(true);
+    expect(ou('jet.degenesis.contamination.resistance[0]')).toBe(false);
+    expect(ou('jet.degenesis.contamination.mental[0][1]')).toBe(true);
+    expect(ou('jet.degenesis.contamination.potentiels[0].nom')).toBe(true);
+    expect(ou('jet.degenesis.contamination.potentiels[0].niveau')).toBe(false);
+    expect(ou('jet.degenesis.contamination.attributs', 'avertissement')).toBe(true);
+    expect(ou('jet.degenesis.contamination.sporulations', 'avertissement')).toBe(true);
+});

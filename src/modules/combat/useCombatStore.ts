@@ -28,6 +28,7 @@ import { horlogeDeDefaite } from './logic/TacheDeDefaite';
 import { lireDune, santeDuConflitDune } from '../dice/systemes/duneRegles';
 import { comparerLInitiative, departager } from './logic/departageDInitiative';
 import { estHorsDeCombat, santeDeDepart, valeurDuChamp } from './logic/SanteDuCombattant';
+import { coupSurLAdversaire, estUnAdversaireAutonome } from './logic/adversairesDeDegenesis';
 import { DiceEngine } from '../dice/DiceEngine';
 import { actionsDuRound, lancerDegenesis, reserveDeDegenesis } from '../dice/systemes/degenesis';
 import { malusDeSante } from '../dice/systemes/coc';
@@ -80,6 +81,7 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
 /** Le pilote actif, lu par le global — un import direct fermerait un cycle. */
 function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'asc' | 'desc'; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien;
     initiativeEnReserve?: GameDriver['combat']['initiativeEnReserve']; pistesDeSante?: GameDriver['combat']['pistesDeSante'];
+    statsToTrack?: GameDriver['combat']['statsToTrack'];
     encaissement?: GameDriver['combat']['encaissement'] }; jet?: { coc?: { des?: 'd20' | '3d6' } } } | undefined {
     try {
         return (window as unknown as {
@@ -1437,10 +1439,36 @@ export const useCombatStore = create<CombatState>()(
                 }
                 targetIds = targetIds.filter(id => !transmis.has(id));
 
+                /*
+                  **Degenesis : l'adversaire sans fiche, à deux pistes** (DEG-A6, 2026-11-04). Préparé
+                  au panneau du round, il passe par la même porte qu'un PJ : le coup coche ses Blessures
+                  superficielles puis ses Traumatismes, le « mental » va à son Égo, et sa santé perd ce
+                  que les pistes retiennent. Non préparé, le coup reste en PV, et on le dit.
+                */
+                const regleDesPistes = piloteActif()?.combat?.pistesDeSante;
+                const pistesPour: Record<string, { montant: number; fiche: Record<string, number>; texte: string }> = {};
+                if (regleDesPistes) for (const c of get().combatants.filter(x => targetIds.includes(x.id) && estUnAdversaireAutonome(x))) {
+                    const r = coupSurLAdversaire(regleDesPistes, piloteActif()?.combat?.statsToTrack, c.sheetData, amount, type);
+                    if (r === 'a-preparer') { gmToast(`${c.name} n’est pas préparé pour Degenesis : le coup reste en PV (panneau du round).`, 'warning'); continue; }
+                    pistesPour[c.id] = r;
+                }
+
                 const coupsPortes: [string, number][] = [];
                 set((state) => {
                     const newCombatants = state.combatants.map(c => {
                         if (!targetIds.includes(c.id)) return c;
+
+                        // Degenesis (DEG-A6) : les pistes ont déjà compté le coup ; l'armure était retirée avant.
+                        const pistes = pistesPour[c.id];
+                        if (pistes) {
+                            const hpMax = c.hpMax ?? c.hp ?? 0;
+                            const hp = Math.max(0, Math.min(hpMax, (c.hp ?? hpMax) - pistes.montant));
+                            coupsPortes.push([c.id, pistes.montant]);
+                            const healthSystem = c.healthSystem && pistes.montant !== 0
+                                ? HealthInterpreter.calculateNextState(c.healthSystem, { value: Math.abs(pistes.montant), isRecovery: pistes.montant < 0 })
+                                : c.healthSystem;
+                            return { ...c, hp, healthSystem, sheetData: { ...c.sheetData, ...pistes.fiche } };
+                        }
 
                         // Calcul pur des conséquences (Moteur de règles)
                         const synthetique = !!alien && estUnAndroide(alien, c.sheetData ?? {});
@@ -1501,6 +1529,11 @@ export const useCombatStore = create<CombatState>()(
                 // store, et le faire pendant une mise à jour reviendrait à muter
                 // pendant qu'on se met à jour.
                 coupsPortes.forEach(([id, valeur]) => get().noterUnCoup(id, { value: valeur }));
+                // DEG-A6 : ce que les pistes ont retenu se dit au journal, comme pour un PJ.
+                Object.entries(pistesPour).forEach(([id, p]) => {
+                    const c = get().combatants.find(x => x.id === id);
+                    if (c) useJournalStore.getState().addEvent({ type: 'COMBAT', title: `${c.name} — pistes`, content: p.texte, sceneId: get().sceneId ?? undefined });
+                });
 
                 /*
                   **Le pupitre écrit sa trace, lui aussi.**

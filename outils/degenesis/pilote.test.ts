@@ -3,18 +3,19 @@ import AdmZip from 'adm-zip';
 import { describe, it, expect } from 'vitest';
 import { controlerLePilote } from '../../src/modules/forge/rules/controlesDuPilote';
 import { preparerLeJet } from '../../src/modules/dice/DescripteurDeJet';
-import { calculerLesMaxima, appliquerLEgoMaximal } from '../../src/modules/dice/systemes/maximaDeDegenesis';
+import { calculerLesMaxima, appliquerLEgoMaximal, CLE_DEGENESIS } from '../../src/modules/dice/systemes/maximaDeDegenesis';
+import { bonusDeLaStimulation, inhaler } from '../../src/modules/dice/systemes/contaminationDeDegenesis';
 import { santeDeDepart, valeurDuChamp } from '../../src/modules/combat/logic/SanteDuCombattant';
 import { calculerLeCoup, lireLaManiabilite, lireLesDegats, lireLesProprietes, sommeDesChamps } from '../../src/modules/dice/systemes/combatDeDegenesis';
 
 /**
  * **Le pilote Degenesis remis à David** (2.0.0 le 30/10/2026, `finir_degenesis.py` ; 2.1.0 le
  * 03/11 : DEG-A1 et DEG-A2, `combat_degenesis.py` ; 2.2.0 le 04/11 : DEG-A3 et DEG-A4,
- * `maxima_et_jets_lies_degenesis.py`). Sauté tant que le fichier n'est pas là :
+ * `maxima_et_jets_lies_degenesis.py` ; 2.3.0 le 04/11 : DEG-A5 et DEG-A6, `contamination_degenesis.py`). Sauté tant que le fichier n'est pas là :
  * `Export Dirvers/` ne se commite pas.
  */
 const fichier = 'Export Dirvers/corriges/Degenesis_driver_gmos_finir.gmos-driver';
-describe.skipIf(!fs.existsSync(fichier))('export Degenesis 2.2.0 fourni à David', () => {
+describe.skipIf(!fs.existsSync(fichier))('export Degenesis 2.3.0 fourni à David', () => {
     const x = JSON.parse(new AdmZip(fichier).getEntry('state.json')!.getData().toString('utf8'));
     const sections = x.sheetTemplate.sections;
     const defauts = Object.fromEntries(sections.flatMap((s: { fields: { id: string; defaultValue?: unknown }[] }) =>
@@ -24,7 +25,7 @@ describe.skipIf(!fs.existsSync(fichier))('export Degenesis 2.2.0 fourni à David
     it('ne produit aucun constat de la Forge et préserve les identifiants', () => {
         expect(controlerLePilote(x.gameDriver, x.sheetTemplate)).toEqual([]);
         expect(x.gameDriver.id).toBe('custom-1793142284065');
-        expect(x.gameDriver.version).toBe('2.2.0');
+        expect(x.gameDriver.version).toBe('2.3.0');
         expect(x.gameDriver.combat.initiativeEnReserve).toEqual({ mecanique: 'degenesis' });
         const ids = sections.flatMap((s: { fields: { id: string }[] }) => s.fields.map(f => f.id));
         expect(ids).toHaveLength(131);
@@ -64,5 +65,15 @@ describe.skipIf(!fs.existsSync(fichier))('export Degenesis 2.2.0 fourni à David
         expect(r.map(a => a.attribut)).toEqual(['physique', 'agilite', 'charisme', 'intellect', 'psyche', 'instinct']);
         expect(r.every(a => a.competences.length === 6)).toBe(true);
         expect(r.find(a => a.attribut === 'psyche')!.competences).toContain('tromperie');
+    });
+
+    it('une Brûlure intense de Muse : Égo et Sporulation de la fiche, puis +Puissance à INS + Perception (p. 189-190)', () => {
+        const con = x.gameDriver.jet.degenesis.contamination;
+        const fiche = { ...defauts, ego_jauge: 3, ego_max: 8, sporulations_jauge: 2 };
+        const r = inhaler(con, fiche, 'muse', true, 8, () => 4, CLE_DEGENESIS);
+        expect(r.maj).toMatchObject({ ego_jauge: 7, sporulations_jauge: 6 });
+        expect(bonusDeLaStimulation(r.stimulation, con, ['instinct', 'perception'], fiche)).toMatchObject({ des: 4 });
+        expect(con.potentiels).toHaveLength(6);
+        expect(con.attributs).toEqual(['physique', 'agilite', 'charisme', 'intellect', 'psyche', 'instinct']);
     });
 });

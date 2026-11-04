@@ -1390,6 +1390,44 @@ async function scenesDeDegenesis(c: ContexteDeScene): Promise<void> {
         const ch = (window as unknown as Fenetre).useSessionOSStore.getState().players.flatMap(p => p.characters).find(x => x.id === id);
         return [ch?.sheetData?.ego_max, ch?.sheetData?.ego_jauge];
     }, c.personnage)).toEqual([10, 5]);
+
+    // DEG-A5 (04/11) : 11 Sporulations pour un maximum de 10 — le test du Germe, tout en 1, donne un
+    // point permanent ; puis une Brûlure intense d'Argus (1D = 4) : Égo 5 → 9, Sporulation 11 → 15.
+    await ecrireLaFiche(c, { sporulations_jauge: 11 });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const spores = f.locator('[data-carte-du-jeu="sporulation-degenesis"]');
+    await expect(spores.locator('[data-sporulation-total]')).toHaveText('11 / 10', { timeout: 15_000 });
+    await expect(spores.locator('[data-test-du-germe]')).toContainText('1 test, difficulté 1');
+    await hasard(0.01, () => spores.getByRole('button', { name: 'Lancer', exact: true }).click());
+    await expect(spores.locator('[data-seuils-sporulation]')).toContainText('Porteur du Germe');
+    await spores.getByLabel('Chakra de la Brûlure', { exact: true }).selectOption('argus');
+    await spores.getByLabel(/intense/).check();
+    await hasard(0.5, () => spores.getByRole('button', { name: 'Inhaler', exact: true }).click());
+    await expect(spores.locator('[data-stimulation-en-cours]')).toContainText('Argus, Puissance 4');
+    await expect(spores.locator('[data-sporulation-total]')).toHaveText('15 / 10');
+    await photographierLePanneau(spores, 'jeu-degenesis-sporulation');
+
+    // DEG-A6 (04/11) : l'Usudi, sans fiche de campagne, se prépare au round (PHY 3, Résistance 2, PSY 2,
+    // Égo 4) ; 12 dégâts passent ensuite par ses deux pistes. L'Argus de Falberg s'y lit.
+    await ouvrirLeModule(gmos, 'Combat-OS');
+    await expect(round).toBeVisible({ timeout: 15_000 });
+    await round.getByText('Avant l’initiative').click();
+    const usudi = round.locator('[data-adversaire-degenesis]').filter({ has: f.getByLabel('PHY de Usudi', { exact: true }) });
+    await expect(usudi).toContainText('à préparer');
+    await usudi.getByLabel('PHY de Usudi', { exact: true }).fill('3');
+    await usudi.getByLabel('Résistance de Usudi', { exact: true }).fill('2');
+    await usudi.getByLabel('PSY de Usudi', { exact: true }).fill('2');
+    await usudi.getByLabel('Égo de Usudi', { exact: true }).fill('4');
+    await usudi.getByRole('button', { name: 'Préparer', exact: true }).click();
+    await expect(usudi.locator('[data-pistes-adversaire]')).toContainText('Usudi — Blessures 0 / 10 · Traumatismes 0 / 5 · Égo 4 / 4');
+    await f.evaluate(() => {
+        const s = (window as unknown as Fenetre).useCombatStore.getState();
+        s.applyDamage(12, 'physique', [s.combatants.find(x => x.name === 'Usudi')!.id]);
+    });
+    await expect(usudi.locator('[data-pistes-adversaire]')).toContainText('Blessures 10 / 10 · Traumatismes 2 / 5');
+    await expect(round.getByLabel(`Initiative de ${c.nom}`)).toContainText('Argus : +4D à l’initiative');
+    await f.waitForTimeout(3_500);
+    await photographierLePanneau(round, 'jeu-degenesis-adversaire');
 }
 
 /**

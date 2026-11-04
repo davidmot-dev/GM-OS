@@ -13589,10 +13589,41 @@ essais (délai dépassé, rien dans le projet) : les écrans sont à valider sur
   cochés/verts dans la synthèse des pilotes ; Degenesis à 🟢 11 · 🟠 0 · 🔴 2.
 - **Reste :** DEG-A5 et DEG-A6.
 
+### 209 · Degenesis DEG-A5 et DEG-A6 — Sporulation, Brûlure et adversaires sans fiche — 04/11/2026
+
+David : « on va finir DEG-A5 et DEG-A6 » (GM-OS fermé). Choix du 04/11 (les recommandés) : la
+stimulation **proposée aux jets** ; **GM-OS lance** le test du Germe, l'exposition et l'EX ; les
+adversaires sans fiche se préparent avec **PHY, Résistance, PSY et Égo** au panneau du round. Les
+Potentiels : un choix explicite au jet, avec leurs dés saisis, sans interpréter leur texte. Deux
+écrans dessinés dans Stitch (projet 8352739217093926431 : `stitch/degenesis-brulure/`,
+`stitch/degenesis-adversaire/`) et validés par David.
+
+- **Livre relu** (Katharsys, PDF − 1) : EX p. 177 ; Sporulation, stigmates, porteur du Germe,
+  Léperos et tableau de sporination p. 186 ; Brûlure, consommation, sporination p. 187 ; euphorie,
+  stimulation, types de Brûlure p. 188 ; Bion, Gloire, Unité, Muse p. 189 ; Argus et Discordia p. 190.
+- **DEG-A5** — `dice/systemes/contaminationDeDegenesis.ts` (seuils, test du Germe, exposition, EX,
+  inhaler, bonus de la stimulation, Argus, nouveau jour ; état sous la clé cachée `_gmos_degenesis`),
+  la carte `SporulationEtBrulureDegenesis.tsx` (fiche) et `StimulationEtPotentielAuJet` (panneau de
+  jet) ; la réserve reçoit des succès d'office (`ChoixDeDegenesis.succes`) ; l'Argus au round.
+- **DEG-A6** — `combat/logic/adversairesDeDegenesis.ts` (préparer, pistes, coup) ; `applyDamage`
+  fait passer l'adversaire préparé par `pistesDeSanteSelonLeJeu` ; préparation dans
+  `PanneauDuRoundDeDegenesis.tsx`, dont la fiche n'est plus reconnue sur un seul champ de la formule
+  d'initiative (un adversaire préparé porte PSY sans Réactivité).
+- **Pilote 2.3.0** (`outils/degenesis/contamination_degenesis.py` → `Export Dirvers/corriges/Degenesis_driver_gmos_finir.gmos-driver`,
+  bâti sur le 2.2.0 validé, même identifiant, 131 champs) : `jet.degenesis.contamination` ;
+  contrôles de la Forge étendus, zéro constat.
+- **Vérifié :** 8 essais de règles, 5 des adversaires (dont la même attaque sur un PNJ lié et un
+  autonome, et `applyDamage`), 2 du round, 3 de la carte, 2 du panneau de jet, 1 des contrôles,
+  1 du pilote ; suite complète (822 fichiers) ; `tsc -b` et lint ; construction ; e2e des captures
+  Degenesis : `jeu-degenesis-sporulation` et `jeu-degenesis-adversaire`, relues.
+- **Reste :** réimport du 2.3.0 avec **Remplacer** et essai de David. DEG-A1 à DEG-A6 sont alors
+  tous livrés.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 145 | **Degenesis — DEG-A5 et DEG-A6** | 🟠 § 209 ; carte « Sporulation et Brûlure » (Germe, exposition, EX, Brûlure, stimulation aux jets, Argus, Potentiel), adversaires sans fiche à deux pistes, pilote 2.3.0 — 04/11 | Réimporter le pilote 2.3.0 avec « Remplacer », puis inhaler une Brûlure, lancer le test du Germe, préparer un adversaire au round et le frapper | Essai de David |
 | 144 | **Degenesis — DEG-A3 et DEG-A4** | 🟢 § 208 ; carte « Maxima » (branches, Égo maximal), aide, combinaison, confrontation et action complexe livrées, pilote 2.2.0, validées par David — 04/11 | Rien pour DEG-A1 à DEG-A4 ; ensuite DEG-A5 et DEG-A6 | Rien |
 | 143 | **Degenesis — DEG-A1 et DEG-A2** | 🟢 § 207 ; round (Égo payé une fois, actions), défense passive ou active, dégâts nets livrés, pilote 2.1.0, validés par David — 04/11 | Rien pour DEG-A1 et DEG-A2 ; ensuite DEG-A3 et DEG-A4 | Rien |
 | 142 | **RuneQuest — RQ-A5 et RQ-A6** | 🟢 § 206 ; attributs calculés, sort payé, inspiration et expérience livrés, pilote 2.3.0, validés par David — 03/11 | Rien pour RQ-A1 à RQ-A6 ; ensuite un autre lot (Degenesis, COC, Shadowrun) | Rien |

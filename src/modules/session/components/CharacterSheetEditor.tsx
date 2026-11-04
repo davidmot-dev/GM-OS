@@ -33,6 +33,7 @@ import OngletsDeLaFiche from './OngletsDeLaFiche';
 import { CarteDuJeu } from './fields/EtapesDuJet';
 import { AttributsCalculesRuneQuest, MagieEtProgressionRuneQuest } from './fields/CartesRuneQuest';
 import { MaximaDegenesis } from './fields/MaximaDegenesis';
+import { SporulationEtBrulureDegenesis } from './fields/SporulationEtBrulureDegenesis';
 import { consignerLeJet } from '../../journal/consignerLeJet';
 import FicheHote from '../../fiches/FicheHote';
 import { useCorrespondanceDuJeu } from '../../fiches/useCorrespondanceDuJeu';
@@ -414,6 +415,24 @@ const CharacterSheetEditor: React.FC = () => {
                                 <MaximaDegenesis key={`maxima-${character.id}`} regle={piloteDeLaFiche.jet.degenesis.maxima}
                                     valeurs={{ ...character.sheetData, ...editor.localData }}
                                     jauges={piloteDeLaFiche.combat?.statsToTrack ?? []}
+                                    appliquer={maj => {
+                                        if (editor.aDesChangements) { gmToast('Sauvegardez les saisies de la fiche avant ce geste.', 'warning'); return; }
+                                        avecOrigine('jet', () => updateCharacter(editor.selectedPlayer!.id, character.id, { sheetData: { ...character.sheetData, ...maj } }));
+                                    }}
+                                    consigner={ligne => consignerLeJet({ titre: `${character.name} — Degenesis`, totalDisplay: ligne })} />
+                            </CarteDuJeu>
+                        )}
+                        {/*
+                            **Degenesis : Sporulation et Brûlure** (DEG-A5, 2026-11-04, Stitch validé par
+                            David) — test du Germe, exposition, EX, Brûlure et stimulation en cours.
+                        */}
+                        {piloteDeLaFiche?.jet?.degenesis?.contamination && editor.selectedPlayer && (
+                            <CarteDuJeu id="sporulation-degenesis" titre="Sporulation et Brûlure">
+                                <SporulationEtBrulureDegenesis key={`sporulation-${character.id}`} regle={piloteDeLaFiche.jet.degenesis.contamination}
+                                    maxima={piloteDeLaFiche.jet.degenesis.maxima} champTraumatismes={piloteDeLaFiche.jet.degenesis.traumatismes}
+                                    valeurs={{ ...character.sheetData, ...editor.localData }}
+                                    jauges={piloteDeLaFiche.combat?.statsToTrack ?? []}
+                                    libelleDuChamp={c => template.sections.flatMap(sec => sec.fields).find(f => f.id === c)?.label ?? c}
                                     appliquer={maj => {
                                         if (editor.aDesChangements) { gmToast('Sauvegardez les saisies de la fiche avant ce geste.', 'warning'); return; }
                                         avecOrigine('jet', () => updateCharacter(editor.selectedPlayer!.id, character.id, { sheetData: { ...character.sheetData, ...maj } }));

@@ -35,6 +35,8 @@ export interface RegleDeDegenesis {
      * compose d'un attribut et d'une de ses compétences (DEG-A4, pilote 2.2.0, p. 19-20).
      */
     reserves?: { attribut: string; competences: string[] }[];
+    /** Sporulation, Brûlure et Potentiels (DEG-A5, pilote 2.3.0, p. 177, 186-190). */
+    contamination?: import('./contaminationDeDegenesis').RegleDeLaContamination;
 }
 
 /** L'échelle de difficulté du livre : le nombre de succès requis (p. 18). */
@@ -74,6 +76,8 @@ export interface ChoixDeDegenesis {
     modificateur: number;
     /** Les points d'Égo dépensés pour cette action : +1D chacun (p. 100). */
     ego: number;
+    /** Des succès d'office : la Gloire en résistance mentale, le Bion, l'hermétique (DEG-A5, p. 186-190). */
+    succes?: number;
 }
 
 export const CHOIX_DE_DEGENESIS: ChoixDeDegenesis = { modificateur: 0, ego: 0 };
@@ -104,7 +108,7 @@ export function reserveDeDegenesis(base: number, choix: Partial<ChoixDeDegenesis
     return {
         base: entier(base), modificateur, ego, traumatismes: trauma, valeur,
         des: Math.max(0, Math.min(PLAFOND_DE_DEGENESIS, valeur)),
-        automatiques: Math.max(0, valeur - PLAFOND_DE_DEGENESIS),
+        automatiques: Math.max(0, valeur - PLAFOND_DE_DEGENESIS) + Math.max(0, entier(choix.succes)),
     };
 }
 

@@ -90,6 +90,9 @@ import { combinerLesDeclencheurs, desDeLAide, DIFFICULTE_DE_L_AIDE } from '../..
 import { useJetsLiesDeDegenesisStore } from '../../../combat/useJetsLiesDeDegenesisStore';
 import { valeursDuCombattant } from '../../../combat/coupsDeDegenesis';
 import { PreparationDesJetsLies, ResultatDesJetsLies, type LiensDuLancer, type PersonnageLie } from './JetsLiesDegenesis';
+import { StimulationEtPotentielAuJet } from './SporulationEtBrulureDegenesis';
+import { bonusDeLaStimulation } from '../../../dice/systemes/contaminationDeDegenesis';
+import { lireLEtatDegenesis } from '../../../dice/systemes/maximaDeDegenesis';
 import { CHOIX_DE_SHADOWRUN, lancerShadowrun, type ChoixDeShadowrun, type JetDeShadowrun } from '../../../dice/systemes/shadowrun';
 import { PreparationShadowrun, SuitesShadowrun } from './ShadowrunAuJet';
 import { CHOIX_DE_COC, ajouterLeHeros, etatDeSante, lancerCoc, malusDeSante, modeleDEvolution, preparerCoc,
@@ -504,6 +507,23 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [liensDegenesis, setLiensDegenesis] = useState<LiensDuLancer>({});
     const desDAideDegenesis = prendreLesAidesDegenesis ? aidesDuPersonnage.reduce((t, a) => t + a.des, 0) : 0;
     const reportDegenesis = prendreLeReportDegenesis ? reportDuPersonnage?.declencheurs ?? 0 : 0;
+    /*
+      DEG-A5 (2026-11-04) : la stimulation de la dernière Brûlure se propose quand le jet
+      correspond (Muse, Unité, Gloire, Bion, Discordia) ; un Potentiel se choisit explicitement.
+    */
+    const contaminationDegenesis = regleDegenesis?.contamination;
+    const bonusDeStimulation = useMemo(() => {
+        if (!contaminationDegenesis) return null;
+        const libelle = (c: string) => template.sections.flatMap(sec => sec.fields).find(f => f.id === c)?.label ?? c;
+        return bonusDeLaStimulation(lireLEtatDegenesis(valeurs).stimulation, contaminationDegenesis, Object.values(choix), valeurs, libelle);
+    }, [contaminationDegenesis, valeurs, choix, template]);
+    const [stimulationPrise, setStimulationPrise] = useState(true);
+    const stimulationDuJet = stimulationPrise ? bonusDeStimulation : null;
+    const potentielsDegenesis = (contaminationDegenesis?.potentiels ?? [])
+        .map(p => ({ cle: p.nom, libelle: `${String(valeurs[p.nom] ?? '').trim()} (niveau ${Math.trunc(Number(valeurs[p.niveau]) || 0)})`, nom: String(valeurs[p.nom] ?? '').trim() }))
+        .filter(p => p.nom);
+    const [potentielDegenesis, setPotentielDegenesis] = useState({ cle: '', des: 0 });
+    const desDuPotentiel = potentielDegenesis.cle ? potentielDegenesis.des : 0;
     const groupeDegenesis = useMemo(
         () => joueursDuGroupe.flatMap(p => p.characters).filter(c => !campaignId || !c.campaignId || c.campaignId === campaignId),
         [joueursDuGroupe, campaignId],
@@ -724,7 +744,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 ...(regleRuneQuest ? { runequest: choixRuneQuest } : {}),
                 ...(regleDegenesis ? { degenesis: {
                     // DEG-A4 : les dés d'aide entrent dans la valeur d'action, sous le plafond de 12 (p. 18, 21).
-                    modificateur: choixDegenesis.modificateur + maniabiliteDegenesis + desDAideDegenesis,
+                    modificateur: choixDegenesis.modificateur + maniabiliteDegenesis + desDAideDegenesis + (stimulationDuJet?.des ?? 0) + desDuPotentiel,
+                    // DEG-A5 : la Gloire et le Bion donnent des succès d'office (p. 190).
+                    succes: stimulationDuJet?.succes ?? 0,
                     // En combat, l'Égo de la première action vient de l'initiative ; hors combat, du menu.
                     ego: etatDegenesis ? bonusDegenesis : Math.min(choixDegenesis.ego, egoDegenesis ?? 0),
                 } } : {}),
@@ -778,7 +800,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [desDAideDegenesis, aideVersDegenesis, maniabiliteDegenesis, etatDegenesis, bonusDegenesis, descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrun, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
+        [stimulationDuJet, desDuPotentiel, desDAideDegenesis, aideVersDegenesis, maniabiliteDegenesis, etatDegenesis, bonusDegenesis, descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrun, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
     );
 
     /*
@@ -1442,6 +1464,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 compte: (d?.compte ?? 0) + 1, arme: armeDegenesis, attaquantId: combattantDegenesis?.id,
                 corpsACorps: !combatDegenesis.aDistance?.includes(competence),
             }) : null);
+        }
+        // DEG-A5 : la stimulation et le Potentiel employés se disent au journal.
+        if (regleDegenesis && stimulationDuJet) dits.push(stimulationDuJet.texte);
+        if (regleDegenesis && potentielDegenesis.cle) {
+            const p = potentielsDegenesis.find(x => x.cle === potentielDegenesis.cle);
+            dits.push(`Potentiel ${p?.libelle ?? ''}${desDuPotentiel ? ` : ${desDuPotentiel > 0 ? '+' : ''}${desDuPotentiel}D` : ''}`);
+            setPotentielDegenesis({ cle: '', des: 0 });
         }
         // DEG-A4 : l'aide reçue et le report sont pris une fois ; l'aide donnée part à l'aidé (p. 20-21).
         if (liesDegenesis && personnageId) {
@@ -2708,6 +2737,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                     return libelle ? [{ cle: a.nom, libelle, maniabilite: maniabiliteDe(valeurs, a) }] : [];
                                 }) : undefined}
                             arme={armeDegenesis} setArme={setArmeDegenesis} />
+                    )}
+                    {regleDegenesis && contaminationDegenesis && (
+                        <StimulationEtPotentielAuJet bonus={bonusDeStimulation} prise={stimulationPrise} setPrise={setStimulationPrise}
+                            potentiels={potentielsDegenesis} potentiel={potentielDegenesis} setPotentiel={setPotentielDegenesis} />
                     )}
                     {liesDegenesis && (
                         <PreparationDesJetsLies aides={aidesDuPersonnage} prendreLesAides={prendreLesAidesDegenesis} setPrendreLesAides={setPrendreLesAidesDegenesis}

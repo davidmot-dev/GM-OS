@@ -2050,6 +2050,25 @@ export function controlerLePilote(
                 if ('champs' in bloc) bloc.champs?.forEach((c, i) => absent(`${cle}.champs[${i}]`, c));
             }
         }
+        // DEG-A5 (2026-11-04) : Sporulation, Brûlure et Potentiels lisent ces champs.
+        const con = deg.contamination;
+        if (con) {
+            const absent = (chemin: string, champ: string | undefined) => {
+                if (champ && !tousLesChamps.has(champ)) erreur(`jet.degenesis.contamination.${chemin}`, `La Sporulation et la Brûlure lisent « ${champ} », absent de la fiche.`);
+            };
+            absent('sporulations', con.sporulations);
+            absent('ego', con.ego);
+            absent('egoMax', con.egoMax);
+            absent('physique', con.physique);
+            con.resistance?.forEach((c, i) => absent(`resistance[${i}]`, c));
+            con.attributs?.forEach((c, i) => absent(`attributs[${i}]`, c));
+            for (const cle of ['mental', 'social', 'sens'] as const) con[cle]?.forEach((p, i) => p.forEach((c, j) => absent(`${cle}[${i}][${j}]`, c)));
+            con.potentiels?.forEach((p, i) => { absent(`potentiels[${i}].nom`, p.nom); absent(`potentiels[${i}].niveau`, p.niveau); });
+            if ((con.attributs?.length ?? 0) !== 6) avertir('jet.degenesis.contamination.attributs', 'La Discordia tire l’attribut au d6 (p. 190) : en nommer six.');
+            if (!(driver.combat?.statsToTrack ?? []).some(s => s.fieldId === con.sporulations && s.max)) {
+                avertir('jet.degenesis.contamination.sporulations', `« ${con.sporulations} » n'a pas de maximum (statsToTrack[].max) : les seuils et le test du Germe ne se calculent pas.`);
+            }
+        }
         // DEG-A4 (2026-11-04) : la réserve d'un adversaire en confrontation, attribut + une de ses compétences.
         deg.reserves?.forEach((r, i) => {
             if (!tousLesChamps.has(r.attribut)) erreur(`jet.degenesis.reserves[${i}].attribut`, `La confrontation lit « ${r.attribut} », absent de la fiche.`);

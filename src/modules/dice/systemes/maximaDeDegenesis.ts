@@ -47,6 +47,14 @@ export interface EtatDegenesisDeLaFiche {
     version: 1;
     brancheEgo?: string;
     brancheSporulations?: string;
+    /** DEG-A5 : les points de Sporulation devenus permanents, comptés dans la jauge (p. 186). */
+    sporulationPermanente?: number;
+    /** DEG-A5 : les points d'excédent déjà soumis au test du Germe. */
+    excesTeste?: number;
+    /** DEG-A5 : une dose d'EX prise ce jour ; une seconde n'a aucun effet (p. 177). */
+    exDuJour?: boolean;
+    /** DEG-A5 : la stimulation de la dernière Brûlure, seule à compter (p. 188). */
+    stimulation?: import('./contaminationDeDegenesis').Stimulation;
 }
 
 export function lireLEtatDegenesis(valeurs: Record<string, unknown>): EtatDegenesisDeLaFiche {
