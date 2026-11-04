@@ -13521,10 +13521,80 @@ par David (« oui je valide les écrans Stitch »), corrigés d'après le livre.
 - **Reste :** le lot de recette de `output/` reste en 2.1.0 ; les effets temporisés des blessures
   (hémorragie, perte de PV au round) restent annoncés, non appliqués.
 
+### 207 · Degenesis DEG-A1 et DEG-A2 — le round, la défense et les dégâts nets — 03/11/2026
+
+David : « on va commencer DEG-A1 et DEG-A2 (GM-OS est fermé) ». Choix du 03/11 (les quatre
+recommandés) : en combat, l'**Égo de l'initiative est reporté** à la première action et le menu
+« Égo dépensé » ne débite plus rien (il reste hors combat) ; **GM-OS lance la réserve du
+défenseur** actif ; les **propriétés des armes se lisent dans la fiche** ; les actions se suivent
+dans un **panneau de Combat-OS**. Deux écrans dessinés dans Stitch (projet 8352739217093926431 :
+`stitch/degenesis-round/`, `stitch/degenesis-attaque/`) et validés par David (« oui c'est validé ») ;
+la maquette du round laissait le bonus d'Égo après la première action, corrigé au codage.
+
+- **Livre relu** (Katharsys, PDF − 1, texte extrait de la session bc7da0a1) : round et initiative
+  p. 100-101 (exemple Vedran, Kum, Usudis, Falberg) ; déplacement, défense active, parade et
+  contre-attaque p. 102 ; armes, maniabilité, F p. 103 ; armure p. 104 ; défense passive p. 106 ;
+  dégâts et exemple du défricheur p. 107 ; propriétés Étourdissement, Mortel, Pénétration p. 155-156 ;
+  armes soniques p. 160.
+- **Règles** — `dice/systemes/combatDeDegenesis.ts` : déclaration (Égo, surprise, réserve sans
+  fiche), `lancerLInitiative` (Égo payé une fois), `depenserUneAction` (bonus à la première
+  seulement), `ordonnerLInitiative` (joueurs avant PNJ, simultanés entre eux), défense passive et
+  active, `lireLesDegats` (F/n arrondi au-dessus), `lireLesProprietes`, `calculerLeCoup` (une armure,
+  pistes Blessures / Traumatismes / Égo). La porte des pistes reçoit le type « mortel »
+  (`pistesDeDegenesis.ts`) ; `coupsDeDegenesis.ts` porte le net.
+- **DEG-A1** — `useRoundDeDegenesisStore.ts` (chez le meneur, déclaré hors périmètre des purges) et
+  `PanneauDuRoundDeDegenesis.tsx`, monté par `CombatControls` quand `combat.initiativeEnReserve`
+  vaut `degenesis` : à la place du Jet système. Au panneau de jet, « Ce jet est une action du round ».
+- **DEG-A2** — `DegenesisAuJet.tsx` : l'arme à la préparation (maniabilité), le bloc « Attaque » au
+  résultat (meneur seulement), branché dans `PanneauDeJet.tsx`.
+- **Pilote 2.1.0** (`outils/degenesis/combat_degenesis.py` → `Export Dirvers/corriges/Degenesis_driver_gmos_finir.gmos-driver`,
+  bâti sur le 2.0.0 réimporté le 30/10, même identifiant, 131 champs) : `jet.degenesis.combat`
+  (F, trois compétences d'attaque dont une à distance, trois armes, deux armures, trois défenses) ;
+  contrôles de la Forge étendus, zéro constat.
+- **Vérifié :** 13 essais de règles, 7 de composants (panneau de jet, round), 1 de plus aux pistes et
+  aux contrôles, 3 du pilote (`outils/degenesis/pilote.test.ts`) ; suite complète (9 738 essais),
+  puis le registre des purges corrigé ; `tsc -b` et lint ; construction ; e2e des captures Degenesis
+  (dés imposés) : `jeu-degenesis-round` et `jeu-degenesis-attaque`, relues ; les cinq captures
+  existantes rephotographiées.
+- **Validation de David le 04/11 :** pilote 2.1.0 réimporté, puis « DEG-A1 et DEG-A2 sont testé ».
+  DEG-A1 et DEG-A2 cochés/verts dans la synthèse des pilotes ; Degenesis à 🟢 9 · 🟠 0 · 🔴 4.
+- **Reste :** DEG-A3 à DEG-A6 (DEG-A3 et DEG-A4 commencés le 04/11).
+
+### 208 · Degenesis DEG-A3 et DEG-A4 — les maxima et les jets liés — 04/11/2026
+
+David : « DEG-A1 et DEG-A2 sont testé, on commence DEG-A3 et DEG-A4 » (GM-OS fermé). Choix du
+04/11 (les recommandés) : carte « Maxima » à la fiche ; aide **et** action complexe ; GM-OS lance
+la réserve de l'adversaire en confrontation. La combinaison suit le geste évident (« Enchaîner un
+second test »). Stitch (projet 8352739217093926431) n'a rendu aucun des deux écrans en quatre
+essais (délai dépassé, rien dans le projet) : les écrans sont à valider sur les captures.
+
+- **Livre relu** (Katharsys, PDF − 1) : confrontation p. 19-20, combinaisons p. 20-21, actions
+  complexes et coopération p. 21, Pulsions/Concentration et Foi/Volonté exclusives p. 26, maxima
+  p. 94. L'exemple du chariot (p. 21) oublie deux déclencheurs : GM-OS suit la règle.
+- **DEG-A3** — `dice/systemes/maximaDeDegenesis.ts` (branche déduite ou déclarée sous la clé cachée
+  `_gmos_degenesis`, contradiction, Égo maximal appliqué sans remplir la jauge) et la carte
+  `MaximaDegenesis.tsx`, montée par `CharacterSheetEditor` à côté du test.
+- **DEG-A4** — `dice/systemes/jetsLiesDeDegenesis.ts` (aide, `combinerLesDeclencheurs`, confrontation,
+  action complexe), `combat/useJetsLiesDeDegenesisStore.ts` (chez le meneur, hors périmètre des purges),
+  `JetsLiesDegenesis.tsx`, branché dans `PanneauDeJet.tsx` (préparation et résultat, meneur
+  seulement) ; la ligne « réussites / difficulté » lit la difficulté du lancer.
+- **Pilote 2.2.0** (`outils/degenesis/maxima_et_jets_lies_degenesis.py` → `Export Dirvers/corriges/Degenesis_driver_gmos_finir.gmos-driver`,
+  bâti sur le 2.1.0 validé, même identifiant, 131 champs) : `jet.degenesis.maxima`,
+  `jet.degenesis.reserves` ; contrôles de la Forge étendus, zéro constat.
+- **Vérifié :** 15 essais de règles, 7 de composants (carte et panneau), 1 des contrôles, 5 du pilote ;
+  suite complète (817 fichiers verts, un échec corrigé : une action du magasin que rien n'appelait) ;
+  `tsc -b` et lint ; construction ; e2e des captures Degenesis (dés imposés) : `jeu-degenesis-jets-lies`
+  et `jeu-degenesis-maxima`, relues ; les captures Degenesis existantes rephotographiées.
+- **Validation de David le 04/11 :** captures et essai, « tout est bon commit ». DEG-A3 et DEG-A4
+  cochés/verts dans la synthèse des pilotes ; Degenesis à 🟢 11 · 🟠 0 · 🔴 2.
+- **Reste :** DEG-A5 et DEG-A6.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 144 | **Degenesis — DEG-A3 et DEG-A4** | 🟢 § 208 ; carte « Maxima » (branches, Égo maximal), aide, combinaison, confrontation et action complexe livrées, pilote 2.2.0, validées par David — 04/11 | Rien pour DEG-A1 à DEG-A4 ; ensuite DEG-A5 et DEG-A6 | Rien |
+| 143 | **Degenesis — DEG-A1 et DEG-A2** | 🟢 § 207 ; round (Égo payé une fois, actions), défense passive ou active, dégâts nets livrés, pilote 2.1.0, validés par David — 04/11 | Rien pour DEG-A1 et DEG-A2 ; ensuite DEG-A3 et DEG-A4 | Rien |
 | 142 | **RuneQuest — RQ-A5 et RQ-A6** | 🟢 § 206 ; attributs calculés, sort payé, inspiration et expérience livrés, pilote 2.3.0, validés par David — 03/11 | Rien pour RQ-A1 à RQ-A6 ; ensuite un autre lot (Degenesis, COC, Shadowrun) | Rien |
 | 141 | **RuneQuest — RQ-A3 et RQ-A4** | 🟢 § 205 ; dégâts de l'attaque et rangs d'action livrés, pilote 2.2.0, validés par David — 03/11 | Commit et push demandés ; ensuite RQ-A5 ou RQ-A6 | Rien |
 | 140 | **NP-C2 / NP-C3 — fiches, droits, variantes** | 🟢 § 204 ; livré, 252 tests ciblés et six parcours Electron verts ; huit captures relues, validé par David — 03/11 | Commit et push demandés ; puis choisir un autre lot | Rien pour NP-C2/NP-C3 ; aucune nouvelle preuve instrumentée de tablette physique |

@@ -32,6 +32,7 @@ import { Calculator, Dices } from 'lucide-react';
 import OngletsDeLaFiche from './OngletsDeLaFiche';
 import { CarteDuJeu } from './fields/EtapesDuJet';
 import { AttributsCalculesRuneQuest, MagieEtProgressionRuneQuest } from './fields/CartesRuneQuest';
+import { MaximaDegenesis } from './fields/MaximaDegenesis';
 import { consignerLeJet } from '../../journal/consignerLeJet';
 import FicheHote from '../../fiches/FicheHote';
 import { useCorrespondanceDuJeu } from '../../fiches/useCorrespondanceDuJeu';
@@ -402,6 +403,24 @@ const CharacterSheetEditor: React.FC = () => {
                                 )}
                             </>;
                         })()}
+
+                        {/*
+                            **Degenesis : les maxima** (DEG-A3, 2026-11-04) — la branche de l'Égo et de la
+                            Sporulation, l'Égo maximal calculé et expliqué ; une saisie non sauvegardée
+                            se sauvegarde d'abord, comme pour RuneQuest.
+                        */}
+                        {piloteDeLaFiche?.jet?.degenesis?.maxima && editor.selectedPlayer && (
+                            <CarteDuJeu id="maxima-degenesis" titre="Maxima">
+                                <MaximaDegenesis key={`maxima-${character.id}`} regle={piloteDeLaFiche.jet.degenesis.maxima}
+                                    valeurs={{ ...character.sheetData, ...editor.localData }}
+                                    jauges={piloteDeLaFiche.combat?.statsToTrack ?? []}
+                                    appliquer={maj => {
+                                        if (editor.aDesChangements) { gmToast('Sauvegardez les saisies de la fiche avant ce geste.', 'warning'); return; }
+                                        avecOrigine('jet', () => updateCharacter(editor.selectedPlayer!.id, character.id, { sheetData: { ...character.sheetData, ...maj } }));
+                                    }}
+                                    consigner={ligne => consignerLeJet({ titre: `${character.name} — Degenesis`, totalDisplay: ligne })} />
+                            </CarteDuJeu>
+                        )}
 
                         {/*
                             **Les mécaniques du Voyageur, avec le test** — David, le

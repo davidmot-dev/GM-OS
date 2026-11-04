@@ -73,7 +73,10 @@ export function pistesDeSanteSelonLeJeu(
         };
     }
 
-    const s = encaisserDegenesis(impact.value, { blessures, traumatismes }, { blessures: maxB, traumatismes: maxT });
+    // DEG-A2 (2026-11-03) : une arme « Mortel » inflige directement des Traumatismes (p. 155) ;
+    // les Blessures superficielles restent où elles sont.
+    const mortel = /mortel/i.test(impact.type ?? '');
+    const s = encaisserDegenesis(impact.value, { blessures, traumatismes }, { blessures: mortel ? blessures : maxB, traumatismes: maxT });
     const nouveaux = s.traumatismes - traumatismes;
     return {
         ...vers(s.blessures, s.traumatismes),

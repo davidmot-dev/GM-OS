@@ -17,6 +17,7 @@ import PanneauDAlternance from './PanneauDAlternance';
 import PanneauDuPaquetDAction from './PanneauDuPaquetDAction';
 import PanneauDesPhases from './PanneauDesPhases';
 import PanneauDesRangsDAction from './PanneauDesRangsDAction';
+import PanneauDuRoundDeDegenesis from './PanneauDuRoundDeDegenesis';
 import LoisDuCosm from '../../session/components/LoisDuCosm';
 import { useCosmsCourants } from '../../session/hooks/useCosmsCourants';
 import { decrireLaSante } from '../logic/SanteDuCombattant';
@@ -90,6 +91,8 @@ const CombatControls: React.FC = () => {
     const parPhases = activeDriver?.combat.initiative?.mode === 'phases';
     /** RuneQuest : le rang d'action selon l'action déclarée (RQ-A4, 2026-11-03). */
     const parRangs = activeDriver?.combat.initiative?.mode === 'rangs-d-action';
+    /** Degenesis : Égo à l'initiative, actions du round, défense active (DEG-A1, 2026-11-03). */
+    const roundDegenesis = activeDriver?.combat.initiativeEnReserve?.mecanique === 'degenesis';
     const cosmsCourants = useCosmsCourants();
 
     const handleAddCombatant = () => {
@@ -369,6 +372,8 @@ const CombatControls: React.FC = () => {
                     <PanneauDesPhases />
                 ) : parRangs ? (
                     <PanneauDesRangsDAction />
+                ) : roundDegenesis ? (
+                    <PanneauDuRoundDeDegenesis />
                 ) : parLePaquet ? (
                     <PanneauDuPaquetDAction />
                 ) : alternance ? (

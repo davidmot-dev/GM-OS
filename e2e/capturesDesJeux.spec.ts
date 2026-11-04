@@ -449,7 +449,7 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
         // RuneQuest joue aussi la magie, l'inspiration et les cartes de la fiche depuis RQ-A6 (03/11).
-        if (['dune', 'noc', 'runequest'].includes(mise.corpusId)) test.setTimeout(180_000);
+        if (['dune', 'noc', 'runequest', 'degenesis'].includes(mise.corpusId)) test.setTimeout(180_000);
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
         if (['alien','crime','cthulhu hack','star-trek'].includes(mise.corpusId)) test.setTimeout(mise.corpusId === 'alien' ? 360_000 : 240_000);
         const f = gmos.fenetre;
@@ -1303,6 +1303,93 @@ async function scenesDeDegenesis(c: ContexteDeScene): Promise<void> {
         return [ch?.sheetData?.blessures_superficielles, ch?.sheetData?.traumatismes, ch?.hp];
     }, c.personnage)).toEqual([12, 2, 5]);
     await photographier(carte, 'jeu-degenesis-sante');
+
+    // DEG-A1 et DEG-A2 (03/11) : le round — Falberg dépense 2 Égo, l'Usudi sans fiche dit sa réserve —,
+    // puis l'attaque à l'épée (+1D de maniabilité), l'esquive de l'Usudi (une action) et les dégâts nets.
+    await ecrireLaFiche(c, { force: 3, arme1_maniabilite: '+1D' });
+    await f.evaluate(() => (window as unknown as Fenetre).useCombatStore.getState().addCombatant(
+        { name: 'Usudi', init: 0, isPlayer: false, faction: 'enemy', statuses: [],
+            sheetData: { agilite: 3, mobilite: 2, armure1: 'Chemise de mailles', armure1_valeur: 2, armure2: 'Cuir', armure2_valeur: 1 } } as never));
+    const round = f.locator('section[aria-label="Round de Degenesis"]');
+    await expect(round).toBeVisible({ timeout: 15_000 });
+    await round.getByLabel(`Égo de ${c.nom}`, { exact: true }).selectOption('2');
+    await round.getByLabel('PSY + Réactivité de Usudi', { exact: true }).fill('4');
+    const hasard = async (r: number, action: () => Promise<void>) => {
+        await f.evaluate(r => { const w = window as unknown as { hasardDeg?: () => number }; w.hasardDeg = Math.random; Math.random = () => r; }, r);
+        try { await action(); } finally { await f.evaluate(() => { Math.random = (window as unknown as { hasardDeg: () => number }).hasardDeg; }); }
+    };
+    // Tous les dés à 6 : PSY 3 + Réactivité 2 + 2 Égo − 2 Traumatismes = cinq dés, cinq déclencheurs, trois actions.
+    await hasard(0.99, () => round.getByRole('button', { name: 'Lancer l’initiative' }).click());
+    await expect.poll(() => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState()
+        .players.flatMap(p => p.characters).find(ch => ch.id === id)?.sheetData?.ego_jauge, c.personnage)).toBe(5);
+
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const attaque = f.locator('[data-panneau-de-jet]').first();
+    await attaque.locator('select').nth(0).selectOption('physique');
+    await attaque.locator('select').nth(1).selectOption('corps_a_corps');
+    const prep = attaque.locator('[data-preparation-degenesis]');
+    await prep.getByLabel('Arme de l’attaque', { exact: true }).selectOption('arme1');
+    await expect(prep.locator('[data-ego-de-l-initiative]')).toContainText('+2D');
+    await expect(prep.locator('[data-composition-degenesis]')).toContainText("Valeur d'action 7 +1D (dont +1D de maniabilité) +2D d'Égo −2D de Traumatismes = 8 : 8 dés");
+    // Tous les dés à 4 : huit succès, aucun déclencheur.
+    await hasard(0.6, () => attaque.getByRole('button', { name: 'Lancer', exact: true }).click());
+    const bloc = attaque.locator('[data-attaque-degenesis]');
+    await expect(bloc).toBeVisible();
+    await bloc.getByRole('button', { name: 'Défense active', exact: true }).click();
+    await bloc.getByLabel('Défense active', { exact: true }).selectOption('esquive');
+    await hasard(0.6, () => bloc.getByRole('button', { name: 'Lancer la défense (1 action)' }).click());
+    await expect(bloc.locator('[data-issue-degenesis]')).toHaveText('Défense active : 5 succès contre 8 — touché.');
+    await expect(bloc.locator('[data-coup-degenesis]')).toHaveText('8 − armure 2 = 6 → Blessures superficielles');
+    await bloc.getByRole('button', { name: 'Porter le coup à Usudi' }).click();
+    await expect(bloc.getByText('Porté à Usudi : 6 → Blessures superficielles.')).toBeVisible();
+    await photographierLePanneau(attaque, 'jeu-degenesis-attaque');
+
+    await ouvrirLeModule(gmos, 'Combat-OS');
+    await expect(round).toBeVisible({ timeout: 15_000 });
+    await f.waitForTimeout(3_500);
+    await photographierLePanneau(round, 'jeu-degenesis-round');
+
+    // DEG-A4 (04/11) : PHY + Force tout en 6, puis « Enchaîner un second test » ; le second, tout
+    // en 4, reçoit les cinq déclencheurs reportés ; il verse à une action complexe et se confronte
+    // à l'esquive de l'Usudi — égalité parfaite, Falberg a pris l'initiative et perd (p. 19-21).
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const lies = f.locator('[data-panneau-de-jet]').first();
+    await lies.locator('select').nth(0).selectOption('physique');
+    await lies.locator('select').nth(1).selectOption('force');
+    await hasard(0.99, () => lies.getByRole('button', { name: 'Lancer', exact: true }).click());
+    await lies.getByRole('button', { name: /Enchaîner un second test \(reporte 5 déclencheurs\)/ }).click();
+    await expect(lies.locator('[data-report-recu]')).toContainText('Déclencheurs reportés (');
+    await hasard(0.6, () => lies.getByRole('button', { name: 'Lancer', exact: true }).click());
+    await expect(lies.locator('[data-combinaison-degenesis]')).toContainText('0 déclencheur + 5 reportés = 5 déclencheurs (p. 20).');
+    await lies.locator('[data-action-complexe-degenesis] summary').click();
+    await lies.getByLabel('Nom de l’action complexe', { exact: true }).fill('Dégager le chariot');
+    await lies.getByLabel('Objectif de succès', { exact: true }).fill('20');
+    await lies.getByRole('button', { name: 'Ouvrir', exact: true }).click();
+    await lies.getByRole('button', { name: 'Verser 5 succès (5)' }).click();
+    await expect(lies.locator('[data-cumul-action]')).toHaveText('5 / 20');
+    await lies.locator('[data-confrontation-degenesis] summary').click();
+    await lies.getByLabel('Adversaire', { exact: true }).selectOption({ label: 'Usudi' });
+    await lies.getByLabel('Réserve de l’adversaire', { exact: true }).selectOption('agilite|mobilite');
+    await hasard(0.6, () => lies.getByRole('button', { name: 'Lancer sa réserve' }).click());
+    await lies.getByLabel('Qui a pris l’initiative', { exact: true }).selectOption('a');
+    await expect(lies.locator('[data-issue-confrontation]')).toContainText(`égalité parfaite : ${c.nom} a pris l’initiative et perd, Usudi l’emporte (p. 20).`);
+    await photographierLePanneau(lies, 'jeu-degenesis-jets-lies');
+
+    // DEG-A3 (04/11) : Concentration et Pulsions toutes deux remplies ; le meneur retient
+    // Concentration, la carte le dit, puis l'Égo maximal passe de 8 à 10 sans remplir la jauge.
+    await ecrireLaFiche(c, { intellect: 3, concentration: 2, instinct: 2, pulsions: 1, ego_max: 8 });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const maxima = f.locator('[data-carte-du-jeu="maxima-degenesis"]');
+    await expect(maxima).toBeVisible({ timeout: 15_000 });
+    await maxima.getByLabel(/^Concentration/).check();
+    await expect(maxima.locator('[data-contradiction-degenesis="ego"]')).toContainText('elles s’excluent (p. 26)');
+    await expect(maxima.locator('[data-maximum="ego"]')).toContainText('(INT 3 + Concentration 2) × 2');
+    await photographierLePanneau(maxima, 'jeu-degenesis-maxima');
+    await maxima.getByRole('button', { name: 'Appliquer tout (1)' }).click();
+    await expect.poll(() => f.evaluate(id => {
+        const ch = (window as unknown as Fenetre).useSessionOSStore.getState().players.flatMap(p => p.characters).find(x => x.id === id);
+        return [ch?.sheetData?.ego_max, ch?.sheetData?.ego_jauge];
+    }, c.personnage)).toEqual([10, 5]);
 }
 
 /**

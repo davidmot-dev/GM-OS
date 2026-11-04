@@ -2011,6 +2011,52 @@ export function controlerLePilote(
             const champ = deg[cle];
             if (champ !== undefined && !tousLesChamps.has(champ)) erreur(`jet.degenesis.${cle}`, `Degenesis lit ${quoi} dans « ${champ} », absent de la fiche.`);
         }
+        // DEG-A2 (2026-11-03) : l'attaque lit F, les armes, les armures et les défenses sur la fiche.
+        const cbt = deg.combat;
+        if (cbt) {
+            const absent = (chemin: string, champ: string | undefined) => {
+                if (champ && !tousLesChamps.has(champ)) erreur(`jet.degenesis.combat.${chemin}`, `L'attaque de Degenesis lit « ${champ} », absent de la fiche.`);
+            };
+            if (!cbt.force?.length) erreur('jet.degenesis.combat.force', 'F vaut PHY + Force (p. 103) : nommer ces deux champs.');
+            cbt.force?.forEach((c, i) => absent(`force[${i}]`, c));
+            if (!cbt.attaques?.length) erreur('jet.degenesis.combat.attaques', "Aucune compétence d'attaque : Corps à corps, Lutte, Armes à projectiles (p. 102).");
+            cbt.attaques?.forEach((c, i) => absent(`attaques[${i}]`, c));
+            cbt.aDistance?.forEach((c, i) => {
+                if (!cbt.attaques?.includes(c)) erreur(`jet.degenesis.combat.aDistance[${i}]`, `« ${c} » tire, mais n'est pas une compétence d'attaque.`);
+            });
+            cbt.armes?.forEach((a, i) => (['nom', 'degats', 'maniabilite', 'proprietes'] as const).forEach(k => absent(`armes[${i}].${k}`, a[k])));
+            cbt.armures?.forEach((a, i) => (['nom', 'valeur'] as const).forEach(k => absent(`armures[${i}].${k}`, a[k])));
+            for (const [genre, champs] of Object.entries(cbt.defenses ?? {})) champs?.forEach((c, i) => absent(`defenses.${genre}[${i}]`, c));
+            if (!cbt.defenses?.esquive?.length) erreur('jet.degenesis.combat.defenses.esquive', "L'esquive (AGI + Mobilité) est la défense contre toute attaque (p. 102) : la nommer.");
+        }
+        // DEG-A3 (2026-11-04) : la carte « Maxima » lit les branches et écrit l'Égo maximal.
+        const max = deg.maxima;
+        if (max) {
+            const absent = (chemin: string, champ: string | undefined) => {
+                if (champ && !tousLesChamps.has(champ)) erreur(`jet.degenesis.maxima.${chemin}`, `Les maxima de Degenesis lisent « ${champ} », absent de la fiche.`);
+            };
+            absent('ego.champ', max.ego?.champ);
+            absent('ego.jauge', max.ego?.jauge);
+            for (const [paire, bloc] of [['ego', max.ego], ['sporulations', max.sporulations]] as const) {
+                if (!bloc) continue;
+                if ((bloc.branches?.length ?? 0) < 2) erreur(`jet.degenesis.maxima.${paire}.branches`, `${paire === 'ego' ? 'Concentration ou Pulsions' : 'Foi ou Volonté'} : deux branches exclusives (p. 26).`);
+                bloc.branches?.forEach((b, i) => { absent(`${paire}.branches[${i}].attribut`, b.attribut); absent(`${paire}.branches[${i}].competence`, b.competence); });
+            }
+            for (const [cle, bloc] of [['sporulations', max.sporulations], ['blessures', max.blessures], ['traumatismes', max.traumatismes]] as const) {
+                if (!bloc) continue;
+                if (!(driver.combat?.statsToTrack ?? []).some(s => s.fieldId === bloc.jauge)) {
+                    avertir(`jet.degenesis.maxima.${cle}.jauge`, `« ${bloc.jauge} » n'est pas une jauge suivie (combat.statsToTrack) : la carte ne peut pas comparer son maximum.`);
+                }
+                if ('champs' in bloc) bloc.champs?.forEach((c, i) => absent(`${cle}.champs[${i}]`, c));
+            }
+        }
+        // DEG-A4 (2026-11-04) : la réserve d'un adversaire en confrontation, attribut + une de ses compétences.
+        deg.reserves?.forEach((r, i) => {
+            if (!tousLesChamps.has(r.attribut)) erreur(`jet.degenesis.reserves[${i}].attribut`, `La confrontation lit « ${r.attribut} », absent de la fiche.`);
+            r.competences?.forEach((c, j) => {
+                if (!tousLesChamps.has(c)) erreur(`jet.degenesis.reserves[${i}].competences[${j}]`, `La confrontation lit « ${c} », absent de la fiche.`);
+            });
+        });
     }
     // ---- Shadowrun : Anarchy 2.0 : réserve, dés de risque, moniteur d'état (2026-10-31) ----
     const sr = driver.jet?.shadowrun;

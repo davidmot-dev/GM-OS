@@ -50,6 +50,12 @@ describe('les deux pistes', () => {
         expect(r?.texte).toMatch(/s'effondre.*PSY\+Foi ou Volonté \(2\)/);
     });
 
+    it('une arme « Mortel » va droit aux Traumatismes, sans toucher les Blessures (p. 155, DEG-A2)', () => {
+        const r = pistesDeSanteSelonLeJeu(REGLE, { ...USUDI, blessures_superficielles: 3 }, { value: 2, type: 'mortel' }, STATS);
+        expect(r?.fiche).toEqual({ blessures_superficielles: 3, traumatismes: 2 });
+        expect(r?.texte).toMatch(/2 Traumatismes de plus/);
+    });
+
     it('sans règle ou sans maximum lisible, l’impact passe tel quel', () => {
         expect(pistesDeSanteSelonLeJeu(undefined, USUDI, { value: 3 }, STATS)).toBeNull();
         expect(pistesDeSanteSelonLeJeu(REGLE, { sante: 5 }, { value: 3 }, STATS)).toBeNull();

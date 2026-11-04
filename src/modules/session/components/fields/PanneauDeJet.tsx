@@ -83,7 +83,13 @@ import { CHOIX_DE_BARBARIANS, appliquerLeGeste, heroismeDeLaFiche, lancerBarbari
 import { PreparationRuneQuest, SuitesRuneQuest } from './RuneQuestAuJet';
 import { CHOIX_DE_RUNEQUEST, nommerLeJetDeRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest } from '../../../dice/systemes/runequest';
 import { CHOIX_DE_DEGENESIS, lancerDegenesis, type ChoixDeDegenesis, type JetDeDegenesis } from '../../../dice/systemes/degenesis';
-import { PreparationDegenesis, SuitesDegenesis } from './DegenesisAuJet';
+import { AttaqueDegenesis, PreparationDegenesis, SuitesDegenesis, type AttaqueLancee } from './DegenesisAuJet';
+import { useRoundDeDegenesisStore } from '../../../combat/useRoundDeDegenesisStore';
+import { actionsRestantes, bonusDeLaProchaineAction, maniabiliteDe } from '../../../dice/systemes/combatDeDegenesis';
+import { combinerLesDeclencheurs, desDeLAide, DIFFICULTE_DE_L_AIDE } from '../../../dice/systemes/jetsLiesDeDegenesis';
+import { useJetsLiesDeDegenesisStore } from '../../../combat/useJetsLiesDeDegenesisStore';
+import { valeursDuCombattant } from '../../../combat/coupsDeDegenesis';
+import { PreparationDesJetsLies, ResultatDesJetsLies, type LiensDuLancer, type PersonnageLie } from './JetsLiesDegenesis';
 import { CHOIX_DE_SHADOWRUN, lancerShadowrun, type ChoixDeShadowrun, type JetDeShadowrun } from '../../../dice/systemes/shadowrun';
 import { PreparationShadowrun, SuitesShadowrun } from './ShadowrunAuJet';
 import { CHOIX_DE_COC, ajouterLeHeros, etatDeSante, lancerCoc, malusDeSante, modeleDEvolution, preparerCoc,
@@ -458,6 +464,65 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const regleDegenesis = descripteur.degenesis;
     const [choixDegenesis, setChoixDegenesis] = useState<ChoixDeDegenesis>(CHOIX_DE_DEGENESIS);
     const egoDegenesis = regleDegenesis?.ego && ecrireSurLaFiche ? Math.max(0, Math.trunc(Number(valeurs[regleDegenesis.ego]) || 0)) : undefined;
+    /*
+      DEG-A1 et DEG-A2 (2026-11-03) : en combat, le personnage qui lance a son état du round
+      (`useRoundDeDegenesisStore`). Le jet y dépense une action ; la première reçoit l'Égo payé
+      à l'initiative, sans rien débiter de nouveau (choix de David). Une compétence d'attaque
+      propose les armes de la fiche : leur maniabilité s'ajoute aux dés (p. 103).
+    */
+    const combatDegenesis = regleDegenesis?.combat;
+    const combattantsDuPlateau = useCombatStore(s => s.combatants);
+    const roundDuPlateau = useCombatStore(s => s.round);
+    const roundDegenesis = useRoundDeDegenesisStore(s => s.round);
+    const etatsDegenesis = useRoundDeDegenesisStore(s => s.etats);
+    const combattantDegenesis = regleDegenesis && personnageId
+        ? combattantsDuPlateau.find(c => c.sourcePlayerId === personnageId || c.sourceEntityId === personnageId) : undefined;
+    const etatDegenesis = combattantDegenesis && roundDegenesis !== null && roundDegenesis === roundDuPlateau ? etatsDegenesis[combattantDegenesis.id] : undefined;
+    const [actionDegenesis, setActionDegenesis] = useState(true);
+    const actionDuRoundDegenesis = !!etatDegenesis && actionDegenesis && actionsRestantes(etatDegenesis) > 0;
+    const bonusDegenesis = actionDuRoundDegenesis ? bonusDeLaProchaineAction(etatDegenesis) : 0;
+    const [armeDegenesis, setArmeDegenesis] = useState('');
+    const maniabiliteDegenesis = maniabiliteDe(valeurs, combatDegenesis?.armes.find(a => a.nom === armeDegenesis));
+    const [attaqueDegenesis, setAttaqueDegenesis] = useState<AttaqueLancee | null>(null);
+    /*
+      DEG-A4 (2026-11-04) : les jets liés, chez le meneur seulement. L'aide reçue et les
+      déclencheurs reportés d'un premier test sont pris une fois, au lancer ; « Ce jet aide… »
+      ajoute 1 à la difficulté, et ses déclencheurs vont à l'aidé (p. 20-21).
+    */
+    const liesDegenesis = !!regleDegenesis && !pourLesJoueurs;
+    const aidesEnAttente = useJetsLiesDeDegenesisStore(s => s.aides);
+    const reportsEnAttente = useJetsLiesDeDegenesisStore(s => s.reports);
+    const entitesDeLaCampagne = useSessionOSStore(s => s.entities);
+    const aidesDuPersonnage = useMemo(
+        () => (liesDegenesis && personnageId ? aidesEnAttente.filter(a => a.pour === personnageId) : []),
+        [liesDegenesis, personnageId, aidesEnAttente],
+    );
+    const reportDuPersonnage = liesDegenesis && personnageId ? reportsEnAttente[personnageId] : undefined;
+    const [prendreLesAidesDegenesis, setPrendreLesAidesDegenesis] = useState(true);
+    const [prendreLeReportDegenesis, setPrendreLeReportDegenesis] = useState(true);
+    const [aideVersDegenesis, setAideVersDegenesis] = useState('');
+    const [liensDegenesis, setLiensDegenesis] = useState<LiensDuLancer>({});
+    const desDAideDegenesis = prendreLesAidesDegenesis ? aidesDuPersonnage.reduce((t, a) => t + a.des, 0) : 0;
+    const reportDegenesis = prendreLeReportDegenesis ? reportDuPersonnage?.declencheurs ?? 0 : 0;
+    const groupeDegenesis = useMemo(
+        () => joueursDuGroupe.flatMap(p => p.characters).filter(c => !campaignId || !c.campaignId || c.campaignId === campaignId),
+        [joueursDuGroupe, campaignId],
+    );
+    const nomDegenesis = groupeDegenesis.find(c => c.id === personnageId)?.name ?? 'Le personnage';
+    const aidablesDegenesis: PersonnageLie[] = useMemo(
+        () => (liesDegenesis ? groupeDegenesis.filter(c => c.id !== personnageId).map(c => ({ cle: c.id, nom: c.name, valeurs: () => (c.sheetData ?? {}) as Record<string, unknown> })) : []),
+        [liesDegenesis, groupeDegenesis, personnageId],
+    );
+    const adversairesDegenesis: PersonnageLie[] = useMemo(() => {
+        if (!liesDegenesis) return [];
+        const deja = new Set(aidablesDegenesis.map(a => a.cle));
+        const duPlateau = combattantsDuPlateau
+            .filter(c => !(c.sourcePlayerId && (deja.has(c.sourcePlayerId) || c.sourcePlayerId === personnageId)) && c.sourceEntityId !== personnageId)
+            .map(c => ({ cle: `combattant:${c.id}`, nom: c.name, valeurs: () => valeursDuCombattant(c) }));
+        return [...duPlateau, ...aidablesDegenesis];
+    // `entitesDeLaCampagne` : la fiche d'un PNJ de la Galerie se relit quand elle change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [liesDegenesis, aidablesDegenesis, combattantsDuPlateau, personnageId, entitesDeLaCampagne]);
 
     /**
      * **Shadowrun : Anarchy 2.0** (2026-10-31) : seuil, risque, RR, avantage, spécialisation.
@@ -657,9 +722,16 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             {
                 ...(regleNephilim ? { nephilim: { ...choixNephilim, lieu: lieuN, conjonction: conjonctionN, intensite: intensiteN, seuilRK: seuilRKN } } : {}),
                 ...(regleRuneQuest ? { runequest: choixRuneQuest } : {}),
-                ...(regleDegenesis ? { degenesis: { ...choixDegenesis, ego: Math.min(choixDegenesis.ego, egoDegenesis ?? 0) } } : {}),
+                ...(regleDegenesis ? { degenesis: {
+                    // DEG-A4 : les dés d'aide entrent dans la valeur d'action, sous le plafond de 12 (p. 18, 21).
+                    modificateur: choixDegenesis.modificateur + maniabiliteDegenesis + desDAideDegenesis,
+                    // En combat, l'Égo de la première action vient de l'initiative ; hors combat, du menu.
+                    ego: etatDegenesis ? bonusDegenesis : Math.min(choixDegenesis.ego, egoDegenesis ?? 0),
+                } } : {}),
                 ...(regleShadowrun ? { shadowrun: { ...choixShadowrun, anarchyPourAvantage: choixShadowrun.anarchyPourAvantage && (anarchyShadowrun ?? 0) > 0 } } : {}),
-                champs: choix, desSupplementaires: desAchetes, difficulte,
+                champs: choix, desSupplementaires: desAchetes,
+                // Degenesis : un assistant fait le même test, difficulté +1 (DEG-A4, p. 21).
+                difficulte: regleDegenesis && aideVersDegenesis ? difficulte + DIFFICULTE_DE_L_AIDE : difficulte,
                 ajustementDeDifficulte: ajustementDeDifficulte + degresPuises, specialisation,
                 modificateurDuSeuil,
                 valeurAdverse: valeurAdverse.trim() === '' ? undefined : Number(valeurAdverse),
@@ -706,7 +778,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrun, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
+        [desDAideDegenesis, aideVersDegenesis, maniabiliteDegenesis, etatDegenesis, bonusDegenesis, descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrun, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
     );
 
     /*
@@ -1233,7 +1305,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             ? lancerShadowrun(jet.shadowrun, jet.reussitesRequises, () => DiceEngine.roll(6))
             // Degenesis : 4+ réussit, les 6 déclenchent, le surplus au-delà de 12 dés est acquis (p. 18-19).
             : regleDegenesis && jet.degenesis
-            ? lancerDegenesis(jet.degenesis, jet.reussitesRequises, () => DiceEngine.roll(6))
+            // DEG-A4 : en combinaison, les déclencheurs reportés du premier test s'ajoutent s'il réussit (p. 20).
+            ? combinerLesDeclencheurs(lancerDegenesis(jet.degenesis, jet.reussitesRequises, () => DiceEngine.roll(6)), liesDegenesis ? reportDegenesis : 0)
             : descripteur.cthulhuHack
             ? DiceEngine.rollSauvegarde(jet.seuil, modificateurCH)
             : jet.garde
@@ -1356,8 +1429,39 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             // Prendre son temps et le mode rapide valent pour UN test.
             if (choixCoc.facon !== 'lancer') setChoixCoc(c => ({ ...c, facon: 'lancer' }));
         }
+        // DEG-A1 : en combat, le jet dépense une action du round ; l'Égo était payé à l'initiative.
+        if (regleDegenesis && etatDegenesis && combattantDegenesis && actionDuRoundDegenesis) {
+            useRoundDeDegenesisStore.getState().depenser(combattantDegenesis.id);
+            dits.push(`action du round${bonusDegenesis ? `, +${bonusDegenesis}D d'Égo de l'initiative` : ''}`);
+        }
+        // DEG-A2 : une compétence d'attaque ouvre l'attaque au résultat, jusqu'aux dégâts nets.
+        if (regleDegenesis && combatDegenesis) {
+            const champs = jet.composantesDeLaReserve.map(c => c.champ);
+            const competence = champs.find(ch => combatDegenesis.attaques.includes(ch));
+            setAttaqueDegenesis(competence ? d => ({
+                compte: (d?.compte ?? 0) + 1, arme: armeDegenesis, attaquantId: combattantDegenesis?.id,
+                corpsACorps: !combatDegenesis.aDistance?.includes(competence),
+            }) : null);
+        }
+        // DEG-A4 : l'aide reçue et le report sont pris une fois ; l'aide donnée part à l'aidé (p. 20-21).
+        if (liesDegenesis && personnageId) {
+            const store = useJetsLiesDeDegenesisStore.getState();
+            if (desDAideDegenesis > 0) { store.prendreLesAides(personnageId); dits.push(`+${desDAideDegenesis}D d'aide`); }
+            if (reportDegenesis > 0) store.prendreLeReport(personnageId);
+            const aide = aidablesDegenesis.find(a => a.cle === aideVersDegenesis);
+            const jetLance = (res as JetDeDegenesis).degenesis ? res as JetDeDegenesis : undefined;
+            if (aide && jetLance) {
+                const des = desDeLAide(jetLance);
+                const id = des > 0 ? store.donnerUneAide({ pour: aide.cle, pourNom: aide.nom, de: nomDegenesis, des }) : undefined;
+                dits.push(des > 0 ? `aide : +${des}D pour ${aide.nom}` : `aide à ${aide.nom} sans effet`);
+                setLiensDegenesis({ aide: { id, pourNom: aide.nom, des } });
+                setAideVersDegenesis('');
+            } else setLiensDegenesis({});
+            setPrendreLesAidesDegenesis(true);
+            setPrendreLeReportDegenesis(true);
+        }
         // L'Égo dépensé quitte la fiche et ne sert qu'à la première action du round (p. 100).
-        if (regleDegenesis?.ego && jet.degenesis?.ego && egoDegenesis !== undefined) {
+        if (!etatDegenesis && regleDegenesis?.ego && jet.degenesis?.ego && egoDegenesis !== undefined) {
             ecrireSurLaFiche?.({ [regleDegenesis.ego]: Math.max(0, egoDegenesis - jet.degenesis.ego) });
             dits.push(`Égo : ${egoDegenesis} → ${Math.max(0, egoDegenesis - jet.degenesis.ego)}`);
             setChoixDegenesis(c => ({ ...c, ego: 0 }));
@@ -2593,7 +2697,22 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     )}
                     {regleDegenesis && (
                         <PreparationDegenesis choix={choixDegenesis} setChoix={setChoixDegenesis} reserve={jet.degenesis}
-                            difficulte={difficulte} setDifficulte={setDifficulte} ego={egoDegenesis} />
+                            difficulte={difficulte} setDifficulte={setDifficulte} ego={egoDegenesis}
+                            combat={etatDegenesis && combattantDegenesis ? {
+                                nom: combattantDegenesis.name, restantes: actionsRestantes(etatDegenesis),
+                                bonus: bonusDeLaProchaineAction(etatDegenesis), action: actionDuRoundDegenesis, setAction: setActionDegenesis,
+                            } : undefined}
+                            armes={combatDegenesis && jet.composantesDeLaReserve.some(c => combatDegenesis.attaques.includes(c.champ))
+                                ? combatDegenesis.armes.flatMap(a => {
+                                    const libelle = String(valeurs[a.nom] ?? '').trim();
+                                    return libelle ? [{ cle: a.nom, libelle, maniabilite: maniabiliteDe(valeurs, a) }] : [];
+                                }) : undefined}
+                            arme={armeDegenesis} setArme={setArmeDegenesis} />
+                    )}
+                    {liesDegenesis && (
+                        <PreparationDesJetsLies aides={aidesDuPersonnage} prendreLesAides={prendreLesAidesDegenesis} setPrendreLesAides={setPrendreLesAidesDegenesis}
+                            report={reportDuPersonnage} prendreLeReport={prendreLeReportDegenesis} setPrendreLeReport={setPrendreLeReportDegenesis}
+                            aideVers={aideVersDegenesis} setAideVers={setAideVersDegenesis} candidats={aidablesDegenesis} />
                     )}
                     {regleSymbaroum && (
                         <PreparationSymbaroum
@@ -3024,7 +3143,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 {reussites} réussite{reussites > 1 ? 's' : ''}
                                 {bonusDuLancer > 0 && ` (dont +${bonusDuLancer} ${ficheDeGroupe?.libelle ?? 'groupe'})`}
                                 {descripteur.difficulte
-                                    ? ` / difficulté ${regleStarTrek && starTrekDuLancer ? starTrekDuLancer.difficulte : difficulte}`
+                                    // Degenesis : la difficulté du lancer, +1 pour un assistant (DEG-A4, p. 21).
+                                    ? ` / difficulté ${regleStarTrek && starTrekDuLancer ? starTrekDuLancer.difficulte : degenesisDuResultat ? degenesisDuResultat.difficulte : difficulte}`
                                     : ` / ${jet.reussitesRequises} requise${jet.reussitesRequises > 1 ? 's' : ''}`}
                                 {/* Star Trek : ce que l'aide a donné, ou pourquoi elle ne compte pas (p. 256). */}
                                 {regleStarTrek && starTrekDuLancer && resultat.totalDisplay.replace(/^\d+ réussites?/, '')}
@@ -3147,6 +3267,19 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 consigner={ligne => redire(dernierLancer?.titre ?? 'RuneQuest', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
                         )}
                         {regleDegenesis && degenesisDuResultat && <SuitesDegenesis jet={resultat as JetDeDegenesis} />}
+                        {combatDegenesis && degenesisDuResultat && attaqueDegenesis && !pourLesJoueurs && (
+                            <AttaqueDegenesis key={attaqueDegenesis.compte} regle={combatDegenesis} champTraumatismes={regleDegenesis?.traumatismes}
+                                valeurs={valeurs} jet={resultat as JetDeDegenesis} attaque={attaqueDegenesis} de={() => DiceEngine.roll(6)}
+                                consigner={ligne => redire(dernierLancer?.titre ?? 'Degenesis', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
+                        )}
+                        {liesDegenesis && regleDegenesis && degenesisDuResultat && (
+                            <ResultatDesJetsLies key={`lies-${(resultat as JetDeDegenesis).degenesis.des.join('')}-${dernierLancer?.titre ?? ''}-${liensDegenesis.aide?.id ?? ''}`}
+                                regle={regleDegenesis} jet={resultat as JetDeDegenesis} nom={nomDegenesis} personnageId={personnageId}
+                                source={dernierLancer?.titre ?? 'premier test'} liens={liensDegenesis} adversaires={adversairesDegenesis}
+                                libelleDuChamp={c => template.sections.flatMap(sec => sec.fields).find(f => f.id === c)?.label ?? c}
+                                de={() => DiceEngine.roll(6)}
+                                consigner={ligne => redire(dernierLancer?.titre ?? 'Degenesis', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
+                        )}
                         {regleShadowrun && shadowrunDuResultat && (
                             <SuitesShadowrun jet={resultat as JetDeShadowrun} anarchy={anarchyShadowrun === undefined ? undefined : anarchyApres ?? anarchyShadowrun}
                                 relancer={relancerShadowrun} />

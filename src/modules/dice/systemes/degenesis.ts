@@ -26,6 +26,15 @@ export interface RegleDeDegenesis {
     traumatismes?: string;
     /** Les points d'Égo actuels, que le joueur dépense pour +1D (p. 100). */
     ego?: string;
+    /** Armes, armures, F et défenses : l'attaque jusqu'aux dégâts nets (DEG-A2, pilote 2.1.0). */
+    combat?: import('./combatDeDegenesis').RegleDuCombatDeDegenesis;
+    /** Égo, Sporulations, Blessures et Traumatismes maximaux, et leurs branches (DEG-A3, pilote 2.2.0). */
+    maxima?: import('./maximaDeDegenesis').RegleDesMaximaDeDegenesis;
+    /**
+     * Les compétences de chaque attribut : la réserve d'un adversaire en confrontation se
+     * compose d'un attribut et d'une de ses compétences (DEG-A4, pilote 2.2.0, p. 19-20).
+     */
+    reserves?: { attribut: string; competences: string[] }[];
 }
 
 /** L'échelle de difficulté du livre : le nombre de succès requis (p. 18). */
@@ -132,6 +141,10 @@ export interface JetDeDegenesis extends RollResult {
         bilan: BilanDeDegenesis;
         libelle: string;
         qualite?: string;
+        /** Combinaison de tests (DEG-A4) : les déclencheurs du premier test, déjà comptés dans `declencheurs` (p. 20). */
+        reportes?: number;
+        /** Le second test a échoué : les déclencheurs reportés sont perdus. */
+        reportesPerdus?: boolean;
     };
 }
 

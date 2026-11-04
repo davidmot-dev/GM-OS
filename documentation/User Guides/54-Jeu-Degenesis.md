@@ -1,8 +1,10 @@
 # 🍄 Jeu — Degenesis
 
 > **Pilote décrit :** « Degenesis », forgé par David, exporté le 2026-10-30, **fini le
-> 2026-10-30**, version 2.0.0 (`Export Dirvers/corriges/Degenesis_driver_gmos_finir.gmos-driver`,
-> construit par `outils/degenesis/finir_degenesis.py`). Thème `degenesis`, fiche de personnage HTML
+> 2026-10-30**, version 2.0.0 (`outils/degenesis/finir_degenesis.py`), puis **2.1.0 le 2026-11-03**
+> pour le round et l'attaque, DEG-A1 et DEG-A2 (`outils/degenesis/combat_degenesis.py`), puis **2.2.0 le
+> 2026-11-04** pour les maxima et les jets liés, DEG-A3 et DEG-A4 (`outils/degenesis/maxima_et_jets_lies_degenesis.py` →
+> `Export Dirvers/corriges/Degenesis_driver_gmos_finir.gmos-driver`, à réimporter avec « Remplacer »). Thème `degenesis`, fiche de personnage HTML
 > et bannière livrés le même jour par Codex. Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
@@ -52,7 +54,12 @@ Validation globale de David : « ok tout est testé, commit et pousse ».
     (−1D), clair de lune (−2D), obscurité (−4D) ; la maniabilité, l'encombrement ou un Potentiel
     se saisissent dans le total (p. 102-106) ;
   - l'**Égo dépensé**, jusqu'à 3 : un dé par point. Il se retire de la fiche au lancer et ne vaut
-    que pour la première action du round (p. 100) ;
+    que pour la première action du round (p. 100). **En combat, ce menu disparaît** : l'Égo se paie
+    à l'initiative (voir [le round](#le-round--égo-et-actions)) ;
+  - en combat, **« Ce jet est une action du round »** (cochée d'office) dépense une action du
+    personnage ; sa première action reçoit les dés d'Égo payés à l'initiative, sans rien débiter ;
+  - pour Corps à corps, Lutte et Armes à projectiles, l'**arme** de la fiche : sa **maniabilité**
+    s'ajoute aux dés (p. 103) ;
   - chaque **Traumatisme** de la fiche retire un dé, sans rien régler (p. 105).
 - **Lancer** : douze dés au plus ; au-delà, chaque point de valeur d'action est un **succès
   d'office** (p. 18).
@@ -69,13 +76,83 @@ Sous le résultat, le panneau rappelle ce que valent les déclencheurs au combat
 p. 107). Sur un échec, il compte les 6 : à égalité de succès, ils départagent une
 **confrontation** (p. 19).
 
-## L'initiative
+## Les jets liés : aide, combinaison, confrontation, action complexe
 
-Le **Jet système** de Combat-OS lance **PSY+Réactivité** pour chacun, moins un dé par
-Traumatisme : le **score est le nombre de succès**, du plus haut au plus bas. Le journal dit qui
-gagne une action de plus — une par paire de déclencheurs (p. 100-101). L'Égo dépensé à
-l'initiative ne se joue pas là : lancez PSY+Réactivité depuis la fiche avec l'Égo, et corrigez le
-score sur la carte.
+![Le second test de Falberg : 5 déclencheurs reportés, une action complexe, la confrontation avec l'Usudi](captures/jeu-degenesis-jets-lies.jpg)
+
+Avec le pilote 2.2.0, pour le meneur (DEG-A4, 04/11/2026 ; Stitch n'ayant rien rendu, les écrans
+ont été validés sur ces captures) :
+
+- **L'aide** (p. 21) : à la préparation, « **Ce jet aide un autre personnage** » et l'aidé choisi —
+  la difficulté monte de 1. Si l'assistant réussit, ses **déclencheurs** sont mis de côté en dés
+  pour l'aidé (« Retirer » les annule) ; au jet suivant de l'aidé, « **Aide de Kum (+2D)** » est
+  cochée d'office, les dés entrent dans la valeur d'action — sous le plafond de 12 — et ne
+  servent qu'une fois. Plusieurs assistants s'additionnent, chacun à +1 de difficulté.
+- **La combinaison de tests** (p. 20) : après une réussite, « **Enchaîner un second test** »
+  reporte ses déclencheurs au prochain test du même personnage. S'il réussit, ils s'ajoutent aux
+  siens — « 1 déclencheur + 2 reportés = 3 » — et comptent pour l'attaque, la qualité et le
+  journal ; s'il échoue, ils sont perdus. Le report ne sert qu'une fois.
+- **La confrontation** (p. 19-20), dans le bloc dépliable du résultat : l'adversaire — un
+  combattant du plateau ou un autre personnage — et sa réserve (un attribut et une de ses
+  compétences, lus sur sa fiche, −1D par Traumatisme) ; « **Lancer sa réserve** », ou ses succès
+  et ses six saisis. Le plus de succès l'emporte, puis le plus de six ; à égalité parfaite, statu
+  quo, ou défaite de celui qui **a pris l'initiative** quand il faut un vainqueur.
+- **L'action complexe** (p. 21) : « Nouvelle action complexe… », un nom et un objectif ; chaque
+  jet, de n'importe quel personnage, y **verse** ses succès plus un par déclencheur, une fois ;
+  la barre dit le cumul et « Objectif atteint ». « Clore » la retire.
+
+> L'exemple du chariot (p. 21) oublie les deux déclencheurs du second Préserviste (« il reste 12 »
+> au lieu de 10) mais compte celui de Falberg ; GM-OS suit la règle, qui les compte tous.
+
+## Le round : Égo et actions
+
+![Le round : Falberg 5 succès, trois actions, Égo épuisé ; l'Usudi a esquivé une fois](captures/jeu-degenesis-round.jpg)
+
+Avec le pilote 2.1.0, Combat-OS remplace le Jet système par le panneau **« Round de Degenesis »**
+(DEG-A1, 03/11/2026, dessiné dans Stitch et validé par David).
+
+1. **Avant l'initiative**, pour chacun : l'**Égo** dépensé, de 0 à 3 (« sur 8 » rappelle ce qu'il
+   a), et **« Pris par surprise »**, qui interdit l'Égo (p. 100). Un adversaire sans fiche reçoit
+   sa réserve **PSY + Réactivité** à la main — le « jet général » du MJ (p. 101).
+2. **« Lancer l'initiative »** lance PSY + Réactivité + l'Égo, moins un dé par Traumatisme ;
+   l'**Égo se retire de la fiche une seule fois**, ici. Le score est le nombre de succès ; une
+   action, plus une par paire de déclencheurs ; aucun succès : une action à 0. Le plateau se
+   range du plus haut au plus bas ; à égalité, les joueurs agissent ensemble (« simultané ») et
+   annoncent avant un PNJ (p. 101). Le journal dit le tout.
+3. **Pendant le round**, chaque ligne montre les actions dépensées et restantes, et le badge
+   « +2D d'Égo — première action » tant que la première action n'a pas eu lieu. Le panneau de jet
+   et la défense active dépensent les actions d'eux-mêmes ; **« Action utilisée »** le fait pour
+   ce qui se joue sans jet (recharger, se déplacer à couvert…), **« Rendre une action »** corrige
+   une erreur — sans rendre le bonus d'Égo. Sans action restante : **défense passive seulement**
+   (p. 102).
+4. **« Round suivant »** efface les actions et les déclarations d'Égo : l'initiative se relance à
+   chaque round (p. 100).
+
+## L'attaque, jusqu'aux dégâts nets
+
+![L'attaque de Falberg : esquive de l'Usudi, 8 − armure 2 = 6 Blessures superficielles](captures/jeu-degenesis-attaque.jpg)
+
+Au résultat d'un jet de **Corps à corps, Lutte ou Armes à projectiles**, pour le meneur, le bloc
+**« Attaque »** (DEG-A2, 03/11/2026, dessiné dans Stitch et validé par David) :
+
+- **La cible**, puis sa **défense** :
+  - **passive** : la difficulté se compose — 1, +1 actif et debout (coché d'office), +1 couvert
+    partiel ou bouclier, +4 couvert total, +1 en mouvement, ± divers ; touché si les succès
+    l'atteignent (p. 106) ;
+  - **active** : esquive AGI + Mobilité, ou parade PHY + Corps à corps ou PHY + Lutte (pas contre
+    un tir). **GM-OS lance la réserve du défenseur depuis sa fiche** et lui **retire une action**
+    du round (choix de David) ; il pare ou esquive **à égalité** ; sans action restante, le bouton
+    se grise. Une parade au corps à corps gagnée avec **trois déclencheurs** blesse l'assaillant
+    — le panneau le dit (p. 102, 106).
+- **Les dégâts**, si le coup touche : ceux de l'arme — **F = PHY + Force**, « F/2 » arrondi au-dessus
+  (p. 103, 156) — + les déclencheurs de l'attaque + les Potentiels saisis, moins **une seule armure**
+  de la cible, choisie dans un menu : les deux de la fiche **ne s'additionnent pas**.
+- **Les propriétés** de l'arme sont **lues dans la fiche** et se décochent (choix de David) :
+  **Mortel** ignore l'armure et va **droit aux Traumatismes** ; une arme **sonique** (« 1+DC Trauma »,
+  « 1+DC Égo ») ignore l'armure ; **Pénétration (N)** annule une armure de N ou moins ;
+  **Étourdissement** va à l'**Égo**, armure comprise (p. 155-156, 160).
+- **« Porter le coup »** envoie le net aux pistes de la cible — une seule fois, sans que l'armure
+  soit retirée de nouveau.
 
 ## La santé : deux pistes
 
@@ -105,9 +182,26 @@ aux champs du pilote (`docs/systems/degenesis/fiche/correspondance.json`). Sur l
 compte les **points restants** ; Sporulations, Blessures superficielles et Traumatismes ce qui a
 été **subi**.
 
-La fiche GM-OS a deux champs que la fiche HTML n'imprime pas : l'**Égo maximal** — à saisir,
-(INT+Concentration)×2 ou (INS+Pulsions)×2 selon la compétence choisie (p. 94) — et la **santé
+La fiche GM-OS a deux champs que la fiche HTML n'imprime pas : l'**Égo maximal** et la **santé
 restante**, tenue par Combat-OS.
+
+### Les maxima
+
+![La carte « Maxima » : Concentration et Pulsions remplies, Égo maximal 8 → 10](captures/jeu-degenesis-maxima.jpg)
+
+À l'onglet du test, la carte **« Maxima »** (DEG-A3, 04/11/2026, pilote 2.2.0) :
+
+- **La branche de l'Égo** — Concentration ou Pulsions — et **celle de la Sporulation** — Foi ou
+  Volonté — se **déduisent** de la compétence remplie (« déduite de la fiche ») ; si les deux le
+  sont, ou aucune, le meneur la **choisit**, et le choix se garde dans la fiche. Deux compétences
+  exclusives remplies sont signalées (« elles s'excluent », p. 26), avec « **Mettre Pulsions à 0** ».
+- **Le tableau** : Égo maximal (INT+Concentration)×2 ou (INS+Pulsions)×2, Sporulations
+  (PSY+Foi ou Volonté)×2, Blessures superficielles (PHY+Résistance)×2, Traumatismes PHY+PSY
+  (p. 26, 94) — chaque ligne avec son calcul.
+- **« Appliquer »** écrit l'Égo maximal. Il **ne remplit pas** la jauge : l'Égo actuel reste, ramené
+  au maximum seulement s'il le dépasse. Les trois autres maxima sont des formules du pilote : la
+  carte les compare et dit l'écart (la jauge de Sporulation additionne Foi et Volonté si les deux
+  sont remplies). Les Sporulations subies ne bougent jamais.
 
 ## Le thème
 
@@ -118,15 +212,18 @@ Paramètres. Accepté par le validateur sans erreur ni avertissement. La banniè
 
 ## Ce qui reste à la table
 
-- **L'armure** : les dégâts se saisissent armure retirée. La fiche porte deux armures, et le livre
-  ne dit pas si elles se cumulent.
-- **La défense** : passive (1, +1 si actif et debout, +1 en mouvement, couvert +1 à +4) ou active,
-  en confrontation (p. 102, 106) — le meneur règle la difficulté.
+- **Sur la carte du combattant**, les dégâts se saisissent toujours armure retirée ; c'est le bloc
+  « Attaque » du panneau de jet qui calcule le net.
+- **La contre-attaque** d'une parade à trois déclencheurs est annoncée, pas lancée ; les attaques
+  mentales (PSY + Foi ou Volonté, sans action) se règlent au panneau, sans bloc d'attaque.
+- **Rafale, Régularité, Terrifiant, Incendiaire** et les autres propriétés restent au meneur.
 - **Les Potentiels**, les rangs de Culte et la **Brûlure** (Égo et Sporulation +Puissance,
-  p. 187-190) ; les combinaisons de tests, où les déclencheurs du premier s'ajoutent au second
-  (p. 20).
+  p. 187-190) — DEG-A5.
+- **L'aide d'un PNJ** : seuls les personnages des joueurs se proposent comme aidés ; un PNJ qui
+  aide se règle en dés ajoutés à la main.
 - **Les adversaires sans fiche** dans Combat-OS perdent leurs PV d'un bloc : les deux pistes ne se
-  tiennent que sur une fiche.
+  tiennent que sur une fiche (DEG-A6). Ils se défendent pourtant, si leur fiche de plateau porte
+  AGI et Mobilité.
 
 ## Les campagnes de test
 
