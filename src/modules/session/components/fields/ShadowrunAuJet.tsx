@@ -3,6 +3,7 @@ import {
     DES_DE_RISQUE_CONSEILLES, DIFFICULTES_DE_SHADOWRUN, LIBELLES_DU_RISQUE, RR_MAXIMALE,
     type ChoixDeShadowrun, type JetDeShadowrun, type NiveauDeRisque, type ReserveDeShadowrun,
 } from '../../../dice/systemes/shadowrun';
+import { succesAdversesShadowrun } from '../../../dice/systemes/oppositionDeShadowrun';
 
 /**
  * **Le jet de Shadowrun : Anarchy 2.0** — 31/10/2026, à la demande de David (« finir le pilote »).
@@ -31,7 +32,7 @@ export const PreparationShadowrun: React.FC<{
         <div data-preparation-shadowrun className="flex flex-col gap-2 text-xs">
             <div className="flex flex-wrap items-center gap-1">
                 <span className={etiquette}>Seuil</span>
-                {DIFFICULTES_DE_SHADOWRUN.map(d => (
+                {choix.opposition ? <span className="font-mono">{succesAdversesShadowrun(choix.opposition)} succès adverses</span> : DIFFICULTES_DE_SHADOWRUN.map(d => (
                     <button key={d.seuil} type="button" aria-pressed={difficulte === d.seuil}
                         className={`${bouton} ${difficulte === d.seuil ? 'border-accent text-accent' : ''}`}
                         title={`${d.seuil} succès (p. 64) ; en test opposé, le seuil est le nombre de succès de l'adversaire.`}
@@ -132,7 +133,7 @@ export const SuitesShadowrun: React.FC<{
             {s.reussi && s.nets > 0 && (
                 <span>{s.nets} succès net{s.nets > 1 ? 's' : ''}{s.exceptionnelle ? ' : réussite exceptionnelle, au-delà des attentes (p. 64)' : ''} — au combat, ils s'ajoutent à la VD de l'arme (p. 66).</span>
             )}
-            {s.complication === 'mineure' && <span className="text-etat-alerte">Complication mineure : un petit imprévu, le test reste {s.reussi ? 'réussi' : 'échoué'} (p. 70).</span>}
+            {s.complication === 'mineure' && <span className="text-etat-alerte">Complication mineure : un petit imprévu, le test reste {s.egalite ? 'indécis' : s.reussi ? 'réussi' : 'échoué'} (p. 70).</span>}
             {s.complication === 'critique' && (
                 <span className="text-etat-danger">Complication critique : un effet grave pour la scène ; le meneur peut forcer l'échec (p. 70).{s.anarchyGagnee ? ` +${s.anarchyGagnee} point d'Anarchy (p. 77).` : ''}</span>
             )}

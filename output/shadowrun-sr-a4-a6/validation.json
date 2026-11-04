@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-04",
+  "versionPilote": "2.2.0",
+  "fichier": "Export Dirvers/corriges/Shadowrun-Anarchy-2.2.0.gmos-driver",
+  "sha256": "6be6034ee24a8f534784beee911821e40dd6bea648740238928869a416ac7215",
+  "suiteComplete": { "testsPasses": 9827, "testsIgnores": 4, "fichiersPasses": 827, "fichiersIgnores": 1, "secondes": 491.69 },
+  "types": "tsc -b passé dans npm run build",
+  "construction": "passée",
+  "lint": { "erreurs": 0, "avertissements": 1, "origine": "useSaisieDifferee.ts, préexistant" },
+  "parcoursElectron": [
+    { "fichier": "e2e/shadowrunAvance.spec.ts", "statut": "passé", "secondes": 19.2 },
+    { "fichier": "e2e/shadowrunExtensions.spec.ts", "statut": "passé", "secondes": 26.3 },
+    { "fichier": "e2e/capturesDesJeux.spec.ts", "statut": "passé séparément, pilote 2.2.0 seul", "secondes": 30.4 }
+  ],
+  "capturesRelues": 14,
+  "constatsDuControleur": 0,
+  "validationDavid": "04/11/2026 — c'est testé marque le ; SR-A4/A5/A6 validés",
+  "donneesPersonnellesUtilisees": false,
+  "demandeDePublication": "04/11/2026 — commit et pousse"
+}

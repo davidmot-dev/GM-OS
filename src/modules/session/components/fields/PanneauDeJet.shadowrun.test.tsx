@@ -55,8 +55,8 @@ const faces = (...f: number[]) => de.mockImplementation(() => f.shift() ?? 2);
 beforeEach(() => { de = vi.spyOn(DiceEngine, 'roll'); consigner.mockClear(); });
 afterEach(() => { cleanup(); de.mockRestore(); });
 
-const monter = (valeurs: Record<string, unknown> = IRON, ecrire = vi.fn()) => {
-    const panneau = render(<PanneauDeJet descripteur={JET} dice={DICE} template={FICHE} valeurs={valeurs} ecrireSurLaFiche={ecrire} />).container;
+const monter = (valeurs: Record<string, unknown> = IRON, ecrire = vi.fn(), descripteur = JET) => {
+    const panneau = render(<PanneauDeJet descripteur={descripteur} dice={DICE} template={FICHE} valeurs={valeurs} ecrireSurLaFiche={ecrire} />).container;
     fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: 'competence_1' } });
     fireEvent.change(screen.getAllByRole('combobox')[1], { target: { value: 'agilite' } });
     return { panneau, ecrire };
@@ -65,6 +65,30 @@ const lancer = () => fireEvent.click(screen.getByText('Lancer', { exact: true })
 const consigne = () => consigner.mock.calls.at(-1)![0] as { titre: string; tagSuccess: boolean; totalDisplay: string };
 
 describe('le test de Shadowrun au panneau', () => {
+    it('SR-A5 : l’égalité 4/4 reste indécise et la relance conserve le contexte opposé malgré un changement des menus', () => {
+        monter({ ...IRON, competence_1_rr: 0 }, vi.fn(), { ...JET, shadowrun: { ...JET.shadowrun, opposition: true } });
+        fireEvent.change(screen.getByLabelText('Épreuve Shadowrun'), { target: { value: 'oppose' } });
+        fireEvent.change(screen.getByLabelText('Succès adverses Shadowrun'), { target: { value: '4' } });
+        faces(6, 6, 6, 6, 2, 2, 2, 2, 2, 2, 2); lancer();
+        expect(consigne().totalDisplay).toContain('Égalité — aucun vainqueur');
+        expect(consigne().tagSuccess).toBeUndefined();
+        expect(screen.getByText('4 réussites / difficulté 4')).toBeTruthy();
+        fireEvent.change(screen.getByLabelText('Succès adverses Shadowrun'), { target: { value: '0' } });
+        faces(6, 6, 6, 6, 2, 2, 2, 2, 2, 2, 2);
+        fireEvent.click(screen.getByText("Relancer — 1 point d'Anarchy"));
+        expect(consigne().totalDisplay).toContain('Égalité — aucun vainqueur');
+        expect(screen.getByText('4 réussites / difficulté 4')).toBeTruthy();
+    });
+
+    it('SR-A5 : le profil de second rôle propose sa moyenne et inverse son avantage', () => {
+        const { panneau } = monter(IRON, vi.fn(), { ...JET, shadowrun: { ...JET.shadowrun, opposition: true } });
+        fireEvent.change(screen.getByLabelText('Épreuve Shadowrun'), { target: { value: 'oppose' } });
+        fireEvent.change(screen.getByLabelText('Rôle de l’adversaire'), { target: { value: 'second' } });
+        fireEvent.change(screen.getByLabelText('RR adverse'), { target: { value: '1' } });
+        expect(screen.getByText('Valeur moyenne 5 — sans Anarchy')).toBeTruthy();
+        fireEvent.change(screen.getByLabelText('Situation adverse'), { target: { value: '1' } });
+        expect(panneau.querySelector('[data-composition-shadowrun]')!.textContent).toContain('6 seulement');
+    });
     it('la compétence se propose sous son libellé ; la RR de la ligne et le risque normal viennent d’eux-mêmes', () => {
         const { panneau } = monter();
         const options = [...screen.getAllByRole('combobox')[0].querySelectorAll('option')].map(o => o.textContent);

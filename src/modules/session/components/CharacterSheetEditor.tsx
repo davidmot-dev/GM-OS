@@ -35,6 +35,7 @@ import { AttributsCalculesRuneQuest, MagieEtProgressionRuneQuest } from './field
 import { MaximaDegenesis } from './fields/MaximaDegenesis';
 import { SporulationEtBrulureDegenesis } from './fields/SporulationEtBrulureDegenesis';
 import { SanteEtCoherenceShadowrun, MatriceShadowrun } from './fields/CartesShadowrun';
+import { PlanificationShadowrun, RiggingShadowrun } from './fields/OperationsShadowrun';
 import { consignerLeJet } from '../../journal/consignerLeJet';
 import FicheHote from '../../fiches/FicheHote';
 import { useCorrespondanceDuJeu } from '../../fiches/useCorrespondanceDuJeu';
@@ -389,6 +390,8 @@ const CharacterSheetEditor: React.FC = () => {
                             return <>
                                 <CarteDuJeu id="suivi-shadowrun" titre="Blessures, drain et cohérence"><SanteEtCoherenceShadowrun key={`sr-${character.id}`} {...props} /></CarteDuJeu>
                                 {sr.matrice && <CarteDuJeu id="matrice-shadowrun" titre="Matrice et surveillance"><MatriceShadowrun key={`matrice-${character.id}`} {...props} /></CarteDuJeu>}
+                                {activeCampaignId && sr.table && <CarteDuJeu id="planification-shadowrun" titre="Planification, flashback et menace"><PlanificationShadowrun key={`plan-${character.id}`} {...props} campaignId={activeCampaignId} personnageId={character.id} /></CarteDuJeu>}
+                                {activeCampaignId && sr.rigging && <CarteDuJeu id="rigging-shadowrun" titre="Rigging et véhicules"><RiggingShadowrun key={`rigging-${character.id}`} {...props} campaignId={activeCampaignId} personnageId={character.id} /></CarteDuJeu>}
                             </>;
                         })()}
 

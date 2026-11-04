@@ -42,3 +42,31 @@ describe('le générateur Shadowrun 2.1.0', () => {
         }
     });
 });
+
+describe('le générateur Shadowrun 2.2.0', () => {
+    it('garde les identifiants et les champs, relie les réserves natives et contrôle leurs références', async () => {
+        const cheminDuControle = '../src/modules/forge/rules/controlesDuPilote.ts';
+        const { controlerLePilote } = await import(cheminDuControle) as {
+            controlerLePilote: (pilote: unknown, fiche: unknown) => { message: string }[];
+        };
+        const dossier = fs.mkdtempSync(path.join(os.tmpdir(), 'gmos-sr-a4-a6-'));
+        if (!path.resolve(dossier).startsWith(path.resolve(os.tmpdir()) + path.sep)) throw new Error('Dossier temporaire inattendu.');
+        try {
+            const ancienFichier = path.join(dossier, '2.1.gmos-driver'), fichier = path.join(dossier, '2.2.gmos-driver');
+            execFileSync(process.execPath, ['outils/shadowrun-anarchy/ameliorer_shadowrun.mjs', 'output/campagnes-tests/shadowrun-anarchy/Shadowrun-Anarchy-2.0.0.gmos-driver', ancienFichier]);
+            execFileSync(process.execPath, ['outils/shadowrun-anarchy/etendre_shadowrun.mjs', ancienFichier, fichier]);
+            type Extension = ArchiveShadowrun & { gameDriver: { jet: { shadowrun: { table: { planification: string; menace: string }; opposition: boolean; rigging: { resistance: string } } } } };
+            const ancien = JSON.parse(new AdmZip(ancienFichier).readAsText('state.json')) as ArchiveShadowrun;
+            const etat = JSON.parse(new AdmZip(fichier).readAsText('state.json')) as Extension;
+            expect(etat.gameDriver.id).toBe(ancien.gameDriver.id);
+            expect(etat.gameDriver.version).toBe('2.2.0');
+            expect(etat.sheetTemplate).toEqual(ancien.sheetTemplate);
+            expect(etat.gameDriver.jet.shadowrun).toMatchObject({ table: { planification: 'reserveDePlanification', menace: 'reserveDeMenace' }, opposition: true, rigging: { resistance: 'tableau-blessures' } });
+            expect(controlerLePilote(etat.gameDriver, etat.sheetTemplate)).toEqual([]);
+            etat.gameDriver.jet.shadowrun.table.menace = 'absente';
+            expect(controlerLePilote(etat.gameDriver, etat.sheetTemplate).some(c => c.message.includes('absente'))).toBe(true);
+            etat.gameDriver.jet.shadowrun.rigging.resistance = 'humanoide';
+            expect(controlerLePilote(etat.gameDriver, etat.sheetTemplate).some(c => c.message.includes('Structure'))).toBe(true);
+        } finally { fs.rmSync(dossier, { recursive: true }); }
+    });
+});

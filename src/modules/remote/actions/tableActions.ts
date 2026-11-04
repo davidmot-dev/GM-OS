@@ -4,6 +4,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { tousLesPilotes } from '../../session/store/tousLesPilotes';
 import { ressourcesDeLaTable } from '../../table/reservesDuGroupe';
 import type { ActionContext, ActionRegistry } from './types';
+import { executerTableShadowrun } from '../../session/logic/operationsDeShadowrun';
 
 /**
  * Les réserves de table, manipulées depuis la tablette d'un joueur.
@@ -85,6 +86,12 @@ const ajusterUneReserve = (payload: unknown, ctx: ActionContext) => {
 };
 
 export const tableActions: ActionRegistry = {
+    'shadowrun:utilisation': (payload, ctx) => {
+        const p = payload as { id?: unknown; characterId?: unknown } | null;
+        if (typeof p?.id !== 'string' || !p.id || p.id.length > 150 || typeof p.characterId !== 'string' || !ctx.activeCampaignId) return;
+        const c = useSessionOSStore.getState().players.flatMap(x => x.characters).find(x => x.id === p.characterId && x.campaignId === ctx.activeCampaignId);
+        if (c) executerTableShadowrun(ctx.activeCampaignId, c.id, { id: `tablette-${p.id}`, type: 'utilisation' });
+    },
     'table:ajuster': ajusterUneReserve,
     'remote:table:ajuster': ajusterUneReserve,
 };

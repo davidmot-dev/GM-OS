@@ -28,9 +28,11 @@ import { estUnAndroide } from './systemes/paniqueAlien';
 import { CHOIX_DE_RUNEQUEST, calculerRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest } from './systemes/runequest';
 import { ajustementsDuJet, lireLEtat } from './systemes/progressionDeRuneQuest';
 import { reserveDeDegenesis, type ChoixDeDegenesis, type ReserveDeDegenesis } from './systemes/degenesis';
-import { reserveDeShadowrun, rrBornee, type ChoixDeShadowrun, type ReserveDeShadowrun } from './systemes/shadowrun';
+import { desDeRisqueConseilles, reserveDeShadowrun, rrBornee, type ChoixDeShadowrun, type ReserveDeShadowrun } from './systemes/shadowrun';
 import { lireSuiviShadowrun } from './systemes/suiviDeShadowrun';
 import { lireMatriceShadowrun, preparerMatriceShadowrun } from './systemes/matriceDeShadowrun';
+import { succesAdversesShadowrun } from './systemes/oppositionDeShadowrun';
+import { effetsRiggingShadowrun } from './systemes/riggingDeShadowrun';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 import type { EchelleDuJet } from './degresDeReussite';
 import {
@@ -1126,7 +1128,8 @@ export function preparerLeJet(
             const champ = choix.champs[composante.id];
             if (!champ) {
                 // Une composante facultative non retenue ne compte pour rien (Torg).
-                if (!composante.facultative) avertissements.push(`${composante.label} : aucun champ retenu.`);
+                const auto = descripteur.shadowrun?.rigging && choix.shadowrun?.rigging && effetsRiggingShadowrun(choix.shadowrun.rigging).autonome;
+                if (!composante.facultative && !auto) avertissements.push(`${composante.label} : aucun champ retenu.`);
                 continue;
             }
             const lu = lireLeChamp(valeursDeLaFiche, champ);
@@ -1458,25 +1461,38 @@ export function preparerLeJet(
         ? rrBornee(lireLeChamp(valeursDeLaFiche, regleShadowrun.rrDesCompetences[champDeLaCompetence]).valeur ?? 0) : undefined;
     const lu = (champ?: string) => (champ ? lireLeChamp(valeursDeLaFiche, champ).valeur ?? undefined : undefined);
     const suiviSR = regleShadowrun?.suivi ? lireSuiviShadowrun(valeursDeLaFiche) : undefined;
+    const oppositionSR = regleShadowrun?.opposition ? choix.shadowrun?.opposition : undefined;
+    const riggingSR = regleShadowrun?.rigging && choix.shadowrun?.rigging ? effetsRiggingShadowrun(choix.shadowrun.rigging) : undefined;
     const matriceSR = regleShadowrun?.matrice && choix.shadowrun?.matrice
         ? preparerMatriceShadowrun(lireMatriceShadowrun(regleShadowrun.matrice, valeursDeLaFiche), choix.shadowrun.matrice) : undefined;
     const shadowrun = regleShadowrun && reserve
         ? {
             ...reserveDeShadowrun(
-                reserveDeDepart,
-                { ...choix.shadowrun, rr: choix.shadowrun?.rr ?? rrLue ?? 0 },
-                { graves: lu(regleShadowrun.blessures?.graves), incapacitantes: lu(regleShadowrun.blessures?.incapacitantes), essence: lu(regleShadowrun.essence),
-                    legereRecente: suiviSR?.legereRecente, drainMineur: suiviSR?.drainMineur, avantageMatrice: matriceSR?.avantage },
+                riggingSR?.autonome ? choix.shadowrun!.rigging!.vehicule.autopilote : reserveDeDepart,
+                { ...choix.shadowrun, ...(riggingSR?.autonome ? { specialisation: false, blessureLegereRecente: false, magie: false, social: false } : {}), rr: riggingSR?.autonome ? 0 : choix.shadowrun?.rr ?? rrLue ?? 0 },
+                { graves: riggingSR?.autonome ? 0 : lu(regleShadowrun.blessures?.graves), incapacitantes: lu(regleShadowrun.blessures?.incapacitantes), essence: lu(regleShadowrun.essence),
+                    legereRecente: riggingSR?.autonome ? false : suiviSR?.legereRecente, drainMineur: suiviSR?.drainMineur, avantageMatrice: matriceSR?.avantage,
+                    situationAdverse: oppositionSR?.role === 'second' ? Math.max(-1, Math.min(1, oppositionSR.situation)) : 0,
+                    avantageRigging: riggingSR?.avantage, graveVehicule: (riggingSR?.graves ?? 0) > 0, legereVehicule: riggingSR?.legereRecente },
                 !!regleShadowrun.risqueAlternatif,
             ),
             ...(rrLue !== undefined ? { rrDeLaCompetence: rrLue } : {}),
         }
         : undefined;
-    if (shadowrun && (lu(regleShadowrun?.blessures?.incapacitantes) ?? 0) > 0) {
+    if (shadowrun && !riggingSR?.autonome && (lu(regleShadowrun?.blessures?.incapacitantes) ?? 0) > 0) {
         avertissements.push('Blessure incapacitante : aucune action qui demande un test (p. 68).');
     }
     if (shadowrun?.annules) remarques.push(`Essence : ${shadowrun.annules} succès annulé${shadowrun.annules > 1 ? 's' : ''} sur ce test de magie (p. 60).`);
-    if (shadowrun && regleShadowrun?.suivi && lu(regleShadowrun.essence) !== undefined && lu(regleShadowrun.essence)! <= 0)
+    if (shadowrun && riggingSR) {
+        if (matriceSR) avertissements.push('Choisir une action de véhicule ou une action matricielle pour ce test.');
+        if (riggingSR.refus) avertissements.push(riggingSR.refus);
+        if (riggingSR.incapacite) avertissements.push('Véhicule incapacitant : aucune action liée au véhicule.');
+        if (riggingSR.autonome && !choix.shadowrun!.rigging!.vehicule.debride) {
+            shadowrun.risque = shadowrun.alternatif ? 0 : desDeRisqueConseilles(shadowrun.rr, 'faible', shadowrun.des);
+            remarques.push('Autopilote non débridé : action précautionneuse imposée (p. 233).');
+        }
+    }
+    if (shadowrun && !riggingSR?.autonome && regleShadowrun?.suivi && lu(regleShadowrun.essence) !== undefined && lu(regleShadowrun.essence)! <= 0)
         avertissements.push(suiviSR?.essenceMortConfirmee ? 'Mort par Essence confirmée : aucun test possible (p. 60).' : 'Essence 0 : confirmer la mort dans le suivi du personnage (p. 60).');
     if (shadowrun && matriceSR) {
         if (matriceSR.refus) avertissements.push(matriceSR.refus);
@@ -1628,7 +1644,7 @@ export function preparerLeJet(
         // Torg compare un total à un Niveau de Difficulté : il ne compte pas de réussites.
         // NOC compare aussi un niveau à la difficulté : sa difficulté n'est pas un compte de réussites.
         // Barbarians compare une somme à 9, COC un d20 + caractéristique à la difficulté : une réussite ou aucune.
-        reussitesRequises: matriceSR?.seuil ?? (descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians || descripteur.coc ? 1 : bornes ? difficulte : 1),
+        reussitesRequises: oppositionSR ? succesAdversesShadowrun(oppositionSR) : matriceSR?.seuil ?? (descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians || descripteur.coc ? 1 : bornes ? difficulte : 1),
         /*
           Une poignée échelonnée n'a pas UNE taille. On rend celle du plus gros
           dé, pour que les écrans qui écrivent « 2d10 » disent quelque chose de

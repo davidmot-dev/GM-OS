@@ -1,10 +1,13 @@
 # 🕶️ Jeu — Shadowrun : Anarchy 2.0
 
 > **Pilote décrit :** « Shadowrun: Anarchy 2.0 », forgé par David, exporté le 2026-10-31, **fini le
-> 2026-10-31**, amélioré le **04/11/2026, version 2.1.0** (`Export Dirvers/corriges/Shadowrun-Anarchy-2.1.0.gmos-driver`,
-> construit par `outils/shadowrun-anarchy/ameliorer_shadowrun.mjs` depuis le pilote 2.0.0). Thème `shadowrun-anarchy`, fiche de
+> 2026-10-31**, amélioré le **04/11/2026, version 2.2.0** (`Export Dirvers/corriges/Shadowrun-Anarchy-2.2.0.gmos-driver`,
+> construit par `outils/shadowrun-anarchy/etendre_shadowrun.mjs` depuis le pilote 2.1.0). Thème `shadowrun-anarchy`, fiche de
 > personnage HTML, bannière et identité livrés le même jour par Codex. Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+
+**Voir les gestes :** un [clip Playwright des six nouveautés — 3 min 12](../../output/clips/shadowrun-anarchy-nouveautes.mp4)
+présente le pilote 2.2.0 avec curseur, surlignages et légendes en français, sur un profil fictif.
 
 Un seul geste : le **test**. On lance autant de d6 que **compétence + attribut**, chaque **5 ou 6**
 est un succès, et il en faut autant que le **seuil**. Ce qui fait le jeu, c'est le **risque** : le
@@ -46,7 +49,7 @@ Validation globale de David : « ok tout est testé, commit et pousse ».
   (7) » —, et un **attribut**. Sans la compétence, elle vaut 0 (p. 64).
 - **Préparer** :
   - le **seuil** : Facile 2, Normale 3 (par défaut), Difficile 4, Ardue 6, Extrême 8 (p. 64) ; en
-    **test opposé**, le nombre de succès de l'adversaire ;
+    **test opposé**, choisir l’épreuve et le rôle adverse dans les réglages ci-dessous ;
   - les **dés de risque** : les raccourcis sont la table « Combien prendre de dés de risque ? »
     (p. 71) à la RR du moment — précautionneuse, normale, risquée, suicidaire —, et le champ en prend
     autant qu'on veut, de 0 à toute la réserve. L'action **normale** est le défaut du livre ;
@@ -84,6 +87,22 @@ d'Anarchy.
 > de risque par un **dé spécial** par niveau de RR, ajouté à la réserve, qui vaut −1 à 3 succès ;
 > deux 1 consécutifs font une complication critique, trois un désastre, jamais de mineure. Le pilote
 > livré garde la règle standard.
+
+## Opposition et rôles adverses — SR-A5
+
+![Quatre succès contre quatre : une opposition générale reste sans vainqueur](captures/jeu-shadowrun-opposition.jpg)
+
+Choisir **Opposé**, **Tir** ou **Mêlée**. Pour un premier rôle, saisir ses succès obtenus
+séparément. Pour un second rôle, saisir sa réserve et sa RR : sa **valeur moyenne** est
+proposée sans dépenser d’Anarchy adverse ; 9 dés et RR 1 donnent 5 succès (p. 81).
+Son avantage devient un désavantage du PJ, et inversement. Les profils **À la volée**
+proposent les cinq niveaux du livre (p. 82).
+
+En opposition générale, **4 contre 4 ne désigne aucun vainqueur**. Si la scène exige un
+vainqueur, cocher ce choix : l’initiateur l’emporte à égalité (p. 64). En tir, l’attaquant
+touche à égalité ; en mêlée, cela vaut quand le défenseur cherche seulement à se défendre.
+Deux attaques de mêlée simultanées restent indécises à égalité. Choisir l’initiateur pour
+indiquer quel camp attaque. La relance conserve l’opposition du lancer initial.
 
 ## Le moniteur d'état
 
@@ -184,10 +203,77 @@ arbitrage explicite ; le panneau bloque ce cas au lieu d’inventer une conversi
 Le panneau en dépense pour l'**avantage** et la **relance**, et en ajoute pour une **complication
 critique** (+1) ou un **désastre** (+2). Les autres gains — un comportement joué à ses dépens, une
 idée inspirante, une décision arbitraire du meneur — et les autres dépenses — action supplémentaire,
-effet spécial, équipement temporaire, flashback (1 à 4) — se font sur la jauge de la carte.
+effet spécial, équipement temporaire — se font sur la jauge de la carte. Pour le flashback,
+utiliser la carte décrite ci-dessous.
 
 La **réserve de planification** (joueurs) et la **réserve de menace** (meneur, narration partagée
 totale, p. 127) sont au bandeau des réserves.
+
+## Planification, flashback et menace — SR-A4
+
+![Flashback payé une fois, puis dépassement de la planification par la menace](captures/jeu-shadowrun-planification.jpg)
+
+Dans **Lancer un test**, le meneur dispose de la carte **Planification, flashback et menace**.
+Un test coché **Test de planification** propose de créditer les succès après l’éventuelle
+relance. La carte accepte aussi les succès d’un test déjà joué : **1 point par succès**,
+ou **2 succès par point** en temps limité (p. 78). Choisir une seule de ces deux portes
+pour le même test.
+
+Décrire le flashback, choisir son coût de **1 à 4** et son financement **collectif** ou
+**personnel**, puis confirmer. Le meneur valide sa pertinence dans le récit ; la réserve
+collective sert aux bénéfices justifiés par le plan, la personnelle à tout moment.
+Le bouton se bloque après le paiement et refuse une réserve insuffisante. Pour une autre
+scène, choisir **Nouveau flashback**. Les autres bénéfices payés par le plan passent par
+la jauge native ; ils n’achètent aucun dé.
+
+Choisir **Narration partagée totale** pour employer la menace (p. 127). Une **utilisation**
+d’Anarchy ajoute **1 Menace**, même si elle coûte plusieurs points. Avantage et relance
+au panneau, ainsi que le flashback confirmé ici, l’alimentent ; signaler les autres
+utilisations avec le bouton prévu. Un tour de table ajoute 1 ; un bonus ou une relance
+de PNJ coûte 1, une péripétie 3. Le dépassement est strict : Menace 3 > Planification 2
+propose un désastre collectif ; **confirmer** sa mise en scène remet la menace à zéro.
+Le mode classique n’alimente pas la menace.
+
+Les confirmations de cette carte appartiennent au meneur. Les jauges du bandeau gardent
+leurs droits habituels. Depuis un Hub joueur, avantage et relance signalent leur utilisation
+au poste meneur ; un message répété ne double pas la menace. Réserves et reçus persistent
+après rechargement et reconnexion.
+
+## Rigging et véhicules — SR-A6
+
+![Moniteur du véhicule séparé : la troisième légère devient grave et provoque un biofeedback léger](captures/jeu-shadowrun-rigging.jpg)
+
+Dans la carte **Rigging et véhicules** du meneur, ajouter l’appareil et vérifier ses
+caractéristiques proposées. La flotte appartient à la campagne ; chaque appareil conserve
+son propre moniteur. **Résistance retenue : tableau des blessures p. 69**, choix de David
+du 04/11 : Structure + Blindage, 2 × Structure + Blindage, 3 × Structure + Blindage.
+Structure 4 et Blindage 2 donnent **6/10/14** ; la VD finale doit dépasser le seuil.
+
+Déclarer l’IND cybernétique et la CCV pour la **plongée**, ou la CCR et sa capacité pour
+le **siège du capitaine**. Confirmer le mode et la connexion. La priorité est plongée,
+capitaine, manuel, autonome ; le premier ordre de même niveau prévaut, sauf en autonome
+où le dernier ordre remplace le précédent (p. 233). Une seule plongée est possible à la
+fois et la capacité CCR est contrôlée. Pour libérer un appareil, repasser en autonome.
+**Nouvelle narration du rigger** autorise son prochain changement de mode ; aucun changement
+n’est payé en action.
+
+Au panneau, choisir le **Véhicule du jet**. En plongée hot-sim, cocher **Test de Pilotage**
+accorde l’avantage, défense comprise. En autonome, la réserve est **Autopilote seul**,
+RR 0, sans spécialisation ni blessures personnelles du rigger ; le risque précautionneux
+est imposé sauf **atout de débridage déclaré**. Les dommages et le malus léger récent de
+l’appareil s’appliquent. Un appareil incapacitant ne peut agir.
+
+Saisir la VD finale et lire l’aperçu avant **Confirmer l’impact**. Le troisième léger
+devient grave : c’est la **case réellement cochée** qui détermine le biofeedback en plongée.
+Une grave inflige une légère mentale au rigger ; une incapacitante lui inflige une grave,
+**étourdissante en cold-sim**, **létale en hot-sim**, sans appliquer son armure une seconde
+fois. Le personnage qui contrôle l’appareil reçoit la blessure, même si une autre fiche
+est ouverte. Les autres modes ne produisent pas ce biofeedback.
+
+Après une réparation réussie, retirer explicitement une case. Le bouton de fin de prochaine
+narration du véhicule expire son malus léger sans réparer ses dommages. Les actions du
+capitaine, l’action manuelle et le pilotage gratuit en plongée sont rappelés ; leur
+consommation reste à la table.
 
 ## La fiche du jeu
 
@@ -214,7 +300,8 @@ officielle ajoutée au dépôt. Les personnages et leurs valeurs restent conserv
 - La protection active matricielle, les dommages détaillés du cyberdeck, le verrouillage de
   connexion et la mise en scène de l’intervention d’élite après convergence.
 - Les variantes « plus sombre » (p. 69) : blessures légères qui durent, guérison plus lente.
-- Les **dommages des véhicules** (Structure × 2, × 3) : le meneur saisit la gravité à la main.
+- Les collisions, profils d’armes et réparations détaillées des véhicules : saisir la VD
+  finale et confirmer la réparation réussie ; la carte suit les conséquences.
 
 ## Les campagnes de recette
 
@@ -232,4 +319,5 @@ sont transmis aux Hub joueurs** ; marqueurs fictifs uniquement dans la recette.
 Voir le rapport et les anomalies du lot. Partie complète, matériel et cas humains restent à jouer.
 
 *Relu le 04/11/2026 pour SR-A1/A2/A3, livre p. 60, 68-70, 170, 212, 216-218 ;
-parcours Electron sur profil jetable et captures relues. Pilote 2.1.0 validé par David le 04/11 : « ok c'est bon, c'est testé ».*
+parcours Electron sur profil jetable et captures relues. Pilote 2.1.0 validé par David le 04/11 : « ok c'est bon, c'est testé ».
+Complété le même jour pour SR-A4/A5/A6, p. 64-69, 78, 81-82, 127, 230-233 ; pilote 2.2.0 livré et validé par David : « c'est testé marque le ». Clip Playwright en six chapitres livré et relu.*

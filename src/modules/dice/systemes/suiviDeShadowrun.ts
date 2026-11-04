@@ -2,11 +2,12 @@ import { encaisserShadowrun, CAPACITES_DU_MONITEUR, type Gravite, type Moniteur,
 
 /** SR-A1, 04/11/2026 : les compteurs restent lisibles par la fiche HTML ; l'origine ne se devine jamais. */
 export const CLE_SUIVI_SHADOWRUN = '__shadowrun';
-export type OrigineDeBlessure = 'drain' | 'physique' | 'mental' | 'inconnue';
+export type OrigineDeBlessure = 'drain' | 'physique' | 'mental' | 'biofeedback' | 'inconnue';
 export type SoinShadowrun = 'premiers-soins' | 'magie' | 'repos';
 export interface BlessureShadowrun {
     id: string; gravite: Gravite; origine: OrigineDeBlessure;
     tentatives: ('premiers-soins' | 'magie')[];
+    nature?: 'letal' | 'etourdissant';
 }
 export interface SuiviShadowrun {
     version: 1;
@@ -24,7 +25,7 @@ export function lireSuiviShadowrun(fiche: Record<string, unknown>): SuiviShadowr
     const s = fiche[CLE_SUIVI_SHADOWRUN] as Partial<SuiviShadowrun> | undefined;
     return {
         version: 1, blessures: Array.isArray(s?.blessures) ? s.blessures.filter(b => b && GRAVITES.includes(b.gravite)
-            && ['drain', 'physique', 'mental', 'inconnue'].includes(b.origine)).map(b => ({ ...b, tentatives: b.tentatives ?? [] })) : [],
+            && ['drain', 'physique', 'mental', 'biofeedback', 'inconnue'].includes(b.origine)).map(b => ({ ...b, tentatives: b.tentatives ?? [] })) : [],
         legereRecente: s?.legereRecente === true, drainMineur: s?.drainMineur === true,
         effetsAppliques: Array.isArray(s?.effetsAppliques) ? s.effetsAppliques : [],
         essenceMortConfirmee: s?.essenceMortConfirmee === true,
@@ -69,14 +70,14 @@ export function capacitesShadowrun(r: RegleDuMoniteur, fiche: Record<string, unk
         graves: nombre(fiche[r.capacites?.graves ?? '']) || CAPACITES_DU_MONITEUR.graves, incapacitantes: 1 };
 }
 export function ajouterBlessureShadowrun(r: RegleDuMoniteur, fiche: Record<string, unknown>, gravite: Gravite,
-    origine: OrigineDeBlessure, id: string): SuiviShadowrun {
+    origine: OrigineDeBlessure, id: string, nature?: BlessureShadowrun['nature']): SuiviShadowrun {
     const s = suivreLesCompteurs(r, fiche);
     if (s.effetsAppliques.includes(id)) return s;
     const avant = compteursShadowrun(s), e = encaisserShadowrun(gravite, avant, capacitesShadowrun(r, fiche));
     return { ...s, effetsAppliques: [...s.effetsAppliques, id],
         legereRecente: s.legereRecente || e.cochee === 'legere',
         blessures: e.moniteur[CLES[e.cochee]] === avant[CLES[e.cochee]] ? s.blessures
-            : [...s.blessures, { id, gravite: e.cochee, origine, tentatives: [] }] };
+            : [...s.blessures, { id, gravite: e.cochee, origine, tentatives: [], ...(nature ? { nature } : {}) }] };
 }
 export function appliquerDrainShadowrun(r: RegleDuMoniteur, fiche: Record<string, unknown>, complication: Complication, id: string): Record<string, unknown> {
     let s = suivreLesCompteurs(r, fiche);

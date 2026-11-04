@@ -96,6 +96,8 @@ import { lireLEtatDegenesis } from '../../../dice/systemes/maximaDeDegenesis';
 import { CHOIX_DE_SHADOWRUN, lancerShadowrun, type ChoixDeShadowrun, type JetDeShadowrun } from '../../../dice/systemes/shadowrun';
 import { PreparationShadowrun, SuitesShadowrun } from './ShadowrunAuJet';
 import { MatriceShadowrun } from './CartesShadowrun';
+import { OppositionAuJetShadowrun } from './OperationsShadowrun';
+import { executerTableShadowrun } from '../../logic/operationsDeShadowrun';
 import { appliquerDrainShadowrun, ajouterBlessureShadowrun, ecrireSuiviShadowrun, positionShadowrun } from '../../../dice/systemes/suiviDeShadowrun';
 import { lireMatriceShadowrun, ecrireMatriceShadowrun, consequenceMatriceShadowrun, effetsModeShadowrun } from '../../../dice/systemes/matriceDeShadowrun';
 import { CHOIX_DE_COC, ajouterLeHeros, etatDeSante, lancerCoc, malusDeSante, modeleDEvolution, preparerCoc,
@@ -555,7 +557,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      */
     const regleShadowrun = descripteur.shadowrun;
     const [suiteShadowrun, setSuiteShadowrun] = useState<{ id: string; drain: boolean; matrice?: ChoixDeShadowrun['matrice'];
-        mode?: Parameters<typeof effetsModeShadowrun>[0]; complication: JetDeShadowrun['shadowrun']['complication']; reussi: boolean; appliquee?: boolean }>();
+        mode?: Parameters<typeof effetsModeShadowrun>[0]; complication: JetDeShadowrun['shadowrun']['complication']; reussi: boolean; appliquee?: boolean;
+        preparation?: { succes: number; tempsLimite: boolean }; creditee?: boolean }>();
     const [choixShadowrunBrut, setChoixShadowrunBrut] = useState<ChoixDeShadowrun & { pour?: string }>(CHOIX_DE_SHADOWRUN);
     const anarchyShadowrun = regleShadowrun?.anarchy && ecrireSurLaFiche ? Math.max(0, Math.trunc(Number(valeurs[regleShadowrun.anarchy]) || 0)) : undefined;
     const [anarchyApres, setAnarchyApres] = useState<number | null>(null);
@@ -647,6 +650,16 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * réserve ajoutée n'y aurait pas de sens.
      */
     const campagnes = useSessionOSStore(s => s.campaigns);
+    const flotteShadowrun = campagnes.find(c => c.id === campaignId)?.suiviShadowrun?.vehicules;
+    const choixShadowrunDuJet = useMemo(() => {
+        const v = flotteShadowrun?.find(v => v.id === choixShadowrun.rigging?.vehicule.id);
+        return { ...choixShadowrun, ...(v && choixShadowrun.rigging ? { rigging: { ...choixShadowrun.rigging, vehicule: v } } : {}) };
+    }, [choixShadowrun, flotteShadowrun]);
+    const signalerUtilisationShadowrun = (id: string) => {
+        if (!regleShadowrun?.table || !campaignId || !personnageId) return;
+        if (pourLesJoueurs) window.dispatchEvent(new CustomEvent('shadowrun:utilisation', { detail: { id, characterId: personnageId } }));
+        else executerTableShadowrun(campaignId, personnageId, { id, type: 'utilisation' });
+    };
     const pilotesPerso = useSessionOSStore(s => s.customGameDrivers);
     const updateCampaign = useSessionOSStore(s => s.updateCampaign);
     const remoteEcrireLeGroupe = useSessionOSStore(s => s.remoteEcrireLeGroupe);
@@ -755,7 +768,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     // En combat, l'Égo de la première action vient de l'initiative ; hors combat, du menu.
                     ego: etatDegenesis ? bonusDegenesis : Math.min(choixDegenesis.ego, egoDegenesis ?? 0),
                 } } : {}),
-                ...(regleShadowrun ? { shadowrun: { ...choixShadowrun, anarchyPourAvantage: choixShadowrun.anarchyPourAvantage && (anarchyShadowrun ?? 0) > 0 } } : {}),
+                ...(regleShadowrun ? { shadowrun: { ...choixShadowrunDuJet, anarchyPourAvantage: choixShadowrunDuJet.anarchyPourAvantage && (anarchyShadowrun ?? 0) > 0 } } : {}),
                 champs: choix, desSupplementaires: desAchetes,
                 // Degenesis : un assistant fait le même test, difficulté +1 (DEG-A4, p. 21).
                 difficulte: regleDegenesis && aideVersDegenesis ? difficulte + DIFFICULTE_DE_L_AIDE : difficulte,
@@ -805,7 +818,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [stimulationDuJet, desDuPotentiel, desDAideDegenesis, aideVersDegenesis, maniabiliteDegenesis, etatDegenesis, bonusDegenesis, descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrun, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
+        [stimulationDuJet, desDuPotentiel, desDAideDegenesis, aideVersDegenesis, maniabiliteDegenesis, etatDegenesis, bonusDegenesis, descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrunDuJet, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
     );
 
     /*
@@ -1329,7 +1342,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             ? lancerCoc(prepCoc, faces => DiceEngine.roll(faces))
             // Shadowrun : 5+ réussit (4+ ou 6 selon l'avantage), les dés de risque doublent et compliquent (p. 64-71).
             : regleShadowrun && jet.shadowrun
-            ? lancerShadowrun(jet.shadowrun, jet.reussitesRequises, () => DiceEngine.roll(6))
+            ? lancerShadowrun(jet.shadowrun, jet.reussitesRequises, () => DiceEngine.roll(6), undefined, regleShadowrun.opposition ? choixShadowrunDuJet.opposition : undefined)
             // Degenesis : 4+ réussit, les 6 déclenchent, le surplus au-delà de 12 dés est acquis (p. 18-19).
             : regleDegenesis && jet.degenesis
             // DEG-A4 : en combinaison, les déclencheurs reportés du premier test s'ajoutent s'il réussit (p. 20).
@@ -1505,7 +1518,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         if (shadowrunDuJet) setSuiteShadowrun({ id: crypto.randomUUID(), drain: choixShadowrun.magie && !!choixShadowrun.drain,
             matrice: choixShadowrun.matrice ? { ...choixShadowrun.matrice } : undefined,
             mode: regleShadowrun?.matrice ? lireMatriceShadowrun(regleShadowrun.matrice, valeurs).mode : undefined,
-            complication: shadowrunDuJet.complication, reussi: shadowrunDuJet.reussi });
+            complication: shadowrunDuJet.complication, reussi: shadowrunDuJet.reussi,
+            ...(choixShadowrun.planification ? { preparation: { succes: shadowrunDuJet.succes, tempsLimite: !!choixShadowrun.tempsLimite } } : {}) });
         if (regleShadowrun?.anarchy && shadowrunDuJet && anarchyShadowrun !== undefined) {
             const paye = jet.shadowrun?.sources.includes("point d'Anarchy") ? 1 : 0;
             const apres = Math.max(0, anarchyShadowrun - paye + shadowrunDuJet.anarchyGagnee);
@@ -1515,7 +1529,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 dits.push(`Anarchy : ${anarchyShadowrun} → ${apres}${paye ? ' (avantage payé)' : ''}`
                     + (shadowrunDuJet.anarchyGagnee ? ` (+${shadowrunDuJet.anarchyGagnee}, ${shadowrunDuJet.complication === 'desastre' ? 'désastre' : 'complication critique'})` : ''));
             }
-            if (paye) setChoixShadowrun(c => ({ ...c, anarchyPourAvantage: false }));
+            if (paye) { signalerUtilisationShadowrun(crypto.randomUUID()); setChoixShadowrun(c => ({ ...c, anarchyPourAvantage: false })); }
         }
         if (regleRuneQuest && jet.runequest) {
             const calcul = jet.runequest;
@@ -1737,12 +1751,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const res = lancerShadowrun(
             { des: premier.normaux.length + premier.risque.length, risque: premier.risque.length, speciaux: premier.speciaux.length,
                 valeurDuSucces: premier.valeurDuSucces, rr: premier.rr as 0 | 1 | 2 | 3, annules: premier.annules },
-            premier.seuil, () => DiceEngine.roll(6), premier.complication,
+            premier.seuil, () => DiceEngine.roll(6), premier.complication, premier.opposition,
         );
         setResultat(res);
-        setSuiteShadowrun(s => s ? { ...s, reussi: res.shadowrun.reussi } : s);
+        setSuiteShadowrun(s => s ? { ...s, reussi: res.shadowrun.reussi, ...(s.preparation ? { preparation: { ...s.preparation, succes: res.shadowrun.succes } } : {}) } : s);
         setAnarchyApres(avant - 1);
         ecrireSurLaFiche?.({ [regleShadowrun.anarchy]: avant - 1 });
+        signalerUtilisationShadowrun(crypto.randomUUID());
         setMouvements(m => [...m, `Relance : Anarchy ${avant} → ${avant - 1}`]);
         redire(`${dernierLancer?.titre ?? 'Test'} · relance`, res);
     };
@@ -2758,6 +2773,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         <PreparationShadowrun choix={choixShadowrun} setChoix={setChoixShadowrun} reserve={jet.shadowrun}
                             difficulte={difficulte} setDifficulte={setDifficulte} anarchy={anarchyShadowrun} />
                     )}
+                    {regleShadowrun?.opposition && <OppositionAuJetShadowrun choix={choixShadowrun} setChoix={setChoixShadowrun} />}
+                    {regleShadowrun?.table && <div className="flex flex-wrap gap-3 text-xs"><label><input type="checkbox" checked={!!choixShadowrun.planification} onChange={e => setChoixShadowrun(c => ({ ...c, planification: e.target.checked }))} /> Test de planification</label>{choixShadowrun.planification && <label><input type="checkbox" checked={!!choixShadowrun.tempsLimite} onChange={e => setChoixShadowrun(c => ({ ...c, tempsLimite: e.target.checked }))} /> Temps limité : 2 succès par point</label>}</div>}
+                    {regleShadowrun?.rigging && !!flotteShadowrun?.length && <div data-rigging-au-jet className="flex flex-wrap items-center gap-3 text-xs"><label>Action liée au véhicule <select aria-label="Véhicule du jet" className="rounded-md border border-app-border/40 bg-app-bg p-1" value={choixShadowrun.rigging?.vehicule.id ?? ''} onChange={e => { const v = flotteShadowrun.find(x => x.id === e.target.value); setChoixShadowrun(c => ({ ...c, rigging: v ? { vehicule: v, personnageId: personnageId ?? '', pilotage: true } : undefined })); }}><option value="">Aucun</option>{flotteShadowrun.map(v => <option key={v.id} value={v.id}>{v.nom}</option>)}</select></label>{choixShadowrun.rigging && <label><input type="checkbox" checked={choixShadowrun.rigging.pilotage} onChange={e => setChoixShadowrun(c => ({ ...c, rigging: c.rigging ? { ...c.rigging, pilotage: e.target.checked } : undefined }))} /> Test de Pilotage (défense comprise)</label>}</div>}
                     {regleShadowrun?.matrice && ecrireSurLaFiche && <MatriceShadowrun regle={regleShadowrun} valeurs={valeurs}
                         appliquer={ecrireSurLaFiche} consigner={texte => consignerLeJet({ titre: 'Shadowrun · Matrice', totalDisplay: texte })}
                         choix={choixShadowrun} setChoix={setChoixShadowrun} />}
@@ -2870,7 +2888,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         </label>
                     )}
 
-                    {descripteur.difficulte && !descripteur.cible && (
+                    {descripteur.difficulte && !descripteur.cible && !(regleShadowrun?.opposition && choixShadowrun.opposition) && (
                         <label className="flex items-center gap-2">
                             <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Difficulté</span>
                             <input
@@ -3214,7 +3232,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 {bonusDuLancer > 0 && ` (dont +${bonusDuLancer} ${ficheDeGroupe?.libelle ?? 'groupe'})`}
                                 {descripteur.difficulte
                                     // Degenesis : la difficulté du lancer, +1 pour un assistant (DEG-A4, p. 21).
-                                    ? ` / difficulté ${regleStarTrek && starTrekDuLancer ? starTrekDuLancer.difficulte : degenesisDuResultat ? degenesisDuResultat.difficulte : difficulte}`
+                                    ? ` / difficulté ${shadowrunDuResultat ? shadowrunDuResultat.seuil : regleStarTrek && starTrekDuLancer ? starTrekDuLancer.difficulte : degenesisDuResultat ? degenesisDuResultat.difficulte : difficulte}`
                                     : ` / ${jet.reussitesRequises} requise${jet.reussitesRequises > 1 ? 's' : ''}`}
                                 {/* Star Trek : ce que l'aide a donné, ou pourquoi elle ne compte pas (p. 256). */}
                                 {regleStarTrek && starTrekDuLancer && resultat.totalDisplay.replace(/^\d+ réussites?/, '')}
@@ -3352,7 +3370,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         {regleShadowrun && shadowrunDuResultat && (
                             <SuitesShadowrun jet={resultat as JetDeShadowrun} anarchy={anarchyShadowrun === undefined ? undefined : anarchyApres ?? anarchyShadowrun}
-                                relancer={suiteShadowrun?.appliquee ? undefined : relancerShadowrun} />
+                                relancer={suiteShadowrun?.appliquee || suiteShadowrun?.creditee ? undefined : relancerShadowrun} />
                         )}
                         {regleShadowrun && suiteShadowrun && ecrireSurLaFiche && (suiteShadowrun.drain || suiteShadowrun.matrice) && (
                             <div className="flex flex-col gap-2 text-xs" data-consequences-shadowrun>
@@ -3363,6 +3381,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                     onClick={appliquerSuiteShadowrun}>{suiteShadowrun.appliquee ? 'Conséquences appliquées' : 'Confirmer les conséquences drain / Matrice'}</button>
                             </div>
                         )}
+                        {suiteShadowrun?.preparation && regleShadowrun?.table && <div data-credit-planification className="text-xs">
+                            <p>{suiteShadowrun.preparation.succes} succès → +{Math.floor(suiteShadowrun.preparation.succes / (suiteShadowrun.preparation.tempsLimite ? 2 : 1))} planification. Confirmer après l’éventuelle relance.</p>
+                            {!pourLesJoueurs && campaignId && personnageId ? <button type="button" disabled={suiteShadowrun.creditee} className="rounded-md border border-app-border/40 p-2 disabled:opacity-30" onClick={() => {
+                                const texte = executerTableShadowrun(campaignId, personnageId, { id: `preparation-${suiteShadowrun.id}`, type: 'preparation', ...suiteShadowrun.preparation! });
+                                setSuiteShadowrun(s => s ? { ...s, creditee: true } : s); consignerLeJet({ titre: 'Shadowrun · Planification', totalDisplay: texte });
+                            }}>{suiteShadowrun.creditee ? 'Crédit confirmé' : 'Confirmer le crédit de planification'}</button> : <p>Crédit à faire confirmer par le meneur dans la carte Planification.</p>}
+                        </div>}
                         {regleCoc && cocDuLancer && cocDuResultat && (
                             <SuitesCoc key={cocDuLancer.compte} jet={resultat as JetDeCoc} heros={herosCoc} des={cocDuLancer.prep.des}
                                 attaque={cocDuLancer.attaque} echelonGagne={cocDuLancer.echelonGagne}

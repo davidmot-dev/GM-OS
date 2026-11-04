@@ -33,9 +33,9 @@ export const SanteEtCoherenceShadowrun: React.FC<Props> = ({ regle, valeurs, app
             {soin === 'repos' && <label>Heures de repos dans de bonnes conditions <input aria-label="Heures de repos" className={champ} type="number" min={0} value={heures} onChange={e => setHeures(Math.max(0, Number(e.target.value)))} /></label>}
             <p>Un test réussi soigne une case. Une tentative de chaque méthode par case ; le drain guérit uniquement par repos. Stabilisez d’abord tout mourant.</p>
             {s.blessures.map(b => <div key={b.id} className="flex flex-wrap items-center gap-2 border-t border-app-border/30 pt-2">
-                <span>Blessure {b.gravite} — {b.origine}{soin === 'repos' ? ` (${HEURES_DE_REPOS[b.gravite]} h)` : ` (seuil de soin ${seuilDeSoin(b.gravite, essence)})`}</span>
+                <span>Blessure {b.gravite} — {b.origine}{b.nature ? ` mental ${b.nature}` : ''}{soin === 'repos' ? ` (${HEURES_DE_REPOS[b.gravite]} h)` : ` (seuil de soin ${seuilDeSoin(b.gravite, essence)})`}</span>
                 <select aria-label={`Origine de ${b.id}`} value={b.origine} className={champ} onChange={e => changer({ [CLE_SUIVI_SHADOWRUN]: { ...s, blessures: s.blessures.map(x => x.id === b.id ? { ...x, origine: e.target.value as OrigineDeBlessure } : x) } }, `Origine de la blessure ${b.gravite} : ${e.target.value}.`)}>
-                    {(['inconnue', 'physique', 'mental', 'drain'] as const).map(x => <option key={x}>{x}</option>)}
+                    {(['inconnue', 'physique', 'mental', 'biofeedback', 'drain'] as const).map(x => <option key={x}>{x}</option>)}
                 </select>
                 <button type="button" className={bouton} disabled={!!refusDuSoinShadowrun(b, soin)} title={refusDuSoinShadowrun(b, soin)} onClick={() => {
                     const resultat = moniteurSelonLeJeu(r, valeurs, { value: 1, isRecovery: true, shadowrun: { soin, blessureId: b.id, heures } });

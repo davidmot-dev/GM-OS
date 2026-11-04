@@ -1,0 +1,20 @@
+{
+  "version": "2.2.0",
+  "creditEtFlashback": true,
+  "refusDoubleDebit": true,
+  "menaceParUtilisation": true,
+  "desastreConfirme": true,
+  "egaliteSansVainqueur": true,
+  "moyenneSecondRole": 5,
+  "seuilsVehicule": [
+    6,
+    10,
+    14
+  ],
+  "troisiemeLegereAvecBiofeedback": true,
+  "persistance": true,
+  "droitsTablette": true,
+  "reconnexionReserve": 2,
+  "varianteAlternativeEtRetour": true,
+  "donneesPersonnelles": false
+}

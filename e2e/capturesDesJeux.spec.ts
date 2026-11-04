@@ -448,6 +448,8 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
+        // SR-A4/A5/A6 ajoutent trois cartes à photographier avant l’ouverture de la fiche HTML.
+        if (mise.corpusId === 'shadowrun-anarchy') test.setTimeout(120_000);
         // RuneQuest joue aussi la magie, l'inspiration et les cartes de la fiche depuis RQ-A6 (03/11).
         if (['dune', 'noc', 'runequest', 'degenesis'].includes(mise.corpusId)) test.setTimeout(180_000);
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
@@ -1487,6 +1489,14 @@ async function scenesDeShadowrun(c: ContexteDeScene): Promise<void> {
     if (c.pilote.gameDriver.jet?.shadowrun?.suivi) {
         await photographier(f.locator('[data-carte-du-jeu="suivi-shadowrun"]'), 'jeu-shadowrun-suivi');
         await photographier(panneau.locator('[data-matrice-shadowrun]'), 'jeu-shadowrun-connexion');
+    }
+    // SR-A4/A5/A6 : les scènes remplies sont reproductibles dans shadowrunExtensions.spec.ts.
+    if (c.pilote.gameDriver.jet?.shadowrun?.table) {
+        await photographier(f.locator('[data-carte-du-jeu="planification-shadowrun"]'), 'jeu-shadowrun-planification-carte');
+        await photographier(panneau.locator('[data-opposition-shadowrun]'), 'jeu-shadowrun-opposition-choix');
+    }
+    if (c.pilote.gameDriver.jet?.shadowrun?.rigging) {
+        await photographier(f.locator('[data-carte-du-jeu="rigging-shadowrun"]'), 'jeu-shadowrun-rigging-carte');
     }
 
     await ongletDeLaFiche(f, 'Fiche du jeu');

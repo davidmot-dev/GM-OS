@@ -1,5 +1,6 @@
 import type { DieResult, RollResult } from '../DiceEngine';
 import type { DegreDeReussite } from '../degresDeReussite';
+import { comparerShadowrun, type OppositionShadowrun } from './oppositionDeShadowrun';
 
 /**
  * **Le jet de Shadowrun : Anarchy 2.0** — 31/10/2026, à la demande de David (« finir le
@@ -27,6 +28,9 @@ import type { DegreDeReussite } from '../degresDeReussite';
 
 /** Ce que le pilote nomme pour Shadowrun (`jet.shadowrun`). */
 export interface RegleDeShadowrun {
+    table?: import('./tableDeShadowrun').RegleTableShadowrun;
+    opposition?: boolean;
+    rigging?: { resistance: 'tableau-blessures' };
     /** SR-A1/A2/A3 — capacités explicites du pilote, jamais reconnues par son nom. */
     suivi?: RegleDuMoniteurShadowrun;
     derives?: import('./suiviDeShadowrun').RegleDesDerivesShadowrun;
@@ -100,6 +104,10 @@ export function desDeRisqueConseilles(rr: unknown, niveau: NiveauDeRisque, reser
 
 /** Ce que le joueur règle avant de lancer. */
 export interface ChoixDeShadowrun {
+    opposition?: OppositionShadowrun;
+    planification?: boolean;
+    tempsLimite?: boolean;
+    rigging?: import('./riggingDeShadowrun').ContexteRiggingShadowrun;
     /** La spécialisation s'applique : +2 dés (p. 52). */
     specialisation: boolean;
     /**
@@ -164,6 +172,10 @@ export interface ReserveDeShadowrun {
 }
 
 export interface EtatDuPersonnage {
+    situationAdverse?: number;
+    avantageRigging?: boolean;
+    graveVehicule?: boolean;
+    legereVehicule?: boolean;
     graves?: number;
     incapacitantes?: number;
     essence?: number;
@@ -191,6 +203,10 @@ export function reserveDeShadowrun(
     if (choix.magie && etat.drainMineur) { somme -= 1; sources.push('drain jusqu’à la fin de la prochaine narration'); }
     if (choix.social && etat.essence !== undefined && etat.essence <= 1) { somme -= 1; sources.push('Essence : test social'); }
     if (etat.avantageMatrice) { somme += 1; sources.push('cybercombat en RV hot-sim'); }
+    if (etat.avantageRigging) { somme += 1; sources.push('Pilotage en plongée hot-sim'); }
+    if (etat.graveVehicule) { somme -= 1; sources.push('dommage grave au véhicule'); }
+    if (etat.legereVehicule) { somme -= 1; sources.push('dommage léger récent au véhicule'); }
+    if (etat.situationAdverse) { somme -= etat.situationAdverse; sources.push('situation du second rôle inversée'); }
     const avantage = borne(somme, -1, 1) as -1 | 0 | 1;
     return {
         base: entier(base), specialisation, des,
@@ -251,6 +267,8 @@ export interface JetDeShadowrun extends RollResult {
         /** Le jet a été relancé : la complication est celle du premier (p. 77). */
         relance: boolean;
         libelle: string;
+        egalite?: boolean;
+        opposition?: OppositionShadowrun;
     };
 }
 
@@ -272,6 +290,7 @@ export function resoudreShadowrun(
     reserve: Pick<ReserveDeShadowrun, 'valeurDuSucces' | 'rr' | 'annules'>,
     seuil: number,
     complicationImposee?: Complication,
+    opposition?: OppositionShadowrun,
 ): JetDeShadowrun {
     const normaux = [...des.normaux], risque = [...(des.risque ?? [])], speciaux = [...(des.speciaux ?? [])];
     const v = reserve.valeurDuSucces;
@@ -285,13 +304,15 @@ export function resoudreShadowrun(
     const tiree = speciaux.length > 0 ? complicationDesSpeciaux(speciaux) : complicationDe(unsRestants);
     const complication = complicationImposee ?? tiree;
     // Sauf exception, le désastre fait échouer le test (p. 70) ; le meneur peut forcer l'échec sur une critique.
-    const reussi = succes >= seuil && complication !== 'desastre';
-    const nets = Math.max(0, succes - seuil);
+    const comparaison = opposition ? comparerShadowrun(succes, opposition) : undefined;
+    const egalite = !!comparaison?.egalite && complication !== 'desastre';
+    const reussi = (comparaison ? comparaison.reussi : succes >= seuil) && complication !== 'desastre';
+    const nets = comparaison?.nets ?? Math.max(0, succes - seuil);
     const exceptionnelle = reussi && nets >= 4;
     const relance = complicationImposee !== undefined;
     // Relancer ne rapporte rien de plus : l'Anarchy de la complication a été gagnée au premier jet.
     const anarchyGagnee = relance ? 0 : ANARCHY_DES_COMPLICATIONS[complication];
-    const libelle = (reussi ? (exceptionnelle ? 'Réussite exceptionnelle' : 'Réussite') : 'Échec')
+    const libelle = (egalite ? 'Égalité — aucun vainqueur' : reussi ? (exceptionnelle ? 'Réussite exceptionnelle' : 'Réussite') : 'Échec')
         + (complication !== 'aucune' ? ` — ${LIBELLES_DES_COMPLICATIONS[complication].toLowerCase()}` : '');
     const rolls: DieResult[] = [
         ...normaux.map(d => ({ val: d, sides: 6, isCritMax: d >= v, isCritMin: false })),
@@ -311,12 +332,13 @@ export function resoudreShadowrun(
         modifier: 0,
         successes: succes,
         fails: unsRestants,
-        tagSuccess: reussi,
-        degre: degreDe(reussi, exceptionnelle, complication),
+        tagSuccess: egalite ? undefined : reussi,
+        degre: egalite ? undefined : degreDe(reussi, exceptionnelle, complication),
         totalDisplay: `${libelle} — ${detail} (seuil ${seuil})`,
         shadowrun: {
             normaux, risque, speciaux, valeurDuSucces: v, succes, uns, unsRestants, rr: reserve.rr,
             annules: reserve.annules, seuil, nets, reussi, exceptionnelle, complication, anarchyGagnee, relance, libelle,
+            ...(opposition ? { opposition: { ...opposition }, egalite } : {}),
         },
     };
 }
@@ -324,12 +346,12 @@ export function resoudreShadowrun(
 /** Lance et résout : `de` rend un d6 (le panneau lui passe le moteur). */
 export function lancerShadowrun(
     reserve: Pick<ReserveDeShadowrun, 'des' | 'risque' | 'speciaux' | 'valeurDuSucces' | 'rr' | 'annules'>,
-    seuil: number, de: () => number, complicationImposee?: Complication,
+    seuil: number, de: () => number, complicationImposee?: Complication, opposition?: OppositionShadowrun,
 ): JetDeShadowrun {
     const lancer = (n: number) => Array.from({ length: Math.max(0, n) }, de);
     return resoudreShadowrun(
         { normaux: lancer(reserve.des - reserve.risque), risque: lancer(reserve.risque), speciaux: lancer(reserve.speciaux) },
-        reserve, seuil, complicationImposee,
+        reserve, seuil, complicationImposee, opposition,
     );
 }
 

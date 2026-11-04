@@ -66,6 +66,7 @@ export const PLAYER_ALLOWED_ACTIONS: ReadonlySet<string> = new Set([
       `stripProjectionTarget` : le rôle en amont, le champ en aval.
     */
     'table:ajuster',
+    'shadowrun:utilisation',
     /*
       **Ce qu'un joueur fait de SES cartes.**
 
@@ -171,6 +172,7 @@ const OWNERSHIP_FIELD: Record<string, string> = {
     'fiche:jet': 'characterId',
     // Un joueur n'envoie que SES jets : pas de résultat au nom d'un autre.
     'fiche:resultat': 'characterId',
+    'shadowrun:utilisation': 'characterId',
     'groupe:ecrire': 'characterId',
 };
 

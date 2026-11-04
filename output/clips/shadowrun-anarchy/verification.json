@@ -1,0 +1,58 @@
+{
+  "version": "2.2.0",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "dureeDepuisTitre": 191.802,
+  "chapitres": [
+    {
+      "titre": "1 · Blessures, drain et soins",
+      "secondesDepuisTitre": 5.978
+    },
+    {
+      "titre": "2 · Réserves et seuils cohérents",
+      "secondesDepuisTitre": 33.069
+    },
+    {
+      "titre": "3 · Piratage et surveillance de DIEU",
+      "secondesDepuisTitre": 49.551
+    },
+    {
+      "titre": "4 · Planification, flashback et menace",
+      "secondesDepuisTitre": 89.679
+    },
+    {
+      "titre": "5 · Oppositions et rôles adverses",
+      "secondesDepuisTitre": 116.257
+    },
+    {
+      "titre": "6 · Rigging et biofeedback",
+      "secondesDepuisTitre": 141.612
+    }
+  ],
+  "assertions": [
+    "drain et soins refusés",
+    "Anarchy 99 → 100",
+    "dérivé 9 → 11 sans perdre la blessure",
+    "surveillance +1",
+    "flashback 4 − 2 = 2 et débit unique",
+    "désastre collectif",
+    "égalité 4/4",
+    "moyenne second rôle 5",
+    "seuils véhicule 6/10/14",
+    "troisième légère et biofeedback létal"
+  ],
+  "exportVideo": {
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\shadowrun-anarchy-nouveautes.webm",
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\shadowrun-anarchy-nouveautes.mp4",
+    "secondesRetirees": 8.418000000000017,
+    "dureeMp4": 192.08,
+    "conversion": "MP4 H.264, chargement retiré ; WebM de tournage conservé."
+  },
+  "relecture": {
+    "scenes": 7,
+    "imagesDuMp4": 8,
+    "debutEtFin": true
+  }
+}

@@ -713,6 +713,7 @@ export const useHubSync = () => {
               et son journal.
             */
             'fiche:resultat',
+            'shadowrun:utilisation',
             /*
               **La fiche du groupe** — la Cabale de NOC (2026-10-13). Même rail
               que la fiche du personnage : le store de la tablette a déjà

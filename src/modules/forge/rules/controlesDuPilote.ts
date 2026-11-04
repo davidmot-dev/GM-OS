@@ -2080,6 +2080,10 @@ export function controlerLePilote(
     // ---- Shadowrun : Anarchy 2.0 : réserve, dés de risque, moniteur d'état (2026-10-31) ----
     const sr = driver.jet?.shadowrun;
     if (sr) {
+        if (sr.table) for (const [cle, id] of Object.entries(sr.table)) {
+            if (!driver.ressourcesDeTable?.some(r => r.id === id)) erreur(`jet.shadowrun.table.${cle}`, `Réserve Shadowrun « ${id} » absente du pilote.`);
+        }
+        if (sr.rigging && sr.rigging.resistance !== 'tableau-blessures') erreur('jet.shadowrun.rigging.resistance', 'La référence retenue est le tableau des blessures p. 69 : Structure ×1/×2/×3 + Blindage.');
         if (driver.jet?.sens !== 'superieur-ou-egal' || !driver.jet?.reserve || facesLancees(driver) !== 6 || (driver.jet?.seuil ?? []).length) {
             avertir('jet.shadowrun', 'Le bloc Shadowrun suppose une réserve de d6 (compétence + attribut), sans seuil composé (p. 64) : déclarer « reserve.composantes » et « sens: superieur-ou-egal ».');
         }

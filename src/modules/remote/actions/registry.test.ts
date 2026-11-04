@@ -55,6 +55,8 @@ const EXPECTED_TYPES = [
     // commune se manipule par décision collective et non par le meneur. Le
     // handler vérifie que le pilote la déclare manipulable.
     'table:ajuster', 'remote:table:ajuster',
+    // Shadowrun : une utilisation d’Anarchy sur son propre personnage, reçue une fois côté MJ.
+    'shadowrun:utilisation',
     /*
       Paquets de cartes — ce qu'un joueur fait de SES cartes. Chacune de ces
       quatre actions vérifie, côté meneur, que le personnage nommé tient bien la

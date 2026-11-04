@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-04",
+  "project": "projects/4980125564784271447",
+  "screen": "projects/4980125564784271447/screens/07c66ddada454698b79083752623c447",
+  "html": "projects/4980125564784271447/files/bce21b3cf69f4af3868d293ec39a45c3",
+  "screenshot": "projects/4980125564784271447/files/914750b0278c4509a9bfe3e67cb1a05d",
+  "referenceLocale": "documentation/Planning/stitch/grammaire/DESIGN.md",
+  "skill": "enhance-prompt",
+  "intention": "Trois cartes GM-OS Shadowrun : planification et flashback, opposition et rôles adverses, rigging et moniteur distinct. Réserves visibles, aperçu avant confirmation, conséquence séparée.",
+  "integration": "Hiérarchie adaptée aux CarteDuJeu et jetons du thème existants ; aucun HTML généré injecté."
+}

@@ -13654,10 +13654,32 @@ David : « on va commencer SR-A1, SR-A2 et SR-A3 ». Il confirme « GM-OS est fe
 - **Vérifications et limites** : [suivi détaillé](2026-11-04-shadowrun-sr-a1-a3.md), livre p. 60, 68-70, 170, 212, 216-218 relu directement ; parcours Electron jetable passé, captures relues ; tests, types, lint et construction consignés dans le suivi.
 - **Reprendre** : SR-A1/A2/A3 validés, choisir séparément SR-A4/A5/A6 ; aucun essai en attente pour ce lot. David rappelle le 04/11 que les pilotes à réimporter doivent se trouver dans `Export Dirvers/corriges/` ; copie vérifiée par SHA-256 et consigne ajoutée à `AGENTS.md`. Après validation, David demande « commit » le 04/11 ; aucun push demandé. Les changements préexistants du registre sont conservés.
 
+### 212 · Shadowrun Anarchy — SR-A4, SR-A5 et SR-A6 — 04/11/2026
+
+David : « on va commencer SR-A4, SR-A5 et SR-A6 ». GM-OS confirmé fermé ; essais et services locaux en profils jetables déjà autorisés. « utilise le mcp Stitch quand c'est nécessaire » et pilotes à réimporter dans `Export Dirvers/corriges/` restent les consignes de livraison.
+
+- **Arbitrage du 04/11** : « Tableau des blessures : 6/10/14 dans cet exemple ». Résistance du véhicule : Structure ×1/×2/×3 + Blindage, tableau p. 69, plutôt que le renvoi p. 230 au calcul humanoïde.
+- **Livré et validé par David le 04/11** : « c'est testé marque le ». Pilote **2.2.0**, planification/flashback personnel ou collectif et menace à reçus persistants ; égalités opposées, tir/mêlée, moyenne des seconds rôles et profils à la volée ; flotte de campagne, modes et équipement du rigger, moniteur séparé et biofeedback après aggravation.
+- **Ancres** : `tableDeShadowrun.ts`, `oppositionDeShadowrun.ts`, `riggingDeShadowrun.ts`, `operationsDeShadowrun.ts`, `OperationsShadowrun.tsx`, `PanneauDeJet.tsx` ; générateur `outils/shadowrun-anarchy/etendre_shadowrun.mjs`. MCP Stitch : projet `4980125564784271447`, trois cartes adaptées à la grammaire GM-OS. Manuel 53/54, captures et synthèse actualisés.
+- **Vérifié et limites** : [suivi détaillé](2026-11-04-shadowrun-sr-a4-a6.md), livre relu directement ; 9 827 tests passent (4 ignorés), types/build passent, lint 0 erreur et un avertissement préexistant ; trois parcours Electron passent, quatorze captures relues. Vraie connexion/reconnexion WebSocket, débit unique, droits, import alternatif et retour standard sur profil jetable. Les confirmations des cartes restent au meneur ; actions du capitaine, collisions et VD finales restent à la table.
+- **Reprendre** : les six lots SR-A1 à SR-A6 sont validés ; aucun essai de David attendu. Clip Playwright des nouveautés demandé le même jour, inspiré de celui de RuneQuest. David demande ensuite « commit et pousse » le 04/11. Le bestiaire § 210 et les changements étrangers sont conservés.
+
+### 213 · Clip Playwright — nouveautés de Shadowrun Anarchy — 04/11/2026
+
+David : « c'est testé marque le. Maintenant fais un clips avec Playright des noouveauté de Shadowrun Anarchy. Est-ce que c'est possible ? Tu peux t'inspirer du clips sur Runequest ».
+
+- **Validation consignée** : SR-A4/A5/A6 cochés et verts ; synthèse Shadowrun 12 vertes, 0 orange, 0 rouge ; suivi, reprise, manuel et § 212 actualisés. Aucun résultat individuel de recette inventé.
+- **Scénario** : `e2e/clipShadowrunAnarchy.spec.ts`, inspiré de `clipDuCombatRuneQuest.spec.ts` : curseur, surlignages, six chapitres et légendes françaises. Pilote 2.2.0, personnage fictif Prisme, vrais gestes dans une instance jetable et dés préparés pour les exemples. Pas de modification de `src/` ou `electron/`.
+- **Livré** : `output/clips/shadowrun-anarchy-nouveautes.mp4`, **3 min 12**, H.264, 1440 × 900 ; tournage WebM, rapport, repères des chapitres et images de contrôle dans `output/clips/shadowrun-anarchy/`. Lien depuis le manuel du jeu.
+- **Vérifié** : un parcours Playwright passé sans saut ; lint scénario/exporteur propre ; sept images de scènes et huit images du MP4 relues, début et fin compris. Chargement retiré par `outils/clips/exporter_clip.mjs`, avec FFmpeg déjà installé. Aucun paquet installé. Aucun travail restant pour le clip.
+- **Git** : David demande « commit et pousse » le 04/11 ; publication sur `production` avec les hooks. Les changements étrangers et le clip RuneQuest sont conservés hors du commit Shadowrun.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 149 | **Clip des nouveautés Shadowrun Anarchy** | 🟢 § 213 ; clip MP4 3 min 12 livré et relu, parcours Playwright passé — 04/11 | Ouvrir le MP4 ; rien à développer | Rien |
+| 148 | **Shadowrun — SR-A4/A5/A6** | 🟢 § 212 ; pilote 2.2.0 livré et validé par David — 04/11 | Rien pour les six lots ; clip des nouveautés demandé | Rien |
 | 147 | **Shadowrun — SR-A1/A2/A3** | 🟢 § 211 ; pilote 2.1.0 livré et validé par David — 04/11 | Rien pour ce lot ; choisir SR-A4/A5/A6 séparément | Rien pour SR-A1/A2/A3 |
 | 146 | **Le bestiaire du pilote** | 🅿️ garé § 210 ; plan écrit, rien commencé — 04/11 | À la reprise : trancher les trois décisions du plan et confirmer la coexistence, puis l'étape A (modèle et contrôle) | Reprise par David |
 | 145 | **Degenesis — DEG-A5 et DEG-A6** | 🟢 § 209 ; carte « Sporulation et Brûlure » (Germe, exposition, EX, Brûlure, stimulation aux jets, Argus, Potentiel), adversaires sans fiche à deux pistes, pilote 2.3.0, validés par David — 04/11 | Rien : DEG-A1 à DEG-A6 tous faits ; ensuite un autre lot (COC, Shadowrun) | Rien |

@@ -1,4 +1,68 @@
-# Reprise Codex — Shadowrun SR-A1/A2/A3 — 04/11/2026
+# Reprise Codex — Shadowrun SR-A1 à SR-A6 — 04/11/2026
+
+## Suite — validation des six lots et clip Playwright
+
+David : « c'est testé marque le », puis demande un clip des nouveautés inspiré de RuneQuest.
+Les six lots sont validés, SR-A4/A5/A6 sont cochés et verts dans la synthèse (12/0/0),
+le suivi, le manuel et le registre § 212. Le scénario `e2e/clipShadowrunAnarchy.spec.ts`
+filme six chapitres sur le pilote 2.2.0 : drain, cohérence, Matrice, planification,
+opposition, rigging. Profil fictif isolé, dés préparés, gestes et confirmations réels.
+Le curseur et les légendes suivent le format du clip RuneQuest. Registre § 213 ;
+livrable `output/clips/shadowrun-anarchy-nouveautes.mp4` (3 min 12, H.264, 1440 × 900),
+tournage WebM et preuves dans le sous-dossier
+`output/clips/shadowrun-anarchy/`. Aucun nouveau paquet ni modification du produit.
+
+Piège de réalisation : ne pas effacer puis taper chiffre par chiffre dans un nombre
+contrôlé qui rétablit son minimum à l’effacement ; `fill(valeur)` saisit le nombre entier.
+Le texte reste tapé progressivement. Le script n’exporte le film final que si toutes
+les assertions métier passent. **Vérifié** : un parcours Playwright passé, aucun saut ;
+lint du scénario/exporteur propre. Sept images de scènes et huit images du MP4 relues,
+début et fin compris. `outils/clips/exporter_clip.mjs` retire le chargement initial du MP4
+avec le FFmpeg déjà installé ; aucune installation. Le lecteur ouvre directement le MP4,
+les repères des six chapitres sont dans `output/clips/shadowrun-anarchy/README.md`.
+David demande ensuite « commit et pousse » le 04/11/2026 : publication sur `production`,
+avec les hooks de validation et de synchronisation des guides. Les fichiers étrangers
+et le clip RuneQuest restent hors du commit Shadowrun.
+
+## Suite — SR-A4/A5/A6, pilote 2.2.0 livré et validé par David
+
+Validation de David le 04/11/2026 : « c'est testé marque le ». SR-A4/A5/A6 sont cochés
+et verts ; aucun essai de David attendu pour SR-A1 à SR-A6. Clip Playwright des nouveautés
+demandé le même jour, inspiré du clip RuneQuest.
+
+David demande « on va commencer SR-A4, SR-A5 et SR-A6 » et confirme GM-OS fermé.
+Son arbitrage du 04/11 fait foi : « Tableau des blessures : 6/10/14 dans cet exemple ».
+Le véhicule utilise Structure ×1/×2/×3 + Blindage (p. 69), pas les seuils humanoïdes.
+
+Produit : planification, flashback et menace ; opposition, égalités et rôles adverses ;
+flotte, équipement, modes, dommages et biofeedback. Les reçus sont dans la campagne,
+les valeurs dans les réserves natives ; les nouvelles confirmations restent au meneur.
+Stitch utilisé : projet `4980125564784271447`, trois cartes adaptées au thème GM-OS.
+Manuel 53/54, captures, synthèse (12 vertes, 0 orange) et registre § 212 actualisés.
+Les résultats finaux et les limites sont dans le
+[suivi SR-A4/A5/A6](2026-11-04-shadowrun-sr-a4-a6.md).
+**Vérifié sur la construction finale : 9 827 tests passent, 4 ignorés / 827 fichiers
+passent, un ignoré ; types et build passent, lint 0 erreur et un avertissement préexistant ;
+trois parcours Electron passent, quatorze captures relues.**
+
+**Reprendre par** l’import de `Export Dirvers/corriges/Shadowrun-Anarchy-2.2.0.gmos-driver`
+avec **Remplacer** pour reproduire les trois gestes du suivi. Aucun champ à reprendre depuis
+la 2.1.0. Les six lots sont validés. **Commit et push demandés par David le 04/11/2026.**
+Le commit bestiaire `49b081f8` d’un autre chantier est conservé.
+
+**Pièges payés** : une reconnexion brute doit présenter le `repriseModules` reçu à
+l’inscription ; ne pas affaiblir le serveur pour faire passer le test. Le résumé de résultat
+opposé doit afficher le seuil du lancer, même après modification des menus. L’ordre autonome
+fait exception au premier ordre de même priorité ; commander plusieurs drones en mode
+capitaine n’est pas changer de mode à chaque appareil. Mettre à jour à la fois la liste
+des droits Electron et le contrat `remote/actions/registry.test.ts` pour un nouveau message.
+Construire après les dernières modifications, puis exécuter les e2e en profil jetable.
+Le parcours générique Shadowrun dépasse 30 s avec les trois cartes supplémentaires ;
+son délai est porté à 120 s, sans changer les attentes de la fiche HTML.
+
+---
+
+## Livraison précédente — SR-A1/A2/A3, validée
 
 David : « on va commencer SR-A1, SR-A2 et SR-A3 ». GM-OS confirmé fermé ; mise à jour du
 registre et essais/services locaux en profils jetables autorisés. **Livré et validé par David le 04/11/2026.**

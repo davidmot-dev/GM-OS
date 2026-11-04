@@ -207,6 +207,7 @@ describe('evaluateAction — actions permises aux joueurs', () => {
             'session:update-character-narrative',
             'session:update-character-sheet-data',
             'session:update-character-vitals',
+            'shadowrun:utilisation',
             'table:ajuster',
         ]);
     });
@@ -229,6 +230,14 @@ describe('evaluateAction — actions permises aux joueurs', () => {
             expect(verdict.allowed, `${type} sur le personnage d'un autre`).toBe(false);
             expect(verdict.reason).toBe('ownership');
         }
+    });
+});
+
+describe('evaluateAction — utilisation Anarchy Shadowrun', () => {
+    it('authentifie son propre personnage et refuse le personnage d’un autre', () => {
+        expect(evaluateAction('shadowrun:utilisation', { characterId: CHAR, id: 'sra4' }, 'player', CHAR).allowed).toBe(true);
+        expect(evaluateAction('shadowrun:utilisation', { characterId: 'autre', id: 'sra4' }, 'player', CHAR).reason).toBe('ownership');
+        expect(evaluateAction('shadowrun:regler-menace', { characterId: CHAR }, 'player', CHAR).allowed).toBe(false);
     });
 });
 
