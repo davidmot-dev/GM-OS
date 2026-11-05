@@ -53,6 +53,17 @@ export type LigneDeRencontre =
         faction?: CampDeRencontre;
     }
     | {
+        /**
+         * **Une créature du livre** (bestiaire du pilote, § 210 étape D, 05/11/2026) : lue au moment
+         * de l'invocation, comme un gabarit. Le nom sert de repli à l'écran si elle a disparu.
+         */
+        genre: 'creature';
+        creatureId: string;
+        nombre: number;
+        nom: string;
+        faction?: CampDeRencontre;
+    }
+    | {
         /** Un PNJ de la campagne, envoyé tel qu'il est. */
         genre: 'entite';
         entiteId: string;

@@ -70,8 +70,9 @@ scène — une scène peut en avoir plusieurs (« la patrouille », « les renfo
 ![La fiche d'Entretien avec Hale : ses battlemaps, puis la rencontre « Les gardes de Hale » dépliée — trois gardes et Hale lui-même, en ennemis](captures/session-trame-scene-rencontres.jpg)
 
 - **Nouvelle rencontre** en crée une ; dépliez-la pour la nommer et la composer.
-- **+ Ajouter…** prend une ligne dans le **bestiaire du jeu**, les **PNJ de la scène**, un
-  **archétype** (avec son rang) ou les autres PNJ de la campagne. Le nombre proposé suit le rang,
+- **+ Ajouter…** prend une ligne dans le **bestiaire du jeu**, les **créatures du livre** (le
+  bestiaire du pilote, depuis le 2026-11-05), les **PNJ de la scène**, un **archétype** (avec son
+  rang) ou les autres PNJ de la campagne. Le nombre proposé suit le rang,
   comme dans l'Atelier : quatre piétailles, deux aguerris, un boss.
 - Chaque ligne a son **nombre** (1 à 20), son **camp** (ennemi, allié, neutre — ou « selon son
   rôle » pour un PNJ), et ✕ pour la retirer.

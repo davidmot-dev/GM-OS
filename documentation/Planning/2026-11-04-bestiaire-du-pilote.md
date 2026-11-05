@@ -2,7 +2,7 @@
 
 > **Garé le 04/11/2026** à la demande de David (« commit le plan et consigne le pour plus tard »),
 > **repris le 05/11** : *« ok on commence par le A »*. Décision 1 tranchée (les créatures vivent
-> **dans le pilote**) ; **étapes A et B livrées le 05/11** (§ « Étape A — livrée », « Étape B — livrée »). Les décisions 2 et 3
+> **dans le pilote**) ; **étapes A à D livrées le 05/11** (§ « Étape A — livrée » à « Étape D — livrée »). Les décisions 2 et 3
 > restent à prendre avant l'étape C.
 
 Registre § 210. Demande de David, après le catalogue d'équipement (§ 203) et les suppléments
@@ -163,6 +163,64 @@ David : *« on va faire le B »*. Maquette Stitch (projet 8352739217093926431, �
   `tsc -b`, eslint ; construction ; e2e des captures d'Alien (scène `sceneDuBestiaireAlien`,
   bestiaire posé à la main) : `jeu-alien-bestiaire-section`, relue. Guide 50 à jour.
 - **Ensuite** : l'étape C — décisions 2 (extraction) et 3 (premier jeu) à prendre avec David.
+
+## Étape C — livrée le 05/11/2026
+
+David : *« ok commit et commence C »* ; décisions 2 et 3 (GM-OS fermé) : **« Tableau relu »** et
+**« Alien »**. Aperçu dessiné dans Stitch (`stitch/bestiaire/remplir.png`) et validé.
+
+- **Le gabarit** (`forge/rules/gabarits.ts`, consignes du supplément) : un sujet de créatures
+  commence « ## Valeurs » par un **tableau de profil** (première colonne « Créature », une colonne
+  par caractéristique et compétence chiffrées, précision entre parenthèses, « Particularités »
+  séparées par des points-virgules) et recopie à part ses tables d'attaques (« Tableau des
+  attaques de <créature> », « D6 | Attaque », « **Nom** : effet »). Le gabarit du livre de base est
+  inchangé (essai) : il recevra la même consigne quand on forgera ses créatures.
+- **La fiche relue des xénomorphes de *Colonial Marines*** mise au format : tableau de profil
+  (Biodrone p. 176, Goreburster p. 177, Anathème monstrueux p. 180), **relu de nouveau contre le
+  livre** (PDF = imprimée + 3), chiffres inchangés ; tables d'attaques titrées avec leur page (178,
+  181) ; la table du Biodrone, celle du Drone du livre de base (p. 309), est dite en particularité —
+  elle n'est pas reliée d'office à `attaques_xenomorphe_rodeur`, l'équivalence n'étant pas vérifiée.
+  La fiche devient « corrigée » (empreinte), donc protégée d'une reforge.
+- **`bestiaire/depuisLeCorpus.ts`** (`remplirLeBestiaire`, `estUneFicheDeBestiaire`) : lecture
+  déterministe, on remplit le vide, l'écart est dit ; « 8 (4 contre le feu) » → 8 et la particularité
+  « Protection 4 contre le feu » ; catégorie, particularités et page au socle ; tables d'attaques
+  rattachées par le titre, après toutes les créatures ; lignes boiteuses et tables orphelines
+  montrées. `equipement/livresDuJeu.ts` reçoit un filtre des fiches (`retenir`).
+- **`RemplirLeBestiaire.tsx`** : l'aperçu (livres à cocher, bilan, créatures par catégorie, colonnes,
+  attaques rattachées, « À regarder », tableaux écartés), branché sur « Remplir depuis le corpus » de
+  la section. Corrigé après la première capture : en-têtes qui se chevauchaient, ligne d'attaques
+  trop longue ; dans la section, les exemples des champs de table (« Alien ») se lisaient comme des
+  valeurs.
+- **Vérifié** : `depuisLeCorpus.test.ts` (7, sur la fiche réelle), `RemplirLeBestiaire.test.tsx` (3),
+  `EditeurDuBestiaire.test.tsx` (5), `bestiaire.test.ts` (5), `supplements.test.ts` (15) ; `tsc -b`,
+  eslint ; construction ; e2e d'Alien (le bestiaire part vide, se remplit, trois colonnes reliées) :
+  `jeu-alien-bestiaire-remplir` et `jeu-alien-bestiaire-section`, relues. Guide 50 et manuel 53.
+- **Ensuite** : l'étape D (poser une créature sur le plateau, rencontres, « Décliner »), après la
+  confirmation de la coexistence des deux bestiaires.
+
+## Étape D — livrée le 05/11/2026
+
+David : *« ok c'est bon. On peut faire le D ? »* ; choix (GM-OS fermé) : **coexistence confirmée**
+(« Décliner » compris) ; **atelier et rencontres**. Onglet « Livre » dessiné dans Stitch
+(`stitch/bestiaire/atelier-livre.png`) et validé.
+
+- **Logique** (`combat/logic/invocationDeRencontre.ts`) : `exemplairesDeLaCreature` (N exemplaires
+  numérotés, fiche de plateau par `ficheDePlateau`, rien de tiré, `origineDuLivre`, notes : colonnes
+  sans champ, particularités, attaques, source) ; `varianteDeLaCreature` (copie des valeurs,
+  archétype « quelconque », `depuis`) ; `adversairesDeLaRencontre` lit les lignes « créature » dans
+  `ctx.bestiaire` et dit celle qui a disparu. `LigneDeRencontre` gagne `genre: 'creature'`
+  (`lignesDeRencontre.ts` : `ligneDeLaCreature`, libellé) ; `rencontreDuPlateau` regroupe les
+  exemplaires d'une créature en une ligne. `Combatant.origineDuLivre`, `GabaritDAdversaire.depuis`.
+- **Écrans** : `CreaturesDuLivre.tsx`, onglet « Livre » de `AtelierDesAdversaires` (« Au combat (n) »,
+  « Décliner », nom numéroté pour ne pas écraser une variante, pied de la fabrique masqué sous
+  « Livre » — vu sur la première capture) ; la variante se dit « Variante de « … » (livre) » dans
+  l'onglet Bestiaire ; la Trame (`RencontresDeLaScene`) a un groupe « Créatures du livre » ;
+  `PanneauDesRencontres` passe le bestiaire du pilote à l'invocation.
+- **Vérifié** : `creaturesDuLivre.test.ts` (4), `AtelierDesAdversaires.test.tsx` (13, dont 3 neufs),
+  315 essais de la logique du combat ; `tsc -b`, eslint ; construction ; e2e d'Alien (deux Biodrones
+  posés, santé 6) et capture `jeu-alien-bestiaire-atelier`, relue. Guides 30, 11, 50 et manuel 53.
+- **Ensuite** : l'étape E, ce qui est propre à chaque jeu (Alien : nourrir `XenomorpheAlien` et sa
+  table d'attaques), à la demande.
 
 ## Ce qui ne change pas
 

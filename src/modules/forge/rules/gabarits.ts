@@ -206,6 +206,15 @@ function consignesDuSupplement(options: OptionsGabarit | undefined): string {
 - Un tableau du livre (armes, véhicules, spécialités, grades) se recopie en
   TABLEAU MARKDOWN, toutes ses lignes et toutes ses colonnes, sans rien omettre ;
   la fiche peut alors atteindre 4 000 caractères.
+- Si le sujet décrit des créatures ou des adversaires chiffrés, « ## Valeurs »
+  commence par un TABLEAU DE PROFIL : première colonne « Créature », puis une
+  colonne par caractéristique chiffrée telle que le livre la nomme (Vitesse,
+  Santé, Protection…) et une par compétence chiffrée ; une ligne par créature ;
+  une précision suit le nombre entre parenthèses (« 8 (4 contre le feu) ») ;
+  une colonne « Particularités » réunit le reste, séparé par des points-virgules.
+  Une table d'attaques tirée au dé se recopie à part, titrée « Tableau des
+  attaques de <créature> », colonnes « D6 | Attaque », chaque attaque écrite
+  « **Nom** : effet ».
 ${consigneDeLangueDuSupplement(options.langue)}`;
 }
 

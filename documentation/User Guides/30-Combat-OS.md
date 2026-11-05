@@ -149,6 +149,7 @@ Ce que devient le plateau quand on le garde :
 | « Goule 1 », « Goule 2 », « Goule 3 » | Une ligne **« 3 × Goule »**. |
 | Un adversaire du **bestiaire** (même nom, même archétype) | Le gabarit lui-même : ses valeurs feront foi. |
 | Un **PNJ** de la campagne | Un renvoi vers sa fiche. |
+| « Biodrone XX121B 1 », « … 2 » (une **créature du livre**) | Une ligne **« 2 × Biodrone XX121B »**, relue dans le bestiaire du pilote à l'invocation. |
 | Un combattant **ajouté à la main** | Un adversaire quelconque — le formulaire le signale. |
 
 > ⚠️ **Une rencontre est un modèle** : les adversaires fabriqués sont **refabriqués à chaque
@@ -273,6 +274,36 @@ Quand vous fabriquez depuis un gabarit du bestiaire, **ce que vous y avez saisi 
 
 > [!TIP]
 > Le bestiaire entre dans la sauvegarde automatique, avec vos corrections de répartition.
+
+### Les créatures du livre — l'onglet *Livre*
+
+Depuis le 2026-11-05 (registre § 210, étape D ; dessiné dans Stitch et validé par David). Le
+**bestiaire du pilote** porte les créatures du livre et des suppléments, remplies depuis le corpus
+dans l'éditeur du pilote ([guide de la Forge des systèmes](./50-Forge-des-systemes.md#la-section-bestiaire)).
+L'atelier les montre dans un troisième onglet, **Livre**, à côté de *Fabriquer* et *Bestiaire* :
+
+- par **catégorie** du livre (« Xénomorphes aberrants », « Anathèmes »), chaque créature avec ses
+  **valeurs**, ses **particularités** (« Protection 4 contre le feu »), ses **attaques** et sa source
+  (livre et page) ;
+- un **nombre** (1 à 20) et un **camp** ;
+- **Au combat (n)** pose n exemplaires numérotés, sans rien tirer : leur fiche de plateau est celle
+  que les colonnes du bestiaire remplissent. Ce qui ne remplit aucun champ (la Vitesse d'un
+  xénomorphe, les attaques, la source) va dans leurs **notes** ;
+- **Décliner** range une **variante** dans *votre* bestiaire (« Biodrone XX121B (variante) », puis
+  « (variante 2) ») : elle **copie** les valeurs et garde la trace de son modèle — l'onglet
+  *Bestiaire* la dit « Variante de « Biodrone XX121B » (livre) ». Une correction du livre ne la
+  change pas. Fabriquée ensuite, ses champs que le livre ne donne pas sont tirés comme pour un
+  adversaire quelconque.
+
+Les deux bestiaires **coexistent** sans rien se prendre : le livre reste dans le pilote, vos gabarits
+chez vous ; seul « Décliner » passe de l'un à l'autre (décision de David, 05/11/2026). Sous *Livre*,
+les gestes de la fabrique (« Envoyer au combat », « Au bestiaire ») ne s'affichent pas.
+
+![L'onglet Livre de l'atelier : Biodrone, Goreburster et Anathème monstrueux de Colonial Marines](captures/jeu-alien-bestiaire-atelier.jpg)
+
+> Une **rencontre préparée** peut aussi compter des créatures du livre : la liste « + Ajouter… » de
+> la Trame a un groupe **Créatures du livre**. Une créature retirée du pilote depuis n'entre pas, et
+> l'invocation le dit.
 
 *Illustré le 2026-10-03 avec la campagne de démonstration ; la disposition décrite est celle de la
 refonte (lot L1).*

@@ -45,15 +45,24 @@ export function rencontreDuPlateau(
             continue;
         }
 
+        // Une créature du livre redevient sa ligne (§ 210, étape D) : les exemplaires se regroupent.
+        if (c.origineDuLivre) {
+            const id = c.origineDuLivre.creatureId;
+            const meme = lignes.find(l => l.genre === 'creature' && l.creatureId === id && l.faction === faction);
+            if (meme && meme.genre === 'creature') meme.nombre += 1;
+            else lignes.push({ genre: 'creature', creatureId: id, nombre: 1, nom: nomDeGabarit(c.name), faction });
+            continue;
+        }
+
         const { archetypeId, rangId } = origineOuDefaut(c.origineFabriquee);
         if (!c.origineFabriquee) sansOrigine.push(c.name);
         const nom = nomDeGabarit(c.name);
         const gabarit = gabarits.find(g => g.nom === nom && g.archetypeId === archetypeId);
 
         const memeLigne = lignes.find(l =>
-            l.genre !== 'entite' && l.faction === faction && l.rangId === rangId && l.archetypeId === archetypeId
+            (l.genre === 'gabarit' || l.genre === 'archetype') && l.faction === faction && l.rangId === rangId && l.archetypeId === archetypeId
             && (l.genre === 'gabarit' ? l.nom : l.nom ?? '') === nom);
-        if (memeLigne && memeLigne.genre !== 'entite') {
+        if (memeLigne && (memeLigne.genre === 'gabarit' || memeLigne.genre === 'archetype')) {
             memeLigne.nombre += 1;
             continue;
         }

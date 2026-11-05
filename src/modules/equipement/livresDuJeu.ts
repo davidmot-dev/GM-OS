@@ -32,12 +32,12 @@ function titreDuLivreDeBase(fiches: readonly { contenu: string }[], repli: strin
     return source || repli;
 }
 
-async function lireLeLivre(corpus: Corpus, cle: string, titre: string | null, repli: string): Promise<LivreACataloguer> {
+async function lireLeLivre(corpus: Corpus, cle: string, titre: string | null, repli: string, retenir: (contenu: string) => boolean): Promise<LivreACataloguer> {
     const ai = window.appBridge?.ai;
     const dossier = cheminDesFiches(corpus);
     const noms = ((await ai?.listDir?.(dossier).catch(() => [])) ?? []).filter(n => n.endsWith('.md')).sort();
     const lues = await Promise.all(noms.map(async nom => ({ chemin: `${dossier}/${nom}`, contenu: ((await ai?.readDoc?.(`${dossier}/${nom}`).catch(() => null)) as string | null) ?? '' })));
-    const dEquipement = lues.filter(f => estUneFicheDEquipement(f.contenu));
+    const dEquipement = lues.filter(f => retenir(f.contenu));
     const livre = titre ?? titreDuLivreDeBase(dEquipement, repli);
     // Les pages : les sections que la fiche cite, résolues par l'index de CE livre.
     const fiches = await Promise.all(dEquipement.map(async f => {
@@ -48,12 +48,19 @@ async function lireLeLivre(corpus: Corpus, cle: string, titre: string | null, re
     return { cle, titre: titre ?? 'Livre de base', fiches, total: lues.length };
 }
 
-/** Le livre de base d'abord : ses noms font foi quand un supplément reprend le même objet. */
-export async function lireLesLivresDuJeu(corpusDuJeu: Corpus, supplements: readonly SupplementDeclare[], nomDuJeu: string): Promise<LivreACataloguer[]> {
-    const livres = [lireLeLivre(corpusDuJeu, 'jeu', null, nomDuJeu)];
+/**
+ * Le livre de base d'abord : ses noms font foi quand un supplément reprend le même objet.
+ * `retenir` dit quelles fiches lire — les fiches d'équipement par défaut ; le bestiaire (§ 210,
+ * étape C, 05/11/2026) passe celles qui portent un tableau de profil.
+ */
+export async function lireLesLivresDuJeu(
+    corpusDuJeu: Corpus, supplements: readonly SupplementDeclare[], nomDuJeu: string,
+    retenir: (contenu: string) => boolean = estUneFicheDEquipement,
+): Promise<LivreACataloguer[]> {
+    const livres = [lireLeLivre(corpusDuJeu, 'jeu', null, nomDuJeu, retenir)];
     for (const s of supplements) {
         const corpus = corpusDeSupplement(corpusDuJeu, s.slug);
-        if (corpus) livres.push(lireLeLivre(corpus, s.slug, s.titre, s.titre));
+        if (corpus) livres.push(lireLeLivre(corpus, s.slug, s.titre, s.titre, retenir));
     }
     return Promise.all(livres);
 }

@@ -58,8 +58,9 @@ vi.mock('../../session/useSessionOSStore', () => ({
     ),
 }));
 
+const ajouterAuCombat = vi.hoisted(() => vi.fn());
 vi.mock('../useCombatStore', () => ({
-    useCombatStore: (selecteur: (etat: unknown) => unknown) => selecteur({ addCombatant: vi.fn() }),
+    useCombatStore: (selecteur: (etat: unknown) => unknown) => selecteur({ addCombatant: ajouterAuCombat }),
 }));
 
 vi.mock('../../../stores/useToastStore', () => ({ gmToast: vi.fn() }));
@@ -70,6 +71,52 @@ describe('AtelierDesAdversaires', () => {
         sessionSimulee.customGameDrivers = [];
         sessionSimulee.customSheetTemplates = [GABARIT];
         useBestiaireStore.setState({ gabarits: [], repartitions: {} });
+        ajouterAuCombat.mockClear();
+    });
+
+    /* ── L'onglet « Livre » (§ 210, étape D, 05/11/2026) ── */
+    const AVEC_LE_LIVRE = {
+        ...PILOTE,
+        bestiaire: {
+            colonnes: [{ id: 'vitesse', libelle: 'Vitesse', nature: 'nombre' }, { id: 'force', libelle: 'Force', nature: 'nombre', champ: 'force' }],
+            creatures: [{ id: 'biodrone', nom: 'Biodrone XX121B', categorie: 'Xénomorphes aberrants', valeurs: { vitesse: 2, force: 4 },
+                source: { livre: 'Colonial Marines', page: 176 } }],
+        },
+    } as unknown as typeof PILOTE;
+
+    it('l’onglet Livre pose deux Biodrones au combat, avec la fiche du livre', () => {
+        sessionSimulee.pilote = AVEC_LE_LIVRE;
+        const fermer = vi.fn();
+        render(<AtelierDesAdversaires onClose={fermer} />);
+        fireEvent.click(screen.getByText('Livre'));
+        expect(screen.getByText('Colonial Marines · p. 176')).toBeTruthy();
+        // Les gestes de la fabrique ne s'affichent pas sous « Livre ».
+        expect(screen.queryByText(/Envoyer au combat/)).toBeNull();
+        fireEvent.click(screen.getByText('Au combat (2)'));
+        expect(ajouterAuCombat.mock.calls.map(c => [c[0].name, c[0].sheetData, c[0].origineDuLivre])).toEqual([
+            ['Biodrone XX121B 1', { force: 4 }, { creatureId: 'biodrone' }],
+            ['Biodrone XX121B 2', { force: 4 }, { creatureId: 'biodrone' }],
+        ]);
+        expect(fermer).toHaveBeenCalled();
+    });
+
+    it('« Décliner » range une variante numérotée au bestiaire, qui dit son modèle', () => {
+        sessionSimulee.pilote = AVEC_LE_LIVRE;
+        render(<AtelierDesAdversaires onClose={() => {}} />);
+        fireEvent.click(screen.getByText('Livre'));
+        fireEvent.click(screen.getByText('Décliner'));
+        fireEvent.click(screen.getByText('Livre'));
+        fireEvent.click(screen.getByText('Décliner'));
+        const gabarits = useBestiaireStore.getState().gabaritsDuJeu('alien');
+        expect(gabarits.map(g => g.nom).sort()).toEqual(['Biodrone XX121B (variante 2)', 'Biodrone XX121B (variante)']);
+        expect(gabarits[0]).toMatchObject({ sheetData: { force: 4 }, depuis: { creatureId: 'biodrone', nom: 'Biodrone XX121B' } });
+        expect(screen.getAllByText('Variante de « Biodrone XX121B » (livre)')).toHaveLength(2);
+    });
+
+    it('sans créatures du livre, l’onglet dit où les remplir', () => {
+        render(<AtelierDesAdversaires onClose={() => {}} />);
+        fireEvent.click(screen.getByText('Livre'));
+        expect(screen.getByText(/section « Bestiaire »/)).toBeTruthy();
     });
 
     it('se monte et propose les archétypes', () => {

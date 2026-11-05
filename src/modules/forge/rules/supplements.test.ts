@@ -83,6 +83,9 @@ describe('gabarits du supplément', () => {
     for (const gabarit of [gabaritFicheRegle('Armes de poing', options), gabaritFichePratique('Armes de poing', options)]) {
       expect(gabarit).toMatch(/SUPPLÉMENT « Colonial Marines Operations Manual »/);
       expect(gabarit).toMatch(/TABLEAU MARKDOWN, toutes ses lignes/);
+      // Bestiaire, § 210 étape C (05/11/2026) : le profil des créatures en tableau, lu sans modèle.
+      expect(gabarit).toMatch(/TABLEAU DE PROFIL : première colonne « Créature »/);
+      expect(gabarit).toMatch(/« Tableau des\s+attaques de <créature> »/);
       expect(gabarit).toMatch(/prose en français/);
       expect(gabarit).toMatch(/« Fusilier \(Rifleman\) »/);
     }

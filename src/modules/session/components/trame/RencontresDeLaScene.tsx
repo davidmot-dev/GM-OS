@@ -5,7 +5,7 @@ import { useBestiaireStore } from '../../../combat/useBestiaireStore';
 import { gmConfirm } from '../../../../stores/useModalStore';
 import { ARCHETYPES, RANGS } from '../../../combat/logic/archetypes';
 import {
-    avecLeNombre, libelleDeLaLigne, ligneDeLArchetype, ligneDuGabarit, ligneDuPNJ, resumeDeLaRencontre,
+    avecLeNombre, libelleDeLaLigne, ligneDeLaCreature, ligneDeLArchetype, ligneDuGabarit, ligneDuPNJ, resumeDeLaRencontre,
 } from '../../../combat/logic/lignesDeRencontre';
 import type { Scene } from '../../../../types/trame.types';
 import type { CampDeRencontre, LigneDeRencontre, RencontrePreparee } from '../../../../types/rencontres.types';
@@ -46,11 +46,16 @@ const RencontresDeLaScene: React.FC<{ scene: Scene }> = ({ scene }) => {
 
     const changerLesLignes = (r: RencontrePreparee, lignes: LigneDeRencontre[]) => modifierUneRencontre(r.id, { lignes });
 
-    /** La valeur du choix « Ajouter… » : `g:` gabarit, `a:` archétype, `e:` PNJ. */
+    /** Les créatures du livre (§ 210, étape D, 05/11/2026) : celles du bestiaire du pilote. */
+    const creaturesDuLivre = driver?.bestiaire?.creatures ?? [];
+
+    /** La valeur du choix « Ajouter… » : `g:` gabarit, `c:` créature du livre, `a:` archétype, `e:` PNJ. */
     const ajouterLaLigne = (r: RencontrePreparee, valeur: string) => {
         const [genre, id] = [valeur.slice(0, 1), valeur.slice(2)];
         const gabarit = gabarits.find(g => g.id === id);
+        const creature = creaturesDuLivre.find(c => c.id === id);
         const ligne = genre === 'g' && gabarit ? ligneDuGabarit(gabarit)
+            : genre === 'c' && creature ? ligneDeLaCreature(creature)
             : genre === 'a' ? ligneDeLArchetype(id)
                 : genre === 'e' ? ligneDuPNJ(id) : null;
         if (ligne) changerLesLignes(r, [...r.lignes, ligne]);
@@ -162,6 +167,11 @@ const RencontresDeLaScene: React.FC<{ scene: Scene }> = ({ scene }) => {
                                     {gabarits.length > 0 && (
                                         <optgroup label="Bestiaire du jeu">
                                             {gabarits.map(g => <option key={g.id} value={`g:${g.id}`}>{g.nom}</option>)}
+                                        </optgroup>
+                                    )}
+                                    {creaturesDuLivre.length > 0 && (
+                                        <optgroup label="Créatures du livre">
+                                            {creaturesDuLivre.map(c => <option key={c.id} value={`c:${c.id}`}>{c.nom}</option>)}
                                         </optgroup>
                                     )}
                                     {pnjDeLaScene.length > 0 && (

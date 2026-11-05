@@ -82,6 +82,11 @@ export interface Combatant {
      * elle se lit « celui-la n'a pas ete fabrique ».
      */
     origineFabriquee?: import('./logic/promotionDuCombattant').OrigineFabriquee;
+    /**
+     * **Une créature du livre** (bestiaire du pilote, § 210 étape D, 05/11/2026) : son identifiant,
+     * pour que « Garder le plateau comme rencontre » sache la nommer et que le plateau la reconnaisse.
+     */
+    origineDuLivre?: { creatureId: string };
     /** Statistiques additionnelles (Mana, Santé Mentale, etc.) */
     extraStats?: Record<string, { value: number; max: number }>; 
     resistances?: string[];

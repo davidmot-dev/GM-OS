@@ -212,8 +212,8 @@ vides.
 
 ### La section Bestiaire
 
-Depuis le 2026-11-05 (registre § 210, étapes A et B ; écran dessiné dans Stitch et validé par
-David). Les **créatures du livre et des suppléments** vivent dans le pilote, comme le catalogue :
+Depuis le 2026-11-05 (registre § 210, étapes A, B et C ; écrans dessinés dans Stitch et validés
+par David). Les **créatures du livre et des suppléments** vivent dans le pilote, comme le catalogue :
 elles partent avec l'export et se corrigent une fois. Le bestiaire que le meneur remplit dans
 l'atelier des adversaires (ses gabarits) ne change pas.
 
@@ -230,10 +230,28 @@ l'atelier des adversaires (ses gabarits) ne change pas.
 - Le contrôle du pilote s'affiche sous ce qu'il vise : une colonne qui remplit un champ absent de la
   fiche, un texte dans une colonne de nombres, deux créatures du même identifiant.
 
+- **« Remplir depuis le corpus »** lit les **tableaux de profil** des fiches relues — livre de base
+  et suppléments déclarés, à cocher — et montre d'abord un aperçu : créatures à ajouter par
+  catégorie, colonnes à déclarer, **tables d'attaques rattachées** à leur créature (« Tableau des
+  attaques du Goreburster »), et « À regarder » pour ce qui diffère de ce que vous avez corrigé.
+  **Rien n'est versé avant « Verser au bestiaire »**, et rien de rempli n'est remplacé. Une
+  précision entre parenthèses (« 8 (4 contre le feu) ») devient une particularité. Le champ de la
+  fiche que chaque colonne remplit se choisit ensuite dans la section.
+
+![Remplir depuis le corpus : Colonial Marines, trois créatures, six colonnes, deux tables d'attaques](captures/jeu-alien-bestiaire-remplir.jpg)
+
 ![La section Bestiaire : le Biodrone XX121B déplié, ses colonnes, sa table d'attaques et ce que le plateau recevra](captures/jeu-alien-bestiaire-section.jpg)
 
-> ⚠️ **Ce qui ne marche pas encore.** « Remplir depuis le corpus » est grisé (étape C), et rien ne
-> pose encore une créature sur le plateau (étape D) : [le plan](../Planning/2026-11-04-bestiaire-du-pilote.md).
+> **Pour qu'une fiche se lise**, sa section « Valeurs » commence par un tableau dont la première
+> colonne est « Créature » (et, si le livre en a, des tables « D6 | Attaque » titrées « Tableau des
+> attaques de … »). La Forge l'écrit ainsi pour un supplément ; une fiche plus ancienne se met au
+> format à la relecture. Pour Alien, la fiche des xénomorphes de *Colonial Marines* l'est (Biodrone,
+> Goreburster, Anathème monstrueux) ; le livre de base n'a pas encore de fiche de créatures.
+
+> **Sur le plateau** (depuis le 2026-11-05, étape D) : l'onglet *Livre* de l'atelier des adversaires
+> pose les créatures et les décline en variantes ; les rencontres préparées les comptent —
+> [guide de Combat-OS](./30-Combat-OS.md#les-créatures-du-livre--longlet-livre). Ce qui reste : ce
+> qui est propre à chaque jeu (étape E, [le plan](../Planning/2026-11-04-bestiaire-du-pilote.md)).
 
 ---
 

@@ -86,6 +86,6 @@ describe('EditeurDuBestiaire (§ 210, étape B)', () => {
         fireEvent.change(screen.getByLabelText('Nom de la nouvelle créature'), { target: { value: 'Biodrone XX121B' } });
         fireEvent.click(screen.getByText('Créer'));
         expect(onUpdate.mock.calls.at(-1)![0].bestiaire.creatures).toEqual([{ id: 'biodrone-xx121b', nom: 'Biodrone XX121B', valeurs: {} }]);
-        expect((screen.getByRole('button', { name: /Remplir depuis le corpus/ }) as HTMLButtonElement).disabled).toBe(true);
+        expect((screen.getByRole('button', { name: /Remplir depuis le corpus/ }) as HTMLButtonElement).disabled).toBe(false);
     });
 });

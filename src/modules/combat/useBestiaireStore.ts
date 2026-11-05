@@ -44,6 +44,11 @@ export interface GabaritDAdversaire {
     notes?: string;
     /** Quand il a été rangé — pour trier du plus récent au plus ancien. */
     creeLe: number;
+    /**
+     * **Une variante d'une créature du livre** (« Décliner », § 210 étape D, 05/11/2026) : la trace
+     * de son modèle. Les valeurs sont COPIÉES : une correction du livre ne change pas la variante.
+     */
+    depuis?: { creatureId: string; nom: string };
 }
 
 interface BestiaireState {

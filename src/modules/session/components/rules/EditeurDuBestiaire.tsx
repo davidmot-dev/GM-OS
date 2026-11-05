@@ -8,6 +8,7 @@ import {
     valeursDeLaColonne, type ConstatDuBestiaire,
 } from '../../../bestiaire/bestiaire';
 import { FormulaireDeNom, ListeDePastilles, ListeDesConstats } from './EditeurDuCatalogue';
+import RemplirLeBestiaire from './RemplirLeBestiaire';
 
 /**
  * **La section « Bestiaire » de l'éditeur du pilote** — registre § 210, étape B (05/11/2026), à
@@ -22,7 +23,8 @@ import { FormulaireDeNom, ListeDePastilles, ListeDesConstats } from './EditeurDu
  * 2. **La grille suit les colonnes déclarées**, comme le catalogue.
  * 3. **Les constats du contrôle s'affichent sous ce qu'ils visent.**
  *
- * « Remplir depuis le corpus » reste grisé jusqu'à l'étape C.
+ * « Remplir depuis le corpus » ouvre l'aperçu de l'étape C (`RemplirLeBestiaire`, 05/11/2026) :
+ * les tableaux de profil des fiches relues, versés sans rien remplacer.
  */
 interface EditeurDuBestiaireProps {
     driver: GameDriver;
@@ -42,6 +44,7 @@ const EditeurDuBestiaire: React.FC<EditeurDuBestiaireProps> = ({ driver, onUpdat
     const [deplie, setDeplie] = useState<string | null>(null);
     const [nouvelleColonne, setNouvelleColonne] = useState<string | null>(null);
     const [nouvelleCreature, setNouvelleCreature] = useState<string | null>(null);
+    const [remplir, setRemplir] = useState(false);
 
     const enregistrer = (suivant: BestiaireDuJeu) => onUpdate({ bestiaire: suivant });
     const base = () => bestiaire ?? bestiaireVide();
@@ -153,9 +156,9 @@ const EditeurDuBestiaire: React.FC<EditeurDuBestiaireProps> = ({ driver, onUpdat
                     <input value={recherche} onChange={e => setRecherche(e.target.value)} placeholder="Chercher une créature" aria-label="Chercher une créature"
                         className={`${CHAMP} rounded-2xl pl-10`} />
                 </label>
-                <button disabled title="Étape C du bestiaire : la lecture des fiches relues viendra ensuite."
-                    className="flex items-center gap-1.5 whitespace-nowrap rounded-2xl border border-app-border/30 px-4 py-2.5 text-sm font-semibold text-app-muted opacity-60">
-                    <BookOpen size={16} /> Remplir depuis le corpus <span className="rounded bg-app-text/5 px-1.5 font-mono text-ui-10">bientôt</span>
+                <button onClick={() => setRemplir(true)}
+                    className="flex items-center gap-1.5 whitespace-nowrap rounded-2xl border border-accent/60 px-4 py-2.5 text-sm font-semibold text-accent shadow-sm hover:bg-accent/10">
+                    <BookOpen size={16} /> Remplir depuis le corpus
                 </button>
                 {nouvelleCreature === null ? (
                     <button onClick={() => setNouvelleCreature('')}
@@ -206,6 +209,8 @@ const EditeurDuBestiaire: React.FC<EditeurDuBestiaireProps> = ({ driver, onUpdat
                     </div>
                 ))}
             </div>
+
+            {remplir && <RemplirLeBestiaire driver={driver} onVerser={enregistrer} onFermer={() => setRemplir(false)} />}
         </div>
     );
 };
@@ -302,10 +307,10 @@ const FicheDeLaCreature: React.FC<{
             <div>
                 <div className="flex flex-wrap items-center justify-between gap-2"><span className={LIBELLE}>Attaques</span>
                     <span className="flex items-center gap-1 text-ui-12 text-app-muted" title="Une table du jeu tirée au dé : les xénomorphes d'Alien.">Table du jeu :
-                        <input value={attaques.table?.univers ?? ''} onChange={e => changerLaTable('univers', e.target.value)} aria-label="Jeu de la table d'attaques" placeholder="Alien"
+                        <input value={attaques.table?.univers ?? ''} onChange={e => changerLaTable('univers', e.target.value)} aria-label="Jeu de la table d'attaques" placeholder="jeu"
                             className="w-20 rounded-md border border-app-border/20 bg-app-bg/40 px-2 py-0.5 font-mono text-ui-12 text-app-text outline-none" />
                         /
-                        <input value={attaques.table?.table ?? ''} onChange={e => changerLaTable('table', e.target.value)} aria-label="Table d'attaques" placeholder="attaques_xenomorphe_rodeur"
+                        <input value={attaques.table?.table ?? ''} onChange={e => changerLaTable('table', e.target.value)} aria-label="Table d'attaques" placeholder="nom de la table"
                             className="w-56 rounded-md border border-app-border/20 bg-app-bg/40 px-2 py-0.5 font-mono text-ui-12 text-accent outline-none" />
                     </span>
                 </div>

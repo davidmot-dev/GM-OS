@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Swords, X, BookMarked, Wand2, Users, Save, Trash2, Pencil, Check } from 'lucide-react';
+import { Swords, X, BookMarked, BookOpen, Wand2, Users, Save, Trash2, Pencil, Check } from 'lucide-react';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { tousLesPilotes } from '../../session/store/tousLesPilotes';
 import { useCombatStore } from '../useCombatStore';
@@ -7,7 +7,10 @@ import { useBestiaireStore } from '../useBestiaireStore';
 import { gmToast } from '../../../stores/useToastStore';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
-import { champsDuPilote, fabriquerLesExemplaires, ficheDUnExemplaire } from '../logic/invocationDeRencontre';
+import { champsDuPilote, exemplairesDeLaCreature, fabriquerLesExemplaires, ficheDUnExemplaire, varianteDeLaCreature } from '../logic/invocationDeRencontre';
+import { CreaturesDuLivre } from './CreaturesDuLivre';
+import type { CreatureDuBestiaire } from '../../../types/drivers';
+import type { CampDeRencontre } from '../../../types/rencontres.types';
 import { santeDeDepart, valeurDuChamp } from '../logic/SanteDuCombattant';
 import { ARCHETYPES, archetypeParId, proposerLesChamps, RANGS, rangParId } from '../logic/archetypes';
 import { nommerLExemplaire } from '../logic/fabriqueDAdversaire';
@@ -109,7 +112,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
     const [exemplaires, setExemplaires] = useState({ nombre: 1, choisiParLeMeneur: false });
     const nombre = exemplaires.nombre;
     const [nom, setNom] = useState('');
-    const [onglet, setOnglet] = useState<'fabriquer' | 'bestiaire'>('fabriquer');
+    const [onglet, setOnglet] = useState<'fabriquer' | 'bestiaire' | 'livre'>('fabriquer');
     /** Le gabarit en cours de renommage, et le nom qu'on lui tape. */
     const [renommage, setRenommage] = useState<{ id: string; nom: string } | null>(null);
     const [graine, setGraine] = useState(() => Math.floor(Math.random() * 1e9));
@@ -254,6 +257,30 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
         gmToast(`« ${nom.trim()} » est au bestiaire`, 'success');
     };
 
+    /*
+      **Les créatures du livre** (§ 210, étape D, 05/11/2026) : posées telles que le pilote les porte,
+      ou déclinées en variante dans le bestiaire du meneur. Un nom déjà pris reçoit un numéro :
+      `enregistrer` remplacerait sinon la variante précédente sans le dire.
+    */
+    const creaturesAuCombat = (creature: CreatureDuBestiaire, n: number, faction: CampDeRencontre) => {
+        if (!driver?.bestiaire) return;
+        exemplairesDeLaCreature({
+            bestiaire: driver.bestiaire, creature, nombre: n, faction,
+            typeDeSante: driver.combat?.defaultHealthType ?? 'hp', casesDeSante: driver.combat?.casesDeSante,
+        }).forEach(addCombatant);
+        gmToast(`${n} × ${creature.nom} dans l’ordre du tour`, 'success');
+        onClose();
+    };
+    const declinerLaCreature = (creature: CreatureDuBestiaire) => {
+        if (!driver?.bestiaire) return;
+        const pris = new Set(gabarits.map(g => g.nom.trim().toLowerCase()));
+        let nomDeLaVariante = `${creature.nom} (variante)`;
+        for (let n = 2; pris.has(nomDeLaVariante.toLowerCase()); n++) nomDeLaVariante = `${creature.nom} (variante ${n})`;
+        enregistrer(varianteDeLaCreature(jeuId, driver.bestiaire, creature, nomDeLaVariante));
+        gmToast(`« ${nomDeLaVariante} » est au bestiaire`, 'success');
+        setOnglet('bestiaire');
+    };
+
     if (!driver) {
         return (
             <div className="p-10 text-center space-y-3">
@@ -288,7 +315,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
     };
 
     return (
-        <div className="flex flex-col h-full max-h-[80vh] text-app-text">
+        <div className="flex flex-col h-full max-h-[80vh] text-app-text" data-atelier-des-adversaires>
             <div className="flex items-center justify-between px-5 py-3 border-b border-app-border/50">
                 <div className="flex items-center gap-2">
                     <Swords size={16} className="text-accent" />
@@ -307,7 +334,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
               vieillit mal. Il vit donc la ou il sert.
             */}
             <div className="flex gap-1 px-5 pt-3">
-                {([['fabriquer', 'Fabriquer', Wand2], ['bestiaire', 'Bestiaire', BookMarked]] as const).map(
+                {([['fabriquer', 'Fabriquer', Wand2], ['bestiaire', 'Bestiaire', BookMarked], ['livre', 'Livre', BookOpen]] as const).map(
                     ([id, libelle, Icone]) => (
                         <button
                             key={id}
@@ -320,10 +347,19 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                             {id === 'bestiaire' && gabarits.length > 0 && (
                                 <span className="font-mono opacity-60">{gabarits.length}</span>
                             )}
+                            {id === 'livre' && (driver.bestiaire?.creatures.length ?? 0) > 0 && (
+                                <span className="font-mono opacity-60">{driver.bestiaire!.creatures.length}</span>
+                            )}
                         </button>
                     ),
                 )}
             </div>
+
+            {onglet === 'livre' && (
+                <div className="flex-1 overflow-y-auto p-5 custom-scrollbar">
+                    <CreaturesDuLivre bestiaire={driver.bestiaire} nomDuJeu={driver.name} onAuCombat={creaturesAuCombat} onDecliner={declinerLaCreature} />
+                </div>
+            )}
 
             {onglet === 'bestiaire' && (
                 <div className="flex-1 overflow-y-auto p-5 space-y-3 custom-scrollbar">
@@ -374,7 +410,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                                 </div>
 
                                 <p className="text-ui-9 font-black uppercase tracking-widest text-app-subtle">
-                                    {archetypeParId(g.archetypeId).nom} · {rangParId(g.rangId).nom}
+                                    {g.depuis ? `Variante de « ${g.depuis.nom} » (livre)` : `${archetypeParId(g.archetypeId).nom} · ${rangParId(g.rangId).nom}`}
                                 </p>
 
                                 {/* Les valeurs saisies, celles qui passeront par-dessus le tirage. */}
@@ -569,6 +605,8 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
             </div>
             )}
 
+            {/* Sous « Livre », chaque carte a ses gestes : ceux-ci agissent sur l'adversaire fabriqué (§ 210, étape D). */}
+            {onglet !== 'livre' && (
             <div className="p-4 border-t border-app-border/50 flex items-center gap-2">
                 <button
                     onClick={rangerAuBestiaire}
@@ -590,6 +628,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                     <Swords size={12} /> Envoyer au combat
                 </button>
             </div>
+            )}
         </div>
     );
 };

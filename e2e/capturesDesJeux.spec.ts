@@ -2077,9 +2077,10 @@ async function scenesDAlien(c: ContexteDeScene): Promise<void> {
 }
 
 /**
- * **Le bestiaire du pilote** (§ 210, étape B, 05/11/2026) : la section de l'éditeur, avec deux
- * créatures de Colonial Marines (fiche relue le 02/11). Le remplissage depuis le corpus est
- * l'étape C : le bestiaire est posé ici à la main, comme le ferait le meneur.
+ * **Le bestiaire du pilote** (§ 210, étapes B et C, 05/11/2026) : le bestiaire part vide ;
+ * « Remplir depuis le corpus » lit le tableau de profil de la fiche relue de Colonial Marines,
+ * l'aperçu se photographie, on verse ; trois colonnes sont reliées aux champs de la fiche, et le
+ * Biodrone se déplie dans la section.
  */
 async function sceneDuBestiaireAlien(c: ContexteDeScene): Promise<void> {
     const f = gmos.fenetre;
@@ -2087,40 +2088,45 @@ async function sceneDuBestiaireAlien(c: ContexteDeScene): Promise<void> {
     await f.evaluate(campagne => {
         const s = (window as unknown as Fenetre).useSessionOSStore.getState();
         const id = s.campaigns.find(x => x.id === campagne)!.system;
-        const livre = 'Colonial Marines Operations Manual';
-        s.updateGameDriver(id, { bestiaire: {
-            colonnes: [
-                { id: 'vitesse', libelle: 'Vitesse', nature: 'nombre' },
-                { id: 'sante', libelle: 'Santé', nature: 'nombre', champ: 'sante' },
-                { id: 'mobilite', libelle: 'Mobilité', nature: 'nombre', champ: 'mobilite' },
-                { id: 'observation', libelle: 'Observation', nature: 'nombre', champ: 'observation' },
-                { id: 'protection', libelle: 'Protection', nature: 'nombre' },
-                { id: 'acide', libelle: 'Éclaboussure d’acide', nature: 'nombre' },
-            ],
-            creatures: [
-                { id: 'goreburster-xx121ab', nom: 'Goreburster XX121AB', nomOriginal: 'Goreburster Xenomorph XX121AB', categorie: 'Xénomorphes aberrants',
-                    valeurs: { vitesse: 3, sante: 6, mobilite: 8, observation: 6, protection: 6, acide: 6 },
-                    particularites: ['Protection 3 contre le feu', 'Meurt après un ou deux Quarts'],
-                    attaques: { lignes: [
-                        { de: '1-2', nom: 'Impact', effet: 'Renverse sa cible, puis fuit de deux zones vers un conduit.' },
-                        { de: '4', nom: 'Attaque à la tête', effet: 'Neuf dés de base, Dégâts 2 ; blessure critique n° 15, 31 ou 34.' },
-                    ] }, source: { livre, page: 178 } },
-                { id: 'biodrone-xx121b', nom: 'Biodrone XX121B', nomOriginal: 'Biodrone Xenomorph XX121B', categorie: 'Xénomorphes aberrants', etiquettes: ['XX121'],
-                    valeurs: { vitesse: 2, sante: 6, mobilite: 8, observation: 10, protection: 8, acide: 8 },
-                    particularites: ['Protection 4 contre le feu', 'Meurt après six jours'],
-                    attaques: { table: { univers: 'Alien', table: 'attaques_xenomorphe_rodeur' } }, source: { livre, page: 178 } },
-            ],
-        } } as never);
+        s.updateGameDriver(id, { bestiaire: { colonnes: [], creatures: [] } } as never);
         s.setEditingDriverId(id);
     }, c.campagne);
     await vue(c.campagne, 'driver-editor');
     await f.getByRole('button', { name: /créature\(s\) au bestiaire/ }).first().click();
     await fenetre.evaluate(w => w.setContentSize(1440, 1900));
     const section = f.locator('div.space-y-12', { has: f.getByRole('heading', { name: /Bestiaire/ }) }).first();
+
+    // 1. L'aperçu : rien n'est versé avant « Verser au bestiaire ».
+    await section.getByRole('button', { name: /Remplir depuis le corpus/ }).click();
+    const apercu = f.getByRole('dialog', { name: 'Remplir le bestiaire' });
+    await expect(apercu.getByRole('status')).toContainText('3 créature(s) à ajouter', { timeout: 30_000 });
+    await expect(apercu.getByText(/Goreburster XX121AB : 5 attaques/)).toBeVisible();
+    await photographier(apercu.locator('[data-cadre-de-surcouche]'), 'jeu-alien-bestiaire-remplir');
+    await apercu.getByRole('button', { name: /Verser au bestiaire/ }).click();
+    await expect(apercu).toHaveCount(0);
+
+    // 2. Les colonnes reliées aux champs de la fiche, puis le Biodrone déplié.
+    for (const [libelle, champ] of [['Santé', 'sante'], ['Mobilité', 'mobilite'], ['Observation', 'observation']]) {
+        await section.getByLabel(`Champ rempli par la colonne ${libelle}`, { exact: true }).selectOption(champ);
+    }
     await section.getByText('Biodrone XX121B', { exact: true }).click();
     // Les libellés sont ceux de la fiche du pilote : « Ag_Mobilité » dans le gabarit de David.
     await expect(section.locator('[data-sur-le-plateau]')).toContainText(/Santé 6 · \S*Mobilité 8 · \S*Observation 10/);
     await photographier(section, 'jeu-alien-bestiaire-section');
+
+    // 3. Étape D : l'onglet « Livre » de l'atelier des adversaires, puis deux Biodrones au combat.
+    await ouvrirLeModule(gmos, 'Combat-OS');
+    await f.getByRole('button', { name: /Fabriquer des adversaires/i }).first().click();
+    const atelier = f.locator('[data-atelier-des-adversaires]');
+    await atelier.getByRole('button', { name: /^Livre/ }).click();
+    const carte = atelier.locator('[data-creature-du-livre="biodrone-xx121b"]');
+    await expect(carte).toContainText('Colonial Marines Operations Manual · p. 176');
+    await photographier(atelier, 'jeu-alien-bestiaire-atelier');
+    await carte.getByRole('button', { name: 'Au combat (2)' }).click();
+    await expect.poll(() => f.evaluate(() => (window as unknown as Fenetre).useCombatStore.getState().combatants
+        .filter(x => x.origineDuLivre?.creatureId === 'biodrone-xx121b').map(x => [x.name, x.sheetData?.sante]))).toEqual([
+        ['Biodrone XX121B 1', 6], ['Biodrone XX121B 2', 6],
+    ]);
 }
 
 /**

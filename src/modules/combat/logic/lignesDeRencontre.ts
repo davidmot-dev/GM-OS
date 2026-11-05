@@ -1,5 +1,6 @@
 import type { LigneDeRencontre, RencontrePreparee } from '../../../types/rencontres.types';
 import type { GabaritDAdversaire } from '../useBestiaireStore';
+import type { CreatureDuBestiaire } from '../../../types/drivers';
 import { archetypeParId, rangParId } from './archetypes';
 import { NOMBRE_MAX, NOMBRE_MIN } from './nombreDExemplaires';
 
@@ -23,6 +24,11 @@ export const ligneDeLArchetype = (archetypeId: string, rangId = 'pietaille'): Li
     nombre: rangParId(rangId).nombreSuggere,
 });
 
+/** Une créature du livre (§ 210, étape D) : deux exemplaires par défaut. */
+export const ligneDeLaCreature = (c: CreatureDuBestiaire, nombre = 2): LigneDeRencontre => ({
+    genre: 'creature', creatureId: c.id, nombre, nom: c.nom,
+});
+
 /** Un PNJ de la campagne. */
 export const ligneDuPNJ = (entiteId: string): LigneDeRencontre => ({ genre: 'entite', entiteId });
 
@@ -36,7 +42,7 @@ export function avecLeNombre(ligne: LigneDeRencontre, nombre: number): LigneDeRe
 /** Ce qu'une ligne dit à l'écran : « 3 × Pillard », « Luv ». */
 export function libelleDeLaLigne(ligne: LigneDeRencontre, nomDuPNJ: (id: string) => string | undefined): string {
     if (ligne.genre === 'entite') return nomDuPNJ(ligne.entiteId) ?? 'PNJ disparu';
-    const nom = ligne.genre === 'gabarit' ? ligne.nom : (ligne.nom?.trim() || archetypeParId(ligne.archetypeId).nom);
+    const nom = ligne.genre === 'gabarit' || ligne.genre === 'creature' ? ligne.nom : (ligne.nom?.trim() || archetypeParId(ligne.archetypeId).nom);
     return ligne.nombre > 1 ? `${ligne.nombre} × ${nom}` : nom;
 }
 

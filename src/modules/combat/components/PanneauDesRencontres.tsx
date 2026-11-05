@@ -113,6 +113,8 @@ const PanneauDesRencontres: React.FC<Props> = ({ onClose, rencontreInitiale }) =
             casesDeSante: driver?.combat?.casesDeSante,
             gabarits: gabaritsDuJeu(jeuId),
             entites: entities,
+            // Les lignes « créature du livre » se lisent dans le bestiaire du pilote (§ 210, étape D).
+            bestiaire: driver?.bestiaire,
             repartitionDe: (archetypeId) =>
                 repartitionRetenue(jeuId, archetypeId) ?? proposerLesChamps(archetypeParId(archetypeId), champs),
             graine: Math.floor(Math.random() * 1e9),

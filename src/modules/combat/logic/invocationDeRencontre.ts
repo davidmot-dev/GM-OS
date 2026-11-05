@@ -1,7 +1,8 @@
 import type { SheetField } from '../../../data/defaultSheetTemplates';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { HealthSystem } from '../../../types/entity.types';
-import type { CasesDeSante } from '../../../types/drivers';
+import type { BestiaireDuJeu, CasesDeSante, CreatureDuBestiaire } from '../../../types/drivers';
+import { ficheDePlateau } from '../../bestiaire/bestiaire';
 import type { Entity } from '../../../types/entity.types';
 import type { CampDeRencontre, LigneDeRencontre, RencontrePreparee } from '../../../types/rencontres.types';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
@@ -86,6 +87,65 @@ export function fabriquerLesExemplaires(demande: DemandeDExemplaires): NouveauCo
 }
 
 /**
+ * **Ce que le meneur lit d'une créature du livre en combat** : sa description, ses particularités,
+ * ses attaques. Les colonnes qui ne remplissent aucun champ y sont rappelées : sans cela, la Vitesse
+ * d'un xénomorphe disparaîtrait du plateau.
+ */
+export function notesDeLaCreature(bestiaire: BestiaireDuJeu, creature: CreatureDuBestiaire): string {
+    const horsFiche = bestiaire.colonnes
+        .filter(c => !c.champ && creature.valeurs[c.id] !== undefined && String(creature.valeurs[c.id]).trim() !== '')
+        .map(c => `${c.libelle} ${creature.valeurs[c.id]}`);
+    const attaques = creature.attaques;
+    const lignes = [
+        creature.description?.trim(),
+        horsFiche.length ? horsFiche.join(' · ') : '',
+        creature.particularites?.length ? creature.particularites.join(' ; ') : '',
+        attaques?.table?.table ? `Attaques : table ${attaques.table.univers} / ${attaques.table.table}` : '',
+        ...(attaques?.lignes ?? []).map(l => `${l.de} — ${l.nom}${l.effet ? ` : ${l.effet}` : ''}`),
+        creature.source ? `${creature.source.livre}${creature.source.page ? `, p. ${creature.source.page}` : ''}` : '',
+    ];
+    return lignes.filter(Boolean).join('\n');
+}
+
+/**
+ * **Une créature du livre, posée en N exemplaires** (§ 210, étape D, 05/11/2026). Sa fiche de
+ * plateau est celle que ses colonnes remplissent (`ficheDePlateau`), sans rien tirer : ce sont les
+ * chiffres du livre. La santé est déduite par `addCombatant`, comme pour l'atelier.
+ */
+export function exemplairesDeLaCreature(demande: {
+    bestiaire: BestiaireDuJeu; creature: CreatureDuBestiaire; nombre: number;
+    typeDeSante: HealthSystem['type']; casesDeSante?: CasesDeSante; faction?: CampDeRencontre;
+}): NouveauCombattant[] {
+    const { bestiaire, creature } = demande;
+    const nombre = Math.max(1, Math.trunc(demande.nombre));
+    return Array.from({ length: nombre }, (_, i) => ({
+        name: nommerLExemplaire(creature.nom, i, nombre),
+        init: 0,
+        isPlayer: false,
+        faction: demande.faction ?? 'enemy',
+        statuses: [],
+        sheetData: { ...ficheDePlateau(bestiaire, creature) },
+        healthSystem: HealthInterpreter.createDefault(demande.typeDeSante, { cases: demande.casesDeSante }),
+        origineDuLivre: { creatureId: creature.id },
+        roleplayingNotes: notesDeLaCreature(bestiaire, creature),
+    }));
+}
+
+/**
+ * **« Décliner » une créature du livre** : une variante pour le bestiaire du meneur, qui COPIE les
+ * valeurs de sa fiche de plateau et garde la trace de son modèle. L'archétype « quelconque »
+ * remplit seulement les champs que le livre ne donne pas, quand on la fabrique ensuite.
+ */
+export function varianteDeLaCreature(jeuId: string, bestiaire: BestiaireDuJeu, creature: CreatureDuBestiaire, nom = `${creature.nom} (variante)`) {
+    return {
+        jeuId, nom, archetypeId: 'quelconque', rangId: 'pietaille',
+        sheetData: ficheDePlateau(bestiaire, creature) as Record<string, number | string | boolean>,
+        notes: notesDeLaCreature(bestiaire, creature),
+        depuis: { creatureId: creature.id, nom: creature.nom },
+    };
+}
+
+/**
  * **Un PNJ de la campagne, tel qu'il entre au combat.** Le camp suit son rôle,
  * sauf quand la rencontre en décide autrement.
  */
@@ -113,6 +173,8 @@ export interface ContexteDInvocation {
     casesDeSante?: CasesDeSante;
     gabarits: readonly GabaritDAdversaire[];
     entites: readonly Entity[];
+    /** Le bestiaire du pilote : les lignes « créature du livre » s'y lisent (§ 210, étape D). */
+    bestiaire?: BestiaireDuJeu;
     /** La répartition retenue par le meneur pour un archétype, sinon la proposition. */
     repartitionDe: (archetypeId: string) => PropositionDeChamps;
     graine: number;
@@ -143,6 +205,18 @@ export function adversairesDeLaRencontre(rencontre: RencontrePreparee, ctx: Cont
                 return;
             }
             combattants.push(combattantDeLEntite(entite, ligne.faction));
+            return;
+        }
+        if (ligne.genre === 'creature') {
+            const creature = ctx.bestiaire?.creatures.find(c => c.id === ligne.creatureId);
+            if (!ctx.bestiaire || !creature) {
+                avertissements.push(`« ${ligne.nom} » n’est plus au bestiaire du livre de ce jeu : elle n’entre pas.`);
+                return;
+            }
+            combattants.push(...exemplairesDeLaCreature({
+                bestiaire: ctx.bestiaire, creature, nombre: ligne.nombre,
+                typeDeSante: ctx.typeDeSante, casesDeSante: ctx.casesDeSante, faction: ligne.faction,
+            }));
             return;
         }
 
