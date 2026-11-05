@@ -1,0 +1,13 @@
+{
+  "pilote": "2.2.0",
+  "remplacement21vers22SansPerte": true,
+  "defHeroiqueSansChangerJet": true,
+  "initiativePlateau17": true,
+  "dmInfliges15Plus5MoinsRd2Egale18": true,
+  "dmSubis15Moins5MoinsRd2Egale8": true,
+  "legendeEtActionsExpirees": true,
+  "chocRang2CritiqueEtFascinationPersistants": true,
+  "blues7Conserve": true,
+  "voieFormulaireHubJournal": true,
+  "profilJetable": true
+}

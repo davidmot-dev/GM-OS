@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-04",
+  "pilote": "2.1.0",
+  "types": "tsc -b : réussi (construction finale)",
+  "construction": "npm run build : réussi, panneau central vérifié dans le bundle",
+  "lint": {
+    "erreurs": 0,
+    "avertissements": 1,
+    "preexistant": "src/components/hub/useSaisieDifferee.ts : directive eslint-disable inutilisée",
+    "derniersFichiersModifies": "eslint ciblé réussi après déplacement du panneau et fin du scénario"
+  },
+  "vitest": {
+    "commande": "npx vitest run --maxWorkers=4",
+    "fichiersReussis": 830,
+    "fichiersIgnores": 1,
+    "testsReussis": 9847,
+    "testsIgnores": 4,
+    "echecs": 0,
+    "nouveauxTestsCoc": 20
+  },
+  "electron": {
+    "scenario": "e2e/cocAvance.spec.ts",
+    "parcoursReussis": 1,
+    "dureeSecondes": 26.6,
+    "rapport": "verification-electron.json"
+  },
+  "captures": {
+    "scenario": "e2e/capturesDesJeux.spec.ts",
+    "filtre": "seul pilote COC 2.1.0 d20",
+    "parcoursReussis": 1,
+    "dureeSecondes": 29.6,
+    "imagesReluesEtLivreesAuManuel": 10
+  },
+  "manuel": {
+    "testsDeCoherenceFinaux": 26,
+    "echecs": 0
+  },
+  "archives": {
+    "d20Sha256": "CBED1F451DE83C0CB5705F35AAB47FC6602DC36EDA3A761F9C8D613D63727894",
+    "option3d6Sha256": "D91DCE31950E3A7CCCDF937A278D3F6220D1001B9B6168C96FBEB59D26ED9C53",
+    "copiesCorrigesIdentiques": true,
+    "identifiantsConserves": true,
+    "anciensChampsConserves": true,
+    "constatsDuControleur": 0
+  },
+  "validationDavid": {
+    "date": "2026-11-05",
+    "citation": "c'est bon c'est testé, tu peux commit et pousse",
+    "lots": "COC-A1 à COC-A6",
+    "portee": "validation globale de David ; aucun résultat individuel de recette ajouté"
+  },
+  "commitEtPush": "autorisés par David le 05/11/2026"
+}

@@ -267,7 +267,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
         set((state) => ({
             entities: state.entities.map((e) => {
                 if (e.id !== id) return e;
-                const conserves=Object.fromEntries([CLE_COMBAT_ALIEN,CLE_SURVIE_ALIEN,CLE_SUIVI_SHADOWRUN,CLE_MATRICE_SHADOWRUN,'__shadowrunDerogations'].filter(cle=>e.sheetData?.[cle]&&updates.sheetData&&!Object.hasOwn(updates.sheetData,cle)).map(cle=>[cle,e.sheetData![cle]]));
+                const conserves=Object.fromEntries([CLE_COMBAT_ALIEN,CLE_SURVIE_ALIEN,CLE_SUIVI_SHADOWRUN,CLE_MATRICE_SHADOWRUN,'__shadowrunDerogations','__cocSuivi','__cocProfil','__cocAvantages','__cocPsychisme'].filter(cle=>e.sheetData?.[cle]&&updates.sheetData&&!Object.hasOwn(updates.sheetData,cle)).map(cle=>[cle,e.sheetData![cle]]));
                 const sheetData = updates.sheetData ? {...updates.sheetData,...conserves}:undefined;
                 const base = { ...e, ...updates, ...(sheetData ? {sheetData} : {}) };
                 const newEntity = base.sheetData?.__rddSante231 ? actualiserPersonnageDeVoyageur(base,
@@ -279,6 +279,10 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                 newEntity.healthSystem = projeterSanteVoyageur(newEntity.sheetData ?? {},syncHealthSystem(currentVal, maxVal, newEntity.healthSystem));
                 const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
                 const pilote = piloteDuPersonnage(newEntity, etat.campaigns ?? [], etat.customGameDrivers ?? [], etat.activeCampaignId);
+                if (pilote?.jet?.coc?.suivi) {
+                    newEntity.healthSystem = casesAligneesSurLaFiche(newEntity.healthSystem, pilote.combat, newEntity.sheetData);
+                    if ((newEntity.sheetData?.__cocSuivi as { mort?: boolean } | undefined)?.mort && newEntity.healthSystem) newEntity.healthSystem = { ...newEntity.healthSystem, state: 'dead' };
+                }
                 if(pilote?.combat.alien&&lireLeCombatAlien(newEntity.sheetData??{}).xenomorphe){
                     const x=lireLeCombatAlien(newEntity.sheetData??{}).xenomorphe!;
                     newEntity.hp=updates.sheetData?Math.max(0,Number(newEntity.sheetData?.[pilote.combat.alien.sante])||0):Math.max(0,newEntity.hp);newEntity.maxHp=x.maximum;
@@ -294,7 +298,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             }),
         }));
         const e = get().entities.find(e => e.id === id);
-        if (e?.healthSystem?.data.alienSynthetique || e?.healthSystem?.data.alienXenomorphe) plateauDeCombat()?.refleterLaFiche?.(id, { hp: e.hp, healthSystem: e.healthSystem, sheetData: e.sheetData });
+        if (e?.healthSystem?.data.alienSynthetique || e?.healthSystem?.data.alienXenomorphe || e?.sheetData?.__cocSuivi || e?.sheetData?.__cocProfil || e?.sheetData?.__cocAvantages || e?.sheetData?.__cocPsychisme) plateauDeCombat()?.refleterLaFiche?.(id, { hp: e.hp, healthSystem: e.healthSystem, sheetData: e.sheetData });
     },
 
     deleteEntity: (id) => {
@@ -351,6 +355,11 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                     updated.hp = Number(health.data.current) || 0;
                     updated.maxHp = Number(health.data.max) || 10;
                     updated.status = updated.hp <= 0 ? 'dead' : updated.hp < updated.maxHp * 0.25 ? 'injured' : 'alive';
+                }
+                // Même contrat que les PJ : le compteur de la fiche suit les cases.
+                // Sinon la projection suivante rétablirait l'ancien compteur (COC-A3, bande).
+                if (health.type === 'boxes' && typeof health.data.champ === 'string' && health.data.champ) {
+                    updated.sheetData = { ...e.sheetData, [health.data.champ]: listeOuVide<{ filled?: boolean }>(health.data.boxes).filter(b => b.filled).length };
                 }
                 return alignerJaugeXeno(updated,get());
             }),
@@ -591,7 +600,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                                 if (c.id !== characterId) return c;
                                 // Une fiche HTML ancienne ne connaît pas le suivi de Panique :
                                 // son écriture ne doit effacer ni les reçus ni les demandes.
-                                const suivis = Object.fromEntries([CLE_PANIQUE_ALIEN, CLE_JET_ALIEN, CLE_COMBAT_ALIEN, CLE_SURVIE_ALIEN, CLE_PROGRESSION_ALIEN, CLE_CTHULHU_HACK, CLE_SUIVI_SHADOWRUN, CLE_MATRICE_SHADOWRUN, '__shadowrunDerogations']
+                                const suivis = Object.fromEntries([CLE_PANIQUE_ALIEN, CLE_JET_ALIEN, CLE_COMBAT_ALIEN, CLE_SURVIE_ALIEN, CLE_PROGRESSION_ALIEN, CLE_CTHULHU_HACK, CLE_SUIVI_SHADOWRUN, CLE_MATRICE_SHADOWRUN, '__shadowrunDerogations', '__cocSuivi', '__cocProfil', '__cocAvantages', '__cocPsychisme']
                                     .filter(cle => c.sheetData?.[cle] && updates.sheetData && !Object.hasOwn(updates.sheetData, cle))
                                     .map(cle => [cle, c.sheetData![cle]]));
                                 const sheetData = updates.sheetData ? { ...updates.sheetData, ...suivis } : undefined;
@@ -606,6 +615,10 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                                 updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {}, syncHealthSystem(currentVal, maxVal, updated.healthSystem));
                                 const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
                                 const pilote = piloteDuPersonnage(updated, etat.campaigns ?? [], etat.customGameDrivers ?? [], etat.activeCampaignId);
+                                if (pilote?.jet?.coc?.suivi) {
+                                    updated.healthSystem = casesAligneesSurLaFiche(updated.healthSystem, pilote.combat, updated.sheetData);
+                                    if ((updated.sheetData?.__cocSuivi as { mort?: boolean } | undefined)?.mort && updated.healthSystem) updated.healthSystem = { ...updated.healthSystem, state: 'dead' };
+                                }
                                 updated.healthSystem = projeterLaSanteSynthetique(pilote?.combat.alien, updated.sheetData ?? {}, lireLeCombatAlien(updated.sheetData ?? {}), updated.healthSystem);
                                 if (pilote?.jet?.shadowrun?.suivi && lireSuiviShadowrun(updated.sheetData ?? {}).essenceMortConfirmee) {
                                     updated.healthSystem = { ...(updated.healthSystem ?? HealthInterpreter.createDefault('boxes', { cases: pilote.combat.casesDeSante })), state: 'dead' };
@@ -628,7 +641,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             ),
         }));
         const c = get().players.find(p => p.id === playerId)?.characters.find(c => c.id === characterId);
-        if (c?.healthSystem?.data.alienSynthetique || c?.healthSystem?.data.cthulhuHack || c?.sheetData?.[CLE_SUIVI_SHADOWRUN]) plateauDeCombat()?.refleterLaFiche?.(characterId, { hp: c.hp, healthSystem: c.healthSystem, sheetData: c.sheetData });
+        if (c?.healthSystem?.data.alienSynthetique || c?.healthSystem?.data.cthulhuHack || c?.sheetData?.[CLE_SUIVI_SHADOWRUN] || c?.sheetData?.__cocSuivi || c?.sheetData?.__cocProfil || c?.sheetData?.__cocAvantages || c?.sheetData?.__cocPsychisme) plateauDeCombat()?.refleterLaFiche?.(characterId, { hp: c.hp, healthSystem: c.healthSystem, sheetData: c.sheetData });
     },
 
     updateCharacterSheetData: (playerId, characterId, fieldId, value) => {
@@ -946,6 +959,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
         if (targetType === 'npc') {
             const entity = entities.find((e) => e.id === targetId);
             if (!entity) return;
+            if (piloteOuvert?.jet?.coc?.suivi && (entity.sheetData?.__cocSuivi as { mort?: boolean } | undefined)?.mort) {
+                gmToast('Mort COC confirmée : rectifier explicitement le suivi avant tout soin.', 'info'); return;
+            }
             const regle = selonLeJeu(piloteOuvert, entity.sheetData);
             if (piloteOuvert?.jet?.shadowrun?.suivi && lireSuiviShadowrun(entity.sheetData ?? {}).essenceMortConfirmee) {
                 gmToast('Mort par Essence confirmée : aucun soin ni dégât à appliquer (p. 60).', 'info'); return;
@@ -1011,6 +1027,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             const character = player?.characters.find((c) => c.id === targetId);
             if (!player || !character) return;
             const piloteDuPJ = piloteDuPersonnage(character, campaigns, customGameDrivers, activeCampaignId);
+            if (piloteDuPJ?.jet?.coc?.suivi && (character.sheetData?.__cocSuivi as { mort?: boolean } | undefined)?.mort) {
+                gmToast('Mort COC confirmée : rectifier explicitement le suivi avant tout soin.', 'info'); return;
+            }
             const regle = selonLeJeu(piloteDuPJ, character.sheetData);
             if (piloteDuPJ?.jet?.shadowrun?.suivi && lireSuiviShadowrun(character.sheetData ?? {}).essenceMortConfirmee) {
                 gmToast('Mort par Essence confirmée : aucun soin ni dégât à appliquer (p. 60).', 'info'); return;

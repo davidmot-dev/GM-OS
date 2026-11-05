@@ -224,7 +224,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
             attaque_au_contact: 1, attaque_a_distance: 2, initiative: 12, defense: 14, bonus_dommages_au_contact: 2, capacite_de_guerison: 4,
             trait1: 'Endurante, Force de la nature, Inébranlable, Remarquable', trait1_valeur: 5,
             trait2: 'Code de conduite, Ennemi juré (présence globale), Toxicomane (alcool)', trait2_valeur: -5,
-            arme1: 'Couteau', arme1_attaque: 2, arme1_dm: '1d6+2', arme1_bc: 6, arme2: 'Mains nues', arme2_attaque: 1, arme2_dm: '1d4+2', arme2_bc: 4,
+            arme1: 'Couteau', arme1_attaque: 2, arme1_dm: '1d6', arme1_bc: 6, arme1_type: 'contact', arme2: 'Mains nues', arme2_attaque: 1, arme2_dm: '1d4', arme2_bc: 4, arme2_type: 'mains-nues',
             protections: 'Gilet rembourré', protection_rd: 2, protection_malus: -1,
             biens: 'Son Bowie fétiche, sa moto, son équipement de randonnée', equipement2: 'Un étui à cigares et une flasque de whisky',
             modele_evolution: 'Héros', echelle_evolution: 12, echelle_de_sante: 0,
@@ -449,7 +449,7 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
         // SR-A4/A5/A6 ajoutent trois cartes à photographier avant l’ouverture de la fiche HTML.
-        if (mise.corpusId === 'shadowrun-anarchy') test.setTimeout(120_000);
+        if (['shadowrun-anarchy', 'coc'].includes(mise.corpusId)) test.setTimeout(120_000);
         // RuneQuest joue aussi la magie, l'inspiration et les cartes de la fiche depuis RQ-A6 (03/11).
         if (['dune', 'noc', 'runequest', 'degenesis'].includes(mise.corpusId)) test.setTimeout(180_000);
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
@@ -1440,6 +1440,17 @@ async function scenesDeDegenesis(c: ContexteDeScene): Promise<void> {
 async function scenesDeCoc(c: ContexteDeScene): Promise<void> {
     const f = gmos.fenetre;
     await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    // COC-A2 : la scène commune a noirci 13 cases. Résoudre CON10 avant l’action suivante.
+    const sante = f.locator('[data-sante-coc]');
+    if (await sante.count()) {
+        const carte = f.locator('[data-carte-du-jeu="suivi-coc"]');
+        if (await carte.getAttribute('open') === null) await carte.locator('summary').first().click();
+        const demande = sante.locator('[data-consequence-coc="affaibli"]');
+        if (await demande.count()) {
+            await demande.getByLabel('Résultat de CON').selectOption('true');
+            await demande.getByRole('button', { name: 'Confirmer la conséquence' }).click();
+        }
+    }
     const panneau = f.locator('[data-panneau-de-jet]').first();
     await expect(panneau).toBeVisible({ timeout: 15_000 });
     await panneau.locator('select').nth(0).selectOption('arme1_attaque');

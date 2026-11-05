@@ -32,6 +32,10 @@ import { coupSurLAdversaire, estUnAdversaireAutonome } from './logic/adversaires
 import { DiceEngine } from '../dice/DiceEngine';
 import { actionsDuRound, lancerDegenesis, reserveDeDegenesis } from '../dice/systemes/degenesis';
 import { malusDeSante } from '../dice/systemes/coc';
+import { finDeTourCoc, porterImpactCoc, lireCibleCoc, nouvelleInitiativeCoc } from './coc';
+import { lireProfilCoc, ROLES_COC } from '../dice/systemes/profilsDeCoc';
+import { bonusAvantageCoc } from '../dice/systemes/avantagesDeCoc';
+import { malusDefensePsychismeCoc } from '../dice/systemes/psychismeDeCoc';
 // `logic/trame` ne connaît que des types : l'importer ne ferme aucun cycle,
 // contrairement au store de séance qui reste atteint par le global.
 import { etatDeLaScene } from '../session/logic/trame';
@@ -82,7 +86,7 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
 function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'asc' | 'desc'; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien;
     initiativeEnReserve?: GameDriver['combat']['initiativeEnReserve']; pistesDeSante?: GameDriver['combat']['pistesDeSante'];
     statsToTrack?: GameDriver['combat']['statsToTrack'];
-    encaissement?: GameDriver['combat']['encaissement'] }; jet?: { coc?: { des?: 'd20' | '3d6' } } } | undefined {
+    encaissement?: GameDriver['combat']['encaissement'] }; jet?: { coc?: { des?: 'd20' | '3d6'; heroisme?: boolean } } } | undefined {
     try {
         return (window as unknown as {
             useSessionOSStore?: { getState: () => { getActiveDriver?: () => ReturnType<typeof piloteActif> } };
@@ -669,6 +673,7 @@ export const useCombatStore = create<CombatState>()(
                     combatants: state.combatants.map(c => c.id === cible.id
                         ? {
                             ...c,
+                            ...(piloteActif()?.jet?.coc?.heroisme && sante.sheetData ? { init: c.init + bonusAvantageCoc(sante.sheetData, 'initiative') - bonusAvantageCoc(c.sheetData ?? {}, 'initiative') } : {}),
                             // Une fiche sans jauge ne doit pas inventer un `0`
                             // sur le plateau : chaque moitié ne s'écrit que si
                             // elle existe.
@@ -1060,6 +1065,7 @@ export const useCombatStore = create<CombatState>()(
             },
 
             rollAutoInitiative: ({ diceMax = 20, formula, resolver, sortOrder = 'desc', cards, departages, carteUn }) => {
+                nouvelleInitiativeCoc();
                 // Porte 1 de l'ouverture : le rituel qui commence un combat dans
                 // presque tous les jeux. Avant le tirage, pour que le fil ouvre
                 // le combat puis annonce l'initiative.
@@ -1133,8 +1139,13 @@ export const useCombatStore = create<CombatState>()(
                                 resolver,
                                 diceMax
                             });
-                            const malus = encaissementCoc?.mecanique === 'coc' && resolver ? malusDeSante(resolver(encaissementCoc.sante, c), desCoc) : 0;
+                            const sourceCoc = encaissementCoc?.suivi ? lireCibleCoc({ type: 'combatant', id: c.id }) : undefined;
+                            const profil = lireProfilCoc(sourceCoc?.fiche ?? c.sheetData ?? {});
+                            if (encaissementCoc?.suivi && profil) rolled = ROLES_COC[profil.role].defense;
+                            const malus = encaissementCoc?.mecanique === 'coc' && resolver ? malusDeSante(sourceCoc ? Number(sourceCoc.fiche[encaissementCoc.sante]) || 0 : resolver(encaissementCoc.sante, c), desCoc, profil) : 0;
                             if (malus) { rolled -= malus; malusCoc.push(`${c.name} −${malus}`); }
+                            if (sourceCoc?.regle.psychisme) rolled -= Math.max(0, malusDefensePsychismeCoc(sourceCoc.fiche, desCoc) - malus);
+                            if (sourceCoc?.regle.heroisme) rolled += bonusAvantageCoc(sourceCoc.fiche, 'initiative');
                         } else {
                             rolled = Math.floor(Math.random() * diceMax) + 1;
                         }
@@ -1207,6 +1218,7 @@ export const useCombatStore = create<CombatState>()(
             },
 
             nextTurn: () => {
+                finDeTourCoc();
                 if(piloteActif()?.combat?.alien?.actions){
                     const s=get(),courant=s.combatants[s.currentTurnIdx],file=fileDesInitiativesAlien(s.combatants);
                     if(!courant||!file.length)return;
@@ -1418,6 +1430,11 @@ export const useCombatStore = create<CombatState>()(
             },
 
             applyDamage: (amount, type, targetIds) => {
+                // COC-A1/A2/A3 : plateau, Galerie et PJ passent par la même RD et le même suivi.
+                if (piloteActif()?.combat?.encaissement?.suivi) {
+                    for (const id of targetIds) porterImpactCoc({ type: 'combatant', id }, { value: Math.abs(amount), isRecovery: amount < 0, type });
+                    get().broadcastSync(); return;
+                }
                 // Porte 2 de l'ouverture : le premier coup. Avant le calcul, pour
                 // que le fil lise « le combat s'engage » puis l'impact, et non
                 // l'inverse.

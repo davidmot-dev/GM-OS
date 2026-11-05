@@ -44,6 +44,20 @@ En cours de partie, les capacités conférées par les rangs de voies s'applique
 À la fin de chaque séance de jeu, le personnage gagne un point d'expérience (section « ET APRÈS? EXPÉRIENCE ET PROGRESSION »). Entre les aventures, le joueur peut dépenser ses points d'expérience accumulés pour acheter de nouveaux rangs dans ses voies existantes ou ouvrir de nouvelles voies (section « ET APRÈS? EXPÉRIENCE ET PROGRESSION »). Cette progression s'effectue en concertation avec le meneur de jeu afin de garantir que les capacités choisies correspondent aux actions passées et à l'historique du personnage (section « ET APRÈS? EXPÉRIENCE ET PROGRESSION »).
 
 ## Cas limites
+
+### Quelques capacités contextuelles du livre
+
+Ces effets exigent le contexte indiqué ; un bonus déjà inclus dans l'attaque ne s'ajoute pas une seconde fois.
+
+| Voie, rang et capacité | Effet et contexte | Page |
+| --- | --- | --- |
+| Armes de contact, 1, Amateur | +1 par rang à l'ATC avec une arme de contact ; même bonus aux VOL face à la violence de cet affrontement | 29 |
+| Furtivité, 1, Furtif | +5 AGI pour se déplacer silencieusement ou agir discrètement | 36 |
+| Furtivité, 2, Vigilant | +5 PER liée aux cinq sens ; une PER15 réussie peut éviter surprise ou piège | 36 |
+| Investigation, 1, Fin limier | +1 par rang pour trouver une preuve (PER) ou remarquer un détail (INT) pendant une fouille | 37 |
+| Investigation, 2, Spécialiste | Un dé bonus aux INT liées à la spécialité d'investigation choisie | 37 |
+
+Option 3d6 : le bonus par rang devient +1 aux rangs1–2, +2 aux rangs3–4, +3 au rang5 ; un bonus fixe de5 devient3 ; le dé bonus donne4d6 dont les trois meilleurs (p.60). Équipements et gains permanents de caractéristiques sont distincts de ces bonus de test.
 Un personnage ne peut pas sauter de rang: l'acquisition doit obligatoirement suivre l'ordre croissant du rang 1 au rang 5 (section « ET APRÈS? EXPÉRIENCE ET PROGRESSION »). Il est également impossible d'acquérir plus d'un rang à la fois au moment d'utiliser ses points d'expérience (section « ET APRÈS? EXPÉRIENCE ET PROGRESSION »).
 
 Sauf dérogation explicite accordée par le meneur de jeu, un personnage est strictement limité à un maximum absolu de 6 voies au total sur sa fiche (section « VOIES ET RANGS À LA CRÉATION »).
@@ -56,3 +70,5 @@ En cas de contradiction entre la règle générale du système et le descriptif 
 rien
 
 *Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; conforme (p. 5, 14, 28-29).*
+
+*Complété le 2026-11-04, p.29, 36–37 et60 : cinq capacités et leurs contextes ; empreinte conservée.*

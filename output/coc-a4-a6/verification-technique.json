@@ -1,0 +1,67 @@
+{
+  "dateDebut": "2026-11-04",
+  "dateClotureTechnique": "2026-11-05",
+  "pilote": "2.2.0",
+  "types": "npx tsc -b : réussi (construction finale)",
+  "construction": "npm run build : réussi après correction du titre au journal",
+  "lint": {
+    "erreurs": 0,
+    "avertissements": 1,
+    "preexistant": "src/components/hub/useSaisieDifferee.ts : directive eslint-disable inutilisée",
+    "dernierPanneauModifie": "eslint ciblé sans diagnostic"
+  },
+  "vitest": {
+    "commande": "npx vitest run --maxWorkers=4",
+    "fichiersReussis": 833,
+    "fichiersIgnores": 1,
+    "testsReussis": 9871,
+    "testsIgnores": 4,
+    "echecs": 0,
+    "nouveauxTestsDepuisA1A3": 24,
+    "testsCorpus": 138
+  },
+  "electron": {
+    "scenario": "e2e/cocAventures.spec.ts",
+    "parcoursReussis": 1,
+    "dureeSecondes": 34.5,
+    "rapport": "verification-electron.json",
+    "formulaireHubEtVraiJournal": true
+  },
+  "captures": {
+    "scenario": "e2e/capturesDesJeux.spec.ts",
+    "filtre": "seul pilote COC 2.2.0 d20",
+    "parcoursReussis": 1,
+    "dureeSecondes": 29.1,
+    "images22ReluesEtLivreesAuManuel": 9
+  },
+  "archives": {
+    "sha256": {
+      "d20": "6157c96c91020d4f211db42389ed016fc09f8c28a3c4a7cd2d79928133b94a9e",
+      "option-3d6": "571c10bcbcd14a463ec1d7928d2bdb2878ff9fb45b062d2f46343a8f4e7ff060"
+    },
+    "copiesCorrigesIdentiques": true,
+    "identifiantsConserves": true,
+    "anciensChampsConserves": true,
+    "nouveauxSelecteursDeVoie": 6,
+    "constatsDuControleur": 0
+  },
+  "validationDavid": {
+    "date": "2026-11-05",
+    "citation": "c'est bon c'est testé, tu peux commit et pousse",
+    "lots": "COC-A1 à COC-A6",
+    "portee": "validation globale de David ; aucun résultat individuel de recette ajouté"
+  },
+  "commitEtPush": "autorisés par David le 05/11/2026",
+  "limites": [
+    "cinq capacités officielles, six contextes seulement",
+    "durée finale du choc confirmée par le MJ",
+    "+3 Enragé en 3d6 conservé et ajustable, sans conversion canonique",
+    "symptômes, thérapie et économie des actions arbitrés à la table"
+  ],
+  "manuel": {
+    "testsDeCoherenceFinaux": 36,
+    "fichiersReussis": 2,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi"
+}

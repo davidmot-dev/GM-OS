@@ -12,6 +12,8 @@
 // ─────────────────────────────────────────────
 
 export interface DamageImpact {
+    /** COC-A1/A2/A3 : reçu du coup, critique et touche de bande explicites. */
+    coc?: { id?: string; critique?: boolean; touche?: boolean };
     /** SR-A1 : une blessure directe de drain, ou une méthode de soins explicite. */
     shadowrun?: { gravite?: import('../modules/dice/systemes/shadowrun').Gravite;
         origine?: import('../modules/dice/systemes/suiviDeShadowrun').OrigineDeBlessure;

@@ -6967,7 +6967,7 @@ Neuf effets partaient de `baseBri`, **la brillance courante**. Or le pied de pag
 
 | Lampe à | Part du cycle collée au plafond de 254 |
 | --- | --- |
-| 150 | 0 % |
+| 150 | **COC — COC-A1/A2/A3** | 🟢 §214 ; livrés en2.1.0, inclus en2.2.0 et validés par David —05/11 | Rien pour ces trois lots | Rien |
 | 200 | **31,8 %** |
 | 254 | **50 %** |
 
@@ -13674,10 +13674,32 @@ David : « c'est testé marque le. Maintenant fais un clips avec Playright des n
 - **Vérifié** : un parcours Playwright passé sans saut ; lint scénario/exporteur propre ; sept images de scènes et huit images du MP4 relues, début et fin compris. Chargement retiré par `outils/clips/exporter_clip.mjs`, avec FFmpeg déjà installé. Aucun paquet installé. Aucun travail restant pour le clip.
 - **Git** : David demande « commit et pousse » le 04/11 ; publication sur `production` avec les hooks. Les changements étrangers et le clip RuneQuest sont conservés hors du commit Shadowrun.
 
+### 214 · COC — COC-A1, COC-A2 et COC-A3 (04/11/2026)
+
+- **Origine :** David : « on va commencer COC-A1, COC-A2 et COC-A3 », « GM-OS est fermé », puis « continue ». Validation et commit/push demandés le05/11 : « c'est bon c'est testé, tu peux commit et pousse ». Essais avec services locaux autorisés dans des profils jetables.
+- **Réalisé et validé par David le05/11 :** pilote **2.1.0**, DM de l’arme avec type/FOR/critique fixe et RD unique, DEF effective et suivi des conséquences confirmées, rôles PNJ/Pulp explicite et bandes. Identifiants et anciennes clés conservés. Les capacités PNJ restent appliquées selon leur contexte ; COC-A4/A5/A6 ne sont pas réalisés ici.
+- **Source :** livre original du NAS, lecture directe des p. 71–73, 88–92, 108–111 ; tables p. 72/108/110 rendues et relues. La référence locale de trois pages n’est pas le livre complet.
+- **Ancres :** [suivi détaillé](2026-11-04-coc-a1-a3.md), [reprise](2026-11-04-etat-et-reprise-codex-coc.md), [manuel](../User%20Guides/54-Jeu-COC.md), outils/coc/ameliorer_coc.mjs, src/modules/combat/coc.ts, e2e/cocAvance.spec.ts.
+- **Pilotes à réimporter :** [d20](../../Export%20Dirvers/corriges/coc/COC-2.1.0-d20.gmos-driver) ou [3d6](../../Export%20Dirvers/corriges/coc/COC-2.1.0-option-3d6.gmos-driver), avec **Remplacer**. Copies suivies dans output/coc-a1-a3/pilote/.
+- **Vérifié :** types et construction finale passent ; lint zéro erreur (un avertissement préexistant), ciblé final propre. **9 847 tests réussis**, 4 ignorés, 830 fichiers réussis/1 ignoré ; vingt nouveaux tests COC. Deux parcours Electron réussis (26,6 s et 29,6 s), import/remplacement 3d6 et retour au d20, dix captures relues ; 26 tests finaux du manuel. Le parcours a détecté et fait corriger le compteur de cases des PNJ de Galerie. Rapports dans output/coc-a1-a3/verification-{technique,electron}.json. Commit/push autorisés le05/11 avec A4/A5/A6.
+- **État :** 🟢 A1/A2/A3 validés par David le05/11. Synthèse actuelle avec A4/A5/A6 : seize acquis verts, zéro orange, zéro rouge.
+
+### 215 · COC — COC-A4, COC-A5 et COC-A6 — 04/11/2026
+
+- **Origine :** David : « on va commencer COC-A4, COC-A5 et COC-A6 » ; à « GM-OS tourne-t-il ? », réponse « non ». Le05/11, David confirme « c'est bon c'est testé, tu peux commit et pousse » : les six lots COC sont validés, commit/push autorisés.
+- **Réalisé en2.2.0 et validé par David le05/11 :** avantages héroïques hors test et Légende ; événements/VOL/choc/séquelle persistants et confirmés ; premier ensemble de cinq capacités de Voies, référence explicite et choix contextuel. Mêmes identifiants et anciennes clés, variantes d20/3d6.
+- **Sources :** livre original du NAS, p.29/36–37/60–61/77–82, tables rendues et relues. Table77 retenue face à l’exemple contradictoire78. Cumul des durées de choc présenté puis confirmé par le MJ ; +3 Enragé en3d6 non chiffré par le livre, conservé et réglable.
+- **Ancres :** [suivi](2026-11-04-coc-a4-a6.md), [manuel](../User%20Guides/54-Jeu-COC.md), outils/coc/etendre_coc.mjs, src/modules/dice/systemes/{avantages,psychisme,voies}DeCoc.ts, e2e/cocAventures.spec.ts. Corpus19/19 relu ; nouvelle fiche psychique, cinq capacités contextualisées.
+- **Pilotes :** [d20](../../Export%20Dirvers/corriges/coc/COC-2.2.0-d20.gmos-driver) ou [3d6](../../Export%20Dirvers/corriges/coc/COC-2.2.0-option-3d6.gmos-driver), avec **Remplacer** ; copies suivies output/coc-a4-a6/pilote/.
+- **Vérifications terminées le05/11 :** 9 871 tests réussis, 4 ignorés (833 fichiers réussis, 1 ignoré), dont138 tests de corpus ; types et construction passent, lint zéro erreur et un avertissement préexistant. Deux parcours Electron passent : calculs héros, persistance psychique, Formulaire/Hub/journal et captures communes ; neuf images2.2 relues. Défaut de titre au journal corrigé, source/page de Furtif désormais transmises. Rapports et inventaire combiné dans output/coc-a4-a6/.
+- **État :** 🟢 COC-A1 à COC-A6 validés par David le05/11 ; seize acquis verts, zéro orange, zéro rouge. Aucun essai humain restant pour ces lots.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 151 | **COC — COC-A4/A5/A6** | 🟢 §215 ; pilote2.2.0, 9 871 tests et deux parcours Electron verts ; six lots validés par David —05/11 | Rien pour COC-A1 à A6 | Rien |
+| 150 | **COC — COC-A1/A2/A3** | 🟠 § 214 ; pilote 2.1.0, 9 847 tests et deux parcours Electron verts, dix captures relues — 04/11 | Réimporter d20 ou 3d6 avec Remplacer, essayer dégâts/santé/rôles | Essai David restant |
 | 149 | **Clip des nouveautés Shadowrun Anarchy** | 🟢 § 213 ; clip MP4 3 min 12 livré et relu, parcours Playwright passé — 04/11 | Ouvrir le MP4 ; rien à développer | Rien |
 | 148 | **Shadowrun — SR-A4/A5/A6** | 🟢 § 212 ; pilote 2.2.0 livré et validé par David — 04/11 | Rien pour les six lots ; clip des nouveautés demandé | Rien |
 | 147 | **Shadowrun — SR-A1/A2/A3** | 🟢 § 211 ; pilote 2.1.0 livré et validé par David — 04/11 | Rien pour ce lot ; choisir SR-A4/A5/A6 séparément | Rien pour SR-A1/A2/A3 |

@@ -1,5 +1,10 @@
 import type { DieResult, RollResult } from '../DiceEngine';
 import type { DegreDeReussite } from '../degresDeReussite';
+import { ETATS_DE_SANTE_COC, etatDuProfilCoc, lireProfilCoc, membresRestantsCoc, type ProfilPnjCoc } from './profilsDeCoc';
+import { blocageSanteCoc } from './suiviDeCoc';
+import { bonusAvantageCoc } from './avantagesDeCoc';
+import { capacitesDisponiblesCoc, type EmplacementVoieCoc } from './voiesDeCoc';
+import { blocagePsychismeCoc, lirePsychismeCoc } from './psychismeDeCoc';
 
 /**
  * **Le test de Chroniques Oubliées Contemporain** — 31/10/2026, à la demande de David
@@ -26,6 +31,16 @@ export type DesDeCoc = 'd20' | '3d6';
 
 /** Ce que le pilote nomme pour COC (`jet.coc`). */
 export interface RegleDeCoc {
+    /** COC-A4/A5/A6, livre p. 29, 36–37, 77–82 : activation explicite du pilote. */
+    heroisme?: boolean;
+    psychisme?: boolean;
+    voies?: { emplacements: EmplacementVoieCoc[] };
+    /** COC-A1 : correspondances explicites, aucune arme déduite de son nom. */
+    dommages?: { force: string; armes: import('./dommagesDeCoc').ArmeDeCoc[] };
+    /** COC-A2 : DEF de base, CON et Init. ; les suites sont confirmées par le meneur. */
+    suivi?: { defense: string; constitution: string; initiative: string };
+    /** COC-A3 : rôles et bandes déclarés, jamais appliqués aux PJ par défaut. */
+    pnj?: boolean;
     /** Le d20, ou l'option du 3d6 (p. 60). Absent : le d20. */
     des?: DesDeCoc;
     /** L'échelle de santé (échelons noircis, 0 à 20) : son état pèse sur les actions physiques (p. 71-72). */
@@ -77,21 +92,16 @@ export function bonusDesConditions(solde: number, des: DesDeCoc = 'd20'): number
 }
 
 /** Les états de santé de l'échelle (p. 71-72) : malus à l'Init., à la DEF et aux actions physiques. */
-export const ETATS_DE_SANTE = [
-    { echelon: 5, label: 'Contusionné', malus: 1, guerison: 0 },
-    { echelon: 10, label: 'Affaibli', malus: 3, guerison: 10 },
-    { echelon: 15, label: 'Blessé', malus: 5, guerison: 15 },
-    { echelon: 20, label: 'Mourant', malus: 10, guerison: 20 },
-] as const;
+export const ETATS_DE_SANTE = ETATS_DE_SANTE_COC;
 
 /** L'état de santé atteint à tant d'échelons noircis ; les malus ne se cumulent pas (p. 71). */
-export function etatDeSante(echelons: number): (typeof ETATS_DE_SANTE)[number] | undefined {
-    return [...ETATS_DE_SANTE].reverse().find(e => echelons >= e.echelon);
+export function etatDeSante(echelons: number, profil?: ProfilPnjCoc) {
+    return etatDuProfilCoc(echelons, profil);
 }
 
 /** Le malus de l'état de santé, positif — 0 en bonne santé. */
-export function malusDeSante(echelons: number, des: DesDeCoc = 'd20'): number {
-    return echelleAuTroisD6(etatDeSante(Math.trunc(echelons) || 0)?.malus ?? 0, des);
+export function malusDeSante(echelons: number, des: DesDeCoc = 'd20', profil?: ProfilPnjCoc): number {
+    return echelleAuTroisD6(etatDeSante(Math.trunc(echelons) || 0, profil)?.malus ?? 0, des);
 }
 
 /**
@@ -149,6 +159,8 @@ export function bonusDuHeros(echelon: number, des: DesDeCoc = 'd20'): { echelons
 
 /** Ce que le joueur règle avant de lancer. */
 export interface ChoixDeCoc {
+    /** Capacités acquises et expressément pertinentes pour CE test. */
+    capacites?: string[];
     /** La difficulté, ou la DEF de la cible pour une attaque (p. 58, 87). */
     difficulte: number;
     /** Conditions favorables moins défavorables (p. 87). */
@@ -177,6 +189,8 @@ export interface ChoixDeCoc {
 export const CHOIX_DE_COC: ChoixDeCoc = { difficulte: 15, conditions: 0, bonus: 0, malus: 0, aides: 0, autre: 0, etat: '', facon: 'lancer' };
 
 export interface PreparationDeCoc {
+    critiquesInterdits?: boolean;
+    blocage?: string;
     des: DesDeCoc;
     /** La valeur de la caractéristique, de l'attaque ou de l'arme retenue. */
     base: number;
@@ -205,7 +219,10 @@ export function preparerCoc(
     const modificateurs: { label: string; valeur: number }[] = [];
     const ajouter = (label: string, valeur: number) => { if (valeur) modificateurs.push({ label, valeur }); };
 
-    const conditions = entier(choix.conditions);
+    const echelons = regle.sante ? entier(valeurs[regle.sante]) : 0;
+    const profil = regle.pnj ? lireProfilCoc(valeurs) : undefined;
+    const surnombre = profil?.bande && base.champ && regle.attaques?.includes(base.champ) ? Math.max(0, membresRestantsCoc(profil, echelons) - 1) : 0;
+    const conditions = entier(choix.conditions) + surnombre;
     ajouter(`${Math.abs(conditions)} condition${Math.abs(conditions) > 1 ? 's' : ''} ${conditions > 0 ? 'favorable' : 'défavorable'}${Math.abs(conditions) > 1 ? 's' : ''}`,
         bonusDesConditions(conditions, des));
     const aides = Math.max(0, entier(choix.aides));
@@ -214,9 +231,17 @@ export function preparerCoc(
     if (etat) ajouter(etat.label, -auTroisD6(etat.malus, des));
 
     const physique = choix.physique ?? (!!base.champ && (regle.physiques ?? []).includes(base.champ));
-    const echelons = regle.sante ? entier(valeurs[regle.sante]) : 0;
-    const sante = etatDeSante(echelons);
-    if (physique && sante) ajouter(sante.label, -malusDeSante(echelons, des));
+    const sante = etatDeSante(echelons, profil);
+    if (physique && sante) ajouter(sante.label, -malusDeSante(echelons, des, profil));
+    if (regle.heroisme) ajouter('Légende (p. 82)', bonusAvantageCoc(valeurs, 'test'));
+    const choc = regle.psychisme ? lirePsychismeCoc(valeurs).choc : undefined;
+    if (choc?.nature === 'Enragé' && physique) ajouter('Enragé (p. 79)', choc.bonusPhysique);
+    if (choc?.nature === 'Ralenti' && base.champ && regle.attaques?.includes(base.champ)) {
+        const deja = Math.max(etat ? auTroisD6(etat.malus, des) : 0, physique ? malusDeSante(echelons, des, profil) : 0);
+        ajouter('Calmant : Ralenti (p. 79)', -Math.max(0, auTroisD6(5, des) - deja));
+    }
+    const capacites = capacitesDisponiblesCoc(regle, valeurs, base.champ).filter(c => choix.capacites?.includes(c.cle));
+    for (const c of capacites) ajouter(`${c.nom} (p. ${c.page})`, c.bonus);
 
     if (regle.evolution && modeleDEvolution(valeurs[regle.evolution.modele ?? '']) === 'blues') {
         const blues = etatDuBlues(entier(valeurs[regle.evolution.champ]));
@@ -229,12 +254,14 @@ export function preparerCoc(
     const naturelMax = des === 'd20' ? 20 : 18;
     const naturelMin = des === 'd20' ? 1 : 3;
     return {
+        critiquesInterdits: !!profil && profil.role !== 'premier',
+        blocage: (regle.suivi ? blocageSanteCoc(valeurs, echelons, physique) : undefined) ?? (regle.psychisme ? blocagePsychismeCoc(valeurs, physique) : undefined),
         des,
         base: valeurDeBase,
         modificateurs,
         total: valeurDeBase + modificateurs.reduce((s, m) => s + m.valeur, 0),
         difficulte: entier(choix.difficulte),
-        solde: Math.sign(Math.max(0, entier(choix.bonus)) - Math.max(0, entier(choix.malus))),
+        solde: Math.sign(Math.max(0, entier(choix.bonus)) + capacites.reduce((s, c) => s + c.deBonus, 0) - Math.max(0, entier(choix.malus))),
         critiqueDes: Math.min(naturelMax, Math.max(naturelMin + 1, choix.critiqueDes ? entier(choix.critiqueDes) : naturelMax)),
         echecJusqua: Math.max(naturelMin, Math.min(naturelMax - 1, choix.echecJusqua ? entier(choix.echecJusqua) : naturelMin)),
         facon: choix.facon,
@@ -304,7 +331,7 @@ function rendre(prep: PreparationDeCoc, des: number[], gardes: number[], naturel
     const resultat = naturel + prep.total + heros;
     const lance = prep.facon === 'lancer';
     // Un 20 naturel réussit et un 1 naturel échoue, quel que soit le total (p. 58) ; qui ne lance pas n'en obtient aucun (p. 59).
-    const bilan: BilanDeCoc = lance && naturel >= prep.critiqueDes ? 'reussite-critique'
+    const bilan: BilanDeCoc = lance && !prep.critiquesInterdits && naturel >= prep.critiqueDes ? 'reussite-critique'
         : lance && naturel <= prep.echecJusqua ? 'echec-critique'
         : resultat >= prep.difficulte ? 'reussite' : 'echec';
     const libelle = LIBELLES_DE_COC[bilan];
@@ -334,7 +361,7 @@ export function resoudreCoc(prep: PreparationDeCoc, des: readonly number[], hero
     const faces = prep.des === 'd20' ? 20 : 6;
     const gardes = desGardes(des, prep.solde, prep.des);
     const naturel = gardes.reduce((s, i) => s + des[i], 0);
-    const critique = naturel >= prep.critiqueDes, echec = naturel <= prep.echecJusqua;
+    const critique = !prep.critiquesInterdits && naturel >= prep.critiqueDes, echec = naturel <= prep.echecJusqua;
     const rolls: DieResult[] = des.map((v, i) => {
         const garde = gardes.includes(i);
         return { val: v, sides: faces, isDropped: !garde, isCritMax: garde && critique, isCritMin: garde && echec && !critique };

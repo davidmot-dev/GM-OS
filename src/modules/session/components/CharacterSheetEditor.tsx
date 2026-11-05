@@ -36,6 +36,7 @@ import { MaximaDegenesis } from './fields/MaximaDegenesis';
 import { SporulationEtBrulureDegenesis } from './fields/SporulationEtBrulureDegenesis';
 import { SanteEtCoherenceShadowrun, MatriceShadowrun } from './fields/CartesShadowrun';
 import { PlanificationShadowrun, RiggingShadowrun } from './fields/OperationsShadowrun';
+import { SanteCoc } from './fields/CartesCoc';
 import { consignerLeJet } from '../../journal/consignerLeJet';
 import FicheHote from '../../fiches/FicheHote';
 import { useCorrespondanceDuJeu } from '../../fiches/useCorrespondanceDuJeu';
@@ -379,6 +380,7 @@ const CharacterSheetEditor: React.FC = () => {
                             </CarteDuJeu>
                         )}
 
+                        {piloteDeLaFiche?.jet?.coc?.suivi && <CarteDuJeu id="suivi-coc" titre="Santé et conséquences COC"><SanteCoc cible={{ type: 'pc', id: character.id }} desactive={editor.aDesChangements} /></CarteDuJeu>}
                         {piloteDeLaFiche?.jet?.shadowrun?.suivi && editor.selectedPlayer && (() => {
                             const sr = piloteDeLaFiche.jet.shadowrun;
                             const props = { regle: sr, valeurs: { ...character.sheetData, ...editor.localData }, sections: template.sections,

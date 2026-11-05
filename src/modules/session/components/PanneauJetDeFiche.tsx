@@ -11,5 +11,5 @@ export default function PanneauJetDeFiche(props: ComponentProps<typeof PanneauDe
         return <PanneauJetVoyageur {...props} personnageId={props.personnageId ?? ''} />;
     }
     // Le bilan Dune appartient au personnage qui a lancé, jamais au suivant sélectionné.
-    return <PanneauDeJet key={props.descripteur.dune || props.descripteur.shadowrun ? `${props.campaignId}:${props.personnageId}:${props.template.id}` : undefined} {...props} />;
+    return <PanneauDeJet key={props.descripteur.dune || props.descripteur.shadowrun || props.descripteur.coc ? `${props.campaignId}:${props.personnageId}:${props.template.id}` : undefined} {...props} />;
 }

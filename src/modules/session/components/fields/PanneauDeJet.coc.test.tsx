@@ -153,4 +153,21 @@ describe('le test de COC au panneau', () => {
         expect(de).not.toHaveBeenCalled();
         expect(consigne().totalDisplay).toBe('Échec — 10 (pris son temps) + 2 = 12 contre 15');
     });
+    it.each([false, true])('Furtif : effet, page et contexte du jet sont conservés au journal (Hub=%s)', hub => {
+        const jet = { ...JET, coc: { ...JET.coc!, voies: { emplacements: [{ nom: 'voie', reference: 'ref', rangs: ['r1'] }] } } };
+        const transmis: { titre: string; totalDisplay: string }[] = [];
+        const recevoir = (e: Event) => transmis.push((e as CustomEvent).detail);
+        window.addEventListener('fiche:resultat', recevoir);
+        try {
+            render(<PanneauDeJet descripteur={jet} dice={DICE} template={FICHE} valeurs={{ ...AMELIA, ref: 'furtivite', r1: true }} pourLesJoueurs={hub} personnageId="amelia" ecrireSurLaFiche={vi.fn()} />);
+            fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: 'agilite' } });
+            fireEvent.click(screen.getByText('Capacités de Voies pour ce test'));
+            fireEvent.click(screen.getByLabelText('Furtif'));
+            faces(11); lancer();
+            const r = hub ? transmis.at(-1)! : consigne();
+            expect(r.titre).toContain('Furtif (p. 36, +5, coût 0, ce test)');
+            expect(r.totalDisplay).toContain('11 + 7 = 18');
+            expect((screen.getByLabelText('Furtif') as HTMLInputElement).checked).toBe(false);
+        } finally { window.removeEventListener('fiche:resultat', recevoir); }
+    });
 });

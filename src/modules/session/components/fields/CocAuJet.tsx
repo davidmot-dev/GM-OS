@@ -90,7 +90,7 @@ export const PreparationCoc: React.FC<{
                 </label>
                 <label className="flex items-center gap-1" title="Cibler un organe vital, un fusil de précision, Fin bretteur : 18 à 20 (p. 30, 90, 94).">
                     Critique dès
-                    <input aria-label="Réussite critique dès" type="number" value={prep.critiqueDes} className={`w-12 ${champ}`}
+                    <input aria-label="Réussite critique dès" disabled={prep.critiquesInterdits} type="number" value={prep.critiqueDes} className={`w-12 ${champ}`}
                         onChange={e => setChoix(c => ({ ...c, critiqueDes: entier(e.target.value) }))} />
                 </label>
                 <label className="flex items-center gap-1" title="Un événement traumatisant de rang 2 : 1 à 3 ; de rang 3 : 1 à 6 (p. 77).">
@@ -135,14 +135,16 @@ export const PreparationCoc: React.FC<{
             <span data-composition-coc className="text-app-text/60">
                 {choix.facon === 'temps' ? '10' : choix.facon === 'rapide' && prep.total >= prep.difficulte ? 'Sans dé' : de}
                 {' '}{signe(prep.base)}{prep.modificateurs.map(m => ` ${signe(m.valeur)} (${m.label})`).join('')} = {signe(prep.total)} au dé,
-                {' '}contre {prep.difficulte}. Réussite critique {prep.critiqueDes < (prep.des === 'd20' ? 20 : 18) ? `de ${prep.critiqueDes} à` : 'sur'} {prep.des === 'd20' ? 20 : 18},
+                {' '}contre {prep.difficulte}. {prep.critiquesInterdits ? 'Aucune réussite critique pour ce rôle' : `Réussite critique ${prep.critiqueDes < (prep.des === 'd20' ? 20 : 18) ? `de ${prep.critiqueDes} à` : 'sur'} ${prep.des === 'd20' ? 20 : 18}`},
                 {' '}échec critique {prep.echecJusqua > (prep.des === 'd20' ? 1 : 3) ? `de ${prep.des === 'd20' ? 1 : 3} à ${prep.echecJusqua}` : `sur ${prep.echecJusqua}`} (p. 58).
             </span>
+            {prep.blocage && <p role="status" className="text-accent">{prep.blocage}</p>}
         </div>
     );
 };
 
 export const SuitesCoc: React.FC<{
+    legendeDediee?: boolean;
     jet: JetDeCoc;
     /** Les échelons de l'échelle du héros ; `undefined` : pas d'échelle du héros, ou pas de fiche à écrire. */
     heros?: number;
@@ -153,7 +155,7 @@ export const SuitesCoc: React.FC<{
     echelonGagne: boolean;
     depenser: (echelons: number, bonus: number) => void;
     gagner: () => void;
-}> = ({ jet, heros, des, attaque, echelonGagne, depenser, gagner }) => {
+}> = ({ jet, heros, des, attaque, echelonGagne, depenser, gagner, legendeDediee }) => {
     const c = jet.coc;
     const critique = c.bilan === 'reussite-critique', echecCritique = c.bilan === 'echec-critique';
     return (
@@ -178,7 +180,7 @@ export const SuitesCoc: React.FC<{
             {heros !== undefined && (c.facon === 'lancer' || c.facon === 'temps') && (
                 <div className="flex flex-wrap items-center gap-2" data-heros-coc>
                     <span className="text-app-text/60">Échelle du héros ({heros} échelon{heros > 1 ? 's' : ''}) :</span>
-                    {bonusDuHeros(heros, des).map(o => (
+                    {bonusDuHeros(heros, des).filter(o => !legendeDediee || o.label !== 'Légende').map(o => (
                         <button key={`${o.label}-${o.echelons}`} type="button" className={bouton} disabled={heros < o.echelons}
                             title={`${o.label} : +${o.bonus} au test qu'il vient d'effectuer, en régressant de ${o.echelons} échelon${o.echelons > 1 ? 's' : ''} (p. 81-82).`}
                             onClick={() => depenser(o.echelons, o.bonus)}>

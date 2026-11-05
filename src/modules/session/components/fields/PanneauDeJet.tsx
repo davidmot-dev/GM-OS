@@ -103,6 +103,12 @@ import { lireMatriceShadowrun, ecrireMatriceShadowrun, consequenceMatriceShadowr
 import { CHOIX_DE_COC, ajouterLeHeros, etatDeSante, lancerCoc, malusDeSante, modeleDEvolution, preparerCoc,
     type ChoixDeCoc, type JetDeCoc, type PreparationDeCoc } from '../../../dice/systemes/coc';
 import { PreparationCoc, SuitesCoc } from './CocAuJet';
+import { DommagesCoc, DefenseCibleCoc } from './CartesCoc';
+import { HeroismeCoc, PsychismeCoc, CapacitesCoc } from './AventuresCoc';
+import { capacitesDisponiblesCoc } from '../../../dice/systemes/voiesDeCoc';
+import { gmToast } from '../../../../stores/useToastStore';
+import { CLE_SUIVI_COC, lireSuiviCoc } from '../../../dice/systemes/suiviDeCoc';
+import { lireProfilCoc } from '../../../dice/systemes/profilsDeCoc';
 import { CreationStarTrek, PreparationStarTrek, ReputationStarTrek, StressEtBlessuresStarTrek, SuitesStarTrek, TourStarTrek, type VaisseauPourLAide } from './StarTrekAuJet';
 import { CarnetDune, PreparationDune, SuitesDune } from './DuneAuJet';
 import { CHOIX_DUNE, CLE_DUNE, bilanDune, conserverDune, depenserDune, desDune, difficulteDune, entierDune, lireDune, lignesDune, noterDune, resultatDune,
@@ -575,7 +581,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      */
     const regleCoc = descripteur.coc;
     const [choixCoc, setChoixCoc] = useState<ChoixDeCoc>(CHOIX_DE_COC);
-    const [cocDuLancer, setCocDuLancer] = useState<{ prep: PreparationDeCoc; titre: string; attaque: boolean; compte: number; echelonGagne: boolean } | null>(null);
+    const [cocDuLancer, setCocDuLancer] = useState<{ prep: PreparationDeCoc; titre: string; attaque: boolean; compte: number; echelonGagne: boolean; champ?: string; valeurs: Record<string, unknown> } | null>(null);
     const [ecritsCoc, setEcritsCoc] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
     const valeursCoc = useMemo(() => ({ ...valeurs,
         ...(ecritsCoc.base === valeurs && ecritsCoc.personnageId === personnageId ? ecritsCoc.maj : {}),
@@ -954,7 +960,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const champCocDeLaFiche = regleCoc ? template.sections.flatMap(s => s.fields).find(f => f.id === champCoc) : undefined;
     const nomCoc = (champCocDeLaFiche?.libelleSur && String(valeursCoc[champCocDeLaFiche.libelleSur] ?? '').trim()) || champCocDeLaFiche?.label || champCoc || '';
     const echelonsCoc = regleCoc?.sante ? Math.trunc(Number(valeursCoc[regleCoc.sante]) || 0) : 0;
-    const etatDeSanteCoc = etatDeSante(echelonsCoc);
+    const etatDeSanteCoc = etatDeSante(echelonsCoc, lireProfilCoc(valeursCoc));
 
     /**
      * L'Avantage ne s'offre que là où il veut dire quelque chose.
@@ -1042,6 +1048,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
     const lancer = () => {
         if (!pret || briseAlien) return;
+        if (prepCoc?.blocage) { gmToast(prepCoc.blocage, 'info'); return; }
+        if (regleCoc?.suivi && prepCoc && (choixCoc.physique ?? (!!champCoc && !!regleCoc.physiques?.includes(champCoc)))) {
+            const suivi = lireSuiviCoc(valeursCoc);
+            if (suivi.physiqueAutorisee) ecrireCoc({ [CLE_SUIVI_COC]: { ...suivi, physiqueAutorisee: false } });
+        }
         if (suiteDuDestin?.personnageId === personnageId && suiteDuDestin) return;
         if (regleDune && (suiviDune.bafoues.includes(principeDune) || (duneDuLancer && !duneDuLancer.bilan.clos))) return;
         if (regleDune && choixDune.contradiction === 'bafouer' && suiviDune.recuperes.includes(principeDune)) return;
@@ -1463,11 +1474,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 choixCoc.facon === 'temps' ? 'pris son temps' : '',
             ].filter(Boolean).join(', ');
             setCocDuLancer(d => ({
-                prep: prepCoc, attaque: attaqueCoc, compte: (d?.compte ?? 0) + 1, echelonGagne: false,
+                prep: prepCoc, attaque: attaqueCoc, compte: (d?.compte ?? 0) + 1, echelonGagne: false, champ: champCoc, valeurs: { ...valeursCoc },
                 titre: `${nomCoc} · ${reglage}`,
             }));
             // Prendre son temps et le mode rapide valent pour UN test.
-            if (choixCoc.facon !== 'lancer') setChoixCoc(c => ({ ...c, facon: 'lancer' }));
+            if (choixCoc.facon !== 'lancer' || choixCoc.capacites?.length) setChoixCoc(c => ({ ...c, facon: 'lancer', capacites: [] }));
         }
         // DEG-A1 : en combat, le jet dépense une action du round ; l'Égo était payé à l'initiative.
         if (regleDegenesis && etatDegenesis && combattantDegenesis && actionDuRoundDegenesis) {
@@ -1573,7 +1584,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             ].join(' · ')
             // COC : le champ ou l'arme retenus, et non « Caractéristique ou attaque ».
             : regleCoc && nomCoc
-            ? nomCoc
+            ? [nomCoc, ...capacitesDisponiblesCoc(regleCoc, valeursCoc, champCoc).filter(c => choixCoc.capacites?.includes(c.cle))
+                .map(c => `${c.nom} (p. ${c.page}, ${c.deBonus ? 'dé bonus' : `+${c.bonus}`}, coût 0, ce test)`)].join(' · ')
             : jet.composantes.length > 0
             ? jet.composantes.map(c => c.label).join(' + ')
             // Shadowrun : « Armes à distance + Agilité (11 dés, 7 de risque) », la compétence par son libellé.
@@ -2760,10 +2772,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {regleBarbarians && (
                         <PreparationBarbarians choix={choixBarbarians} setChoix={setChoixBarbarians} seuil={jet.seuil} />
                     )}
+                    {regleCoc?.suivi && attaqueCoc && <DefenseCibleCoc choisir={defense => setChoixCoc(c => ({ ...c, difficulte: defense }))} />}
+                    {regleCoc?.heroisme && regleCoc.evolution && <HeroismeCoc regle={regleCoc} valeurs={valeursCoc} ecrire={ecrireCoc} consigner={texte => redire(`${nomCoc} · héroïsme COC`, { total: 0, modifier: 0, rolls: [], totalDisplay: texte })} />}
+                    {regleCoc?.psychisme && <PsychismeCoc regle={regleCoc} valeurs={valeursCoc} ecrire={ecrireCoc} joueur={pourLesJoueurs} consigner={texte => redire(`${nomCoc} · psychisme COC`, { total: 0, modifier: 0, rolls: [], totalDisplay: texte })} />}
+                    {regleCoc?.voies && <CapacitesCoc regle={regleCoc} valeurs={valeursCoc} ecrire={ecrireCoc} consigner={() => {}} choix={choixCoc} setChoix={setChoixCoc} champ={champCoc} />}
                     {regleCoc && prepCoc && (
                         <PreparationCoc choix={choixCoc} setChoix={setChoixCoc} prep={prepCoc} attaque={attaqueCoc}
                             physiqueParDefaut={!!champCoc && (regleCoc.physiques ?? []).includes(champCoc)}
-                            sante={etatDeSanteCoc ? `${etatDeSanteCoc.label}, −${malusDeSante(echelonsCoc, prepCoc.des)}` : undefined}
+                            sante={etatDeSanteCoc ? `${etatDeSanteCoc.label}, −${malusDeSante(echelonsCoc, prepCoc.des, lireProfilCoc(valeursCoc))}` : undefined}
                             blues={modeleCoc === 'blues'} />
                     )}
                     {regleRuneQuest && (
@@ -3390,8 +3406,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         </div>}
                         {regleCoc && cocDuLancer && cocDuResultat && (
                             <SuitesCoc key={cocDuLancer.compte} jet={resultat as JetDeCoc} heros={herosCoc} des={cocDuLancer.prep.des}
+                                legendeDediee={regleCoc.heroisme}
                                 attaque={cocDuLancer.attaque} echelonGagne={cocDuLancer.echelonGagne}
                                 depenser={depenserLeHerosCoc} gagner={gagnerUnEchelonCoc} />
+                        )}
+                        {regleCoc?.dommages && cocDuLancer?.attaque && cocDuResultat?.bilan.startsWith('reussite') && (
+                            <DommagesCoc key={`dm-${cocDuLancer.compte}`} regle={regleCoc} valeurs={cocDuLancer.valeurs} personnageId={personnageId}
+                                attaque={cocDuLancer.champ} critique={cocDuResultat.bilan === 'reussite-critique'} />
                         )}
                         {regleBarbarians && barbariansDuLancer && barbariansDuResultat && (
                             <SuitesBarbarians key={barbariansDuLancer.compte} jet={resultat as JetDeBarbarians} reaction={barbariansDuLancer.reaction}

@@ -106,6 +106,8 @@ export interface GroupeDeCampagne {
 export interface Campaign {
     /** SR-A4/A6 : arbitrages, reçus et flotte, emportés par l’archive de campagne. */
     suiviShadowrun?: import('../modules/dice/systemes/tableDeShadowrun').TableShadowrun;
+    /** COC-A1 : reçus de coups, conservés au rechargement et à l’export natif. */
+    recusCoc?: string[];
     /**
      * **Les hypothèses de l'affaire** — Crimes, C5 (2026-10-23), livre p. 437-438 :
      * les théories que la table formule, notées par le meneur. L'outil ne les

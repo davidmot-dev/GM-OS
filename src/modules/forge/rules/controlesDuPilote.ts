@@ -1088,8 +1088,12 @@ export function controlerLePilote(
         if (driver.jet?.critique !== undefined || driver.jet?.complication !== undefined) {
             avertir('jet.critique', 'COC lit ses critiques sur le dé gardé — le 20 réussit, le 1 échoue (p. 58) : « critique » et « complication » compteraient un 1 double et un 20 pour une complication.');
         }
-        for (const champ of [coc.sante, coc.volonte, coc.evolution?.champ, coc.evolution?.modele, ...(coc.physiques ?? []), ...(coc.attaques ?? [])]) {
+        for (const champ of [coc.sante, coc.volonte, coc.evolution?.champ, coc.evolution?.modele, ...(coc.physiques ?? []), ...(coc.attaques ?? []),
+            ...(coc.suivi ? Object.values(coc.suivi) : []), ...(coc.dommages ? [coc.dommages.force, ...coc.dommages.armes.flatMap(a => Object.values(a))] : [])]) {
             if (champ && !tousLesChamps.has(champ)) erreur('jet.coc', `COC lit « ${champ} », absent de la fiche.`);
+        }
+        for (const slot of coc.voies?.emplacements ?? []) for (const champ of [slot.nom, slot.reference, ...slot.rangs]) {
+            if (!tousLesChamps.has(champ)) erreur('jet.coc.voies', `Une Voie COC lit « ${champ} », absent de la fiche.`);
         }
     }
     const encaissement = driver.combat?.encaissement;

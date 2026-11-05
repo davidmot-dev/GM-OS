@@ -747,7 +747,7 @@ export interface GameDriver {
          * coup de grâce (p. 73). `sante` est le champ des échelons noircis, et son état retire
          * aussi son malus à l'initiative (p. 71).
          */
-        encaissement?: { mecanique: 'coc'; sante: string; rd?: string; constitution?: string; nombre?: number };
+        encaissement?: { mecanique: 'coc'; sante: string; rd?: string; constitution?: string; nombre?: number; suivi?: boolean; heroisme?: boolean };
         /**
          * **Le moniteur d'état de Shadowrun : Anarchy 2.0** — 2026-10-31
          * (`combat/logic/moniteurDeShadowrun.ts`). La valeur saisie est la VD ; elle se compare

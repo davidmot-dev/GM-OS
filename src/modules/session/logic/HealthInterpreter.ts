@@ -1,5 +1,6 @@
 import type { HealthSystem, DamageImpact } from '../useSessionOSStore';
 import type { CasesDeSante } from '../../../types/drivers';
+import { lireProfilCoc, tailleSanteCoc, etatsDuProfilCoc } from '../../dice/systemes/profilsDeCoc';
 
 /**
  * Le palier de blessure courant, tel qu'on l'affiche.
@@ -137,11 +138,22 @@ export function casesAligneesSurLaFiche(
 ): HealthSystem | undefined {
     const cases = combat?.casesDeSante;
     if (combat?.defaultHealthType !== 'boxes' || !cases) return sante;
-    const base = sante?.type === 'boxes' ? sante : casesDuPilote(cases);
+    const profil = fiche && lireProfilCoc(fiche);
+    const taille = profil ? tailleSanteCoc(profil) : undefined;
+    const existantes = sante?.type === 'boxes' ? listeOuVide(sante.data.boxes).length : 0;
+    const signature = profil ? `${profil.role}:${profil.pulp}:${profil.bande ?? ''}` : undefined;
+    const reconstruire = profil ? existantes !== taille || sante?.data.profilCoc !== signature : !!sante?.data.profilCoc;
+    const configuration: CasesDeSante = profil && taille !== undefined ? { ...cases, nombre: taille, seuils: profil.bande
+        ? [{ aPartirDe: taille, label: 'Bande neutralisée', etat: 'dead' }]
+        : etatsDuProfilCoc(profil).map(e => ({ aPartirDe: e.echelon, label: e.label,
+            etat: e.label === 'Mourant' ? 'critical' : e.label === 'Contusionné' ? 'scratched' : 'wounded' })) } : cases;
+    const nouvelle = reconstruire || sante?.type !== 'boxes' ? casesDuPilote(configuration) : undefined;
+    const base = nouvelle ? { ...nouvelle, data: { ...nouvelle.data, ...(signature ? { profilCoc: signature } : {}) } } : sante!;
     const brut = cases.champ ? fiche?.[cases.champ] : undefined;
     const lu = brut === undefined || brut === null || brut === '' ? NaN : Math.trunc(Number(brut));
     const boxes = listeOuVide<{ label: string; filled?: boolean }>(base.data.boxes);
-    if (!Number.isFinite(lu) || boxes.filter(b => b.filled).length === Math.max(0, Math.min(boxes.length, lu))) return base;
+    const mortRectifiee = base.state === 'dead' && (fiche?.__cocSuivi as { mort?: boolean } | undefined)?.mort === false && !profil?.bande;
+    if (!Number.isFinite(lu) || !mortRectifiee && boxes.filter(b => b.filled).length === Math.max(0, Math.min(boxes.length, lu))) return base;
     const compte = Math.max(0, Math.min(boxes.length, lu));
     const seuils = listeOuVide<SeuilDeCases>(base.data.seuils);
     return {
