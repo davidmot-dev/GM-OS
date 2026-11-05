@@ -56,6 +56,15 @@ export function controlerLeBestiaire(bestiaire: BestiaireDuJeu | undefined, cham
         }
         if (c.id) colonnes.set(c.id, c);
     });
+    // Étape E : un rôle unique (la Vitesse, la santé…) joué par deux colonnes, ou un rôle sur du texte.
+    const roles = new Map<string, string>();
+    (Array.isArray(bestiaire.colonnes) ? bestiaire.colonnes : []).forEach((c, i) => {
+        if (!c.role) return;
+        const ou = `bestiaire.colonnes[${i}].role`;
+        if (c.nature === 'texte') avertir(ou, `La colonne « ${c.libelle || c.id} » joue le rôle « ${c.role} » mais porte du texte : une mécanique ne la comptera pas.`);
+        if (c.role !== 'competence' && roles.has(c.role)) avertir(ou, `Le rôle « ${c.role} » est déjà joué par « ${roles.get(c.role)} » : la première colonne remplie l'emporte.`);
+        if (!roles.has(c.role)) roles.set(c.role, c.libelle || c.id);
+    });
 
     if (!Array.isArray(bestiaire.creatures)) erreur('bestiaire.creatures', 'Le bestiaire doit porter une liste de créatures.');
     const ids = new Set<string>();
@@ -138,14 +147,18 @@ export function ajouterUneColonne(bestiaire: BestiaireDuJeu, libelle: string, na
     return { ...bestiaire, colonnes: [...bestiaire.colonnes, { id, libelle: libelle.trim(), nature }] };
 }
 
-/** `champ: undefined` : la colonne reste au bestiaire, sans rien écrire sur la fiche de plateau. */
-export function modifierUneColonne(bestiaire: BestiaireDuJeu, id: string, patch: Partial<Pick<ColonneDuBestiaire, 'libelle' | 'nature' | 'champ'>>): BestiaireDuJeu {
+/**
+ * `champ: undefined` : la colonne reste au bestiaire, sans rien écrire sur la fiche de plateau.
+ * `role: undefined` : elle ne joue aucun rôle dans une mécanique du jeu (étape E).
+ */
+export function modifierUneColonne(bestiaire: BestiaireDuJeu, id: string, patch: Partial<Pick<ColonneDuBestiaire, 'libelle' | 'nature' | 'champ' | 'role'>>): BestiaireDuJeu {
     return {
         ...bestiaire,
         colonnes: bestiaire.colonnes.map(c => {
             if (c.id !== id) return c;
             const suivante = { ...c, ...patch };
             if ('champ' in patch && !patch.champ) delete suivante.champ;
+            if ('role' in patch && !patch.role) delete suivante.role;
             return suivante;
         }),
     };

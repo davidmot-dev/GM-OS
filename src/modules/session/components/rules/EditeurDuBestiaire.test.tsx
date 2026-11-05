@@ -88,4 +88,21 @@ describe('EditeurDuBestiaire (§ 210, étape B)', () => {
         expect(onUpdate.mock.calls.at(-1)![0].bestiaire.creatures).toEqual([{ id: 'biodrone-xx121b', nom: 'Biodrone XX121B', valeurs: {} }]);
         expect((screen.getByRole('button', { name: /Remplir depuis le corpus/ }) as HTMLButtonElement).disabled).toBe(false);
     });
+
+    it('Alien : chaque colonne a un rôle du profil xénomorphe, qui se change ou se retire (étape E)', () => {
+        const onUpdate = vi.fn();
+        const alien = { id: 'alien', name: 'Alien', bestiaire: { ...BESTIAIRE, colonnes: BESTIAIRE.colonnes.map(c => (c.id === 'vitesse' ? { ...c, role: 'vitesse' } : c)) },
+            combat: { alien: { actions: true } } } as unknown as GameDriver;
+        render(<EditeurDuBestiaire driver={alien} onUpdate={onUpdate} champsDeLaFiche={CHAMPS} />);
+        expect((screen.getByLabelText('Rôle de la colonne Vitesse') as HTMLSelectElement).value).toBe('vitesse');
+        fireEvent.change(screen.getByLabelText('Rôle de la colonne Santé'), { target: { value: 'sante' } });
+        expect(onUpdate.mock.calls.at(-1)![0].bestiaire.colonnes[1]).toMatchObject({ id: 'sante', role: 'sante' });
+        fireEvent.change(screen.getByLabelText('Rôle de la colonne Vitesse'), { target: { value: '' } });
+        expect(onUpdate.mock.calls.at(-1)![0].bestiaire.colonnes[0]).not.toHaveProperty('role');
+    });
+
+    it('hors d’Alien, aucun menu de rôle', () => {
+        monter(BESTIAIRE);
+        expect(screen.queryByLabelText('Rôle de la colonne Vitesse')).toBeNull();
+    });
 });

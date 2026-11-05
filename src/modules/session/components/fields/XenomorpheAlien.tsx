@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import type { CombatAlien, RegleDeCombatAlien } from '../../../dice/systemes/combatAlien';
-import { critiqueXenoAlien } from '../../../dice/systemes/xenomorphesAlien';
+import { critiqueXenoAlien, entreesDesLignes } from '../../../dice/systemes/xenomorphesAlien';
 import { DiceEngine, type RollResult } from '../../../dice/DiceEngine';
 import { entreeDeLaTable } from '../../../dice/systemes/yearZero';
 import { pontDesTables } from '../../../tables/pontDesTables';
@@ -21,7 +21,9 @@ export default function XenomorpheAlien({regle,suivi,actuel,noter,dire,joueur,so
         if(enCours.current)return;enCours.current=true;
         try{
             const s=actuel(),x=s.xenomorphe!;
-            const table=await pontDesTables()?.loadTable('Alien',critique?'blessures_critiques_xenomorphes':x.table).catch(()=>null);
+            // Bestiaire du pilote (§ 210, étape E) : les attaques propres de l'espèce passent avant la table du jeu.
+            const propres=!critique&&x.lignes?.length?entreesDesLignes(x.lignes):null;
+            const table=propres?.length?{entries:propres}:await pontDesTables()?.loadTable('Alien',critique?'blessures_critiques_xenomorphes':x.table).catch(()=>null);
             if(!table){dire('Table indisponible : aucune demande consommée.');return;}
             const code=aleatoire?DiceEngine.roll(6):choix,e=entreeDeLaTable(table.entries,code);if(!e)return;
             if(critique){
@@ -40,7 +42,8 @@ export default function XenomorpheAlien({regle,suivi,actuel,noter,dire,joueur,so
         {!joueur&&<>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">{([['Vitesse','vitesse',1],['Santé maximale de l’espèce','maximum',1],['Protection naturelle','protection',0],['Éclaboussure d’acide de l’espèce','acide',0]] as const).map(([label,k,min])=><label key={k}>{label}<input className={champ} type="number" min={min} value={x[k]} onChange={e=>changer({[k]:Math.max(min,Math.trunc(Number(e.target.value)||0))})}/></label>)}</div>
             <label className="block"><input type="checkbox" checked={x.xx121} onChange={e=>changer({xx121:e.target.checked})}/> Espèce XX121 avec sang acide</label>
-            <label>Table des attaques de cette espèce<select className={champ} value={x.table} onChange={e=>changer({table:e.target.value})}>{TABLES.map(t=><option key={t} value={t}>{t.replaceAll('_',' ')}</option>)}</select></label>
+            {x.lignes?.length?<p data-attaques-propres>Attaques propres de l’espèce ({x.lignes.length} lignes, bestiaire du livre) : elles servent au tirage D6. <button type="button" className={bouton} onClick={()=>changer({lignes:undefined})}>Tirer plutôt dans la table du jeu</button></p>
+            :<label>Table des attaques de cette espèce<select className={champ} value={x.table} onChange={e=>changer({table:e.target.value})}>{TABLES.map(t=><option key={t} value={t}>{t.replaceAll('_',' ')}</option>)}</select></label>}
             <p>Modifier la Vitesse avant le tirage. Après une blessure, la plus basse carte est retirée automatiquement. Ne pas dupliquer la fiche de Santé.</p>
             <label>Choix d’attaque de Maman<select className={champ} value={choix} onChange={e=>setChoix(Number(e.target.value))}>{[1,2,3,4,5,6].map(n=><option key={n} value={n}>{n}</option>)}</select></label>
             <button type="button" className={bouton} disabled={x.etat==='mort'} onClick={()=>void tirer(false,true)}>Tirer une attaque spéciale D6</button>{' '}

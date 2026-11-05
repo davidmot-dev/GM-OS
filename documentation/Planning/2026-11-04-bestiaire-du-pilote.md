@@ -2,7 +2,7 @@
 
 > **Garé le 04/11/2026** à la demande de David (« commit le plan et consigne le pour plus tard »),
 > **repris le 05/11** : *« ok on commence par le A »*. Décision 1 tranchée (les créatures vivent
-> **dans le pilote**) ; **étapes A à D livrées le 05/11** (§ « Étape A — livrée » à « Étape D — livrée »). Les décisions 2 et 3
+> **dans le pilote**) ; **étapes A à E livrées le 05/11** (§ « Étape A — livrée » à « Étape E — livrée », Alien pour l'étape E). Les décisions 2 et 3
 > restent à prendre avant l'étape C.
 
 Registre § 210. Demande de David, après le catalogue d'équipement (§ 203) et les suppléments
@@ -221,6 +221,31 @@ David : *« ok c'est bon. On peut faire le D ? »* ; choix (GM-OS fermé) : **co
   posés, santé 6) et capture `jeu-alien-bestiaire-atelier`, relue. Guides 30, 11, 50 et manuel 53.
 - **Ensuite** : l'étape E, ce qui est propre à chaque jeu (Alien : nourrir `XenomorpheAlien` et sa
   table d'attaques), à la demande.
+
+## Étape E — livrée le 05/11/2026 (Alien)
+
+David : *« ok c'est bon. On peut faire le E ? »* ; choix (GM-OS fermé) : la créature posée **d'office**
+en xénomorphe ; des **rôles déclarés** (proposés d'après le libellé) ; les attaques propres **tirées au
+D6**. Vérifié avant : `attaques_xenomorphe_rodeur` s'intitule « Attaques de Rôdeur, d'Éclaireur et de
+Drone » — la table du Drone (p. 309) que le livre donne au Biodrone.
+
+- **Modèle** : `ColonneDuBestiaire.role` ; `XenomorpheAlien.lignes` (attaques propres).
+- **`bestiaire/rolesDuBestiaire.ts`** : `ROLES_ALIEN` (vitesse, sante, protection, acide, competence),
+  `rolesDuPilote` (Alien seulement), `proposerLeRole` (d'après le libellé, jamais sur du texte),
+  `profilXenomorphe` (null sans rôle ; XX121 par l'étiquette ou l'acide ; compétences nommées par
+  le libellé ; table ou lignes), `ficheAlienDeLaCreature` (suivi déclaré xénomorphe, Santé au
+  maximum, seulement si `combat.alien.actions`). Contrôle : rôle unique joué deux fois, rôle sur du
+  texte (avertissements).
+- **Branché** : `exemplairesDeLaCreature` (atelier, rencontres) ; `remplirLeBestiaire` propose les
+  rôles des colonnes neuves, l'aperçu les montre ; l'éditeur a un menu « Rôle » par colonne quand le
+  pilote est Alien ; `XenomorpheAlien.tsx` tire dans les lignes propres (`entreesDesLignes`) et
+  offre « Tirer plutôt dans la table du jeu ».
+- **Vérifié** : `rolesDuBestiaire.test.ts` (7, sur la fiche réelle), `EditeurDuBestiaire.test.tsx`
+  (+2), essais du combat et des écrans (518) ; `tsc -b`, eslint ; construction ; e2e d'Alien (rôles
+  proposés, Biodrones posés en xénomorphes Vitesse 2, santé 6, Protection 8, acide 8, table du Drone ;
+  Goreburster et ses cinq attaques). Guides 30, 50, manuels 54-Alien et 53.
+- **Ensuite** : les autres jeux à la demande (Degenesis : PHY, Résistance, PSY pour les pistes ;
+  RuneQuest : PV par zone) ; une fiche de créatures pour le livre de base d'Alien.
 
 ## Ce qui ne change pas
 

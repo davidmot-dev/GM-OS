@@ -9,9 +9,28 @@ export interface XenomorpheAlien {
     reflexe?: 'fuite'|'attaque';
     attaque?: {code:number;titre:string;effet:string};
     reflexeActions?: {lente:boolean;rapide:boolean};
+    /**
+     * Les attaques propres à l'espèce, quand le livre les donne à part (le Goreburster) : tirées au
+     * D6 à la place de `table` (bestiaire du pilote, § 210, étape E, 05/11/2026).
+     */
+    lignes?: import('../../../types/drivers').LigneDAttaque[];
 }
 export interface AspersionAlien { id:string; des:number; round:number; traiteRound?:number }
 export interface AcideAlien { des: number; round: number; trepas: boolean; traiteRound?: number; trepasRound?: number; aspersions?:AspersionAlien[] }
+/**
+ * Les attaques propres d'une espèce en entrées de table : « 1-2 », « 3 », « 5–6 » deviennent des
+ * bornes, comme les tables du disque (bestiaire du pilote, § 210, étape E, 05/11/2026). Une ligne
+ * dont le dé ne se lit pas est laissée de côté.
+ */
+export function entreesDesLignes(lignes: readonly { de: string; nom: string; effet: string }[]): { min: number; max: number; title: string; description: string; effect: string }[] {
+    return lignes.flatMap(l => {
+        const m = /^\s*(\d+)\s*(?:[-–—à]\s*(\d+))?\s*$/.exec(l.de);
+        if (!m) return [];
+        const min = Number(m[1]), max = m[2] ? Number(m[2]) : min;
+        return [{ min: Math.min(min, max), max: Math.max(min, max), title: l.nom, description: '', effect: l.effet }];
+    });
+}
+
 export function xenoViergeAlien(): XenomorpheAlien {
     return {vitesse:1,maximum:1,protection:0,competences:{},table:'attaques_xenomorphe_rodeur',xx121:false,acide:0,etat:'actif',demandesAcide:[],recusAcide:[]};
 }

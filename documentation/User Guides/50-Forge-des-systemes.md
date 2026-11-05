@@ -227,6 +227,10 @@ l'atelier des adversaires (ses gabarits) ne change pas.
   attaques_xenomorphe_rodeur ») et/ou des lignes D6 —, description, livre et page.
 - **« Sur le plateau »** montre ce que la fiche de plateau de la créature recevra : seules les
   colonnes qui remplissent un champ y entrent.
+- **Pour Alien** (depuis le 2026-11-05, étape E), chaque colonne a aussi un **rôle** dans le profil
+  xénomorphe de Combat-OS — Vitesse, Santé maximale, Protection, Acide, Compétence, ou aucun.
+  « Remplir depuis le corpus » le propose d'après le libellé ; il se change ici. Une créature posée
+  au combat arrive alors déclarée xénomorphe : [le manuel d'Alien](./54-Jeu-Alien.md#actions-et-xénomorphes--a6).
 - Le contrôle du pilote s'affiche sous ce qu'il vise : une colonne qui remplit un champ absent de la
   fiche, un texte dans une colonne de nombres, deux créatures du même identifiant.
 
@@ -250,8 +254,9 @@ l'atelier des adversaires (ses gabarits) ne change pas.
 
 > **Sur le plateau** (depuis le 2026-11-05, étape D) : l'onglet *Livre* de l'atelier des adversaires
 > pose les créatures et les décline en variantes ; les rencontres préparées les comptent —
-> [guide de Combat-OS](./30-Combat-OS.md#les-créatures-du-livre--longlet-livre). Ce qui reste : ce
-> qui est propre à chaque jeu (étape E, [le plan](../Planning/2026-11-04-bestiaire-du-pilote.md)).
+> [guide de Combat-OS](./30-Combat-OS.md#les-créatures-du-livre--longlet-livre). Ce qui est propre
+> à chaque jeu est fait pour Alien (étape E) ; les autres jeux viendront à la demande —
+> [le plan](../Planning/2026-11-04-bestiaire-du-pilote.md).
 
 ---
 

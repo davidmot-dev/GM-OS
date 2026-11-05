@@ -818,6 +818,18 @@ Vitesse, Santé maximale, Protection naturelle et table des attaques de son esp�
 Ces valeurs viennent de sa description dans le livre. Les compétences propres se
 mémorisent comme des réserves de dés, sans attribut humain, Stress ni forçage.
 
+**Depuis le bestiaire du pilote** (2026-11-05, registre § 210, étape E) : une créature du livre
+posée par l'onglet *Livre* de l'atelier des adversaires, ou par une rencontre, **arrive déjà
+déclarée xénomorphe** (choix de David). Son profil vient des colonnes du bestiaire selon leur
+**rôle** — Vitesse, Santé maximale, Protection, Acide, Compétence —, que la section « Bestiaire »
+de l'éditeur du pilote propose d'après le libellé et laisse changer ; la Santé de la fiche est mise
+à son maximum ; l'espèce est XX121 si elle porte l'étiquette « XX121 » ou une éclaboussure d'acide.
+La table des attaques est celle que le bestiaire lui donne (le Biodrone de *Colonial Marines* :
+« Attaques de Rôdeur, d'Éclaireur et de Drone », la table du Drone p. 309 du livre de base) ; une
+espèce qui a **ses propres attaques** dans le livre (le Goreburster, l'Anathème monstrueux) les tire
+au D6 à la place — « Tirer plutôt dans la table du jeu » rend la table. Sans rôle déclaré, rien ne
+change : « Déclarer cette créature xénomorphe » reste le geste.
+
 **Vitesse 2 donne deux cartes et deux créneaux, pour une seule fiche de Santé.** La
 file d'initiative montre tous les créneaux ; **Suivant** les visite dans l'ordre.
 Chaque carte donne une lente et une rapide. Maman tire une attaque spéciale D6,

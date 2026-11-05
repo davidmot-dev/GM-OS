@@ -8,6 +8,7 @@ import { useSupplementsDuJeu } from '../../../forge/rules/useSupplementsDuJeu';
 import { rangerParCategorie } from '../../../bestiaire/bestiaire';
 import { estUneFicheDeBestiaire, remplirLeBestiaire } from '../../../bestiaire/depuisLeCorpus';
 import { lireLesLivresDuJeu, type LivreACataloguer } from '../../../equipement/livresDuJeu';
+import { rolesDuPilote } from '../../../bestiaire/rolesDuBestiaire';
 
 /**
  * **« Remplir depuis le corpus » du bestiaire** — registre § 210, étape C (05/11/2026), dessiné
@@ -47,9 +48,10 @@ const RemplirLeBestiaire: React.FC<RemplirLeBestiaireProps> = ({ driver, onVerse
     }, [livresFournis, corpus, supplements, driver.name]);
 
     const coches = useMemo(() => (livres ?? []).filter(l => l.fiches.length > 0 && !ecartes.has(l.cle)), [livres, ecartes]);
+    const roles = useMemo(() => rolesDuPilote(driver), [driver]);
     const { bestiaire: propose, journal } = useMemo(
-        () => remplirLeBestiaire(driver.bestiaire, coches.flatMap(l => l.fiches)),
-        [driver.bestiaire, coches],
+        () => remplirLeBestiaire(driver.bestiaire, coches.flatMap(l => l.fiches), roles),
+        [driver.bestiaire, coches, roles],
     );
     const ajoutees = useMemo(() => new Set(journal.creaturesAjoutees.map(c => c.id)), [journal]);
     const groupes = rangerParCategorie(propose.creatures.filter(c => ajoutees.has(c.id)));
@@ -162,10 +164,10 @@ const RemplirLeBestiaire: React.FC<RemplirLeBestiaireProps> = ({ driver, onVerse
                             <h4 className={TITRE_DE_SECTION}>Colonnes à déclarer</h4>
                             <div className="flex flex-wrap gap-1.5">
                                 {journal.colonnesAjoutees.map(c => (
-                                    <span key={c.libelle} className={PASTILLE}>{c.libelle} <span className="text-app-muted">({c.nature})</span></span>
+                                    <span key={c.libelle} className={PASTILLE}>{c.libelle} <span className="text-app-muted">({c.nature}{c.role ? ` · rôle ${roles.find(r => r.id === c.role)?.libelle ?? c.role}` : ''})</span></span>
                                 ))}
                             </div>
-                            <p className="mt-2 text-ui-12 italic text-app-muted">Le champ de la fiche que chaque colonne remplit se choisit ensuite dans la section.</p>
+                            <p className="mt-2 text-ui-12 italic text-app-muted">Le champ de la fiche que chaque colonne remplit se choisit ensuite dans la section{roles.length ? ' ; le rôle proposé s’y change' : ''}.</p>
                         </section>
                     )}
 

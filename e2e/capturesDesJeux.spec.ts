@@ -2109,7 +2109,13 @@ async function sceneDuBestiaireAlien(c: ContexteDeScene): Promise<void> {
     for (const [libelle, champ] of [['Santé', 'sante'], ['Mobilité', 'mobilite'], ['Observation', 'observation']]) {
         await section.getByLabel(`Champ rempli par la colonne ${libelle}`, { exact: true }).selectOption(champ);
     }
+    // Étape E : les rôles du profil xénomorphe sont proposés d'après le libellé.
+    await expect(section.getByLabel('Rôle de la colonne Vitesse', { exact: true })).toHaveValue('vitesse');
+    await expect(section.getByLabel("Rôle de la colonne Éclaboussure d'acide", { exact: true })).toHaveValue('acide');
     await section.getByText('Biodrone XX121B', { exact: true }).click();
+    // La table du Drone (livre de base p. 309) : « Attaques de Rôdeur, d'Éclaireur et de Drone ».
+    await section.getByLabel("Jeu de la table d'attaques", { exact: true }).fill('Alien');
+    await section.getByLabel("Table d'attaques", { exact: true }).fill('attaques_xenomorphe_rodeur');
     // Les libellés sont ceux de la fiche du pilote : « Ag_Mobilité » dans le gabarit de David.
     await expect(section.locator('[data-sur-le-plateau]')).toContainText(/Santé 6 · \S*Mobilité 8 · \S*Observation 10/);
     await photographier(section, 'jeu-alien-bestiaire-section');
@@ -2127,6 +2133,23 @@ async function sceneDuBestiaireAlien(c: ContexteDeScene): Promise<void> {
         .filter(x => x.origineDuLivre?.creatureId === 'biodrone-xx121b').map(x => [x.name, x.sheetData?.sante]))).toEqual([
         ['Biodrone XX121B 1', 6], ['Biodrone XX121B 2', 6],
     ]);
+    // Étape E : posés déclarés xénomorphes, le profil tiré des rôles (Vitesse 2 → deux cartes).
+    const profil = await f.evaluate(() => {
+        const c = (window as unknown as Fenetre).useCombatStore.getState().combatants.find(x => x.name === 'Biodrone XX121B 1');
+        const x = (c?.sheetData?.['_gmos_combat_alien'] as { xenomorphe?: Record<string, unknown> } | undefined)?.xenomorphe;
+        return x && [x.vitesse, x.maximum, x.protection, x.acide, x.xx121, x.table];
+    });
+    expect(profil).toEqual([2, 6, 8, 8, true, 'attaques_xenomorphe_rodeur']);
+    // Le Goreburster tire ses propres attaques D6, celles du livre (p. 178).
+    await f.getByRole('button', { name: /Fabriquer des adversaires/i }).first().click();
+    await atelier.getByRole('button', { name: /^Livre/ }).click();
+    await atelier.locator('[data-creature-du-livre="goreburster-xx121ab"]').getByRole('button', { name: 'Au combat (2)' }).click();
+    const lignes = await f.evaluate(() => {
+        const c = (window as unknown as Fenetre).useCombatStore.getState().combatants.find(x => x.name === 'Goreburster XX121AB 1');
+        const x = (c?.sheetData?.['_gmos_combat_alien'] as { xenomorphe?: { lignes?: { nom: string }[] } } | undefined)?.xenomorphe;
+        return x?.lignes?.map(l => l.nom);
+    });
+    expect(lignes).toEqual(['Impact', 'Horrible sifflement', 'Attaque à la tête', 'Suffocation', 'Éviscération']);
 }
 
 /**

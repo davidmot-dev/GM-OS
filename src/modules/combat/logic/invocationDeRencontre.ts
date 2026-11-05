@@ -3,6 +3,8 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { HealthSystem } from '../../../types/entity.types';
 import type { BestiaireDuJeu, CasesDeSante, CreatureDuBestiaire } from '../../../types/drivers';
 import { ficheDePlateau } from '../../bestiaire/bestiaire';
+import { ficheAlienDeLaCreature } from '../../bestiaire/rolesDuBestiaire';
+import type { RegleDeCombatAlien } from '../../dice/systemes/combatAlien';
 import type { Entity } from '../../../types/entity.types';
 import type { CampDeRencontre, LigneDeRencontre, RencontrePreparee } from '../../../types/rencontres.types';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
@@ -115,16 +117,19 @@ export function notesDeLaCreature(bestiaire: BestiaireDuJeu, creature: CreatureD
 export function exemplairesDeLaCreature(demande: {
     bestiaire: BestiaireDuJeu; creature: CreatureDuBestiaire; nombre: number;
     typeDeSante: HealthSystem['type']; casesDeSante?: CasesDeSante; faction?: CampDeRencontre;
+    /** Alien (étape E) : la créature entre déclarée xénomorphe, son profil tiré des rôles des colonnes. */
+    alien?: RegleDeCombatAlien;
 }): NouveauCombattant[] {
     const { bestiaire, creature } = demande;
     const nombre = Math.max(1, Math.trunc(demande.nombre));
+    const propreAuJeu = ficheAlienDeLaCreature(demande.alien, bestiaire, creature);
     return Array.from({ length: nombre }, (_, i) => ({
         name: nommerLExemplaire(creature.nom, i, nombre),
         init: 0,
         isPlayer: false,
         faction: demande.faction ?? 'enemy',
         statuses: [],
-        sheetData: { ...ficheDePlateau(bestiaire, creature) },
+        sheetData: { ...ficheDePlateau(bestiaire, creature), ...propreAuJeu },
         healthSystem: HealthInterpreter.createDefault(demande.typeDeSante, { cases: demande.casesDeSante }),
         origineDuLivre: { creatureId: creature.id },
         roleplayingNotes: notesDeLaCreature(bestiaire, creature),
@@ -175,6 +180,8 @@ export interface ContexteDInvocation {
     entites: readonly Entity[];
     /** Le bestiaire du pilote : les lignes « créature du livre » s'y lisent (§ 210, étape D). */
     bestiaire?: BestiaireDuJeu;
+    /** La règle de combat d'Alien : la créature entre déclarée xénomorphe (§ 210, étape E). */
+    alien?: RegleDeCombatAlien;
     /** La répartition retenue par le meneur pour un archétype, sinon la proposition. */
     repartitionDe: (archetypeId: string) => PropositionDeChamps;
     graine: number;
@@ -215,7 +222,7 @@ export function adversairesDeLaRencontre(rencontre: RencontrePreparee, ctx: Cont
             }
             combattants.push(...exemplairesDeLaCreature({
                 bestiaire: ctx.bestiaire, creature, nombre: ligne.nombre,
-                typeDeSante: ctx.typeDeSante, casesDeSante: ctx.casesDeSante, faction: ligne.faction,
+                typeDeSante: ctx.typeDeSante, casesDeSante: ctx.casesDeSante, faction: ligne.faction, alien: ctx.alien,
             }));
             return;
         }

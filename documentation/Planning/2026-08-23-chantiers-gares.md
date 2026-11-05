@@ -13621,7 +13621,7 @@ Potentiels : un choix explicite au jet, avec leurs dés saisis, sans interpréte
   cochés/verts dans la synthèse des pilotes ; Degenesis à 🟢 13 · 🟠 0 · 🔴 0.
 - **Reste :** rien pour DEG-A1 à DEG-A6.
 
-### 210 · Le bestiaire du pilote — plan le 04/11, étapes A à D le 05/11/2026
+### 210 · Le bestiaire du pilote — plan le 04/11, étapes A à E le 05/11/2026
 
 David : *« maintenant on est capable de gérer les suppléments et les équipements d'un pilote. Je
 pense qu'il faudrait aussi être capable d'intégrer automatiquement les bestiaires à partir des
@@ -13669,7 +13669,15 @@ bouquins de règles / suppléments »*, puis *« écris le plan »*. **Plan seul
   rencontre « créature » (Trame, invocation, plateau gardé) ; `exemplairesDeLaCreature`,
   `varianteDeLaCreature`. Vérifié : 17 essais neufs ou étendus, logique du combat (315), `tsc -b`,
   eslint, construction, e2e d'Alien et capture relue ; guides 30, 11, 50, manuel 53.
-- **Reste** : l'étape E (le propre de chaque jeu, Alien d'abord), à la demande.
+- **Commit** `94179247` (C et D), le 05/11 (« commit »).
+- **David, le 05/11** : *« ok c'est bon. On peut faire le E ? »* — D accepté.
+- **Étape E livrée le 05/11 (Alien)** — choix de David : xénomorphe d'office, rôles déclarés, attaques
+  propres au D6. `ColonneDuBestiaire.role`, `bestiaire/rolesDuBestiaire.ts` (rôles, proposition,
+  profil, fiche) ; la créature posée arrive déclarée xénomorphe ; menu « Rôle » dans l'éditeur ;
+  `XenomorpheAlien` tire dans les lignes propres. La table du Drone (Biodrone) vérifiée :
+  `attaques_xenomorphe_rodeur`. Vérifié : essais neufs (9), combat et écrans (518), `tsc -b`, eslint,
+  construction, e2e d'Alien ; guides 30, 50, manuels 54-Alien et 53.
+- **Reste** : les autres jeux à la demande ; une fiche de créatures pour le livre de base d'Alien.
 
 ### 211 · Shadowrun Anarchy — SR-A1, SR-A2 et SR-A3 — 04/11/2026
 
@@ -13730,7 +13738,7 @@ David : « c'est testé marque le. Maintenant fais un clips avec Playright des n
 | 149 | **Clip des nouveautés Shadowrun Anarchy** | 🟢 § 213 ; clip MP4 3 min 12 livré et relu, parcours Playwright passé — 04/11 | Ouvrir le MP4 ; rien à développer | Rien |
 | 148 | **Shadowrun — SR-A4/A5/A6** | 🟢 § 212 ; pilote 2.2.0 livré et validé par David — 04/11 | Rien pour les six lots ; clip des nouveautés demandé | Rien |
 | 147 | **Shadowrun — SR-A1/A2/A3** | 🟢 § 211 ; pilote 2.1.0 livré et validé par David — 04/11 | Rien pour ce lot ; choisir SR-A4/A5/A6 séparément | Rien pour SR-A1/A2/A3 |
-| 146 | **Le bestiaire du pilote** | 🟠 § 210 ; étapes A à D livrées (modèle, éditeur, remplissage, atelier et rencontres) — 05/11 | Essayer l'onglet « Livre » de l'atelier (Au combat, Décliner) et une rencontre avec une créature du livre ; ensuite l'étape E | Essai de David |
+| 146 | **Le bestiaire du pilote** | 🟠 § 210 ; étapes A à E livrées (modèle, éditeur, remplissage, atelier et rencontres, profil xénomorphe d'Alien) — 05/11 | Essayer : poser un Biodrone et un Goreburster, ouvrir leur panneau xénomorphe, tirer une attaque | Essai de David |
 | 145 | **Degenesis — DEG-A5 et DEG-A6** | 🟢 § 209 ; carte « Sporulation et Brûlure » (Germe, exposition, EX, Brûlure, stimulation aux jets, Argus, Potentiel), adversaires sans fiche à deux pistes, pilote 2.3.0, validés par David — 04/11 | Rien : DEG-A1 à DEG-A6 tous faits ; ensuite un autre lot (COC, Shadowrun) | Rien |
 | 144 | **Degenesis — DEG-A3 et DEG-A4** | 🟢 § 208 ; carte « Maxima » (branches, Égo maximal), aide, combinaison, confrontation et action complexe livrées, pilote 2.2.0, validées par David — 04/11 | Rien pour DEG-A1 à DEG-A4 ; ensuite DEG-A5 et DEG-A6 | Rien |
 | 143 | **Degenesis — DEG-A1 et DEG-A2** | 🟢 § 207 ; round (Égo payé une fois, actions), défense passive ou active, dégâts nets livrés, pilote 2.1.0, validés par David — 04/11 | Rien pour DEG-A1 et DEG-A2 ; ensuite DEG-A3 et DEG-A4 | Rien |

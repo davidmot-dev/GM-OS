@@ -267,6 +267,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
         exemplairesDeLaCreature({
             bestiaire: driver.bestiaire, creature, nombre: n, faction,
             typeDeSante: driver.combat?.defaultHealthType ?? 'hp', casesDeSante: driver.combat?.casesDeSante,
+            alien: driver.combat?.alien,
         }).forEach(addCombatant);
         gmToast(`${n} × ${creature.nom} dans l’ordre du tour`, 'success');
         onClose();

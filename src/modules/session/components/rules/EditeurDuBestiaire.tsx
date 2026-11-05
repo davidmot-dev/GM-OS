@@ -9,6 +9,7 @@ import {
 } from '../../../bestiaire/bestiaire';
 import { FormulaireDeNom, ListeDePastilles, ListeDesConstats } from './EditeurDuCatalogue';
 import RemplirLeBestiaire from './RemplirLeBestiaire';
+import { rolesDuPilote } from '../../../bestiaire/rolesDuBestiaire';
 
 /**
  * **La section « Bestiaire » de l'éditeur du pilote** — registre § 210, étape B (05/11/2026), à
@@ -52,6 +53,8 @@ const EditeurDuBestiaire: React.FC<EditeurDuBestiaireProps> = ({ driver, onUpdat
     const creatures = bestiaire?.creatures ?? [];
 
     const champs = useMemo(() => new Set(champsDeLaFiche.map(c => c.id)), [champsDeLaFiche]);
+    // Étape E (05/11/2026) : Alien donne un rôle aux colonnes, celui du profil xénomorphe.
+    const roles = rolesDuPilote(driver);
     const constats = useMemo(() => controlerLeBestiaire(bestiaire, champs.size ? champs : undefined), [bestiaire, champs]);
     const constatsParCreature = useMemo(() => {
         const parId = new Map<string, ConstatDuBestiaire[]>();
@@ -129,6 +132,15 @@ const EditeurDuBestiaire: React.FC<EditeurDuBestiaireProps> = ({ driver, onUpdat
                                 {inconnu && <option value={c.champ}>{c.champ} — absent de la fiche</option>}
                                 {champsDeLaFiche.map(f => <option key={f.id} value={f.id}>Remplit : {f.label}</option>)}
                             </select>
+                            {roles.length > 0 && (
+                                <select value={c.role ?? ''} aria-label={`Rôle de la colonne ${c.libelle}`}
+                                    title="Son rôle dans le profil xénomorphe d'Alien : la créature posée sur le plateau le reçoit."
+                                    onChange={e => enregistrer(modifierUneColonne(base(), c.id, { role: e.target.value || undefined }))}
+                                    className={`w-40 rounded-xl border border-app-border/20 bg-app-bg px-3 py-1.5 text-ui-12 font-semibold ${c.role ? 'text-accent' : 'text-app-muted'}`}>
+                                    <option value="">— aucun rôle —</option>
+                                    {roles.map(r => <option key={r.id} value={r.id}>Rôle : {r.libelle}</option>)}
+                                </select>
+                            )}
                             <button title="Retirer la colonne" aria-label={`Retirer la colonne ${c.libelle}`}
                                 onClick={() => retirerLaColonne(c.id, c.libelle)}
                                 className="rounded-lg p-1.5 text-app-muted hover:bg-etat-danger/10 hover:text-etat-danger">

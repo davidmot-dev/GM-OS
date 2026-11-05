@@ -288,7 +288,9 @@ L'atelier les montre dans un troisième onglet, **Livre**, à côté de *Fabriqu
 - un **nombre** (1 à 20) et un **camp** ;
 - **Au combat (n)** pose n exemplaires numérotés, sans rien tirer : leur fiche de plateau est celle
   que les colonnes du bestiaire remplissent. Ce qui ne remplit aucun champ (la Vitesse d'un
-  xénomorphe, les attaques, la source) va dans leurs **notes** ;
+  xénomorphe, les attaques, la source) va dans leurs **notes**. **Pour Alien**, la créature arrive
+  aussi **déclarée xénomorphe**, son profil tiré du rôle des colonnes (étape E) —
+  [le manuel d'Alien](./54-Jeu-Alien.md#actions-et-xénomorphes--a6) ;
 - **Décliner** range une **variante** dans *votre* bestiaire (« Biodrone XX121B (variante) », puis
   « (variante 2) ») : elle **copie** les valeurs et garde la trace de son modèle — l'onglet
   *Bestiaire* la dit « Variante de « Biodrone XX121B » (livre) ». Une correction du livre ne la

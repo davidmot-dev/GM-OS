@@ -153,6 +153,12 @@ export interface ColonneDuBestiaire {
     nature: 'nombre' | 'texte';
     /** Le champ de la fiche qu'elle remplit quand la créature entre en jeu — `protection`. */
     champ?: string;
+    /**
+     * **Son rôle dans une mécanique du jeu** (§ 210, étape E, 05/11/2026) — Alien : `vitesse`,
+     * `sante`, `protection`, `acide` ou `competence` du profil xénomorphe. Déclaré dans l'éditeur,
+     * proposé d'après le libellé au remplissage : rien n'est deviné en silence.
+     */
+    role?: string;
 }
 
 /** Une attaque écrite dans le livre : le résultat du dé, son nom, ce qu'elle fait. */

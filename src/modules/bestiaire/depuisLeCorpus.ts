@@ -1,5 +1,6 @@
 import type { BestiaireDuJeu, CreatureDuBestiaire, LigneDAttaque } from '../../types/drivers';
 import { ajouterUneColonne, identifiantDeCreature } from './bestiaire';
+import { proposerLeRole, type RoleDuBestiaire } from './rolesDuBestiaire';
 
 /**
  * Remplir le bestiaire depuis les fiches relues — registre § 210, étape C (05/11/2026), à la
@@ -31,7 +32,8 @@ export interface FicheDuBestiaire {
 
 export interface JournalDuBestiaire {
     fiches: { chemin: string; tableaux: number; creatures: number }[];
-    colonnesAjoutees: { libelle: string; nature: 'nombre' | 'texte' }[];
+    /** Avec le rôle proposé d'après le libellé, quand le jeu en connaît (Alien, étape E). */
+    colonnesAjoutees: { libelle: string; nature: 'nombre' | 'texte'; role?: string }[];
     creaturesAjoutees: { id: string; nom: string; categorie?: string }[];
     /** Créatures déjà au bestiaire dont une case vide a été remplie. */
     creaturesCompletees: { id: string; nom: string; champs: string[] }[];
@@ -155,6 +157,7 @@ function pageDeLaCategorie(categorie: string | undefined, pages: FicheDuBestiair
 export function remplirLeBestiaire(
     bestiaire: BestiaireDuJeu | undefined,
     fiches: readonly FicheDuBestiaire[],
+    roles: readonly RoleDuBestiaire[] = [],
 ): { bestiaire: BestiaireDuJeu; journal: JournalDuBestiaire } {
     let b: BestiaireDuJeu = bestiaire
         ? { colonnes: [...bestiaire.colonnes], creatures: bestiaire.creatures.map(c => ({ ...c })) }
@@ -199,8 +202,10 @@ export function remplirLeBestiaire(
                 const valeurs = lues.map(c => nettoyer(c[n] ?? '')).filter(v => !VIDE.has(v)).map(v => v.replace(/\s*\(.*\)$/, ''));
                 const nature = valeurs.length && valeurs.filter(estUnNombre).length * 2 >= valeurs.length ? 'nombre' : 'texte';
                 b = ajouterUneColonne(b, entete, nature);
+                const role = proposerLeRole(entete, nature, roles);
+                if (role) b.colonnes[b.colonnes.length - 1] = { ...b.colonnes.at(-1)!, role };
                 idDeLaColonne.set(n, b.colonnes.at(-1)!.id);
-                journal.colonnesAjoutees.push({ libelle: entete, nature });
+                journal.colonnesAjoutees.push({ libelle: entete, nature, ...(role ? { role } : {}) });
             });
 
             tableau.lignes.forEach((ligne, r) => {
