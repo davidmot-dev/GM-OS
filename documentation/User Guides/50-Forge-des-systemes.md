@@ -229,7 +229,9 @@ l'atelier des adversaires (ses gabarits) ne change pas.
   colonnes qui remplissent un champ y entrent.
 - **Pour Alien** (depuis le 2026-11-05, étape E), chaque colonne a aussi un **rôle** dans le profil
   xénomorphe de Combat-OS — Vitesse, Santé maximale, Protection, Acide, Compétence, ou aucun.
-  « Remplir depuis le corpus » le propose d'après le libellé ; il se change ici. Une créature posée
+  « Remplir depuis le corpus » le propose d'après le libellé — aussi aux colonnes déjà là qui n'en
+  ont pas — et **« Proposer les rôles »** le fait sans relire le corpus ; un rôle déjà choisi n'est
+  jamais remplacé. Il se change ici. Une créature posée
   au combat arrive alors déclarée xénomorphe : [le manuel d'Alien](./54-Jeu-Alien.md#actions-et-xénomorphes--a6).
 - Le contrôle du pilote s'affiche sous ce qu'il vise : une colonne qui remplit un champ absent de la
   fiche, un texte dans une colonne de nombres, deux créatures du même identifiant.

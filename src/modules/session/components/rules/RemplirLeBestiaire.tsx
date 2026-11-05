@@ -64,7 +64,8 @@ const RemplirLeBestiaire: React.FC<RemplirLeBestiaireProps> = ({ driver, onVerse
         ...journal.attaquesSansCreature.map(t => `${t} — sa créature n’est pas au bestiaire`),
         ...journal.lignesNonLues.map(l => `${l.chemin.split('/').pop()} : ligne non lue (${l.raison})`),
     ];
-    const rienAVerser = !journal.creaturesAjoutees.length && !journal.creaturesCompletees.length && !journal.colonnesAjoutees.length && !journal.attaquesRattachees.length;
+    const rienAVerser = !journal.creaturesAjoutees.length && !journal.creaturesCompletees.length && !journal.colonnesAjoutees.length
+        && !journal.attaquesRattachees.length && !journal.rolesProposes.length;
     const basculer = (cle: string) => setEcartes(e => {
         const suivant = new Set(e);
         if (suivant.has(cle)) suivant.delete(cle); else suivant.add(cle);
@@ -168,6 +169,18 @@ const RemplirLeBestiaire: React.FC<RemplirLeBestiaireProps> = ({ driver, onVerse
                                 ))}
                             </div>
                             <p className="mt-2 text-ui-12 italic text-app-muted">Le champ de la fiche que chaque colonne remplit se choisit ensuite dans la section{roles.length ? ' ; le rôle proposé s’y change' : ''}.</p>
+                        </section>
+                    )}
+
+                    {journal.rolesProposes.length > 0 && (
+                        <section data-roles-proposes>
+                            <h4 className={TITRE_DE_SECTION}>Rôles proposés</h4>
+                            <div className="flex flex-wrap gap-1.5">
+                                {journal.rolesProposes.map(r => (
+                                    <span key={r.libelle} className={PASTILLE}>{r.libelle} <span className="text-app-muted">→ {roles.find(x => x.id === r.role)?.libelle ?? r.role}</span></span>
+                                ))}
+                            </div>
+                            <p className="mt-2 text-ui-12 italic text-app-muted">Des colonnes déjà au bestiaire, sans rôle ; un rôle déjà choisi n’est jamais remplacé.</p>
                         </section>
                     )}
 

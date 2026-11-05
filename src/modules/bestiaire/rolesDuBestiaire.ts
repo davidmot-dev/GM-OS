@@ -48,6 +48,24 @@ export function proposerLeRole(libelle: string, nature: 'nombre' | 'texte', role
     return ids.has(propose) ? propose : undefined;
 }
 
+/**
+ * **Proposer un rôle aux colonnes qui n'en ont pas** — vu par David le 05/11/2026 : ses colonnes,
+ * créées à l'étape C, n'avaient aucun rôle, et le Biodrone posé arrivait à Vitesse 1. Un rôle déjà
+ * choisi n'est jamais remplacé ; rend le bestiaire et ce qui a été proposé.
+ */
+export function proposerLesRoles(bestiaire: BestiaireDuJeu, roles: readonly RoleDuBestiaire[]): { bestiaire: BestiaireDuJeu; proposes: { libelle: string; role: string }[] } {
+    const proposes: { libelle: string; role: string }[] = [];
+    if (!roles.length) return { bestiaire, proposes };
+    const colonnes = bestiaire.colonnes.map(c => {
+        if (c.role) return c;
+        const role = proposerLeRole(c.libelle, c.nature, roles);
+        if (!role) return c;
+        proposes.push({ libelle: c.libelle, role });
+        return { ...c, role };
+    });
+    return { bestiaire: proposes.length ? { ...bestiaire, colonnes } : bestiaire, proposes };
+}
+
 const nombre = (v: unknown) => {
     const n = Number(String(v ?? '').replace(',', '.'));
     return Number.isFinite(n) ? Math.trunc(n) : undefined;

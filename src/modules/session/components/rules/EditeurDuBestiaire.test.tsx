@@ -101,6 +101,17 @@ describe('EditeurDuBestiaire (§ 210, étape B)', () => {
         expect(onUpdate.mock.calls.at(-1)![0].bestiaire.colonnes[0]).not.toHaveProperty('role');
     });
 
+    it('Alien : « Proposer les rôles » remplit les colonnes sans rôle, puis disparaît', () => {
+        const onUpdate = vi.fn();
+        const alien = { id: 'alien', name: 'Alien', bestiaire: BESTIAIRE, combat: { alien: { actions: true } } } as unknown as GameDriver;
+        render(<EditeurDuBestiaire driver={alien} onUpdate={onUpdate} champsDeLaFiche={CHAMPS} />);
+        fireEvent.click(screen.getByText('Proposer les rôles'));
+        expect(onUpdate.mock.calls.at(-1)![0].bestiaire.colonnes.map((c: { role?: string }) => c.role)).toEqual(['vitesse', 'sante', 'protection']);
+        cleanup();
+        render(<EditeurDuBestiaire driver={{ ...alien, bestiaire: onUpdate.mock.calls.at(-1)![0].bestiaire } as GameDriver} onUpdate={vi.fn()} champsDeLaFiche={CHAMPS} />);
+        expect(screen.queryByText('Proposer les rôles')).toBeNull();
+    });
+
     it('hors d’Alien, aucun menu de rôle', () => {
         monter(BESTIAIRE);
         expect(screen.queryByLabelText('Rôle de la colonne Vitesse')).toBeNull();

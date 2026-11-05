@@ -1,6 +1,6 @@
 import type { BestiaireDuJeu, CreatureDuBestiaire, LigneDAttaque } from '../../types/drivers';
 import { ajouterUneColonne, identifiantDeCreature } from './bestiaire';
-import { proposerLeRole, type RoleDuBestiaire } from './rolesDuBestiaire';
+import { proposerLeRole, proposerLesRoles, type RoleDuBestiaire } from './rolesDuBestiaire';
 
 /**
  * Remplir le bestiaire depuis les fiches relues — registre § 210, étape C (05/11/2026), à la
@@ -34,6 +34,8 @@ export interface JournalDuBestiaire {
     fiches: { chemin: string; tableaux: number; creatures: number }[];
     /** Avec le rôle proposé d'après le libellé, quand le jeu en connaît (Alien, étape E). */
     colonnesAjoutees: { libelle: string; nature: 'nombre' | 'texte'; role?: string }[];
+    /** Colonnes déjà au bestiaire, sans rôle, qui en reçoivent un (vu le 05/11 : créées avant l'étape E). */
+    rolesProposes: { libelle: string; role: string }[];
     creaturesAjoutees: { id: string; nom: string; categorie?: string }[];
     /** Créatures déjà au bestiaire dont une case vide a été remplie. */
     creaturesCompletees: { id: string; nom: string; champs: string[] }[];
@@ -163,7 +165,7 @@ export function remplirLeBestiaire(
         ? { colonnes: [...bestiaire.colonnes], creatures: bestiaire.creatures.map(c => ({ ...c })) }
         : { colonnes: [], creatures: [] };
     const journal: JournalDuBestiaire = {
-        fiches: [], colonnesAjoutees: [], creaturesAjoutees: [], creaturesCompletees: [], conserves: [],
+        fiches: [], colonnesAjoutees: [], rolesProposes: [], creaturesAjoutees: [], creaturesCompletees: [], conserves: [],
         attaquesRattachees: [], attaquesSansCreature: [], lignesNonLues: [], tableauxIgnores: [],
     };
     // Les tables d'attaques se rattachent une fois toutes les créatures connues : elles peuvent précéder leur profil.
@@ -261,6 +263,10 @@ export function remplirLeBestiaire(
         cible.attaques = { ...cible.attaques, lignes: t.lignes };
         journal.attaquesRattachees.push(`${cible.nom} : ${t.lignes.length} attaque${t.lignes.length > 1 ? 's' : ''}${page ? ` (p. ${page})` : ''}`);
     }
+    // Les colonnes déjà là, sans rôle, en reçoivent un ; celles ajoutées ici l'ont déjà.
+    const roles2 = proposerLesRoles(b, roles);
+    b = roles2.bestiaire;
+    journal.rolesProposes = roles2.proposes;
     return { bestiaire: b, journal };
 
     /** Ajoute la créature, ou remplit les cases vides de celle qui porte déjà ce nom. */

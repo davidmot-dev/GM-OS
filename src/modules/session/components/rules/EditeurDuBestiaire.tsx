@@ -9,7 +9,7 @@ import {
 } from '../../../bestiaire/bestiaire';
 import { FormulaireDeNom, ListeDePastilles, ListeDesConstats } from './EditeurDuCatalogue';
 import RemplirLeBestiaire from './RemplirLeBestiaire';
-import { rolesDuPilote } from '../../../bestiaire/rolesDuBestiaire';
+import { proposerLesRoles, rolesDuPilote } from '../../../bestiaire/rolesDuBestiaire';
 
 /**
  * **La section « Bestiaire » de l'éditeur du pilote** — registre § 210, étape B (05/11/2026), à
@@ -150,6 +150,14 @@ const EditeurDuBestiaire: React.FC<EditeurDuBestiaireProps> = ({ driver, onUpdat
                     );
                 })}
                 <ListeDesConstats constats={constatsDesColonnes} />
+                {/* Vu par David le 05/11 : des colonnes créées avant l'étape E, sans rôle. */}
+                {roles.length > 0 && colonnes.some(c => !c.role && proposerLesRoles({ colonnes: [c], creatures: [] }, roles).proposes.length) && (
+                    <button onClick={() => enregistrer(proposerLesRoles(base(), roles).bestiaire)}
+                        title="Un rôle d'après le libellé, pour les colonnes qui n'en ont pas ; un rôle déjà choisi n'est jamais remplacé."
+                        className="mr-2 inline-flex items-center gap-1.5 rounded-2xl border border-accent/50 px-4 py-2 text-ui-12 font-semibold uppercase tracking-wider text-accent hover:bg-accent/5">
+                        Proposer les rôles
+                    </button>
+                )}
                 {nouvelleColonne === null ? (
                     <button onClick={() => setNouvelleColonne('')}
                         className="inline-flex items-center gap-1.5 rounded-2xl border border-dashed border-accent/50 px-4 py-2 text-ui-12 font-semibold uppercase tracking-wider text-accent hover:bg-accent/5">

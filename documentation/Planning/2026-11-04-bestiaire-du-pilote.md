@@ -244,6 +244,12 @@ Drone » — la table du Drone (p. 309) que le livre donne au Biodrone.
   (+2), essais du combat et des écrans (518) ; `tsc -b`, eslint ; construction ; e2e d'Alien (rôles
   proposés, Biodrones posés en xénomorphes Vitesse 2, santé 6, Protection 8, acide 8, table du Drone ;
   Goreburster et ses cinq attaques). Guides 30, 50, manuels 54-Alien et 53.
+- **Défaut vu par David le 05/11** (capture : Biodrone à « Vitesse 1 », une carte) : ses colonnes,
+  créées à l'étape C, n'avaient aucun rôle — la proposition ne visait que les colonnes neuves. Corrigé
+  (GM-OS fermé) : `proposerLesRoles` (colonnes sans rôle seulement), appliqué par « Remplir depuis le
+  corpus » (`journal.rolesProposes`, montré dans l'aperçu) et par le bouton « Proposer les rôles » de
+  l'éditeur. Essais : 2 + 1.
+- **Validation de David le 05/11** : *« ok c'est bon commit »* — étapes A à E validées.
 - **Ensuite** : les autres jeux à la demande (Degenesis : PHY, Résistance, PSY pour les pistes ;
   RuneQuest : PV par zone) ; une fiche de créatures pour le livre de base d'Alien.
 

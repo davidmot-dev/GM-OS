@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ficheAlienDeLaCreature, profilXenomorphe, proposerLeRole, rolesDuPilote, ROLES_ALIEN } from './rolesDuBestiaire';
+import { ficheAlienDeLaCreature, profilXenomorphe, proposerLeRole, proposerLesRoles, rolesDuPilote, ROLES_ALIEN } from './rolesDuBestiaire';
 import { remplirLeBestiaire } from './depuisLeCorpus';
 import { controlerLeBestiaire } from './bestiaire';
 import { entreesDesLignes } from '../dice/systemes/xenomorphesAlien';
@@ -78,5 +78,25 @@ describe('le profil xénomorphe (p. 176-181)', () => {
         // Sans les actions d'Alien, pas de profil : la règle du panneau le demande.
         const [sans] = exemplairesDeLaCreature({ bestiaire, creature: parNom('Biodrone XX121B'), nombre: 1, typeDeSante: 'hp', alien: { ...REGLE, actions: false } });
         expect(sans.sheetData).not.toHaveProperty(CLE_COMBAT_ALIEN);
+    });
+});
+
+describe('des colonnes créées avant les rôles (vu par David le 05/11 : Biodrone à Vitesse 1)', () => {
+    const sansRole = { ...bestiaire, colonnes: bestiaire.colonnes.map(({ role: _r, ...c }) => c) };
+
+    it('« Proposer les rôles » en donne un aux colonnes qui n’en ont pas, sans toucher aux autres', () => {
+        const choisi = { ...sansRole, colonnes: sansRole.colonnes.map(c => (c.id === 'mobilite' ? { ...c, role: 'vitesse' } : c)) };
+        const { bestiaire: b, proposes } = proposerLesRoles(choisi, ROLES_ALIEN);
+        expect(b.colonnes.map(c => c.role)).toEqual(['vitesse', 'sante', 'vitesse', 'competence', 'protection', 'acide']);
+        expect(proposes.map(p => p.libelle)).toEqual(['Vitesse', 'Santé', 'Observation', 'Protection', "Éclaboussure d'acide"]);
+        expect(proposerLesRoles(b, ROLES_ALIEN).proposes).toEqual([]);
+        expect(proposerLesRoles(sansRole, []).bestiaire).toBe(sansRole);
+    });
+
+    it('un nouveau « Remplir depuis le corpus » les propose aussi, et le Biodrone retrouve sa Vitesse 2', () => {
+        const { bestiaire: b, journal: j } = remplirLeBestiaire(sansRole, [FICHE], ROLES_ALIEN);
+        expect(j.colonnesAjoutees).toEqual([]);
+        expect(j.rolesProposes.map(r => r.role)).toEqual(['vitesse', 'sante', 'competence', 'competence', 'protection', 'acide']);
+        expect(profilXenomorphe(b, b.creatures[0])).toMatchObject({ vitesse: 2, maximum: 6 });
     });
 });
