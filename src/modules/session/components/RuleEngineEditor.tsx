@@ -20,6 +20,8 @@ import PanneauDesPersonas from '../../forge/corpus/PanneauDesPersonas';
 import EditeurDuJet from './rules/EditeurDuJet';
 import EditeurDesTablesDeButin from './rules/EditeurDesTablesDeButin';
 import EditeurDuCatalogue from './rules/EditeurDuCatalogue';
+import EditeurDuBestiaire from './rules/EditeurDuBestiaire';
+import { PawPrint } from 'lucide-react';
 import ChoixDeLaBanniere from './rules/ChoixDeLaBanniere';
 import { TYPES_NUMERIQUES } from '../../forge/rules/controlesDuPilote';
 
@@ -75,6 +77,7 @@ export const RuleEngineEditor: React.FC = () => {
         ai: t('modules:session.rule_engine_editor.agencement.resume_personas', { count: Object.keys(driver.aiPersonas ?? {}).length }),
         loot: t('modules:session.rule_engine_editor.agencement.resume_butin', { count: driver.lootTables?.length ?? 0 }),
         equipement: `${driver.catalogue?.objets.length ?? 0} objet(s) au catalogue`,
+        bestiaire: `${driver.bestiaire?.creatures.length ?? 0} créature(s) au bestiaire`,
         notebook: driver.defaultNotebookUrl ? t('modules:session.rule_engine_editor.agencement.resume_carnet') : t('modules:session.rule_engine_editor.agencement.resume_sans_carnet'),
     };
 
@@ -85,6 +88,7 @@ export const RuleEngineEditor: React.FC = () => {
         { id: 'ai', label: t('modules:session.rule_engine_editor.nav.ai'), icon: Sparkles, color: 'text-gm-violet', bg: 'bg-gm-violet/10' },
         { id: 'loot', label: t('modules:session.rule_engine_editor.nav.loot'), icon: Archive, color: 'text-gm-gold', bg: 'bg-gm-gold/10' },
         { id: 'equipement', label: 'Équipement', icon: Swords, color: 'text-gm-gold', bg: 'bg-gm-gold/10' },
+        { id: 'bestiaire', label: 'Bestiaire', icon: PawPrint, color: 'text-gm-gold', bg: 'bg-gm-gold/10' },
         { id: 'notebook', label: t('modules:session.rule_engine_editor.nav.notebook'), icon: BookOpen, color: 'text-etat-info', bg: 'bg-etat-info/10' },
         { id: 'modules-du-jeu', label: 'Modules du jeu', icon: Blocks, color: 'text-accent', bg: 'bg-accent/10' },
     ] as const;
@@ -768,6 +772,24 @@ export const RuleEngineEditor: React.FC = () => {
                                 </header>
 
                                 <EditeurDuCatalogue driver={driver} onUpdate={handleUpdate}
+                                    champsDeLaFiche={(gabaritDuPilote?.sections ?? []).flatMap(s => (s.fields ?? []).map(f => ({ id: f.id, label: `${f.label} — ${s.label || s.id}` })))} />
+                            </div>
+                        )}
+
+                        {/* Le bestiaire du jeu — § 210, étape B (05/11/2026), dessiné dans Stitch et validé par David. */}
+                        {activeSection === 'bestiaire' && (
+                            <div className="space-y-12">
+                                <header className="space-y-2 mb-10">
+                                    <h2 className="text-3xl font-black text-app-text tracking-tight uppercase italic flex items-center gap-4 font-display">
+                                        <PawPrint className="text-accent" size={32} />
+                                        Bestiaire <span className="text-accent/40 underline decoration-accent/40">Créatures du jeu</span>
+                                    </h2>
+                                    <p className="text-app-text/60 text-sm max-w-2xl leading-relaxed">
+                                        Les créatures du livre et des suppléments, avec leurs caractéristiques. Chaque colonne remplit un champ de la fiche quand la créature entre en jeu.
+                                    </p>
+                                </header>
+
+                                <EditeurDuBestiaire driver={driver} onUpdate={handleUpdate}
                                     champsDeLaFiche={(gabaritDuPilote?.sections ?? []).flatMap(s => (s.fields ?? []).map(f => ({ id: f.id, label: `${f.label} — ${s.label || s.id}` })))} />
                             </div>
                         )}

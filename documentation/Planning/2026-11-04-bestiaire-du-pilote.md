@@ -1,7 +1,9 @@
 # Le bestiaire du pilote — plan, 04/11/2026
 
-> **Garé le 04/11/2026** à la demande de David (« commit le plan et consigne le pour plus tard ») :
-> rien n'est commencé ; à la reprise, trancher d'abord les trois décisions (§ « À trancher »).
+> **Garé le 04/11/2026** à la demande de David (« commit le plan et consigne le pour plus tard »),
+> **repris le 05/11** : *« ok on commence par le A »*. Décision 1 tranchée (les créatures vivent
+> **dans le pilote**) ; **étapes A et B livrées le 05/11** (§ « Étape A — livrée », « Étape B — livrée »). Les décisions 2 et 3
+> restent à prendre avant l'étape C.
 
 Registre § 210. Demande de David, après le catalogue d'équipement (§ 203) et les suppléments
 (§ 185) : *« maintenant on est capable de gérer les suppléments et les équipements d'un pilote. Je
@@ -117,6 +119,50 @@ coexister ? »* Réponse proposée — **à confirmer à la reprise** :
   pilote avec « Remplacer » remplace le bestiaire du livre, jamais les gabarits ni les variantes.
   Purger un jeu : le bestiaire du livre part avec le pilote ; celui du meneur est déjà déclaré au
   registre des purges du pilote et suit la même décision.
+
+## Étape A — livrée le 05/11/2026
+
+GM-OS fermé, dit David. Décision 1 : *« Dans le pilote »*.
+
+- **Types** (`src/types/drivers.ts`) : `ColonneDuBestiaire` (id, libellé, nature, **`champ`** de la
+  fiche), `LigneDAttaque`, `CreatureDuBestiaire` (nom, nom original, catégorie, étiquettes, valeurs,
+  particularités, attaques — table `{ univers, table }` et/ou lignes —, description, source),
+  `BestiaireDuJeu`, et `bestiaire?` dans `GameDriver`.
+- **`src/modules/bestiaire/bestiaire.ts`** : `controlerLeBestiaire` (erreurs : identifiants, colonnes,
+  `champ` absent de la fiche, valeur hors des colonnes, table d'attaques sans nom, attaque sans dé ni
+  nom, page ; avertissements : texte dans une colonne de nombres, deux colonnes sur le même champ),
+  branché dans `controlerLePilote` avec les champs de la fiche ; `ficheDePlateau` (le contrat : chaque
+  colonne qui a un `champ` l'écrit, les nombres lus comme nombres) ; `identifiantDeCreature`,
+  `rangerParCategorie`, `bestiaireVide`.
+- **Limite dite** : les tables d'attaques vivent sur le disque, par jeu (`pontDesTables`) ; la Forge
+  vérifie leur forme, pas leur existence.
+- **Vérifié** : `bestiaire.test.ts` (5, dont le cas témoin : le Biodrone XX121B donne santé 6 et
+  Protection 8, la Vitesse reste au bestiaire) ; 31 fichiers de la Forge ; manuel des jeux (ligne
+  `bestiaire` au 53) ; `tsc -b` et eslint.
+
+## Étape B — livrée le 05/11/2026
+
+David : *« on va faire le B »*. Maquette Stitch (projet 8352739217093926431, écran « GM-OS - Section
+« Bestiaire » (790px) », `stitch/bestiaire/`) validée par David.
+
+- **`EditeurDuBestiaire.tsx`** (`session/components/rules/`), section **07. Bestiaire** de l'éditeur
+  du pilote (`RuleEngineEditor`, `RuleEngineSection` étendu) : colonnes avec Nombre/Texte et le
+  **champ rempli** choisi parmi les champs de la fiche (« — reste au bestiaire — ») ; recherche ;
+  « Remplir depuis le corpus » grisé (« bientôt », étape C) ; « Ajouter une créature » ; créatures par
+  catégorie ; fiche dépliée (nom, nom original, catégorie, étiquettes, caractéristiques,
+  particularités, attaques par table du jeu et lignes D6, **« Sur le plateau »**, description, livre
+  et page, suppression) ; constats sous ce qu'ils visent.
+- **Gestes purs** ajoutés à `bestiaire.ts` : ajouter, modifier, retirer une colonne (et ses valeurs),
+  une créature ; chercher ; rang du constat. Les petites pièces de l'éditeur du catalogue
+  (`FormulaireDeNom`, `ListeDePastilles`, `ListeDesConstats`) sont exportées et partagées.
+- **Écarts à la maquette**, voulus : la coquille « Xénormorphes » et l'acide en Texte (Nombre) ;
+  la grille **tient dans la largeur** — la première capture débordait (en-têtes « OBSERVA… », fiche
+  coupée à droite), puis coupait les mots (« OBSERVAT ION ») : en-têtes plus petits, passage à la ligne
+  entre deux mots seulement.
+- **Vérifié** : `EditeurDuBestiaire.test.tsx` (5) et l'éditeur du catalogue (8) ; `bestiaire.test.ts` (5) ;
+  `tsc -b`, eslint ; construction ; e2e des captures d'Alien (scène `sceneDuBestiaireAlien`,
+  bestiaire posé à la main) : `jeu-alien-bestiaire-section`, relue. Guide 50 à jour.
+- **Ensuite** : l'étape C — décisions 2 (extraction) et 3 (premier jeu) à prendre avec David.
 
 ## Ce qui ne change pas
 

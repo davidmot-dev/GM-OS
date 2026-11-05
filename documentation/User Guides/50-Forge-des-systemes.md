@@ -106,7 +106,7 @@ Manual* d'Alien.
 
 ---
 
-## 📖 L'éditeur de règles — huit sections
+## 📖 L'éditeur de règles — neuf sections
 
 On y arrive depuis Session-OS, par les **Règles** (le *Grimoire*).
 
@@ -119,6 +119,7 @@ On y arrive depuis Session-OS, par les **Règles** (le *Grimoire*).
 | **Intelligence** | Les consignes des huit personas, réécrites pour ce jeu |
 | **Trésors** | Les tables de butin, et le **vocabulaire** du jeu : sa monnaie, ses raretés |
 | **Équipement** | Le **catalogue** du jeu : armes, protections, véhicules, matériel, avec leurs caractéristiques |
+| **Bestiaire** | Les **créatures** du livre et des suppléments, leurs caractéristiques et le champ de la fiche que chacune remplit |
 | **Connaissance** | Le carnet NotebookLM de référence pour ce système |
 
 > ⛔ **Ce guide n'en décrivait que trois** — le moteur de dés, le combat et le Cortex. L'**Atelier**,
@@ -208,6 +209,31 @@ vides.
 
 > ⚠️ **Ce qui ne marche pas encore.** Seul Alien déclare les champs qui reçoivent une arme et
 > applique les effets cochés aux dés : [le plan](../Planning/2026-11-02-catalogue-d-equipement.md).
+
+### La section Bestiaire
+
+Depuis le 2026-11-05 (registre § 210, étapes A et B ; écran dessiné dans Stitch et validé par
+David). Les **créatures du livre et des suppléments** vivent dans le pilote, comme le catalogue :
+elles partent avec l'export et se corrigent une fois. Le bestiaire que le meneur remplit dans
+l'atelier des adversaires (ses gabarits) ne change pas.
+
+- **Les colonnes du bestiaire** : celles que le jeu donne à une créature (Alien : Vitesse, Santé,
+  Mobilité, Observation, Protection, Éclaboussure d'acide), chacune **Nombre** ou **Texte**, et le
+  **champ de la fiche qu'elle remplit** quand la créature entrera en jeu — choisi dans la liste des
+  champs du pilote, ou « reste au bestiaire ».
+- **Les créatures**, rangées par catégorie du livre, une ligne par créature, une cellule par
+  colonne. Dépliée : nom, nom original, catégorie, étiquettes, caractéristiques, **particularités**
+  (« Protection 4 contre le feu »), **attaques** — une table du jeu tirée au dé (« Alien /
+  attaques_xenomorphe_rodeur ») et/ou des lignes D6 —, description, livre et page.
+- **« Sur le plateau »** montre ce que la fiche de plateau de la créature recevra : seules les
+  colonnes qui remplissent un champ y entrent.
+- Le contrôle du pilote s'affiche sous ce qu'il vise : une colonne qui remplit un champ absent de la
+  fiche, un texte dans une colonne de nombres, deux créatures du même identifiant.
+
+![La section Bestiaire : le Biodrone XX121B déplié, ses colonnes, sa table d'attaques et ce que le plateau recevra](captures/jeu-alien-bestiaire-section.jpg)
+
+> ⚠️ **Ce qui ne marche pas encore.** « Remplir depuis le corpus » est grisé (étape C), et rien ne
+> pose encore une créature sur le plateau (étape D) : [le plan](../Planning/2026-11-04-bestiaire-du-pilote.md).
 
 ---
 

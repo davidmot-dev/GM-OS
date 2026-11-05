@@ -132,6 +132,65 @@ export interface CatalogueDEquipement {
     objets: ObjetDuCatalogue[];
 }
 
+/**
+ * **Le bestiaire du jeu, ses créatures prises au livre** — registre § 210, étape A, 05/11/2026.
+ *
+ * David : *« il faudrait aussi être capable d'intégrer automatiquement les bestiaires à partir des
+ * bouquins de règles / suppléments »* ; les créatures vivent **dans le pilote** (décision du
+ * 05/11), comme le catalogue : elles partent avec l'export et se corrigent une fois. Le bestiaire du
+ * meneur (`useBestiaireStore`) garde les gabarits qu'il fabrique ; les deux se rejoignent à l'usage.
+ *
+ * **Le socle est commun, les colonnes sont celles du jeu**, et chacune dit le champ de la fiche
+ * qu'elle remplit : une créature posée sur le plateau reçoit une vraie fiche de plateau, que les
+ * mécaniques existantes lisent (Protection d'Alien, pistes de Degenesis, zones de RuneQuest).
+ * Plan : `documentation/Planning/2026-11-04-bestiaire-du-pilote.md`.
+ */
+export interface ColonneDuBestiaire {
+    /** La clé des `valeurs` de la créature — `sante`. */
+    id: string;
+    libelle: string;
+    /** `nombre` : ce que lit une mécanique ; une valeur en lettres y est signalée, pas refusée. */
+    nature: 'nombre' | 'texte';
+    /** Le champ de la fiche qu'elle remplit quand la créature entre en jeu — `protection`. */
+    champ?: string;
+}
+
+/** Une attaque écrite dans le livre : le résultat du dé, son nom, ce qu'elle fait. */
+export interface LigneDAttaque {
+    /** « 1 », « 1-2 », « 3 ». */
+    de: string;
+    nom: string;
+    effet: string;
+}
+
+export interface CreatureDuBestiaire {
+    id: string;
+    nom: string;
+    /** Le nom de l'autre édition — « Biodrone Xenomorph XX121B ». */
+    nomOriginal?: string;
+    /** Le classement du livre — « Xénomorphes aberrants », « Anathèmes ». */
+    categorie?: string;
+    /** « XX121 », « infecté » : de quoi filtrer. */
+    etiquettes?: string[];
+    /** Les caractéristiques, par identifiant de colonne. */
+    valeurs: Record<string, string | number>;
+    /** Ce qui ne tient pas dans une colonne — « Protection 4 contre le feu ». */
+    particularites?: string[];
+    /**
+     * Ses attaques : une table du jeu tirée au dé (les xénomorphes d'Alien), ou les lignes du
+     * livre quand la table n'existe que pour elle. Les deux peuvent coexister.
+     */
+    attaques?: { table?: { univers: string; table: string }; lignes?: LigneDAttaque[] };
+    description?: string;
+    /** D'où viennent les chiffres — le livre ou le supplément, la page imprimée, la fiche relue. */
+    source?: { livre: string; page?: number; fiche?: string };
+}
+
+export interface BestiaireDuJeu {
+    colonnes: ColonneDuBestiaire[];
+    creatures: CreatureDuBestiaire[];
+}
+
 export interface LootTable {
     id: string;
     name: string;
@@ -815,6 +874,11 @@ export interface GameDriver {
      * fiches s'équipent à la main comme avant.
      */
     catalogue?: CatalogueDEquipement;
+    /**
+     * Les créatures du jeu, leurs chiffres pris au livre — § 210, voir `BestiaireDuJeu`. Absent :
+     * le jeu n'a pas de bestiaire de livre, et l'atelier des adversaires fabrique comme avant.
+     */
+    bestiaire?: BestiaireDuJeu;
     /** Les mots de ce jeu pour la monnaie et la rareté — voir `VocabulaireDuButin`. */
     vocabulaireDuButin?: VocabulaireDuButin;
     defaultNotebookUrl?: string; // Default NotebookLM for this system

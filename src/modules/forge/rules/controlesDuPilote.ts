@@ -2,6 +2,7 @@ import { ECHELLE_D_USURE } from '../../dice/desDUsure';
 import type { GameDriver, DiceRollLogic, DiceConfig, MouvementDeFiche } from '../../../types/drivers';
 import { modulesDuPilote } from '../../modulesDuJeu/catalogue';
 import { controlerLeCatalogue } from '../../equipement/catalogue';
+import { controlerLeBestiaire } from '../../bestiaire/bestiaire';
 import type { HealthSystemType } from '../../../types/entity.types';
 import type { SheetTemplate, SheetSection, SheetFieldType } from '../../../data/defaultSheetTemplates';
 import { sectionDeLaComposante, type SensDuJet } from '../../dice/DescripteurDeJet';
@@ -2446,6 +2447,8 @@ export function controlerLePilote(
 
     // Le catalogue d'équipement (§ 203) : son contrôle vit avec lui, dans `equipement/catalogue.ts`.
     constats.push(...controlerLeCatalogue(driver.catalogue));
+    // Le bestiaire du pilote (§ 210) : son contrôle vit avec lui, dans `bestiaire/bestiaire.ts`.
+    constats.push(...controlerLeBestiaire(driver.bestiaire, tousLesChamps));
 
     return constats;
 }

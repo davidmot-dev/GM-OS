@@ -2047,6 +2047,7 @@ async function scenesDAlien(c: ContexteDeScene): Promise<void> {
     const composantes = ['force', 'combat_rapproche', 'niveau_de_stress'];
     // En tête : l'éditeur du pilote ne s'ouvre plus une fois qu'une scène a ouvert la séance.
     if (jet?.alien) await sceneDuCatalogueAlien(c);
+    if (jet?.alien) await sceneDuBestiaireAlien(c);
     if (jet?.panique) {
         const panneau = await jeterJusqua(c, composantes, p => p.getByRole('button', { name: 'Test de Panique', exact: true }));
         await panneau.getByRole('button', { name: 'Test de Panique', exact: true }).click();
@@ -2073,6 +2074,53 @@ async function scenesDAlien(c: ContexteDeScene): Promise<void> {
     if ((jet?.alien?.combat as {survie?:unknown}|undefined)?.survie) await sceneDeSurvieAlien(c);
     if ((jet?.alien?.combat as {actions?:boolean}|undefined)?.actions) await sceneDesActionsXenoAlien(c);
     if ((jet?.alien?.combat as {progression?:unknown}|undefined)?.progression) await sceneDeProgressionAlien(c);
+}
+
+/**
+ * **Le bestiaire du pilote** (§ 210, étape B, 05/11/2026) : la section de l'éditeur, avec deux
+ * créatures de Colonial Marines (fiche relue le 02/11). Le remplissage depuis le corpus est
+ * l'étape C : le bestiaire est posé ici à la main, comme le ferait le meneur.
+ */
+async function sceneDuBestiaireAlien(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    const fenetre = await gmos.application.browserWindow(f);
+    await f.evaluate(campagne => {
+        const s = (window as unknown as Fenetre).useSessionOSStore.getState();
+        const id = s.campaigns.find(x => x.id === campagne)!.system;
+        const livre = 'Colonial Marines Operations Manual';
+        s.updateGameDriver(id, { bestiaire: {
+            colonnes: [
+                { id: 'vitesse', libelle: 'Vitesse', nature: 'nombre' },
+                { id: 'sante', libelle: 'Santé', nature: 'nombre', champ: 'sante' },
+                { id: 'mobilite', libelle: 'Mobilité', nature: 'nombre', champ: 'mobilite' },
+                { id: 'observation', libelle: 'Observation', nature: 'nombre', champ: 'observation' },
+                { id: 'protection', libelle: 'Protection', nature: 'nombre' },
+                { id: 'acide', libelle: 'Éclaboussure d’acide', nature: 'nombre' },
+            ],
+            creatures: [
+                { id: 'goreburster-xx121ab', nom: 'Goreburster XX121AB', nomOriginal: 'Goreburster Xenomorph XX121AB', categorie: 'Xénomorphes aberrants',
+                    valeurs: { vitesse: 3, sante: 6, mobilite: 8, observation: 6, protection: 6, acide: 6 },
+                    particularites: ['Protection 3 contre le feu', 'Meurt après un ou deux Quarts'],
+                    attaques: { lignes: [
+                        { de: '1-2', nom: 'Impact', effet: 'Renverse sa cible, puis fuit de deux zones vers un conduit.' },
+                        { de: '4', nom: 'Attaque à la tête', effet: 'Neuf dés de base, Dégâts 2 ; blessure critique n° 15, 31 ou 34.' },
+                    ] }, source: { livre, page: 178 } },
+                { id: 'biodrone-xx121b', nom: 'Biodrone XX121B', nomOriginal: 'Biodrone Xenomorph XX121B', categorie: 'Xénomorphes aberrants', etiquettes: ['XX121'],
+                    valeurs: { vitesse: 2, sante: 6, mobilite: 8, observation: 10, protection: 8, acide: 8 },
+                    particularites: ['Protection 4 contre le feu', 'Meurt après six jours'],
+                    attaques: { table: { univers: 'Alien', table: 'attaques_xenomorphe_rodeur' } }, source: { livre, page: 178 } },
+            ],
+        } } as never);
+        s.setEditingDriverId(id);
+    }, c.campagne);
+    await vue(c.campagne, 'driver-editor');
+    await f.getByRole('button', { name: /créature\(s\) au bestiaire/ }).first().click();
+    await fenetre.evaluate(w => w.setContentSize(1440, 1900));
+    const section = f.locator('div.space-y-12', { has: f.getByRole('heading', { name: /Bestiaire/ }) }).first();
+    await section.getByText('Biodrone XX121B', { exact: true }).click();
+    // Les libellés sont ceux de la fiche du pilote : « Ag_Mobilité » dans le gabarit de David.
+    await expect(section.locator('[data-sur-le-plateau]')).toContainText(/Santé 6 · \S*Mobilité 8 · \S*Observation 10/);
+    await photographier(section, 'jeu-alien-bestiaire-section');
 }
 
 /**

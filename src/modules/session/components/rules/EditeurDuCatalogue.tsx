@@ -219,9 +219,11 @@ const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdat
     );
 };
 
-/* ── Les pièces de l'écran ────────────────────────────────────────────────── */
+/* ── Les pièces de l'écran ──────────────────────────────────────────────────
+ * Exportées pour la section « Bestiaire » (§ 210, étape B) : la même grammaire, un seul dessin.
+ */
 
-const FormulaireDeNom: React.FC<{
+export const FormulaireDeNom: React.FC<{
     valeur: string; onChange: (v: string) => void; onValider: () => void; onAnnuler: () => void; libelle: string; placeholder: string;
 }> = ({ valeur, onChange, onValider, onAnnuler, libelle, placeholder }) => (
     <form className="flex items-center gap-2" onSubmit={e => { e.preventDefault(); onValider(); }}>
@@ -231,7 +233,7 @@ const FormulaireDeNom: React.FC<{
     </form>
 );
 
-const ListeDesConstats: React.FC<{ constats: ConstatDuCatalogue[] }> = ({ constats }) => (
+export const ListeDesConstats: React.FC<{ constats: ConstatDuCatalogue[] }> = ({ constats }) => (
     <>
         {constats.map((c, i) => (
             <p key={i} role={c.gravite === 'erreur' ? 'alert' : 'status'}
@@ -277,7 +279,7 @@ const LigneDObjet: React.FC<{
     </article>
 );
 
-const ListeDePastilles: React.FC<{ libelle: string; valeurs: string[]; onChange: (v: string[]) => void }> = ({ libelle, valeurs, onChange }) => {
+export const ListeDePastilles: React.FC<{ libelle: string; valeurs: string[]; onChange: (v: string[]) => void }> = ({ libelle, valeurs, onChange }) => {
     const [saisie, setSaisie] = useState('');
     const ajouter = () => {
         const v = saisie.trim();
