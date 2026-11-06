@@ -13751,10 +13751,51 @@ David : « c'est testé marque le. Maintenant fais un clips avec Playright des n
 - **Vérifications terminées le05/11 :** 9 871 tests réussis, 4 ignorés (833 fichiers réussis, 1 ignoré), dont138 tests de corpus ; types et construction passent, lint zéro erreur et un avertissement préexistant. Deux parcours Electron passent : calculs héros, persistance psychique, Formulaire/Hub/journal et captures communes ; neuf images2.2 relues. Défaut de titre au journal corrigé, source/page de Furtif désormais transmises. Rapports et inventaire combiné dans output/coc-a4-a6/.
 - **État :** 🟢 COC-A1 à COC-A6 validés par David le05/11 ; seize acquis verts, zéro orange, zéro rouge. Aucun essai humain restant pour ces lots.
 
+### 220 · Les chemins des livres — plan, étapes 0, A et B — 06/11/2026
+
+David : *« est-ce qu'il ne serait pas utile de pouvoir garder le chemin vers les PDF des livres de
+bases et des suppléments dans GM-OS ? »*, puis *« je n'ai pas envie de recopier mes livres un peu
+partout, donc un chemin pour moi est une bonne idée »*. Choix du même jour : le registre dans le
+dépôt, l'enregistrement dans la Forge, la fenêtre de lecture intégrée, l'ordre 0, A + B, C + D, E.
+[Le plan](2026-11-06-chemins-des-livres.md).
+
+- **Étape 0 (sans code)** : `docs/systems/<jeu>/livres.json` pour seize jeux, dix-huit livres et
+  trois errata, sur le NAS (`\\CLOUDDAVID\Media\Jeux de Rôle\`). Chaque décalage a été mesuré sur
+  les pieds de page, puis les copies de travail ont été effacées. Quatre points restent à confirmer
+  par David : Rêve de Dragon (le corpus cite la 2.2, le NAS n'a que la 2.3), le fichier de NOC,
+  « Nephilim Légende - Système de règles », la version de Shadowrun.
+- **Étape A** : `forge/rules/livres.ts`, un module pur.
+  - Il lit, contrôle, enregistre et retire un livre, et trouve le livre d'une fiche par son chemin.
+    Quand un jeu a plusieurs volumes, il choisit d'après les `sources:` de la fiche.
+  - Il convertit une page imprimée en page du PDF, et `mesurerLeDecalage` mesure le décalage.
+  - `cheminDesLivres` est ajouté à `electron/corpusSysteme.ts`.
+- **Étape B** : la carte « PDF du livre » de la Forge (`PdfDuLivre.tsx`), sous « Livre documenté ».
+  Maquette Stitch validée par David (*« je valide »*, `stitch/livres/pdf-du-livre.png`).
+  - Les gestes : choisir, vérifier (« Le livre répond — 398 pages »), le décalage saisi comme on le
+    constate, « Proposer depuis le livre » (une proposition à retenir), Enregistrer.
+  - Trois canaux en lecture seule (`electron/cheminsDesLivres.ts`, groupe `livres` du pont).
+    `lirePagesPdf` est ajouté à `extractionPdf.ts`. Le registre s'écrit par `ai:write-doc`.
+- **Défauts trouvés en chemin, corrigés** :
+  - la carte restait vide quand le registre arrivait après son ouverture (vu à l'e2e) ;
+  - le nom du fichier était invisible dans le panneau, large d'environ 250 px, et la phrase du
+    décalage s'y cassait mal (vu sur la capture) ;
+  - la mesure ignorait le second volume de Rêve de Dragon, qui continue la numérotation du premier,
+    et Blade Runner, dont pdf.js lit les chiffres espacés (« 0 2 1⇥0 2 1 »).
+- **Vérifié** :
+  - la mesure du code de GM-OS retrouve, sur les dix-huit livres réels, le décalage de chacun
+    (1 à 3 s par livre) ;
+  - essais neufs : `livres.test.ts` (10), `PdfDuLivre.test.tsx` (8), `cheminsDesLivres.test.ts` (2) ;
+    Forge et processus principal (2 458) ; `tsc -b`, eslint, construction ;
+  - e2e : le neuf `e2e/livresDuJeu.spec.ts` (corpus jetable semé) et celui de la Forge
+    (`modulesIa`, 7). Capture : `captures/forge-pdf-du-livre.jpg`. Guide 50 mis à jour.
+- **Reste** : l'essai de David (la carte d'Alien, « Vérifier », « Proposer depuis le livre ») ; les
+  étapes C et D (ouvrir le livre à la page, les boutons « Livre, p. N ») ; l'étape E (les agents).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 156 | **Les chemins des livres** | 🟠 § 220 ; registre de seize jeux (dix-huit livres) et carte « PDF du livre » de la Forge livrés — 06/11 | Ouvrir la Forge, Atelier de règles, corpus `alien` : Vérifier, Proposer depuis le livre ; confirmer les quatre points de l'étape 0 | Essai de David ; ensuite étapes C, D, E |
 | 151 | **COC — COC-A4/A5/A6** | 🟢 §215 ; pilote2.2.0, 9 871 tests et deux parcours Electron verts ; six lots validés par David —05/11 | Rien pour COC-A1 à A6 | Rien |
 | 150 | **COC — COC-A1/A2/A3** | 🟠 § 214 ; pilote 2.1.0, 9 847 tests et deux parcours Electron verts, dix captures relues — 04/11 | Réimporter d20 ou 3d6 avec Remplacer, essayer dégâts/santé/rôles | Essai David restant |
 | 149 | **Clip des nouveautés Shadowrun Anarchy** | 🟢 § 213 ; clip MP4 3 min 12 livré et relu, parcours Playwright passé — 04/11 | Ouvrir le MP4 ; rien à développer | Rien |

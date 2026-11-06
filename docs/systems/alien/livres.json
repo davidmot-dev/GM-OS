@@ -1,0 +1,19 @@
+[
+  {
+    "cle": "jeu",
+    "titre": "ALIEN, le jeu de rôle",
+    "chemin": "\\\\CLOUDDAVID\\Media\\Jeux de Rôle\\03. Futur\\1. Space Opera\\Aliens\\ALIEN (Arkhane Asylum)\\ALIEN_le_jeu_de_rôle.pdf",
+    "decalage": 3,
+    "edition": "française (Arkhane Asylum)",
+    "errata": "\\\\CLOUDDAVID\\Media\\Jeux de Rôle\\03. Futur\\1. Space Opera\\Aliens\\ALIEN (Arkhane Asylum)\\ALIEN-Errata.pdf",
+    "notes": "Décalage mesuré le 06/11/2026 : le pied de la page PDF 294 imprime 291. Texte doublé par endroits (deux couches) ; les tableaux se relèvent mot par mot, avec leur position. L'errata du 04/11/2021 reprend celui du 09/04/2021 (ALIEN-Errata-1.pdf)."
+  },
+  {
+    "cle": "colonial-marines",
+    "titre": "Colonial Marines Operations Manual",
+    "chemin": "\\\\CLOUDDAVID\\Media\\Jeux de Rôle\\03. Futur\\1. Space Opera\\Aliens\\ALIEN (Arkhane Asylum)\\ALN-Marines Coloniaux_FR.pdf",
+    "decalage": 3,
+    "edition": "française (Arkhane Asylum)",
+    "notes": "Décalage relevé à la relecture du 01/11/2026 (fiche des xénomorphes, p. 175-181). L'édition anglaise, pour les noms d'origine : alien-colonial-marines-operations-manual.pdf, dans le même dossier."
+  }
+]

@@ -357,6 +357,16 @@ export function cheminDesSupplements(corpus: Corpus): string {
     return `${racineDuJeu(corpus)}/${DOSSIER_DES_SUPPLEMENTS}/supplements.json`;
 }
 
+/**
+ * Le registre des livres d'un jeu : le chemin de chaque PDF et son décalage de pages, pour le livre
+ * de base et pour chaque supplément (plan du 06/11/2026, « Les chemins des livres »). Un fichier par
+ * jeu, à la racine du jeu, que le corpus visé soit le sien ou celui d'un supplément. Le JSON n'est
+ * pas indexé par l'Oracle, et le livre lui-même n'est jamais copié.
+ */
+export function cheminDesLivres(corpus: Corpus): string {
+    return `${racineDuJeu(corpus)}/livres.json`;
+}
+
 /** La racine du jeu, que le corpus soit le sien ou celui d'un de ses suppléments. */
 function racineDuJeu(corpus: Corpus): string {
     return corpus.supplement

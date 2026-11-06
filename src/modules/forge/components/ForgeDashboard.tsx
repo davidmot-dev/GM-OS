@@ -6,6 +6,8 @@ import { forgeService } from '../ForgeService';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import ForgeProgress from '../rules/components/ForgeProgress';
 import ChoixDuLivre from '../rules/components/ChoixDuLivre';
+import PdfDuLivre from '../rules/components/PdfDuLivre';
+import { useLivresDuJeu } from '../rules/useLivresDuJeu';
 import { useSupplementsDuJeu } from '../rules/useSupplementsDuJeu';
 import RevueDuPilote from './RevueDuPilote';
 import PanneauDesPersonas from '../corpus/PanneauDesPersonas';
@@ -188,6 +190,8 @@ const ForgeDashboard: React.FC = () => {
     : null;
   // Le livre documenté : base ou supplément (§ 185), choisi avant l'analyse.
   const { supplements, declarer: declarerUnSupplement } = useSupplementsDuJeu(corpusVise);
+  // Le PDF de ce livre et le décalage de ses pages (« Les chemins des livres », 06/11/2026).
+  const { livres: livresDuJeu, ecrire: ecrireLesLivres, chemin: cheminDuRegistre } = useLivresDuJeu(corpusVise);
 
   /**
    * Les corpus qui se déclarent **famille**, et celui qu'on a désigné.
@@ -1368,6 +1372,13 @@ const ForgeDashboard: React.FC = () => {
                         });
                       }}
                       sourcesRetenues={brainstormStore.selectedSourceIds}
+                    />
+                    <PdfDuLivre
+                      cle={brainstormStore.supplementCible?.slug ?? 'jeu'}
+                      titre={brainstormStore.supplementCible?.titre ?? 'Livre de base'}
+                      livres={livresDuJeu}
+                      onEcrire={ecrireLesLivres}
+                      cheminDuRegistre={cheminDuRegistre}
                     />
                   </>
                 )}

@@ -1,0 +1,16 @@
+[
+  {
+    "cle": "jeu",
+    "titre": "Rêve de Dragon — Livre des Voyageurs (2.3)",
+    "chemin": "\\\\CLOUDDAVID\\Media\\Jeux de Rôle\\01. Passé\\1. High Fantasy\\Reve de Dragon\\Rêve de Dragon - JdR\\Rêve de Dragon - Livres de Règles et univers\\1_Livre_des_Voyageurs_2.3.pdf",
+    "decalage": 1,
+    "notes": "Décalage mesuré le 06/11/2026 sur les numéros imprimés en pied de page. ⚠️ Version 2.3 ; le corpus cite la 2.2 (1_Livre_du_Voyageur_2.2.pdf), absente du NAS : vérifier la page avant de la citer. Le texte extrait mêle les colonnes des tables : les lire en image."
+  },
+  {
+    "cle": "jeu",
+    "titre": "Rêve de Dragon — Livre du Haut-Rêve (2.3)",
+    "chemin": "\\\\CLOUDDAVID\\Media\\Jeux de Rôle\\01. Passé\\1. High Fantasy\\Reve de Dragon\\Rêve de Dragon - JdR\\Rêve de Dragon - Livres de Règles et univers\\2_Livre_du_Haut_Reve_2.3.pdf",
+    "decalage": -166,
+    "notes": "Décalage mesuré le 06/11/2026 sur les numéros imprimés en pied de page : la numérotation continue celle du premier livre (PDF 5 = p. 171, PDF 121 = p. 287). ⚠️ Version 2.3 ; le corpus cite la 2.2."
+  }
+]

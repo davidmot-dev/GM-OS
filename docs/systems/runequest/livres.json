@@ -1,0 +1,10 @@
+[
+  {
+    "cle": "jeu",
+    "titre": "RuneQuest — Livre de base (7e édition française)",
+    "chemin": "\\\\CLOUDDAVID\\Media\\Jeux de Rôle\\01. Passé\\4. Antiquité\\RuneQuest\\RuneQuest [FR]\\Nouvelle version\\[Runequest][7Ed.][FR] - DCRQK02 - Livre de Base.pdf",
+    "decalage": 1,
+    "errata": "\\\\CLOUDDAVID\\Media\\Jeux de Rôle\\01. Passé\\4. Antiquité\\RuneQuest\\RuneQuest [FR]\\Nouvelle version\\[Runequest][7Ed.][FR] - DCRQK02 - Livre de Base - Errata.pdf",
+    "notes": "Décalage mesuré le 06/11/2026 sur les numéros imprimés en pied de page. Le fichier de la relecture du 30/10 (même taille). pypdf perd des colonnes : rendre la page en image pour les tableaux. Le Bestiaire de Glorantha (DCRQK03) est dans le même dossier."
+  }
+]

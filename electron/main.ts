@@ -67,6 +67,7 @@ import { registerMcpHandlers } from './mcp_bridge'
 import { registerObsidianHandlers } from './obsidian_bridge'
 import { registerSourisHandlers } from './sourisDesJoueurs'
 import { registerPurgeHandlers } from './purgeDesCorpus'
+import { registerLivresHandlers } from './cheminsDesLivres'
 import { registerNexusHandlers } from './nexus_bridge'
 import { registerSecurityHandlers } from './SecurityManager'
 import { sessionManager } from './SessionManager'
@@ -136,6 +137,7 @@ registerObsidianHandlers();
 registerSourisHandlers();
 // La purge d'un corpus — elle déplace en quarantaine, elle ne supprime pas.
 registerPurgeHandlers();
+registerLivresHandlers();
 // Register Nexus-OS Bridge (Campaign Portability)
 registerNexusHandlers();
 // Register native Keychain Security

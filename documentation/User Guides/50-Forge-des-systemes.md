@@ -104,6 +104,27 @@ Manual* d'Alien.
 > Le supplément **n'ajoute encore aucun champ au pilote** : on documente d'abord. Décision de David
 > du 2026-11-01 ; les champs viendront après l'essai de Colonial Marines.
 
+### Le PDF du livre et le décalage de ses pages
+
+*Depuis le 2026-11-06.* Sous « Livre documenté », la carte **PDF du livre** garde **où est** le PDF
+du livre choisi (base ou supplément) : GM-OS ne le copie jamais. Elle garde aussi le **décalage**
+de ses pages, c'est-à-dire de combien la page du PDF dépasse la page imprimée (Alien : + 3).
+
+![La carte « PDF du livre »](captures/forge-pdf-du-livre.jpg)
+
+1. **Choisir…** ouvre le sélecteur de fichiers. On peut aussi coller le chemin (`\\CLOUDDAVID\…`).
+2. **Vérifier** dit si le livre répond et combien il a de pages. Si le NAS est éteint ou le fichier
+   déplacé, la carte le dit.
+3. **Le décalage** : tapez une page imprimée et la page du PDF où elle se trouve. Ou bien cliquez
+   **Proposer depuis le livre** : GM-OS lit une soixantaine de pages, compare leur numéro imprimé
+   et propose un décalage, que vous **retenez** d'un clic. Rien n'est écrit sans vous.
+4. **Enregistrer** écrit le registre du jeu, `docs/systems/<jeu>/livres.json`. **Retirer** ôte le
+   livre du registre, sans toucher au PDF.
+
+Seize jeux ont déjà leur registre (relevé du 2026-11-06). Ouvrir le livre à la bonne page depuis
+le bestiaire, le catalogue ou une fiche est l'étape suivante :
+[le plan](../Planning/2026-11-06-chemins-des-livres.md).
+
 ---
 
 ## 📖 L'éditeur de règles — neuf sections
