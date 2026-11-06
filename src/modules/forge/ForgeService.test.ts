@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ForgeService, estErreurAuth, type ForgeContextItem } from './ForgeService';
 import { CANEVAS } from './rules/canevas';
 import { GROUPES } from './rules/GroupesDeChamps';
+import { estUneFicheDEquipement, remplirDepuisLesFiches } from '../equipement/depuisLeCorpus';
 import type { useAIStore } from '../../stores/useAIStore';
 
 type EtatIA = ReturnType<typeof useAIStore.getState>;
@@ -278,6 +279,46 @@ rien`;
           .mockResolvedValueOnce({ content: SECONDE_MOITIE });
         await forgeService.forgeCard('nb-1', candidat, 'dune');
         expect(requete(1)).toContain('Monnaie de table');
+      });
+
+      it('F2 : un sujet d’équipement reçoit le gabarit des tableaux, et la fiche reste lisible par le catalogue', async () => {
+        // David, sur COC (06/11/2026) : « malgré le fait que j'ai une fiche, rien ne se remplit ».
+        const TABLEAUX = `## Métadonnées
+- sujet : Equipements et Objets
+- couverture : complète
+- sources : COC
+- sections : « ARMES DE CONTACT »
+
+## Règle
+Les armes de contact ajoutent la FOR aux DM.
+
+## Valeurs
+### Tableau des ARMES DE CONTACT
+
+| Arme | Allonge | DM | Bonus critique | Spécial |
+|:--- |:--- |:--- |:--- |:--- |
+| **Machette** | Moyenne | 1d6+1+FOR | 7 | – |
+| **Fouet** | Grande | 1d4+FOR | 4 | Peut désarmer |`;
+        callTool
+          .mockResolvedValueOnce({ content: TABLEAUX })
+          .mockResolvedValueOnce({ content: SECONDE_MOITIE });
+        const card = await forgeService.forgeCard('nb-1', { ...candidat, id: 'equipements', title: 'Equipements et Objets' }, 'coc');
+        expect(requete(0)).toContain("C'est un sujet d'ÉQUIPEMENT");
+        expect(requete(0)).toContain('« Arme », « Protection », « Véhicule »');
+        expect(requete(0)).not.toContain('jauges ou des ressources');
+        expect(requete(1)).toContain('SECONDE MOITIÉ');
+        expect(estUneFicheDEquipement(card.content)).toBe(true);
+        expect(remplirDepuisLesFiches(undefined, [{ chemin: 'x.md', contenu: card.content, livre: 'COC' }]).journal.objetsAjoutes.map(o => o.nom))
+          .toEqual(['Machette', 'Fouet']);
+      });
+
+      it('un sujet de règles ordinaire garde son gabarit', async () => {
+        callTool
+          .mockResolvedValueOnce({ content: FICHE })
+          .mockResolvedValueOnce({ content: SECONDE_MOITIE });
+        await forgeService.forgeCard('nb-1', { ...candidat, title: 'Charmes et sortilèges' }, 'coc');
+        expect(requete(0)).toContain('jauges ou des ressources');
+        expect(requete(0)).not.toContain('« Arme », « Protection »');
       });
 
       it('assemble les six sections en une seule fiche', async () => {

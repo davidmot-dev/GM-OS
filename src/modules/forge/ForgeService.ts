@@ -5,7 +5,8 @@ import { attenteAnnoncee, budgetDuMoment } from '../ai/budgetsDeTemps';
 import type { GameDriver } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 import type { BrainstormCandidate, BrainstormCard } from './rules/types';
-import { gabaritInventaire, gabaritInventaireDeSupplement, gabaritFicheRegle, gabaritFichePratique, promptVoix, promptPersonas, type OptionsGabarit } from './rules/gabarits';
+import { gabaritInventaire, gabaritInventaireDeSupplement, gabaritFicheRegle, gabaritFicheTableaux, gabaritFichePratique, promptVoix, promptPersonas, type OptionsGabarit } from './rules/gabarits';
+import { natureDuSujet } from './rules/natureDuSujet';
 import { lireInventaire } from './rules/inventaire';
 import { retirerLesRenvoisDuCarnet } from './renvoisDuCarnet';
 import { convertirFiche } from './rules/conversion';
@@ -645,9 +646,14 @@ export class ForgeService {
     const gabarit: OptionsGabarit | undefined = options?.supplement
       ? { supplement: options.supplement.titre, langue: options.supplement.langue }
       : undefined;
+    // F2 (06/11/2026) : un sujet d'équipement ou de créatures reçoit le gabarit des tableaux, que le
+    // catalogue et le bestiaire savent lire — livre de base compris. David, sur COC : « malgré le fait
+    // que j'ai une fiche, rien ne se remplit ».
+    const nature = natureDuSujet(candidate.title);
+    const premiereMoitie = nature ? gabaritFicheTableaux(candidate.title, nature, gabarit) : gabaritFicheRegle(candidate.title, gabarit);
     const regle = options?.moitieDeja
       ?? retirerLesRenvoisDuCarnet(
-        await this.interrogerCarnet(notebookId, gabaritFicheRegle(candidate.title, gabarit), sourceIds),
+        await this.interrogerCarnet(notebookId, premiereMoitie, sourceIds),
       );
 
     // On la remet à l'appelant AVANT la seconde requête : une moitié acquise ne

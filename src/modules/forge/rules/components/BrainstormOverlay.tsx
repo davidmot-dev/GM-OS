@@ -15,6 +15,8 @@ import { gmConfirm } from '../../../../stores/useModalStore';
 import { gmToast } from '../../../../stores/useToastStore';
 import DiscoveryUI from './DiscoveryUI';
 import LivreALaPage from './LivreALaPage';
+import { bilanAMontrer, bilanDesLecteurs } from '../bilanDesLecteurs';
+import { FAMILLES_D_OBJET } from '../../../equipement/catalogue';
 import { useLivresDuJeu } from '../useLivresDuJeu';
 import ForgeProgress from './ForgeProgress';
 import {
@@ -29,6 +31,7 @@ import {
 import { fichesSupplantees, sujetDuFrontmatter } from '../fichesSupplantees';
 import { aEteRetouchee } from '../empreinteDeLaFiche';
 import { slugFiche } from '../canevas';
+import { MARQUE_SUJET_LIBRE, MARQUE_SUJET_LIBRE_RETROUVE } from '../sujetLibre';
 import { ficheInventaire, ficheInventaireDeSupplement, lireInventaire, lireInventaireDeSupplement } from '../inventaire';
 import { slug } from '../../../../../electron/corpusSysteme';
 import { lireNature } from '../familleDuCorpus';
@@ -154,6 +157,16 @@ export const BrainstormOverlay: React.FC = () => {
   const corpus = useMemo(
     () => (corpusDuJeu && supplement ? corpusDeSupplement(corpusDuJeu, supplement.slug) : corpusDuJeu),
     [corpusDuJeu, supplement],
+  );
+
+  /**
+   * F1 (06/11/2026) : ce que le catalogue et le bestiaire liront de la fiche relue, par leurs lecteurs
+   * réels, à blanc. David, sur COC : « malgré le fait que j'ai une fiche, rien ne se remplit ».
+   */
+  const carteRelue = brainstormStore.activeCard;
+  const bilan = useMemo(
+    () => (carteRelue ? bilanDesLecteurs(`${carteRelue.slug}.md`, carteRelue.content) : null),
+    [carteRelue],
   );
 
   /** Le registre des livres du jeu : « Livre, p. N » sur les sections résolues (06/11/2026). */
@@ -286,14 +299,19 @@ export const BrainstormOverlay: React.FC = () => {
     //
     // Et elle ne se dédouble pas : taper « Poursuites » ne doit pas créer une
     // seconde ligne pour un sujet que l'inventaire porte déjà.
+    //
+    // Un doublon passe en tête, marqué, au lieu de se fondre dans la liste : David, le 06/11/2026,
+    // tape « La gestion simplifiée des adversaires… », déjà quatrième hors catégorie de COC et déjà
+    // publiée — « il n'y a rien qui se passe dans la forge ». L'écran le dit maintenant.
     const libre = customSubject.trim();
     const slugLibre = libre ? slugFiche(libre) : '';
-    const inedit = slugLibre && !candidats.some(c => c.id === slugLibre);
+    const retrouve = slugLibre ? candidats.find(c => c.id === slugLibre) : undefined;
 
     setCandidates(
-      inedit
-        ? [{ id: slugLibre, title: libre, category: 'rule' as const, summary: '', tags: ['hors canevas'] }, ...candidats]
-        : candidats,
+      !slugLibre ? candidats
+        : retrouve
+          ? [{ ...retrouve, tags: [...retrouve.tags, MARQUE_SUJET_LIBRE_RETROUVE] }, ...candidats.filter(c => c !== retrouve)]
+          : [{ id: slugLibre, title: libre, category: 'rule' as const, summary: '', tags: ['hors canevas', MARQUE_SUJET_LIBRE] }, ...candidats],
       inventaire,
     );
   }, [customSubject, setCandidates, supplement]);
@@ -1052,6 +1070,41 @@ export const BrainstormOverlay: React.FC = () => {
                    <ul className="space-y-2 text-sm text-etat-alerte/60 leading-relaxed list-disc pl-6">
                      {brainstormStore.activeCard.avertissements.map((avis, idx) => <li key={idx}>{avis}</li>)}
                    </ul>
+                 </div>
+               )}
+
+               {bilan && bilanAMontrer(bilan) && (
+                 <div data-bilan-des-lecteurs className={`p-8 rounded-[3rem] border ${bilan.alerte ? 'bg-etat-alerte/10 border-etat-alerte/20' : 'bg-app-text/2 border-app-text/5'}`}>
+                   <div className="flex items-center gap-4 mb-4">
+                     {bilan.alerte ? <AlertTriangle size={18} className="text-etat-alerte" /> : <BookOpen size={18} className="text-gm-violet/60" />}
+                     <h4 className={`text-sm font-black uppercase tracking-widest font-display ${bilan.alerte ? 'text-etat-alerte' : 'text-app-text/40'}`}>
+                       {t('session.forge_module.atelier.lecteurs_title')}
+                     </h4>
+                   </div>
+                   <div className="space-y-2 text-sm leading-relaxed text-app-text/70">
+                     {bilan.alerte && (
+                       <p className="text-etat-alerte/80" role="alert">
+                         {t(`session.forge_module.atelier.lecteurs_alerte_${bilan.alerte}`)}
+                       </p>
+                     )}
+                     {bilan.equipement.objets > 0 && (
+                       <p>{t('session.forge_module.atelier.lecteurs_equipement', {
+                         detail: FAMILLES_D_OBJET.filter(f => bilan.equipement.parFamille[f.id])
+                           .map(f => `${bilan.equipement.parFamille[f.id]} ${f.pluriel}`).join(', '),
+                       })}</p>
+                     )}
+                     {bilan.bestiaire.creatures > 0 && (
+                       <p>{t('session.forge_module.atelier.lecteurs_bestiaire', { creatures: bilan.bestiaire.creatures, attaques: bilan.bestiaire.tablesDAttaques })}</p>
+                     )}
+                     {bilan.lignesNonLues.length > 0 && (
+                       <div className="text-etat-alerte/70">
+                         <p>{t('session.forge_module.atelier.lecteurs_lignes', { n: bilan.lignesNonLues.length })}</p>
+                         <ul className="mt-1 space-y-1 font-mono text-xs list-disc pl-6">
+                           {bilan.lignesNonLues.slice(0, 5).map((l, i) => <li key={i}>{l.ligne.slice(0, 120)} — {l.raison}</li>)}
+                         </ul>
+                       </div>
+                     )}
+                   </div>
                  </div>
                )}
 

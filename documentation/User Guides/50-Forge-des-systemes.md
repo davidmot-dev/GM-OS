@@ -242,9 +242,27 @@ section Bestiaire fait de même pour les créatures (première colonne « Créat
 > **Pour COC**, la fiche forgée `equipements-et-objets.md` était en prose : rien ne se remplissait.
 > Le 2026-11-06, les tableaux du livre ont été transcrits depuis le PDF
 > (`equipement-armes-et-protections-du-livre-de-base.md`) : 36 armes et 8 protections, avec une
-> colonne de prix par époque (2025 à 1865). Que la Forge
-> écrive elle-même ces tableaux est un chantier à venir :
-> [le plan](../Planning/2026-11-06-forge-tableaux-equipement-bestiaire.md).
+> colonne de prix par époque (2025 à 1865).
+
+**La Forge écrit ces tableaux** (depuis le 2026-11-06,
+[le plan](../Planning/2026-11-06-forge-tableaux-equipement-bestiaire.md)) :
+
+- **Un sujet d'équipement ou de créatures** (armes, armures, protections, matériel, véhicules,
+  biens ; bestiaire, créatures, adversaires, monstres, PNJ) reçoit un gabarit à part, pour le
+  livre de base comme pour un supplément. Le carnet y recopie chaque tableau du livre au format que
+  le catalogue et le bestiaire lisent : un titre par tableau, celui de sa section dans le livre ; la
+  première colonne « Arme », « Protection », « Véhicule », « Objet » ou « Créature » ; une colonne
+  par prix et par époque quand le livre en donne.
+- **À la relecture**, l'encart « Ce que le catalogue et le bestiaire liront » compte ce que
+  « Remplir depuis le corpus » tirera de la fiche : objets par famille, créatures, tables
+  d'attaques, lignes illisibles. Une fiche qui parle d'équipement ou de créatures sans rien donner
+  affiche une **alerte** : elle peut être publiée, mais il faudra recopier ses tableaux.
+- Le lecteur accepte aussi les noms du livre en première colonne : « Armes à distance légères »,
+  « Explosif », « Armures », « PNJ », « Monstre », « Sbire »…
+- **Pour reforger une fiche existante** (par exemple les adversaires de COC), tapez son sujet dans
+  « Sujet de Forge Libre » ou cherchez-le dans la liste : un sujet déjà inventorié passe **en tête**,
+  désigné, avec un bandeau qui le dit. Cliquez sa carte : la nouvelle fiche remplace l'ancienne à la
+  publication (l'ancienne n'est archivée dans `rules-v1/` que si elle a été corrigée à la main).
 
 ![Remplir depuis le corpus : les deux livres d'Alien, 154 objets, les colonnes et les rattachements](captures/jeu-alien-catalogue-remplir.jpg)
 

@@ -2,6 +2,7 @@ import { cheminDesFiches, corpusDeSupplement, systemePourLIndex, type Corpus } f
 import { champDeLaFiche } from '../forge/rules/lectureDuCorpus';
 import type { SupplementDeclare } from '../forge/rules/supplements';
 import { estUneFicheDEquipement, type FicheACataloguer } from './depuisLeCorpus';
+import { parleDEquipement } from '../forge/rules/natureDuSujet';
 
 /**
  * Les livres d'un jeu tels que l'aperçu « Remplir depuis le corpus » les lit —
@@ -28,18 +29,8 @@ export interface LivreACataloguer {
     sansTableau?: string[];
 }
 
-const plier = (texte: string) => texte.normalize('NFD').replace(/\p{Mn}/gu, '').toLowerCase();
-
-/** Ce dont parle une fiche : son nom de fichier et son `sujet:`. */
-const sujetDe = (chemin: string, contenu: string) => plier(`${chemin.split('/').pop() ?? ''} ${champDeLaFiche(contenu, 'sujet')}`);
-
-/** Une fiche qui parle d'équipement (armes, armures, matériel, véhicules, biens). */
-export const parleDEquipement = (chemin: string, contenu: string) =>
-    /equipement|arme|armure|protection|materiel|objet|vehicule|biens/.test(sujetDe(chemin, contenu));
-
-/** Une fiche qui parle de créatures (bestiaire, adversaires, monstres, PNJ). */
-export const parleDeCreatures = (chemin: string, contenu: string) =>
-    /bestiaire|creature|adversaire|monstre|pnj|antagoniste/.test(sujetDe(chemin, contenu));
+// Une seule règle pour la Forge et pour cet écran (F2, 06/11/2026) : `natureDuSujet`, par mots entiers.
+export { parleDEquipement, parleDeCreatures } from '../forge/rules/natureDuSujet';
 
 /**
  * Le titre que portera `source.livre`. Pour le livre de base, le `sources:` de

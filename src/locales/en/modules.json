@@ -1840,6 +1840,8 @@
         "brainstorm_desc": "Select your sources on the left to generate ideas, or use the 'Free Forge' field for a specific subject.",
         "custom_subject_label": "Free Forge Subject",
         "custom_subject_placeholder": "e.g., Aerial combat rules, Mental health system...",
+        "custom_subject_found": "“{{sujet}}” is already in the inventory: it is first in the list. Click it to forge it.",
+        "custom_subject_found_published": "“{{sujet}}” is already in the inventory and its sheet is published: it is first in the list. Click it to forge it again: once published, the new sheet replaces the old one (archived in rules-v1/ only if it was edited by hand).",
         "analyze_button": "Analyze Sources",
         "source_adn_btn": "DNA",
         "source_atelier_btn": "Atelier",
@@ -1909,7 +1911,13 @@
         "sections_score": "{{resolues}} of {{total}} found in the index ({{sources}}).",
         "sections_unresolved": "not found",
         "sections_unresolved_hint": "A section that is not found does not condemn the card on its own: the index may be incomplete, or the title invented. Yours to judge before publishing.",
-        "sections_impossible_pages": "Pages cited beyond the book: {{pages}}. The index only attests up to page {{max}}."
+        "sections_impossible_pages": "Pages cited beyond the book: {{pages}}. The index only attests up to page {{max}}.",
+        "lecteurs_title": "What the catalogue and the bestiary will read",
+        "lecteurs_equipement": "Catalogue: {{detail}}.",
+        "lecteurs_bestiaire": "Bestiary: {{creatures}} creature(s), {{attaques}} attack table(s) attached.",
+        "lecteurs_lignes": "{{n}} unreadable table row(s) — they will enter neither the catalogue nor the bestiary:",
+        "lecteurs_alerte_equipement": "This sheet is about equipment, but the catalogue will read nothing from it: no table whose first column is Weapon (Arme), Protection, Vehicle (Véhicule) or Object (Objet). It can be published; copy the book's tables so that “Fill from the corpus” can read it.",
+        "lecteurs_alerte_bestiaire": "This sheet is about creatures, but the bestiary will read nothing from it: no profile table whose first column is Creature (Créature). It can be published; copy the book's profiles so that “Fill from the corpus” can read it."
       },
       "notebook": {
         "title": "NotebookLM Browser",

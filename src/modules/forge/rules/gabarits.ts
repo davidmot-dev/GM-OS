@@ -317,6 +317,76 @@ ${consignesDuSupplement(options)}- N'écris PAS les sections « À la table », 
 }
 
 /**
+ * **Première moitié d'un sujet d'équipement ou de créatures : les tableaux** — étape F2 du plan
+ * `documentation/Planning/2026-11-06-forge-tableaux-equipement-bestiaire.md` (06/11/2026).
+ *
+ * David, sur COC : *« malgré le fait que j'ai une fiche, rien ne se remplit »* — la fiche du livre
+ * de base était en prose, parce que la consigne de tableau n'existait qu'en mode supplément. Ce
+ * gabarit la donne à tout livre, avec le format exact des deux lecteurs (« Remplir depuis le
+ * corpus ») : première colonne `Arme`/`Protection`/`Véhicule`/`Objet` ou `Créature`, un titre par
+ * tableau. Le titre est **celui de la section du livre**, jamais une page : l'index du livre le
+ * résout en page, et le carnet donne des pages fausses.
+ *
+ * Il remplace la première moitié ordinaire au lieu de s'y ajouter : l'invite doit tenir sous la
+ * limite de NotebookLM (3 594 caractères acceptés, `questionAuCarnet.test.ts`). La consigne des
+ * jauges n'a rien à faire ici.
+ */
+export function gabaritFicheTableaux(sujet: string, nature: 'equipement' | 'creatures', options?: OptionsGabarit): string {
+  const valeurs = nature === 'equipement'
+    ? `Recopie CHAQUE tableau du livre sur ce sujet en TABLEAU MARKDOWN (barres
+verticales), TOUTES ses lignes et TOUTES ses colonnes, sans résumer :
+- avant chaque tableau, une ligne « ### Tableau des <titre exact de sa section> » ;
+- sa PREMIÈRE colonne s'intitule exactement « Arme », « Protection », « Véhicule »
+  ou « Objet », selon ce qu'il décrit ;
+- les autres colonnes gardent les noms du livre ; le prix va dans « Coût », le
+  poids dans « Poids » ; une dernière colonne « Spécial » reçoit les notes de bas
+  de tableau et les effets propres à la ligne ;
+- le nom de chaque objet en gras ; « N/A » ou une case vide s'écrit « – » ;
+- si le livre donne les prix dans un autre tableau, par époque, ajoute à l'objet
+  une colonne « Prix <année> » par époque quand le nom concorde.`
+    : `Commence par un TABLEAU DE PROFIL : première colonne « Créature », puis une
+colonne par caractéristique chiffrée telle que le livre la nomme et une par
+compétence chiffrée ; une ligne par créature, son nom en gras ; une précision
+suit le nombre entre parenthèses (« 8 (4 contre le feu) ») ; une colonne
+« Particularités » réunit le reste, séparé par des points-virgules. Une table
+d'attaques tirée au dé se recopie à part, titrée « ### Tableau des attaques de
+<créature> », colonnes « D6 | Attaque », chaque attaque écrite « **Nom** : effet ».`;
+  const supplement = options?.supplement
+    ? `- Ce sujet vient du SUPPLÉMENT « ${options.supplement} ». Appuie-toi sur lui seul.
+${consigneDeLangueDuSupplement(options.langue)}`
+    : '';
+  return `Tu rédiges la PREMIÈRE MOITIÉ d'une fiche sur le sujet :
+« ${sujet} ». C'est un sujet ${nature === 'equipement' ? "d'ÉQUIPEMENT" : 'de CRÉATURES'} : ses tableaux seront lus ligne à
+ligne par un programme.
+
+Appuie-toi UNIQUEMENT sur les sources de ce carnet. Si elles ne suffisent pas,
+dis-le explicitement plutôt que de compléter.
+
+${consigneStudio(options, "Génère un Markdown que tu sauveras dans le studio, nommé d'après le sujet.")}Réponds DIRECTEMENT par ces trois sections, dans ta réponse elle-même : ta
+réponse est le livrable. Markdown, jusqu'à 6 000 caractères : un tableau ne se
+tronque pas. Aucune ligne « --- » : commence par « ## Métadonnées ».
+
+## Métadonnées
+- sujet : ${sujet}
+- couverture : complète | partielle | absente
+- sources : titre exact de chaque source utilisée
+- sections : titres des sections d'où viennent les tableaux, RECOPIÉS MOT POUR
+  MOT tels qu'imprimés — ils sont confrontés à l'index du livre. Omets un titre
+  dont tu n'es pas sûr.
+
+## Règle
+En quelques phrases, ce que le livre dit de ${nature === 'equipement' ? 'ces objets' : 'ces créatures'} et comment lire ses tableaux.
+
+## Valeurs
+${valeurs}
+
+Règles de rédaction :
+${REGLES_COMMUNES}
+${supplement}- N'écris PAS « À la table », « Cas limites » ni « Non couvert » : elles font
+  l'objet d'une seconde demande.`;
+}
+
+/**
  * Seconde moitié : comment ça se joue, et ce qui manque.
  *
  * Le sujet est rappelé en toutes lettres : rien ne garantit que le carnet garde

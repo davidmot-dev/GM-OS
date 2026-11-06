@@ -13843,14 +13843,32 @@ l'atelier puisse faire le travail correctement pour les équipements et le besti
   David** : *« 1. tu rajoutes une colonne par époque 2. On l'accepte avec alerte 3. tu attends le
   moteur pour le tester »* — prix par époque au catalogue, fiche sans tableau publiée avec alerte,
   bestiaire de COC laissé au moteur, qui sera essayé dessus.
-- **Reste** : l'essai de David (« Remplir depuis le corpus », section Équipement du pilote de COC) ;
-  le moteur (F1 à F5), à lancer sur demande.
+- **Le moteur, F1, F5 et F2, le même jour** (David : *« commit et commence le moteur (gm-os est
+  fermé) »*) — [détail dans le plan](2026-11-06-forge-tableaux-equipement-bestiaire.md#livré-le-0611--f1-f5-f2) :
+  - **F1** : à la relecture, l'atelier montre ce que le catalogue et le bestiaire liront de la fiche
+    (`bilanDesLecteurs.ts`, les deux lecteurs réels à blanc) ; alerte sans refus ;
+  - **F5** : les lecteurs acceptent « Armes à distance légères », « Explosif », « Armures », « PNJ »,
+    « Monstre », « Sbire »… ; aucun tableau du corpus existant n'est lu en plus ;
+  - **F2** : `natureDuSujet` reconnaît un sujet d'équipement ou de créatures, qui reçoit
+    `gabaritFicheTableaux` (livre de base compris), 2 359 à 3 038 caractères, sous la limite de
+    NotebookLM ;
+  - ⚠️ constat : la première moitié ordinaire en mode supplément fait 4 613 caractères, au-delà
+    des 3 594 mesurés le 03/10 ; à vérifier avant d'allonger une invite ;
+  - vérifié : 964 essais (dont 16 neufs), `tsc -b`, eslint.
+- **À l'essai, le soir du 06/11** : *« il n'y a rien qui se passe dans la forge »* — le sujet des
+  adversaires était déjà inventorié et publié, l'atelier écartait le doublon sans un mot ; il
+  passe maintenant en tête avec un bandeau. Et la note `*Relu le …*` au bas des inventaires était
+  lue comme un sujet « Relu le 2026 » (huit jeux ; une fiche vide publiée pour COC,
+  `rules/relu-le-2026.md`, supprimée avec l'accord de David) : corrigé dans `inventaire.ts`. Détail au
+  [plan](2026-11-06-forge-tableaux-equipement-bestiaire.md).
+- **Reste** : l'essai de David (« Remplir depuis le corpus », section Équipement du pilote de COC ;
+  forger le bestiaire de COC et lire le bilan à la relecture) ; F4 et F3 ensuite.
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 160 | **COC : catalogue d'équipement ; la Forge et les tableaux** | 🟠 § 224 ; fiche d'armes et de protections transcrite du livre (44 objets, prix par époque), l'écran nomme une fiche sans tableau ; plan du moteur écrit et tranché — 06/11 | « Remplir depuis le corpus », section Équipement du pilote de COC | Essai de David ; ensuite le moteur (F1 à F5), sur demande |
+| 160 | **COC : catalogue d'équipement ; la Forge et les tableaux** | 🟠 § 224 ; fiche d'armes et de protections transcrite du livre (44 objets, prix par époque), l'écran nomme une fiche sans tableau ; moteur de la Forge F1, F5, F2 livrés — 06/11 | « Remplir depuis le corpus », section Équipement de COC ; forger le bestiaire de COC dans l'atelier | Essai de David ; ensuite F4 et F3 |
 | 156 | **Les chemins des livres** | 🟢 § 220 ; registre de seize jeux (dix-sept livres, réglés avec David), carte « PDF du livre » de la Forge, fenêtre de lecture à la page, boutons « Livre, p. N », skills et passation livrés ; essayé et validé par David — 06/11 | Rien | Rien ; à la demande : les citations de l'Oracle |
 | 151 | **COC — COC-A4/A5/A6** | 🟢 §215 ; pilote2.2.0, 9 871 tests et deux parcours Electron verts ; six lots validés par David —05/11 | Rien pour COC-A1 à A6 | Rien |
 | 150 | **COC — COC-A1/A2/A3** | 🟠 § 214 ; pilote 2.1.0, 9 847 tests et deux parcours Electron verts, dix captures relues — 04/11 | Réimporter d20 ou 3d6 avec Remplacer, essayer dégâts/santé/rôles | Essai David restant |

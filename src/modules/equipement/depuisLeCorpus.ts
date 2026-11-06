@@ -55,12 +55,19 @@ const clef = (texte: string) => texte.normalize('NFD').replace(/\p{Mn}/gu, '').t
 const VIDE = new Set(['', '–', '-', '—']);
 const estUnNombre = (v: string) => /^[+-]?\d+(?:[.,]\d+)?$/.test(v);
 
-/** Reconnaître la famille à la première colonne du tableau. */
+/**
+ * Reconnaître la famille à la première colonne du tableau.
+ *
+ * **Le début du nom suffit** pour les armes, les protections et les véhicules (F5, 06/11/2026) : un
+ * tableau recopié tel que le livre l'imprime s'ouvre sur « Armes à distance légères », « Explosif »,
+ * « Armures » — COC. Le matériel reste au mot exact : « Système », « Objectif », « Article » ouvrent
+ * aussi des tableaux de règles. « Prix des armes » ne commence pas par une famille : il est écarté.
+ */
 function familleDuTableau(premiereColonne: string): FamilleDObjet | null {
     const k = clef(premiereColonne);
-    if (/^armes?$/.test(k)) return 'arme';
-    if (/^(armures?|protections?|boucliers?)$/.test(k)) return 'protection';
-    if (/^(vehicules?|vaisseaux?|engins?)$/.test(k)) return 'vehicule';
+    if (/^(armes?|explosifs?|munitions?|grenades?)/.test(k)) return 'arme';
+    if (/^(armures?|protections?|boucliers?)/.test(k)) return 'protection';
+    if (/^(vehicules?|vaisseaux?|engins?)/.test(k)) return 'vehicule';
     // Le livre de base d'Alien titre ses tableaux de matériel « Appareil », « Aliment », « Substance », « Système ».
     if (/^(tenues?|objets?|materiels?|equipements?|articles?|appareils?|aliments?|substances?|systemes?)$/.test(k)) return 'materiel';
     return null;

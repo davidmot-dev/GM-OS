@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { lireInventaire, couverture } from './inventaire';
 import { CANEVAS, slugFiche } from './canevas';
+import INVENTAIRE_COC from '../../../../docs/systems/coc/rules/inventaire-des-mecaniques.md?raw';
 
 /** Un inventaire tronqué, comme le gabarit 1 le fait rendre. */
 const INVENTAIRE = `| Sujet | Traité | Mécanique | Sections |
@@ -274,4 +275,39 @@ describe('lireInventaire — numérotation en toutes lettres (SRD Year Zero Engi
         // 14 sujets du canevas + 2 mécaniques. Avant correction : 23 pour 14.
         expect(lireInventaire(reel)).toHaveLength(16);
     });
+});
+
+describe('lireInventaire — la note de relecture en italique (COC, 06/11/2026)', () => {
+  /**
+   * `*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; corrigé : …*` : l'astérisque de
+   * l'italique était pris pour une puce et le tiret de la date pour le séparateur. Huit inventaires
+   * rendaient un sujet « Relu le 2026 », et COC en avait forgé une fiche vide, publiée.
+   */
+  it("une ligne en italique n'est pas une puce", () => {
+    const md = `### Mécaniques hors catégories
+
+1. **La poussée** : on relance une fois.
+
+*Relu le 2026-10-31 contre le livre (PDF = imprimée + 3) ; corrigé : les dés bonus.*`;
+    expect(lireInventaire(md).filter(e => e.horsCanevas).map(e => e.sujet)).toEqual(['La poussée']);
+  });
+
+  it("une puce garde sa forme : un tiret ou un astérisque suivi d'une espace", () => {
+    const md = `### Hors catégories
+
+- **La poussée** : on relance une fois.
+* **Le stress** : un dé de plus.`;
+    expect(lireInventaire(md).filter(e => e.horsCanevas).map(e => e.sujet)).toEqual(['La poussée', 'Le stress']);
+  });
+
+  it("l'inventaire réel de COC : les quatre mécaniques, sans la note de relecture", () => {
+    const hors = lireInventaire(INVENTAIRE_COC.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, ''))
+      .filter(e => e.horsCanevas).map(e => slugFiche(e.sujet));
+    expect(hors).toEqual([
+      'les-voies-et-rangs-de-capacites',
+      'le-systeme-d-interactions-sociales-par-approches-et-sentiments',
+      'l-investigation-par-evidences-et-recherche-a-seuils-multiples',
+      'la-gestion-simplifiee-des-adversaires-par-roles-et-bandes-de-sbires',
+    ]);
+  });
 });

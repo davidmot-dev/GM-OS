@@ -1,7 +1,7 @@
 # La Forge écrit des tableaux lisibles — équipement et bestiaire — plan du 06/11/2026
 
-**Statut** : plan tranché par David le 06/11 (§ « Décisions de David ») ; rien n'est codé. Les étapes
-se lancent à sa demande.
+**Statut** : plan tranché par David le 06/11 (§ « Décisions de David »). **F1, F5 et F2 livrés le
+06/11** ; essai de David attendu sur le bestiaire de COC ; F4 et F3 ensuite.
 
 David, le 06/11 : *« j'ai essayé de remplir les équipements de COC à partir de l'atelier et malgré
 le fait que j'ai une fiche, rien ne se remplit »*, puis *« je voudrais à terme que le moteur de
@@ -78,6 +78,70 @@ Le lecteur refuse aujourd'hui une première colonne « Explosif », « Armes à 
 « Munitions ». Élargir `familleDuTableau` (et l'équivalent du bestiaire : « Adversaire »,
 « PNJ », « Monstre ») pour qu'un tableau recopié tel que le livre l'imprime soit lu, sans attendre
 que la Forge renomme sa colonne.
+
+## Livré le 06/11 — F1, F5, F2
+
+David : *« commit et commence le moteur (gm-os est fermé) »*.
+
+- **F1 — le bilan à la relecture** : `forge/rules/bilanDesLecteurs.ts` passe la fiche relue à
+  `remplirDepuisLesFiches` et `remplirLeBestiaire`, à blanc. L'atelier affiche « Ce que le catalogue
+  et le bestiaire liront » : objets par famille, créatures et tables d'attaques, lignes illisibles.
+  Une fiche qui parle d'équipement ou de créatures sans rien donner reçoit l'**alerte**, et reste
+  publiable (décision 2). Une fiche de règles ordinaire n'affiche rien.
+- **F5 — les familles du livre** : pour les armes, protections et véhicules, le **début** de la
+  première colonne suffit (« Armes à distance légères », « Armures », et « Explosif », « Munitions »,
+  « Grenade » pour les armes) ; le matériel reste au mot exact. Le bestiaire reconnaît aussi « PNJ »,
+  « Monstre », « Antagoniste », « Ennemi », « Sbire », « Figurant ». Vérifié sur tout le corpus :
+  aucun tableau existant n'est lu en plus.
+- **F2 — le gabarit des tableaux** : `natureDuSujet` (par mots entiers : « Charmes » n'est pas une
+  arme) reconnaît un sujet d'équipement ou de créatures ; la Forge lui donne
+  `gabaritFicheTableaux` à la place de la première moitié ordinaire, livre de base compris : un
+  `### Tableau des <titre exact de sa section>` par tableau (l'index du livre en donne la page ; le
+  carnet n'en cite aucune), première colonne `Arme`/`Protection`/`Véhicule`/`Objet` ou `Créature`,
+  `Coût`, `Poids`, `Spécial`, « – » pour N/A, une colonne `Prix <année>` par époque (décision 1),
+  jusqu'à 6 000 caractères. La seconde moitié ne change pas.
+- **La longueur des invites** : le gabarit des tableaux fait 2 359 à 3 038 caractères, sous les
+  3 594 acceptés par NotebookLM (essai ajouté à `questionAuCarnet.test.ts`). ⚠️ Constat en passant :
+  la première moitié ordinaire **en mode supplément** fait 4 613 caractères, au-delà de cette
+  limite mesurée le 03/10 ; les fiches de *Colonial Marines* ont pourtant été forgées. La limite est
+  peut-être moins stricte qu'on ne l'a mesurée : à vérifier avant d'allonger une invite.
+- **Vérifié** : `bilanDesLecteurs.test.ts` (5, sur les vraies fiches), `BrainstormOverlay.test.tsx`
+  (+2), `ForgeService.test.ts` (+2 : le gabarit choisi, la fiche assemblée lue par le catalogue),
+  lecteurs (+3), longueurs (+4) ; 964 essais (Forge, invites, équipement, écrans des règles),
+  `tsc -b`, eslint.
+- **À essayer par David** : forger le bestiaire de COC (« La gestion simplifiée des adversaires par
+  rôles et bandes de sbires ») dans l'atelier ; à la relecture, le bilan dit combien de créatures le
+  bestiaire lira (décision 3).
+- **Reste** : F4 (le livre vérifie les lignes) et F3 (un tableau par requête), à lancer après cet
+  essai.
+
+## Corrigé le 06/11, à l'essai de David — le sujet libre et la note de relecture
+
+David, en essayant : *« lorsque je rentre ce sujet : La gestion simplifiée des adversaires par
+rôles et bandes de sbires, il n'y a rien qui se passe dans la forge »*, puis *« la forge s'ouvre
+directement, sans résultat »*.
+
+- **Le sujet libre retrouvé** : le sujet était déjà le quatrième hors catégorie de l'inventaire de
+  COC, et sa fiche déjà publiée. L'atelier écartait le doublon sans un mot et rouvrait la liste
+  relue sur le disque. Désormais il le **passe en tête**, la carte désignée, avec un bandeau :
+  « déjà dans l'inventaire (et publiée) : cliquez dessus pour la (re)forger » (`sujetLibre.ts`,
+  `BrainstormOverlay.tsx`, `DiscoveryUI.tsx`). Une reforge au même nom remplace la fiche sur place ;
+  elle n'est archivée dans `rules-v1/` que si elle a été corrigée à la main.
+- **La note de relecture lue comme un sujet** : `*Relu le 2026-10-31 contre le livre…*`, en
+  italique au bas des inventaires relus, était prise pour une puce (l'astérisque) avec le tiret de
+  la date pour séparateur. **Huit jeux** recevaient un sujet « Relu le 2026 » (Barbarians, Blade
+  Runner, COC, Degenesis, Dune, RuneQuest, Shadowrun Anarchy, Symbaroum) ; COC en avait forgé une
+  fiche vide, publiée : `docs/systems/coc/rules/relu-le-2026.md` (non suivie par git, copie dans
+  `drafts/`). Une puce de symbole demande maintenant une espace (`inventaire.ts`) ; sur les
+  inventaires de tous les jeux, seules ces huit lignes disparaissent.
+- **Vérifié** : `inventaire.test.ts` (+3, dont l'inventaire réel de COC), `BrainstormOverlay.test.tsx`
+  (+2), `DiscoveryUI.test.tsx` (4, neuf) ; 959 essais (Forge, invites, équipement, bestiaire),
+  `tsc -b`, eslint.
+- **La fiche vide supprimée** (`rules/` et `drafts/`), à la demande de David (« oui supprime »).
+- **Reste** : l'essai prévu — cliquer la carte des adversaires pour la reforger avec le gabarit des
+  tableaux.
+- Non traité : en mode supplément, le sujet libre n'entre pas dans la liste (la liste y est celle
+  des sujets retenus, qui a son propre champ « Ajouter »).
 
 ## L'ordre recommandé
 

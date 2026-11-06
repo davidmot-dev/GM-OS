@@ -1840,6 +1840,8 @@
         "brainstorm_desc": "Choisissez vos sources à gauche pour générer des idées, ou utilisez le champ \"Forge Libre\" pour un sujet spécifique.",
         "custom_subject_label": "Sujet de Forge Libre",
         "custom_subject_placeholder": "Ex: Règles de combat aérien, Système de santé mentale...",
+        "custom_subject_found": "« {{sujet}} » est déjà dans l’inventaire : il est en tête de liste. Cliquez dessus pour le forger.",
+        "custom_subject_found_published": "« {{sujet}} » est déjà dans l’inventaire, et sa fiche est publiée : il est en tête de liste. Cliquez dessus pour la reforger : à la publication, la nouvelle fiche remplace l’ancienne (archivée dans rules-v1/ seulement si elle a été corrigée à la main).",
         "analyze_button": "Analyser les sources",
         "source_adn_btn": "ADN",
         "source_atelier_btn": "Atelier",
@@ -1909,7 +1911,13 @@
         "sections_score": "{{resolues}} sur {{total}} se retrouvent dans l'index ({{sources}}).",
         "sections_unresolved": "introuvable",
         "sections_unresolved_hint": "Une section introuvable n'accuse pas la fiche à elle seule : l'index peut être incomplet, ou le titre inventé. À vous de trancher avant de publier.",
-        "sections_impossible_pages": "Pages citées au-delà du livre : {{pages}}. L'index n'atteste que jusqu'à la page {{max}}."
+        "sections_impossible_pages": "Pages citées au-delà du livre : {{pages}}. L'index n'atteste que jusqu'à la page {{max}}.",
+        "lecteurs_title": "Ce que le catalogue et le bestiaire liront",
+        "lecteurs_equipement": "Catalogue : {{detail}}.",
+        "lecteurs_bestiaire": "Bestiaire : {{creatures}} créature(s), {{attaques}} table(s) d'attaques rattachée(s).",
+        "lecteurs_lignes": "{{n}} ligne(s) de tableau illisible(s) — elles n'entreront ni au catalogue ni au bestiaire :",
+        "lecteurs_alerte_equipement": "Cette fiche parle d'équipement, mais le catalogue n'y lira rien : aucun tableau dont la première colonne est Arme, Protection, Véhicule ou Objet. Elle peut être publiée ; recopiez les tableaux du livre pour que « Remplir depuis le corpus » la lise.",
+        "lecteurs_alerte_bestiaire": "Cette fiche parle de créatures, mais le bestiaire n'y lira rien : aucun tableau de profil dont la première colonne est Créature. Elle peut être publiée ; recopiez les profils du livre pour que « Remplir depuis le corpus » la lise."
       },
       "notebook": {
         "title": "Navigateur NotebookLM",

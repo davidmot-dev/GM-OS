@@ -394,9 +394,10 @@ tableau. Transcrite depuis le PDF (p. 52-54, 93-96, lus en image et confrontés 
 `equipement-armes-et-protections-du-livre-de-base.md`, **36 armes et 8 protections**, chacune avec
 sa page et une colonne de prix par époque, de 2025 à 1865 (choix de David). L'écran « Remplir depuis le corpus » nomme
 désormais une fiche qui parle d'équipement sans tableau lisible. **Essai de David attendu** :
-« Remplir depuis le corpus » dans la section Équipement du pilote. **À venir** : que la Forge écrive
-ces tableaux seule ([plan](2026-11-06-forge-tableaux-equipement-bestiaire.md)) ; le bestiaire de
-COC (adversaires par rôles) attend ce moteur, qui sera essayé dessus (décision de David).
+« Remplir depuis le corpus » dans la section Équipement du pilote. **La Forge écrit ces tableaux
+depuis le 06/11** (F1, F5, F2 du [plan](2026-11-06-forge-tableaux-equipement-bestiaire.md)) : le
+bestiaire de COC (adversaires par rôles) est son premier essai — le forger dans l'atelier, puis lire
+à la relecture le bilan « Ce que le catalogue et le bestiaire liront » (décision de David).
 
 ## Crimes
 

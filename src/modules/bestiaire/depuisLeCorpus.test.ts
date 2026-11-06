@@ -109,3 +109,14 @@ describe('les défauts vus par David le 06/11', () => {
         expect(remplirLeBestiaire(undefined, [fiche]).bestiaire.creatures).toMatchObject([{ nom: 'Drone XX121', valeurs: { vitesse: 2, sante: 7 } }]);
     });
 });
+
+describe('F5 — les profils nommés comme le livre les nomme (06/11/2026)', () => {
+    it('« PNJ », « Monstre », « Sbires » ouvrent un tableau de profil', () => {
+        for (const entete of ['PNJ', 'Monstre', 'Sbires']) {
+            const contenu = `## Valeurs\n\n| ${entete} | PV | DEF |\n|:--- |:--- |:--- |\n| **Gros bras** | 12 | 13 |\n`;
+            expect(estUneFicheDeBestiaire(contenu)).toBe(true);
+            expect(remplirLeBestiaire(undefined, [{ chemin: 'x.md', contenu, livre: 'COC' }]).journal.creaturesAjoutees.map(c => c.nom)).toEqual(['Gros bras']);
+        }
+        expect(estUneFicheDeBestiaire('| Rang | Effet |\n|:--- |:--- |\n| 1 | +1 |\n')).toBe(false);
+    });
+});

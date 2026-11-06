@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { questionAuCarnet, LONGUEUR_MAX_D_UNE_QUESTION } from './questionAuCarnet';
-import { gabaritInventaire, gabaritFicheRegle, gabaritFichePratique, promptVoix, promptPersonas } from '../../forge/rules/gabarits';
+import { gabaritInventaire, gabaritFicheRegle, gabaritFicheTableaux, gabaritFichePratique, promptVoix, promptPersonas } from '../../forge/rules/gabarits';
 import { gabaritInventaireDeCampagne, gabaritStructureDeCampagne, toutesLesInvites } from '../../forge/campagne/gabaritsDeCampagne';
 
 const ETAT_COURT = '## Scène\nLe quai 9, la nuit.\n## PJ\n- Deckard';
@@ -53,5 +53,18 @@ describe('les invites de la Forge tiennent sous la limite de NotebookLM', () => 
     ];
     it.each(invites)('%s', (_nom, invite) => {
         expect(invite.length).toBeLessThanOrEqual(PLUS_LONG_ACCEPTE);
+    });
+});
+
+/** F2 (06/11/2026) : le gabarit des tableaux tient lui aussi sous la limite, supplément compris. */
+describe('le gabarit des tableaux tient sous la limite de NotebookLM', () => {
+    const supplement = { supplement: 'Colonial Marines Operations Manual', langue: 'fr' };
+    it.each([
+        ['équipement', gabaritFicheTableaux('Equipements et Objets', 'equipement')],
+        ['créatures', gabaritFicheTableaux('Les adversaires', 'creatures')],
+        ['équipement, supplément', gabaritFicheTableaux('Armes de poing', 'equipement', supplement)],
+        ['créatures, supplément', gabaritFicheTableaux('Xénomorphes', 'creatures', supplement)],
+    ])('%s', (_nom, invite) => {
+        expect(invite.length).toBeLessThanOrEqual(3594);
     });
 });

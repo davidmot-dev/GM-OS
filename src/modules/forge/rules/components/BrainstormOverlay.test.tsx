@@ -62,6 +62,30 @@ describe('BrainstormOverlay — dépendances de la découverte', () => {
         await waitFor(() => expect(useBrainstormStore.getState().candidates[0].title).toBe('Voyages interstellaires'));
         expect(forgeService.discoverCandidates).not.toHaveBeenCalled();
     });
+
+    /*
+     * David, le 06/11/2026, sur COC : un sujet libre déjà inventorié se fondait dans la liste,
+     * sans un mot — « il n'y a rien qui se passe dans la forge ». Il passe en tête, marqué.
+     */
+    it('un sujet libre déjà dans la liste passe en tête, marqué, sans se dédoubler', async () => {
+        lire.mockResolvedValue(inventaire);
+        render(<BrainstormOverlay />);
+        await waitFor(() => expect(useBrainstormStore.getState().candidates.length).toBeGreaterThan(0));
+        act(() => useBrainstormStore.getState().setCustomSubject('Poursuites'));
+        await waitFor(() => expect(useBrainstormStore.getState().candidates[0].id).toBe('poursuites'));
+        const { candidates } = useBrainstormStore.getState();
+        expect(candidates[0].tags).toContain('sujet libre retrouvé');
+        expect(candidates.filter(c => c.id === 'poursuites')).toHaveLength(1);
+        expect(candidates.slice(1).some(c => c.tags.includes('sujet libre retrouvé'))).toBe(false);
+    });
+
+    it('un sujet libre inédit reçoit sa propre marque', async () => {
+        lire.mockResolvedValue(inventaire);
+        render(<BrainstormOverlay />);
+        await waitFor(() => expect(useBrainstormStore.getState().candidates.length).toBeGreaterThan(0));
+        act(() => useBrainstormStore.getState().setCustomSubject('Voyages interstellaires'));
+        await waitFor(() => expect(useBrainstormStore.getState().candidates[0].tags).toEqual(['hors canevas', 'sujet libre']));
+    });
 });
 
 /**
@@ -115,5 +139,39 @@ describe('BrainstormOverlay — supplément', () => {
         render(<BrainstormOverlay />);
         await waitFor(() => expect(useBrainstormStore.getState().candidates.map(c => c.title)).toEqual(['Pistolets']));
         expect(forgeService.inventaireDeSupplement).not.toHaveBeenCalled();
+    });
+});
+
+describe('BrainstormOverlay — relecture : ce que les lecteurs liront (F1, 06/11/2026)', () => {
+    const origine = useBrainstormStore.getState();
+    const pontInitial = window.appBridge;
+    const carte = (slug: string, content: string) => ({
+        id: slug, slug, title: slug, category: 'rule' as const, summary: '', tags: [], content,
+        systemId: 'coc', forgedAt: 0, sections: [], avertissements: [],
+    });
+
+    beforeEach(() => {
+        window.appBridge = { ai: { listSystems: vi.fn(async () => ['coc']), listDir: vi.fn(async () => []), readDoc: vi.fn(async () => null) } } as unknown as typeof window.appBridge;
+    });
+    afterEach(() => {
+        useBrainstormStore.setState(origine, true);
+        window.appBridge = pontInitial;
+    });
+
+    it('une fiche d’équipement en prose : l’alerte, sans refus', () => {
+        useBrainstormStore.setState({ ...origine, step: 'review', corpusCible: 'coc',
+            activeCard: carte('equipements-et-objets', '---\nsujet: Equipements et Objets\n---\n\n## Valeurs\n- Gilet rigide : RD 8, malus -4\n') });
+        render(<BrainstormOverlay />);
+        // i18n n'est pas chargé dans les essais : on lit la clé.
+        expect(screen.getByRole('alert').textContent).toBe('session.forge_module.atelier.lecteurs_alerte_equipement');
+    });
+
+    it('une fiche à tableaux : ce que le catalogue lira, par famille', () => {
+        useBrainstormStore.setState({ ...origine, step: 'review', corpusCible: 'coc',
+            activeCard: carte('armes', '---\nsujet: Armes\n---\n\n### Tableau des Armes de contact (p. 93)\n\n| Arme | DM |\n|:--- |:--- |\n| **Machette** | 1d6+1+FOR |\n| **Fouet** | 1d4+FOR |\n') });
+        render(<BrainstormOverlay />);
+        const bilan = document.querySelector('[data-bilan-des-lecteurs]');
+        expect(bilan?.textContent).toContain('session.forge_module.atelier.lecteurs_equipement');
+        expect(screen.queryByRole('alert')).toBeNull();
     });
 });

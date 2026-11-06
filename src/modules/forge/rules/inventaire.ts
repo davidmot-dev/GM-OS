@@ -215,8 +215,13 @@ export function lireInventaire(markdown: string): EntreeInventaire[] {
     // Statistique Duale** : … » et celles du SRD YZE sous « un. **La mécanique
     // de poussée** : … ». Sans les deux formes, les mécaniques centrales d'un
     // jeu tombent dans le vide — quatre pour Dune, trois pour le SRD.
+    //
+    // Une puce de symbole veut une espace, comme en Markdown : `*Relu le 2026-10-31 contre le
+    // livre…*`, la note en italique posée au bas des inventaires relus, devenait le sujet
+    // « Relu le 2026 » (le tiret de la date pris pour le séparateur) — sept jeux, et une fiche vide
+    // forgée et publiée pour COC. Relevé par David le 06/11/2026 : « il n'y a rien qui se passe ».
     const puce = new RegExp(
-      `^\\s*(?:[-*•]|\\d+[.)]|(?:${NOMBRES_ECRITS})[.)])\\s*(?:\\*\\*)?\\s*([^:*]{2,80}?)\\s*(?:\\*\\*)?\\s*[:—-]\\s*(.+)$`,
+      `^\\s*(?:[-*•]\\s|\\d+[.)]|(?:${NOMBRES_ECRITS})[.)])\\s*(?:\\*\\*)?\\s*([^:*]{2,80}?)\\s*(?:\\*\\*)?\\s*[:—-]\\s*(.+)$`,
       'i',
     ).exec(ligne);
     if (puce) {

@@ -177,3 +177,24 @@ describe('remplirDepuisLesFiches — livre de base d’Alien', () => {
         expect(ensemble.catalogue.objets).toHaveLength(89 + 66 - 1);
     });
 });
+
+describe('F5 — les familles telles que le livre les imprime (06/11/2026)', () => {
+    const lire = (tableau: string) => remplirDepuisLesFiches(undefined, [{ chemin: 'systems/coc/rules/x.md', livre: 'COC', contenu: tableau }]);
+
+    it('« Armes à distance légères », « Explosif », « Armures » ouvrent un tableau d’équipement', () => {
+        const { catalogue } = lire([
+            '### Tableau des Armes à distance (p. 94)', '', '| Armes à distance légères | Portée | DM |', '|:--- |:--- |:--- |', '| Taser | Contact | 1d4 |', '',
+            '### Tableau des Explosifs (p. 95)', '', '| Explosif | DM |', '|:--- |:--- |', '| Mine | 4d6 |', '',
+            '### Tableau des Armures (p. 96)', '', '| Armures | RD |', '|:--- |:--- |', '| Gilet souple | 4 |',
+        ].join('\n'));
+        expect(catalogue.objets.map(o => [o.nom, o.famille, o.source?.page])).toEqual([
+            ['Taser', 'arme', 94], ['Mine', 'arme', 95], ['Gilet souple', 'protection', 96],
+        ]);
+    });
+
+    it('« Prix des armes » ne commence pas par une famille : il est écarté', () => {
+        const { catalogue, journal } = lire('### Prix (p. 53)\n\n| Prix des armes | 2025 |\n|:--- |:--- |\n| Machette | 30 |\n');
+        expect(catalogue.objets).toEqual([]);
+        expect(journal.tableauxIgnores).toHaveLength(1);
+    });
+});

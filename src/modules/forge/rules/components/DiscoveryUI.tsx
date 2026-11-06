@@ -4,6 +4,7 @@ import { Sparkles, Zap, ChevronRight, RefreshCw, CheckCircle2, MinusCircle, Help
 import { useBrainstormStore } from '../store/useBrainstormStore';
 import ForgeProgress from './ForgeProgress';
 import type { BrainstormCandidate } from '../types';
+import { sujetLibre } from '../sujetLibre';
 
 /**
  * La liste des sujets, telle que l'inventaire la rend.
@@ -76,6 +77,10 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
   };
 
   const duCanevas = candidates.filter(c => !c.tags.includes('hors canevas'));
+  // Le sujet tapé à gauche, s'il est dans la liste : en tête, et dit (06/11/2026).
+  const libre = candidates.find(c => sujetLibre(c.tags) !== null);
+  const libreRetrouve = libre && sujetLibre(libre.tags) === 'retrouve';
+  const librePublie = libre && fichesPubliees.includes(libre.id);
   const traites = duCanevas.filter(c => etat(c) === 'traite').length;
 
   // L'inventaire est une requête au carnet comme les autres : elle mérite le
@@ -148,6 +153,23 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
         </div>
       </div>
 
+      {/*
+        Un sujet déjà inventorié ne s'ajoutait pas, sans un mot : David a tapé un sujet de COC
+        déjà publié, et « il n'y a rien qui se passe dans la forge » (06/11/2026).
+      */}
+      {libre && libreRetrouve && (
+        <p
+          role="status"
+          data-sujet-libre={libre.id}
+          className="flex items-start gap-2 px-6 py-4 rounded-2xl border border-gm-violet/30 bg-gm-violet/5 text-xs text-app-text/70 leading-relaxed"
+        >
+          <Sparkles size={14} className="mt-0.5 shrink-0 text-gm-violet" />
+          {t(librePublie
+            ? 'session.forge_module.atelier.custom_subject_found_published'
+            : 'session.forge_module.atelier.custom_subject_found', { sujet: libre.title })}
+        </p>
+      )}
+
       <div className="grid grid-cols-2 gap-4">
         {candidates.map((candidate, idx) => {
           const statut = etat(candidate);
@@ -156,6 +178,7 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
           // c'est le nom sous lequel la fiche a réellement été écrite.
           const enregistre = fichesPubliees.includes(candidate.id);
           const enBrouillon = !enregistre && brouillonsEnAttente.includes(candidate.id);
+          const estLeSujetLibre = candidate === libre;
 
           if (supplement && enEdition?.id === candidate.id) {
             return (
@@ -185,7 +208,9 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
             <div key={idx} className="relative group/sujet min-w-0">
             <button
               onClick={() => onSelect(candidate)}
+              aria-current={estLeSujetLibre ? 'true' : undefined}
               className={`group relative w-full h-full bg-app-surface/60 border p-6 rounded-[2rem] text-left transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-6 shadow-xl ${
+                estLeSujetLibre ? 'border-gm-violet/60 ring-1 ring-gm-violet/40' :
                 statut === 'traite' ? 'border-app-border/10 hover:border-gm-violet/50 hover:bg-gm-violet/5' : 'border-app-border/10 opacity-60 hover:opacity-100'
               }`}
             >
