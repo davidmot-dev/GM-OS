@@ -146,7 +146,7 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
           <button
             onClick={() => (onRelancer ? onRelancer() : startDiscovery())}
             className="p-3 hover:bg-app-text/5 rounded-xl text-app-text/40 hover:text-gm-violet transition-all group"
-            title={t('common:actions.refresh')}
+            title={t('session.forge_module.atelier.redemander_inventaire')}
           >
             <RefreshCw size={20} className="group-hover:rotate-180 transition-transform duration-700" />
           </button>

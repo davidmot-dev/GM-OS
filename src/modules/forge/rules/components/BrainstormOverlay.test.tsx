@@ -3,6 +3,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import { BrainstormOverlay } from './BrainstormOverlay';
 import { useBrainstormStore, abandonnerLaRequete } from '../store/useBrainstormStore';
 import { forgeService, type InventaireForge } from '../../ForgeService';
+import { useModalStore } from '../../../../stores/useModalStore';
 
 vi.mock('../../ForgeService', () => ({ forgeService: { discoverCandidates: vi.fn(), inventaireDeSupplement: vi.fn() } }));
 vi.mock('../../../session/useSessionOSStore', () => ({
@@ -13,7 +14,15 @@ vi.mock('../../../../store/useSessionStore', () => ({
     useSessionStore: (selecteur: (etat: { setActiveModule: () => void }) => unknown) =>
         selecteur({ setActiveModule: vi.fn() }),
 }));
-vi.mock('./DiscoveryUI', () => ({ default: () => <div>Inventaire</div> }));
+// La liste réduite à ses deux gestes de requête : abandonner, redemander l'inventaire.
+vi.mock('./DiscoveryUI', () => ({
+    default: (p: { onAbandon?: () => void; onRelancer?: () => void }) => (
+        <div>Inventaire
+            <button onClick={p.onAbandon}>abandonner</button>
+            {p.onRelancer && <button onClick={p.onRelancer}>redemander</button>}
+        </div>
+    ),
+}));
 
 const inventaire = '| Sujet | Traité | Mécanique | Sections |\n|---|---|---|---|\n| Résolution des jets | oui | 2d20 | Agir |';
 
@@ -77,6 +86,37 @@ describe('BrainstormOverlay — dépendances de la découverte', () => {
         expect(candidates[0].tags).toContain('sujet libre retrouvé');
         expect(candidates.filter(c => c.id === 'poursuites')).toHaveLength(1);
         expect(candidates.slice(1).some(c => c.tags.includes('sujet libre retrouvé'))).toBe(false);
+    });
+
+    /*
+     * Audit du parcours de l'atelier, 06/11/2026 (défaut A) : sur un jeu sans inventaire enregistré,
+     * « Abandonner » pendant le premier inventaire le relançait aussitôt — la liste vide et l'atelier
+     * sans erreur ressemblaient à une ouverture.
+     */
+    it('abandonner le premier inventaire ne le relance pas ; « redemander » le relance', async () => {
+        vi.mocked(forgeService.discoverCandidates).mockImplementation(() => new Promise(() => {}));
+        render(<BrainstormOverlay />);
+        await waitFor(() => expect(forgeService.discoverCandidates).toHaveBeenCalledTimes(1));
+        act(() => screen.getByText('abandonner').click());
+        await act(async () => { await new Promise(r => setTimeout(r, 30)); });
+        expect(forgeService.discoverCandidates).toHaveBeenCalledTimes(1);
+        act(() => screen.getByText('redemander').click());
+        await waitFor(() => expect(forgeService.discoverCandidates).toHaveBeenCalledTimes(2));
+    });
+
+    /* Défaut B : « Actualiser » relisait le même fichier ; il redemande l'inventaire au carnet. */
+    it('livre de base : « redemander » interroge le carnet même quand un inventaire est sur le disque', async () => {
+        lire.mockResolvedValue(inventaire);
+        vi.mocked(forgeService.discoverCandidates).mockResolvedValue({ inventaire, candidats: [] });
+        render(<BrainstormOverlay />);
+        await waitFor(() => expect(useBrainstormStore.getState().candidates.length).toBeGreaterThan(0));
+        expect(forgeService.discoverCandidates).not.toHaveBeenCalled();
+        act(() => screen.getByText('redemander').click());
+        // La liste n'est pas vide : une confirmation d'abord.
+        await waitFor(() => expect(useModalStore.getState().type).toBe('confirm'));
+        expect(forgeService.discoverCandidates).not.toHaveBeenCalled();
+        act(() => { useModalStore.getState().onConfirm?.(); });
+        await waitFor(() => expect(forgeService.discoverCandidates).toHaveBeenCalledTimes(1));
     });
 
     it('un sujet libre inédit reçoit sa propre marque', async () => {

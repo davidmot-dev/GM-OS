@@ -92,6 +92,7 @@
     }
   },
   "clock": {
+    "timerLabel": "Timer",
     "agencement": {
       "completion": "Completion: {{p}}%",
       "dernier_quart": "Last quarter",
@@ -1843,6 +1844,10 @@
         "custom_subject_placeholder": "e.g., Aerial combat rules, Mental health system...",
         "custom_subject_found": "“{{sujet}}” is already in the inventory: it is first in the list. Click it to forge it.",
         "custom_subject_found_published": "“{{sujet}}” is already in the inventory and its sheet is published: it is first in the list. Click it to forge it again: once published, the new sheet replaces the old one (archived in rules-v1/ only if it was edited by hand).",
+        "carnet_occupe": "The notebook is still answering the previous request: wait for its answer, or abandon it.",
+        "redemander_inventaire": "Ask the notebook for the inventory again",
+        "redemander_inventaire_confirm": "Asking the notebook for the inventory again (about a minute) replaces the list of subjects. Sheets already published stay on disk; the new inventory is saved only through “Save inventory”.",
+        "notebook_required": "First choose a NotebookLM notebook, in the right-hand panel.",
         "analyze_button": "Analyze Sources",
         "source_adn_btn": "DNA",
         "source_atelier_btn": "Atelier",

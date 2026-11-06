@@ -258,6 +258,32 @@ David : *« refait la fiche des adversaires »*, puis, à la question de la mét
 - **À essayer par David** : « Remplir depuis le corpus » dans la section Bestiaire du pilote de
   COC (18 profils).
 
+## Audit du parcours de l'atelier — 06/11, le soir
+
+Idées reprises d'ECC à la demande de David (*« ok pour ton ordre »*), sans l'installer : le skill
+`.claude/skills/auditer-un-parcours/` (d'après `click-path-audit`), appliqué à l'atelier de règles ;
+un crochet `rappel-apres-compaction.mjs` ; l'étape « qui d'autre lit ça ? » dans `finir-un-pilote`.
+
+- **A — l'abandon relançait l'inventaire** : sur un jeu sans inventaire enregistré, « Abandonner »
+  le premier inventaire le relançait aussitôt (liste vide, sans erreur : l'effet de découverte
+  croyait l'atelier tout juste ouvert). Corrigé : après un abandon, l'inventaire attend le geste
+  « Redemander ». Prouvé par un essai qui échouait avant (2 appels au carnet au lieu d'un).
+- **B — « Actualiser » ne redemandait rien** (livre de base) : il relisait l'inventaire du disque.
+  David : *« redemander l'inventaire »*. Le bouton redemande désormais au carnet, avec une
+  confirmation quand une liste est déjà là ; le nouvel inventaire ne s'enregistre que par
+  « Enregistrer l'inventaire ».
+- **C — « Analyser » grisé sans dire pourquoi** quand aucun carnet n'est choisi : le message
+  « Choisissez d'abord un carnet NotebookLM, dans le panneau de droite » s'affiche.
+- **D — le carnet occupé se taisait** : les trois gestes qui le réservent (inventaire, fiche,
+  personas) disent maintenant qu'il répond encore à la requête précédente.
+- Vérifiés sans défaut : le « X » et « Recommencer » rendent le verrou ; une réponse tardive après
+  un abandon est jetée.
+- **Clés de traduction** : l'essai existait déjà (`src/locales/clesEmployees.test.ts`, deux langues,
+  namespaces, replis tolérés) — je l'avais d'abord cru absent. Seul ajout : `clock.timerLabel`
+  (« Minuteur » / « Timer »), employée avec un repli français.
+- **Vérifié** : 1 253 essais (locales, Forge, Clock-OS), `tsc -b`, eslint ; gardes : `node --test
+  .claude/hooks/gardes.test.mjs` (11).
+
 ## L'ordre recommandé
 
 F1, puis F5, puis F2, puis F4, puis F3. F1 et F5 se font sans toucher aux invites et servent tout de

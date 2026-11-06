@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react';
+import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useBrainstormStore,
@@ -347,10 +347,27 @@ export const BrainstormOverlay: React.FC = () => {
     return true;
   }, [corpus, construireCandidats, cheminDesSujets, setCandidates]);
 
+  /**
+   * Audit du parcours de l'atelier, 06/11/2026 (défaut D) : les trois gestes qui réservent le carnet
+   * s'arrêtaient sans un mot s'il répondait encore à une requête — « rien ne se passe ».
+   */
+  const signalerCarnetOccupe = useCallback(
+    () => gmToast(t('session.forge_module.atelier.carnet_occupe'), 'info'),
+    [t],
+  );
+
+  /**
+   * Défaut A du même audit : sur un jeu sans inventaire enregistré, « Abandonner » le premier
+   * inventaire le relançait aussitôt — la liste vide, sans erreur, ressemblait à une ouverture de
+   * l'atelier. Après un abandon, l'inventaire attend le geste « Redemander ».
+   */
+  const inventaireAbandonne = useRef(false);
+
   const handleDiscover = useCallback(async () => {
     if (!notebookId) return;
     const gen = reserverLeCarnet();
-    if (gen === null) return;
+    if (gen === null) { signalerCarnetOccupe(); return; }
+    inventaireAbandonne.current = false;
     setProcessing(true);
     try {
       if (supplement) {
@@ -377,7 +394,7 @@ export const BrainstormOverlay: React.FC = () => {
     } finally {
       libererLeCarnet(gen);
     }
-  }, [notebookId, selectedSourceIds, t, setProcessing, setError, construireCandidats, supplement, langueDuJeu, setCandidates, enregistrerLesSujets]);
+  }, [notebookId, selectedSourceIds, t, setProcessing, setError, construireCandidats, supplement, langueDuJeu, setCandidates, enregistrerLesSujets, signalerCarnetOccupe]);
 
   /**
    * Le sujet libre se répercute sans repayer l'inventaire.
@@ -399,7 +416,10 @@ export const BrainstormOverlay: React.FC = () => {
   }, [brainstormStore.customSubject, brainstormStore.inventaireBrut, brainstormStore.step, construireCandidats, supplement]);
 
   useEffect(() => {
-    if (brainstormStore.step === 'discovery' && brainstormStore.candidates.length === 0 && !brainstormStore.isProcessing && !brainstormStore.error) {
+    // Hors de la liste, l'abandon est oublié : rouvrir l'atelier repart du disque.
+    if (brainstormStore.step !== 'discovery') { inventaireAbandonne.current = false; return; }
+    if (inventaireAbandonne.current) return;
+    if (brainstormStore.candidates.length === 0 && !brainstormStore.isProcessing && !brainstormStore.error) {
       // Le disque d'abord : une requête au carnet ne se paie que si rien n'a
       // encore été enregistré pour ce corpus.
       //
@@ -419,6 +439,7 @@ export const BrainstormOverlay: React.FC = () => {
    * moindre message, jusqu'à ce que la requête retombe.
    */
   const handleAbandon = () => {
+    if (brainstormStore.step === 'discovery' && brainstormStore.candidates.length === 0) inventaireAbandonne.current = true;
     abandonnerLaRequete();
     brainstormStore.setProcessing(false);
     brainstormStore.setStep('discovery');
@@ -460,7 +481,7 @@ export const BrainstormOverlay: React.FC = () => {
         return;
     }
     const gen = reserverLeCarnet();
-    if (gen === null) return;
+    if (gen === null) { signalerCarnetOccupe(); return; }
     setEtapeDeForge(null);
     brainstormStore.startForging();
 
@@ -643,7 +664,7 @@ export const BrainstormOverlay: React.FC = () => {
       return;
     }
     const gen = reserverLeCarnet();
-    if (gen === null) return;
+    if (gen === null) { signalerCarnetOccupe(); return; }
     brainstormStore.startPersonas();
     try {
       const resultat = await forgeService.forgePersonas(
@@ -1012,17 +1033,24 @@ export const BrainstormOverlay: React.FC = () => {
                 onSelect={handleForge}
                 onAbandon={handleAbandon}
                 onEnregistrerInventaire={brainstormStore.inventaireBrut ? handleRevoirInventaire : undefined}
+                /*
+                  Défaut B de l'audit du 06/11/2026 : pour le livre de base, « Actualiser » relisait
+                  l'inventaire du disque et rendait la même liste. David : « redemander
+                  l'inventaire ».
+                */
+                onRelancer={() => {
+                  const relancer = () => { void handleDiscover(); };
+                  if (brainstormStore.candidates.length === 0) return relancer();
+                  gmConfirm(
+                    supplement
+                      ? "Redemander l'inventaire au carnet remplace la liste des sujets retenus, "
+                        + 'renommages compris. Les fiches déjà publiées restent sur le disque.'
+                      : t('session.forge_module.atelier.redemander_inventaire_confirm'),
+                    relancer, undefined, 'REDEMANDER', 'ANNULER',
+                  );
+                }}
                 {...(supplement ? {
                   supplement: supplement.titre,
-                  onRelancer: () => {
-                    const relancer = () => { void handleDiscover(); };
-                    if (brainstormStore.candidates.length === 0) return relancer();
-                    gmConfirm(
-                      "Redemander l'inventaire au carnet remplace la liste des sujets retenus, "
-                      + 'renommages compris. Les fiches déjà publiées restent sur le disque.',
-                      relancer, undefined, 'REDEMANDER', 'ANNULER',
-                    );
-                  },
                   onRenommer: (id: string, titre: string) => changerLesSujets(renommerLeSujet(brainstormStore.candidates, id, titre)),
                   onEcarter: (id: string) => changerLesSujets(ecarterLeSujet(brainstormStore.candidates, id)),
                   onAjouter: (titre: string) => changerLesSujets(ajouterLeSujet(brainstormStore.candidates, titre)),

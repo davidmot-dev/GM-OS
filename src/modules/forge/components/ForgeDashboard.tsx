@@ -1413,6 +1413,15 @@ const ForgeDashboard: React.FC = () => {
                 >
                   {t('modules:session.forge_module.atelier.analyze_button')}
                 </button>
+                {/*
+                  Audit du parcours de l'atelier, 06/11/2026 (défaut C) : sans carnet choisi, le
+                  bouton restait gris sans dire pourquoi ; le corpus manquant, lui, était dit.
+                */}
+                {!selectedNotebook && (
+                  <p className="text-ui-10 text-etat-alerte/60 leading-relaxed">
+                    {t('modules:session.forge_module.atelier.notebook_required')}
+                  </p>
+                )}
                 {!corpusVise && (
                   <p className="text-ui-10 text-etat-alerte/60 leading-relaxed">
                     {t('modules:session.forge_module.atelier.corpus_required')}
