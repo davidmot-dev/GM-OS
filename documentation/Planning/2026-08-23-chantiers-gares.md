@@ -13811,10 +13811,46 @@ dépôt, l'enregistrement dans la Forge, la fenêtre de lecture intégrée, l'or
 - **Essayé et validé par David le 06/11** : *« ok j'ai essayé, c'est bon »*. Plus rien à faire ;
   à la demande, plus tard : « Livre, p. N » sur les citations de l'Oracle (plan, étape D).
 
+### 224 · COC : le catalogue d'équipement depuis le livre ; la Forge et les tableaux — 06/11/2026
+
+David : *« j'ai essayé de remplir les équipements de COC à partir de l'atelier et malgré le fait que
+j'ai une fiche, rien ne se remplit »*, puis *« fais les 2, mais je voudrais à terme que le moteur de
+l'atelier puisse faire le travail correctement pour les équipements et le bestiaire »*. GM-OS fermé.
+
+- **La cause** : la fiche forgée `docs/systems/coc/rules/equipements-et-objets.md` (gabarit v3,
+  `relu: false`) est en prose, sans tableau ; « Remplir depuis le corpus » ne lit que des tableaux
+  dont la première colonne nomme une famille. Dans le moteur, la consigne de tableau
+  (`consignesDuSupplement`, `forge/rules/gabarits.ts`) n'existe que pour un supplément.
+- **Transcrite** : `equipement-armes-et-protections-du-livre-de-base.md`, depuis le PDF (registre des
+  livres, + 3), tableaux lus en image et confrontés au texte extrait : 36 armes (contact p. 93,
+  distance légères et lourdes p. 94, explosifs p. 95), 8 protections (p. 96, le casque dédoublé en
+  moderne et médiéval), notes de bas de tableau en « Spécial ». **Une colonne de prix par époque**
+  (2025 à 1865, p. 53-54), choix de David : remplie quand le nom concorde ; les appariements au
+  sens (Arc → Arc court et Arc long, Hache à deux mains, Canon de 75 mm, Grenade ×3) sont dits dans
+  la fiche ; le Fusil mitrailleur, sans caractéristiques, n'est pas rapporté à la Mitrailleuse. La
+  fiche forgée reste (règles de prix).
+- **L'écran le dit** : `lireLesLivresDuJeu` relève les fiches qui parlent d'équipement (ou de
+  créatures) sans tableau lisible ; un encart (`FichesSansTableau.tsx`) les nomme dans « Remplir
+  depuis le corpus » du catalogue et du bestiaire, et le livre affiche « aucun tableau d'équipement
+  lisible ».
+- **Vérifié** : la fiche passée au vrai lecteur (44 objets, 0 ligne illisible) ; essais
+  `livresDuJeu.test.ts` (+1), `RemplirDepuisLeCorpus.test.tsx` (+2, sur les vraies fiches de COC) ;
+  115 essais (équipement, bestiaire, écrans des règles), `corpusDerivable`, `tsc -b`, eslint.
+  Guides 50 et 54-COC, synthèse des pilotes.
+- **Plan du moteur** : [2026-11-06-forge-tableaux-equipement-bestiaire.md](2026-11-06-forge-tableaux-equipement-bestiaire.md)
+  — F1 contrôle à la relecture par les vrais lecteurs, F2 consignes de tableau pour tout livre, F3 un
+  tableau par requête, F4 vérification des lignes dans le PDF, F5 familles élargies. **Décisions de
+  David** : *« 1. tu rajoutes une colonne par époque 2. On l'accepte avec alerte 3. tu attends le
+  moteur pour le tester »* — prix par époque au catalogue, fiche sans tableau publiée avec alerte,
+  bestiaire de COC laissé au moteur, qui sera essayé dessus.
+- **Reste** : l'essai de David (« Remplir depuis le corpus », section Équipement du pilote de COC) ;
+  le moteur (F1 à F5), à lancer sur demande.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 160 | **COC : catalogue d'équipement ; la Forge et les tableaux** | 🟠 § 224 ; fiche d'armes et de protections transcrite du livre (44 objets, prix par époque), l'écran nomme une fiche sans tableau ; plan du moteur écrit et tranché — 06/11 | « Remplir depuis le corpus », section Équipement du pilote de COC | Essai de David ; ensuite le moteur (F1 à F5), sur demande |
 | 156 | **Les chemins des livres** | 🟢 § 220 ; registre de seize jeux (dix-sept livres, réglés avec David), carte « PDF du livre » de la Forge, fenêtre de lecture à la page, boutons « Livre, p. N », skills et passation livrés ; essayé et validé par David — 06/11 | Rien | Rien ; à la demande : les citations de l'Oracle |
 | 151 | **COC — COC-A4/A5/A6** | 🟢 §215 ; pilote2.2.0, 9 871 tests et deux parcours Electron verts ; six lots validés par David —05/11 | Rien pour COC-A1 à A6 | Rien |
 | 150 | **COC — COC-A1/A2/A3** | 🟠 § 214 ; pilote 2.1.0, 9 847 tests et deux parcours Electron verts, dix captures relues — 04/11 | Réimporter d20 ou 3d6 avec Remplacer, essayer dégâts/santé/rôles | Essai David restant |

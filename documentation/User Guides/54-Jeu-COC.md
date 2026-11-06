@@ -237,6 +237,15 @@ de zone et les dommages aux structures restent à arbitrer : un explosif critiqu
 maximum sans bonus supplémentaire, mais son éventuel test d’AGI et la réduction des DM restent
 à résoudre avant une saisie dans le calculateur de dégâts commun.
 
+**Le catalogue d'équipement** (depuis le 2026-11-06) : « Remplir depuis le corpus », dans
+l'éditeur du pilote, section Équipement, lit la fiche
+`equipement-armes-et-protections-du-livre-de-base.md`, transcrite depuis le livre : **36 armes**
+(contact, distance légères et lourdes, explosifs ; p. 93-95) et **8 protections** (p. 96), avec
+allonge ou portée, DM, bonus critique, magasin, RD et malus, et **une colonne de prix par époque**
+(2025, 1985, 1945, 1905, 1865 ; p. 53-54) quand le nom de l'arme concorde. Les DM y sont écrits
+comme le livre les imprime, « 1d6+FOR » : sur la fiche du personnage, saisir **1d6** (GM-OS ajoute
+la FOR). Chaque objet porte son bouton « Livre, p. N ».
+
 ## Santé et conséquences
 
 La carte **Santé et conséquences COC**, dans l’onglet du test, conserve la **DEF de base**

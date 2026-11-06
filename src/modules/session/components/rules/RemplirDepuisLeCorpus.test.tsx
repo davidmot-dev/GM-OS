@@ -3,7 +3,7 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import RemplirDepuisLeCorpus from './RemplirDepuisLeCorpus';
 import EditeurDuCatalogue from './EditeurDuCatalogue';
 import type { CatalogueDEquipement, GameDriver } from '../../../../types/drivers';
-import type { LivreACataloguer } from '../../../equipement/livresDuJeu';
+import { parleDEquipement, type LivreACataloguer } from '../../../equipement/livresDuJeu';
 import { estUneFicheDEquipement } from '../../../equipement/depuisLeCorpus';
 
 /**
@@ -28,6 +28,29 @@ const monter = (catalogue?: CatalogueDEquipement, livres = [BASE, CM]) => {
     render(<RemplirDepuisLeCorpus driver={pilote(catalogue)} champsDeLaFiche={CHAMPS} onVerser={onVerser} onFermer={onFermer} livresFournis={livres} />);
     return { onVerser, onFermer };
 };
+
+describe('RemplirDepuisLeCorpus — COC, 06/11/2026', () => {
+    // David : « malgré le fait que j'ai une fiche, rien ne se remplit » — la fiche forgée était en prose.
+    const brutes = import.meta.glob('/docs/systems/coc/rules/*.md', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+    const COC: LivreACataloguer = {
+        ...livre('jeu', 'Livre de base', brutes),
+        sansTableau: Object.entries(brutes).filter(([c, t]) => !estUneFicheDEquipement(t) && parleDEquipement(c, t)).map(([c]) => c.split('/').pop()!),
+    };
+
+    it('la fiche transcrite donne 36 armes et 8 protections, prix par époque ; la fiche en prose est nommée', () => {
+        monter(undefined, [COC]);
+        expect(screen.getByRole('status').textContent).toContain('44 objet(s) à ajouter');
+        const note = screen.getByRole('note');
+        expect(note.textContent).toContain('equipements-et-objets.md');
+        expect(note.textContent).toContain('Arme, Protection, Véhicule ou Objet');
+    });
+
+    it('sans aucun tableau lisible, le livre le dit au lieu de se taire', () => {
+        monter(undefined, [{ cle: 'jeu', titre: 'Livre de base', total: 20, fiches: [], sansTableau: ['equipements-et-objets.md'] }]);
+        expect(screen.getByText('aucun tableau d’équipement lisible')).toBeTruthy();
+        expect(screen.getByRole('note').textContent).toMatch(/Cette fiche parle d’équipement sans tableau/);
+    });
+});
 
 describe('RemplirDepuisLeCorpus', () => {
     it('dit ce que chaque livre apporte, et verse les deux livres dans le catalogue', () => {

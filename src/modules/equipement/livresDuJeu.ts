@@ -20,7 +20,26 @@ export interface LivreACataloguer {
     fiches: FicheACataloguer[];
     /** Toutes les fiches du livre, pour dire « 8 fiches d'équipement sur 18 ». */
     total: number;
+    /**
+     * Les fiches qui **parlent** du sujet (équipement, créatures) sans tableau que le lecteur sait
+     * lire : leur nom de fichier. Vu par David le 06/11/2026 sur COC (*« malgré le fait que j'ai une
+     * fiche, rien ne se remplit »*) : la fiche forgée était en prose, et l'écran se taisait.
+     */
+    sansTableau?: string[];
 }
+
+const plier = (texte: string) => texte.normalize('NFD').replace(/\p{Mn}/gu, '').toLowerCase();
+
+/** Ce dont parle une fiche : son nom de fichier et son `sujet:`. */
+const sujetDe = (chemin: string, contenu: string) => plier(`${chemin.split('/').pop() ?? ''} ${champDeLaFiche(contenu, 'sujet')}`);
+
+/** Une fiche qui parle d'équipement (armes, armures, matériel, véhicules, biens). */
+export const parleDEquipement = (chemin: string, contenu: string) =>
+    /equipement|arme|armure|protection|materiel|objet|vehicule|biens/.test(sujetDe(chemin, contenu));
+
+/** Une fiche qui parle de créatures (bestiaire, adversaires, monstres, PNJ). */
+export const parleDeCreatures = (chemin: string, contenu: string) =>
+    /bestiaire|creature|adversaire|monstre|pnj|antagoniste/.test(sujetDe(chemin, contenu));
 
 /**
  * Le titre que portera `source.livre`. Pour le livre de base, le `sources:` de
@@ -32,7 +51,10 @@ function titreDuLivreDeBase(fiches: readonly { contenu: string }[], repli: strin
     return source || repli;
 }
 
-async function lireLeLivre(corpus: Corpus, cle: string, titre: string | null, repli: string, retenir: (contenu: string) => boolean): Promise<LivreACataloguer> {
+async function lireLeLivre(
+    corpus: Corpus, cle: string, titre: string | null, repli: string,
+    retenir: (contenu: string) => boolean, parleDuSujet: (chemin: string, contenu: string) => boolean,
+): Promise<LivreACataloguer> {
     const ai = window.appBridge?.ai;
     const dossier = cheminDesFiches(corpus);
     const noms = ((await ai?.listDir?.(dossier).catch(() => [])) ?? []).filter(n => n.endsWith('.md')).sort();
@@ -45,22 +67,25 @@ async function lireLeLivre(corpus: Corpus, cle: string, titre: string | null, re
         const pages = (verif?.resolutions ?? []).flatMap(r => (r.page ? [{ titre: r.demande, page: r.page }] : []));
         return { ...f, livre, pages };
     }));
-    return { cle, titre: titre ?? 'Livre de base', fiches, total: lues.length };
+    const sansTableau = lues.filter(f => !retenir(f.contenu) && parleDuSujet(f.chemin, f.contenu)).map(f => f.chemin.split('/').pop()!);
+    return { cle, titre: titre ?? 'Livre de base', fiches, total: lues.length, sansTableau };
 }
 
 /**
  * Le livre de base d'abord : ses noms font foi quand un supplément reprend le même objet.
  * `retenir` dit quelles fiches lire — les fiches d'équipement par défaut ; le bestiaire (§ 210,
- * étape C, 05/11/2026) passe celles qui portent un tableau de profil.
+ * étape C, 05/11/2026) passe celles qui portent un tableau de profil. `parleDuSujet` repère les
+ * fiches qui en parlent sans tableau lisible, pour que l'écran le dise (06/11/2026).
  */
 export async function lireLesLivresDuJeu(
     corpusDuJeu: Corpus, supplements: readonly SupplementDeclare[], nomDuJeu: string,
     retenir: (contenu: string) => boolean = estUneFicheDEquipement,
+    parleDuSujet: (chemin: string, contenu: string) => boolean = parleDEquipement,
 ): Promise<LivreACataloguer[]> {
-    const livres = [lireLeLivre(corpusDuJeu, 'jeu', null, nomDuJeu, retenir)];
+    const livres = [lireLeLivre(corpusDuJeu, 'jeu', null, nomDuJeu, retenir, parleDuSujet)];
     for (const s of supplements) {
         const corpus = corpusDeSupplement(corpusDuJeu, s.slug);
-        if (corpus) livres.push(lireLeLivre(corpus, s.slug, s.titre, s.titre, retenir));
+        if (corpus) livres.push(lireLeLivre(corpus, s.slug, s.titre, s.titre, retenir, parleDuSujet));
     }
     return Promise.all(livres);
 }

@@ -8,6 +8,7 @@ import { useSupplementsDuJeu } from '../../../forge/rules/useSupplementsDuJeu';
 import { FAMILLES_D_OBJET, rangerParCategorie } from '../../../equipement/catalogue';
 import { remplirDepuisLesFiches } from '../../../equipement/depuisLeCorpus';
 import { lireLesLivresDuJeu, type LivreACataloguer } from '../../../equipement/livresDuJeu';
+import FichesSansTableau from './FichesSansTableau';
 
 /**
  * **« Remplir depuis le corpus »** — registre § 203, étape C (02/11/2026).
@@ -105,12 +106,13 @@ const RemplirDepuisLeCorpus: React.FC<RemplirDepuisLeCorpusProps> = ({ driver, c
                                             <span className={`text-sm ${coche ? 'font-semibold text-app-text' : 'text-app-muted'}`}>{l.titre}</span>
                                         </span>
                                         <span className="text-ui-12 text-app-muted">
-                                            {vide ? 'aucune fiche d’équipement relue' : `${l.fiches.length} fiche${l.fiches.length > 1 ? 's' : ''} d’équipement sur ${l.total}`}
+                                            {vide ? (l.sansTableau?.length ? 'aucun tableau d’équipement lisible' : 'aucune fiche d’équipement relue') : `${l.fiches.length} fiche${l.fiches.length > 1 ? 's' : ''} d’équipement sur ${l.total}`}
                                         </span>
                                     </label>
                                 );
                             })}
                         </div>
+                        <FichesSansTableau livres={livres} sujet="d’équipement" attendu="la première colonne est Arme, Protection, Véhicule ou Objet (Matériel, Tenue…)" />
                     </section>
 
                     {livres && (

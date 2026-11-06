@@ -7,7 +7,8 @@ import { useCorpusDuPilote } from '../../../forge/corpus/useCorpusDuPilote';
 import { useSupplementsDuJeu } from '../../../forge/rules/useSupplementsDuJeu';
 import { rangerParCategorie } from '../../../bestiaire/bestiaire';
 import { estUneFicheDeBestiaire, remplirLeBestiaire } from '../../../bestiaire/depuisLeCorpus';
-import { lireLesLivresDuJeu, type LivreACataloguer } from '../../../equipement/livresDuJeu';
+import { lireLesLivresDuJeu, parleDeCreatures, type LivreACataloguer } from '../../../equipement/livresDuJeu';
+import FichesSansTableau from './FichesSansTableau';
 import { rolesDuPilote } from '../../../bestiaire/rolesDuBestiaire';
 
 /**
@@ -43,7 +44,7 @@ const RemplirLeBestiaire: React.FC<RemplirLeBestiaireProps> = ({ driver, onVerse
     useEffect(() => {
         if (livresFournis || !corpus) return;
         let annule = false;
-        void lireLesLivresDuJeu(corpus, supplements, driver.name, estUneFicheDeBestiaire).then(l => { if (!annule) setLus(l); });
+        void lireLesLivresDuJeu(corpus, supplements, driver.name, estUneFicheDeBestiaire, parleDeCreatures).then(l => { if (!annule) setLus(l); });
         return () => { annule = true; };
     }, [livresFournis, corpus, supplements, driver.name]);
 
@@ -104,12 +105,13 @@ const RemplirLeBestiaire: React.FC<RemplirLeBestiaireProps> = ({ driver, onVerse
                                             <span className={`text-sm ${coche ? 'font-semibold text-app-text' : 'text-app-muted'}`}>{l.titre}</span>
                                         </span>
                                         <span className="text-ui-12 text-app-muted">
-                                            {vide ? 'aucune fiche de créatures relue' : `${l.fiches.length} fiche${l.fiches.length > 1 ? 's' : ''} de créatures sur ${l.total}`}
+                                            {vide ? (l.sansTableau?.length ? 'aucun tableau de profil lisible' : 'aucune fiche de créatures relue') : `${l.fiches.length} fiche${l.fiches.length > 1 ? 's' : ''} de créatures sur ${l.total}`}
                                         </span>
                                     </label>
                                 );
                             })}
                         </div>
+                        <FichesSansTableau livres={livres} sujet="de créatures" attendu="la première colonne est Créature (ou Adversaire, Espèce)" />
                     </section>
 
                     {livres && (

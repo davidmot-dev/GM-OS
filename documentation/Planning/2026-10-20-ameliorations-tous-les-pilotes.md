@@ -388,6 +388,16 @@ Sources : [dégâts](../../docs/systems/coc/rules/degats-et-types-de-degats.md),
 **Cas témoin :** sauter la haie, 8 au d20 + AGI 3 = 11 contre 10, réussi (p. 8) ; le revolver
 d'Amelia, 15 DM moins RD 2 = 13 échelons, affaiblie (p. 72, 89).
 
+**Catalogue d'équipement, livré le 06/11 (registre § 224)** : David, *« malgré le fait que j'ai une
+fiche, rien ne se remplit »*. La fiche forgée `equipements-et-objets.md` était en prose, sans
+tableau. Transcrite depuis le PDF (p. 52-54, 93-96, lus en image et confrontés au texte) :
+`equipement-armes-et-protections-du-livre-de-base.md`, **36 armes et 8 protections**, chacune avec
+sa page et une colonne de prix par époque, de 2025 à 1865 (choix de David). L'écran « Remplir depuis le corpus » nomme
+désormais une fiche qui parle d'équipement sans tableau lisible. **Essai de David attendu** :
+« Remplir depuis le corpus » dans la section Équipement du pilote. **À venir** : que la Forge écrive
+ces tableaux seule ([plan](2026-11-06-forge-tableaux-equipement-bestiaire.md)) ; le bestiaire de
+COC (adversaires par rôles) attend ce moteur, qui sera essayé dessus (décision de David).
+
 ## Crimes
 
 **Références :** [audit détaillé](2026-10-19-crimes-propositions.md) et

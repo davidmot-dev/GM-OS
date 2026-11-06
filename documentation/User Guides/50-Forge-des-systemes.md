@@ -231,6 +231,21 @@ Les tableaux qui ne décrivent pas d'équipement (tables de D66, terrains, spéc
 et la fenêtre les nomme. On peut relancer le remplissage sans risque : il ne remplit que les cases
 vides.
 
+**Seuls les tableaux sont lus.** La première colonne d'un tableau doit nommer la famille : **Arme**,
+**Protection** (Armure, Bouclier), **Véhicule**, ou **Objet** (Matériel, Équipement, Tenue…). Le
+titre qui le précède donne la catégorie et la page : `### Tableau des Armes de contact (p. 93)`.
+Une fiche écrite en phrases ou en listes (« Gilet rigide : RD 8, malus -4 ») ne donne rien.
+*Depuis le 2026-11-06*, la fenêtre le dit : un encart ocre nomme chaque fiche qui parle
+d'équipement sans tableau lisible, et le livre affiche « aucun tableau d'équipement lisible ». La
+section Bestiaire fait de même pour les créatures (première colonne « Créature »).
+
+> **Pour COC**, la fiche forgée `equipements-et-objets.md` était en prose : rien ne se remplissait.
+> Le 2026-11-06, les tableaux du livre ont été transcrits depuis le PDF
+> (`equipement-armes-et-protections-du-livre-de-base.md`) : 36 armes et 8 protections, avec une
+> colonne de prix par époque (2025 à 1865). Que la Forge
+> écrive elle-même ces tableaux est un chantier à venir :
+> [le plan](../Planning/2026-11-06-forge-tableaux-equipement-bestiaire.md).
+
 ![Remplir depuis le corpus : les deux livres d'Alien, 154 objets, les colonnes et les rattachements](captures/jeu-alien-catalogue-remplir.jpg)
 
 ![La section Équipement : le fusil M41A déplié, ses caractéristiques, ses propriétés et sa source](captures/jeu-alien-catalogue-section.jpg)

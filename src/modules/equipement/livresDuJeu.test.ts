@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { lireLesLivresDuJeu } from './livresDuJeu';
+import { lireLesLivresDuJeu, parleDEquipement, parleDeCreatures } from './livresDuJeu';
 import type { Corpus } from '../../../electron/corpusSysteme';
 
 /**
@@ -44,6 +44,33 @@ describe('lireLesLivresDuJeu', () => {
 
     it('rend des livres vides, sans lever, quand le pont est absent', async () => {
         const livres = await lireLesLivresDuJeu(corpus, [], 'Alien');
-        expect(livres).toEqual([{ cle: 'jeu', titre: 'Livre de base', fiches: [], total: 0 }]);
+        expect(livres).toEqual([{ cle: 'jeu', titre: 'Livre de base', fiches: [], total: 0, sansTableau: [] }]);
+    });
+
+    it('nomme la fiche qui parle d’équipement sans tableau lisible (COC, 06/11/2026)', async () => {
+        const PROSE = `---
+sujet: Equipements et Objets
+---
+
+## Valeurs
+- Gilet rigide : RD 8, malus -4
+`;
+        const ADVERSAIRES = `---
+sujet: La gestion simplifiée des adversaires
+---
+
+Des rôles et des bandes de sbires.
+`;
+        (window as { appBridge?: unknown }).appBridge = { ai: {
+            listDir: async () => ['armes.md', 'equipements-et-objets.md', 'stress.md', 'adversaires.md'],
+            readDoc: async (c: string) => ({ 'systems/alien/rules/armes.md': ARMES, 'systems/alien/rules/equipements-et-objets.md': PROSE,
+                'systems/alien/rules/stress.md': STRESS, 'systems/alien/rules/adversaires.md': ADVERSAIRES } as Record<string, string>)[c] ?? null,
+        } };
+        const [livre] = await lireLesLivresDuJeu(corpus, [], 'COC');
+        expect(livre.fiches.map(f => f.chemin)).toEqual(['systems/alien/rules/armes.md']);
+        expect(livre.sansTableau).toEqual(['equipements-et-objets.md']);
+        const [bestiaire] = await lireLesLivresDuJeu(corpus, [], 'COC', () => false, parleDeCreatures);
+        expect(bestiaire.sansTableau).toEqual(['adversaires.md']);
+        expect(parleDEquipement('x/stress.md', STRESS)).toBe(false);
     });
 });
