@@ -6,8 +6,10 @@ des suppléments dans GM-OS ? »*, puis *« je n'ai pas envie de recopier mes li
 donc un chemin pour moi est une bonne idée »*. Il a demandé le plan complet avant de commencer.
 
 **Statut** : plan validé le 06/11/2026. David a tranché les quatre choix (§ « Décisions de David »).
-**Étapes 0, A et B livrées le 06/11** (registre § 220) : seize jeux recensés, dix-huit livres ; le
-registre lu par GM-OS ; la carte « PDF du livre » de la Forge. Essai de David attendu ; ensuite C, D, E.
+**Étapes 0, A et B livrées le 06/11** (registre § 220) : seize jeux recensés (dix-sept livres
+depuis le livre complet de Rêve de Dragon, le 06/11) ; le registre lu par GM-OS ; la carte « PDF
+du livre » de la Forge. Les quatre points à confirmer sont réglés avec David. Essai de David
+attendu ; ensuite C, D, E.
 
 ## Le principe : un chemin, jamais une copie
 
@@ -89,23 +91,28 @@ inconnus ignorés), `livreDeLaFiche(cheminDeFiche, livres)`, `pageDuPdf(livre, p
   | `dune` | Dune_Aventures_dans_l'Imperium_BQ | + 7 |
   | `nephilim` | Livre 0 - Quintessence (+ errata V1.3) | + 1 |
   | `noc` | 3938_noc01_ldb_light | + 2 |
-  | `reves de dragons` | Livre des Voyageurs 2.3 ; Livre du Haut-Rêve 2.3 | + 1 ; − 166 |
+  | `reves de dragons` | Reve_de_Dragon_2.3.1, livre complet (avant le 06/11 : Voyageurs 2.3, + 1 ; Haut-Rêve 2.3, − 166) | + 1 |
   | `runequest` | DCRQK02 - Livre de Base (+ errata) | + 1 |
-  | `shadowrun-anarchy` | anarchy_v2_vf_web_v0 | + 2 |
+  | `shadowrun-anarchy` | sran2_01anarchyv2_web_v1 | + 2 |
   | `star-trek` | Star Trek Adventures, 2e édition | + 4 |
   | `symbaroum` | Symbaroum - Livre de Base | + 2 |
   | `torg` | Torg Eternity - Livre de regles | + 2 |
 
 - **Racine retenue : le NAS** (`\\CLOUDDAVID\Media\Jeux de Rôle\`). Le lecteur `Z:` dépend
   de la machine. Les copies OneDrive (Barbarians, Blade Runner, NOC, Dune) sont des doublons.
-- **À confirmer par David** :
-  - **Rêve de Dragon** : le corpus cite la **2.2**, et le NAS n'a que la **2.3**. Les pages citées
-    peuvent ne plus correspondre.
-  - **NOC** : le corpus cite « NOC Livre de Base.pdf », introuvable sous ce nom. Retenu :
-    `3938_noc01_ldb_light-ylomzz.pdf` (« ldb » = livre de base).
-  - **Nephilim** : « Nephilim Légende - Système de règles », cité par le corpus, est introuvable.
-  - **Shadowrun Anarchy** : la v0, celle du corpus, est retenue. La v1 a servi aux travaux SR-A1
-    à A3 ; les deux ont le même décalage.
+- **Réglés avec David le 06/11** (les quatre points qui restaient à confirmer) :
+  - **Rêve de Dragon** : le corpus citait la 2.2, absente du NAS. David donne le **livre complet
+    2.3.1** (`Reve_de_Dragon_2.3.1.pdf`, 510 pages), qui remplace les deux volumes 2.3. Sa
+    numérotation est continue : un seul décalage, **+ 1** (58 pages concordantes sur 60). Le
+    corpus avait été relu le 24/10 contre la 2.3.1 et cite ces pages-là (Haut-Rêve p. 181-193) ;
+    seules ses lignes `sources:` nomment encore la 2.2. Le choix d'un volume par les `sources:`
+    reste dans `livres.ts` pour un autre jeu, son essai garde l'ancien registre en exemple.
+  - **NOC** : `3938_noc01_ldb_light-ylomzz.pdf` est bien le livre de base, confirmé par David.
+  - **Nephilim** : David retient *Quintessence* et son errata V1.3 comme livre du jeu ; « Nephilim
+    Légende - Système de règles », cité par le corpus, n'est pas un autre PDF à enregistrer.
+  - **Shadowrun Anarchy** : la **v1** (`sran2_01anarchyv2_web_v1.pdf`), choix de David, celle des
+    travaux SR-A1 à A3 ; décalage **+ 2** remesuré (41 pages sur 60), le même que la v0 du corpus.
+  - Le registre compte désormais **dix-sept livres** pour seize jeux.
   - **Les suppléments** : seul *Colonial Marines* est déclaré dans GM-OS. Sur le NAS, d'autres
     livres sont des candidats : le Bestiaire de Glorantha (RuneQuest), les Codex de Nephilim.
 - **Pas de registre** pour `2d20` et `srd-yze` : ce sont des SRD, absents du NAS sous leur nom.

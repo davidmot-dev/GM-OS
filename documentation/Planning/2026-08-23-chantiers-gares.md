@@ -13761,9 +13761,11 @@ dépôt, l'enregistrement dans la Forge, la fenêtre de lecture intégrée, l'or
 
 - **Étape 0 (sans code)** : `docs/systems/<jeu>/livres.json` pour seize jeux, dix-huit livres et
   trois errata, sur le NAS (`\\CLOUDDAVID\Media\Jeux de Rôle\`). Chaque décalage a été mesuré sur
-  les pieds de page, puis les copies de travail ont été effacées. Quatre points restent à confirmer
-  par David : Rêve de Dragon (le corpus cite la 2.2, le NAS n'a que la 2.3), le fichier de NOC,
-  « Nephilim Légende - Système de règles », la version de Shadowrun.
+  les pieds de page, puis les copies de travail ont été effacées. Les quatre points à confirmer
+  ont été réglés avec David le même jour : Rêve de Dragon passe au **livre complet 2.3.1** (+ 1,
+  numérotation continue, celle que cite le corpus relu le 24/10) au lieu des deux volumes 2.3 ;
+  le fichier de NOC est le bon ; Nephilim, c'est *Quintessence* et son errata ; Shadowrun, la
+  **v1** (+ 2). Le registre compte dix-sept livres.
 - **Étape A** : `forge/rules/livres.ts`, un module pur.
   - Il lit, contrôle, enregistre et retire un livre, et trouve le livre d'une fiche par son chemin.
     Quand un jeu a plusieurs volumes, il choisit d'après les `sources:` de la fiche.
@@ -13795,7 +13797,7 @@ dépôt, l'enregistrement dans la Forge, la fenêtre de lecture intégrée, l'or
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 156 | **Les chemins des livres** | 🟠 § 220 ; registre de seize jeux (dix-huit livres) et carte « PDF du livre » de la Forge livrés — 06/11 | Ouvrir la Forge, Atelier de règles, corpus `alien` : Vérifier, Proposer depuis le livre ; confirmer les quatre points de l'étape 0 | Essai de David ; ensuite étapes C, D, E |
+| 156 | **Les chemins des livres** | 🟠 § 220 ; registre de seize jeux (dix-sept livres, réglés avec David) et carte « PDF du livre » de la Forge livrés — 06/11 | Ouvrir la Forge, Atelier de règles, corpus `alien` : Vérifier, Proposer depuis le livre | Essai de David ; ensuite étapes C, D, E |
 | 151 | **COC — COC-A4/A5/A6** | 🟢 §215 ; pilote2.2.0, 9 871 tests et deux parcours Electron verts ; six lots validés par David —05/11 | Rien pour COC-A1 à A6 | Rien |
 | 150 | **COC — COC-A1/A2/A3** | 🟠 § 214 ; pilote 2.1.0, 9 847 tests et deux parcours Electron verts, dix captures relues — 04/11 | Réimporter d20 ou 3d6 avec Remplacer, essayer dégâts/santé/rôles | Essai David restant |
 | 149 | **Clip des nouveautés Shadowrun Anarchy** | 🟢 § 213 ; clip MP4 3 min 12 livré et relu, parcours Playwright passé — 04/11 | Ouvrir le MP4 ; rien à développer | Rien |

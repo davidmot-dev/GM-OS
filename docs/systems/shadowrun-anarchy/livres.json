@@ -2,8 +2,9 @@
   {
     "cle": "jeu",
     "titre": "Shadowrun Anarchy 2",
-    "chemin": "\\\\CLOUDDAVID\\Media\\Jeux de Rôle\\03. Futur\\3. Cyberpunk\\Shadowrun\\Shadowrun Anarchy JDR [FR]\\anarchy_v2_vf_web_v0.pdf",
+    "chemin": "\\\\CLOUDDAVID\\Media\\Jeux de Rôle\\03. Futur\\3. Cyberpunk\\Shadowrun\\Shadowrun Anarchy JDR [FR]\\sran2_01anarchyv2_web_v1.pdf",
     "decalage": 2,
-    "notes": "Décalage mesuré le 06/11/2026 sur les numéros imprimés en pied de page. Version v0, celle que cite le corpus ; la v1 (sran2_01anarchyv2_web_v1.pdf, même dossier, même décalage) a servi aux travaux SR-A1 à SR-A3."
+    "edition": "v1",
+    "notes": "Version v1, retenue par David le 06/11/2026 ; elle a servi aux travaux SR-A1 à SR-A3. Décalage mesuré le 06/11/2026 sur les pieds de page (41 pages concordantes sur 60). Le corpus cite la v0 (anarchy_v2_vf_web_v0.pdf, même dossier), qui a le même décalage."
   }
 ]

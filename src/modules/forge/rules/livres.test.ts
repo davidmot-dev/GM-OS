@@ -36,14 +36,31 @@ describe('le registre réel d’Alien', () => {
     });
 });
 
-describe('Rêve de Dragon : deux volumes pour la même clé', () => {
-    const livres = lireLesLivres(RDD);
+describe('Rêve de Dragon : le livre complet 2.3.1', () => {
+    // Choix de David le 06/11 : le livre complet remplace les deux volumes 2.3. Sa numérotation
+    // est continue ; le corpus, relu contre la 2.3.1, cite le Haut-Rêve p. 181-193.
+    it('un seul livre, décalé de + 1 : la p. 187 du Haut-Rêve est à la page 188 du PDF', () => {
+        const livres = lireLesLivres(RDD);
+        expect(livres.map(l => [l.cle, l.decalage, l.edition])).toEqual([['jeu', 1, '2.3.1']]);
+        expect(controlerLesLivres(RDD, ['jeu'])).toEqual([]);
+        const livre = livreDeLaFiche(livres, 'docs/systems/reves de dragons/rules/x.md', '"2_Livre_du_Haut-Reve_2.2.pdf"');
+        expect(pageDuPdf(livre!, 187)).toBe(188);
+    });
+});
 
-    it('la fiche choisit son volume par ses `sources:` ; le Haut-Rêve se décale de − 166', () => {
+describe('deux volumes pour la même clé', () => {
+    // Le registre de Rêve de Dragon avant le 06/11 : deux volumes, le second continuant la
+    // numérotation du premier (PDF 5 = p. 171).
+    const livres = lireLesLivres(JSON.stringify([
+        { cle: 'jeu', titre: 'Livre des Voyageurs (2.3)', chemin: 'N:\\1_Livre_des_Voyageurs_2.3.pdf', decalage: 1 },
+        { cle: 'jeu', titre: 'Livre du Haut-Rêve (2.3)', chemin: 'N:\\2_Livre_du_Haut_Reve_2.3.pdf', decalage: -166 },
+    ]));
+
+    it('la fiche choisit son volume par ses `sources:` ; le second se décale de − 166', () => {
         const hautReve = livreDeLaFiche(livres, 'docs/systems/reves de dragons/rules/x.md', '"2_Livre_du_Haut_Reve_2.3.pdf"');
         expect(hautReve?.decalage).toBe(-166);
         expect(pageDuPdf(hautReve!, 287)).toBe(121);
-        // La fiche cite la 2.2, absente : le premier volume, faute de mieux.
+        // La fiche cite une édition absente : le premier volume, faute de mieux.
         expect(livreDeLaFiche(livres, 'docs/systems/reves de dragons/rules/x.md', '"1_Livre_du_Voyageur_2.2.pdf"')?.titre).toMatch(/Voyageurs/);
     });
 });
