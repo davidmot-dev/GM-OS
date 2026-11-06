@@ -253,6 +253,23 @@ Drone » — la table du Drone (p. 309) que le livre donne au Biodrone.
 - **Ensuite** : les autres jeux à la demande (Degenesis : PHY, Résistance, PSY pour les pistes ;
   RuneQuest : PV par zone) ; une fiche de créatures pour le livre de base d'Alien.
 
+## Le livre de base d'Alien — 06/11/2026
+
+La fiche que la Forge avait tirée du livre n'était pas lue : son en-tête était « Créature / Stade »,
+et il lui manquait la Mobilité, l'Observation et les tables d'attaques. Choix de David : transcrire
+le PDF, puis retirer la fiche forgée.
+
+- **`docs/systems/alien/rules/bestiaire-du-livre-de-base.md`** : 27 créatures (p. 295-322), relevées
+  colonne par colonne à la position de chaque mot.
+- **La colonne « Table d'attaques »** relie une créature à une table du jeu, écrite entre accents
+  graves : `` `Alien/attaques_xenomorphe_rodeur` ``. Le livre de base imprime ses onze tables, qui
+  sont déjà des tables du jeu : la fiche les relie au lieu de les recopier. Une table choisie dans
+  l'éditeur n'est jamais remplacée.
+- **Deux défauts de lecture corrigés** : un en-tête qui *commence* par « Créature » (ou
+  « Adversaire », « Espèce ») est un profil ; des attaques identiques ne sont plus signalées.
+- **Questions ouvertes réglées** : le livre de base a sa fiche ; les tables d'un supplément restent
+  des lignes de la créature, celles du livre de base sont les tables du jeu.
+
 ## Ce qui ne change pas
 
 - **Le bestiaire du meneur** (`useBestiaireStore`) garde ses gabarits fabriqués et ses répartitions

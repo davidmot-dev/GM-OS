@@ -250,9 +250,12 @@ l'atelier des adversaires (ses gabarits) ne change pas.
 
 > **Pour qu'une fiche se lise**, sa section « Valeurs » commence par un tableau dont la première
 > colonne est « Créature » (et, si le livre en a, des tables « D6 | Attaque » titrées « Tableau des
-> attaques de … »). La Forge l'écrit ainsi pour un supplément ; une fiche plus ancienne se met au
-> format à la relecture. Pour Alien, la fiche des xénomorphes de *Colonial Marines* l'est (Biodrone,
-> Goreburster, Anathème monstrueux) ; le livre de base n'a pas encore de fiche de créatures.
+> attaques de … »). Une colonne « Table d'attaques » peut nommer une table du jeu entre accents
+> graves, `` `Alien/attaques_neomorphes` `` : la créature y tire ses attaques. La Forge écrit ce
+> format pour un supplément ; une fiche plus ancienne s'y met à la relecture. Pour Alien, deux
+> fiches le sont : les xénomorphes de *Colonial Marines* (Biodrone, Goreburster, Anathème
+> monstrueux) et, depuis le 2026-11-06, les 27 créatures du livre de base, chacune reliée à sa
+> table (`bestiaire-du-livre-de-base.md`).
 
 > **Sur le plateau** (depuis le 2026-11-05, étape D) : l'onglet *Livre* de l'atelier des adversaires
 > pose les créatures et les décline en variantes ; les rencontres préparées les comptent —

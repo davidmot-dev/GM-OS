@@ -14,7 +14,8 @@ import { proposerLeRole, proposerLesRoles, type RoleDuBestiaire } from './rolesD
  * - le **tableau de profil**, reconnu à sa première colonne « Créature » : une ligne par créature,
  *   une colonne par caractéristique ; « Catégorie », « Particularités » (séparées par des
  *   points-virgules) et « Page » vont au socle ; « 8 (4 contre le feu) » donne 8, et la précision
- *   devient une particularité (« Protection 4 contre le feu ») ;
+ *   devient une particularité (« Protection 4 contre le feu ») ; « Table d'attaques » relie la
+ *   créature à une table du jeu nommée entre accents graves, `` `Alien/attaques_neomorphes` `` ;
  * - la **table d'attaques**, reconnue à ses colonnes « D6 | Attaque » et rattachée à la créature
  *   que nomme son titre (« Tableau des attaques du Goreburster ») ; « **Nom** : effet ».
  *
@@ -97,15 +98,20 @@ function tableauxDeLaFiche(contenu: string): TableauLu[] {
     return tableaux;
 }
 
-const estUnProfil = (t: TableauLu) => /^(creatures?|adversaires?)$/.test(clef(t.entetes[0] ?? ''));
+/*
+  La première colonne **commence** par « Créature » : la forge de David du 06/11 titrait « Créature /
+  Stade », que l'égalité stricte écartait sans rien dire d'autre qu'un tableau ignoré.
+*/
+const estUnProfil = (t: TableauLu) => /^(creatures?|adversaires?|especes?)/.test(clef(t.entetes[0] ?? ''));
 const estUneTableDAttaques = (t: TableauLu) => /^d\d+$/.test(clef(t.entetes[0] ?? '')) && /^attaques?$/.test(clef(t.entetes[1] ?? ''));
 
 /** Une fiche porte-t-elle un tableau de profil ? L'aperçu compte les fiches lues par livre. */
 export const estUneFicheDeBestiaire = (contenu: string) => tableauxDeLaFiche(contenu).some(estUnProfil);
 
 /** Les colonnes que le socle porte : elles ne deviennent pas des colonnes du jeu. */
-function champDuSocle(entete: string): 'categorie' | 'particularites' | 'page' | null {
+function champDuSocle(entete: string): 'categorie' | 'particularites' | 'page' | 'attaques' | null {
     const k = clef(entete);
+    if (/^tables?(?:de|des|d)?attaques?$/.test(k)) return 'attaques';
     if (k === 'categorie' || k === 'type') return 'categorie';
     if (/^(particularites?|special|notes?|remarques?)$/.test(k)) return 'particularites';
     if (k === 'page' || k === 'p') return 'page';
@@ -134,6 +140,16 @@ function lireLaValeur(brute: string): { valeur: string | number; precision?: str
     const m = /^([+-]?\d+(?:[.,]\d+)?)\s*\((.+)\)$/.exec(v);
     if (m) return { valeur: Number(m[1].replace(',', '.')), precision: m[2].trim() };
     return { valeur: /^\d+$/.test(v) ? Number(v) : v };
+}
+
+/**
+ * « Attaques de Néomorphes (p. 296) — `Alien/attaques_neomorphes` » → la table du jeu. Ajouté le
+ * 06/11/2026 pour le livre de base d'Alien, dont les onze tables d'attaques sont déjà des tables
+ * du jeu (`databases/tables/Alien/`) : la fiche les relie au lieu de les recopier.
+ */
+function lireLaTable(cellule: string): { univers: string; table: string } | null {
+    const m = /`([^`/]+?)\s*\/\s*([A-Za-z0-9_-]+)`/.exec(cellule);
+    return m ? { univers: m[1].trim(), table: m[2] } : null;
 }
 
 /** « **Impact** : renverse… » → le nom et l'effet. */
@@ -234,6 +250,11 @@ export function remplirLeBestiaire(
                     if (socle === 'categorie') categorie = brute;
                     else if (socle === 'particularites') particularites.push(...brute.split(/\s*;\s*/).filter(Boolean));
                     else if (socle === 'page') page = /^\d+$/.test(brute) ? Number(brute) : undefined;
+                    else if (socle === 'attaques') {
+                        const table = lireLaTable(c[n]);
+                        if (table) propose.attaques = { table };
+                        else particularites.push(`${entete} : ${brute}`);
+                    }
                     else {
                         const { valeur, precision } = lireLaValeur(c[n]);
                         propose.valeurs[idDeLaColonne.get(n)!] = valeur;
@@ -257,7 +278,10 @@ export function remplirLeBestiaire(
         const cible = k ? b.creatures.find(c => clef(c.nom) === k) ?? b.creatures.find(c => clef(c.nom).includes(k) || k.includes(clef(c.nom))) : undefined;
         if (!cible) { journal.attaquesSansCreature.push(`${t.titre || 'Table d’attaques'} (${t.chemin.split('/').pop()})`); continue; }
         if (cible.attaques?.lignes?.length) {
-            journal.conserves.push(`${cible.nom} · attaques : le bestiaire en a déjà ${cible.attaques.lignes.length}, la fiche ${t.lignes.length} — gardées telles quelles`);
+            // Les mêmes attaques ne sont pas un écart (vu par David le 06/11 : « 6, la fiche 6 »).
+            if (JSON.stringify(cible.attaques.lignes) !== JSON.stringify(t.lignes)) {
+                journal.conserves.push(`${cible.nom} · attaques : le bestiaire en a ${cible.attaques.lignes.length}, la fiche ${t.lignes.length} qui diffèrent`);
+            }
             continue;
         }
         cible.attaques = { ...cible.attaques, lignes: t.lignes };
@@ -300,6 +324,15 @@ export function remplirLeBestiaire(
                 Object.assign(existant, { [champ]: apres });
                 remplis.push(champ);
             } else if (champ !== 'source') ecart(champ, avant, apres);
+        }
+        // La table du jeu : posée si la créature n'en a pas, jamais remplacée.
+        const table = propose.attaques?.table;
+        if (table) {
+            const avant = existant.attaques?.table;
+            if (!avant?.table?.trim()) {
+                existant.attaques = { ...existant.attaques, table };
+                remplis.push('table d’attaques');
+            } else ecart('table d’attaques', `${avant.univers}/${avant.table}`, `${table.univers}/${table.table}`);
         }
         if (remplis.length) {
             const deja = journal.creaturesCompletees.find(c => c.id === existant.id);

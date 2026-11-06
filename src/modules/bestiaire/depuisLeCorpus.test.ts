@@ -95,3 +95,17 @@ describe('le remplissage ne remplace rien', () => {
         expect(journal.attaquesSansCreature).toEqual(['Tableau des attaques du Néomorphe (y.md)']);
     });
 });
+
+describe('les défauts vus par David le 06/11', () => {
+    it('un second remplissage ne signale pas des attaques identiques', () => {
+        const { bestiaire: premier } = remplirLeBestiaire(undefined, [FICHE]);
+        const { journal } = remplirLeBestiaire(premier, [FICHE]);
+        expect(journal.conserves).toEqual([]);
+    });
+
+    it('« Créature / Stade » est un tableau de profil', () => {
+        const fiche = { chemin: 'z.md', livre: 'L', contenu: ['| Créature / Stade | Vitesse | Santé |', '|:--|:--|:--|', '| **Drone XX121** | 2 | 7 |', ''].join('\n') };
+        expect(estUneFicheDeBestiaire(fiche.contenu)).toBe(true);
+        expect(remplirLeBestiaire(undefined, [fiche]).bestiaire.creatures).toMatchObject([{ nom: 'Drone XX121', valeurs: { vitesse: 2, sante: 7 } }]);
+    });
+});

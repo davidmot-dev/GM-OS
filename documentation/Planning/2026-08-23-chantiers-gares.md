@@ -13683,7 +13683,23 @@ bouquins de règles / suppléments »*, puis *« écris le plan »*. **Plan seul
   `proposerLesRoles`, appliqué au remplissage et par « Proposer les rôles » dans l'éditeur.
 - **Validation de David le 05/11** : *« ok c'est bon commit »* — l'étape E et sa correction essayées
   (C et D l'avaient été : « ok c'est bon »). Les étapes A à E sont validées.
-- **Reste** : les autres jeux à la demande ; une fiche de créatures pour le livre de base d'Alien.
+- **Le livre de base d'Alien, le 06/11** — David avait reforgé le livre pour « Bestiaire et
+  Equipement » ; ses captures : aucune créature lue, et des écarts sur des attaques identiques.
+  Choix de David (GM-OS fermé) : *« Je transcris le PDF »*, *« La retirer après »*.
+  - **Fiche relue** `docs/systems/alien/rules/bestiaire-du-livre-de-base.md` : le chapitre 11 relevé
+    avec la position de chaque mot (PDF = imprimée + 3), 27 créatures p. 295-322, chacune reliée à
+    sa table du jeu par la colonne « Table d'attaques » (`` `Alien/attaques_…` ``). Les tables ne
+    sont pas recopiées : ce sont les onze de `databases/tables/Alien/`.
+  - **La fiche forgée retirée** du corpus (`bestiaire-et-equipement.md`, non suivie ; copie gardée
+    hors du dépôt). Son tableau d'armures doublait `equipement-protections-du-livre-de-base.md`.
+  - **Code** (`bestiaire/depuisLeCorpus.ts`) : la colonne « Table d'attaques » va au socle et pose
+    `attaques.table` (jamais remplacée, l'écart est dit) ; un en-tête qui commence par « Créature »
+    est un profil ; des attaques identiques ne sont plus un écart. Essais : `depuisLeCorpus.test.ts`
+    (+2), `bestiaireDuLivreDeBase.test.ts` (6, sur la fiche réelle) ; le compte des fiches de
+    `RemplirDepuisLeCorpus.test.tsx` passe à 31. Vérifié : 1 000 essais (bestiaire, écrans des
+    règles, combat, équipement, corpus, manuel), `tsc -b`, eslint.
+- **Reste** : l'essai de David (« Remplir depuis le corpus » : 27 créatures du livre de base, puis
+  poser un Drone et tirer une attaque) ; les autres jeux à la demande.
 
 ### 211 · Shadowrun Anarchy — SR-A1, SR-A2 et SR-A3 — 04/11/2026
 
@@ -13744,7 +13760,7 @@ David : « c'est testé marque le. Maintenant fais un clips avec Playright des n
 | 149 | **Clip des nouveautés Shadowrun Anarchy** | 🟢 § 213 ; clip MP4 3 min 12 livré et relu, parcours Playwright passé — 04/11 | Ouvrir le MP4 ; rien à développer | Rien |
 | 148 | **Shadowrun — SR-A4/A5/A6** | 🟢 § 212 ; pilote 2.2.0 livré et validé par David — 04/11 | Rien pour les six lots ; clip des nouveautés demandé | Rien |
 | 147 | **Shadowrun — SR-A1/A2/A3** | 🟢 § 211 ; pilote 2.1.0 livré et validé par David — 04/11 | Rien pour ce lot ; choisir SR-A4/A5/A6 séparément | Rien pour SR-A1/A2/A3 |
-| 146 | **Le bestiaire du pilote** | 🟢 § 210 ; étapes A à E livrées et validées par David (modèle, éditeur, remplissage, atelier et rencontres, profil xénomorphe d'Alien) — 05/11 | Rien ; ensuite, à la demande : les autres jeux, une fiche de créatures pour le livre de base d'Alien | Rien |
+| 146 | **Le bestiaire du pilote** | 🟠 § 210 ; étapes A à E validées le 05/11 ; le bestiaire du livre de base d'Alien transcrit (27 créatures reliées aux tables du jeu) et deux défauts de lecture corrigés — 06/11 | Remplir le bestiaire depuis le livre de base, poser un Drone | Essai de David |
 | 145 | **Degenesis — DEG-A5 et DEG-A6** | 🟢 § 209 ; carte « Sporulation et Brûlure » (Germe, exposition, EX, Brûlure, stimulation aux jets, Argus, Potentiel), adversaires sans fiche à deux pistes, pilote 2.3.0, validés par David — 04/11 | Rien : DEG-A1 à DEG-A6 tous faits ; ensuite un autre lot (COC, Shadowrun) | Rien |
 | 144 | **Degenesis — DEG-A3 et DEG-A4** | 🟢 § 208 ; carte « Maxima » (branches, Égo maximal), aide, combinaison, confrontation et action complexe livrées, pilote 2.2.0, validées par David — 04/11 | Rien pour DEG-A1 à DEG-A4 ; ensuite DEG-A5 et DEG-A6 | Rien |
 | 143 | **Degenesis — DEG-A1 et DEG-A2** | 🟢 § 207 ; round (Égo payé une fois, actions), défense passive ou active, dégâts nets livrés, pilote 2.1.0, validés par David — 04/11 | Rien pour DEG-A1 et DEG-A2 ; ensuite DEG-A3 et DEG-A4 | Rien |

@@ -261,6 +261,15 @@ fiche HTML, MU/TH/UR et détecteur de mouvement. Ces outils ne sont pas à recon
 **A9 livré le 23/10 (registre § 162)**, demande de David : *« on va faire la suite d'Alien, je voudrais aussi finir Alien aujourd'hui »* ; périmètre « complet ». Module `alien-combat-spatial` (`outils/alien/modules/combat-spatial/`), écrans `src/modules/modulesDuJeu/combatSpatial/`, pilote `Export Dirvers/corriges/Alien_driver_gmos_combat-spatial.gmos-driver` (`outils/alien/ajouter-combat-spatial.mjs`). Réimporté ; **essai de David validé le 23/10** (« tout est testé, tu peux faire les commit et pousser »). Points tranchés : avarie mineure dès un point (table contre texte), contremesures dès la portée Courte, amarrage aux vélocités égales ; réactions et oppositions sans forçage. Le 23/10 aussi : les cases à cocher du poste MU/TH/UR montrent de nouveau leur coche.
 
 **A10 livré le 23/10 (registre § 163)**, demande de David : *« je veux pouvoir faire des pré-reglages et aussi avoir un bouton de reset pour tout remettre à zéro (pour les 3 modules MU/TH/UR) »* ; choix : préparation complète, remise à zéro qui garde les préréglages, exemple du relais livré. Logique commune `outils/alien/modules/prereglages.mjs`, panneau commun `prereglages-vues.mjs` ; données MU/TH/UR v5, détecteur v4, combat spatial v2, migrées sans perte. **Essai de David validé le 23/10** (« A10 testé, c'est bon. Commit et pousse »).
+**Bestiaire du livre de base, livré le 06/11 (registre § 210)** : la fiche forgée par David
+n'était pas lue (en-tête « Créature / Stade ») et n'avait ni Mobilité, ni Observation, ni tables
+d'attaques. Le chapitre 11 est transcrit depuis le PDF, tableau par tableau (p. 295-322) :
+`docs/systems/alien/rules/bestiaire-du-livre-de-base.md`, **27 créatures** (Néomorphes,
+Xénomorphes XX121, autres espèces), chacune reliée à l'une des onze tables d'attaques du jeu par
+la nouvelle colonne « Table d'attaques ». Corrigés en même temps : le faux écart sur des attaques
+identiques, et la reconnaissance d'un en-tête qui *commence* par « Créature ». **Essai de David
+attendu** : « Remplir depuis le corpus » dans la section Bestiaire, puis poser un Drone.
+
 **Cas témoin :** des six suivis d'une Panique effective de 10 annulent l'action ; un Point
 de Récit ne doit pas contourner cette conséquence. L'export réel a été vérifié le 20/10.
 

@@ -32,7 +32,8 @@ const monter = (catalogue?: CatalogueDEquipement, livres = [BASE, CM]) => {
 describe('RemplirDepuisLeCorpus', () => {
     it('dit ce que chaque livre apporte, et verse les deux livres dans le catalogue', () => {
         const { onVerser, onFermer } = monter();
-        expect(screen.getByText('4 fiches d’équipement sur 30')).toBeTruthy();
+        // 31 depuis le 06/11/2026 : la fiche du bestiaire du livre de base (sans équipement).
+        expect(screen.getByText('4 fiches d’équipement sur 31')).toBeTruthy();
         expect(screen.getByText('8 fiches d’équipement sur 19')).toBeTruthy();
         expect(screen.getByRole('status').textContent).toContain('154 objet(s) à ajouter');
         fireEvent.click(screen.getByRole('button', { name: /Verser au catalogue/ }));
