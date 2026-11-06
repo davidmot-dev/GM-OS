@@ -14,6 +14,8 @@ import { X, Zap, Sparkles, ChevronLeft, Shield, BookOpen, AlertTriangle, Users, 
 import { gmConfirm } from '../../../../stores/useModalStore';
 import { gmToast } from '../../../../stores/useToastStore';
 import DiscoveryUI from './DiscoveryUI';
+import LivreALaPage from './LivreALaPage';
+import { useLivresDuJeu } from '../useLivresDuJeu';
 import ForgeProgress from './ForgeProgress';
 import {
   corpusChoisi,
@@ -153,6 +155,10 @@ export const BrainstormOverlay: React.FC = () => {
     () => (corpusDuJeu && supplement ? corpusDeSupplement(corpusDuJeu, supplement.slug) : corpusDuJeu),
     [corpusDuJeu, supplement],
   );
+
+  /** Le registre des livres du jeu : « Livre, p. N » sur les sections résolues (06/11/2026). */
+  const { livres: livresDuJeu, racine: racineDesLivres } = useLivresDuJeu(corpusDuJeu);
+  const registreDesLivres = useMemo(() => ({ racine: racineDesLivres, livres: livresDuJeu }), [racineDesLivres, livresDuJeu]);
 
   /**
    * La langue des fiches d'un supplément : celle du corpus du jeu, sinon celle
@@ -1117,9 +1123,12 @@ export const BrainstormOverlay: React.FC = () => {
                                }`}
                              >
                                {r.demande}
-                               <span className="ml-2 font-mono opacity-60">
-                                 {r.page ? `p. ${r.page}` : t('session.forge_module.atelier.sections_unresolved')}
-                               </span>
+                               {r.page ? (
+                                 <LivreALaPage registre={registreDesLivres} source={{ cle: supplement?.slug ?? 'jeu', page: r.page }}
+                                   className="ml-2" classeDuTexte="font-mono opacity-60" />
+                               ) : (
+                                 <span className="ml-2 font-mono opacity-60">{t('session.forge_module.atelier.sections_unresolved')}</span>
+                               )}
                              </span>
                            ))}
                          </div>

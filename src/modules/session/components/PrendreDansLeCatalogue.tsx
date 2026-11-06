@@ -5,6 +5,8 @@ import type { InventoryItem } from '../../../types/player.types';
 import { CadreDeSurcouche, BoutonPrincipal, BoutonSecondaire } from '../../../components/socle';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { FAMILLES_D_OBJET, chercherDansLeCatalogue, objetsDeLaFamille, rangerParCategorie } from '../../equipement/catalogue';
+import LivreALaPage from '../../forge/rules/components/LivreALaPage';
+import { useLivresDuPilote } from '../../forge/rules/useLivresDuJeu';
 import {
     appliquerLesEcritures, champsDEquipement, ecrituresDeLObjet, emportesEquipables, famillesEquipables, objetPourLeSac,
 } from '../../equipement/equiperLaFiche';
@@ -42,6 +44,8 @@ const PrendreDansLeCatalogue: React.FC<PrendreDansLeCatalogueProps> = ({ driver,
     useFermetureParEchap(true, onFermer, 'Prendre dans le catalogue');
     const catalogue = driver.catalogue ?? { colonnes: {}, objets: [] };
     const champs = useMemo(() => champsDEquipement(driver), [driver]);
+    // « Livre, p. N » sur la ligne de l'objet (chemins des livres, étape D, 06/11/2026).
+    const registreDesLivres = useLivresDuPilote(driver);
     const avecLeSac = !!onRanger;
     const familles = famillesEquipables(champs, avecLeSac);
     const [famille, setFamille] = useState<FamilleDObjet>(familles[0] ?? 'arme');
@@ -55,7 +59,7 @@ const PrendreDansLeCatalogue: React.FC<PrendreDansLeCatalogueProps> = ({ driver,
     const colonnes = catalogue.colonnes[famille] ?? [];
     // Une colonne de texte de plus : les propriétés d'une arme, les effets du reste.
     const texteEnPlus = famille === 'arme' ? 'Propriétés' : 'Effets';
-    const grille = { gridTemplateColumns: `minmax(12rem, 1fr) repeat(${colonnes.length}, minmax(4.5rem, max-content)) minmax(10rem, 1fr) 4rem` };
+    const grille = { gridTemplateColumns: `minmax(12rem, 1fr) repeat(${colonnes.length}, minmax(4.5rem, max-content)) minmax(10rem, 1fr) minmax(4rem, max-content)` };
 
     const objet = catalogue.objets.find(o => o.id === choisi && o.famille === famille);
     const emportes = objet ? emportesEquipables(champs, catalogue, objet, avecLeSac) : [];
@@ -145,7 +149,7 @@ const PrendreDansLeCatalogue: React.FC<PrendreDansLeCatalogueProps> = ({ driver,
                                             <span className={`font-semibold ${actif ? 'text-accent' : 'text-app-text'}`}>{o.nom}</span>
                                             {colonnes.map(c => <span key={c.id} className="whitespace-nowrap text-center text-app-text">{o.valeurs[c.id] ?? '—'}</span>)}
                                             <span className="text-app-muted">{(famille === 'arme' ? o.proprietes ?? [] : (o.effets ?? []).map(e => e.texte)).join(', ') || '—'}</span>
-                                            <span className="whitespace-nowrap text-right text-app-muted">{o.source?.page ? `p. ${o.source.page}` : '—'}</span>
+                                            <span className="whitespace-nowrap text-right text-app-muted">{o.source?.page ? <LivreALaPage registre={registreDesLivres} source={o.source} /> : '—'}</span>
                                         </div>
                                     );
                                 })}

@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { cheminDesLivres, type Corpus } from '../../../../electron/corpusSysteme';
 import { ecrireLesLivres, lireLesLivres, type LivreDuJeu } from './livres';
+import { useCorpusDuPilote, type PiloteAResoudre } from '../corpus/useCorpusDuPilote';
+import type { RegistreDesLivres } from './components/LivreALaPage';
 
 /**
  * Le registre des livres d'un jeu (`docs/systems/<jeu>/livres.json`), lu sur le disque, et le geste
@@ -32,5 +34,17 @@ export function useLivresDuJeu(corpusDuJeu: Corpus | null) {
         return true;
     }, [chemin]);
 
-    return { livres, ecrire, chemin };
+    /** La racine du jeu (`systems/alien`), que l'ouverture à la page (étape C) envoie. */
+    const racine = chemin ? chemin.replace(/\/livres\.json$/, '') : null;
+    return { livres, ecrire, chemin, racine };
+}
+
+/**
+ * Le registre des livres du jeu d'un pilote, pour les boutons « Livre, p. N » (étape D) : le corpus
+ * résolu comme partout (`useCorpusDuPilote`), puis son `livres.json`.
+ */
+export function useLivresDuPilote(pilote: PiloteAResoudre | null | undefined): RegistreDesLivres {
+    const { corpus } = useCorpusDuPilote(pilote);
+    const { livres, racine } = useLivresDuJeu(corpus);
+    return useMemo(() => ({ racine, livres }), [racine, livres]);
 }

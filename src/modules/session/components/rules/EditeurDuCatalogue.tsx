@@ -8,6 +8,8 @@ import {
     rangerParCategorie, retirerUneColonne, retirerUnObjet, valeursDeLaColonne, type ConstatDuCatalogue,
 } from '../../../equipement/catalogue';
 import RemplirDepuisLeCorpus from './RemplirDepuisLeCorpus';
+import LivreALaPage, { type RegistreDesLivres } from '../../../forge/rules/components/LivreALaPage';
+import { useLivresDuPilote } from '../../../forge/rules/useLivresDuJeu';
 
 /**
  * **La section « Équipement » de l'éditeur du pilote** — registre § 203,
@@ -40,6 +42,8 @@ const PASTILLE = 'inline-flex items-center gap-1 rounded-full border border-app-
 
 const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdate, champsDeLaFiche = AUCUN_CHAMP }) => {
     const catalogue = driver.catalogue;
+    // « Livre, p. N » dans la fiche dépliée (chemins des livres, étape D, 06/11/2026).
+    const registreDesLivres = useLivresDuPilote(driver);
     const [famille, setFamille] = useState<FamilleDObjet>('arme');
     const [recherche, setRecherche] = useState('');
     const [deplie, setDeplie] = useState<string | null>(null);
@@ -198,7 +202,7 @@ const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdat
                                 <LigneDObjet key={o.id} objet={o} grille={grille} colonnes={colonnes} ouvert={deplie === o.id}
                                     constats={constatsParObjet.get(o.id) ?? []}
                                     onBasculer={() => setDeplie(deplie === o.id ? null : o.id)}>
-                                    <FicheDeLObjet objet={o} colonnes={colonnes} catalogue={base()} champsDeLaFiche={champsDeLaFiche}
+                                    <FicheDeLObjet objet={o} colonnes={colonnes} catalogue={base()} champsDeLaFiche={champsDeLaFiche} registre={registreDesLivres}
                                         onChange={patch => enregistrer(modifierUnObjet(base(), o.id, patch))}
                                         onRetirer={() => gmConfirm(`Supprimer « ${o.nom} » du catalogue ?`, () => {
                                             enregistrer(retirerUnObjet(base(), o.id));
@@ -305,7 +309,8 @@ const FicheDeLObjet: React.FC<{
     objet: ObjetDuCatalogue; colonnes: { id: string; libelle: string }[]; catalogue: CatalogueDEquipement;
     champsDeLaFiche: { id: string; label: string }[];
     onChange: (patch: Partial<Omit<ObjetDuCatalogue, 'id' | 'famille'>>) => void; onRetirer: () => void;
-}> = ({ objet, colonnes, catalogue, champsDeLaFiche, onChange, onRetirer }) => {
+    registre: RegistreDesLivres;
+}> = ({ objet, colonnes, catalogue, champsDeLaFiche, onChange, onRetirer, registre }) => {
     // Une valeur vidée disparaît : le contrôle ne doit pas lire une case vide comme une valeur.
     const valeur = (id: string, texte: string) => {
         const valeurs = { ...objet.valeurs };
@@ -429,8 +434,9 @@ const FicheDeLObjet: React.FC<{
                     <input value={objet.source?.page ?? ''} type="number" min={1} className={`${CHAMP} font-mono`}
                         onChange={e => onChange({ source: { livre: objet.source?.livre ?? '', ...objet.source, page: e.target.value === '' ? undefined : Number(e.target.value) } })} /></label>
             </div>
-            <div className="flex justify-end">
-                <button onClick={onRetirer} className="inline-flex items-center gap-1 text-ui-12 font-medium text-etat-danger hover:underline">
+            <div className="flex items-center justify-between gap-3">
+                <LivreALaPage registre={registre} source={objet.source} sansLivre="rien" />
+                <button onClick={onRetirer} className="ml-auto inline-flex items-center gap-1 text-ui-12 font-medium text-etat-danger hover:underline">
                     <Trash2 size={14} /> Supprimer l'objet
                 </button>
             </div>

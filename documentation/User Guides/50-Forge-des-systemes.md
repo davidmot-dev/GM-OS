@@ -121,9 +121,29 @@ de ses pages, c'est-à-dire de combien la page du PDF dépasse la page imprimée
 4. **Enregistrer** écrit le registre du jeu, `docs/systems/<jeu>/livres.json`. **Retirer** ôte le
    livre du registre, sans toucher au PDF.
 
-Seize jeux ont déjà leur registre (relevé du 2026-11-06). Ouvrir le livre à la bonne page depuis
-le bestiaire, le catalogue ou une fiche est l'étape suivante :
-[le plan](../Planning/2026-11-06-chemins-des-livres.md).
+Seize jeux ont déjà leur registre (relevé du 2026-11-06) : [le plan](../Planning/2026-11-06-chemins-des-livres.md).
+
+#### Ouvrir le livre à la page
+
+*Depuis le 2026-11-06.* Quand le livre a son PDF, la page d'une source devient un bouton
+**« Livre, p. N »**. Un clic ouvre le PDF dans une **fenêtre de lecture**, à la bonne page : GM-OS
+ajoute le décalage (le Drone, p. 309 du livre d'Alien, est la page 312 du PDF). Le bouton se trouve :
+
+- dans l'**atelier de règles**, sur chaque section citée qu'on a retrouvée dans l'index du livre ;
+- dans l'éditeur du pilote, section **Bestiaire** et section **Équipement**, en bas de la fiche
+  dépliée d'une créature ou d'un objet ;
+- dans l'onglet **Livre** de l'atelier des adversaires ([guide de Combat-OS](./30-Combat-OS.md)) ;
+- dans **« Prendre dans le catalogue »**, sur la ligne de l'objet.
+
+![Le livre d'Alien ouvert à la page du Drone](captures/livre-a-la-page.jpg)
+
+- **Une seule fenêtre** : chaque clic la reprend. Le compteur indique la page aussitôt ; la page
+  s'affiche quand le livre est lu, quelques secondes depuis le NAS.
+- **Sans PDF enregistré**, la page reste du texte, et son infobulle dit où l'ajouter.
+- **Un livre qui ne répond pas** (NAS éteint, fichier déplacé) le dit à côté du bouton. Si la
+  fenêtre ne peut pas l'ouvrir, l'application PDF de Windows prend le relais, à la première page :
+  GM-OS indique alors la page du PDF à chercher.
+- Le chemin n'est jamais envoyé par l'écran : GM-OS le relit dans le registre du jeu.
 
 ---
 

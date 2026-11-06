@@ -8,8 +8,9 @@ donc un chemin pour moi est une bonne idée »*. Il a demandé le plan complet a
 **Statut** : plan validé le 06/11/2026. David a tranché les quatre choix (§ « Décisions de David »).
 **Étapes 0, A et B livrées le 06/11** (registre § 220) : seize jeux recensés (dix-sept livres
 depuis le livre complet de Rêve de Dragon, le 06/11) ; le registre lu par GM-OS ; la carte « PDF
-du livre » de la Forge. Les quatre points à confirmer sont réglés avec David. Essai de David
-attendu ; ensuite C, D, E.
+du livre » de la Forge. Les quatre points à confirmer sont réglés avec David.
+**Étapes C et D livrées le 06/11** : la fenêtre de lecture à la page et les boutons « Livre, p. N ».
+Essai de David attendu ; ensuite E.
 
 ## Le principe : un chemin, jamais une copie
 
@@ -174,6 +175,42 @@ Dans la **Forge**, panneau de gauche, là où David choisit déjà le livre (bas
 - **Fiches de règles** : l'atelier de règles de la Forge, à côté des pages qu'une fiche cite.
 - Le bouton n'apparaît que si le livre a un chemin. Sinon : « Ajouter le PDF de ce livre ».
 - Plus tard, à la demande : les citations de l'Oracle.
+
+### Étapes C et D — livrées le 06/11
+
+David : *« commit fait C & D »* ; GM-OS fermé ; **sans maquette Stitch**, sur sa décision (pas
+d'écran neuf : la fenêtre est la visionneuse PDF de Chromium, le bouton prend la place du « p. N »).
+
+- **Deux essais jetables avant le code**, avec le livre d'Alien sur le NAS :
+  - la visionneuse d'Electron 34 ouvre un PDF réseau (`file://clouddavid/…`) à `#page=312` ;
+  - ⚠️ changer seulement `#page=` d'une fenêtre déjà ouverte **ne déplace pas** la visionneuse.
+    Chaque ouverture porte donc une adresse distincte (`?ouverture=N`) : le livre se recharge et la
+    page est prise.
+- **Étape C** — `livres:ouvrir {racine, cle, rang?, page?}` (`electron/cheminsDesLivres.ts`) :
+  - la demande est contrôlée (`demandeDOuvertureValide` : `systems/<jeu>`, une clé, une page
+    entière) ; le chemin est **relu dans le registre**, jamais reçu de l'écran ; seul un `.pdf`
+    existant s'ouvre ;
+  - une seule fenêtre de lecture (sans préchargement, sandbox, nouvelles fenêtres refusées),
+    fermée avec celle du meneur pour ne pas retenir GM-OS ;
+  - repli : `shell.openPath`, à la première page, et l'écran dit quelle page du PDF chercher.
+- **Défaut trouvé à l'e2e, corrigé** : dans une partition **en mémoire** (`livres`), la
+  visionneuse se charge mais ne peint rien (fenêtre blanche). Bissection par essais jetables : la
+  partition seule en est la cause ; **`persist:livres`** peint la page.
+- **Étape D** — `LivreALaPage.tsx`, un bouton « Livre, p. N » ; `livreDeLaSource` trouve le livre par
+  la clé, la fiche relue (`source.fiche`), le titre, ou le livre de base seul — sinon pas de bouton,
+  plutôt que d'ouvrir le mauvais livre. Branché dans :
+  - l'atelier de règles de la Forge (sections citées résolues par l'index) ;
+  - l'éditeur du pilote, Bestiaire et Équipement (fiche dépliée : la ligne est déjà un bouton) ;
+  - l'onglet *Livre* de l'atelier des adversaires ;
+  - « Prendre dans le catalogue » (ligne de l'objet).
+  - Sans PDF : la page reste du texte, avec une infobulle qui dit où l'ajouter.
+- **Vérifié** : `livres.test.ts` (15), `LivreALaPage.test.tsx` (4), `cheminsDesLivres.test.ts` (7) ;
+  3 509 essais (Forge, combat, bestiaire, équipement, écrans de session, processus principal) ;
+  `tsc -b`, eslint, construction ; e2e `livresDuJeu` (2) : dans la vraie application, la p. 309
+  ouvre la fenêtre à la page 312, capturée depuis le processus principal (Playwright rend blanche
+  la visionneuse, qui tourne à part) : `captures/livre-a-la-page.jpg`.
+- **Reste** : l'essai de David ; un e2e qui clique le bouton dans un écran (il faudrait un pilote
+  d'Alien dans le profil jetable) ; l'étape E.
 
 ### Étape E — les agents
 

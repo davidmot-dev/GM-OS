@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { BookOpen, ChevronDown, ChevronUp, Plus, Search, Trash2 } from 'lucide-react';
 import type { BestiaireDuJeu, ColonneDuBestiaire, CreatureDuBestiaire, GameDriver, LigneDAttaque } from '../../../../types/drivers';
+import LivreALaPage, { type RegistreDesLivres } from '../../../forge/rules/components/LivreALaPage';
+import { useLivresDuPilote } from '../../../forge/rules/useLivresDuJeu';
 import { gmConfirm } from '../../../../stores/useModalStore';
 import {
     ajouterUneColonne, ajouterUneCreature, bestiaireVide, chercherDansLeBestiaire, controlerLeBestiaire, ficheDePlateau,
@@ -55,6 +57,8 @@ const EditeurDuBestiaire: React.FC<EditeurDuBestiaireProps> = ({ driver, onUpdat
     const champs = useMemo(() => new Set(champsDeLaFiche.map(c => c.id)), [champsDeLaFiche]);
     // Étape E (05/11/2026) : Alien donne un rôle aux colonnes, celui du profil xénomorphe.
     const roles = rolesDuPilote(driver);
+    // « Livre, p. N » dans la fiche dépliée (chemins des livres, étape D, 06/11/2026).
+    const registreDesLivres = useLivresDuPilote(driver);
     const constats = useMemo(() => controlerLeBestiaire(bestiaire, champs.size ? champs : undefined), [bestiaire, champs]);
     const constatsParCreature = useMemo(() => {
         const parId = new Map<string, ConstatDuBestiaire[]>();
@@ -217,7 +221,7 @@ const EditeurDuBestiaire: React.FC<EditeurDuBestiaireProps> = ({ driver, onUpdat
                                 <LigneDeCreature key={cr.id} creature={cr} grille={grille} colonnes={colonnes} ouvert={deplie === cr.id}
                                     constats={constatsParCreature.get(cr.id) ?? []}
                                     onBasculer={() => setDeplie(deplie === cr.id ? null : cr.id)}>
-                                    <FicheDeLaCreature creature={cr} colonnes={colonnes} plateau={ficheDePlateau(base(), cr)} libelleDuChamp={libelleDuChamp}
+                                    <FicheDeLaCreature creature={cr} colonnes={colonnes} plateau={ficheDePlateau(base(), cr)} libelleDuChamp={libelleDuChamp} registre={registreDesLivres}
                                         onChange={patch => enregistrer(modifierUneCreature(base(), cr.id, patch))}
                                         onRetirer={() => gmConfirm(`Supprimer « ${cr.nom} » du bestiaire ?`, () => {
                                             enregistrer(retirerUneCreature(base(), cr.id));
@@ -271,7 +275,8 @@ const FicheDeLaCreature: React.FC<{
     creature: CreatureDuBestiaire; colonnes: ColonneDuBestiaire[]; plateau: Record<string, string | number>;
     libelleDuChamp: (id: string) => string;
     onChange: (patch: Partial<Omit<CreatureDuBestiaire, 'id'>>) => void; onRetirer: () => void;
-}> = ({ creature, colonnes, plateau, libelleDuChamp, onChange, onRetirer }) => {
+    registre: RegistreDesLivres;
+}> = ({ creature, colonnes, plateau, libelleDuChamp, onChange, onRetirer, registre }) => {
     // Une valeur vidée disparaît : le contrôle ne doit pas lire une case vide comme une valeur.
     const valeur = (id: string, saisie: string) => {
         const valeurs = { ...creature.valeurs };
@@ -383,8 +388,9 @@ const FicheDeLaCreature: React.FC<{
                     <input value={creature.source?.page ?? ''} type="number" min={1} className={`${CHAMP} font-mono`}
                         onChange={e => onChange({ source: { livre: creature.source?.livre ?? '', ...creature.source, page: e.target.value === '' ? undefined : Number(e.target.value) } })} /></label>
             </div>
-            <div className="flex justify-end">
-                <button onClick={onRetirer} className="inline-flex items-center gap-1 text-ui-12 font-medium text-etat-danger hover:underline">
+            <div className="flex items-center justify-between gap-3">
+                <LivreALaPage registre={registre} source={creature.source} sansLivre="rien" />
+                <button onClick={onRetirer} className="ml-auto inline-flex items-center gap-1 text-ui-12 font-medium text-etat-danger hover:underline">
                     <Trash2 size={14} /> Supprimer la créature
                 </button>
             </div>

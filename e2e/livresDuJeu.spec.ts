@@ -64,3 +64,31 @@ test('le livre de base d’Alien : chemin, décalage + 3, puis Colonial Marines'
     await f.getByRole('button', { name: /Colonial Marines/ }).click();
     await expect(carte.getByLabel('Chemin du PDF du livre')).toHaveValue(/ALN-Marines Coloniaux_FR\.pdf$/);
 });
+
+/**
+ * **Étape C** : le Drone, p. 309 du livre de base, s'ouvre à la page 312 du PDF dans la fenêtre de
+ * lecture. Le livre est sur le NAS : s'il ne répond pas, l'essai le dit et s'arrête là.
+ */
+test('« Livre, p. 309 » : la fenêtre de lecture s’ouvre à la page 312 du PDF', async () => {
+    const r = await gmos.fenetre.evaluate(() => window.appBridge!.livres!.ouvrir({ racine: 'systems/alien', cle: 'jeu', page: 309 }));
+    test.skip(!r.ouvert && r.motif === 'introuvable', 'Le NAS ne répond pas : le livre d’Alien est introuvable.');
+    expect(r).toEqual({ ouvert: true, titre: 'ALIEN, le jeu de rôle', pagePdf: 312, alaPage: true });
+
+    const lecture = gmos.application.windows().find(w => /ALIEN_le_jeu_de_r%C3%B4le\.pdf\?ouverture=\d+#page=312$/.test(w.url()));
+    expect(lecture, 'la fenêtre de lecture').toBeTruthy();
+    expect(await gmos.application.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows().map(w => w.getTitle())))
+        .toContain('ALIEN, le jeu de rôle — page 312 du PDF');
+
+    // La visionneuse charge le livre du NAS : on lui laisse le temps d'afficher la page. Elle tourne
+    // dans un processus à part, que la capture de Playwright rend blanche : on capture la fenêtre
+    // depuis le processus principal.
+    // Le compteur dit 312 tout de suite ; la page s'affiche une fois le livre lu sur le NAS.
+    await lecture!.waitForTimeout(16_000);
+    const image = await gmos.application.evaluate(async ({ BrowserWindow }) => {
+        const w = BrowserWindow.getAllWindows().find(x => x.getTitle().endsWith('page 312 du PDF'));
+        return w ? (await w.webContents.capturePage()).toJPEG(80).toString('base64') : '';
+    });
+    // Une fenêtre blanche pèse ~10 Ko en JPEG, la page du Drone ~110 Ko : le livre est peint.
+    expect(image.length).toBeGreaterThan(60_000);
+    fs.writeFileSync(path.join(CAPTURES, 'livre-a-la-page.jpg'), Buffer.from(image, 'base64'));
+});

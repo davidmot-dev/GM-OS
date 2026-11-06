@@ -224,6 +224,95 @@ export const MOTIFS_DU_LIVRE: Record<MotifDuLivre | 'rien-ne-se-degage', string>
     'rien-ne-se-degage': 'Aucun décalage ne se dégage des numéros imprimés : saisissez-le à la main.',
 };
 
+/**
+ * **Ouvrir le livre à la page** — étape C (06/11/2026). L'interface ne désigne le livre que par son
+ * jeu (`systems/<jeu>`), sa clé et son rang parmi ceux qui la partagent : **aucun chemin ne vient de
+ * l'écran**, le processus principal le relit dans le registre.
+ */
+export interface DemandeDOuverture {
+    /** La racine du jeu dans `docs/` : `systems/alien`. */
+    racine: string;
+    cle: string;
+    /** Le rang parmi les livres de la même clé (plusieurs volumes) ; 0 par défaut. */
+    rang?: number;
+    /** La page imprimée ; sans elle, la première page. */
+    page?: number;
+}
+
+export type MotifDOuverture = MotifDuLivre | 'sans-livre' | 'demande-invalide';
+
+export type OuvertureDuLivre =
+    | { ouvert: true; titre: string; pagePdf: number; alaPage: boolean }
+    | { ouvert: false; motif: MotifDOuverture };
+
+/** Ce que l'écran dit quand le livre ne s'ouvre pas. */
+export const MOTIFS_D_OUVERTURE: Record<MotifDOuverture, string> = {
+    'pas-un-pdf': MOTIFS_DU_LIVRE['pas-un-pdf'],
+    introuvable: MOTIFS_DU_LIVRE.introuvable,
+    illisible: 'Le livre ne s’ouvre pas.',
+    'pdf-indisponible': MOTIFS_DU_LIVRE['pdf-indisponible'],
+    'sans-livre': 'Ce livre n’a pas de PDF enregistré : Forge › Atelier de règles › PDF du livre.',
+    'demande-invalide': 'Le livre demandé n’est pas reconnu.',
+};
+
+/** Une racine de jeu sûre : `systems/<dossier>`, un seul niveau, ni `.` ni `..`. */
+export const racineDeJeuValide = (racine: unknown): racine is string =>
+    typeof racine === 'string' && /^systems\/[^/\\]+$/.test(racine) && !/^systems\/\.\.?$/.test(racine);
+
+/** La racine du jeu d'une fiche du corpus : `systems/alien/supplements/…/rules/x.md` → `systems/alien`. */
+export function racineDuJeuDeLaFiche(fiche: string): string | null {
+    const m = /^(?:docs\/)?(systems\/[^/]+)\//.exec(fiche.replace(/\\/g, '/'));
+    return m && racineDeJeuValide(m[1]) ? m[1] : null;
+}
+
+/** La demande reçue par le processus principal, contrôlée champ par champ ; `null` si elle ne tient pas. */
+export function demandeDOuvertureValide(brute: unknown): DemandeDOuverture | null {
+    if (!brute || typeof brute !== 'object') return null;
+    const d = brute as Record<string, unknown>;
+    if (!racineDeJeuValide(d.racine) || typeof d.cle !== 'string' || !d.cle.trim()) return null;
+    if (d.rang !== undefined && !(Number.isInteger(d.rang) && (d.rang as number) >= 0)) return null;
+    if (d.page !== undefined && !(Number.isInteger(d.page) && (d.page as number) > 0)) return null;
+    return {
+        racine: d.racine, cle: d.cle.trim(),
+        ...(d.rang !== undefined ? { rang: d.rang as number } : {}),
+        ...(d.page !== undefined ? { page: d.page as number } : {}),
+    };
+}
+
+/** Le livre d'une demande : la clé, au rang voulu. */
+export const livreDeLaDemande = (livres: readonly LivreDuJeu[], demande: Pick<DemandeDOuverture, 'cle' | 'rang'>) =>
+    livres.filter(l => l.cle === demande.cle)[demande.rang ?? 0] ?? null;
+
+/** D'où viennent les chiffres d'une créature ou d'un objet (`source` du bestiaire, du catalogue). */
+export interface SourceDuLivre {
+    livre?: string;
+    page?: number;
+    fiche?: string;
+    /** La clé, quand l'écran la connaît déjà (l'atelier de règles : le livre documenté). */
+    cle?: string;
+}
+
+/**
+ * Le livre d'une source : par sa fiche relue d'abord (le chemin dit la clé), sinon par son titre ;
+ * une source saisie à la main dans un jeu qui n'a que son livre de base y renvoie. Rien sinon :
+ * mieux vaut pas de bouton qu'un bouton qui ouvre le mauvais livre.
+ */
+export function livreDeLaSource(livres: readonly LivreDuJeu[], source: SourceDuLivre | undefined): LivreDuJeu | null {
+    if (!source) return null;
+    if (source.cle) return livreDeLaCle(livres, source.cle);
+    if (source.fiche) return livreDeLaFiche(livres, source.fiche);
+    const titre = source.livre?.trim().toLowerCase();
+    const parTitre = titre ? livres.find(l => l.titre.trim().toLowerCase() === titre) : undefined;
+    if (parTitre) return parTitre;
+    return livres.length > 0 && livres.every(l => l.cle === CLE_DU_LIVRE_DE_BASE) ? livres[0] : null;
+}
+
+/** La demande qui ouvre `livre` (de ce registre) à la page imprimée voulue. */
+export function demandePourLeLivre(livres: readonly LivreDuJeu[], livre: LivreDuJeu, racine: string, page?: number): DemandeDOuverture {
+    const rang = livres.filter(l => l.cle === livre.cle).indexOf(livre);
+    return { racine, cle: livre.cle, ...(rang > 0 ? { rang } : {}), ...(page ? { page } : {}) };
+}
+
 /** Les pages à lire pour la mesure : une sur dix environ, au plus `nombre`, réparties dans le livre. */
 export function pagesAEchantillonner(total: number, nombre = 40): number[] {
     if (total <= nombre) return Array.from({ length: total }, (_, i) => i + 1);

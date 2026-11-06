@@ -456,6 +456,10 @@ recopier « +1 », « 2 », « Longue » à la main.
 
 Le panneau de jet propose aussitôt l'arme ajoutée, avec ses chiffres.
 
+*Depuis le 2026-11-06*, la colonne Page de chaque objet est un bouton **« Livre, p. N »** : il
+ouvre le PDF du livre à la page de l'objet, décalage compris (+ 3 pour le livre de base comme pour
+*Colonial Marines*). Voir le [guide 50](./50-Forge-des-systemes.md#ouvrir-le-livre-à-la-page).
+
 **L'onglet Matériel** (palmes, jumelles, médikit…) range l'objet dans le **Sac à dos**, relié au
 catalogue. Une protection prise y entre aussi. Le Sac à dos s'enregistre aussitôt, comme son
 bouton « + » ; un objet déjà rangé n'est pas doublé.

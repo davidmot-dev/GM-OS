@@ -9,6 +9,7 @@ import type { SheetField } from '../../../data/defaultSheetTemplates';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 import { champsDuPilote, exemplairesDeLaCreature, fabriquerLesExemplaires, ficheDUnExemplaire, varianteDeLaCreature } from '../logic/invocationDeRencontre';
 import { CreaturesDuLivre } from './CreaturesDuLivre';
+import { useLivresDuPilote } from '../../forge/rules/useLivresDuJeu';
 import type { CreatureDuBestiaire } from '../../../types/drivers';
 import type { CampDeRencontre } from '../../../types/rencontres.types';
 import { santeDeDepart, valeurDuChamp } from '../logic/SanteDuCombattant';
@@ -92,6 +93,8 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
         ? tousLesPilotes(etat.customGameDrivers ?? []).find(d => d.id === jeuDemande) ?? etat.getActiveDriver()
         : etat.getActiveDriver());
     const jeuId = driver?.id ?? 'sans-pilote';
+    // Le registre des livres du jeu : « Livre, p. N » sur les créatures du livre (06/11/2026).
+    const registreDesLivres = useLivresDuPilote(driver);
 
     /** Les champs de la fiche du jeu — la seule source des échelles. */
     const champs: SheetField[] = useMemo(
@@ -358,7 +361,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
 
             {onglet === 'livre' && (
                 <div className="flex-1 overflow-y-auto p-5 custom-scrollbar">
-                    <CreaturesDuLivre bestiaire={driver.bestiaire} nomDuJeu={driver.name} onAuCombat={creaturesAuCombat} onDecliner={declinerLaCreature} />
+                    <CreaturesDuLivre bestiaire={driver.bestiaire} nomDuJeu={driver.name} onAuCombat={creaturesAuCombat} onDecliner={declinerLaCreature} registre={registreDesLivres} />
                 </div>
             )}
 

@@ -3,8 +3,9 @@ import { describe, expect, it } from 'vitest';
 import ALIEN from '../../../../docs/systems/alien/livres.json?raw';
 import RDD from '../../../../docs/systems/reves de dragons/livres.json?raw';
 import {
-    cleDeLaFiche, controlerLesLivres, decalageDepuis, ecrireLesLivres, enregistrerLeLivre, lireLesLivres,
-    livreDeLaFiche, mesurerLeDecalage, pageDuPdf, pagesAEchantillonner, retirerLeLivre,
+    cleDeLaFiche, controlerLesLivres, decalageDepuis, demandeDOuvertureValide, demandePourLeLivre, ecrireLesLivres,
+    enregistrerLeLivre, lireLesLivres, livreDeLaDemande, livreDeLaFiche, livreDeLaSource, mesurerLeDecalage, pageDuPdf,
+    pagesAEchantillonner, racineDeJeuValide, racineDuJeuDeLaFiche, retirerLeLivre,
 } from './livres';
 import { cheminDesLivres, corpusDeSupplement } from '../../../../electron/corpusSysteme';
 
@@ -119,5 +120,49 @@ describe('mesurer le décalage (« Proposer depuis le livre »)', () => {
         expect(p[0]).toBe(1);
         expect(p.at(-1)).toBeGreaterThan(380);
         expect(pagesAEchantillonner(12)).toHaveLength(12);
+    });
+});
+
+describe('ouvrir le livre à la page (étapes C et D)', () => {
+    const livres = lireLesLivres(ALIEN);
+
+    it('la demande ne passe que si elle désigne un jeu, une clé et une page entière', () => {
+        expect(demandeDOuvertureValide({ racine: 'systems/alien', cle: 'jeu', page: 309 })).toEqual({ racine: 'systems/alien', cle: 'jeu', page: 309 });
+        for (const mauvaise of [
+            null, 'systems/alien', { racine: 'systems/..', cle: 'jeu' }, { racine: '../secret', cle: 'jeu' },
+            { racine: 'systems/alien/rules', cle: 'jeu' }, { racine: 'C:\\docs', cle: 'jeu' }, { racine: 'systems/alien', cle: '' },
+            { racine: 'systems/alien', cle: 'jeu', page: 0 }, { racine: 'systems/alien', cle: 'jeu', page: 3.5 },
+            { racine: 'systems/alien', cle: 'jeu', rang: -1 }, { racine: 'systems/alien', cle: 'jeu', chemin: undefined, page: '309' },
+        ]) expect(demandeDOuvertureValide(mauvaise)).toBeNull();
+        expect(racineDeJeuValide('systems/reves de dragons')).toBe(true);
+    });
+
+    it('la racine du jeu se lit dans le chemin de la fiche, supplément compris', () => {
+        expect(racineDuJeuDeLaFiche('systems/alien/supplements/colonial-marines/rules/x.md')).toBe('systems/alien');
+        expect(racineDuJeuDeLaFiche('docs\\systems\\alien\\rules\\x.md')).toBe('systems/alien');
+        expect(racineDuJeuDeLaFiche('systems/../rules/x.md')).toBeNull();
+        expect(racineDuJeuDeLaFiche('ailleurs/x.md')).toBeNull();
+    });
+
+    it('le livre d’une source : la clé, la fiche, le titre ; rien plutôt que le mauvais livre', () => {
+        const cm = 'systems/alien/supplements/colonial-marines/rules/nouvelles-variantes.md';
+        expect(livreDeLaSource(livres, { livre: 'x', page: 178, fiche: cm })?.cle).toBe('colonial-marines');
+        expect(livreDeLaSource(livres, { cle: 'jeu', page: 309 })?.decalage).toBe(3);
+        expect(livreDeLaSource(livres, { livre: 'colonial marines operations manual', page: 12 })?.cle).toBe('colonial-marines');
+        // Saisie à la main, titre inconnu, et le jeu a un supplément : pas de bouton.
+        expect(livreDeLaSource(livres, { livre: 'Un livre', page: 12 })).toBeNull();
+        // Un jeu qui n'a que son livre de base y renvoie.
+        expect(livreDeLaSource(livres.slice(0, 1), { livre: 'Un livre', page: 12 })?.cle).toBe('jeu');
+        expect(livreDeLaSource(livres, undefined)).toBeNull();
+    });
+
+    it('la demande du Drone (p. 309) désigne le livre de base, que le processus principal retrouve', () => {
+        const demande = demandePourLeLivre(livres, livres[0], 'systems/alien', 309);
+        expect(demande).toEqual({ racine: 'systems/alien', cle: 'jeu', page: 309 });
+        expect(pageDuPdf(livreDeLaDemande(livres, demande)!, demande.page!)).toBe(312);
+        const volumes = [{ ...livres[0] }, { ...livres[0], titre: 'Tome 2', chemin: 'N:\\t2.pdf' }];
+        expect(demandePourLeLivre(volumes, volumes[1], 'systems/x', 4)).toEqual({ racine: 'systems/x', cle: 'jeu', rang: 1, page: 4 });
+        expect(livreDeLaDemande(volumes, { cle: 'jeu', rang: 1 })?.titre).toBe('Tome 2');
+        expect(livreDeLaDemande(volumes, { cle: 'jeu', rang: 2 })).toBeNull();
     });
 });

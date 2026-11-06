@@ -13751,7 +13751,7 @@ David : « c'est testé marque le. Maintenant fais un clips avec Playright des n
 - **Vérifications terminées le05/11 :** 9 871 tests réussis, 4 ignorés (833 fichiers réussis, 1 ignoré), dont138 tests de corpus ; types et construction passent, lint zéro erreur et un avertissement préexistant. Deux parcours Electron passent : calculs héros, persistance psychique, Formulaire/Hub/journal et captures communes ; neuf images2.2 relues. Défaut de titre au journal corrigé, source/page de Furtif désormais transmises. Rapports et inventaire combiné dans output/coc-a4-a6/.
 - **État :** 🟢 COC-A1 à COC-A6 validés par David le05/11 ; seize acquis verts, zéro orange, zéro rouge. Aucun essai humain restant pour ces lots.
 
-### 220 · Les chemins des livres — plan, étapes 0, A et B — 06/11/2026
+### 220 · Les chemins des livres — plan, étapes 0 à D — 06/11/2026
 
 David : *« est-ce qu'il ne serait pas utile de pouvoir garder le chemin vers les PDF des livres de
 bases et des suppléments dans GM-OS ? »*, puis *« je n'ai pas envie de recopier mes livres un peu
@@ -13790,14 +13790,28 @@ dépôt, l'enregistrement dans la Forge, la fenêtre de lecture intégrée, l'or
     Forge et processus principal (2 458) ; `tsc -b`, eslint, construction ;
   - e2e : le neuf `e2e/livresDuJeu.spec.ts` (corpus jetable semé) et celui de la Forge
     (`modulesIa`, 7). Capture : `captures/forge-pdf-du-livre.jpg`. Guide 50 mis à jour.
-- **Reste** : l'essai de David (la carte d'Alien, « Vérifier », « Proposer depuis le livre ») ; les
-  étapes C et D (ouvrir le livre à la page, les boutons « Livre, p. N ») ; l'étape E (les agents).
+- **Étapes C et D, le même jour** (David : *« commit fait C & D »* ; GM-OS fermé ; sans maquette, sur
+  sa décision) — [détail dans le plan](2026-11-06-chemins-des-livres.md#étapes-c-et-d--livrées-le-0611).
+  - **C** : `livres:ouvrir`, le chemin relu dans le registre, jamais reçu de l'écran ; une fenêtre de
+    lecture (visionneuse PDF de Chromium, sandbox) qui s'ouvre à la page imprimée + décalage ; repli
+    sur l'application PDF du système, à la première page.
+  - **D** : le bouton « Livre, p. N » (`LivreALaPage.tsx`) dans l'atelier de règles, l'éditeur du
+    pilote (Bestiaire, Équipement), l'onglet *Livre* de l'atelier des adversaires et « Prendre dans
+    le catalogue ». Sans PDF : la page reste du texte, avec une infobulle qui dit où l'ajouter.
+  - **Deux pièges trouvés par des essais jetables, avant et pendant** : changer seulement `#page=`
+    ne déplace pas la visionneuse (adresse distincte à chaque ouverture) ; une partition en mémoire
+    la laisse blanche (`persist:livres`).
+  - **Vérifié** : 26 essais neufs ou repris, 3 509 essais des modules touchés, `tsc -b`, eslint,
+    construction ; e2e `livresDuJeu` (2) : dans la vraie application, le Drone (p. 309) ouvre la
+    page 312 — `captures/livre-a-la-page.jpg`. Guides 50, 30 et 54-Alien.
+- **Reste** : l'essai de David (la carte d'Alien ; un « Livre, p. N » dans le bestiaire ou le
+  catalogue) ; l'étape E (les agents).
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 156 | **Les chemins des livres** | 🟠 § 220 ; registre de seize jeux (dix-sept livres, réglés avec David) et carte « PDF du livre » de la Forge livrés — 06/11 | Ouvrir la Forge, Atelier de règles, corpus `alien` : Vérifier, Proposer depuis le livre | Essai de David ; ensuite étapes C, D, E |
+| 156 | **Les chemins des livres** | 🟠 § 220 ; registre de seize jeux (dix-sept livres, réglés avec David), carte « PDF du livre » de la Forge, fenêtre de lecture à la page et boutons « Livre, p. N » livrés — 06/11 | Forge, Atelier de règles, corpus `alien` : Vérifier ; puis un « Livre, p. N » (bestiaire, catalogue ou onglet *Livre*) | Essai de David ; ensuite étape E |
 | 151 | **COC — COC-A4/A5/A6** | 🟢 §215 ; pilote2.2.0, 9 871 tests et deux parcours Electron verts ; six lots validés par David —05/11 | Rien pour COC-A1 à A6 | Rien |
 | 150 | **COC — COC-A1/A2/A3** | 🟠 § 214 ; pilote 2.1.0, 9 847 tests et deux parcours Electron verts, dix captures relues — 04/11 | Réimporter d20 ou 3d6 avec Remplacer, essayer dégâts/santé/rôles | Essai David restant |
 | 149 | **Clip des nouveautés Shadowrun Anarchy** | 🟢 § 213 ; clip MP4 3 min 12 livré et relu, parcours Playwright passé — 04/11 | Ouvrir le MP4 ; rien à développer | Rien |

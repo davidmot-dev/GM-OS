@@ -295,7 +295,9 @@ L'atelier les montre dans un troisième onglet, **Livre**, à côté de *Fabriqu
   « (variante 2) ») : elle **copie** les valeurs et garde la trace de son modèle — l'onglet
   *Bestiaire* la dit « Variante de « Biodrone XX121B » (livre) ». Une correction du livre ne la
   change pas. Fabriquée ensuite, ses champs que le livre ne donne pas sont tirés comme pour un
-  adversaire quelconque.
+  adversaire quelconque ;
+- **Livre, p. N** (depuis le 2026-11-06) ouvre le PDF du livre à la page de la créature, quand la
+  Forge connaît son chemin ([guide 50](./50-Forge-des-systemes.md#ouvrir-le-livre-à-la-page)).
 
 Les deux bestiaires **coexistent** sans rien se prendre : le livre reste dans le pilote, vos gabarits
 chez vous ; seul « Décliner » passe de l'un à l'autre (décision de David, 05/11/2026). Sous *Livre*,
