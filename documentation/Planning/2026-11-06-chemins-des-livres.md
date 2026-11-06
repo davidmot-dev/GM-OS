@@ -10,7 +10,8 @@ donc un chemin pour moi est une bonne idée »*. Il a demandé le plan complet a
 depuis le livre complet de Rêve de Dragon, le 06/11) ; le registre lu par GM-OS ; la carte « PDF
 du livre » de la Forge. Les quatre points à confirmer sont réglés avec David.
 **Étapes C et D livrées le 06/11** : la fenêtre de lecture à la page et les boutons « Livre, p. N ».
-Essai de David attendu ; ensuite E.
+**Étape E livrée le 06/11** : skills, passation, mémoires. **Tout le plan est livré, essayé et validé
+par David le 06/11** (*« ok j'ai essayé, c'est bon »*).
 
 ## Le principe : un chemin, jamais une copie
 
@@ -218,6 +219,19 @@ d'écran neuf : la fenêtre est la visionneuse PDF de Chromium, le bouton prend 
   avant de demander où est le livre, et d'en prendre le décalage.
 - La passation Claude ↔ Codex (`2026-10-04-passation-claude-codex.md`) le mentionne.
 - Les mémoires qui notent un emplacement de livre renvoient au registre, qui fait foi.
+
+**Livrée le 06/11** (David : *« fini l'étape E »*) :
+
+- `relire-un-corpus` : le registre d'abord (« ne demander à David que si le jeu n'a pas de registre
+  ou si le fichier ne répond pas, puis l'y ajouter ») ; la copie de travail temporaire remplace
+  l'ancien « lire en place » ; les décalages renvoient au registre et à `mesurerLeDecalage`.
+- `finir-un-pilote`, § 2 : où est le livre, et l'entrée d'un nouveau jeu ou supplément dans
+  `livres.json`, qui allume les boutons « Livre, p. N ».
+- Passation, § 5 « Les décisions de David » : un chemin, jamais une copie ; le registre ; la
+  lecture par copie temporaire ; Rêve de Dragon 2.3.1 et Shadowrun v1.
+- Mémoires de Claude Code : une mémoire « les chemins des livres » (registre, lecture, pièges de la
+  fenêtre de lecture) ; les neuf mémoires qui notaient un emplacement de livre y renvoient.
+  Les fichiers de Codex (`.codex/`) ne sont pas touchés : il lit les skills et la passation.
 
 ## Ce qui ne change pas
 

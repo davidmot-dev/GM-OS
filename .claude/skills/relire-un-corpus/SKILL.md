@@ -15,17 +15,29 @@ Avant de croire une liste du carnet, la compter contre la source.
 
 ## 1 · Trouver et lire le livre
 
-- **Demander à David où est le PDF** ; ses livres sont sur OneDrive
-  (`C:\Users\david\OneDrive\Jeux de Rôles\…`) ou sur `Z:\Jeux de Rôle\…`. Un dossier de JPG
-  n'est pas le livre. Ne rien copier de ses données ; lire en place.
+- ⭐ **Le registre des livres d'abord : `docs/systems/<jeu>/livres.json`** (depuis le 06/11/2026,
+  [plan](../../../documentation/Planning/2026-11-06-chemins-des-livres.md)). Chaque entrée donne le
+  `chemin` du PDF (le NAS `\\CLOUDDAVID\Media\Jeux de Rôle\…`), son `decalage` (page PDF = page
+  imprimée + décalage), l'`errata` et des `notes` (texte doublé, tables à lire en image). La clé
+  `jeu` est le livre de base, sinon le slug du supplément. **Le registre fait foi** : ne demander
+  à David que si le jeu n'a pas de registre, ou si le fichier ne répond pas — puis l'y ajouter
+  (Forge › Atelier de règles › PDF du livre, ou le `.json` à la main). Un dossier de JPG n'est pas
+  le livre.
+- **Lire un livre du NAS** : en tirer une copie de travail **temporaire** dans le scratchpad, par
+  PowerShell (`Copy-Item -LiteralPath`, Python lit mal un chemin réseau accentué), lancer Python en
+  `-I`, puis **effacer la copie**. ⛔ Jamais de PDF dans `docs/` (l'Oracle indexe les `.pdf`), ni
+  dans le dépôt.
 - Extraire le texte dans un dossier de travail (`scratch/<jeu>-audit/livre.txt`), avec un marqueur
   par page (`--- PAGE PDF n ---`). Outils présents : `pypdf`, `pdftotext`, `pdfjs-dist` et
   `@napi-rs/canvas` (rendu en image) ; pas `pdftoppm`.
 - **Vérifier d'abord que le texte ne double pas** : certains PDF ont deux couches (Blade Runner),
   et pdfjs rend chaque fragment deux fois. Garder la première occurrence par position arrondie.
-- **Le décalage des pages** se mesure, il ne se devine pas : Barbarians imprimée = PDF − 2,
-  Blade Runner = PDF − 4, Rêve de Dragon = PDF − 1, Dune = PDF − 7. Calculer chaque page citée
-  depuis le marqueur qui précède la ligne ; une fois, six pages citées étaient fausses.
+- **Le décalage des pages** se mesure, il ne se devine pas : il est dans le registre (Alien + 3,
+  Barbarians + 2, Blade Runner + 4, Rêve de Dragon 2.3.1 + 1, Dune + 7). Pour un livre neuf,
+  `mesurerLeDecalage` (`src/modules/forge/rules/livres.ts`, le « Proposer depuis le livre » de la
+  Forge) le retrouve sur les dix-huit livres relevés. Calculer chaque page citée depuis le marqueur
+  qui précède la ligne ; une fois, six pages citées étaient fausses. Les fiches citent la page
+  **imprimée**.
 - ⛔ **Une table se lit en image** : `pdftotext -layout` mélange les colonnes (la table des
   rencontres de Rêve de Dragon rangeait les plaines avec les cités). Rendre la page (pdfjs +
   canvas) et la regarder, ou lire les mots à leur position (`pypdf`, `visitor_text`).

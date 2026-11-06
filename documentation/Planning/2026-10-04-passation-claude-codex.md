@@ -139,6 +139,15 @@ registre.
 - **Trame** (§ 120) : le graphe se **range** en chaîne ou en étoile selon la forme de la trame.
 - **Modèles d'IA** (03/10) : un modèle pour préparer, un autre pour jouer ; la contrainte de 20 lignes
   ne vaut que pour le modèle **de séance**.
+- **Les livres** (06/11, § 220) : GM-OS garde **le chemin** du PDF de chaque livre, **jamais une
+  copie** (*« je n'ai pas envie de recopier mes livres un peu partout »*). Le registre est
+  **`docs/systems/<jeu>/livres.json`**, dans le dépôt : chemin sur le NAS
+  (`\\CLOUDDAVID\Media\Jeux de Rôle\…`), **décalage** (page PDF = imprimée + décalage), errata,
+  notes. **Le lire avant de demander où est un livre**, et en prendre le décalage avant de citer
+  une page. Pour lire un livre : copie de travail **temporaire** dans le scratchpad
+  (`Copy-Item -LiteralPath` sous PowerShell), Python en `-I`, copie effacée ensuite ; ⛔ jamais de
+  PDF dans `docs/`. Rêve de Dragon : le livre complet 2.3.1 ; Shadowrun Anarchy : la v1.
+  [Le plan](2026-11-06-chemins-des-livres.md).
 
 ---
 

@@ -56,10 +56,17 @@ Le meilleur modèle à imiter est le pilote fini le plus récent : registre § 1
 
 ## 2 · Le livre fait foi
 
-Le PDF et son errata, que David fournit — **jamais** le carnet NotebookLM, qui a déjà inventé des
-règles (Nephilim, Symbaroum). Relire le corpus `docs/systems/<jeu>/rules/` contre le livre :
-suivre le skill **`relire-un-corpus`** (couches de texte doublées, décalage des pages, tables à
-lire en image, budget de l'invite de la Forge).
+Le PDF et son errata — **jamais** le carnet NotebookLM, qui a déjà inventé des règles (Nephilim,
+Symbaroum). **Où est le livre** : le registre `docs/systems/<jeu>/livres.json` donne le chemin du
+PDF, de l'errata et le décalage des pages, pour le livre de base et chaque supplément (seize jeux
+relevés le 06/11/2026). Ne demander à David que si le registre manque ou ne répond pas, puis l'y
+ajouter. Relire le corpus `docs/systems/<jeu>/rules/` contre le livre : suivre le skill
+**`relire-un-corpus`** (copie de travail temporaire, couches de texte doublées, décalage des pages,
+tables à lire en image, budget de l'invite de la Forge).
+
+Un nouveau jeu, ou un supplément déclaré, reçoit son entrée dans `livres.json` (Forge › Atelier de
+règles › PDF du livre : « Proposer depuis le livre » mesure le décalage). C'est elle qui allume les
+boutons « Livre, p. N » du bestiaire, du catalogue et de l'atelier de règles.
 
 ## 3 · Le code
 
