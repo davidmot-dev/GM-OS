@@ -263,6 +263,21 @@ section Bestiaire fait de même pour les créatures (première colonne « Créat
   « Sujet de Forge Libre » ou cherchez-le dans la liste : un sujet déjà inventorié passe **en tête**,
   désigné, avec un bandeau qui le dit. Cliquez sa carte : la nouvelle fiche remplace l'ancienne à la
   publication (l'ancienne n'est archivée dans `rules-v1/` que si elle a été corrigée à la main).
+  ⚠️ Une reforge refait aussi le texte : elle peut défaire une relecture. Comparez avant de publier.
+- **Le livre vérifie la fiche** (depuis le 2026-11-06) : quand le livre a un PDF dans le registre,
+  l'encart lit seul les pages des tableaux et dit, ligne par ligne, ce qu'il y retrouve :
+  - **retrouvée** : le nom et toutes ses valeurs sur la même ligne du livre ;
+  - **à confirmer** : une valeur lue ailleurs dans les pages, loin du nom (une valeur venue d'une
+    autre section, ou fausse) — « Livre, p. N » ouvre la page ;
+  - **introuvable** : une valeur qu'aucune page lue ne porte, ou un nom absent — en alerte.
+
+  Il contrôle les chiffres, pas la prose. Sur un livre dont le texte mêle les colonnes (Alien), il
+  répond surtout « à confirmer ».
+- **Un tableau par requête** (depuis le 2026-11-06) : pour un sujet d'équipement ou de créatures,
+  la Forge demande d'abord la liste des tableaux du livre et leur nombre de lignes, puis les recopie
+  par lots (une quinzaine de lignes, ou six créatures, par requête). Le compteur dit combien de lots
+  sont reçus ; si une requête échoue, relancer la forge reprend au lot manquant. À la relecture,
+  les avertissements disent l'écart entre lignes annoncées et recopiées.
 
 ![Remplir depuis le corpus : les deux livres d'Alien, 154 objets, les colonnes et les rattachements](captures/jeu-alien-catalogue-remplir.jpg)
 

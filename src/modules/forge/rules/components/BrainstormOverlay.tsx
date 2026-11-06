@@ -15,6 +15,7 @@ import { gmConfirm } from '../../../../stores/useModalStore';
 import { gmToast } from '../../../../stores/useToastStore';
 import DiscoveryUI from './DiscoveryUI';
 import LivreALaPage from './LivreALaPage';
+import VerificationAuLivre from './VerificationAuLivre';
 import { bilanAMontrer, bilanDesLecteurs } from '../bilanDesLecteurs';
 import { FAMILLES_D_OBJET } from '../../../equipement/catalogue';
 import { useLivresDuJeu } from '../useLivresDuJeu';
@@ -449,6 +450,9 @@ export const BrainstormOverlay: React.FC = () => {
     });
   };
 
+  /** F3 (06/11/2026) : l'avancement de la recopie des tableaux, lot par lot. */
+  const [etapeDeForge, setEtapeDeForge] = useState<{ fait: number; total: number } | null>(null);
+
   /** Rédige la fiche. **N'écrit rien** : la revue vient ensuite. */
   const handleForge = async (candidate: BrainstormCandidate) => {
     if (!brainstormStore.notebookId || !corpus) {
@@ -457,6 +461,7 @@ export const BrainstormOverlay: React.FC = () => {
     }
     const gen = reserverLeCarnet();
     if (gen === null) return;
+    setEtapeDeForge(null);
     brainstormStore.startForging();
 
     const cheminBrouillon = `${cheminDesBrouillons(corpus)}/${slugFiche(candidate.title)}.md`;
@@ -484,6 +489,8 @@ export const BrainstormOverlay: React.FC = () => {
           // La première moitié part sur le disque AVANT la seconde requête :
           // c'est ce qui rend la scission utile plutôt que seulement plus lente.
           surMoitie: (regle) => { void window.appBridge?.ai?.writeDoc?.(cheminBrouillon, regle); },
+          // F3 : « tableau 3 sur 5 » dans le compteur ; une forge abandonnée ne l'affiche plus.
+          surEtape: (etape) => { if (gen === generationCourante()) setEtapeDeForge(etape); },
           // Un supplément : son titre et la langue du jeu dans les gabarits, et
           // les sujets retenus comme canevas de la conversion.
           ...(supplement ? {
@@ -513,6 +520,7 @@ export const BrainstormOverlay: React.FC = () => {
       brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
     } finally {
       libererLeCarnet(gen);
+      setEtapeDeForge(null);
     }
   };
 
@@ -1040,7 +1048,9 @@ export const BrainstormOverlay: React.FC = () => {
               titre={t('session.forge_module.atelier.forging_title')}
               sousTitre={brainstormStore.step === 'personas'
                 ? t('session.forge_module.atelier.personas_processing')
-                : t('session.forge_module.atelier.forging_subtitle')}
+                : etapeDeForge
+                  ? t('session.forge_module.atelier.forging_tables_step', { fait: etapeDeForge.fait, total: etapeDeForge.total })
+                  : t('session.forge_module.atelier.forging_subtitle')}
             />
           )}
 
@@ -1104,6 +1114,14 @@ export const BrainstormOverlay: React.FC = () => {
                          </ul>
                        </div>
                      )}
+                     {/* F4 (06/11/2026) : les lignes lues, confrontées à leur page du livre. */}
+                     <VerificationAuLivre
+                       contenu={carteRelue?.content ?? ''}
+                       registre={registreDesLivres}
+                       cle={supplement?.slug ?? 'jeu'}
+                       plage={resolution?.plage ?? null}
+                       plageEnCours={resolutionEnCours}
+                     />
                    </div>
                  </div>
                )}

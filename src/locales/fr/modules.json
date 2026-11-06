@@ -1826,6 +1826,7 @@
         "discovery_processing_sub": "Analyse des sources NotebookLM en cours",
         "forging_title": "Cristallisation en cours",
         "forging_subtitle": "Forge de la fiche markdown détaillée",
+        "forging_tables_step": "Recopie des tableaux du livre, un lot par requête : {{fait}} reçu(s) sur {{total}}. Le brouillon garde les lots déjà reçus.",
         "success_title": "Cristallisation Réussie",
         "success_subtitle": "Indexé dans le RAG de campagne",
         "back_to_subjects": "Retour aux sujets",
@@ -1917,7 +1918,16 @@
         "lecteurs_bestiaire": "Bestiaire : {{creatures}} créature(s), {{attaques}} table(s) d'attaques rattachée(s).",
         "lecteurs_lignes": "{{n}} ligne(s) de tableau illisible(s) — elles n'entreront ni au catalogue ni au bestiaire :",
         "lecteurs_alerte_equipement": "Cette fiche parle d'équipement, mais le catalogue n'y lira rien : aucun tableau dont la première colonne est Arme, Protection, Véhicule ou Objet. Elle peut être publiée ; recopiez les tableaux du livre pour que « Remplir depuis le corpus » la lise.",
-        "lecteurs_alerte_bestiaire": "Cette fiche parle de créatures, mais le bestiaire n'y lira rien : aucun tableau de profil dont la première colonne est Créature. Elle peut être publiée ; recopiez les profils du livre pour que « Remplir depuis le corpus » la lise."
+        "lecteurs_alerte_bestiaire": "Cette fiche parle de créatures, mais le bestiaire n'y lira rien : aucun tableau de profil dont la première colonne est Créature. Elle peut être publiée ; recopiez les profils du livre pour que « Remplir depuis le corpus » la lise.",
+        "lecteurs_livre_lecture": "Le livre : lecture des pages {{pages}}…",
+        "lecteurs_livre_resultat": "Le livre (p. {{pages}}) : {{retrouvees}} ligne(s) sur {{total}} retrouvée(s) avec leurs valeurs, {{aConfirmer}} à confirmer, {{introuvables}} introuvable(s).",
+        "lecteurs_livre_ailleurs": "à confirmer : {{valeurs}}, lu(s) loin du nom",
+        "lecteurs_livre_manquantes": "introuvable(s) dans les pages lues : {{valeurs}}",
+        "lecteurs_livre_nom_absent": "nom absent des pages lues",
+        "lecteurs_livre_et_autres": "et {{n}} autre(s)",
+        "lecteurs_livre_echec": "Le livre n'a pas pu être lu : {{motif}}",
+        "lecteurs_livre_sans": "Aucun PDF enregistré pour ce livre : la vérification au livre se fera une fois le « PDF du livre » renseigné, dans le panneau de gauche de la Forge.",
+        "lecteurs_livre_sans_pages": "Le livre : aucune page à lire — les tableaux ne citent pas de page et l'index n'a pas résolu les sections de la fiche."
       },
       "notebook": {
         "title": "Navigateur NotebookLM",

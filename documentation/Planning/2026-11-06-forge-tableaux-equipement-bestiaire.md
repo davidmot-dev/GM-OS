@@ -1,7 +1,8 @@
 # La Forge écrit des tableaux lisibles — équipement et bestiaire — plan du 06/11/2026
 
 **Statut** : plan tranché par David le 06/11 (§ « Décisions de David »). **F1, F5 et F2 livrés le
-06/11** ; essai de David attendu sur le bestiaire de COC ; F4 et F3 ensuite.
+06/11 et essayés par David** (les adversaires de COC, reforgés en tableau) ; **F4 et F3 livrés le
+06/11**, essai de David attendu. Le plan est entièrement réalisé.
 
 David, le 06/11 : *« j'ai essayé de remplir les équipements de COC à partir de l'atelier et malgré
 le fait que j'ai une fiche, rien ne se remplit »*, puis *« je voudrais à terme que le moteur de
@@ -142,6 +143,120 @@ directement, sans résultat »*.
   tableaux.
 - Non traité : en mode supplément, le sujet libre n'entre pas dans la liste (la liste y est celle
   des sujets retenus, qui a son propre champ « Ajouter »).
+
+## La reforge des adversaires de COC — l'essai de David, le 06/11
+
+David a reforgé « La gestion simplifiée des adversaires… » avec le gabarit des tableaux (*« ok c'est
+bon »*). **Le tableau a marché** : un tableau de profils `Créature` (Figurant, Second rôle, Premier
+rôle, Bande de sbires) que le bestiaire lit (4 profils, aucune ligne illisible), aux valeurs justes.
+**La prose, non** : elle réintroduisait les deux règles que la relecture du 31/10 avait retirées
+(les sbires éliminés par tranche de dommages, la garde du premier rôle) et ajoutait un figurant
+éliminé sans jet de dommages (il a 20 échelons). La fiche publiée est donc reconstituée : le tableau
+de la reforge, le texte relu du 31/10, `relu: true`. L'ancienne version, corrigée à la main, avait
+été archivée par l'atelier dans `rules-v1/` (son empreinte ne concordait plus : c'est la protection
+des corrections qui a joué, comme prévu).
+
+*Leçon : le gabarit des tableaux fait bien son travail sur les chiffres ; une reforge écrase
+quand même une relecture. F4 contrôle les chiffres, pas la prose.*
+
+## Livré le 06/11 — F4, le livre vérifie la fiche
+
+David : *« ok c'est bon commit et continue »*.
+
+- **Où** : dans l'encart « Ce que le catalogue et le bestiaire liront » de la relecture, **sans
+  bouton** — la lecture part seule dès qu'une fiche porte un tableau lu par le catalogue ou le
+  bestiaire et que le livre a un PDF dans le registre.
+- **Comment** : `forge/rules/verificationAuLivre.ts` (pur) prend les lignes des tableaux que les
+  lecteurs liront (mêmes règles de première colonne, exportées par eux), leurs valeurs chiffrées
+  (dés, nombres, milliers recollés) hors des colonnes en prose et des prix par époque ; les pages
+  sont celle du titre `(p. N)` et ses voisines, sinon la plage des sections résolues par l'index.
+  Le processus principal lit ces pages (`livres:lire-pages`, chemin relu dans le registre, décalage
+  appliqué). Une ligne est **retrouvée** quand son nom et toutes ses valeurs sont sur la même ligne
+  de texte du livre ; **à confirmer** quand une valeur n'est lue qu'ailleurs dans les pages lues ;
+  **introuvable** quand une valeur n'est sur aucune page, ou le nom absent (alerte).
+- **Mesuré sur les vrais livres** :
+  - COC, armes et protections : **43 sur 44 retrouvées**, 1 à confirmer (les grenades, que le livre
+    imprime en liste sur plusieurs lignes). Une copie faussée (couteau à 1d8, marteau à 1d6+3) :
+    les deux armes passent « à confirmer ». *Chercher dans toute la page les laissait passer : 1d8
+    et 3 y figurent ailleurs — d'où la recherche sur la ligne du nom.*
+  - COC, adversaires : 3 sur 4, le premier rôle à confirmer (sa ligne réunit DEF 15, p. 108, et la
+    santé Pulp, p. 92).
+  - Alien, quatre fiches d'équipement : surtout « à confirmer » (6 sur 28 armes retrouvées, 0 sur 6
+    protections) — le livre a deux couches de texte et ses tableaux ne gardent pas leurs lignes ;
+    jamais de « retrouvée » à tort.
+- **Limite** : le contrôle est sûr pour un livre dont le texte garde les lignes de ses tableaux
+  (COC) ; sur un livre à couches mêlées (Alien), il dit « à confirmer » et renvoie à la page par
+  « Livre, p. N ». Il ne contrôle pas la prose.
+- **Vérifié** : `verificationAuLivre.test.ts` (11, sur la vraie fiche de COC et le texte de sa page
+  93), `VerificationAuLivre.test.tsx` (6), `cheminsDesLivres.test.ts` (+3) ; 1 012 essais (Forge,
+  équipement, bestiaire, invites, livres, manuel), `tsc -b`, eslint.
+- **À essayer par David** : reforger un sujet à tableaux de COC (les adversaires) et, à la
+  relecture, lire la ligne « Le livre (p. …) : … », qui paraît après quelques secondes de lecture du
+  NAS. **Ne pas publier** cette reforge : la fiche en place est la version reconstituée (tableau +
+  texte relu) ; « Retour » suffit. Si elle était publiée, la version reconstituée partirait dans
+  `rules-v1/` (elle est marquée corrigée), sans se perdre.
+- **Reste** : l'essai de David.
+
+## Livré le 06/11 — F3, un tableau par requête
+
+David : *« termine F3 »* (le seuil n'a pas été tranché : réglage par défaut ci-dessous, à revoir sur
+demande).
+
+- **Le déroulé**, pour tout sujet d'équipement ou de créatures (`natureDuSujet`) :
+  1. **l'en-tête** (`gabaritEnteteDesTableaux`) : métadonnées, règle, et la liste « ## Tableaux du
+     livre » — un tableau Markdown « Tableau | Lignes » (le titre de la section, le nombre d'objets),
+     ou « Créature | Section » ;
+  2. **un lot par requête** (`gabaritDesTableaux`) : au plus **15 lignes annoncées** par lot (un
+     petit sujet tient en une requête, un tableau plus grand ou sans compte part seul), **six
+     créatures** par lot ; chaque lot au format exact des lecteurs, nombre de lignes rappelé ;
+  3. la seconde moitié, inchangée.
+- **Le brouillon porte l'avancement** : il part sur le disque après l'en-tête et après chaque lot,
+  la liste comprise ; une forge relancée reprend au premier lot manquant (un tableau déclaré
+  « Absent des sources » ne se redemande pas). La liste est retirée de la fiche assemblée.
+- **Le contrôle des lignes** : l'écart entre annoncé et recopié va aux avertissements de la
+  relecture (« Armes de contact : 10 ligne(s) annoncée(s), 8 recopiée(s). » ; créatures annoncées
+  sans profil).
+- **Le compteur** de forge dit « Recopie des tableaux du livre, un lot par requête : 2 reçu(s) sur
+  5 ».
+- **Repli** : un en-tête sans liste lisible retombe sur la requête unique de F2.
+- **Le prix** : une requête de plus qu'avec F2 pour un petit sujet (en-tête + un lot + seconde
+  moitié) ; le chapitre des armes de COC (5 tableaux, 44 lignes) ferait environ 1 + 4 + 1
+  requêtes, selon les nombres que le carnet annonce.
+- **Les invites** : 1 446 à 2 380 caractères, sous les 3 594 acceptés (essais ajoutés).
+- **Vérifié** : `tableauxParRequete.test.ts` (12), `ForgeService.test.ts` (F3 nominal, écart,
+  reprise, repli), longueurs (+4) ; 1 030 essais (Forge, équipement, bestiaire, invites, livres,
+  manuel), `tsc -b`, eslint.
+- **À essayer par David** : reforger les adversaires de COC (ou un sujet d'armes) et regarder le
+  compteur, puis à la relecture les avertissements, le bilan et « Le livre (p. …) » ; ne pas
+  publier les adversaires (la fiche en place est la version reconstituée).
+
+## Refaites depuis le livre le 06/11 — la fiche des adversaires et le bestiaire de COC
+
+David : *« refait la fiche des adversaires »*, puis, à la question de la méthode, « depuis le livre »
+(les profils humains et les créatures compris).
+
+- **`la-gestion-simplifiee-des-adversaires-par-roles-et-bandes-de-sbires.md`**, réécrite contre
+  les p. 92 et 108-111 (tableaux lus en image) : le tableau des rôles tel qu'imprimé (première
+  colonne `PNJ`, trois lignes — la « Bande de sbires » du carnet n'est pas une ligne du livre), les
+  dix-huit capacités Pro / Expert, la santé variable, les groupes de PNJ. `empreinte` gardée : la
+  fiche reste marquée corrigée, donc protégée d'une reforge.
+- **`bestiaire-du-livre-de-base.md`**, neuve (p. 112-119) : six profils humains et neuf créatures
+  en tableaux de profil `Créature` (TAI, caractéristiques, DEF, Init., échelle de santé avec la
+  précision Pulp, armes, capacités, page), le tableau de référence des tailles et les vingt-six
+  capacités spéciales. Deux bizarreries du livre recopiées et dites : le leader politique imprimé
+  « second rôle » avec des valeurs de premier rôle ; le gamin des rues imprimé TAI 4.
+- **« Remplir depuis le corpus » du bestiaire de COC** : 18 profils (3 rôles, 6 humains, 9
+  créatures), aucune ligne illisible, aucun constat (`bestiaireDeCoc.test.ts`).
+- **F4 amélioré au passage** : la colonne « Page » donne la page de la ligne (et n'est plus une
+  valeur), un titre « (p. 117-119) » fait lire toutes ses pages, et un profil imprimé en bloc est
+  lu jusqu'au nom suivant du même tableau (au plus 16 lignes de texte), seulement quand la ligne
+  du nom ne porte pas ses valeurs. Sur le vrai livre : bestiaire 14 sur 15 retrouvés (l'officier
+  de police est coupé entre deux pages), rôles 3 sur 3, armes 43 sur 44 ; une copie faussée (rat
+  à DEF 17, crocodile à 1d12) est repérée (introuvable, à confirmer).
+- **Vérifié** : 1 037 essais (Forge, équipement, bestiaire, invites, livres, manuel), `tsc -b`,
+  eslint.
+- **À essayer par David** : « Remplir depuis le corpus » dans la section Bestiaire du pilote de
+  COC (18 profils).
 
 ## L'ordre recommandé
 

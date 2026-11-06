@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron'
 import type { FournisseurReseau } from './hotesDesFournisseurs'
 import type { GuideDuManuel } from './guidesDuManuel'
-import type { VerificationDuLivre, PropositionDeDecalage, DemandeDOuverture, OuvertureDuLivre } from '../src/modules/forge/rules/livres'
+import type { VerificationDuLivre, PropositionDeDecalage, DemandeDOuverture, OuvertureDuLivre, DemandeDePages, LectureDesPages } from '../src/modules/forge/rules/livres'
 import type { InventaireDuCorpus, BilanDeQuarantaine } from './groupesDuCorpus'
 
 // --------- Expose some API to the Renderer process ---------
@@ -270,6 +270,8 @@ contextBridge.exposeInMainWorld('appBridge', {
         proposerDecalage: (chemin: string): Promise<PropositionDeDecalage> => ipcRenderer.invoke('livres:proposer-decalage', chemin),
         /** Étape C : ouvrir le livre à la page imprimée ; le chemin est relu dans le registre. */
         ouvrir: (demande: DemandeDOuverture): Promise<OuvertureDuLivre> => ipcRenderer.invoke('livres:ouvrir', demande),
+        /** F4 : le texte des pages imprimées, pour confronter une fiche au livre. */
+        lirePages: (demande: DemandeDePages): Promise<LectureDesPages> => ipcRenderer.invoke('livres:lire-pages', demande),
     },
     ai: {
         listDocs: () => ipcRenderer.invoke('ai:list-docs'),

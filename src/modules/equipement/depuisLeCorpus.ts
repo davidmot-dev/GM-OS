@@ -63,7 +63,7 @@ const estUnNombre = (v: string) => /^[+-]?\d+(?:[.,]\d+)?$/.test(v);
  * « Armures » — COC. Le matériel reste au mot exact : « Système », « Objectif », « Article » ouvrent
  * aussi des tableaux de règles. « Prix des armes » ne commence pas par une famille : il est écarté.
  */
-function familleDuTableau(premiereColonne: string): FamilleDObjet | null {
+export function familleDuTableau(premiereColonne: string): FamilleDObjet | null {
     const k = clef(premiereColonne);
     if (/^(armes?|explosifs?|munitions?|grenades?)/.test(k)) return 'arme';
     if (/^(armures?|protections?|boucliers?)/.test(k)) return 'protection';

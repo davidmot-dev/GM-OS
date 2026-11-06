@@ -1826,6 +1826,7 @@
         "discovery_processing_sub": "Analyzing NotebookLM sources",
         "forging_title": "Crystallization in progress",
         "forging_subtitle": "Forging detailed markdown sheet",
+        "forging_tables_step": "Copying the book's tables, one batch per request: {{fait}} of {{total}} received. The draft keeps the batches already received.",
         "success_title": "Crystallization Successful",
         "success_subtitle": "Indexed in campaign RAG",
         "back_to_subjects": "Back to subjects",
@@ -1917,7 +1918,16 @@
         "lecteurs_bestiaire": "Bestiary: {{creatures}} creature(s), {{attaques}} attack table(s) attached.",
         "lecteurs_lignes": "{{n}} unreadable table row(s) — they will enter neither the catalogue nor the bestiary:",
         "lecteurs_alerte_equipement": "This sheet is about equipment, but the catalogue will read nothing from it: no table whose first column is Weapon (Arme), Protection, Vehicle (Véhicule) or Object (Objet). It can be published; copy the book's tables so that “Fill from the corpus” can read it.",
-        "lecteurs_alerte_bestiaire": "This sheet is about creatures, but the bestiary will read nothing from it: no profile table whose first column is Creature (Créature). It can be published; copy the book's profiles so that “Fill from the corpus” can read it."
+        "lecteurs_alerte_bestiaire": "This sheet is about creatures, but the bestiary will read nothing from it: no profile table whose first column is Creature (Créature). It can be published; copy the book's profiles so that “Fill from the corpus” can read it.",
+        "lecteurs_livre_lecture": "The book: reading pages {{pages}}…",
+        "lecteurs_livre_resultat": "The book (p. {{pages}}): {{retrouvees}} of {{total}} row(s) found with their values, {{aConfirmer}} to confirm, {{introuvables}} not found.",
+        "lecteurs_livre_ailleurs": "to confirm: {{valeurs}}, read away from the name",
+        "lecteurs_livre_manquantes": "not found on the pages read: {{valeurs}}",
+        "lecteurs_livre_nom_absent": "name not found on the pages read",
+        "lecteurs_livre_et_autres": "and {{n}} more",
+        "lecteurs_livre_echec": "The book could not be read: {{motif}}",
+        "lecteurs_livre_sans": "No PDF registered for this book: the check against the book will run once the “Book PDF” is set, in the Forge's left panel.",
+        "lecteurs_livre_sans_pages": "The book: no page to read — the tables cite no page and the index did not resolve the sheet's sections."
       },
       "notebook": {
         "title": "NotebookLM Browser",

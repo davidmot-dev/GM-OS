@@ -279,6 +279,34 @@ export function demandeDOuvertureValide(brute: unknown): DemandeDOuverture | nul
     };
 }
 
+/**
+ * **Lire des pages du livre** — F4 du plan des tableaux (06/11/2026) : le texte des pages imprimées
+ * demandées, pour confronter une fiche au livre. Comme l'ouverture, la demande ne nomme que le jeu,
+ * la clé et le rang ; le chemin est relu dans le registre.
+ */
+export interface DemandeDePages {
+    racine: string;
+    cle: string;
+    rang?: number;
+    /** Pages imprimées, au plus `PLAFOND_DES_PAGES`. */
+    pages: number[];
+}
+
+export const PLAFOND_DES_PAGES = 40;
+
+export type LectureDesPages =
+    | { lu: true; titre: string; pages: { page: number; texte: string }[] }
+    | { lu: false; motif: MotifDOuverture };
+
+export function demandeDePagesValide(brute: unknown): DemandeDePages | null {
+    const base = demandeDOuvertureValide(brute && typeof brute === 'object' ? { ...brute, page: undefined } : brute);
+    if (!base) return null;
+    const pages = (brute as Record<string, unknown>).pages;
+    if (!Array.isArray(pages) || !pages.length || pages.length > PLAFOND_DES_PAGES) return null;
+    if (!pages.every(p => Number.isInteger(p) && p > 0 && p < 10000)) return null;
+    return { racine: base.racine, cle: base.cle, ...(base.rang !== undefined ? { rang: base.rang } : {}), pages: [...new Set(pages as number[])] };
+}
+
 /** Le livre d'une demande : la clé, au rang voulu. */
 export const livreDeLaDemande = (livres: readonly LivreDuJeu[], demande: Pick<DemandeDOuverture, 'cle' | 'rang'>) =>
     livres.filter(l => l.cle === demande.cle)[demande.rang ?? 0] ?? null;

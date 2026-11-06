@@ -13861,14 +13861,38 @@ l'atelier puisse faire le travail correctement pour les équipements et le besti
   lue comme un sujet « Relu le 2026 » (huit jeux ; une fiche vide publiée pour COC,
   `rules/relu-le-2026.md`, supprimée avec l'accord de David) : corrigé dans `inventaire.ts`. Détail au
   [plan](2026-11-06-forge-tableaux-equipement-bestiaire.md).
-- **Reste** : l'essai de David (« Remplir depuis le corpus », section Équipement du pilote de COC ;
-  forger le bestiaire de COC et lire le bilan à la relecture) ; F4 et F3 ensuite.
+- **L'essai de David, la reforge des adversaires de COC** (*« ok c'est bon »*) : le tableau de profils
+  `Créature` est lu par le bestiaire (4 profils), ses valeurs sont justes ; la prose réintroduisait
+  les deux règles retirées le 31/10 (sbires éliminés par tranche de DM, garde du premier rôle) et un
+  figurant éliminé sans jet de dommages. Fiche reconstituée : le tableau de la reforge, le texte
+  relu du 31/10 ; l'ancienne, corrigée à la main, était archivée dans `rules-v1/` comme prévu.
+- **F4, le livre vérifie la fiche, le même soir** (David : *« commit et continue »*) — [détail au
+  plan](2026-11-06-forge-tableaux-equipement-bestiaire.md) : à la relecture, sans bouton, les lignes
+  des tableaux lus sont cherchées sur leur page du PDF (`verificationAuLivre.ts`, canal
+  `livres:lire-pages`) — retrouvée (nom et valeurs sur la même ligne du livre), à confirmer, ou
+  introuvable (alerte). Sur le vrai livre de COC : 43 armes et protections sur 44 retrouvées, deux
+  armes faussées repérées ; sur Alien (texte à deux couches) : « à confirmer » en masse, jamais
+  « retrouvée » à tort. 1 012 essais, `tsc -b`, eslint.
+- **F3, un tableau par requête, le même soir** (David : *« termine F3 »*) — [détail au
+  plan](2026-11-06-forge-tableaux-equipement-bestiaire.md) : l'en-tête annonce les tableaux (ou les
+  créatures) et leur nombre de lignes ; un lot par requête (15 lignes annoncées, ou six créatures) ;
+  le brouillon garde l'avancement et une forge relancée reprend au lot manquant ; l'écart annoncé /
+  recopié va aux avertissements ; repli sur F2 sans liste lisible. Invites de 1 446 à 2 380
+  caractères. 1 030 essais, `tsc -b`, eslint. Le plan F1 à F5 est réalisé.
+- **Les adversaires et le bestiaire de COC refaits depuis le livre** (David : *« refait la fiche des
+  adversaires »*, « depuis le livre ») : la fiche des rôles réécrite contre les p. 92 et 108-111 ;
+  une fiche neuve `bestiaire-du-livre-de-base.md` (six profils humains, neuf créatures, tailles,
+  capacités spéciales, p. 112-119) ; « Remplir depuis le corpus » lit 18 profils sans constat. F4
+  lit désormais la colonne « Page », les plages « (p. 117-119) » et les profils en bloc (bestiaire
+  14 sur 15 retrouvés sur le vrai livre, deux valeurs faussées repérées). 1 037 essais.
+- **Reste** : l'essai de David — « Remplir depuis le corpus » du bestiaire de COC (18 profils) ;
+  F3 et F4 sur une reforge (sans publier).
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 160 | **COC : catalogue d'équipement ; la Forge et les tableaux** | 🟠 § 224 ; fiche d'armes et de protections transcrite du livre (44 objets, prix par époque), l'écran nomme une fiche sans tableau ; moteur de la Forge F1, F5, F2 livrés — 06/11 | « Remplir depuis le corpus », section Équipement de COC ; forger le bestiaire de COC dans l'atelier | Essai de David ; ensuite F4 et F3 |
+| 160 | **COC : catalogue d'équipement ; la Forge et les tableaux** | 🟠 § 224 ; armes et protections (44 objets) et bestiaire (18 profils : rôles, humains, créatures) transcrits du livre ; moteur de la Forge F1 à F5 livrés (F1, F2, F5 essayés) — 06/11 | « Remplir depuis le corpus » du bestiaire de COC ; F3 et F4 sur une reforge, sans publier | Essai de David |
 | 156 | **Les chemins des livres** | 🟢 § 220 ; registre de seize jeux (dix-sept livres, réglés avec David), carte « PDF du livre » de la Forge, fenêtre de lecture à la page, boutons « Livre, p. N », skills et passation livrés ; essayé et validé par David — 06/11 | Rien | Rien ; à la demande : les citations de l'Oracle |
 | 151 | **COC — COC-A4/A5/A6** | 🟢 §215 ; pilote2.2.0, 9 871 tests et deux parcours Electron verts ; six lots validés par David —05/11 | Rien pour COC-A1 à A6 | Rien |
 | 150 | **COC — COC-A1/A2/A3** | 🟠 § 214 ; pilote 2.1.0, 9 847 tests et deux parcours Electron verts, dix captures relues — 04/11 | Réimporter d20 ou 3d6 avec Remplacer, essayer dégâts/santé/rôles | Essai David restant |

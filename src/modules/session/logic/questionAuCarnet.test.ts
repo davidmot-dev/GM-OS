@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { questionAuCarnet, LONGUEUR_MAX_D_UNE_QUESTION } from './questionAuCarnet';
-import { gabaritInventaire, gabaritFicheRegle, gabaritFicheTableaux, gabaritFichePratique, promptVoix, promptPersonas } from '../../forge/rules/gabarits';
+import { gabaritInventaire, gabaritFicheRegle, gabaritFicheTableaux, gabaritEnteteDesTableaux, gabaritDesTableaux, gabaritFichePratique, promptVoix, promptPersonas } from '../../forge/rules/gabarits';
 import { gabaritInventaireDeCampagne, gabaritStructureDeCampagne, toutesLesInvites } from '../../forge/campagne/gabaritsDeCampagne';
 
 const ETAT_COURT = '## Scène\nLe quai 9, la nuit.\n## PJ\n- Deckard';
@@ -64,6 +64,16 @@ describe('le gabarit des tableaux tient sous la limite de NotebookLM', () => {
         ['créatures', gabaritFicheTableaux('Les adversaires', 'creatures')],
         ['équipement, supplément', gabaritFicheTableaux('Armes de poing', 'equipement', supplement)],
         ['créatures, supplément', gabaritFicheTableaux('Xénomorphes', 'creatures', supplement)],
+        // F3 : l'en-tête et un lot, avec des titres longs et six créatures.
+        ['F3, en-tête équipement', gabaritEnteteDesTableaux('Equipements et Objets', 'equipement')],
+        ['F3, en-tête créatures, supplément', gabaritEnteteDesTableaux('Xénomorphes', 'creatures', supplement)],
+        ['F3, lot équipement, supplément', gabaritDesTableaux('Armes de poing', 'equipement', [
+            { titre: 'Armes à distance légères et armes de poing de service', attendu: 12 },
+            { titre: 'Explosifs, grenades et charges de démolition', attendu: 3 },
+        ], supplement)],
+        ['F3, lot créatures, supplément', gabaritDesTableaux('Xénomorphes', 'creatures',
+            ['Facehugger', 'Chestburster', 'Drone xénomorphe', 'Rôdeur', 'Soldat xénomorphe', 'Reine xénomorphe'].map(titre => ({ titre, attendu: null })),
+            supplement)],
     ])('%s', (_nom, invite) => {
         expect(invite.length).toBeLessThanOrEqual(3594);
     });

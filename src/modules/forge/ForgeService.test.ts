@@ -281,35 +281,93 @@ rien`;
         expect(requete(1)).toContain('Monnaie de table');
       });
 
-      it('F2 : un sujet d’équipement reçoit le gabarit des tableaux, et la fiche reste lisible par le catalogue', async () => {
-        // David, sur COC (06/11/2026) : « malgré le fait que j'ai une fiche, rien ne se remplit ».
-        const TABLEAUX = `## Métadonnées
+      // F3 (06/11/2026) : un sujet de tableaux, l'en-tête annonce les tableaux, un lot par requête.
+      const ENTETE = (liste: string) => `## Métadonnées
 - sujet : Equipements et Objets
 - couverture : complète
 - sources : COC
-- sections : « ARMES DE CONTACT »
+- sections : « ARMES DE CONTACT » ; « ARMURES »
 
 ## Règle
 Les armes de contact ajoutent la FOR aux DM.
 
-## Valeurs
-### Tableau des ARMES DE CONTACT
+## Tableaux du livre
+| Tableau | Lignes |
+| --- | --- |
+${liste}`;
+      const CONTACT = `### Tableau des Armes de contact
 
 | Arme | Allonge | DM | Bonus critique | Spécial |
 |:--- |:--- |:--- |:--- |:--- |
 | **Machette** | Moyenne | 1d6+1+FOR | 7 | – |
 | **Fouet** | Grande | 1d4+FOR | 4 | Peut désarmer |`;
+      const ARMURES = `### Tableau des Armures
+
+| Protection | RD | Malus |
+|:--- |:--- |:--- |
+| **Gilet rigide** | 8 | -4 |`;
+      const equipements = { ...candidat, id: 'equipements', title: 'Equipements et Objets' };
+
+      it('F3 : l’en-tête annonce les tableaux, un lot les recopie, la fiche assemblée est lue par le catalogue', async () => {
+        // David, sur COC (06/11/2026) : « malgré le fait que j'ai une fiche, rien ne se remplit ».
         callTool
-          .mockResolvedValueOnce({ content: TABLEAUX })
+          .mockResolvedValueOnce({ content: ENTETE('| Armes de contact | 2 |\n| Armures | 1 |') })
+          .mockResolvedValueOnce({ content: `## Valeurs\n\n${CONTACT}\n\n---\n\n${ARMURES}` })
           .mockResolvedValueOnce({ content: SECONDE_MOITIE });
-        const card = await forgeService.forgeCard('nb-1', { ...candidat, id: 'equipements', title: 'Equipements et Objets' }, 'coc');
-        expect(requete(0)).toContain("C'est un sujet d'ÉQUIPEMENT");
-        expect(requete(0)).toContain('« Arme », « Protection », « Véhicule »');
-        expect(requete(0)).not.toContain('jauges ou des ressources');
-        expect(requete(1)).toContain('SECONDE MOITIÉ');
+        const etapes: unknown[] = [];
+        const brouillons: string[] = [];
+        const card = await forgeService.forgeCard('nb-1', equipements, 'coc', undefined, {
+          surEtape: e => etapes.push(e), surMoitie: m => brouillons.push(m),
+        });
+        expect(callTool).toHaveBeenCalledTimes(3);
+        expect(requete(0)).toContain('## Tableaux du livre');
+        expect(requete(0)).toContain('Ne recopie PAS les tableaux');
+        expect(requete(1)).toContain('« Armes de contact » (2 lignes), « Armures » (1 lignes)');
+        expect(requete(1)).toContain('« Arme », « Protection », « Véhicule »');
+        expect(requete(2)).toContain('SECONDE MOITIÉ');
+        expect(card.content).not.toContain('Tableaux du livre');
+        expect(card.avertissements.filter(a => /annoncée/.test(a))).toEqual([]);
         expect(estUneFicheDEquipement(card.content)).toBe(true);
         expect(remplirDepuisLesFiches(undefined, [{ chemin: 'x.md', contenu: card.content, livre: 'COC' }]).journal.objetsAjoutes.map(o => o.nom))
-          .toEqual(['Machette', 'Fouet']);
+          .toEqual(['Machette', 'Fouet', 'Gilet rigide']);
+        expect(etapes).toEqual([{ fait: 0, total: 1 }, { fait: 1, total: 1 }]);
+        // Le brouillon part après l'en-tête et après le lot ; la liste y reste, pour la reprise.
+        expect(brouillons.at(-2)).toContain('## Tableaux du livre');
+        expect(brouillons.at(-1)).not.toContain('## Tableaux du livre');
+      });
+
+      it('F3 : le nombre annoncé contrôle le nombre recopié', async () => {
+        callTool
+          .mockResolvedValueOnce({ content: ENTETE('| Armes de contact | 3 |') })
+          .mockResolvedValueOnce({ content: CONTACT })
+          .mockResolvedValueOnce({ content: SECONDE_MOITIE });
+        const card = await forgeService.forgeCard('nb-1', equipements, 'coc');
+        expect(card.avertissements).toContain('Armes de contact : 3 ligne(s) annoncée(s), 2 recopiée(s).');
+      });
+
+      it('F3 : un brouillon partiel reprend au premier lot manquant, sans repayer l’en-tête ni les lots reçus', async () => {
+        const partiel = `${ENTETE('| Armes de contact | 10 |\n| Armures | 10 |')}\n\n## Valeurs\n\n${CONTACT}`;
+        callTool
+          .mockResolvedValueOnce({ content: ARMURES })
+          .mockResolvedValueOnce({ content: SECONDE_MOITIE });
+        const card = await forgeService.forgeCard('nb-1', equipements, 'coc', undefined, { moitieDeja: partiel });
+        expect(callTool).toHaveBeenCalledTimes(2);
+        expect(requete(0)).toContain('« Armures » (10 lignes)');
+        expect(requete(0)).not.toContain('« Armes de contact »');
+        expect(card.content).toContain('**Machette**');
+        expect(card.content).toContain('**Gilet rigide**');
+      });
+
+      it('F3 : un en-tête sans liste retombe sur la requête unique de F2', async () => {
+        callTool
+          .mockResolvedValueOnce({ content: '## Métadonnées\n- sujet : Equipements et Objets\n\n## Règle\nRien.' })
+          .mockResolvedValueOnce({ content: `## Métadonnées\n- sujet : Equipements et Objets\n- couverture : complète\n\n## Règle\nLes armes.\n\n## Valeurs\n${CONTACT}` })
+          .mockResolvedValueOnce({ content: SECONDE_MOITIE });
+        const card = await forgeService.forgeCard('nb-1', equipements, 'coc');
+        expect(requete(1)).toContain('PREMIÈRE MOITIÉ');
+        expect(requete(1)).toContain("C'est un sujet d'ÉQUIPEMENT");
+        expect(requete(1)).not.toContain('jauges ou des ressources');
+        expect(estUneFicheDEquipement(card.content)).toBe(true);
       });
 
       it('un sujet de règles ordinaire garde son gabarit', async () => {

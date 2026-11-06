@@ -103,7 +103,10 @@ function tableauxDeLaFiche(contenu: string): TableauLu[] {
   Stade », que l'égalité stricte écartait sans rien dire d'autre qu'un tableau ignoré.
 */
 // F5 (06/11/2026) : les noms qu'un livre donne aussi à ses profils — PNJ, monstres, sbires (COC).
-const estUnProfil = (t: TableauLu) => /^(creatures?|adversaires?|especes?|pnj|monstres?|antagonistes?|ennemis?|sbires?|figurants?)/.test(clef(t.entetes[0] ?? ''));
+/** Exportée pour F4, qui vérifie au livre les tableaux que ce lecteur lit (06/11/2026). */
+export const estUnePremiereColonneDeProfil = (premiereColonne: string) =>
+    /^(creatures?|adversaires?|especes?|pnj|monstres?|antagonistes?|ennemis?|sbires?|figurants?)/.test(clef(premiereColonne));
+const estUnProfil = (t: TableauLu) => estUnePremiereColonneDeProfil(t.entetes[0] ?? '');
 const estUneTableDAttaques = (t: TableauLu) => /^d\d+$/.test(clef(t.entetes[0] ?? '')) && /^attaques?$/.test(clef(t.entetes[1] ?? ''));
 
 /** Une fiche porte-t-elle un tableau de profil ? L'aperçu compte les fiches lues par livre. */

@@ -395,9 +395,16 @@ tableau. Transcrite depuis le PDF (p. 52-54, 93-96, lus en image et confrontés 
 sa page et une colonne de prix par époque, de 2025 à 1865 (choix de David). L'écran « Remplir depuis le corpus » nomme
 désormais une fiche qui parle d'équipement sans tableau lisible. **Essai de David attendu** :
 « Remplir depuis le corpus » dans la section Équipement du pilote. **La Forge écrit ces tableaux
-depuis le 06/11** (F1, F5, F2 du [plan](2026-11-06-forge-tableaux-equipement-bestiaire.md)) : le
-bestiaire de COC (adversaires par rôles) est son premier essai — le forger dans l'atelier, puis lire
-à la relecture le bilan « Ce que le catalogue et le bestiaire liront » (décision de David).
+depuis le 06/11** (F1, F5, F2 du [plan](2026-11-06-forge-tableaux-equipement-bestiaire.md)),
+**essayé par David** sur les adversaires de COC : 4 profils lus par le bestiaire, valeurs justes ; la
+prose réintroduisait deux règles retirées à la relecture, la fiche est donc reconstituée (tableau de
+la reforge, texte relu). **F4 et F3 livrés le même soir** : à la relecture, le livre vérifie chaque
+ligne (43 armes et protections de COC sur 44 retrouvées sur leur page) ; la Forge recopie les
+tableaux par lots, une requête chacun, et compte les lignes annoncées. **Essai de David attendu** :
+reforger les adversaires (compteur des lots, avertissements, « Le livre (p. …) »), sans publier.
+**Bestiaire de COC transcrit du livre le 06/11** (« refait la fiche des adversaires ») : la fiche des
+rôles réécrite (p. 92, 108-111) et `bestiaire-du-livre-de-base.md` (six profils humains, neuf
+créatures, p. 112-119) ; « Remplir depuis le corpus » lit 18 profils. **Essai de David attendu.**
 
 ## Crimes
 

@@ -387,6 +387,113 @@ ${supplement}- N'écris PAS « À la table », « Cas limites » ni « Non couve
 }
 
 /**
+ * **F3 — un tableau par requête** (plan des tableaux, 06/11/2026). Le titre de la liste que rend
+ * `gabaritEnteteDesTableaux` : la forge la lit, découpe en lots, puis la retire de la fiche.
+ */
+export const TITRE_DES_TABLEAUX_ANNONCES = 'Tableaux du livre';
+
+/**
+ * F3, première requête : métadonnées, règle, et la **liste** des tableaux (équipement) ou des
+ * créatures (bestiaire) que le livre donne sur le sujet, avec le nombre de lignes. Courte à rendre :
+ * c'est elle qui fait tenir un long chapitre en plusieurs réponses, et le nombre annoncé devient le
+ * contrôle « 15 armes attendues, 12 recopiées ».
+ */
+export function gabaritEnteteDesTableaux(sujet: string, nature: 'equipement' | 'creatures', options?: OptionsGabarit): string {
+  const liste = nature === 'equipement'
+    ? `Un TABLEAU MARKDOWN de deux colonnes, « Tableau | Lignes » : une ligne par
+tableau du livre sur ce sujet (armes, protections, véhicules, matériel, prix) ;
+« Tableau » = le titre exact de sa section, tel qu'imprimé ; « Lignes » = le
+nombre d'objets qu'il décrit, en chiffres. Ne recopie PAS les tableaux eux-mêmes.`
+    : `Un TABLEAU MARKDOWN de deux colonnes, « Créature | Section » : une ligne par
+créature ou adversaire dont le livre donne un profil chiffré ; « Section » = le
+titre exact de la section où figure son profil. Ne recopie PAS les profils.`;
+  const supplement = options?.supplement
+    ? `- Ce sujet vient du SUPPLÉMENT « ${options.supplement} ». Appuie-toi sur lui seul.
+${consigneDeLangueDuSupplement(options.langue)}`
+    : '';
+  return `Tu prépares une fiche sur le sujet : « ${sujet} ». C'est un sujet
+${nature === 'equipement' ? "d'ÉQUIPEMENT" : 'de CRÉATURES'} : ses tableaux seront recopiés ensuite, un à un.
+
+Appuie-toi UNIQUEMENT sur les sources de ce carnet. Si elles ne suffisent pas,
+dis-le explicitement plutôt que de compléter.
+
+${consigneStudio(options, "Génère un Markdown que tu sauveras dans le studio, nommé d'après le sujet.")}Réponds DIRECTEMENT par ces trois sections, dans ta réponse elle-même : ta
+réponse est le livrable. Markdown, 800 à 2 000 caractères. Aucune ligne « --- » :
+commence par « ## Métadonnées ».
+
+## Métadonnées
+- sujet : ${sujet}
+- couverture : complète | partielle | absente
+- sources : titre exact de chaque source utilisée
+- sections : titres des sections d'où viennent les tableaux, RECOPIÉS MOT POUR
+  MOT tels qu'imprimés — ils sont confrontés à l'index du livre. Omets un titre
+  dont tu n'es pas sûr.
+
+## Règle
+En quelques phrases, ce que le livre dit de ${nature === 'equipement' ? 'ces objets' : 'ces créatures'} et comment lire ses tableaux.
+
+## ${TITRE_DES_TABLEAUX_ANNONCES}
+${liste}
+
+Règles de rédaction :
+${REGLES_COMMUNES}
+${supplement}- N'écris rien d'autre : ni valeurs, ni « À la table ».`;
+}
+
+/**
+ * F3, les requêtes suivantes : **un lot** de tableaux (ou de créatures), au format exact des
+ * lecteurs — le même que `gabaritFicheTableaux`, restreint au lot, avec le nombre de lignes attendu.
+ */
+export function gabaritDesTableaux(
+  sujet: string,
+  nature: 'equipement' | 'creatures',
+  lot: readonly { titre: string; attendu: number | null }[],
+  options?: OptionsGabarit,
+): string {
+  const noms = lot.map(p => `« ${p.titre} »${p.attendu ? ` (${p.attendu} lignes)` : ''}`).join(', ');
+  const consigne = nature === 'equipement'
+    ? `Recopie SEULEMENT ces tableaux du livre : ${noms}. Pour chacun, en TABLEAU
+MARKDOWN (barres verticales), TOUTES ses lignes et TOUTES ses colonnes, sans
+résumer :
+- avant le tableau, une ligne « ### Tableau des <titre exact de sa section> » ;
+- sa PREMIÈRE colonne s'intitule exactement « Arme », « Protection », « Véhicule »
+  ou « Objet », selon ce qu'il décrit ;
+- les autres colonnes gardent les noms du livre ; le prix va dans « Coût », le
+  poids dans « Poids » ; une dernière colonne « Spécial » reçoit les notes de bas
+  de tableau et les effets propres à la ligne ;
+- le nom de chaque objet en gras ; « N/A » ou une case vide s'écrit « – » ;
+- si le livre donne les prix dans un autre tableau, par époque, ajoute à l'objet
+  une colonne « Prix <année> » par époque quand le nom concorde.`
+    : `Recopie SEULEMENT les profils de ces créatures : ${noms}. Un TABLEAU DE
+PROFIL, précédé de « ### Tableau des profils » : première colonne « Créature »,
+puis une colonne par caractéristique chiffrée telle que le livre la nomme et une
+par compétence chiffrée ; une ligne par créature, son nom en gras ; une précision
+suit le nombre entre parenthèses (« 8 (4 contre le feu) ») ; une colonne
+« Particularités » réunit le reste, séparé par des points-virgules. Une table
+d'attaques tirée au dé se recopie à part, titrée « ### Tableau des attaques de
+<créature> », colonnes « D6 | Attaque », chaque attaque écrite « **Nom** : effet ».`;
+  const supplement = options?.supplement
+    ? `- Ce sujet vient du SUPPLÉMENT « ${options.supplement} ». Appuie-toi sur lui seul.
+${consigneDeLangueDuSupplement(options.langue)}`
+    : '';
+  return `Fiche sur le sujet « ${sujet} » : ses tableaux seront lus ligne à ligne par un
+programme.
+
+Appuie-toi UNIQUEMENT sur les sources de ce carnet. Si un tableau n'y est pas,
+écris « Absent des sources : <titre> » plutôt que de le compléter.
+
+${consigneStudio(options, "Génère un Markdown que tu sauveras dans le studio, nommé d'après le sujet.")}Réponds DIRECTEMENT par les tableaux, dans ta réponse elle-même, et rien d'autre :
+ni titre « ## », ni introduction, ni « À la table ». Aucune ligne « --- ».
+Jusqu'à 6 000 caractères : un tableau ne se tronque pas.
+
+${consigne}
+
+Règles :
+- Recopie les chiffres tels qu'imprimés ; n'invente aucune ligne.
+${supplement}`;
+}
+
+/**
  * Seconde moitié : comment ça se joue, et ce qui manque.
  *
  * Le sujet est rappelé en toutes lettres : rien ne garantit que le carnet garde

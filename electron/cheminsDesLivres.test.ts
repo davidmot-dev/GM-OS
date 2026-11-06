@@ -49,6 +49,8 @@ beforeAll(async () => {
         { cle: 'jeu', titre: 'ALIEN, le jeu de rôle', chemin: UN_PDF, decalage: 3 },
         { cle: 'colonial-marines', titre: 'Colonial Marines', chemin: path.join(DOCS, 'absent.pdf'), decalage: 3 },
         { cle: 'notes', titre: 'Notes', chemin: path.join(DOCS, 'notes.txt'), decalage: 0 },
+        // F4 : le même PDF sans décalage, pour lire sa page 1 comme page imprimée.
+        { cle: 'fiche', titre: 'Fiche', chemin: UN_PDF, decalage: 0 },
     ]));
     const { registerLivresHandlers } = await import('./cheminsDesLivres');
     registerLivresHandlers({ racineDesDocs: () => DOCS });
@@ -112,5 +114,30 @@ describe('livres:ouvrir', () => {
         expect(r).toEqual({ ouvert: true, titre: 'ALIEN, le jeu de rôle', pagePdf: 1, alaPage: false });
         const { shell } = await import('electron');
         expect(shell.openPath).toHaveBeenCalledWith(UN_PDF);
+    });
+});
+
+/**
+ * F4 — le livre vérifie la fiche (06/11/2026) : `livres:lire-pages` rend le texte des pages imprimées,
+ * le chemin relu dans le registre.
+ */
+describe('livres:lire-pages', () => {
+    it('lit la page demandée et la rend sous son numéro imprimé', async () => {
+        const r = await appeler('livres:lire-pages', { racine: 'systems/alien', cle: 'fiche', pages: [1] }) as { lu: boolean; pages: { page: number; texte: string }[] };
+        expect(r.lu).toBe(true);
+        expect(r.pages.map(p => p.page)).toEqual([1]);
+        expect(typeof r.pages[0].texte).toBe('string');
+    });
+
+    it('le décalage s’applique : une page imprimée au-delà du livre ne rend rien', async () => {
+        const r = await appeler('livres:lire-pages', { racine: 'systems/alien', cle: 'jeu', pages: [1] }) as { lu: boolean; pages: unknown[] };
+        expect(r).toEqual({ lu: true, titre: 'ALIEN, le jeu de rôle', pages: [] });
+    });
+
+    it('refuse une demande hors des jeux ou sans pages ; dit un livre absent ou sans registre', async () => {
+        expect(await appeler('livres:lire-pages', { racine: '../x', cle: 'jeu', pages: [1] })).toEqual({ lu: false, motif: 'demande-invalide' });
+        expect(await appeler('livres:lire-pages', { racine: 'systems/alien', cle: 'jeu', pages: [] })).toEqual({ lu: false, motif: 'demande-invalide' });
+        expect(await appeler('livres:lire-pages', { racine: 'systems/alien', cle: 'colonial-marines', pages: [1] })).toEqual({ lu: false, motif: 'introuvable' });
+        expect(await appeler('livres:lire-pages', { racine: 'systems/dune', cle: 'jeu', pages: [1] })).toEqual({ lu: false, motif: 'sans-livre' });
     });
 });

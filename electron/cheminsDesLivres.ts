@@ -6,8 +6,10 @@ import { lirePagesPdf, pdfDisponible } from './extractionPdf';
 import { racineDuCorpus } from './perimetreDeLInstance';
 import { strictementSous } from './sousChemin';
 import {
-    demandeDOuvertureValide, lireLesLivres, livreDeLaDemande, mesurerLeDecalage, pageDuPdf, pagesAEchantillonner,
-    type LivreDuJeu, type MotifDuLivre, type OuvertureDuLivre, type PropositionDeDecalage, type VerificationDuLivre,
+    demandeDePagesValide, demandeDOuvertureValide, lireLesLivres, livreDeLaDemande, mesurerLeDecalage, pageDuPdf,
+    pagesAEchantillonner,
+    type LectureDesPages, type LivreDuJeu, type MotifDuLivre, type OuvertureDuLivre, type PropositionDeDecalage,
+    type VerificationDuLivre,
 } from '../src/modules/forge/rules/livres';
 
 /**
@@ -90,8 +92,35 @@ export interface OptionsDesLivres {
     racineDesDocs?: () => string;
 }
 
+/** Le livre d'une demande, relu dans le registre du jeu ; `null` sans registre ni livre. */
+async function livreDuRegistre(racine: string, demande: { racine: string; cle: string; rang?: number }): Promise<LivreDuJeu | null> {
+    const registre = path.join(racine, demande.racine, 'livres.json');
+    if (!strictementSous(registre, racine)) return null;
+    const brut = await fs.readFile(registre, 'utf8').catch(() => null);
+    return livreDeLaDemande(lireLesLivres(brut), demande);
+}
+
 export function registerLivresHandlers(options: OptionsDesLivres = {}): void {
     const racineDesDocs = options.racineDesDocs ?? (() => racineDuCorpus(process.env, process.env.APP_ROOT || ''));
+
+    /**
+     * **F4 — le livre vérifie la fiche** (06/11/2026) : le texte des pages imprimées demandées,
+     * rendues sous leur numéro imprimé. Rien n'est écrit ; le chemin vient du registre.
+     */
+    ipcMain.handle('livres:lire-pages', async (_event, brute: unknown): Promise<LectureDesPages> => {
+        const demande = demandeDePagesValide(brute);
+        if (!demande) return { lu: false, motif: 'demande-invalide' };
+        const livre = await livreDuRegistre(racineDesDocs(), demande);
+        if (!livre) return { lu: false, motif: 'sans-livre' };
+        const lu = await lireLeLivre(livre.chemin);
+        if ('motif' in lu) return { lu: false, motif: lu.motif };
+        try {
+            const { pages } = await lirePagesPdf(lu.donnees, () => demande.pages.map(p => pageDuPdf(livre, p)));
+            return { lu: true, titre: livre.titre, pages: pages.map(p => ({ page: p.num - livre.decalage, texte: p.text })) };
+        } catch {
+            return { lu: false, motif: 'illisible' };
+        }
+    });
 
     /**
      * Ouvre le livre à la page imprimée demandée. Le chemin est relu ici, dans le registre du jeu :
@@ -101,10 +130,8 @@ export function registerLivresHandlers(options: OptionsDesLivres = {}): void {
         const demande = demandeDOuvertureValide(brute);
         if (!demande) return { ouvert: false, motif: 'demande-invalide' };
         const racine = racineDesDocs();
-        const registre = path.join(racine, demande.racine, 'livres.json');
-        if (!strictementSous(registre, racine)) return { ouvert: false, motif: 'demande-invalide' };
-        const brut = await fs.readFile(registre, 'utf8').catch(() => null);
-        const livre = livreDeLaDemande(lireLesLivres(brut), demande);
+        if (!strictementSous(path.join(racine, demande.racine, 'livres.json'), racine)) return { ouvert: false, motif: 'demande-invalide' };
+        const livre = await livreDuRegistre(racine, demande);
         if (!livre) return { ouvert: false, motif: 'sans-livre' };
         if (!estUnPdf(livre.chemin)) return { ouvert: false, motif: 'pas-un-pdf' };
         if (!(await fs.pathExists(livre.chemin).catch(() => false))) return { ouvert: false, motif: 'introuvable' };

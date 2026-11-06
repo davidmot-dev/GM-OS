@@ -5,7 +5,8 @@ import { attenteAnnoncee, budgetDuMoment } from '../ai/budgetsDeTemps';
 import type { GameDriver } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 import type { BrainstormCandidate, BrainstormCard } from './rules/types';
-import { gabaritInventaire, gabaritInventaireDeSupplement, gabaritFicheRegle, gabaritFicheTableaux, gabaritFichePratique, promptVoix, promptPersonas, type OptionsGabarit } from './rules/gabarits';
+import { gabaritInventaire, gabaritInventaireDeSupplement, gabaritFicheRegle, gabaritFicheTableaux, gabaritEnteteDesTableaux, gabaritDesTableaux, gabaritFichePratique, promptVoix, promptPersonas, type OptionsGabarit } from './rules/gabarits';
+import { ajouterAuBrouillon, decouperEnLots, ecartsDesLignes, lireLesPiecesAnnoncees, lotDejaRecopie, porteLaListeDesTableaux, premiereMoitieAssemblee, tableauxDeLaReponse, type NatureDesTableaux } from './rules/tableauxParRequete';
 import { natureDuSujet } from './rules/natureDuSujet';
 import { lireInventaire } from './rules/inventaire';
 import { retirerLesRenvoisDuCarnet } from './renvoisDuCarnet';
@@ -93,8 +94,13 @@ export interface OptionsForgeFiche {
    * brouillon avant la seconde demande.
    */
   moitieDeja?: string;
-  /** Appelé dès que la première moitié est là, avant la seconde requête. */
+  /**
+   * Appelé dès que la première moitié est là, avant la seconde requête. F3 (06/11/2026) : aussi
+   * après chaque lot de tableaux, avec le brouillon partiel (liste comprise), pour la reprise.
+   */
   surMoitie?: (regle: string) => void;
+  /** F3 : l'avancement de la recopie des tableaux, lot par lot (« tableau 3 sur 5 »). */
+  surEtape?: (etape: { fait: number; total: number }) => void;
   /**
    * La fiche est celle d'un **supplément** — § 185, 01/11/2026. Son slug part
    * dans l'en-tête (`supplement:`), son titre et la langue dans les gabarits.
@@ -650,11 +656,13 @@ export class ForgeService {
     // catalogue et le bestiaire savent lire — livre de base compris. David, sur COC : « malgré le fait
     // que j'ai une fiche, rien ne se remplit ».
     const nature = natureDuSujet(candidate.title);
-    const premiereMoitie = nature ? gabaritFicheTableaux(candidate.title, nature, gabarit) : gabaritFicheRegle(candidate.title, gabarit);
-    const regle = options?.moitieDeja
-      ?? retirerLesRenvoisDuCarnet(
-        await this.interrogerCarnet(notebookId, premiereMoitie, sourceIds),
-      );
+    const ecarts: string[] = [];
+    const regle = nature
+      ? await this.premiereMoitieParTableaux(notebookId, candidate.title, nature, gabarit, sourceIds, options, ecarts)
+      : options?.moitieDeja
+        ?? retirerLesRenvoisDuCarnet(
+          await this.interrogerCarnet(notebookId, gabaritFicheRegle(candidate.title, gabarit), sourceIds),
+        );
 
     // On la remet à l'appelant AVANT la seconde requête : une moitié acquise ne
     // doit pas dépendre du sort de l'autre. Le gabarit entier dépassait le délai
@@ -684,8 +692,56 @@ ${pratique.trim()}`;
       forgedAt: Date.now(),
       slug: fiche.slug,
       sections: fiche.sections,
-      avertissements: fiche.avertissements
+      avertissements: [...fiche.avertissements, ...ecarts]
     };
+  }
+
+  /**
+   * **F3 — la première moitié d'un sujet de tableaux, un lot par requête** (06/11/2026, David :
+   * *« termine F3 »*). L'en-tête annonce les tableaux (ou les créatures) et leur nombre de lignes ;
+   * chaque lot est recopié par sa requête ; le brouillon, liste comprise, part sur le disque après
+   * chaque lot (`surMoitie`), et une forge relancée reprend au premier lot manquant.
+   *
+   * Si l'en-tête n'annonce rien, on retombe sur la requête unique de F2 : une forge ne doit pas
+   * échouer parce que le carnet a mal rendu une liste.
+   */
+  private async premiereMoitieParTableaux(
+    notebookId: string,
+    sujet: string,
+    nature: NatureDesTableaux,
+    gabarit: OptionsGabarit | undefined,
+    sourceIds: string[] | undefined,
+    options: OptionsForgeFiche | undefined,
+    ecarts: string[],
+  ): Promise<string> {
+    // Une première moitié complète (sans la liste) se reprend telle quelle, comme avant F3.
+    if (options?.moitieDeja && !porteLaListeDesTableaux(options.moitieDeja)) return options.moitieDeja;
+
+    let brouillon = options?.moitieDeja
+      ?? retirerLesRenvoisDuCarnet(await this.interrogerCarnet(notebookId, gabaritEnteteDesTableaux(sujet, nature, gabarit), sourceIds));
+    const pieces = lireLesPiecesAnnoncees(brouillon);
+    if (!pieces.length) {
+      return retirerLesRenvoisDuCarnet(
+        await this.interrogerCarnet(notebookId, gabaritFicheTableaux(sujet, nature, gabarit), sourceIds),
+      );
+    }
+    options?.surMoitie?.(brouillon);
+
+    const lots = decouperEnLots(pieces, nature);
+    for (const [rang, lot] of lots.entries()) {
+      if (lotDejaRecopie(brouillon, lot, nature)) continue;
+      options?.surEtape?.({ fait: rang, total: lots.length });
+      const reponse = retirerLesRenvoisDuCarnet(
+        await this.interrogerCarnet(notebookId, gabaritDesTableaux(sujet, nature, lot, gabarit), sourceIds),
+      );
+      brouillon = ajouterAuBrouillon(brouillon, tableauxDeLaReponse(reponse));
+      options?.surMoitie?.(brouillon);
+    }
+    options?.surEtape?.({ fait: lots.length, total: lots.length });
+
+    const regle = premiereMoitieAssemblee(brouillon);
+    ecarts.push(...ecartsDesLignes(pieces, regle, nature));
+    return regle;
   }
 
   /**

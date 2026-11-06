@@ -30,7 +30,7 @@ import type { EvenementMcp } from '../../electron/mcpActivity';
 // de node.
 import type { FournisseurReseau } from '../../electron/hotesDesFournisseurs';
 import type { GuideDuManuel } from '../../electron/guidesDuManuel';
-import type { VerificationDuLivre, PropositionDeDecalage, DemandeDOuverture, OuvertureDuLivre } from '../modules/forge/rules/livres';
+import type { VerificationDuLivre, PropositionDeDecalage, DemandeDOuverture, OuvertureDuLivre, DemandeDePages, LectureDesPages } from '../modules/forge/rules/livres';
 // Idem : `groupesDuCorpus` est pur, et c'est le contrat des canaux `purge:*`
 // qu'on partage. Les deux types du bilan viennent du module qui les rend.
 import type { InventaireDuCorpus, BilanDeQuarantaine } from '../../electron/groupesDuCorpus';
@@ -313,6 +313,8 @@ declare global {
             verifier: (chemin: string) => Promise<VerificationDuLivre>;
             proposerDecalage: (chemin: string) => Promise<PropositionDeDecalage>;
             ouvrir: (demande: DemandeDOuverture) => Promise<OuvertureDuLivre>;
+            /** F4 (06/11/2026) : le texte des pages imprimées, pour confronter une fiche au livre. */
+            lirePages?: (demande: DemandeDePages) => Promise<LectureDesPages>;
         };
         ai?: {
             listDocs: () => Promise<AIDocument[]>;
