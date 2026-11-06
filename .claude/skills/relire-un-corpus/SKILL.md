@@ -29,7 +29,13 @@ Avant de croire une liste du carnet, la compter contre la source.
   dans le dépôt.
 - Extraire le texte dans un dossier de travail (`scratch/<jeu>-audit/livre.txt`), avec un marqueur
   par page (`--- PAGE PDF n ---`). Outils présents : `pypdf`, `pdftotext`, `pdfjs-dist` et
-  `@napi-rs/canvas` (rendu en image) ; pas `pdftoppm`.
+  `@napi-rs/canvas` (rendu en image) ; pas `pdftoppm`. `pdf-parse` (celui de GM-OS) rend une ligne
+  de tableau par ligne de texte, colonnes séparées par des tabulations : le meilleur premier passage.
+- ⛔ **MarkItDown n'est pas mieux** (essayé le 06/11/2026 à la demande de David, 0.1.9, huit pages
+  de COC et d'Alien) : pas de marque de page, prose à deux colonnes changée en faux tableaux, profils
+  mêlés à la prose, Alien aplati en une ligne sans espaces (deux couches doublées), et une ligne du
+  tableau des armes de COC **perdue en silence**. Utile pour un `.docx`, un `.xlsx` ou un `.pptx`,
+  pas pour un livre en PDF.
 - **Vérifier d'abord que le texte ne double pas** : certains PDF ont deux couches (Blade Runner),
   et pdfjs rend chaque fragment deux fois. Garder la première occurrence par position arrondie.
 - **Le décalage des pages** se mesure, il ne se devine pas : il est dans le registre (Alien + 3,

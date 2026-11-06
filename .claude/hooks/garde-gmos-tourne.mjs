@@ -108,12 +108,14 @@ export function reponseEncoreValable(session, maintenant = Date.now()) {
     }
 }
 
-function inscrireLaReponse(session) {
+/** Exportée pour l'essai du rappel après compaction (06/11/2026). */
+export function inscrireLaReponse(session) {
     fs.mkdirSync(DOSSIER_DES_REPONSES, { recursive: true });
     fs.writeFileSync(fichierDeReponse(session), new Date().toISOString());
 }
 
-function oublierLaReponse(session) {
+/** Exportée pour `rappel-apres-compaction.mjs` (06/11/2026) : une compaction fait oublier la réponse. */
+export function oublierLaReponse(session) {
     fs.rmSync(fichierDeReponse(session), { force: true });
 }
 

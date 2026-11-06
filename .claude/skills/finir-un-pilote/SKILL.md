@@ -76,6 +76,13 @@ boutons « Livre, p. N » du bestiaire, du catalogue et de l'atelier de règles.
   — la synthèse, § « Améliorations communes », dit ce qui existe).
 - Code et commentaires **en français** ; un commentaire dit *pourquoi*, avec la date et la
   demande de David citée. Imiter le fichier qu'on touche.
+- **Qui d'autre lit ça ?** Avant de toucher un format lu à plusieurs endroits (un champ du pilote,
+  une clé de fiche, le format d'un tableau du corpus, un champ de magasin), **recenser ses
+  lecteurs par recherche dans le code, pas de mémoire** — la mémoire en compte sept pour les degrés,
+  cinq pour les jauges, quatre pour `nomsDesHeures`. Après la modification, comparer le diff à la
+  liste : un lecteur non touché est soit voulu (le dire), soit oublié. Idée reprise d'ECC
+  (`change-impact`) le 06/11/2026. Un écran qui « ne fait rien » relève du skill
+  **`auditer-un-parcours`**.
 - ⛔ Un sélecteur zustand qui fabrique un tableau (`s => s.players.flatMap(...)`) fait boucler
   React : sélectionner `s.players`, dériver avec `useMemo`.
 - Un nouveau module de jeu prend l'habillage du module existant du jeu (LCARS pour Star Trek).

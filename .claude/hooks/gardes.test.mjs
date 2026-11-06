@@ -86,3 +86,53 @@ test('src/electron : la question est posée une fois, puis la réponse vaut', ()
     assert.equal(decisionAvant('src/App.tsx', { vite: false, sync: false, dejaRepondu: true }), null);
     assert.equal(decisionAvant(null, { vite: true, sync: true, dejaRepondu: false }), null);
 });
+
+/*
+ * Le rappel après une compaction (06/11/2026) : la réponse « fermé » est oubliée, le rappel est
+ * réinjecté — et rien ne se passe à un démarrage ordinaire.
+ */
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { rappelApresCompaction } from './rappel-apres-compaction.mjs';
+import { inscrireLaReponse, reponseEncoreValable, oublierLaReponse } from './garde-gmos-tourne.mjs';
+
+const SCRIPT_DU_RAPPEL = fileURLToPath(new URL('./rappel-apres-compaction.mjs', import.meta.url));
+const lancerLeRappel = entree => spawnSync(process.execPath, [SCRIPT_DU_RAPPEL], { input: JSON.stringify(entree), encoding: 'utf8' });
+
+test('rappel : la question à reposer, la langue, le git en lecture, et l’état du dépôt', () => {
+    const texte = rappelApresCompaction({ branche: 'production', modifies: 17, nonPousses: ['a1 un', 'b2 deux'] });
+    assert.match(texte, /NE VAUT PLUS/);
+    assert.match(texte, /GM-OS tourne-t-il \?/);
+    assert.match(texte, /français/);
+    assert.match(texte, /Branche : production/);
+    assert.match(texte, /17 fichier\(s\) modifié\(s\)/);
+    assert.match(texte, /2 commit\(s\) non poussé\(s\) : a1 un ; b2 deux/);
+    const sansAmont = rappelApresCompaction({ branche: null, modifies: null, nonPousses: null });
+    assert.doesNotMatch(sansAmont, /Branche|commit\(s\)|fichier\(s\)/);
+    const beaucoup = rappelApresCompaction({ branche: 'x', modifies: 0, nonPousses: ['1', '2', '3', '4', '5', '6', '7'] });
+    assert.match(beaucoup, /7 commit\(s\) non poussé\(s\) : 1 ; 2 ; 3 ; 4 ; 5 ; …/);
+});
+
+test('rappel : après une compaction, la garde oublie la réponse et le contexte reçoit le rappel', () => {
+    const session = `essai-rappel-${process.pid}`;
+    inscrireLaReponse(session);
+    assert.equal(reponseEncoreValable(session), true);
+    const r = lancerLeRappel({ session_id: session, source: 'compact', cwd: process.cwd() });
+    assert.equal(r.status, 0);
+    const sortie = JSON.parse(r.stdout);
+    assert.equal(sortie.hookSpecificOutput.hookEventName, 'SessionStart');
+    assert.match(sortie.hookSpecificOutput.additionalContext, /NE VAUT PLUS/);
+    assert.equal(reponseEncoreValable(session), false);
+});
+
+test('rappel : un démarrage ou une reprise ordinaires ne disent rien et ne touchent pas la réponse', () => {
+    const session = `essai-rappel-demarrage-${process.pid}`;
+    inscrireLaReponse(session);
+    for (const source of ['startup', 'resume', 'clear']) {
+        const r = lancerLeRappel({ session_id: session, source });
+        assert.equal(r.status, 0);
+        assert.equal(r.stdout, '');
+    }
+    assert.equal(reponseEncoreValable(session), true);
+    oublierLaReponse(session);
+});
