@@ -1,0 +1,125 @@
+{
+  "version": "2.2.0",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "modeRapide": false,
+  "dureeDepuisTitre": 232.36,
+  "chapitres": [
+    {
+      "titre": "1 · Un test, des conditions et des dés bonus ou malus",
+      "secondesDepuisTitre": 5.989
+    },
+    {
+      "titre": "2 · Héros : sauver le test ou acheter un avantage distinct",
+      "secondesDepuisTitre": 30.659
+    },
+    {
+      "titre": "3 · Une Voie référencée, un rang acquis, un contexte choisi",
+      "secondesDepuisTitre": 56.872
+    },
+    {
+      "titre": "4 · Un événement choquant, son choc et sa séquelle",
+      "secondesDepuisTitre": 79.304
+    },
+    {
+      "titre": "5 · PNJ par rôle, Santé Pulp et bande de sbires",
+      "secondesDepuisTitre": 107.579
+    },
+    {
+      "titre": "6 · Critique, DM, RD et conséquence de santé",
+      "secondesDepuisTitre": 142.37
+    },
+    {
+      "titre": "7 · Joueur tactile : Voie, jet, héros et fiche HTML",
+      "secondesDepuisTitre": 174.63
+    },
+    {
+      "titre": "8 · Retour au MJ : jet reçu, source et fiche synchronisée",
+      "secondesDepuisTitre": 209.31
+    }
+  ],
+  "exportVideo": {
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\coc-mecanismes-et-tablette.mp4",
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\coc-mecanismes-et-tablette.webm",
+    "dureeMp4": 232.36,
+    "chapitres": [
+      {
+        "titre": "1 · Un test, des conditions et des dés bonus ou malus",
+        "secondesDepuisTitre": 5.989
+      },
+      {
+        "titre": "2 · Héros : sauver le test ou acheter un avantage distinct",
+        "secondesDepuisTitre": 30.659
+      },
+      {
+        "titre": "3 · Une Voie référencée, un rang acquis, un contexte choisi",
+        "secondesDepuisTitre": 56.872
+      },
+      {
+        "titre": "4 · Un événement choquant, son choc et sa séquelle",
+        "secondesDepuisTitre": 79.304
+      },
+      {
+        "titre": "5 · PNJ par rôle, Santé Pulp et bande de sbires",
+        "secondesDepuisTitre": 107.579
+      },
+      {
+        "titre": "6 · Critique, DM, RD et conséquence de santé",
+        "secondesDepuisTitre": 142.37
+      },
+      {
+        "titre": "7 · Joueur tactile : Voie, jet, héros et fiche HTML",
+        "secondesDepuisTitre": 174.63
+      },
+      {
+        "titre": "8 · Retour au MJ : jet reçu, source et fiche synchronisée",
+        "secondesDepuisTitre": 209.31
+      }
+    ],
+    "montage": {
+      "debutMJ": 7.81699999999999,
+      "debutT": 8.759999999999998,
+      "remplacementMJ": [
+        174.63,
+        213.293
+      ],
+      "dureeTablette": 34.68,
+      "brutMJ": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\coc\\tournage-mj.webm",
+      "brutTablette": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\coc\\tournage-tablette.webm"
+    }
+  },
+  "tablette": {
+    "client": "Hub HTTP/WebSocket réel sans appBridge",
+    "viewport": {
+      "largeur": 768,
+      "hauteur": 1024
+    },
+    "contexteTactile": true,
+    "touchersPlaywright": true,
+    "touchersRecus": 8,
+    "appareilPhysique": false,
+    "jetRecuMJ": true,
+    "capaciteAuJournal": true,
+    "heroisme11vers10": true,
+    "ficheHTML9RecueMJ": true
+  },
+  "assertions": [
+    "bonus et malus s’annulent",
+    "conditions+5, aide+2, fatigue−2 : +7 ; test15",
+    "héros13 → 12, test11 → 16",
+    "DEF14 → 19, base conservée ; héros12 → 11",
+    "Furtif : référence, rang, contexte, +5 et choix consommé",
+    "choc rang2 critique, Enragé2 rounds et Fascination ; Blues7 conservé",
+    "un round confirmé",
+    "Figurant Pulp4, vingt sans critique",
+    "bande3 : une touche sans DM retire un membre",
+    "critique :7+8−RD2=13, coup verrouillé",
+    "DEF14 → 11 ; CON renseignée, action perdue consommée",
+    "vrai client tactile Hub avec réception MJ",
+    "jet Furtif et héros du joueur synchronisés",
+    "fiche HTML et échelle9 synchronisées",
+    "aucun module indépendant COC au catalogue"
+  ]
+}

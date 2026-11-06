@@ -4,6 +4,18 @@
 
 Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font monter la peur.
 
+## Le clip des mécanismes, des modules et du joueur sur tablette — 06/11/2026
+
+[Voir le clip MP4 (3 min 08)](../../output/clips/alien-mecanismes-modules-et-tablette.mp4) : neuf chapitres, légendes françaises, sans voix.
+Forçage, Point de Récit en mode Cinéma, Panique, réserve d’Air, puis les trois modules réels :
+MU/TH/UR6000, détecteur M314 et Combat spatial. Le joueur utilise le vrai Hub avec des
+touchers Playwright : test, question privée, réponse reçue, échos et ordre de verrouillage.
+Le MJ répond, révèle les ordres et retrouve le test reçu. Écran tactile émulé768×1024,
+sans tablette physique. Personnages fictifs, dés du panneau préparés, scan M314 aléatoire ;
+pilote1.9.0 inchangé. Le combat spatial s’arrête après la révélation des ordres.
+[Repères des chapitres](../../output/clips/alien/chapitres.md).
+
+
 **Ajout du 15/10/2026 — préparation des modules :** dans l’éditeur du pilote, **Modules du jeu**
 permet de conserver ou retirer **MU/TH/UR 6000**, le **Détecteur de mouvement** et, depuis le 23/10, le **Combat spatial**. Un ancien pilote
 Alien les propose par défaut, même avec un identifiant personnalisé. Le choix est sauvegardé et

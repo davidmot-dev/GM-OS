@@ -1,0 +1,153 @@
+{
+  "mp4": "../barbarians-of-lemuria-mecanismes-et-tablette.mp4",
+  "dureeSecondes": 162.52,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 9.01
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 21.044999999999998
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 39.08
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 47.46
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 61.84
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 68.13
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 80.42
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 82.21350000000001
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 90.007
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 97.6695
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 111.332
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 125.475
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 145.618
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 149.06900000000002
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 159.52
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 107.93199999999999
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 109.332
+    },
+    {
+      "image": "film-19.jpg",
+      "secondes": 142.21800000000002
+    },
+    {
+      "image": "film-20.jpg",
+      "secondes": 143.618
+    }
+  ],
+  "relecture": "16 scènes et 20 images du MP4 examinées ; titres, sept chapitres et deux raccords MJ/tablette compris.",
+  "build": "npm run build : réussi avant essais",
+  "lint": "eslint e2e/clipBol.spec.ts outils/clips/monter_clip_bol.mjs : réussi",
+  "tablette": {
+    "client": "Hub HTTP/WebSocket réel sans appBridge",
+    "viewport": {
+      "largeur": 768,
+      "hauteur": 1024
+    },
+    "contexteTactile": true,
+    "touchersPlaywright": true,
+    "touchersRecus": 6,
+    "appareilPhysique": false,
+    "jetRecuMJ": true,
+    "heroisme3vers2": true,
+    "ficheHTMLVitalite11RecueMJ": true
+  },
+  "montage": {
+    "debutMJ": 22.964999999999986,
+    "debutT": 0,
+    "segments": [
+      {
+        "source": 0,
+        "debut": 0,
+        "fin": 108.63199999999999
+      },
+      {
+        "source": 1,
+        "debut": 4.467,
+        "fin": 38.753
+      },
+      {
+        "source": 0,
+        "debut": 146.81400000000002,
+        "fin": 166.47500000000002
+      }
+    ],
+    "raccords": [
+      108.63199999999999,
+      142.918
+    ],
+    "brutMJ": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\bol\\tournage-mj.webm",
+    "brutTablette": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\bol\\tournage-tablette.webm"
+  },
+  "registre": 229,
+  "limites": "Démonstration ciblée, sans combat complet ni recette exhaustive : magie, foi, alchimie, dégâts/armure, usages narratifs de l’héroïsme, récupération et progression ne sont pas rejoués. Personnage et dés d’exercice préparés. La Vitalité à 11 est saisie manuellement ; aucun calcul de dégâts revendiqué. Aucun appareil physique utilisé.",
+  "pilote": {
+    "archive": "output/clips/bol/pilote/BOL-2.0.0.gmos-driver",
+    "origine": "Export Dirvers/corriges/BOL_driver_gmos_2.0.0.gmos-driver",
+    "version": "2.0.0",
+    "sha256": "27fc536dbf85fda7fea4376ab7c9caad2636e8c7cbc69d5f9f1e8bcc0c207a38",
+    "modifie": false
+  },
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipBol.spec.ts --reporter=list : 1 parcours normal réussi"
+}

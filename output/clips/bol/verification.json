@@ -1,0 +1,132 @@
+{
+  "version": "2.0.0",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "modeRapide": false,
+  "dureeDepuisTitre": 162.52,
+  "chapitres": [
+    {
+      "titre": "1 · Contre neuf : carrière, difficulté, bonus et malus",
+      "secondesDepuisTitre": 6.01
+    },
+    {
+      "titre": "2 · Succès héroïque acheté ou double six légendaire",
+      "secondesDepuisTitre": 36.08
+    },
+    {
+      "titre": "3 · Faveur divine, double un et échec critique choisi",
+      "secondesDepuisTitre": 58.84
+    },
+    {
+      "titre": "4 · Quand seul un double six pouvait réussir",
+      "secondesDepuisTitre": 77.42
+    },
+    {
+      "titre": "5 · Réaction : Esprit et Initiative contre l’adversaire",
+      "secondesDepuisTitre": 87.007
+    },
+    {
+      "titre": "6 · Tablette : attaque, héroïsme et fiche HTML",
+      "secondesDepuisTitre": 108.332
+    },
+    {
+      "titre": "7 · Côté MJ : le test reçu et la fiche synchronisée",
+      "secondesDepuisTitre": 142.618
+    }
+  ],
+  "exportVideo": {
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\barbarians-of-lemuria-mecanismes-et-tablette.mp4",
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\barbarians-of-lemuria-mecanismes-et-tablette.webm",
+    "dureeMp4": 162.52,
+    "chapitres": [
+      {
+        "titre": "1 · Contre neuf : carrière, difficulté, bonus et malus",
+        "secondesDepuisTitre": 6.01
+      },
+      {
+        "titre": "2 · Succès héroïque acheté ou double six légendaire",
+        "secondesDepuisTitre": 36.08
+      },
+      {
+        "titre": "3 · Faveur divine, double un et échec critique choisi",
+        "secondesDepuisTitre": 58.84
+      },
+      {
+        "titre": "4 · Quand seul un double six pouvait réussir",
+        "secondesDepuisTitre": 77.42
+      },
+      {
+        "titre": "5 · Réaction : Esprit et Initiative contre l’adversaire",
+        "secondesDepuisTitre": 87.007
+      },
+      {
+        "titre": "6 · Tablette : attaque, héroïsme et fiche HTML",
+        "secondesDepuisTitre": 108.332
+      },
+      {
+        "titre": "7 · Côté MJ : le test reçu et la fiche synchronisée",
+        "secondesDepuisTitre": 142.618
+      }
+    ],
+    "montage": {
+      "debutMJ": 22.964999999999986,
+      "debutT": 0,
+      "segments": [
+        {
+          "source": 0,
+          "debut": 0,
+          "fin": 108.63199999999999
+        },
+        {
+          "source": 1,
+          "debut": 4.467,
+          "fin": 38.753
+        },
+        {
+          "source": 0,
+          "debut": 146.81400000000002,
+          "fin": 166.47500000000002
+        }
+      ],
+      "raccords": [
+        108.63199999999999,
+        142.918
+      ],
+      "brutMJ": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\bol\\tournage-mj.webm",
+      "brutTablette": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\bol\\tournage-tablette.webm"
+    }
+  },
+  "tablette": {
+    "client": "Hub HTTP/WebSocket réel sans appBridge",
+    "viewport": {
+      "largeur": 768,
+      "hauteur": 1024
+    },
+    "contexteTactile": true,
+    "touchersPlaywright": true,
+    "touchersRecus": 6,
+    "appareilPhysique": false,
+    "jetRecuMJ": true,
+    "heroisme3vers2": true,
+    "ficheHTMLVitalite11RecueMJ": true
+  },
+  "modulesIndependants": [],
+  "assertions": [
+    "bonus et malus annulés :2d6+4",
+    "bonus :2,5,4 garde5+4, total13",
+    "malus : mêmes dés garde2+4, total10",
+    "héroïsme5→4 : succès héroïque acheté, sans promotion légendaire",
+    "double6 héroïque puis légendaire, héroïsme4→3",
+    "Faveur divine3→2 : le double1 du second jet remplace la réussite",
+    "échec critique choisi, point accordé une fois :2→3",
+    "seul double6 pouvait réussir : réussite simple à9 sans promotion",
+    "réaction Esprit1+Initiative1−adverse2 : dés4+5=9, avant les rivaux",
+    "Hub tactile réel sans pont Electron",
+    "attaque joueur5+4+1+2−1=11 reçue côté MJ",
+    "héroïsme3→2 synchronisé",
+    "fiche HTML Barbare et héroïsme2 conservés, Vitalité11 reçue MJ",
+    "aucun module indépendant dédié au catalogue"
+  ]
+}

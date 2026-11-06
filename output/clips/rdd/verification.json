@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "module": "rdd-tmr",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "modeRapide": false,
+  "dureeDepuisTitre": 267.733,
+  "chapitres": [
+    {
+      "titre": "1 · La table de résolution et les degrés du d100",
+      "secondesDepuisTitre": 6.005
+    },
+    {
+      "titre": "2 · Fatigue et entraînement du Voyageur",
+      "secondesDepuisTitre": 17.493
+    },
+    {
+      "titre": "3 · Combat-OS : le round en sept phases",
+      "secondesDepuisTitre": 49.493
+    },
+    {
+      "titre": "4 · Château Dormant, potions et famine",
+      "secondesDepuisTitre": 72.899
+    },
+    {
+      "titre": "5 · Le module des Terres Médianes du Rêve",
+      "secondesDepuisTitre": 103.299
+    },
+    {
+      "titre": "6 · Monter et se déplacer : le vrai débit sur la fiche",
+      "secondesDepuisTitre": 116.587
+    },
+    {
+      "titre": "7 · Rencontre privée, révélation et maîtrise",
+      "secondesDepuisTitre": 141.252
+    },
+    {
+      "titre": "8 · Sort en réserve, carnet et sortie des TMR",
+      "secondesDepuisTitre": 206.916
+    }
+  ],
+  "exportVideo": {
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\reve-de-dragon-mecanismes-et-tmr.webm",
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\reve-de-dragon-mecanismes-et-tmr.mp4",
+    "secondesRetirees": 10.207000000000004,
+    "dureeMp4": 268,
+    "conversion": "MP4 H.264, chargement retiré ; WebM de tournage conservé."
+  },
+  "assertions": [
+    "d100 et table de résolution",
+    "fatigue 0 → 2 puis entraînement → 4",
+    "round : phases Magie, Lancers et phase7",
+    "bilan de nuit : famine, nourriture0 et endurance22",
+    "accès TMR et carte officielle chargée",
+    "G4 placé, montée : rêve−1/fatigue+1",
+    "chaque déplacement : fatigue+1",
+    "rencontre publiée bloque le déplacement",
+    "maîtrise sur la fiche, puis résolution au module",
+    "trajet H4–I4–J4",
+    "sort en réserve payé : rêve9, bonus9, ligne de réserve inscrite",
+    "note TMR sans nouveau débit",
+    "sortie sans débit, demi-rêve conservé à J4"
+  ]
+}

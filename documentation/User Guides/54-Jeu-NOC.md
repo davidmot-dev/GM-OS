@@ -8,6 +8,15 @@ cellule commune à toute la table.
 
 ---
 
+## Le clip des mécanismes et outils — 06/11/2026
+
+[Voir le clip MP4 (3 min 18)](../../output/clips/noc-mecanismes-et-outils.mp4) : huit chapitres avec légendes françaises, sans voix.
+Talent/Domaine, destin, réserves du Héros et de la Cabale, Fiel/Menace, périls et Séquelles,
+Extase/Soupçon au repos, Réseau et Faveurs, Rouage hostile et recharge du scénario.
+NOC ne propose actuellement aucun module indépendant dans « Modules du jeu » : ce sont
+ses outils intégrés aux fiches, à Session-OS et à Dice-OS qui sont montrés.
+Personnages fictifs, profil jetable et dés préparés. [Repères](../../output/clips/noc/chapitres.md).
+
 ## Le Fiel et la Menace — le bandeau des réserves
 
 ![Le bandeau de NOC : le Fiel en cinq segments, la Menace sans plafond, et les gestes « Début de séance » et « Nouveau scénario »](captures/jeu-noc-reserves.jpg)

@@ -1,0 +1,115 @@
+{
+  "mp4": "../degenesis-mecanismes-et-outils.mp4",
+  "dureeSecondes": 236.88,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 9.006
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 17.2305
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 31.455
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 33.977999999999994
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 42.501
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 75.484
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 114.467
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 124.333
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 140.199
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 147.8125
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 161.426
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 169.8175
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 184.209
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 190.1465
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 202.084
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 214.482
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 233.88
+    }
+  ],
+  "relecture": "16 scènes et 18 images du MP4 examinées ; titres et huit chapitres compris.",
+  "build": "npm run build : réussi avant essais",
+  "lint": "eslint e2e/clipDegenesis.spec.ts : réussi",
+  "constatHorsLot": {
+    "description": "Calculateur générique PJ : PV réduits, pistes Degenesis inchangées.",
+    "preuve": "constats/calculateur-pj.json",
+    "suivi": "registre §1bis",
+    "corrige": false
+  },
+  "pilote": {
+    "archive": "output/clips/degenesis/pilote/Degenesis-2.3.0.gmos-driver",
+    "origine": "Export Dirvers/corriges/Degenesis_driver_gmos_finir.gmos-driver",
+    "version": "2.3.0",
+    "sha256": "8c34279fb92f1bc7ce57f3c11b463c655d9b43dbef5f9a1767c37ae999c0e850",
+    "modifie": false
+  },
+  "limites": [
+    "Sélection de mécanismes, pas une recette exhaustive",
+    "Exposition, tous les Chakras, chirurgie, autres défenses/propriétés, fiche HTML et import/rechargement non rejoués",
+    "Hub et appareils physiques non rejoués",
+    "Sporulation11/10 préparée avant le titre ; nouveaux tests du Germe après Argus laissés à la table",
+    "Dés et valeurs d’exercice préparés, sans création novice revendiquée"
+  ],
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipDegenesis.spec.ts --reporter=list : 1 parcours normal réussi"
+}

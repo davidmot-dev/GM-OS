@@ -438,6 +438,68 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**07/11/2026 — Blade Runner : deux constats du clip, hors correction vidéo.**
+
+- **Reprise du suivi de blessures :** DonneesDeFicheSchema refuse le JSON structuré
+  `_gmos_blade_runner` ; la semence contenant une plaie mortelle ne charge donc pas.
+  [Preuve reproductible](../../output/clips/blade-runner/constats/validation.json),
+  `src/types/donneesDeFiche.ts` (liste des métadonnées réservées). La semence scalaire
+  valide est chargée, puis le seul état fictif de blessure est préparé avant le générique.
+  Le clip ne démontre pas un import/rechargement du suivi. Même classe de constat que
+  Dune ci-dessous ; ajouter une validation JSON bornée et éprouver la reprise séparément.
+- **Compteur générique :** le forçage physique écrit bien Santé8→7 ; après le forçage
+  mental du Hub, Sang-froid5→4 et Santé7 sont reçus côté MJ, mais pc.hp reste à8 et le
+  compteur générique affiche8/8. [Valeurs](../../output/clips/blade-runner/constats/jauges.json)
+  et [capture](../../output/clips/blade-runner/constats/jauge-generique.jpg).
+  Le panneau passe par updateCharacter({sheetData:…}), tandis que le compteur lit hp/maxHp.
+  Vérifier les deux sens du raccord sans réappliquer une perte déjà payée. La légende du
+  film distingue explicitement les pistes du jeu de ce compteur générique.
+
+Aucun correctif applicatif dans ce lot : les jets, coûts et échanges du clip sont vérifiés.
+Demander l’arrêt de GM-OS avant toute modification de src/ ou electron/.
+
+
+**06/11/2026 — Degenesis : le calculateur générique du combat ne répartit pas le coup du PJ.**
+Sur Falberg fictif, pilote2.3.0, le calculateur ouvert depuis « Calculer », montant14, type
+`physique`, bouton final « Déclencher dégâts », donne bien **PV19 → 5**, mais laisse
+**Blessures superficielles0 / Traumatismes0**, au lieu de12 / 2. [Constat](../../output/clips/degenesis/constats/calculateur-pj.json)
+et [capture](../../output/clips/degenesis/constats/calculateur-pj.jpg). `DamageCalculator.tsx`
+appelle `useCombatStore.applyDamage` ; sa branche Degenesis traite les adversaires autonomes,
+et le PJ passe par la réduction générique des PV. **Raccord à examiner séparément**, sans
+réappliquer le coup : couvrir PJ/PNJ liés et adversaires autonomes, dégâts/soins/mental, depuis
+le calculateur et le panneau de santé. Le clip utilise les commandes de santé natives de la carte.
+Aucun correctif applicatif dans ce lot ; demander l’arrêt de GM-OS avant une modification source.
+
+**06/11/2026 — Symbaroum : jauge du cockpit restée à la santé de départ.** Sur le profil
+fictif du clip, `hp/maxHp=10/10` et `endurance_actuelle/endurance=10/10` au départ. Les boutons
+Défense/encaisser puis Medicus du panneau écrivent bien l’Endurance **10 → 6 → 0 → 3**, avec
+assertions sur la fiche, mais le cockpit affiche toujours **10/10**. [Capture conservée](../../output/clips/symbaroum/constats/cockpit-jauge.jpg).
+`CharacterSheetEditor.tsx` transmet ces opérations par `updateCharacter({sheetData:…})` ;
+`SessionWorkspace.tsx` affiche `pc.hp / pc.maxHp`. **Raccord de santé à examiner séparément**,
+en vérifiant fiche → cockpit et cockpit/combat → fiche, sans réappliquer les dégâts.
+Le film final reste sur la fiche pour Corruption et fin de scène. Aucun correctif applicatif
+dans ce lot vidéo ; demander l’arrêt de GM-OS avant une modification source.
+
+**06/11/2026 — Dune : métadonnées refusées par la validation générale.** La préparation du
+clip Dune reproduit `DonneesDeFicheSchema.safeParse({_gmos_dune: {version:1, aventure:'…'}})` :
+refus de ce champ JSON structuré dans `src/types/donneesDeFiche.ts`, dont la liste réservée
+accepte RdD/Alien/Cthulhu Hack mais pas Dune. La semence du profil jetable est donc refusée
+avant d’entrer dans le magasin. [Constat reproductible](../../output/clips/dune/constat-validation.json).
+**À corriger séparément** en conservant des bornes JSON et des essais de sauvegarde/relecture.
+Le lot vidéo utilise une semence scalaire, puis prépare les métadonnées des seuls personnages
+fictifs après chargement ; il ne démontre pas un import/rechargement de campagne Dune.
+Aucun correctif applicatif dans le clip ; demander l’arrêt de GM-OS avant une modification source.
+
+**06/11/2026 — Crimes : aperçu des dégâts recalculé après le coup.** Pendant le tournage
+`e2e/clipCrimes.spec.ts`, canne-épée, deux réussites, Physique attaquant5/cible5 et protection2 :
+le résultat propose bien **2 blessures**. Après « Infliger », le reçu et la fiche portent
+bien deux blessures et la cible passe à Physique3, mais `IssueDeLAttaque`
+(`src/modules/session/components/fields/AttaqueDeCrimes.tsx`) recalcule son aperçu sur le
+Physique courant et affiche alors **4 blessures** au-dessus du reçu de2. **Défaut d’affichage
+à corriger séparément**, sans refaire le coup ni toucher aux deux marques déjà portées.
+Le clip montre le calcul avant application puis le plateau avec le Physique3 confirmé.
+Aucun correctif applicatif dans ce lot vidéo ; demander l’arrêt de GM-OS avant de modifier la source.
+
 **GM-05 — corrigé et validé par David le 01/11/2026 (§ 200).** Le filtre commun vide désormais
 les secrets de séance ; quatre tests applicatifs passent sur douze Hub (initial/différentiel/
 reconnexion), les résumés publics restent reçus et les secrets du MJ intacts. Les reproductions
@@ -6967,7 +7029,7 @@ Neuf effets partaient de `baseBri`, **la brillance courante**. Or le pied de pag
 
 | Lampe à | Part du cycle collée au plafond de 254 |
 | --- | --- |
-| 150 | **COC — COC-A1/A2/A3** | 🟢 §214 ; livrés en2.1.0, inclus en2.2.0 et validés par David —05/11 | Rien pour ces trois lots | Rien |
+| 150 | 0 % |
 | 200 | **31,8 %** |
 | 254 | **50 %** |
 
@@ -13751,6 +13813,46 @@ David : « c'est testé marque le. Maintenant fais un clips avec Playright des n
 - **Vérifications terminées le05/11 :** 9 871 tests réussis, 4 ignorés (833 fichiers réussis, 1 ignoré), dont138 tests de corpus ; types et construction passent, lint zéro erreur et un avertissement préexistant. Deux parcours Electron passent : calculs héros, persistance psychique, Formulaire/Hub/journal et captures communes ; neuf images2.2 relues. Défaut de titre au journal corrigé, source/page de Furtif désormais transmises. Rapports et inventaire combiné dans output/coc-a4-a6/.
 - **État :** 🟢 COC-A1 à COC-A6 validés par David le05/11 ; seize acquis verts, zéro orange, zéro rouge. Aucun essai humain restant pour ces lots.
 
+### 216 · Clip Playwright — mécanismes de Nephilim — 05/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de Nephilim ».
+
+- **Livré :** [MP4 de 3 min 29](../../output/clips/nephilim-mecanismes.mp4), H.264, 1440 × 900 ; WebM, rapport, repères et images dans output/clips/nephilim/. Curseur, surlignages et légendes françaises sans voix, inspirés des clips RuneQuest/Shadowrun.
+- **Scénario :** e2e/clipNephilim.spec.ts, pilote2.0.0 existant, personnage Aster et effets fictifs ; Vécus/Mnémos, métamorphe, Magie/Stase/critique/Sacrifice, pacte, Alchimie, lieu/Conjonction/Traque, santé et Chutes/expérience. Dés préparés, vrais gestes, profil jetable ; aucun src/electron modifié, aucun paquet installé.
+- **Vérifié :** build avant essais, lint propre, répétition accélérée puis tournage normal réussis ; treize assertions de fiche/réserves, douze scènes et dix-huit images du MP4 relues, début et fin compris. Manuel et synthèse liés au film. Les deux suites du manuel sont vérifiées après livraison des liens.
+- **Limites et reprise :** ouvrir le MP4 ; effets de démonstration non officiels clairement nommés, pas de voix ni d’essai de tablette physique. La montée immédiate de Traque est rappelée comme choix de David, distinct de l’errata. [Reprise](2026-11-05-etat-et-reprise-codex-clip-nephilim.md).
+- **Documentation corrigée :** notre remplacement global de la ligne150 avait touché l’ancien tableau de brillance ; « Lampe150 : 0 % » rétabli et validation COC reportée sur sa vraie ligne150. Aucun changement étranger inclus ; aucun commit/push demandé pour le clip.
+
+### 217 · Clip Playwright — mécanismes de Crimes — 06/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de Crime ».
+
+- **Livré :** [MP4 de 3 min 54](../../output/clips/crimes-mecanismes.mp4), H.264, 1440 × 900 ; WebM, repères et rapports dans output/clips/crimes/. Huit chapitres, curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Scénario :** e2e/clipCrimes.spec.ts, affaire et personnages fictifs, pilote complet retrouvé dans scratch/recette-pilotes et copié sans modification dans output/clips/crimes/pilote/. Archive étiquetée1.0.0, blocs complets présents. Garde choisie, dépassement, atteintes/repos, psychologie, indices privés puis partagés, attaque/munitions, contacts/fortune et développement.
+- **Vérifié :** construction avant essais, lint propre, répétition accélérée puis tournage normal réussis ; dix-sept assertions de fiches/indices, quinze images de scènes et dix-huit images du MP4 relues, début et fin compris. Manuel et synthèse liés au film ; tests finaux du manuel consignés au rapport.
+- **Défaut distinct :** après deux blessures appliquées, l’aperçu recalcule4 sur la cible diminuée, mais le reçu et la fiche gardent2, Physique3. Constat au §1bis, aucun correctif source. Le film montre le calcul avant application puis le suivi réel sur Combat-OS.
+- **Reprendre :** ouvrir le film ; [note de reprise](2026-11-06-etat-et-reprise-codex-clip-crimes.md). Aucun src/electron modifié, paquet installé ou profil personnel utilisé. Services locaux en profil jetable déjà autorisés. Aucun commit/push demandé pour ce clip ; les sorties Nephilim restent conservées.
+
+### 218 · Clip Playwright — Dune, mécanismes et module — 06/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de Dune en intégrant également les modules du jeu ».
+
+- **Livré :** [MP4 de 4 min 14](../../output/clips/dune-mecanismes-et-modules.mp4), H.264, 1440 × 900 ; WebM, repères et rapports dans output/clips/dune/. Huit chapitres, curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Scénario :** e2e/clipDune.spec.ts, pilote Dune2.0.0 et Maison Vaëlan de la recette existante ; Lysa et deux autres personnages fictifs, dés préparés. Tests, achat/aide, Impulsion/Menace, maximes/Détermination, bafouer/récupérer et progression. Un seul module « Dune : conflits et Maison » porte les cinq arènes, Agent/Architecte, accès, Maison, déplacement adjacent, enquête et atouts.
+- **Vérifié :** build avant essais, lint, répétition accélérée puis tournage normal réussis ; assertions sur fiches, réserves, accès et sauvegarde native du module. Douze images de scènes et dix-huit images du MP4 relues, début et fin compris ; format contrôlé par ffprobe. Manuel et synthèse liés au film.
+- **Défaut distinct :** DonneesDeFicheSchema refuse _gmos_dune structuré ; constat reproduit au §1bis et dans constat-validation.json. Fixture scalaire puis suivi fictif préparé après hydratation, avant tournage. Aucun correctif source ni essai de réimport/rechargement annoncé ; les transports Hub ne sont pas rejoués.
+- **Reprendre :** ouvrir le film ; [note de reprise](2026-11-06-etat-et-reprise-codex-clip-dune.md). Aucun src/electron modifié, paquet installé ou profil personnel utilisé. Services locaux en profil jetable déjà autorisés. Aucun commit/push demandé pour ces clips ; Nephilim et Crimes conservés.
+
+### 219 · Clip Playwright — NOC et outils de Cabale — 06/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de NOC en intégrant également les modules du jeu ».
+
+- **Livré :** [MP4 de 3 min 18](../../output/clips/noc-mecanismes-et-outils.mp4), H.264, 1440 × 900 ; WebM, huit chapitres et rapports dans output/clips/noc/. Curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Scénario :** e2e/clipNoc.spec.ts, pilote NOC2.0.0 existant, trois Héros fictifs des Veilleurs du Palier. Talent/Domaine, test sans dé, 10 facultatif, Fiel/Menace ; réserves personnelles et apports de Cabale ; effets du Fiel ; pistes/Séquelles ; Extase et Soupçon au repos ; fiche de Cabale et grande Faveur ; Rouage hostile, début de séance et nouveau scénario.
+- **Modules :** aucun adaptateur indépendant NOC dans le catalogue actuel. Le film le constate et montre les outils propres au pilote, aux fiches, à Session-OS et à Dice-OS. Aucun module inventé ou ajouté ; les transports Hub ne sont pas rejoués.
+- **Vérifié :** build complet, lint, répétition accélérée et tournage normal réussis ; assertions sur fiches, Cabale, Faveurs et réserves de table. Treize images de scènes et dix-huit images du MP4 relues, titres compris ; format contrôlé par ffprobe. Manuel/synthèse liés au film ; tests du manuel consignés au rapport.
+- **Reprendre :** ouvrir le MP4 ; [note de reprise](2026-11-06-etat-et-reprise-codex-clip-noc.md). Aucun code applicatif ni pilote modifié, aucun paquet installé ou profil personnel utilisé. Services jetables déjà autorisés. Aucun commit/push demandé pour les clips ; films précédents et changements étrangers conservés.
+
 ### 220 · Les chemins des livres — plan, étapes 0 à E — 06/11/2026
 
 David : *« est-ce qu'il ne serait pas utile de pouvoir garder le chemin vers les PDF des livres de
@@ -13810,6 +13912,37 @@ dépôt, l'enregistrement dans la Forge, la fenêtre de lecture intégrée, l'or
   les mémoires de Claude Code qui notaient un emplacement de livre renvoient au registre.
 - **Essayé et validé par David le 06/11** : *« ok j'ai essayé, c'est bon »*. Plus rien à faire ;
   à la demande, plus tard : « Livre, p. N » sur les citations de l'Oracle (plan, étape D).
+
+### 221 · Clip Playwright — Rêve de Dragon et TMR — 06/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de Rêves de Dragon en intégrant également les modules du jeu », puis « continue ».
+
+- **Livré :** [MP4 de 4 min 28](../../output/clips/reve-de-dragon-mecanismes-et-tmr.mp4), H.264, 1440 × 900 ; WebM, huit chapitres et rapports dans output/clips/rdd/. Curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Scénario :** e2e/clipReveDeDragon.spec.ts, pilote2.0.0 inchangé, Nitouche et un Groin fictifs. Table de résolution et degrés, fatigue/entraînement, sept phases de Combat-OS, Château Dormant/potion/famine ; puis le module rdd-tmr : accès, carte officielle, montée, trajet G4–H4–I4–J4, rencontre préparée/révélée et maîtrise sur la fiche, sort en réserve, note et journal.
+- **Raccord TMR :** chaque trajet est prévisualisé puis payé sur la vraie fiche ; assertions sur rêve et fatigue après confirmation. Le module conserve position et notes, sans réserve parallèle. Le sort est payé dans Haut-Rêve avant la note sur la carte ; la sortie conserve le demi-rêve à J4.
+- **Vérifié :** build complet, lint, répétition et tournage normal réussis ; assertions sur compteurs de fiche et état natif du module. Treize scènes et dix-huit images du MP4 relues, titres compris ; format contrôlé par ffprobe. Manuel et synthèse liés au film ; contrôles du manuel consignés au rapport.
+- **Limites et reprise :** ouvrir le film ; [note de reprise](2026-11-06-etat-et-reprise-codex-clip-rdd.md). Sélection de mécanismes, pas une recette exhaustive : transport Hub, rechargement et tablettes physiques non rejoués. Aucun code applicatif/pilote modifié, paquet installé ou profil personnel utilisé. Services jetables déjà autorisés ; aucun commit/push demandé. Films précédents et chantiers étrangers conservés.
+
+### 222 · Clip Playwright — Symbaroum — 06/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de Symbaroum en intégrant également les modules du jeu si nécessaire ».
+
+- **Livré :** [MP4 de 2 min 44](../../output/clips/symbaroum-mecanismes-et-outils.mp4), H.264, 1440 × 900 ; WebM, huit chapitres et rapports dans output/clips/symbaroum/. Curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Scénario :** e2e/clipSymbaroum.spec.ts, Éléna des Brumes fictive, pilote 2.0.0 inchangé. Opposition au seuil ; Avantage tactique et dégâts ; Défense et protection ; agonie, Test de mort et soins ; Corruption, seuil et Stigmate ; fin de scène ; dérivées et progression ; bourse et voyage ; attaque parfaite optionnelle.
+- **Modules :** aucun module indépendant Symbaroum dans src/modules/modulesDuJeu/catalogue.ts. Les outils intégrés à la fiche sont filmés, sans inventer de module. Archive existante retrouvée dans scratch/recette-pilotes/, copiée à l’identique dans output/clips/symbaroum/pilote/ ; pas de réimport requis pour ce clip.
+- **Vérifié :** build, lint, répétition et tournage normal réussis ; assertions sur Endurance, Corruption, Expérience et bourse. Treize scènes et dix-huit images du MP4 relues, titres compris ; format contrôlé par ffprobe. Manuel, synthèse et [note de reprise](2026-11-06-etat-et-reprise-codex-clip-symbaroum.md) liés ; tests du manuel consignés au rapport.
+- **Reste :** ouvrir le film. Jauge générique du cockpit restée à 10/10 après les soins sur la fiche : constat distinct au §1bis et capture dans constats/, sans correctif dans le film. Sélection de mécanismes, pas une recette exhaustive : toutes les options, Talents, création HTML, import/rechargement, Hub et tablettes physiques non rejoués. Aucun code applicatif ou pilote modifié, paquet installé ou profil personnel utilisé. Services jetables déjà autorisés ; aucun commit/push demandé. Autres films et travaux étrangers conservés.
+
+### 223 · Clip Playwright — Star Trek, LCARS et Opérations — 06/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de Star Trek en intégrant également les modules du jeu si nécessaire ».
+
+- **Livré :** [MP4 de 3 min 51](../../output/clips/star-trek-mecanismes-et-modules.mp4), H.264, 1440 × 900 ; WebM, huit chapitres et rapports dans output/clips/star-trek/. Curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Scénario :** e2e/clipStarTrek.spec.ts ; T’Vael, Rin Sol et mission fictifs, pilote 2.0.0 inchangé. Spécialisation, achat en Menace et complication ; assistant, aide native du vaisseau et Occasion parfaite ; Stress, Protection, blessure et soin confirmé ; Réputation ; deux modules.
+- **LCARS :** préparation des postes Science/Médecine et accès distinct ; vrai client Hub HTTP/WebSocket, sans appBridge, intégré à une iframe de tournage. Intervention scientifique reçue dans l’état natif ; rapport privé reçu dans le client ; alerte rouge reçue. Ni faux écran ni calcul automatique de dégâts/soins dans LCARS.
+- **Opérations :** vaisseaux fictifs préparés avant le titre ; dégâts appliqués après réussite annoncée à la table : 16 − Résistance4, Boucliers15 → 3, secousse et brèche. Tâche étendue : Fonction4 − obstacle1 = trois coches sur six ; défi et intervalles6 → 4.
+- **Vérifié :** build, lint, répétition et tournage normal réussis ; assertions sur Impulsion/Menace, Détermination, Stress, états natifs des modules et réception Hub. Quinze scènes et dix-huit images du MP4 relues, titres compris ; format ffprobe contrôlé. Manuel et synthèse liés ; tests du manuel consignés au rapport.
+- **Reste :** ouvrir le film ; [note de reprise](2026-11-06-etat-et-reprise-codex-clip-star-trek.md). Sélection de mécanismes : alternance des camps, toutes les consoles LCARS, son/médias privés, import/rechargement et appareils physiques non rejoués ; jet médical et jet d’attaque spatiale supposés résolus à la table. Les essais matériels LCARS restent ouverts. Aucun code applicatif ou pilote modifié, paquet installé ou profil personnel utilisé. Services jetables déjà autorisés ; aucun commit/push demandé. Films précédents et changements étrangers conservés.
 
 ### 224 · COC : le catalogue d'équipement depuis le livre ; la Forge et les tableaux — 06/11/2026
 
@@ -13888,14 +14021,87 @@ l'atelier puisse faire le travail correctement pour les équipements et le besti
 - **Reste** : l'essai de David — « Remplir depuis le corpus » du bestiaire de COC (18 profils) ;
   F3 et F4 sur une reforge (sans publier).
 
+### 225 · Clip Playwright — Degenesis — 06/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de Degenesis en intégrant également les modules du jeu si nécessaire ».
+
+- **Livré :** [MP4 de 3 min 57](../../output/clips/degenesis-mecanismes-et-outils.mp4), H.264, 1440 × 900 ; WebM, huit chapitres et rapports dans output/clips/degenesis/. Curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Scénario :** e2e/clipDegenesis.spec.ts, Falberg/Kum/Usudi fictifs, valeurs d’exercice, pilote 2.3.0 inchangé copié depuis Export Dirvers/corriges/. Aucun module indépendant Degenesis au catalogue : outils intégrés filmés.
+- **Parcours :** test d’action, Égo et déclencheurs ; maxima ; combinaison, action complexe, confrontation et aide consommée ; adversaire préparé et initiative ; défense active et dégâts nets ; deux pistes de santé et pénalité des Traumatismes ; test du Germe, EX, nouveau jour ; Brûlure d’Argus, bonus d’initiative et Potentiel explicite.
+- **Vérifié :** build, lint, répétition et tournage normal réussis. Assertions sur Égo actuel/maximal, aides/reports, dégâts et pistes, Sporulation permanente/EX/stimulation ; seize scènes et dix-huit images du MP4 relues, titres compris, format ffprobe contrôlé. Manuel et synthèse liés ; tests du manuel consignés au rapport.
+- **Reste :** ouvrir le film. Le calculateur générique du PJ réduit les PV sans répartir les pistes Degenesis : constat distinct au §1bis ; le film utilise les commandes natives de santé. Voir aussi la [note de reprise](2026-11-06-etat-et-reprise-codex-clip-degenesis.md). Sélection de mécanismes, pas une recette exhaustive : autres défenses/propriétés, exposition, tous les Chakras, chirurgie, fiche HTML, import/rechargement et Hub non rejoués. La jauge Sporulation11/10 est préparée avant le titre ; les nouveaux tests du Germe après l’Argus restent à résoudre. Aucun code applicatif ou pilote modifié, paquet installé ou profil personnel utilisé. Services jetables déjà autorisés ; aucun commit/push demandé. Films précédents et changements étrangers conservés.
+
+### 226 · Clip Playwright — Cthulhu Hack — 06/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de Cthulhu Hack en intégrant également les modules du jeu si nécessaire ».
+
+- **Livré :** [MP4 de 3 min 36](../../output/clips/cthulhu-hack-mecanismes-et-outils.mp4), H.264, 1440 × 900 ; WebM et [huit chapitres](../../output/clips/cthulhu-hack/chapitres.md). Curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Scénario :** e2e/clipCthulhuHack.spec.ts ; Edith Marsh et Nora Vale fictives, valeurs d’exercice et dés préparés, pilote1.1.0 inchangé copié depuis la campagne de recette. Aucun module indépendant Cthulhu Hack au catalogue : outils intégrés de la fiche, de Dice-OS, Combat-OS et Table-OS filmés.
+- **Parcours :** Sauvegardes et Avantage/Désavantage ; Fortune joueur/MJ ; enquête et dés d’usure ; Matériel, armure et PA restaurés par la Fortune ; déclin mental et Choc ; effets et Moments ; Hors Jeu standard, pertes permanentes et récupération ; variante Pulp ; les trois tables de Table-OS.
+- **Vérifié :** build, lint, répétition et tournage normal réussis ; assertions sur la Fortune, les dés/PA, la Santé mentale, les Moments et le Hors Jeu. Seize scènes et dix-huit images du MP4 relues, titres compris ; ffprobe vérifié. Tests du manuel dans le rapport.
+- **Reste :** ouvrir le film ; [note de reprise](2026-11-06-etat-et-reprise-codex-clip-cthulhu-hack.md). Sélection de mécanismes, sans recette exhaustive : tous les Chocs/Folies, soins spéciaux, épuisement mental définitif, sorts, fiche HTML, import/rechargement et transports Hub non rejoués. Le tirage libre dans Table-OS est une référence, sans ajout d’effet à la fiche. Indice et conséquences narratives sont joués par le MJ. Aucun code applicatif ou pilote modifié, paquet installé ou profil personnel utilisé. Services locaux jetables déjà autorisés ; aucun commit/push demandé. Films précédents et changements étrangers conservés.
+
+### 227 · Clip Playwright — COC et joueur tactile — 06/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de COC en intégrant également les modules du jeu si nécessaire, est-ce que tu peux simuler les gestes d'un joueurs sur une tablette ? ».
+
+- **Livré :** [MP4 de 3 min 52](../../output/clips/coc-mecanismes-et-tablette.mp4), H.264, 1440×900 ; WebM monté, [huit chapitres](../../output/clips/coc/chapitres.md), rapports et tournages bruts. Curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Parcours :** test d20, conditions et dés bonus/malus ; héros après test et DEF héroïque consommée ; Voie de Furtivité référencée et rang acquis ; choc de rang2, Enragé, Fascination et Blues conservé ; Figurant Pulp et bande ; critique fixe, RD et conséquence de santé ; joueur tactile sur le Hub ; réception MJ et fiche HTML synchronisée. Scénario e2e/clipCoc.spec.ts ; pilote2.2.0 d20 inchangé copié depuis Export Dirvers/corriges/coc/. Aucun module indépendant COC au catalogue : outils intégrés filmés.
+- **Tablette :** Vrai Hub HTTP/WebSocket dans un navigateur Edge jetable, contexte mobile/tactile, écran768×1024 sans appBridge ; 8 événements touchstart reçus. Choix de Furtif, jet reçu au MJ, héros11→10, puis échelle9 enregistrée depuis la fiche HTML et reçue chez le meneur. Le cadre de tournage affiche les réceptions après assertions sur les magasins réels ; aucune fausse interface Hub.
+- **Vérifié :** build, lint, répétition et tournage normal réussis ; assertions sur héros/DEF, Voies, choc/Blues, bande, DM/RD et santé, historique/journal et fiche côté MJ. Seize scènes et vingt-deux images du MP4 relues, titres et deux raccords compris ; ffprobe contrôlé. Tests du manuel au rapport. Montage reproductible : outils/clips/monter_clip_coc.mjs.
+- **Reste :** ouvrir le film ; [note de reprise](2026-11-06-etat-et-reprise-codex-clip-coc.md). Sélection de mécanismes, sans recette exhaustive : variante3d6, tous les états/Voies, Légende, poursuites, soins et thérapie, import/rechargement non rejoués. Valeurs et dés d’exercice préparés. Le résultat de CON du guetteur est renseigné comme joué à la table. Aucun appareil physique utilisé. Aucun code applicatif ou pilote modifié, paquet installé ou profil personnel utilisé. Services locaux jetables déjà autorisés ; aucun commit/push demandé. Clips précédents et changements étrangers conservés.
+
+### 228 · Clip Playwright — Alien et joueur tactile — 06/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de Alien en intégrant également les modules du jeu si nécessaire, est-ce que tu peux simuler les gestes d'un joueurs sur une tablette ? ».
+
+- **Livré :** [MP4 de 3 min 08](../../output/clips/alien-mecanismes-modules-et-tablette.mp4), H.264, 1440×900 ; WebM monté, [neuf chapitres](../../output/clips/alien/chapitres.md), tournages bruts et rapports. Curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Parcours :** réserve de base et Stress, forçage et Point de Récit en mode Cinéma ; Panique provisoire puis Figé10 annulant l’action ; Air8 testé à six dés et ramené à6 ; Conestoga du catalogue, poste Senseurs et ordres secrets ; M314 raccordé au plan privé et batterie ; vrai Hub tactile, test et question /M ; réponse privée du MJ ; lecture des échos et ordre spatial du joueur ; révélation et historique MJ. Scénario e2e/clipAlien.spec.ts ; pilote1.9.0 copié sans modification depuis l’export de David, aucun réimport nécessaire. Les trois modules réels sont intégrés : MU/TH/UR6000, Détecteur de mouvement, Combat spatial.
+- **Tablette :** Vrai Hub HTTP/WebSocket dans Edge jetable, contexte mobile/tactile 768×1024 sans appBridge ; 15 événements touchstart reçus. Test reçu au MJ, question /M reçue, réponse du meneur lue, écho sans noms privés et ordre de verrouillage reçu côté MJ. Touchers par tap(), saisies et choix par contrôles HTML ; pas de clavier tactile natif filmé. Deux séquences tactiles alternent avec le pupitre MJ ; quatre raccords contrôlés.
+- **Vérifié :** build, lint, répétition et tournage normal ; assertions sur Stress/Récit/Panique/Air, trois modules, événements tactiles et échanges réels. Dix-huit scènes et vingt-huit images du MP4 relues, titres et quatre raccords compris ; ffprobe contrôlé. Montage reproductible : outils/clips/monter_clip_alien.mjs.
+- **Reste :** ouvrir le film ; [note de reprise](2026-11-06-etat-et-reprise-codex-clip-alien.md). Démonstration ciblée : pas de recette exhaustive du pilote, ni combat spatial complet (arrêt après révélation), ni blessures/soins, xénomorphes, équipement/catalogue, fin d’acte ou progression complète. Personnages et dés du panneau préparés ; test de batterie M314 aléatoire. Aucun appareil physique utilisé. Aucun code applicatif/pilote modifié ou profil personnel utilisé. Services locaux jetables déjà autorisés, aucun paquet installé ni commit/push demandé. Clips précédents et changements étrangers conservés.
+
+### 229 · Clip Playwright — Barbarians of Lemuria et joueur tactile — 06/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de Barbarian of Lemuria en intégrant également les modules du jeu si nécessaire, est-ce que tu peux simuler les gestes d'un joueurs sur une tablette ? ».
+
+- **Livré :** [MP4 de 2 min 43](../../output/clips/barbarians-of-lemuria-mecanismes-et-tablette.mp4), H.264, 1440×900 ; WebM monté, [sept chapitres](../../output/clips/bol/chapitres.md), tournages bruts et rapports. Curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Parcours :** carrière et difficulté, annulation des bonus/malus et choix des deux meilleurs ou pires dés ; succès héroïque acheté sans promotion au légendaire ; double six héroïque puis légendaire ; Faveur divine gardant le second jet même moins bon, échec critique choisi et point accordé une fois ; réussite simple quand seul un double six pouvait réussir ; ordre de réaction ; attaque et héroïsme depuis le vrai Hub tactile ; fiche HTML et réception MJ. Scénario e2e/clipBol.spec.ts ; pilote 2.0.0 inchangé copié depuis Export Dirvers/corriges/. Aucun module indépendant dédié au catalogue : outils intégrés du panneau, de la fiche HTML et de Dice-OS.
+- **Tablette :** Vrai Hub HTTP/WebSocket dans Edge jetable, contexte mobile/tactile 768×1024 sans appBridge ; 6 touchstart relevés dans le client principal. Attaque Agilité1 + Mêlée2 − Défense1 : dés5+4, total11 reçu chez le MJ ; héroïsme3→2 ; fiche HTML Barbare/héroïsme2 et Vitalité11 reçue côté MJ. Touchers par tap(), saisies et sélections par contrôles HTML ; aucun clavier tactile natif filmé. Deux raccords MJ/tablette contrôlés.
+- **Vérifié :** build, lint, répétition et tournage normal ; assertions sur bonus/malus, héroïsme, doubles, Faveur divine, réaction, événements tactiles et synchronisation réelle. Seize scènes et vingt images du MP4 relues, titres et deux raccords compris ; ffprobe contrôlé. Montage reproductible : outils/clips/monter_clip_bol.mjs.
+- **Reste :** ouvrir le film ; [note de reprise](2026-11-06-etat-et-reprise-codex-clip-bol.md). Démonstration ciblée, sans combat complet ni recette exhaustive : magie, foi, alchimie, dégâts/armure, usages narratifs de l’héroïsme, récupération et progression ne sont pas rejoués. Personnage et dés d’exercice préparés. La Vitalité à 11 est saisie manuellement ; aucun calcul de dégâts revendiqué. Aucun appareil physique utilisé. Aucun code applicatif ou pilote modifié, paquet installé ou profil personnel utilisé. Services locaux jetables déjà autorisés ; aucun commit/push demandé. Clips précédents et changements étrangers conservés.
+
+### 230 · Clip Playwright — Blade Runner et joueur tactile — 07/11/2026
+
+David : « peux-tu faire un clips avec Playright les mécanismes particulier de Blade Runner en intégrant également les modules du jeu si nécessaire, est-ce que tu peux simuler les gestes d'un joueurs sur une tablette ? ».
+
+- **Livré :** [MP4 de 3 min 17](../../output/clips/blade-runner-mecanismes-et-tablette.mp4), H.264, 1440×900 ; WebM monté, [huit chapitres](../../output/clips/blade-runner/chapitres.md), tournages bruts et rapports. Curseur, surlignages et légendes françaises, sans voix ni musique.
+- **Parcours :** D10/D8, seuils de six et dix, soutien apportant son dé ; forçage humain avec relance volontaire d’une réussite, deux forçages du réplicant et crâne payé une seule fois ; souvenir clé consommé pour la séance ; stress subi puis objet fétiche ; blessure mortelle préparée, sauvegarde, stabilisations Round→Quart→hors de danger, soins et guérison en cours ; échange des cartes3/7 et protection2D8 ; test et forçage mental depuis le vrai Hub tactile ; Humanité HTML et réception MJ. Scénario e2e/clipBladeRunner.spec.ts ; pilote 2.0.0 inchangé copié depuis le fichier de recette de scratch/recette-br/. Aucun module indépendant dédié au catalogue : outils intégrés du panneau, de la fiche HTML et de Dice-OS.
+- **Tablette :** Vrai Hub HTTP/WebSocket dans Edge jetable, contexte mobile/tactile 768×1024 sans appBridge ; 6 touchstart relevés dans le client principal. Le test mental et son forçage sont reçus chez le MJ ; Sang-froid5→4, Santé7 conservée ; Humanité4 saisie dans la fiche HTML et reçue côté MJ. Touchers par tap(), sélections HTML ; aucun clavier tactile natif filmé. Deux raccords MJ/tablette contrôlés.
+- **Vérifié :** build, lint, répétition et tournage normal ; assertions sur réussites, forçages, coûts, usages de séance, stress, blessures, cartes, protection et échanges tactiles réels. Dix-huit scènes et vingt-deux images du MP4 relues, titres et deux raccords compris ; ffprobe contrôlé. Montage reproductible : outils/clips/monter_clip_blade_runner.mjs.
+- **Reste :** ouvrir le film ; [note de reprise](2026-11-07-etat-et-reprise-codex-clip-blade-runner.md). Exercices ciblés, sans combat complet ni recette exhaustive : les effets critiques de stress/Brisé, mort, premiers secours, main secourable, récupération, poursuites, fin de guérison et progression ne sont pas rejoués. Plaie mortelle et cartes3/7 préparées avant le générique ; dés d’exercice choisis. Humanité à4 saisie manuellement, sans bilan de fin de session. Le compteur de PV générique reste à8 malgré la Santé à7 : constat de raccord séparé. Aucun appareil physique utilisé. Le rechargement/import du suivi de blessure n’est pas testé : la semence refuse ce JSON structuré, posé après chargement pour le tournage (constat hors périmètre consigné au registre). Aucun code applicatif ou pilote modifié, paquet installé ou profil personnel utilisé. Services locaux jetables déjà autorisés ; aucun commit/push demandé. Clips précédents et changements étrangers conservés.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 166 | **Clip Blade Runner et joueur tactile** | 🟢 § 230 ; MP4 3 min 17, huit chapitres et vrai Hub → MJ vérifiés —07/11 | Ouvrir le MP4 | Rien pour le clip ; appareils physiques non essayés |
+| 165 | **Clip Barbarians of Lemuria et joueur tactile** | 🟢 § 229 ; MP4 2 min 43, sept chapitres et vrai Hub → MJ vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip ; appareils physiques non essayés |
+| 164 | **Clip Alien et joueur tactile** | 🟢 §228 ; MP4 3 min 08, neuf chapitres, trois modules et vrai Hub → MJ vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip ; appareils physiques non essayés |
+| 163 | **Clip COC et joueur tactile** | 🟢 §227 ; MP4 3 min 52, huit chapitres et vrai Hub tactile → MJ vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip ; appareils physiques non essayés |
+| 162 | **Clip Cthulhu Hack** | 🟢 §226 ; MP4 3 min 36, huit chapitres et outils intégrés vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip |
+| 161 | **Clip Degenesis** | 🟢 §225 ; MP4 3 min 57, huit chapitres, pilote2.3.0 et outils intégrés vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip |
 | 160 | **COC : catalogue d'équipement ; la Forge et les tableaux** | 🟠 § 224 ; armes et protections (44 objets) et bestiaire (18 profils : rôles, humains, créatures) transcrits du livre ; moteur de la Forge F1 à F5 livrés (F1, F2, F5 essayés) — 06/11 | « Remplir depuis le corpus » du bestiaire de COC ; F3 et F4 sur une reforge, sans publier | Essai de David |
+| 159 | **Clip Star Trek et modules** | 🟢 §223 ; MP4 3 min 51, huit chapitres, LCARS/Hub et Opérations vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip ; essais physiques distincts |
+| 158 | **Clip Symbaroum** | 🟢 §222 ; MP4 2 min 44, huit chapitres, tournage et images vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip |
+| 157 | **Clip Rêve de Dragon et TMR** | 🟢 §221 ; MP4 4 min 28, huit chapitres, tournage et images vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip |
 | 156 | **Les chemins des livres** | 🟢 § 220 ; registre de seize jeux (dix-sept livres, réglés avec David), carte « PDF du livre » de la Forge, fenêtre de lecture à la page, boutons « Livre, p. N », skills et passation livrés ; essayé et validé par David — 06/11 | Rien | Rien ; à la demande : les citations de l'Oracle |
+| 155 | **Clip NOC et outils de Cabale** | 🟢 §219 ; MP4 3 min 18, huit chapitres, tournage et images vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip |
+| 154 | **Clip Dune : mécanismes et module** | 🟢 §218 ; MP4 4 min 14, huit chapitres, tournage et images vérifiés —06/11 | Ouvrir le MP4 ; schéma générique distinct au §1bis | Rien pour le clip |
+| 153 | **Clip des mécanismes de Crimes** | 🟢 §217 ; MP4 3 min 54, huit chapitres, tournage et images vérifiés —06/11 | Ouvrir le MP4 ; défaut d’aperçu distinct au §1bis | Rien pour le clip |
+| 152 | **Clip des mécanismes de Nephilim** | 🟢 §216 ; MP4 3 min 29, huit chapitres, tournage et images vérifiés —05/11 | Ouvrir le MP4 | Rien |
 | 151 | **COC — COC-A4/A5/A6** | 🟢 §215 ; pilote2.2.0, 9 871 tests et deux parcours Electron verts ; six lots validés par David —05/11 | Rien pour COC-A1 à A6 | Rien |
-| 150 | **COC — COC-A1/A2/A3** | 🟠 § 214 ; pilote 2.1.0, 9 847 tests et deux parcours Electron verts, dix captures relues — 04/11 | Réimporter d20 ou 3d6 avec Remplacer, essayer dégâts/santé/rôles | Essai David restant |
+| 150 | **COC — COC-A1/A2/A3** | 🟢 §214 ; livrés en2.1.0, inclus en2.2.0 et validés par David —05/11 | Rien pour ces trois lots | Rien |
 | 149 | **Clip des nouveautés Shadowrun Anarchy** | 🟢 § 213 ; clip MP4 3 min 12 livré et relu, parcours Playwright passé — 04/11 | Ouvrir le MP4 ; rien à développer | Rien |
 | 148 | **Shadowrun — SR-A4/A5/A6** | 🟢 § 212 ; pilote 2.2.0 livré et validé par David — 04/11 | Rien pour les six lots ; clip des nouveautés demandé | Rien |
 | 147 | **Shadowrun — SR-A1/A2/A3** | 🟢 § 211 ; pilote 2.1.0 livré et validé par David — 04/11 | Rien pour ce lot ; choisir SR-A4/A5/A6 séparément | Rien pour SR-A1/A2/A3 |

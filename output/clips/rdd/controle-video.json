@@ -1,0 +1,106 @@
+{
+  "mp4": "../reve-de-dragon-mecanismes-et-tmr.mp4",
+  "dureeSecondes": 268,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 9.004999999999999
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 11.748999999999999
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 20.493
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 33.493
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 52.493
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 61.196
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 75.899
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 88.099
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 106.299
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 109.94300000000001
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 119.587
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 128.9195
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 144.252
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 174.084
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 209.916
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 233.958
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 265
+    }
+  ],
+  "relecture": "13 images de scènes et 18 images du MP4 examinées ; titres et huit chapitres compris.",
+  "build": "npm run build : réussi avant essais",
+  "lint": "eslint e2e/clipReveDeDragon.spec.ts : réussi",
+  "pilote": {
+    "archive": "output/campagnes-tests/reve-de-dragon/Reve-de-Dragon-2.0.0.gmos-driver",
+    "version": "2.0.0",
+    "sha256": "ed1fe721c63ed129949491f929901528a5b474727549291bdb6694f6de75ae62",
+    "modifie": false
+  },
+  "limites": [
+    "Sélection de mécanismes ; pas de recette exhaustive",
+    "pas de transport Hub, rechargement ou tablette physique rejoué",
+    "fiche fictive préparée avant le titre, dés et saisies de dés préparés"
+  ],
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipReveDeDragon.spec.ts --reporter=list : 1 parcours normal réussi"
+}

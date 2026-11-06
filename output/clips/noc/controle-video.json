@@ -1,0 +1,106 @@
+{
+  "mp4": "../noc-mecanismes-et-outils.mp4",
+  "dureeSecondes": 198.12,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 9.014
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 19.6295
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 36.245
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 38.6705
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 47.096
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 53.5995
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 66.10300000000001
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 72.3655
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 84.628
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 95.565
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 112.502
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 116.987
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 127.472
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 144.058
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 166.644
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 177.382
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 195.12
+    }
+  ],
+  "relecture": "13 images de scènes et 18 images du MP4 examinées ; titres et huit chapitres compris.",
+  "build": "npm run build : réussi avant essais, après écriture concurrente du test bestiaire",
+  "lint": "eslint e2e/clipNoc.spec.ts : réussi",
+  "pilote": {
+    "archive": "output/campagnes-tests/noc/NOC-2.0.0.gmos-driver",
+    "version": "2.0.0",
+    "sha256": "c8fd40090498481f3478c051a0fe93bbb70c7c437d231c0a09bd83453f608741",
+    "modifie": false
+  },
+  "limites": [
+    "Aucun module indépendant NOC au catalogue ; outils du pilote et des fiches filmés",
+    "pas de transport Hub ou import/rechargement rejoué",
+    "fiches fictives préparées avant le titre, dés préparés"
+  ],
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipNoc.spec.ts --reporter=list : 1 parcours normal réussi"
+}

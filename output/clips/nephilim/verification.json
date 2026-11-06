@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "effetsFictifs": true,
+  "narrationSonore": false,
+  "modeRapide": false,
+  "dureeDepuisTitre": 208.958,
+  "chapitres": [
+    {
+      "titre": "1 · Vécus, approches et Effet Mnémos",
+      "secondesDepuisTitre": 5.997
+    },
+    {
+      "titre": "2 · Métamorphe et limites du Seuil RK",
+      "secondesDepuisTitre": 25.749
+    },
+    {
+      "titre": "3 · Magie : Stase, critique et Sacrifice",
+      "secondesDepuisTitre": 35.718
+    },
+    {
+      "titre": "4 · Kabbale : invoquer, puis nouer le pacte",
+      "secondesDepuisTitre": 66.155
+    },
+    {
+      "titre": "5 · Alchimie : construct, formule et Materiae Primae",
+      "secondesDepuisTitre": 86.877
+    },
+    {
+      "titre": "6 · Lieu magique, Conjonction et Traque",
+      "secondesDepuisTitre": 101.088
+    },
+    {
+      "titre": "7 · Santé : cases et Conséquences",
+      "secondesDepuisTitre": 143.724
+    },
+    {
+      "titre": "8 · Chutes, recharge de Stase et expérience",
+      "secondesDepuisTitre": 174.217
+    }
+  ],
+  "exportVideo": {
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\nephilim-mecanismes.webm",
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\nephilim-mecanismes.mp4",
+    "secondesRetirees": 8.661999999999988,
+    "dureeMp4": 209.24,
+    "conversion": "MP4 H.264, chargement retiré ; WebM de tournage conservé."
+  },
+  "assertions": [
+    "Mnémos 12 → 11 PS",
+    "Stase 4 → 2",
+    "critique 88/90 et Khaïba 2 → 1 sans gain de PS",
+    "Sacrifice 11 → 6 PS malgré 99",
+    "pacte noué après opposition",
+    "Materiae Primae Eau 6 → 4",
+    "Plexus et Conjonction : 110 %",
+    "Traque au seuil : 0 et Intensité 2",
+    "Mineure et case de 3, cible physique 70 %",
+    "repos conserve la Conséquence",
+    "PS de Chute séparés",
+    "Stase +1 par jour",
+    "expérience Templier 4 → 5, PS 6 → 1"
+  ]
+}

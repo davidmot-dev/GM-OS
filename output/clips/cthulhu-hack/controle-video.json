@@ -1,0 +1,104 @@
+{
+  "mp4": "../cthulhu-hack-mecanismes-et-outils.mp4",
+  "dureeSecondes": 215.84,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 9.004
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 16.244
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 29.484
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 37.417
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 51.35
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 69.884
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 94.418
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 102.738
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 117.058
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 124.99350000000001
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 138.929
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 152.8155
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 172.702
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 180.53199999999998
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 194.362
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 200.101
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 212.84
+    }
+  ],
+  "relecture": "16 scènes et 18 images du MP4 examinées ; titres et huit chapitres compris.",
+  "build": "npm run build : tsc et trois builds Vite terminés avant essais",
+  "lint": "eslint e2e/clipCthulhuHack.spec.ts : réussi",
+  "pilote": {
+    "archive": "output/clips/cthulhu-hack/pilote/Cthulhu-Hack-1.1.0.gmos-driver",
+    "origine": "output/campagnes-tests/cthulhu-hack/Cthulhu-Hack-1.1.0.gmos-driver",
+    "version": "1.1.0",
+    "sha256": "1ee8aedd17f93e324ce781da8d699783d76a5afb23d7ef33959d6b4c8c7e7d59",
+    "modifie": false
+  },
+  "limites": "Sélection de mécanismes, sans recette exhaustive : tous les Chocs/Folies, soins spéciaux, épuisement mental définitif, sorts, fiche HTML, import/rechargement et transports Hub non rejoués. Le tirage libre dans Table-OS est une référence, sans ajout d’effet à la fiche. Indice et conséquences narratives sont joués par le MJ.",
+  "registre": 226,
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipCthulhuHack.spec.ts --reporter=list : 1 parcours normal réussi"
+}

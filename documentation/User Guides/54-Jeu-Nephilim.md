@@ -19,6 +19,14 @@ passés** reliés aux **époques d'incarnation** du livre.
 
 ---
 
+## Le clip des mécanismes particuliers — 05/11/2026
+
+[Voir le clip MP4 (3 min 29)](../../output/clips/nephilim-mecanismes.mp4) : huit chapitres,
+curseur et légendes françaises, sans voix. Vécus/Mnémos, métamorphe, Magie/Stase/Sacrifice,
+pacte de Kabbale, Alchimie, lieu et Traque, santé, Chutes et expérience.
+Personnage et effets fictifs, dés préparés pour des exemples reproductibles ; vrais gestes
+dans une instance jetable. [Repères des chapitres](../../output/clips/nephilim/chapitres.md).
+
 ## Le jet
 
 ![Le panneau de jet de Nephilim : le Vécu « Templier » 4 et l'approche du Feu 5, soit 90 %](captures/jeu-nephilim-jet.jpg)

@@ -1,0 +1,72 @@
+{
+  "version": "2.3.0",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "modeRapide": false,
+  "dureeDepuisTitre": 236.607,
+  "chapitres": [
+    {
+      "titre": "1 · Valeur d’action, difficulté et Égo",
+      "secondesDepuisTitre": 6.006
+    },
+    {
+      "titre": "2 · Les maxima ne remplissent pas les réserves",
+      "secondesDepuisTitre": 28.455
+    },
+    {
+      "titre": "3 · Combinaison, action complexe, confrontation et aide",
+      "secondesDepuisTitre": 39.501
+    },
+    {
+      "titre": "4 · Préparer l’adversaire et payer l’Égo à l’initiative",
+      "secondesDepuisTitre": 111.467
+    },
+    {
+      "titre": "5 · Attaque, défense active et dégâts nets",
+      "secondesDepuisTitre": 137.199
+    },
+    {
+      "titre": "6 · Blessures superficielles, Traumatismes et dés perdus",
+      "secondesDepuisTitre": 158.426
+    },
+    {
+      "titre": "7 · Sporulation, test du Germe et EX",
+      "secondesDepuisTitre": 181.209
+    },
+    {
+      "titre": "8 · Brûlure, initiative et Potentiel choisi",
+      "secondesDepuisTitre": 199.084
+    }
+  ],
+  "exportVideo": {
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\degenesis-mecanismes-et-outils.webm",
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\degenesis-mecanismes-et-outils.mp4",
+    "secondesRetirees": 8.893000000000011,
+    "dureeMp4": 236.88,
+    "conversion": "MP4 H.264, chargement retiré ; WebM de tournage conservé."
+  },
+  "assertions": [
+    "six d6 et quatre succès requis",
+    "Égo8 → 7",
+    "Égo maximal8 → 10 sans remplir la réserve",
+    "sept déclencheurs reportés sur un second test réussi",
+    "action complexe8/8",
+    "confrontation : égalité parfaite et initiative",
+    "cinq dés d’aide reçus puis consommés",
+    "adversaire préparé : maxima10/5",
+    "initiative : Égo7 → 5",
+    "première attaque +2D sans nouveau débit",
+    "défense active5 contre10",
+    "dégâts8 − armure2 = 6 et pistes adverses6",
+    "quatorze dégâts nets : Blessures12, Traumatismes2, hp5",
+    "−2D de Traumatismes",
+    "Germe : un point permanent",
+    "EX11 → 8 et une dose par jour",
+    "nouveau jour : Égo5 → 6",
+    "Argus4 : Égo10, Sporulations12 et +4D à l’initiative",
+    "Potentiel choisi avec deux dés saisis",
+    "absence de module indépendant au catalogue"
+  ]
+}

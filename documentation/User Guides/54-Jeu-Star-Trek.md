@@ -10,6 +10,15 @@ et une Fonction.
 
 ---
 
+## Le clip des mécanismes et des modules — 06/11/2026
+
+[Voir le clip MP4 (3 min 51)](../../output/clips/star-trek-mecanismes-et-modules.mp4) : huit chapitres, légendes françaises, sans voix.
+2d20, spécialisation, Menace et Impulsion ; assistance et Détermination ; Stress/blessures ; Réputation.
+Les modules **LCARS — Passerelle** et **Bataille spatiale et tâches étendues** montrent affectations,
+accès, intervention/réponse privée et alerte dans le vrai Hub, puis Boucliers, brèche, tâche et défi.
+Équipage fictif, dés préparés et profil jetable ; Hub intégré au cadre de tournage.
+[Repères des chapitres](../../output/clips/star-trek/chapitres.md). Les essais matériels restent distincts.
+
 ## L'Impulsion et la Menace
 
 ![Le bandeau de Star Trek : l'Impulsion des joueurs en six segments, la Menace du meneur, et « Fin de scène »](captures/jeu-star-trek-reserves.jpg)

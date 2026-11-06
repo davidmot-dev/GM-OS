@@ -1,0 +1,46 @@
+{
+  "dureeDepuisTitre": 205.753,
+  "dureeTournageTablette": 37.22,
+  "segmentsTablette": [
+    {
+      "debutMJ": 144.845,
+      "finMJ": 184.996,
+      "debutTablette": 5.942,
+      "finTablette": 37.22
+    }
+  ],
+  "chapitres": [
+    {
+      "titre": "1 · Une lettre, un dé ; six ou dix pour réussir",
+      "secondesDepuisTitre": 6.036
+    },
+    {
+      "titre": "2 · Forcer : payer les crânes, une fois ou deux",
+      "secondesDepuisTitre": 25.246
+    },
+    {
+      "titre": "3 · Le souvenir clé, une seule fois dans la séance",
+      "secondesDepuisTitre": 52.757
+    },
+    {
+      "titre": "4 · Encaisser le stress, puis retrouver son objet fétiche",
+      "secondesDepuisTitre": 68.968
+    },
+    {
+      "titre": "5 · Une blessure mortelle : survivre, stabiliser et soigner",
+      "secondesDepuisTitre": 87.319
+    },
+    {
+      "titre": "6 · Cartes d’initiative et protection",
+      "secondesDepuisTitre": 117.564
+    },
+    {
+      "titre": "7 · Tablette : forçage mental et fiche HTML",
+      "secondesDepuisTitre": 144.845
+    },
+    {
+      "titre": "8 · Retour MJ : dés, prix du forçage et fiche reçus",
+      "secondesDepuisTitre": 184.996
+    }
+  ]
+}

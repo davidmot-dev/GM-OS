@@ -1,0 +1,108 @@
+{
+  "mp4": "../crimes-mecanismes.mp4",
+  "dureeSecondes": 234.36,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 9.05
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 20.772499999999997
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 38.495
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 43.388999999999996
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 54.283
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 65.72550000000001
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 83.168
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 88.3165
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 99.465
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 119.45
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 145.435
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 166.30200000000002
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 193.169
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 200.53300000000002
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 213.897
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 219.1285
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 231.36
+    }
+  ],
+  "relecture": "15 images de scènes et 18 images du MP4 examinées ; début/fin et huit chapitres compris.",
+  "build": "npm run build : réussi avant les essais",
+  "lint": "eslint e2e/clipCrimes.spec.ts : réussi",
+  "pilote": {
+    "origine": "scratch/recette-pilotes/Crime_driver_gmos_complet.gmos-driver",
+    "copie": "output/clips/crimes/pilote/Crime_driver_gmos_complet.gmos-driver",
+    "versionHistorique": "1.0.0",
+    "sha256": "4d21ada589b1b81eada6a4bd335644b745bcd9aadc77d593dbab7724290e189a",
+    "copieIdentique": true,
+    "modifie": false
+  },
+  "limites": [
+    "pas de transport Hub rejoué",
+    "aperçu des dégâts recalculé après application : §1bis, reçu et marques corrects",
+    "le seuil de fortune10 est le choix de David"
+  ],
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipCrimes.spec.ts --reporter=list : 1 parcours normal réussi"
+}

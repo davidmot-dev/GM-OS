@@ -1,0 +1,106 @@
+{
+  "mp4": "../dune-mecanismes-et-modules.mp4",
+  "dureeSecondes": 253.76,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 9.007
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 18.774
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 34.541
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 40.943
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 53.345
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 73.2195
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 99.094
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 103.2695
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 113.445
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 132.0385
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 156.632
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 168.674
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 186.716
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 205.558
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 230.4
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 237.07999999999998
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 250.76
+    }
+  ],
+  "relecture": "12 images de scènes et 18 images du MP4 examinées ; début/fin et huit chapitres compris.",
+  "build": "npm run build : réussi avant les essais",
+  "lint": "eslint e2e/clipDune.spec.ts : réussi",
+  "pilote": {
+    "archive": "output/campagnes-tests/dune/Dune-2.0.0.gmos-driver",
+    "version": "2.0.0",
+    "sha256": "486ce4a6ec049f50691760ce6487cdbfee6758f7d4db3efb7c3c1f2483d562e1",
+    "modifie": false
+  },
+  "limites": [
+    "pas de transport Hub rejoué",
+    "pas de validation import/rechargement : refus _gmos_dune structuré au schéma générique, §1bis",
+    "le plateau initial et le suivi fictif sont préparés avant tournage ; les gestes montrés sont natifs"
+  ],
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipDune.spec.ts --reporter=list : 1 parcours normal réussi"
+}

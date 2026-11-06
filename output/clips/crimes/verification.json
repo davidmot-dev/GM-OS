@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "modeRapide": false,
+  "dureeDepuisTitre": 234.09,
+  "chapitres": [
+    {
+      "titre": "1 · Potentiel GARDE Compétence",
+      "secondesDepuisTitre": 6.05
+    },
+    {
+      "titre": "2 · Se dépasser : le succès a un prix",
+      "secondesDepuisTitre": 35.495
+    },
+    {
+      "titre": "3 · Atteintes et récupération",
+      "secondesDepuisTitre": 51.283
+    },
+    {
+      "titre": "4 · Angoisse, Névrose et Psychose",
+      "secondesDepuisTitre": 80.168
+    },
+    {
+      "titre": "5 · Dossier d’enquête : découvrir, révéler, partager",
+      "secondesDepuisTitre": 96.465
+    },
+    {
+      "titre": "6 · Combat : arme, opposition, protection et munitions",
+      "secondesDepuisTitre": 142.435
+    },
+    {
+      "titre": "7 · Contacts et fortune",
+      "secondesDepuisTitre": 190.169
+    },
+    {
+      "titre": "8 · Tempérament, création et développement",
+      "secondesDepuisTitre": 210.897
+    }
+  ],
+  "exportVideo": {
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\crimes-mecanismes.webm",
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\crimes-mecanismes.mp4",
+    "secondesRetirees": 10.649999999999988,
+    "dureeMp4": 234.36,
+    "conversion": "MP4 H.264, chargement retiré ; WebM de tournage conservé."
+  },
+  "assertions": [
+    "1 imposé et réussite mitigée",
+    "spécialisation Escalade",
+    "garde choisie en échec et consignée",
+    "dépassement : fatigue 1 et blocage par scène",
+    "atteinte grave remplace la moindre",
+    "Bonne nuit conserve la blessure",
+    "soin explicite",
+    "Angoisse et Névrose +1",
+    "test psychotique et Psychose +1",
+    "gain Limier 1 → 2 puis seuil 3",
+    "indice privé puis partagé, gain Limier 4",
+    "hypothèse notée",
+    "2 blessures à la cible",
+    "munitions 6 → 5 → 10",
+    "contact 2/3, base conservée, restauration",
+    "fortune niveau 3 et jauge 5",
+    "Mental 4 → 5 et développement 6 → 1"
+  ]
+}

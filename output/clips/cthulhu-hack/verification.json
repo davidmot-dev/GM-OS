@@ -1,0 +1,70 @@
+{
+  "version": "1.1.0",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "modeRapide": false,
+  "dureeDepuisTitre": 215.573,
+  "chapitres": [
+    {
+      "titre": "1 · La Sauvegarde : rester sous la caractéristique",
+      "secondesDepuisTitre": 6.004
+    },
+    {
+      "titre": "2 · Fortune : placer des jetons, puis laisser le MJ les défausser",
+      "secondesDepuisTitre": 26.484
+    },
+    {
+      "titre": "3 · Enquête et Matériel : les dés d’usure gardent leur trace",
+      "secondesDepuisTitre": 48.35
+    },
+    {
+      "titre": "4 · Santé mentale : le déclin ouvre une Folie ou un Choc",
+      "secondesDepuisTitre": 91.418
+    },
+    {
+      "titre": "5 · Les effets suivent le temps confirmé de la fiction",
+      "secondesDepuisTitre": 114.058
+    },
+    {
+      "titre": "6 · Hors Jeu standard : le danger, les pertes, puis la récupération",
+      "secondesDepuisTitre": 135.929
+    },
+    {
+      "titre": "7 · Variante Pulp : les blessures à zéro PV s’accumulent",
+      "secondesDepuisTitre": 169.702
+    },
+    {
+      "titre": "8 · Table-OS : retrouver les trois tables du jeu",
+      "secondesDepuisTitre": 191.362
+    }
+  ],
+  "exportVideo": {
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\cthulhu-hack-mecanismes-et-outils.webm",
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\cthulhu-hack-mecanismes-et-outils.mp4",
+    "secondesRetirees": 7.686999999999995,
+    "dureeMp4": 215.84,
+    "conversion": "MP4 H.264, chargement retiré ; WebM de tournage conservé."
+  },
+  "assertions": [
+    "sauvegarde Sagesse12 : Avantage6, Désavantage16",
+    "Fortune0 → 1 → 2 et limite2",
+    "FortuneMJ Menace : 2 → 0",
+    "Torche d8 → d6",
+    "gilet d8 → d6, PA3 → 2",
+    "Fortune sauve déclin : d8, PA3, Fortune2",
+    "Santé mentale d10 → d8",
+    "Choc Confus, deux Moments",
+    "Désavantage mental automatique :17",
+    "deux Moments confirmés font expirer Confus",
+    "HorsJeu standard : danger requis",
+    "Détruit : six points sur deux Sauvegardes, aperçu sans perte",
+    "confirmation unique Force12 → 7, Sagesse12 → 11",
+    "D4 récupération unique : hp3",
+    "Pulp explicite : tirages immédiats9 puis9−1=8",
+    "Pulp : récupération après danger uniquement, hp2 et une fois",
+    "TableOS : Chocs, Folies, HorsJeu ; tirage libre Hurlement",
+    "absence de module indépendant au catalogue"
+  ]
+}

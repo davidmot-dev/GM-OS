@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-06",
+  "schema": "DonneesDeFicheSchema",
+  "champ": "_gmos_dune",
+  "accepte": false,
+  "erreurs": [
+    {
+      "chemin": [
+        "_gmos_dune"
+      ],
+      "message": "Valeur de champ attendue ; seules les métadonnées réservées RdD, Alien et Cthulhu Hack acceptent du JSON structuré borné."
+    }
+  ],
+  "portee": "Constat du schéma de sauvegarde ; aucun correctif applicatif dans le lot vidéo. La campagne fictive est semée en champs scalaires, puis ses métadonnées préparées dans le profil jetable."
+}

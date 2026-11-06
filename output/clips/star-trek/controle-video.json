@@ -1,0 +1,109 @@
+{
+  "mp4": "../star-trek-mecanismes-et-modules.mp4",
+  "dureeSecondes": 230.68,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 8.989
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 16.8625
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 30.736
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 39.3835
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 54.031
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 63.399
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 78.767
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 82.007
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 91.247
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 114.345
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 143.443
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 153.8135
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 170.184
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 186.6415
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 209.099
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 214.8895
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 227.68
+    }
+  ],
+  "relecture": "15 images de scènes et 18 images du MP4 examinées ; titres et huit chapitres compris.",
+  "build": "npm run build : réussi avant essais",
+  "lint": "eslint e2e/clipStarTrek.spec.ts : réussi",
+  "pilote": {
+    "archive": "output/clips/star-trek/pilote/Star-Trek-2.0.0.gmos-driver",
+    "origine": "scratch/recette-pilotes/ST_driver_gmos_finir.gmos-driver",
+    "version": "2.0.0",
+    "sha256": "9105f7ac7b3f7672cb5ded0e56f43e949e51c4247dd9299c56ce666e2b16d72c",
+    "modifie": false
+  },
+  "hub": "Vrai client HTTP/WebSocket dans iframe de tournage, sans appBridge ; aucun appareil physique.",
+  "limites": [
+    "Sélection de mécanismes ; pas de recette exhaustive",
+    "Alternance, toutes les consoles, son, médias privés et import/rechargement non rejoués",
+    "Jets médical et spatial supposés résolus à la table avant confirmation",
+    "Fiction et vaisseaux préparés avant le titre ; dés préparés"
+  ],
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipStarTrek.spec.ts --reporter=list : 1 parcours normal réussi"
+}

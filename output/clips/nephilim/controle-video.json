@@ -1,0 +1,95 @@
+{
+  "mp4": "../nephilim-mecanismes.mp4",
+  "dureeSecondes": 209.24,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 8.997
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 15.873
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 28.749
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 30.7335
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 38.718
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 50.9365
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 69.155
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 76.51599999999999
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 89.877
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 93.98249999999999
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 104.088
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 122.40599999999999
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 146.724
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 158.97050000000002
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 177.217
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 188.2285
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 206.24
+    }
+  ],
+  "relecture": "12 images de scènes et 18 images du MP4 examinées, début/fin et chaque chapitre compris.",
+  "build": "npm run build : réussi avant les essais",
+  "lint": "eslint e2e/clipNephilim.spec.ts : réussi",
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipNephilim.spec.ts --reporter=list : 1 parcours normal réussi"
+}

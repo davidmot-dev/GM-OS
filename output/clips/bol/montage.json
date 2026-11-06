@@ -1,0 +1,42 @@
+{
+  "dureeDepuisTitre": 166.175,
+  "dureeTournageTablette": 38.753,
+  "segmentsTablette": [
+    {
+      "debutMJ": 108.332,
+      "finMJ": 146.514,
+      "debutTablette": 4.467,
+      "finTablette": 38.753
+    }
+  ],
+  "chapitres": [
+    {
+      "titre": "1 · Contre neuf : carrière, difficulté, bonus et malus",
+      "secondesDepuisTitre": 6.01
+    },
+    {
+      "titre": "2 · Succès héroïque acheté ou double six légendaire",
+      "secondesDepuisTitre": 36.08
+    },
+    {
+      "titre": "3 · Faveur divine, double un et échec critique choisi",
+      "secondesDepuisTitre": 58.84
+    },
+    {
+      "titre": "4 · Quand seul un double six pouvait réussir",
+      "secondesDepuisTitre": 77.42
+    },
+    {
+      "titre": "5 · Réaction : Esprit et Initiative contre l’adversaire",
+      "secondesDepuisTitre": 87.007
+    },
+    {
+      "titre": "6 · Tablette : attaque, héroïsme et fiche HTML",
+      "secondesDepuisTitre": 108.332
+    },
+    {
+      "titre": "7 · Côté MJ : le test reçu et la fiche synchronisée",
+      "secondesDepuisTitre": 146.514
+    }
+  ]
+}

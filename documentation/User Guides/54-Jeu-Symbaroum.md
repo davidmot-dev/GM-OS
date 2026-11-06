@@ -14,6 +14,15 @@ création au voyage. La fiche de personnage HTML est reliée champ par champ.
 
 ---
 
+## Le clip des mécanismes — 06/11/2026
+
+[Voir le clip MP4 (2 min 44)](../../output/clips/symbaroum-mecanismes-et-outils.mp4) : huit chapitres avec légendes françaises, sans voix.
+Opposition et Avantage tactique ; attaque et Défense avec leurs dégâts ; agonie et soins ;
+Corruption et Stigmates ; fin de scène ; progression ; bourse et voyage ; attaques parfaites optionnelles.
+Il n’existe pas de module indépendant Symbaroum dans le catalogue actuel : ces outils sont intégrés à la fiche.
+Éléna est fictive, les dés préparés et le profil jetable. Le pilote 2.0.0 reste inchangé.
+[Repères des chapitres](../../output/clips/symbaroum/chapitres.md).
+
 ## Le test
 
 ![Le panneau de jet de Symbaroum : un test de Précision, seuil 15](captures/jeu-symbaroum-jet.jpg)

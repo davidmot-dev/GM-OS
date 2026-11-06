@@ -1,0 +1,57 @@
+{
+  "dureeDepuisTitre": 194.469,
+  "dureeTournageTablette": 76.53,
+  "segmentsTablette": [
+    {
+      "debutMJ": 97.245,
+      "finMJ": 127.227,
+      "debutTablette": 3.61,
+      "finTablette": 33.592
+    },
+    {
+      "debutMJ": 144.099,
+      "finMJ": 177.263,
+      "debutTablette": 50.464,
+      "finTablette": 76.524
+    }
+  ],
+  "chapitres": [
+    {
+      "titre": "1 · Forcer un test, puis engager un Point de Récit",
+      "secondesDepuisTitre": 6.003
+    },
+    {
+      "titre": "2 · Des six… puis la Panique annule l’action",
+      "secondesDepuisTitre": 23.763
+    },
+    {
+      "titre": "3 · L’Air : une réserve, six dés au maximum",
+      "secondesDepuisTitre": 39.449
+    },
+    {
+      "titre": "4 · Combat spatial : modèles du livre et postes d’équipage",
+      "secondesDepuisTitre": 51.862
+    },
+    {
+      "titre": "5 · Maman prépare le M314 et ouvre les accès",
+      "secondesDepuisTitre": 75.11
+    },
+    {
+      "titre": "6 · Tablette : test réel puis question privée à MU/TH/UR",
+      "secondesDepuisTitre": 97.245
+    },
+    {
+      "titre": "7 · Côté MJ : une réponse privée, reçue par le joueur",
+      "secondesDepuisTitre": 127.227
+    },
+    {
+      "titre": "8 · Tablette : réponse, échos du M314 et ordre spatial",
+      "secondesDepuisTitre": 144.099
+    },
+    {
+      "titre": "9 · Le MJ révèle les ordres et retrouve le test du Hub",
+      "secondesDepuisTitre": 177.263
+    }
+  ],
+  "debutVideoTablette": 0
+}

@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-06",
+  "pilote": "Degenesis2.3.0",
+  "initial": {
+    "hp": 19,
+    "blessures_superficielles": 0,
+    "traumatismes": 0
+  },
+  "action": "Calculer, montant14, typephysique, bouton final Déclencher dégâts",
+  "attendu": {
+    "hp": 5,
+    "blessures_superficielles": 12,
+    "traumatismes": 2
+  },
+  "recu": {
+    "hp": 5,
+    "blessures_superficielles": 0,
+    "traumatismes": 0
+  },
+  "source": [
+    "src/modules/combat/components/DamageCalculator.tsx : applyDamage",
+    "src/modules/combat/useCombatStore.ts : branche des pistes limitée aux adversaires autonomes"
+  ],
+  "corrige": false,
+  "alternative": "Panneau de santé natif sur la carte, Intensité14, Physique, Infliger dégâts"
+}

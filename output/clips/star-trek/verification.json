@@ -1,0 +1,71 @@
+{
+  "version": "2.0.0",
+  "modules": [
+    "star-trek-lcars",
+    "star-trek-operations"
+  ],
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "modeRapide": false,
+  "dureeDepuisTitre": 230.411,
+  "chapitres": [
+    {
+      "titre": "1 · Deux d20, spécialisation et paiement en Menace",
+      "secondesDepuisTitre": 5.989
+    },
+    {
+      "titre": "2 · Assistance, aide du vaisseau et Détermination",
+      "secondesDepuisTitre": 27.736
+    },
+    {
+      "titre": "3 · Éviter une blessure, Stress et soins",
+      "secondesDepuisTitre": 51.031
+    },
+    {
+      "titre": "4 · La Réputation après la mission",
+      "secondesDepuisTitre": 75.767
+    },
+    {
+      "titre": "5 · LCARS : postes, intervention et réponse privée",
+      "secondesDepuisTitre": 88.247
+    },
+    {
+      "titre": "6 · Bataille spatiale : Boucliers, secousse et brèche",
+      "secondesDepuisTitre": 140.443
+    },
+    {
+      "titre": "7 · Tâches étendues et défis chronométrés",
+      "secondesDepuisTitre": 167.184
+    },
+    {
+      "titre": "8 · Alerte de passerelle et retour à la mission",
+      "secondesDepuisTitre": 206.099
+    }
+  ],
+  "exportVideo": {
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\star-trek-mecanismes-et-modules.webm",
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\star-trek-mecanismes-et-modules.mp4",
+    "secondesRetirees": 8.568999999999999,
+    "dureeMp4": 230.68,
+    "conversion": "MP4 H.264, chargement retiré ; WebM de tournage conservé."
+  },
+  "assertions": [
+    "2d20 et spécialisation, troisième dé choisi en Menace",
+    "Menace4 → 5 puis7, Impulsion2 → 3",
+    "assistant et aide native du vaisseau",
+    "Occasion parfaite : Détermination2 → 1",
+    "blessure évitée : Stress2 → 5 ; Répit → 1",
+    "Protection et blessure ; premiers secours confirmés",
+    "Réputation : trois points de Gloire",
+    "deux consoles attribuées et accès ouvert",
+    "vrai client Hub sans appBridge dans iframe de tournage",
+    "intervention science reçue dans état natif LCARS",
+    "réponse privée reçue dans le client",
+    "dégâts spatiaux : Boucliers15 → 3",
+    "tâche étendue3/6",
+    "défi6 → 4 intervalles",
+    "alerte rouge reçue au Hub"
+  ]
+}

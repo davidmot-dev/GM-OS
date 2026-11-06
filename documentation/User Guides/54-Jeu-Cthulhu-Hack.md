@@ -13,6 +13,16 @@ passagère** et le **Choc**, le **Hors Jeu**.
 
 ---
 
+## Le clip des mécanismes — 06/11/2026
+
+[Voir le clip MP4 (3 min 36)](../../output/clips/cthulhu-hack-mecanismes-et-outils.mp4) : huit chapitres, légendes françaises, sans voix.
+Sauvegarde, Fortune joueur/MJ, enquête et Matériel, armure, Santé mentale et Choc,
+durée des effets, Hors Jeu et variante Pulp, puis tables du jeu.
+Les outils sont intégrés à la fiche, Dice-OS, Combat-OS et Table-OS ; aucun module indépendant
+Cthulhu Hack au catalogue actuel. Personnages fictifs, valeurs d’exercice et dés préparés ;
+pilote1.1.0 inchangé, aucun réimport nécessaire pour ce film.
+[Repères des chapitres](../../output/clips/cthulhu-hack/chapitres.md).
+
 ## La Sauvegarde
 
 ![Le panneau de jet de Cthulhu Hack : une Sauvegarde de Sagesse, seuil 15](captures/jeu-cthulhu-hack-jet.jpg)

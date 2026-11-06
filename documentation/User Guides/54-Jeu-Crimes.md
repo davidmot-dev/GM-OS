@@ -22,6 +22,14 @@ HTML et ses spécialisations les nourrissent.
 
 ---
 
+## Le clip des mécanismes particuliers — 06/11/2026
+
+[Voir le clip MP4 (3 min 54)](../../output/clips/crimes-mecanismes.mp4) : huit chapitres, curseur et légendes françaises,
+sans voix. Jet et garde choisie, dépassement, atteintes et récupération, psychologie,
+dossier d’enquête, combat et munitions, contacts/fortune, création et développement.
+Affaire et personnages fictifs, dés préparés, vrais gestes dans une instance jetable.
+[Repères des chapitres](../../output/clips/crimes/chapitres.md).
+
 ## Le test : Potentiel GARDE Compétence
 
 ![Le panneau de jet de Crimes : Physique 5, Sport 2 — cinq dés, deux gardés, seuil 8](captures/jeu-crimes-jet.jpg)

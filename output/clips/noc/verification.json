@@ -1,0 +1,67 @@
+{
+  "version": "2.0.0",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "modeRapide": false,
+  "dureeDepuisTitre": 197.845,
+  "chapitres": [
+    {
+      "titre": "1 · Talent, Domaine et dés de destin",
+      "secondesDepuisTitre": 6.014
+    },
+    {
+      "titre": "2 · Vécu, Espoir et Singularité du Héros",
+      "secondesDepuisTitre": 33.245
+    },
+    {
+      "titre": "3 · Puiser dans les réserves de la Cabale",
+      "secondesDepuisTitre": 44.096
+    },
+    {
+      "titre": "4 · Les effets du Fiel, choisis par la Loi",
+      "secondesDepuisTitre": 63.103
+    },
+    {
+      "titre": "5 · Périls et Séquelles sur les vraies pistes",
+      "secondesDepuisTitre": 81.628
+    },
+    {
+      "titre": "6 · Moment de calme, Extase et Soupçon",
+      "secondesDepuisTitre": 109.502
+    },
+    {
+      "titre": "7 · Cabale, Réseau et Faveurs",
+      "secondesDepuisTitre": 124.472
+    },
+    {
+      "titre": "8 · Rouage hostile et recharge du scénario",
+      "secondesDepuisTitre": 163.644
+    }
+  ],
+  "exportVideo": {
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\noc-mecanismes-et-outils.webm",
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\noc-mecanismes-et-outils.mp4",
+    "secondesRetirees": 33.21500000000002,
+    "dureeMp4": 198.12,
+    "conversion": "MP4 H.264, chargement retiré ; WebM de tournage conservé."
+  },
+  "assertions": [
+    "sans dé : Talent seul",
+    "10 supplémentaire facultatif",
+    "Fiel 4 + 2 → 1, Menace 2 → 3",
+    "Vécu, Espoir et Singularité du Héros réellement dépensés",
+    "Cabale : pistes et stocks de scénario dépensés",
+    "deux Tensions puis Folie, Fatigue",
+    "piste HTML Trauma 8 puis Séquelle 1",
+    "Soupçon bloque le repos avant répartition",
+    "Extase donnée par Mara, récupération confirmée",
+    "Fiel −1 au repos de tous",
+    "fiche HTML de Cabale et Faveur réellement dépensée",
+    "absence de module indépendant constatée",
+    "Rouage : bénéficiaire obligatoire et Singularité +2",
+    "début de séance et nouveau scénario distincts",
+    "périls conservés au nouveau scénario"
+  ]
+}

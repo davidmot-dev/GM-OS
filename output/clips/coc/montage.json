@@ -1,0 +1,41 @@
+{
+  "dureeDepuisTitre": 236.083,
+  "debutTablette": 174.63,
+  "finTablette": 213.293,
+  "dureeTablette": 34.68,
+  "finTournageTablette": 1793990832814,
+  "chapitres": [
+    {
+      "titre": "1 · Un test, des conditions et des dés bonus ou malus",
+      "secondesDepuisTitre": 5.989
+    },
+    {
+      "titre": "2 · Héros : sauver le test ou acheter un avantage distinct",
+      "secondesDepuisTitre": 30.659
+    },
+    {
+      "titre": "3 · Une Voie référencée, un rang acquis, un contexte choisi",
+      "secondesDepuisTitre": 56.872
+    },
+    {
+      "titre": "4 · Un événement choquant, son choc et sa séquelle",
+      "secondesDepuisTitre": 79.304
+    },
+    {
+      "titre": "5 · PNJ par rôle, Santé Pulp et bande de sbires",
+      "secondesDepuisTitre": 107.579
+    },
+    {
+      "titre": "6 · Critique, DM, RD et conséquence de santé",
+      "secondesDepuisTitre": 142.37
+    },
+    {
+      "titre": "7 · Joueur tactile : Voie, jet, héros et fiche HTML",
+      "secondesDepuisTitre": 174.63
+    },
+    {
+      "titre": "8 · Retour au MJ : jet reçu, source et fiche synchronisée",
+      "secondesDepuisTitre": 213.293
+    }
+  ]
+}

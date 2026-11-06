@@ -1,0 +1,199 @@
+{
+  "mp4": "../alien-mecanismes-modules-et-tablette.mp4",
+  "dureeSecondes": 187.68,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 9.003
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 14.883000000000001
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 26.763
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 31.606
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 42.449
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 45.6555
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 54.862
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 63.486000000000004
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 78.11
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 86.17750000000001
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 100.245
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 112.236
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 130.227
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 135.663
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 147.099
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 157.129
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 173.159
+    },
+    {
+      "image": "film-19.jpg",
+      "secondes": 175.4195
+    },
+    {
+      "image": "film-20.jpg",
+      "secondes": 184.68
+    },
+    {
+      "image": "film-21.jpg",
+      "secondes": 96.845
+    },
+    {
+      "image": "film-22.jpg",
+      "secondes": 98.245
+    },
+    {
+      "image": "film-23.jpg",
+      "secondes": 126.827
+    },
+    {
+      "image": "film-24.jpg",
+      "secondes": 128.227
+    },
+    {
+      "image": "film-25.jpg",
+      "secondes": 143.699
+    },
+    {
+      "image": "film-26.jpg",
+      "secondes": 145.099
+    },
+    {
+      "image": "film-27.jpg",
+      "secondes": 169.75900000000001
+    },
+    {
+      "image": "film-28.jpg",
+      "secondes": 171.159
+    }
+  ],
+  "relecture": "18 scènes et 28 images du MP4 examinées ; titres, neuf chapitres et quatre raccords MJ/tablette compris.",
+  "build": "npm run build : réussi avant essais",
+  "lint": "eslint e2e/clipAlien.spec.ts outils/clips/monter_clip_alien.mjs : réussi",
+  "tablette": {
+    "client": "Hub HTTP/WebSocket réel sans appBridge",
+    "viewport": {
+      "largeur": 768,
+      "hauteur": 1024
+    },
+    "contexteTactile": true,
+    "touchersPlaywright": true,
+    "touchersRecus": 15,
+    "appareilPhysique": false,
+    "jetRecuMJ": true,
+    "questionPriveeRecueMJ": true,
+    "reponseMJRecue": true,
+    "echoRecuSansNomsPrives": true,
+    "ordreSpatialRecuMJ": true
+  },
+  "montage": {
+    "debutMJ": 9.550999999999998,
+    "debutT": 0,
+    "segments": [
+      {
+        "source": 0,
+        "debut": 0,
+        "fin": 97.545
+      },
+      {
+        "source": 1,
+        "debut": 3.61,
+        "fin": 33.592
+      },
+      {
+        "source": 0,
+        "debut": 127.527,
+        "fin": 144.399
+      },
+      {
+        "source": 1,
+        "debut": 50.464,
+        "fin": 76.524
+      },
+      {
+        "source": 0,
+        "debut": 177.56300000000002,
+        "fin": 194.769
+      }
+    ],
+    "raccords": [
+      97.545,
+      127.527,
+      144.399,
+      170.459
+    ],
+    "brutMJ": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\alien\\tournage-mj.webm",
+    "brutTablette": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\alien\\tournage-tablette.webm"
+  },
+  "registre": 228,
+  "limites": "Démonstration ciblée : pas de recette exhaustive du pilote, ni combat spatial complet (arrêt après révélation), ni blessures/soins, xénomorphes, équipement/catalogue, fin d’acte ou progression complète. Personnages et dés du panneau préparés ; test de batterie M314 aléatoire. Aucun appareil physique utilisé.",
+  "pilote": {
+    "archive": "output/clips/alien/pilote/ALIEN-1.9.0.gmos-driver",
+    "origine": "Export Dirvers/Alien_driver_gmos_1793655035463.gmos-driver",
+    "version": "1.9.0",
+    "sha256": "56415a94e0f45366c2a44fa1cae2b7f9858f3d5daf4891282cddd98c01ec13b1",
+    "modifie": false
+  },
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipAlien.spec.ts --reporter=list : 1 parcours normal réussi"
+}

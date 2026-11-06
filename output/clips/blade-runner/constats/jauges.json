@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-07",
+  "contexte": "Forçage physique humain, puis test mental depuis le Hub ; profil fictif",
+  "hp": 8,
+  "maxHp": 8,
+  "sante": 7,
+  "sangFroid": 4,
+  "attendu": "La jauge générique suit la Santé de la fiche sans réappliquer le coup",
+  "corrige": false
+}

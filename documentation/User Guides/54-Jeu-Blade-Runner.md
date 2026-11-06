@@ -7,7 +7,18 @@ lettre est un dé.
 
 ---
 
+## Le clip des mécanismes et du joueur sur tablette — 07/11/2026
+
+[Voir le clip MP4 (3 min 17)](../../output/clips/blade-runner-mecanismes-et-tablette.mp4) : huit chapitres, légendes françaises, sans voix.
+Dés échelonnés, soutien, forçage humain/réplicant, souvenir clé, stress, objet fétiche,
+blessures, initiative et protection, puis le vrai Hub tactile : test mental, Sang-froid
+et Humanité HTML reçus côté MJ. Écran émulé 768×1024 ; personnages fictifs, blessure et
+dés d’exercice préparés, pilote 2.0.0 inchangé. Aucun module indépendant dédié au
+catalogue actuel : les outils intégrés sont filmés.
+[Repères des chapitres](../../output/clips/blade-runner/chapitres.md).
+
 ## Le jet — les dés échelonnés
+
 
 ![Le panneau de jet de Blade Runner : Vigueur (B) donne un D10, Corps à corps (C) un D8 ; le soutien et le souvenir clé se règlent avant de lancer](captures/jeu-blade-runner-jet.jpg)
 

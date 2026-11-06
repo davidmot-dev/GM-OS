@@ -40,6 +40,15 @@ Validation globale de David : « ok tout est testé, commit et pousse ».
 
 ---
 
+## Le clip des mécanismes — 06/11/2026
+
+[Voir le clip MP4 (3 min 57)](../../output/clips/degenesis-mecanismes-et-outils.mp4) : huit chapitres avec légendes françaises, sans voix.
+Test d’action et Égo ; maxima ; jets liés ; round ; attaque et défense ; santé à deux pistes ;
+Sporulation/EX ; Brûlure et Potentiel. Les outils sont intégrés à la fiche et à Combat-OS :
+aucun module indépendant Degenesis au catalogue actuel. Personnages fictifs, valeurs d’exercice,
+dés préparés et profil jetable ; pilote2.3.0 inchangé, aucun réimport nécessaire pour ce film.
+[Repères des chapitres](../../output/clips/degenesis/chapitres.md).
+
 ## Le test d'action
 
 ![La préparation : Difficile (4), déplacement −2D, un point d'Égo — 6 dés](captures/jeu-degenesis-preparation.jpg)

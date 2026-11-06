@@ -23,6 +23,16 @@ la fiche forgée garde ses anciennes valeurs, sans qu'elles paraissent.
 
 ---
 
+## Le clip des mécanismes et du joueur sur tablette — 06/11/2026
+
+[Voir le clip MP4 (2 min 43)](../../output/clips/barbarians-of-lemuria-mecanismes-et-tablette.mp4) : sept chapitres, légendes françaises, sans voix.
+Carrières, difficulté, bonus/malus, héroïsme, doubles six/un et réaction, puis le vrai Hub :
+touchers Playwright, attaque reçue par le MJ, succès héroïque et fiche HTML synchronisée.
+Écran tactile émulé 768×1024 ; personnages fictifs, dés d’exercice préparés, pilote 2.0.0
+inchangé. La Vitalité à 11 est saisie manuellement. Aucun module indépendant dédié au
+catalogue actuel : les outils intégrés sont filmés.
+[Repères des chapitres](../../output/clips/bol/chapitres.md).
+
 ## Le jet d'action
 
 ![Le panneau de jet : Vigueur 3 et Barbare 2, seuil 5](captures/jeu-barbarians-jet.jpg)

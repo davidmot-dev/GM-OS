@@ -1,0 +1,67 @@
+{
+  "version": "2.0.0",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "modeRapide": false,
+  "dureeDepuisTitre": 163.697,
+  "chapitres": [
+    {
+      "titre": "1 · Un attribut, une opposition et un seul d20",
+      "secondesDepuisTitre": 6.011
+    },
+    {
+      "titre": "2 · Attaquer avec l’Avantage tactique",
+      "secondesDepuisTitre": 18.9
+    },
+    {
+      "titre": "3 · Se défendre, encaisser, survivre",
+      "secondesDepuisTitre": 38.167
+    },
+    {
+      "titre": "4 · Corruption, seuil et Stigmates",
+      "secondesDepuisTitre": 68.551
+    },
+    {
+      "titre": "5 · Déclarer la fin de scène",
+      "secondesDepuisTitre": 90.584
+    },
+    {
+      "titre": "6 · Valeurs dérivées, création et progression",
+      "secondesDepuisTitre": 100.657
+    },
+    {
+      "titre": "7 · Bourse et traversée de Davokar",
+      "secondesDepuisTitre": 116.687
+    },
+    {
+      "titre": "8 · Les options choisies par la table",
+      "secondesDepuisTitre": 140.046
+    }
+  ],
+  "exportVideo": {
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\symbaroum-mecanismes-et-outils.webm",
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\symbaroum-mecanismes-et-outils.mp4",
+    "secondesRetirees": 8.562999999999999,
+    "dureeMp4": 163.96,
+    "conversion": "MP4 H.264, chargement retiré ; WebM de tournage conservé."
+  },
+  "assertions": [
+    "seuil : 15 + (10−13) + 2 = 14",
+    "Avantage tactique, un seul d20 et +1D4",
+    "dégâts nets6 et choix lié à la douleur",
+    "Défense ratée et protection : Endurance10 → 6",
+    "second coup : Endurance0 et agonie",
+    "Test de mort6 poursuit l’agonie ; soin3 l’arrête",
+    "Corruption temporaire2 → 4, seuil5",
+    "franchissement noté : permanente1 → 2",
+    "Stigmate temporaire inscrit",
+    "fin de scène : temporaire0 et permanente2",
+    "création80 ; Adepte pour20 XP",
+    "bourse5.37 → 5.12",
+    "voyage20km/jour et guérison3 → 4",
+    "option activée : attaque parfaite sur1",
+    "absence de module indépendant au catalogue"
+  ]
+}

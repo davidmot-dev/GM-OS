@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-07",
+  "source": "src/types/donneesDeFiche.ts",
+  "accepte": false,
+  "erreurs": [
+    {
+      "code": "custom",
+      "path": [
+        "_gmos_blade_runner"
+      ],
+      "message": "Valeur de champ attendue ; seules les métadonnées réservées RdD, Alien et Cthulhu Hack acceptent du JSON structuré borné."
+    }
+  ],
+  "consequence": "Semence scalaire ; blessure préparée après chargement, aucun essai de reprise du suivi."
+}

@@ -43,6 +43,16 @@ Validation globale de David : « ok tout est testé, commit et pousse ».
 
 ---
 
+## Le clip des mécanismes et du joueur sur tablette — 06/11/2026
+
+[Voir le clip MP4 (3 min 52)](../../output/clips/coc-mecanismes-et-tablette.mp4) : huit chapitres, légendes françaises, sans voix.
+Test, héroïsme, Voies, choc psychique, PNJ/bandes, dégâts et santé, puis le vrai Hub joueur
+avec des touchers simulés par Playwright : choix de Furtif, jet, héros et édition de la fiche HTML.
+Les jets et modifications sont vérifiés côté MJ. Écran émulé768×1024, sans tablette physique.
+Aucun module indépendant COC au catalogue actuel ; les outils intégrés sont filmés.
+Personnages fictifs, valeurs d’exercice et dés préparés ; pilote2.2.0 d20 inchangé.
+[Repères des chapitres](../../output/clips/coc/chapitres.md).
+
 ## Le test
 
 ![La préparation : le couteau d'Amelia (+2) contre la DEF 14, une condition défavorable, un dé bonus — affaiblie (−3)](captures/jeu-coc-preparation.jpg)

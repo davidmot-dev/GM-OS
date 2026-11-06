@@ -1,0 +1,162 @@
+{
+  "mp4": "../blade-runner-mecanismes-et-tablette.mp4",
+  "dureeSecondes": 197.16,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 9.036
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 15.640999999999998
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 28.246
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 39.0015
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 55.757
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 60.8625
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 71.968
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 78.1435
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 90.319
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 102.44149999999999
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 120.564
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 131.2045
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 147.845
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 160.48399999999998
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 179.123
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 183.1415
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 194.16
+    },
+    {
+      "image": "film-19.jpg",
+      "secondes": 144.44500000000002
+    },
+    {
+      "image": "film-20.jpg",
+      "secondes": 145.845
+    },
+    {
+      "image": "film-21.jpg",
+      "secondes": 175.723
+    },
+    {
+      "image": "film-22.jpg",
+      "secondes": 177.123
+    }
+  ],
+  "relecture": "18 scènes et 22 images du MP4 examinées ; titres, huit chapitres et deux raccords MJ/tablette compris.",
+  "build": "npm run build : réussi avant essais",
+  "lint": "eslint e2e/clipBladeRunner.spec.ts outils/clips/monter_clip_blade_runner.mjs : réussi",
+  "tablette": {
+    "client": "Hub HTTP/WebSocket réel sans appBridge",
+    "viewport": {
+      "largeur": 768,
+      "hauteur": 1024
+    },
+    "contexteTactile": true,
+    "touchersPlaywright": true,
+    "touchersRecus": 6,
+    "appareilPhysique": false,
+    "jetRecuMJ": true,
+    "forcageSangFroid5vers4": true,
+    "sante7Conservee": true,
+    "humaniteHTML4RecueMJ": true
+  },
+  "montage": {
+    "debutMJ": 29.147000000000002,
+    "debutT": 0,
+    "segments": [
+      {
+        "source": 0,
+        "debut": 0,
+        "fin": 145.145
+      },
+      {
+        "source": 1,
+        "debut": 5.942,
+        "fin": 37.22
+      },
+      {
+        "source": 0,
+        "debut": 185.29600000000002,
+        "fin": 206.053
+      }
+    ],
+    "raccords": [
+      145.145,
+      176.423
+    ],
+    "brutMJ": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\blade-runner\\tournage-mj.webm",
+    "brutTablette": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\blade-runner\\tournage-tablette.webm"
+  },
+  "registre": 230,
+  "limites": "Exercices ciblés, sans combat complet ni recette exhaustive : les effets critiques de stress/Brisé, mort, premiers secours, main secourable, récupération, poursuites, fin de guérison et progression ne sont pas rejoués. Plaie mortelle et cartes3/7 préparées avant le générique ; dés d’exercice choisis. Humanité à4 saisie manuellement, sans bilan de fin de session. Le compteur de PV générique reste à8 malgré la Santé à7 : constat de raccord séparé. Aucun appareil physique utilisé. Le rechargement/import du suivi de blessure n’est pas testé : la semence refuse ce JSON structuré, posé après chargement pour le tournage (constat hors périmètre consigné au registre).",
+  "pilote": {
+    "archive": "output/clips/blade-runner/pilote/BR-2.0.0.gmos-driver",
+    "origine": "scratch/recette-br/BladeRunner_driver_gmos_finir.gmos-driver",
+    "version": "2.0.0",
+    "sha256": "e2cf871957931c9bb500270d51fa6260cbe1b93d0751624f089278dedf9d4446",
+    "modifie": false
+  },
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipBladeRunner.spec.ts --reporter=list : 1 parcours normal réussi"
+}

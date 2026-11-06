@@ -1,0 +1,113 @@
+{
+  "mp4": "../symbaroum-mecanismes-et-outils.mp4",
+  "dureeSecondes": 163.96,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 9.011
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 12.455499999999999
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 21.9
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 28.5335
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 41.167
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 53.359
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 71.551
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 79.5675
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 93.584
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 95.62049999999999
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 103.657
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 108.672
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 119.687
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 128.3665
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 143.046
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 148.503
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 160.96
+    }
+  ],
+  "relecture": "13 images de scènes et 18 images du MP4 examinées ; titres et huit chapitres compris.",
+  "build": "npm run build : réussi avant essais",
+  "lint": "eslint e2e/clipSymbaroum.spec.ts : réussi",
+  "constatHorsLot": {
+    "description": "Après dégâts puis soins, Endurance3 sur la fiche mais hp10 au cockpit dans le profil fictif.",
+    "preuve": "constats/cockpit-jauge.jpg",
+    "suivi": "registre §1bis",
+    "corrige": false
+  },
+  "pilote": {
+    "archive": "output/clips/symbaroum/pilote/Symbaroum-2.0.0.gmos-driver",
+    "origine": "scratch/recette-pilotes/Symbaroum_driver_gmos_finir.gmos-driver",
+    "version": "2.0.0",
+    "sha256": "d86f9cd37b8e07e384cc6029c1dba4f26d56f77032e472678985a543386b2884",
+    "modifie": false
+  },
+  "limites": [
+    "Sélection de mécanismes ; pas de recette exhaustive",
+    "Toutes les options, Talents, création HTML, import/rechargement, Hub et tablettes physiques non rejoués",
+    "Personnage fictif préparé avant le titre ; dés préparés"
+  ],
+  "manuel": {
+    "fichiers": 2,
+    "testsReussis": 36,
+    "echecs": 0
+  },
+  "diffCheck": "git diff --check : réussi",
+  "tournage": "npx playwright test e2e/clipSymbaroum.spec.ts --reporter=list : 1 parcours normal réussi"
+}

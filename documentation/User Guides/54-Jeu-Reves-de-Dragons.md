@@ -5,6 +5,15 @@
 Un d100 sous un **pourcentage**, lu dans la **table de résolution** du jeu, qui croise une
 caractéristique et un ajustement.
 
+## Le clip des mécanismes et du module TMR — 06/11/2026
+
+[Voir le clip MP4 (4 min 28)](../../output/clips/reve-de-dragon-mecanismes-et-tmr.mp4) : huit chapitres avec légendes françaises, sans voix.
+Table de résolution, fatigue/entraînement, phases du round, Château Dormant et Haut-Rêve,
+avec le module **Terres Médianes du Rêve** : accès, carte, montée et déplacements,
+débit réel sur la fiche, rencontre et maîtrise, sort en réserve, notes et journal.
+Nitouche et son adversaire sont fictifs ; profil jetable et dés préparés.
+[Repères des chapitres](../../output/clips/rdd/chapitres.md).
+
 ## La fiche du Voyageur — reprise et calculs
 
 La fiche consolidée se reçoit en réimportant le pilote R0 avec cette version de GM-OS.

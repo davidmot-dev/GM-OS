@@ -10,6 +10,15 @@ Le champ de points de vie erroné disparaît du gabarit. La préparation de cet 
 aucune campagne. Depuis le 25/10, l'export déclare aussi la **fiche de Maison** comme fiche de groupe :
 réimportez-le pour la voir paraître (voir « Les fiches HTML »).
 
+## Le clip des mécanismes et du module — 06/11/2026
+
+[Voir le clip MP4 (4 min 14)](../../output/clips/dune-mecanismes-et-modules.mp4) : huit chapitres, curseur et légendes françaises,
+sans voix. Tests 2d20, achat et aide, Impulsion, Détermination et maximes, progression,
+puis le module **Dune : conflits et Maison** : accès des personnages, fiche de Maison,
+Menace de séance, cinq arènes, zones reliées, enquête d’intrigue et atouts.
+Personnages fictifs de la Maison Vaëlan, dés préparés, actions dans une instance jetable.
+[Repères des chapitres](../../output/clips/dune/chapitres.md).
+
 ## Lancer un test
 
 ![Le jet de Dune](captures/jeu-dune-jet.jpg)
