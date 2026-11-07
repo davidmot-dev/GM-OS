@@ -153,3 +153,62 @@ export function ecartsDesLignes(pieces: readonly PieceAnnoncee[], premiereMoitie
     }
     return ecarts;
 }
+
+/** Ce qu'un lot apporte, une fois nettoyé, et ce qui en a été écarté. */
+export interface LotNettoye {
+    tableaux: string;
+    /** Lignes dont le nom figurait déjà au brouillon : le carnet a répété un tableau. */
+    doublons: number;
+    /** Lignes coupées en plein milieu (sans « | » final, ou un titre collé dedans). */
+    coupees: number;
+}
+
+const nomDeLaLigne = (ligne: string) => {
+    const premiere = ligne.trim().replace(/^\|/, '').split('|')[0] ?? '';
+    return normaliser(premiere.replace(/\*\*/g, ''));
+};
+const estUneRangee = (l: string) => l.trim().startsWith('|');
+const estUneSeparation = (l: string) => /^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/.test(l);
+
+/**
+ * Le lot nettoyé avant d'entrer au brouillon (07/11/2026, Barbarians of Lemuria). La forge du
+ * bestiaire avait recopié trois fois le même tableau, dont une coupée en pleine ligne
+ * (« …Exemples: chark### Tableau des profils ») : la liste annoncée nommait des catégories de
+ * taille, et chaque lot a rendu le même tableau. On écarte les lignes coupées et celles dont le nom
+ * est déjà au brouillon, puis les tableaux restés sans ligne ; on compte ce qu'on écarte, pour
+ * le dire à la relecture.
+ */
+export function nettoyerLeLot(brouillon: string, tableaux: string): LotNettoye {
+    const dejaVus = new Set(
+        brouillon.split(/\r?\n/).filter(l => estUneRangee(l) && /\*\*/.test(l)).map(nomDeLaLigne).filter(Boolean),
+    );
+    // Un titre collé au milieu d'une ligne coupe celle-ci : la ligne s'arrête là, le titre repart.
+    const lignes = tableaux.replace(/\r\n/g, '\n').split('\n')
+        .flatMap(l => { const i = l.indexOf('###'); return i > 0 ? [l.slice(0, i), l.slice(i)] : [l]; });
+    let doublons = 0, coupees = 0;
+    const gardees: string[] = [];
+    for (let i = 0; i < lignes.length; i++) {
+        const l = lignes[i];
+        const enTete = estUneRangee(l) && estUneSeparation(lignes[i + 1] ?? '');
+        if (!estUneRangee(l) || estUneSeparation(l) || enTete) { gardees.push(l); continue; }
+        if (!l.trim().endsWith('|')) { coupees++; continue; }
+        const nom = nomDeLaLigne(l);
+        if (nom && /\*\*/.test(l) && dejaVus.has(nom)) { doublons++; continue; }
+        if (nom) dejaVus.add(nom);
+        gardees.push(l);
+    }
+    // Les tableaux sans ligne : leur titre, leur en-tête et leur séparation disparaissent ensemble.
+    const sortie: string[] = [];
+    for (let i = 0; i < gardees.length; i++) {
+        const l = gardees[i];
+        if (/^###\s/.test(l.trim())) {
+            let j = i + 1;
+            while (j < gardees.length && !gardees[j].trim()) j++;
+            const avecEnTete = estUneRangee(gardees[j] ?? '') && estUneSeparation(gardees[j + 1] ?? '');
+            const premiereRangee = avecEnTete ? gardees[j + 2] : undefined;
+            if (avecEnTete && !(premiereRangee && estUneRangee(premiereRangee) && !estUneSeparation(premiereRangee))) { i = j + 1; continue; }
+        }
+        sortie.push(l);
+    }
+    return { tableaux: sortie.join('\n').replace(/\n{3,}/g, '\n\n').trim(), doublons, coupees };
+}

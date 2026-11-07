@@ -6,7 +6,7 @@ import type { GameDriver } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
 import type { BrainstormCandidate, BrainstormCard } from './rules/types';
 import { gabaritInventaire, gabaritInventaireDeSupplement, gabaritFicheRegle, gabaritFicheTableaux, gabaritEnteteDesTableaux, gabaritDesTableaux, gabaritFichePratique, promptVoix, promptPersonas, type OptionsGabarit } from './rules/gabarits';
-import { ajouterAuBrouillon, decouperEnLots, ecartsDesLignes, lireLesPiecesAnnoncees, lotDejaRecopie, porteLaListeDesTableaux, premiereMoitieAssemblee, tableauxDeLaReponse, type NatureDesTableaux } from './rules/tableauxParRequete';
+import { ajouterAuBrouillon, decouperEnLots, ecartsDesLignes, lireLesPiecesAnnoncees, lotDejaRecopie, nettoyerLeLot, porteLaListeDesTableaux, premiereMoitieAssemblee, tableauxDeLaReponse, type NatureDesTableaux } from './rules/tableauxParRequete';
 import { natureDuSujet } from './rules/natureDuSujet';
 import { lireInventaire } from './rules/inventaire';
 import { retirerLesRenvoisDuCarnet } from './renvoisDuCarnet';
@@ -734,7 +734,11 @@ ${pratique.trim()}`;
       const reponse = retirerLesRenvoisDuCarnet(
         await this.interrogerCarnet(notebookId, gabaritDesTableaux(sujet, nature, lot, gabarit), sourceIds),
       );
-      brouillon = ajouterAuBrouillon(brouillon, tableauxDeLaReponse(reponse));
+      // Les lignes répétées ou coupées par le carnet n'entrent pas au brouillon (Barbarians, 07/11/2026).
+      const lu = nettoyerLeLot(brouillon, tableauxDeLaReponse(reponse));
+      if (lu.doublons) ecarts.push(`Lot ${rang + 1} : ${lu.doublons} ligne(s) déjà reçue(s) écartée(s) — le carnet a répété un tableau.`);
+      if (lu.coupees) ecarts.push(`Lot ${rang + 1} : ${lu.coupees} ligne(s) coupée(s) écartée(s) — la réponse du carnet s'est interrompue.`);
+      brouillon = ajouterAuBrouillon(brouillon, lu.tableaux);
       options?.surMoitie?.(brouillon);
     }
     options?.surEtape?.({ fait: lots.length, total: lots.length });

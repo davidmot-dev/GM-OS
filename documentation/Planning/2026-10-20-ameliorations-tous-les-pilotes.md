@@ -303,6 +303,15 @@ moitié, armure) ; le coût de la magie en points de pouvoir ; les points de vil
 **Cas témoin :** Krongar, Vigueur 3 et Barbare 2, enfonce une porte Ardue : 2d6 + 4, un 4 et un 6
 font 14, réussi ; un double 1 échoue même à +12.
 
+**Catalogue et bestiaire, le 07/11/2026** (David : *« je viens de finir Barbarians of Lemuria,
+vérifie »*) : forgés par David avec les nouveaux sujets du canevas, puis vérifiés contre le livre.
+L'équipement était juste (32 objets : 18 armes, 7 protections, 7 navires ; F4 : 32 sur 32) — armes
+séparées en mêlée et tir, échelle des dégâts écartée du catalogue. Le bestiaire ne l'était pas (trois
+copies des catégories de taille, aucune des créatures) : **transcrit du livre** —
+`rules/bestiaire-et-adversaires.md`, 47 créatures, 4 morts-vivants, 3 démons, 12 PNJ coriaces et 3
+rivaux, 69 profils lus sans constat, et les tables de création en référence (p. 106-137). **Essai de
+David attendu** : « Remplir depuis le corpus » du bestiaire (69 profils) et du catalogue (32 objets).
+
 ## Blade Runner
 
 **Clip Playwright livré le 07/11/2026 :** [MP4 de 3 min 17](../../output/clips/blade-runner-mecanismes-et-tablette.mp4), huit chapitres : D10/D8, seuils de six et dix, soutien apportant son dé ; forçage humain avec relance volontaire d’une réussite, deux forçages du réplicant et crâne payé une seule fois ; souvenir clé consommé pour la séance ; stress subi puis objet fétiche ; blessure mortelle préparée, sauvegarde, stabilisations Round→Quart→hors de danger, soins et guérison en cours ; échange des cartes3/7 et protection2D8 ; test et forçage mental depuis le vrai Hub tactile ; Humanité HTML et réception MJ. Pilote 2.0.0 inchangé, aucun module indépendant dédié au catalogue. Vrai Hub HTTP/WebSocket dans Edge jetable, contexte mobile/tactile 768×1024 sans appBridge ; 6 touchstart relevés dans le client principal. Le test mental et son forçage sont reçus chez le MJ ; Sang-froid5→4, Santé7 conservée ; Humanité4 saisie dans la fiche HTML et reçue côté MJ. Touchers par tap(), sélections HTML ; aucun clavier tactile natif filmé. Deux raccords MJ/tablette contrôlés. [Repères et vérifications](../../output/clips/blade-runner/README.md), registre § 230. Dix-huit scènes et vingt-deux images du film relues. Exercices ciblés, sans combat complet ni recette exhaustive : les effets critiques de stress/Brisé, mort, premiers secours, main secourable, récupération, poursuites, fin de guérison et progression ne sont pas rejoués. Plaie mortelle et cartes3/7 préparées avant le générique ; dés d’exercice choisis. Humanité à4 saisie manuellement, sans bilan de fin de session. Le compteur de PV générique reste à8 malgré la Santé à7 : constat de raccord séparé. Aucun appareil physique utilisé. Le rechargement/import du suivi de blessure n’est pas testé : la semence refuse ce JSON structuré, posé après chargement pour le tournage (constat hors périmètre consigné au registre).

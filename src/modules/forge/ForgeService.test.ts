@@ -358,6 +358,19 @@ ${liste}`;
         expect(card.content).toContain('**Gilet rigide**');
       });
 
+      it('F3 : un lot qui répète un tableau déjà reçu n’entre pas, et la relecture le dit', async () => {
+        // Barbarians of Lemuria, 07/11/2026 : le même tableau rendu par chaque lot.
+        callTool
+          .mockResolvedValueOnce({ content: ENTETE('| Armes de contact | 10 |\n| Armures | 10 |') })
+          .mockResolvedValueOnce({ content: CONTACT })
+          .mockResolvedValueOnce({ content: `${CONTACT}\n\n${ARMURES}` })
+          .mockResolvedValueOnce({ content: SECONDE_MOITIE });
+        const card = await forgeService.forgeCard('nb-1', equipements, 'coc');
+        expect(card.content.match(/\*\*Machette\*\*/g)).toHaveLength(1);
+        expect(card.content).toContain('**Gilet rigide**');
+        expect(card.avertissements).toContain('Lot 2 : 2 ligne(s) déjà reçue(s) écartée(s) — le carnet a répété un tableau.');
+      });
+
       it('F3 : un en-tête sans liste retombe sur la requête unique de F2', async () => {
         callTool
           .mockResolvedValueOnce({ content: '## Métadonnées\n- sujet : Equipements et Objets\n\n## Règle\nRien.' })

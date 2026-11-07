@@ -410,8 +410,9 @@ tableau du livre sur ce sujet (armes, protections, véhicules, matériel, prix) 
 « Tableau » = le titre exact de sa section, tel qu'imprimé ; « Lignes » = le
 nombre d'objets qu'il décrit, en chiffres. Ne recopie PAS les tableaux eux-mêmes.`
     : `Un TABLEAU MARKDOWN de deux colonnes, « Créature | Section » : une ligne par
-créature ou adversaire dont le livre donne un profil chiffré ; « Section » = le
-titre exact de la section où figure son profil. Ne recopie PAS les profils.`;
+créature ou adversaire NOMMÉ dont le livre donne un profil chiffré (une espèce,
+un PNJ) — pas une catégorie de taille, ni une table de création ; « Section » =
+le titre exact de la section où figure son profil. Ne recopie PAS les profils.`;
   const supplement = options?.supplement
     ? `- Ce sujet vient du SUPPLÉMENT « ${options.supplement} ». Appuie-toi sur lui seul.
 ${consigneDeLangueDuSupplement(options.langue)}`

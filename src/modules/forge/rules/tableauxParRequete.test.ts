@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-    ajouterAuBrouillon, decouperEnLots, ecartsDesLignes, lireLesPiecesAnnoncees, lotDejaRecopie, porteLaListeDesTableaux,
+    ajouterAuBrouillon, decouperEnLots, ecartsDesLignes, lireLesPiecesAnnoncees, lotDejaRecopie, nettoyerLeLot, porteLaListeDesTableaux,
     premiereMoitieAssemblee, tableauxDeLaReponse,
 } from './tableauxParRequete';
 
@@ -119,5 +119,58 @@ describe('F3 — le contrôle des lignes', () => {
         const md = '## Valeurs\n\n| Créature | DEF |\n| --- | --- |\n| **Figurant** | 10 |';
         expect(ecartsDesLignes([{ titre: 'Figurant', attendu: null }, { titre: 'Premier rôle', attendu: null }], md, 'creatures'))
             .toEqual(['Créatures annoncées sans profil recopié (1 sur 2) : Premier rôle.']);
+    });
+});
+
+/*
+ * Barbarians of Lemuria, 07/11/2026 : le carnet a rendu trois fois le même tableau, dont une coupée
+ * en pleine ligne (« …Exemples: chark### Tableau des profils »). Le lot se nettoie avant d'entrer.
+ */
+describe('F3 — le lot nettoyé', () => {
+    const DEJA = ajouterAuBrouillon(ENTETE, `### Tableau des profils
+
+| Créature | Vigueur | Vitalité |
+| --- | --- | --- |
+| **Créature minuscule** | -3 | 1 |
+| **Créature grande** | 4 | 20 |`);
+
+    it('un tableau déjà reçu, répété et coupé : rien n’entre, et les écarts sont comptés', () => {
+        const lot = `### Tableau des profils
+
+| Créature | Vigueur | Vitalité |
+| --- | --- | --- |
+| **Créature minuscule** | -3 | 1 |
+| **Créature grande** | 4 | 20 |
+| **Créature massive** | 10 | 50 | Exemples: chark### Tableau des profils
+
+| Créature | Vigueur | Vitalité |
+| --- | --- | --- |
+| **Créature minuscule** | -3 | 1 |`;
+        const r = nettoyerLeLot(DEJA, lot);
+        expect(r).toMatchObject({ tableaux: '', doublons: 3, coupees: 1 });
+    });
+
+    it('un lot neuf entre tel quel ; seules ses lignes répétées s’écartent', () => {
+        const lot = `### Tableau des profils des PNJ
+
+| Créature | Vigueur | Vitalité |
+| --- | --- | --- |
+| **Archer de Tyrus** | 1 | 7 |
+| **Créature grande** | 4 | 20 |
+| **Assassin halakhi** | 0 | 6 |`;
+        const r = nettoyerLeLot(DEJA, lot);
+        expect(r.doublons).toBe(1);
+        expect(r.coupees).toBe(0);
+        expect(r.tableaux).toContain('**Archer de Tyrus**');
+        expect(r.tableaux).toContain('**Assassin halakhi**');
+        expect(r.tableaux).not.toContain('Créature grande');
+        expect(r.tableaux).toContain('| --- | --- | --- |');
+    });
+
+    it('« Absent des sources » et les lignes sans nom en gras (tables d’attaques) passent', () => {
+        const lot = 'Absent des sources : Démons\n\n### Tableau des attaques de Drakk\n\n| D6 | Attaque |\n| --- | --- |\n| 1 | **Morsure** : d6B |';
+        const r = nettoyerLeLot(DEJA, lot);
+        expect(r.tableaux).toBe(lot);
+        expect(r).toMatchObject({ doublons: 0, coupees: 0 });
     });
 });
