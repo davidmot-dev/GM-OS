@@ -7,7 +7,8 @@ import { ServiceDesModules } from './modulesDuJeu/service';
 import { stockageDesModules } from './modulesDuJeu/stockage';
 import type { StockageDesModules } from './modulesDuJeu/stockage';
 import { objetSimple, identifiantDeTable } from '../src/modules/modulesDuJeu/protocole';
-import type { ContexteDesModules, RequeteDeModule, SauvegardeDesModules } from '../src/modules/modulesDuJeu/protocole';
+import type { ContexteDesModules, RequeteDeModule, SauvegardeDesModules, VueDesModulesMJ } from '../src/modules/modulesDuJeu/protocole';
+import { demandeDuMeneur } from './modulesDuJeu/demandesDuMeneur';
 import http from 'node:http';
 import type { Socket } from 'node:net';
 import { WebSocketServer, WebSocket } from 'ws';
@@ -99,6 +100,12 @@ export class SyncServer {
     }
     private reprisesDesModules = new Map<string, string>();
     private jetonMediasMJ = randomBytes(32).toString('hex');
+    /** Un jeton de médias par socket de la tablette du meneur, jamais partagé avec le poste. */
+    private jetonsDuMeneur = new WeakMap<WebSocket, string>();
+    /** La tablette du meneur : une socket inscrite avec le secret d'appairage (rôle `remote` ou `gm`). */
+    private estLeMeneur(ws: ExtendedWebSocket) {
+        return !!ws.deviceId && !!ws.role && PRIVILEGED_ROLES.includes(ws.role);
+    }
     private sessionsMedia = new WeakMap<WebSocket, { identite: NonNullable<ExtendedWebSocket['identiteModules']>; jeton: string }>();
     private sessionMedia(ws: ExtendedWebSocket, identite: NonNullable<ExtendedWebSocket['identiteModules']>) {
         let session = this.sessionsMedia.get(ws);
@@ -123,6 +130,9 @@ export class SyncServer {
             if (egal(this.jetonMediasMJ) && ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress || '') && !this.mainWindow.isDestroyed()) return { role: 'mj', appareilId: 'poste-mj' };
             for (const client of this.wss?.clients ?? []) {
                 const ws = client as ExtendedWebSocket, session = this.sessionsMedia.get(ws);
+                // La tablette du meneur appairée lit les médias de la vue MJ, avec le jeton de SA socket.
+                const jetonDuMeneur = this.jetonsDuMeneur.get(ws);
+                if (ws.readyState === WebSocket.OPEN && this.estLeMeneur(ws) && jetonDuMeneur && egal(jetonDuMeneur)) return { role: 'mj', appareilId: 'poste-mj' };
                 if (ws.readyState === WebSocket.OPEN && ws.identiteModules?.personnageId && session?.identite === ws.identiteModules && egal(session.jeton))
                     return { role: 'joueur', personnageId: ws.identiteModules.personnageId, appareilId: ws.identiteModules.appareilId };
             }
@@ -456,6 +466,8 @@ export class SyncServer {
                     this.handleRegister(ws, data.payload);
                 } else if (data.type === 'remote:ping') {
                     ws.send(JSON.stringify({ type: 'remote:pong', payload: data.payload }));
+                } else if (typeof data.type === 'string' && data.type.startsWith('modules:mj:')) {
+                    void this.traiterCommandeDuMeneur(ws, data);
                 } else if (typeof data.type === 'string' && data.type.startsWith('modules:')) {
                     void this.traiterCommandeDeModule(ws, data);
                 } else {
@@ -534,6 +546,11 @@ export class SyncServer {
             // L'identité privée est portée par la socket qui a réussi son inscription.
             // Une collision ne laisse donc ni rôle, ni personnage utilisable pour les modules.
             if (ws.deviceId && ws.deviceId !== actualDeviceId) this.deviceSocketMap.get(ws.deviceId)?.delete(ws);
+            // Une socket qui se réinscrit sans le secret perd la vue du meneur sur-le-champ.
+            if (this.estLeMeneur(ws) && !PRIVILEGED_ROLES.includes(claimedRole)) {
+                this.jetonsDuMeneur.delete(ws);
+                ws.send(JSON.stringify({ type: 'modules:mj:fermes' }));
+            }
             ws.deviceId = actualDeviceId; ws.role = claimedRole;
             if (!this.deviceSocketMap.has(actualDeviceId)) this.deviceSocketMap.set(actualDeviceId, new Set());
             for (const autre of this.deviceSocketMap.get(actualDeviceId) ?? []) {
@@ -612,10 +629,74 @@ export class SyncServer {
     }
 
     private async diffuserLesModules() {
-        const vueMJ = this.projeterRessources(await this.modulesDuJeu.vueMJ(), this.jetonMediasMJ, true);
+        const brute = await this.modulesDuJeu.vueMJ();
+        const vueMJ = this.projeterRessources(brute, this.jetonMediasMJ, true);
         vueMJ.appareils = this.appareilsDesModules();
         if (!this.mainWindow.isDestroyed()) this.mainWindow.webContents.send('modules:changement', vueMJ);
-        if (this.wss) await Promise.all([...this.wss.clients].map(ws => this.rendreLesModules(ws as ExtendedWebSocket)));
+        if (this.wss) await Promise.all([...this.wss.clients].map(async client => {
+            const ws = client as ExtendedWebSocket;
+            await this.rendreLesModules(ws);
+            this.rendreLaVueDuMeneur(ws, brute);
+        }));
+    }
+
+    /**
+     * **La vue du meneur pour sa tablette** — 07/11/2026, David : « activer les modules de jeu
+     * dans la tablette de Game Master » (plan `2026-11-07-modules-du-jeu-tablette-du-meneur.md`).
+     * La même vue que le poste, à deux différences : **sans `sauvegarde`** — elle porte les
+     * données de toutes les campagnes et n'a rien à faire sur le réseau —, et des médias servis
+     * avec le jeton de cette socket, par une URL relative, comme pour les joueurs.
+     */
+    private rendreLaVueDuMeneur(ws: ExtendedWebSocket, brute: VueDesModulesMJ) {
+        if (!this.estLeMeneur(ws) || ws.readyState !== WebSocket.OPEN) return;
+        let jeton = this.jetonsDuMeneur.get(ws);
+        if (!jeton) { jeton = randomBytes(32).toString('hex'); this.jetonsDuMeneur.set(ws, jeton); }
+        const { sauvegarde: _sauvegarde, ...sansSauvegarde } = brute;
+        const vue = { ...this.projeterRessources(sansSauvegarde, jeton), appareils: this.appareilsDesModules() };
+        ws.send(JSON.stringify({ type: 'modules:mj:vue', payload: vue }));
+    }
+
+    /**
+     * **Les gestes du meneur depuis sa tablette.** Réservés à une socket appairée : ailleurs, le
+     * message est ignoré et journalisé, sans réponse — inutile d'apprendre à un joueur ce qui
+     * existe. Le contexte (campagne, séance, pilote), l'import et l'acquittement des fiches
+     * restent au poste. Les commandes sont jouées au nom du poste (`poste-mj`) : la tablette
+     * pilote les effets du poste, elle n'en joue aucun elle-même (décision du plan, § 4).
+     */
+    private async traiterCommandeDuMeneur(ws: ExtendedWebSocket, message: MessageRecu) {
+        if (ws.readyState !== WebSocket.OPEN) return;
+        if (!this.estLeMeneur(ws)) {
+            auditDenied(`Geste de meneur '${message.type}' refusé à ${ws.remoteAddress} (appareil '${ws.deviceId ?? 'inconnu'}') : appareil non appairé`);
+            return;
+        }
+        if (message.type === 'modules:mj:consulter') { this.rendreLaVueDuMeneur(ws, await this.modulesDuJeu.vueMJ()); return; }
+        const charge = message.payload;
+        if (!objetSimple(charge) || typeof charge.requeteId !== 'string' || !/^[a-zA-Z0-9-]{1,100}$/.test(charge.requeteId)) return;
+        const requeteId = charge.requeteId, role = ws.role;
+        const repondre = (ok: boolean, erreur?: string) => {
+            if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'modules:mj:resultat', payload: { requeteId, ok, ...(erreur ? { erreur } : {}) } }));
+        };
+        const compteur = this.commandesDesModules.get(ws) ?? { instant: Date.now(), nombre: 0, dejaVues: new Set<string>() };
+        if (Date.now() - compteur.instant > 10000) { compteur.instant = Date.now(); compteur.nombre = 0; }
+        if (++compteur.nombre > 30 || compteur.dejaVues.has(requeteId) || JSON.stringify(charge).length > 64000) { repondre(false, 'Commande refusée. Attends un instant avant de réessayer.'); return; }
+        compteur.dejaVues.add(requeteId);
+        if (compteur.dejaVues.size > 128) compteur.dejaVues.delete(compteur.dejaVues.values().next().value!);
+        this.commandesDesModules.set(ws, compteur);
+        const demande = demandeDuMeneur(message.type, charge);
+        if (!demande) { repondre(false, 'Demande illisible.'); return; }
+        // Le rôle est relu après chaque attente : une réinscription sans le secret arrête tout.
+        const toujoursLeMeneur = () => ws.readyState === WebSocket.OPEN && ws.role === role && this.estLeMeneur(ws);
+        try {
+            if (demande.type === 'commander') await this.modulesDuJeu.commander(demande.requete, { role: 'mj', appareilId: 'poste-mj' }, toujoursLeMeneur);
+            else if (demande.type === 'autoriser') await this.modulesDuJeu.autoriser(demande.demande);
+            else if (demande.type === 'tout-couper') await this.modulesDuJeu.toutCouper(demande.demande);
+            else {
+                const appareil = demande.demande.appareilId === 'poste-mj' ? { id: 'poste-mj' } : this.appareilsDesModules().find(a => a.id === demande.demande.appareilId);
+                if (!appareil) throw new Error('Cet appareil n’est plus connecté.');
+                await this.modulesDuJeu.choisirDiffusion(demande.demande, appareil);
+            }
+            repondre(true);
+        } catch (e) { repondre(false, e instanceof Error && e.message ? e.message : 'Commande du module refusée.'); }
     }
     private appareilsDesModules() {
         const appareils = new Map<string, { id: string; libelle: string; personnageId: string }>();

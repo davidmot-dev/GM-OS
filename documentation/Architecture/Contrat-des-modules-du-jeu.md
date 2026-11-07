@@ -207,6 +207,26 @@ filtre s'applique avant l'envoi, pour l'état complet, les mises à jour et la
 reconnexion. Les secrets NE DOIVENT PAS entrer dans le flux commun des
 campagnes, les journaux techniques ou les messages d'erreur publics.
 
+### 6.1 · Le meneur sur sa tablette (07/11/2026)
+
+La tablette du meneur reçoit la vue MJ et en joue les gestes par la WebSocket, sous une famille
+de messages distincte : `modules:mj:consulter | commander | autoriser | tout-couper | diffusion`
+envoyés, `modules:mj:vue | resultat | fermes` reçus
+([plan](../Planning/2026-11-07-modules-du-jeu-tablette-du-meneur.md)).
+
+- Ces messages NE SONT ACCEPTÉS que d'une socket inscrite **avec le secret d'appairage** (rôle
+  `remote` ou `gm`). Ailleurs, ils sont ignorés sans réponse et journalisés ; une réinscription
+  sans le secret envoie `modules:mj:fermes`.
+- La charge est relue champ par champ (`electron/modulesDuJeu/demandesDuMeneur.ts`) : une clé de
+  trop la refuse. Mêmes bornes que pour un joueur (débit, rejeu d'un `requeteId`, taille).
+- La commande est jouée **au nom du poste** (`{ role: 'mj', appareilId: 'poste-mj' }`) : la
+  tablette pilote les effets du poste et n'en joue aucun elle-même.
+- La vue envoyée NE CONTIENT PAS `sauvegarde` ; les médias privés y portent le jeton propre à la
+  socket et une adresse relative.
+- Restent au poste, par l'IPC seulement : le contexte, l'import et l'acquittement des écritures
+  de fiche. Un pupitre qui lit les données du poste reçoit `lieu: 'tablette'` et y renonce en le
+  disant (raccord des TMR, fiche de Maison de Dune).
+
 ## 7 · Sauvegarde et cycle de vie
 
 Une sauvegarde contient `moduleId`, `versionDonnees` et `donnees`, indexés

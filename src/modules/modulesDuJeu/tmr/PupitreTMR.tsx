@@ -64,8 +64,16 @@ function RaccordVoyageur({ voyageur: v, campagneId, envoyer }: { voyageur: Voyag
         </>}
     </section>;
 }
-export function PupitreTMR({ vue, envoyerCommande }: { vue: VueTMRMJ; envoyerCommande: Envoyer }) {
+export function PupitreTMR({ vue, envoyerCommande, surLePoste = true }: { vue: VueTMRMJ; envoyerCommande: Envoyer; surLePoste?: boolean }) {
     const campagneId = useModulesDuJeuMJ(s => s.vue?.campagneId);
-    return <>{campagneId && vue.voyageurs.filter(v => v.demande || v.ecriture).map(v => <RaccordVoyageur key={`${v.id}:${v.demande?.operationId ?? v.ecriture?.id}`} voyageur={v} campagneId={campagneId} envoyer={envoyerCommande} />)}
+    const enAttente = vue.voyageurs.filter(v => v.demande || v.ecriture);
+    /*
+      Le raccord à la fiche lit et écrit la fiche persistée du poste : sur la tablette du meneur
+      (07/11/2026), il reste au poste. La tablette dit qui attend, sans rien débiter.
+    */
+    if (!surLePoste) return <>{enAttente.length > 0 && <p role="status" className="tmr-aide mb-3">
+        {enAttente.map(v => v.nom).join(', ')} : coût du trajet à confirmer au poste MJ, qui écrit sur la fiche.</p>}
+        <VuesTMR vue={vue} envoyerCommande={envoyerCommande} /></>;
+    return <>{campagneId && enAttente.map(v => <RaccordVoyageur key={`${v.id}:${v.demande?.operationId ?? v.ecriture?.id}`} voyageur={v} campagneId={campagneId} envoyer={envoyerCommande} />)}
         <VuesTMR vue={vue} envoyerCommande={envoyerCommande} /></>;
 }

@@ -119,4 +119,17 @@ describe('useRemoteSync', () => {
         act(() => { vi.advanceTimersByTime(1000); }); // 2000ms passed, triggers retry
         expect(mockWebSocketSpy).toHaveBeenCalledTimes(3);
     });
+
+    it('les modules du jeu : redemande la vue une fois appairée, l’affiche, la perd à la déconnexion (07/11/2026)', () => {
+        const { result } = renderHook(() => useRemoteSync());
+        act(() => { vi.advanceTimersByTime(0); });
+        act(() => { mockWebSocket.readyState = 1; mockWebSocket.onopen!(); });
+        act(() => { mockWebSocket.onmessage!({ data: JSON.stringify({ type: 'remote:registered', payload: { role: 'remote' } }) }); });
+        expect(mockWebSocket.send.mock.calls.map(([m]) => JSON.parse(m).type)).toContain('modules:mj:consulter');
+        const vue = { campagneId: 'a', contexte: 1, revision: 1, modules: [{ id: 'alien-muthur', libelle: 'MU/TH/UR 6000', revision: 1, acces: [], vue: {} }] };
+        act(() => { mockWebSocket.onmessage!({ data: JSON.stringify({ type: 'modules:mj:vue', payload: vue }) }); });
+        expect(result.current.vueDesModules?.modules[0].id).toBe('alien-muthur');
+        act(() => { mockWebSocket.onclose!(); });
+        expect(result.current.vueDesModules).toBeNull();
+    });
 });

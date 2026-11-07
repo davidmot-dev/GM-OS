@@ -14081,10 +14081,21 @@ David : « peux-tu faire un clips avec Playright les mécanismes particulier de 
 - **Vérifié :** build, lint, répétition et tournage normal ; assertions sur réussites, forçages, coûts, usages de séance, stress, blessures, cartes, protection et échanges tactiles réels. Dix-huit scènes et vingt-deux images du MP4 relues, titres et deux raccords compris ; ffprobe contrôlé. Montage reproductible : outils/clips/monter_clip_blade_runner.mjs.
 - **Reste :** ouvrir le film ; [note de reprise](2026-11-07-etat-et-reprise-codex-clip-blade-runner.md). Exercices ciblés, sans combat complet ni recette exhaustive : les effets critiques de stress/Brisé, mort, premiers secours, main secourable, récupération, poursuites, fin de guérison et progression ne sont pas rejoués. Plaie mortelle et cartes3/7 préparées avant le générique ; dés d’exercice choisis. Humanité à4 saisie manuellement, sans bilan de fin de session. Le compteur de PV générique reste à8 malgré la Santé à7 : constat de raccord séparé. Aucun appareil physique utilisé. Le rechargement/import du suivi de blessure n’est pas testé : la semence refuse ce JSON structuré, posé après chargement pour le tournage (constat hors périmètre consigné au registre). Aucun code applicatif ou pilote modifié, paquet installé ou profil personnel utilisé. Services locaux jetables déjà autorisés ; aucun commit/push demandé. Clips précédents et changements étrangers conservés.
 
+### 233 · Les modules du jeu sur la tablette du meneur — 07/11/2026
+
+David : « peux-tu me faire le plan pour activer les modules de jeu dans la tablette de Game Master », puis « commence » et, sur la maquette Stitch, « je suis d'accord avec la maquette continue ». GM-OS déclaré fermé.
+
+- **Livré, essai de David attendu :** un neuvième onglet **Modules** sur la tablette du meneur — accès par personnage, son de l'alarme, Tout couper, pupitre de chaque module en plein écran. Le poste et la tablette partagent un même panneau (`PanneauDesModulesMJ`) ; le poste garde son écran.
+- **Transport :** messages `modules:mj:*` acceptés d'une socket appairée seulement, charges relues champ par champ, commandes jouées au nom du poste, vue sans `sauvegarde`, jeton de médias par socket. Contexte, import et écriture des fiches restent au poste ; les pupitres des TMR et de Dune le disent sur la tablette.
+- **Ancres :** `SyncServer.traiterCommandeDuMeneur`, `demandesDuMeneur.ts`, `canalMeneur.ts`, `PanneauDesModulesMJ.tsx`, `RemoteModulesDuJeu.tsx`, `useRemoteSync`. [Plan](2026-11-07-modules-du-jeu-tablette-du-meneur.md), [contrat § 6.1](../Architecture/Contrat-des-modules-du-jeu.md), guide 60 § 9.
+- **Vérifié :** 2 476 essais (modules, télécommande, écrans de séance, `electron`) dont 24 nouveaux ; `tsc -b`, eslint ; e2e `modulesDuJeuTabletteMeneur.spec.ts` (2) et `modulesDuJeuAlien.spec.ts` (14, non-régression du poste) sur le vrai Electron ; captures relues.
+- **Reste :** l'essai de David sur une vraie tablette, Alien d'abord (MU/TH/UR et détecteur), puis Rêve de Dragon. Aucun appareil physique essayé ; aucun commit demandé.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 169 | **Modules du jeu sur la tablette du meneur** | 🟠 § 233 ; onglet Modules, transport appairé, panneau commun, e2e vérifiés —07/11 | Ouvrir l'onglet Modules sur la tablette, en séance Alien | Essai de David sur une vraie tablette |
 | 166 | **Clip Blade Runner et joueur tactile** | 🟢 § 230 ; MP4 3 min 17, huit chapitres et vrai Hub → MJ vérifiés —07/11 | Ouvrir le MP4 | Rien pour le clip ; appareils physiques non essayés |
 | 165 | **Clip Barbarians of Lemuria et joueur tactile** | 🟢 § 229 ; MP4 2 min 43, sept chapitres et vrai Hub → MJ vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip ; appareils physiques non essayés |
 | 164 | **Clip Alien et joueur tactile** | 🟢 §228 ; MP4 3 min 08, neuf chapitres, trois modules et vrai Hub → MJ vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip ; appareils physiques non essayés |

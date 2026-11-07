@@ -10,6 +10,7 @@ import {
     BookOpen,
     Film,
     MessageSquare,
+    Blocks,
 } from 'lucide-react';
 import { useRemoteSync } from './hooks/useRemoteSync';
 import { type RemoteActionType } from './types/remote.types';
@@ -25,6 +26,7 @@ import RemoteWhiteboardView from './components/RemoteWhiteboardView';
 import RemoteStatusBar from './components/RemoteStatusBar';
 import RemoteMessenger from './components/RemoteMessenger';
 import { RemoteModule } from './components/RemoteModule';
+import { RemoteModulesDuJeu } from './components/RemoteModulesDuJeu';
 import { useDernierJet } from './hooks/useDernierJet';
 
 /**
@@ -46,7 +48,7 @@ import { useDernierJet } from './hooks/useDernierJet';
  * filet qui évite qu'améliorer le paysage casse le portrait.
  */
 
-type Onglet = 'pads' | 'dice' | 'sound' | 'combat' | 'whiteboard' | 'notes' | 'story' | 'messages';
+type Onglet = 'pads' | 'dice' | 'sound' | 'combat' | 'whiteboard' | 'notes' | 'story' | 'messages' | 'modules';
 
 const ONGLETS = [
     { id: 'pads', icon: LayoutDashboard, label: 'Pads' },
@@ -57,11 +59,13 @@ const ONGLETS = [
     { id: 'whiteboard', icon: PenTool, label: 'Tableau' },
     { id: 'notes', icon: BookOpen, label: 'Notes' },
     { id: 'messages', icon: MessageSquare, label: 'Messages' },
+    /* Les modules du jeu, pilotés depuis la tablette (07/11/2026, maquette Stitch validée). */
+    { id: 'modules', icon: Blocks, label: 'Modules' },
 ] as const;
 
 const RemoteControl: React.FC = () => {
     const {
-        status, isPaired, syncData, sendAction,
+        status, isPaired, syncData, sendAction, vueDesModules, gestesDesModules,
         coffre, demanderLeCoffre, ouvrirUneNote, fermerLaNote,
     } = useRemoteSync();
     /*
@@ -199,6 +203,8 @@ const RemoteControl: React.FC = () => {
                         onTrigger={(index) => sendAction('remote:story:trigger', { index })}
                     />
                 );
+            case 'modules':
+                return <RemoteModulesDuJeu vue={isPaired ? vueDesModules : null} gestes={gestesDesModules} appaire={isPaired} />;
             default:
                 return null;
         }
@@ -269,7 +275,7 @@ const RemoteControl: React.FC = () => {
                 </main>
 
                 {/* Le repli sous 900 px : collée au bord, sans marge flottante. */}
-                <nav aria-label="Navigation du meneur" className="min-[900px]:hidden shrink-0 grid grid-cols-4 items-stretch gap-1 p-1 pb-[max(4px,env(safe-area-inset-bottom))] border-t border-app-text/5 bg-app-bg">
+                <nav aria-label="Navigation du meneur" className="min-[900px]:hidden shrink-0 grid grid-cols-4 min-[600px]:grid-cols-5 items-stretch gap-1 p-1 pb-[max(4px,env(safe-area-inset-bottom))] border-t border-app-text/5 bg-app-bg">
                     {boutonsDOnglet(false)}
                 </nav>
             </div>

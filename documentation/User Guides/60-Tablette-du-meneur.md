@@ -71,7 +71,7 @@ musique, les ambiances et les bruitages — en le tenant enfoncé.*
 
 | Où | Quoi |
 | :--- | :--- |
-| **Colonne de gauche** | Les huit onglets, **avec leur nom écrit** |
+| **Colonne de gauche** | Les neuf onglets, **avec leur nom écrit** |
 | **Ligne du haut** | Ce qui joue en ce moment, et **Couper le son** |
 | **Le reste** | Le panneau ouvert |
 
@@ -83,8 +83,8 @@ musique, les ambiances et les bruitages — en le tenant enfoncé.*
 > Les sept onglets étaient des icônes nues. Leurs noms vivaient dans une infobulle — *c'est-à-dire
 > nulle part sur un écran tactile, où l'on ne survole rien.*
 
-> 🔎 **Sur un téléphone**, ou une tablette tenue debout, les huit onglets restent nommés sur
-> **deux rangées de quatre en bas**. Chaque commande mesure au moins 44 × 44 px. Le
+> 🔎 **Sur un téléphone**, ou une tablette tenue debout, les neuf onglets restent nommés en
+> bas : **deux rangées de cinq** sur une tablette debout, **trois rangées de quatre** sur un téléphone. Chaque commande mesure au moins 44 × 44 px. Le
 > basculement se fait tout seul à 900 px de large.
 
 ### La ligne d'état
@@ -116,7 +116,7 @@ plusieurs lignes sans recouvrir les commandes ou la navigation.
 
 ---
 
-## 🕹️ Les huit panneaux
+## 🕹️ Les neuf panneaux
 
 > ⛔ **Ce guide décrivait cinq panneaux. Il y en a sept**, et il manquait **celui qui s'ouvre en
 > premier**. Corrigé le 2026-09-04.
@@ -424,6 +424,34 @@ vue du meneur, tout en envoyant les nouveaux messages au canal général.
 
 > 🔒 **Seule une tablette appairée peut parler au nom du meneur.** Un appareil joueur qui tenterait
 > l'action est refusé par le serveur, pas par l'écran.
+
+### 9. 🧩 Modules — les outils du jeu
+
+**Ajouté le 2026-11-07, à la demande de David** (*« activer les modules de jeu dans la tablette
+de Game Master »*). Les modules que le pilote de la campagne propose — MU/TH/UR, le détecteur
+de mouvement et le combat spatial d'Alien, les Terres Médianes de Rêve de Dragon, les consoles
+LCARS et les opérations de Star Trek, les conflits de Dune — se pilotent d'ici comme depuis
+**Cockpit › Modules du jeu**.
+
+- **Une carte par module.** Les cases **Accès des personnages** ouvrent ou ferment le module à
+  chacun ; elles ne s'activent qu'en séance. **Fermer tous les accès** referme ce module et coupe
+  ses effets.
+- **Son de l'alarme** (MU/TH/UR, LCARS) : l'appareil qui joue le son du module — le poste MJ ou
+  la tablette d'un joueur qui a l'accès. *La tablette du meneur n'en joue aucun.*
+- **Ouvrir le pupitre** : le pupitre du module prend tout l'écran, le même qu'au poste.
+  **← Modules** ramène à la liste.
+- **Tout couper**, en haut : ferme tous les modules à tous les joueurs et arrête leurs effets.
+
+![L'onglet Modules : MU/TH/UR ouvert à Nel Varga, le détecteur fermé](captures/tablette-du-meneur-modules.png)
+
+**Ce qui reste au poste MJ** : choisir la campagne et démarrer la séance ; configurer le pilote
+et ses modules ; **écrire sur les fiches** — le coût d'un trajet dans les Terres Médianes se
+confirme au poste, qui débite la fiche (la tablette dit qui attend) ; la fiche de Maison et la
+Menace de début de séance de Dune.
+
+> 🔒 **Comme les notes privées, les modules sont réservés à la tablette appairée.** Sans le jeton
+> d'appairage, l'onglet le dit et n'affiche rien ; un appareil de joueur qui enverrait un geste
+> de meneur est ignoré par le serveur, et le refus est journalisé.
 
 ---
 

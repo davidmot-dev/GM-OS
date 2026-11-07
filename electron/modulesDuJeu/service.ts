@@ -226,6 +226,7 @@ export class ServiceDesModules {
     async vueMJ(): Promise<VueDesModulesMJ> {
         await this.pret();
         return { campagneId: this.contexte.campagneId, contexte: this.generation, revision: this.revision, erreur: this.erreur ?? this.erreurEcriture,
+            enSeance: !!this.contexte.seanceId, personnages: this.contexte.personnages.map(p => ({ ...p })),
             indisponibles: modulesDuPilote(this.contexte.pilote, this.contexte.systemPath).modules.filter(m => this.versionFuture(m.reference.id))
                 .map(m => ({ id: m.reference.id, raison: 'Cette préparation provient d’une version plus récente. Elle est conservée et reste indisponible.' })),
             modules: this.erreur || !this.contexte.campagneId ? [] : this.disponibles().map(m => ({ id: m.reference.id, libelle: m.libelle,

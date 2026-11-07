@@ -26,6 +26,10 @@ export interface VueDesModulesMJ {
     modules: (CarteDeModule & { acces: string[]; diffusionSonore?: boolean; appareilDeDiffusion?: string | null })[];
     appareils?: { id: string; libelle: string; personnageId: string }[];
     sauvegarde?: SauvegardeDesModules;
+    /** Une séance est ouverte : les accès joueurs peuvent s'ouvrir. Lu par la tablette du meneur (07/11/2026). */
+    enSeance?: boolean;
+    /** Les personnages de la campagne, tels que le poste les a poussés au contexte. */
+    personnages?: { id: string; nom: string }[];
     erreur?: string;
     indisponibles?: { id: string; raison: string }[];
 }

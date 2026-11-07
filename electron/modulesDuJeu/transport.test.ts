@@ -124,6 +124,79 @@ describe('transport privé des modules sans ouvrir de port', () => {
         await serveur.diffuserLesModules();
         for (const ws of [alice, bob]) expect(paquets(ws, 'modules:vue').at(-1).payload.modules).toEqual([]);
     });
+    describe('la tablette du meneur (07/11/2026)', () => {
+        const appairer = (ws: Tablette, deviceId: string, token = 'secret-mj') =>
+            ws.emit('message', JSON.stringify({ type: 'remote:register', payload: { deviceId, role: 'remote', token } }));
+        const geste = async (ws: Tablette, type: string, payload: Record<string, unknown>) => {
+            ws.emit('message', JSON.stringify({ type, payload }));
+            await serveur.modulesDuJeu.pret(); await new Promise(r => setTimeout(r, 0));
+            return paquets(ws, 'modules:mj:resultat').find(p => p.payload.requeteId === payload.requeteId)?.payload;
+        };
+
+        it('reçoit la vue MJ sans la sauvegarde, et ne la reçoit pas sans le secret', async () => {
+            appairer(alice, 'tablette-mj'); appairer(bob, 'faux-mj', 'mauvais');
+            await serveur.diffuserLesModules();
+            const vue = paquets(alice, 'modules:mj:vue').at(-1)?.payload;
+            expect(vue.campagneId).toBe('camp-a');
+            expect(vue.modules.map((m: { id: string }) => m.id)).toEqual(expect.arrayContaining(['alien-muthur', 'alien-detecteur']));
+            expect(vue).not.toHaveProperty('sauvegarde');
+            expect(JSON.stringify(vue)).not.toContain('"campagnes"');
+            expect(paquets(bob, 'modules:mj:vue')).toEqual([]);
+        });
+
+        it('les médias privés (LCARS) : le jeton de SA socket, une adresse relative', async () => {
+            await invoquer('modules:contexte', { campagneId: 'camp-t', seanceId: 's', pilote: { id: 'custom-trek', name: 'Star Trek', corpusId: 'star-trek', modulesDuJeu: [{ id: 'star-trek-lcars' }] }, personnages: [{ id: 'alice', nom: 'Alice' }] });
+            appairer(alice, 'tablette-mj'); appairer(bob, 'autre-mj');
+            await serveur.diffuserLesModules();
+            const ressources = (ws: Tablette) => paquets(ws, 'modules:mj:vue').at(-1).payload.modules.find((m: { id: string }) => m.id === 'star-trek-lcars').vue.integration.ressources;
+            expect(ressources(alice).jeton).toMatch(/^[a-f0-9]{64}$/);
+            expect(ressources(alice).jeton).not.toBe((serveur as unknown as { jetonMediasMJ: string }).jetonMediasMJ);
+            expect(ressources(alice).jeton).not.toBe(ressources(bob).jeton);
+            expect(ressources(alice)).not.toHaveProperty('base');
+        });
+
+        it('autorise, commande et coupe tout depuis la tablette appairée', async () => {
+            inscrire(bob, 'b', 'bob'); appairer(alice, 'tablette-mj');
+            let contexte = (await serveur.modulesDuJeu.vueMJ()).contexte;
+            expect(await geste(alice, 'modules:mj:autoriser', { requeteId: 'acces', campagneId: 'camp-a', moduleId: 'alien-detecteur', contexte, personnages: ['bob'] })).toEqual({ requeteId: 'acces', ok: true });
+            contexte = (await serveur.modulesDuJeu.vueMJ()).contexte;
+            expect(await geste(alice, 'modules:mj:commander', { requeteId: 'radar', campagneId: 'camp-a', moduleId: 'alien-detecteur', contexte, commande: { id: 'scanner', charge: { actif: true } } })).toMatchObject({ ok: true });
+            await serveur.diffuserLesModules();
+            expect(paquets(bob, 'modules:vue').at(-1).payload.modules.map((m: { id: string }) => m.id)).toEqual(['alien-detecteur']);
+            expect(await geste(alice, 'modules:mj:tout-couper', { requeteId: 'coupe', campagneId: 'camp-a', contexte })).toMatchObject({ ok: true });
+            await serveur.diffuserLesModules();
+            expect(paquets(bob, 'modules:vue').at(-1).payload.modules).toEqual([]);
+        });
+
+        it('un joueur qui envoie un geste de meneur n’obtient ni effet ni réponse', async () => {
+            inscrire(bob, 'b', 'bob');
+            const contexte = (await serveur.modulesDuJeu.vueMJ()).contexte;
+            expect(await geste(bob, 'modules:mj:autoriser', { requeteId: 'pirate', campagneId: 'camp-a', moduleId: 'alien-muthur', contexte, personnages: ['bob'] })).toBeUndefined();
+            expect(await geste(bob, 'modules:mj:tout-couper', { requeteId: 'pirate-2', campagneId: 'camp-a', contexte })).toBeUndefined();
+            expect((await serveur.modulesDuJeu.vueMJ()).modules.every(m => m.acces.length === 0)).toBe(true);
+            expect(paquets(bob, 'modules:mj:vue')).toEqual([]);
+        });
+
+        it('refuse un contexte périmé, une clé de trop et le rejeu, avec la raison', async () => {
+            appairer(alice, 'tablette-mj');
+            const contexte = (await serveur.modulesDuJeu.vueMJ()).contexte;
+            expect(await geste(alice, 'modules:mj:tout-couper', { requeteId: 'vieux', campagneId: 'camp-a', contexte: contexte + 5 })).toMatchObject({ ok: false, erreur: expect.stringContaining('La table a changé') });
+            expect(await geste(alice, 'modules:mj:tout-couper', { requeteId: 'cle', campagneId: 'camp-a', contexte, role: 'mj' })).toEqual({ requeteId: 'cle', ok: false, erreur: 'Demande illisible.' });
+            expect(await geste(alice, 'modules:mj:tout-couper', { requeteId: 'une', campagneId: 'camp-a', contexte })).toMatchObject({ ok: true });
+            alice.send.mockClear();
+            expect(await geste(alice, 'modules:mj:tout-couper', { requeteId: 'une', campagneId: 'camp-a', contexte })).toMatchObject({ ok: false });
+        });
+
+        it('se réinscrire sans le secret ferme la vue du meneur', async () => {
+            appairer(alice, 'tablette-mj');
+            appairer(alice, 'tablette-mj', 'mauvais');
+            expect(paquets(alice, 'modules:mj:fermes')).toHaveLength(1);
+            alice.send.mockClear();
+            await serveur.diffuserLesModules();
+            expect(paquets(alice, 'modules:mj:vue')).toEqual([]);
+        });
+    });
+
     it('confirme une commande une seule fois et refuse son rejeu', async () => {
         inscrire(alice, 'a', 'alice'); await ouvrir();
         const requete = { type: 'modules:commander', payload: { requeteId: 'une-fois', campagneId: 'camp-a', moduleId: 'alien-muthur', contexte: (await serveur.modulesDuJeu.vueMJ()).contexte, commande: { id: 'saisir', charge: { texte: 'HELP' } } } };

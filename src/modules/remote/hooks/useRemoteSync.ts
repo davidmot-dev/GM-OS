@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { CanalDesModulesMJ, type GestesDuMeneur } from '../../modulesDuJeu/canalMeneur';
+import type { VueDesModulesMJ } from '../../modulesDuJeu/protocole';
 import { lireRepriseDesModules, enregistrerRepriseDesModules } from '../../modulesDuJeu/reprise';
 import { reglagesAudio } from '../reglagesAudio';
 import { portDeSynchronisation } from '../../../utils/portsDuRenderer';
@@ -65,6 +67,14 @@ export const useRemoteSync = () => {
         notes: [], chemin: null, contenu: null, chargement: false,
     });
     const socketRef = useRef<WebSocket | null>(null);
+    /*
+      **Les modules du jeu, vus par le meneur** (07/11/2026, plan
+      `2026-11-07-modules-du-jeu-tablette-du-meneur.md`). Un canal par socket : il naît à
+      l'ouverture et meurt à la fermeture, sans rien rejouer. La vue n'arrive qu'à une
+      tablette appairée ; ailleurs elle reste `null`.
+    */
+    const canalRef = useRef<CanalDesModulesMJ | null>(null);
+    const [vueDesModules, setVueDesModules] = useState<VueDesModulesMJ | null>(null);
     const backoffRef = useRef(BACKOFF_INITIAL);
     const connectRef = useRef<(() => void) | null>(null);
     const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -89,6 +99,8 @@ export const useRemoteSync = () => {
 
         socket.onopen = () => {
             console.log('[Remote] Connected to GM-OS');
+            canalRef.current?.fermer();
+            canalRef.current = new CanalDesModulesMJ(message => socket.send(JSON.stringify(message)), setVueDesModules);
             setStatus('connected');
             setClientStatus('active');
             backoffRef.current = BACKOFF_INITIAL; // Reset backoff on success
@@ -103,6 +115,7 @@ export const useRemoteSync = () => {
 
         socket.onclose = () => {
             console.log(`[Remote] Disconnected. Retrying in ${backoffRef.current}ms...`);
+            if (socketRef.current === socket) { canalRef.current?.fermer(); canalRef.current = null; }
             setStatus('error');
             setClientStatus('disconnected');
             
@@ -116,6 +129,7 @@ export const useRemoteSync = () => {
         socket.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
+                if (canalRef.current?.recevoir(data)) return;
                 
                 // Unified Sync Logic
                 if (data.type === 'sync') {
@@ -176,6 +190,8 @@ export const useRemoteSync = () => {
                 else if (data.type === 'remote:registered') {
                     enregistrerRepriseDesModules(deviceId, data.payload?.repriseModules);
                     setIsPaired(data.payload?.role === 'remote');
+                    // Redemander la vue une fois le canal prêt : un message parti avant l'écoute est perdu.
+                    if (data.payload?.role === 'remote') socket.send(JSON.stringify({ type: 'modules:mj:consulter' }));
                 }
                 // Handle Remote Errors (e.g. Character Collision)
                 else if (data.type === 'remote:error') {
@@ -235,9 +251,22 @@ export const useRemoteSync = () => {
         setCoffre((avant) => ({ ...avant, chemin: null, contenu: null, erreur: undefined }));
     }, []);
 
+    /** Des gestes stables, qui visent le canal de la socket du moment. */
+    const gestesDesModules = useMemo<GestesDuMeneur>(() => {
+        const ferme = async () => ({ ok: false as const, erreur: 'Module fermé ou déconnecté.' });
+        return {
+            commander: (moduleId, commande) => canalRef.current?.commander(moduleId, commande) ?? ferme(),
+            autoriser: (moduleId, personnages) => canalRef.current?.autoriser(moduleId, personnages) ?? ferme(),
+            toutCouper: () => canalRef.current?.toutCouper() ?? ferme(),
+            choisirDiffusion: (moduleId, appareilId) => canalRef.current?.choisirDiffusion(moduleId, appareilId) ?? ferme(),
+        };
+    }, []);
+
     return {
         status,
         isPaired,
+        vueDesModules,
+        gestesDesModules,
         syncData,
         sendAction,
         coffre,

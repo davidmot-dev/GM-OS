@@ -19,7 +19,7 @@ export function PlateauDune({ vue }: { vue: ConflitDune }) {
         <details><summary>La Maison {vue.maison.nom}</summary>{(['monde', 'domaines', 'roles', 'allies', 'ennemis', 'atouts'] as const).map(k => <p key={k}>{k} : {vue.maison[k]}</p>)}</details>
     </div>;
 }
-export function PupitreDune({ vue, envoyerCommande }: Props) {
+export function PupitreDune({ vue, envoyerCommande, surLePoste = true }: Props & { surLePoste?: boolean }) {
     const [erreur, setErreur] = useState(''), [zone, setZone] = useState<Partial<ZoneDune>>({ nom: '', visible: true, discipline: 4 }), [autre, setAutre] = useState('');
     const [atout, setAtout] = useState({ nom: '', proprietaire: '', zone: '', qualite: 0, usage: 'offensif', tangible: true, permanent: true, visible: true, militaire: false });
     const [destination, setDestination] = useState(''), [scene, setScene] = useState(''), [joueurs, setJoueurs] = useState(4), [ajustement, setAjustement] = useState(0);
@@ -35,7 +35,8 @@ export function PupitreDune({ vue, envoyerCommande }: Props) {
     const reflet = maisonDepuisLaFiche(ficheDeMaison);
     const ecarts = ecartsDuReflet(vue.maison, reflet);
     const aEnvoyer = Object.keys(ecarts).length ? JSON.stringify(ecarts) : '';
-    useEffect(() => { if (aEnvoyer) void envoyerCommande({ id: 'maison', charge: JSON.parse(aEnvoyer) }); }, [aEnvoyer, envoyerCommande]);
+    // La fiche de Maison vit au poste : la tablette du meneur ne la lit pas et n'envoie rien (07/11/2026).
+    useEffect(() => { if (surLePoste && aEnvoyer) void envoyerCommande({ id: 'maison', charge: JSON.parse(aEnvoyer) }); }, [surLePoste, aEnvoyer, envoyerCommande]);
     const tenuParLaFiche = (k: string) => !!reflet && (RUBRIQUES_DE_LA_FICHE as readonly string[]).includes(k) && (k !== 'type' || reflet.type !== undefined);
     const affichee = { ...maison, ...(reflet ?? {}) };
     const menace = menaceInitialeDune(affichee.type, joueurs, ajustement);
@@ -68,7 +69,7 @@ export function PupitreDune({ vue, envoyerCommande }: Props) {
             <label>Destination <select className={champ} value={destination} onChange={e => setDestination(e.target.value)}><option value="">Choisir une zone</option>{vue.zones.map(z => <option key={z.id} value={z.id}>{z.nom}</option>)}</select></label>
             {vue.atouts.map(a => <div key={a.id} className="flex flex-wrap gap-2 pt-2"><span>{a.nom}</span><button type="button" className={bouton} disabled={!destination || a.neutralise} onClick={() => void envoyer('deplacer', { atoutId: a.id, zoneId: destination })}>Déplacer d’une zone</button><button type="button" className={bouton} onClick={() => void envoyer(a.neutralise ? 'recuperer' : 'neutraliser', { atoutId: a.id })}>{a.neutralise ? 'Récupérer' : a.tangible ? 'Neutraliser' : 'Détruire'}</button></div>)}
             <p>Déplacement : difficulté 2. Discrétion réussie : rétention gratuite ; audace réussie : déplacement d’un atout adverse. Échec : réaction adverse et aucune rétention. Une zone supplémentaire ou un second atout coûte 2 Impulsion ; appliquez le paiement au bandeau avant le second mouvement.</p></details>
-            <details><summary>Maison et début de séance</summary><div className="space-y-2 pt-2">
+            {surLePoste ? <details><summary>Maison et début de séance</summary><div className="space-y-2 pt-2">
                 {reflet && <p data-maison-de-la-fiche>Nom, monde, type, domaines, rôles et ennemis viennent de la fiche de Maison, qui fait foi. <button type="button" className={bouton} onClick={() => setCurrentView('group-sheet')}>Ouvrir la fiche de la Maison</button></p>}
                 {(['nom', 'monde', 'domaines', 'roles', 'allies', 'ennemis', 'atouts'] as const).map(k => <label className="block" key={k}>{k} <input className={champ} value={affichee[k]} disabled={tenuParLaFiche(k)} title={tenuParLaFiche(k) ? 'Tenu par la fiche de Maison' : undefined} onChange={e => setMaison(m => ({ ...m, [k]: e.target.value }))} /></label>)}
                 <label>Type <select className={champ} value={affichee.type} disabled={tenuParLaFiche('type')} onChange={e => setMaison(m => ({ ...m, type: Number(e.target.value) }))}>{types.map((t, i) => <option key={t} value={i}>{t}</option>)}</select></label>
@@ -76,7 +77,7 @@ export function PupitreDune({ vue, envoyerCommande }: Props) {
                 <label>Joueurs présents <input className={`w-16 ${champ}`} type="number" min={0} value={joueurs} onChange={e => setJoueurs(Number(e.target.value))} /></label><label>Ajustement MJ <input className={`w-16 ${champ}`} type="number" value={ajustement} onChange={e => setAjustement(Number(e.target.value))} /></label>
                 <button type="button" className={bouton} onClick={() => { const s = useSessionOSStore.getState(), r = s.getActiveDriver()?.ressourcesDeTable; if (s.activeCampaignId && r) { useRessourcesDeTableStore.getState().fixer(s.activeCampaignId, r, 'menace', menace, 'Dune : début de séance, Maison et joueurs présents'); setErreur(''); } else setErreur('Campagne Dune active requise.'); }}>Début de séance : fixer la Menace à {menace}</button>
                 <p>Ce geste remplace la Menace actuelle après votre clic. La Détermination se remet au début d’aventure sur chaque fiche.</p>
-            </div></details>
+            </div></details> : <p>La Maison et la Menace de début de séance se règlent au poste MJ, qui tient la fiche de Maison.</p>}
             <input className={champ} aria-label="Nouvelle scène du plateau Dune" placeholder="Nouvelle scène" value={scene} onChange={e => setScene(e.target.value)} /><button type="button" className={bouton} disabled={!scene.trim() || scene === vue.scene} onClick={() => void envoyer('scene', { nom: scene })}>Changer de scène (retirer les atouts temporaires)</button>
             {erreur && <p role="alert" className="text-etat-danger">{erreur}</p>}
         </div>

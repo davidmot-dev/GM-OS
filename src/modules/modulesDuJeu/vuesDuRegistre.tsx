@@ -7,14 +7,19 @@ import '../../../outils/alien/modules/detecteur/style.css';
 import '../../../outils/star-trek/lcars/style.css';
 import type { VueLcarsMJ, VueLcarsJoueur } from '../../../outils/star-trek/lcars/moteur.mjs';
 
-type Props = { vue: unknown; horloge?: () => number; envoyerCommande: (commande: CommandeDeModule) => Promise<ResultatDeModule> };
+/**
+ * `lieu` : le poste MJ ou la tablette du meneur (07/11/2026). Deux pupitres touchent aux données
+ * du poste — l'écriture du coût des TMR sur la fiche, la fiche de Maison et la Menace de Dune — :
+ * sur la tablette, ces gestes restent au poste et le pupitre le dit.
+ */
+type Props = { vue: unknown; horloge?: () => number; envoyerCommande: (commande: CommandeDeModule) => Promise<ResultatDeModule>; lieu?: 'poste' | 'tablette' };
 const vueTmr = lazy(async () => {
     const { VuesTMR } = await import('./tmr/VuesTMR');
     return { default: (props: Props) => <VuesTMR {...props} vue={props.vue as import('../../../outils/reve-de-dragon/tmr/moteur.mjs').VueTMRMJ | import('../../../outils/reve-de-dragon/tmr/moteur.mjs').VueTMRJoueur} /> };
 });
 const mjTmr = lazy(async () => {
     const { PupitreTMR } = await import('./tmr/PupitreTMR');
-    return { default: (props: Props) => <PupitreTMR {...props} vue={props.vue as import('../../../outils/reve-de-dragon/tmr/moteur.mjs').VueTMRMJ} /> };
+    return { default: (props: Props) => <PupitreTMR {...props} surLePoste={props.lieu !== 'tablette'} vue={props.vue as import('../../../outils/reve-de-dragon/tmr/moteur.mjs').VueTMRMJ} /> };
 });
 const joueurLcars = lazy(async () => {
     const { VueJoueur } = await import('../../../outils/star-trek/lcars/vues.mjs');
@@ -59,7 +64,7 @@ const mjOperations = lazy(async () => {
 const REGISTRE_DES_VUES = new Map([
     ['dune-conflits', {
         joueur: lazy(async () => { const { PlateauDune } = await import('./dune/VuesDune'); return { default: (p: Props) => <PlateauDune vue={p.vue as import('../dice/systemes/conflitsDeDune').ConflitDune} /> }; }),
-        mj: lazy(async () => { const { PupitreDune } = await import('./dune/VuesDune'); return { default: (p: Props) => <PupitreDune vue={p.vue as import('../dice/systemes/conflitsDeDune').ConflitDune} envoyerCommande={p.envoyerCommande} /> }; }),
+        mj: lazy(async () => { const { PupitreDune } = await import('./dune/VuesDune'); return { default: (p: Props) => <PupitreDune surLePoste={p.lieu !== 'tablette'} vue={p.vue as import('../dice/systemes/conflitsDeDune').ConflitDune} envoyerCommande={p.envoyerCommande} /> }; }),
     }],
     ['star-trek-operations', { joueur: joueurOperations, mj: mjOperations }],
     ['rdd-tmr', { joueur: vueTmr, mj: mjTmr }],
