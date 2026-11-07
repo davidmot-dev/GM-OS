@@ -331,6 +331,31 @@ David : *« j'ai essayé de forger les équipements de Cthulhu Hack et cela n'a 
   - Les objets déjà versés gardent leurs colonnes : vider la famille, ou retirer les colonnes en
     trop, avant de remplir à nouveau.
 
+## L'équipement et le bestiaire, sujets de base du canevas — 07/11
+
+David : *« donne-moi l'instruction pour l'atelier pour forger les équipements et les bestiaires ?
+Est-ce que tu ne rajouterais pas cela comme éléments de base lorsque l'on forge un nouveau jeu ? »*
+
+- **Le canevas passe de 14 à 16 sujets** (`forge/rules/canevas.ts`) : « Équipement et matériel » et
+  « Bestiaire et adversaires ». Leur nom déclenche le gabarit des tableaux (F2/F3) ; ils
+  apparaissent dans la liste de tous les jeux — « le carnet n'a rien rendu » tant que
+  l'inventaire n'a pas été redemandé.
+- **L'inventaire ne les recopie toujours pas** : son exclusion de l'équipement et du bestiaire (les
+  chapitres les plus volumineux) devient une exception sur le modèle de la « Composition de la
+  fiche » — il dit s'il y a des tableaux ou des profils, combien, et leurs sections. Invite :
+  3 261 caractères (2 843 avant), sous la limite de 3 594.
+- **Qui d'autre lit ça ?** Lecteurs du canevas recensés : l'invite de l'inventaire, la lecture de
+  l'inventaire et sa couverture (« x sur 16 »), la conversion (qui rabat le sujet d'une fiche
+  forgée sur le canevas). La Forge Système (`GroupesDeChamps`) ne nomme pas ces deux sujets : rien
+  ne change pour la dérivation des pilotes. Sur les 364 fiches du corpus, une seule se rabat
+  désormais sur un nouveau sujet : `alien/rules/equipement-materiel-du-livre-de-base.md` — rien ne
+  change sur le disque ; une reforge écrirait `equipement-et-materiel.md` à côté.
+- ⚠️ **Ne pas forger ces sujets là où l'équipement ou le bestiaire est déjà transcrit du livre**
+  (Alien, COC, Cthulhu Hack pour l'équipement) : la fiche forgée doublerait la fiche relue.
+- **Vérifié** : `canevas.test.ts`, `inventaire.test.ts` (comptes mis à jour) ; 1 010 essais (Forge,
+  invites, sélection du RAG, manuel), `tsc -b`, eslint.
+
+
 ## L'ordre recommandé
 
 F1, puis F5, puis F2, puis F4, puis F3. F1 et F5 se font sans toucher aux invites et servent tout de

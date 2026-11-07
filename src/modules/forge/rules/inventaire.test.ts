@@ -272,8 +272,8 @@ describe('lireInventaire — numérotation en toutes lettres (SRD Year Zero Engi
     });
 
     it('le compte total est celui du canevas, plus les vraies hors-catégories', () => {
-        // 14 sujets du canevas + 2 mécaniques. Avant correction : 23 pour 14.
-        expect(lireInventaire(reel)).toHaveLength(16);
+        // 16 sujets du canevas (14 avant le 07/11/2026) + 2 mécaniques. Avant correction : 23 pour 14.
+        expect(lireInventaire(reel)).toHaveLength(18);
     });
 });
 

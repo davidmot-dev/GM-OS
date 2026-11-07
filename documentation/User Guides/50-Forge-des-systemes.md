@@ -263,6 +263,11 @@ section Bestiaire fait de même pour les créatures (première colonne « Créat
   d'objets (une échelle, le couvert) garde sa première colonne et n'est pas versé.
 - Le lecteur accepte aussi les noms du livre en première colonne : « Armes à distance légères »,
   « Explosif », « Armures », « PNJ », « Monstre », « Sbire »…
+- **L'équipement et le bestiaire sont des sujets de base** (depuis le 2026-11-07) : l'inventaire
+  d'un jeu propose « Équipement et matériel » et « Bestiaire et adversaires » ; un clic forge leurs
+  tableaux. Pour un jeu déjà inventorié, « Redemander l'inventaire au carnet » les fait renseigner.
+  Ne les forgez pas là où l'équipement ou les créatures sont déjà transcrits du livre (Alien, COC,
+  Cthulhu Hack) : la fiche forgée doublerait la fiche relue.
 - **Le sujet libre vaut aussi pour un supplément** (depuis le 2026-11-07) : il se pose en tête de la
   liste des sujets retenus, le temps de le forger, sans y être enregistré — pour l'y garder, utilisez
   « Ajouter » sous la liste.

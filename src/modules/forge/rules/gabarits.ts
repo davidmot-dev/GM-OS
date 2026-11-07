@@ -111,12 +111,15 @@ mécaniques centrales.
 exemple pour marquer une réussite), nomme-la au lieu de la reproduire.
 
 N'aborde PAS : la PROCÉDURE de création de personnage, la progression,
-l'équipement et le matériel, l'historique et le background, le bestiaire, les
-scénarios inclus.
+l'historique et le background, les scénarios inclus.
 
 Le sujet « Composition de la fiche de personnage » fait exception à la première
 de ces exclusions, et à elle seule : on veut la LISTE de ce qu'une fiche finie
-porte comme valeurs chiffrées, jamais la manière de les choisir.`;
+porte comme valeurs chiffrées, jamais la manière de les choisir.
+
+Pour « Équipement et matériel » et « Bestiaire et adversaires », ne recopie
+AUCUNE ligne : dis seulement s'il y a des tableaux ou des profils, combien, et
+leurs sections.`;
 }
 
 /**

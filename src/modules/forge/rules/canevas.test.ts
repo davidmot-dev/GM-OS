@@ -2,9 +2,11 @@ import { describe, it, expect } from 'vitest';
 import { CANEVAS, CLEFS_CANEVAS, clefCanonique, normaliser, slugFiche } from './canevas';
 
 describe('canevas', () => {
-  it('porte les treize sujets, sans doublon de clé', () => {
-    expect(CANEVAS).toHaveLength(14);
-    expect(new Set(CLEFS_CANEVAS).size).toBe(14);
+  // Seize depuis le 07/11/2026 : l'équipement et le bestiaire, à la demande de David.
+  it('porte les seize sujets, sans doublon de clé', () => {
+    expect(CANEVAS).toHaveLength(16);
+    expect(new Set(CLEFS_CANEVAS).size).toBe(16);
+    expect(CLEFS_CANEVAS.slice(-2)).toEqual(['Équipement et matériel', 'Bestiaire et adversaires']);
   });
 
   it('chaque énoncé contient sa clé — le carnet doit pouvoir la reprendre', () => {

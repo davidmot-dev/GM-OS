@@ -106,6 +106,28 @@ export const CANEVAS: readonly SujetCanevas[] = [
       '   leurs bornes (valeur de départ, minimum, maximum).\n' +
       '   PAS la procédure de création, PAS la progression, PAS l\'équipement.',
   },
+  /*
+    **Les quinzième et seizième sujets, ajoutés le 2026-11-07** à la demande de David (« est-ce que
+    tu ne rajouterais pas cela comme éléments de base lorsque l'on forge un nouveau jeu ? »).
+    Jusque-là, l'équipement et le bestiaire n'existaient pour la Forge que si on pensait à les taper
+    en sujet libre ; ce sont pourtant eux que lisent « Remplir depuis le corpus » du catalogue et du
+    bestiaire. Leur nom déclenche le gabarit des tableaux (`natureDuSujet`).
+
+    L'inventaire ne doit toujours pas les recopier — ce sont les chapitres les plus volumineux : il
+    dit seulement si le livre donne des tableaux ou des profils chiffrés, combien, et où.
+  */
+  {
+    clef: 'Équipement et matériel',
+    enonce:
+      'Équipement et matériel (armes, protections, véhicules, objets) : le livre en\n' +
+      '   donne-t-il des TABLEAUX chiffrés, combien, et dans quelles sections ?',
+  },
+  {
+    clef: 'Bestiaire et adversaires',
+    enonce:
+      'Bestiaire et adversaires : le livre donne-t-il des PROFILS chiffrés de\n' +
+      '   créatures ou de PNJ, combien, et dans quelles sections ?',
+  },
 ] as const;
 
 /** Les treize clés seules, pour piloter la boucle de génération. */
