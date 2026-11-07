@@ -419,6 +419,13 @@ export function remplirDepuisLesFiches(
                 remplis.push(champ);
             } else if (champ !== 'source') ecart(champ, avant, apres);
         }
+        // Une source sans page reçoit celle de la fiche — 07/11/2026, Barbarians : un objet posé
+        // avant que la fiche ne cite ses pages restait « sans page » à chaque remplissage.
+        const page = propose.source?.page;
+        if (existant.source && existant.source.page === undefined && page !== undefined) {
+            existant.source = { ...existant.source, page };
+            remplis.push('page');
+        }
         if (remplis.length) {
             const deja = journal.objetsCompletes.find(o => o.id === existant.id);
             if (deja) deja.champs.push(...remplis);

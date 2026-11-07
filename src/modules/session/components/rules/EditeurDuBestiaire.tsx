@@ -11,6 +11,7 @@ import {
 } from '../../../bestiaire/bestiaire';
 import { FormulaireDeNom, ListeDePastilles, ListeDesConstats } from './EditeurDuCatalogue';
 import RemplirLeBestiaire from './RemplirLeBestiaire';
+import { DEFILEUR, DEPLIE_VISIBLE, INTERIEUR, NOM_FIGE, grilleDefilante } from './grilleDefilante';
 import { proposerLesRoles, rolesDuPilote } from '../../../bestiaire/rolesDuBestiaire';
 
 /**
@@ -78,7 +79,10 @@ const EditeurDuBestiaire: React.FC<EditeurDuBestiaireProps> = ({ driver, onUpdat
       (« OBSERVA… ») et la fiche dépliée était coupée à droite (capture du 05/11). Les en-têtes
       passent à la ligne entre deux mots, jamais au milieu (« OBSERVAT ION », même jour).
     */
-    const grille = { gridTemplateColumns: `minmax(9rem, 1.4fr) repeat(${colonnes.length}, minmax(3.5rem, 1fr)) 4.5rem` };
+    // Le 07/11/2026, la grille ne tient plus dans la largeur : elle défile (`grilleDefilante.ts`).
+    // À treize colonnes (Barbarians), la faire tenir rendait tout illisible ; la fiche dépliée, elle,
+    // garde la largeur visible — c'est le défaut du 05/11 qu'on ne refait pas.
+    const grille = grilleDefilante(colonnes, ['4.5rem']);
 
     const retirerLaColonne = (id: string, libelle: string) => {
         const n = valeursDeLaColonne(bestiaire, id);
@@ -206,13 +210,14 @@ const EditeurDuBestiaire: React.FC<EditeurDuBestiaireProps> = ({ driver, onUpdat
             )}
             <div className="space-y-6 pb-20">
                 {groupes.map(g => (
-                    <div key={g.categorie}>
-                        <div className="mb-2 flex items-center justify-between px-1">
+                    <div key={g.categorie} className={DEFILEUR}>
+                      <div className={INTERIEUR}>
+                        <div className={`${DEPLIE_VISIBLE} mb-2 flex items-center justify-between px-1`}>
                             <h4 className="text-ui-12 font-black uppercase tracking-[0.15em] text-app-muted">{g.categorie}</h4>
                             <span className="font-mono text-ui-12 text-app-muted">{g.creatures.length} créature{g.creatures.length > 1 ? 's' : ''}</span>
                         </div>
                         <div className="mb-2 grid items-center gap-3 px-5 text-ui-12 font-black uppercase tracking-[0.12em] text-app-muted" style={grille}>
-                            <span>Créature</span>
+                            <span className={`${NOM_FIGE} -ml-5 pl-5`}>Créature</span>
                             {colonnes.map(c => <span key={c.id} className="text-center text-ui-10 leading-tight tracking-[0.04em]" title={c.libelle}>{c.libelle}</span>)}
                             <span className="text-right">Source</span>
                         </div>
@@ -230,6 +235,7 @@ const EditeurDuBestiaire: React.FC<EditeurDuBestiaireProps> = ({ driver, onUpdat
                                 </LigneDeCreature>
                             ))}
                         </div>
+                      </div>
                     </div>
                 ))}
             </div>
@@ -243,10 +249,10 @@ const LigneDeCreature: React.FC<{
     creature: CreatureDuBestiaire; grille: React.CSSProperties; colonnes: ColonneDuBestiaire[]; ouvert: boolean;
     constats: ConstatDuBestiaire[]; onBasculer: () => void; children: React.ReactNode;
 }> = ({ creature, grille, colonnes, ouvert, constats, onBasculer, children }) => (
-    <article data-creature={creature.id} className={`overflow-hidden rounded-3xl border bg-app-surface/20 ${ouvert ? 'border-2 border-accent' : 'border-app-border/10 hover:border-app-border/30'}`}>
+    <article data-creature={creature.id} className={`overflow-clip rounded-3xl border bg-app-surface/20 ${ouvert ? 'border-2 border-accent' : 'border-app-border/10 hover:border-app-border/30'}`}>
         <button onClick={onBasculer} aria-expanded={ouvert}
             className={`grid w-full items-center gap-3 px-5 py-3 text-left ${ouvert ? 'border-b border-accent/30 bg-accent/5' : ''}`} style={grille}>
-            <span className="flex min-w-0 items-center gap-2">
+            <span className={`${NOM_FIGE} -my-3 -ml-5 flex min-w-0 items-center gap-2 self-stretch py-3 pl-5`}>
                 {ouvert ? <ChevronUp size={18} className="shrink-0 text-accent" /> : <ChevronDown size={18} className="shrink-0 text-app-muted" />}
                 <span className="min-w-0">
                     <span className={`block font-bold ${ouvert ? 'text-accent' : 'text-app-text'}`}>{creature.nom || '(sans nom)'}</span>
@@ -257,8 +263,14 @@ const LigneDeCreature: React.FC<{
                 const v = creature.valeurs?.[c.id];
                 const vide = v === undefined || String(v).trim() === '';
                 return (
-                    <span key={c.id} className="text-center">
-                        <span className={`inline-block whitespace-nowrap rounded-md px-2 py-0.5 font-mono text-ui-12 ${vide ? 'text-app-muted' : 'bg-app-text/5 font-bold text-app-text'}`}>{vide ? '—' : String(v)}</span>
+                    <span key={c.id} className="min-w-0 text-center">
+                        {/*
+                          Un texte long se coupe ; il se lit entier au survol et dans la fiche dépliée
+                          (07/11/2026, Barbarians : « 6 points (max 4 dans un attribut) » chevauchait ses
+                          voisins — le même défaut que le catalogue de Cthulhu Hack).
+                        */}
+                        <span title={vide ? undefined : String(v)}
+                            className={`inline-block max-w-full truncate whitespace-nowrap rounded-md px-2 py-0.5 align-middle font-mono text-ui-12 ${vide ? 'text-app-muted' : 'bg-app-text/5 font-bold text-app-text'}`}>{vide ? '—' : String(v)}</span>
                     </span>
                 );
             })}
@@ -266,8 +278,9 @@ const LigneDeCreature: React.FC<{
                 {creature.source?.page ? `p. ${creature.source.page}` : <span className="font-sans italic">sans page</span>}
             </span>
         </button>
-        {constats.length > 0 && <div className="space-y-1.5 px-5 pb-3 pt-1"><ListeDesConstats constats={constats} /></div>}
-        {ouvert && children}
+        {constats.length > 0 && <div className={`${DEPLIE_VISIBLE} space-y-1.5 px-5 pb-3 pt-1`}><ListeDesConstats constats={constats} /></div>}
+        {/* La fiche dépliée ne défile pas avec le tableau : elle garde la largeur visible. */}
+        {ouvert && <div className={DEPLIE_VISIBLE}>{children}</div>}
     </article>
 );
 

@@ -10,6 +10,7 @@ import {
 import RemplirDepuisLeCorpus from './RemplirDepuisLeCorpus';
 import LivreALaPage, { type RegistreDesLivres } from '../../../forge/rules/components/LivreALaPage';
 import { useLivresDuPilote } from '../../../forge/rules/useLivresDuJeu';
+import { DEFILEUR, DEPLIE_VISIBLE, INTERIEUR, NOM_FIGE, grilleDefilante } from './grilleDefilante';
 
 /**
  * **La section « Équipement » de l'éditeur du pilote** — registre § 203,
@@ -85,7 +86,9 @@ const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdat
       colonnes, et la fiche dépliée s'élargissait avec le tableau. Les colonnes se partagent désormais
       la place (`1fr`), le nom en garde le double ; une valeur trop longue se coupe.
     */
-    const grille = { gridTemplateColumns: `minmax(9rem, 2fr) repeat(${colonnes.length}, minmax(2.5rem, 1fr)) minmax(5rem, 8rem) 4rem` };
+    // Le 07/11/2026, second essai de David (« c'est pas mieux », sur le bestiaire de Barbarians) : la
+    // grille défile, chaque colonne lisible, le nom figé, la fiche dépliée à la largeur visible.
+    const grille = grilleDefilante(colonnes, ['minmax(9rem, 12rem)', '5.5rem']);
 
     const retirerLaColonne = (id: string, libelle: string) => {
         const n = valeursDeLaColonne(catalogue, famille, id);
@@ -198,14 +201,15 @@ const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdat
             )}
             <div className="space-y-6 pb-20">
                 {groupes.map(g => (
-                    <div key={g.categorie} className="min-w-0">
-                        <div className="mb-2 flex items-center justify-between px-1">
+                    <div key={g.categorie} className={DEFILEUR}>
+                      <div className={INTERIEUR}>
+                        <div className={`${DEPLIE_VISIBLE} mb-2 flex items-center justify-between px-1`}>
                             <h4 className="text-ui-12 font-black uppercase tracking-[0.15em] text-app-muted">{g.categorie}</h4>
                             <span className="font-mono text-ui-12 text-app-muted">{g.objets.length} objet{g.objets.length > 1 ? 's' : ''}</span>
                         </div>
                         <div className="mb-2 grid items-center gap-3 px-5 text-ui-12 font-black uppercase tracking-[0.12em] text-app-muted" style={grille}>
-                            <span>{libelleDeFamille.libelle}</span>
-                            {colonnes.map(c => <span key={c.id} title={c.libelle} className="min-w-0 hyphens-auto text-center leading-tight tracking-normal">{c.libelle}</span>)}
+                            <span className={`${NOM_FIGE} -ml-5 pl-5`}>{libelleDeFamille.libelle}</span>
+                            {colonnes.map(c => <span key={c.id} title={c.libelle} className="text-center leading-tight tracking-normal">{c.libelle}</span>)}
                             <span>Propriétés</span>
                             <span className="text-right">Source</span>
                         </div>
@@ -223,6 +227,7 @@ const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdat
                                 </LigneDObjet>
                             ))}
                         </div>
+                      </div>
                     </div>
                 ))}
             </div>
@@ -264,10 +269,10 @@ const LigneDObjet: React.FC<{
     objet: ObjetDuCatalogue; grille: React.CSSProperties; colonnes: { id: string }[]; ouvert: boolean;
     constats: ConstatDuCatalogue[]; onBasculer: () => void; children: React.ReactNode;
 }> = ({ objet, grille, colonnes, ouvert, constats, onBasculer, children }) => (
-    <article className={`overflow-hidden rounded-3xl border bg-app-surface/20 ${ouvert ? 'border-2 border-accent' : 'border-app-border/10 hover:border-app-border/30'}`}>
+    <article className={`overflow-clip rounded-3xl border bg-app-surface/20 ${ouvert ? 'border-2 border-accent' : 'border-app-border/10 hover:border-app-border/30'}`}>
         <button onClick={onBasculer} aria-expanded={ouvert}
             className={`grid w-full items-center gap-3 px-5 py-3 text-left ${ouvert ? 'border-b border-accent/30 bg-accent/5' : ''}`} style={grille}>
-            <span className="flex min-w-0 items-center gap-2">
+            <span className={`${NOM_FIGE} -my-3 -ml-5 flex min-w-0 items-center gap-2 self-stretch py-3 pl-5`}>
                 {ouvert ? <ChevronUp size={18} className="shrink-0 text-accent" /> : <ChevronDown size={18} className="shrink-0 text-app-muted" />}
                 <span className="min-w-0">
                     <span className="block font-bold text-app-text">{objet.nom || '(sans nom)'}</span>
@@ -292,8 +297,9 @@ const LigneDObjet: React.FC<{
                 {objet.source?.page ? `p. ${objet.source.page}` : <span className="font-sans italic">sans page</span>}
             </span>
         </button>
-        {constats.length > 0 && <div className="space-y-1.5 px-5 pb-3 pt-1"><ListeDesConstats constats={constats} /></div>}
-        {ouvert && children}
+        {constats.length > 0 && <div className={`${DEPLIE_VISIBLE} space-y-1.5 px-5 pb-3 pt-1`}><ListeDesConstats constats={constats} /></div>}
+        {/* La fiche dépliée ne défile pas avec le tableau : elle garde la largeur visible. */}
+        {ouvert && <div className={DEPLIE_VISIBLE}>{children}</div>}
     </article>
 );
 

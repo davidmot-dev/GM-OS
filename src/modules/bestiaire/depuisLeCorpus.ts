@@ -330,6 +330,13 @@ export function remplirLeBestiaire(
                 remplis.push(champ);
             } else if (champ !== 'source') ecart(champ, avant, apres);
         }
+        // Une source sans page reçoit celle de la fiche — 07/11/2026, Barbarians : une créature
+        // posée avant que la fiche ne cite ses pages restait « sans page » à chaque remplissage.
+        const page = propose.source?.page;
+        if (existant.source && existant.source.page === undefined && page !== undefined) {
+            existant.source = { ...existant.source, page };
+            remplis.push('page');
+        }
         // La table du jeu : posée si la créature n'en a pas, jamais remplacée.
         const table = propose.attaques?.table;
         if (table) {

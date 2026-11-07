@@ -356,6 +356,42 @@ Est-ce que tu ne rajouterais pas cela comme éléments de base lorsque l'on forg
   invites, sélection du RAG, manuel), `tsc -b`, eslint.
 
 
+## Barbarians of Lemuria — le 07/11 : la vérification, F3 plus robuste
+
+David : *« je viens de finir Barabarian of Lemuria, vérifie »*, puis *« fais les 3 »*.
+
+- **A — le livre** : l'équipement forgé était juste (32 objets, F4 : 32 sur 32) ; le bestiaire
+  forgé recopiait trois fois les catégories de taille, coupées, et omettait les créatures. Il est
+  transcrit du livre (script sur le texte du PDF, encadrés vérifiés en image quand le rendu le
+  permettait — certains sortent noirs —, démons attribués par leurs règles de création) : 69
+  profils, aucun constat ; F4 : 55 retrouvés, 14 à confirmer (blocs à cheval sur deux colonnes ou
+  pages), aucun introuvable.
+- **B — F3** : `nettoyerLeLot` écarte d'un lot les lignes coupées et celles dont le nom est déjà au
+  brouillon, puis les tableaux vides ; la relecture le dit (« Lot 2 : 8 ligne(s) déjà reçue(s)
+  écartée(s) — le carnet a répété un tableau »). L'en-tête des créatures demande des créatures
+  NOMMÉES, pas des catégories de taille ni des tables de création.
+- **C — l'écran du bestiaire** : un premier essai (valeurs coupées en « … », titres coupés par
+  syllabe, colonnes à 2,5 rem) n'a rien donné — *« c'est pas mieux »* : Chromium n'a pas de césure
+  sous Windows, et treize colonnes serrées sont illisibles. **Choix de David : défiler.** La grille
+  (`grilleDefilante.ts`, partagée par le bestiaire et le catalogue) donne à chaque colonne une
+  largeur fixe, jamais moins que le plus long mot de son titre, la même pour l'en-tête et chaque
+  ligne ; le groupe défile à l'horizontale, le **nom reste figé à gauche**, la fiche dépliée et les
+  constats gardent la **largeur visible** (`100cqw`). L'article passe en `overflow-clip` pour que
+  `sticky` tienne. Second retour (*« ce n'est toujours pas bon … augmente la taille utile »*) :
+  l'atelier bridait toutes ses sections à `max-w-5xl` (≈ 870 px), le tableau défilait entre deux
+  marges vides. Le Bestiaire et l'Équipement prennent désormais **toute la largeur** de l'espace
+  de travail (`RuleEngineEditor.tsx`) ; les autres sections gardent leur colonne. **Essai de David
+  attendu.**
+- **D — la page manquante** : une créature (ou un objet) déjà présente **sans page** ne la recevait
+  pas au « Remplir depuis le corpus » — `verser` ne posait `source` que si elle manquait entière.
+  Elle reçoit désormais la page de la fiche (journal : « page »), sans toucher au reste de la
+  source ; une page déjà posée ne bouge pas. Un essai de chaque côté (`depuisLeCorpus.test.ts`).
+- **Vérifié après C et D** : 1 031 essais (Forge, bestiaire, équipement, écrans des règles),
+  `tsc -b`, eslint.
+- **Vérifié** : `tableauxParRequete.test.ts` (+3), `ForgeService.test.ts` (+1) ; 1 087 essais
+  (Forge, bestiaire, équipement, écrans des règles, invites, manuel), `tsc -b`, eslint.
+
+
 ## L'ordre recommandé
 
 F1, puis F5, puis F2, puis F4, puis F3. F1 et F5 se font sans toucher aux invites et servent tout de

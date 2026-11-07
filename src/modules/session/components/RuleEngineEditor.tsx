@@ -196,7 +196,13 @@ export const RuleEngineEditor: React.FC = () => {
 
                 {/* Main Workspace */}
                 <div className="flex-1 overflow-y-auto custom-scrollbar bg-[radial-gradient(circle_at_top_right,rgba(var(--app-accent-rgb),0.05),transparent_40%)]">
-                    <div className="max-w-5xl mx-auto p-12 animate-fade-in">
+                    {/*
+                      Le Bestiaire et l'Équipement prennent toute la largeur — 07/11/2026, David sur
+                      Barbarians : « augmente la taille utile pour pouvoir lire ». Leurs tableaux ont
+                      jusqu'à treize colonnes ; bridés à 5xl, ils défilaient dans un couloir central
+                      entre deux marges vides. Les autres sections gardent leur colonne de lecture.
+                    */}
+                    <div className={`${activeSection === 'bestiaire' || activeSection === 'equipement' ? 'max-w-none px-8 py-12' : 'max-w-5xl p-12'} mx-auto animate-fade-in`}>
                         
                         {activeSection === 'modules-du-jeu' && <EditeurDesModules pilote={driver} onChange={modulesDuJeu => handleUpdate({ modulesDuJeu })} />}
                         {activeSection === 'core' && (

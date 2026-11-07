@@ -78,6 +78,18 @@ describe('remplirDepuisLesFiches — Colonial Marines', () => {
         expect(objet(r, 'Pistolet semi-automatique VP-70MA6').source?.page).toBe(66);
     });
 
+    it('un objet déjà présent sans page reçoit celle de la fiche ; une page posée ne bouge pas', () => {
+        // 07/11/2026, Barbarians : le catalogue forgé d'abord gardait « sans page ».
+        const avecPages = fiches.map(f => (f.chemin.endsWith('armes-de-poing-pistolets.md') ? { ...f, pages: [{ titre: 'PISTOLETS', page: 66 }] } : f));
+        const premier = remplirDepuisLesFiches(undefined, fiches, champs);
+        expect(objet(premier, 'Pistolet semi-automatique VP-70MA6').source?.page).toBeUndefined();
+        const second = remplirDepuisLesFiches(premier.catalogue, avecPages, champs);
+        expect(objet(second, 'Pistolet semi-automatique VP-70MA6').source).toMatchObject({ livre: LIVRE, page: 66 });
+        expect(second.journal.objetsCompletes).toEqual(expect.arrayContaining([{ id: 'pistolet-semi-automatique-vp-70ma6', nom: 'Pistolet semi-automatique VP-70MA6', champs: ['page'] }]));
+        const troisieme = remplirDepuisLesFiches(second.catalogue, avecPages, champs);
+        expect(troisieme.journal.objetsCompletes).toEqual([]);
+    });
+
     it('ne remplace jamais ce que le meneur a corrigé, et ne double rien au second passage', () => {
         const premier = remplir();
         const corrige = modifierUnObjet(premier.catalogue, 'pistolet-semi-automatique-vp-70ma6', { valeurs: { bonus: '+3', degats: 1 } });

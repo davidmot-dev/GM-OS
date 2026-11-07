@@ -77,6 +77,20 @@ describe('le remplissage ne remplace rien', () => {
         expect(journal.creaturesCompletees).toEqual([{ id: 'biodrone-xx121b', nom: 'Biodrone XX121B', champs: ['observation'] }]);
     });
 
+    it('une créature déjà présente sans page reçoit celle de la fiche, sans rien perdre d’autre', () => {
+        // 07/11/2026, Barbarians : le bestiaire forgé d'abord gardait « sans page ».
+        const { bestiaire: premier } = remplirLeBestiaire(undefined, [FICHE]);
+        const sansPage = {
+            ...premier,
+            creatures: premier.creatures.map(c => (c.nom === 'Biodrone XX121B' ? { ...c, source: { livre: 'Mon livre' } } : c)),
+        };
+        const { bestiaire, journal } = remplirLeBestiaire(sansPage, [FICHE]);
+        expect(bestiaire.creatures.find(c => c.nom === 'Biodrone XX121B')?.source).toEqual({ livre: 'Mon livre', page: 176 });
+        expect(journal.creaturesCompletees).toEqual([{ id: 'biodrone-xx121b', nom: 'Biodrone XX121B', champs: ['page'] }]);
+        // Une page déjà posée ne bouge pas.
+        expect(remplirLeBestiaire(bestiaire, [FICHE]).journal.creaturesCompletees).toEqual([]);
+    });
+
     it('un tableau qui n’est ni un profil ni une table d’attaques est écarté, nommé', () => {
         const fiche = { chemin: 'x.md', livre: 'L', contenu: '### Événements\n\n| D66 | Événement |\n|:--|:--|\n| 11 | Rien |\n' };
         const { journal } = remplirLeBestiaire(undefined, [fiche]);
