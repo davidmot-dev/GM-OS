@@ -1,0 +1,418 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "torg-eternity-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Torg Eternity (pilote 2.0.0, outils/torg/finir_torg.mjs) et le gabarit torg-eternity-fr livré le 2026-11-07 (GM-OS Studio, registre § 232). Le jet de Torg ajoute la compétence à l’attribut : les cases « rangs » vont aux compétences du pilote, les « valeurs » restent sur la fiche. Armes, armures et équipement vont dans l’inventaire, une ligne imprimée par objet.",
+  "champs": [
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "race",
+      "fiche": "identity.race"
+    },
+    {
+      "gmos": "cosm_origine",
+      "fiche": "identity.cosm"
+    },
+    {
+      "gmos": "xp",
+      "fiche": "identity.xp_total"
+    },
+    {
+      "gmos": "niveau_habilitation",
+      "fiche": "identity.clearance"
+    },
+    {
+      "gmos": "charisme",
+      "fiche": "attributes.charisma"
+    },
+    {
+      "gmos": "dexterite",
+      "fiche": "attributes.dexterity"
+    },
+    {
+      "gmos": "esprit",
+      "fiche": "attributes.spirit"
+    },
+    {
+      "gmos": "force",
+      "fiche": "attributes.strength"
+    },
+    {
+      "gmos": "raison",
+      "fiche": "attributes.mind"
+    },
+    {
+      "gmos": "axiome_magie",
+      "fiche": "axioms.magic"
+    },
+    {
+      "gmos": "axiome_social",
+      "fiche": "axioms.social"
+    },
+    {
+      "gmos": "axiome_spirituel",
+      "fiche": "axioms.spirit"
+    },
+    {
+      "gmos": "axiome_technologie",
+      "fiche": "axioms.tech"
+    },
+    {
+      "gmos": "esquive_def",
+      "fiche": "defenses.dodge"
+    },
+    {
+      "gmos": "melee_def",
+      "fiche": "defenses.melee"
+    },
+    {
+      "gmos": "mains_nues_def",
+      "fiche": "defenses.unarmed"
+    },
+    {
+      "gmos": "resistance",
+      "fiche": "combat.toughness"
+    },
+    {
+      "gmos": "armure",
+      "fiche": "combat.armour"
+    },
+    {
+      "gmos": "choc",
+      "fiche": "tracks.shock"
+    },
+    {
+      "gmos": "blessures",
+      "fiche": "tracks.wounds"
+    },
+    {
+      "gmos": "armes_energie",
+      "fiche": "skills.energy_weapons.adds"
+    },
+    {
+      "gmos": "armes_feu",
+      "fiche": "skills.fire_combat.adds"
+    },
+    {
+      "gmos": "armes_jet",
+      "fiche": "skills.missile_weapons.adds"
+    },
+    {
+      "gmos": "armes_melee",
+      "fiche": "skills.melee_weapons.adds"
+    },
+    {
+      "gmos": "combat_mains_nues",
+      "fiche": "skills.unarmed_combat.adds"
+    },
+    {
+      "gmos": "intimidation",
+      "fiche": "skills.intimidation.adds"
+    },
+    {
+      "gmos": "manoeuvre",
+      "fiche": "skills.maneuver.adds"
+    },
+    {
+      "gmos": "provocation",
+      "fiche": "skills.taunt.adds"
+    },
+    {
+      "gmos": "ruse",
+      "fiche": "skills.trick.adds"
+    },
+    {
+      "gmos": "atouts",
+      "fiche": [
+        "assets.0.name",
+        "assets.1.name",
+        "assets.2.name",
+        "assets.3.name",
+        "assets.4.name",
+        "assets.5.name",
+        "assets.6.name"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "notes_personnelles",
+      "fiche": "profile.description"
+    }
+  ],
+  "objets": [
+    {
+      "destination": "inventoryItems",
+      "prefixe": "weapons",
+      "emplacements": [
+        0,
+        1,
+        2
+      ],
+      "type": "weapon",
+      "nom": "name",
+      "proprietes": {
+        "tech": "tech",
+        "damage": "dommages",
+        "ammo": "munitions",
+        "range": "portee",
+        "notes": "notes"
+      }
+    },
+    {
+      "destination": "inventoryItems",
+      "prefixe": "armour",
+      "emplacements": [
+        0,
+        1
+      ],
+      "type": "armor",
+      "nom": "name",
+      "proprietes": {
+        "tech": "tech",
+        "bonus": "bonus",
+        "notes": "notes"
+      }
+    },
+    {
+      "destination": "inventoryItems",
+      "prefixe": "equipment",
+      "emplacements": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "type": "other",
+      "nom": "name",
+      "proprietes": {
+        "tech": "tech",
+        "notes": "notes"
+      }
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "identity.xp_available",
+      "pourquoi": "GM-OS ne tient qu’un total de PX (champ « xp »)."
+    },
+    {
+      "fiche": "combat.movement",
+      "pourquoi": "Valeur dérivée imprimée sur la fiche ; la fiche du pilote n’a pas de champ pour elle."
+    },
+    {
+      "fiche": "combat.run",
+      "pourquoi": "Valeur dérivée imprimée sur la fiche ; la fiche du pilote n’a pas de champ pour elle."
+    },
+    {
+      "fiche": "skills.energy_weapons.value",
+      "pourquoi": "Valeur = attribut + rangs : le jet de GM-OS la recalcule à partir des rangs."
+    },
+    {
+      "fiche": "skills.fire_combat.value",
+      "pourquoi": "Valeur = attribut + rangs : le jet de GM-OS la recalcule à partir des rangs."
+    },
+    {
+      "fiche": "skills.missile_weapons.value",
+      "pourquoi": "Valeur = attribut + rangs : le jet de GM-OS la recalcule à partir des rangs."
+    },
+    {
+      "fiche": "skills.melee_weapons.value",
+      "pourquoi": "Valeur = attribut + rangs : le jet de GM-OS la recalcule à partir des rangs."
+    },
+    {
+      "fiche": "skills.unarmed_combat.value",
+      "pourquoi": "Valeur = attribut + rangs : le jet de GM-OS la recalcule à partir des rangs."
+    },
+    {
+      "fiche": "skills.intimidation.value",
+      "pourquoi": "Valeur = attribut + rangs : le jet de GM-OS la recalcule à partir des rangs."
+    },
+    {
+      "fiche": "skills.maneuver.value",
+      "pourquoi": "Valeur = attribut + rangs : le jet de GM-OS la recalcule à partir des rangs."
+    },
+    {
+      "fiche": "skills.taunt.value",
+      "pourquoi": "Valeur = attribut + rangs : le jet de GM-OS la recalcule à partir des rangs."
+    },
+    {
+      "fiche": "skills.trick.value",
+      "pourquoi": "Valeur = attribut + rangs : le jet de GM-OS la recalcule à partir des rangs."
+    },
+    {
+      "fiche": "skills.other.0.name",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.0.attribute",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.0.adds",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.0.value",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.1.name",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.1.attribute",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.1.adds",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.1.value",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.2.name",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.2.attribute",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.2.adds",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.2.value",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.3.name",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.3.attribute",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.3.adds",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.3.value",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.4.name",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.4.attribute",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.4.adds",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.4.value",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.5.name",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.5.attribute",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.5.adds",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.5.value",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.6.name",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.6.attribute",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.6.adds",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.6.value",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.7.name",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.7.attribute",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.7.adds",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "skills.other.7.value",
+      "pourquoi": "Ligne libre « Autre » : la compétence n’est connue qu’à la saisie ; reporter ses rangs dans la compétence du pilote."
+    },
+    {
+      "fiche": "assets.0.effect",
+      "pourquoi": "GM-OS tient les atouts en un texte, un nom par ligne ; l’effet est celui du livre."
+    },
+    {
+      "fiche": "assets.1.effect",
+      "pourquoi": "GM-OS tient les atouts en un texte, un nom par ligne ; l’effet est celui du livre."
+    },
+    {
+      "fiche": "assets.2.effect",
+      "pourquoi": "GM-OS tient les atouts en un texte, un nom par ligne ; l’effet est celui du livre."
+    },
+    {
+      "fiche": "assets.3.effect",
+      "pourquoi": "GM-OS tient les atouts en un texte, un nom par ligne ; l’effet est celui du livre."
+    },
+    {
+      "fiche": "assets.4.effect",
+      "pourquoi": "GM-OS tient les atouts en un texte, un nom par ligne ; l’effet est celui du livre."
+    },
+    {
+      "fiche": "assets.5.effect",
+      "pourquoi": "GM-OS tient les atouts en un texte, un nom par ligne ; l’effet est celui du livre."
+    },
+    {
+      "fiche": "assets.6.effect",
+      "pourquoi": "GM-OS tient les atouts en un texte, un nom par ligne ; l’effet est celui du livre."
+    },
+    {
+      "fiche": "states.stymied",
+      "pourquoi": "État de combat éphémère, suivi par le combat de GM-OS."
+    },
+    {
+      "fiche": "states.vulnerable",
+      "pourquoi": "État de combat éphémère, suivi par le combat de GM-OS."
+    },
+    {
+      "fiche": "tracks.wound_level",
+      "pourquoi": "Piste imprimée du niveau de Blessures, indépendante du compteur ; GM-OS tient le compteur (« blessures »)."
+    }
+  ]
+}

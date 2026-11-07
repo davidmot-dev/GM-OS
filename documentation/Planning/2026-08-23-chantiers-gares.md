@@ -438,6 +438,15 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**07/11/2026 — Forcer Atelier ne libère pas la Bibliothèque pendant une séance active.**
+
+Constaté dans la recette Torg isolée : le bandeau affiche « Atelier (forcé) », mais une
+navigation vers `library` revient au cockpit. `useLayoutManager.ts` calcule encore
+`momentDeJeu(sessions)` sans lire `surchargeDuRegime`, contrairement au bandeau
+`IndicateurDeRegime.tsx`. Hors chantier Torg, aucun correctif de ce comportement appliqué.
+La recette termine sa séance fictive avant le réimport. Reproduire puis raccorder le
+régime utilisé par le classement des vues à celui que le bandeau annonce.
+
 **07/11/2026 — Blade Runner : deux constats du clip, hors correction vidéo.**
 
 - **Reprise du suivi de blessures :** DonneesDeFicheSchema refuse le JSON structuré
@@ -14081,6 +14090,28 @@ David : « peux-tu faire un clips avec Playright les mécanismes particulier de 
 - **Vérifié :** build, lint, répétition et tournage normal ; assertions sur réussites, forçages, coûts, usages de séance, stress, blessures, cartes, protection et échanges tactiles réels. Dix-huit scènes et vingt-deux images du MP4 relues, titres et deux raccords compris ; ffprobe contrôlé. Montage reproductible : outils/clips/monter_clip_blade_runner.mjs.
 - **Reste :** ouvrir le film ; [note de reprise](2026-11-07-etat-et-reprise-codex-clip-blade-runner.md). Exercices ciblés, sans combat complet ni recette exhaustive : les effets critiques de stress/Brisé, mort, premiers secours, main secourable, récupération, poursuites, fin de guérison et progression ne sont pas rejoués. Plaie mortelle et cartes3/7 préparées avant le générique ; dés d’exercice choisis. Humanité à4 saisie manuellement, sans bilan de fin de session. Le compteur de PV générique reste à8 malgré la Santé à7 : constat de raccord séparé. Aucun appareil physique utilisé. Le rechargement/import du suivi de blessure n’est pas testé : la semence refuse ce JSON structuré, posé après chargement pour le tournage (constat hors périmètre consigné au registre). Aucun code applicatif ou pilote modifié, paquet installé ou profil personnel utilisé. Services locaux jetables déjà autorisés ; aucun commit/push demandé. Clips précédents et changements étrangers conservés.
 
+### 231 · Torg Eternity — Atouts, échanges, Lois et Sbires — 07/11/2026
+
+David : « on va finir les amélioration de TORG des améliorations tous les pilotes ».
+GM-OS déclaré fermé ; services locaux d'essai déjà autorisés en profil jetable.
+
+- **Livré, essai de David attendu :** TORG-A0 à A4. Six Atouts déclarés par cases, coûts et usages contrôlés ; échanges une pour une en main hors rounds et en Réserve en rounds, acceptation atomique chez le MJ et sur le vrai Hub ; Désorientés, Domination, Ténacité et Souffrance raccordés avec cibles, reçus et traces ; Sbires réservé au porteur déclaré, proximité confirmée, Réalité ND 10 puis application unique sur la cible finale. La capacité Horde vient de la fiche. Les dégâts ordinaires et ceux du calculateur passent aussi par la table Torg, y compris les adversaires autonomes ; une action multicible partage le reçu pour Souffrance.
+- **Ancres :** `gestesDesAtoutsTorg.ts`, `echangesDeTorg.ts` et `deckSlice.ts` ; `SuitesDeTorg.tsx`, `suitesDeTorg.ts`, `impactDeTorg.ts`, `useCombatStore.applyDamage`, `SbiresDuVilain.tsx`. [Suivi détaillé](2026-11-07-torg-ameliorations.md), manuels 53/54 et captures actualisés ; synthèse à cinq lignes orange.
+- **Pilote :** [Torg-Eternity-2.0.0.gmos-driver](../../Export%20Dirvers/corriges/Torg-Eternity-2.0.0.gmos-driver), scripts `outils/torg/finir_torg.mjs` et `verifier_pilote.mjs`. Identifiants du pilote et du modèle, ainsi que les trois paquets, conservés ; dix nouvelles cases fausses par défaut. Contrôle du pilote sans constat, vrai jet préparé niveau 11/1d20/ND 10.
+- **Sources :** livre de base et *Empire du Nil* v1, chemins dans `livres.json`, imprimée +2 = PDF ; tables des Bonus et Dommages relues en image. Critique étendu 2–4 corrigé (seul le 1 échoue toujours), faux exemple de dé brut retiré, Déconnexion limitée aux dépenses de Possibilités et Drame/Héros. Trois fiches métier intégralement relues sur seize ; trois autres corrigées ponctuellement, laissées non relues ; empreintes d'origine conservées.
+- **Vérifié :** voir le [suivi](2026-11-07-torg-ameliorations.md), la [note de reprise](2026-11-07-etat-et-reprise-codex-torg.md) et le [rapport des contrôles](../../output/torg-ameliorations/verification-automatique.json). Build et types réussis ; lint global 2 679 fichiers sans erreur (un avertissement préexistant) ; **10 070 tests réussis, quatre sautés, zéro échec**. Recette Electron/Hub finale : un test réussi, import, réimport, coûts, échange tactile, Sbires, dégâts ordinaires, Lois et persistance. Captures du manuel : un test réussi, dix images de base et quatre nouvelles images relues.
+- **Reste :** réimport **Remplacer**, cocher et sauvegarder les possessions réelles des personnages, puis essai de David. Les autres Lois et effets narratifs des cartes, les conditions fictionnelles, Défaite et la correction manuelle d'Annulation restent à la table. Treize fiches métier et l'inventaire restent à relire entièrement. Aucun appareil physique testé, aucune donnée personnelle touchée. Aucun commit/push demandé ; fichier RuneQuest et corpus Blade Runner étrangers au lot conservés.
+
+### 232 · GM-OS Studio — fiche PJ Torg vierge — 07/11/2026
+
+David : « fais la fiche PJ pour Torg, vide les champs qui sont rempli, ne touche pas à la table des bonus ».
+
+- **Livré :** [HTML interactif](../../docs/fiches/Torg/torg-eternity-fiche-pj-vierge-interactive.html), [PDF vierge](../../output/fiches/torg/torg-eternity-fiche-pj-vierge.pdf) et [PNG vierge](../../output/fiches/torg/torg-eternity-fiche-pj-vierge.png). Page de Vikas Ord identifiée dans les prétirés Torg, PDF p. 84 ; 88 blocs de texte retirés, commandes graphiques conservées. La bande entière de la Table des Bonus reste identique pixel pour pixel.
+- **Modèle :** `torg-eternity-fr`, une page, 152 zones et 145 clés nouvelles, aucune retirée. Champs initialement vides, trois pistes cliquables cumulatives, compteur Blessures indépendant de la piste de niveau, aucun calcul de règles ni portrait ajouté. Zoom 20–400 %, Zones, sauvegarde locale, JSON, réinitialisation confirmée et impression.
+- **Ancres :** `outils/torg/preparer-fiche-vierge.py`, `construire-fiche.mjs`, `verifier-fiche.mjs` et `fiche/`. [Contrôle du fond](../../output/fiches/torg/controle-du-fond.json), [validation](../../output/fiches/torg/validation.md), [recette du HTML](../../output/fiches/torg/verification.json), six captures relues ; manuel 54 et synthèse actualisés.
+- **Vérifié :** validateur accepté, zéro erreur et deux avertissements attendus (nouveau modèle non intégré, correspondance absente). Essais autonomes hors ligne, saisies, trois pistes, import/export et rechargement, refus sans perte, reset confirmé, zoom/clavier/molette, impression, tactile 768×1024, import dans le vrai moteur en stockage jetable puis retour JSON. Zéro erreur JavaScript, zéro requête réseau. **46 tests réussis** pour les fiches du dépôt et le manuel (`--maxWorkers=4`). Aucun service démarré, paquet installé ou profil personnel utilisé.
+- **Reste :** ouvrir l'HTML et juger le placement. Le fichier est importable ; l'installation dans `builtinTemplates` et la correspondance avec le pilote GM-OS sont un raccord ultérieur, non effectué par l'atelier constructeur. Aucun changement dans `src/` ou `electron/`, aucun commit/push demandé. Travaux TORG-A0/A4 précédents et fichiers étrangers conservés.
+
 ### 233 · Les modules du jeu sur la tablette du meneur — 07/11/2026
 
 David : « peux-tu me faire le plan pour activer les modules de jeu dans la tablette de Game Master », puis « commence » et, sur la maquette Stitch, « je suis d'accord avec la maquette continue ». GM-OS déclaré fermé.
@@ -14091,11 +14122,24 @@ David : « peux-tu me faire le plan pour activer les modules de jeu dans la tabl
 - **Vérifié :** 2 476 essais (modules, télécommande, écrans de séance, `electron`) dont 24 nouveaux ; `tsc -b`, eslint ; e2e `modulesDuJeuTabletteMeneur.spec.ts` (2) et `modulesDuJeuAlien.spec.ts` (14, non-régression du poste) sur le vrai Electron ; captures relues.
 - **Reste :** l'essai de David sur une vraie tablette, Alien d'abord (MU/TH/UR et détecteur), puis Rêve de Dragon. Aucun appareil physique essayé ; aucun commit demandé.
 
+### 234 · La fiche PJ de Torg reliée à GM-OS — 07/11/2026
+
+David : « j'ai fait la fiche de PJ de Torg, tu peux vérifier ? », puis « fais le raccord » et « corrige chocs et blessures ». Seul `electron/correspondanceDesFiches.test.ts` a été touché sous `electron/` (attente de version), sans que la question « GM-OS tourne-t-il ? » ait été reposée — un essai, que l'application ne charge pas.
+
+- **Vérifié :** la fiche du § 232, acceptée par le validateur ; rendus vierge et tablette propres.
+- **Corrigé — Choc et Blessures :** la case imprimée porte son libellé en filigrane, une valeur au centre se lisait « CH2C ». Le champ remplit le cadre sur fond clair, le libellé redit en petit à gauche, la valeur en gras à droite, y compris au focus (`outils/torg/construire-fiche.mjs`, `fiche/champs.css`) ; fiche régénérée, recette de l'atelier repassée.
+- **Raccord :** gabarit `torg-eternity-fr` intégré au moteur, `BUILTIN_VERSION` 23 → 24 (`outils/torg/integrer_au_moteur.mjs`) ; [correspondance](../../docs/systems/torg/fiche/correspondance.json) : 32 champs (identité, attributs, axiomes, défenses, Résistance, Armure, Choc, Blessures, rangs des neuf compétences imprimées, atouts par ligne, notes), armes, armures et équipement vers l'inventaire, 54 absents motivés — les valeurs de compétence (attribut + rangs, recalculées au jet), les huit lignes « Autre » (compétence inconnue d'avance), les effets d'atouts, la piste de niveau de Blessures, Déplacement, Course, PX disponibles.
+- **Vérifié :** validateur 0 erreur, 0 avertissement ; 1 775 essais (`electron`, `src/modules/fiches`).
+- **Reste :** l'essai de David — ouvrir la fiche HTML d'un PJ Torg depuis GM-OS, saisir, « Sauvegarder », voir les valeurs dans la fiche GM-OS. Les 31 compétences du pilote sans case imprimée ne remontent pas. Page 54 et synthèse des pilotes à compléter (fichiers de Codex en cours, non touchés). Aucun commit demandé.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 170 | **Fiche PJ de Torg reliée à GM-OS** | 🟠 § 234 ; Choc/Blessures corrigés, gabarit intégré (v24), correspondance écrite, validateur sans avertissement —07/11 | Ouvrir la fiche HTML d'un PJ Torg, saisir, Sauvegarder | Essai de David |
 | 169 | **Modules du jeu sur la tablette du meneur** | 🟠 § 233 ; onglet Modules, transport appairé, panneau commun, e2e vérifiés —07/11 | Ouvrir l'onglet Modules sur la tablette, en séance Alien | Essai de David sur une vraie tablette |
+| 168 | **Fiche PJ Torg vierge — GM-OS Studio** | 🟠 § 232 ; HTML/PDF/PNG livrés, Table des Bonus intacte, recette vérifiée —07/11 | Ouvrir l'HTML pour le jugement visuel | Essai de David ; raccord GM-OS ultérieur |
+| 167 | **Torg — Atouts, échanges, Lois et Sbires** | 🟠 § 231 ; TORG-A0 à A4 livrés, 10 070 tests et recette Electron/Hub vérifiés —07/11 | Réimporter le pilote 2.0.0 avec Remplacer et essayer les gestes | Essai de David ; relecture complète du corpus distincte |
 | 166 | **Clip Blade Runner et joueur tactile** | 🟢 § 230 ; MP4 3 min 17, huit chapitres et vrai Hub → MJ vérifiés —07/11 | Ouvrir le MP4 | Rien pour le clip ; appareils physiques non essayés |
 | 165 | **Clip Barbarians of Lemuria et joueur tactile** | 🟢 § 229 ; MP4 2 min 43, sept chapitres et vrai Hub → MJ vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip ; appareils physiques non essayés |
 | 164 | **Clip Alien et joueur tactile** | 🟢 §228 ; MP4 3 min 08, neuf chapitres, trois modules et vrai Hub → MJ vérifiés —06/11 | Ouvrir le MP4 | Rien pour le clip ; appareils physiques non essayés |

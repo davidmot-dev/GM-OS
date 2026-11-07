@@ -1,0 +1,15 @@
+.sheet[data-template="torg-eternity-fr"] .torg-field{position:absolute;box-sizing:border-box;margin:0;min-width:0;min-height:0;border:0;border-radius:0;background:transparent;color:#211d15;font:8.7px/1.2 Georgia,"Times New Roman",serif;padding:0 1px;resize:none;outline:0}
+.sheet[data-template="torg-eternity-fr"] .torg-number{text-align:center;font:10px/1.1 Georgia,"Times New Roman",serif;padding:0;font-variant-numeric:tabular-nums;appearance:textfield;-moz-appearance:textfield}
+.sheet[data-template="torg-eternity-fr"] .torg-small{font-size:9px}
+.sheet[data-template="torg-eternity-fr"] .torg-circle{font-size:12px}
+.sheet[data-template="torg-eternity-fr"] .torg-counter,.sheet[data-template="torg-eternity-fr"] .torg-field.torg-counter:focus{font-size:15px;font-weight:bold;text-align:right;padding:0 5px 0 0;background-color:#fffdf7;background-repeat:no-repeat;background-position:4px center}
+.sheet[data-template="torg-eternity-fr"] .torg-choc,.sheet[data-template="torg-eternity-fr"] .torg-field.torg-choc:focus{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='10'%3E%3Ctext x='0' y='8' font-family='Georgia,serif' font-size='7' letter-spacing='.3' fill='%2386796a'%3ECHOC%3C/text%3E%3C/svg%3E")}
+.sheet[data-template="torg-eternity-fr"] .torg-blessures,.sheet[data-template="torg-eternity-fr"] .torg-field.torg-blessures:focus{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='10'%3E%3Ctext x='0' y='8' font-family='Georgia,serif' font-size='7' letter-spacing='.3' fill='%2386796a'%3EBLESSURES%3C/text%3E%3C/svg%3E")}
+.sheet[data-template="torg-eternity-fr"] .torg-centered{text-align:center}
+.sheet[data-template="torg-eternity-fr"] .torg-number::-webkit-inner-spin-button,.sheet[data-template="torg-eternity-fr"] .torg-number::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.sheet[data-template="torg-eternity-fr"] .torg-textarea{padding:0 1px;line-height:11px;overflow:auto}
+.sheet[data-template="torg-eternity-fr"] .torg-name{font-size:12px}
+.sheet[data-template="torg-eternity-fr"] .torg-field:focus{outline:.6px solid #76613d;background:rgba(255,249,229,.8)}
+.sheet[data-template="torg-eternity-fr"] .torg-hotspot{padding:0;cursor:pointer;touch-action:manipulation}
+.sheet[data-template="torg-eternity-fr"] .torg-hotspot.active::after{content:"";position:absolute;inset:1px;background:rgba(69,86,77,.38);box-shadow:inset 0 0 0 1px #263c31;pointer-events:none}
+.sheet[data-template="torg-eternity-fr"] .torg-field.torg-counter:focus{background-color:#fff6df}

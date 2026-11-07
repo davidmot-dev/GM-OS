@@ -1,0 +1,26 @@
+{
+  "source": "274_jour_unpretires.pdf",
+  "pagePDF": 84,
+  "formatPoints": [
+    612,
+    792
+  ],
+  "renduPixels": [
+    1224,
+    1584
+  ],
+  "methode": "Suppression des blocs texte BT/ET du PDF, commandes graphiques inchangées",
+  "blocsTexteRetires": 88,
+  "textePersonnageRestant": 0,
+  "tableDesBonus": {
+    "bandePixels": [
+      0,
+      1388,
+      1224,
+      1584
+    ],
+    "pixelsModifies": 0,
+    "sha256Pixels": "7313d04c704ac04a7f597fdeb65df1aa6ae1a1ee7427452de7477c1a8109cd7f"
+  },
+  "pdf": "torg-eternity-fiche-pj-vierge.pdf"
+}

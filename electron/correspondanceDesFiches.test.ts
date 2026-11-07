@@ -140,9 +140,10 @@ describe('les gabarits intégrés du moteur', () => {
         const ids = MOTEURS.map(g => g.id).sort();
         expect({ version, ids }, 'liste changée : montez BUILTIN_VERSION dans le moteur, puis cette attente').toEqual({
             // 19 : la fiche de Barbarians of Lemuria (2026-10-27) ; 20 : celle de RuneQuest ; 21 : celle de Degenesis (2026-10-30) ;
-            // 22 : celle de COC 2 (2026-10-31) ; 23 : celle de Shadowrun : Anarchy 2.0 (2026-10-31).
-            version: 23,
-            ids: ['alien-v2-normalise', 'barbarian-of-lemuria-fr', 'blade-runner-fr', 'coc2-fr', 'crimes-fr', 'cthulhu-hack', 'degenesis-fr', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'runequest-fr', 'shadowrun-anarchy2-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr'],
+            // 22 : celle de COC 2 (2026-10-31) ; 23 : celle de Shadowrun : Anarchy 2.0 (2026-10-31) ;
+            // 24 : celle de Torg Eternity (2026-11-07).
+            version: 24,
+            ids: ['alien-v2-normalise', 'barbarian-of-lemuria-fr', 'blade-runner-fr', 'coc2-fr', 'crimes-fr', 'cthulhu-hack', 'degenesis-fr', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'runequest-fr', 'shadowrun-anarchy2-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr', 'torg-eternity-fr'],
         });
     });
 });

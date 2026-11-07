@@ -1,0 +1,39 @@
+{
+  "pages": 1,
+  "zones": 152,
+  "cles": 145,
+  "pistes": 3,
+  "hotspots": 10,
+  "champsInitialementVides": true,
+  "fondIdentiqueAuPDFVierge": true,
+  "aucunChampSurLaTableDesBonus": true,
+  "tableDesBonus": {
+    "bandePixels": [
+      0,
+      1388,
+      1224,
+      1584
+    ],
+    "pixelsModifies": 0,
+    "sha256Pixels": "7313d04c704ac04a7f597fdeb65df1aa6ae1a1ee7427452de7477c1a8109cd7f"
+  },
+  "htmlSHA256": "9b817730595a6182cc56351e3cbe69e84415aef51a3e1cfcbd4d7e4e10a0a54b",
+  "erreursJavaScript": [],
+  "requetesReseau": [],
+  "saisie": true,
+  "pistesCumulativesEtZero": true,
+  "rechargement": true,
+  "importExportJSON": true,
+  "importIncompatibleRefuseSansPerte": true,
+  "reinitialisationConfirmee": true,
+  "zoom20a400": true,
+  "raccourcisEtMolette": true,
+  "tabletteTactile": true,
+  "impression": {
+    "largeur": 816,
+    "hauteur": 1056
+  },
+  "importDansLeMoteurEtRetourJSON": true,
+  "integration": "Modèle importable, non installé dans builtinTemplates ; correspondance non écrite, conformément à l’atelier.",
+  "capturesExaminees": false
+}
