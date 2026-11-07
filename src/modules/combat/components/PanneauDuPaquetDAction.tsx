@@ -54,6 +54,7 @@ const PanneauDuPaquetDAction: React.FC = () => {
     const systeme = useSessionOSStore(s => s.campaigns.find(c => c.id === s.activeCampaignId)?.system);
     const [modifier, setModifier] = useState(false);
 
+
     if (combattants.length === 0) return null;
 
     const paquet = paquetDActionDuJeu(decks, systeme);
@@ -90,7 +91,7 @@ const PanneauDuPaquetDAction: React.FC = () => {
         if (effet === 'vivacite') {
             secondTour(camp);
         } else {
-            const dits = ajusterLeChocDuCamp(camp, effet === 'inspiration' ? -2 : 2);
+            const dits = ajusterLeChocDuCamp(camp, effet === 'inspiration' ? -2 : 2, effet === 'inspiration');
             gmToast(`${EFFETS_DE_CONFLIT[effet].libelle} — ${dits.length ? dits.join(' ; ') : 'personne n’avait de Choc'}`, 'info');
         }
         noterLApplication(cle);

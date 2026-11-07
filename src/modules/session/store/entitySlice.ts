@@ -68,6 +68,7 @@ const plateauDeCombat = () => (window as unknown as {
             /** La scène à laquelle le combat en cours est rattaché, s'il l'est. */
             sceneId?: string | null;
             noterUnCoup?: (cibleId: string, impact: DamageImpact) => void;
+            noterSuiteTorg?: (cibleId: string, suite: import('../../dice/systemes/torgPersonnage').SuiteDeCoupTorg) => void;
             refleterLaFiche?: (
                 cibleId: string,
                 sante: { hp?: number; healthSystem?: HealthSystem; sheetData?: Record<string, unknown> },
@@ -933,13 +934,14 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             const cosms = cosmsDesIds(pilote?.cosms, idsDesCosmsCourants(campaigns.find(c => c.id === activeCampaignId), etat.scenes ?? []));
             const tenacite = choc.ko ? loiEnVigueur(cosms, 'tenacite') : undefined;
             const souffrance = d.blessures > 0 ? loiEnVigueur(cosms, 'souffrance') : undefined;
+            plateauDeCombat()?.noterSuiteTorg?.(targetId, { id: impactSaisi.torg?.actionId ?? crypto.randomUUID(), blessures: d.blessures, ko: choc.ko });
             const lois = [
                 tenacite ? `${tenacite.nom} : s'il est chargé en possibilités, il peut encaisser 1 Blessure pour effacer tout son Choc` : '',
                 souffrance ? `${souffrance.nom} : l'attaquant récupère 1 point de Choc` : '',
             ].filter(Boolean);
             return {
                 impact: { ...impactSaisi, value: d.blessures },
-                fiche: d.choc > 0 ? { [regle.choc]: choc.valeur } : {},
+                fiche: { ...(d.choc > 0 ? { [regle.choc]: choc.valeur } : {}), ...(choc.ko && pilote?.torg?.etats?.ko ? { [pilote.torg.etats.ko]: true } : {}) },
                 texte: direLesDommages(impactSaisi.value, resistance, d, choc.ko) + lois.map(l => ` — ${l}`).join(''),
             };
         };

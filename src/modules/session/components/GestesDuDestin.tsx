@@ -6,6 +6,7 @@ import { useCosmsCourants } from '../hooks/useCosmsCourants';
 import { tailleDeLaMain } from '../logic/cosmsCourants';
 import { gmConfirm } from '../../../stores/useModalStore';
 import AtoutsDuDestin from './AtoutsDuDestin';
+import { useOrdreDuTourStore } from '../../combat/useOrdreDuTourStore';
 
 /**
  * **Les gestes du meneur sur le Paquet du Destin** — Torg, 2026-10-14.
@@ -37,7 +38,10 @@ const GestesDuDestin: React.FC<{ deck: DeckManifest }> = ({ deck }) => {
     return (
         <div className="flex flex-wrap items-center gap-2 rounded-xl border border-accent/30 bg-accent/5 p-3" data-gestes-du-destin>
             <span className="text-ui-9 font-black uppercase tracking-widest text-accent mr-1">Paquet du Destin · main de {taille}</span>
-            <button type="button" onClick={() => reprendreLesReserves(deck.id)} className={bouton}
+            {!deckStates[deck.id]?.torgEnRounds && <button type="button" className={bouton}
+                onClick={() => useSessionOSStore.getState().reglerLesRoundsTorg(deck.id, true)}>Début du combat · jouer en rounds</button>}
+            {deckStates[deck.id]?.torgEnRounds && <span className="text-ui-10 text-app-muted">En rounds · échanges de Réserve à Réserve</span>}
+            <button type="button" onClick={() => { useOrdreDuTourStore.getState().clore(); reprendreLesReserves(deck.id); }} className={bouton}
                 title="Après un combat : les cartes de Réserve d’Action reviennent en main">
                 <Swords size={13} /> Fin du combat
             </button>

@@ -31,6 +31,8 @@ import { deCourant, ecrireLeDe } from '../../dice/ressourcesDUsure';
 import { useDiceStore } from '../../../stores/useDiceStore';
 import HordeDuCombattant from './HordeDuCombattant';
 import SbiresDuVilain from './SbiresDuVilain';
+import SuitesDeTorg from './SuitesDeTorg';
+import { caseDeTorg } from '../../dice/systemes/torgPersonnage';
 import { useTranslation } from 'react-i18next';
 import { estUneFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
 import { etatDuPhysique, physiqueActuel } from '../../dice/systemes/potentielGarde';
@@ -157,6 +159,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             if(refus){gmToast(refus,'info');return;}
         }
         ecrireSurLaFiche(fieldId, Math.max(0, valeur ?? currentVal + delta));
+        const koTorg = activeDriver?.torg?.etats?.ko;
+        if (valeur === 0 && fieldId === activeDriver?.combat.dommages?.choc && koTorg) ecrireLaFicheDuCombattant(combatant, { [koTorg]: false });
     };
 
     /*
@@ -517,6 +521,11 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 onHealthChange={(newHealth) => {
                   updateCombatant(combatant.id, { healthSystem: newHealth });
                 }}
+                onApplyImpact={(impact, versLaCible) => {
+                    if (activeDriver?.combat.dommages?.mecanique !== 'torg') return false;
+                    useCombatStore.getState().applyDamage(impact.isRecovery ? -impact.value : impact.value, 'torg', [versLaCible && currentTarget ? currentTarget.id : combatant.id]);
+                    return true;
+                }}
                 disposition="carte"
                 /*
                   **Les boutons Dégâts / Soins de cette ligne partent sur la
@@ -608,10 +617,12 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
             {/* Torg : un vilain touché fait passer l'attaque à un sbire (capacité « Sbires »). */}
             <SbiresDuVilain combatant={combatant} valeurs={ficheLue.valeurs} />
+            <SuitesDeTorg combatant={combatant} />
             {/* Torg : une horde de sbires, au Choc commun (règle optionnelle, 2026-10-14). */}
             {!combatant.isPlayer && activeDriver?.combat?.dommages?.mecanique === 'torg' && (
                 <HordeDuCombattant
                     horde={combatant.horde}
+                    capaciteDeclaree={caseDeTorg(ficheLue.valeurs, activeDriver.torg?.capacites?.horde)}
                     espritParDefaut={maximumDeLaJauge(activeDriver.combat.dommages.choc, activeDriver.combat.statsToTrack, combatant.sheetData) ?? 0}
                     resistanceParDefaut={Number(combatant.sheetData?.[activeDriver.combat.dommages.resistance]) || 0}
                     onChange={horde => updateCombatant(combatant.id, { horde })}

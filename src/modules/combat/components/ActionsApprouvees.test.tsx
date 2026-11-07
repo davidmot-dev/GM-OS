@@ -58,6 +58,16 @@ describe('l’Action approuvée', () => {
         expect(container.innerHTML).toBe('');
     });
 
+    it('Toutes propose chaque action, dont Intimidation, une fois par action', () => {
+        table();
+        useSessionOSStore.setState(s => ({ decks: s.decks.map(d => d.id === 'action' ? { ...d, cardMetadata: { 5: { action: { standard: { premier: 'H' }, dramatique: { premier: 'V' }, approuvees: ['toutes'] } } } } : d) }));
+        render(<ActionsApprouvees combatant={MARA as never} />);
+        fireEvent.click(screen.getByRole('button', { name: /Intimidation \+1 carte/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Attaque \+1 carte/ }));
+        expect(mainDeMara()).toHaveLength(2);
+        expect((screen.getByRole('button', { name: /Intimidation ✓/ }) as HTMLButtonElement).disabled).toBe(true);
+    });
+
     it('un Vilain n’a pas de Cartes du Destin', () => {
         table();
         const { container } = render(<ActionsApprouvees combatant={{ ...MARA, isPlayer: false, sourcePlayerId: undefined } as never} />);

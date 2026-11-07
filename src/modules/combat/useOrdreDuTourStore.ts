@@ -12,7 +12,7 @@ import {
     type Camp,
     type EtatDuTour,
 } from './logic/OrdreDuTour';
-import type { SceneDeConflit } from './logic/paquetDAction';
+import { effetsDuRound, type SceneDeConflit } from './logic/paquetDAction';
 
 /** La carte d'Action du round — Torg. Le paquet la détient, on retient laquelle. */
 export interface CarteDuRound {
@@ -169,3 +169,17 @@ export const useOrdreDuTourStore = create<OrdreDuTourState>()(
         },
     ),
 );
+
+// TORG-A2/A3 : le mode et les interdictions suivent le round, même si Deck-OS
+// ou le panneau d'initiative sont fermés. Le pont évite un import cyclique des stores.
+useOrdreDuTourStore.subscribe(ordre => {
+    if (typeof window === 'undefined') return;
+    const session = (window as unknown as { useSessionOSStore?: typeof import('../session/useSessionOSStore').useSessionOSStore }).useSessionOSStore?.getState();
+    const pilote = session?.getActiveDriver();
+    if (!session || pilote?.jet?.tableDeBonus !== 'torg') return;
+    const action = ordre.carte ? session.decks.find(d => d.id === ordre.carte?.deckId) : undefined;
+    const desorientes = effetsDuRound(ordre, action, 'joueurs').includes('desorientes');
+    for (const d of session.decks.filter(d => d.systemId === pilote.id && d.role === 'destin')) {
+        session.reglerLesRoundsTorg(d.id, !!ordre.tour || !!ordre.carte, desorientes);
+    }
+});

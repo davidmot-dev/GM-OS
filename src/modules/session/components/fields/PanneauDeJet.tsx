@@ -1717,6 +1717,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const completerTorg = (geste: 'relance' | 'possibilite' | 'action' | 'unDePlus') => {
         if (!testDeTorg) return;
         const { des, options, niveau, difficulte: nd, entraine: ok, titre } = testDeTorg;
+        if (des.premier[0] === 1 || (geste === 'relance' && des.premier[0] <= (options.plageCritique ?? 1))) return;
         const de = () => DiceEngine.roll(20);
         const suivants: DesDeTorg = geste === 'relance'
             ? { ...des, premier: lancerUneChaine(de, ok), relance: true }
@@ -3593,7 +3594,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     */}
                     {torg && testDeTorg && resultat && !torgCritique && (
                         <div data-gestes-de-torg className="flex flex-wrap items-center gap-2">
-                            {!testDeTorg.des.relance && !testDeTorg.des.possibilite && !testDeTorg.des.unDePlus && (
+                            {!testDeTorg.des.relance && !testDeTorg.des.possibilite && !testDeTorg.des.unDePlus && testDeTorg.des.premier[0] > (testDeTorg.options.plageCritique ?? 1) && (
                                 <button type="button" onClick={() => completerTorg('relance')}
                                     className="px-3 py-1 rounded-lg border border-app-border/40 text-ui-10 font-bold hover:border-accent/40 transition-colors">
                                     Relancer (compétence favorisée)

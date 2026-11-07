@@ -343,13 +343,14 @@ const DeckPlayer: React.FC = () => {
                                         <strong>{d.versNom}</strong>
                                     </span>
                                     <div className="flex gap-2">
-                                        <button
+                                        {d.echangeTorg ? <ContrepartieDeTorg deckId={d.deckId} porteur={d.versQui}
+                                            accepter={contreIndex => accepterLeDonDeCarte(d.id, undefined, contreIndex)} /> : <button
                                             type="button"
                                             onClick={() => accepterLeDonDeCarte(d.id)}
                                             className="rounded-lg bg-gm-gold px-3 py-1 text-ui-9 font-black uppercase tracking-widest text-app-bg"
                                         >
                                             {t('modules:session.deck_module.player.hands.accept')}
-                                        </button>
+                                        </button>}
                                         <button
                                             type="button"
                                             onClick={() => refuserLeDonDeCarte(d.id)}
@@ -461,3 +462,4 @@ const DeckPlayer: React.FC = () => {
 };
 
 export default DeckPlayer;
+import ContrepartieDeTorg from './ContrepartieDeTorg';

@@ -11,8 +11,8 @@ import { useSessionOSStore } from '../../useSessionOSStore';
 import { useOrdreDuTourStore } from '../../../combat/useOrdreDuTourStore';
 
 /**
- * **Le jet de Torg depuis la fiche** — 2026-10-13, relu contre le carnet
- * NotebookLM « Torg ».
+ * **Le jet de Torg depuis la fiche** — 2026-10-13 ; critique étendu relu
+ * contre le livre de base p. 109 le 07/11/2026.
  *
  * Le niveau vaut attribut + compétence ; sans compétence, le 20 n'explose pas ;
  * les Blessures retirent au total d'action ; après le premier dé, la
@@ -84,14 +84,18 @@ describe('le jet de Torg', () => {
         expect(ligne()).toMatch(/total d'action 9 \(niveau 11, −3 Blessures\)/);
     });
 
-    it('la plage d’échec critique se règle avant de lancer', () => {
-        faces(2);
-        monter();
+    it('sur un 2 dans la plage critique, une Possibilité peut réussir ; la conséquence demeure', () => {
+        faces(2, 3);
+        monter({ possibilites: 3 });
         retenir();
         fireEvent.change(document.querySelector('[data-plage-critique]')!, { target: { value: '2' } });
         lancer();
-        expect(ligne()).toMatch(/^Échec critique — premier dé 2/);
-        expect(screen.queryByText('Un de plus !')).toBeNull();
+        expect(ligne()).toMatch(/^Échec — dé 2/);
+        expect(ligne()).toContain('conséquence critique');
+        expect(screen.queryByText('Relancer (compétence favorisée)')).toBeNull();
+        fireEvent.click(screen.getByText('Dépenser une Possibilité (3)'));
+        expect(ligne()).toMatch(/^Succès Simple/);
+        expect(ligne()).toContain('conséquence critique');
     });
 
     it('pas d’Avantage : le dé de Torg explose, il ne se double pas', () => {

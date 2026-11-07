@@ -24,6 +24,7 @@ import {
     resolveInitiativeFormula
 } from './logic/CombatRules';
 import { HealthInterpreter } from '../session/logic/HealthInterpreter';
+import { impactDeTorg } from './logic/impactDeTorg';
 import { horlogeDeDefaite } from './logic/TacheDeDefaite';
 import { lireDune, santeDuConflitDune } from '../dice/systemes/duneRegles';
 import { comparerLInitiative, departager } from './logic/departageDInitiative';
@@ -585,6 +586,7 @@ interface CombatState {
     // Damage/Heal
     /** Applique des dégâts ou des soins à un groupe de cibles (gère résistances/vulnérabilités) */
     applyDamage: (amount: number, type: string, targetIds: string[]) => void;
+    noterSuiteTorg: (id: string, suite: import('../dice/systemes/torgPersonnage').SuiteDeCoupTorg) => void;
     /** Définit la cible prioritaire d'un participant */
     setTarget: (combatantId: string, targetId: string | null) => void;
     
@@ -1429,7 +1431,28 @@ export const useCombatStore = create<CombatState>()(
                 });
             },
 
+            noterSuiteTorg: (id, suite) => set(s => ({ combatants: s.combatants.map(c => c.id === id || c.sourcePlayerId === id || c.sourceEntityId === id ? { ...c, suiteTorg: { ...suite, dernierTour: c.suiteTorg?.dernierTour } } : c) })),
+
             applyDamage: (amount, type, targetIds) => {
+                const sessionTorg = (window as unknown as { useSessionOSStore?: { getState: () => SessionOSState } }).useSessionOSStore?.getState();
+                const torg = sessionTorg?.getActiveDriver?.();
+                if (torg?.combat?.dommages?.mecanique === 'torg' && sessionTorg && Number.isFinite(amount)) {
+                    get().consignerLOuvertureDuCombat();
+                    const actionId = crypto.randomUUID();
+                    for (const c of get().combatants.filter(c => targetIds.includes(c.id))) {
+                        if (c.horde) { gmToast(`${c.name} : utiliser « Coup sur la horde ».`, 'info'); continue; }
+                        const source = c.isPlayer ? sessionTorg.players.flatMap(p => p.characters).find(p => p.id === c.sourcePlayerId) : sessionTorg.entities.find(e => e.id === c.sourceEntityId);
+                        if (source) sessionTorg.handleApplyImpact(source.id, c.isPlayer ? 'pc' : 'npc', { value: Math.abs(amount), isRecovery: amount < 0, torg: { actionId } });
+                        else {
+                            const r = impactDeTorg(torg, c.sheetData ?? {}, c.healthSystem, amount);
+                            get().updateCombatant(c.id, { healthSystem: r.healthSystem, sheetData: { ...c.sheetData, ...r.fiche } });
+                            if (amount >= 0) get().noterSuiteTorg(c.id, { id: actionId, blessures: r.blessures, ko: r.ko });
+                            get().noterUnCoup(c.id, { value: amount < 0 ? -amount : r.blessures, isRecovery: amount < 0 });
+                            useJournalStore.getState().addEvent({ type: 'COMBAT', title: `${c.name} — ${amount < 0 ? 'soins' : 'dommages'}`, content: r.texte });
+                        }
+                    }
+                    get().broadcastSync(); return;
+                }
                 // COC-A1/A2/A3 : plateau, Galerie et PJ passent par la même RD et le même suivi.
                 if (piloteActif()?.combat?.encaissement?.suivi) {
                     for (const id of targetIds) porterImpactCoc({ type: 'combatant', id }, { value: Math.abs(amount), isRecovery: amount < 0, type });

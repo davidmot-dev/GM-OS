@@ -14,7 +14,7 @@ empreinte: 7f89022c
 # La Réalité, la déconnexion et la reconnexion
 
 ## Règle
-Une contradiction survient lorsqu'un personnage utilise une capacité ou un équipement dépassant les limites d'axiomes locales ou de sa propre réalité (section « CONTRADICTIONS »). Cela déclenche un test de contradiction pouvant mener à la déconnexion (section « CONTRADICTIONS »). Un personnage déconnecté perd l'usage de ses Possibilités, de ses cartes, de ses réserves et ne peut plus annuler de dommages ni utiliser de pouvoirs ou objets contradictoires (section « dÉconnexion »).
+Une contradiction survient lorsqu'un personnage utilise une capacité ou un équipement dépassant les limites d'axiomes locales ou de sa propre réalité (section « CONTRADICTIONS »). Cela déclenche un test de contradiction pouvant mener à la déconnexion (section « CONTRADICTIONS »). Un personnage Déconnecté ne peut plus dépenser de Possibilités, y compris via les cartes Drame ou Héros, ni annuler des dommages. Les instruments et actions contraires aux axiomes locaux ne fonctionnent plus. Cela n'interdit pas globalement les autres Cartes du Destin, leur échange ou la Réserve d'Action (livre p. 179).
 
 La reconnexion s'effectue au début de son tour par une action gratuite via un test de la compétence Réalité (section « reconnexion »). Un échec critique de reconnexion provoque la transformation définitive du personnage en s'adaptant à la réalité locale, sauf s'il sacrifie un rang de sa compétence Réalité (section « Transformation »). Les Ords non chargés en possibilités se reconnectent d'office en retournant dans leur réalité d'origine (section « Ords et Reconnexion »).
 
@@ -39,7 +39,7 @@ Au round suivant, au début de son tour, le joueur tente une reconnexion par une
 
 ## Cas limites
 Le livre de règles apporte des précisions sur plusieurs situations ambiguës:
-1. Un personnage déconnecté ne peut plus utiliser sa Réserve d'Action ni jouer de cartes pour aider ses compagnons (section « déconnexion »).
+1. La déconnexion interdit les dépenses de Possibilités, y compris les cartes Drame et Héros ; elle n'interdit pas toute carte ou tout échange depuis la Réserve d'Action (p. 179).
 2. Si un objet contradictoire est séparé de son propriétaire, il s'éteint après un round d'inactivité s'il se trouve à plus d'un kilomètre (section « contradictions à distance »).
 3. La déconnexion brise instantanément la concentration d'un lanceur de sorts si le sort fait appel à un axiome supérieur à l'axiome local (section « concentration »).
 4. Un Ord déconnecté subissant un effet de transformation se conforme à la réalité locale sans pouvoir dépenser de Possibilité (section « Ords et Reconnexion »).
@@ -49,3 +49,5 @@ Les sources ne précisent pas:
 - Les détails des altérations physiques ou psychologiques qu'un Chevalier des Tempêtes subit lors de sa transformation définitive après un échec critique (section « Transformation »).
 - Si la perte d'un rang de Réalité suite à un échec critique de reconnexion entraîne une perte d'expérience accumulée (section « Transformation »).
 - La gestion d'une contradiction si un personnage utilise un objet combinant un axiome magique et un axiome spirituel hors limites (section « CONTRADICTIONS »).
+
+> Relecture ciblée du 07/11/2026 : interdictions de Déconnexion confrontées au livre de base p. 179 (PDF 181). Le reste de la fiche n'a pas été intégralement relu ; `relu: false` et l'empreinte d'origine sont conservés.

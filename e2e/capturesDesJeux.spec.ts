@@ -276,7 +276,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
     },
     {
         corpusId: 'torg', slug: 'torg', personnage: 'Mara Quill',
-        sheetData: { dexterite: 9, esquive: 2, choc: 3, possibilites: 3, esprit: 9, realite: 2, resistance: 10 },
+        sheetData: { dexterite: 9, esquive: 2, choc: 3, possibilites: 3, esprit: 9, realite: 2, resistance: 10, raison: 10, sciences_humaines: 3, torg_atouts_occultiste: true },
         composantes: ['dexterite', 'esquive'],
         casesCochees: 1,
         coup: 17,
@@ -421,6 +421,15 @@ test.afterAll(async () => { await gmos?.fermer(); });
 
 async function photographier(cible: Locator, nom: string): Promise<void> {
     await gmos.fenetre.waitForTimeout(500);
+    if (nom.startsWith('jeu-torg-')) {
+        // Les paquets fictifs n'embarquent aucune carte commerciale. Seules leurs
+        // illustrations sont remplacées pour la photo ; état et gestes restent réels.
+        await cible.locator('img').evaluateAll(images => {
+            const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="250" height="350"><rect width="250" height="350" fill="#1c3e49"/><rect x="10" y="10" width="230" height="330" fill="none" stroke="#c7b878"/><text x="125" y="165" text-anchor="middle" fill="#e2d3a2" font-size="20">TORG</text><text x="125" y="195" text-anchor="middle" fill="#e2d3a2" font-size="14">Exemple du manuel</text></svg>';
+            for (const img of images) if (img.getAttribute('src')?.includes('/decks/torg/')) img.setAttribute('src', `data:image/svg+xml,${encodeURIComponent(svg)}`);
+        });
+        await cible.locator('img').evaluateAll(images => Promise.all(images.map(img => img instanceof HTMLImageElement ? img.decode().catch(() => {}) : undefined)));
+    }
     // En pixels CSS : la fenêtre peut passer sur un écran à l'échelle 2, et la capture doublerait (24/10).
     await cible.screenshot({ path: path.join(SORTIE, `${nom}.jpg`), type: 'jpeg', quality: 82, animations: 'disabled', caret: 'hide', scale: 'css' });
 }
@@ -2700,7 +2709,7 @@ async function scenesDePaniqueAlien(c: ContexteDeScene): Promise<void> {
 
 /** Torg : les Lois du cosm courant, et une horde de sbires sur la carte d'un adversaire. */
 async function scenesDeTorg(c: ContexteDeScene): Promise<void> {
-    const pilote = c.pilote.gameDriver as { cosms?: { id: string }[]; combat?: { dommages?: { mecanique?: string } } };
+    const pilote = c.pilote.gameDriver as { torg?: unknown; cosms?: { id: string }[]; combat?: { dommages?: { mecanique?: string } } };
     const f = gmos.fenetre;
     if (pilote.cosms?.length) {
         await f.evaluate(({ campagne, cosm }) => {
@@ -2733,32 +2742,41 @@ async function scenesDeTorg(c: ContexteDeScene): Promise<void> {
         await carte.getByRole('button', { name: 'Former la horde', exact: true }).click();
         await expect(carte.locator('[data-horde]')).toBeVisible();
         await carte.getByRole('button', { name: 'Coup sur la horde', exact: true }).click();
-        await carte.getByLabel('Capacité Horde').check();
         await photographier(carte, 'jeu-torg-horde');
 
         // La capacité « Sbires » : sur un vilain qui n'est pas lui-même un sbire.
         await f.evaluate(() => {
             (window as unknown as Fenetre).useCombatStore.getState().addCombatant({
                 name: 'Mobius', init: 0, isPlayer: false, faction: 'enemy', statuses: [],
-                sheetData: { esprit: 10, realite: 3 },
+                sheetData: { esprit: 10, realite: 3, torg_capacites_sbires: true },
+            } as never);
+            (window as unknown as Fenetre).useCombatStore.getState().addCombatant({
+                name: 'Laquais proche', init: 0, isPlayer: false, faction: 'enemy', statuses: [], sheetData: { esprit: 7, resistance: 8 },
+                healthSystem: { type: 'boxes', state: 'healthy', data: { boxes: [{ label: 'Vaincu', filled: false }] } },
             } as never);
         });
         const vilain = f.locator('[data-combattant]').filter({ hasText: 'Mobius' }).first();
-        await expect(vilain.locator('[data-sbires]')).toBeVisible({ timeout: 15_000 });
-        await vilain.locator('[data-sbires]').getByRole('button').click();
-        await photographier(vilain, 'jeu-torg-sbires');
+        if (pilote.torg) {
+            await expect(vilain.locator('[data-sbires]')).toBeVisible({ timeout: 15_000 });
+            const sbires = vilain.locator('[data-sbires]');
+            await sbires.getByLabel('Sbire qui reçoit le coup').selectOption({ label: 'Laquais proche' });
+            await sbires.getByLabel(/Le meneur confirme/).check();
+            await sbires.getByRole('button', { name: /Sbires · Réalité/ }).click();
+            await photographier(vilain, 'jeu-torg-sbires');
+        }
     }
 
     // Les Atouts qui touchent aux cartes, sous les gestes du Paquet du Destin.
     // Le Paquet du Destin du jeu, s'il est chargé dans Deck-OS.
+    if (!pilote.torg) return;
     await vue(c.campagne, 'deck-player');
     const destin = f.getByRole('button', { name: /Paquet du Destin/i }).first();
     if (!(await destin.isVisible().catch(() => false))) return;
     await destin.click();
     const atouts = f.locator('[data-atouts-du-destin]');
     await expect(atouts).toBeVisible({ timeout: 15_000 });
-    await atouts.getByLabel('Combien de cartes piocher').selectOption('2');
-    await atouts.getByRole('button', { name: /Piocher, en garder une/ }).click();
+    await atouts.getByLabel(/Début d’un combat/).check();
+    await atouts.getByRole('button', { name: /Occultiste · Sciences humaines/ }).click();
     await photographier(f.locator('[data-gestes-du-destin]'), 'jeu-torg-atouts');
 }
 

@@ -1672,6 +1672,17 @@ export function controlerLePilote(
 
     // Torg : la main de Cartes du Destin que « Fin de scène » complète.
     const mainDuDestin = driver.cartesDuDestin;
+    if (driver.torg) {
+        for (const [famille, cases] of Object.entries({ atouts: driver.torg.atouts, capacites: driver.torg.capacites, etats: driver.torg.etats })) {
+            for (const [nom, champ] of Object.entries(cases ?? {})) {
+                const f = sections.flatMap(s => s.fields ?? []).find(f => f.id === champ);
+                if (!f || f.type !== 'checkbox') erreur(`torg.${famille}.${nom}`, `« ${String(champ)} » doit désigner une case à cocher de la fiche ; un texte libre n'accorde aucune capacité.`);
+            }
+        }
+        for (const nom of ['raison', 'sciencesHumaines'] as const) {
+            if (!tousLesChamps.has(driver.torg[nom])) erreur(`torg.${nom}`, `« ${driver.torg[nom]} » n'est pas un champ de la fiche.`);
+        }
+    }
     if (mainDuDestin !== undefined && !(Number.isInteger(mainDuDestin?.taille) && mainDuDestin.taille > 0)) {
         erreur('cartesDuDestin.taille', `« ${String(mainDuDestin?.taille)} » n'est pas une taille de main : un entier positif (4 chez Torg, 5 sous la Loi de l'Héroïsme).`);
     }
@@ -1682,7 +1693,7 @@ export function controlerLePilote(
       plus. Une mécanique se NOMME dans une liste fermée ; la Loi de la Magie dit
       quelles compétences elle touche, et où s'écrit le Choc.
     */
-    const MECANIQUES_DE_LOI = ['heroisme', 'action', 'perseverance', 'magie', 'tenacite', 'souffrance'];
+    const MECANIQUES_DE_LOI = ['heroisme', 'action', 'perseverance', 'magie', 'tenacite', 'souffrance', 'domination'];
     const vus = new Set<string>();
     (driver.cosms ?? []).forEach((cosm, i) => {
         if (!cosm.id || vus.has(cosm.id)) erreur(`cosms[${i}].id`, `« ${cosm.id} » : chaque cosm a un identifiant, et un seul cosm le porte.`);

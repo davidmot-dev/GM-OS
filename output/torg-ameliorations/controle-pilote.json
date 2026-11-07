@@ -1,0 +1,36 @@
+{
+  "fichier": "Export Dirvers/corriges/Torg-Eternity-2.0.0.gmos-driver",
+  "version": "2.0.0",
+  "constats": [],
+  "jet": {
+    "seuil": 11,
+    "composantes": [
+      {
+        "label": "Attribut",
+        "champ": "dexterite",
+        "valeur": 9
+      },
+      {
+        "label": "Compétence",
+        "champ": "esquive",
+        "valeur": 2
+      }
+    ],
+    "nombreDeDes": 1,
+    "desEchelonnes": [],
+    "composantesDeLaReserve": [],
+    "desSecondaires": 0,
+    "composantesDeLaSecondeReserve": [],
+    "desAchetes": 0,
+    "cout": {
+      "total": 0
+    },
+    "reussitesRequises": 1,
+    "faces": 20,
+    "sens": "superieur-ou-egal",
+    "doubleSous": 0,
+    "difficulte": 10,
+    "avertissements": [],
+    "remarques": []
+  }
+}

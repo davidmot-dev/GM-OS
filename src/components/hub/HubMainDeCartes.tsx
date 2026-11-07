@@ -9,6 +9,7 @@ import { ResolvedImage } from '../ResolvedImage';
 import { useCosmsCourants } from '../../modules/session/hooks/useCosmsCourants';
 import { tailleDeLaMain } from '../../modules/session/logic/cosmsCourants';
 import { Bouton, EnTeteDeModule, GabaritDeModule, Panneau } from '../socle';
+import ContrepartieDeTorg from '../../modules/session/components/ContrepartieDeTorg';
 
 /**
  * **L'onglet Cartes de la tablette : ce que ce joueur tient, et ce qu'il peut
@@ -145,7 +146,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null; commandes?: React.
     }, [mainsDesPaquets, decks, characterId]);
 
     /** Ce qu'on me propose, et ce que j'ai proposé et qui attend encore. */
-    const proposeesAMoi = (demandesDeCarte ?? []).filter(d => d.versQui === characterId);
+    const proposeesAMoi = (demandesDeCarte ?? []).filter(d => d.versQui === characterId && d.statut === 'en-attente');
     const mesPropositions = (demandesDeCarte ?? []).filter(d => d.deQui === characterId);
 
     return (
@@ -157,9 +158,10 @@ const HubMainDeCartes: React.FC<{ characterId: string | null; commandes?: React.
                         <Panneau key={demande.id} className="space-y-3 p-4">
                             <p className="text-[14px]">{t('modules:session.deck_module.player.hands.offered', { qui: nomDuPersonnage(demande.deQui) })}</p>
                             <div className="grid grid-cols-2 gap-2">
-                                <Bouton cibleTactile variante="accent" onClick={() => demanderAuMeneur('deck:accepter-don', { demandeId: demande.id, characterId })} icone={<Check size={16} />}>
+                                {demande.echangeTorg ? <ContrepartieDeTorg deckId={demande.deckId} porteur={characterId ?? null}
+                                    accepter={contreIndex => demanderAuMeneur('deck:accepter-don', { demandeId: demande.id, characterId, contreIndex })} /> : <Bouton cibleTactile variante="accent" onClick={() => demanderAuMeneur('deck:accepter-don', { demandeId: demande.id, characterId })} icone={<Check size={16} />}>
                                     {t('modules:session.deck_module.player.hands.accept')}
-                                </Bouton>
+                                </Bouton>}
                                 <Bouton cibleTactile onClick={() => demanderAuMeneur('deck:refuser-don', { demandeId: demande.id, characterId })} icone={<X size={16} />}>
                                     {t('modules:session.deck_module.player.hands.refuse')}
                                 </Bouton>

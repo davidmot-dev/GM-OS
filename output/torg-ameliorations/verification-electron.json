@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "importReel": true,
+  "ingenieuxCoutEtFrequence": true,
+  "populaireRelationEtActe": true,
+  "echangeHubTactile": true,
+  "transfertSbiresUnique": true,
+  "degatsOrdinairesAutonome": true,
+  "souffranceCible": true,
+  "tenaciteCoutEtKO": true,
+  "persistance": true,
+  "reimportRemplacer": true,
+  "donneesPersonnelles": false
+}

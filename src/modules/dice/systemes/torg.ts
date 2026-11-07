@@ -18,9 +18,8 @@ import type { DegreDeReussite } from '../degresDeReussite';
 /**
  * **La Table des Bonus**, page 109 du livre de base.
  *
- * ⚠️ Transcrite le 2026-10-13 depuis le carnet NotebookLM « Torg » (une source
- * citée), **pas depuis le corpus** : la fiche `resolution-des-jets.md` dit
- * elle-même ne pas la contenir. À relire contre le livre.
+ * Transcrite initialement depuis le carnet ; relue en image le 07/11/2026
+ * contre le livre de base p. 109 (PDF + 2), table conforme.
  *
  * Chaque ligne : le plus petit total du dé qui donne ce bonus. Le 1 n'y figure
  * pas : c'est un échec, quel que soit le reste.
@@ -184,7 +183,9 @@ export function resoudreTorg(niveau: number, difficulte: number, des: DesDeTorg,
     const marge = totalDAction - difficulte;
     const tous = [...des.premier, ...(des.possibilite ?? []), ...(des.possibiliteDeLAction ?? []), ...(des.unDePlus ?? [])];
     const base = { des: tous, totalDuDe, echecCritique, bonus, totalDAction, marge };
-    if (echecCritique) return { ...base, nom: 'Échec critique', degre: 'echec-total' };
+    // Livre p. 109 relu le 07/11 : seul le 1 échoue toujours ; sur 2–4, la
+    // conséquence critique demeure mais le total et une Possibilité peuvent réussir.
+    if (des.premier[0] === 1) return { ...base, nom: 'Échec critique', degre: 'echec-total' };
     if (marge < 0) return { ...base, nom: 'Échec', degre: 'echec-normal' };
     const n = NIVEAUX.find(x => marge >= x.margeMin)!;
     return { ...base, nom: n.nom, degre: n.degre };
@@ -202,8 +203,9 @@ export function direTorg(j: JetDeTorg, des: DesDeTorg, niveau: number, difficult
     const signe = j.bonus >= 0 ? `+${j.bonus}` : `${j.bonus}`;
     const malus = (options.malus ? `, −${options.malus}${options.raisonDuMalus ? ` ${options.raisonDuMalus}` : ''}` : '')
         + (options.bonus ? `, +${options.bonus}${options.raisonDuBonus ? ` ${options.raisonDuBonus}` : ''}` : '');
-    if (j.echecCritique) return `Échec critique — premier dé ${des.premier[0]} : l'action échoue, aucune Possibilité n'y change rien`;
-    return `${j.nom} — dé ${de} → bonus ${signe} ; total d'action ${j.totalDAction} (niveau ${niveau}${malus}) contre ND ${difficulte}, marge ${j.marge >= 0 ? '+' : ''}${j.marge}`;
+    if (des.premier[0] === 1) return `Échec critique — premier dé 1 : l'action échoue, aucune Possibilité n'y change rien`;
+    return `${j.nom} — dé ${de} → bonus ${signe} ; total d'action ${j.totalDAction} (niveau ${niveau}${malus}) contre ND ${difficulte}, marge ${j.marge >= 0 ? '+' : ''}${j.marge}`
+        + (j.echecCritique ? ' — conséquence critique à appliquer malgré le résultat' : '');
 }
 
 /**

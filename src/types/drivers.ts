@@ -292,7 +292,7 @@ export interface CosmDuJeu {
  * bonus aux compétences magiques), `tenacite` (au KO, une Blessure efface le
  * Choc), `souffrance` (infliger une Blessure rend un point de Choc).
  */
-export type MecaniqueDeLoi = 'heroisme' | 'action' | 'perseverance' | 'magie' | 'tenacite' | 'souffrance';
+export type MecaniqueDeLoi = 'heroisme' | 'action' | 'perseverance' | 'magie' | 'tenacite' | 'souffrance' | 'domination';
 
 /** Une Loi du Monde : son nom, ce qu'elle dit, et ce que GM-OS en applique. */
 export interface LoiDuMonde {
@@ -632,7 +632,18 @@ export interface IdentiteVisuelle {
     references?: string[];
 }
 
+/** TORG-A1 : les cases déclarent des capacités possédées, jamais déduites du rôle de vilain. */
+export interface ConfigurationTorg {
+    atouts?: Partial<Record<'aspectEffrayant' | 'occultiste' | 'ingenieux' | 'populaire' | 'chefNaturel' | 'conscienceEnvironnementale', string>>;
+    capacites?: Partial<Record<'sbires' | 'horde', string>>;
+    etats?: Partial<Record<'ko' | 'deconnecte', string>>;
+    raison: string;
+    sciencesHumaines: string;
+}
+
 export interface GameDriver {
+    /** Atouts et capacités cochés sur la fiche (livre p. 85, 94, 105, 265 ; Empire du Nil p. 17). */
+    torg?: ConfigurationTorg;
     id: string;
     name: string;
     author: string;

@@ -50,6 +50,7 @@ import { estUneFicheDeVoyageur, lireFicheDeVoyageur, calculDeVoyageurHorsTable, 
 import { avecOrigine } from '../logic/origineDesModifications';
 import { champsDEquipement, objetsPortes, sectionDuCatalogue as sectionAvecLeCatalogue } from '../../equipement/equiperLaFiche';
 import PrendreDansLeCatalogue from './PrendreDansLeCatalogue';
+import AtoutsTorgDeLaFiche from './AtoutsTorgDeLaFiche';
 
 
 // --- Sub-components ---
@@ -368,6 +369,7 @@ const CharacterSheetEditor: React.FC = () => {
                             **Blade Runner : blessures critiques et secours** (B3–B7, 2026-10-24) —
                             sauvegarde contre la mort, stabilisation, soins, premiers secours.
                         */}
+                        {piloteDeLaFiche?.torg && <AtoutsTorgDeLaFiche personnageId={character.id} saisiesEnAttente={editor.aDesChangements} />}
                         {piloteDeLaFiche?.jet?.bladeRunner && editor.selectedPlayer && (
                             <CarteDuJeu id="blessures-blade-runner" titre="Blessures critiques et secours">
                                 <SuiviBladeRunner key={`br-${character.id}`} regle={piloteDeLaFiche.jet.bladeRunner} forcer={piloteDeLaFiche.jet.forcer}

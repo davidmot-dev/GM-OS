@@ -7,7 +7,7 @@ sources: "Torg Eternity - Livre de regles.pdf"
 sections: "« tests d’attribut et de compétence, niveaux de difficultÉ » ; « NIVEAUX DE SUCCÈS » ; « Échec » ; « Échec critique »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 8bcee369
 ---
 
@@ -36,9 +36,9 @@ Un total inférieur est un **échec** (section « Échec »). Si le premier dé 
   - **Succès Spectaculaire**: plus **deux Dés Bonus** aux dommages.
 
 ## À la table
-En combat, un Chevalier des Tempêtes tire sur un gospog (section « gospog »). Il lance le dé à vingt faces et obtient un quinze (section « tests d’attribut et de compétence »). Sa compétence étant de douze, son total d'action atteint vingt-sept (section « tests d’attribut et de compétence »). Le Niveau de Difficulté étant de dix-sept à cause d'un couvert moyen (section « couverts »), l'attaque réussit. Son total dépassant la difficulté de dix points, il obtient un succès Spectaculaire (section « NIVEAUX DE SUCCÈS »), s'octroyant deux Dés Bonus aux dommages (section « Bonus aux dommages »).
+Cas témoin : niveau douze, dé quinze. La Table des Bonus donne +2 ; le total d’action est quatorze, pas vingt-sept. Contre ND dix, marge +4 : succès Simple, aucun Dé Bonus accordé par la marge (p. 109, 115-116).
 
-Au tour suivant, un autre héros veut invoquer un miracle (section « INVOQUER DES MIRACLES »). Son premier dé donne un résultat de un: c'est un échec critique automatique (section « Échec critique »). Le joueur ne peut dépenser de Possibilité pour modifier ce jet (section « Échec critique »). L'action échoue et l'invocateur subit deux points de Choc de contrecoup (section « INVOQUER DES MIRACLES »). De plus, cet échec le rend Très déstabilisé pour le round suivant (section « INVOQUER DES MIRACLES »).
+Sur un un au premier dé, l’action échoue toujours et une Possibilité ne peut modifier ce résultat. Les conséquences propres au pouvoir ou à l’équipement utilisé se résolvent séparément (p. 109).
 
 ## Cas limites
 Le livre de règles apporte les précisions suivantes pour les situations ambiguës:
@@ -51,3 +51,5 @@ Les sources ne précisent pas:
 - La résolution d'un double échec critique lors d'un test en opposition (section « oppositions »).
 - Si les échecs critiques d'interactions offensives non physiques appliquent des pénalités en dehors de la perte de l'action (section « effets d’interaction »).
 - L'effet d'un succès spectaculaire lors d'un test passif simple sans marge d'effet applicable (section « NIVEAUX DE SUCCÈS »).
+
+*Relu le 2026-11-07, PDF = imprimée + 2 ; corrigé le dé brut dans l’exemple, retiré les effets de miracle non établis ; critique étendu vérifié (p. 108-110, 115-116).*

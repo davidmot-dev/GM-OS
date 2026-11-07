@@ -220,6 +220,7 @@ export function tientLaCarte(
  * simple compte de celles qui ne le sont pas.
  */
 export interface MainDiffusee {
+    torgEnRounds?: boolean;
     porteur: string | null;
     /** Les indices des cartes face visible. */
     revelees: number[];
@@ -256,6 +257,7 @@ export function mainsPourLaTable(etat: DeckSessionState): MainDiffusee[] {
         const tenues = mainDuPorteur(etat, porteur);
         return {
             porteur,
+            ...(etat.torgEnRounds ? { torgEnRounds: true } : {}),
             revelees: tenues.filter(c => c.face === 'revelee').map(c => c.index),
             scellees: tenues.filter(c => c.face === 'scellee').length,
             ...(tenues.some(c => c.enReserve) ? { enReserve: tenues.filter(c => c.enReserve).map(c => c.index) } : {}),

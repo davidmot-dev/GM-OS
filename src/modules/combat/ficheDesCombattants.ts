@@ -53,7 +53,7 @@ export function ecrireLaFicheDuCombattant(c: Combatant, maj: Record<string, Vale
  * pilote déclarent ; le Choc ajouté plafonne au maximum de la jauge, et le
  * dépasser se dit (KO). Rend une phrase par combattant touché.
  */
-export function ajusterLeChocDuCamp(camp: Camp, delta: number): string[] {
+export function ajusterLeChocDuCamp(camp: Camp, delta: number, reveiller = false): string[] {
     const pilote = useSessionOSStore.getState().getActiveDriver();
     const champ = pilote?.combat?.dommages?.choc;
     if (!champ) return ['Le pilote ne déclare pas de champ de Choc (`combat.dommages.choc`).'];
@@ -63,15 +63,18 @@ export function ajusterLeChocDuCamp(camp: Camp, delta: number): string[] {
         const actuel = valeurDuChamp(valeurs, champ) ?? 0;
         if (delta < 0) {
             const apres = Math.max(0, actuel + delta);
-            if (apres !== actuel) {
-                ecrireLaFicheDuCombattant(c, { [champ]: apres });
+            const ko = pilote?.torg?.etats?.ko;
+            if (apres !== actuel || (reveiller && ko && valeurs[ko])) {
+                ecrireLaFicheDuCombattant(c, { [champ]: apres, ...(reveiller && ko ? { [ko]: false } : {}) });
                 dits.push(`${c.name} : Choc ${actuel} → ${apres}`);
             }
             continue;
         }
         const max = maximumDeLaJauge(champ, pilote?.combat?.statsToTrack, valeurs);
         const choc = ajouterLeChoc(actuel, delta, max);
-        if (choc.valeur !== actuel) ecrireLaFicheDuCombattant(c, { [champ]: choc.valeur });
+        const ko = pilote?.torg?.etats?.ko;
+        if (choc.valeur !== actuel || choc.ko) ecrireLaFicheDuCombattant(c, { [champ]: choc.valeur, ...(choc.ko && ko ? { [ko]: true } : {}) });
+        useCombatStore.getState().noterSuiteTorg(c.id, { id: crypto.randomUUID(), blessures: 0, ko: choc.ko });
         dits.push(`${c.name} : Choc ${actuel} → ${choc.valeur}${choc.ko ? ' — KO' : ''}`);
     }
     return dits;

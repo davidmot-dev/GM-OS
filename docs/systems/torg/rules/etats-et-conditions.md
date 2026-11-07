@@ -25,7 +25,7 @@ D'autres conditions affectent la mobilité, la réalité ou la conscience:
 - Pris au dépourvu: inflige d'office l'état Très Vulnérable (section « pris au dÉpourvu »).
 - Entravé: la cible est Pris au dépourvu et ne peut plus se déplacer (section « Lutte »).
 - KO: le personnage est inconscient, ne peut plus agir ni dépenser de ressources (section « ko »).
-- Déconnecté: après une contradiction, bloque l'usage des Possibilités, cartes et réserves (section « déconnexion »).
+- Déconnecté : après une contradiction, interdit de dépenser des Possibilités (y compris via Drame ou Héros), d'annuler des dommages et d'agir contre les axiomes locaux ; les autres cartes et les échanges restent possibles (livre p. 179).
 - En attente: permet de retarder son action au prix d'un malus (section « attendre »).
 - Concentré: indique qu'un personnage maintient un sort ou pouvoir, avec un risque d'interruption (section « concentration »).
 - Désorienté: interdit l'usage des cartes de sa réserve au cours du round (section « désavantages »).
@@ -44,12 +44,12 @@ D'autres conditions affectent la mobilité, la réalité ou la conscience:
 - Désorienté: réserve d'action bloquée pour un round.
 
 ## À la table
-Pendant un combat, un Chevalier des Tempêtes fait face à un soldat ennemi. Lors du round, le soldat utilise la compétence Provocation pour réaliser une interaction contre le héros (section « EFFETS D’INTERACTION »). Le test obtient un succès Supérieur, ce qui permet à l'ennemi de choisir deux effets d'interaction: le héros devient à la fois Déstabilisé et Vulnérable (section « EFFETS D’INTERACTION »). Durant le tour suivant, si le héros veut attaquer, il doit appliquer un malus de moins deux à son total d'action à cause de son état Déstabilisé (section « effets d’interaction »). De son côté, si un adversaire attaque notre héros, il bénéficie d'un bonus de plus deux à son test car le héros est Vulnérable (section « effets d’interaction »). À la fin du prochain tour de notre héros affecté, ces deux états d'interaction temporaires se terminent automatiquement (section « TIMING »). Si le héros s'était déconnecté de sa réalité après une contradiction (section « déconnexion »), il aurait dû utiliser une action entière lors de son tour de jeu pour tenter de se reconnecter en faisant un test de compétence Réalité (section « reconnexion »).
+Pendant un combat, un Chevalier des Tempêtes fait face à un soldat ennemi. Lors du round, le soldat utilise la compétence Provocation pour réaliser une interaction contre le héros (section « EFFETS D’INTERACTION »). Le test obtient un succès Supérieur, ce qui permet à l'ennemi de choisir deux effets d'interaction: le héros devient à la fois Déstabilisé et Vulnérable (section « EFFETS D’INTERACTION »). Durant le tour suivant, si le héros veut attaquer, il doit appliquer un malus de moins deux à son total d'action à cause de son état Déstabilisé (section « effets d’interaction »). De son côté, si un adversaire attaque notre héros, il bénéficie d'un bonus de plus deux à son test car le héros est Vulnérable (section « effets d’interaction »). À la fin du prochain tour de notre héros affecté, ces deux états d'interaction temporaires se terminent automatiquement (section « TIMING »). Si le héros s'était déconnecté de sa réalité après une contradiction (section « déconnexion »), il aurait dû utiliser une action gratuite au début de son tour pour tenter de se reconnecter en faisant un test de compétence Réalité (section « reconnexion »).
 
 ## Cas limites
 Le livre de règles apporte les précisions suivantes sur les cas particuliers:
 1. Les états Déstabilisé et Vulnérable ne s'accumulent pas au-delà de deux fois. Si un personnage Très Déstabilisé subit un troisième effet identique, cet effet est ignoré (section « effets d’interaction »).
-2. La déconnexion bloque l'utilisation de la Réserve d'Action. Un personnage déconnecté ne peut ni ajouter de carte à sa réserve, ni utiliser les cartes déjà présentes pour s'aider ou aider ses alliés (section « déconnexion »).
+2. La déconnexion ne bloque pas globalement la Réserve d'Action : ce sont les dépenses de Possibilités, y compris Drame et Héros, qui sont interdites (p. 179).
 3. Un personnage KO ne peut pas se concentrer. S'il subit l'état KO alors qu'il maintenait un sort actif, sa concentration est brisée et l'effet s'arrête (section « concentration »).
 4. L'état En attente se résout à la fin d'un tour. S'il choisit d'attendre pour agir après un ennemi, il subit le malus associé jusqu'à la résolution de son action (section « attendre »).
 
@@ -58,3 +58,5 @@ Les sources ne mentionnent pas:
 - La façon dont plusieurs sources d'entraves distinctes s'accumulent ou se dissipent séparément (section « Lutte »).
 - Si les états d'interaction comme Déstabilisé ou Vulnérable s'appliquent lors de scènes dramatiques de négociation hors combat (section « EFFETS D’INTERACTION »).
 - Le statut des compagnons animaux ou des familiers lorsque leur maître subit l'état KO ou Déconnecté.
+
+> Relecture ciblée du 07/11/2026 : Déconnexion et action gratuite de Reconnexion vérifiées contre le livre de base p. 179 (PDF 181). Le reste reste à relire ; `relu: false` et l’empreinte d’origine sont conservés.

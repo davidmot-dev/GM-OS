@@ -61,9 +61,9 @@ const demanderLeDon = (payload: unknown) => {
   ce chemin-ci vient toujours du réseau.
 */
 const accepterLeDon = (payload: unknown) => {
-    const { demandeId, characterId } = (payload ?? {}) as
-        { demandeId?: string; characterId?: string | null };
-    if (demandeId) useSessionOSStore.getState().accepterLeDonDeCarte(demandeId, characterId ?? null);
+    const { demandeId, characterId, contreIndex } = (payload ?? {}) as
+        { demandeId?: string; characterId?: string | null; contreIndex?: number };
+    if (demandeId) useSessionOSStore.getState().accepterLeDonDeCarte(demandeId, characterId ?? null, contreIndex);
 };
 
 const refuserLeDon = (payload: unknown) => {

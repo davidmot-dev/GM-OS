@@ -17,11 +17,12 @@ import { bonusDesActionsCombinees, coupSurLaHorde, nouvelleHorde, prochainKO, ty
  */
 const HordeDuCombattant: React.FC<{
     horde: Horde | undefined;
+    capaciteDeclaree?: boolean;
     /** Ce que la fiche du combattant dit d'un membre, pour préremplir. */
     espritParDefaut: number;
     resistanceParDefaut: number;
     onChange: (horde: Horde | undefined) => void;
-}> = ({ horde, espritParDefaut, resistanceParDefaut, onChange }) => {
+}> = ({ horde, espritParDefaut, resistanceParDefaut, onChange, capaciteDeclaree = false }) => {
     const [ouvert, setOuvert] = useState(false);
     const [membres, setMembres] = useState(6);
     const [esprit, setEsprit] = useState(espritParDefaut);
@@ -71,11 +72,10 @@ const HordeDuCombattant: React.FC<{
                     Assaillants <input type="number" min={1} max={horde.debout} value={engages} onChange={e => setAssaillants(Number(e.target.value) || 1)} className={champ} />
                 </label>
                 <span className="font-bold text-etat-danger" data-attaque-combinee>
-                    {horde.capacite ? 'Attaque et dommages combinés' : 'Attaque combinée'} : +{bonusDesActionsCombinees(engages)}
+                    {capaciteDeclaree ? 'Attaque et dommages combinés' : 'Attaque combinée'} : +{bonusDesActionsCombinees(engages)}
                 </span>
                 <label className="flex items-center gap-1" title="Capacité spéciale « Horde » (infectés, daémons…) : le bonus des Actions combinées compte aussi aux dommages de l'attaque">
-                    <input type="checkbox" checked={!!horde.capacite} onChange={e => onChange({ ...horde, capacite: e.target.checked })} />
-                    Capacité Horde
+                    Capacité Horde {capaciteDeclaree ? 'déclarée sur la fiche' : 'absente de la fiche'}
                 </label>
                 <button type="button" className={`${bouton} ml-auto`} onClick={() => onChange(undefined)} title="Revenir à un combattant seul">Dissoudre</button>
             </div>

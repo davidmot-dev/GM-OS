@@ -19,6 +19,9 @@ export interface StatusEffect {
  * Peut être liée à un personnage joueur (PC) ou un PNJ (NPC).
  */
 export interface Combatant {
+    /** Le dernier coup Torg et ses suites explicites, pour ne pas les appliquer deux fois. */
+    suiteTorg?: import('../dice/systemes/torgPersonnage').SuiteDeCoupTorg;
+    actionsSouffranceTorg?: string[];
     alien?: import('../dice/systemes/actionsAlien').ActionsDuCombattantAlien;
     id: string;
     name: string;

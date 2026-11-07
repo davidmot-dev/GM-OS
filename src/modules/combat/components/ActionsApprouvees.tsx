@@ -5,6 +5,11 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { ACTIONS_APPROUVEES, carteDecrite } from '../logic/paquetDAction';
 import { paquetDuDestinDuJeu } from '../../session/logic/cartesDuDestin';
 import type { Combatant } from '../types';
+import { possedeAtoutTorg } from '../../dice/systemes/torgPersonnage';
+import { valeursDuCombattant } from '../ficheDesCombattants';
+import { useCosmsCourants } from '../../session/hooks/useCosmsCourants';
+import { loiEnVigueur } from '../../session/logic/cosmsCourants';
+import { ouvrirChoixAtoutTorg, ouvrirChoixDominationTorg } from '../../session/logic/gestesDesAtoutsTorg';
 
 /**
  * **L'Action approuvée, sur la carte d'un Héros** — Torg, 2026-10-14.
@@ -27,11 +32,16 @@ const ActionsApprouvees: React.FC<{ combatant: Combatant }> = ({ combatant }) =>
     const decks = useSessionOSStore(s => s.decks);
     const systeme = useSessionOSStore(s => s.campaigns.find(c => c.id === s.activeCampaignId)?.system);
     const piocher = useSessionOSStore(s => s.piocherUneCarteDuDestin);
+    const pilote = useSessionOSStore(s => s.getActiveDriver());
+    const cosms = useCosmsCourants();
 
     if (!combatant.isPlayer || !combatant.sourcePlayerId || !tour || !carte || enAttente) return null;
-    const approuvees = carteDecrite(decks.find(d => d.id === carte.deckId), carte.index)?.approuvees ?? [];
+    const indiquees = carteDecrite(decks.find(d => d.id === carte.deckId), carte.index)?.approuvees ?? [];
+    const approuvees = indiquees.includes('toutes') ? (Object.keys(ACTIONS_APPROUVEES) as (keyof typeof ACTIONS_APPROUVEES)[]).filter(a => a !== 'toutes') : indiquees;
     const destin = paquetDuDestinDuJeu(decks, systeme);
     if (approuvees.length === 0 || !destin) return null;
+    const aspect = possedeAtoutTorg(pilote?.torg, valeursDuCombattant(combatant), 'aspectEffrayant');
+    const domination = !!loiEnVigueur(cosms, 'domination');
 
     return (
         <div className="flex flex-wrap items-center gap-2 px-3" data-actions-approuvees={combatant.id}>
@@ -46,11 +56,18 @@ const ActionsApprouvees: React.FC<{ combatant: Combatant }> = ({ combatant }) =>
                         key={action}
                         type="button"
                         disabled={prise}
-                        onClick={() => { piocher(destin.id, combatant.sourcePlayerId!); noterLApplication(cle); }}
+                        onClick={() => {
+                            if (action === 'intimidation' && (aspect || domination)) {
+                                const ok = aspect ? ouvrirChoixAtoutTorg(destin.id, combatant.sourcePlayerId!, 'aspectEffrayant', combatant.sourcePlayerId!)
+                                    : ouvrirChoixDominationTorg(destin.id, combatant.sourcePlayerId!);
+                                if (!ok) return;
+                            } else piocher(destin.id, combatant.sourcePlayerId!);
+                            noterLApplication(cle);
+                        }}
                         title={`${combatant.name} a réussi : ${ACTIONS_APPROUVEES[action]} — une Carte du Destin en main`}
                         className="px-2 py-0.5 rounded-md border border-accent/40 text-ui-10 font-bold text-accent disabled:opacity-30"
                     >
-                        {ACTIONS_APPROUVEES[action]} {prise ? '✓' : '+1 carte'}
+                        {ACTIONS_APPROUVEES[action]} {prise ? '✓' : action === 'intimidation' && (aspect || domination) ? '2 cartes, 1 gardée' : '+1 carte'}
                     </button>
                 );
             })}

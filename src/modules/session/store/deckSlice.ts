@@ -10,13 +10,15 @@
 
 import type { CreateurDeSlice } from './contratDesSlices';
 import { cosmsDesIds, idsDesCosmsCourants, tailleDeLaMain } from '../logic/cosmsCourants';
-import type { CosmDuJeu } from '../../../types/drivers';
+import type { CosmDuJeu, GameDriver } from '../../../types/drivers';
+import { refusEtatTorg } from '../../dice/systemes/torgPersonnage';
 import type { Scene } from '../../../types/trame.types';
 import i18next from 'i18next';
 import { DeckInterpreter } from '../logic/DeckInterpreter';
 import type { DeckManifest, DeckSessionState } from './types';
 import type { DemandeDeCarte, FaceDeCarte } from '../../../types/deck.types';
 import { gmToast } from '../../../stores/useToastStore';
+import { echangerLesCartesTorg } from '../logic/echangesDeTorg';
 import {
     changerLePorteur,
     garderLaCarteRetournee,
@@ -129,7 +131,8 @@ export interface DeckSliceActions {
      * Fourni, il doit correspondre au destinataire — sans quoi un joueur
      * accepterait une proposition faite à un autre.
      */
-    accepterLeDonDeCarte: (demandeId: string, parQui?: string | null) => void;
+    accepterLeDonDeCarte: (demandeId: string, parQui?: string | null, contreIndex?: number) => void;
+    reglerLesRoundsTorg: (deckId: string, enRounds: boolean, desorientes?: boolean) => void;
     refuserLeDonDeCarte: (demandeId: string, parQui?: string | null) => void;
 
     /* ── Les Cartes du Destin de Torg (2026-10-14) ─────────────────────────
@@ -176,12 +179,19 @@ export type DeckSlice = DeckSliceState & DeckSliceActions;
   pilotes se lisent sur le magasin entier, comme `handleApplyImpact` le fait.
 */
 type MagasinEntier = {
-    players?: { characters?: { id: string; name: string; campaignId?: string | null }[] }[];
+    players?: { characters?: { id: string; name: string; campaignId?: string | null; sheetData?: Record<string, unknown> }[] }[];
     activeCampaignId?: string | null;
     campaigns?: { id: string; cosmsParDefaut?: string[] }[];
     scenes?: Scene[];
-    getActiveDriver?: () => { id?: string; cartesDuDestin?: { taille: number }; cosms?: CosmDuJeu[] } | null | undefined;
+    getActiveDriver?: () => GameDriver | null | undefined;
 };
+
+function refusDeCarteTorg(magasin: unknown, porteur: string | null | undefined, depensePossibilite = false): string | undefined {
+    if (!porteur) return undefined;
+    const m = magasin as MagasinEntier;
+    const fiche = m.players?.flatMap(p => p.characters ?? []).find(c => c.id === porteur)?.sheetData ?? {};
+    return refusEtatTorg(m.getActiveDriver?.()?.torg, fiche, depensePossibilite);
+}
 
 /** Les cosms courants de la campagne ouverte, et le nom de chacun. */
 function cosmsDuMagasin(magasin: unknown): CosmDuJeu[] {
@@ -502,14 +512,32 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
         );
     },
 
-    donnerLaCarte: (deckId, index, porteur) =>
-        get().appliquerAuPaquet(deckId, e => changerLePorteur(e, index, porteur)),
+    donnerLaCarte: (deckId, index, porteur) => {
+        const deck = get().decks.find(d => d.id === deckId);
+        const carte = get().deckStates[deckId]?.enMain?.find(c => c.index === index);
+        if (deck?.role === 'destin' && carte?.porteur && porteur && carte.porteur !== porteur) {
+            get().demanderLeDonDeCarte(deckId, index, carte.porteur, porteur);
+            return;
+        }
+        get().appliquerAuPaquet(deckId, e => changerLePorteur(e, index, porteur));
+    },
 
     retournerLaCarte: (deckId, index) =>
         get().appliquerAuPaquet(deckId, e => retournerUneCarte(e, index)),
 
     jouerLaCarteTenue: (deckId, index) => {
         const deck = get().decks.find(d => d.id === deckId);
+        const etat = get().deckStates[deckId];
+        const carte = etat?.enMain?.find(c => c.index === index);
+        if (deck?.role === 'destin') {
+            const nom = deck.cardMetadata?.[index]?.name?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim() ?? '';
+            const refus = refusDeCarteTorg(get(), carte?.porteur, /^(drame|heros)(?:\s|$|[(:—-])/i.test(nom));
+            if (refus) { gmToast(refus, 'info'); return; }
+        }
+        if (deck?.role === 'destin' && etat?.torgEnRounds && (!carte?.enReserve || etat.torgDesorientes)) {
+            gmToast(etat.torgDesorientes ? 'Désorientés : aucune carte de Réserve ne peut être jouée ce round.' : 'En rounds, posez d’abord la carte en Réserve.', 'info');
+            return;
+        }
         const avecDefausse = deck?.useDiscard ?? false;
         /* Une carte de Cosm jouée compte pour l'Acte : on n'en reçoit pas d'autre en changeant de cosm. */
         if (deck?.role === 'cosm') {
@@ -581,6 +609,17 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
     demanderLeDonDeCarte: (deckId, index, deQui, versQui) => {
         const etat = get().deckStates[deckId];
         if (!etat || !tientLaCarte(etat, index, deQui)) return;
+        const echangeTorg = get().decks.find(d => d.id === deckId)?.role === 'destin';
+        if (echangeTorg) {
+            const refus = refusDeCarteTorg(get(), deQui) ?? refusDeCarteTorg(get(), versQui);
+            if (refus) { gmToast(refus, 'info'); return; }
+            const carte = etat.enMain?.find(c => c.index === index);
+            if (!deQui || !versQui || deQui === versQui) return;
+            if (!!carte?.enReserve !== !!etat.torgEnRounds) {
+                gmToast(etat.torgEnRounds ? 'En rounds, proposez une carte de Réserve.' : 'Hors rounds, proposez une carte en main.', 'info');
+                return;
+            }
+        }
 
         // Une seule demande en attente par carte : sans quoi deux clics
         // pressés créeraient deux demandes, et accepter la seconde après la
@@ -595,11 +634,12 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
                 deckId, index, deQui, versQui,
                 statut: 'en-attente' as const,
                 quand: Date.now(),
+                ...(echangeTorg ? { echangeTorg: true } : {}),
             }],
         }));
     },
 
-    accepterLeDonDeCarte: (demandeId, parQui) => {
+    accepterLeDonDeCarte: (demandeId, parQui, contreIndex) => {
         const demande = get().demandesDeCarte.find(d => d.id === demandeId);
         if (!demande || demande.statut !== 'en-attente') return;
 
@@ -633,7 +673,20 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
             return;
         }
 
-        get().appliquerAuPaquet(demande.deckId, e => changerLePorteur(e, demande.index, demande.versQui));
+        if (get().decks.find(d => d.id === demande.deckId)?.role === 'destin' || demande.echangeTorg) {
+            const refus = refusDeCarteTorg(get(), demande.deQui) ?? refusDeCarteTorg(get(), demande.versQui);
+            if (refus) { gmToast(refus, 'info'); return; }
+            if (contreIndex === undefined || !demande.deQui || !demande.versQui) {
+                gmToast('Torg : choisissez une carte en retour, une pour une.', 'info');
+                return;
+            }
+            const echange = echangerLesCartesTorg(etat, demande.index, contreIndex, demande.deQui, demande.versQui);
+            if (echange.refus) { gmToast(echange.refus, 'info'); return; }
+            get().appliquerAuPaquet(demande.deckId, () => echange.etat);
+            gmToast(`${nomDuPersonnage(get(), demande.deQui)} et ${nomDuPersonnage(get(), demande.versQui)} échangent une carte pour une.`, 'success');
+        } else {
+            get().appliquerAuPaquet(demande.deckId, e => changerLePorteur(e, demande.index, demande.versQui));
+        }
         set((store) => ({
             demandesDeCarte: store.demandesDeCarte.map(
                 d => (d.id === demandeId ? { ...d, statut: 'acceptee' as const } : d)),
@@ -652,6 +705,13 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
             return { ...d, statut: 'refusee' as const };
         }),
     })),
+
+    reglerLesRoundsTorg: (deckId, enRounds, desorientes = false) => {
+        const etat = get().deckStates[deckId];
+        if (!etat || (!!etat.torgEnRounds === enRounds && !!etat.torgDesorientes === desorientes)) return;
+        get().appliquerAuPaquet(deckId, e => ({ ...e, torgEnRounds: enRounds, torgDesorientes: desorientes,
+            torgUsagesCombat: enRounds && !e.torgEnRounds ? [] : e.torgUsagesCombat }));
+    },
 
     poserEnReserve: (deckId, index, parQui) => {
         const etat = get().deckStates[deckId];
@@ -681,7 +741,7 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
         const etat = get().deckStates[deckId];
         if (!etat) return;
         const { etat: apres, reprises } = reprendreLesReserves(etat);
-        get().appliquerAuPaquet(deckId, () => apres);
+        get().appliquerAuPaquet(deckId, () => ({ ...apres, torgEnRounds: false, torgDesorientes: false, torgUsagesCombat: [] }));
         gmToast(reprises ? `${reprises} carte${reprises > 1 ? 's' : ''} de Réserve revenue${reprises > 1 ? 's' : ''} en main.` : 'Aucune carte en Réserve.', 'info');
     },
 
@@ -690,7 +750,7 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
         if (!etat) return;
         const { porteurs, taille } = mainsDeLaCampagne(get());
         const bilan = completerLesMains(etat, porteurs, taille, DeckInterpreter.shuffle);
-        get().appliquerAuPaquet(deckId, () => bilan.etat);
+        get().appliquerAuPaquet(deckId, () => ({ ...bilan.etat, torgUsagesScene: [] }));
         gmToast(direLeBilan(get(), bilan, taille), 'info');
     },
 
@@ -700,7 +760,7 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
         if (!etat || !deck) return;
         const { porteurs, taille } = mainsDeLaCampagne(get());
         const bilan = nouvellesMains(etat, porteurs, taille, deck.useDiscard, DeckInterpreter.shuffle);
-        get().appliquerAuPaquet(deckId, () => bilan.etat);
+        get().appliquerAuPaquet(deckId, () => ({ ...bilan.etat, torgUsagesScene: [], torgUsagesActe: [], torgUsagesCombat: [], torgChoix: {} }));
         gmToast(`Fin d’Acte — nouvelles mains. ${direLeBilan(get(), bilan, taille)}`, 'info');
     },
 

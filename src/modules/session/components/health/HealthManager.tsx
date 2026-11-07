@@ -5,6 +5,7 @@ import { santePrincipaleDuPersonnage } from '../../logic/santePrincipale';
 import { santeAlignee } from '../../../combat/logic/SanteDuCombattant';
 import type { PlayerCharacter } from '../../store/types';
 import { DamageCalculator } from '../../logic/DamageCalculator';
+import type { DamageImpact } from '../../../../types/entity.types';
 import { HealthBarDriver } from './HealthBarDriver';
 import { ClockDriver } from './ClockDriver';
 import { WoundLevelsDriver } from './WoundLevelsDriver';
@@ -61,6 +62,8 @@ interface HealthManagerProps {
   initialHealthSystem?: HealthSystem;
   /** Callback for when health changes (useful for standalone mode updates) */
   onHealthChange?: (newHealth: HealthSystem) => void;
+  /** Le plateau peut appliquer sa règle commune ; true signifie que le coup est déjà écrit. */
+  onApplyImpact?: (impact: DamageImpact, versLaCible: boolean) => boolean;
   /**
    * La cible vers qui rediriger les **boutons** Dégâts / Soins.
    *
@@ -78,7 +81,7 @@ interface HealthManagerProps {
   actionsDeCarte?: React.ReactNode;
 }
 
-export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialHealthSystem, onHealthChange, cibleDesCoups, disposition = 'bloc', actionsDeCarte }) => {
+export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialHealthSystem, onHealthChange, onApplyImpact, cibleDesCoups, disposition = 'bloc', actionsDeCarte }) => {
   const { 
     players, 
     entities, 
@@ -231,6 +234,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
         location: partId,
         ...(isRecovery ? {} : { type: typeChoisi }),
     });
+    if (onApplyImpact?.(impact, !!versLaCible)) { setInternalHealth(null); return; }
     
     /*
       **Le coup part sur la cible, et alors il ne touche RIEN d'ici.**

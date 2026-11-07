@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-07",
+  "version": "2.0.0",
+  "build": { "commande": "npm run build", "reussi": true, "types": "tsc -b" },
+  "lint": { "commande": "npm run lint", "fichiers": 2679, "erreurs": 0, "avertissements": 1, "avertissementExistant": "src/components/hub/useSaisieDifferee.ts" },
+  "vitest": { "commande": "npx vitest run --maxWorkers=4", "reussis": 10070, "sautes": 4, "echecs": 0, "fichiersReussis": 856, "fichiersSautes": 1, "dureeSecondes": 493.88 },
+  "electron": { "scenario": "e2e/torgAmeliorations.spec.ts", "reussis": 1, "echecs": 0, "rapport": "verification-electron.json" },
+  "captures": { "scenario": "e2e/capturesDesJeux.spec.ts --grep Torg", "reussis": 1, "echecs": 0, "base": 10, "nouvellesDansLeManuel": 4, "imagesRelues": true, "illustrationsDesCartes": "fictives" },
+  "pilote": { "rapport": "controle-pilote.json", "constats": 0, "identifiantsConserves": true, "paquetsConserves": 3 },
+  "theme": { "verdict": "ACCEPTE", "erreurs": 0, "avertissements": 2 },
+  "corpus": { "fichesMetier": 16, "integralementRelues": 3, "aRelireIntegralement": 13, "inventaire": "non relu", "empreintesOrigine": "conservees" },
+  "validationDavid": "attendue",
+  "profilsPersonnelsUtilises": false,
+  "commit": false,
+  "push": false
+}

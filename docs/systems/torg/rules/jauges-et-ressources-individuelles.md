@@ -18,9 +18,9 @@ Les Chevaliers des Tempêtes utilisent des ressources pour modifier les combats 
 
 La jauge de Possibilités mesure l'énergie de création du héros (section « Possibilités »). Départ: trois jetons par Acte. Bornes: de zéro à l'infini. Elle descend quand la situation empire. Elle diminue (dépense volontaire) pour ajouter un dé, tenter une annulation ou contrer l'adversaire (section « Possibilités », section « contre »). Elle augmente via des récompenses (section « Possibilités »). Se dépense. Seuil: à zéro, impossible d'agir sur le destin ou d'annuler les dégâts.
 
-La jauge de Cartes du Destin mesure les opportunités narratives en main (section « CARTES DU DESTIN »). Départ: quatre cartes. Bornes: de zéro à quatre (cinq sous la Loi de l'Héroïsme) (section « Héroïsme »). Elle descend quand la situation empire. Elle diminue quand le joueur pose une carte en Réserve ou la perd face à un insidieux (section « la rÉserve d’action », section « insidieux »). Elle augmente via une Action approuvée ou la restauration de Scène (section « Actions approuvées », section « Restauration »). Se dépense. Seuil: à zéro, plus d'options en main.
+La jauge de Cartes du Destin mesure les opportunités narratives en main (section « CARTES DU DESTIN »). Départ: quatre cartes. Bornes: aucune limite pendant le combat ; restauration à quatre après le combat, cinq sous la Loi de l’Héroïsme (section « Héroïsme »). Elle descend quand la situation empire. Elle diminue quand le joueur pose une carte en Réserve ou la perd face à un insidieux (section « la rÉserve d’action », section « insidieux »). Elle augmente via une Action approuvée ou la restauration de Scène (section « Actions approuvées », section « Restauration »). Se dépense. Seuil: à zéro, plus d'options en main.
 
-La jauge de Réserve d'Action mesure les cartes prêtes en combat (section « la rÉserve d’action »). Départ: zéro. Bornes: de zéro au nombre de cartes en main. Elle monte en posant une carte en fin de tour ou par un Moment Critique (section « Moment critique »). Elle descend quand les cartes sont jouées ou défaussées. Bloquée par l'état Désorienté (section « désavantages »). Se dépense. Seuil: à zéro, aucune synergie n'est jouable.
+La jauge de Réserve d'Action mesure les cartes prêtes en combat (section « la rÉserve d’action »). Départ: zéro. Bornes: pas de plafond propre ; chaque carte posée quitte la main. Elle monte en posant une carte en fin de tour ou par un Moment Critique (section « Moment critique »). Elle descend quand les cartes sont jouées ou défaussées. Bloquée par l'état Désorienté (section « désavantages »). Se dépense. Seuil: à zéro, aucune synergie n'est jouable.
 
 ## Valeurs
 - Allocation: seize points de compétence, quarante points d'attributs (section « attributs de dÉpart »).
@@ -37,7 +37,7 @@ Lors d'un test difficile, le joueur peut dépenser une Possibilité (section « 
 
 ## Cas limites
 Le livre de règles apporte les précisions suivantes pour résoudre les cas ambigus:
-1. Déconnexion et réserve: un Chevalier des Tempêtes Déconnecté perd l'accès à sa Réserve d'Action, l'empêchant de jouer des cartes pour lui ou ses alliés, et ne peut plus dépenser de Possibilités (section « déconnexion »).
+1. Déconnexion : interdit de dépenser des Possibilités, y compris via Drame ou Héros (p. 179) ; ne pas en déduire une interdiction générale d’échanger ou de jouer toutes les cartes.
 2. Timing de l'annulation: le test d'Annulation des dommages doit être tenté immédiatement après l'attaque, avant que les dégâts ne prennent effet (section « ANNULATION DES DOMMAGES »).
 3. Cumul des cartes: plusieurs Cartes du Destin identiques se cumulent depuis la Réserve d'Action, comme deux cartes de Coup de Grâce (section « la rÉserve d’action »).
 4. Cartes inutilisées: après un Moment Critique, toutes les cartes non consommées de la Réserve d'Action sont perdues (section « moment critique »).
@@ -47,3 +47,5 @@ Les sources ne mentionnent pas:
 - Si la progression permet d'acheter directement des augmentations d'axiomes sans passer par l'Atout Augmentation d'Axiome (section « PROGRESSION »).
 - Le devenir des Cartes du Destin en main ou en Réserve d'Action lors d'une déconnexion prolongée (section « déconnexion »).
 - L'échange de Possibilités entre Chevaliers des Tempêtes sans l'Atout Transfert de Possibilités (section « transfert de possiBilitÉs »).
+
+*Relecture ciblée du 2026-11-07 (p. 112-113, 179, PDF +2) : bornes de main et de Réserve corrigées, fausse interdiction globale de cartes en déconnexion retirée. Les autres passages restent à relire ; `relu: false` conservé.*

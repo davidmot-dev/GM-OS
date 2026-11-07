@@ -27,13 +27,12 @@ describe('la horde sur la carte', () => {
         expect(screen.getByText('Attaque combinée : +1')).toBeTruthy();
     });
 
-    it('la capacité « Horde » se coche : le bonus compte aussi aux dommages (p. 271)', () => {
+    it('la capacité « Horde » vient de la fiche, sans case qui l’accorde à toute créature (p. 271)', () => {
         const onChange = vi.fn();
         const horde = nouvelleHorde(5, 6, 8);
         const { rerender } = render(<HordeDuCombattant horde={horde} espritParDefaut={0} resistanceParDefaut={0} onChange={onChange} />);
-        fireEvent.click(screen.getByLabelText('Capacité Horde'));
-        expect(onChange).toHaveBeenCalledWith({ ...horde, capacite: true });
-        rerender(<HordeDuCombattant horde={{ ...horde, capacite: true }} espritParDefaut={0} resistanceParDefaut={0} onChange={onChange} />);
+        expect(screen.queryByRole('checkbox')).toBeNull();
+        rerender(<HordeDuCombattant horde={horde} capaciteDeclaree espritParDefaut={0} resistanceParDefaut={0} onChange={onChange} />);
         expect(screen.getByText('Attaque et dommages combinés : +3')).toBeTruthy();
     });
 });

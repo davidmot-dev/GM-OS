@@ -7,14 +7,14 @@ sources: "Torg Eternity - Livre de regles.pdf"
 sections: "« Tests d’attribut & de compétence » ; « Niveaux de difficulté » ; « Modificateurs de difficulté » ; « Niveaux de succès » ; « Échec » ; « Échec critique, compétences favorisées » ; « Possibilités »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: a40b8d36
 ---
 
 # Résolution des jets
 
 ## Règle
-Pour résoudre une action, on effectue un test (section « Tests d’attribut & de compétence »). Le joueur lance un dé à vingt faces. Sur dix ou vingt, le dé explose (relance cumulée). Le total du dé est converti en valeur bonus via la Table des Bonus (section « Table des bonus ») et s'ajoute à la compétence ou à l’attribut pour donner le total d’action.
+Pour résoudre une action, on effectue un test (p. 108). Le joueur lance un dé à vingt faces. Sur dix ou vingt, le dé explose (relance cumulée) ; pour une compétence sans entraînement, seul le dix explose (p. 77). Le total du dé est converti en valeur bonus via la Table des Bonus (p. 109) et s'ajoute à la valeur de compétence (attribut + rangs), ou à l’attribut seul.
 
 Ce total doit égaler ou dépasser le Niveau de Difficulté (section « Niveaux de difficulté »), par défaut à dix, ajusté selon la complexité (section « Modificateurs de difficulté »).
 
@@ -28,7 +28,7 @@ La jauge de Possibilités mesure l'énergie héroïque d'un Chevalier des Tempê
 - Dé employé: dé à vingt faces unique.
 - Seuil de base (Niveau de Difficulté normal): dix.
 - Échelle de complexité (modificateur / ND): Très facile (plus quatre / six), Facile (plus deux / huit), Normale (zéro / dix), Complexe (moins deux / douze), Difficile (moins quatre / quatorze), Très difficile (moins six / seize), Héroïque (moins huit / dix-huit), Presque impossible (moins dix / vingt).
-- Échelle des succès (marge sur le Niveau de Difficulté): Succès Spectaculaire (dix et plus), Succès Supérieur (de de de cinq à de de neuf, ajoute plus un Dé Bonus), Succès Simple (de de de zéro à de de de quatre).
+- Échelle des succès (marge sur le Niveau de Difficulté): Succès Spectaculaire (dix et plus), Succès Supérieur (cinq à neuf, ajoute plus un Dé Bonus), Succès Simple (zéro à quatre).
 - Échec critique: un au premier dé (un à deux ou un à quatre selon le risque).
 - Possibilités de départ: trois par Acte.
 - Minimum garanti d'un dé de Possibilité: dix.
@@ -48,3 +48,5 @@ Les sources ne mentionnent pas:
 - La formule mathématique exacte de la Table des Bonus pour calculer les bonus sans lire la table physique.
 - Les délais temporels précis requis pour pouvoir retenter un test de compétence échoué hors combat, cette durée étant laissée à l'appréciation du Meneur de jeu (section « ÉCHEC D’UN TEST DE COMPÉTENCE »).
 - Les effets précis d'un échec critique en dehors du combat, de la magie ou de l'utilisation d'équipements.
+
+*Relu le 2026-11-07, PDF = imprimée + 2 ; table p. 109 lue en image ; entraînement et critique étendu vérifiés (p. 77, 108-110).*

@@ -334,7 +334,18 @@ Une carte peut être **posée en Réserve d'Action** — publique, toute la tabl
 la tablette du joueur. Sur la carte de combat d'un héros, **l'Action approuvée** de la carte du
 round lui fait piocher une carte. Pour les **Atouts** qui touchent aux cartes, deux gestes sous ceux
 du paquet : **piocher une à trois cartes et en garder une**, les autres défaussées, et **chercher une
-carte** dans la défausse ou la pioche, en vignettes. Voir [Torg](./54-Jeu-Torg.md).
+carte** dans la défausse ou la pioche, en vignettes. Depuis le 07/11/2026, les gestes de Torg
+vérifient la possession des Atouts, leurs coûts et leurs usages par scène, combat ou Acte.
+Les échanges sont **une pour une**, de main à main hors rounds et de Réserve à Réserve en rounds,
+avec choix de la contrepartie sur le Hub aussi. **Désorientés** bloque le jeu d’une carte de Réserve.
+Voir [Torg](./54-Jeu-Torg.md).
+
+**Atouts et capacités de Torg (`torg`, sur le pilote)** : les correspondances `atouts`, `capacites`
+et `etats` désignent des cases à cocher de la fiche ; `raison` et `sciencesHumaines` nomment les
+champs des tests d’Atouts. Un vilain n’a pas **Sbires** par défaut. Le transfert se prépare sur sa
+carte : laquais choisi et proximité confirmée, test de Réalité, puis application unique du coup
+contre la Résistance de la cible finale. La capacité spéciale **Horde** se lit également sur la
+fiche ; elle se distingue du simple regroupement de sbires.
 
 ---
 
@@ -352,8 +363,9 @@ qui nomment une `mecanique` sont prises en charge par GM-OS (marque **GM-OS**) :
 | `action` | Après une Possibilité, **une seconde** : la meilleure des deux compte |
 | `perseverance` | L'Annulation des dommages **annule moins** (Simple : le Choc seul ; Supérieur : une Blessure) |
 | `magie` | Au jet d'une compétence magique (`competences`), du **Choc volontaire** donne +1 par point, jusqu'aux rangs, et s'écrit sur la fiche |
-| `tenacite` | **Annoncée** quand le Choc met KO : on peut encaisser une Blessure pour l'effacer |
-| `souffrance` | **Annoncée** quand une Blessure tombe : l'attaquant récupère un point de Choc |
+| `tenacite` | Après le coup qui met KO : bouton pour encaisser une Blessure et effacer le Choc ; un reçu empêche le double paiement, le dernier tour avant Défaite est signalé |
+| `souffrance` | Après une Blessure : choisir l’auteur de l’action, lui rendre un Choc ; une seule récupération pour ce reçu d’action |
+| `domination` | Intimidation approuvée réussie : proposer deux Cartes du Destin, une gardée |
 
 La tablette reçoit le cosm courant du meneur.
 

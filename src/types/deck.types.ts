@@ -164,9 +164,21 @@ export interface DemandeDeCarte {
     versQui: string | null;
     statut: 'en-attente' | 'acceptee' | 'refusee';
     quand: number;
+    /** Torg : la proposition attend une carte en retour, choisie par le destinataire. */
+    echangeTorg?: boolean;
 }
 
 export interface DeckSessionState {
+    /** TORG-A2 : mode annoncé au début du combat, terminé par « Fin du combat ». */
+    torgEnRounds?: boolean;
+    /** Ligne de conflit des Héros : aucune carte de Réserve ne se joue. */
+    torgDesorientes?: boolean;
+    /** Usages vérifiés, remis à zéro aux bornes de scène et d'Acte. */
+    torgUsagesScene?: string[];
+    torgUsagesActe?: string[];
+    torgUsagesCombat?: string[];
+    /** Une sélection ouverte reste à terminer, même après fermeture de la fiche. */
+    torgChoix?: Record<string, { atout: 'occultiste' | 'ingenieux' | 'aspectEffrayant' | 'domination'; indices: number[]; beneficiaire: string }>;
     deckId: string;
     remainingIndices: number[];     // Indices [1..N] des cartes dans la pioche
     discardedIndices: number[];     // Indices des cartes en défausse
