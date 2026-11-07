@@ -1,5 +1,6 @@
 import { familleDuTableau } from '../../equipement/depuisLeCorpus';
 import { estUnePremiereColonneDeProfil } from '../../bestiaire/depuisLeCorpus';
+import { estUneLigneDeSeparation } from './tableauMarkdown';
 
 /**
  * **F4 — le livre vérifie la fiche** (plan `documentation/Planning/2026-11-06-forge-tableaux-equipement-bestiaire.md`,
@@ -141,7 +142,7 @@ export function lignesAVerifier(contenu: string): LigneAVerifier[] {
         const l = lignes[i];
         const t = /^#{2,4}\s+(.*)$/.exec(l);
         if (t) { titre = t[1].trim(); continue; }
-        if (!l.trim().startsWith('|') || !/^\s*\|\s*:?-{2,}/.test(lignes[i + 1] ?? '')) continue;
+        if (!l.trim().startsWith('|') || !estUneLigneDeSeparation(lignes[i + 1])) continue;
         const entetes = cellules(l).map(nettoyer);
         const lu = familleDuTableau(entetes[0] ?? '') !== null || estUnePremiereColonneDeProfil(entetes[0] ?? '');
         const colonneDePage = entetes.findIndex(e => COLONNE_DE_PAGE.test(normaliser(e)));

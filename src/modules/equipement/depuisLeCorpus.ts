@@ -1,6 +1,7 @@
 import type { CatalogueDEquipement, EffetDObjet, FamilleDObjet, ObjetDuCatalogue } from '../../types/drivers';
 import { slug } from '../../../electron/corpusSysteme';
 import { ajouterUneColonne, identifiantDObjet } from './catalogue';
+import { estUneLigneDeSeparation } from '../forge/rules/tableauMarkdown';
 
 /**
  * Remplir le catalogue depuis les fiches relues — registre § 203, étape C
@@ -78,7 +79,9 @@ function champDuSocle(entete: string): 'poids' | 'cout' | 'special' | null {
     const k = clef(entete);
     if (k === 'poids') return 'poids';
     if (k === 'cout' || k === 'prix') return 'cout';
-    if (/^(special|effets?|notes?|description|usage|stockage)$/.test(k)) return 'special';
+    // « Particularités » (Cthulhu Hack, 07/11/2026) : le long texte d'une ligne va à la description,
+    // comme dans le bestiaire — en colonne, il débordait sur ses voisines.
+    if (/^(special|effets?|notes?|description|usage|stockage|particularites?)$/.test(k)) return 'special';
     return null;
 }
 
@@ -127,7 +130,7 @@ function tableauxDeLaFiche(contenu: string): TableauLu[] {
         const l = lignes[i];
         const t = /^#{2,4}\s+(.*)$/.exec(l);
         if (t) { titre = t[1].trim(); continue; }
-        if (!l.trim().startsWith('|') || !/^\s*\|\s*:?-{2,}/.test(lignes[i + 1] ?? '')) continue;
+        if (!l.trim().startsWith('|') || !estUneLigneDeSeparation(lignes[i + 1])) continue;
         const tableau: TableauLu = { titre, entetes: cellules(l).map(nettoyer), lignes: [] };
         i += 2;
         while (i < lignes.length && lignes[i].trim().startsWith('|')) tableau.lignes.push(lignes[i++]);
@@ -284,19 +287,49 @@ export function remplirDepuisLesFiches(
             const page = pageDuTitre(tableau.titre) ?? pageDeLaCategorie(categorie, fiche.pages);
             const lues = tableau.lignes.map(cellules);
 
+            /*
+              La famille de chaque ligne (07/11/2026). Un tableau d'« Objet » générique qui porte une
+              colonne « Type » (Cthulhu Hack : « Arme à distance », « Protection », « Outils »…) range
+              chaque ligne selon son type ; le type devient aussi sa catégorie. Sans cela, le revolver
+              et l'armure lourde finissaient en matériel. Un type qui ne nomme aucune famille garde
+              celle du tableau.
+            */
+            const colonneDuType = famille === 'materiel'
+                ? tableau.entetes.findIndex((e, n) => n > 0 && clef(e) === 'type')
+                : -1;
+            const familleDeLaLigne = (c: string[]): FamilleDObjet =>
+                (colonneDuType > 0 ? familleDuTableau(nettoyer(c[colonneDuType] ?? '')) : null) ?? famille;
+
             // Les colonnes du jeu : rapprochées par leur libellé, ajoutées sinon,
-            // nombre quand la moitié au moins des valeurs du tableau en sont.
-            const idDeLaColonne = new Map<number, string>();
-            tableau.entetes.forEach((entete, n) => {
-                if (n === 0 || champDuSocle(entete)) return;
-                const existante = (cat.colonnes[famille] ?? []).find(c => clef(c.libelle) === clef(entete));
-                if (existante) { idDeLaColonne.set(n, existante.id); return; }
+            // nombre quand la moitié au moins des valeurs du tableau en sont — par
+            // famille, et seulement pour les familles que le tableau emploie.
+            const idDeLaColonne = new Map<string, string>();
+            const colonne = (fam: FamilleDObjet, n: number): string => {
+                const cleDeLaColonne = `${fam}:${n}`;
+                const connue = idDeLaColonne.get(cleDeLaColonne);
+                if (connue) return connue;
+                const entete = tableau.entetes[n];
+                const existante = (cat.colonnes[fam] ?? []).find(c => clef(c.libelle) === clef(entete));
+                if (existante) { idDeLaColonne.set(cleDeLaColonne, existante.id); return existante.id; }
                 const valeurs = lues.map(c => nettoyer(c[n] ?? '')).filter(v => !VIDE.has(v));
                 const nature = valeurs.length && valeurs.filter(estUnNombre).length * 2 >= valeurs.length ? 'nombre' : 'texte';
-                cat = ajouterUneColonne(cat, famille, entete, nature);
-                idDeLaColonne.set(n, cat.colonnes[famille]!.at(-1)!.id);
-                journal.colonnesAjoutees.push({ famille, libelle: entete, nature });
-            });
+                cat = ajouterUneColonne(cat, fam, entete, nature);
+                const id = cat.colonnes[fam]!.at(-1)!.id;
+                idDeLaColonne.set(cleDeLaColonne, id);
+                journal.colonnesAjoutees.push({ famille: fam, libelle: entete, nature });
+                return id;
+            };
+            const completes = lues.filter(c => c.length === tableau.entetes.length);
+            const familles = [...new Set(completes.map(familleDeLaLigne))];
+            for (const fam of (familles.length ? familles : [famille])) {
+                tableau.entetes.forEach((entete, n) => {
+                    if (n === 0 || n === colonneDuType || champDuSocle(entete)) return;
+                    // Un tableau qui mêle les familles ne donne à chacune que les colonnes qu'elle
+                    // remplit : la « Portée » des armes n'a rien à faire chez les armures (07/11/2026).
+                    if (colonneDuType > 0 && !completes.some(c => familleDeLaLigne(c) === fam && !VIDE.has(nettoyer(c[n] ?? '')))) return;
+                    colonne(fam, n);
+                });
+            }
 
             tableau.lignes.forEach((ligne, r) => {
                 const c = lues[r];
@@ -309,22 +342,25 @@ export function remplirDepuisLesFiches(
                     journal.lignesNonLues.push({ chemin: fiche.chemin, ligne, raison: 'pas de nom' });
                     return;
                 }
-                const propose: Omit<ObjetDuCatalogue, 'id'> = { famille, nom, valeurs: {}, categorie, source: { livre: fiche.livre, ...(page ? { page } : {}), fiche: fiche.chemin } };
+                const fam = familleDeLaLigne(c);
+                const type = colonneDuType > 0 ? nettoyer(c[colonneDuType] ?? '') : '';
+                const categorieDeLaLigne = type && !VIDE.has(type) ? type : categorie;
+                const propose: Omit<ObjetDuCatalogue, 'id'> = { famille: fam, nom, valeurs: {}, categorie: categorieDeLaLigne, source: { livre: fiche.livre, ...(page ? { page } : {}), fiche: fiche.chemin } };
                 if (nomOriginal) propose.nomOriginal = nomOriginal;
                 let special = '';
                 tableau.entetes.forEach((entete, n) => {
-                    if (n === 0) return;
+                    if (n === 0 || n === colonneDuType) return;
                     const v = nettoyer(c[n]);
                     if (VIDE.has(v)) return;
                     const socle = champDuSocle(entete);
                     if (socle === 'poids') propose.poids = v;
                     else if (socle === 'cout') propose.cout = v;
                     else if (socle === 'special') special = v;
-                    else propose.valeurs[idDeLaColonne.get(n)!] = /^\d+$/.test(v) ? Number(v) : v;
+                    else propose.valeurs[colonne(fam, n)] = /^\d+$/.test(v) ? Number(v) : v;
                 });
                 if (special) {
                     propose.description = special;
-                    const proprietes = famille === 'arme' ? proprietesCourtes(special) : [];
+                    const proprietes = fam === 'arme' ? proprietesCourtes(special) : [];
                     if (proprietes.length) propose.proprietes = proprietes;
                     const effets = effetsDuTexte(special, champsDeLaFiche);
                     if (effets.length) propose.effets = effets;

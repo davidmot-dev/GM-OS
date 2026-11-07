@@ -73,7 +73,19 @@ const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdat
     const objets = objetsDeLaFamille(catalogue, famille);
     const groupes = rangerParCategorie(chercherDansLeCatalogue(objets, recherche));
     // Le nom, une cellule par colonne déclarée, les propriétés, la source.
-    const grille = { gridTemplateColumns: `minmax(14rem, 1fr) repeat(${colonnes.length}, minmax(5.5rem, max-content)) minmax(9rem, 12rem) 5.5rem` };
+    /*
+      Des largeurs bornées, les mêmes pour l'en-tête et pour chaque ligne (07/11/2026, David sur
+      Cthulhu Hack : « ce n'est pas très lisible »). Avec `max-content`, chaque ligne — une grille à
+      elle — calculait ses colonnes d'après son propre contenu : rien ne s'alignait, les titres se
+      chevauchaient et un texte long débordait sur ses voisins.
+    */
+    /*
+      Et la grille tient dans la largeur de la section (07/11/2026, second essai de David : « l'écran
+      est tronqué à droite »). Des minimums de 5,5 rem par colonne dépassaient la section dès sept
+      colonnes, et la fiche dépliée s'élargissait avec le tableau. Les colonnes se partagent désormais
+      la place (`1fr`), le nom en garde le double ; une valeur trop longue se coupe.
+    */
+    const grille = { gridTemplateColumns: `minmax(9rem, 2fr) repeat(${colonnes.length}, minmax(2.5rem, 1fr)) minmax(5rem, 8rem) 4rem` };
 
     const retirerLaColonne = (id: string, libelle: string) => {
         const n = valeursDeLaColonne(catalogue, famille, id);
@@ -184,16 +196,16 @@ const EditeurDuCatalogue: React.FC<EditeurDuCatalogueProps> = ({ driver, onUpdat
             {objets.length > 0 && groupes.length === 0 && (
                 <p className="text-sm italic text-app-muted">Aucun objet ne répond à « {recherche} ».</p>
             )}
-            <div className="space-y-6 overflow-x-auto pb-20">
+            <div className="space-y-6 pb-20">
                 {groupes.map(g => (
-                    <div key={g.categorie} className="min-w-fit">
+                    <div key={g.categorie} className="min-w-0">
                         <div className="mb-2 flex items-center justify-between px-1">
                             <h4 className="text-ui-12 font-black uppercase tracking-[0.15em] text-app-muted">{g.categorie}</h4>
                             <span className="font-mono text-ui-12 text-app-muted">{g.objets.length} objet{g.objets.length > 1 ? 's' : ''}</span>
                         </div>
                         <div className="mb-2 grid items-center gap-3 px-5 text-ui-12 font-black uppercase tracking-[0.12em] text-app-muted" style={grille}>
                             <span>{libelleDeFamille.libelle}</span>
-                            {colonnes.map(c => <span key={c.id} className="text-center">{c.libelle}</span>)}
+                            {colonnes.map(c => <span key={c.id} title={c.libelle} className="min-w-0 hyphens-auto text-center leading-tight tracking-normal">{c.libelle}</span>)}
                             <span>Propriétés</span>
                             <span className="text-right">Source</span>
                         </div>
@@ -266,8 +278,10 @@ const LigneDObjet: React.FC<{
                 const v = objet.valeurs?.[c.id];
                 const vide = v === undefined || String(v).trim() === '';
                 return (
-                    <span key={c.id} className="text-center">
-                        <span className={`inline-block whitespace-nowrap rounded-md px-2 py-0.5 font-mono text-ui-12 ${vide ? 'text-app-muted' : 'bg-app-text/5 font-bold text-app-text'}`}>{vide ? '—' : String(v)}</span>
+                    <span key={c.id} className="min-w-0 text-center">
+                        {/* Un texte long se coupe ; il se lit entier au survol et dans la fiche dépliée. */}
+                        <span title={vide ? undefined : String(v)}
+                            className={`inline-block max-w-full truncate whitespace-nowrap rounded-md px-2 py-0.5 align-middle font-mono text-ui-12 ${vide ? 'text-app-muted' : 'bg-app-text/5 font-bold text-app-text'}`}>{vide ? '—' : String(v)}</span>
                     </span>
                 );
             })}

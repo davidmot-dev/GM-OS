@@ -257,8 +257,15 @@ section Bestiaire fait de même pour les créatures (première colonne « Créat
   « Remplir depuis le corpus » tirera de la fiche : objets par famille, créatures, tables
   d'attaques, lignes illisibles. Une fiche qui parle d'équipement ou de créatures sans rien donner
   affiche une **alerte** : elle peut être publiée, mais il faudra recopier ses tableaux.
+- Un tableau dont la première colonne est « Objet » et qui porte une colonne **« Type »** range
+  chaque ligne selon son type (« Arme à distance » devient une arme, « Protection » une
+  protection) — depuis le 2026-11-07, pour Cthulhu Hack. Un tableau qui n'est pas une liste
+  d'objets (une échelle, le couvert) garde sa première colonne et n'est pas versé.
 - Le lecteur accepte aussi les noms du livre en première colonne : « Armes à distance légères »,
   « Explosif », « Armures », « PNJ », « Monstre », « Sbire »…
+- **Le sujet libre vaut aussi pour un supplément** (depuis le 2026-11-07) : il se pose en tête de la
+  liste des sujets retenus, le temps de le forger, sans y être enregistré — pour l'y garder, utilisez
+  « Ajouter » sous la liste.
 - **Pour reforger une fiche existante** (par exemple les adversaires de COC), tapez son sujet dans
   « Sujet de Forge Libre » ou cherchez-le dans la liste : un sujet déjà inventorié passe **en tête**,
   désigné, avec un bandeau qui le dit. Cliquez sa carte : la nouvelle fiche remplace l'ancienne à la

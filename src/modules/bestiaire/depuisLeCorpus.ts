@@ -1,6 +1,7 @@
 import type { BestiaireDuJeu, CreatureDuBestiaire, LigneDAttaque } from '../../types/drivers';
 import { ajouterUneColonne, identifiantDeCreature } from './bestiaire';
 import { proposerLeRole, proposerLesRoles, type RoleDuBestiaire } from './rolesDuBestiaire';
+import { estUneLigneDeSeparation } from '../forge/rules/tableauMarkdown';
 
 /**
  * Remplir le bestiaire depuis les fiches relues — registre § 210, étape C (05/11/2026), à la
@@ -88,7 +89,7 @@ function tableauxDeLaFiche(contenu: string): TableauLu[] {
         const l = lignes[i];
         const t = /^#{2,4}\s+(.*)$/.exec(l);
         if (t) { titre = t[1].trim(); continue; }
-        if (!l.trim().startsWith('|') || !/^\s*\|\s*:?-{2,}/.test(lignes[i + 1] ?? '')) continue;
+        if (!l.trim().startsWith('|') || !estUneLigneDeSeparation(lignes[i + 1])) continue;
         const tableau: TableauLu = { titre, entetes: cellules(l).map(nettoyer), lignes: [] };
         i += 2;
         while (i < lignes.length && lignes[i].trim().startsWith('|')) tableau.lignes.push(lignes[i++]);

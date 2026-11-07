@@ -198,3 +198,45 @@ describe('F5 — les familles telles que le livre les imprime (06/11/2026)', () 
         expect(journal.tableauxIgnores).toHaveLength(1);
     });
 });
+
+/*
+ * Cthulhu Hack, 07/11/2026 — David : « j'ai essayé de forger les équipements… et cela n'a pas
+ * fonctionné ». Extrait de la fiche forgée : la séparation à un seul tiret, et un tableau d'« Objet »
+ * générique dont la colonne « Type » dit la famille de chaque ligne.
+ */
+describe('Cthulhu Hack — un tiret, et la famille lue dans la colonne « Type »', () => {
+    const FICHE_CH = `### Tableau des Exemple de matériel
+| Objet | Type | Dé de Matériel | Portée | Particularités |
+|:- |:- |:- |:- |:- |
+| **Revolver** | Arme à distance | d6 | Proche | Dissimulable |
+| **Machette** | Arme de contact / Outil | d10 | – | Peut servir d'outil en jungle. |
+| **Grenade explosive** | Explosifs | – | 3 x Force mètres | + 3 niveaux de dégâts |
+| **Armure lourde** | Protection | d8 | – | 3 Points d'Armure. |
+| **Lampe-torche** | Accessoire | d8 | – | Éclaire jusqu'à Loin. |`;
+    const { catalogue, journal } = remplirDepuisLesFiches(undefined, [{ chemin: 'objets-et-equipement.md', contenu: FICHE_CH, livre: 'Cthulhu Hack' }]);
+    const parNom = (nom: string) => catalogue.objets.find(o => o.nom === nom)!;
+
+    it('le tableau à un tiret est lu : cinq objets, aucune ligne perdue', () => {
+        expect(catalogue.objets).toHaveLength(5);
+        expect(journal.lignesNonLues).toEqual([]);
+    });
+
+    it('chaque ligne prend la famille de son type, et son type pour catégorie', () => {
+        expect(parNom('Revolver')).toMatchObject({ famille: 'arme', categorie: 'Arme à distance' });
+        expect(parNom('Machette').famille).toBe('arme');
+        expect(parNom('Grenade explosive').famille).toBe('arme');
+        expect(parNom('Armure lourde')).toMatchObject({ famille: 'protection', categorie: 'Protection' });
+        // Un type qui ne nomme aucune famille garde celle du tableau.
+        expect(parNom('Lampe-torche')).toMatchObject({ famille: 'materiel', categorie: 'Accessoire' });
+    });
+
+    it('chaque famille ne reçoit que les colonnes qu’elle remplit ; « Particularités » va à la description', () => {
+        // Vu par David le 07/11 : sept colonnes chez les armures, des textes qui débordaient.
+        expect(catalogue.colonnes.arme!.map(c => c.libelle)).toEqual(['Dé de Matériel', 'Portée']);
+        expect(catalogue.colonnes.protection!.map(c => c.libelle)).toEqual(['Dé de Matériel']);
+        expect(catalogue.colonnes.materiel!.map(c => c.libelle)).toEqual(['Dé de Matériel']);
+        const deMateriel = catalogue.colonnes.arme!.find(c => c.libelle === 'Dé de Matériel')!.id;
+        expect(parNom('Revolver').valeurs[deMateriel]).toBe('d6');
+        expect(parNom('Armure lourde').description).toBe("3 Points d'Armure.");
+    });
+});

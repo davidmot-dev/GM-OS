@@ -1,5 +1,6 @@
 import { TITRE_DES_TABLEAUX_ANNONCES } from './gabarits';
 import { lignesAVerifier, normaliser } from './verificationAuLivre';
+import { estUneLigneDeSeparation } from './tableauMarkdown';
 
 /**
  * **F3 — un tableau par requête** (plan `documentation/Planning/2026-11-06-forge-tableaux-equipement-bestiaire.md`,
@@ -54,7 +55,7 @@ export function lireLesPiecesAnnoncees(texte: string): PieceAnnoncee[] {
     const pieces: PieceAnnoncee[] = [];
     const vues = new Set<string>();
     for (const ligne of texte.slice(section.debut, section.fin).split(/\r?\n/)) {
-        if (!ligne.trim().startsWith('|') || /^\s*\|\s*:?-{2,}/.test(ligne)) continue;
+        if (!ligne.trim().startsWith('|') || estUneLigneDeSeparation(ligne)) continue;
         const [premiere, seconde] = cellules(ligne);
         const titre = nettoyer(premiere ?? '');
         if (!titre || /^(tableau|creature|créature|lignes|section)$/i.test(titre)) continue;

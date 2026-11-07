@@ -141,8 +141,13 @@ directement, sans résultat »*.
 - **La fiche vide supprimée** (`rules/` et `drafts/`), à la demande de David (« oui supprime »).
 - **Reste** : l'essai prévu — cliquer la carte des adversaires pour la reforger avec le gabarit des
   tableaux.
-- Non traité : en mode supplément, le sujet libre n'entre pas dans la liste (la liste y est celle
-  des sujets retenus, qui a son propre champ « Ajouter »).
+- ~~Non traité : en mode supplément, le sujet libre n'entre pas dans la liste.~~ **Fait le 07/11**
+  (David : *« je voudrais que l'on active le "sujet de forge libre" pour les Suppléments »*, « le
+  temps de le forger ») : le sujet libre se pose sur la liste des sujets retenus, en tête, marqué,
+  comme pour le livre de base ; il n'est **jamais enregistré** dans `sujets.json` (« Ajouter » reste
+  le geste qui l'y met). Une seule règle pour les deux livres : `avecLeSujetLibre` et
+  `sansLeSujetLibre` (`forge/rules/sujetLibre.ts`). Essais : `sujetLibre.test.ts` (3),
+  `BrainstormOverlay.test.tsx` (+2, mode supplément) ; 901 essais de la Forge, `tsc -b`, eslint.
 
 ## La reforge des adversaires de COC — l'essai de David, le 06/11
 
@@ -283,6 +288,48 @@ un crochet `rappel-apres-compaction.mjs` ; l'étape « qui d'autre lit ça ? » 
   (« Minuteur » / « Timer »), employée avec un repli français.
 - **Vérifié** : 1 253 essais (locales, Forge, Clock-OS), `tsc -b`, eslint ; gardes : `node --test
   .claude/hooks/gardes.test.mjs` (11).
+
+## Cthulhu Hack — le 07/11 : la ligne de séparation, la colonne « Type »
+
+David : *« j'ai essayé de forger les équipements de Cthulhu Hack et cela n'a pas fonctionné »* —
+« Remplir depuis le corpus » disait « aucun tableau d'équipement lisible ». Puis *« fais les 4 »*.
+
+- **La cause** : la forge (F3) avait rendu une bonne fiche, quatre tableaux et une cinquantaine
+  d'objets, mais le carnet séparait l'en-tête par `|:- |` — un seul tiret, du Markdown valide.
+  Les quatre lecteurs (catalogue, bestiaire, F4, liste de F3) exigeaient deux tirets.
+  **Corrigé** : une règle unique, `forge/rules/tableauMarkdown.ts`, stricte sur la forme (une
+  ligne qui commence par « -2 » n'est pas une séparation). Sur tout le corpus, seule cette fiche
+  gagne des tableaux ; aucun n'est perdu.
+- **La colonne « Type »** : dans un tableau d'« Objet » générique, elle donne la famille et la
+  catégorie de chaque ligne (« Arme à distance » → arme, « Protection » → protection ; un type qui
+  ne nomme aucune famille garde celle du tableau). Le revolver n'est plus du matériel.
+- **Les gabarits F2 et F3** : un tableau qui ne liste pas des objets (une échelle, un couvert, une
+  règle) garde la première colonne que le livre lui donne — il n'est plus versé au catalogue.
+  Invites de 1 577 à 3 169 caractères.
+- **La fiche relue contre le livre** (v1v3, + 1, `relu: true`, empreinte gardée) : tableaux
+  conformes ; le revolver est imprimé « d3 » (hors de l'échelle d4-d12, la v1v2 du carnet
+  donnait d6 : recopié tel quel et signalé), « strictement », les premières colonnes « Niveau de
+  dé » et « Couvert », les pages des tableaux. Catalogue : **57 objets** (19 armes, 33 matériels,
+  5 protections), aucune ligne illisible ; F4 sur le vrai livre : 55 lignes sur 58 retrouvées,
+  3 à confirmer (noms imprimés sur trois lignes), aucune introuvable.
+- **Vérifié** : `tableauMarkdown.test.ts` (2), `depuisLeCorpus.test.ts` (+3, Cthulhu Hack) ; 1 062
+  essais (Forge, équipement, bestiaire, invites, locales, livres, manuel), `tsc -b`, eslint.
+- **À essayer par David** : « Remplir depuis le corpus » dans la section Équipement du pilote de
+  Cthulhu Hack (57 objets).
+- **Essayé par David, le même jour** : *« ce n'est pas très lisible »* — la famille Protection
+  cumulait sept colonnes (celles de la liste du matériel et du tableau des armures), et les lignes
+  ne s'alignaient pas. Corrigé :
+  - la fiche : le tableau des armures (p. 52) reprend les noms de la liste (p. 38) et nomme sa
+    colonne « Dé de Matériel » (appariement au sens, dit dans la fiche) — 3 protections au lieu de
+    5, 55 objets en tout ;
+  - le lecteur : « Particularités » va à la description, comme « Spécial » ; dans un tableau qui
+    mêle les familles, chacune ne reçoit que les colonnes qu'elle remplit (plus de « Portée » chez
+    les armures) ;
+  - l'écran (`EditeurDuCatalogue.tsx`) : des largeurs bornées, communes à l'en-tête et aux lignes
+    (`max-content` faisait calculer à chaque ligne ses propres colonnes), le texte long coupé avec
+    « … » et lisible au survol, les titres de colonne qui passent à la ligne.
+  - Les objets déjà versés gardent leurs colonnes : vider la famille, ou retirer les colonnes en
+    trop, avant de remplir à nouveau.
 
 ## L'ordre recommandé
 

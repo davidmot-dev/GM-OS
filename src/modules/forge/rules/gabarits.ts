@@ -338,6 +338,8 @@ verticales), TOUTES ses lignes et TOUTES ses colonnes, sans résumer :
 - avant chaque tableau, une ligne « ### Tableau des <titre exact de sa section> » ;
 - sa PREMIÈRE colonne s'intitule exactement « Arme », « Protection », « Véhicule »
   ou « Objet », selon ce qu'il décrit ;
+  un tableau qui ne liste pas des objets (une échelle, un couvert, une règle)
+  garde la première colonne que lui donne le livre ;
 - les autres colonnes gardent les noms du livre ; le prix va dans « Coût », le
   poids dans « Poids » ; une dernière colonne « Spécial » reçoit les notes de bas
   de tableau et les effets propres à la ligne ;
@@ -458,6 +460,8 @@ résumer :
 - avant le tableau, une ligne « ### Tableau des <titre exact de sa section> » ;
 - sa PREMIÈRE colonne s'intitule exactement « Arme », « Protection », « Véhicule »
   ou « Objet », selon ce qu'il décrit ;
+  un tableau qui ne liste pas des objets (une échelle, un couvert, une règle)
+  garde la première colonne que lui donne le livre ;
 - les autres colonnes gardent les noms du livre ; le prix va dans « Coût », le
   poids dans « Poids » ; une dernière colonne « Spécial » reçoit les notes de bas
   de tableau et les effets propres à la ligne ;
