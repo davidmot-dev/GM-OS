@@ -1,0 +1,27 @@
+{
+  "faces": 78,
+  "dos": 1,
+  "plage": [
+    1,
+    78
+  ],
+  "pagesSource": 14,
+  "regions": 84,
+  "repetitionsDosDocumentees": 5,
+  "JPEG_verifies": 79,
+  "dpi": 300,
+  "qualiteJPEG": 95,
+  "sousEchantillonnage": "4:4:4",
+  "dimensionsPixels": {
+    "709x1335": 40,
+    "709x1334": 39
+  },
+  "controleVisuelTermine": false,
+  "sourcePDFNonIncluse": true,
+  "scriptPublication": {
+    "plugin": "Extracteur de cartes 1.1.0",
+    "source_sha256": "132f32f7a609d528d38c8f322d143a322cc28d612b2aebc225a46b1d9fcfac45",
+    "script_sha256": "fc3f4bf94997a8834e0f4045d171e038f7ef0cce0d49da69b365e4d23aeced2e",
+    "adaptation": "Publication par copie vérifiée au lieu du déplacement atomique du dossier ; rendu, découpe, numérotation et compression du script original conservés."
+  }
+}

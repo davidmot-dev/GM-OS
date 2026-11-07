@@ -1,0 +1,67 @@
+{
+  "version": "2.0.0",
+  "module": "dune-conflits",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "modeRapide": true,
+  "dureeDepuisTitre": 76.699,
+  "chapitres": [
+    {
+      "titre": "1 · Compétence, Principe et dés achetés",
+      "secondesDepuisTitre": 0.145
+    },
+    {
+      "titre": "2 · Dépenser l’Impulsion avant de la conserver",
+      "secondesDepuisTitre": 6.47
+    },
+    {
+      "titre": "3 · Détermination, maxime et principe bafoué",
+      "secondesDepuisTitre": 13.797
+    },
+    {
+      "titre": "4 · Progression : gain validé et acquisition",
+      "secondesDepuisTitre": 29.22
+    },
+    {
+      "titre": "5 · Le module du jeu et la Maison",
+      "secondesDepuisTitre": 32.362
+    },
+    {
+      "titre": "6 · Cinq arènes, modes Agent et Architecte",
+      "secondesDepuisTitre": 49.967
+    },
+    {
+      "titre": "7 · Intrigue : découvrir un désir par l’enquête",
+      "secondesDepuisTitre": 58.844
+    },
+    {
+      "titre": "8 · Neutraliser, détruire et changer de scène",
+      "secondesDepuisTitre": 71.582
+    }
+  ],
+  "exportVideo": {
+    "webm": "C:\\Projet_David\\GM-OS-v5\\tmp\\clip-dune-repetition\\dune-mecanismes-et-modules.webm",
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\tmp\\clip-dune-repetition\\dune-mecanismes-et-modules.mp4",
+    "secondesRetirees": 19.520999999999997,
+    "dureeMp4": 76.96,
+    "conversion": "MP4 H.264, chargement retiré ; WebM de tournage conservé."
+  },
+  "assertions": [
+    "achat en Menace, Impulsion inchangée",
+    "bonus et Impulsion normale séparés",
+    "rachat complication +2 Menace",
+    "trait écrit puis reliquat versé une fois",
+    "Détermination 2 → 1",
+    "principe bafoué à la clôture puis récupéré",
+    "progression 12 → 15 → 5 et Combat 6 → 7",
+    "Maison reflétée et Menace de séance 3",
+    "fiche de Maison ouverte",
+    "cinq arènes et deux modes",
+    "déplacement non adjacent refusé puis adjacent accepté",
+    "deux vrais tests pour désir 4/6 puis 8/6",
+    "neutralisation tangible et destruction intangible",
+    "nouvelle scène réactive le permanent"
+  ]
+}

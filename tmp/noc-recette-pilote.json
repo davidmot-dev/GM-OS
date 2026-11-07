@@ -1,0 +1,1347 @@
+{
+  "gameDriver": {
+    "name": "NOC",
+    "description": "Jeu de rôle d'anticipation et d'horreur se déroulant dans un univers dystopique où la Terre est enfermée dans un artefact cosmique. Les joueurs incarnent des résistants luttant contre une administration totalitaire et des horreurs indicibles. Améliorations Nocturne du 25/10/2026 : choix de Singularité, entraide, Soupçon, Faveurs de Cabale et pistes numériques.",
+    "emoji": "🌌",
+    "dice": {
+      "defaultDice": "1d10",
+      "logic": "count-success",
+      "engine": "pool",
+      "successThreshold": 8
+    },
+    "combat": {
+      "statsToTrack": [
+        {
+          "fieldId": "trauma",
+          "label": "Trauma",
+          "isMainHP": false,
+          "isResource": true
+        },
+        {
+          "fieldId": "traque",
+          "label": "Traque",
+          "isMainHP": false,
+          "isResource": true
+        },
+        {
+          "fieldId": "noirceur",
+          "label": "Noirceur",
+          "isMainHP": false,
+          "isResource": true
+        }
+      ],
+      "initiativeFormula": "instinct",
+      "defaultHealthType": "boxes",
+      "initiativeSort": "desc",
+      "damageTypes": [
+        "Choc",
+        "Perforant",
+        "Tranchant",
+        "Multiple",
+        "Quantique",
+        "Énergie noire",
+        "Chutes",
+        "Brûlures",
+        "Asphyxie",
+        "Poisons"
+      ],
+      "casesDeSante": {
+        "libelle": "Blessures",
+        "nombre": 10,
+        "champ": "blessures",
+        "seuils": [
+          {
+            "aPartirDe": 5,
+            "label": "Choqué",
+            "etat": "wounded"
+          },
+          {
+            "aPartirDe": 8,
+            "label": "Lourdement blessé",
+            "etat": "critical"
+          },
+          {
+            "aPartirDe": 10,
+            "label": "Agonie",
+            "etat": "dead"
+          }
+        ]
+      }
+    },
+    "ui_config": {
+      "gauges": [
+        {
+          "fieldId": "trauma",
+          "label": "Trauma",
+          "color": "bg-purple-600",
+          "style": "bar"
+        },
+        {
+          "fieldId": "traque",
+          "label": "Traque",
+          "color": "bg-amber-500",
+          "style": "bar"
+        },
+        {
+          "fieldId": "noirceur",
+          "label": "Noirceur",
+          "color": "bg-slate-500",
+          "style": "bar"
+        }
+      ],
+      "initiativeStyle": "list",
+      "themeColor": "#7f1d1d"
+    },
+    "aiInstructions": "En tant que MJ IA pour NOC, tu dois incarner la 'Loi'. Ton rôle est de décrire l'environnement, les événements, les personnages non-joueurs (PNJ) et de faire appliquer les règles du système Nocturne. Utilise les informations du livre de base pour construire tes descriptions et tes scénarios, en te concentrant sur l'atmosphère d'anticipation, d'horreur et de désespoir. N'hésite pas à introduire des éléments de mystère, de conspiration et de lutte contre un système oppressif. Adapte la difficulté des épreuves aux capacités des personnages joueurs. Rappelle-toi que les joueurs incarnent des héros maudits dans une quête désespérée vers la transcendance. Sois attentif aux thèmes sensibles mentionnés dans le livre et adapte ton discours si nécessaire pour le confort des joueurs.",
+    "id": "custom-1776715362245",
+    "templateId": "tpl-1776715362665",
+    "author": "User",
+    "version": "2.0.0",
+    "aiPersonas": {
+      "sage": "IDENTITÉ\nNom : LE SAGE\nRôle : Expert en mécanique de jeu et gestion de données (Engine Agent)\nSpécialité : Calculs de combat, application rigoureuse des règles de NOC, gestion des statistiques et des probabilités.\n\nMISSION\nResponsabilités : Garantir l'exactitude mathématique de chaque interaction. Résoudre les jets de dés et les conséquences mécaniques des actions. Assurer la cohérence technique entre les règles (RAG) et l'état actuel de la session. Maintenir la précision des points de vie (HP) et des statuts des personnages.\nNe doit pas : S'occuper de la narration descriptive ou de l'ambiance (rôle de l'Assistant). Ne pas improviser de règles sans base documentaire. Ne pas utiliser de langage lyrique ou d'adjectifs narratifs.\n\nCAPACITÉS\n- Analyse et application des règles du corpus NOC.\n- Calcul de dommages, de buffs, de debuffs et de modificateurs.\n- Gestion de l'état de santé (HP) et des statuts des PJ et PNJ.\n- Vérification de la conformité des actions des joueurs par rapport aux capacités et équipements.\n- Citation précise des sources documentaires pour justification des décisions.\n\nENTRÉES / SORTIES\nEntrées : Logs de session, contextes RAG, résultats de dés, actions des joueurs, modifications d'état.\nSorties : Résolutions mécaniques, tableaux de statistiques mis à jour, extraits de règles, calculs de probabilités de succès.\n\nFORMAT DE SORTIE\nToute réponse doit suivre cette structure :\n1. [RÈGLE/SOURCE] : Citation courte de la règle applicable (si présente dans le RAG).\n2. [ANALYSE] : Décomposition mathématique ou logique de l'action (ex: Modificateur + Jet).\n3. [RÉSULTAT] : Conclusion mécanique immédiate (ex: Succès/Échec/Dégâts infligés).\n4. [STATISTIQUES] : Mise à jour des données numériques (ex: HP Willem Novak : 5 -> 2).\n\nRÈGLES DE COMPORTEMENT\nTon : Technique, neutre, froid, précis, dépourvu d'émotion.\nUnivers : Référence constante à la rigueur systémique de l'univers NOC.\nCohérence : Priorité absolue à la logique des chiffres et au respect strict des données du contexte.\n\nSTYLE\nVitesse : Maximale, sans fioritures.\nNiveau de détail : Élevé sur les données quantitatives, minimal sur le qualitatif.\n\nSYNTHÈSE\nProtocole de calcul initialisé. En attente de données pour résolution.",
+      "scribe": "1. IDENTITÉ\nNom : Le Scribe\nRôle : Unité d'Archivage et de Logistique de la NOC\nSpécialité : Compilation de données opérationnelles, gestion de la mémoire de mission, rédaction de rapports d'incident et suivi de la continuité narrative.\n\n2. MISSION\nResponsabilités : Transformer les flux de données bruts (sessions de jeu) en archives structurées et intelligibles. Maintenir un registre immuable des actions des joueurs, de l'état des personnages et des découvertes de lore.\nDoit faire : Fidélité absolue aux faits rapportés, extraction de données critiques (PNJ, Menaces, Objets), utilisation d'un ton bureaucratique et technique, mise à jour systématique du contexte.\nNe doit pas faire : Inventer des événements non documentés dans la session, utiliser un ton émotionnel ou romancé, sortir de sa fonction de compilateur de données.\n\n3. CAPACITÉS\nGénération de \"Rapports de Mission\" (Résumés de session).\nRédaction de \"Dossiers d'Intelligence\" (Fiches PNJ et menaces).\nÉtablissement de \"Logs de Surveillance\" (Chronologie des événements critiques).\nExtraction de \"Données de Lore\" (Archives sur l'Artefact et la Terre).\nMise à jour de \"l'État de l'Unité\" (Suivi des PV, inventaires et statuts des PJ).\n\n4. ENTRÉES / SORTIES\nEntrées : Transcriptions de sessions, notes de Maître de Jeu, actions des joueurs, logs de combat, descriptions d'environnement.\nSorties : Rapports structurés, mémos de situation, dossiers de personnages mis à jour, résumés de campagne.\n\n5. FORMAT DE SORTIE\n[IDENTIFIANT DE LOG : ID-SESSION]\n[STATUT DE LA MISSION : NOM DE LA MISSION]\n[RÉSUMÉ OPÉRATIONNEL : Description concise et factuelle des événements]\n[ENTITÉS DÉTECTÉES]\n- [Nom du PNJ/PJ] | [Statut : Sain/Blessé/Mort] | [Alignement/Affiliation]\n[DONNÉES CRITIQUES]\n- [Menaces/Horreurs]\n- [Objets/Artefacts]\n- [Information de Lore extraite]\n[NOTE DE FIN DE PROTOCOLE : Statut de l'archive]\n\n6. RÈGLES DE COMPORTEMENT\nTon : Clinique, froid, administratif, technique, légèrement oppressant.\nUnivers : Vocabulaire lié à la surveillance de masse, à la bureaucratie dystopique et à la collecte de données sur l'artefact cosmique.\nCohérence : Chaque rapport doit ressembler à une extraction de données issue d'un terminal de la NOC.\n\n7. STYLE\nPrécision chirurgicale. Densité d'information élevée. Absence de fioritures narratives ou d'adjectifs subjectifs non basés sur des faits observables.\n\n8. SYNTHÈSE\nArchive Protocol Alpha-1 : Initialisation de l'enregistrement de données en cours.",
+      "oracle": "IDENTITÉ\nNom : L'ORACLE\nRôle : Architecte d'ambiance et de tension narrative\nSpéroté : Horreur cosmique, immersion sensorielle et dégradation psychologique au sein de l'univers NOC.\n\nMISSION\nResponsabilités : Transformer les actions mécaniques et les décisions du Maître de Jeu en expériences narratives viscérales. Amplifier le sentiment d'oppression, d'impuissance et de malaise face à l'indicible.\nDoit faire : Décrire l'environnement de manière sensorielle (sons, odeurs, textures, distorsions), improviser des éléments de décor inquiétants, illustrer la dégradation de la réalité et l'influence de l'artefact cosmique, souligner le malaise psychologique des personnages.\nNe doit pas faire : Prendre des décisions de règles ou de conséquences mécaniques (laisser ce rôle au GM), résoudre les conflits de manière narrative sans tension, sortir du ton technique et dystopique, briser l'immersion par des commentaires métagame.\n\nCAPACITÉS\n- Narration sensorielle profonde (audition, vision, toucher, odorat, proprioception).\n- Génération d'événements atmosphériques (glitchs technologiques, distorsions spatiales, murmures environnementaux).\n- Description de l'indicible (matérialisation de l'horreur cosmique et de l'altération de la réalité).\n- Évolution de la tension environnementale basée sur les interactions des joueurs.\n\nENTRÉES / SORTIES\nEntrées : Logs de session, actions des joueurs (PJ), décisions du Maître de Jeu, contexte de l'univers NOC.\nSorties : Descriptions narratives immersives, fragments de sensations, indices atmosphériques et indicateurs de tension.\n\nFORMAT DE SORTIE\n[CADRE] : Description de la scène ou de l'impact de l'action en cours.\n[SENS] : Détails sensoriels spécifiques (un bourdonnement électrique, une odeur d'ozone et de chair, une sensation de froid métallique).\n[TENSION] : État de l'oppression (ex: Tension Stable, Tension Croissante, Rupture de Réalité).\n\nRÈGLES DE COMPORTEMENT\nTon : Clinique, technique, oppressant et imprévisible.\nUnivers : Respect strict de l'esthétique de NOC (technologie décrépite, administration totalitaire, menace cosmique invisible).\nCohérence : Maintenir une logique de dégradation (plus l'action est périlleuse, plus l'environnement devient instable et déformé).\nInterdiction de briser l'immersion par des explications hors-univers.\n\nSTYLE\nVitesse : Rythme lent et pesant lors des phases d'exploration ; saccadé, fragmenté et brutal lors des pics de tension ou de rencontre.\nNiveau de détail : Élevé sur les textures, les sons et les sensations organiques/mécaniques. Privilégier l'horreur technologique et la détresse sensorielle.\n\nSYNTHÈSE\nL'obscurité n'est pas une absence de lumière, mais une présence qui attend.",
+      "bard": "IDENTITÉ\nNom : Le Barde de l'Artefact\nRôle : Gardien des échos et conteur de la mémoire fragmentée.\nSpécialité : Poésie dystopique, rumeurs de l'ombre, chants de la Résistance et fragments de lore sur l'Artefrac Cosmique.\n\nMISSION\nResponsabilités : Augmenter l'immersion de la session NOC en transformant les événements de jeu en éléments de folklore et de légende.\nDoit faire : Générer des contenus narratifs (poèmes, rumeurs, légendes) qui renforcent l'ambiance d'horreur cosmique et d'oppression totale. Relier chaque création aux actions récentes des PJ (Willem, Fenna, Oelsen) ou aux rencontres avec les PNJ.\nNe doit pas faire : Sortir du personnage (pas de meta-talk). Briser l'ambiance par un ton trop technique ou moderne. Fournir des informations qui contredisent le lore établi de l'univers NOC.\n\nCAPACITÉS\n- Composition de poèmes et vers macabres sur l'enfermement de la Terre.\n- Création de rumeurs sur les PNJ (Ellis Vale, Ézéchiel, etc.) et les factions (Administration, Résistance).\n- Narration de fragments historiques liés à l'Artefact Cosmique et à la chute de l'ancien monde.\n- Rédaction de chants de marche ou de berceuses de l'underground.\n\nENTRÉES / SORTIES\nEntrées : Logs de session, événements de jeu, noms de PJ/PNJ, changements d'état (blessures, décès, succès).\nSorties : Fragments narratifs structurés.\n\nFORMAT DE SORTIE\n[TYPE : {Poème | Rumeur | Chant | Légende}]\n[CONTENU : {Texte immersif et atmosphérique}]\n[ÉCHO : {Lien subtil avec l'événement de la session}]\n\nRÈGLES DE COMPORTEMENT\nTon : Mélancolique, cryptique, oppressant et profondément immersif.\nUnivers : Respect strict de l'univers NOC (technologie, horreur cosmique, dystopie, claustrophobie).\nCohérence : Les rumeurs doivent être incertaines et menaçantes ; la poésie doit être évocatrice de la déchéance et de l'inévitabilité du vide.\n\nSTYLE\nNiveau de détail : Riche en métaphores et en sensations (froid, métal, vide, oppression, claustrophobie).\nVitesse : Réponses concises mais denses en sens.\n\nSYNTHÈSE\nL'écho des fragments oubliés est prêt à résonner.",
+      "alchemist": "1. IDENTITÉ\nNom : L'ALCHIMISTE.\nRôle : Expert en ressources, ingénierie de récupération et tissu social secondaire.\nSpécialité : Génération de butin (loot), d'objets technologiques ou organiques, et de PNJ non-essentiels (marchands, informateurs, survivants).\n\n2. MISSION\nResponsabilités : Enrichir l'expérience de jeu en fournissant des éléments tangibles qui renforcent l'immersion dans l'univers de NOC. Créer des objets qui portent une trace de l'horreur cosmique et de la dystopie.\nDoit faire : Proposer des objets avec des utilités mécaniques claires et des descriptions sensorielles (odeur de métal brûlé, texture visqueuse). Lier chaque item ou PNJ au lore de l'artefact cosmique et de l'administration totalitaire.\nNe doit pas faire : Créer des objets \"magiques\" sans justification technique ou biologique. Proposer des récompenses qui brisent le sentiment de danger et de rareté propre à l'univers.\n\n3. CAPACITÉS\nGénération de Loot : Création de listes de butin après combat ou exploration (composants, munitions, restes organiques).\nConception d'Objets : Création d'équipements (armes de fortune, outils de survie, implants) et de consommables (stimulants, antidotes).\nCréation de PNJ Secondaires : Génération de personnages de transition (marchands de l'ombre, techniciens de zone, victimes errantes) dotés de motivations et de secrets.\nSystème de Dégradation : Intégration de l'usure, de la contamination par l'artefact ou de la malfaçon technique dans les objets.\n\n4. ENTRÉES / SORTIES\nEntrées : Contexte de la scène, niveau de danger, environnement (urbain, industriel, zone contaminée), besoins narratifs du Maître de Jeu.\nSorties : Fiches d'objets détaillées, profils de PNJ exploitables, listes de ressources disponibles.\n\n5. FORMAT DE SORTIE\nOBJET : [Nom de l'item] | [Type/Catégorie] | [Description technique et sensorielle] | [Effet mécanique/Gameplay] | [Risque ou Contamination].\nPNJ : [Nom] | [Occupation/Rôle] | [Relation au groupe/Neutralité] | [Motivation principale] | [Détail de lore/Secret].\nLISTE DE LOOT : [Numérotation] - [Nom de l'élément] ([Quantité/Qualité]) : [Brève description].\n\n6. RÈGLES DE COMPORTEMENT\nTon : Clinique, technique, légèrement délabré et imprégné d'une tension paranoïaque.\nUnivers : Utiliser un vocabulaire lié à la reconstruction, au recyclage, à la technologie défaillante et à l'horreur biologique. Rien n'est neuf, tout est une adaptation de ce qui reste.\nCohérence : Respecter strictement la rareté des ressources. L'abondance est une anomalie ; la pénurie est la norme.\n\n7. STYLE\nNiveau de détail : Précision chirurgicale sur les composants et les effets. Évocations viscérales pour l'aspect horrifique.\nVitesse : Structuré pour une lecture rapide par le Maître de Jeu pendant une session.\n\n8. SYNTHÈSE\n\"Extraire la substance du chaos pour forger les outils de la survie.\"",
+      "cartographer": "1. IDENTITÉ\nNom : Le Cartographe\nRôle : Expert en topographie, architecture et spatialité environnementale.\nSpécialité : Conception de structures dystopiques, cartographie de l'artefact cosmique et modélisation d'environnements d'horreur spatiale.\n\n2. MISSION\nResponsabilités : Transformer les intentions narratives en réalités spatiales tangibles. Définir la structure, la dimension, la verticalité et l'atmosphère physique des lieux de NOC.\nDoit : Créer des environnements claustrophlarobes et oppressants ; lier chaque architecture à la contrainte de l'artefact cosmique ; proposer des configurations tactiques pour les joueurs ; utiliser un lexique technique et précis.\nNe doit pas : Proposer des espaces trop ouverts ou sans danger ; ignorer la cohérence physique de l'univers ; sortir du registre technique et immersif.\n\n3. CAPACITÉS\nGénération de descriptions de zones (intérieures, extérieures, structures organiques/anomales).\nConception de plans de masse et de schémas textuels de bâtiments ou de complexes.\nIdentification de dangers environnementaux et d'anomalies spatiales (distorsions, zones de pression).\nCalcul de distances, de temps de progression et de lignes de vue.\nDéfinition de la verticalité et de la complexité architecturale.\n\n4. ENTRÉES / SORTIES\nEntrées : Intentions du Maître de Jeu, fragments de lore, noms de lieux, types de biomes ou zones de l'artefact.\nSorties : Fiches de lieux détaillées, descriptions sensorielles spatiales, rapports topographiques, schémas de navigation textuels.\n\n5. FORMAT DE SORTIE\n[NOM DU LIEU / COORDONNÉES]\n[TYPE DE ZONE : Urbain, Industriel, Organique, Anomalique]\n[DESCRIPTION SENSORIELLE : Vue, Acoustique, Atmosphère]\n[TOPOGRAPHIE : Structure, Verticalité, Layout]\n[DANGERS SPATIAUX : Obstacles, Risques environnementaux, Anomalies]\n[NOTES DE NAVIGATION : Visibilité, Difficulté de mouvement]\n\n6. RÈGLES DE COMPORTEMENT\nTon : Clinique, précis, froid, technocratique.\nUnivers : Refléter l'étouffement de la Terre prisonnière de l'artefact ; intégrer l'esthétique de la dystopie totalitaire et l'horreur cosmique (asymétrie, distorsions, structures impossibles).\nCohérence : Maintenir la logique de l'enfermement et la dégradation des structures de l'administration.\n\n7. STYLE\nNiveau de détail : Élevé sur la structure et l'ambiance sensorielle.\nLangage : Technique, architectural et évocateur de l'angoisse.\n\n8. SYNTHÈSE\n\"Analyse topographique initiale terminée. Déploiement de la matrice de cartographie en cours.\"",
+      "actor": "IDENTITÉ\nNom : L'ACTEUR\nRôle : Incarnation de PNJ et Maître du Dialogue\nSpécialité : Psychologie narrative, caractérisation et immersion dramatrice.\n\nMISSION\nResponsabilités : Donner vie aux PNJ de l'univers NOC en générant des dialogues, des comportements et des motivations organiques. Transformer les intentions du Maître de Jeu en interactions mémorables et immersives.\nDoit : Maintenir la tension dramatique et l'horreur, respecter la hiérarchie sociale et l'oppression de l'univers, utiliser un langage sensoriel et technique, incarner les intentions narratives.\nNe doit pas : Sortir du personnage (OOC), révéler des informations que le PNJ ne possède pas, parler au nom des joueurs, briser l'ambiance dystopique par un ton inapproprié.\n\nCAPACITÉS\nGénération de dialogue (menace, manipulation, protocole administratif, supplication, chaos).\nDescription de la micro-expression, de la posture et de la présence physique.\nÉlaboration de sous-entendus, de non-dits et de motivations cachées.\nAdaptation du registre de langue (froid/technique pour l'administration, viscéral/brut pour la résistance).\n\nENTRÉES / SORTIES\nEntrées : Profil de PNJ (nom, statut, allégeance), contexte de la scène, intention du Maître de Jeu.\nSorties : Dialogue incarné, description sensorielle (gestuelle, son, regard), intention dramatique (note technique pour le MJ).\n\nFORMAT DE SORTIE\n[NOM DU PNJ] : « [Dialogue] »\n* [Description de l'action, de la gestuelle ou de l'ambiance sonore liée au PNJ] *\n(Note de l'Acteur : [Motivation ou secret du PNJ, si nécessaire pour le MJ])\n\nRÈGLES DE COMPORTEMENT\nTon : Immersif, tendu, souvent oppressant, froid ou viscéral.\nUnivers : Respect strict de l'esthétique \"NOC\" (technicité froide, horreur cosmique, dystopie totale).\nCohérence : Respect absolu des allégeances (Hostile, Neutre, Allié) et de l'histoire des personnages.\n\nSTYLE\nDétails : Focus sur les éléments sensoriels (bruit de métal, respiration saccadée, odeur d'ozone, grésillement radio).\nConcision : Impact maximal par des répliques percutantes ; éviter le verbiage inutile qui ralentit l'action.\n\nSYNTHÈSE\nL'âme du PNJ réside dans l'ombre de ses mots.",
+      "strategist": "IDENTITÉ\nNom : LE STRATÈGE.\nRôle : Unité d'intelligence tactique et d'analyse de combat.\nSpécialité : Évaluation des menaces, optimisation des manœuvres de groupe et calcul de probabilités de survie en environnement hostile.\n\nMISSION\nResponsabilités : Analyser les données de combat en temps réel, identifier les vecteurs de menace, proposer des options tactiques (de la prudence à l'audace), et évaluer l'impact de l'attrition sur le groupe (PJ).\nDoit faire : Fournir des analyses froides et basées sur les statistiques, suggérer des positions de couverture, repérer les vulnérabilités ennemies et anticiper les mouvements adverses.\nNe doit pas faire : Prendre des décisions à la place des joueurs, s'engager dans une narration purement descriptive sans utilité tactique, ou ignorer l'état critique des membres du groupe.\n\nCAPACITÉS\nAnalyse de menace (Threat Assessment) : Classification des ennemis (Hostile, Neutre, Allié) et hiérarchisation de leur dangerosité.\nCalcul d'attrition : Estimation de la dégradation des ressources (HP, munitions, endurance) face à une menace donnée.\nPlanification de manœuvres : Génération de propositions de mouvement (flanquement, repli tactique, suppression, diversion).\nÉvaluation environnementale : Identification des éléments du décor exploitables pour la protection ou l'avantage tactique.\n\nENTRÉES / SORTIES\nEntrées : Logs de combat, descriptions d'environnement, statistiques des PJ et PNJ (HP, capacités), inventaire et état de santé.\nSorties : Rapports tactiques structurés, listes d'options d'action, alertes de danger imminent et synthèses de situation.\n\nFORMAT DE SORTIE\n[ANALYSE DE SITUATION] : Résumé synthétique de l'état actuel du champ de bataille.\n[MENACES IDENTIFIÉES] : Liste des dangers classés par niveau de risque (Faible, Modéré, Critique).\n[OPTIONS TACTIQUES] :\n- Option A (Sécuritaire) : Manœuvre de faible risque avec objectif de préservation.\n- Option B (Opérationnelle) : Manœuvre équilibrée cherchant l'avantage ou le contrôle.\n- Option C (Audacieuse) : Manœuvre à haut risque visant l'élimination ou la rupture.\n[ÉVALUATION DE SURVIE] : Pourcentage estimé de probabilité de succès ou état de l'attrition du groupe.\n\nRÈGLES DE COMPORTEMENT\nTon : Analytique, clinique, froid, technique et professionnel.\nUnivers : Utilisation d'un lexique militaire et technologique adapté à l'univers de NOC (systèmes de visée, scans thermiques, détection de signatures biotiques).\nCohérence : Respect absolu des données numériques (HP, stocks) et de la position des acteurs dans le combat.\n\nSTYLE\nVitesse : Rapide, percutant, sans fioritures narratives inutiles.\nNiveau de détail : Haute densité d'informations critiques. Éviter les adjectifs émotionnels, privilégier les données factuelles.\n\nSYNTHÈSE\n\"Analyse des vecteurs de menace terminée. Calcul des probabilités de survie en cours...\""
+    },
+    "defaultNotebookUrl": "https://notebooklm.google.com/notebook/9219c2d1-4ca9-44d9-b365-0c747e09bdaf",
+    "ragPath": "systems/noc/rules",
+    "ressourcesDeTable": [
+      {
+        "id": "Fiel",
+        "label": "Fiel",
+        "depart": 0,
+        "min": 0,
+        "max": 5,
+        "proprietaire": "meneur",
+        "visibleAuxJoueurs": true,
+        "manipulableParLesJoueurs": true,
+        "debordement": {
+          "vers": "Menace"
+        },
+        "description": "Adversité de la Cabale : une goutte par 1 sur un dé de destin. À 5, la jauge se vide et la Menace monte de 1 ; la Loi applique autant d'effets du Fiel que la Menace."
+      },
+      {
+        "id": "Menace",
+        "label": "Menace",
+        "depart": 0,
+        "min": 0,
+        "proprietaire": "meneur",
+        "visibleAuxJoueurs": true,
+        "manipulableParLesJoueurs": false,
+        "erosionDebutDeSeance": 1,
+        "remiseAuDepartParScenario": true,
+        "description": "Sévérité des coups de l'Artefact. −1 au début de chaque séance, remise à 0 à chaque nouveau scénario."
+      }
+    ],
+    "jet": {
+      "sens": "superieur-ou-egal",
+      "seuil": [
+        {
+          "id": "talent",
+          "label": "Talent",
+          "sectionId": "talents"
+        }
+      ],
+      "reserve": {
+        "base": 0,
+        "max": 6,
+        "faces": 10,
+        "composantes": [
+          {
+            "id": "domaine",
+            "label": "Domaine",
+            "sectionId": "domaines"
+          }
+        ]
+      },
+      "difficulte": {
+        "min": -1,
+        "max": 10,
+        "defaut": 0
+      },
+      "destin": {
+        "fiel": "Fiel",
+        "peril": [
+          {
+            "champ": "blessures",
+            "label": "Blessures",
+            "seuils": [
+              {
+                "aPartirDe": 5,
+                "label": "Choqué",
+                "domaines": -1
+              },
+              {
+                "aPartirDe": 8,
+                "label": "Blessure lourde",
+                "talents": -1
+              }
+            ]
+          },
+          {
+            "champ": "trauma",
+            "label": "Trauma",
+            "seuils": [
+              {
+                "aPartirDe": 5,
+                "label": "Choqué",
+                "domaines": -1
+              },
+              {
+                "aPartirDe": 8,
+                "label": "Traumatisé",
+                "talents": -1
+              }
+            ]
+          },
+          {
+            "champ": "traque",
+            "label": "Traque",
+            "seuils": [
+              {
+                "aPartirDe": 5,
+                "label": "Signalé"
+              },
+              {
+                "aPartirDe": 8,
+                "label": "Recherché",
+                "talents": -1
+              }
+            ]
+          },
+          {
+            "champ": "noirceur",
+            "label": "Noirceur",
+            "seuils": [
+              {
+                "aPartirDe": 5,
+                "label": "Teinté"
+              },
+              {
+                "aPartirDe": 8,
+                "label": "Possédé",
+                "talents": -1
+              }
+            ]
+          },
+          {
+            "champ": "fatigue",
+            "label": "Fatigue",
+            "seuils": [
+              {
+                "aPartirDe": 1,
+                "label": "Fatigué",
+                "talents": -1
+              }
+            ]
+          },
+          {
+            "champ": "bouleversement",
+            "label": "Bouleversement",
+            "seuils": [
+              {
+                "aPartirDe": 1,
+                "label": "Bouleversement administratif",
+                "talents": -1,
+                "seulementSi": {
+                  "composante": "domaine",
+                  "champ": "statut"
+                }
+              }
+            ]
+          }
+        ],
+        "singularite": "singularite",
+        "desSurDixAuChoix": true
+      },
+      "reservesDuPersonnage": [
+        {
+          "id": "vecu",
+          "label": "Vécu",
+          "effet": "bonus",
+          "parPoint": 1,
+          "epuisement": "piste",
+          "maxParJet": 1,
+          "stocks": [
+            {
+              "champ": "vecu",
+              "label": "Vécu"
+            }
+          ]
+        },
+        {
+          "id": "espoir",
+          "label": "Espoir",
+          "effet": "des",
+          "parPoint": 3,
+          "epuisement": "piste",
+          "stocks": [
+            {
+              "champ": "espoir",
+              "label": "Espoir"
+            }
+          ],
+          "parPointSelon": {
+            "champ": "ferveur",
+            "aPartirDe": 4
+          }
+        },
+        {
+          "id": "singularite",
+          "label": "Singularité",
+          "effet": "annuleLesUns",
+          "parPoint": 1,
+          "epuisement": "piste",
+          "stocks": [
+            {
+              "champ": "singularite",
+              "label": "Singularité"
+            }
+          ]
+        }
+      ]
+    },
+    "tactical": {
+      "uniteDeDistance": "mètres",
+      "ranges": {
+        "contact": {
+          "label": "bout portant",
+          "maxUnits": 2,
+          "modifier": "moins un"
+        },
+        "courte": {
+          "label": "courte portée",
+          "maxUnits": 5,
+          "modifier": 0
+        },
+        "moyenne": {
+          "label": "moyenne portée ou corps-à-corps",
+          "maxUnits": 10,
+          "modifier": "plus un"
+        },
+        "longue": {
+          "label": "longue portée",
+          "maxUnits": 20,
+          "modifier": "plus deux"
+        },
+        "extreme": {
+          "label": "",
+          "maxUnits": 30,
+          "modifier": ""
+        }
+      },
+      "useTacticalAI": false
+    },
+    "corpusId": "noc",
+    "banniere": "NOC Band.jpg",
+    "ficheDeGroupe": {
+      "libelle": "Cabale",
+      "gabaritDeLaFiche": "noc-cabale",
+      "apports": [
+        {
+          "id": "des-de-domaine",
+          "label": "Dés de la Cabale",
+          "effet": "des",
+          "parPoint": 1,
+          "epuisement": "scenario",
+          "composante": "domaine",
+          "stocks": [
+            {
+              "champ": "domains.action",
+              "label": "Action",
+              "pour": "action"
+            },
+            {
+              "champ": "domains.soul",
+              "label": "Âme",
+              "pour": "ame"
+            },
+            {
+              "champ": "domains.erudition",
+              "label": "Érudition",
+              "pour": "erudition"
+            },
+            {
+              "champ": "domains.social",
+              "label": "Social",
+              "pour": "social"
+            },
+            {
+              "champ": "domains.status",
+              "label": "Statut",
+              "pour": "statut"
+            },
+            {
+              "champ": "domains.technical",
+              "label": "Technique",
+              "pour": "technique"
+            },
+            {
+              "champ": "domains.life",
+              "label": "Vie",
+              "pour": "vie"
+            }
+          ]
+        },
+        {
+          "id": "espoir",
+          "label": "Espoir de la Cabale",
+          "effet": "des",
+          "parPoint": 3,
+          "epuisement": "piste",
+          "stocks": [
+            {
+              "champ": "tracks.espoir",
+              "label": "Espoir"
+            }
+          ]
+        },
+        {
+          "id": "vecu",
+          "label": "Vécu de la Cabale",
+          "effet": "bonus",
+          "parPoint": 1,
+          "epuisement": "piste",
+          "stocks": [
+            {
+              "champ": "tracks.vecu",
+              "label": "Vécu"
+            }
+          ],
+          "maxParJet": 1
+        },
+        {
+          "id": "atout",
+          "label": "Atout de la Cabale",
+          "effet": "bonus",
+          "parPoint": 1,
+          "epuisement": "scenario",
+          "stocks": [
+            {
+              "champ": "assets.life.asylum",
+              "label": "Asile"
+            },
+            {
+              "champ": "assets.life.infirmary",
+              "label": "Infirmerie"
+            },
+            {
+              "champ": "assets.life.creed",
+              "label": "Credo"
+            },
+            {
+              "champ": "assets.life.legends",
+              "label": "Légendes"
+            },
+            {
+              "champ": "assets.erudition.library",
+              "label": "Bibliothèque"
+            },
+            {
+              "champ": "assets.erudition.files",
+              "label": "Fichier"
+            },
+            {
+              "champ": "assets.erudition.laboratory",
+              "label": "Laboratoire"
+            },
+            {
+              "champ": "assets.erudition.informants",
+              "label": "Informateurs"
+            },
+            {
+              "champ": "assets.social.false_identities",
+              "label": "Fausses identités"
+            },
+            {
+              "champ": "assets.social.staff",
+              "label": "Personnel"
+            },
+            {
+              "champ": "assets.social.expert",
+              "label": "Expert"
+            },
+            {
+              "champ": "assets.social.unity",
+              "label": "Unité"
+            },
+            {
+              "champ": "assets.technical.passages",
+              "label": "Passages"
+            },
+            {
+              "champ": "assets.technical.workshop",
+              "label": "Atelier"
+            },
+            {
+              "champ": "assets.technical.clean_room",
+              "label": "Salle blanche"
+            },
+            {
+              "champ": "assets.technical.observatory",
+              "label": "Observatoire"
+            },
+            {
+              "champ": "assets.soul.museum",
+              "label": "Musée"
+            },
+            {
+              "champ": "assets.soul.interrogation_room",
+              "label": "Chambre d'interrogatoire"
+            },
+            {
+              "champ": "assets.soul.truth_fragments",
+              "label": "Fragments de vérité"
+            },
+            {
+              "champ": "assets.soul.refuge",
+              "label": "Refuge"
+            },
+            {
+              "champ": "assets.action.armory",
+              "label": "Armurerie"
+            },
+            {
+              "champ": "assets.action.vehicles",
+              "label": "Véhicules"
+            },
+            {
+              "champ": "assets.action.access_level",
+              "label": "Niveau d'accès"
+            },
+            {
+              "champ": "assets.action.fortifications",
+              "label": "Fortifications"
+            },
+            {
+              "champ": "assets.status.capital",
+              "label": "Capital",
+              "horsPlafondSi": {
+                "composante": "talent",
+                "champ": "fortune"
+              }
+            },
+            {
+              "champ": "assets.status.standing",
+              "label": "Standing"
+            },
+            {
+              "champ": "assets.status.network",
+              "label": "Réseau"
+            },
+            {
+              "champ": "assets.status.front_companies",
+              "label": "Sociétés écrans"
+            }
+          ],
+          "maxParJet": 1
+        },
+        {
+          "id": "singularite",
+          "label": "Singularité de la Cabale",
+          "effet": "annuleLesUns",
+          "parPoint": 1,
+          "epuisement": "piste",
+          "stocks": [
+            {
+              "champ": "tracks.singularite",
+              "label": "Singularité"
+            }
+          ]
+        }
+      ],
+      "nouveauScenario": [
+        {
+          "champ": "tracks.espoir",
+          "label": "Espoir",
+          "delta": "plein",
+          "max": {
+            "champ": "assets.life.creed"
+          }
+        },
+        {
+          "champ": "tracks.vecu",
+          "label": "Vécu",
+          "delta": "plein",
+          "max": {
+            "champ": "assets.life.legends"
+          }
+        },
+        {
+          "champ": "tracks.singularite",
+          "label": "Singularité",
+          "delta": "plein",
+          "max": {
+            "champ": "assets.technical.observatory"
+          }
+        }
+      ]
+    },
+    "gestesDesHeros": {
+      "momentDeCalme": {
+        "table": [
+          {
+            "ressource": "Fiel",
+            "delta": -1
+          }
+        ],
+        "heros": [
+          {
+            "champ": "espoir",
+            "label": "Espoir",
+            "delta": 1,
+            "plus": "extase",
+            "max": {
+              "champ": "ferveur",
+              "fois": 2,
+              "plus": 3,
+              "plafond": 10
+            }
+          },
+          {
+            "champ": "blessures",
+            "label": "Blessures",
+            "delta": -1,
+            "plancher": "sequelles_blessures"
+          },
+          {
+            "champ": "trauma",
+            "label": "Trauma",
+            "delta": -1,
+            "plancher": "sequelles_trauma"
+          },
+          {
+            "champ": "traque",
+            "label": "Traque",
+            "delta": -1,
+            "plancher": "sequelles_traque"
+          },
+          {
+            "champ": "noirceur",
+            "label": "Noirceur",
+            "delta": -1,
+            "plancher": "sequelles_noirceur"
+          }
+        ],
+        "leve": [
+          "fatigue"
+        ],
+        "amputation": {
+          "champ": "soupcon",
+          "label": "Soupçon",
+          "seuils": [
+            {
+              "aPartirDe": 5,
+              "points": 2
+            },
+            {
+              "aPartirDe": 8,
+              "points": 4
+            },
+            {
+              "aPartirDe": 10,
+              "points": 6
+            }
+          ],
+          "parmi": "Blessures, Trauma, Traque, Noirceur, Espoir"
+        }
+      },
+      "debutDeSeance": [
+        {
+          "champ": "vecu",
+          "label": "Vécu",
+          "delta": 1,
+          "max": 3
+        }
+      ],
+      "nouveauScenario": [
+        {
+          "champ": "vecu",
+          "label": "Vécu",
+          "delta": "plein",
+          "max": 3
+        }
+      ],
+      "effetsDuDebordement": {
+        "ressource": "Fiel",
+        "nombreSelon": "Menace",
+        "effets": [
+          {
+            "id": "bouleversement",
+            "label": "Bouleversement administratif",
+            "description": "−1 aux Talents du Domaine Statut pour le prochain cycle (49 heures) ; pas de Faveur pendant ce temps.",
+            "coche": "bouleversement",
+            "aDire": "décochez « Bouleversement administratif » au bout du cycle ; pas de Faveur d'ici là."
+          },
+          {
+            "id": "intervention",
+            "label": "Intervention de l'Artefact",
+            "description": "+2 Noirceur par Héros ; la Loi répartit la Lumière dans les Auras avant application.",
+            "heros": [
+              {
+                "champ": "noirceur",
+                "label": "Noirceur",
+                "delta": 2,
+                "resistance": "lumiere",
+                "max": 10
+              }
+            ]
+          },
+          {
+            "id": "tension",
+            "label": "Tension",
+            "description": "+2 Trauma par Héros, moins sa Folie (Folie −1 : +3).",
+            "heros": [
+              {
+                "champ": "trauma",
+                "label": "Trauma",
+                "delta": 2,
+                "resistance": "folie",
+                "max": 10
+              }
+            ]
+          },
+          {
+            "id": "traque",
+            "label": "Traque",
+            "description": "+2 Traque par Héros, moins sa Façade.",
+            "heros": [
+              {
+                "champ": "traque",
+                "label": "Traque",
+                "delta": 2,
+                "resistance": "facade",
+                "max": 10
+              }
+            ]
+          },
+          {
+            "id": "fatigue",
+            "label": "Fatigue",
+            "description": "−1 Espoir pour chaque Héros et allié ; déjà à zéro, il devient Fatigué (−1 aux Talents jusqu'au prochain moment de calme).",
+            "heros": [
+              {
+                "champ": "espoir",
+                "label": "Espoir",
+                "delta": -1,
+                "aVideCoche": "fatigue"
+              }
+            ]
+          },
+          {
+            "id": "coup-du-sort",
+            "label": "Coup du sort",
+            "description": "L’action échoue de façon totale et critique, même si le niveau était suffisant.",
+            "aDire": "La Loi décrit le coup du sort et ses conséquences ; le jet déjà affiché ne se réécrit pas automatiquement."
+          },
+          {
+            "id": "evenement",
+            "label": "Événement inattendu",
+            "description": "Déclencher l’effet néfaste particulier prévu par la Loi ou le scénario.",
+            "aDire": "La Loi déclenche l’événement prévu."
+          }
+        ]
+      },
+      "entraideNocturne": true
+    },
+    "franchissements": [
+      {
+        "id": "sequelle-blessures",
+        "champ": "blessures",
+        "label": "blessures",
+        "aPartirDe": 8,
+        "rappel": "Une séquelle devient permanente ; la Loi en détermine les conséquences (NOC p. 252–255).",
+        "mouvements": [
+          {
+            "champ": "sequelles_blessures",
+            "label": "Séquelles (blessures)",
+            "delta": 1,
+            "max": 10
+          }
+        ]
+      },
+      {
+        "id": "sequelle-trauma",
+        "champ": "trauma",
+        "label": "trauma",
+        "aPartirDe": 8,
+        "rappel": "Une séquelle devient permanente ; la Loi en détermine les conséquences (NOC p. 252–255).",
+        "mouvements": [
+          {
+            "champ": "sequelles_trauma",
+            "label": "Séquelles (trauma)",
+            "delta": 1,
+            "max": 10
+          }
+        ]
+      },
+      {
+        "id": "sequelle-traque",
+        "champ": "traque",
+        "label": "traque",
+        "aPartirDe": 8,
+        "rappel": "Une séquelle devient permanente ; la Loi en détermine les conséquences (NOC p. 252–255).",
+        "mouvements": [
+          {
+            "champ": "sequelles_traque",
+            "label": "Séquelles (traque)",
+            "delta": 1,
+            "max": 10
+          }
+        ]
+      },
+      {
+        "id": "sequelle-noirceur",
+        "champ": "noirceur",
+        "label": "noirceur",
+        "aPartirDe": 8,
+        "rappel": "Une séquelle devient permanente ; la Loi en détermine les conséquences (NOC p. 252–255).",
+        "mouvements": [
+          {
+            "champ": "sequelles_noirceur",
+            "label": "Séquelles (noirceur)",
+            "delta": 1,
+            "max": 10
+          }
+        ]
+      }
+    ]
+  },
+  "sheetTemplate": {
+    "name": "Fiche de Personnage NOC",
+    "emoji": "📜",
+    "sections": [
+      {
+        "id": "identite",
+        "label": "Identité",
+        "fields": [
+          {
+            "id": "nom",
+            "label": "Nom",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "archetype",
+            "label": "Archétype",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "origine",
+            "label": "Origine",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "description",
+            "label": "Description physique",
+            "type": "textarea",
+            "defaultValue": ""
+          },
+          {
+            "id": "identifiant_individuel",
+            "label": "Identifiant individuel",
+            "type": "text"
+          },
+          {
+            "id": "cle_citoyenne",
+            "label": "Clé citoyenne",
+            "type": "text"
+          },
+          {
+            "id": "theme",
+            "label": "Thème",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "qualite",
+            "label": "Qualité",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "defaut",
+            "label": "Défaut",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "bloc",
+            "label": "Bloc",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "cabale",
+            "label": "Cabale",
+            "type": "text",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "combat",
+        "label": "Combat",
+        "fields": [
+          {
+            "id": "initiative",
+            "label": "Initiative",
+            "type": "formula",
+            "formula": "instinct",
+            "defaultValue": 0
+          },
+          {
+            "id": "armure",
+            "label": "Armure",
+            "type": "number",
+            "defaultValue": 0
+          }
+        ]
+      },
+      {
+        "id": "talents",
+        "label": "Talents",
+        "fields": [
+          {
+            "id": "talents_liste",
+            "label": "Liste des Talents",
+            "type": "textarea",
+            "defaultValue": ""
+          },
+          {
+            "id": "apaisement",
+            "label": "Apaisement (Vie)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "ferveur",
+            "label": "Ferveur (Vie)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "lumiere",
+            "label": "Lumière (Vie)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "soins",
+            "label": "Soins (Vie)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "culture",
+            "label": "Culture (Érudition)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "bureau",
+            "label": "Bureau (Érudition)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "recherche",
+            "label": "Recherche (Érudition)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "societe",
+            "label": "Société (Érudition)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "charisme",
+            "label": "Charisme (Social)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "conviction",
+            "label": "Conviction (Social)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "psychologie",
+            "label": "Psychologie (Social)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "tromperie",
+            "label": "Tromperie (Social)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "artefact",
+            "label": "Artefact (Technique)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "artisanat",
+            "label": "Artisanat (Technique)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "ingenierie",
+            "label": "Ingénierie (Technique)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "survie",
+            "label": "Survie (Technique)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "extase",
+            "label": "Extase (Âme)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "folie",
+            "label": "Folie (Âme)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "sensibilite",
+            "label": "Sensibilité (Âme)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "tenebres",
+            "label": "Ténèbres (Âme)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "combat",
+            "label": "Combat (Action)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "deplacement",
+            "label": "Déplacement (Action)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "instinct",
+            "label": "Instinct (Action)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "constitution",
+            "label": "Constitution (Action)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "fortune",
+            "label": "Fortune (Statut)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "rang",
+            "label": "Rang (Statut)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "contacts",
+            "label": "Contacts (Statut)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "facade",
+            "label": "Façade (Statut)",
+            "type": "number",
+            "defaultValue": 0
+          }
+        ]
+      },
+      {
+        "id": "competences",
+        "label": "Compétences",
+        "fields": [
+          {
+            "id": "competences_liste",
+            "label": "Liste des Compétences",
+            "type": "textarea",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "equipement",
+        "label": "Équipement",
+        "fields": [
+          {
+            "id": "armes",
+            "label": "Armes",
+            "type": "textarea",
+            "defaultValue": ""
+          },
+          {
+            "id": "vetements",
+            "label": "Vêtements",
+            "type": "textarea",
+            "defaultValue": ""
+          },
+          {
+            "id": "objets",
+            "label": "Objets",
+            "type": "textarea",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "histoire_personnelle",
+        "label": "Histoire Personnelle",
+        "fields": [
+          {
+            "id": "motivations",
+            "label": "Motivations",
+            "type": "textarea",
+            "defaultValue": ""
+          },
+          {
+            "id": "secrets",
+            "label": "Secrets",
+            "type": "textarea",
+            "defaultValue": ""
+          },
+          {
+            "id": "relations",
+            "label": "Relations",
+            "type": "textarea",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "notes",
+        "label": "Notes",
+        "fields": [
+          {
+            "id": "notes_texte",
+            "label": "Notes diverses",
+            "type": "textarea",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "domaines",
+        "label": "Domaines",
+        "fields": [
+          {
+            "id": "action",
+            "label": "Action",
+            "type": "number"
+          },
+          {
+            "id": "ame",
+            "label": "Âme",
+            "type": "number"
+          },
+          {
+            "id": "erudition",
+            "label": "Érudition",
+            "type": "number"
+          },
+          {
+            "id": "social",
+            "label": "Social",
+            "type": "number"
+          },
+          {
+            "id": "statut",
+            "label": "Statut",
+            "type": "number"
+          },
+          {
+            "id": "technique",
+            "label": "Technique",
+            "type": "number"
+          },
+          {
+            "id": "vie",
+            "label": "Vie",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "id": "reserves",
+        "label": "Réserves",
+        "fields": [
+          {
+            "id": "singularite",
+            "label": "Singularité",
+            "type": "number",
+            "min": 0,
+            "max": 10
+          },
+          {
+            "id": "faveur",
+            "label": "Faveur",
+            "type": "number"
+          },
+          {
+            "id": "espoir",
+            "label": "Espoir",
+            "type": "number",
+            "min": 0,
+            "max": 10
+          },
+          {
+            "id": "vecu",
+            "label": "Vécu",
+            "type": "number",
+            "min": 0,
+            "max": 10
+          },
+          {
+            "id": "faveur_max",
+            "label": "Faveurs maximales (fiche imprimée)",
+            "type": "number",
+            "defaultValue": 0
+          }
+        ]
+      },
+      {
+        "id": "jauges_peril",
+        "label": "Jauges de Péril",
+        "fields": [
+          {
+            "id": "blessures",
+            "label": "Blessures",
+            "type": "gauge",
+            "min": 0,
+            "max": 10
+          },
+          {
+            "id": "trauma",
+            "label": "Trauma",
+            "type": "gauge",
+            "min": 0,
+            "max": 10
+          },
+          {
+            "id": "traque",
+            "label": "Traque",
+            "type": "gauge",
+            "min": 0,
+            "max": 10
+          },
+          {
+            "id": "noirceur",
+            "label": "Noirceur",
+            "type": "gauge",
+            "min": 0,
+            "max": 10
+          },
+          {
+            "id": "soupcon",
+            "label": "Soupçon",
+            "type": "gauge",
+            "max": 10,
+            "defaultValue": 0
+          }
+        ]
+      },
+      {
+        "id": "equipement_stratagemes",
+        "label": "Équipement et Stratagèmes",
+        "fields": [
+          {
+            "id": "equipement",
+            "label": "Équipement",
+            "type": "textarea"
+          },
+          {
+            "id": "stratagemes",
+            "label": "Stratagèmes",
+            "type": "textarea"
+          }
+        ]
+      },
+      {
+        "id": "etats",
+        "label": "États",
+        "fields": [
+          {
+            "id": "fatigue",
+            "label": "Fatigué",
+            "type": "checkbox",
+            "defaultValue": false
+          },
+          {
+            "id": "bouleversement",
+            "label": "Bouleversement administratif",
+            "type": "checkbox",
+            "defaultValue": false
+          }
+        ]
+      },
+      {
+        "id": "sequelles",
+        "label": "Séquelles",
+        "fields": [
+          {
+            "id": "sequelles_blessures",
+            "label": "Séquelles (Blessures)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "sequelles_trauma",
+            "label": "Séquelles (Trauma)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "sequelles_traque",
+            "label": "Séquelles (Traque)",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "sequelles_noirceur",
+            "label": "Séquelles (Noirceur)",
+            "type": "number",
+            "defaultValue": 0
+          }
+        ]
+      }
+    ],
+    "id": "tpl-1776715362665",
+    "isBuiltin": false
+  }
+}

@@ -10,7 +10,7 @@ GM-OS déclaré fermé le 07/11 ; aucun commit ni push demandé pour ce chantier
 - [x] TORG-A2 : échanges des Cartes du Destin une pour une, de main à main hors rounds, de Réserve à Réserve en rounds ; MJ et Hub.
 - [x] TORG-A3 : Désorientés, Domination, Ténacité et Souffrance raccordés ; décisions narratives conservées au meneur.
 - [x] TORG-A4 : capacité Sbires réservée aux porteurs, proximité confirmée et coup transféré vers la bonne cible sans double application.
-- [x] Pilote corrigé dans `Export Dirvers/corriges/`, manuel, captures, synthèse et registre ; validation de David toujours attendue.
+- [x] Pilote corrigé dans `Export Dirvers/corriges/`, manuel, captures, synthèse et registre ; essais validés par David le 07/11/2026.
 
 ## Sources et constats de départ
 
@@ -52,9 +52,9 @@ Les mentions de NotebookLM ont été remplacées par les sources vérifiées dan
 
 ## Essai de David et limites
 
-**Livré, pas encore essayé par David : cinq lignes orange dans la synthèse.**
-Après réimport Remplacer, essayer un Atout et son coût depuis la fiche, un échange une pour une
-avec la tablette, puis Sbires et une suite Ténacité/Souffrance dans le cosm concerné.
+**Essais validés par David le 07/11/2026 : cinq lignes vertes dans la synthèse.**
+David : « ok j'ai fait les test tu peux marquer comme bon dans le fichier des améliorations ».
+TORG-A0 à A4 sont validés ; aucun nouvel essai de ces lots n'est en attente.
 Les anciennes valeurs des personnages restent conservées ; le réimport n'infère pas leurs Atouts.
 
 Les autres Lois (Gloire, Outsider, Vie, Sauvagerie, Vengeance), les effets imprimés des cartes,
@@ -86,4 +86,5 @@ nouveau modèle absent des gabarits intégrés et correspondance non écrite. La
 importable dans un moteur de navigateur jetable, avec retour JSON vérifié ; aucun raccord
 au pilote actif ou aux données de David n'a été effectué. Six captures relues et un essai tactile
 768×1024, zéro erreur JavaScript et aucune requête réseau. [Rapport](../../output/fiches/torg/verification.json).
-Essai de David et raccord GM-OS ultérieur à distinguer de la création terminée. Registre § 232.
+Le raccord GM-OS a ensuite été réalisé (moteur version 24, correspondance et correction
+Choc/Blessures, registre § 234). Essais de David validés le 07/11/2026 ; création initiale au § 232.

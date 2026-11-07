@@ -1,0 +1,14 @@
+{
+  "campagnes": [
+    {
+      "id": "clip-dune",
+      "system": "dune"
+    }
+  ],
+  "active": "clip-dune",
+  "joueurs": [
+    "clip-joueur-dune",
+    "clip-joueur-dune-1",
+    "clip-joueur-dune-2"
+  ]
+}

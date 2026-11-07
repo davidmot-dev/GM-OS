@@ -1,0 +1,3940 @@
+{
+  "toc": [
+    {
+      "titre": "Introduction",
+      "pages": "5"
+    },
+    {
+      "titre": "Glorantha",
+      "pages": "13"
+    },
+    {
+      "titre": "Les aventuriers",
+      "pages": "23"
+    },
+    {
+      "titre": "Les aventuriers pré-tirés",
+      "pages": "84"
+    },
+    {
+      "titre": "Les régions d'origine",
+      "pages": "99"
+    },
+    {
+      "titre": "Le système de jeu",
+      "pages": "137"
+    },
+    {
+      "titre": "Les compétences",
+      "pages": "163"
+    },
+    {
+      "titre": "Le combat",
+      "pages": "191"
+    },
+    {
+      "titre": "Les Runes",
+      "pages": "227"
+    },
+    {
+      "titre": "Les Passions et la Réputation",
+      "pages": "233"
+    },
+    {
+      "titre": "La magie",
+      "pages": "243"
+    },
+    {
+      "titre": "La magie spirituelle",
+      "pages": "253"
+    },
+    {
+      "titre": "Les cultes runiques",
+      "pages": "269"
+    },
+    {
+      "titre": "La magie runique",
+      "pages": "313"
+    },
+    {
+      "titre": "Les chamans",
+      "pages": "351"
+    },
+    {
+      "titre": "Les esprits et le monde des Esprits",
+      "pages": "365"
+    },
+    {
+      "titre": "La sorcellerie",
+      "pages": "381"
+    },
+    {
+      "titre": "L'équipement et la richesse",
+      "pages": "403"
+    },
+    {
+      "titre": "Entre les aventures",
+      "pages": "415"
+    },
+    {
+      "titre": "Le guide de conversion",
+      "pages": "432"
+    },
+    {
+      "titre": "Scénario : Quand l'esprit faillit",
+      "pages": "439"
+    },
+    {
+      "titre": "Index",
+      "pages": "454"
+    }
+  ],
+  "index": [
+    {
+      "titre": "Absorption",
+      "pages": "317",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Accélérer un vaisseau",
+      "pages": "391",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Accélérer/Ralentir le vent",
+      "pages": "317",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Actions multiples en combat",
+      "pages": "195",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Actions multiples hors combat",
+      "pages": "195",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Aéolianisme",
+      "pages": "389",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Agriculture",
+      "pages": "58, 60-63, 66, 72, 79-81, 100, 113, 132, 139, 175, 293, 301, 307-308, 405, 417, 423",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Ajouter une Passion",
+      "pages": "236",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Alchimie",
+      "pages": "14, 58, 61, 66, 70, 139, 175, 290, 298",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Altérer une créature",
+      "pages": "317",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Amour (famille)",
+      "pages": "24, 27, 38-40, 46, 65-66, 69, 71, 75-77, 79, 91-92, 234-235, 291-292, 295, 300, 307, 310, 442",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Amour (individu)",
+      "pages": "27, 39, 235",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Amputer l'esprit",
+      "pages": "76, 288, 297, 318, 344, 349",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Analyser la magie",
+      "pages": "290, 298, 302, 318",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Animation des morts",
+      "pages": "391",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Annuler l'armure",
+      "pages": "391",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Apaiser les eaux",
+      "pages": "391",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Appeler la lumière",
+      "pages": "391",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Appeler le froid",
+      "pages": "391",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Appeler les nuages",
+      "pages": "77, 292, 294, 301, 318, 331, 341",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Appeler un Fondateur",
+      "pages": "306, 318",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Apprenti",
+      "pages": "25, 352, 404, 424",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Apprêter le corps",
+      "pages": "59, 61, 112, 139, 182",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Aptitudes chamaniques",
+      "pages": "359, 360",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Aptitudes supérieures à 100 %",
+      "pages": "144",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Argan Argar",
+      "pages": "18, 24, 47, 69, 71, 74-75, 110, 113, 274, 277, 289, 294, 311",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Arme à distance",
+      "pages": "61, 65, 69, 185, 193, 211, 214, 217, 295, 300, 302, 305",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Arme de jet",
+      "pages": "201, 211-213, 219, 434",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Arme de mêlée",
+      "pages": "61, 65, 185, 192, 197, 206-207, 221, 264, 300, 302, 305, 318, 334, 394",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "(Arme) de vérité",
+      "pages": "318",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Armure spirituelle",
+      "pages": "369",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Art",
+      "pages": "58, 61, 65, 168, 187",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Artisan",
+      "pages": "28, 64, 413, 423",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    {
+      "titre": "Artisanat",
+      "pages": "59, 61, 64-66, 186, 207, 216, 296-297, 417, 423, 434",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Artiste",
+      "pages": "28, 65, 423",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Assistant chaman",
+      "pages": "28, 65, 319, 352-353, 368, 417, 423",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Attaque critique",
+      "pages": "198-202, 206, 224",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Attaque mentale",
+      "pages": "77, 261, 303-304, 318, 346",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Attaquer",
+      "pages": "197",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Attaquer avec un avantage ou un désavantage",
+      "pages": "223",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Atténuer les dégâts",
+      "pages": "391",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Attirer la magie",
+      "pages": "391",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Attirer les esprits",
+      "pages": "392",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Attirer les projectiles",
+      "pages": "392",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Attirer un animal",
+      "pages": "319",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Attributs",
+      "pages": "54",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Augmentation",
+      "pages": "45, 52, 81, 144, 164, 167, 189, 219, 262, 276, 309, 353, 357, 417-418, 420",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Augmenter INT",
+      "pages": "392",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Augmenter les aptitudes",
+      "pages": "144",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Augmenter les compétences",
+      "pages": "163, 168-169",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Augures",
+      "pages": "141, 420-422, 427",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Auto résurrection",
+      "pages": "361",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Avaler",
+      "pages": "295, 319",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Aventuriers inexpérimentés",
+      "pages": "25",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Axis Mundi",
+      "pages": "75, 77, 291, 306, 319, 351, 354, 377",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Babeester Gor",
+      "pages": "24, 47, 65, 71-72, 74-76, 119, 174, 272, 274, 277, 286, 289-290, 293, 299, 311, 404",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Balayer les nuages",
+      "pages": "77, 294, 301, 309, 319",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Bandit",
+      "pages": "26, 28, 65, 423",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Baratin",
+      "pages": "58, 61, 71, 75, 139, 141, 168-169, 175, 184, 295, 338, 340",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Barrière protectrice",
+      "pages": "74, 289, 319",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Bataille",
+      "pages": "26, 41, 43-46, 58, 61-62, 65, 71-73, 79-80, 82, 85-86, 139, 167, 176, 219, 223, 229, 289-290, 296-297, 301-302, 304-305, 308, 310, 423, 435, 441-442",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Bénédiction de Kargan Tor",
+      "pages": "392",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Bénir la grossesse",
+      "pages": "319",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    {
+      "titre": "Bénir les animaux",
+      "pages": "320",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Bénir les récoltes",
+      "pages": "320",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Bénir un champion",
+      "pages": "320",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Bénir une tombe",
+      "pages": "320",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Berger",
+      "pages": "66",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Berserk",
+      "pages": "320",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Blocage spirituel",
+      "pages": "321",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Bond",
+      "pages": "321",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Bonus personnels aux compétences",
+      "pages": "23, 25, 79",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Bouclier",
+      "pages": "60-63, 65-66, 69, 70-74, 76-77, 79-80, 82, 85, 87, 89, 144, 152, 157, 184, 186-187, 192, 194, 197-198, 200-202, 204-205, 207, 213, 217-222, 224-225, 261, 263, 265, 290, 292-294, 297, 299, 301, 309, 316, 322, 347, 363, 378, 379, 394, 399, 422, 433, 437, 441, 446",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Bouclier adamantin",
+      "pages": "322",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Bouclier de feu",
+      "pages": "322",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Briser",
+      "pages": "322",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Brouillard",
+      "pages": "322",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Bureaucratie",
+      "pages": "58, 61, 70, 139, 177, 423",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Cacher un feu",
+      "pages": "322",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Camouflage",
+      "pages": "59, 61, 65, 69, 71, 85, 87, 139, 142, 188-189, 295, 300, 310, 434",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Canotage",
+      "pages": "58, 61, 66, 75, 139, 164, 181, 292, 423",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Caractéristiques",
+      "pages": "23, 48, 51, 52-54, 57-58, 60, 65, 71-73, 81, 87, 141, 145, 153, 155, 179, 188, 192, 198, 215, 250, 256, 276-277, 280, 313, 320, 327, 332, 339, 343-344, 359, 365, 415, 417-418, 425, 432-433, 441",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Caractéristiques maximales d'une espèce",
+      "pages": "52",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Cercle de protection",
+      "pages": "392",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "CHA",
+      "pages": "52",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Chalana Arroy",
+      "pages": "18, 24, 26, 47, 66, 74-77, 79, 104, 107, 110, 113, 119, 150, 175, 274, 277, 285-286, 290, 293, 298-299, 302, 306, 308, 311, 320, 334, 349, 389, 406",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Chamans",
+      "pages": "19, 64, 253, 258, 263, 265, 269, 291, 294, 306, 308, 351-359, 377, 379, 388",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Chances de base",
+      "pages": "60",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Changer la direction du vent",
+      "pages": "322",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Chant",
+      "pages": "58, 60-64, 66, 70-77, 79-80, 139, 144, 163, 168-169, 188, 241, 244, 246, 301-302, 368, 417, 423",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Chant du réconfort",
+      "pages": "323",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Chantre sacré",
+      "pages": "70, 76, 269, 272, 277-278, 280, 284, 286, 288, 292-293, 299, 302, 304, 309-310, 313-315, 418, 433, 436",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Charisme",
+      "pages": "52",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Charme",
+      "pages": "58, 61, 75, 139, 141, 169, 241, 295, 310, 443",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Chars",
+      "pages": "65, 165, 220",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Chasseur",
+      "pages": "66",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Chute",
+      "pages": "156, 167, 205",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    {
+      "titre": "Clairvoyance",
+      "pages": "76, 298, 323",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Clarté de la logique",
+      "pages": "76, 298, 389, 392",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Cloche-Renommée",
+      "pages": "440-443, 445, 452",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Combat monté",
+      "pages": "167, 219-220",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Combat spirituel",
+      "pages": "40, 43-44, 56, 59-64, 75, 77, 139, 142, 176, 182, 244, 247, 258, 260, 262, 287, 291, 306, 323, 326-327, 329, 331, 335-336, 338, 343-344, 353, 356-360, 362, 365-366, 368-371, 392, 399, 417-418, 423",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Combattre avec deux armes",
+      "pages": "224",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Combattre en phalange",
+      "pages": "222",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Combattre la maladie",
+      "pages": "77, 290, 307, 323",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Comédie",
+      "pages": "58, 61, 139, 169",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Commander (espèce)",
+      "pages": "323",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Commander aux adorateurs",
+      "pages": "301, 323",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Commander aux prêtres",
+      "pages": "323",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Commander un esprit de culte",
+      "pages": "323",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Compétences chamaniques",
+      "pages": "353",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Compétences d'Agilité",
+      "pages": "58, 164, 262, 346",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Compétences de communication",
+      "pages": "52, 58, 60, 168-171, 180, 188, 262, 323, 360",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Compétences de Connaissances",
+      "pages": "58, 175, 282, 434",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Compétences de Discrétion",
+      "pages": "59-60, 189",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Compétences de Magie",
+      "pages": "59, 168-169, 182, 184, 262, 417, 434",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Compétences de Manipulation",
+      "pages": "59, 185, 207, 211, 220, 225, 265, 417",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Compétences de Perception",
+      "pages": "59, 141, 188",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Compétences martiales",
+      "pages": "152-153, 161, 167, 197, 220",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Compétences supérieures à 100 % en combat",
+      "pages": "201",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Compréhension des troupeaux",
+      "pages": "59, 61, 75, 183, 291-292, 305-306",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "CON",
+      "pages": "51",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Conditions dans un enchantement",
+      "pages": "250",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Conducteur de char",
+      "pages": "28, 66, 423",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Conduite",
+      "pages": "58, 65, 70, 153, 221-222, 229, 233, 302, 423",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Conflits de personnalité",
+      "pages": "230",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Confusion",
+      "pages": "256",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Connaissance de la région",
+      "pages": "61, 164, 177-179, 182, 241, 291, 442",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Connaissance des animaux",
+      "pages": "61, 64, 69, 75, 177, 291, 293, 352, 423",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Connaissance des cieux",
+      "pages": "61, 63, 79, 163, 177, 308",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Connaissance des esprits",
+      "pages": "59, 61, 64, 139, 183, 291, 353",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Connaissance des minéraux",
+      "pages": "61, 179",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Connaissance des plantes",
+      "pages": "61, 64, 66, 75, 179, 182, 290, 292-293, 352, 423",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Connaissance des Races aînées",
+      "pages": "40, 61, 164, 178",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Connaissance du culte",
+      "pages": "61, 73, 163, 177, 275, 289-293, 295-296, 298-299, 301, 303, 305-308, 448",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Connaissances",
+      "pages": "58, 61, 175, 177-181, 184, 397, 434",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Consacrer une pierre de tonnerre",
+      "pages": "324",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Consacrer une teinture",
+      "pages": "324",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    {
+      "titre": "Contremagie",
+      "pages": "258",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Contrôler (espèce)",
+      "pages": "435",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Coordination",
+      "pages": "258",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Coup",
+      "pages": "324",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Coups visés",
+      "pages": "197",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Coupure",
+      "pages": "324",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Coût des sorts",
+      "pages": "386",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Coutumes",
+      "pages": "58, 60-63, 66, 69-70, 117, 139, 168, 180, 298, 425",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Création d'une matrice",
+      "pages": "324",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer de nouveaux sorts",
+      "pages": "390",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer l'obscurité",
+      "pages": "325",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer un aventurier",
+      "pages": "23",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer un brasier",
+      "pages": "325",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer un goût",
+      "pages": "392",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer un grand marché",
+      "pages": "325",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer un marché",
+      "pages": "325",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer un son",
+      "pages": "393",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer une crevasse",
+      "pages": "325",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer une image",
+      "pages": "393",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer une odeur",
+      "pages": "393",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer une ombre",
+      "pages": "326",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Créer une sensation",
+      "pages": "393",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Crémation des morts",
+      "pages": "326",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Croissance accélérée",
+      "pages": "326",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Cultes",
+      "pages": "8, 13-15, 24-27, 45, 47, 64-66, 69-77, 79-80, 104, 110, 116, 128, 132, 150, 171, 174-175, 184, 191, 211, 227, 234, 244, 253, 269-272, 274-278, 280-284, 286, 288-302, 304, 306-308, 310-311, 313-316, 318, 320, 323, 326-327, 329, 337, 342-343, 351-352, 357, 377-379, 388, 404, 406, 422, 432, 435-437",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Cultes associés",
+      "pages": "283",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Daimon",
+      "pages": "440",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Daka Fal",
+      "pages": "25, 47, 64, 70, 75-76, 79, 119, 277, 291, 300, 311, 334-335, 352, 359, 363",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Danse",
+      "pages": "58-66, 70, 72, 75-77, 139, 144, 163, 168-169, 188, 244, 246-247, 293, 299, 353, 368, 432",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Danse spirituelle",
+      "pages": "59, 61, 64, 139, 183, 353, 355, 370",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Daredart",
+      "pages": "258",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "De gnome à gargouille",
+      "pages": "326",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Défenses du temple",
+      "pages": "287",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Dégâts aux armes",
+      "pages": "200",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Déguisement",
+      "pages": "58, 61, 71, 139, 169, 423",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Démoralisation",
+      "pages": "258",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Déplacement",
+      "pages": "54, 59, 61, 71, 82, 102, 139, 150, 153, 161, 192-194, 195, 205, 214, 219-220, 247, 264-265, 271, 317, 326, 333, 348, 391, 394, 423",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Déplacement silencieux",
+      "pages": "59, 61, 71, 139, 144, 188, 189, 215-216, 265, 295, 300, 304, 310, 423, 434",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Déshonneur",
+      "pages": "237-238",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    {
+      "titre": "Désincarnation",
+      "pages": "326",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Désincarné",
+      "pages": "183, 185, 287, 326-327, 353, 356-358, 366, 370, 374-375, 394, 397",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Désolidariser (partie du corps)",
+      "pages": "327",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Détecter (substance)",
+      "pages": "259",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Détecter la magie",
+      "pages": "259",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Détecter la vie",
+      "pages": "259",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Détecter l'ennemi",
+      "pages": "259",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Détecter l'honneur",
+      "pages": "327",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Détecter un esprit",
+      "pages": "259",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Détecter un mort-vivant",
+      "pages": "259",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Détecter un piège",
+      "pages": "259",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Détection d'assassin",
+      "pages": "61, 183, 296",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Détection du Chaos",
+      "pages": "49, 59, 61, 77, 139, 163, 183, 305",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Détruire l'éther",
+      "pages": "327",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Dévotion (divinité)",
+      "pages": "26, 31, 32-33, 36, 38, 40-41, 43, 70, 83, 233-234, 276, 280",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "DEX",
+      "pages": "52",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Discours de vérité",
+      "pages": "327",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Disparition",
+      "pages": "394",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Dispersion de la magie",
+      "pages": "327",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Disruption",
+      "pages": "259",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Dissimulation",
+      "pages": "59, 61, 69, 187, 189, 295, 303-304, 360, 382, 434, 436",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Dissipation de la magie",
+      "pages": "260",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Distorsion",
+      "pages": "260",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Distraction",
+      "pages": "260",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Divination",
+      "pages": "74, 271-272, 275, 295, 310, 317, 328, 379",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Diviser les attaques",
+      "pages": "202",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Doigt de feu",
+      "pages": "394",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Dominer (animal)",
+      "pages": "394",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Dominer (esprit désincarné)",
+      "pages": "394",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Dominer (humanoïde)",
+      "pages": "395",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Dompter un taureau",
+      "pages": "328",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Don du Chaos",
+      "pages": "328",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Dons",
+      "pages": "408",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Drain de l'âme",
+      "pages": "395",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Drainer le corps",
+      "pages": "395",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Durée des sort",
+      "pages": "386",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Échec critique",
+      "pages": "142-143, 145, 149, 153, 156, 163-171, 175-176, 179-188, 198-203, 206, 220-221, 224, 229, 236, 238, 241, 256, 264, 314, 326, 330, 335, 341-342, 345, 353-355, 368, 370, 375, 387, 392, 405, 422",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Éclair",
+      "pages": "328",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Écoute",
+      "pages": "48, 59, 61, 69, 71-73, 85, 139, 152, 188, 289, 290, 303-304, 308, 310",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Écran spirituel",
+      "pages": "260",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Écrasement",
+      "pages": "200, 203, 206-207, 219",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Effets des dégâts",
+      "pages": "146",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Eiritha",
+      "pages": "25-26, 47, 66, 69, 75, 77, 118-119, 121-122, 124, 274, 277, 291-293, 301, 306, 311",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    {
+      "titre": "Élémentaires",
+      "pages": "77, 93, 243, 247, 249-250, 273-274, 286, 304, 323, 336, 377",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Élevage",
+      "pages": "58, 60, 61-63, 66, 69, 75, 112-113, 139, 180, 292, 301, 417, 423, 446",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Éleveurs de poneys",
+      "pages": "24-25, 46, 62, 114",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Éloquence",
+      "pages": "30, 58, 61, 66, 70, 76, 79-80, 83, 85, 139, 141, 168-169, 175, 241, 293, 297-298, 301-302, 304, 306, 307, 338, 340, 417",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Embrasement",
+      "pages": "260",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Empalement",
+      "pages": "200, 202-204, 207, 291, 392",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Empathie",
+      "pages": "59, 61, 65-66, 69-70, 139, 168-170, 188, 235, 289, 293, 303-304, 307",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "ENC maximum",
+      "pages": "56, 150-151, 167, 201",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Enchantement",
+      "pages": "247-251, 260-261, 274, 289, 290-293, 295, 297-300, 302, 303, 305-307, 309-310, 322, 324, 328-329, 336, 343, 360, 394-395, 397, 435-436",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Enchantement (métal)",
+      "pages": "328",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Enchantement d'armure spirituelle",
+      "pages": "329",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Enchantement de lien",
+      "pages": "249, 257, 260, 329, 336",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Enchantement de lien d'esprit",
+      "pages": "257, 261",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Enchantement de matrice de sort",
+      "pages": "257, 261, 336, 436",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Enchantement de points de magie",
+      "pages": "257, 261, 329, 336, 395, 435-436",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Encombrement",
+      "pages": "150",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Enfant Trouvé",
+      "pages": "47, 69, 75-76, 79, 118-119, 277, 295, 300, 306, 310-311",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Engizi",
+      "pages": "47, 66, 75, 100, 106, 274, 277, 292, 311",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Enseignement de sort",
+      "pages": "281",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Entraînement",
+      "pages": "63, 167, 187, 217, 219, 281, 353, 415-418",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Entrave au Chaos",
+      "pages": "329",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Épier le chemin",
+      "pages": "329",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Épieu",
+      "pages": "61-63, 72, 211, 219",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Épreuves magiques",
+      "pages": "230",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Ernalda",
+      "pages": "24-26, 38-39, 47, 65-66, 70, 74-77, 79, 81, 103, 106-107, 109-110, 112, 116, 128-129, 132, 150, 168, 233, 269, 272, 274, 277, 282, 284-285, 289-290, 292-294, 299, 301-302, 306, 308, 310-311, 332, 338",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Ernaldori",
+      "pages": "107, 287",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Escalade",
+      "pages": "58, 61, 66, 69, 71, 139, 165, 299-300, 302, 304, 310, 417, 434",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Escamotage",
+      "pages": "59, 61, 71, 139, 187-189, 295, 423, 434",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Esprit allié",
+      "pages": "277, 280-281, 286, 318, 327, 329",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Esprit de représailles",
+      "pages": "274, 282",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Esprit gardien",
+      "pages": "329",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Esprit totem",
+      "pages": "352, 354-362, 371, 378",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Esprits ancestraux",
+      "pages": "319, 335-336",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Esprits de culte",
+      "pages": "273-274",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Esquive",
+      "pages": "26, 58, 61, 75, 139, 144, 151, 157, 165, 192, 195, 197, 200-201, 205, 245, 295",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Esrolia",
+      "pages": "21, 23-24, 27-28, 30-42, 46, 53, 60, 65-66, 70-71, 92, 94, 99-100, 107, 109-110, 112-113, 117, 171, 177-179, 294",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    {
+      "titre": "Eurmal",
+      "pages": "18, 24, 47, 65-66, 70-71, 75-77, 104, 277, 294-295, 298-299, 302, 311, 389",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Évaluation",
+      "pages": "58, 61, 65, 69-70, 180, 298, 354, 434",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Événements familiaux",
+      "pages": "426",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Exalter la Passion",
+      "pages": "329",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Excommunication",
+      "pages": "329",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Exorcisme",
+      "pages": "358",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Expérience supplémentaire",
+      "pages": "81",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Exposition à la chaleur",
+      "pages": "161",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Exposition au froid",
+      "pages": "161",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Extension",
+      "pages": "330",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Extinction",
+      "pages": "261",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Faim",
+      "pages": "161",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Faire face au Chaos",
+      "pages": "330",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Fanatisme",
+      "pages": "261",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Fermeture",
+      "pages": "330",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Fermier",
+      "pages": "66",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Feu",
+      "pages": "157",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Feu lunaire",
+      "pages": "395",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Flèche de feu",
+      "pages": "261",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Flotter",
+      "pages": "330",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Focus",
+      "pages": "254",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Folie",
+      "pages": "330",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "FOR",
+      "pages": "51",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Force",
+      "pages": "262",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Force d'ours",
+      "pages": "331",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Force d'un sort",
+      "pages": "385",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Foudre",
+      "pages": "331",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Fracasser",
+      "pages": "331",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Fraternité du Croc noir",
+      "pages": "379",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Fructifier",
+      "pages": "331",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Fusion d'esprits",
+      "pages": "331",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Géomancie",
+      "pages": "395",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Glamour",
+      "pages": "262",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Glue",
+      "pages": "263",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Grands Prêtres et Archi-Prêtres",
+      "pages": "281",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Griffes",
+      "pages": "331",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Guérir du poison",
+      "pages": "332",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Guérir les blessures du Chaos",
+      "pages": "332",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Guérir toutes les maladies",
+      "pages": "332",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Guérisseur",
+      "pages": "69",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Guérison accélérée",
+      "pages": "396",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Guérison de blessure",
+      "pages": "332",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Guérison naturelle",
+      "pages": "149",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Guérison totale",
+      "pages": "332",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Guerrier",
+      "pages": "69",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Guildes",
+      "pages": "66",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    {
+      "titre": "Haine (Groupe ou Individu)",
+      "pages": "27, 233",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Hallucination",
+      "pages": "332",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Harmonie",
+      "pages": "332",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Héritage familial",
+      "pages": "82",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Homme cornu",
+      "pages": "353",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Honneur",
+      "pages": "27, 29-37, 40-41, 43-45, 65, 70-73, 76-79, 225, 234, 241, 296-297, 301-302, 307-308, 310, 442-443",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Humakt",
+      "pages": "14, 24-26, 47, 71-73, 76, 104, 107, 119, 128, 132, 184, 244, 277, 286, 296-297, 304, 311, 332, 348-349, 404",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Identifier un parfum",
+      "pages": "332",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Identifier un sort",
+      "pages": "396",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Identifier une entité de l'Autre monde",
+      "pages": "396",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Illusion auditive",
+      "pages": "333",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Illusion de mouvement",
+      "pages": "333",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Illusion gustative",
+      "pages": "333",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Illusion olfactive",
+      "pages": "333",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Illusion tactile",
+      "pages": "333",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Illusion visuelle",
+      "pages": "333",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Illusions",
+      "pages": "333",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Impôts",
+      "pages": "407",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Incarner un ancêtre",
+      "pages": "334",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Incendie",
+      "pages": "396",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Initiés",
+      "pages": "274",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Inspiration",
+      "pages": "229, 233, 236, 304",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Inspiration runique",
+      "pages": "227",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "INT",
+      "pages": "52",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "INT Libre",
+      "pages": "384, 390",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Intendance",
+      "pages": "58, 61, 65-66, 69-70, 139, 180, 405, 416, 423-425",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Intensité",
+      "pages": "247, 333, 384-386, 393",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Intervention divine",
+      "pages": "272",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Intimidation",
+      "pages": "58-59, 61, 65, 74, 76-77, 139, 141, 170",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Intrigue",
+      "pages": "58, 60-61, 63, 70, 92, 139, 141, 170",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invention",
+      "pages": "59, 61, 65-66, 71, 139, 187, 295, 434",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Inviolable",
+      "pages": "334",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invisibilité",
+      "pages": "334",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invocation (entité)",
+      "pages": "263",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invocation de l'esprit de culte",
+      "pages": "334",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invocations maléfiques",
+      "pages": "334",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invoquer (espèce)",
+      "pages": "396",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invoquer un ancêtre",
+      "pages": "335",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invoquer un ancêtre choisi",
+      "pages": "336",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invoquer un élémentaire (type)",
+      "pages": "336",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invoquer un esprit de la loi",
+      "pages": "338",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invoquer un gardien du foyer",
+      "pages": "338",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Invoquer un mentor spirituel",
+      "pages": "338",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    {
+      "titre": "Issaries",
+      "pages": "18, 24-26, 47, 65, 69, 75-77, 104, 106, 110, 113, 116, 119, 272, 277, 285, 290, 295, 298-299, 302, 304, 310-311, 346, 389, 408, 416",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Jeu",
+      "pages": "180",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lacération",
+      "pages": "200, 203-204, 206-207, 210",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lame de feu",
+      "pages": "263",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lance du soleil",
+      "pages": "338",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lancer un sort runique",
+      "pages": "314",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Langue affûtée",
+      "pages": "338",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Langue étrangère",
+      "pages": "60-63, 69, 171",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Langue natale",
+      "pages": "58, 60-63, 70, 72, 80, 170",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lanterne",
+      "pages": "263",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lecture/Écriture",
+      "pages": "58, 61, 69-70, 74, 76-77, 80, 139, 177, 180-181, 289, 298-299, 303-304, 388, 390, 398, 417, 423, 434",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lever le voile",
+      "pages": "397",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lhankor Mhy",
+      "pages": "11, 18, 24, 26, 47, 70-71, 75-77, 104, 110, 113, 116, 119, 126, 175, 185, 189, 271, 277, 283, 285, 290, 295, 298, 302, 311, 327, 381, 389, 404",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Libérer un fantôme",
+      "pages": "338",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lien",
+      "pages": "27, 40, 73, 234-235, 249-250, 291, 304, 313-314, 318, 329, 331-332, 366, 388",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lier un élémentaire",
+      "pages": "397",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lier un esprit",
+      "pages": "397",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lier un fantôme",
+      "pages": "338",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lire les pensées",
+      "pages": "338",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Liste des prix des biens et des services",
+      "pages": "408",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Localisation",
+      "pages": "55-56, 81, 85, 87, 89, 91, 95, 97, 146-147, 148-150, 156-157, 166-168, 197-199, 204, 211, 214-216, 220-222, 224",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Logicien",
+      "pages": "397",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Longue vue",
+      "pages": "263",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Loyauté (ville)",
+      "pages": "27, 234",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Loyauté (clan, tribu)",
+      "pages": "27, 234",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Loyauté (individu)",
+      "pages": "27, 234",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Loyauté (temple)",
+      "pages": "27, 39-40, 65, 70, 74-77, 79, 83, 234, 276, 280, 289, 292-293, 295, 298-299, 301, 315",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lumière",
+      "pages": "263",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lumière solaire",
+      "pages": "338",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Lune",
+      "pages": "49",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Magie curative",
+      "pages": "149",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Magie runique commune",
+      "pages": "275, 317",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Magie runique cumulable",
+      "pages": "315",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Magie runique spéciale",
+      "pages": "77, 79, 276, 280, 288-293, 295, 297-303, 305-310, 313-314, 379, 406",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    {
+      "titre": "Magie sympathique",
+      "pages": "387",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Main de fer",
+      "pages": "263",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Maîtriser les animaux",
+      "pages": "339",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Maladie",
+      "pages": "154",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Malani",
+      "pages": "107",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Malkioni",
+      "pages": "388",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Mange-Chêne",
+      "pages": "379",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Maran Gor",
+      "pages": "24, 26, 47, 65, 72, 74-76, 116, 132, 133, 274, 277, 290, 293, 299, 311",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Marchand",
+      "pages": "71",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Marchandage",
+      "pages": "58, 60-61, 65, 69, 76, 112-113, 139, 141, 164, 174-175, 289, 298, 423",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Marche des ténèbres",
+      "pages": "339",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Marche sur l'eau",
+      "pages": "397",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Mariage",
+      "pages": "33, 42, 80-81, 237-238, 425-427",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Matraque",
+      "pages": "264",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Méditation",
+      "pages": "54, 59, 61, 64, 70, 73, 79-80, 139, 146, 183-184, 221, 244-245, 254, 257, 259, 314, 320, 326, 387, 390",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Membres laïcs",
+      "pages": "274",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Mémoire totale",
+      "pages": "397",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Mentir",
+      "pages": "339",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Message du vent",
+      "pages": "339",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Métamorphose",
+      "pages": "339",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Météo",
+      "pages": "159",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Mobilité",
+      "pages": "264",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Modificateur de catégorie de compétences",
+      "pages": "57",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Modificateur des compétences d'Agilité",
+      "pages": "58",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Modificateur des compétences de Communication",
+      "pages": "58",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Modificateur des compétences de Connaissances",
+      "pages": "58",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Modificateur des compétences de Discrétion",
+      "pages": "59",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Modificateur des compétences de Magie",
+      "pages": "59",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Modificateur des compétences de Manipulation",
+      "pages": "59",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Modificateur des compétences de Perception",
+      "pages": "59",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Modificateurs de lieux sacrés",
+      "pages": "185",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Modificateurs de région d'origine",
+      "pages": "53",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Modificateurs de Temps sacré",
+      "pages": "185",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Monde des Esprits",
+      "pages": "371",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Monomythe",
+      "pages": "381",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Monte",
+      "pages": "26, 58, 60-63, 69-70, 72-73, 77, 79-80, 153, 166-167, 195, 213, 219-220, 222, 297, 302, 304-307",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Monteurs de l'Impala",
+      "pages": "25, 46, 53, 62, 121",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Monteurs du Bison",
+      "pages": "25, 46, 53, 62, 119",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Monteurs du Grand Lama",
+      "pages": "25, 46, 53, 62, 119",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Moral",
+      "pages": "339",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Morokanth",
+      "pages": "118, 121, 125, 173, 317",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Mort et dégâts permanents",
+      "pages": "149",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Mort paisible",
+      "pages": "58, 61-63, 69, 75-77, 118, 122, 139, 181, 228, 292, 295-296, 300, 306",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Mortelame",
+      "pages": "264",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Multiprojectile",
+      "pages": "264",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Multisort",
+      "pages": "339",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    {
+      "titre": "Mur de Flammes",
+      "pages": "398",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Mur de lumière",
+      "pages": "264",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Mur de ténèbres",
+      "pages": "264",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Musique",
+      "pages": "59, 61, 66, 83, 139, 168, 187-188, 307, 393, 412",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Nage",
+      "pages": "58, 61, 66, 75, 139, 156, 164-165, 167, 292, 423, 434",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Naïades",
+      "pages": "292",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Namolding",
+      "pages": "440",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Naissance",
+      "pages": "28, 31, 34, 42, 80",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Navigation",
+      "pages": "58, 61, 139, 160, 164, 181",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Négocier avec des esprits",
+      "pages": "365",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Neige",
+      "pages": "340",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Neutralisation de la magie",
+      "pages": "398",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Neutraliser (Rune)",
+      "pages": "398",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Neutraliser la magie spirituelle",
+      "pages": "398",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Niveau de vie",
+      "pages": "64-66, 69-73, 403-404, 406, 422-423, 426",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Noble",
+      "pages": "71",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Noyade et asphyxie",
+      "pages": "156",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Objets lancés",
+      "pages": "159",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Observation",
+      "pages": "48, 59, 61, 65-66, 69, 71-73, 79-80, 139, 152-153, 161, 187-189, 227, 295-297, 299-306, 308, 310",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Odayla",
+      "pages": "26, 47, 65, 69, 75-77, 79, 104, 132, 273, 277, 291, 296, 300, 302, 310-311, 313",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Œil de chat",
+      "pages": "340",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Offrandes de choses vivantes",
+      "pages": "184, 316",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Offrandes d'objets de valeur",
+      "pages": "184, 316",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Orandarna",
+      "pages": "444",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Orlanth",
+      "pages": "14, 18, 24-26, 38-40, 42, 47, 65-66, 69-73, 75-77, 79-81, 103, 106-107, 109-110, 112, 119, 122, 125, 128, 132, 160, 166, 184, 191, 196, 233, 244-245, 269-270, 272-274, 277, 280, 282-285, 290, 292, 294-295, 298-302, 306, 310-311, 313, 348, 367, 372, 377, 389, 404",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Orlanth Aventureux",
+      "pages": "65, 72-73, 77, 79, 273, 280, 283-285, 294, 298, 301-302, 313",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Orlanth Tempétueux",
+      "pages": "72-73, 75, 77, 274, 283-284, 292, 294, 301, 302, 314",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Ouverture des mers",
+      "pages": "398",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Paix",
+      "pages": "340",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Panique",
+      "pages": "340",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Parade",
+      "pages": "76, 144, 147, 157, 163, 176, 192, 194-195, 197-202, 205-206, 217, 219, 222-225, 245, 247, 257, 265, 296, 418, 433-435",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Parades enchaînées",
+      "pages": "200",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    {
+      "titre": "Parler à l'esprit",
+      "pages": "399",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Parler aux troupeaux",
+      "pages": "340",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Parler avec les insectes",
+      "pages": "340",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Passage",
+      "pages": "340",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Passe du Dragon",
+      "pages": "11, 15, 17-19, 21, 23-26, 28, 31, 35, 37-39, 41, 43-44, 46, 70, 80, 99-103, 106-110, 112-114, 116-117, 122, 124-126, 128, 132-133, 139, 171, 173, 175, 178, 180-181, 210, 222, 234, 241, 269, 288, 291, 294, 303, 306-308, 351, 359, 377, 381, 390, 404, 407-408, 435, 437",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Passé familial",
+      "pages": "11, 23, 25-27, 29, 31, 42, 80, 82",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Passions",
+      "pages": "8, 11, 19, 24-29, 31, 37-38, 41-42, 64-66, 69-77, 79, 102, 141, 145, 192, 202, 230, 233-234, 236-237, 275-276, 280, 282-283, 287-293, 295-296, 298-301, 303, 305-308, 310, 329, 355, 365, 368, 392, 397, 399, 415, 432",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Pâturages",
+      "pages": "23-24, 27-28, 30, 32-38, 41, 46, 53, 62, 64, 69, 73, 99-100, 106, 114, 116-117, 126, 140, 173, 180, 294, 352, 411",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Peau d'ours",
+      "pages": "340",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Pêcheur",
+      "pages": "72",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Peuple du Pur-sang",
+      "pages": "79, 110, 114, 116-117, 173, 180, 294, 306-308",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Peur",
+      "pages": "340",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Peur (Type ou Individu)",
+      "pages": "26, 233",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Phases lunaires",
+      "pages": "139, 303",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Philosophe",
+      "pages": "72",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Pistage",
+      "pages": "59, 61, 65, 69, 75-76, 79, 139, 141, 152, 189, 289-290, 295, 300, 304-306, 310, 417, 423, 434",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Pluie",
+      "pages": "341",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Points d'armure",
+      "pages": "198, 216, 322, 325-326, 329, 340, 391, 437",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Points de magie",
+      "pages": "54",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Points de rune",
+      "pages": "11, 25, 73-74, 81, 125, 149, 184, 244, 247, 272-273, 275-278, 280-284, 286-288, 290-291, 294, 307, 310, 313-317, 324, 326, 329, 334-338, 342-347, 349, 379, 420, 436-437",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Points de vie",
+      "pages": "54",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Poison",
+      "pages": "157",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Pol-Joni",
+      "pages": "25-26, 62, 72-73, 108, 122, 124, 166",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Portée des sorts",
+      "pages": "385",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Portée d'un sort de magie spirituelle",
+      "pages": "255",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Possession",
+      "pages": "360, 370",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "POU",
+      "pages": "52",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Poursuites",
+      "pages": "151",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Pouvoir de la terre",
+      "pages": "341",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Pratiques rituelles",
+      "pages": "245, 387",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Prax",
+      "pages": "14, 17, 19, 23, 25-28, 30-39, 42, 44, 65-66, 69-70, 72-73, 99-100, 108, 116, 118-119, 121-122, 124-126, 128, 130, 140, 166, 173, 177, 206, 219, 228, 230, 238, 255, 288, 291, 306, 328, 351, 355, 365, 372, 379",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Premiers soins",
+      "pages": "58, 60-61, 64-66, 69, 71-74, 139, 148-150, 181-183, 204, 290, 293, 296-297, 307, 352, 423",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Préparation rituelle",
+      "pages": "246",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    {
+      "titre": "Préparer ou changer d'arme",
+      "pages": "194",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Préserver un objet",
+      "pages": "399",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Prêtre",
+      "pages": "70",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Prêtre runique",
+      "pages": "70, 269, 272-273, 276-278, 280-282, 286, 288-290, 292, 294-295, 298-299, 302, 308, 310, 313-315, 378-379, 418, 433, 436",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Prêtresse runique",
+      "pages": "276-277, 292-293, 299, 304",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Prêtres-Seigneurs runiques",
+      "pages": "281",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Protection",
+      "pages": "265",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Protection contre les armes",
+      "pages": "399",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Quête héroïque",
+      "pages": "9-10, 141, 149, 230, 237, 286-287, 335, 343-344, 420-421",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Quitter une mêlée",
+      "pages": "195",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Ralentissement",
+      "pages": "265",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Rançon",
+      "pages": "8, 64-66, 69-73, 150, 235, 262, 276, 280, 359, 407, 422, 427",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Rang d'action",
+      "pages": "57, 192",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Rang d'action de DEX",
+      "pages": "57",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Rang d'action de TAI",
+      "pages": "57",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Rang d'action d'un sort",
+      "pages": "254",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Recherche",
+      "pages": "48, 52, 58-61, 70, 139, 142, 144, 153-154, 161, 185, 187, 189, 289-290, 300, 305, 308, 310, 361, 393, 398, 413, 434",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Recherche en bibliothèque",
+      "pages": "58, 61, 70, 139, 182, 413",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Recherches",
+      "pages": "180, 286, 375, 389-390, 413, 417, 418",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Récoltes",
+      "pages": "420-423, 426",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Réconfort de l'esprit logique",
+      "pages": "399",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Reconstitution",
+      "pages": "341",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Récupération des points de Rune",
+      "pages": "284, 315",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Réflexion",
+      "pages": "341",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Régénérer un membre",
+      "pages": "341",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Remarques pour le combat",
+      "pages": "225",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Renforcement de filet",
+      "pages": "342",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Renforcer un sort",
+      "pages": "387",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Renvoi",
+      "pages": "399",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Renvoyer un élémentaire (type)",
+      "pages": "342",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Réparation",
+      "pages": "265",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Réparer la chair",
+      "pages": "399",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Repoussement",
+      "pages": "146, 195, 222, 224",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Repousser les morts-vivants",
+      "pages": "342",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Reproduction",
+      "pages": "342",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Réputation",
+      "pages": "11, 19, 26, 29-33, 35-37, 40-46, 82-83, 170, 176, 179, 233, 237-239, 241",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Résister aux sorts",
+      "pages": "244",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Respirer air/eau",
+      "pages": "342",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Restaurer la santé",
+      "pages": "343",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Résultats des attaques et des parades",
+      "pages": "199",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Résurrection",
+      "pages": "74-75, 150, 290-291, 343",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    {
+      "titre": "Réussite critique",
+      "pages": "142-145, 149, 153, 164-165, 168-170, 175-176, 179-180, 182-188, 198, 200-203, 205-206, 214, 224, 229, 231, 236, 241, 314, 330, 341-342, 345, 353-355, 362, 368-369, 387, 390, 392, 394, 422",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Réussite spéciale",
+      "pages": "142-145, 148-150, 153, 164-165, 167-170, 175-177, 183-188, 198, 200-204, 206-208, 214, 223-224, 229, 231, 236-237, 241, 258, 318, 330, 341-342, 353-355, 368-369, 379, 391, 394, 422",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Révéler une Rune",
+      "pages": "399",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Revenu de base",
+      "pages": "63-66, 69-73, 422-423, 425",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Revenus d'un aventurier",
+      "pages": "422",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Revigorer",
+      "pages": "343, 435",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Rire communicatif",
+      "pages": "343",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Round de mêlée",
+      "pages": "54, 57, 82, 137, 139, 146, 150, 152-153, 156-157, 165, 181-182, 187, 189, 191-192, 194-195, 197, 202-204, 211, 213, 222-224, 258, 368, 370, 386, 396, 400",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Runes",
+      "pages": "6, 8, 11, 13, 15, 19, 23, 26, 45, 47-50, 53-54, 73, 81, 102, 114, 137, 191-192, 202, 227, 229-231, 237, 241, 243, 245, 248-249, 254, 283, 288, 313-314, 327, 348, 368, 374, 381-384, 386, 388-391, 396, 415, 418",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Runes comme guide",
+      "pages": "229",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Runes conflictuelles",
+      "pages": "230",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sacrifice",
+      "pages": "316",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Saisie",
+      "pages": "146, 224",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sanctification",
+      "pages": "343",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sans peur",
+      "pages": "343",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sartar",
+      "pages": "14, 18, 21, 23-24, 26-28, 30-32, 34-46, 53, 60, 65-66, 69-71, 80, 99-101, 103-104, 106-109, 124-126, 128, 138, 140, 171, 173, 177-179, 233, 235, 238, 282, 285, 301, 367, 372",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Saut",
+      "pages": "58, 61, 66, 69, 139, 152, 156-157, 167-168, 321, 434",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sauvegarde",
+      "pages": "343",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sauvegarde contre les esprits",
+      "pages": "399",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sceller l'âme",
+      "pages": "344",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Scribe",
+      "pages": "73",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Seconde vue",
+      "pages": "265",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Seigneur runique",
+      "pages": "8, 70, 237, 269, 272-273, 277-278, 280-282, 286, 288, 290, 295, 297-298, 300, 302, 304-307, 310, 313-315, 379, 436",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sendestra",
+      "pages": "444",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sentier",
+      "pages": "344",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sept Mères",
+      "pages": "26, 47, 65-66, 69-71, 73, 77, 119, 126, 128, 166, 178, 274, 277, 282, 302-305, 311, 314",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Serment",
+      "pages": "344",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Silence",
+      "pages": "265",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Soif",
+      "pages": "161",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Soins",
+      "pages": "265",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sommeil",
+      "pages": "265",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sorcellerie lunar",
+      "pages": "389",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sort à distance",
+      "pages": "248",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    {
+      "titre": "Sort de contact",
+      "pages": "248",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Sort instantané",
+      "pages": "248",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Sort temporaire",
+      "pages": "248",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Sous-cultes",
+      "pages": "282",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Stériliser la terre",
+      "pages": "344",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Stocker des biens de valeur",
+      "pages": "406",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Stopper un vaisseau",
+      "pages": "399",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Suites",
+      "pages": "404",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Survie",
+      "pages": "58, 61-63, 65, 71, 118-119, 121, 139, 182, 295, 300, 306, 310, 317",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Table de résistance",
+      "pages": "145-147, 157, 159, 164, 224, 227, 244, 254, 256, 258, 260, 263, 274, 277, 280, 314, 323, 326, 332, 334, 338, 341, 378, 392, 398-399",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Table de résultats des aptitudes",
+      "pages": "143",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Tabous",
+      "pages": "363",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "TAI",
+      "pages": "51",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Taille des objets",
+      "pages": "151",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Tarsh lunar",
+      "pages": "23, 26-27, 30-41, 43-44, 46, 53, 63, 65-66, 70-71, 99, 126, 128-129",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Taureau Tempête",
+      "pages": "14, 24-26, 47, 65, 72-73, 75, 77, 102, 110, 118-119, 122, 124, 163, 166, 183, 228, 272, 274, 277, 280, 283, 290-292, 294, 302, 305-306, 311, 320, 328, 330, 347, 377, 404",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Techniques",
+      "pages": "185, 381, 383-384, 386, 388-391, 437",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Téléportation",
+      "pages": "344",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Téléportation guidée",
+      "pages": "345",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Températures et précipitations",
+      "pages": "102, 104, 110, 116, 122, 129, 132",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Temples",
+      "pages": "283-286, 406",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Temps de lancement des sorts",
+      "pages": "386",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Temps des compétences et des aptitudes",
+      "pages": "139",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Temps sacré",
+      "pages": "140, 185, 315, 420",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Ténèbres",
+      "pages": "153, 174, 181, 382",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Tenter à nouveau un test d'aptitude",
+      "pages": "142",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Test de caractéristique",
+      "pages": "141",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Test en opposition",
+      "pages": "142",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Tests d'expérience",
+      "pages": "137, 229, 231, 236-237, 382, 415-416",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Tir monté",
+      "pages": "219",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Tirer dans une mêlée",
+      "pages": "214",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Tirer sur des cibles mouvantes",
+      "pages": "214",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Tour complet",
+      "pages": "137, 139, 148, 154, 168-169, 188-189",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Tourment",
+      "pages": "229",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Traduction",
+      "pages": "345",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Trait mortel",
+      "pages": "345",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Traitement des maladies",
+      "pages": "58, 61, 66, 74, 139, 182, 290, 423",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Traitement du poison",
+      "pages": "58, 61, 66, 74, 139, 182, 290",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Transe de guérison",
+      "pages": "345",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Transe de la hache",
+      "pages": "345",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Transe de l'épée",
+      "pages": "345",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Transformation",
+      "pages": "345",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Trembleterre",
+      "pages": "335",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    {
+      "titre": "Tribu de l'Antilope noire",
+      "pages": "26, 63, 122",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Troquer un sort",
+      "pages": "346",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Trouver (substance)",
+      "pages": "327",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Trouver des esprits",
+      "pages": "374",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Trouver un ennemi",
+      "pages": "347",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Types d'armure",
+      "pages": "216",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Types de sorts",
+      "pages": "247",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Utiliser une sarisse contre une charge de cavalerie",
+      "pages": "220",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Vague scélérate",
+      "pages": "400",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Val d'Arfritha",
+      "pages": "442",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Vénération",
+      "pages": "47, 59, 61, 70, 73, 75, 79-80, 83, 139, 184-185, 244-246, 271, 274-276, 278, 281, 283-284, 289-293, 295-303, 305-308, 310, 315-316, 325, 334-335, 389, 417-418, 420, 436",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Vieillissement",
+      "pages": "425",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Vieux Tarsh",
+      "pages": "23, 26-27, 29-30, 32-39, 44, 46, 53, 63, 65-66, 69, 71, 99, 122, 129-130, 132, 173, 202",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Vigueur",
+      "pages": "267",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Vinga",
+      "pages": "77, 79, 81, 113, 282-283, 301-302, 314",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Visibilité",
+      "pages": "161, 257, 267",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Vision de l'âme",
+      "pages": "347",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Vitesse de guérison",
+      "pages": "56",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Vivelame",
+      "pages": "267",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Voir la vérité",
+      "pages": "348",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Vol",
+      "pages": "348",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    {
+      "titre": "Voler le souffle",
+      "pages": "400",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Voleur",
+      "pages": "73",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Vomieuvre",
+      "pages": "449",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Vortex spirituels",
+      "pages": "374",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Voyage spirituel",
+      "pages": "59, 61, 64, 139, 185, 353, 370-371, 374-375, 423",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Waha",
+      "pages": "25-26, 47, 64, 69-70, 73, 75, 77, 79, 118-119, 121-122, 125, 228, 269, 274, 277, 292, 296, 306, 311, 317, 347, 352, 356, 359, 363, 371",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Wyters",
+      "pages": "286",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Yelm",
+      "pages": "21, 25, 47, 64, 69-70, 73, 75, 77, 79, 116, 128, 138, 159-160, 233, 271, 274, 277, 280, 286, 288, 290, 294, 301, 306-308, 310-311, 339, 349",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Yelmalio",
+      "pages": "24-26, 47, 66, 71, 73, 75, 79, 104, 108, 110, 119, 126, 128, 130, 220, 277, 280, 286, 294, 301, 308-311, 323, 404",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Yeux de la rivière",
+      "pages": "267",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Yinkin",
+      "pages": "47, 69, 75-77, 79, 81, 104, 132, 277, 291, 296, 300, 302, 310-311, 332, 377",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Zorak Zoran",
+      "pages": "271-272, 304, 306, 309, 436",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    {
+      "titre": "Zzaburi",
+      "pages": "389",
+      "pageSource": 9,
+      "colonne": 2
+    }
+  ]
+}

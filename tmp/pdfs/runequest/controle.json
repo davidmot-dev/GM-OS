@@ -1,0 +1,308 @@
+[
+  {
+    "page": 1,
+    "colonne": 1,
+    "n": 33,
+    "premiere": {
+      "titre": "Absorption",
+      "pages": "317",
+      "pageSource": 1,
+      "colonne": 1
+    },
+    "derniere": {
+      "titre": "Artisan",
+      "pages": "28, 64, 413, 423",
+      "pageSource": 1,
+      "colonne": 1
+    }
+  },
+  {
+    "page": 1,
+    "colonne": 2,
+    "n": 30,
+    "premiere": {
+      "titre": "Artisanat",
+      "pages": "59, 61, 64-66, 186, 207, 216, 296-297, 417, 423, 434",
+      "pageSource": 1,
+      "colonne": 2
+    },
+    "derniere": {
+      "titre": "Bénir la grossesse",
+      "pages": "319",
+      "pageSource": 1,
+      "colonne": 2
+    }
+  },
+  {
+    "page": 2,
+    "colonne": 1,
+    "n": 34,
+    "premiere": {
+      "titre": "Bénir les animaux",
+      "pages": "320",
+      "pageSource": 2,
+      "colonne": 1
+    },
+    "derniere": {
+      "titre": "Chute",
+      "pages": "156, 167, 205",
+      "pageSource": 2,
+      "colonne": 1
+    }
+  },
+  {
+    "page": 2,
+    "colonne": 2,
+    "n": 41,
+    "premiere": {
+      "titre": "Clairvoyance",
+      "pages": "76, 298, 323",
+      "pageSource": 2,
+      "colonne": 2
+    },
+    "derniere": {
+      "titre": "Consacrer une teinture",
+      "pages": "324",
+      "pageSource": 2,
+      "colonne": 2
+    }
+  },
+  {
+    "page": 3,
+    "colonne": 1,
+    "n": 39,
+    "premiere": {
+      "titre": "Contremagie",
+      "pages": "258",
+      "pageSource": 3,
+      "colonne": 1
+    },
+    "derniere": {
+      "titre": "Déshonneur",
+      "pages": "237-238",
+      "pageSource": 3,
+      "colonne": 1
+    }
+  },
+  {
+    "page": 3,
+    "colonne": 2,
+    "n": 43,
+    "premiere": {
+      "titre": "Désincarnation",
+      "pages": "326",
+      "pageSource": 3,
+      "colonne": 2
+    },
+    "derniere": {
+      "titre": "Eiritha",
+      "pages": "25-26, 47, 66, 69, 75, 77, 118-119, 121-122, 124, 274, 277, 291-293, 301, 306, 311",
+      "pageSource": 3,
+      "colonne": 2
+    }
+  },
+  {
+    "page": 4,
+    "colonne": 1,
+    "n": 36,
+    "premiere": {
+      "titre": "Élémentaires",
+      "pages": "77, 93, 243, 247, 249-250, 273-274, 286, 304, 323, 336, 377",
+      "pageSource": 4,
+      "colonne": 1
+    },
+    "derniere": {
+      "titre": "Esrolia",
+      "pages": "21, 23-24, 27-28, 30-42, 46, 53, 60, 65-66, 70-71, 92, 94, 99-100, 107, 109-110, 112-113, 117, 171, 177-179, 294",
+      "pageSource": 4,
+      "colonne": 1
+    }
+  },
+  {
+    "page": 4,
+    "colonne": 2,
+    "n": 46,
+    "premiere": {
+      "titre": "Eurmal",
+      "pages": "18, 24, 47, 65-66, 70-71, 75-77, 104, 277, 294-295, 298-299, 302, 311, 389",
+      "pageSource": 4,
+      "colonne": 2
+    },
+    "derniere": {
+      "titre": "Guildes",
+      "pages": "66",
+      "pageSource": 4,
+      "colonne": 2
+    }
+  },
+  {
+    "page": 5,
+    "colonne": 1,
+    "n": 43,
+    "premiere": {
+      "titre": "Haine (Groupe ou Individu)",
+      "pages": "27, 233",
+      "pageSource": 5,
+      "colonne": 1
+    },
+    "derniere": {
+      "titre": "Invoquer un mentor spirituel",
+      "pages": "338",
+      "pageSource": 5,
+      "colonne": 1
+    }
+  },
+  {
+    "page": 5,
+    "colonne": 2,
+    "n": 34,
+    "premiere": {
+      "titre": "Issaries",
+      "pages": "18, 24-26, 47, 65, 69, 75-77, 104, 106, 110, 113, 116, 119, 272, 277, 285, 290, 295, 298-299, 302, 304, 310-311, 346, 389, 408, 416",
+      "pageSource": 5,
+      "colonne": 2
+    },
+    "derniere": {
+      "titre": "Magie runique spéciale",
+      "pages": "77, 79, 276, 280, 288-293, 295, 297-303, 305-310, 313-314, 379, 406",
+      "pageSource": 5,
+      "colonne": 2
+    }
+  },
+  {
+    "page": 6,
+    "colonne": 1,
+    "n": 46,
+    "premiere": {
+      "titre": "Magie sympathique",
+      "pages": "387",
+      "pageSource": 6,
+      "colonne": 1
+    },
+    "derniere": {
+      "titre": "Multisort",
+      "pages": "339",
+      "pageSource": 6,
+      "colonne": 1
+    }
+  },
+  {
+    "page": 6,
+    "colonne": 2,
+    "n": 32,
+    "premiere": {
+      "titre": "Mur de Flammes",
+      "pages": "398",
+      "pageSource": 6,
+      "colonne": 2
+    },
+    "derniere": {
+      "titre": "Parades enchaînées",
+      "pages": "200",
+      "pageSource": 6,
+      "colonne": 2
+    }
+  },
+  {
+    "page": 7,
+    "colonne": 1,
+    "n": 33,
+    "premiere": {
+      "titre": "Parler à l'esprit",
+      "pages": "399",
+      "pageSource": 7,
+      "colonne": 1
+    },
+    "derniere": {
+      "titre": "Préparation rituelle",
+      "pages": "246",
+      "pageSource": 7,
+      "colonne": 1
+    }
+  },
+  {
+    "page": 7,
+    "colonne": 2,
+    "n": 41,
+    "premiere": {
+      "titre": "Préparer ou changer d'arme",
+      "pages": "194",
+      "pageSource": 7,
+      "colonne": 2
+    },
+    "derniere": {
+      "titre": "Résurrection",
+      "pages": "74-75, 150, 290-291, 343",
+      "pageSource": 7,
+      "colonne": 2
+    }
+  },
+  {
+    "page": 8,
+    "colonne": 1,
+    "n": 33,
+    "premiere": {
+      "titre": "Réussite critique",
+      "pages": "142-145, 149, 153, 164-165, 168-170, 175-176, 179-180, 182-188, 198, 200-203, 205-206, 214, 224, 229, 231, 236, 241, 314, 330, 341-342, 345, 353-355, 362, 368-369, 387, 390, 392, 394, 422",
+      "pageSource": 8,
+      "colonne": 1
+    },
+    "derniere": {
+      "titre": "Sort à distance",
+      "pages": "248",
+      "pageSource": 8,
+      "colonne": 1
+    }
+  },
+  {
+    "page": 8,
+    "colonne": 2,
+    "n": 43,
+    "premiere": {
+      "titre": "Sort de contact",
+      "pages": "248",
+      "pageSource": 8,
+      "colonne": 2
+    },
+    "derniere": {
+      "titre": "Trembleterre",
+      "pages": "335",
+      "pageSource": 8,
+      "colonne": 2
+    }
+  },
+  {
+    "page": 9,
+    "colonne": 1,
+    "n": 21,
+    "premiere": {
+      "titre": "Tribu de l'Antilope noire",
+      "pages": "26, 63, 122",
+      "pageSource": 9,
+      "colonne": 1
+    },
+    "derniere": {
+      "titre": "Vol",
+      "pages": "348",
+      "pageSource": 9,
+      "colonne": 1
+    }
+  },
+  {
+    "page": 9,
+    "colonne": 2,
+    "n": 13,
+    "premiere": {
+      "titre": "Voler le souffle",
+      "pages": "400",
+      "pageSource": 9,
+      "colonne": 2
+    },
+    "derniere": {
+      "titre": "Zzaburi",
+      "pages": "389",
+      "pageSource": 9,
+      "colonne": 2
+    }
+  }
+]

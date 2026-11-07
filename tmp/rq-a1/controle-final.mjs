@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import AdmZip from 'adm-zip';
+import {createHash} from 'node:crypto';
+const d='output/campagnes-tests/runequest',zip=new AdmZip(d+'/RuneQuest-Campagnes-de-recette.zip');
+const sha=f=>createHash('sha256').update(fs.readFileSync(f)).digest('hex');
+assert.equal(sha(d+'/RuneQuest-Campagnes-de-recette.zip'),'77255c9a703f1a12fd01a90ccfa36e4e7450b3626935470075cd77725fc44b5e');
+const i=JSON.parse(fs.readFileSync(d+'/inventaire.json'));
+for(const a of i.archives)assert.equal(createHash('sha256').update(zip.readFile(a.fichier)).digest('hex'),a.sha256);
+assert(!zip.getEntries().some(e=>/historique|traces|2\.0\.0\.gmos-driver|\.zip$/.test(e.entryName)));
+const prov=JSON.parse(fs.readFileSync(d+'/provenance.json'));for(const[f,h]of Object.entries(prov.sourcesDeLaRevision))assert.equal(sha(f),h,f);
+const planning='documentation/Planning/2026-10-20-ameliorations-tous-les-pilotes.md',plan=fs.readFileSync(planning,'utf8');
+assert(plan.includes('- [x] **RQ-A2'));assert(plan.includes('- [ ] **RQ-A1'));
+const registre=fs.readFileSync('documentation/Planning/2026-08-23-chantiers-gares.md','utf8');
+assert.equal((registre.match(/### 202 ·/g)??[]).length,1);assert.equal((registre.match(/^\| 138 \|/gm)??[]).length,1);
+assert(registre.split('\n').find(l=>l.startsWith('| 122 |')).endsWith('| Rien |'));
+let liens=0;for(const f of [planning,'documentation/Planning/2026-11-01-etat-et-reprise-codex-runequest-recette-210.md'])for(const m of fs.readFileSync(f,'utf8').matchAll(/\]\(([^)#]+)(?:#[^)]*)?\)/g)){if(/^(?:https?:|#)/.test(m[1]))continue;assert(fs.existsSync(path.resolve(path.dirname(f),decodeURIComponent(m[1]))),m[1]);liens++;}
+const pilote=new AdmZip(d+'/RuneQuest-2.1.0.gmos-driver');
+console.log(JSON.stringify({zip:zip.getEntryCount(),octets:fs.statSync(d+'/RuneQuest-Campagnes-de-recette.zip').size,liensVerifies:liens,manifestPilote:JSON.parse(pilote.readAsText('manifest.json')),versionPilote:JSON.parse(pilote.readAsText('state.json')).gameDriver.version,final:true},null,2));

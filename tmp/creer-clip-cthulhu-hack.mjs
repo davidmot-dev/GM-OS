@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+const origine=fs.readFileSync('e2e/clipDegenesis.spec.ts','utf8');
+let haut=origine.slice(0,origine.indexOf("test('les mécanismes de Degenesis"));
+haut=haut.replace(/import type \{ useRoundDeDegenesisStore[^\n]+\n/,'').replace(/import type \{ useJetsLiesDeDegenesisStore[^\n]+\n/,'').replace(/import type \{ EtatDegenesisDeLaFiche[^\n]+\n/,'');
+haut=haut.replace('useRoundDeDegenesisStore: typeof useRoundDeDegenesisStore; useJetsLiesDeDegenesisStore: typeof useJetsLiesDeDegenesisStore; ','');
+haut=haut.replaceAll('Degenesis','CthulhuHack').replaceAll('degenesis','cthulhu-hack').replace('CthulhuHack-2.3.0','Cthulhu-Hack-1.1.0').replace("PERSO = 'clip-falberg'","PERSO = 'clip-edith'");
+haut=haut.replace('les mécanismes particuliers de CthulhuHack','les mécanismes particuliers de Cthulhu Hack');
+haut=haut.replace("import type { useSessionOSStore }", "import type { useDiceStore } from '../src/stores/useDiceStore';\nimport { modulesDuPilote } from '../src/modules/modulesDuJeu/catalogue';\nimport type { SuiviCH } from '../src/modules/dice/systemes/cthulhuHack';\nimport type { useSessionOSStore }");
+haut=haut.replace('useCombatStore: typeof useCombatStore;','useCombatStore: typeof useCombatStore; useDiceStore: typeof useDiceStore;');
+fs.writeFileSync('e2e/clipCthulhuHack.spec.ts',haut+fs.readFileSync('tmp/clip-cthulhu-hack-corps.txt','utf8'));
+fs.mkdirSync('output/clips/cthulhu-hack/pilote',{recursive:true});
+fs.copyFileSync('output/campagnes-tests/cthulhu-hack/Cthulhu-Hack-1.1.0.gmos-driver','output/clips/cthulhu-hack/pilote/Cthulhu-Hack-1.1.0.gmos-driver');

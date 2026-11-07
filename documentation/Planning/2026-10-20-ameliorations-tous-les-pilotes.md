@@ -161,7 +161,7 @@ Avant toute modification du code applicatif, vérifier avec David que GM-OS est 
 | [Shadowrun Anarchy](#shadowrun-anarchy) | 🟢 12 · 🟠 0 · 🔴 0 | **Pilote 2.2.0 livré et validé par David le 04/11**, SR-A4/A5/A6 : planification/flashback/menace, égalités et rôles adverses, rigging et biofeedback séparés ; résistance arbitrée par David, 6/10/14. [Suivi et vérifications](2026-11-04-shadowrun-sr-a4-a6.md), registre § 212. SR-A1/A2/A3 validés le même jour ; socle et recette le 01/11 ; NP-C2/NP-C3 le 03/11. | Rien pour SR-A1 à SR-A6 ; [clip Playwright de 3 min 12](../../output/clips/shadowrun-anarchy-nouveautes.mp4) livré, § 213 |
 | [Star Trek Adventures](#star-trek-adventures) | 🟢 4 · 🟠 1 · 🔴 0 | Pilote et LCARS documentés ; **audit et toutes les améliorations livrés le 23/10** (registre § 167, [audit](2026-10-23-star-trek-ameliorations.md)), pilote 2.0.0, **essai de David validé le 24/10** ; [clip des mécanismes et modules (3 min 51)](../../output/clips/star-trek-mecanismes-et-modules.mp4) livré le 06/11 (§223) | Essais matériels LCARS |
 | [Symbaroum](#symbaroum) | 🟢 10 · 🟠 0 · 🔴 0 | Audit du livre et de l'export corrigé ; jet corrigé et page du manuel livrés (registre § 145) ; **S1 à S4 livrés le 22/10** (§ 149, 150, 155), essai de David validé ; **S0, S2 et S5 à S9 livrés le 23/10** (§ 166), pilote 2.0.0 ; [clip des mécanismes (2 min 44)](../../output/clips/symbaroum-mecanismes-et-outils.mp4) livré le 06/11 (§222) | Réimport du pilote 2.0.0 et essai de David |
-| [Torg Eternity](#torg-eternity) | 🟢 0 · 🟠 5 · 🔴 0 | Pilote 2.0.0 : Atouts/capacités, échanges, Lois et Sbires ; fiche PJ vierge HTML/PDF produite — 07/11 | Essayer le pilote et la fiche ; HTML importable, raccord au pilote à faire |
+| [Torg Eternity](#torg-eternity) | 🟢 5 · 🟠 0 · 🔴 0 | TORG-A0 à A4 et fiche PJ reliée : essais validés par David le 07/11 ; clip de 2 min 58 et Hub tactile vérifiés | Aucun lot TORG-A0 à A4 restant ; relecture intégrale du corpus distincte |
 | [Within](#within) | ⏸️ en suspens | Pilote retiré par David (24/10) ; rien à faire tant qu'il ne revient pas | Si le jeu revient : livre, corpus, configuration mécanique vérifiable |
 
 ## Alien
@@ -1049,11 +1049,11 @@ plusieurs Lois du Monde, sbires, hordes, attaques combinées et cibles multiples
 
 | Priorité | Amélioration possible |
 | --- | --- |
-| 🟠 TORG-A1 · P1 | **Livré le 07/11 :** cases explicites pour six Atouts et les capacités Sbires/Horde ; gestes depuis la fiche et Deck-OS, coûts et usages contrôlés. Ingénieux et Chef naturel paient une Possibilité ; Populaire ne prend qu’une Relation. Essai de David attendu |
-| 🟠 TORG-A2 · P2 | **Livré le 07/11 :** une carte pour une, en main hors rounds et en Réserve pendant les rounds ; contrepartie choisie par le destinataire, acceptation atomique et revalidation au magasin, MJ et Hub. KO déclaré interdit l’échange ; la déconnexion n’est pas une interdiction globale. Essai de David attendu |
-| 🟠 TORG-A3 · P2 | **Livré le 07/11 :** Désorientés bloque le jeu depuis la Réserve ; Domination/Aspect effrayant proposent deux cartes, une gardée ; Ténacité et Souffrance ont une cible, un reçu et une trace. Les autres Lois et les effets imprimés des cartes restent à la table selon leur texte. Essai de David attendu |
-| 🟠 TORG-A4 · P2 | **Livré le 07/11 :** Sbires seulement pour un porteur déclaré ; laquais du même camp choisi, proximité confirmée, Réalité ND 10, puis coup transféré et appliqué une seule fois contre la Résistance de la cible finale. Essai de David attendu |
-| 🟠 TORG-A0 · P0 | **Vérifié le 07/11 :** export réel 1.0.0, livre de base et Empire du Nil v1 ; tables lues en image. Pilote 2.0.0, identifiants conservés, zéro constat ; critique étendu 2–4 corrigé et faux exemple du dé brut retiré du corpus. Trois fiches métier relues sur seize ; treize autres et l’inventaire restent à relire |
+| 🟢 TORG-A1 · P1 | **Livré et validé par David le 07/11 :** cases explicites pour six Atouts et les capacités Sbires/Horde ; gestes depuis la fiche et Deck-OS, coûts et usages contrôlés. Ingénieux et Chef naturel paient une Possibilité ; Populaire ne prend qu’une Relation |
+| 🟢 TORG-A2 · P2 | **Livré et validé par David le 07/11 :** une carte pour une, en main hors rounds et en Réserve pendant les rounds ; contrepartie choisie par le destinataire, acceptation atomique et revalidation au magasin, MJ et Hub. KO déclaré interdit l’échange ; la déconnexion n’est pas une interdiction globale |
+| 🟢 TORG-A3 · P2 | **Livré et validé par David le 07/11 :** Désorientés bloque le jeu depuis la Réserve ; Domination/Aspect effrayant proposent deux cartes, une gardée ; Ténacité et Souffrance ont une cible, un reçu et une trace. Les autres Lois et les effets imprimés des cartes restent à la table selon leur texte |
+| 🟢 TORG-A4 · P2 | **Livré et validé par David le 07/11 :** Sbires seulement pour un porteur déclaré ; laquais du même camp choisi, proximité confirmée, Réalité ND 10, puis coup transféré et appliqué une seule fois contre la Résistance de la cible finale |
+| 🟢 TORG-A0 · P0 | **Vérifié et validé par David le 07/11 :** export réel 1.0.0, livre de base et Empire du Nil v1 ; tables lues en image. Pilote 2.0.0, identifiants conservés, zéro constat ; critique étendu 2–4 corrigé et faux exemple du dé brut retiré du corpus. Trois fiches métier relues sur seize ; treize autres et l’inventaire restent à relire |
 
 **Cas témoin :** un vilain ne reçoit pas automatiquement la capacité Sbires parce qu'il est
 un adversaire ; le MJ peut toujours arbitrer la proximité et la cible. Les effets narratifs
@@ -1065,14 +1065,26 @@ script `outils/torg/finir_torg.mjs`. Les nouvelles cases ne sont pas attribuées
 libre des anciennes fiches : les cocher et sauvegarder. Types, lint et essais ciblés passent ;
 recette Electron/Hub et captures vérifiées. Dégâts ordinaires raccordés, y compris les adversaires
 autonomes ; suite complète : **10 070 tests réussis, quatre sautés**, zéro échec.
-Aucun essai de David déclaré, aucun commit demandé.
+**Validation de David le 07/11/2026 :** « ok j'ai fait les test tu peux marquer comme bon dans le fichier des améliorations ».
+Les cinq lots TORG-A0 à A4 sont validés. La relecture intégrale du corpus reste distincte.
+
+**Clip Playwright livré le 07/11 :** [MP4 de 2 min 58](../../output/clips/torg-mecanismes-et-tablette.mp4),
+huit chapitres : d20 explosif et Table des Bonus, Possibilité, Ingénieux, carte d’Action
+et Un de plus !, Réserve/échange un contre un, fiche HTML, Ténacité, Sbires et Souffrance.
+Vraies images d’Action et du Destin ; vrai Hub tactile 768×1024, 14 appuis et 18
+événements de déplacement reçus, jet/coût/échange/fiche vérifiés côté MJ. Quatorze
+scènes et vingt-six images du MP4 relues, trois raccords compris ; build, lint,
+répétition et tournage normal réussis. [Repères et limites](../../output/clips/torg/README.md),
+registre § 235. Pilote inchangé ; dés préparés, effets imprimés arbitrés par le MJ,
+sans voix, recette exhaustive ou appareil physique. Les cartes de Cosm ne sont pas distribuées dans ce clip.
 
 **Atelier GM-OS Studio du 07/11 :** [fiche PJ HTML vierge](../../docs/fiches/Torg/torg-eternity-fiche-pj-vierge-interactive.html),
 une page issue de l'image fournie (Vikas Ord, PDF des prétirés p. 84), 152 zones et 145 clés.
 Toutes les données du personnage sont retirées ; la Table des Bonus est identique pixel pour
 pixel. Versions PDF et PNG, validation acceptée, essais hors ligne et dans un moteur jetable.
-Modèle `torg-eternity-fr` nouveau, importable ; installation intégrée et correspondance GM-OS
-non effectuées dans cet atelier. Essai visuel de David attendu ; registre § 232.
+Modèle `torg-eternity-fr` intégré ensuite au moteur (version 24), correspondance GM-OS écrite,
+Choc et Blessures corrigés ; validation sans erreur ni avertissement, registre § 234.
+Essais de David validés le 07/11 ; l'atelier de création initial est décrit au § 232.
 
 ## Within
 
@@ -1137,7 +1149,7 @@ référence. Les autres propositions restent à choisir ; le présent suivi ne c
 **Pour choisir une prochaine intervention (historique du 25/10, complété par l’analyse ci-dessus) :** Alien, Crimes, Cthulhu Hack,
 Nephilim, Rêve de Dragon, Star Trek, Symbaroum et Blade Runner sont finis contre leur livre ;
 Barbarians of Lemuria (27/10), RuneQuest et Degenesis (30/10) aussi ; les fonctions livrées des quatre nouveaux pilotes sont validées globalement par David le 01/11.
-NOC est terminé et validé par David le 25/10 (§ 177) ; Torg : TORG-A0 à A4 livrés le 07/11, essai de David attendu ; relecture intégrale du corpus restante ; Dune est validé
+NOC est terminé et validé par David le 25/10 (§ 177) ; Torg : TORG-A0 à A4 livrés et validés par David le 07/11 ; relecture intégrale du corpus restante ; Dune est validé
 par David le 25/10 (§ 175) ; Within est en suspens, son pilote retiré par David. Ce repérage n'impose pas un ordre entre les
 campagnes de David.
 

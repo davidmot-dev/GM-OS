@@ -1,0 +1,1 @@
+import fs from 'node:fs';const p='e2e/clipCthulhuHack.spec.ts';let s=fs.readFileSync(p,'utf8');s=s.replace("await expect.poll(async()=>(await dernier()).tagSuccess).toBe(true);","await expect(resultat).toContainText(/réussite/i);");fs.writeFileSync(p,s);

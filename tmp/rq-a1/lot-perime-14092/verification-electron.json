@@ -1,0 +1,78 @@
+{
+  "reussi": true,
+  "importNatif": true,
+  "pilote210RemplaceExplicitement": true,
+  "dependance200ConserveeParNexus": true,
+  "coupsLocalises": {
+    "reussi": true,
+    "pj": true,
+    "pnjLie": true,
+    "autonome": true,
+    "armure": true,
+    "plafond": true,
+    "soinBorne": true,
+    "depuisLeJet": true,
+    "persistanceAttendues": {
+      "c07": {
+        "degats_bras_droit": 1,
+        "points_de_vie": 11
+      },
+      "npc01": {
+        "id": "recette-rq-pnj-sera",
+        "champ": "degats_bras_gauche",
+        "degats": 6,
+        "hp": 6
+      }
+    }
+  },
+  "persistanceCoups": true,
+  "reinitialisationCompteurs": true,
+  "blessure01Conservee": true,
+  "remplacementIsole": true,
+  "reload": true,
+  "joueursExistantsConserves": true,
+  "anciensPJConserves": 3,
+  "joueurs": [
+    {
+      "id": "p-1",
+      "nom": "Thomas D.",
+      "personnages": 7
+    },
+    {
+      "id": "p-2",
+      "nom": "Marie C.",
+      "personnages": 7
+    },
+    {
+      "id": "p-3",
+      "nom": "Lucas R.",
+      "personnages": 7
+    }
+  ],
+  "ficheHTML": true,
+  "pmTablettes": 3,
+  "localisationsTablettes": 3,
+  "jetsRecusParMJ": 3,
+  "tablettes": [
+    360,
+    768,
+    1180
+  ],
+  "modulesSpecifiques": 0,
+  "archives": [
+    {
+      "fichier": "01-Les-Bornes-du-gue.gmos",
+      "sha256": "f9de892dd24ed078f218e29985018f5f12f39d574061e196f787487dcff0cc37"
+    },
+    {
+      "fichier": "02-Aptitudes-Combat-et-Sante.gmos",
+      "sha256": "41243e5e8b2da51ed25ac2a8278cdb1a2ed65a74822d9c252ee8ee957ee7c2ca"
+    },
+    {
+      "fichier": "03-Runes-Passions-et-Magie.gmos",
+      "sha256": "b37c84fc58dff402302b849f705bb8c95fa35369420fa8e6e1fb5c2d84694caa"
+    }
+  ],
+  "secretsNonDiffuses": true,
+  "anomalies": []
+}

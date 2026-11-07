@@ -1,0 +1,1160 @@
+{
+  "gameDriver": {
+    "ressourcesDeTable": [
+      {
+        "id": "reserveDePlanification",
+        "label": "Réserve de planification",
+        "proprietaire": "joueurs",
+        "depart": 0,
+        "min": 0,
+        "visibleAuxJoueurs": true,
+        "manipulableParLesJoueurs": true
+      },
+      {
+        "id": "reserveDeMenace",
+        "label": "Réserve de menace",
+        "proprietaire": "meneur",
+        "depart": 0,
+        "min": 0,
+        "visibleAuxJoueurs": true,
+        "manipulableParLesJoueurs": false
+      }
+    ],
+    "name": "Shadowrun: Anarchy 2.0",
+    "description": "Un jeu de rôle cyberpunk et fantastique privilégiant le récit et la prise de risque, où les joueurs incarnent des shadowrunners naviguant entre haute technologie, magie et enjeux de corporations.",
+    "emoji": "🕶️",
+    "dice": {
+      "defaultDice": "6d6",
+      "logic": "count-success",
+      "engine": "pool",
+      "successThreshold": 5
+    },
+    "jet": {
+      "reserve": {
+        "base": 0,
+        "max": 16,
+        "sansPlafond": true,
+        "faces": 6,
+        "composantes": [
+          {
+            "id": "competence",
+            "label": "Compétence",
+            "sectionId": "competences",
+            "motif": "^competence_\\d+$",
+            "facultative": true
+          },
+          {
+            "id": "attribut",
+            "label": "Attribut",
+            "sectionId": "attributs"
+          }
+        ]
+      },
+      "sens": "superieur-ou-egal",
+      "difficulte": {
+        "min": 0,
+        "max": 12,
+        "defaut": 3
+      },
+      "shadowrun": {
+        "anarchy": "anarchy",
+        "essence": "essence",
+        "blessures": {
+          "legeres": "blessures_legeres",
+          "graves": "blessures_graves",
+          "incapacitantes": "blessures_incapacitantes"
+        },
+        "rrDesCompetences": {
+          "competence_1": "competence_1_rr",
+          "competence_2": "competence_2_rr",
+          "competence_3": "competence_3_rr",
+          "competence_4": "competence_4_rr",
+          "competence_5": "competence_5_rr",
+          "competence_6": "competence_6_rr",
+          "competence_7": "competence_7_rr",
+          "competence_8": "competence_8_rr",
+          "competence_9": "competence_9_rr",
+          "competence_10": "competence_10_rr",
+          "competence_11": "competence_11_rr"
+        },
+        "risqueAlternatif": false
+      }
+    },
+    "combat": {
+      "statsToTrack": [
+        {
+          "fieldId": "anarchy",
+          "label": "Points d'Anarchy",
+          "isMainHP": false,
+          "isResource": true
+        },
+        {
+          "fieldId": "essence",
+          "label": "Essence",
+          "isMainHP": false,
+          "isResource": true,
+          "max": "6"
+        },
+        {
+          "fieldId": "blessures_legeres",
+          "label": "Blessures légères",
+          "isMainHP": false,
+          "isResource": true,
+          "max": "blessures_legeres_max"
+        },
+        {
+          "fieldId": "blessures_graves",
+          "label": "Blessures graves",
+          "isMainHP": false,
+          "isResource": true,
+          "max": "blessures_graves_max"
+        },
+        {
+          "fieldId": "blessures_incapacitantes",
+          "label": "Blessure incapacitante",
+          "isMainHP": false,
+          "isResource": true,
+          "max": "1"
+        }
+      ],
+      "defaultHealthType": "boxes",
+      "casesDeSante": {
+        "libelle": "Moniteur d'état",
+        "nombre": 4,
+        "champ": "moniteur",
+        "seuils": [
+          {
+            "aPartirDe": 1,
+            "label": "Légère",
+            "etat": "scratched"
+          },
+          {
+            "aPartirDe": 3,
+            "label": "Grave",
+            "etat": "wounded"
+          },
+          {
+            "aPartirDe": 4,
+            "label": "Incapacitante",
+            "etat": "critical"
+          }
+        ]
+      },
+      "damageTypes": [
+        "physique",
+        "sans armure",
+        "armure secondaire",
+        "mental"
+      ],
+      "moniteurDEtat": {
+        "mecanique": "shadowrun",
+        "sante": "moniteur",
+        "legeres": "blessures_legeres",
+        "graves": "blessures_graves",
+        "incapacitantes": "blessures_incapacitantes",
+        "capacites": {
+          "legeres": "blessures_legeres_max",
+          "graves": "blessures_graves_max"
+        },
+        "seuils": {
+          "sans_armure": {
+            "legere": "seuil_sans_armure_legere",
+            "grave": "seuil_sans_armure_grave",
+            "incapacitante": "seuil_sans_armure_incapacitante"
+          },
+          "principale": {
+            "legere": "seuil_principale_legere",
+            "grave": "seuil_principale_grave",
+            "incapacitante": "seuil_principale_incapacitante"
+          },
+          "secondaire": {
+            "legere": "seuil_secondaire_legere",
+            "grave": "seuil_secondaire_grave",
+            "incapacitante": "seuil_secondaire_incapacitante"
+          },
+          "mental": {
+            "legere": "seuil_mental_legere",
+            "grave": "seuil_mental_grave",
+            "incapacitante": "seuil_mental_incapacitante"
+          }
+        },
+        "force": "force",
+        "volonte": "volonte"
+      }
+    },
+    "ui_config": {
+      "themeColor": "#2c3e50",
+      "gauges": [
+        {
+          "fieldId": "anarchy",
+          "label": "Points d'Anarchy",
+          "color": "#d946ef",
+          "style": "segmented"
+        },
+        {
+          "fieldId": "essence",
+          "label": "Essence",
+          "color": "#22d3ee",
+          "style": "bar"
+        },
+        {
+          "fieldId": "blessures_legeres",
+          "label": "Blessures légères",
+          "color": "#f59e0b",
+          "style": "segmented"
+        },
+        {
+          "fieldId": "blessures_graves",
+          "label": "Blessures graves",
+          "color": "#ef4444",
+          "style": "segmented"
+        }
+      ]
+    },
+    "id": "custom-1793480750141",
+    "templateId": "tpl-1793480750142",
+    "author": "User",
+    "version": "2.0.0",
+    "corpusId": "shadowrun-anarchy",
+    "banniere": "Shadowrun Anarchy Band.jpg",
+    "tactical": {
+      "uniteDeDistance": "portée",
+      "ranges": {
+        "contact": {
+          "label": "Contact (jusqu’à 2 m)",
+          "maxUnits": 1,
+          "modifier": 0
+        },
+        "courte": {
+          "label": "Portée courte (3 à 15 m)",
+          "maxUnits": 2,
+          "modifier": 0
+        },
+        "moyenne": {
+          "label": "Portée moyenne (16 à 60 m)",
+          "maxUnits": 3,
+          "modifier": 0
+        },
+        "longue": {
+          "label": "Portée longue (plus de 60 m)",
+          "maxUnits": 4,
+          "modifier": 0
+        }
+      }
+    }
+  },
+  "sheetTemplate": {
+    "name": "Fiche de personnage",
+    "sections": [
+      {
+        "id": "identite",
+        "label": "Identité",
+        "fields": [
+          {
+            "id": "pseudo",
+            "label": "Pseudo",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "metatype",
+            "label": "Métatype",
+            "type": "select",
+            "options": [
+              "Humain",
+              "Elfe",
+              "Nain",
+              "Ork",
+              "Troll"
+            ],
+            "defaultValue": "Humain"
+          },
+          {
+            "id": "train_de_vie",
+            "label": "Train de vie",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "mot_cle_1",
+            "label": "Mot-clé 1",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "mot_cle_2",
+            "label": "Mot-clé 2",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "mot_cle_3",
+            "label": "Mot-clé 3",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "mot_cle_4",
+            "label": "Mot-clé 4",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "mot_cle_5",
+            "label": "Mot-clé 5",
+            "type": "text",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "incarnation",
+        "label": "Comportements et répliques",
+        "fields": [
+          {
+            "id": "comportement_1",
+            "label": "Comportement 1",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "comportement_2",
+            "label": "Comportement 2",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "comportement_3",
+            "label": "Comportement 3",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "comportement_4",
+            "label": "Comportement 4",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "replique_1",
+            "label": "Réplique 1",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "replique_2",
+            "label": "Réplique 2",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "replique_3",
+            "label": "Réplique 3",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "replique_4",
+            "label": "Réplique 4",
+            "type": "text",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "attributs",
+        "label": "Attributs",
+        "fields": [
+          {
+            "id": "force",
+            "label": "Force",
+            "type": "number",
+            "defaultValue": 1,
+            "max": 6
+          },
+          {
+            "id": "agilite",
+            "label": "Agilité",
+            "type": "number",
+            "defaultValue": 1,
+            "max": 6
+          },
+          {
+            "id": "volonte",
+            "label": "Volonté",
+            "type": "number",
+            "defaultValue": 1,
+            "max": 6
+          },
+          {
+            "id": "logique",
+            "label": "Logique",
+            "type": "number",
+            "defaultValue": 1,
+            "max": 6
+          },
+          {
+            "id": "charisme",
+            "label": "Charisme",
+            "type": "number",
+            "defaultValue": 1,
+            "max": 6
+          }
+        ]
+      },
+      {
+        "id": "competences",
+        "label": "Compétences",
+        "fields": [
+          {
+            "id": "competence_1_nom",
+            "label": "Compétence 1 — libellé",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "competence_1",
+            "label": "Compétence 1",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8,
+            "libelleSur": "competence_1_nom"
+          },
+          {
+            "id": "competence_1_attribut",
+            "label": "Compétence 1 — attribut",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          },
+          {
+            "id": "competence_1_reserve",
+            "label": "Compétence 1 — réserve de dés",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "competence_1_rr",
+            "label": "Compétence 1 — réduction du risque",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3
+          },
+          {
+            "id": "competence_2_nom",
+            "label": "Compétence 2 — libellé",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "competence_2",
+            "label": "Compétence 2",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8,
+            "libelleSur": "competence_2_nom"
+          },
+          {
+            "id": "competence_2_attribut",
+            "label": "Compétence 2 — attribut",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          },
+          {
+            "id": "competence_2_reserve",
+            "label": "Compétence 2 — réserve de dés",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "competence_2_rr",
+            "label": "Compétence 2 — réduction du risque",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3
+          },
+          {
+            "id": "competence_3_nom",
+            "label": "Compétence 3 — libellé",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "competence_3",
+            "label": "Compétence 3",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8,
+            "libelleSur": "competence_3_nom"
+          },
+          {
+            "id": "competence_3_attribut",
+            "label": "Compétence 3 — attribut",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          },
+          {
+            "id": "competence_3_reserve",
+            "label": "Compétence 3 — réserve de dés",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "competence_3_rr",
+            "label": "Compétence 3 — réduction du risque",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3
+          },
+          {
+            "id": "competence_4_nom",
+            "label": "Compétence 4 — libellé",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "competence_4",
+            "label": "Compétence 4",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8,
+            "libelleSur": "competence_4_nom"
+          },
+          {
+            "id": "competence_4_attribut",
+            "label": "Compétence 4 — attribut",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          },
+          {
+            "id": "competence_4_reserve",
+            "label": "Compétence 4 — réserve de dés",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "competence_4_rr",
+            "label": "Compétence 4 — réduction du risque",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3
+          },
+          {
+            "id": "competence_5_nom",
+            "label": "Compétence 5 — libellé",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "competence_5",
+            "label": "Compétence 5",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8,
+            "libelleSur": "competence_5_nom"
+          },
+          {
+            "id": "competence_5_attribut",
+            "label": "Compétence 5 — attribut",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          },
+          {
+            "id": "competence_5_reserve",
+            "label": "Compétence 5 — réserve de dés",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "competence_5_rr",
+            "label": "Compétence 5 — réduction du risque",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3
+          },
+          {
+            "id": "competence_6_nom",
+            "label": "Compétence 6 — libellé",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "competence_6",
+            "label": "Compétence 6",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8,
+            "libelleSur": "competence_6_nom"
+          },
+          {
+            "id": "competence_6_attribut",
+            "label": "Compétence 6 — attribut",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          },
+          {
+            "id": "competence_6_reserve",
+            "label": "Compétence 6 — réserve de dés",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "competence_6_rr",
+            "label": "Compétence 6 — réduction du risque",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3
+          },
+          {
+            "id": "competence_7_nom",
+            "label": "Compétence 7 — libellé",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "competence_7",
+            "label": "Compétence 7",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8,
+            "libelleSur": "competence_7_nom"
+          },
+          {
+            "id": "competence_7_attribut",
+            "label": "Compétence 7 — attribut",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          },
+          {
+            "id": "competence_7_reserve",
+            "label": "Compétence 7 — réserve de dés",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "competence_7_rr",
+            "label": "Compétence 7 — réduction du risque",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3
+          },
+          {
+            "id": "competence_8_nom",
+            "label": "Compétence 8 — libellé",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "competence_8",
+            "label": "Compétence 8",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8,
+            "libelleSur": "competence_8_nom"
+          },
+          {
+            "id": "competence_8_attribut",
+            "label": "Compétence 8 — attribut",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          },
+          {
+            "id": "competence_8_reserve",
+            "label": "Compétence 8 — réserve de dés",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "competence_8_rr",
+            "label": "Compétence 8 — réduction du risque",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3
+          },
+          {
+            "id": "competence_9_nom",
+            "label": "Compétence 9 — libellé",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "competence_9",
+            "label": "Compétence 9",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8,
+            "libelleSur": "competence_9_nom"
+          },
+          {
+            "id": "competence_9_attribut",
+            "label": "Compétence 9 — attribut",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          },
+          {
+            "id": "competence_9_reserve",
+            "label": "Compétence 9 — réserve de dés",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "competence_9_rr",
+            "label": "Compétence 9 — réduction du risque",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3
+          },
+          {
+            "id": "competence_10_nom",
+            "label": "Compétence 10 — libellé",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "competence_10",
+            "label": "Compétence 10",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8,
+            "libelleSur": "competence_10_nom"
+          },
+          {
+            "id": "competence_10_attribut",
+            "label": "Compétence 10 — attribut",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          },
+          {
+            "id": "competence_10_reserve",
+            "label": "Compétence 10 — réserve de dés",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "competence_10_rr",
+            "label": "Compétence 10 — réduction du risque",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3
+          },
+          {
+            "id": "competence_11_nom",
+            "label": "Compétence 11 — libellé",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "competence_11",
+            "label": "Compétence 11",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8,
+            "libelleSur": "competence_11_nom"
+          },
+          {
+            "id": "competence_11_attribut",
+            "label": "Compétence 11 — attribut",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          },
+          {
+            "id": "competence_11_reserve",
+            "label": "Compétence 11 — réserve de dés",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "competence_11_rr",
+            "label": "Compétence 11 — réduction du risque",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3
+          }
+        ]
+      },
+      {
+        "id": "connaissances",
+        "label": "Connaissances",
+        "fields": [
+          {
+            "id": "connaissances_liste",
+            "label": "Connaissances",
+            "type": "text",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "atouts",
+        "label": "Atouts",
+        "fields": [
+          {
+            "id": "atout_1",
+            "label": "Atout 1",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "atout_2",
+            "label": "Atout 2",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "atout_3",
+            "label": "Atout 3",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "atout_4",
+            "label": "Atout 4",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "atout_5",
+            "label": "Atout 5",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "atout_6",
+            "label": "Atout 6",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "atout_7",
+            "label": "Atout 7",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "atout_8",
+            "label": "Atout 8",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "atout_9",
+            "label": "Atout 9",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "atout_10",
+            "label": "Atout 10",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "atout_11",
+            "label": "Atout 11",
+            "type": "text",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "armes_et_sorts",
+        "label": "Armes et sorts",
+        "fields": [
+          {
+            "id": "arme_1",
+            "label": "Arme ou sort 1",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "arme_1_type",
+            "label": "Arme ou sort 1 — type",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "arme_2",
+            "label": "Arme ou sort 2",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "arme_2_type",
+            "label": "Arme ou sort 2 — type",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "arme_3",
+            "label": "Arme ou sort 3",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "arme_3_type",
+            "label": "Arme ou sort 3 — type",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "arme_4",
+            "label": "Arme ou sort 4",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "arme_4_type",
+            "label": "Arme ou sort 4 — type",
+            "type": "text",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "equipement",
+        "label": "Équipement et nuyens",
+        "fields": [
+          {
+            "id": "equipement_1",
+            "label": "Équipement — ligne 1",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "equipement_2",
+            "label": "Équipement — ligne 2",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "equipement_3",
+            "label": "Équipement — ligne 3",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "equipement_4",
+            "label": "Équipement — ligne 4",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "equipement_5",
+            "label": "Équipement — ligne 5",
+            "type": "text",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "armures",
+        "label": "Armures et seuils de blessure",
+        "fields": [
+          {
+            "id": "armure_principale",
+            "label": "Armure principale",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "armure_secondaire",
+            "label": "Armure secondaire",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "seuil_sans_armure_legere",
+            "label": "Seuil sans armure — légère",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          },
+          {
+            "id": "seuil_sans_armure_grave",
+            "label": "Seuil sans armure — grave",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          },
+          {
+            "id": "seuil_sans_armure_incapacitante",
+            "label": "Seuil sans armure — incapacitante",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          },
+          {
+            "id": "seuil_principale_legere",
+            "label": "Seuil armure principale — légère",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          },
+          {
+            "id": "seuil_principale_grave",
+            "label": "Seuil armure principale — grave",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          },
+          {
+            "id": "seuil_principale_incapacitante",
+            "label": "Seuil armure principale — incapacitante",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          },
+          {
+            "id": "seuil_secondaire_legere",
+            "label": "Seuil armure secondaire — légère",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          },
+          {
+            "id": "seuil_secondaire_grave",
+            "label": "Seuil armure secondaire — grave",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          },
+          {
+            "id": "seuil_secondaire_incapacitante",
+            "label": "Seuil armure secondaire — incapacitante",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          },
+          {
+            "id": "seuil_mental_legere",
+            "label": "Seuil mental — légère",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          },
+          {
+            "id": "seuil_mental_grave",
+            "label": "Seuil mental — grave",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          },
+          {
+            "id": "seuil_mental_incapacitante",
+            "label": "Seuil mental — incapacitante",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 30
+          }
+        ]
+      },
+      {
+        "id": "piratage",
+        "label": "Piratage",
+        "fields": [
+          {
+            "id": "piratage_des_de_risque",
+            "label": "Nombre minimum de dés de risque en piratage",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 16
+          },
+          {
+            "id": "piratage_hausse_du_seuil",
+            "label": "Augmentation du seuil en piratage",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 8
+          }
+        ]
+      },
+      {
+        "id": "jauges",
+        "label": "Anarchy, Essence et moniteur d’état",
+        "fields": [
+          {
+            "id": "anarchy",
+            "label": "Points d'Anarchy",
+            "type": "number",
+            "defaultValue": 4,
+            "max": 99
+          },
+          {
+            "id": "essence",
+            "label": "Essence",
+            "type": "number",
+            "defaultValue": 6,
+            "max": 6
+          },
+          {
+            "id": "blessures_legeres",
+            "label": "Blessures légères",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 3,
+            "maxSur": "blessures_legeres_max"
+          },
+          {
+            "id": "blessures_graves",
+            "label": "Blessures graves",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 2,
+            "maxSur": "blessures_graves_max"
+          },
+          {
+            "id": "blessures_incapacitantes",
+            "label": "Blessure incapacitante",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 1
+          },
+          {
+            "id": "blessures_legeres_max",
+            "label": "Cases de blessures légères (3 par un atout)",
+            "type": "number",
+            "defaultValue": 2,
+            "max": 3
+          },
+          {
+            "id": "blessures_graves_max",
+            "label": "Cases de blessures graves (2 par un atout)",
+            "type": "number",
+            "defaultValue": 1,
+            "max": 2
+          },
+          {
+            "id": "moniteur",
+            "label": "Moniteur d'état (position, tenue par GM-OS)",
+            "type": "number",
+            "defaultValue": 0,
+            "max": 6
+          }
+        ]
+      }
+    ],
+    "isBuiltin": false,
+    "id": "tpl-1793480750142"
+  }
+}

@@ -1,0 +1,25 @@
+import fs from 'node:fs';
+let t=fs.readFileSync('e2e/campagneDeRecetteCoc.spec.ts','utf8');
+t=t.replaceAll('campagnes-tests/coc','campagnes-tests/shadowrun-anarchy').replaceAll('recette-coc','recette-shadowrun').replaceAll('campagne-minutes','campagne-couleur').replaceAll('evolution-campagne','risques-campagne').replaceAll('Coc','Shadowrun').replaceAll('COC2','SHADOWRUN ANARCHY').replaceAll('SECRET_MJ_COC','SECRET_MJ_SHADOWRUN').replaceAll('docs/systems/coc','docs/systems/shadowrun-anarchy').replaceAll("'coc',","'shadowrun-anarchy',").replaceAll('01-Les-Minutes-de-Verre','01-La-Derniere-Couleur').replaceAll('02-Sante-et-Etats','02-Moniteur-et-Seuils').replaceAll('03-Heros-Blues-et-Tests','03-Risque-Anarchy-et-Matrice').replaceAll('Les Minutes de Verre','La Dernière Couleur');
+t=t.replace('toBe(24)','toBe(22)').replace('toBe(36); expect(inventaire.lieux).toBe(24); expect(inventaire.scenes).toBe(48); expect(inventaire.indices).toBe(36)','toBe(27); expect(inventaire.lieux).toBe(18); expect(inventaire.scenes).toBe(36); expect(inventaire.indices).toBe(27)');
+// Le remplacement précédent du nombre de PJ a aussi changé la vérification du nombre de lieux.
+t=t.replace('expect(inventaire.pnj).toBe(36); expect(inventaire.lieux).toBe(22); expect(inventaire.scenes).toBe(48); expect(inventaire.indices).toBe(36)','expect(inventaire.pnj).toBe(27); expect(inventaire.lieux).toBe(18); expect(inventaire.scenes).toBe(36); expect(inventaire.indices).toBe(27)');
+const a=t.indexOf("            const panneau=tablette.locator('[data-panneau-de-jet]')"),b=t.indexOf('            await image(tablette,',a);
+t=t.slice(0,a)+`            const panneau=tablette.locator('[data-panneau-de-jet]').first();
+            await panneau.locator('select').nth(0).selectOption('competence_1');await panneau.locator('select').nth(1).selectOption('logique');
+            await expect(panneau.locator('[data-preparation-shadowrun]')).toBeVisible();
+            await panneau.getByLabel('Dés de risque',{exact:true}).fill('0');await panneau.getByLabel('Réduction du risque',{exact:true}).selectOption('0');
+            await panneau.getByRole('checkbox',{name:/1 point d.Anarchy : avantage/}).check();
+            const avant=await f.evaluate(()=>(window as unknown as FenetreRecette).useDiceStore.getState().history.length);await panneau.getByRole('button',{name:'Lancer',exact:true}).click();
+            await expect.poll(()=>f.evaluate(()=>(window as unknown as FenetreRecette).useDiceStore.getState().history.length)).toBeGreaterThan(avant);jets++;
+            await expect(panneau.locator('[data-suites-shadowrun]')).toBeVisible();
+            await expect.poll(()=>f.evaluate(id=>(window as unknown as FenetreRecette).useSessionOSStore.getState().players.flatMap(p=>p.characters).find(c=>c.id===id)!.sheetData.anarchy,pc.id)).toBe(Number(pc.sheetData.anarchy)-1);
+            await ongletDeLaFiche(tablette,'Ma fiche');const html=tablette.frameLocator('iframe:visible');
+            await expect(html.locator('[data-key="identity.name"]')).toHaveValue(pc.name,{timeout:30_000});
+            await expect(html.locator('[data-key="attributes.agility"]')).toHaveValue(String(pc.sheetData.agilite));
+            await html.locator('[data-key="attributes.logic"]').fill(String(3+i));
+            const sauvegarder=html.getByRole('button',{name:/Sauvegarder/});if(await sauvegarder.isVisible())await sauvegarder.click();
+            await expect.poll(()=>f.evaluate(id=>(window as unknown as FenetreRecette).useSessionOSStore.getState().players.flatMap(p=>p.characters).find(c=>c.id===id)!.sheetData.logique,pc.id)).toBe(3+i);ego++;
+`+t.slice(b);
+t=t.replace('toBe(27);\n        expect(await f.evaluate(campagne','toBe(25);\n        expect(await f.evaluate(campagne').replace('c.sheetData.echelle_evolution','c.sheetData.logique').replace('toEqual([8,9,10])','toEqual([3,4,5])').replace('evolutionTablettes:ego','fichesSauvegardees:ego');
+fs.writeFileSync('e2e/campagneDeRecetteShadowrun.spec.ts',t);

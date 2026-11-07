@@ -11,7 +11,7 @@ sont raccordés à la même table ; une attaque multicible partage le reçu pour
 Pilote corrigé : `Export Dirvers/corriges/Torg-Eternity-2.0.0.gmos-driver`, reconstruit par
 `outils/torg/finir_torg.mjs`. Version 2.0.0, identifiants et trois paquets conservés ; dix cases
 ajoutées, fausses par défaut. `verifier_pilote.mjs` donne zéro constat et prépare un vrai jet.
-Le lot demeure orange jusqu'à l'essai de David. Aucun commit ni push demandé.
+**Essais validés par David le 07/11/2026** : TORG-A0 à A4 passent au vert. Aucun commit ni push demandé dans cette validation.
 
 Manuels 53/54, captures, synthèse et registre § 231 actualisés.
 [Détail du lot et résultats](2026-11-07-torg-ameliorations.md).
@@ -29,16 +29,16 @@ la Table des Bonus. Fichiers livrés : [HTML interactif](../../docs/fiches/Torg/
 [PNG](../../output/fiches/torg/torg-eternity-fiche-pj-vierge.png), modèle `torg-eternity-fr`,
 une page, 152 zones, 145 clés nouvelles. Table inchangée pixel pour pixel, six captures relues ;
 validation, navigation/zoom, JSON, sauvegarde, reset, impression et import dans un moteur
-jetable contrôlés. Ouvrir d'abord l'HTML pour le jugement visuel de David. Le gabarit intégré
-et la correspondance GM-OS ne sont pas installés ; ces deux avertissements sont attendus.
+jetable contrôlés. Le gabarit et la correspondance ont ensuite été installés (moteur version 24,
+registre § 234), avec correction de Choc/Blessures ; essais validés par David le 07/11.
 Scripts dans `outils/torg/`, rapports dans `output/fiches/torg/`, registre § 232. Aucun commit.
 
 David réimporte le pilote avec **Remplacer**, puis coche et
 sauvegarde les Atouts/capacités réellement possédés. Les valeurs anciennes sont conservées ;
 aucun droit n'est déduit du carnet en texte libre.
 
-Essayer un Atout et sa dépense, un échange une pour une sur la tablette, puis Sbires et une
-suite Ténacité/Souffrance dans le cosm concerné. Marquer vert seulement après son retour.
+Retour de David du 07/11 : « ok j'ai fait les test tu peux marquer comme bon dans le fichier
+des améliorations ». Les lots TORG-A0 à A4 et la fiche PJ reliée sont marqués validés.
 Le corpus n'est pas relu en entier : trois fiches métier sur seize sont relues, treize et
 l'inventaire attendent encore. Les autres Lois, effets imprimés des cartes, conditions
 fictionnelles et Défaite restent arbitrés par le meneur ; Annulation conserve sa correction

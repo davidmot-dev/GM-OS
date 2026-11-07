@@ -1,0 +1,2040 @@
+[
+  [
+    {
+      "title": "Abomination",
+      "pages": "233",
+      "x": 51.0236,
+      "y": 745.8897
+    },
+    {
+      "title": "Abominations, catégorie",
+      "pages": "202",
+      "x": 51.02358199999999,
+      "y": 733.8924999999999
+    },
+    {
+      "title": "Acrobatie",
+      "pages": "116",
+      "x": 51.01453400000001,
+      "y": 721.8953
+    },
+    {
+      "title": "Action de combat",
+      "pages": "162",
+      "x": 51.014482,
+      "y": 709.8981
+    },
+    {
+      "title": "Action de mouvement",
+      "pages": "162",
+      "x": 51.014482,
+      "y": 697.9009
+    },
+    {
+      "title": "Adversaires humains",
+      "pages": "216",
+      "x": 51.01453400000001,
+      "y": 685.9037
+    },
+    {
+      "title": "Agilité",
+      "pages": "102",
+      "x": 51.01453400000001,
+      "y": 673.9064999999999
+    },
+    {
+      "title": "Ailes",
+      "pages": "204",
+      "x": 51.014551999999995,
+      "y": 661.9093
+    },
+    {
+      "title": "Alchimie",
+      "pages": "116",
+      "x": 51.014551999999995,
+      "y": 649.9121
+    },
+    {
+      "title": "Analyser des artéfacts",
+      "pages": "192",
+      "x": 51.02358199999999,
+      "y": 637.9149
+    },
+    {
+      "title": "Anathème",
+      "pages": "134",
+      "x": 51.023634,
+      "y": 625.9177
+    },
+    {
+      "title": "Apparition corporelle",
+      "pages": "204",
+      "x": 51.02358199999999,
+      "y": 613.9205
+    },
+    {
+      "title": "Appliquer un élixir",
+      "pages": "165",
+      "x": 51.023634,
+      "y": 601.9232999999999
+    },
+    {
+      "title": "Arachnides",
+      "pages": "224",
+      "x": 51.023634,
+      "y": 589.9261
+    },
+    {
+      "title": "Aranéa",
+      "pages": "225",
+      "x": 51.032681999999994,
+      "y": 577.9289
+    },
+    {
+      "title": "Archétype",
+      "pages": "84",
+      "x": 51.032652,
+      "y": 565.9317
+    },
+    {
+      "title": "Argent",
+      "pages": "190",
+      "x": 51.032681999999994,
+      "y": 553.9345
+    },
+    {
+      "title": "Arme à une main",
+      "pages": "154",
+      "x": 51.032652,
+      "y": 541.9372999999999
+    },
+    {
+      "title": "Arme courte",
+      "pages": "154",
+      "x": 51.032677999999976,
+      "y": 529.9400999999999
+    },
+    {
+      "title": "Arme de trait",
+      "pages": "154",
+      "x": 51.032681999999994,
+      "y": 517.9429
+    },
+    {
+      "title": "Arme longue",
+      "pages": "152",
+      "x": 51.032681999999994,
+      "y": 505.9457
+    },
+    {
+      "title": "Arme lourde",
+      "pages": "152",
+      "x": 51.032681999999994,
+      "y": 493.94849999999997
+    },
+    {
+      "title": "Arme naturelle",
+      "pages": "205",
+      "x": 51.032681999999994,
+      "y": 481.9513
+    },
+    {
+      "title": "Armes",
+      "pages": "152",
+      "x": 51.02359999999999,
+      "y": 469.9540999999999
+    },
+    {
+      "title": "Armes de jet",
+      "pages": "154",
+      "x": 51.032652,
+      "y": 457.95689999999996
+    },
+    {
+      "title": "Armure",
+      "pages": "155",
+      "x": 51.032681999999994,
+      "y": 445.9597
+    },
+    {
+      "title": "Armure légère",
+      "pages": "155",
+      "x": 51.032652,
+      "y": 433.9625
+    },
+    {
+      "title": "Armure lourde",
+      "pages": "156",
+      "x": 51.032681999999994,
+      "y": 421.96529999999996
+    },
+    {
+      "title": "Armure moyenne",
+      "pages": "155",
+      "x": 51.032681999999994,
+      "y": 409.9681
+    },
+    {
+      "title": "Armure naturelle",
+      "pages": "205",
+      "x": 51.032681999999994,
+      "y": 397.9709
+    },
+    {
+      "title": "Art de la survie",
+      "pages": "110",
+      "x": 51.032681999999994,
+      "y": 385.97369999999995
+    },
+    {
+      "title": "Artéfacts",
+      "pages": "192",
+      "x": 51.032681999999994,
+      "y": 373.9765
+    },
+    {
+      "title": "Asservissement",
+      "pages": "142",
+      "x": 51.041782,
+      "y": 361.97929999999997
+    },
+    {
+      "title": "Astuce",
+      "pages": "102",
+      "x": 51.041782,
+      "y": 349.9821
+    },
+    {
+      "title": "Attaque acide",
+      "pages": "205",
+      "x": 51.041752,
+      "y": 337.9849
+    },
+    {
+      "title": "Attaque corruptrice",
+      "pages": "205",
+      "x": 51.0236,
+      "y": 325.8897
+    },
+    {
+      "title": "Attaque gratuite",
+      "pages": "163",
+      "x": 51.0236,
+      "y": 313.8897
+    },
+    {
+      "title": "Attaques sans armes",
+      "pages": "154",
+      "x": 51.02358199999999,
+      "y": 301.8925
+    },
+    {
+      "title": "Attaques parfaites",
+      "pages": "184",
+      "x": 51.023634,
+      "y": 289.89529999999996
+    },
+    {
+      "title": "Attribut exceptionnel",
+      "pages": "116",
+      "x": 51.023634,
+      "y": 277.8981
+    },
+    {
+      "title": "Attributs",
+      "pages": "102",
+      "x": 51.02359999999999,
+      "y": 265.9009
+    },
+    {
+      "title": "Attributs secondaires",
+      "pages": "103",
+      "x": 51.02358199999999,
+      "y": 253.9037
+    },
+    {
+      "title": "Aura impie",
+      "pages": "134",
+      "x": 51.023634,
+      "y": 241.9065
+    },
+    {
+      "title": "Aura sacrée",
+      "pages": "134",
+      "x": 51.02358199999999,
+      "y": 229.9093
+    },
+    {
+      "title": "Avantage",
+      "pages": "166",
+      "x": 51.02359999999999,
+      "y": 217.9121
+    },
+    {
+      "title": "Aventure Classique",
+      "pages": "194",
+      "x": 51.02358199999999,
+      "y": 205.91490000000002
+    },
+    {
+      "title": "Aventures",
+      "pages": "13, 194",
+      "x": 51.023634,
+      "y": 193.9177
+    },
+    {
+      "title": "Baïaga",
+      "pages": "30",
+      "x": 51.0236,
+      "y": 169.8897
+    },
+    {
+      "title": "Baïagorn",
+      "pages": "226",
+      "x": 51.023551999999995,
+      "y": 157.8925
+    },
+    {
+      "title": "Berserker, archétype",
+      "pages": "85",
+      "x": 51.0236,
+      "y": 145.8897
+    },
+    {
+      "title": "Berserker, talent",
+      "pages": "116",
+      "x": 51.0236,
+      "y": 133.8897
+    },
+    {
+      "title": "Bête primitive corrompue",
+      "pages": "235",
+      "x": 51.02358199999999,
+      "y": 121.8925
+    },
+    {
+      "title": "Bêtes, catégorie",
+      "pages": "202",
+      "x": 51.023634,
+      "y": 109.89529999999999
+    },
+    {
+      "title": "Blessure partagée",
+      "pages": "134",
+      "x": 51.032681999999994,
+      "y": 97.8981
+    },
+    {
+      "title": "Bouclier",
+      "pages": "154",
+      "x": 51.032681999999994,
+      "y": 85.9009
+    },
+    {
+      "title": "Bouclier sanctifié",
+      "pages": "134",
+      "x": 51.032652,
+      "y": 73.90369999999999
+    },
+    {
+      "title": "Brigand",
+      "pages": "218",
+      "x": 51.02359999999999,
+      "y": 61.9065
+    },
+    {
+      "title": "Capitaine, archétype",
+      "pages": "87",
+      "x": 222.2677,
+      "y": 745.8897
+    },
+    {
+      "title": "Cascade de soufre",
+      "pages": "135",
+      "x": 222.2677,
+      "y": 733.8897
+    },
+    {
+      "title": "Catégories de monstres",
+      "pages": "202",
+      "x": 222.26768200000004,
+      "y": 721.8924999999999
+    },
+    {
+      "title": "Cavalier",
+      "pages": "117",
+      "x": 222.26773400000002,
+      "y": 709.8953
+    },
+    {
+      "title": "Cercle de magie",
+      "pages": "143",
+      "x": 222.25865199999998,
+      "y": 697.8981
+    },
+    {
+      "title": "Cercle de sorcières",
+      "pages": "143",
+      "x": 222.258582,
+      "y": 685.9009
+    },
+    {
+      "title": "Changelin",
+      "pages": "107",
+      "x": 222.25863399999997,
+      "y": 673.9037
+    },
+    {
+      "title": "Changement d’Ombre",
+      "pages": "180",
+      "x": 222.26768200000004,
+      "y": 661.9064999999999
+    },
+    {
+      "title": "Charlatan",
+      "pages": "99",
+      "x": 222.25863399999997,
+      "y": 649.9093
+    },
+    {
+      "title": "Chasse à l’hérétique",
+      "pages": "144",
+      "x": 222.258582,
+      "y": 637.9121
+    },
+    {
+      "title": "Chasseur de sorcières, archétype",
+      "pages": "98",
+      "x": 222.25863399999997,
+      "y": 625.9149
+    },
+    {
+      "title": "Chasseur de sorcières, ennemi",
+      "pages": "221",
+      "x": 222.249586,
+      "y": 613.9177
+    },
+    {
+      "title": "Chasseur de trésors, archétype",
+      "pages": "100",
+      "x": 222.2677,
+      "y": 601.8897
+    },
+    {
+      "title": "Chasseur de trésors, ennemi",
+      "pages": "221",
+      "x": 222.2677,
+      "y": 589.8897
+    },
+    {
+      "title": "Chevalier, archétype",
+      "pages": "89",
+      "x": 222.2677,
+      "y": 577.8897
+    },
+    {
+      "title": "Choc climatique",
+      "pages": "144",
+      "x": 222.2677,
+      "y": 565.8897
+    },
+    {
+      "title": "Chronologie",
+      "pages": "20",
+      "x": 222.26768200000004,
+      "y": 553.8924999999999
+    },
+    {
+      "title": "Clairvoyance",
+      "pages": "144",
+      "x": 222.26768200000004,
+      "y": 541.8953
+    },
+    {
+      "title": "Combat à l’aveugle",
+      "pages": "165",
+      "x": 222.26768200000004,
+      "y": 529.8981
+    },
+    {
+      "title": "Confession forcée",
+      "pages": "144",
+      "x": 222.26773400000002,
+      "y": 517.9009
+    },
+    {
+      "title": "Conflits sociaux",
+      "pages": "176",
+      "x": 222.258622,
+      "y": 505.90369999999996
+    },
+    {
+      "title": "Confusion",
+      "pages": "135",
+      "x": 222.26768200000004,
+      "y": 493.9065
+    },
+    {
+      "title": "Conjuration, talent",
+      "pages": "117",
+      "x": 222.27678200000003,
+      "y": 481.9093
+    },
+    {
+      "title": "Conjuration, tradition",
+      "pages": "128",
+      "x": 222.27673399999998,
+      "y": 469.91209999999995
+    },
+    {
+      "title": "Conjureur, archétype",
+      "pages": "92",
+      "x": 222.27673399999998,
+      "y": 457.9149
+    },
+    {
+      "title": "Connaissance des bêtes",
+      "pages": "117",
+      "x": 222.27673399999998,
+      "y": 445.91769999999997
+    },
+    {
+      "title": "Contacts",
+      "pages": "110",
+      "x": 222.27673399999998,
+      "y": 433.9205
+    },
+    {
+      "title": "Corrompu",
+      "pages": "233",
+      "x": 222.276752,
+      "y": 421.9233
+    },
+    {
+      "title": "Corruption",
+      "pages": "179",
+      "x": 222.27678200000003,
+      "y": 409.92609999999996
+    },
+    {
+      "title": "Corruption permanente",
+      "pages": "180",
+      "x": 222.28588200000002,
+      "y": 397.9289
+    },
+    {
+      "title": "Corruption temporaire",
+      "pages": "180",
+      "x": 222.28583400000002,
+      "y": 385.9317
+    },
+    {
+      "title": "Coup en traître",
+      "pages": "118",
+      "x": 222.28583400000002,
+      "y": 373.93449999999996
+    },
+    {
+      "title": "Court",
+      "pages": "156",
+      "x": 222.28588200000002,
+      "y": 361.9373
+    },
+    {
+      "title": "Courte vie",
+      "pages": "110",
+      "x": 222.28585199999998,
+      "y": 349.9401
+    },
+    {
+      "title": "Créatures civilisées, catégorie",
+      "pages": "204",
+      "x": 222.2677,
+      "y": 337.8897
+    },
+    {
+      "title": "Croissance accélérée",
+      "pages": "144",
+      "x": 222.2677,
+      "y": 325.8897
+    },
+    {
+      "title": "Davokar",
+      "pages": "35",
+      "x": 222.2677,
+      "y": 301.8897
+    },
+    {
+      "title": "Défense",
+      "pages": "103, 162",
+      "x": 222.267652,
+      "y": 289.8925
+    },
+    {
+      "title": "Dégainement rapide",
+      "pages": "118",
+      "x": 222.2677,
+      "y": 277.8897
+    },
+    {
+      "title": "Dégâts",
+      "pages": "164",
+      "x": 222.2677,
+      "y": 265.8897
+    },
+    {
+      "title": "Dégâts alternatifs",
+      "pages": "205",
+      "x": 222.25865199999998,
+      "y": 253.8925
+    },
+    {
+      "title": "Dégâts d’acide",
+      "pages": "182",
+      "x": 222.26768200000004,
+      "y": 241.89530000000002
+    },
+    {
+      "title": "Dégâts de chute",
+      "pages": "183",
+      "x": 222.26769999999996,
+      "y": 229.8981
+    },
+    {
+      "title": "Dégâts de poison",
+      "pages": "182",
+      "x": 222.26768200000004,
+      "y": 217.9009
+    },
+    {
+      "title": "Degrés de réussite",
+      "pages": "103",
+      "x": 222.27677799999998,
+      "y": 205.90370000000001
+    },
+    {
+      "title": "Disciple de culte",
+      "pages": "216",
+      "x": 222.27678200000003,
+      "y": 193.9065
+    },
+    {
+      "title": "Discrétion",
+      "pages": "102",
+      "x": 222.27677799999998,
+      "y": 181.9093
+    },
+    {
+      "title": "Divination",
+      "pages": "145",
+      "x": 222.28588200000002,
+      "y": 169.9121
+    },
+    {
+      "title": "Domaine de Prios",
+      "pages": "28",
+      "x": 222.294982,
+      "y": 157.91490000000002
+    },
+    {
+      "title": "Domination",
+      "pages": "118",
+      "x": 222.294982,
+      "y": 145.9177
+    },
+    {
+      "title": "Double attaque",
+      "pages": "118",
+      "x": 222.30398200000002,
+      "y": 133.9205
+    },
+    {
+      "title": "Dragoul",
+      "pages": "236",
+      "x": 222.30398200000002,
+      "y": 121.9233
+    },
+    {
+      "title": "Duelliste, archétype",
+      "pages": "86",
+      "x": 222.31309,
+      "y": 109.9261
+    },
+    {
+      "title": "Échange d’Ombre",
+      "pages": "145",
+      "x": 222.2677,
+      "y": 85.8897
+    },
+    {
+      "title": "Échec critique en Défense",
+      "pages": "184",
+      "x": 222.26768200000004,
+      "y": 73.8925
+    },
+    {
+      "title": "Éclaireur, archétype",
+      "pages": "101",
+      "x": 222.26773400000002,
+      "y": 61.8953
+    },
+    {
+      "title": "Elfe",
+      "pages": "208",
+      "x": 222.2677,
+      "y": 49.89810000000001
+    },
+    {
+      "title": "Elfe d’automne",
+      "pages": "211",
+      "x": 222.267652,
+      "y": 37.9009
+    },
+    {
+      "title": "Elfe de printemps",
+      "pages": "210",
+      "x": 393.50599600000004,
+      "y": 757.902
+    },
+    {
+      "title": "Elfelin",
+      "pages": "211",
+      "x": 393.505982,
+      "y": 745.9048
+    },
+    {
+      "title": "Élixir",
+      "pages": "157",
+      "x": 393.506052,
+      "y": 733.9076
+    },
+    {
+      "title": "Élixirs alchimiques",
+      "pages": "157",
+      "x": 393.506052,
+      "y": 721.9104
+    },
+    {
+      "title": "Élori, émissaire elfe",
+      "pages": "33",
+      "x": 393.506034,
+      "y": 709.9132
+    },
+    {
+      "title": "Empoisonneur",
+      "pages": "119",
+      "x": 393.506034,
+      "y": 697.9159999999999
+    },
+    {
+      "title": "Encerclement",
+      "pages": "165",
+      "x": 393.496936,
+      "y": 685.9187999999999
+    },
+    {
+      "title": "Enchevêtrement",
+      "pages": "136",
+      "x": 393.505982,
+      "y": 673.9216
+    },
+    {
+      "title": "Encombrant",
+      "pages": "156",
+      "x": 393.505982,
+      "y": 661.9244
+    },
+    {
+      "title": "Endurance",
+      "pages": "164",
+      "x": 393.505982,
+      "y": 649.9272
+    },
+    {
+      "title": "Énoaï",
+      "pages": "29",
+      "x": 393.515082,
+      "y": 637.93
+    },
+    {
+      "title": "Envoûtement",
+      "pages": "205",
+      "x": 393.51505199999997,
+      "y": 625.9327999999999
+    },
+    {
+      "title": "Épreuves",
+      "pages": "198",
+      "x": 393.524182,
+      "y": 613.9356
+    },
+    {
+      "title": "Équilibré",
+      "pages": "156",
+      "x": 393.524182,
+      "y": 601.9384
+    },
+    {
+      "title": "Équipement",
+      "pages": "152",
+      "x": 393.524182,
+      "y": 589.9412
+    },
+    {
+      "title": "Érudit",
+      "pages": "119",
+      "x": 393.533282,
+      "y": 577.944
+    },
+    {
+      "title": "Étrangleur",
+      "pages": "120",
+      "x": 393.533252,
+      "y": 565.9467999999999
+    },
+    {
+      "title": "Étreinte de la nature",
+      "pages": "136",
+      "x": 393.533282,
+      "y": 553.9496
+    },
+    {
+      "title": "Éventreur",
+      "pages": "156",
+      "x": 393.53324799999996,
+      "y": 541.9524
+    },
+    {
+      "title": "Exorcisme",
+      "pages": "146",
+      "x": 393.53324799999996,
+      "y": 529.9552000000001
+    },
+    {
+      "title": "Expérience",
+      "pages": "166, 184, 187",
+      "x": 393.5118,
+      "y": 517.8897
+    },
+    {
+      "title": "Familier",
+      "pages": "146",
+      "x": 393.5118,
+      "y": 493.8897
+    },
+    {
+      "title": "Fée",
+      "pages": "210",
+      "x": 393.511752,
+      "y": 481.8925
+    },
+    {
+      "title": "Feinte",
+      "pages": "120",
+      "x": 393.511752,
+      "y": 469.89529999999996
+    },
+    {
+      "title": "Félispectre",
+      "pages": "226",
+      "x": 393.511752,
+      "y": 457.8981
+    },
+    {
+      "title": "Feu purificateur",
+      "pages": "146",
+      "x": 393.51178200000004,
+      "y": 445.9009
+    },
+    {
+      "title": "Flexible",
+      "pages": "156",
+      "x": 393.51178200000004,
+      "y": 433.90369999999996
+    },
+    {
+      "title": "Force",
+      "pages": "102",
+      "x": 393.511752,
+      "y": 421.9065
+    },
+    {
+      "title": "Forme éthérée",
+      "pages": "206",
+      "x": 393.511752,
+      "y": 409.9093
+    },
+    {
+      "title": "Forme révélée",
+      "pages": "136",
+      "x": 393.5118,
+      "y": 397.9121
+    },
+    {
+      "title": "Frappe du revenant",
+      "pages": "136",
+      "x": 393.51178200000004,
+      "y": 385.9149
+    },
+    {
+      "title": "Froid d’outre-tombe",
+      "pages": "206",
+      "x": 393.502734,
+      "y": 373.91769999999997
+    },
+    {
+      "title": "Froideflamme",
+      "pages": "236",
+      "x": 393.50272200000006,
+      "y": 361.92049999999995
+    },
+    {
+      "title": "Fumée révélatrice",
+      "pages": "146",
+      "x": 393.502682,
+      "y": 349.9233
+    },
+    {
+      "title": "Gaoia",
+      "pages": "29",
+      "x": 393.5118,
+      "y": 325.8897
+    },
+    {
+      "title": "Garde du corps",
+      "pages": "120",
+      "x": 393.511752,
+      "y": 313.8925
+    },
+    {
+      "title": "Gênant",
+      "pages": "156",
+      "x": 393.51178200000004,
+      "y": 301.89529999999996
+    },
+    {
+      "title": "Gobelin",
+      "pages": "109",
+      "x": 393.502752,
+      "y": 289.8981
+    },
+    {
+      "title": "Godinja",
+      "pages": "29",
+      "x": 393.502752,
+      "y": 277.9009
+    },
+    {
+      "title": "Guérison",
+      "pages": "164",
+      "x": 393.502752,
+      "y": 265.90369999999996
+    },
+    {
+      "title": "Guerriers",
+      "pages": "84",
+      "x": 393.502682,
+      "y": 253.90650000000002
+    },
+    {
+      "title": "Guerrier clanique",
+      "pages": "222",
+      "x": 393.502682,
+      "y": 241.9093
+    },
+    {
+      "title": "Guerrier né",
+      "pages": "121",
+      "x": 393.5118,
+      "y": 229.9121
+    },
+    {
+      "title": "Haut troll",
+      "pages": "214",
+      "x": 393.5118,
+      "y": 205.8897
+    },
+    {
+      "title": "Homme d’armes",
+      "pages": "121",
+      "x": 393.5118,
+      "y": 193.8925
+    },
+    {
+      "title": "Humains",
+      "pages": "104",
+      "x": 393.51180000000005,
+      "y": 181.89530000000002
+    },
+    {
+      "title": "Humains, adversaires",
+      "pages": "216",
+      "x": 393.52088200000003,
+      "y": 169.8981
+    },
+    {
+      "title": "Illusion",
+      "pages": "147",
+      "x": 393.5118,
+      "y": 145.8897
+    },
+    {
+      "title": "Imperceptible",
+      "pages": "137",
+      "x": 393.511752,
+      "y": 133.8925
+    },
+    {
+      "title": "Imposition des mains",
+      "pages": "137",
+      "x": 393.51178200000004,
+      "y": 121.8953
+    },
+    {
+      "title": "Inébranlable",
+      "pages": "121",
+      "x": 393.511834,
+      "y": 109.8981
+    },
+    {
+      "title": "Instinct de survie",
+      "pages": "110",
+      "x": 393.51178200000004,
+      "y": 97.9009
+    },
+    {
+      "title": "Interlude",
+      "pages": "201",
+      "x": 393.51178200000004,
+      "y": 85.90369999999999
+    },
+    {
+      "title": "Interrogatoire télépathique",
+      "pages": "147",
+      "x": 393.52088200000003,
+      "y": 73.9065
+    },
+    {
+      "title": "Invocation",
+      "pages": "147",
+      "x": 393.51178600000003,
+      "y": 61.909299999999995
+    },
+    {
+      "title": "Jécibégaï, Premier père",
+      "pages": "30",
+      "x": 393.5118,
+      "y": 37.8897
+    }
+  ],
+  [
+    {
+      "title": "Kanaran",
+      "pages": "228",
+      "x": 42.5197,
+      "y": 745.8897
+    },
+    {
+      "title": "Karohar",
+      "pages": "30",
+      "x": 42.519699999999986,
+      "y": 733.8924999999999
+    },
+    {
+      "title": "Kasandrien",
+      "pages": "28",
+      "x": 42.519651999999994,
+      "y": 721.8953
+    },
+    {
+      "title": "Lancer puissant",
+      "pages": "121",
+      "x": 42.5197,
+      "y": 697.8897
+    },
+    {
+      "title": "Lévitation",
+      "pages": "138",
+      "x": 42.519682,
+      "y": 685.8924999999999
+    },
+    {
+      "title": "Libellule vorace",
+      "pages": "231",
+      "x": 42.519682,
+      "y": 673.8953
+    },
+    {
+      "title": "Licence d’exploration",
+      "pages": "36",
+      "x": 42.5197,
+      "y": 661.8897
+    },
+    {
+      "title": "Lien du sang",
+      "pages": "147",
+      "x": 42.5197,
+      "y": 649.8897
+    },
+    {
+      "title": "Liens du jugement",
+      "pages": "147",
+      "x": 42.519682,
+      "y": 637.8924999999999
+    },
+    {
+      "title": "Lier des artéfacts",
+      "pages": "192",
+      "x": 42.519734000000014,
+      "y": 625.8953
+    },
+    {
+      "title": "Ligne de tir",
+      "pages": "165",
+      "x": 42.519682,
+      "y": 613.8981
+    },
+    {
+      "title": "Lindaros",
+      "pages": "56, 57",
+      "x": 42.519682,
+      "y": 601.9009
+    },
+    {
+      "title": "Long",
+      "pages": "156",
+      "x": 42.519651999999994,
+      "y": 589.9037
+    },
+    {
+      "title": "Longévité",
+      "pages": "111",
+      "x": 42.52877799999999,
+      "y": 577.9064999999999
+    },
+    {
+      "title": "Mage, archétype",
+      "pages": "94",
+      "x": 42.5197,
+      "y": 553.8897
+    },
+    {
+      "title": "Magie pure",
+      "pages": "129",
+      "x": 42.519682,
+      "y": 541.8924999999999
+    },
+    {
+      "title": "Magie, talent",
+      "pages": "122",
+      "x": 42.519682,
+      "y": 529.8953
+    },
+    {
+      "title": "Magie, tradition",
+      "pages": "129",
+      "x": 42.52877800000002,
+      "y": 517.8980999999999
+    },
+    {
+      "title": "Maîtrise des armes d’hast",
+      "pages": "122",
+      "x": 42.5197,
+      "y": 505.9009
+    },
+    {
+      "title": "Maîtrise du bouclier",
+      "pages": "122",
+      "x": 42.528734,
+      "y": 493.90369999999996
+    },
+    {
+      "title": "Malédiction",
+      "pages": "138",
+      "x": 42.528734,
+      "y": 481.9065
+    },
+    {
+      "title": "Malfrat, archétype",
+      "pages": "99",
+      "x": 42.52878199999999,
+      "y": 469.9093
+    },
+    {
+      "title": "Marqué par la Corruption",
+      "pages": "179",
+      "x": 42.5197,
+      "y": 457.9120999999999
+    },
+    {
+      "title": "Marteau à sorcière",
+      "pages": "138",
+      "x": 42.510621999999984,
+      "y": 445.91489999999993
+    },
+    {
+      "title": "Medicus",
+      "pages": "123",
+      "x": 42.510633999999996,
+      "y": 433.91769999999997
+    },
+    {
+      "title": "Mélodie de la nature",
+      "pages": "147",
+      "x": 42.51065199999999,
+      "y": 421.9205
+    },
+    {
+      "title": "Mémoire des cendres",
+      "pages": "148",
+      "x": 42.510633999999996,
+      "y": 409.9233
+    },
+    {
+      "title": "Meneur né",
+      "pages": "124",
+      "x": 42.510633999999996,
+      "y": 397.92609999999996
+    },
+    {
+      "title": "Mercenaire, archétype",
+      "pages": "88",
+      "x": 42.510582,
+      "y": 385.9289
+    },
+    {
+      "title": "Mervidun",
+      "pages": "28",
+      "x": 42.510633999999996,
+      "y": 373.9317
+    },
+    {
+      "title": "Métamorphe",
+      "pages": "111",
+      "x": 42.519682,
+      "y": 361.93449999999996
+    },
+    {
+      "title": "Métamorphose",
+      "pages": "136",
+      "x": 42.519682,
+      "y": 349.9373
+    },
+    {
+      "title": "Monde inférieur",
+      "pages": "235",
+      "x": 42.52878199999999,
+      "y": 337.9401
+    },
+    {
+      "title": "Monstres",
+      "pages": "204",
+      "x": 42.52878199999999,
+      "y": 325.94289999999995
+    },
+    {
+      "title": "Mort subite",
+      "pages": "185",
+      "x": 42.52878199999999,
+      "y": 313.9457
+    },
+    {
+      "title": "Mort-vivant, catégorie",
+      "pages": "204",
+      "x": 42.52878199999999,
+      "y": 301.94849999999997
+    },
+    {
+      "title": "Mort-vivant, ennemi",
+      "pages": "238",
+      "x": 42.528734,
+      "y": 289.9513
+    },
+    {
+      "title": "Mort-vivant, trait",
+      "pages": "206",
+      "x": 42.528734,
+      "y": 277.9541
+    },
+    {
+      "title": "Mur de flammes",
+      "pages": "139",
+      "x": 42.537881999999996,
+      "y": 265.95689999999996
+    },
+    {
+      "title": "Mystiques",
+      "pages": "90",
+      "x": 42.537881999999996,
+      "y": 253.95970000000003
+    },
+    {
+      "title": "Mystique autodidacte",
+      "pages": "95",
+      "x": 42.537881999999996,
+      "y": 241.9625
+    },
+    {
+      "title": "Mystiques indépendants",
+      "pages": "131",
+      "x": 42.53783400000002,
+      "y": 229.9653
+    },
+    {
+      "title": "Narugor",
+      "pages": "28",
+      "x": 42.5197,
+      "y": 205.8897
+    },
+    {
+      "title": "Nécromage",
+      "pages": "238",
+      "x": 42.51065199999999,
+      "y": 193.8925
+    },
+    {
+      "title": "Nécromancie",
+      "pages": "148",
+      "x": 42.510582,
+      "y": 181.89530000000002
+    },
+    {
+      "title": "Nouvelle Bérendoria",
+      "pages": "28",
+      "x": 42.519682,
+      "y": 169.8981
+    },
+    {
+      "title": "Nouvelle Bérétor",
+      "pages": "28",
+      "x": 42.519734000000014,
+      "y": 157.9009
+    },
+    {
+      "title": "Nuée",
+      "pages": "206",
+      "x": 42.519700000000014,
+      "y": 145.90370000000001
+    },
+    {
+      "title": "Objectif de vie",
+      "pages": "184",
+      "x": 42.5197,
+      "y": 121.8897
+    },
+    {
+      "title": "Odaïova",
+      "pages": "30",
+      "x": 42.519682,
+      "y": 109.8925
+    },
+    {
+      "title": "Ogre",
+      "pages": "109",
+      "x": 42.519651999999994,
+      "y": 97.89529999999999
+    },
+    {
+      "title": "Ombre",
+      "pages": "179",
+      "x": 42.519651999999994,
+      "y": 85.8981
+    },
+    {
+      "title": "Oracle",
+      "pages": "148",
+      "x": 42.519651999999994,
+      "y": 73.9009
+    },
+    {
+      "title": "Ordre des tours",
+      "pages": "161",
+      "x": 42.519651999999994,
+      "y": 61.90369999999999
+    },
+    {
+      "title": "Ortegs",
+      "pages": "191",
+      "x": 42.519682,
+      "y": 49.9065
+    },
+    {
+      "title": "Panorama",
+      "pages": "196",
+      "x": 215.4331,
+      "y": 745.8897
+    },
+    {
+      "title": "Paria",
+      "pages": "113",
+      "x": 215.433082,
+      "y": 733.8924999999999
+    },
+    {
+      "title": "Personnages mourants",
+      "pages": "164",
+      "x": 215.42405200000002,
+      "y": 721.8953
+    },
+    {
+      "title": "Persuasion",
+      "pages": "102",
+      "x": 215.424034,
+      "y": 709.8981
+    },
+    {
+      "title": "Pierre d’âme",
+      "pages": "148",
+      "x": 215.42398200000002,
+      "y": 697.9009
+    },
+    {
+      "title": "Pluie de flèches",
+      "pages": "139",
+      "x": 215.42398200000002,
+      "y": 685.9037
+    },
+    {
+      "title": "Poigne de fer",
+      "pages": "124",
+      "x": 215.42402199999998,
+      "y": 673.9064999999999
+    },
+    {
+      "title": "Possession",
+      "pages": "148",
+      "x": 215.42398200000002,
+      "y": 661.9093
+    },
+    {
+      "title": "Possession d’animal",
+      "pages": "148",
+      "x": 215.42398200000002,
+      "y": 649.9121
+    },
+    {
+      "title": "Pots-de-vin",
+      "pages": "191",
+      "x": 215.424034,
+      "y": 637.9149
+    },
+    {
+      "title": "Pouvoir mystique",
+      "pages": "132",
+      "x": 215.42398200000002,
+      "y": 625.9177
+    },
+    {
+      "title": "Pratique",
+      "pages": "156",
+      "x": 215.42398200000002,
+      "y": 613.9205
+    },
+    {
+      "title": "Précis",
+      "pages": "156",
+      "x": 215.42405200000002,
+      "y": 601.9232999999999
+    },
+    {
+      "title": "Précision",
+      "pages": "102",
+      "x": 215.42405200000002,
+      "y": 589.9261
+    },
+    {
+      "title": "Prédateurs",
+      "pages": "226",
+      "x": 215.42398200000002,
+      "y": 577.9289
+    },
+    {
+      "title": "Premiers soins",
+      "pages": "165",
+      "x": 215.42398200000002,
+      "y": 565.9317
+    },
+    {
+      "title": "Privilégié",
+      "pages": "113",
+      "x": 215.42402199999998,
+      "y": 553.9345
+    },
+    {
+      "title": "Problèmes étendus",
+      "pages": "176",
+      "x": 215.42398200000002,
+      "y": 541.9372999999999
+    },
+    {
+      "title": "Problèmes simples",
+      "pages": "175",
+      "x": 215.41495600000002,
+      "y": 529.9401
+    },
+    {
+      "title": "Profusion de larves",
+      "pages": "141",
+      "x": 215.424034,
+      "y": 517.9429
+    },
+    {
+      "title": "Projection de venin",
+      "pages": "206",
+      "x": 215.424034,
+      "y": 505.9457
+    },
+    {
+      "title": "Promesse de part",
+      "pages": "191",
+      "x": 215.42402199999998,
+      "y": 493.9484999999999
+    },
+    {
+      "title": "Prophétie de Sarkomal",
+      "pages": "24",
+      "x": 215.42398200000002,
+      "y": 481.9513
+    },
+    {
+      "title": "Psychokinésie",
+      "pages": "141",
+      "x": 215.424034,
+      "y": 469.9541
+    },
+    {
+      "title": "Puissance à deux mains",
+      "pages": "124",
+      "x": 215.42398200000002,
+      "y": 457.95689999999996
+    },
+    {
+      "title": "Qualités",
+      "pages": "156",
+      "x": 215.4331,
+      "y": 433.8897
+    },
+    {
+      "title": "Race",
+      "pages": "104",
+      "x": 215.4331,
+      "y": 409.8897
+    },
+    {
+      "title": "Patrouilleur, ennemi",
+      "pages": "218",
+      "x": 215.43305199999998,
+      "y": 397.8925
+    },
+    {
+      "title": "Réactions",
+      "pages": "163",
+      "x": 215.433134,
+      "y": 385.89529999999996
+    },
+    {
+      "title": "Réalité altérée",
+      "pages": "141",
+      "x": 215.433082,
+      "y": 373.8981
+    },
+    {
+      "title": "Récompense",
+      "pages": "198",
+      "x": 215.442182,
+      "y": 361.9009
+    },
+    {
+      "title": "Reconnaissance de dette",
+      "pages": "191",
+      "x": 215.442182,
+      "y": 349.90369999999996
+    },
+    {
+      "title": "Récupération",
+      "pages": "125",
+      "x": 215.442134,
+      "y": 337.9065
+    },
+    {
+      "title": "Refaire un jet contre de l’Expérience",
+      "pages": "184",
+      "x": 215.4331,
+      "y": 325.8897
+    },
+    {
+      "title": "Refaire un jet contre de la Corruption",
+      "pages": "184",
+      "x": 215.4331,
+      "y": 313.8897
+    },
+    {
+      "title": "Régénération",
+      "pages": "207",
+      "x": 215.4331,
+      "y": 301.8897
+    },
+    {
+      "title": "Règles optionnelles",
+      "pages": "183",
+      "x": 215.4331,
+      "y": 289.8897
+    },
+    {
+      "title": "Reine Korinthia",
+      "pages": "27",
+      "x": 215.4331,
+      "y": 277.8897
+    },
+    {
+      "title": "Rencontres",
+      "pages": "189",
+      "x": 215.433082,
+      "y": 265.8925
+    },
+    {
+      "title": "Reptiles",
+      "pages": "228",
+      "x": 215.433082,
+      "y": 253.8953
+    },
+    {
+      "title": "Résistance à la douleur",
+      "pages": "164",
+      "x": 215.43305199999998,
+      "y": 241.8981
+    },
+    {
+      "title": "Résolution de problèmes",
+      "pages": "166",
+      "x": 215.433134,
+      "y": 229.9009
+    },
+    {
+      "title": "Rite de profanation",
+      "pages": "149",
+      "x": 215.433134,
+      "y": 217.90370000000001
+    },
+    {
+      "title": "Rite de sanctification",
+      "pages": "149",
+      "x": 215.433134,
+      "y": 205.9065
+    },
+    {
+      "title": "Ritualiste",
+      "pages": "125",
+      "x": 215.424034,
+      "y": 193.9093
+    },
+    {
+      "title": "Robuste",
+      "pages": "207",
+      "x": 215.42398200000002,
+      "y": 181.9121
+    },
+    {
+      "title": "Rôdeur des cryptes",
+      "pages": "239",
+      "x": 215.4331,
+      "y": 169.8897
+    },
+    {
+      "title": "Roublards",
+      "pages": "96",
+      "x": 215.4331,
+      "y": 157.8897
+    },
+    {
+      "title": "Rupture du lien",
+      "pages": "149",
+      "x": 215.433082,
+      "y": 145.8925
+    },
+    {
+      "title": "Saar-Kahn",
+      "pages": "30",
+      "x": 215.4331,
+      "y": 121.8897
+    },
+    {
+      "title": "Saint patron",
+      "pages": "149",
+      "x": 215.433082,
+      "y": 109.8925
+    },
+    {
+      "title": "Sanctuaire",
+      "pages": "149",
+      "x": 215.433082,
+      "y": 97.89529999999999
+    },
+    {
+      "title": "Sang acide",
+      "pages": "207",
+      "x": 215.442182,
+      "y": 85.8981
+    },
+    {
+      "title": "Saut des sept lieues",
+      "pages": "150",
+      "x": 215.442182,
+      "y": 73.9009
+    },
+    {
+      "title": "Scène",
+      "pages": "196",
+      "x": 215.442134,
+      "y": 61.90369999999999
+    },
+    {
+      "title": "Scrofar",
+      "pages": "227",
+      "x": 215.44215200000002,
+      "y": 49.9065
+    },
+    {
+      "title": "Se désengager",
+      "pages": "165",
+      "x": 215.43305199999998,
+      "y": 37.9093
+    },
+    {
+      "title": "Se relever",
+      "pages": "165",
+      "x": 388.341748,
+      "y": 757.9104000000001
+    },
+    {
+      "title": "Seigneur troll",
+      "pages": "213",
+      "x": 388.341782,
+      "y": 745.9132
+    },
+    {
+      "title": "Seldonio, Grand Maître",
+      "pages": "31",
+      "x": 388.341782,
+      "y": 733.9159999999999
+    },
+    {
+      "title": "Séragon",
+      "pages": "28",
+      "x": 388.341734,
+      "y": 721.9188
+    },
+    {
+      "title": "Serviteur de flammes",
+      "pages": "150",
+      "x": 388.341752,
+      "y": 709.9216
+    },
+    {
+      "title": "Seuil de Corruption",
+      "pages": "103, 179",
+      "x": 388.3465,
+      "y": 697.8897
+    },
+    {
+      "title": "Shillings",
+      "pages": "191",
+      "x": 388.3465,
+      "y": 685.8897
+    },
+    {
+      "title": "Sixième sens",
+      "pages": "125",
+      "x": 388.346452,
+      "y": 673.8924999999999
+    },
+    {
+      "title": "Sorcellerie, talent",
+      "pages": "126",
+      "x": 388.355582,
+      "y": 661.8953
+    },
+    {
+      "title": "Sorcellerie, tradition",
+      "pages": "129",
+      "x": 388.355582,
+      "y": 649.8981
+    },
+    {
+      "title": "Sorcière, archétype",
+      "pages": "90",
+      "x": 388.346534,
+      "y": 637.9009
+    },
+    {
+      "title": "Soumission",
+      "pages": "141",
+      "x": 388.346534,
+      "y": 625.9037
+    },
+    {
+      "title": "Stigmates",
+      "pages": "179",
+      "x": 388.34648200000004,
+      "y": 613.9064999999999
+    },
+    {
+      "title": "Stigmatisation",
+      "pages": "180",
+      "x": 388.337422,
+      "y": 601.9092999999999
+    },
+    {
+      "title": "Suinte-crocs",
+      "pages": "225",
+      "x": 388.34648200000004,
+      "y": 589.9121
+    },
+    {
+      "title": "Surprise",
+      "pages": "166",
+      "x": 388.34650000000005,
+      "y": 577.9148999999999
+    },
+    {
+      "title": "Symbar",
+      "pages": "39",
+      "x": 388.346452,
+      "y": 565.9177
+    },
+    {
+      "title": "Tacticien",
+      "pages": "126",
+      "x": 388.3465,
+      "y": 541.8897
+    },
+    {
+      "title": "Talents",
+      "pages": "114",
+      "x": 388.355582,
+      "y": 529.8924999999999
+    },
+    {
+      "title": "Temps",
+      "pages": "178",
+      "x": 388.355552,
+      "y": 517.8953
+    },
+    {
+      "title": "Terrain trompeur",
+      "pages": "150",
+      "x": 388.355552,
+      "y": 505.8981
+    },
+    {
+      "title": "Terrifiant",
+      "pages": "207",
+      "x": 388.355582,
+      "y": 493.9009
+    },
+    {
+      "title": "Test",
+      "pages": "103",
+      "x": 388.355578,
+      "y": 481.9036999999999
+    },
+    {
+      "title": "Test de mort",
+      "pages": "164",
+      "x": 388.346452,
+      "y": 469.9065
+    },
+    {
+      "title": "Thalers",
+      "pages": "191",
+      "x": 388.34648200000004,
+      "y": 457.9093
+    },
+    {
+      "title": "Tharaban, Haut Chef",
+      "pages": "29",
+      "x": 388.3465,
+      "y": 445.9120999999999
+    },
+    {
+      "title": "Théurge, archétype",
+      "pages": "93",
+      "x": 388.346534,
+      "y": 433.9149
+    },
+    {
+      "title": "Théurgie, talent",
+      "pages": "126",
+      "x": 388.346534,
+      "y": 421.91769999999997
+    },
+    {
+      "title": "Théurgie, tradition",
+      "pages": "130",
+      "x": 388.34648200000004,
+      "y": 409.9205
+    },
+    {
+      "title": "Tireur d’élite",
+      "pages": "126",
+      "x": 388.3465,
+      "y": 397.9232999999999
+    },
+    {
+      "title": "Toile",
+      "pages": "207",
+      "x": 388.34648200000004,
+      "y": 385.92609999999996
+    },
+    {
+      "title": "Touché par la Corruption",
+      "pages": "179",
+      "x": 388.337452,
+      "y": 373.9289
+    },
+    {
+      "title": "Tours",
+      "pages": "178",
+      "x": 388.337434,
+      "y": 361.9317
+    },
+    {
+      "title": "Tradition mystique",
+      "pages": "128",
+      "x": 388.33742199999995,
+      "y": 349.93449999999996
+    },
+    {
+      "title": "Traits",
+      "pages": "110",
+      "x": 388.337434,
+      "y": 337.9373
+    },
+    {
+      "title": "Traits monstrueux",
+      "pages": "204",
+      "x": 388.3465,
+      "y": 325.9400999999999
+    },
+    {
+      "title": "Transformation dégénérative",
+      "pages": "142",
+      "x": 388.3465,
+      "y": 313.8897
+    },
+    {
+      "title": "Troll",
+      "pages": "213",
+      "x": 388.3465,
+      "y": 301.8897
+    },
+    {
+      "title": "Troll enragé",
+      "pages": "213",
+      "x": 388.346452,
+      "y": 289.8925
+    },
+    {
+      "title": "Utiliser un artéfact",
+      "pages": "192",
+      "x": 388.3465,
+      "y": 265.8897
+    },
+    {
+      "title": "Utiliser un élixir",
+      "pages": "157",
+      "x": 388.346534,
+      "y": 253.8925
+    },
+    {
+      "title": "Vajvod",
+      "pages": "30",
+      "x": 388.3465,
+      "y": 229.8897
+    },
+    {
+      "title": "Varakko",
+      "pages": "30",
+      "x": 388.337452,
+      "y": 217.8925
+    },
+    {
+      "title": "Venimeux",
+      "pages": "207",
+      "x": 388.328352,
+      "y": 205.89530000000002
+    },
+    {
+      "title": "Verre ardent de Prios",
+      "pages": "142",
+      "x": 388.337422,
+      "y": 193.8981
+    },
+    {
+      "title": "Vigilance",
+      "pages": "103",
+      "x": 388.3465,
+      "y": 181.8897
+    },
+    {
+      "title": "Vigoureux",
+      "pages": "113",
+      "x": 388.3465,
+      "y": 169.8897
+    },
+    {
+      "title": "Violenteur",
+      "pages": "230",
+      "x": 388.34648200000004,
+      "y": 157.8925
+    },
+    {
+      "title": "Vision de l’Ombre",
+      "pages": "127",
+      "x": 388.34648200000004,
+      "y": 145.89530000000002
+    },
+    {
+      "title": "Volonté",
+      "pages": "103",
+      "x": 388.355582,
+      "y": 133.8981
+    },
+    {
+      "title": "Vouivre",
+      "pages": "228",
+      "x": 388.355552,
+      "y": 121.9009
+    },
+    {
+      "title": "Voyages",
+      "pages": "189",
+      "x": 388.346452,
+      "y": 109.90369999999999
+    },
+    {
+      "title": "Yédésa",
+      "pages": "30",
+      "x": 388.3465,
+      "y": 85.8897
+    },
+    {
+      "title": "Yéléta, la Huldra",
+      "pages": "28",
+      "x": 388.337452,
+      "y": 73.8925
+    },
+    {
+      "title": "Yndarien",
+      "pages": "28",
+      "x": 388.337382,
+      "y": 61.8953
+    },
+    {
+      "title": "Zarek",
+      "pages": "30",
+      "x": 388.3465,
+      "y": 37.8897
+    }
+  ]
+]

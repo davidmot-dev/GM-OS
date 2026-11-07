@@ -1,0 +1,139 @@
+{
+  "mp4": "../torg-mecanismes-et-tablette.mp4",
+  "dureeSecondes": 178.2,
+  "flux": [
+    {
+      "codec_name": "h264",
+      "codec_type": "video",
+      "width": 1440,
+      "height": 900,
+      "r_frame_rate": "25/1"
+    }
+  ],
+  "decodageCompletSansErreur": true,
+  "imagesExtraites": [
+    {
+      "image": "film-01.jpg",
+      "secondes": 1
+    },
+    {
+      "image": "film-02.jpg",
+      "secondes": 9.009
+    },
+    {
+      "image": "film-03.jpg",
+      "secondes": 16.575
+    },
+    {
+      "image": "film-04.jpg",
+      "secondes": 28.141
+    },
+    {
+      "image": "film-05.jpg",
+      "secondes": 33.9
+    },
+    {
+      "image": "film-06.jpg",
+      "secondes": 43.658
+    },
+    {
+      "image": "film-07.jpg",
+      "secondes": 47.389
+    },
+    {
+      "image": "film-08.jpg",
+      "secondes": 52.82
+    },
+    {
+      "image": "film-09.jpg",
+      "secondes": 54.02
+    },
+    {
+      "image": "film-10.jpg",
+      "secondes": 55.12
+    },
+    {
+      "image": "film-11.jpg",
+      "secondes": 67.429
+    },
+    {
+      "image": "film-12.jpg",
+      "secondes": 83.737
+    },
+    {
+      "image": "film-13.jpg",
+      "secondes": 102.268
+    },
+    {
+      "image": "film-14.jpg",
+      "secondes": 122.497
+    },
+    {
+      "image": "film-15.jpg",
+      "secondes": 123.697
+    },
+    {
+      "image": "film-16.jpg",
+      "secondes": 124.798
+    },
+    {
+      "image": "film-17.jpg",
+      "secondes": 130.315
+    },
+    {
+      "image": "film-18.jpg",
+      "secondes": 139.831
+    },
+    {
+      "image": "film-19.jpg",
+      "secondes": 151.792
+    },
+    {
+      "image": "film-20.jpg",
+      "secondes": 165.484
+    },
+    {
+      "image": "film-21.jpg",
+      "secondes": 166.684
+    },
+    {
+      "image": "film-22.jpg",
+      "secondes": 167.752
+    },
+    {
+      "image": "film-23.jpg",
+      "secondes": 168.476
+    },
+    {
+      "image": "film-24.jpg",
+      "secondes": 174.2
+    },
+    {
+      "image": "film-25-carte.jpg",
+      "secondes": 110
+    },
+    {
+      "image": "film-26-souffrance.jpg",
+      "secondes": 161
+    }
+  ],
+  "imagesRelues": true,
+  "raccords": [
+    53.419999999999995,
+    123.09700000000001,
+    166.084
+  ],
+  "scenesRelues": 14,
+  "planchesRelues": [
+    "planche-film-01.jpg",
+    "planche-film-02.jpg",
+    "planche-scenes-01.jpg",
+    "planche-scenes-02.jpg"
+  ],
+  "webm": {
+    "codec": "vp9",
+    "largeur": 1440,
+    "hauteur": 900,
+    "dureeSecondes": 178.2
+  }
+}

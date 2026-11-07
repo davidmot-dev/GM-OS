@@ -1,0 +1,15 @@
+{
+  "modele": "noc-reference",
+  "pistes": 9,
+  "anciennesClesConservees": 78,
+  "ancienneSauvegarde": true,
+  "clicCumulatif": true,
+  "remiseAZero": true,
+  "exportJSON": true,
+  "rechargement": true,
+  "migrationMoteur": true,
+  "valeursSuperieuresAuxCasesConservees": true,
+  "autresModelesInchanges": true,
+  "erreurs": [],
+  "reseau": []
+}

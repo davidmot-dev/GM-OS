@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const fichier='outils/campagnes-de-recette/runequest-recette.mjs';
+let source=fs.readFileSync(fichier,'utf8');
+const ancien='3. node outils/campagnes-de-recette/runequest-visuels.mjs ; examiner les captures.';
+const nouveau='3. node outils/campagnes-de-recette/runequest-visuels.mjs ; examiner les neuf captures, puis node outils/campagnes-de-recette/runequest-verifier-plugin.mjs (GMOS_PYTHON et GMOS_VERIFICATEUR_CAMPAGNES si nécessaire).';
+assert(source.includes(ancien));source=source.replace(ancien,nouveau);
+const vieux='5. node outils/campagnes-de-recette/emballer-runequest.mjs';
+const neuf='5. Examiner les sept captures Electron ; consigner les revues dans verification-medias.json (capturesExaminees) et verification-captures-electron.json (sept captures et SHA du rapport/test/helper).\n6. node outils/campagnes-de-recette/emballer-runequest.mjs';
+assert(source.includes(vieux));source=source.replace(vieux,neuf.replaceAll('\n','\\n'));
+fs.writeFileSync(fichier,source);
+const guide='output/campagnes-tests/runequest/REPRODUIRE.md';
+let texte=fs.readFileSync(guide,'utf8');texte=texte.replace(ancien,nouveau).replace(vieux,neuf);
+texte+='\nLe rejeu de la comparaison 2.0.0 → 2.1.0 nécessite le pilote historique sous historique/2026-10-30-2.0.0 dans le dépôt. Ce dossier est conservé à part et exclu du ZIP courant. Le générateur Python du pilote est copié dans reproduction/ ; aucun export personnel nécessaire pour utiliser le pilote 2.1.0 livré.\n';
+fs.writeFileSync(guide,texte);

@@ -1,10 +1,16 @@
 # ⚡️ Jeu — Torg Eternity
 
-> **Pilote décrit :** « Torg Eternity » 2.0.0, exporté le 2026-11-07 ; essai de David attendu. [Pilote à réimporter avec « Remplacer »](../../Export%20Dirvers/corriges/Torg-Eternity-2.0.0.gmos-driver). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Torg Eternity » 2.0.0, exporté le 2026-11-07 ; essais validés par David le 07/11/2026. [Pilote à réimporter avec « Remplacer »](../../Export%20Dirvers/corriges/Torg-Eternity-2.0.0.gmos-driver). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Les Chevaliers des Tempêtes contre les Seigneurs de Réalité. Les passages utilisés pour les
 améliorations ont été relus le 07/11/2026 contre le livre de base et *L’Empire du Nil*, version 1.
 Les chemins et décalages sont dans `docs/systems/torg/livres.json`.
+
+[Voir le clip Playwright de 2 min 58](../../output/clips/torg-mecanismes-et-tablette.mp4) :
+dé explosif, Possibilités, Ingénieux, carte d’Action, Réserve et échange un contre un,
+fiche HTML, Ténacité, Sbires et Souffrance. Le joueur utilise le vrai Hub en émulation
+tactile : appuis et glissement, avec réception vérifiée côté MJ. Légendes françaises,
+dés préparés ; aucun appareil physique. [Chapitres et vérifications](../../output/clips/torg/README.md).
 
 ## La fiche PJ vierge
 
@@ -19,10 +25,12 @@ sont cliquables ; le compteur Blessures et sa piste de niveau restent indépenda
 Aucun calcul de règles n'est ajouté. **Zones** montre les champs, **Exporter JSON** sauvegarde
 une copie transportable, **Imprimer** conserve le format de la page. La fiche fonctionne hors ligne.
 
-Le fichier porte le modèle `torg-eternity-fr` et peut être importé dans le moteur de fiches.
-Il n'est pas encore installé comme modèle intégré ; la correspondance avec les champs
-du pilote GM-OS reste à écrire. Les saisies de cet HTML ne pilotent donc pas encore les jets
-ni les cases d'Atouts du formulaire GM-OS.
+Le modèle `torg-eternity-fr` est intégré au moteur de fiches (version 24) et relié au pilote.
+Après **Sauvegarder**, l'identité, les attributs, les axiomes, les défenses, la Résistance,
+l'Armure, le Choc, les Blessures et les rangs des neuf compétences imprimées remontent dans
+GM-OS ; les lignes d'armes, d'armures et d'équipement rejoignent l'inventaire.
+Les compétences libres et les champs sans correspondance restent manuels. Les cases
+structurées de possession des Atouts se cochent toujours dans le formulaire GM-OS.
 
 ![La fiche PJ de Torg vidée de ses données, avec la Table des Bonus intacte](captures/jeu-torg-fiche-vierge.png)
 
@@ -330,4 +338,4 @@ est alors comptée comme jouée pour l'Acte. Ce qu'elle fait reste à la table.
 - Réimporter le pilote **2.0.0** avec **Remplacer**. Identifiants et valeurs des personnages sont conservés ; les nouvelles cases restent absentes ou fausses tant qu’elles ne sont pas cochées et sauvegardées.
 - Le MJ confirme les conditions fictionnelles : créature surnaturelle maléfique, laquais proche, auteur de l’action. Les autres Atouts, Lois et effets imprimés des cartes se jouent selon leur texte.
 - L’Annulation des dommages garde le fonctionnement décrit plus haut ; terminer les réactions avant l’application d’un coup.
-- Essai attendu de David : un Atout et son coût, un échange une pour une, un transfert vers un sbire et une suite de Loi du Monde.
+- Essais validés par David le 07/11/2026 : les améliorations TORG-A0 à A4 sont marquées bonnes dans leur suivi.

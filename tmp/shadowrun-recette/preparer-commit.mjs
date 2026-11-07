@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+const guide='documentation/User Guides/54-Jeu-Shadowrun-Anarchy.md';
+const texte=fs.readFileSync(guide,'utf8'),titre='\n## Les campagnes de recette\n';
+const a=texte.indexOf(titre),b=texte.indexOf(titre,a+1);
+if(a<0||b<0||texte.slice(a,b).trim()!==texte.slice(b).trim())throw Error('Doublon du guide inattendu');
+fs.writeFileSync(guide,texte.slice(0,b).trimEnd()+'\n');
+const p='output/campagnes-tests/shadowrun-anarchy/provenance.json',pr=JSON.parse(fs.readFileSync(p,'utf8'));
+const entree=pr.sourcesTechniques.find(s=>s.fichier===guide);if(!entree)throw Error('Source absente');
+entree.sha256=createHash('sha256').update(fs.readFileSync(guide)).digest('hex');fs.writeFileSync(p,JSON.stringify(pr,null,2)+'\n');
+fs.writeFileSync('tmp/shadowrun-recette/message-commit.txt',"feat(recette): ajouter les campagnes de test Shadowrun Anarchy\n\nA la demande de David, livrer la mission originale La Derniere Couleur et deux laboratoires pour les trois joueurs existants : 22 nouveaux PJ, 64 cas humains, medias et reproduction.\n\n72 tests cibles passent ; imports, remplacement isole, trois Hub, jets et fiches HTML eprouves. Conserver l echec GM-05 observe avec des marqueurs fictifs, sans correction applicative dans ce lot.\n\nCo-Authored-By: Codex <noreply@openai.com>\n");

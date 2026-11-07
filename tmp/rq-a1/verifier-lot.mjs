@@ -1,0 +1,36 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import AdmZip from 'adm-zip';
+import {createHash} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+const d='output/campagnes-tests/runequest',h=d+'/historique/2026-10-30-2.0.0';
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const sauve=JSON.parse(fs.readFileSync(h+'/empreintes-conservees.json'));
+for(const[n,sha]of Object.entries(sauve.fichiers))assert.equal(hash(fs.readFileSync(h+'/'+n)),sha,n);
+const ancien=new AdmZip(h+'/RuneQuest-Campagnes-de-recette.zip');
+const inv=JSON.parse(fs.readFileSync(d+'/inventaire.json'));
+for(const a of inv.archives){
+    const avant=JSON.parse(new AdmZip(ancien.readFile(a.fichier)).readAsText('state.json'));
+    const apres=JSON.parse(new AdmZip(d+'/'+a.fichier).readAsText('state.json'));
+    assert.equal(apres.campaign.id,avant.campaign.id);
+    assert.deepEqual(apres.players.map(p=>[p.id,p.realName,p.characters.map(c=>c.id)]),avant.players.map(p=>[p.id,p.realName,p.characters.map(c=>c.id)]));
+    assert.equal(apres.requiredDriverData[0].version,'2.1.0');
+    for(const r of ['verification-contexte.json','verification-medias.json','verification-electron.json'])assert.equal(JSON.parse(fs.readFileSync(d+'/'+r)).archives.find(x=>x.fichier===a.fichier).sha256,a.sha256);
+}
+const perime=JSON.parse(fs.readFileSync(d+'/verification-contexte.json'));
+perime.archives[0].sha256='0'.repeat(64);
+const cible=d+'/RuneQuest-Campagnes-de-recette.zip',zipAvant=hash(fs.readFileSync(cible));
+const essai='tmp/rq-a1/lot-perime-'+process.pid;
+fs.mkdirSync(essai,{recursive:true});
+for(const nom of ['inventaire.json','verification-archives.json','verification-medias.json','verification-plugin.json','verification-electron.json','verification-captures-electron.json',...inv.archives.map(a=>a.fichier)])fs.writeFileSync(essai+'/'+nom,fs.readFileSync(d+'/'+nom));
+fs.mkdirSync(essai+'/captures');
+for(const c of JSON.parse(fs.readFileSync(d+'/verification-captures-electron.json')).captures)fs.writeFileSync(essai+'/'+c.fichier,fs.readFileSync(d+'/'+c.fichier));
+fs.writeFileSync(essai+'/verification-contexte.json',JSON.stringify(perime));
+const refus=spawnSync(process.execPath,['outils/campagnes-de-recette/emballer-runequest.mjs'],{encoding:'utf8',windowsHide:true,env:{...process.env,GMOS_DOSSIER_RECETTE_RUNEQUEST:essai}});
+assert.notEqual(refus.status,0);assert.match(refus.stderr,/Rapport périmé : tests/);
+assert.equal(hash(fs.readFileSync(cible)),zipAvant,'Un refus ne doit pas modifier le ZIP');
+const provenance=JSON.parse(fs.readFileSync(d+'/provenance.json'));
+for(const[f,sha]of Object.entries(provenance.sourcesDeLaRevision))assert.equal(hash(fs.readFileSync(f)),sha,f);
+const csv=fs.readFileSync(d+'/resultats.csv','utf8');assert.equal(csv.split(/\r?\n/).filter(l=>l.endsWith(';"NON TESTÉ";"";""')).length,78);
+fs.writeFileSync(d+'/verification-integrite.json',JSON.stringify({date:'2026-11-01',reussi:true,archives:inv.archives,anciensIdentifiantsConserves:true,nouveauxCSVHumainsVierge:78,historique:{fichiersVerifies:Object.keys(sauve.fichiers).length,zipSHA256:sauve.fichiers['RuneQuest-Campagnes-de-recette.zip'],csvSHA256:sauve.fichiers['resultats.csv']},refusRapportPerime:true,zipInchangeApresRefus:true,sourcesSHAConcordantes:true},null,2)+'\n');
+console.log('Historique intact, identifiants conservés, 78 résultats vierges ; rapport périmé refusé sans modifier le ZIP.');

@@ -1,0 +1,17 @@
+{
+  "archives": [
+    {
+      "fichier": "01-Les-Bornes-du-gue.gmos",
+      "sha256": "f9de892dd24ed078f218e29985018f5f12f39d574061e196f787487dcff0cc37"
+    },
+    {
+      "fichier": "02-Aptitudes-Combat-et-Sante.gmos",
+      "sha256": "41243e5e8b2da51ed25ac2a8278cdb1a2ed65a74822d9c252ee8ee957ee7c2ca"
+    },
+    {
+      "fichier": "03-Runes-Passions-et-Magie.gmos",
+      "sha256": "b37c84fc58dff402302b849f705bb8c95fa35369420fa8e6e1fb5c2d84694caa"
+    }
+  ],
+  "assertions": "runequest.test.ts ; résultat global dans verification-archives.json"
+}

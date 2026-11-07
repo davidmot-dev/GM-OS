@@ -1,0 +1,44 @@
+{
+  "outil": "GM-OS Campagnes de test / gmos_bundle.py verify",
+  "rapports": [
+    {
+      "fichier": "01-Les-Bornes-du-gue.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "f9de892dd24ed078f218e29985018f5f12f39d574061e196f787487dcff0cc37",
+      "campaignId": "recette-rq-campagne-bornes",
+      "players": 3,
+      "characters": 3,
+      "assets": 39
+    },
+    {
+      "fichier": "02-Aptitudes-Combat-et-Sante.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "41243e5e8b2da51ed25ac2a8278cdb1a2ed65a74822d9c252ee8ee957ee7c2ca",
+      "campaignId": "recette-rq-corps-campagne-bornes",
+      "players": 3,
+      "characters": 9,
+      "assets": 39
+    },
+    {
+      "fichier": "03-Runes-Passions-et-Magie.gmos",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil."
+      ],
+      "sha256": "b37c84fc58dff402302b849f705bb8c95fa35369420fa8e6e1fb5c2d84694caa",
+      "campaignId": "recette-rq-runes-campagne-bornes",
+      "players": 3,
+      "characters": 9,
+      "assets": 39
+    }
+  ]
+}

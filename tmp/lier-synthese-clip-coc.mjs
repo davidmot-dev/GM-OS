@@ -1,0 +1,2 @@
+import fs from 'node:fs';const p='documentation/Planning/2026-10-20-ameliorations-tous-les-pilotes.md';let s=fs.readFileSync(p,'utf8');
+s=s.split('\n').map(l=>l.startsWith('| [Chroniques Oubliées Contemporain]')&&!l.includes('coc-mecanismes-et-tablette.mp4')?l.trimEnd().replace(/\|$/,' ; [clip avec joueur tactile (3 min 52)](../../output/clips/coc-mecanismes-et-tablette.mp4) livré le 06/11 (§227) |'):l).join('\n');fs.writeFileSync(p,s);

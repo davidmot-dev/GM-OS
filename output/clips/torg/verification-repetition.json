@@ -1,0 +1,151 @@
+{
+  "date": "2026-11-07",
+  "version": "2.0.0",
+  "profilJetable": true,
+  "donneesPersonnelles": false,
+  "desPrepares": true,
+  "narrationSonore": false,
+  "modeRapide": true,
+  "exportVideo": {
+    "mp4": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\torg-repetition\\torg-mecanismes-et-tablette.mp4",
+    "webm": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\torg-repetition\\torg-mecanismes-et-tablette.webm",
+    "dureeMp4": 54.32,
+    "chapitres": [
+      {
+        "titre": "1 · Le dé explose, puis la table donne le bonus",
+        "secondesDepuisTitre": 0.162
+      },
+      {
+        "titre": "2 · Ingénieux : un Atout possédé, un coût, un choix",
+        "secondesDepuisTitre": 2.672
+      },
+      {
+        "titre": "3 · La carte d’Action ouvre le round",
+        "secondesDepuisTitre": 4.964
+      },
+      {
+        "titre": "4 · Le joueur touche sa fiche et dépense une Possibilité",
+        "secondesDepuisTitre": 12.202
+      },
+      {
+        "titre": "5 · Destin : Réserve d’Action et échange un contre un",
+        "secondesDepuisTitre": 20.885
+      },
+      {
+        "titre": "6 · Pan-Pacifica : dépasser le Choc, puis choisir Ténacité",
+        "secondesDepuisTitre": 33.004
+      },
+      {
+        "titre": "7 · Tharkold : Sbires et Loi de la Souffrance",
+        "secondesDepuisTitre": 35.538999999999994
+      },
+      {
+        "titre": "8 · La fiche du jeu retrouve les choix de la table",
+        "secondesDepuisTitre": 39.88399999999999
+      }
+    ],
+    "montage": {
+      "debutMJ": 40.44,
+      "debutT": 0,
+      "segments": [
+        {
+          "source": 0,
+          "debut": 0,
+          "fin": 12.502
+        },
+        {
+          "source": 1,
+          "debut": 4.63,
+          "fin": 25.432
+        },
+        {
+          "source": 0,
+          "debut": 39.482,
+          "fin": 60.519999999999996
+        }
+      ],
+      "raccords": [
+        12.502,
+        33.304
+      ],
+      "brutMJ": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\torg-repetition\\torg\\tournage-mj.webm",
+      "brutTablette": "C:\\Projet_David\\GM-OS-v5\\output\\clips\\torg-repetition\\torg\\tournage-tablette.webm"
+    }
+  },
+  "chapitres": [
+    {
+      "titre": "1 · Le dé explose, puis la table donne le bonus",
+      "secondesDepuisTitre": 0.162
+    },
+    {
+      "titre": "2 · Ingénieux : un Atout possédé, un coût, un choix",
+      "secondesDepuisTitre": 2.672
+    },
+    {
+      "titre": "3 · La carte d’Action ouvre le round",
+      "secondesDepuisTitre": 4.964
+    },
+    {
+      "titre": "4 · Le joueur touche sa fiche et dépense une Possibilité",
+      "secondesDepuisTitre": 12.202
+    },
+    {
+      "titre": "5 · Destin : Réserve d’Action et échange un contre un",
+      "secondesDepuisTitre": 20.885
+    },
+    {
+      "titre": "6 · Pan-Pacifica : dépasser le Choc, puis choisir Ténacité",
+      "secondesDepuisTitre": 33.004
+    },
+    {
+      "titre": "7 · Tharkold : Sbires et Loi de la Souffrance",
+      "secondesDepuisTitre": 35.538999999999994
+    },
+    {
+      "titre": "8 · La fiche du jeu retrouve les choix de la table",
+      "secondesDepuisTitre": 39.88399999999999
+    }
+  ],
+  "tablette": {
+    "client": "Hub HTTP/WebSocket réel sans appBridge",
+    "viewport": {
+      "largeur": 768,
+      "hauteur": 1024
+    },
+    "contexteTactile": true,
+    "touchersPlaywright": true,
+    "touchersRecus": 14,
+    "mouvementsRecus": 17,
+    "glissementTactileCDP": true,
+    "appareilPhysique": false,
+    "jetRecuMJ": true,
+    "possibilites3vers2RecuesMJ": true,
+    "echangeAtomique1Pour1": true,
+    "defenseEsquiveHTML9RecueMJ": true
+  },
+  "cartes": {
+    "images": "JPEG réels public/assets/decks/torg",
+    "action": 12,
+    "destin": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "cosm": "Paquet présent, non distribué ; exemple de cosm résolu par ses Lois",
+    "limite": "Sous-ensemble de cinq cartes du Destin ; aucun effet imprimé joué automatiquement"
+  },
+  "assertions": [
+    "d20 : 10 + 7, bonus4, résultat14",
+    "Possibilité : dé3 compte10, résultat19, coût3→2",
+    "Ingénieux : coût2→1, Romance pour Mara, Seconde chance pour Teo, une fois/scène",
+    "Action13-N : Héros, Un de plus, Intimidation/Provocation",
+    "Hub tactile : jet, Possibilité et Un de plus réels",
+    "Réserve et échange atomique Monologue contre Plan de secours",
+    "fiche HTML : Esquive9 reçue MJ",
+    "Pan-Pacifica : coup11/Résistance10, KO puis Ténacité, Choc0/Blessures2",
+    "Sbires : capacité explicite, proximité confirmée, test réel, transfert unique au laquais",
+    "Tharkold : auteur Teo, Choc3→2",
+    "fiche HTML MJ : Choc0, Blessures2"
+  ]
+}

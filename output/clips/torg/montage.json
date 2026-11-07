@@ -1,0 +1,55 @@
+{
+  "dureeDepuisTitre": 203.825,
+  "segmentsTablette": [
+    {
+      "debutMJ": 58.122,
+      "finMJ": 135.528,
+      "debutTablette": 4.19,
+      "finTablette": 73.867
+    }
+  ],
+  "coupesMJ": [
+    {
+      "debut": 53.12,
+      "fin": 58.122
+    },
+    {
+      "debut": 178.515,
+      "fin": 191.718
+    }
+  ],
+  "chapitres": [
+    {
+      "titre": "1 · Le dé explose, puis la table donne le bonus",
+      "secondesDepuisTitre": 7.009
+    },
+    {
+      "titre": "2 · Ingénieux : un Atout possédé, un coût, un choix",
+      "secondesDepuisTitre": 26.141
+    },
+    {
+      "titre": "3 · La carte d’Action ouvre le round",
+      "secondesDepuisTitre": 41.658
+    },
+    {
+      "titre": "4 · Le joueur touche sa fiche et dépense une Possibilité",
+      "secondesDepuisTitre": 58.122
+    },
+    {
+      "titre": "5 · Destin : Réserve d’Action et échange un contre un",
+      "secondesDepuisTitre": 86.739
+    },
+    {
+      "titre": "6 · Pan-Pacifica : dépasser le Choc, puis choisir Ténacité",
+      "secondesDepuisTitre": 135.529
+    },
+    {
+      "titre": "7 · Tharkold : Sbires et Loi de la Souffrance",
+      "secondesDepuisTitre": 150.562
+    },
+    {
+      "titre": "8 · La fiche du jeu retrouve les choix de la table",
+      "secondesDepuisTitre": 178.483
+    }
+  ]
+}

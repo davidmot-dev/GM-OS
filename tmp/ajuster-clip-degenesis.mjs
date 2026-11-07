@@ -1,0 +1,9 @@
+import fs from 'node:fs';
+const p='e2e/clipDegenesis.spec.ts';let t=fs.readFileSync(p,'utf8');
+t=t.replace("await chapitre('1 · Valeur d’action, difficulté et Égo');await composer('physique','corps_a_corps');", "await chapitre('1 · Valeur d’action, difficulté et Égo');await composer('physique','force');").replace('PHY 4 + Corps à corps 3, déplacement','PHY 4 + Force 3, déplacement');
+const a=t.indexOf("await r.cliquer(carte.getByRole('button',{name:/calcul/i}));"),b=t.indexOf("await expect.poll(async()=>{const c=await personnage();",a);
+if(a<0||b<0)throw new Error('Séquence du calculateur absente.');
+t=t.slice(0,a)+"await r.taper(carte.getByTitle('Intensité',{exact:true}),'14');await r.choisir(carte.getByTitle('Type de dégâts — appliqué aux résistances de la fiche',{exact:true}),'physique');await r.legende('On saisit ici quatorze dégâts nets, armure déjà retirée.','La piste superficielle absorbe douze ; les deux points restants deviennent des Traumatismes.',3300);await r.cliquer(carte.getByTitle('Infliger dégâts',{exact:true}));"+t.slice(b);
+fs.writeFileSync(p,t);
+fs.mkdirSync('output/clips/degenesis/constats',{recursive:true});fs.copyFileSync('output/clips/degenesis/diagnostic-echec.jpg','output/clips/degenesis/constats/calculateur-pj.jpg');
+fs.writeFileSync('output/clips/degenesis/constats/calculateur-pj.json',JSON.stringify({date:'2026-11-06',pilote:'Degenesis2.3.0',initial:{hp:19,blessures_superficielles:0,traumatismes:0},action:'Calculer, montant14, typephysique, bouton final Déclencher dégâts',attendu:{hp:5,blessures_superficielles:12,traumatismes:2},recu:{hp:5,blessures_superficielles:0,traumatismes:0},source:['src/modules/combat/components/DamageCalculator.tsx : applyDamage','src/modules/combat/useCombatStore.ts : branche des pistes limitée aux adversaires autonomes'],corrige:false,alternative:'Panneau de santé natif sur la carte, Intensité14, Physique, Infliger dégâts'},null,2)+'\n');
