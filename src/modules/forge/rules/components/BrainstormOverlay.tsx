@@ -32,7 +32,7 @@ import {
 import { fichesSupplantees, sujetDuFrontmatter } from '../fichesSupplantees';
 import { aEteRetouchee } from '../empreinteDeLaFiche';
 import { slugFiche } from '../canevas';
-import { MARQUE_SUJET_LIBRE, MARQUE_SUJET_LIBRE_RETROUVE } from '../sujetLibre';
+import { MARQUE_SUJET_LIBRE, avecLeSujetLibre, sansLeSujetLibre } from '../sujetLibre';
 import { ficheInventaire, ficheInventaireDeSupplement, lireInventaire, lireInventaireDeSupplement } from '../inventaire';
 import { slug } from '../../../../../electron/corpusSysteme';
 import { lireNature } from '../familleDuCorpus';
@@ -45,6 +45,7 @@ import {
   renommerLeSujet,
   sujetsDeLInventaire,
   sujetsDesCandidats,
+  MARQUE_SUPPLEMENT,
 } from '../supplements';
 import type { BrainstormCandidate } from '../types';
 
@@ -194,7 +195,9 @@ export const BrainstormOverlay: React.FC = () => {
   const cheminDesSujets = corpus?.supplement ? `${corpus.racine}/sujets.json` : '';
   const enregistrerLesSujets = useCallback(async (candidats: BrainstormCandidate[]) => {
     if (!cheminDesSujets) return;
-    await window.appBridge?.ai?.writeDoc?.(cheminDesSujets, JSON.stringify(sujetsDesCandidats(candidats), null, 2));
+    // Le sujet libre ne vit que le temps de le forger : il n'entre pas dans les sujets retenus
+    // (décision de David, 07/11/2026). « Ajouter », dans la liste, reste le geste qui l'enregistre.
+    await window.appBridge?.ai?.writeDoc?.(cheminDesSujets, JSON.stringify(sujetsDesCandidats(sansLeSujetLibre(candidats)), null, 2));
   }, [cheminDesSujets]);
 
   /** Les trois gestes du choix des sujets : la liste change, le disque suit. */
@@ -273,12 +276,22 @@ export const BrainstormOverlay: React.FC = () => {
     return () => { abandonne = true; };
   }, [brainstormStore.step, brainstormStore.activeCard, corpus]);
 
+  /**
+   * La carte d'un sujet libre inédit : hors canevas pour le livre de base ; pour un supplément, comme
+   * un sujet ajouté à la main (07/11/2026, David : « je voudrais que l'on active le "sujet de forge
+   * libre" pour les Suppléments »).
+   */
+  const libreDuLivreDeBase = (titre: string, id: string): BrainstormCandidate =>
+    ({ id, title: titre, category: 'rule', summary: '', tags: ['hors canevas', MARQUE_SUJET_LIBRE] });
+  const libreDuSupplement = useCallback((titre: string, id: string): BrainstormCandidate =>
+    ({ id, title: titre, category: 'rule', summary: '', tags: ['oui', MARQUE_SUPPLEMENT, MARQUE_SUJET_LIBRE] }), []);
+
   /** Les candidats tirés d'un inventaire, quelle qu'en soit la provenance. */
   const construireCandidats = useCallback((inventaire: string) => {
     // Un supplément n'a pas de canevas : ses sujets sont ceux que le carnet
     // propose, et David les choisit ensuite (§ 185, 01/11/2026).
     if (supplement) {
-      setCandidates(candidatsDesSujets(sujetsDeLInventaire(lireInventaireDeSupplement(inventaire))), inventaire);
+      setCandidates(avecLeSujetLibre(candidatsDesSujets(sujetsDeLInventaire(lireInventaireDeSupplement(inventaire))), customSubject, libreDuSupplement), inventaire);
       return;
     }
     const candidats = lireInventaire(inventaire).map(entree => ({
@@ -304,18 +317,8 @@ export const BrainstormOverlay: React.FC = () => {
     // Un doublon passe en tête, marqué, au lieu de se fondre dans la liste : David, le 06/11/2026,
     // tape « La gestion simplifiée des adversaires… », déjà quatrième hors catégorie de COC et déjà
     // publiée — « il n'y a rien qui se passe dans la forge ». L'écran le dit maintenant.
-    const libre = customSubject.trim();
-    const slugLibre = libre ? slugFiche(libre) : '';
-    const retrouve = slugLibre ? candidats.find(c => c.id === slugLibre) : undefined;
-
-    setCandidates(
-      !slugLibre ? candidats
-        : retrouve
-          ? [{ ...retrouve, tags: [...retrouve.tags, MARQUE_SUJET_LIBRE_RETROUVE] }, ...candidats.filter(c => c !== retrouve)]
-          : [{ id: slugLibre, title: libre, category: 'rule' as const, summary: '', tags: ['hors canevas', MARQUE_SUJET_LIBRE] }, ...candidats],
-      inventaire,
-    );
-  }, [customSubject, setCandidates, supplement]);
+    setCandidates(avecLeSujetLibre(candidats, customSubject, libreDuLivreDeBase), inventaire);
+  }, [customSubject, setCandidates, supplement, libreDuSupplement]);
 
   /**
    * Reprend l'inventaire déjà enregistré, sans rien demander au carnet.
@@ -338,14 +341,14 @@ export const BrainstormOverlay: React.FC = () => {
     if (cheminDesSujets) {
       const sujets = lireLesSujets(await window.appBridge?.ai?.readDoc?.(cheminDesSujets).catch(() => null));
       if (sujets) {
-        setCandidates(candidatsDesSujets(sujets), brut ?? undefined);
+        setCandidates(avecLeSujetLibre(candidatsDesSujets(sujets), customSubject, libreDuSupplement), brut ?? undefined);
         return true;
       }
     }
     if (!brut) return false;
     construireCandidats(brut);
     return true;
-  }, [corpus, construireCandidats, cheminDesSujets, setCandidates]);
+  }, [corpus, construireCandidats, cheminDesSujets, setCandidates, customSubject, libreDuSupplement]);
 
   /**
    * Audit du parcours de l'atelier, 06/11/2026 (défaut D) : les trois gestes qui réservent le carnet
@@ -378,7 +381,7 @@ export const BrainstormOverlay: React.FC = () => {
         );
         if (gen !== generationCourante()) return;   // abandonnée entre-temps
         const candidats = candidatsDesSujets(sujetsDeLInventaire(lireInventaireDeSupplement(inventaire)));
-        setCandidates(candidats, inventaire);
+        setCandidates(avecLeSujetLibre(candidats, customSubject, libreDuSupplement), inventaire);
         await enregistrerLesSujets(candidats);
         return;
       }
@@ -394,7 +397,7 @@ export const BrainstormOverlay: React.FC = () => {
     } finally {
       libererLeCarnet(gen);
     }
-  }, [notebookId, selectedSourceIds, t, setProcessing, setError, construireCandidats, supplement, langueDuJeu, setCandidates, enregistrerLesSujets, signalerCarnetOccupe]);
+  }, [notebookId, selectedSourceIds, t, setProcessing, setError, construireCandidats, supplement, langueDuJeu, setCandidates, enregistrerLesSujets, signalerCarnetOccupe, customSubject, libreDuSupplement]);
 
   /**
    * Le sujet libre se répercute sans repayer l'inventaire.
@@ -407,13 +410,17 @@ export const BrainstormOverlay: React.FC = () => {
    */
   useEffect(() => {
     if (brainstormStore.step !== 'discovery') return;
+    // Pour un supplément, la liste est celle que David a retenue : la reconstruire depuis
+    // l'inventaire brut déferait ses renommages et ses écarts — l'essai « reprend les sujets
+    // retenus » l'a attrapé le 01/11. Le sujet libre se pose donc sur la liste en place (07/11).
+    if (supplement) {
+      const enPlace = useBrainstormStore.getState().candidates;
+      if (enPlace.length) setCandidates(avecLeSujetLibre(enPlace, brainstormStore.customSubject, libreDuSupplement));
+      return;
+    }
     if (!brainstormStore.inventaireBrut) return;
-    // Pas pour un supplément : la liste y est celle que David a retenue, et la
-    // reconstruire depuis l'inventaire brut déferait ses renommages et ses
-    // écarts — l'essai « reprend les sujets retenus » l'a attrapé le 01/11.
-    if (supplement) return;
     construireCandidats(brainstormStore.inventaireBrut);
-  }, [brainstormStore.customSubject, brainstormStore.inventaireBrut, brainstormStore.step, construireCandidats, supplement]);
+  }, [brainstormStore.customSubject, brainstormStore.inventaireBrut, brainstormStore.step, construireCandidats, supplement, setCandidates, libreDuSupplement]);
 
   useEffect(() => {
     // Hors de la liste, l'abandon est oublié : rouvrir l'atelier repart du disque.

@@ -180,6 +180,34 @@ describe('BrainstormOverlay — supplément', () => {
         await waitFor(() => expect(useBrainstormStore.getState().candidates.map(c => c.title)).toEqual(['Pistolets']));
         expect(forgeService.inventaireDeSupplement).not.toHaveBeenCalled();
     });
+
+    /*
+     * Le sujet libre pour un supplément — 07/11/2026, David : « je voudrais que l'on active le
+     * "sujet de forge libre" pour les Suppléments », le temps de le forger (non enregistré).
+     */
+    const SUJETS = JSON.stringify([{ titre: 'Pistolets', mecanique: 'renommé par David', sections: ['Pistols'] }]);
+
+    it('un sujet libre inédit passe en tête, marqué, sans toucher aux sujets retenus', async () => {
+        fichiers.set('systems/alien/supplements/colonial-marines/sujets.json', SUJETS);
+        useBrainstormStore.setState({ customSubject: 'Armes lourdes' });
+        render(<BrainstormOverlay />);
+        await waitFor(() => expect(useBrainstormStore.getState().candidates.map(c => c.title)).toEqual(['Armes lourdes', 'Pistolets']));
+        expect(useBrainstormStore.getState().candidates[0].tags).toContain('sujet libre');
+    });
+
+    it('un sujet libre déjà retenu est retrouvé, et suit la saisie', async () => {
+        fichiers.set('systems/alien/supplements/colonial-marines/sujets.json', SUJETS);
+        render(<BrainstormOverlay />);
+        await waitFor(() => expect(useBrainstormStore.getState().candidates.map(c => c.title)).toEqual(['Pistolets']));
+        act(() => useBrainstormStore.getState().setCustomSubject('pistolets'));
+        await waitFor(() => expect(useBrainstormStore.getState().candidates[0].tags).toContain('sujet libre retrouvé'));
+        expect(useBrainstormStore.getState().candidates).toHaveLength(1);
+        act(() => useBrainstormStore.getState().setCustomSubject('Explosifs'));
+        await waitFor(() => expect(useBrainstormStore.getState().candidates.map(c => c.title)).toEqual(['Explosifs', 'Pistolets']));
+        expect(useBrainstormStore.getState().candidates[1].tags).not.toContain('sujet libre retrouvé');
+        act(() => useBrainstormStore.getState().setCustomSubject(''));
+        await waitFor(() => expect(useBrainstormStore.getState().candidates.map(c => c.title)).toEqual(['Pistolets']));
+    });
 });
 
 describe('BrainstormOverlay — relecture : ce que les lecteurs liront (F1, 06/11/2026)', () => {
