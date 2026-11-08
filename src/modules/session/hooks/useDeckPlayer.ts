@@ -79,11 +79,20 @@ export const useDeckPlayer = () => {
         return DeckInterpreter.getCardImageUrl(activeDeck.folderPath, activeState.currentCardIndex, activeDeck);
     }, [activeDeck, activeState]);
 
+    /** Le verso propre à la carte tirée, face du meneur — `null` pour un dos commun. */
+    const currentVersoUrl = useMemo(() => {
+        if (!activeDeck || !activeState || activeState.currentCardIndex === null) return null;
+        return DeckInterpreter.getVersoImage(activeDeck, activeState.currentCardIndex);
+    }, [activeDeck, activeState]);
+
     const handleFlip = useCallback(() => {
         const nextFlipped = !isFlipped;
         setIsFlipped(nextFlipped);
 
         if (!isProjecting || !activeDeck || !activeState || activeState.currentCardIndex === null) return;
+        // Le verso d'une Menace porte ses statistiques : le meneur le lit seul, la
+        // projection garde le recto (08/11/2026).
+        if (DeckInterpreter.getVersoImage(activeDeck, activeState.currentCardIndex)) return;
 
         const idx = activeState.currentCardIndex;
         const cardName = DeckInterpreter.getCardMetadata(activeDeck, idx)?.name || t('modules:session.deck_module.player.projection.card_name_fallback', { idx });
@@ -231,6 +240,7 @@ export const useDeckPlayer = () => {
         drawCount,
         cardBackUrl,
         currentCardUrl,
+        currentVersoUrl,
         aspectRatio,
         isProjecting,
         

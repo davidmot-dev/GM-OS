@@ -42,6 +42,7 @@ const DeckPlayer: React.FC = () => {
         drawCount,
         cardBackUrl,
         currentCardUrl,
+        currentVersoUrl,
         aspectRatio,
         isProjecting,
         setActiveDeckId,
@@ -265,7 +266,9 @@ const DeckPlayer: React.FC = () => {
                                                 <img src={`/${currentCardUrl}`} alt={t('modules:session.deck_module.player.card_label')} className="h-full w-full object-cover" />
                                             </div>
                                             <div className="card-face card-back absolute inset-0 overflow-hidden rounded-2xl border border-app-border bg-app-bg shadow-2xl">
-                                                <img src={`/${cardBackUrl}`} alt={t('modules:session.deck_module.player.card_back')} className="h-full w-full object-cover grayscale opacity-40" />
+                                                {currentVersoUrl
+                                                    ? <img src={`/${currentVersoUrl}`} alt={t('modules:session.deck_module.player.verso_label')} className="h-full w-full object-cover" />
+                                                    : <img src={`/${cardBackUrl}`} alt={t('modules:session.deck_module.player.card_back')} className="h-full w-full object-cover grayscale opacity-40" />}
                                             </div>
                                         </div>
                                     </button>
@@ -281,7 +284,7 @@ const DeckPlayer: React.FC = () => {
                                 {activeState.currentCardIndex !== null && (
                                     <div className="text-center">
                                         <p className="font-display text-base font-bold text-app-text">{nomDeLaCarte(activeState.currentCardIndex)}</p>
-                                        <p className="text-ui-10 text-app-muted">{t('modules:session.deck_module.player.flip_card_tooltip')}</p>
+                                        <p className="text-ui-10 text-app-muted">{t(currentVersoUrl ? 'modules:session.deck_module.player.verso_hint' : 'modules:session.deck_module.player.flip_card_tooltip')}</p>
                                     </div>
                                 )}
                                 {/*

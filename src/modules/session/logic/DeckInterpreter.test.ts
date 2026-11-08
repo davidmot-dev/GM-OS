@@ -43,4 +43,22 @@ describe('DeckInterpreter', () => {
             expect(result.newRemaining).toEqual([]);
         });
     });
+
+    /** Les Menaces de Torg, rangées par `outils/torg/ranger-recto-verso.mjs` (08/11/2026). */
+    describe('le verso propre à chaque carte', () => {
+        const menaces = {
+            folderPath: 'assets/decks/torg/menaces-cyberpapaute', extension: '.jpg',
+            filenamePattern: 'recto/{n}', versoPattern: 'verso/{n}', padding: 2,
+        } as Parameters<typeof DeckInterpreter.getVersoImage>[0];
+
+        it('le recto et le verso d’une même carte suivent chacun leur motif', () => {
+            expect(DeckInterpreter.getCardImage(menaces, 5)).toBe('assets/decks/torg/menaces-cyberpapaute/recto/05.jpg');
+            expect(DeckInterpreter.getVersoImage(menaces, 5)).toBe('assets/decks/torg/menaces-cyberpapaute/verso/05.jpg');
+        });
+
+        it('un paquet à dos commun n’a pas de verso par carte', () => {
+            expect(DeckInterpreter.getVersoImage({ ...menaces, versoPattern: undefined }, 5)).toBeNull();
+            expect(DeckInterpreter.getVersoImage({ ...menaces, versoPattern: '  ' }, 5)).toBeNull();
+        });
+    });
 });

@@ -26,8 +26,12 @@ const DeckLibrary: React.FC = () => {
         isAdding,
         editingDeckId,
         filteredDecks,
-        showAllDecks,
-        setShowAllDecks,
+        groupes,
+        pilotes,
+        filtre,
+        setFiltre,
+        nomDuPilote,
+        estGenerique,
         availableSystems,
         currentSystemId,
         form,
@@ -56,6 +60,12 @@ const DeckLibrary: React.FC = () => {
     };
     /** Torg : les cosms du jeu, pour rattacher un Paquet de Cosm au sien (2026-10-14). */
     const cosmsDuJeu = (systemId: string) => getGameDriver(systemId)?.cosms ?? [];
+    /** Le pilote par son nom, plus par `custom-1774618478256` (08/11/2026). */
+    const libelleDuPilote = (systemId: string) => estGenerique(systemId)
+        ? t('modules:session.deck_module.library.groupes.generique')
+        : nomDuPilote(systemId);
+    const boutonDeFiltre = (actif: boolean) => `rounded-md px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest transition-all ${
+        actif ? 'bg-accent text-app-on-accent' : 'text-app-muted hover:text-app-text'}`;
 
     return (
         <div className="flex h-full w-full flex-col overflow-hidden bg-app-bg">
@@ -77,27 +87,12 @@ const DeckLibrary: React.FC = () => {
                         Deck-OS <span className="text-gm-gold">//</span> {t('modules:session.deck_module.library.agencement.titre')}
                     </h1>
                     <div className="mt-1.5 flex flex-wrap gap-1.5">
-                        <Etiquette ton="accent">{t('modules:session.deck_module.library.agencement.systeme_en_cours', { systeme: currentSystemId })}</Etiquette>
+                        <Etiquette ton="accent">{t('modules:session.deck_module.library.agencement.systeme_en_cours', { systeme: libelleDuPilote(currentSystemId) })}</Etiquette>
                         <Etiquette>{t('modules:session.deck_module.library.agencement.paquets', { count: filteredDecks.length })}</Etiquette>
                     </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
-                    <div className="flex rounded-lg border border-app-border bg-app-bg/40 p-1">
-                        {([true, false] as const).map(tous => (
-                            <button
-                                key={String(tous)}
-                                type="button"
-                                onClick={() => setShowAllDecks(tous)}
-                                title={tous ? t('modules:session.deck_module.library.tooltip_filter_all') : t('modules:session.deck_module.library.tooltip_filter_active')}
-                                className={`rounded-md px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest transition-all ${
-                                    showAllDecks === tous ? 'bg-accent text-app-on-accent' : 'text-app-muted hover:text-app-text'
-                                }`}
-                            >
-                                {tous ? t('modules:session.deck_module.library.filter_all') : t('modules:session.deck_module.library.agencement.systeme_actif')}
-                            </button>
-                        ))}
-                    </div>
                     <button
                         type="button"
                         onClick={() => { resetForm(); setIsAdding(true); }}
@@ -108,6 +103,30 @@ const DeckLibrary: React.FC = () => {
                     </button>
                 </div>
             </header>
+
+            {/*
+              **Filtrer par pilote** — demande de David du 2026-11-08. « Tous », le jeu de la
+              campagne (avec les génériques, la règle de la tablette), puis un bouton par pilote
+              qui a des paquets. Remplace l'ancien « Tout voir / Système actif ».
+            */}
+            <nav aria-label={t('modules:session.deck_module.library.groupes.filtrer')}
+                className="flex flex-wrap gap-1 border-b border-app-border bg-app-bg/40 px-6 py-2 shrink-0">
+                <button type="button" aria-pressed={filtre === 'tous'} onClick={() => setFiltre('tous')}
+                    title={t('modules:session.deck_module.library.tooltip_filter_all')} className={boutonDeFiltre(filtre === 'tous')}>
+                    {t('modules:session.deck_module.library.filter_all')}
+                </button>
+                <button type="button" aria-pressed={filtre === 'actif'} onClick={() => setFiltre('actif')}
+                    title={t('modules:session.deck_module.library.tooltip_filter_active')} className={boutonDeFiltre(filtre === 'actif')}>
+                    {t('modules:session.deck_module.library.agencement.systeme_actif')}
+                </button>
+                <span aria-hidden className="mx-1 w-px self-stretch bg-app-border" />
+                {pilotes.map(p => (
+                    <button key={p.systemId} type="button" aria-pressed={filtre === p.systemId} onClick={() => setFiltre(p.systemId)}
+                        className={boutonDeFiltre(filtre === p.systemId)}>
+                        {libelleDuPilote(p.systemId)} <span className="opacity-60">{p.nombre}</span>
+                    </button>
+                ))}
+            </nav>
 
             <div className="flex-1 overflow-y-auto custom-scrollbar p-5">
                 <div className="mx-auto flex max-w-5xl flex-col gap-3">
@@ -261,10 +280,21 @@ const DeckLibrary: React.FC = () => {
                                     </div>
                                 </div>
 
+                                <div className="space-y-1.5">
+                                    <label htmlFor="deck-verso-pattern" className="text-ui-9 font-black uppercase tracking-widest text-app-text/40 px-1">{t('modules:session.deck_module.editor.verso_pattern_label')}</label>
+                                    <input
+                                        id="deck-verso-pattern"
+                                        value={form.versoPattern}
+                                        onChange={e => form.setVersoPattern(e.target.value)}
+                                        className="w-full bg-app-bg/40 border border-app-text/5 rounded-xl py-2 px-4 text-ui-10 font-mono text-app-text/60 focus:border-gm-gold/40 transition-all outline-none"
+                                        placeholder={t('modules:session.deck_module.editor.verso_pattern_placeholder')}
+                                    />
+                                </div>
+
                                 <div className="flex items-center justify-between pt-2">
                                     <div className="flex items-center gap-3">
-                                        <input 
-                                            type="checkbox" 
+                                        <input
+                                            type="checkbox"
                                             checked={form.useDiscard}
                                             onChange={e => form.setUseDiscard(e.target.checked)}
                                             id="useDiscard"
@@ -301,15 +331,25 @@ const DeckLibrary: React.FC = () => {
                                 {t('modules:session.deck_module.library.empty_state')}<br/>
                                 <span className="text-ui-10">{t('modules:session.deck_module.library.empty_state_filter_hint', { systemId: currentSystemId })}</span>
                             </span>
-                            {!showAllDecks && (
-                                <button onClick={() => setShowAllDecks(true)} className="text-ui-10 font-black uppercase tracking-widest text-gm-gold hover:underline">
+                            {filtre !== 'tous' && (
+                                <button onClick={() => setFiltre('tous')} className="text-ui-10 font-black uppercase tracking-widest text-gm-gold hover:underline">
                                     {t('modules:session.deck_module.library.show_all_btn')}
                                 </button>
                             )}
                         </div>
                     )}
 
-                    {filteredDecks.map(deck => {
+                    {groupes.map(groupe => (
+                        <section key={groupe.systemId} aria-label={libelleDuPilote(groupe.systemId)} className="flex flex-col gap-3">
+                            {/* Un titre par pilote, sauf quand un seul groupe est à l'écran : il redirait le filtre. */}
+                            {groupes.length > 1 && (
+                                <h2 className="mt-2 flex items-center gap-2 px-1 font-display text-sm font-bold uppercase tracking-wider text-app-text">
+                                    {libelleDuPilote(groupe.systemId)}
+                                    <Etiquette>{t('modules:session.deck_module.library.agencement.paquets', { count: groupe.paquets.length })}</Etiquette>
+                                    {groupe.systemId === currentSystemId && <Etiquette ton="accent">{t('modules:session.deck_module.library.groupes.en_cours')}</Etiquette>}
+                                </h2>
+                            )}
+                    {groupe.paquets.map(deck => {
                         const charge = enService === deck.id;
                         return (
                             <Panneau key={deck.id} className={charge ? 'border-accent' : ''}>
@@ -319,7 +359,7 @@ const DeckLibrary: React.FC = () => {
                                     </div>
                                     <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                                         <div className="flex flex-wrap items-center gap-2">
-                                            <Etiquette ton="info">{deck.systemId}</Etiquette>
+                                            <Etiquette ton="info">{libelleDuPilote(deck.systemId)}</Etiquette>
                                             <span className="flex items-center gap-1 text-ui-10 font-bold uppercase tracking-widest text-app-muted">
                                                 {deck.orientation === 'portrait' ? <Smartphone size={11} /> : <Monitor size={11} />}
                                                 {deck.format} — {deck.orientation}
@@ -430,6 +470,8 @@ const DeckLibrary: React.FC = () => {
                             </Panneau>
                         );
                     })}
+                        </section>
+                    ))}
                 </div>
             </div>
         </div>

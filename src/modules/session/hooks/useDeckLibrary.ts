@@ -1,9 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import type { CardFormat, CardOrientation, DeckManifest } from '../store/types';
-import { paquetsDuJeu, systemeDeLaCampagne } from '../logic/paquetsDuJeu';
+import { JEU_UNIVERSEL, systemeDeLaCampagne } from '../logic/paquetsDuJeu';
+import { grouperParPilote, paquetsDuFiltre, type FiltreDesPaquets } from '../logic/groupesDePaquets';
 
 export const useDeckLibrary = () => {
     const { 
@@ -15,7 +16,8 @@ export const useDeckLibrary = () => {
 
     const [isAdding, setIsAdding] = useState(false);
     const [editingDeckId, setEditingDeckId] = useState<string | null>(null);
-    const [showAllDecks, setShowAllDecks] = useState(true);
+    /** `tous`, `actif` ou un pilote — 08/11/2026, les paquets rangés par pilote. */
+    const [filtre, setFiltre] = useState<FiltreDesPaquets>('tous');
 
     // Form State
     const [name, setName] = useState('');
@@ -29,6 +31,7 @@ export const useDeckLibrary = () => {
     const [filenamePattern, setFilenamePattern] = useState('card_{n}');
     const [startAtZero, setStartAtZero] = useState(false);
     const [padding, setPadding] = useState(0);
+    const [versoPattern, setVersoPattern] = useState('');
 
     const availableSystems = useMemo(() => {
         const systems = [
@@ -45,13 +48,31 @@ export const useDeckLibrary = () => {
         [campaigns, activeCampaignId],
     );
 
-    /* La même règle que la tablette, prise au même endroit — voir
-       `logic/paquetsDuJeu.ts`. Ici seulement, elle a un interrupteur : le meneur
-       range ses paquets, donc il lui faut pouvoir tous les voir. */
-    const filteredDecks = useMemo(() => {
-        if (showAllDecks) return decks;
-        return paquetsDuJeu(decks, currentSystemId);
-    }, [decks, currentSystemId, showAllDecks]);
+    /** Le nom d'un pilote, ou son identifiant s'il n'est plus installé. */
+    const nomDuPilote = useCallback(
+        (id: string) => availableSystems.find(s => s.id === id)?.name || id,
+        [availableSystems],
+    );
+
+    /* « actif » reste la règle de la tablette, prise au même endroit — voir
+       `logic/paquetsDuJeu.ts`. Ici seulement, le meneur peut aussi tout voir, ou un
+       seul pilote : il range ses paquets (`logic/groupesDePaquets.ts`). */
+    const filteredDecks = useMemo(
+        () => paquetsDuFiltre(decks, filtre, currentSystemId),
+        [decks, currentSystemId, filtre],
+    );
+    const groupes = useMemo(
+        () => grouperParPilote(filteredDecks, currentSystemId, nomDuPilote),
+        [filteredDecks, currentSystemId, nomDuPilote],
+    );
+    /** Un bouton par pilote qui a des paquets, avec leur nombre. */
+    const pilotes = useMemo(
+        () => grouperParPilote(decks, currentSystemId, nomDuPilote)
+            .map(g => ({ systemId: g.systemId, nombre: g.paquets.length })),
+        [decks, currentSystemId, nomDuPilote],
+    );
+    /* Un pilote dont le dernier paquet a été supprimé : la liste retombe sur tous, le bouton aussi. */
+    const filtreAffiche = filtre === 'tous' || filtre === 'actif' || pilotes.some(p => p.systemId === filtre) ? filtre : 'tous';
 
     const resetForm = () => {
         setName('');
@@ -65,6 +86,7 @@ export const useDeckLibrary = () => {
         setFilenamePattern('card_{n}');
         setStartAtZero(false);
         setPadding(0);
+        setVersoPattern('');
         setIsAdding(false);
         setEditingDeckId(null);
     };
@@ -81,6 +103,7 @@ export const useDeckLibrary = () => {
         setFilenamePattern(deck.filenamePattern ?? 'card_{n}');
         setStartAtZero(deck.startAtZero ?? false);
         setPadding(deck.padding ?? 0);
+        setVersoPattern(deck.versoPattern ?? '');
         setEditingDeckId(deck.id);
         setIsAdding(false);
     };
@@ -99,7 +122,9 @@ export const useDeckLibrary = () => {
             extension,
             filenamePattern,
             startAtZero,
-            padding
+            padding,
+            // Vide : un paquet à dos commun. `undefined` efface un motif retiré.
+            versoPattern: versoPattern.trim() || undefined,
         };
 
         if (editingDeckId) {
@@ -131,8 +156,12 @@ export const useDeckLibrary = () => {
         isAdding,
         editingDeckId,
         filteredDecks,
-        showAllDecks,
-        setShowAllDecks,
+        groupes,
+        pilotes,
+        filtre: filtreAffiche,
+        setFiltre,
+        nomDuPilote,
+        estGenerique: (id: string) => id === JEU_UNIVERSEL,
         availableSystems,
         currentSystemId,
         
@@ -148,7 +177,8 @@ export const useDeckLibrary = () => {
             extension, setExtension,
             filenamePattern, setFilenamePattern,
             startAtZero, setStartAtZero,
-            padding, setPadding
+            padding, setPadding,
+            versoPattern, setVersoPattern
         },
 
         // Actions

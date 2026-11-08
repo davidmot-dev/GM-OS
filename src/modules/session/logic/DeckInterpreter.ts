@@ -55,9 +55,9 @@ export const DeckInterpreter = {
     /**
      * Génère l'URL d'une image de carte basée sur la convention de dossier.
      */
-    getCardImageUrl: (folderPath: string, index: number, manifest: DeckManifest): string => {
+    getCardImageUrl: (folderPath: string, index: number, manifest: DeckManifest, motif?: string): string => {
         const ext = manifest.extension || '.png';
-        const pattern = manifest.filenamePattern || 'card_{n}';
+        const pattern = motif || manifest.filenamePattern || 'card_{n}';
         const padding = manifest.padding || 0;
         const indexStr = padding > 0 ? String(index).padStart(padding, '0') : String(index);
         const filename = pattern.replace('{n}', indexStr);
@@ -73,6 +73,15 @@ export const DeckInterpreter = {
      */
     getCardImage: (deck: DeckManifest, index: number): string => {
         return DeckInterpreter.getCardImageUrl(deck.folderPath, index, deck);
+    },
+
+    /**
+     * Le verso propre à une carte (`versoPattern`), ou `null` pour un paquet à dos
+     * commun. Réservé au poste du meneur : voir `DeckManifest.versoPattern`.
+     */
+    getVersoImage: (deck: DeckManifest, index: number): string | null => {
+        const motif = deck.versoPattern?.trim();
+        return motif ? DeckInterpreter.getCardImageUrl(deck.folderPath, index, deck, motif) : null;
     },
 
     /**

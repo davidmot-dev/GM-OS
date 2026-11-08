@@ -66,6 +66,18 @@ export interface DeckManifest {
     filenamePattern?: string; // Optionnel : pattern (ex: "card_{n}" ou "{n}")
     startAtZero?: boolean;  // Si vrai, l'index commence à 0 (default: false = 1)
     padding?: number;       // Optionnel : nombre de chiffres (ex: 2 pour "01")
+    /**
+     * **Le verso propre à chaque carte** — demande de David du 2026-11-08, sur les
+     * Menaces de Torg : *« des paquets de cartes où le verso ET le recto sont à
+     * chaque fois différents »*. Un motif comme `filenamePattern` (ex. `verso/{n}`),
+     * mêmes extension et remplissage.
+     *
+     * Ce verso est **la face du meneur** (les statistiques d'une Menace), pas un
+     * dos qui cache la carte : il ne s'affiche qu'au poste du meneur, quand il
+     * retourne la carte tirée. Projection et tablettes ne montrent que le recto ;
+     * `back` reste le dos commun d'une carte scellée. Absent : un paquet comme hier.
+     */
+    versoPattern?: string;
     cardMetadata?: Record<number, MetadonneesDeCarte>; // Optionnel : métadonnées par index
     /**
      * **Ce que le paquet est pour son jeu** — Torg, 2026-10-13. Le **Paquet
