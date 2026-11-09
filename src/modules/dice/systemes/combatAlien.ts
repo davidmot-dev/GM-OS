@@ -2,6 +2,7 @@ import type { CompetenceAlien, EquipementAlien, ReglagesDuJetAlien } from './jet
 import type { TableEntry } from '../../tables/types';
 import type { SynthetiqueAlien } from './synthetiquesAlien';
 import type { RegleDeSurvieAlien } from './survieAlien';
+import { estUnAndroide } from './paniqueAlien';
 
 export interface RegleDeCombatAlien {
     actions?: boolean;
@@ -32,6 +33,24 @@ export const combatAlienVierge = (): CombatAlien => ({ version: 1, temps: { roun
 export function lireLeCombatAlien(fiche: Record<string, unknown>): CombatAlien {
     const v = fiche[CLE_COMBAT_ALIEN] as CombatAlien | undefined;
     return v?.version === 1 && Array.isArray(v.blessures) ? v : combatAlienVierge();
+}
+/**
+ * **Un PNJ d'Alien suit-il la Santé de sa fiche ?** — 09/11/2026, David : « dans alien comment
+ * aligner les points de vie et la santé ? ». La console du Dr Webb disait 10/10 quand sa fiche
+ * disait Santé 2 (= sa Force) : un PNJ ne suivait sa Santé qu'une fois « déclaré humain », et ce
+ * bouton n'existait que sur sa carte du Combat-OS. Décision de David : **humain par défaut** dès
+ * que la fiche porte une Santé chiffrée ; « synthétique » et « xénomorphe » restent à déclarer.
+ * Les créatures du bestiaire entrent déjà déclarées xénomorphes.
+ */
+export function santeHumaineParDefaut(regle: { sante: string; androide?: string }, fiche: Record<string, unknown>): boolean {
+    const suivi = lireLeCombatAlien(fiche), v = fiche[regle.sante];
+    return !suivi.humain && !suivi.xenomorphe && !estUnAndroide(regle, fiche)
+        && v !== undefined && v !== null && String(v).trim() !== '' && Number.isFinite(Number(v));
+}
+/** Humain (déclaré ou par défaut), synthétique ou xénomorphe : la Santé de la fiche fait foi. */
+export function suitLaSanteAlien(regle: { sante: string; androide?: string }, fiche: Record<string, unknown>): boolean {
+    const suivi = lireLeCombatAlien(fiche);
+    return !!suivi.xenomorphe || !!suivi.humain || estUnAndroide(regle, fiche) || santeHumaineParDefaut(regle, fiche);
 }
 export function demanderUnCritique(suivi: CombatAlien, id: string): CombatAlien {
     if (suivi.mort || suivi.critiques.includes(id) || suivi.blessureTraitee.includes(id)) return suivi;

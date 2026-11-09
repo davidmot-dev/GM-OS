@@ -3,6 +3,8 @@ import { HealthInterpreter } from './HealthInterpreter';
 import { champDeSantePrincipale, santeAlignee, santePrincipaleDeLaFiche } from '../../combat/logic/SanteDuCombattant';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { GameDriver } from '../../../types/drivers';
+import { santePrincipaleDuPnj } from './santePrincipale';
+import { CLE_COMBAT_ALIEN, combatAlienVierge } from '../../dice/systemes/combatAlien';
 
 /**
  * **Les points de vie d'un PJ suivent sa fiche** — 2026-10-16.
@@ -89,3 +91,17 @@ describe('un coup porté écrit la santé de la fiche', () => {
     });
 });
 
+/** 09/11/2026 — la carte et la console d'un PNJ d'Alien : Webb, Santé 2 et Force 2, montrait 10/10. */
+describe('la santé principale d’un PNJ', () => {
+    const ALIEN = { combat: { defaultHealthType: 'hp', statsToTrack: [{ fieldId: 'sante', isMainHP: true, max: 'force' }],
+        alien: { sante: 'sante', force: 'force', endurance: 'e', protection: 'p', talents: 't', proprietesArmes: 'a', stress: 's', androide: 'androide' } } } as unknown as GameDriver;
+    it('un PNJ d’Alien lit sa Santé, plafonnée à sa Force', () => {
+        expect(santePrincipaleDuPnj({ sheetData: { sante: 2, force: 2 } }, ALIEN)).toEqual({ champ: 'sante', courant: 2, max: 2 });
+        expect(santePrincipaleDuPnj({ sheetData: { sante: 3, force: 5, androide: true } }, ALIEN)).toMatchObject({ courant: 3, max: 5 });
+    });
+    it('rien pour un PNJ sans Santé, un xénomorphe ou un autre jeu', () => {
+        expect(santePrincipaleDuPnj({ sheetData: { force: 2 } }, ALIEN)).toBeNull();
+        expect(santePrincipaleDuPnj({ sheetData: { sante: 4, [CLE_COMBAT_ALIEN]: { ...combatAlienVierge(), xenomorphe: {} } } }, ALIEN)).toBeNull();
+        expect(santePrincipaleDuPnj({ sheetData: { sante: 5, santeMax: 8 } }, BR as unknown as GameDriver)).toBeNull();
+    });
+});

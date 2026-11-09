@@ -31,7 +31,7 @@ import { santePrincipaleDuPersonnage } from '../logic/santePrincipale';
 import { CLE_PANIQUE_ALIEN, arreterLaPaniqueAlien, changerLeStressAlien } from '../../dice/systemes/paniqueAlien';
 import { CLE_JET_ALIEN } from '../../dice/systemes/jetsAlien';
 import { CLE_CTHULHU_HACK, lireCH, signalerImpactCH, usureArmureCH } from '../../dice/systemes/cthulhuHack';
-import { CLE_COMBAT_ALIEN, demanderUnCritique, lireLeCombatAlien } from '../../dice/systemes/combatAlien';
+import { CLE_COMBAT_ALIEN, demanderUnCritique, lireLeCombatAlien, santeHumaineParDefaut, suitLaSanteAlien } from '../../dice/systemes/combatAlien';
 import { estUnAndroide } from '../../dice/systemes/paniqueAlien';
 import { immuniteSynthetique, projeterLaSanteSynthetique } from '../../dice/systemes/synthetiquesAlien';
 import { apresImpactXeno, projeterSanteXeno } from '../../dice/systemes/xenomorphesAlien';
@@ -103,10 +103,19 @@ export function syncHealthSystem(currentHp: number | undefined, maxHp: number | 
 
 /** Une édition administrative de la jauge xéno doit aussi suivre sa fiche, sans inventer un coup. */
 function alignerJaugeXeno(e:Entity,etat:unknown):Entity {
-    const suivi=lireLeCombatAlien(e.sheetData??{});if(!suivi.xenomorphe)return e;
+    const suivi=lireLeCombatAlien(e.sheetData??{});
     const s=etat as {campaigns?:Campaign[];customGameDrivers?:GameDriver[];activeCampaignId?:string|null};
-    const r=piloteDuPersonnage(e,s.campaigns??[],s.customGameDrivers??[],s.activeCampaignId)?.combat.alien;
+    const pilote=piloteDuPersonnage(e,s.campaigns??[],s.customGameDrivers??[],s.activeCampaignId);
+    const r=pilote?.combat.alien;
     if(!r)return e;
+    /* Un PNJ humain ou synthétique d'Alien (09/11/2026) : la barre réglée à la main écrit la Santé
+       de la fiche, et le maximum reste la Force — la console relit la fiche à chaque rendu. */
+    if(!suivi.xenomorphe){
+        if(!suitLaSanteAlien(r,e.sheetData??{}))return e;
+        const fiche={...e.sheetData,[r.sante]:e.hp};
+        const principale=santePrincipaleDeLaFiche(pilote,fiche);
+        return principale?{...e,sheetData:fiche,maxHp:principale.max,status:suivi.mort?'dead':e.hp>0?'alive':'injured',healthSystem:santeAlignee(e.healthSystem,principale)??e.healthSystem}:e;
+    }
     const sheetData={...e.sheetData,[r.sante]:e.hp};
     return {...e,sheetData,maxHp:suivi.xenomorphe.maximum,status:suivi.mort?'dead':e.hp>0?'alive':'injured',
         healthSystem:projeterSanteXeno(r,sheetData,suivi,syncHealthSystem(e.hp,suivi.xenomorphe.maximum,e.healthSystem))};
@@ -976,7 +985,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             if (regle) gmToast(`${entity.name} — ${regle.texte}`, 'info');
 
             const xeno=piloteOuvert?.combat.alien?lireLeCombatAlien(entity.sheetData??{}).xenomorphe:undefined;
-            const humainAlien = !!piloteOuvert?.combat.alien && (!!xeno || lireLeCombatAlien(entity.sheetData ?? {}).humain || estUnAndroide(piloteOuvert.combat.alien, entity.sheetData ?? {}));
+            const humainAlien = !!piloteOuvert?.combat.alien && suitLaSanteAlien(piloteOuvert.combat.alien, entity.sheetData ?? {});
+            // Humain par défaut (09/11/2026) : le premier coup l'inscrit, pour qu'un PNJ Brisé à 0 reste suivi.
+            const humainParDefaut = !!piloteOuvert?.combat.alien && santeHumaineParDefaut(piloteOuvert.combat.alien, entity.sheetData ?? {});
             const baseHealth = humainAlien ? santeAlignee(entity.healthSystem || HealthInterpreter.createDefault('hp'),santePrincipaleDeLaFiche(piloteOuvert,xeno?.etat==='ruse'?{...entity.sheetData,[piloteOuvert!.combat.alien!.sante]:1}:entity.sheetData)) ?? HealthInterpreter.createDefault('hp') : casesAligneesSurLaFiche(entity.healthSystem, piloteOuvert?.combat, entity.sheetData) || HealthInterpreter.createDefault('hp');
             const updatedHealth = HealthInterpreter.calculateNextState(baseHealth, impact);
             const newHp = (updatedHealth.data.current as number) ?? entity.hp;
@@ -985,7 +996,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             get().updateEntityHP(targetId, newHp);
             if (humainAlien && piloteOuvert?.combat.alien) {
                 const f = get().entities.find(e => e.id === targetId)?.sheetData ?? {};
-                const suivi = lireLeCombatAlien(f), a = piloteOuvert.combat.alien;
+                const lu = lireLeCombatAlien(f), suivi = humainParDefaut ? { ...lu, humain: true } : lu, a = piloteOuvert.combat.alien;
                 const nouveau = xeno ? apresImpactXeno(suivi,newHp,impact.isRecovery?0:impact.value,impact.type??'ordinaire',`alien-xeno-${crypto.randomUUID()}`) : !impact.isRecovery && impact.value > 0 && newHp === 0 && (!impact.procedureAlien||estUnAndroide(a,f))
                     ? demanderUnCritique(suivi,`alien-pnj-${crypto.randomUUID()}`) : suivi;
                 get().updateEntity(targetId,{sheetData:{...f,[a.sante]:newHp,[CLE_COMBAT_ALIEN]:nouveau},status:nouveau.mort?'dead':newHp<=0?'injured':'alive'});

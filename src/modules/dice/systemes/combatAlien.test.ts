@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ajouterUneBlessure, avancerLeTempsAlien, combatAlienVierge, demanderUnCritique, desDeProtection, malusDesBlessures, preparerLeTir, rechargerUneArme, resoudreLeTrepas, soignerUneBlessure, trepasDu } from './combatAlien';
+import { CLE_COMBAT_ALIEN, ajouterUneBlessure, avancerLeTempsAlien, combatAlienVierge, santeHumaineParDefaut, suitLaSanteAlien, demanderUnCritique, desDeProtection, malusDesBlessures, preparerLeTir, rechargerUneArme, resoudreLeTrepas, soignerUneBlessure, trepasDu } from './combatAlien';
 import { REGLAGES_ALIEN, ajouterUneCibleSecondaire, budgetDesEclats, depenserUnEclat, type JetAlien } from './jetsAlien';
 import { DiceEngine } from '../DiceEngine';
 const arme = { id:'0', nom:'Fusil', bonus:1, degats:2, portee:'Longue', proprietes:{ automatique:true,munitions:true,unique:false,armure:'perce-armure' as const } };
@@ -60,5 +60,25 @@ describe('Alien A3 — livre français p. 61,94–101,118', () => {
         expect(s.blessures[0].jours).toBe(0.5);
         s = avancerLeTempsAlien(s,'jour'); expect(s.blessures[0].guerie).toBe(false);
         expect(trepasDu(s,s.blessures[0])).toBe(true);
+    });
+});
+
+/** 09/11/2026 : un PNJ d'Alien est humain par défaut dès que sa fiche porte une Santé chiffrée. */
+describe('Alien — PNJ humain par défaut', () => {
+    const regle = { sante: 'sante', androide: 'androide' };
+    it('une Santé chiffrée suffit, zéro compris ; une Santé absente ou vide non', () => {
+        expect(santeHumaineParDefaut(regle, { sante: 2 })).toBe(true);
+        expect(santeHumaineParDefaut(regle, { sante: '0' })).toBe(true);
+        expect(santeHumaineParDefaut(regle, {})).toBe(false);
+        expect(santeHumaineParDefaut(regle, { sante: '' })).toBe(false);
+    });
+    it('le synthétique, le xénomorphe et l’humain déclaré ne le sont pas « par défaut », mais suivent leur Santé', () => {
+        const xeno = { sante: 3, [CLE_COMBAT_ALIEN]: { ...combatAlienVierge(), xenomorphe: {} } };
+        const declare = { sante: 3, [CLE_COMBAT_ALIEN]: { ...combatAlienVierge(), humain: true } };
+        for (const fiche of [{ sante: 3, androide: true }, xeno, declare]) {
+            expect(santeHumaineParDefaut(regle, fiche)).toBe(false);
+            expect(suitLaSanteAlien(regle, fiche)).toBe(true);
+        }
+        expect(suitLaSanteAlien(regle, {})).toBe(false);
     });
 });

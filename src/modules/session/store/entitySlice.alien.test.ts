@@ -125,6 +125,36 @@ describe('A3 : critiques au raccord réel de Santé', () => {
         expect(estHorsDeCombat(s.getState().players[0].characters[0])).toBe(true);
         expect(decrireLaSante(s.getState().players[0].characters[0])).toContain('Arrêt du système');
     });
+    /* 09/11/2026, David : « dans alien comment aligner les points de vie et la santé ? » — le Dr Webb,
+       Santé 2 et Force 2 sur sa fiche, montrait 10/10 dans sa console. Humain par défaut. */
+    const pnjFictif = (sheetData: Record<string, unknown>): Entity => ({id:'pnj',name:'Dr fictif',hp:10,maxHp:10,status:'alive',type:'npc',role:'neutral',avatar:'',ac:0,speed:0,initiative:0,
+        description:'',roleplayingNotes:'',gmSecretInfo:'',linkedMapIds:[],campaignId:'c',sheetData} as Entity);
+    it('un PNJ dont la fiche porte une Santé est humain par défaut : le coup part de sa Santé, plafonnée à sa Force', () => {
+        const s = magasin(false,true);
+        s.setState({ entities:[pnjFictif({sante:2,force:2})] });
+        s.getState().handleApplyImpact('pnj','npc',{value:1});
+        const e = s.getState().entities[0];
+        expect(e.hp).toBe(1); expect(e.maxHp).toBe(2); expect(e.sheetData?.sante).toBe(1);
+        // Inscrit humain au premier coup : Brisé à zéro, il reste suivi.
+        expect(lireLeCombatAlien(e.sheetData!).humain).toBe(true);
+        s.getState().handleApplyImpact('pnj','npc',{value:1});
+        expect(lireLeCombatAlien(s.getState().entities[0].sheetData!).critiques).toHaveLength(1);
+    });
+    it('la barre réglée à la main écrit la Santé de la fiche d’un PNJ humain, le maximum reste sa Force', () => {
+        const s = magasin(false,true);
+        s.setState({ entities:[pnjFictif({sante:2,force:3})] });
+        s.getState().updateEntityHP('pnj', 1);
+        const e = s.getState().entities[0];
+        expect(e.sheetData?.sante).toBe(1); expect(e.maxHp).toBe(3);
+        expect(e.healthSystem?.data).toMatchObject({ current: 1, max: 3 });
+    });
+    it('un PNJ sans Santé sur sa fiche garde ses points de vie et la déclaration à faire', () => {
+        const s = magasin(false,true);
+        s.setState({ entities:[pnjFictif({force:2})] });
+        s.getState().handleApplyImpact('pnj','npc',{value:3});
+        const e = s.getState().entities[0];
+        expect(e.hp).toBe(7); expect(e.sheetData?.[CLE_COMBAT_ALIEN]).toBeUndefined();
+    });
     it('A4 : le PNJ synthétique utilise sa Santé, sans déclaration humaine ni mort automatique', () => {
         const s = magasin(false,true);
         s.setState({entities:[{id:'pnj',name:'Synthétique fictif',hp:8,maxHp:8,status:'alive',type:'npc',role:'neutral',avatar:'',ac:0,speed:0,initiative:0,

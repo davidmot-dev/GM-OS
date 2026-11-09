@@ -1,6 +1,7 @@
 import { resolveSheetTemplate } from './templateResolver';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { champDeSantePrincipale, santePrincipaleDeLaFiche } from '../../combat/logic/SanteDuCombattant';
+import { lireLeCombatAlien, suitLaSanteAlien } from '../../dice/systemes/combatAlien';
 import type { Campaign, PlayerCharacter } from '../store/types';
 import type { GameDriver } from '../../../types/drivers';
 
@@ -24,4 +25,20 @@ export function santePrincipaleDuPersonnage(
     const gabarit = resolveSheetTemplate(personnage, campagnes, [...DEFAULT_SHEET_TEMPLATES, ...fichesPersonnalisees]);
     const defaut = Number(gabarit?.sections.flatMap(s => s.fields).find(f => f.id === champ)?.defaultValue);
     return santePrincipaleDeLaFiche(pilote, personnage.sheetData, Number.isFinite(defaut) && defaut > 0 ? defaut : undefined);
+}
+
+/**
+ * **La santé principale d'un PNJ, lue sur sa fiche** — 09/11/2026. Seul Alien la fait suivre à un
+ * PNJ : humain (déclaré ou par défaut) ou synthétique, sa Santé plafonnée à sa Force. Le
+ * xénomorphe garde sa projection (`alignerJaugeXeno`, qui connaît la ruse). Deux lecteurs : la
+ * console de dommage (`HealthManager`) et la carte de la galerie (`NpcGallery`) — David : « Webb
+ * 10/10 qui est faux ».
+ */
+export function santePrincipaleDuPnj(
+    entite: { sheetData?: Record<string, unknown> } | undefined,
+    pilote: GameDriver | null | undefined,
+): { champ: string; courant: number; max: number } | null {
+    const alien = pilote?.combat?.alien, fiche = entite?.sheetData ?? {};
+    if (!entite || !alien || lireLeCombatAlien(fiche).xenomorphe || !suitLaSanteAlien(alien, fiche)) return null;
+    return santePrincipaleDeLaFiche(pilote, fiche);
 }

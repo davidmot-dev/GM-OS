@@ -570,9 +570,14 @@ dégâts préparés. Maman ouvre le suivi de santé de chaque victime pour appli
 ### Résoudre la protection et les dégâts
 
 Au poste MJ, **Blessures et soins Alien** est disponible sur la fiche et sur la carte de
-combat. Pour un PNJ, confirmer explicitement qu'il est humain pour activer ce suivi ;
-les monstres ne deviennent pas humains par défaut. **Déclarer ce PNJ synthétique**
-coche la case Androïde et active directement le suivi A4 décrit plus bas.
+combat. Un PNJ dont la fiche porte une **Santé** est **suivi comme humain par défaut**
+(depuis le 09/11/2026) : sa console de dommage et sa carte dans la galerie des PNJ lisent
+sa Santé, plafonnée à sa Force, et
+chaque coup la réécrit sur sa fiche. Le panneau le dit (« Suivi comme humain ») et garde
+à côté **Déclarer ce PNJ synthétique** et **Déclarer cette créature xénomorphe**. Un PNJ
+sans Santé sur sa fiche demande toujours la déclaration ; les créatures du bestiaire
+entrent déjà déclarées xénomorphes. **Déclarer ce PNJ synthétique** coche la case
+Androïde et active directement le suivi A4 décrit plus bas.
 
 Saisir les **Dégâts entrants**, l'éventuel abri déjà occupé et la propriété de l'attaque,
 puis **Préparer ce coup**. L'abri s'ajoute seulement à distance. Décocher **Dégâts d'une

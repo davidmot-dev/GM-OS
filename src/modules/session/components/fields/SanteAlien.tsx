@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { DiceEngine, type RollResult } from '../../../dice/DiceEngine';
-import { CLE_COMBAT_ALIEN, ajouterUneBlessure, avancerLeTempsAlien, demanderUnCritique, desDeProtection, lireLeCombatAlien, malusDesBlessures, resoudreLeTrepas, soignerUneBlessure, trepasDu,
+import { CLE_COMBAT_ALIEN, santeHumaineParDefaut, ajouterUneBlessure, avancerLeTempsAlien, demanderUnCritique, desDeProtection, lireLeCombatAlien, malusDesBlessures, resoudreLeTrepas, soignerUneBlessure, trepasDu,
     type ArmureAlien, type CombatAlien, type RegleDeCombatAlien, type UniteAlien } from '../../../dice/systemes/combatAlien';
 import { entreeDeLaTable } from '../../../dice/systemes/yearZero';
 import { pontDesTables } from '../../../tables/pontDesTables';
@@ -87,9 +87,17 @@ export default function SanteAlien({ regle, valeurs, ecrire, personnageId, campa
         const s = lireLeCombatAlien(actuel()), nouveau = soignerUneBlessure(s, id, mode, reussites, soignant.trim(), materiel);
         noter(nouveau); dire(`Soins ${mode} : ${reussites} réussite(s) validée(s), soignant ${soignant}.`);
     };
-    if (pnj && !suivi.humain && !androide && !suivi.xenomorphe) return <section data-sante-alien className="p-2 text-xs"><button type="button" className={bouton} onClick={() => noter({ ...suivi, humain:true })}>Déclarer ce PNJ humain pour le suivi des blessures</button><button type="button" className={bouton} onClick={() => noter(suivi, { [regle.androide]: true })}>Déclarer ce PNJ synthétique</button>{regle.actions&&<button type="button" className={bouton} onClick={()=>noter({...suivi,xenomorphe:{...xenoViergeAlien(),maximum:Math.max(1,Number(valeurs[regle.force])||sante),protection:Math.max(0,Number(valeurs[regle.protection])||0)}})}>Déclarer cette créature xénomorphe</button>}</section>;
+    /* Humain par défaut dès que sa fiche porte une Santé (09/11/2026, `santeHumaineParDefaut`) : on
+       lit la fiche du magasin, pas les valeurs de la carte de combat, qui comblent la Santé absente
+       par les PV du combattant. Synthétique et xénomorphe restent à déclarer. */
+    const ficheDuPnj = sourceEntityId ? useSessionOSStore.getState().entities?.find(e => e.id === sourceEntityId)?.sheetData ?? {} : {};
+    const declarerSynthetique = <button type="button" className={bouton} onClick={() => noter(suivi, { [regle.androide]: true })}>Déclarer ce PNJ synthétique</button>;
+    const declarerXeno = regle.actions&&<button type="button" className={bouton} onClick={()=>noter({...suivi,xenomorphe:{...xenoViergeAlien(),maximum:Math.max(1,Number(valeurs[regle.force])||sante),protection:Math.max(0,Number(valeurs[regle.protection])||0)}})}>Déclarer cette créature xénomorphe</button>;
+    const humainParDefaut = pnj && santeHumaineParDefaut(regle, ficheDuPnj);
+    if (pnj && !humainParDefaut && !suivi.humain && !androide && !suivi.xenomorphe) return <section data-sante-alien className="p-2 text-xs"><button type="button" className={bouton} onClick={() => noter({ ...suivi, humain:true })}>Déclarer ce PNJ humain pour le suivi des blessures</button>{declarerSynthetique}{declarerXeno}</section>;
     return <section data-sante-alien className="space-y-2 rounded-lg border border-app-border p-3 text-xs text-app-text">
         <h4 className="font-bold">Blessures et soins Alien</h4>
+        {humainParDefaut && !pourLesJoueurs && <p data-humain-par-defaut className="flex flex-wrap items-center gap-1 text-app-text/70">Suivi comme humain (sa fiche porte une Santé). {declarerSynthetique}{declarerXeno}</p>}
         <p>{suivi.xenomorphe?`Santé xénomorphe : ${sante}/${suivi.xenomorphe.maximum} ; ${suivi.xenomorphe.etat}. Aucun Brisé humain.`:androide ? `Santé synthétique : ${sante}. ${systemeArrete(suivi) ? 'Système arrêté.' : 'Actions selon les avaries.'}` : suivi.mort ? 'Mort : aucun test ni récupération.' : sante <= 0 ? 'Brisé : aucun test de compétence ordinaire ; ramper et grogner seulement.' : `Santé : ${sante}. Les blessures critiques persistent après récupération.`}</p>
         {!pourLesJoueurs && !suivi.mort && <>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

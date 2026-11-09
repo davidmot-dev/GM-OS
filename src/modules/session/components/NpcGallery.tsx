@@ -5,7 +5,8 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import type { Entity } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { combattantDeLEntite } from '../../combat/logic/invocationDeRencontre';
-import { abregerLaSante, decrireLaSante, fractionDeVie } from '../../combat/logic/SanteDuCombattant';
+import { abregerLaSante, decrireLaSante, fractionDeVie, santeAlignee } from '../../combat/logic/SanteDuCombattant';
+import { santePrincipaleDuPnj } from '../logic/santePrincipale';
 import { gmToast } from '../../../stores/useToastStore';
 import { useImageStore } from '../../image/useImageStore';
 import { 
@@ -280,6 +281,26 @@ const NpcGalleryItem: React.FC<{
     regime: import('../logic/regimeDInterface').RegimeDInterface,
     t: TFunction
 }> = ({ npc, isSelected, isPinned, onSelect, onTogglePin, onGenerateImage, onPickImage, onDelete, regime, t }) => {
+    /*
+      **La carte lit la santé que lit la console** — 09/11/2026, David : « pourquoi il y a des PNJ
+      avec Vitalité (10/10) pour Webb qui est faux, ou Hobbs qui n'a pas de vitalité ». Les deux
+      montraient le 10/10 par défaut : Webb par ses `hp`/`maxHp` de naissance (une barre), Hobbs
+      par sa seule santé par défaut, sans `hp` (une ligne de texte). Un PNJ d'Alien suivi lit sa
+      Santé et sa Force sur la fiche (`santePrincipaleDuPnj`) ; une santé en points de vie chiffrée
+      donne la même barre, qu'elle vienne des champs `hp` ou du modèle de santé.
+    */
+    const pilote = useSessionOSStore(s => {
+        const campagne = s.campaigns.find(c => c.id === (npc.campaignId || s.activeCampaignId));
+        return campagne ? s.getGameDriver(campagne.system) : null;
+    });
+    const principale = santePrincipaleDuPnj(npc, pilote);
+    const sys = npc.healthSystem;
+    const porteur: Entity = principale
+        ? { ...npc, hp: principale.courant, maxHp: principale.max, healthSystem: santeAlignee(sys, principale) }
+        : typeof npc.hp !== 'number' && sys?.type === 'hp' && typeof sys.data.current === 'number' && typeof sys.data.max === 'number'
+            ? { ...npc, hp: sys.data.current, maxHp: sys.data.max }
+            : npc;
+    const fraction = fractionDeVie(porteur);
 
     return (
         <motion.div
@@ -456,22 +477,22 @@ const NpcGalleryItem: React.FC<{
                         pour la grille des personnages joueurs — sans jauge, on
                         montre ce que le système décrit.
                     */}
-                    {fractionDeVie(npc) === null ? (
+                    {fraction === null ? (
                         <div className="flex items-center gap-1.5 text-ui-10 font-black text-app-subtle tracking-widest uppercase">
                             <Activity size={11} className="text-etat-danger/60" />
-                            <span>{abregerLaSante(npc) ?? decrireLaSante(npc) ?? 'santé non chiffrée'}</span>
+                            <span>{abregerLaSante(porteur) ?? decrireLaSante(porteur) ?? 'santé non chiffrée'}</span>
                         </div>
                     ) : (<div className="flex flex-col gap-1.5">
                     <div className="flex justify-between items-baseline text-ui-10 font-black text-app-subtle tracking-widest uppercase">
-                        <span>{t('modules:session.npc_gallery.hp_label')}</span>
-                        <span className={`font-display text-sm ${fractionDeVie(npc)! < 0.3 ? 'text-etat-danger' : 'text-accent'}`}>{npc.hp} / {npc.maxHp} HP</span>
+                        <span>{principale ? 'Santé' : t('modules:session.npc_gallery.hp_label')}</span>
+                        <span className={`font-display text-sm ${fraction < 0.3 ? 'text-etat-danger' : 'text-accent'}`}>{porteur.hp} / {porteur.maxHp}{principale ? '' : ' HP'}</span>
                     </div>
                     <div className="w-full h-1.5 bg-app-bg rounded-full overflow-hidden">
                         <div
                             className={`h-full transition-all duration-500 ${
-                                fractionDeVie(npc)! < 0.3 ? 'bg-etat-danger' : 'bg-accent'
+                                fraction < 0.3 ? 'bg-etat-danger' : 'bg-accent'
                             }`}
-                            style={{ width: `${fractionDeVie(npc)! * 100}%` }}
+                            style={{ width: `${fraction * 100}%` }}
                         />
                     </div>
                     </div>)}
