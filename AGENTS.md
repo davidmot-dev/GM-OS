@@ -38,7 +38,10 @@ cas de doute, demande à David avant d'agir.**
 
 > 📋 **Les procédures qui reviennent sont des listes à cocher** dans `.claude/skills/` (Claude Code
 > les charge seul ; un autre agent les lit comme des fichiers) : `finir-un-pilote`,
-> `relire-un-corpus`, `campagne-de-recette`, `clore-la-session`. Elles renvoient aux documents
+> `relire-un-corpus`, `campagne-de-recette`, `clore-la-session`, `auditer-un-parcours` (06/11),
+> `specifier-un-chantier` (08/11 : spécifier → clarifier → planifier → découper → analyser
+> avant de coder, idée de GitHub Spec Kit sans l'outil ni ses branches) et `mes-skills` (08/11 :
+> la liste commentée de ces skills, lue dans les fichiers). Elles renvoient aux documents
 > ci-dessus, qui font foi en cas d'écart. Posées le 28/10/2026 à la demande de David.
 
 ## Ce qui est interdit, et pourquoi
