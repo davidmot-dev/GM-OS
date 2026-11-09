@@ -239,7 +239,7 @@ export const JourneeArgyropee: React.FC<{
                     </button>
                 ) : (
                     <>
-                        <button type="button" className={`${bouton} border-red-500/60`} onClick={() => { setConfirmer(false); exuberance(); }}>
+                        <button type="button" className={`${bouton} border-etat-danger/60`} onClick={() => { setConfirmer(false); exuberance(); }}>
                             Sacrifier {panache} points
                         </button>
                         <button type="button" className={bouton} onClick={() => setConfirmer(false)}>Annuler</button>

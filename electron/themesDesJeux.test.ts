@@ -114,9 +114,27 @@ describe('les thèmes de jeu du dépôt', () => {
  * ça redemanderait d'éditer du code. *On ne répare pas une liste close en
  * l'allongeant.*
  */
+/*
+  Les polices courantes de Windows n'ont rien à télécharger. Le cahier des charges
+  (§ 3.6 et la ligne des piles de polices) admet un thème qui s'en tient à elles :
+  Argyropée (2026-11-09) ne demande que Georgia et Courier New. Décision de David :
+  l'essai l'accepte, le thème reste tel que RPG Theme Builder l'a livré.
+*/
+const POLICES_SYSTEME = ['Arial', 'Helvetica', 'Georgia', 'Times', 'Courier', 'Verdana'];
+
+/** Les familles nommées en tête des jetons de police, hors piles génériques et polices système. */
+function famillesATelecharger(css: string): string[] {
+    const { jetons } = extraireJetons(css);
+    return ['font-display', 'font-body', 'font-ui', 'font-mono']
+        .map(jeton => premiereFamille(jetons[jeton]))
+        .filter((f): f is string => !!f && /[A-Z]/.test(f) && !POLICES_SYSTEME.some(g => f.startsWith(g)));
+}
+
 describe('les polices des thèmes', () => {
     it.each(AVEC_THEME)('%s apporte au moins une feuille de police', (jeu) => {
-        expect(extraireImportsDePolice(lire(jeu)).length).toBeGreaterThan(0);
+        const css = lire(jeu);
+        if (famillesATelecharger(css).length === 0) return;
+        expect(extraireImportsDePolice(css).length).toBeGreaterThan(0);
     });
 
     it.each(AVEC_THEME)('%s importe bien la famille qu’il déclare', (jeu) => {
