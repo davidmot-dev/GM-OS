@@ -1,0 +1,152 @@
+[
+  {
+    "titre": "Adaptations des carrières et nouveaux talents d'explorateurs *(Your Career & New Talents)*",
+    "mecanique": "Adapte les carrières du livre de base en leur ajoutant deux talents et des options d'équipement, et introduit deux nouvelles carrières de la Frontière (Prospecteur et Artiste) disposant chacune de leurs talents d'archétype et de leurs talents généraux.",
+    "sections": [
+      "YOUR CAREER",
+      "NEW TALENTS",
+      "WILDCATTER",
+      "ENTERTAINER",
+      "GENERAL TALENTS"
+    ]
+  },
+  {
+    "titre": "Motivations personnelles de la Frontière *(Personal Agendas on the Frontier)*",
+    "mecanique": "Propose une table aléatoire de Motivations personnelles à trente-six entrées tirées au D66 pour guider l'interprétation et l'attribution de Points de Récit.",
+    "sections": [
+      "PERSONAL AGENDAS ON THE FRONTIER",
+      "YOUR PERSONAL AGENDA"
+    ]
+  },
+  {
+    "titre": "Armes à feu et munitions *(Weapons & Ammunition)*",
+    "mecanique": "Liste six armes chiffrées (pistolets, fusils, armes lourdes) et deux types de munitions particulières définis par leurs modificateurs de touche, dégâts, portée, poids, coût et effets spéciaux.",
+    "sections": [
+      "WEAPONS",
+      "PISTOLS",
+      "RIFLES",
+      "HEAVY WEAPONS",
+      "AMMUNITION AND EXPLOSIVES"
+    ]
+  },
+  {
+    "titre": "Tenues de protection et équipements de survie *(Suits, Armor & Protective Gear)*",
+    "mecanique": "Décrit neuf tenues et équipements de protection chiffrés (combinaisons Hazmat, combinaisons spatiales, vestes Kevlar, abri YAWS3, capsule EL7) avec leurs valeurs de Protection, Réserve d'Air, poids, coût et modificateurs d'attributs.",
+    "sections": [
+      "SUITS AND ARMOR",
+      "FATIGUES",
+      "PROTECTIVE GEAR",
+      "OTHER EQUIPMENT"
+    ]
+  },
+  {
+    "titre": "Véhicules terrestres et aériens *(Vehicles)*",
+    "mecanique": "Fournit les caractéristiques de neuf véhicules civils et d'exploration (tracteurs tout-terrain, helijets, navettes de maintenance) avec vitesse maximale, longueur, armure et capacité d'équipage.",
+    "sections": [
+      "VEHICLES"
+    ]
+  },
+  {
+    "titre": "Vaisseaux spatiaux d'exploration *(Spacecraft)*",
+    "mecanique": "Définit les statistiques de six vaisseaux spatiaux et navettes de colonisation (module de sauvetage, excavateur, vaisseau d'exploration SEV Classe J, coloniseur) précisant coque, armure, signature, propulseurs et coût.",
+    "sections": [
+      "SPACECRAFT"
+    ]
+  },
+  {
+    "titre": "Modes de campagne et expéditions de la Frontière *(Campaign Styles & Expeditions)*",
+    "mecanique": "Propose deux styles majeurs de campagne (Explorateurs et Colonisation) et neuf types de missions d'expédition définissant des objectifs, risques et mécanismes de récompenses.",
+    "sections": [
+      "CAMPAIGN STYLES",
+      "EXPLORER CAMPAIGNS",
+      "COLONY CAMPAIGNS",
+      "EXPEDITIONS"
+    ]
+  },
+  {
+    "titre": "Dangers de la Frontière et exploitation des Moissonneurs *(Challenges of Frontier Life & Mining Operations Using a \"Tamed\" Harvester)*",
+    "mecanique": "Définit les procédures de contrôle des Moissonneurs par aiguillons électriques et charges télécommandées capables de neutraliser la créature pendant deux D6 Rounds.",
+    "sections": [
+      "CHALLENGES OF FRONTIER LIFE",
+      "MINING OPERATIONS USING A “TAMED” HARVESTER"
+    ]
+  },
+  {
+    "titre": "Abominations de la Frontière *(Abominations)*",
+    "mecanique": "Présente cinq types de créatures et mutants générés par le mutagène noir (Hammerpede, Xenoixodida, Venator, Abominations humaines en cinq stades), avec leurs caractéristiques, dés de base et tables d'attaques au D6.",
+    "sections": [
+      "ABOMINATIONS",
+      "XENOCOBRA “HAMMERPEDE”",
+      "PATHOGEN POPPER “XENOIXODIDA”",
+      "PATHOGEN STALKER “VENATOR”",
+      "HUMANOID ABOMINATION",
+      "SPINWARD VARIANT"
+    ]
+  },
+  {
+    "titre": "Les Perfectionnés *(Fulfremmen (The Perfected))*",
+    "mecanique": "Profil d'êtres hyper-évolués possédant Vitesse 3, Santé 12, Protection 12 (cinq contre le feu) et disposant d'une table d'attaques physiques et psioniques au D6.",
+    "sections": [
+      "FULFREMMEN (THE PERFECTED)"
+    ]
+  },
+  {
+    "titre": "Protomorphes *(Proto-Xenomorphs)*",
+    "mecanique": "Décrit la Proto-ruche vivante et sept stades évolutifs de Protomorphes (du sac utérin au grand Archdeacon), avec leurs valeurs de Vitesse, Santé, Protection, compétences et tables d'attaques au D6.",
+    "sections": [
+      "PROTO-XENOMORPHS",
+      "THE LIVING PROTO-HIVE",
+      "PROTOMORPH XX033",
+      "STAGE I: UTERO-PODS “WOMB-BATS”",
+      "ALTERNATE STAGE I: XYGOTE (EMBRYONIC) “EYE-WORM”",
+      "STAGE II: NAIAD (INFANT) “SQUID-BABY”",
+      "STAGE III: TRILOBITE (CARRIER) “CUDDLES”",
+      "STAGE IV: AETHON (JUVENILE) “DEACON”",
+      "STAGE V: ADJUTOR (ADULT) “ARCHDEACON”"
+    ]
+  },
+  {
+    "titre": "Variantes de Xénomorphes XX121 *(Xenomorphs)*",
+    "mecanique": "Introduit le stade VIII de Reine-Impératrice et le Xénomorphe bioluminescent radioactif (Santé 7, Vitesse 2, Protection 6, Éclaboussure d'acide 8) avec sa table d'attaques au D6.",
+    "sections": [
+      "XENOMORPHS",
+      "XENOMORPH XX121 STAGE VIII: EMPRESS",
+      "BIOLUMINESCENT XENOMORPH XX121LV LAMBENT TYPE VARIANT"
+    ]
+  },
+  {
+    "titre": "Événements d'intermède et rapports d'expédition *(Downtime & Expedition Reports)*",
+    "mecanique": "Système de négociation des primes lors des rapports d'expédition par tests opposés de Manipulation, suivi du tirage d'incidents d'intermède entre deux missions.",
+    "sections": [
+      "DOWNTIME",
+      "EXPEDITION REPORTS",
+      "DOWNTIME INCIDENTS"
+    ]
+  },
+  {
+    "titre": "Création et astronomie des systèmes planétaires *(Enhanced Systems and Planets)*",
+    "mecanique": "Tables aléatoires au D6, 2D6 et D66 pour générer le nombre d'étoiles, les types de planètes, les sponsors (de un à trois) et la mission principale de la colonie.",
+    "sections": [
+      "ENHANCED SYSTEMS AND PLANETS",
+      "COLONY SPONSORSHIP",
+      "COLONY MISSIONS"
+    ]
+  },
+  {
+    "titre": "Gestion des attributs et initiatives de colonie *(The Colony Attributes & Colony Initiatives)*",
+    "mecanique": "Système de gestion mesuré par six attributs numériques (Économie, Potentiel, Productivité, Maintenance, Science, Esprit) modifiés par des initiatives classées en Politiques, Installations et Projets.",
+    "sections": [
+      "THE COLONY ATTRIBUTES",
+      "COLONY INITIATIVES"
+    ]
+  },
+  {
+    "titre": "Équipe de commandement et cycle de la colonie *(The Colony Command Team & The Colony Cycle)*",
+    "mecanique": "Procédure de gestion par Cycles de six mois où six postes de commandement effectuent des tests de compétences clés pour faire évoluer le niveau de développement et résoudre des incidents.",
+    "sections": [
+      "THE COLONY COMMAND TEAM",
+      "THE COLONY IN PLAY",
+      "THE COLONY CYCLE"
+    ]
+  }
+]

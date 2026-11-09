@@ -15,5 +15,19 @@
     "decalage": 3,
     "edition": "française (Arkhane Asylum)",
     "notes": "Décalage relevé à la relecture du 01/11/2026 (fiche des xénomorphes, p. 175-181). L'édition anglaise, pour les noms d'origine : alien-colonial-marines-operations-manual.pdf, dans le même dossier."
+  },
+  {
+    "cle": "coeur-de-tenebre",
+    "titre": "Coeur de Ténèbre",
+    "chemin": "Z:\\Jeux de Rôle\\03. Futur\\1. Space Opera\\Aliens\\Alien - Heart of Darkness.pdf",
+    "decalage": 2,
+    "edition": "anglaise (Free League)",
+    "notes": "Décalage mesuré le 09/11/2026 : la page PDF 63 imprime 61. Texte doublé (deux couches). Les symboles des dés sont des glyphes : lire la page en image (p. 65 facehugger, p. 72 réussite). Bestiaire : annexe I, p. 61-72."
+  },
+  {
+    "cle": "building-better-worlds",
+    "titre": "Building Better Worlds",
+    "chemin": "Z:\\Jeux de Rôle\\03. Futur\\1. Space Opera\\Aliens\\Alien - Building Better Worlds [EN].pdf",
+    "decalage": 4
   }
 ]

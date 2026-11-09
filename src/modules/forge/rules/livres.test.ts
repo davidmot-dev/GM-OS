@@ -16,11 +16,12 @@ import { cheminDesLivres, corpusDeSupplement } from '../../../../electron/corpus
 describe('le registre réel d’Alien', () => {
     const livres = lireLesLivres(ALIEN);
 
-    it('deux livres, sans constat ; le Drone de la p. 309 est à la page 312 du PDF', () => {
-        expect(livres.map(l => [l.cle, l.decalage])).toEqual([['jeu', 3], ['colonial-marines', 3]]);
+    // 09/11/2026 : David déclare Cœur de Ténèbre (décalage mesuré : + 2) et Building Better Worlds.
+    it('quatre livres, sans constat ; le Drone de la p. 309 est à la page 312 du PDF', () => {
+        expect(livres.map(l => [l.cle, l.decalage])).toEqual([['jeu', 3], ['colonial-marines', 3], ['coeur-de-tenebre', 2], ['building-better-worlds', 4]]);
         expect(livres[0].chemin.startsWith('\\\\CLOUDDAVID\\Media\\')).toBe(true);
         expect(livres[0].errata).toMatch(/ALIEN-Errata\.pdf$/);
-        expect(controlerLesLivres(ALIEN, ['jeu', 'colonial-marines'])).toEqual([]);
+        expect(controlerLesLivres(ALIEN, ['jeu', 'colonial-marines', 'coeur-de-tenebre', 'building-better-worlds'])).toEqual([]);
         expect(pageDuPdf(livres[0], 309)).toBe(312);
     });
 
@@ -87,7 +88,7 @@ describe('lire, contrôler, enregistrer', () => {
         expect(livres[0].chemin).not.toBe('D:\\Alien.pdf');
         const neuf = enregistrerLeLivre([], 'jeu', { chemin: 'E:\\Livre de base.pdf', decalage: -2 });
         expect(neuf).toEqual([{ cle: 'jeu', titre: 'Livre de base.pdf', chemin: 'E:\\Livre de base.pdf', decalage: -2 }]);
-        expect(retirerLeLivre(livres, 'colonial-marines').map(l => l.cle)).toEqual(['jeu']);
+        expect(retirerLeLivre(livres, 'colonial-marines').map(l => l.cle)).toEqual(['jeu', 'coeur-de-tenebre', 'building-better-worlds']);
         expect(lireLesLivres(ecrireLesLivres(livres))).toEqual(livres);
     });
 });

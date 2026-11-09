@@ -167,6 +167,70 @@ describe('F3 — le lot nettoyé', () => {
         expect(r.tableaux).toContain('| --- | --- | --- |');
     });
 
+    /*
+     * Building Better Worlds, 09/11/2026 (David : « je l'ai forgé mais je ne vois pas les nouvelles
+     * créatures ») : quinze créatures annoncées, les profils rendus par le carnet, et une fiche
+     * assemblée sans un seul — écartés comme « doublons » de la liste annoncée.
+     */
+    const ENTETE_CREATURES = `## Métadonnées
+- sujet : Bestiaire
+
+## Règle
+Les créatures de la Frontière.
+
+## Tableaux du livre
+
+| Créature | Section |
+| :--- | :--- |
+| **Xénocobra *(Hammerpede)*** | XENOCOBRA “HAMMERPEDE” |
+| **Naïade de Stade II *(Squid-Baby)*** | STAGE II: NAIAD (INFANT) “SQUID-BABY” |`;
+    const LOT_CREATURES = `### Tableau des profils
+
+| Créature | Vitesse | Santé |
+| :--- | :--- | :--- |
+| **Xénocobra *(Hammerpede)*** | 2 | 2 |
+| **Naïade de Stade II *(Squid-Baby)*** | 2 | 2 |
+
+### Tableau des attaques de Xénocobra *(Hammerpede)*
+
+| D6 | Attaque |
+| :--- | :--- |
+| **1** | **Fuite éclair** : s'enfuit. |
+| **2** | **Danse hypnotique** : test d'Esprit. |
+
+### Tableau des attaques de Naïade de Stade II *(Squid-Baby)*
+
+| D6 | Attaque |
+| :--- | :--- |
+| **1–3** | **Fuite en ondulant** : s'enfuit. |
+| **1** | **Révulsion** : test d'Infection. |
+| **2** | **Saisie en étau** : six dés de base. |`;
+
+    it('la liste annoncée n’est pas un tableau reçu : les profils du premier lot entrent', () => {
+        const r = nettoyerLeLot(ENTETE_CREATURES, LOT_CREATURES);
+        expect(r.doublons).toBe(0);
+        expect(r.tableaux).toContain('| **Xénocobra *(Hammerpede)*** | 2 | 2 |');
+    });
+
+    it('les mêmes valeurs de dé, dans deux tables d’attaques, ne sont pas des doublons', () => {
+        const r = nettoyerLeLot(ENTETE_CREATURES, LOT_CREATURES);
+        expect(r.tableaux).toContain('**Révulsion**');
+        expect(r.tableaux).toContain('**Saisie en étau**');
+    });
+
+    it('la même table d’attaques répétée reste un doublon', () => {
+        const deja = ajouterAuBrouillon(ENTETE_CREATURES, LOT_CREATURES);
+        const r = nettoyerLeLot(deja, LOT_CREATURES);
+        expect(r).toMatchObject({ tableaux: '', doublons: 7 });
+    });
+
+    it('le contrôle et la reprise reconnaissent une créature annoncée avec son nom original', () => {
+        const pieces = lireLesPiecesAnnoncees(ENTETE_CREATURES);
+        const brouillon = ajouterAuBrouillon(ENTETE_CREATURES, nettoyerLeLot(ENTETE_CREATURES, LOT_CREATURES).tableaux);
+        expect(ecartsDesLignes(pieces, premiereMoitieAssemblee(brouillon), 'creatures')).toEqual([]);
+        expect(lotDejaRecopie(brouillon, pieces, 'creatures')).toBe(true);
+    });
+
     it('« Absent des sources » et les lignes sans nom en gras (tables d’attaques) passent', () => {
         const lot = 'Absent des sources : Démons\n\n### Tableau des attaques de Drakk\n\n| D6 | Attaque |\n| --- | --- |\n| 1 | **Morsure** : d6B |';
         const r = nettoyerLeLot(DEJA, lot);

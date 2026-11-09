@@ -135,11 +135,11 @@ leurs sections.`;
 function consigneDeLangueDuSupplement(langue: string | undefined): string {
   const nom = nomDeLaLangue(langue);
   if (!nom) return '';
+  // Resserrée le 09/11/2026 (sans perte de sens) : elle entre dans chaque invite de supplément.
   return `- Écris toute la prose en ${nom}, même si le livre est dans une autre
-  langue. Donne entre parenthèses le nom ORIGINAL de chaque terme de jeu la
-  première fois qu'il paraît — spécialité, talent, arme, véhicule, grade —, par
-  exemple « Fusilier (Rifleman) ». Les titres de section des métadonnées, eux,
-  restent RECOPIÉS dans la langue du livre.
+  langue ; donne entre parenthèses le nom ORIGINAL de chaque terme de jeu à sa
+  première apparition, par exemple « Fusilier (Rifleman) ». Les titres de
+  section des métadonnées restent RECOPIÉS dans la langue du livre.
 `;
 }
 
@@ -204,20 +204,16 @@ N'invente rien. Écris tous les symboles en toutes lettres.`;
  */
 function consignesDuSupplement(options: OptionsGabarit | undefined): string {
   if (!options?.supplement) return '';
+  /*
+    Le TABLEAU DE PROFIL des créatures n'est plus ici (09/11/2026) : un sujet de créatures reçoit
+    depuis F2 le gabarit des tableaux (`gabaritFicheTableaux`), qui le porte. Ici, il poussait
+    chaque fiche de règle d'un supplément à 4 600-4 800 caractères, que NotebookLM refuse (« The
+    query request is invalid ») : aucun sujet de Building Better Worlds ne se forgeait.
+  */
   return `- Ce sujet vient du SUPPLÉMENT « ${options.supplement} ». Appuie-toi sur
-  lui seul. Si la règle modifie une règle du livre de base, dis ce qui change.
-- Un tableau du livre (armes, véhicules, spécialités, grades) se recopie en
-  TABLEAU MARKDOWN, toutes ses lignes et toutes ses colonnes, sans rien omettre ;
-  la fiche peut alors atteindre 4 000 caractères.
-- Si le sujet décrit des créatures ou des adversaires chiffrés, « ## Valeurs »
-  commence par un TABLEAU DE PROFIL : première colonne « Créature », puis une
-  colonne par caractéristique chiffrée telle que le livre la nomme (Vitesse,
-  Santé, Protection…) et une par compétence chiffrée ; une ligne par créature ;
-  une précision suit le nombre entre parenthèses (« 8 (4 contre le feu) ») ;
-  une colonne « Particularités » réunit le reste, séparé par des points-virgules.
-  Une table d'attaques tirée au dé se recopie à part, titrée « Tableau des
-  attaques de <créature> », colonnes « D6 | Attaque », chaque attaque écrite
-  « **Nom** : effet ».
+  lui seul ; si la règle modifie une règle du livre de base, dis ce qui change.
+- Un tableau du livre se recopie en TABLEAU MARKDOWN, toutes ses lignes et
+  colonnes ; la fiche peut alors atteindre 4 000 caractères.
 ${consigneDeLangueDuSupplement(options.langue)}`;
 }
 
@@ -260,6 +256,27 @@ const REGLES_COMMUNES = `- Cite tes sources par TITRE DE SECTION dans le corps d
 - Ne reformule pas en langage générique de jeu de rôle : garde le vocabulaire
   exact du jeu.`;
 
+/** La consigne des titres de section, exemples compris : celle du livre de base, qui ne change pas d'un mot. */
+const SECTIONS_EXPLIQUEES = `- sections : titres des chapitres ou sections dont la règle est tirée, RECOPIÉS
+  MOT POUR MOT tels qu'ils sont imprimés dans le livre — article compris. Ces
+  titres sont ensuite CONFRONTÉS À L'INDEX DU LIVRE : un titre approché s'y lit
+  comme un titre inventé. Donc jamais de reformulation thématique (« Périls
+  Magiques » pour un chapitre qui s'appelle « Queues, souffles et têtes de
+  Dragon »), jamais deux titres fondus en un (« Lancement et Réserve » pour
+  « Lancer un sort » et « Mise en réserve », qui sont deux sections distinctes),
+  jamais un titre que tu formes toi-même à partir du contenu. Si tu ne retrouves
+  pas le titre exact, OMETS-LE : une section de moins vaut mieux qu'un titre qui
+  ne renvoie à rien.`;
+
+/**
+ * La même, sans ses exemples, pour un supplément (09/11/2026) : ses consignes et un titre long
+ * (134 caractères chez Building Better Worlds) passaient la limite de NotebookLM. Elle garde
+ * l'essentiel, comme le gabarit des tableaux : mot pour mot, confronté à l'index, omis si douteux.
+ */
+const SECTIONS_EN_BREF = `- sections : titres des sections dont la règle est tirée, RECOPIÉS MOT POUR
+  MOT tels qu'imprimés : ils sont CONFRONTÉS À L'INDEX DU LIVRE. Ni reformulation,
+  ni deux titres fondus en un ; omets un titre dont tu n'es pas sûr.`;
+
 /**
  * Première moitié : ce que le livre pose.
  *
@@ -284,16 +301,7 @@ bloc de métadonnées en en-tête : commence directement par « ## Métadonnées
 - sujet : ${sujet}
 - couverture : complète | partielle | absente
 - sources : titre exact de chaque source utilisée
-- sections : titres des chapitres ou sections dont la règle est tirée, RECOPIÉS
-  MOT POUR MOT tels qu'ils sont imprimés dans le livre — article compris. Ces
-  titres sont ensuite CONFRONTÉS À L'INDEX DU LIVRE : un titre approché s'y lit
-  comme un titre inventé. Donc jamais de reformulation thématique (« Périls
-  Magiques » pour un chapitre qui s'appelle « Queues, souffles et têtes de
-  Dragon »), jamais deux titres fondus en un (« Lancement et Réserve » pour
-  « Lancer un sort » et « Mise en réserve », qui sont deux sections distinctes),
-  jamais un titre que tu formes toi-même à partir du contenu. Si tu ne retrouves
-  pas le titre exact, OMETS-LE : une section de moins vaut mieux qu'un titre qui
-  ne renvoie à rien.
+${options?.supplement ? SECTIONS_EN_BREF : SECTIONS_EXPLIQUEES}
 
 ## Règle
 L'énoncé de la règle telle que le livre la pose.

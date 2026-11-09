@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { lireInventaireDeSupplement, ficheInventaireDeSupplement } from './inventaire';
-import { gabaritInventaireDeSupplement, gabaritFicheRegle, gabaritFichePratique } from './gabarits';
+import { gabaritInventaireDeSupplement, gabaritFicheRegle, gabaritFichePratique, gabaritFicheTableaux } from './gabarits';
 import { convertirFiche } from './conversion';
 import {
   ajouterLeSujet,
@@ -83,12 +83,20 @@ describe('gabarits du supplément', () => {
     for (const gabarit of [gabaritFicheRegle('Armes de poing', options), gabaritFichePratique('Armes de poing', options)]) {
       expect(gabarit).toMatch(/SUPPLÉMENT « Colonial Marines Operations Manual »/);
       expect(gabarit).toMatch(/TABLEAU MARKDOWN, toutes ses lignes/);
-      // Bestiaire, § 210 étape C (05/11/2026) : le profil des créatures en tableau, lu sans modèle.
-      expect(gabarit).toMatch(/TABLEAU DE PROFIL : première colonne « Créature »/);
-      expect(gabarit).toMatch(/« Tableau des\s+attaques de <créature> »/);
       expect(gabarit).toMatch(/prose en français/);
       expect(gabarit).toMatch(/« Fusilier \(Rifleman\) »/);
+      // 09/11/2026 : le profil des créatures n'y est plus — il poussait l'invite au-delà de la
+      // limite de NotebookLM. Un sujet de créatures prend le gabarit des tableaux, qui le porte.
+      expect(gabarit).not.toMatch(/TABLEAU DE PROFIL/);
     }
+  });
+
+  it('porte le profil des créatures dans le gabarit des tableaux du supplément', () => {
+    // Bestiaire, § 210 étape C (05/11/2026) : le profil des créatures en tableau, lu sans modèle.
+    const gabarit = gabaritFicheTableaux('Protomorphes', 'creatures', { supplement: 'Building Better Worlds', langue: 'fr' });
+    expect(gabarit).toMatch(/TABLEAU DE PROFIL : première colonne « Créature »/);
+    expect(gabarit).toMatch(/Tableau des attaques de\s+<créature>/);
+    expect(gabarit).toMatch(/SUPPLÉMENT « Building Better Worlds »/);
   });
 
   it('ne change pas d\'un mot les gabarits du livre de base', () => {

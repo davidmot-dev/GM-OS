@@ -1,0 +1,144 @@
+[
+  {
+    "titre": "Personnages pré-tirés et agendas *(Pre-Generated Characters & Agendas)*",
+    "mecanique": "Sept personnages pré-tirés reçoivent des cartes d'Agenda personnel pour chaque Acte (un Point de Récit est attribué en cas de réussite) ainsi que des cartes d'Histoire *(Story Cards)* offrant un Point de Récit supplémentaire si leur contenu est introduit en jeu.",
+    "sections": [
+      "CHARACTERS",
+      "PERSONAL AGENDAS",
+      "STORY CARDS"
+    ]
+  },
+  {
+    "titre": "Troubles de la distortion neurologique, variante Ablassen *(Neurological Distortion Disorder, Ablassen Variant)*",
+    "mecanique": "Les personnages effectuent un jet de D6 une fois par Quart avec un modificateur cumulatif de +1 à chaque jet consécutif. La table comporte six entrées de conséquences psychologiques (Paranoïa, Épilepsie, Obfuscation avec une sous-table à six entrées, et Psychose).",
+    "sections": [
+      "NDDS: TERROR ON THE EDGE OF SPACE",
+      "NEUROLOGICAL DISTORTION DISORDER",
+      "ABLASSEN VARIANT"
+    ]
+  },
+  {
+    "titre": "Médicaments anti-TDN *(Anti-NDD Drugs)*",
+    "mecanique": "Deux substances médicales spécifiques sont utilisables: le Chil-X (cinq doses réduisant le bonus cumulatif des jets de TDN de un point) et le NeuroTick (deux doses éliminant un effet actif de TDN).",
+    "sections": [
+      "NDDS: TERROR ON THE EDGE OF SPACE",
+      "NDD MEDS"
+    ]
+  },
+  {
+    "titre": "Conditions environnementales de la station Erebos *(Conditions Inside Erebos)*",
+    "mecanique": "Les déplacements en apesanteur exigent un test de Mobilité. Les zones de radiations sont classées en Forte (test de Maladie à Virulence 6 sous peine de transformation) et Faible (Virulence 4), tandis que les feux de plasma atteignent une Intensité de 12.",
+    "sections": [
+      "CONDITIONS INSIDE EREBOS",
+      "THE CAUSEWAYS"
+    ]
+  },
+  {
+    "titre": "Avaries du conduit central *(The Chute, Personnel Airlocks, and Junctions Random Chart)*",
+    "mecanique": "Un jet de D6 détermine la condition d'un secteur du conduit parmi une table de six entrées (débris nécessitant des outils de découpe, froid à −20 °C, stroboscopes déclenchant l'épilepsie, tentacules ajoutant +1 en Stress, ou attaque de spores).",
+    "sections": [
+      "THE CHUTE",
+      "PERSONNEL AIRLOCKS",
+      "AND JUNCTIONS RANDOM CHART"
+    ]
+  },
+  {
+    "titre": "Dysfonctionnement du Médipod *(Medpod Malfunction)*",
+    "mecanique": "Lors de l'utilisation du Médipod pour soigner un personnage, le joueur doit lancer un Dé de Stress. Si le dé affiche un symbole de Panique, l'appareil dysfonctionne et inflige une nouvelle blessure critique au patient.",
+    "sections": [
+      "MEDPOD 01 (LOTUS CHAMBER)"
+    ]
+  },
+  {
+    "titre": "Protoplasmamorphes ioniques « Lumières de Hessdalen » *(Ionic Proto-Plasmamorph \"Hessdalen Lights\")*",
+    "mecanique": "Particules vivantes microscopiques en apesanteur dont l'exposition directe impose un test de Maladie à Virulence 6, dont l'échec transforme la victime en Abomination de type E en un Quart.",
+    "sections": [
+      "APPENDIX I: THE PROTO-XENOMORPHS",
+      "IONIC PROTO-PLASMAMORPH “HESSDALEN LIGHTS”"
+    ]
+  },
+  {
+    "titre": "Proto-ruche vivante et Nodules *(Living Proto-Hive & Nodes)*",
+    "mecanique": "Structure biomécanique possédant un masque thermique annulant les détecteurs infrarouges et régénérant 1 point de Santé par Round sous radiation (jusqu'à 10 Rads). La Proto-ruche possède Vitesse 1, Santé 24, Protection 8 et Éclaboussure d'acide 8, tandis que les Nodules ont Vitesse 0, Santé 4, Protection 6 et Éclaboussure d'acide 6.",
+    "sections": [
+      "APPENDIX I: THE PROTO-XENOMORPHS",
+      "THE LIVING PROTO-HIVE",
+      "LIVING PROTO-HIVE NODULES “NODES”"
+    ]
+  },
+  {
+    "titre": "Spores irritantes de Proto-ruche *(Irritating Spores)*",
+    "mecanique": "Les polyps à portée Engagé imposent un test de Mobilité sans action chaque Round pour éviter d'être perturbés. En cas d'échec, le polyp éclate, projette ses spores et augmente le Niveau de Stress de +1 (effet annulable par un antiallergique ou un lavage).",
+    "sections": [
+      "APPENDIX I: THE PROTO-XENOMORPHS",
+      "IRRITATING SPORES"
+    ]
+  },
+  {
+    "titre": "Stade I: Sacs utérins « Womb-Bats » *(Stage I Utero-Pods \"Womb-Bats\")*",
+    "mecanique": "Créatures fixes de Vitesse 0, Santé 2 et Protection 1. S'approcher à portée Engagé requiert un test de Mobilité par Round pour ne pas perturber le sac, et rester à portée Courte impose de lancer un Dé de Stress chaque Round pour vérifier si la naissance d'un Bébé-pieuvre se déclenche.",
+    "sections": [
+      "APPENDIX I: THE PROTO-XENOMORPHS",
+      "STAGE I UTERO-PODS “WOMB-BATS”"
+    ]
+  },
+  {
+    "titre": "Stade II: Naïade « Bébé-pieuvre » *(Stage II Naiad \"Squid-Baby\")*",
+    "mecanique": "Protomorphe juvénile doté de Vitesse 2, Santé 2 et Protection 1. Ses attaques s'effectuent via une table dédiée à six entrées sur un jet de D6, incluant un étouffement à 6 dés de base (Dégâts 1) infligeant automatiquement la blessure critique n° 16 et provoquant la suffocation.",
+    "sections": [
+      "APPENDIX I: THE PROTO-XENOMORPHS",
+      "STAGE II NAIAD (INFANT) “SQUID-BABY”"
+    ]
+  },
+  {
+    "titre": "Stade III: Trilobite « Cuddles » *(Stage III Trilobite \"Cuddles\")*",
+    "mecanique": "Parasite adulte à sept tentacules possédant Vitesse 2, Santé 9 et Protection 5. Ses actions obéissent à une table d'attaques à six entrées sur un jet de D6 (incluant l'agrippement infligeant la blessure critique n° 33 et l'implantation d'embryon retirée sous 3 Tours par chirurgie).",
+    "sections": [
+      "APPENDIX I: THE PROTO-XENOMORPHS",
+      "STAGE III TRILOBITE (CARRIER) “CUDDLES”"
+    ]
+  },
+  {
+    "titre": "Stade IV: Aéthon « Déacon » *(Stage IV Aethon \"Deacon\")*",
+    "mecanique": "Protomorphe humanoïde eyeless doté de Vitesse 2, Santé 5 et Protection 6. Ses actions sont régies par une table d'attaques à six entrées sur un jet de D6 (mâchoire crocheteuse infligeant la blessure n° 36 et arrachement de membre avec blessure n° 54 ou 55).",
+    "sections": [
+      "APPENDIX I: THE PROTO-XENOMORPHS",
+      "STAGE IV AETHON (JUVENILE) “DEACON”"
+    ]
+  },
+  {
+    "titre": "Abomination variante de type E *(Abomination E Type Variant)*",
+    "mecanique": "Mutation causée par un test de Maladie échoué (Virulence 6) face aux Lumières de Hessdalen. La transformation accorde Vitesse 2, +3 en Force, +1 en Agilité, fixe l'Empathie à 1, rend immunisé à la Manipulation et convertit le personnage en PNJ après une première attaque.",
+    "sections": [
+      "APPENDIX I: THE PROTO-XENOMORPHS",
+      "ABOMINATION E TYPE VARIANT",
+      "STAGE II “THE MUTATED”"
+    ]
+  },
+  {
+    "titre": "Les Perfectionnés / Fulfremmen *(Fulfremmen \"The Perfected\")*",
+    "mecanique": "Êtres hyper-intelligents dotés de Vitesse 3, Santé 12, Protection 12 et de l'incapacité de détecter les sujets en cryosommeil (Hyperblind). Leurs actions suivent une table d'attaques à six entrées sur jet de D6 (incluant l'hypnose par test d'Empathie, l'attaque psychique à 10 dés infligeant la blessure n° 16, et le baiser fatal infligeant l'état Brisé et la blessure n° 46).",
+    "sections": [
+      "APPENDIX I: THE PROTO-XENOMORPHS",
+      "FULFREMMEN “THE PERFECTED”"
+    ]
+  },
+  {
+    "titre": "Armes à feu et munitions *(Weapons & Ammunition)*",
+    "mecanique": "Présente sept armes chiffrées (pistolet à fléchettes Bionational TX-9, pistolet ES-4, fusil de choc ES-7, lance-flammes Flammenmacher 3 à Intensité 12, pistolet Norcomm QSZ-203, fusil AK-104s et lanceur Armat U4C) ainsi que deux munitions particulières (balles bâtons M230 et cartouches de gaz lacrymogène T3 infligeant −2 aux compétences).",
+    "sections": [
+      "APPENDIX II: GEAR",
+      "WEAPONS",
+      "EXPLOSIVES AND AMMUNITION"
+    ]
+  },
+  {
+    "titre": "Tenues de protection, armures et équipement CBRN *(Suits, Body Armor & CBRN Detection Kit)*",
+    "mecanique": "Liste six équipements de protection individuelle chiffrés (masque respiratoire, gilet Kevlar à Protection 4, combinaison ECO2 à Protection 8 et Réserve d'Air 6, combinaison Hazmat absorbant les Rads sur un jet de 6 dés, combinaison CCC5) et un kit de détection CBRN accordant +2 aux tests de Maladie.",
+    "sections": [
+      "APPENDIX II: GEAR",
+      "SUITS AND BODY ARMOR",
+      "OTHER EQUIPMENT"
+    ]
+  }
+]

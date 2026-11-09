@@ -108,6 +108,14 @@ export function ajouterAuBrouillon(brouillon: string, tableaux: string): string 
 
 const titreNormalise = (t: string) => normaliser(t.replace(/^tableau\s+(?:des|du|de la|de l['’]|de)\s+/i, ''));
 
+/*
+  Le nom d'une créature annoncée, comparé à celui d'une ligne recopiée — 09/11/2026 : la liste
+  garde l'original (« Xénocobra *(Hammerpede)* », utile au carnet pour chercher dans un livre
+  anglais), la ligne lue le retire (`lignesAVerifier`) ; sans cela, les quinze créatures de Building
+  Better Worlds étaient dites « sans profil recopié », et une forge reprise refaisait ses lots.
+*/
+const nomDeCreature = (titre: string) => normaliser(titre.replace(/\s*\*\(([^)]*)\)\*/g, ''));
+
 /** Les pièces d'un lot sont-elles déjà dans le brouillon ? (reprise après une requête échouée) */
 export function lotDejaRecopie(brouillon: string, lot: readonly PieceAnnoncee[], nature: NatureDesTableaux): boolean {
     const valeurs = RE_VALEURS.exec(brouillon);
@@ -115,7 +123,7 @@ export function lotDejaRecopie(brouillon: string, lot: readonly PieceAnnoncee[],
     const recu = brouillon.slice(valeurs.index);
     if (nature === 'creatures') {
         const noms = new Set(lignesAVerifier(recu).map(l => normaliser(l.nom)));
-        return lot.every(p => noms.has(normaliser(p.titre)) || new RegExp(`absent des sources\\s*:\\s*${echapper(normaliser(p.titre))}`).test(normaliser(recu)));
+        return lot.every(p => noms.has(nomDeCreature(p.titre)) || new RegExp(`absent des sources\\s*:\\s*${echapper(normaliser(p.titre))}`).test(normaliser(recu)));
     }
     const titres = [...recu.matchAll(/^###\s+(.+)$/gm)].map(m => titreNormalise(m[1])).filter(Boolean);
     return lot.every(p => titres.some(t => t.includes(titreNormalise(p.titre)) || titreNormalise(p.titre).includes(t))
@@ -139,7 +147,7 @@ export function ecartsDesLignes(pieces: readonly PieceAnnoncee[], premiereMoitie
     const lues = lignesAVerifier(premiereMoitie);
     if (nature === 'creatures') {
         const noms = new Set(lues.map(l => normaliser(l.nom)));
-        const absentes = pieces.filter(p => !noms.has(normaliser(p.titre))).map(p => p.titre);
+        const absentes = pieces.filter(p => !noms.has(nomDeCreature(p.titre))).map(p => p.titre);
         return absentes.length
             ? [`Créatures annoncées sans profil recopié (${absentes.length} sur ${pieces.length}) : ${absentes.join(', ')}.`]
             : [];
@@ -170,6 +178,30 @@ const nomDeLaLigne = (ligne: string) => {
 const estUneRangee = (l: string) => l.trim().startsWith('|');
 const estUneSeparation = (l: string) => /^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/.test(l);
 
+/*
+  La clé d'une ligne — 09/11/2026, Building Better Worlds (« je l'ai forgé mais je ne vois pas les
+  nouvelles créatures ») : les rangées d'une table de dés commencent toutes par « 1 », « 2 », « 1–3 » ;
+  reconnues à leur seule valeur, la table d'attaques du Bébé-pieuvre perdait cinq lignes sur six,
+  « déjà vues » dans celle du Xénocobra. Une valeur de dé se reconnaît donc avec le titre de sa table ;
+  un nom (une créature, une arme) reste reconnu seul, même sous un autre titre (Barbarians, 07/11).
+*/
+const VALEUR_DE_DE = /^\d+(?:\s*[–—-]\s*\d+)?\+?$/;
+const cleDeLaLigne = (titre: string, ligne: string) => {
+    const nom = nomDeLaLigne(ligne);
+    return nom && VALEUR_DE_DE.test(nom) ? `${normaliser(titre)} ${nom}` : nom;
+};
+
+/** Les clés des rangées en gras d'un texte, chacune lue sous le dernier titre « ### » qui la précède. */
+function clesDesRangees(texte: string): Set<string> {
+    const cles = new Set<string>();
+    let titre = '';
+    for (const l of texte.split(/\r?\n/)) {
+        if (/^###\s/.test(l.trim())) titre = l.trim().replace(/^###\s+/, '');
+        else if (estUneRangee(l) && /\*\*/.test(l)) { const cle = cleDeLaLigne(titre, l); if (cle) cles.add(cle); }
+    }
+    return cles;
+}
+
 /**
  * Le lot nettoyé avant d'entrer au brouillon (07/11/2026, Barbarians of Lemuria). La forge du
  * bestiaire avait recopié trois fois le même tableau, dont une coupée en pleine ligne
@@ -179,22 +211,29 @@ const estUneSeparation = (l: string) => /^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?
  * le dire à la relecture.
  */
 export function nettoyerLeLot(brouillon: string, tableaux: string): LotNettoye {
-    const dejaVus = new Set(
-        brouillon.split(/\r?\n/).filter(l => estUneRangee(l) && /\*\*/.test(l)).map(nomDeLaLigne).filter(Boolean),
-    );
+    /*
+      La liste annoncée (« ## Tableaux du livre ») n'est pas un tableau reçu — 09/11/2026 : ses
+      noms en gras (« **Xénocobra** | XENOCOBRA… ») faisaient de chaque profil du lot un « doublon »,
+      et la fiche de Building Better Worlds sortait sans une seule créature (15 annoncées, 0 gardée).
+    */
+    const section = sectionDeLaListe(brouillon);
+    const recu = section ? brouillon.slice(0, section.debut) + brouillon.slice(section.fin) : brouillon;
+    const dejaVus = clesDesRangees(recu);
     // Un titre collé au milieu d'une ligne coupe celle-ci : la ligne s'arrête là, le titre repart.
     const lignes = tableaux.replace(/\r\n/g, '\n').split('\n')
         .flatMap(l => { const i = l.indexOf('###'); return i > 0 ? [l.slice(0, i), l.slice(i)] : [l]; });
     let doublons = 0, coupees = 0;
+    let titre = '';
     const gardees: string[] = [];
     for (let i = 0; i < lignes.length; i++) {
         const l = lignes[i];
+        if (/^###\s/.test(l.trim())) titre = l.trim().replace(/^###\s+/, '');
         const enTete = estUneRangee(l) && estUneSeparation(lignes[i + 1] ?? '');
         if (!estUneRangee(l) || estUneSeparation(l) || enTete) { gardees.push(l); continue; }
         if (!l.trim().endsWith('|')) { coupees++; continue; }
-        const nom = nomDeLaLigne(l);
-        if (nom && /\*\*/.test(l) && dejaVus.has(nom)) { doublons++; continue; }
-        if (nom) dejaVus.add(nom);
+        const cle = cleDeLaLigne(titre, l);
+        if (cle && /\*\*/.test(l) && dejaVus.has(cle)) { doublons++; continue; }
+        if (cle) dejaVus.add(cle);
         gardees.push(l);
     }
     // Les tableaux sans ligne : leur titre, leur en-tête et leur séparation disparaissent ensemble.

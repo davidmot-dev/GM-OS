@@ -56,6 +56,26 @@ describe('les invites de la Forge tiennent sous la limite de NotebookLM', () => 
     });
 });
 
+/**
+ * **Les deux moitiés d'une fiche de supplément**, avec le plus long titre réel — 09/11/2026. La
+ * garde ne testait que le livre de base : en mode supplément, la fiche de règle faisait 4 613 à
+ * 4 841 caractères, et NotebookLM refusait chaque sujet de Building Better Worlds (« The query
+ * request is invalid »). Remesuré ce jour-là : le refus dépend du texte (une question factice de
+ * 4 800 caractères passe, cette invite casse vers 4 300) ; on garde donc la marge de 3 594.
+ */
+describe('une fiche de supplément tient sous la limite de NotebookLM, titre long compris', () => {
+    const supplement = { supplement: 'Building Better Worlds', langue: 'fr' };
+    const titre = 'Dangers de la Frontière et exploitation des Moissonneurs *(Challenges of Frontier Life & Mining Operations Using the Harvesters)*';
+    it.each([
+        ['fiche de règle', gabaritFicheRegle(titre, supplement)],
+        ['fiche pratique', gabaritFichePratique(titre, supplement)],
+        ['en-tête des tableaux', gabaritEnteteDesTableaux(titre, 'creatures', supplement)],
+        ['tableaux', gabaritFicheTableaux(titre, 'creatures', supplement)],
+    ])('%s', (_nom, invite) => {
+        expect(invite.length).toBeLessThanOrEqual(3594);
+    });
+});
+
 /** F2 (06/11/2026) : le gabarit des tableaux tient lui aussi sous la limite, supplément compris. */
 describe('le gabarit des tableaux tient sous la limite de NotebookLM', () => {
     const supplement = { supplement: 'Colonial Marines Operations Manual', langue: 'fr' };
