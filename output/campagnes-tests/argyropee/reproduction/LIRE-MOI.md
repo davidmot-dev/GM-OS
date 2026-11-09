@@ -1,0 +1,1 @@
+Replacer les fichiers .mjs, .ts, .tsx et .mts sous outils/campagnes-de-recette/ dans le dépôt courant. Les fonctions métier et dépendances existantes sont nécessaires ; aucun profil privé ne fait partie de la reproduction. gmos_bundle.py est autonome avec Python standard. Lire REPRODUIRE.md à la racine du lot.

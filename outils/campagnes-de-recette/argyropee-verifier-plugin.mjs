@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const dir=path.resolve('output/campagnes-tests/argyropee');
+const python=process.env.GMOS_PYTHON??path.join(process.env.USERPROFILE,'.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe');
+const outil=path.resolve('outils/gmos-campagnes-tests/plugin/gmos-campagnes-tests/skills/campagnes-de-test/scripts/gmos_bundle.py');
+const i=JSON.parse(fs.readFileSync(path.join(dir,'inventaire.json'),'utf8'));assert.equal(i.archives.length,1);
+const rapports=i.archives.map(a=>{assert.equal(createHash('sha256').update(fs.readFileSync(path.join(dir,a.fichier))).digest('hex'),a.sha256);return {fichier:a.fichier,sha256:a.sha256,...JSON.parse(execFileSync(python,['-I','-B',outil,'verify',path.join(dir,a.fichier)],{encoding:'utf8',env:{...process.env,PYTHONIOENCODING:'utf-8'}}))};});
+assert.ok(rapports.every(r=>r.valid));fs.writeFileSync(path.join(dir,'verification-plugin.json'),JSON.stringify({outil:'gmos_bundle.py verify — contrôle structurel partiel',rapports},null,2)+'\n');console.log(JSON.stringify(rapports.map(({fichier,valid})=>({fichier,valid}))));

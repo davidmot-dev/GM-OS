@@ -1,0 +1,291 @@
+{
+  "version": 1,
+  "genereLe": "2026-11-09T12:00:00.000Z",
+  "pilote": {
+    "id": "custom-1794176660508",
+    "version": "2.1.0",
+    "source": "Export Dirvers/corriges/Argyropee-2.1.0.gmos-driver",
+    "sha256": "1e73bb938cd0966dc2587fd21ba912068c3d1a0b555d16e22ec8c6a17d02f89a"
+  },
+  "gabarit": {
+    "id": "tpl-1794176660508",
+    "html": "argyropee-fr",
+    "champs": 137
+  },
+  "archives": [
+    {
+      "fichier": "01-Les-Comptes-de-la-maree.gmos",
+      "campagne": "recette-argyropee-maree-20261109-campagne-comptes",
+      "sha256": "99ab03140af10542e26006d9bead494fd9f7fd7f11064711cee0a2525c1bdcaa",
+      "personnages": 11,
+      "medias": 48
+    }
+  ],
+  "seances": 12,
+  "actesNarratifs": 4,
+  "ateliers": 6,
+  "scenes": 42,
+  "pjPrincipaux": 3,
+  "pjRecette": 8,
+  "pnj": 18,
+  "lieux": 12,
+  "indices": 12,
+  "casDeRecette": 61,
+  "modules": {
+    "instances": 0,
+    "outilsNatifs": [
+      "Fiche du jeu",
+      "Panneau de jet Argyropée",
+      "Pupitre PNJ et Guigne",
+      "Combat-OS",
+      "Atlas",
+      "Trame",
+      "Sound-OS"
+    ],
+    "verification": "modulesDuPilote vérifié dans argyropee.test.ts"
+  },
+  "rattachement": [
+    {
+      "id": "p-1",
+      "realName": "Thomas D."
+    },
+    {
+      "id": "p-2",
+      "realName": "Marie C."
+    },
+    {
+      "id": "p-3",
+      "realName": "Lucas R."
+    }
+  ],
+  "generateur": "argyropee.mjs v1",
+  "gmosVersion": "6.5.0",
+  "node": "v24.13.1",
+  "sourcesRegles": [
+    {
+      "fichier": "docs/systems/argyropee/rules/bestiaire-et-adversaires.md",
+      "sha256": "5bf9f38784b2058c680d0b07f1b92b37b9bfa7ce4e14724d6b4a844b4b9ade18"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/composition-de-la-fiche-de-personnage.md",
+      "sha256": "826d5b19c8c2c7987a0964cf6fc06101ed7d62523ee69ea7cdf4ca162002d5b3"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/degats-et-types-de-degats.md",
+      "sha256": "3e6bbb1a3e9803c85250b4f49a6258dbee3a1d99110b37ac4ee868805d9fd2d4"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/degres-de-reussite-et-critiques.md",
+      "sha256": "d5b5dae2f17bf50f523152639ddab821a2ac48f6c28966ef48c8c64d03fca4cb"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/distances-et-portees.md",
+      "sha256": "0e2a55e1f7ee09de5470b4f9f0cc9f3bc97c4d6e04e330fc6918e53b1eb52112"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/environnement-et-dangers.md",
+      "sha256": "fa4ba652022d444357ebdd2311b007b012d8a3e3297ed25ecc207398705b0f53"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/equipement-et-materiel.md",
+      "sha256": "08edcfd3c34ee23c77c76c1aa86ff7539d148d4230c9824aa91a0e94e0e13b09"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/etats-et-conditions.md",
+      "sha256": "18894ab68d91a6eafe6383dd1b39942ca0421462ab6c68bd8fc26fa947942b03"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/initiative-et-deroulement-du-tour.md",
+      "sha256": "106b568745e210afd2c9d945a18322936e508b0f858606c6499172fb2ae45ae2"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/inventaire-des-mecaniques.md",
+      "sha256": "dec0ac21f2fd4f04ac5b33b7736452059fef1d96a7f90aa47611aea4c4be69e6"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/jauges-et-ressources-individuelles.md",
+      "sha256": "0c67327beac77cfa566fb0f0e660d9537c7930e78ca45e9b7363bce9df6a1d5a"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/jets-opposes-aide-et-cooperation.md",
+      "sha256": "864c0e4c1098543d0638f9ac746ad74641b27457c47562be3a631f70f12bfc14"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/l-art-thaumaturgique-magie-innee-des-humeurs.md",
+      "sha256": "754a2f9165ff3caf70941905f0531af9beff1005ce528b476f9a7134fc2d146b"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/l-exuberance.md",
+      "sha256": "97a265643ebfa462ceafdbcf2251ee821e7b3af03e3fe9c11a2962c4a5699c4d"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/la-faveur-divine.md",
+      "sha256": "f9c75bb6384ee8385c049c6b8069fecb537f1985eb9c1aa4c2fffb0324ebc44f"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/la-guigne.md",
+      "sha256": "62bd2256d658c7a9f217e14f7c4dc14d8666d5a97ab57b4b14eeae3ae08e9411"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/poursuites.md",
+      "sha256": "f3b93a9ef371db3ad5f2cb9a03472288401d49873b3ff234a9ba6bb55dd012d3"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/resolution-des-jets.md",
+      "sha256": "432ca83d563bd90d15afcd693335bbbf2f7f0d282fe713bbedceabcf6c12aef1"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/sante-et-blessures.md",
+      "sha256": "e3c114c1bae8bb5d2c9123a97697ee62b919c0c2d509685f0ec6c28abe161f6e"
+    },
+    {
+      "fichier": "docs/systems/argyropee/rules/ton-registre-et-ambiance.md",
+      "sha256": "9df7417cfc9e5c36f62a211d2d7a87b944e9d15b7ccf0ee85c8c4d7aab4a30c1"
+    }
+  ],
+  "sourcesTechniques": [
+    {
+      "fichier": "src/modules/dice/systemes/argyropee.ts",
+      "sha256": "43ca89df605fdfe9fd35369f05ab013ff38ede00a8755a22e67f50b92720e1f0"
+    },
+    {
+      "fichier": "src/modules/session/components/fields/PanneauDeJet.tsx",
+      "sha256": "2971829f57562cc8493b7f174fb1765c55b15ce88fdbff3e3fc0086217daddee"
+    },
+    {
+      "fichier": "src/modules/session/components/fields/ArgyropeeAuJet.tsx",
+      "sha256": "e9ee0017b77d85c648c17de5b2a0cfbbb03caf218225487c9cf16c735c083606"
+    },
+    {
+      "fichier": "src/modules/dice/GuigneDArgyropee.tsx",
+      "sha256": "80bbf5c79c84770a49d6106850536026518b34a37163e5067499278b4ab4044f"
+    },
+    {
+      "fichier": "src/modules/session/logic/HealthInterpreter.ts",
+      "sha256": "a85f75a757398b9143eeb6f37f3955323ea0eff21cccc794e7912931cf3bce35"
+    },
+    {
+      "fichier": "src/modules/session/logic/ficheNeuve.ts",
+      "sha256": "41a0b772292ec5e628b8730305b8d97c14a45b1a821cc48fc47a325a3309d351"
+    },
+    {
+      "fichier": "src/modules/combat/logic/SanteDuCombattant.ts",
+      "sha256": "b327a0a218b9fea9066ec5ffdb8c7c3587cf2e8ee47e37bf3debdd9899c6536e"
+    },
+    {
+      "fichier": "src/modules/system/archive/nexus.types.ts",
+      "sha256": "3df1e4d908110a12c5d9a47b903b1087b5e9d2e270c3e61be95b0242a4b8f1bd"
+    },
+    {
+      "fichier": "src/modules/modulesDuJeu/catalogue.ts",
+      "sha256": "3dd87df4456da340881fa332bf0bf393266940338e3a4133b82f5dc2d0b1e520"
+    },
+    {
+      "fichier": "src/modules/remote/logic/caviardageDesJoueurs.ts",
+      "sha256": "04b88370dc581ce59b03c2516b24e8d8aecb5bceb0d71b8ad3b9684db70d68f7"
+    },
+    {
+      "fichier": "docs/systems/argyropee/fiche/correspondance.json",
+      "sha256": "e9aa4eb19f8ad7128c9853a1b9c4626e4c0d0e575406a1dfcd76a4eb66ea2a10"
+    },
+    {
+      "fichier": "docs/fiches/Argyropée/argyropee-fiche-interactive.html",
+      "sha256": "6806eb2c918aa003b596cc0c6dced0b1157c51f50e879a1c63ee79c8a37a5244"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/cthulhu-hack-joueurs.json",
+      "sha256": "0032dc5a6bec43dbf515ade46ce461b71858a2a5e2cb81bb27f1380d95d912fa"
+    }
+  ],
+  "sourcesVisuelles": [
+    {
+      "fichier": "docs/systems/argyropee/Argyropée Band.jpg",
+      "sha256": "17304229b472d93069cee1d3e7e3c58ceec175909283f5cc56d6b2c976ff1bea"
+    },
+    {
+      "fichier": "output/gmos-studio/argyropee/identite-visuelle.txt",
+      "sha256": "013d1cd81d94e016e8e6850a1d502f51f150285048063142850807e3a8ca7fa4"
+    }
+  ],
+  "sourcesGenerateur": [
+    {
+      "fichier": "outils/campagnes-de-recette/argyropee.mjs",
+      "sha256": "9acae50718495d6480d39f3c704c2feda3517db13bb43704ea7ed90369e75dc0"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/argyropee-scenario.mjs",
+      "sha256": "a715bc2897130cf951b02dd7a6af3964cfd86d0ab6eb6cd946285954be8828af"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/argyropee-recette.mjs",
+      "sha256": "8680ca99f1e6a51255cad19b92b7a913186bfbc0998864c29ebf114a0a72adab"
+    }
+  ],
+  "limite": "Corpus relu réutilisé, sans nouvelle relecture du livre. Import Electron et Hub réseau NON EXÉCUTÉS ; aucun service lancé.",
+  "sourcesControles": [
+    {
+      "fichier": "outils/campagnes-de-recette/argyropee.mjs",
+      "sha256": "9acae50718495d6480d39f3c704c2feda3517db13bb43704ea7ed90369e75dc0"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/argyropee-scenario.mjs",
+      "sha256": "a715bc2897130cf951b02dd7a6af3964cfd86d0ab6eb6cd946285954be8828af"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/argyropee-recette.mjs",
+      "sha256": "8680ca99f1e6a51255cad19b92b7a913186bfbc0998864c29ebf114a0a72adab"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/argyropee.test.ts",
+      "sha256": "69823c111eb884485dc6600679bec3c6affc2b2f4d117f093ad29d1a72e4818e"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/argyropee-ecrans.test.tsx",
+      "sha256": "a69ef09a927b344897514e0f23725dab654c7deb4afcc7167efd8b2b09fa9a89"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/vitest-argyropee.config.mts",
+      "sha256": "2663558e138f57647239f228b2954d208c5475030e7c700988f6522465f854c9"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/argyropee-verifier-plugin.mjs",
+      "sha256": "b05fc350173341bce6ed7855b53b256dc6ccf07a6202e51ba4f1367a84932909"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/argyropee-visuels.mjs",
+      "sha256": "9423f499e1fbac6fb3fc629340ccdedf8a213b4fa9381dbba0066645beabaee6"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/emballer-argyropee.mjs",
+      "sha256": "62b8441a040448c7918417c8ab043345ff916f531851d38073c352545c82a028"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/archives-de-recette.mjs",
+      "sha256": "93a6fd79a4234574e2dabd2d8330e2c8c5f617df3152bbb038916040a94f18ec"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/charger-typescript.mjs",
+      "sha256": "0ce4d1d77e4017e39147f3eb7948e3934a3cd27ec128563754af8931d72782c2"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/cthulhu-hack-joueurs.json",
+      "sha256": "0032dc5a6bec43dbf515ade46ce461b71858a2a5e2cb81bb27f1380d95d912fa"
+    }
+  ],
+  "verifications": {
+    "structurePlugin": true,
+    "testsMemoire": 120,
+    "mediasHorsLigne": true,
+    "rendusRelus": true,
+    "injectionMagasinEnMemoire": true,
+    "restaurationSerialisation": true,
+    "importNatifElectron": "NON EXÉCUTÉ",
+    "hubReseau": "NON EXÉCUTÉ",
+    "materiel": "NON EXÉCUTÉ",
+    "recetteHumaine": "NON TESTÉE",
+    "ecartsDeRegleConserves": [
+      "ARGY-SANTE-NEGATIVE",
+      "ARGY-INITIATIVE-ZERO"
+    ]
+  }
+}

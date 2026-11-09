@@ -1,0 +1,29 @@
+{
+  "archive": {
+    "fichier": "01-Les-Comptes-de-la-maree.gmos",
+    "sha256": "99ab03140af10542e26006d9bead494fd9f7fd7f11064711cee0a2525c1bdcaa"
+  },
+  "verdict": "ÉCARTS DE RÈGLE CONSERVÉS — les tests de diagnostic ne valident pas ces règles",
+  "ecarts": [
+    {
+      "id": "ARGY-SANTE-NEGATIVE",
+      "casHumain": "SAN-02",
+      "source": "Santé p.52-53 ; HealthInterpreter.handleHP",
+      "avant": 4,
+      "impact": 5,
+      "attendu": -1,
+      "observe": 0,
+      "etatGenerique": "dead",
+      "conforme": false
+    },
+    {
+      "id": "ARGY-INITIATIVE-ZERO",
+      "casHumain": "COM-01",
+      "source": "Initiative p.46 ; CombatRules.resolveInitiativeFormula",
+      "faceMoteur": 10,
+      "attendu": 4,
+      "observe": 14,
+      "conforme": false
+    }
+  ]
+}

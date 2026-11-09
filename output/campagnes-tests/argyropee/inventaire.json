@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "genereLe": "2026-11-09T12:00:00.000Z",
+  "pilote": {
+    "id": "custom-1794176660508",
+    "version": "2.1.0",
+    "source": "Export Dirvers/corriges/Argyropee-2.1.0.gmos-driver",
+    "sha256": "1e73bb938cd0966dc2587fd21ba912068c3d1a0b555d16e22ec8c6a17d02f89a"
+  },
+  "gabarit": {
+    "id": "tpl-1794176660508",
+    "html": "argyropee-fr",
+    "champs": 137
+  },
+  "archives": [
+    {
+      "fichier": "01-Les-Comptes-de-la-maree.gmos",
+      "campagne": "recette-argyropee-maree-20261109-campagne-comptes",
+      "sha256": "99ab03140af10542e26006d9bead494fd9f7fd7f11064711cee0a2525c1bdcaa",
+      "personnages": 11,
+      "medias": 48
+    }
+  ],
+  "seances": 12,
+  "actesNarratifs": 4,
+  "ateliers": 6,
+  "scenes": 42,
+  "pjPrincipaux": 3,
+  "pjRecette": 8,
+  "pnj": 18,
+  "lieux": 12,
+  "indices": 12,
+  "casDeRecette": 61,
+  "modules": {
+    "instances": 0,
+    "outilsNatifs": [
+      "Fiche du jeu",
+      "Panneau de jet Argyropée",
+      "Pupitre PNJ et Guigne",
+      "Combat-OS",
+      "Atlas",
+      "Trame",
+      "Sound-OS"
+    ],
+    "verification": "modulesDuPilote vérifié dans argyropee.test.ts"
+  },
+  "rattachement": [
+    {
+      "id": "p-1",
+      "realName": "Thomas D."
+    },
+    {
+      "id": "p-2",
+      "realName": "Marie C."
+    },
+    {
+      "id": "p-3",
+      "realName": "Lucas R."
+    }
+  ]
+}

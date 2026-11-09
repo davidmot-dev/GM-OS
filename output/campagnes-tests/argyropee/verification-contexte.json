@@ -1,0 +1,10 @@
+{
+  "archives": [
+    {
+      "fichier": "01-Les-Comptes-de-la-maree.gmos",
+      "sha256": "99ab03140af10542e26006d9bead494fd9f7fd7f11064711cee0a2525c1bdcaa"
+    }
+  ],
+  "assertions": "argyropee.test.ts et argyropee-ecrans.test.tsx",
+  "portee": "Fonctions et composants en mémoire jsdom ; import natif Electron et réseau non exécutés."
+}

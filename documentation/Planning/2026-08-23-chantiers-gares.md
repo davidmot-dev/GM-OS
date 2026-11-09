@@ -438,6 +438,21 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**09/11/2026 — Argyropée : santé négative et zéro du d10 dans le combat générique.**
+La campagne de recette (§ 240) reproduit deux écarts, sans toucher le code applicatif :
+`HealthInterpreter.handleHP`, santé 4 moins impact 5 → **0** et état générique `dead`
+(hors combat), au lieu de −1 inconscient sans mort automatique (p. 52-53) ;
+`CombatRules.resolveInitiativeFormula`, face moteur 10 avec Agilité 2, Détection 2,
+bonus 0 → **14**, au lieu de 4 si ce dé est lu zéro (p. 46). Preuves :
+`outils/campagnes-de-recette/argyropee.test.ts` et
+`output/campagnes-tests/argyropee/verification-ecarts.json`, cas humains SAN-02 / COM-01.
+Les tests de diagnostic réussis **conservent une non-conformité**, pas un succès de règle.
+La fiche signée et l’arbitrage manuel sont documentés ; import natif et Hub non exécutés.
+Autre portée à connaître : `Guigne réglée` cible tous les PJ de la campagne, dont les
+huit `[RECETTE]` du lot, et ajoute trois à l’offrande déjà présente. Ce geste collectif
+n’est jamais présenté comme une restauration locale d’atelier. Corrections éventuelles
+à cadrer séparément ; aucun changement de pilote ou d’application dans cette livraison.
+
 **08/11/2026 — Torg : portée des distributions collectives dans une campagne avec ateliers.**
 `mainsDeLaCampagne` (`session/store/deckSlice.ts`) sélectionne tous les PJ de la campagne,
 sans filtrer les participants de la séance. La campagne de recette Torg (§ 236) contient
@@ -14204,6 +14219,32 @@ David : « Peux-tu gérer ceci : l'Exubérance, la Faveur divine, la Guigne, la 
 - **Vérifié** : `npx vitest run --maxWorkers=4` sur `src/modules/dice`, `src/modules/session/components/fields`, `src/modules/forge/rules`, `electron/manuelDesJeux.test.ts`, `electron/ficheDArgyropee.test.ts` — 158 fichiers, 2 064 essais, dont `PanneauDeJet.argyropee-journee.test.tsx` (12) et `argyropeeAuPupitre.test.tsx` (4) ; `corpusDerivable.test.ts` (145) ; `npx tsc -b` ; eslint des fichiers touchés. `npm run build` puis `capturesDesJeux.spec.ts --grep Argyrop` passé ; neuf images relues et versées au manuel (nouvelles : `jeu-argyropee-journee`, `jeu-argyropee-pupitre`). La relecture des images a trouvé un défaut corrigé avant livraison : le pupitre annonçait un modificateur qu'il n'affichait pas.
 - **Reste** : réimporter **`Argyropee-2.1.0.gmos-driver`** avec « Remplacer » et essayer une Faveur divine, un Réveil, une Exubérance, un sort jusqu'à 7, un test de PNJ au pupitre et « Guigne réglée ». Hors outil : la Faveur divine sur un dé de dégâts ou d'initiative, le Panache sur l'initiative, le Châtiment vermeil.
 
+### 240 · Campagne de recette Argyropée — Les Comptes de la marée — 09/11/2026
+
+David : « peux-tu faire une campagne test pour Argyropee? » — plugin GM-OS Campagnes de test.
+
+- **Livré :** [lot et import](2026-11-09-campagne-recette-argyropee.md), un seul `.gmos`,
+  douze séances prévues, quatre actes, 36 scènes narratives et six ateliers dans un acte
+  **ATELIERS DE RECETTE — hors fiction**. Trois héros nouveaux pour les profils autorisés
+  `p-1/p-2/p-3`, huit `[RECETTE]`, seize PNJ de fiction et deux synthétiques, douze lieux,
+  douze indices, trois fins et des voies alternatives ; 61 cas humains NON TESTÉS.
+- **Pilote :** Argyropée **2.1.0**, 137 champs, copie identique séparée depuis
+  `Export Dirvers/corriges/Argyropee-2.1.0.gmos-driver`. Aucun changement de pilote,
+  d’application ou de corpus. Outils natifs ; aucun module étranger ou réserve inventée.
+- **Vérifié :** 120 tests / sept fichiers (données, fonctions et composants réels), injection
+  Nexus en mémoire préservant les anciens PJ/avatars fictifs, restauration ciblée par le
+  magasin et sérialisation préservant note de scène et Panache 17 de Marin, 128 clés HTML,
+  caviardage complet/partiel GM-05 ; structure acceptée par l’utilitaire du plugin.
+  45 images et trois WAV décodés hors ligne ; 45 rendus et cinq planches relus.
+- **Écarts conservés :** HP générique borné à zéro et d10 d’initiative générique non converti
+  en zéro, reproduits dans `verification-ecarts.json` ; voir § 1 bis. Les 120 tests verts
+  n’affirment pas la conformité de ces deux règles. Guigne collective à onze PJ documentée.
+- **Reste :** import natif Electron, sauvegarde/rechargement réel, trois Hub réseau et
+  matériel NON EXÉCUTÉS (aucun service lancé) ; les 61 cas de David à jouer.
+  Lot **PRÉPARÉ**, guides/états/CSV/provenance et ZIP dans `output/campagnes-tests/argyropee/`.
+  Sources `argyropee*.mjs`, `.test.ts`, `.test.tsx`, config et emballeur sous
+  `outils/campagnes-de-recette/`. Note de reprise du 09/11 liée au sujet. Non commité.
+
 ### 241 · Alien — bestiaires des suppléments : Cœur de Ténèbre relu, la Forge des suppléments réparée — 09/11/2026
 
 David : « dans le corpus d'Alien j'ai introduit des nouvelles créatures dans le bestiaire mais je ne sais pas les intégrer », puis, capture à l'appui, « Erreur de transmutation… The query request is invalid » « lorsque j'essaie de forger le bestiaire du supplément alien ».
@@ -14231,6 +14272,7 @@ David, captures du Dr Asher Webb à l'appui : « dans alien comment aligner les 
 | --- | --- | --- | --- | --- |
 | 178 | **Alien — console d'un PNJ alignée sur sa Santé ; carrière sans options** | 🟠 § 242 ; PNJ humain par défaut, quatre lecteurs alignés —09/11 | Ouvrir le Dr Webb : console à 2/2 ; saisir les options de la carrière | Essai de David |
 | 177 | **Alien — bestiaires des suppléments, Forge des suppléments réparée** | 🟠 § 241 ; Cœur de Ténèbre relu (8 créatures, 4 tables), invites de supplément ramenées sous la limite, espèces reconnues comme créatures —09/11 | Reforger le bestiaire de Building Better Worlds, puis « Remplir depuis le corpus » | Essai de David |
+| 176 | **Campagne de recette Argyropée — Les Comptes de la marée** | 🟠 § 240 ; une campagne, douze séances, six ateliers, 120 tests, deux écarts de règle conservés —09/11 | Lire les anomalies puis importer l’unique .gmos avec le pilote 2.1.0 | Import natif/Hub NON EXÉCUTÉS ; 61 cas humains NON TESTÉS |
 | 175 | **Argyropée — Exubérance, Faveur divine, Guigne, magie, PNJ** | 🟠 § 239 ; journée et magie au panneau, test de PNJ et Guigne au pupitre, pilote 2.1.0, Guigne recorrigée dans le corpus —09/11 | Réimporter `Argyropee-2.1.0.gmos-driver` avec « Remplacer » | Essai de David |
 | 174 | **Skills `specifier-un-chantier` et `/mes-skills`** | 🟢 § 238 ; liste lue dans les fichiers, AGENTS.md à jour —08/11 | `/mes-skills` | Rien |
 | 173 | **Argyropée fini** | 🟠 § 237 ; test, action complexe, opposition, Panache, pilote 2.0.0, fiche reliée, corpus relu 20/20 (bestiaire 163, équipement 18 tableaux) —08/11 | Réimporter le pilote **2.1.0** (§ 239), qui remplace le 2.0.0 | Essai de David |

@@ -1,0 +1,5 @@
+{
+  "methode": "Magasin réel en mémoire + sérialisation JSON, aucun profil disque",
+  "principalEtScenePreserves": true,
+  "rechargementElectron": false
+}

@@ -189,3 +189,21 @@ remet les repères à zéro.
   propose sur le test.
 - **Le Panache sur l'initiative** : il compte pour la Guigne, mais l'initiative se tire dans
   Combat-OS, sans dépense de Panache ; l'ajouter au repère à la main si besoin.
+
+## La campagne d’essais
+
+**Les Comptes de la marée**, préparée le 09/11/2026, propose douze séances d’enquête urbaine
+et six ateliers directement accessibles dans le cinquième acte de la Trame. Un seul `.gmos`,
+trois héros pour les joueurs existants et des personnages `[RECETTE]` réservés aux essais.
+[Livraison, guide et cahier de 61 cas](../Planning/2026-11-09-campagne-recette-argyropee.md).
+
+Le lot a été contrôlé par les fonctions et composants en mémoire ; son import natif Electron
+et ses Hub réseau restent NON EXÉCUTÉS. Deux écarts du combat générique ont été reproduits :
+les dégâts bornent la santé à zéro au lieu de conserver le négatif, et le d10 d’initiative
+générique conserve la face10 au lieu de la lire0. Lire les anomalies du lot et tenir ces deux
+valeurs à la main en attendant une correction spécifique. Les tests verts de diagnostic ne
+valident pas ces deux règles comme conformes.
+
+Pour refaire un cas, restaurer uniquement ses champs selon les états de référence.
+**Guigne réglée** agit sur tous les PJ de la campagne, profils de recette compris ; ce geste
+collectif ne remet pas un atelier seul à zéro. **Nexus Remplacer réimporte toute la campagne.**

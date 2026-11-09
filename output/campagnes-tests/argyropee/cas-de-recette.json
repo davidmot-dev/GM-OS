@@ -1,0 +1,1039 @@
+[
+  {
+    "id": "IMP-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "import",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-ecrans",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / ecrans / [RECETTE] JET. Le pilote 2.1.0 est installé ; conserver un PJ et une campagne existants comme témoins. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Importer une seule fois la campagne avec Tel quel, puis regarder les trois profils de joueurs.",
+    "attendu": "Une seule campagne ajoutée ; les nouveaux PJ rejoignent p-1/p-2/p-3 ; les anciens PJ et avatars sont conservés.",
+    "source": "src/modules/system/archive/nexus.types.ts ; NexusService.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "IMP-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "import",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-ecrans",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / ecrans / [RECETTE] JET. Campagne importée une fois, données sauvegardées. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Recharger GM-OS et ouvrir la Trame, les douze séances et l’Atlas.",
+    "attendu": "Quatre actes narratifs, un acte hors fiction, 36 scènes de fiction, six ateliers, douze séances prévues et les liens demeurent. Ne pas importer de nouveau pour recharger.",
+    "source": "src/modules/system/archive/nexus.types.ts ; NexusService.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "JET-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "jets",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Serrurerie 3 ; métier Malandrin +2 ; modificateur 0 ; aidants 0 ; aucune option complexe/Faveur/opposition. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Choisir Serrurerie et Malandrin, lancer et relever la face effectivement tirée.",
+    "attendu": "Total = face lue 0–9 + 5 ; la face moteur 10 représente 0 ; le résultat se lit sur les cinq paliers fixes. Aucun jet imposé en interface.",
+    "source": "docs/systems/argyropee/rules/resolution-des-jets.md, p. 44-45 ; manuel 54-Jeu-Argyropee.md (décision de David : total ≤ 0 critique)",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "JET-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "jets",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Même fiche ; préparation neuve. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Lancer une fois avec Aucun métier et comparer la composition avec Malandrin sans confondre deux dés différents.",
+    "attendu": "La préparation passe de +3 à +5 ; seul le métier choisi est ajouté, pas tous les métiers de la fiche.",
+    "source": "docs/systems/argyropee/rules/resolution-des-jets.md, p. 44-45 ; manuel 54-Jeu-Argyropee.md (décision de David : total ≤ 0 critique)",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "JET-03",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "jets",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Modificateur du Conteur composé de deux sources −4 et −3, annoncé −7. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Saisir −7 puis lancer Serrurerie avec Aucun métier.",
+    "attendu": "Le global −7 est conservé ; total = face +3−7 ; à 0 ou moins, échec critique selon la décision de David.",
+    "source": "docs/systems/argyropee/rules/resolution-des-jets.md, p. 44-45 ; manuel 54-Jeu-Argyropee.md (décision de David : total ≤ 0 critique)",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "JET-04",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "jets",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Aucun métier ; annoncer au plus cinq aidants qualifiés. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Comparer la composition avec zéro puis cinq aidants ; essayer d’en saisir six.",
+    "attendu": "Bonus d’entraide plafonné à +5 ; la qualification de chaque aidant reste vérifiée à la table.",
+    "source": "docs/systems/argyropee/rules/resolution-des-jets.md, p. 44-45 ; manuel 54-Jeu-Argyropee.md (décision de David : total ≤ 0 critique)",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "JET-05",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "jets",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Combat rapproché 7 ; choisir le métier de recette +5 uniquement pour cette expérience. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Lancer et relever le dé ; classer le total face+12.",
+    "attendu": "12–14 réussite ; 15–21 critique. Les essais automatiques imposent séparément chaque seuil 0/1/7/8/9/10/14/15 ; l’interface reste aléatoire.",
+    "source": "docs/systems/argyropee/rules/resolution-des-jets.md, p. 44-45 ; manuel 54-Jeu-Argyropee.md (décision de David : total ≤ 0 critique)",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "PAN-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "panache",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Panache 12 ; Serrurerie 3 + Malandrin2 ; après un jet dont le dé lu est inférieur à9. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Noter la réserve, cliquer +1 et relire le résultat et le journal.",
+    "attendu": "Dé final +1, total +1, Panache −1, guigne_depense +1 ; pas de nouveau d10. Si dé9, relever le refus de plafond.",
+    "source": "docs/systems/argyropee/rules/jauges-et-ressources-individuelles.md, p. 84-85 ; argyropee.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "PAN-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "panache",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-zero"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] ZERO. Panache 0 ; jet dont le dé est inférieur à9. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Essayer +1 ou un palier proposé.",
+    "attendu": "Boutons de dépense indisponibles ; réserve reste0 et aucun Panache négatif.",
+    "source": "docs/systems/argyropee/rules/jauges-et-ressources-individuelles.md, p. 84-85 ; argyropee.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "PAN-03",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "panache",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Panache12 ; relever un résultat avec dé inférieur à9. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Dépenser jusqu’au dé9, en notant chaque coût ; essayer ensuite un point de plus.",
+    "attendu": "Le dé n’excède jamais9 ; coût total =9−face initiale, limité aussi par la réserve. Le résultat initial reste lisible.",
+    "source": "docs/systems/argyropee/rules/jauges-et-ressources-individuelles.md, p. 84-85 ; argyropee.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "PAN-04",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "panache",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-sante"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] SANTE. Un jet de dégâts libre, distinct d’un test d’attaque. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Lancer 1d4 de dégâts et chercher une dépense Panache pour ce dé.",
+    "attendu": "Aucune dépense Panache sur les dégâts n’est proposée ; un critique d’attaque se résout avec deux jets de dégâts ou une manœuvre au choix.",
+    "source": "docs/systems/argyropee/rules/jauges-et-ressources-individuelles.md, p. 84-85 ; argyropee.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "CMP-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "complexe",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Escalade1, Furtivité4 ; Aucun métier ; modificateur0, aidants0. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Composer Escalade et ajouter Furtivité dans Action complexe, puis lancer.",
+    "attendu": "Moyenne2 ; total=face+2. Succès à8 ou plus accomplit l’action ; sur échec, rattrapage=face+4 : partiellement ratée si ce total atteint8.",
+    "source": "docs/systems/argyropee/rules/jets-opposes-aide-et-cooperation.md, p. 45-46 ; argyropee.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "CMP-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "complexe",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Action complexe précédente ; après le jet, Panache disponible. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Si un palier est atteignable, dépenser le coût annoncé puis relire l’issue complexe.",
+    "attendu": "Le même dé est rehaussé, la moyenne reste2 et le rattrapage est recalculé ; aucune nouvelle compétence ni second dé inventé.",
+    "source": "docs/systems/argyropee/rules/jets-opposes-aide-et-cooperation.md, p. 45-46 ; argyropee.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "OPP-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "complexe",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Commerce3 ; Aucun métier ; adversaire score4 ; nouvelle opposition. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Activer Test en opposition ; lancer les manches jusqu’à une issue.",
+    "attendu": "Réussite partielle ou simple=1 succès, critique=2 ; premier à5 ; si les deux atteignent5 dans la même manche, égalité. Journal de l’adversaire présent.",
+    "source": "docs/systems/argyropee/rules/jets-opposes-aide-et-cooperation.md, p. 45-46 ; argyropee.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "OPP-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "complexe",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Opposition terminée. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Cliquer Nouvelle opposition, puis changer de compétence.",
+    "attendu": "Le compte neuf ne réutilise pas les succès anciens. Vérifier aussi le comportement après fermeture/réouverture ; toute conservation inattendue est à relever.",
+    "source": "docs/systems/argyropee/rules/jets-opposes-aide-et-cooperation.md, p. 45-46 ; argyropee.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "OPP-03",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "pnj",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-guigne",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / guigne / [RECETTE] JET. Opposition neuve ; Adversaire PNJ coché ; carrière+modificateurs2. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Lancer deux manches avec compétence privilégiée, puis une nouvelle opposition sans cette case.",
+    "attendu": "Chaque manche tire un nouveau d6 : degré d6 ou plancher(d6/2), plus2 puis d10 lu0–9 ; ne pas saisir une compétence fixe de PNJ.",
+    "source": "docs/systems/argyropee/rules/bestiaire-et-adversaires.md, p. 185, 196 ; lancerUnPnj",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "JOU-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "journee",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-journee",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jour"
+    },
+    "precondition": "ATELIERS DE RECETTE / journee / [RECETTE] JOUR. Panache3, bonus permanent2, offrande3, prières1, magie4, repère Guigne6. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Cliquer Réveil après le repos de fiction ; relever le dé et toutes les valeurs après.",
+    "attendu": "Panache=face0–9+15, donc15–24 ; prières0, magie0, guigne_depense0 et guigne_offerte0. La réserve3 de la veille n’est pas additionnée.",
+    "source": "docs/systems/argyropee/rules/jauges-et-ressources-individuelles.md, p. 84 ; argyropee.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "JOU-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "journee",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-journee",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jour"
+    },
+    "precondition": "ATELIERS DE RECETTE / journee / [RECETTE] JOUR. Restaurer Panache3 ; aucune autre action entre les lectures. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Cliquer Repas +3 une fois.",
+    "attendu": "Panache6 ; santé et prières inchangées. Le repas ne soigne pas automatiquement les PS.",
+    "source": "docs/systems/argyropee/rules/jauges-et-ressources-individuelles.md, p. 84 ; argyropee.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "JOU-03",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "journee",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-journee",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jour"
+    },
+    "precondition": "ATELIERS DE RECETTE / journee / [RECETTE] JOUR. Restaurer Panache3. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Cliquer Collation +1 une fois.",
+    "attendu": "Panache4 ; pas de modification des sorts ou de la Guigne. La fréquence des repas relève de la fiction.",
+    "source": "docs/systems/argyropee/rules/jauges-et-ressources-individuelles.md, p. 84 ; argyropee.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "FAV-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "faveur",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-journee",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jour"
+    },
+    "precondition": "ATELIERS DE RECETTE / journee / [RECETTE] JOUR. Sciences religieuses2, prières1 ; option Faveur décochée. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Cocher Faveur divine avant un test puis lancer.",
+    "attendu": "Deux d10 lus0–9, meilleur gardé ; prières passe2 et case décochée après le jet. La faveur reste notée après une dépense de Panache.",
+    "source": "docs/systems/argyropee/rules/la-faveur-divine.md, p. 81 ; PanneauDeJet.tsx",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "FAV-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "faveur",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-journee",
+      "personnageId": "recette-argyropee-maree-20261109-pj-bas"
+    },
+    "precondition": "ATELIERS DE RECETTE / journee / [RECETTE] BAS. Sciences religieuses2, prières2. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Essayer de déclarer une Faveur.",
+    "attendu": "Aucune prière restante ; option indisponible, sans décrément supplémentaire. Réveil rétablit deux possibilités pour le nouveau jour.",
+    "source": "docs/systems/argyropee/rules/la-faveur-divine.md, p. 81 ; PanneauDeJet.tsx",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "FAV-03",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "faveur",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-jets",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / jets / [RECETTE] JET. Sciences religieuses0. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Ouvrir Préparer et chercher la Faveur divine.",
+    "attendu": "Zéro prière ; aucune faveur lancée ni comptée.",
+    "source": "docs/systems/argyropee/rules/la-faveur-divine.md, p. 81 ; PanneauDeJet.tsx",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "FAV-04",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "faveur",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-sante"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] SANTE. Une Faveur sur dégâts ou initiative décidée par le Conteur. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Résoudre deux dés à la main et conserver le meilleur ; consigner la prière.",
+    "attendu": "Le livre permet tout dé ; le panneau natif automatise seulement le test. Aucune automatisation des dégâts/initiative revendiquée.",
+    "source": "docs/systems/argyropee/rules/la-faveur-divine.md, p. 81 ; PanneauDeJet.tsx",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "EXU-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "exuberance",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-journee",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jour"
+    },
+    "precondition": "ATELIERS DE RECETTE / journee / [RECETTE] JOUR. Panache3, santé0 ; raconter un péril puis obtenir l’accord du Conteur. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Cliquer Exubérance puis confirmer le sacrifice3.",
+    "attendu": "La santé0 est encore consciente ; second clic requis ; Panache0, sans guérison automatique ni changement imposé du récit.",
+    "source": "docs/systems/argyropee/rules/l-exuberance.md, p. 85-86 ; obstacleALExuberance",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "EXU-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "exuberance",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-journee",
+      "personnageId": "recette-argyropee-maree-20261109-pj-bas"
+    },
+    "precondition": "ATELIERS DE RECETTE / journee / [RECETTE] BAS. Panache2, santé4. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Essayer Exubérance.",
+    "attendu": "Refus expliqué : moins de3 points ; Panache2 inchangé.",
+    "source": "docs/systems/argyropee/rules/l-exuberance.md, p. 85-86 ; obstacleALExuberance",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "EXU-03",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "exuberance",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-journee",
+      "personnageId": "recette-argyropee-maree-20261109-pj-inconscient"
+    },
+    "precondition": "ATELIERS DE RECETTE / journee / [RECETTE] INCONSCIENT. Fiche points_de_sante−1, Panache3 ; projection HP générique0 documentée. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Ouvrir la journée et essayer Exubérance.",
+    "attendu": "Refus pour santé sous0. Vérifier la fiche HTML tracks.health−1 ; ne pas assimiler le libellé HP générique à une mort de règle.",
+    "source": "docs/systems/argyropee/rules/l-exuberance.md, p. 85-86 ; obstacleALExuberance",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "MAG-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "magie",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-magie",
+      "personnageId": "recette-argyropee-maree-20261109-pj-magie"
+    },
+    "precondition": "ATELIERS DE RECETTE / magie / [RECETTE] MAGIE. Restaurer Panache10 et magie_du_combat0 ; domaines Eau/Verre distincts. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Choisir le sort de recette, Sans lueur décoché, puis Exprimer.",
+    "attendu": "Panache9, magie1, guigne_depense inchangé ; coût1 avec lueur. L’effet reste arbitré, aucun bonus officiel fabriqué.",
+    "source": "docs/systems/argyropee/rules/l-art-thaumaturgique-magie-innee-des-humeurs.md, p. 127, 135-136 ; décision David 09/11 : un tirage au franchissement de 7",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "MAG-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "magie",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-magie",
+      "personnageId": "recette-argyropee-maree-20261109-pj-magie"
+    },
+    "precondition": "ATELIERS DE RECETTE / magie / [RECETTE] MAGIE. Restaurer Panache10, magie0 ; domaines distincts. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Cocher Sans lueur puis Exprimer une fois.",
+    "attendu": "Panache8, magie2 ; coût2, aucune dépense Guigne.",
+    "source": "docs/systems/argyropee/rules/l-art-thaumaturgique-magie-innee-des-humeurs.md, p. 127, 135-136 ; décision David 09/11 : un tirage au franchissement de 7",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "MAG-03",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "magie",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-magie",
+      "personnageId": "recette-argyropee-maree-20261109-pj-double"
+    },
+    "precondition": "ATELIERS DE RECETTE / magie / [RECETTE] DOUBLE. Panache3, magie0 ; deux domaines Verre. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Exprimer le sort avec Sans lueur.",
+    "attendu": "Panache2 et magie1 ; coût1 grâce à la double humeur, pas2. Le nom du domaine seul ne certifie pas une création novice.",
+    "source": "docs/systems/argyropee/rules/l-art-thaumaturgique-magie-innee-des-humeurs.md, p. 127, 135-136 ; décision David 09/11 : un tirage au franchissement de 7",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "MAG-04",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "magie",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-magie",
+      "personnageId": "recette-argyropee-maree-20261109-pj-zero"
+    },
+    "precondition": "ATELIERS DE RECETTE / magie / [RECETTE] ZERO. Panache0 ; sort de recette présent. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Essayer Exprimer avec et sans lueur.",
+    "attendu": "Bouton indisponible ; aucun compte ne change.",
+    "source": "docs/systems/argyropee/rules/l-art-thaumaturgique-magie-innee-des-humeurs.md, p. 127, 135-136 ; décision David 09/11 : un tirage au franchissement de 7",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "MAG-05",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "magie",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-magie",
+      "personnageId": "recette-argyropee-maree-20261109-pj-magie"
+    },
+    "precondition": "ATELIERS DE RECETTE / magie / [RECETTE] MAGIE. Panache10, magie6, silenciada false ; expression normale coût1. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Exprimer une fois ; relever le d100 au journal.",
+    "attendu": "Panache9, magie7 ; un d100 au franchissement ; muet si résultat≤20, sinon non. L’issue précise n’est pas promise avant le tirage.",
+    "source": "docs/systems/argyropee/rules/l-art-thaumaturgique-magie-innee-des-humeurs.md, p. 127, 135-136 ; décision David 09/11 : un tirage au franchissement de 7",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "MAG-06",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "magie",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-magie",
+      "personnageId": "recette-argyropee-maree-20261109-pj-magie"
+    },
+    "precondition": "ATELIERS DE RECETTE / magie / [RECETTE] MAGIE. Restaurer Panache10, magie7, silenciada false. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Exprimer une fois de plus.",
+    "attendu": "Panache9, magie8 ; aucun nouveau d100 de silenciada pour ce combat déjà au seuil.",
+    "source": "docs/systems/argyropee/rules/l-art-thaumaturgique-magie-innee-des-humeurs.md, p. 127, 135-136 ; décision David 09/11 : un tirage au franchissement de 7",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "MAG-07",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "magie",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-magie",
+      "personnageId": "recette-argyropee-maree-20261109-pj-magie"
+    },
+    "precondition": "ATELIERS DE RECETTE / magie / [RECETTE] MAGIE. Magie_du_combat6 et Panache10 ; relever silenciada. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Cliquer Fin du combat.",
+    "attendu": "Magie0 ; Panache10 et silenciada inchangés. Ce geste ne soigne pas le mutisme.",
+    "source": "docs/systems/argyropee/rules/l-art-thaumaturgique-magie-innee-des-humeurs.md, p. 127, 135-136 ; décision David 09/11 : un tirage au franchissement de 7",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "MAG-08",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "magie",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-magie",
+      "personnageId": "recette-argyropee-maree-20261109-pj-magie"
+    },
+    "precondition": "ATELIERS DE RECETTE / magie / [RECETTE] MAGIE. Cocher silenciada true dans la fiche, Panache10, magie0. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Résoudre deux tests réussis de Sens magique avec le Conteur puis remettre la case à faux.",
+    "attendu": "Guérison arbitrée et case tenue manuellement ; pas de deux succès ni soin automatique inventés par la campagne.",
+    "source": "docs/systems/argyropee/rules/l-art-thaumaturgique-magie-innee-des-humeurs.md, p. 127, 135-136 ; décision David 09/11 : un tirage au franchissement de 7",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "SAN-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "sante",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-sante"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] SANTE. Endurances3+3, santé actuelle4, maximum8. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Comparer fiche HTML, fiche GM-OS et compteur du combat, avant toute blessure.",
+    "attendu": "Maximum8 selon2+3+3, actuel4 aux trois lectures. Le champ de maximum est renseigné, pas une formule persistante automatique promise.",
+    "source": "docs/systems/argyropee/rules/sante-et-blessures.md, p. 52-54 ; pilote combat.santeDeDepart ; HealthInterpreter.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "SAN-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "sante",
+    "support": "à vérifier",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-sante"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] SANTE. Actuel4, maximum8 ; cible de recette seule. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Appliquer un impact générique de5 puis comparer à la règle de santé sous0.",
+    "attendu": "Règle : santé−1, inconscience sans mort automatique. Constat technique connu : HP générique borne à0. Relever l’écart ; ne pas valider la règle sur ce seul affichage.",
+    "source": "docs/systems/argyropee/rules/sante-et-blessures.md, p. 52-54 ; pilote combat.santeDeDepart ; HealthInterpreter.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "SAN-03",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "sante",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-inconscient"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] INCONSCIENT. Fiche−1, maximum8 ; le modèle de combat est à0. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Au tour suivant, résoudre Endurance morale ; sur réussite restaurer la fiche à0.",
+    "attendu": "Retour à0 conscient aux capacités limitées ; sur échec, rester inconscient selon p.53. États et réveil médical restent manuels.",
+    "source": "docs/systems/argyropee/rules/sante-et-blessures.md, p. 52-54 ; pilote combat.santeDeDepart ; HealthInterpreter.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "SAN-04",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "sante",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-sante"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] SANTE. Santé1, maximum8, aucun soin en cours. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Après un vrai repos de fiction, remonter à ceil(8/3)=3 puis noter ce soin ; recommencer le repos.",
+    "attendu": "Le premier repos remonte AU tiers3, pas +3 ; une seconde nuit seule ne monte pas à6. Panache Réveil est un autre geste.",
+    "source": "docs/systems/argyropee/rules/sante-et-blessures.md, p. 52-54 ; pilote combat.santeDeDepart ; HealthInterpreter.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "SAN-05",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "sante",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-sante"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] SANTE. Restaurer actuel4 ; maximum8 ; patient non encore soigné. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Réussir Médecine, tirer1d4 et ajouter le soin selon le Conteur ; noter le patient traité.",
+    "attendu": "Un seul test efficace par patient ; pas de répétition infinie automatique. Ne pas attribuer une essence de salmycète absente à l’inventaire.",
+    "source": "docs/systems/argyropee/rules/sante-et-blessures.md, p. 52-54 ; pilote combat.santeDeDepart ; HealthInterpreter.ts",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "PRO-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "protection",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-sante"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] SANTE. Protection de recette2/3 ; actuel4 ; impact solide fixé à3 par l’essai humain. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Déduire absorption2 puis1 PS ; modifier usure à2/2 dans le champ texte de protection.",
+    "attendu": "Actuel3, protection2/2 ; l’usure et l’absorption X/Y restent manuelles. Aucun champ d’armure générique n’est inventé.",
+    "source": "docs/systems/argyropee/rules/degats-et-types-de-degats.md, p. 49, 52 ; protections texte du gabarit",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "PRO-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "protection",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-sante"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] SANTE. Protection2/3 ; actuel4. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Comparer un poing1d4 et un contact de feu1 PS/tour, en restaurant entre les deux.",
+    "attendu": "Poing : absorption2 mais usure inchangée. Feu : pas d’absorption2, −1 PS et −1 usure par tour de contact.",
+    "source": "docs/systems/argyropee/rules/degats-et-types-de-degats.md, p. 49, 52 ; protections texte du gabarit",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "COM-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "combat",
+    "support": "à vérifier",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] JET. Agilité2, Détection2, bonus_initiative0 ; enregistrer les valeurs avant combat. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Tirer l’initiative une seule fois et noter le dé du moteur.",
+    "attendu": "Composition du pilote1d10+4 ; bonus0 évite de recompter Agilité+Détection. Contrôler la lecture du zéro : le chemin générique peut rendre10 ; noter l’écart.",
+    "source": "docs/systems/argyropee/rules/initiative-et-deroulement-du-tour.md et distances-et-portees.md, p. 46-51 ; pilote.combat et tactical",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "COM-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "combat",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] JET. Rencontre d’atelier ouverte ; tour de5 secondes. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Faire deux actions puis changer le tour ; essayer attaque après une parade non déclarée.",
+    "attendu": "Deux actions sont arbitrées par le Conteur ; une parade exige déclaration et Agilité. Aucun compteur spécialisé ni défense universelle automatique annoncé.",
+    "source": "docs/systems/argyropee/rules/initiative-et-deroulement-du-tour.md et distances-et-portees.md, p. 46-51 ; pilote.combat et tactical",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "COM-03",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "combat",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] JET. Arme et portée annoncées par le Conteur. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Comparer une cible à3m, puis au-delà et hors portée propre à l’arme.",
+    "attendu": "À3m ou moins : Combat rapproché/Rixe ; au-delà : Combat à distance. Pas de malus automatique par bande du pilote ; saisir celui de l’arme à la main.",
+    "source": "docs/systems/argyropee/rules/initiative-et-deroulement-du-tour.md et distances-et-portees.md, p. 46-51 ; pilote.combat et tactical",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "POU-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "poursuite",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] JET. Distance15m ; Endurance physique2, fatigue après5 tours. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Noter deux tests simultanés de course ; comparer succès/échec ; poursuivre au sixième tour.",
+    "attendu": "Un seul camp réussit : écart±5m ; mêmes issues : inchangé. Au6e tour, malus−1 puis cumulatif ; suivi de distance et de fatigue manuel.",
+    "source": "docs/systems/argyropee/rules/poursuites.md, p. 51-52",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "POU-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "poursuite",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] JET. Même course ; obstacle annoncé ; deux chemins de sortie. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Le fuyard accepte−1 et tente l’obstacle ; distinguer son échec d’une réussite.",
+    "attendu": "L’obstacle ne gêne le poursuivant que si le fuyard réussit ; fuite possible après deux tours hors vue. Ne pas appliquer l’opposition premier à5 à cette course.",
+    "source": "docs/systems/argyropee/rules/poursuites.md, p. 51-52",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "PNJ-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "pnj",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-guigne",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / guigne / [RECETTE] JET. Pupitre Dice-OS Argyropée ; PNJ humain synthétique carrière2 ; compétence privilégiée. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Lancer un test de PNJ et relever d6 puis d10.",
+    "attendu": "Total=d6+2+face0–9+modificateur ; nouveau d6 à chaque test, pas de compétence permanente sauvegardée.",
+    "source": "docs/systems/argyropee/rules/bestiaire-et-adversaires.md, p. 185, 196 ; lancerUnPnj",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "PNJ-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "pnj",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-guigne",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / guigne / [RECETTE] JET. Pupitre ; même PNJ ; compétence non privilégiée puis animal sans carrière. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Relever le d6 non privilégié, puis tester avec carrière0.",
+    "attendu": "Humain non privilégié : plancher(d6/2)+2+face ; animal : aucune carrière. Ces profils sont synthétiques, pas des entrées officielles du bestiaire.",
+    "source": "docs/systems/argyropee/rules/bestiaire-et-adversaires.md, p. 185, 196 ; lancerUnPnj",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "GUI-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "guigne",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-guigne",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / guigne / [RECETTE] JET. Guigne_depense0 ; Panache12 ; test au dé inférieur à9. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Dépenser +1 sur le test et relire la carte La Guigne.",
+    "attendu": "Repère du seul personnage +1 ; aucune réserve partagée, aucun incident automatique imposé à6.",
+    "source": "docs/systems/argyropee/rules/la-guigne.md, p. 176-177 ; GuigneDArgyropee.tsx",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "GUI-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "guigne",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-guigne",
+      "personnageId": "recette-argyropee-maree-20261109-pj-magie"
+    },
+    "precondition": "ATELIERS DE RECETTE / guigne / [RECETTE] MAGIE. Guigne_depense0 ; magie0 ; Panache10. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Exprimer le sort à1 ou2 points puis relire le repère.",
+    "attendu": "Repère0 ; seul le compte magique augmente.",
+    "source": "docs/systems/argyropee/rules/la-guigne.md, p. 176-177 ; GuigneDArgyropee.tsx",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "GUI-03",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "guigne",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-guigne",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jour"
+    },
+    "precondition": "ATELIERS DE RECETTE / guigne / [RECETTE] JOUR. Les profils de recette et les héros partagent la même campagne. Relever leurs valeurs avant le geste collectif. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Sur un poste d’essai, cliquer Guigne réglée puis consulter chaque PJ.",
+    "attendu": "Le geste est collectif : offrande augmentée de3 et repère0 pour chaque personnage ; JOUR passe de3 à6 offerts. Ne pas le présenter comme un reset d’atelier isolé ; restaurer toutes les cibles modifiées depuis l’état de référence.",
+    "source": "docs/systems/argyropee/rules/la-guigne.md, p. 176-177 ; GuigneDArgyropee.tsx",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "GUI-04",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "guigne",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-guigne",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jour"
+    },
+    "precondition": "ATELIERS DE RECETTE / guigne / [RECETTE] JOUR. Offrande3 ; bonus2 ; Panache3 ; accord du Conteur sur le repos. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Cliquer Réveil une fois puis vérifier l’offrande ; ne pas cliquer deux fois pour le même réveil.",
+    "attendu": "Panache15–24 ; offrande0. Les3 ne sont pas donnés une deuxième fois. Le droit à un nouveau repos reste arbitré.",
+    "source": "docs/systems/argyropee/rules/la-guigne.md, p. 176-177 ; GuigneDArgyropee.tsx",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "FIC-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "fiche",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-ecrans",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / ecrans / [RECETTE] JET. Onglet Fiche du jeu du PJ de recette ; modèle argyropee-fr déjà intégré au moteur courant. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Changer Nom et cliquer le cercle5 d’Agilité sur le modèle HTML.",
+    "attendu": "La fiche GM-OS reçoit nom et agilite5 ; les cercles précédents sont allumés ; aucun champ de héros principal changé.",
+    "source": "docs/systems/argyropee/fiche/correspondance.json ; docs/fiches/Argyropée/argyropee-fiche-interactive.html",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "FIC-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "fiche",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-ecrans",
+      "personnageId": "recette-argyropee-maree-20261109-pj-sante"
+    },
+    "precondition": "ATELIERS DE RECETTE / ecrans / [RECETTE] SANTE. Modèle HTML et fiche GM-OS du même personnage. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Changer Santé actuelle, une arme, un métier et un équipement ; recharger puis relire dans les deux sens.",
+    "attendu": "Les128 clés reliées persistent. Les9 champs propres à GM-OS, dont Guigne et Faveur, ne sont pas imprimés en HTML et restent tenus côté GM-OS.",
+    "source": "docs/systems/argyropee/fiche/correspondance.json ; docs/fiches/Argyropée/argyropee-fiche-interactive.html",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "FIC-03",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "fiche",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-ecrans",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / ecrans / [RECETTE] JET. Une scène de fiction et sa note témoin existent ; conserver le Panache de Marin comme témoin. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Modifier uniquement le PJ de recette puis suivre la restauration manuelle de ETATS-DE-REFERENCE.md ; recharger.",
+    "attendu": "Les seuls champs d’essai retrouvent leurs valeurs ; note de scène, Panache de Marin et autres fiches restent identiques. Ne pas utiliser Nexus Remplacer.",
+    "source": "docs/systems/argyropee/fiche/correspondance.json ; docs/fiches/Argyropée/argyropee-fiche-interactive.html",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "DRO-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "droits",
+    "support": "à vérifier",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-ecrans",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / ecrans / [RECETTE] JET. Trois Hub appairés à p-1/p-2/p-3 dans une instance jetable autorisée ; aucun vrai secret utilisé. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Ouvrir séances et scènes ; inspecter les charges reçues et rechercher SECRET_MJ_ARGY_MAREE.",
+    "attendu": "Aucun marqueur privé reçu ; GM-05 contrôlé sur charges complètes et partielles. Le test pur ne remplace pas ce parcours réseau.",
+    "source": "src/modules/remote/logic/caviardageDesJoueurs.ts ; parcours Hub de GM-OS",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "DRO-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "droits",
+    "support": "à vérifier",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-ecrans",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / ecrans / [RECETTE] JET. Trois Hub en360/768/1180px ; chaque joueur a son personnage. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Lancer un test et modifier une compétence depuis sa fiche ; essayer une écriture sur le PJ d’un autre joueur.",
+    "attendu": "Le MJ reçoit jet et modification autorisés ; l’autre PJ ne reçoit aucune écriture interdite. Capture et rechargement requis.",
+    "source": "src/modules/remote/logic/caviardageDesJoueurs.ts ; parcours Hub de GM-OS",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "MED-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "campagne",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-ecrans",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / ecrans / [RECETTE] JET. Campagne ouverte ; réseau externe coupé. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Ouvrir les douze plans, révéler un document préparé, projeter le plan du quai et lire un signal.",
+    "attendu": "Médias embarqués lisibles ; plans et cartouches documentaires, pas portraits peints ; signaux synthétiques, pas voix enregistrées. Matériel externe non configuré.",
+    "source": "src/types/trame.types.ts ; nexus.types.ts ; archives de campagne",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "TRA-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "campagne",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-ecrans",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / ecrans / [RECETTE] JET. Trame et séances importées. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Passer d’un acte narratif à R1 puis revenir à l’histoire ; fermer et rouvrir la scène.",
+    "attendu": "Ateliers directement accessibles et optionnels ; aucune obligation de terminer l’histoire ; leurs PJ ne sont pas affectés aux scènes de fiction.",
+    "source": "src/types/trame.types.ts ; nexus.types.ts ; archives de campagne",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "CHA-01",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "progression",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-jet"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] JET. PJ de recette seul, noter ses valeurs de départ. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Modifier un métier/une compétence et recalculer les charges depuis Endurance physique : légère10+2EP, lourde×2, soulevable×4, poussable×6.",
+    "attendu": "Les champs nommés existent et persistent ; pas de budget de création ou dépense d’expérience automatique inventé. Si les Endurances changent définitivement, recalculer la santé maximale avec le Conteur.",
+    "source": "docs/systems/argyropee/rules/composition-de-la-fiche-de-personnage.md et jauges-et-ressources-individuelles.md ; arbitrage du Conteur",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  },
+  {
+    "id": "CHA-02",
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "mecanique": "progression",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-argyropee-maree-20261109-acte-recette",
+      "sceneId": "recette-argyropee-maree-20261109-atelier-sante",
+      "personnageId": "recette-argyropee-maree-20261109-pj-sante"
+    },
+    "precondition": "ATELIERS DE RECETTE / sante / [RECETTE] SANTE. Châtiment vermeil0 sur le PJ de recette ; aucune action réelle de fiction. Restaurer les seuls champs d’essai avant ce cas.",
+    "action": "Simuler une marque dans la jauge et consigner une variation de pécule choisie.",
+    "attendu": "Marque1 et monnaie saisie persistantes ; aucune marque de meurtre ou conversion monétaire automatique attribuée aux héros.",
+    "source": "docs/systems/argyropee/rules/composition-de-la-fiche-de-personnage.md et jauges-et-ressources-individuelles.md ; arbitrage du Conteur",
+    "preuvePrevue": "Valeurs avant/après, capture datée et journal ; vérifier la persistance après rechargement.",
+    "statut": "NON TESTÉ"
+  }
+]

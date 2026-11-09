@@ -1,0 +1,243 @@
+[
+  {
+    "id": "M-01",
+    "mecanique": "import",
+    "source": "src/modules/system/archive/nexus.types.ts ; NexusService.ts",
+    "support": "natif",
+    "casIds": [
+      "IMP-01",
+      "IMP-02"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-02",
+    "mecanique": "jets",
+    "source": "docs/systems/argyropee/rules/resolution-des-jets.md, p. 44-45 ; manuel 54-Jeu-Argyropee.md (décision de David : total ≤ 0 critique)",
+    "support": "natif",
+    "casIds": [
+      "JET-01",
+      "JET-02",
+      "JET-03",
+      "JET-04",
+      "JET-05"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-03",
+    "mecanique": "panache",
+    "source": "docs/systems/argyropee/rules/jauges-et-ressources-individuelles.md, p. 84-85 ; argyropee.ts",
+    "support": "natif / manuel",
+    "casIds": [
+      "PAN-01",
+      "PAN-02",
+      "PAN-03",
+      "PAN-04"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-04",
+    "mecanique": "complexe",
+    "source": "docs/systems/argyropee/rules/jets-opposes-aide-et-cooperation.md, p. 45-46 ; argyropee.ts",
+    "support": "natif",
+    "casIds": [
+      "CMP-01",
+      "CMP-02",
+      "OPP-01",
+      "OPP-02"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-05",
+    "mecanique": "journee",
+    "source": "docs/systems/argyropee/rules/jauges-et-ressources-individuelles.md, p. 84 ; argyropee.ts",
+    "support": "natif",
+    "casIds": [
+      "JOU-01",
+      "JOU-02",
+      "JOU-03"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-06",
+    "mecanique": "faveur",
+    "source": "docs/systems/argyropee/rules/la-faveur-divine.md, p. 81 ; PanneauDeJet.tsx",
+    "support": "natif / manuel",
+    "casIds": [
+      "FAV-01",
+      "FAV-02",
+      "FAV-03",
+      "FAV-04"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-07",
+    "mecanique": "exuberance",
+    "source": "docs/systems/argyropee/rules/l-exuberance.md, p. 85-86 ; obstacleALExuberance",
+    "support": "natif",
+    "casIds": [
+      "EXU-01",
+      "EXU-02",
+      "EXU-03"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-08",
+    "mecanique": "magie",
+    "source": "docs/systems/argyropee/rules/l-art-thaumaturgique-magie-innee-des-humeurs.md, p. 127, 135-136 ; décision David 09/11 : un tirage au franchissement de 7",
+    "support": "natif / manuel",
+    "casIds": [
+      "MAG-01",
+      "MAG-02",
+      "MAG-03",
+      "MAG-04",
+      "MAG-05",
+      "MAG-06",
+      "MAG-07",
+      "MAG-08"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Effets originaux de recette, pas des sorts officiels ; effets et guérison de la silenciada manuels."
+  },
+  {
+    "id": "M-09",
+    "mecanique": "sante",
+    "source": "docs/systems/argyropee/rules/sante-et-blessures.md, p. 52-54 ; pilote combat.santeDeDepart ; HealthInterpreter.ts",
+    "support": "natif / à vérifier / manuel",
+    "casIds": [
+      "SAN-01",
+      "SAN-02",
+      "SAN-03",
+      "SAN-04",
+      "SAN-05"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "HP générique ne conserve pas le négatif ; soins et inconscience à arbitrer."
+  },
+  {
+    "id": "M-10",
+    "mecanique": "protection",
+    "source": "docs/systems/argyropee/rules/degats-et-types-de-degats.md, p. 49, 52 ; protections texte du gabarit",
+    "support": "manuel",
+    "casIds": [
+      "PRO-01",
+      "PRO-02"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-11",
+    "mecanique": "combat",
+    "source": "docs/systems/argyropee/rules/initiative-et-deroulement-du-tour.md et distances-et-portees.md, p. 46-51 ; pilote.combat et tactical",
+    "support": "à vérifier / manuel",
+    "casIds": [
+      "COM-01",
+      "COM-02",
+      "COM-03"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Initiative générique et compte des actions à vérifier ; pas de conversion0 ni compteur spécialisé promis."
+  },
+  {
+    "id": "M-12",
+    "mecanique": "poursuite",
+    "source": "docs/systems/argyropee/rules/poursuites.md, p. 51-52",
+    "support": "manuel",
+    "casIds": [
+      "POU-01",
+      "POU-02"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-13",
+    "mecanique": "pnj",
+    "source": "docs/systems/argyropee/rules/bestiaire-et-adversaires.md, p. 185, 196 ; lancerUnPnj",
+    "support": "natif",
+    "casIds": [
+      "OPP-03",
+      "PNJ-01",
+      "PNJ-02"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-14",
+    "mecanique": "guigne",
+    "source": "docs/systems/argyropee/rules/la-guigne.md, p. 176-177 ; GuigneDArgyropee.tsx",
+    "support": "natif",
+    "casIds": [
+      "GUI-01",
+      "GUI-02",
+      "GUI-03",
+      "GUI-04"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Guigne réglée touche collectivement les PJ de la campagne ; garder ses effets hors reset local."
+  },
+  {
+    "id": "M-15",
+    "mecanique": "fiche",
+    "source": "docs/systems/argyropee/fiche/correspondance.json ; docs/fiches/Argyropée/argyropee-fiche-interactive.html",
+    "support": "natif",
+    "casIds": [
+      "FIC-01",
+      "FIC-02",
+      "FIC-03"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-16",
+    "mecanique": "droits",
+    "source": "src/modules/remote/logic/caviardageDesJoueurs.ts ; parcours Hub de GM-OS",
+    "support": "à vérifier",
+    "casIds": [
+      "DRO-01",
+      "DRO-02"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Parcours Hub et réseau NON EXÉCUTÉS ; caviardage pur vérifié séparément."
+  },
+  {
+    "id": "M-17",
+    "mecanique": "campagne",
+    "source": "src/types/trame.types.ts ; nexus.types.ts ; archives de campagne",
+    "support": "natif",
+    "casIds": [
+      "MED-01",
+      "TRA-01"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  },
+  {
+    "id": "M-18",
+    "mecanique": "progression",
+    "source": "docs/systems/argyropee/rules/composition-de-la-fiche-de-personnage.md et jauges-et-ressources-individuelles.md ; arbitrage du Conteur",
+    "support": "manuel",
+    "casIds": [
+      "CHA-01",
+      "CHA-02"
+    ],
+    "archive": "01-Les-Comptes-de-la-maree.gmos",
+    "limite": "Voir le support et les préconditions de chaque cas ; recette humaine NON TESTÉE."
+  }
+]

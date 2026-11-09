@@ -1,0 +1,18 @@
+{
+  "outil": "gmos_bundle.py verify — contrôle structurel partiel",
+  "rapports": [
+    {
+      "fichier": "01-Les-Comptes-de-la-maree.gmos",
+      "sha256": "99ab03140af10542e26006d9bead494fd9f7fd7f11064711cee0a2525c1bdcaa",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; r�gles, satellites, m�dias d�cod�s, import GM-OS, tablettes et mat�riel non v�rifi�s par cet outil."
+      ],
+      "campaignId": "recette-argyropee-maree-20261109-campagne-comptes",
+      "players": 3,
+      "characters": 11,
+      "assets": 48
+    }
+  ]
+}
