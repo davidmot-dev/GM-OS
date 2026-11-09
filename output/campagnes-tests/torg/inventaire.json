@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "genereLe": "2026-11-08T12:00:00.000Z",
+  "pilote": {
+    "id": "custom-1774618478256",
+    "version": "2.0.0",
+    "source": "Export Dirvers/corriges/Torg-Eternity-2.0.0.gmos-driver",
+    "sha256": "40bbeec5d6c3d8369cb5d9be6c5d6c2a422590cf1e8ecaf2a829b1701bd60d65"
+  },
+  "gabarit": {
+    "id": "tpl-1774618478258",
+    "html": "torg-eternity-fr",
+    "champs": 80
+  },
+  "rattachement": [
+    {
+      "id": "p-1",
+      "realName": "Thomas D."
+    },
+    {
+      "id": "p-2",
+      "realName": "Marie C."
+    },
+    {
+      "id": "p-3",
+      "realName": "Lucas R."
+    }
+  ],
+  "archives": [
+    {
+      "fichier": "01-Les-Balises-de-l-Aube.gmos",
+      "campagne": "recette-torg-aube-campagne-balises",
+      "sha256": "3014d2b69be3daa3a9561443c7c3602f55071f275ea1e86ca4833dc477cc9142",
+      "personnages": 9,
+      "medias": 45
+    }
+  ],
+  "seances": 12,
+  "actesNarratifs": 4,
+  "ateliers": 6,
+  "scenes": 42,
+  "pjPrincipaux": 3,
+  "pjRecette": 6,
+  "pnj": 16,
+  "casDeRecette": 63,
+  "modules": {
+    "instances": {},
+    "specifiques": 0,
+    "outilsNatifs": [
+      "Fiche du jeu",
+      "Lancer un test",
+      "Dice-OS",
+      "Combat-OS",
+      "Deck-OS"
+    ],
+    "verification": "modulesDuPilote(pilote) appelé par torg.test.ts ; catalogue.ts et pilote réel empreintés"
+  },
+  "sourcesRegles": [
+    {
+      "fichier": "docs/systems/torg/rules/resolution-des-jets.md",
+      "sha256": "a63db0e54878720cc704cedd48cbbc77998f0e55a5114ccee0f149651fc1185b"
+    },
+    {
+      "fichier": "docs/systems/torg/rules/degres-de-reussite-et-critiques.md",
+      "sha256": "ea3143970407d5081543f1ced94d7b7f127e1d014abad5b4710348ff7ba9cd2f"
+    },
+    {
+      "fichier": "docs/systems/torg/rules/atouts-cartes-et-capacites.md",
+      "sha256": "93c53c19df927a5464a19735038c8e15f650991cfd8124dfefe60cc3d5f61138"
+    }
+  ]
+}

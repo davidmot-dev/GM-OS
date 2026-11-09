@@ -1,0 +1,9 @@
+{
+  "archives": [
+    {
+      "fichier": "01-Les-Balises-de-l-Aube.gmos",
+      "sha256": "3014d2b69be3daa3a9561443c7c3602f55071f275ea1e86ca4833dc477cc9142"
+    }
+  ],
+  "assertions": "torg.test.ts ; résultat global dans verification-archives.json"
+}

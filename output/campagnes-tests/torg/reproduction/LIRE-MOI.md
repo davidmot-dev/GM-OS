@@ -1,0 +1,1 @@
+Replacer ces fichiers dans outils/campagnes-de-recette/ et le parcours Playwright dans e2e/ du dépôt. Le pilote réel est fourni à la racine. Les fonctions métier et dépendances existantes du dépôt sont requises ; aucun profil personnel ne fait partie de la reproduction. Les empreintes sont invalidées si les sources ou l’archive changent.

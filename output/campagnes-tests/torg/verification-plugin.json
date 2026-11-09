@@ -1,0 +1,18 @@
+{
+  "outil": "GM-OS Campagnes de test / gmos_bundle.py verify",
+  "rapports": [
+    {
+      "fichier": "01-Les-Balises-de-l-Aube.gmos",
+      "sha256": "3014d2b69be3daa3a9561443c7c3602f55071f275ea1e86ca4833dc477cc9142",
+      "valid": true,
+      "errors": [],
+      "limits": [
+        "Structure Nexus v1 partielle ; r�gles, satellites, m�dias d�cod�s, import GM-OS, tablettes et mat�riel non v�rifi�s par cet outil."
+      ],
+      "campaignId": "recette-torg-aube-campagne-balises",
+      "players": 3,
+      "characters": 9,
+      "assets": 45
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "reussi": true,
+  "navigateur": "Edge Chromium",
+  "horsLigne": true,
+  "imagesDecodees": 42,
+  "wavDecodes": 3,
+  "dureeWavSecondes": 4,
+  "archives": [
+    {
+      "fichier": "01-Les-Balises-de-l-Aube.gmos",
+      "campagne": "recette-torg-aube-campagne-balises",
+      "sha256": "3014d2b69be3daa3a9561443c7c3602f55071f275ea1e86ca4833dc477cc9142",
+      "personnages": 9,
+      "medias": 45
+    }
+  ],
+  "capturesExaminees": true,
+  "captures": [
+    {
+      "fichier": "captures/rendu-carte-port.jpg",
+      "sha256": "263110f5a3b032b409508add2bb8663441da9aaebb539190e6d2a837e1e9361a"
+    },
+    {
+      "fichier": "captures/rendu-carte-pont.jpg",
+      "sha256": "6bcd083ac69ab59b75ead9953178d7f4a4e3c974c1f5f9ac364ddc19848bc961"
+    },
+    {
+      "fichier": "captures/rendu-carte-fort.jpg",
+      "sha256": "d84d164bfe9590dc68ff04af94db7084fdbb9fc38efe46c524156efa10e834cc"
+    },
+    {
+      "fichier": "captures/rendu-carte-fonderie.jpg",
+      "sha256": "b6c565d64c53fb5686280cfb742ebd4cc7d494a13bb9f5642bac5516a4612b98"
+    },
+    {
+      "fichier": "captures/rendu-pj-salome.jpg",
+      "sha256": "44663b5e08182e7b29ec89e3d8e24407c642757d45c10996b8dcb73b100a155a"
+    },
+    {
+      "fichier": "captures/rendu-pj-ilyan.jpg",
+      "sha256": "aa1c7af73ceaba3d2d0347c0ed580ebe8f881349b70c82a8fd69650811645c66"
+    },
+    {
+      "fichier": "captures/rendu-pj-mei.jpg",
+      "sha256": "9c81e95429c90e50bd1ed1cecc612141f8267bbf47a8feff06b0585cc226910c"
+    },
+    {
+      "fichier": "captures/rendu-indice-options.jpg",
+      "sha256": "e63ef4e76176a05f60bf6315b6f08e64516e99cc9e87f93105a102ddf80b0554"
+    },
+    {
+      "fichier": "captures/rendu-reseau.jpg",
+      "sha256": "38a8296219ad3ae3af66c41d06111a9eb6b3dc709be7b88a465ac7a48ecb3ded"
+    }
+  ],
+  "examen": "Neuf rendus examines sur planche ; carte de la fonderie examinee aussi en pleine resolution."
+}

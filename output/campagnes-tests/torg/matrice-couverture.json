@@ -1,0 +1,145 @@
+[
+  {
+    "id": "import",
+    "mecanique": "import",
+    "source": "src/modules/system/archive/nexus.types.ts ; NexusService.ts ; contrat campagne-complete.md",
+    "support": "natif",
+    "casIds": [
+      "IMP-01",
+      "IMP-02",
+      "IMP-03",
+      "IMP-04"
+    ],
+    "archive": "01-Les-Balises-de-l-Aube.gmos",
+    "limite": "Cas ciblés ; ni toutes les combinaisons ni une partie humaine validée."
+  },
+  {
+    "id": "jets",
+    "mecanique": "jets",
+    "source": "docs/systems/torg/rules/resolution-des-jets.md et degres-de-reussite-et-critiques.md, relus le 07/11 ; livre p. 77, 108–110 ; src/modules/dice/systemes/torg.ts",
+    "support": "natif avec arbitrage explicite",
+    "casIds": [
+      "JET-01",
+      "JET-02",
+      "JET-03",
+      "JET-04",
+      "JET-05",
+      "JET-06",
+      "JET-07",
+      "JET-08",
+      "JET-09",
+      "JET-10"
+    ],
+    "archive": "01-Les-Balises-de-l-Aube.gmos",
+    "limite": "Cas ciblés ; ni toutes les combinaisons ni une partie humaine validée."
+  },
+  {
+    "id": "sante",
+    "mecanique": "sante",
+    "source": "documentation/User Guides/54-Jeu-Torg.md, table vérifiée le 07/11 ; src/modules/combat/logic/dommagesDeTorg.ts et impactDeTorg.ts ; l’ancien résumé sante-et-blessures.md reste non relu",
+    "support": "natif avec arbitrage explicite",
+    "casIds": [
+      "SAN-01",
+      "SAN-02",
+      "SAN-03",
+      "SAN-04",
+      "SAN-05",
+      "SAN-06",
+      "SAN-07",
+      "SAN-08",
+      "SAN-09",
+      "SAN-10"
+    ],
+    "archive": "01-Les-Balises-de-l-Aube.gmos",
+    "limite": "Cas ciblés ; ni toutes les combinaisons ni une partie humaine validée."
+  },
+  {
+    "id": "cartes",
+    "mecanique": "cartes",
+    "source": "documentation/User Guides/54-Jeu-Torg.md ; livre p. 112–113, 117 ; src/modules/session/logic/cartesDuDestin.ts et echangesDeTorg.ts",
+    "support": "natif avec arbitrage explicite",
+    "casIds": [
+      "CAR-01",
+      "CAR-02",
+      "CAR-03",
+      "CAR-04",
+      "CAR-05",
+      "CAR-06",
+      "CAR-07",
+      "CAR-08",
+      "CAR-09",
+      "CAR-10"
+    ],
+    "archive": "01-Les-Balises-de-l-Aube.gmos",
+    "limite": "Dix cartes du Destin disponibles ; mains complètes et Relation réelle demandent le paquet complet."
+  },
+  {
+    "id": "atouts",
+    "mecanique": "atouts",
+    "source": "docs/systems/torg/rules/atouts-cartes-et-capacites.md, relu le 07/11 ; livre p. 85, 94, 99–100, 105 ; Empire du Nil v1 p. 17",
+    "support": "natif avec arbitrage explicite",
+    "casIds": [
+      "ATO-01",
+      "ATO-02",
+      "ATO-03",
+      "ATO-04",
+      "ATO-05",
+      "ATO-06",
+      "ATO-07",
+      "ATO-08",
+      "ATO-09"
+    ],
+    "archive": "01-Les-Balises-de-l-Aube.gmos",
+    "limite": "Dix cartes du Destin disponibles ; mains complètes et Relation réelle demandent le paquet complet."
+  },
+  {
+    "id": "cosms",
+    "mecanique": "cosms",
+    "source": "documentation/User Guides/54-Jeu-Torg.md ; src/modules/session/logic/cosmsCourants.ts ; src/modules/combat/suitesDeTorg.ts ; cosms du pilote 2.0.0",
+    "support": "natif et manuel",
+    "casIds": [
+      "COS-01",
+      "COS-02",
+      "COS-03",
+      "COS-04",
+      "COS-05",
+      "COS-06",
+      "COS-07",
+      "COS-08",
+      "COS-09",
+      "COS-10"
+    ],
+    "archive": "01-Les-Balises-de-l-Aube.gmos",
+    "limite": "Cas ciblés ; ni toutes les combinaisons ni une partie humaine validée."
+  },
+  {
+    "id": "sbires",
+    "mecanique": "sbires",
+    "source": "docs/systems/torg/rules/atouts-cartes-et-capacites.md ; livre p. 264–265, 271 ; porterUnCoupDeTorg.ts ; impactDeTorg.ts",
+    "support": "natif avec arbitrage explicite",
+    "casIds": [
+      "SBI-01",
+      "SBI-02",
+      "SBI-03",
+      "SBI-04"
+    ],
+    "archive": "01-Les-Balises-de-l-Aube.gmos",
+    "limite": "Cas ciblés ; ni toutes les combinaisons ni une partie humaine validée."
+  },
+  {
+    "id": "hub",
+    "mecanique": "hub",
+    "source": "src/components/hub/HubCharacterSheet.tsx ; docs/systems/torg/fiche/correspondance.json ; e2e/lancerGmOs.ts",
+    "support": "natif avec arbitrage explicite",
+    "casIds": [
+      "HUB-01",
+      "HUB-02",
+      "HUB-03",
+      "HUB-04",
+      "HUB-05",
+      "RST-01"
+    ],
+    "archive": "01-Les-Balises-de-l-Aube.gmos",
+    "limite": "Cas ciblés ; ni toutes les combinaisons ni une partie humaine validée."
+  }
+]

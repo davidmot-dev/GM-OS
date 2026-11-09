@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+const dir=path.resolve('output/campagnes-tests/torg');
+const python=process.env.GMOS_PYTHON??path.join(process.env.USERPROFILE,'.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe');
+const outil=process.env.GMOS_BUNDLE_TOOL??path.resolve('outils/gmos-campagnes-tests/plugin/gmos-campagnes-tests/skills/campagnes-de-test/scripts/gmos_bundle.py');
+const i=JSON.parse(fs.readFileSync(path.join(dir,'inventaire.json'),'utf8'));
+assert.equal(i.archives.length,1);
+const rapports=i.archives.map(a=>({fichier:a.fichier,sha256:a.sha256,...JSON.parse(execFileSync(python,['-I','-B',outil,'verify',path.join(dir,a.fichier)],{encoding:'utf8',env:{...process.env,PYTHONIOENCODING:'utf-8'}}))}));
+assert.ok(rapports.every(r=>r.valid));
+fs.writeFileSync(path.join(dir,'verification-plugin.json'),JSON.stringify({outil:'GM-OS Campagnes de test / gmos_bundle.py verify',rapports},null,2)+'\n');
+console.log(JSON.stringify(rapports.map(({fichier,valid})=>({fichier,valid}))));

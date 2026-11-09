@@ -1,0 +1,32 @@
+{
+  "capturesExaminees": true,
+  "rapportElectronSHA256": "53b33b375241bc7559b6aae67843d5457fe468eaacc144fc660a95deb8959f7f",
+  "sourceE2ESHA256": "528338ef3e4aa39ed903d9cfda0c216deaeab209e5994827c7c9f96d4b5e7313",
+  "examen": "Six captures examinees sur planche ; Hub 360 et restauration locale examines en pleine resolution.",
+  "captures": [
+    {
+      "fichier": "captures/01-campagne-importee.jpg",
+      "sha256": "0094f42d39b77956b60acdb3a5b2dacaa950198581365d7724f4e7912533bb5c"
+    },
+    {
+      "fichier": "captures/02-ateliers-dans-la-trame.jpg",
+      "sha256": "57b921af182972d0ab6b3ab267c8639e6f681b94152657a62670d32836140845"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-1-360.jpg",
+      "sha256": "343ffc9ac0a822b126c5e33f972da423fe1020a8d3cc95b74f780a3062817c6a"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-2-768.jpg",
+      "sha256": "e12c5359c8e470fff09501ea613cc86bc868638ccd128bd873699f7438a96d51"
+    },
+    {
+      "fichier": "captures/03-fiche-joueur-3-1180.jpg",
+      "sha256": "a7e3bcbb5895e7f70d2ebe6e7767fb9a1918f77fce3bb8bf8cdadf064895697c"
+    },
+    {
+      "fichier": "captures/04-atelier-restaure.jpg",
+      "sha256": "fab6f56749841cf5294d818be27aaef3fb73ed5897b01af34377b6460a2f78de"
+    }
+  ]
+}

@@ -14,6 +14,10 @@ dés préparés ; aucun appareil physique. [Chapitres et vérifications](../../o
 
 ## La fiche PJ vierge
 
+Pour essayer le pilote : [Les Balises de l’Aube — campagne de recette](../../output/campagnes-tests/torg/LIRE-MOI.md),
+douze séances préparées et six ateliers dans une seule campagne. Le cahier contient 63 cas NON TESTÉS
+par David ; le guide précise les limites des cinq cartes du Destin disponibles et la portée des distributions.
+
 [Ouvrir la fiche HTML interactive](../../docs/fiches/Torg/torg-eternity-fiche-pj-vierge-interactive.html)
 ou [la version PDF à imprimer](../../output/fiches/torg/torg-eternity-fiche-pj-vierge.pdf).
 La page fournie par David est reproduite avec ses données préremplies retirées ; la

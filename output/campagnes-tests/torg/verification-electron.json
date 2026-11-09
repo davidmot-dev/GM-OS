@@ -1,0 +1,35 @@
+{
+  "reussi": true,
+  "importNatif": true,
+  "uneSeuleCampagneAjoutee": true,
+  "reload": true,
+  "joueursExistantsConserves": true,
+  "anciensPJConserves": 3,
+  "paquetsEtMainsPreserves": true,
+  "pjDuLot": 9,
+  "seances": 12,
+  "scenes": 42,
+  "ficheHTML": true,
+  "fichesRecuesMJ": 3,
+  "jetsRecusParMJ": 3,
+  "depensesRecuesMJ": 3,
+  "touchesRecues": 12,
+  "tablettes": [
+    360,
+    768,
+    1180
+  ],
+  "appareilPhysique": false,
+  "modulesSpecifiques": 0,
+  "restaurationLocale": true,
+  "temoinsFictionEtPrincipalConserves": true,
+  "archives": [
+    {
+      "fichier": "01-Les-Balises-de-l-Aube.gmos",
+      "sha256": "3014d2b69be3daa3a9561443c7c3602f55071f275ea1e86ca4833dc477cc9142"
+    }
+  ],
+  "sourceE2ESHA256": "528338ef3e4aa39ed903d9cfda0c216deaeab209e5994827c7c9f96d4b5e7313",
+  "secretsNonDiffuses": true,
+  "anomalies": []
+}

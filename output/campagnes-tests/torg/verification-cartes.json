@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-08",
+  "reussi": true,
+  "facesDecodees": 10,
+  "facesAjouteesExaminees": [
+    "card_06.jpg",
+    "card_07.jpg",
+    "card_08.jpg",
+    "card_09.jpg",
+    "card_10.jpg"
+  ],
+  "relationDisponible": false,
+  "nombreDeclareParPilote": 5,
+  "nombreAReglerDansDeckOS": 10,
+  "manquantesTroisHeros": 2,
+  "manquantesNeufPJ": 26,
+  "portee": "Décodage hors ligne des dix JPEG. --lecture-confirmee atteste une lecture explicite des cinq nouvelles faces ; ce paramètre ne doit être employé qu’après examen. Aucune distribution en application ni validation humaine de recette revendiquée.",
+  "faces": [
+    {
+      "fichier": "public/assets/decks/torg/destin/card_01.jpg",
+      "sha256": "9257c59d2d487ab8cfa5fb8556adf7a9a8c90d4d70807298b48baa14be21d109",
+      "largeur": 357,
+      "hauteur": 498
+    },
+    {
+      "fichier": "public/assets/decks/torg/destin/card_02.jpg",
+      "sha256": "1059f7f759adcd304983e79a4da7681b8f5195396aca81dee1bbf4ac2bdcde51",
+      "largeur": 357,
+      "hauteur": 498
+    },
+    {
+      "fichier": "public/assets/decks/torg/destin/card_03.jpg",
+      "sha256": "fa6dd31e8eefbde9918716ac586c39fbf034c5e4de2b34d6a81d2b994001b621",
+      "largeur": 357,
+      "hauteur": 498
+    },
+    {
+      "fichier": "public/assets/decks/torg/destin/card_04.jpg",
+      "sha256": "c2d68953e49e431fbbdcdb68a73382b179109d4388c8da6fa4ad6c6f70d69211",
+      "largeur": 357,
+      "hauteur": 498
+    },
+    {
+      "fichier": "public/assets/decks/torg/destin/card_05.jpg",
+      "sha256": "ba1c4e30b31372654efca2a0d41fbc14e2e3b5c3da69041bc35410c305d5b5e6",
+      "largeur": 357,
+      "hauteur": 498
+    },
+    {
+      "fichier": "public/assets/decks/torg/destin/card_06.jpg",
+      "sha256": "6de434b3063712b894d048eb108b87e909047ece4b14a86d57350ba901e3ec8b",
+      "largeur": 745,
+      "hauteur": 1040
+    },
+    {
+      "fichier": "public/assets/decks/torg/destin/card_07.jpg",
+      "sha256": "53d2708dcae9a1897bd3769f0d029d9300a35391155d46ba98bde08f72318a98",
+      "largeur": 745,
+      "hauteur": 1040
+    },
+    {
+      "fichier": "public/assets/decks/torg/destin/card_08.jpg",
+      "sha256": "89f76d1bb47a8124ff1075dccde04c43057c0b330d943117be4d5f0abf313494",
+      "largeur": 745,
+      "hauteur": 1040
+    },
+    {
+      "fichier": "public/assets/decks/torg/destin/card_09.jpg",
+      "sha256": "a31b3efd718a4cfc68e137ac04d58ca8536ff540dd96a8a52f8332309002fa01",
+      "largeur": 745,
+      "hauteur": 1040
+    },
+    {
+      "fichier": "public/assets/decks/torg/destin/card_10.jpg",
+      "sha256": "03b66dcc4e1bce73166bf33ef399161b6bd6efa5b2b8031bebc71a949752dd1c",
+      "largeur": 745,
+      "hauteur": 1040
+    }
+  ]
+}
