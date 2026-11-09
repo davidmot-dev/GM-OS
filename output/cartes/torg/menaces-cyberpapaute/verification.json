@@ -1,0 +1,628 @@
+{
+  "status": "passed",
+  "date": "2026-11-08",
+  "source_sha256": "8b9d4561857c160a2e32e9d095427005273744852d71a44019b70c3734a5a8df",
+  "source_pages": 62,
+  "covered_pages": 62,
+  "threat_pairs": 30,
+  "illustrated_fronts": 30,
+  "distinct_stat_backs": 30,
+  "card_jpegs": 60,
+  "instruction_jpegs": 2,
+  "replay_identical_card_jpegs": 60,
+  "replay_identical_instruction_jpegs": 2,
+  "decks": {
+    "01-gospog-de-la-5e-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "01-gospog-de-la-5e-recolte/back.jpg"
+    },
+    "02-gospog-de-la-4e-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "02-gospog-de-la-4e-recolte/back.jpg"
+    },
+    "03-gospog-de-la-3e-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "03-gospog-de-la-3e-recolte/back.jpg"
+    },
+    "04-gospog-de-la-2de-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "04-gospog-de-la-2de-recolte/back.jpg"
+    },
+    "05-cygoyle": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "05-cygoyle/back.jpg"
+    },
+    "06-aenge": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "06-aenge/back.jpg"
+    },
+    "07-survoltchien": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "07-survoltchien/back.jpg"
+    },
+    "08-cartagras": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "08-cartagras/back.jpg"
+    },
+    "09-jean-malraux": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "09-jean-malraux/back.jpg"
+    },
+    "10-molosse-infernal": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "10-molosse-infernal/back.jpg"
+    },
+    "11-inquisiteur": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "11-inquisiteur/back.jpg"
+    },
+    "12-veilleur-de-babel": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "12-veilleur-de-babel/back.jpg"
+    },
+    "13-cyberchevalier": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "13-cyberchevalier/back.jpg"
+    },
+    "14-parangon-de-la-police-de-l-eglise": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "14-parangon-de-la-police-de-l-eglise/back.jpg"
+    },
+    "15-parjure": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "15-parjure/back.jpg"
+    },
+    "16-hospitalier": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "16-hospitalier/back.jpg"
+    },
+    "17-connectpretre-sentinelle": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "17-connectpretre-sentinelle/back.jpg"
+    },
+    "18-inspecteur-de-la-police-de-l-eglise": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "18-inspecteur-de-la-police-de-l-eglise/back.jpg"
+    },
+    "19-devoreur": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "19-devoreur/back.jpg"
+    },
+    "20-char-a-repulsion-magnetique-samson": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "20-char-a-repulsion-magnetique-samson/back.jpg"
+    },
+    "21-drone-d-assaut": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "21-drone-d-assaut/back.jpg"
+    },
+    "22-morgana": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "22-morgana/back.jpg"
+    },
+    "23-le-directeur": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "23-le-directeur/back.jpg"
+    },
+    "24-cybernonne-possedee": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "24-cybernonne-possedee/back.jpg"
+    },
+    "25-fanatiques": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "25-fanatiques/back.jpg"
+    },
+    "26-apostats": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "26-apostats/back.jpg"
+    },
+    "27-irzzometh": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "27-irzzometh/back.jpg"
+    },
+    "28-uriel": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "28-uriel/back.jpg"
+    },
+    "29-chasseur-draygakk": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "29-chasseur-draygakk/back.jpg"
+    },
+    "30-police-secrete-du-vatican": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "30-police-secrete-du-vatican/back.jpg"
+    }
+  },
+  "labels": {
+    "01-gospog-de-la-5e-recolte": "GOSPOG DE LA 5E RÉCOLTE",
+    "02-gospog-de-la-4e-recolte": "GOSPOG DE LA 4E RÉCOLTE",
+    "03-gospog-de-la-3e-recolte": "GOSPOG DE LA 3E RÉCOLTE",
+    "04-gospog-de-la-2de-recolte": "GOSPOG DE LA 2DE RÉCOLTE",
+    "05-cygoyle": "CYGOYLE",
+    "06-aenge": "AENGE",
+    "07-survoltchien": "SURVOLTCHIEN",
+    "08-cartagras": "CARTAGRAS",
+    "09-jean-malraux": "JEAN MALRAUX",
+    "10-molosse-infernal": "MOLOSSE INFERNAL",
+    "11-inquisiteur": "INQUISITEUR",
+    "12-veilleur-de-babel": "VEILLEUR DE BABEL",
+    "13-cyberchevalier": "CYBERCHEVALIER",
+    "14-parangon-de-la-police-de-l-eglise": "PARANGON DE LA POLICE DE L'ÉGLISE",
+    "15-parjure": "PARJURE",
+    "16-hospitalier": "HOSPITALIER",
+    "17-connectpretre-sentinelle": "CONNECTPRÊTRE SENTINELLE",
+    "18-inspecteur-de-la-police-de-l-eglise": "INSPECTEUR DE LA POLICE DE L'ÉGLISE",
+    "19-devoreur": "DÉVOREUR",
+    "20-char-a-repulsion-magnetique-samson": "CHAR À RÉPULSION MAGNÉTIQUE SAMSON",
+    "21-drone-d-assaut": "DRONE D'ASSAUT",
+    "22-morgana": "MORGANA",
+    "23-le-directeur": "LE DIRECTEUR",
+    "24-cybernonne-possedee": "CYBERNONNE POSSÉDÉE",
+    "25-fanatiques": "FANATIQUES",
+    "26-apostats": "APOSTATS",
+    "27-irzzometh": "IRZZOMETH",
+    "28-uriel": "URIEL",
+    "29-chasseur-draygakk": "CHASSEUR DRAYGAKK",
+    "30-police-secrete-du-vatican": "POLICE SECRÈTE DU VATICAN"
+  },
+  "format": "JPEG RGB; quality 95; 4:4:4; PDF rendered at 300 dpi",
+  "visual_checks": "Both source sheets and both final preview sheets inspected; all 30 final stat backs inspected at full resolution in eight sheets; first illustrated front opened separately. All text upright; complete card borders retained.",
+  "source_notes": [
+    "Pages 1–2 are instructions, exported separately rather than treated as threats."
+  ],
+  "runtime": {
+    "pymupdf": "2.0",
+    "pillow": "12.1.1"
+  },
+  "extractor": {
+    "original_sha256": "132f32f7a609d528d38c8f322d143a322cc28d612b2aebc225a46b1d9fcfac45",
+    "adapted_sha256": "fc3f4bf94997a8834e0f4045d171e038f7ef0cce0d49da69b365e4d23aeced2e",
+    "adaptation": "Only stage.rename(out) replaced by copytree with SHA-256 equality checks. Rendering unchanged."
+  },
+  "cards": [
+    {
+      "file": "01-gospog-de-la-5e-recolte/0.jpg",
+      "page": 3,
+      "sha256": "d5a9e736c71e0bbe6ed2952650e08433418d7d4c3112835b8356821c425d9222",
+      "replay_identical": true
+    },
+    {
+      "file": "01-gospog-de-la-5e-recolte/back.jpg",
+      "page": 4,
+      "sha256": "18e4880a34c0e43e5c298b92cc2775922d1fa568ce6c94bc3cd00a3a2b8b1130",
+      "replay_identical": true
+    },
+    {
+      "file": "02-gospog-de-la-4e-recolte/0.jpg",
+      "page": 5,
+      "sha256": "7a145e69dfcdb4433a75bdfd17a9296c85a82d491da94c99532e523b46a9cd87",
+      "replay_identical": true
+    },
+    {
+      "file": "02-gospog-de-la-4e-recolte/back.jpg",
+      "page": 6,
+      "sha256": "5588f93b686d4fd59dc66f70d1f088e623a016a375a884cb8ac68020944db13e",
+      "replay_identical": true
+    },
+    {
+      "file": "03-gospog-de-la-3e-recolte/0.jpg",
+      "page": 7,
+      "sha256": "7af4627d80b4467767434a4e6ff5be2c325de48825ca794f4cc831c8a29ac97b",
+      "replay_identical": true
+    },
+    {
+      "file": "03-gospog-de-la-3e-recolte/back.jpg",
+      "page": 8,
+      "sha256": "a78088e9ec589060078dac567c26373fc122af6671fb4de534d11eede3977d71",
+      "replay_identical": true
+    },
+    {
+      "file": "04-gospog-de-la-2de-recolte/0.jpg",
+      "page": 9,
+      "sha256": "d1bf01be7fb64dfc9edcd297546b4a0cada2f19d2684296a57d33ddcd963bfe6",
+      "replay_identical": true
+    },
+    {
+      "file": "04-gospog-de-la-2de-recolte/back.jpg",
+      "page": 10,
+      "sha256": "e2ef42dfaf3d2212b22f32eb784b8c409c45572efe49b640b72326bfcc01cf64",
+      "replay_identical": true
+    },
+    {
+      "file": "05-cygoyle/0.jpg",
+      "page": 11,
+      "sha256": "a661376ab680d918fedc76ea228019cf776c49694a3129a9c395ce926946fb41",
+      "replay_identical": true
+    },
+    {
+      "file": "05-cygoyle/back.jpg",
+      "page": 12,
+      "sha256": "77b38dbfbc12404782941a10ca8a114c2d99ee8aa09eb64d512401c95656190f",
+      "replay_identical": true
+    },
+    {
+      "file": "06-aenge/0.jpg",
+      "page": 13,
+      "sha256": "c2a9034e342c3068f67e12c64d1b7ccd4f4c835edaf81d5c29cd336bda85d4b6",
+      "replay_identical": true
+    },
+    {
+      "file": "06-aenge/back.jpg",
+      "page": 14,
+      "sha256": "7f29d8444fb1697395f266cd791f0a11e81e3cf1b4a57f1869db8db2ef104910",
+      "replay_identical": true
+    },
+    {
+      "file": "07-survoltchien/0.jpg",
+      "page": 15,
+      "sha256": "bd8f92809fb381dd61a4c46e0f45ceb7330bc241152d086924bb59256e43e26a",
+      "replay_identical": true
+    },
+    {
+      "file": "07-survoltchien/back.jpg",
+      "page": 16,
+      "sha256": "f093b9d66e6909695474fc22c0d8700463b7fb5b1c8234bbf19a4fc13cf2d9f2",
+      "replay_identical": true
+    },
+    {
+      "file": "08-cartagras/0.jpg",
+      "page": 17,
+      "sha256": "a5e7178f915d30b42330ff896be9eca51c10dc643edc69fe039f4a1791c39c0e",
+      "replay_identical": true
+    },
+    {
+      "file": "08-cartagras/back.jpg",
+      "page": 18,
+      "sha256": "4b8f9d952c28fe9c4eb2af5531e99a10c0822af07b7ca02511916ef5491a3db6",
+      "replay_identical": true
+    },
+    {
+      "file": "09-jean-malraux/0.jpg",
+      "page": 19,
+      "sha256": "c49013b0ee4662c7120ba72315236c45b0d70deab29e5ade58ef0c7bdf52e16d",
+      "replay_identical": true
+    },
+    {
+      "file": "09-jean-malraux/back.jpg",
+      "page": 20,
+      "sha256": "9ef37e1a852396fc185457d7dae9b9b6c2faa1c6e174508730c5b4abc6c1b901",
+      "replay_identical": true
+    },
+    {
+      "file": "10-molosse-infernal/0.jpg",
+      "page": 21,
+      "sha256": "1bc4dbe530bf69e720d36ef1ead0638555b9295d1892f3af77ec5ece66bc86d7",
+      "replay_identical": true
+    },
+    {
+      "file": "10-molosse-infernal/back.jpg",
+      "page": 22,
+      "sha256": "a235036b7c884f2dbc2a593e973c6a8228fbe733d3f27a9380dfe3a0442dea9e",
+      "replay_identical": true
+    },
+    {
+      "file": "11-inquisiteur/0.jpg",
+      "page": 23,
+      "sha256": "be28d0c5eb9fd4464f62bd7c3875d86c440a3876f1a5d6ff02f73344250b0399",
+      "replay_identical": true
+    },
+    {
+      "file": "11-inquisiteur/back.jpg",
+      "page": 24,
+      "sha256": "d44f843e763172da4fc5bb71ed27d9424116ea02be1fdd8962e792d435a35801",
+      "replay_identical": true
+    },
+    {
+      "file": "12-veilleur-de-babel/0.jpg",
+      "page": 25,
+      "sha256": "ce033a6063eb70810af374434247396bae573b1e2af8422c147cdeca5944ea0a",
+      "replay_identical": true
+    },
+    {
+      "file": "12-veilleur-de-babel/back.jpg",
+      "page": 26,
+      "sha256": "c50365a8452415d19ba9131e718eae460171dfa9e158bd54d5677493dadab421",
+      "replay_identical": true
+    },
+    {
+      "file": "13-cyberchevalier/0.jpg",
+      "page": 27,
+      "sha256": "984e79a632d07999023e8d0b0f8d520bb60382fa6ef50a118e75f4530f49c476",
+      "replay_identical": true
+    },
+    {
+      "file": "13-cyberchevalier/back.jpg",
+      "page": 28,
+      "sha256": "ecdcdd7f2e546974060f94551ee0eddf4749e860de3c13d58b5af8b6c2873e71",
+      "replay_identical": true
+    },
+    {
+      "file": "14-parangon-de-la-police-de-l-eglise/0.jpg",
+      "page": 29,
+      "sha256": "6cfc7256ca663e52ca1e6e07eabbf58ec3a5daa5af3aa4cc1f6121e57d5c50dc",
+      "replay_identical": true
+    },
+    {
+      "file": "14-parangon-de-la-police-de-l-eglise/back.jpg",
+      "page": 30,
+      "sha256": "fae91526c60fbdea5c8ff3f91047f276b84b16b3376b912f667c4f624bf82767",
+      "replay_identical": true
+    },
+    {
+      "file": "15-parjure/0.jpg",
+      "page": 31,
+      "sha256": "a5ba8fc50735f4887d95b53d7d5f7c15cf23cd970f5b4355ef4dc184da50366a",
+      "replay_identical": true
+    },
+    {
+      "file": "15-parjure/back.jpg",
+      "page": 32,
+      "sha256": "a6ef4473c659cd18f5400948873c53e6e31d7b27caa04a296ba67be58a6b58eb",
+      "replay_identical": true
+    },
+    {
+      "file": "16-hospitalier/0.jpg",
+      "page": 33,
+      "sha256": "1dfc7bf3e46a2a16c9a14ca442ee5ce79bfbb3454e998fa13c12fee00e56b555",
+      "replay_identical": true
+    },
+    {
+      "file": "16-hospitalier/back.jpg",
+      "page": 34,
+      "sha256": "8a43ad33bacbf46e08592372b56e22dc7ddd5067f706f31845cf9da717bf6934",
+      "replay_identical": true
+    },
+    {
+      "file": "17-connectpretre-sentinelle/0.jpg",
+      "page": 35,
+      "sha256": "8fe3dbedf25052dfb5b273363398648cfc34077b30c68a8a91e049144ee174a0",
+      "replay_identical": true
+    },
+    {
+      "file": "17-connectpretre-sentinelle/back.jpg",
+      "page": 36,
+      "sha256": "193fe8178c47fea1a0315a3a74c6876647d725990c60a6509b0e0316af791936",
+      "replay_identical": true
+    },
+    {
+      "file": "18-inspecteur-de-la-police-de-l-eglise/0.jpg",
+      "page": 37,
+      "sha256": "975a244ec8254e1e16ffc8dc517e92c05e091a148ebdd7f39e21fffc08a98b86",
+      "replay_identical": true
+    },
+    {
+      "file": "18-inspecteur-de-la-police-de-l-eglise/back.jpg",
+      "page": 38,
+      "sha256": "59d5823366b29707a3e9f129ce6bae67e2ee00759a9758f9664470bd41c02768",
+      "replay_identical": true
+    },
+    {
+      "file": "19-devoreur/0.jpg",
+      "page": 39,
+      "sha256": "b787c26432c78ecb80faacb005cf04989cbf58373487ca8a2ac75d0fddb3f039",
+      "replay_identical": true
+    },
+    {
+      "file": "19-devoreur/back.jpg",
+      "page": 40,
+      "sha256": "b4e0bcaef5242c67bfc94ec48d53fbbebbee9172ea2028d1967244991223bc62",
+      "replay_identical": true
+    },
+    {
+      "file": "20-char-a-repulsion-magnetique-samson/0.jpg",
+      "page": 41,
+      "sha256": "55e77364ad5d7b6dddb7596438c2b8f2560fb77a150980156c7afd39af21a876",
+      "replay_identical": true
+    },
+    {
+      "file": "20-char-a-repulsion-magnetique-samson/back.jpg",
+      "page": 42,
+      "sha256": "934c7bb9f0d14f42df7d8c5e8dad4cdb45400c3562985ca6bbb4a3630ba77a4e",
+      "replay_identical": true
+    },
+    {
+      "file": "21-drone-d-assaut/0.jpg",
+      "page": 43,
+      "sha256": "f806498ccb2940af4ed9b0354245f34b4e2d784367afd89e6432fd225f4f3944",
+      "replay_identical": true
+    },
+    {
+      "file": "21-drone-d-assaut/back.jpg",
+      "page": 44,
+      "sha256": "64a2518f5b7176da87ff980830e09347dd08cb2abf54b8ce4c02a94a54d3ed59",
+      "replay_identical": true
+    },
+    {
+      "file": "22-morgana/0.jpg",
+      "page": 45,
+      "sha256": "4bf55f0d068bebc48cb42f81e19dd76fa2b5a938661eea397958f4f37a1f02c7",
+      "replay_identical": true
+    },
+    {
+      "file": "22-morgana/back.jpg",
+      "page": 46,
+      "sha256": "fea81cf484d3cd16d18d8509d9454d9e218cc7ac0aa206dc4debc6a73dbd3dfb",
+      "replay_identical": true
+    },
+    {
+      "file": "23-le-directeur/0.jpg",
+      "page": 47,
+      "sha256": "77215883b2f32075938256a8bcd13a3e7bd6de6b982f66ea03139b33376ad3ee",
+      "replay_identical": true
+    },
+    {
+      "file": "23-le-directeur/back.jpg",
+      "page": 48,
+      "sha256": "3e4290ffa0c5a10a82f22e501a846839d43911f92f1c81a6a7615bfaabc5747a",
+      "replay_identical": true
+    },
+    {
+      "file": "24-cybernonne-possedee/0.jpg",
+      "page": 49,
+      "sha256": "d869b9e125c5e2408ea1889a0f3b40ac9a15b8d997e6999d711b748c6b5197bc",
+      "replay_identical": true
+    },
+    {
+      "file": "24-cybernonne-possedee/back.jpg",
+      "page": 50,
+      "sha256": "98393bb07c1fa2efe6ca4da688b55cfad105aec7db00e4057d2bcffdf06c2b82",
+      "replay_identical": true
+    },
+    {
+      "file": "25-fanatiques/0.jpg",
+      "page": 51,
+      "sha256": "1eda9a5c776cfdead0d31563558b905767cd20f764e4453d1d2e3defffe28d31",
+      "replay_identical": true
+    },
+    {
+      "file": "25-fanatiques/back.jpg",
+      "page": 52,
+      "sha256": "f510561d111da4087eb594317d7a01cd86cc7419400eb975a1c7f43b18f83c08",
+      "replay_identical": true
+    },
+    {
+      "file": "26-apostats/0.jpg",
+      "page": 53,
+      "sha256": "9b5ae21a8b0a2d73073c1dddefbe9fd1732ad86b3335ee02fd24c73ee7b5dcee",
+      "replay_identical": true
+    },
+    {
+      "file": "26-apostats/back.jpg",
+      "page": 54,
+      "sha256": "77076fbdd8d076e9203a53d688331a797ddbab41efe5cc4ca268d2cc0676d7fe",
+      "replay_identical": true
+    },
+    {
+      "file": "27-irzzometh/0.jpg",
+      "page": 55,
+      "sha256": "d4f63ee5d9497c7a148379a91f89090025eb2970065b5d4554fc24b3130b5fb4",
+      "replay_identical": true
+    },
+    {
+      "file": "27-irzzometh/back.jpg",
+      "page": 56,
+      "sha256": "71caa8242bb65e5b8d22e23508c589e761dde9f424716ae1034033abfd53da1b",
+      "replay_identical": true
+    },
+    {
+      "file": "28-uriel/0.jpg",
+      "page": 57,
+      "sha256": "130d81be7e399cb47bd002ecf5d487411f621df8d6a66c62473064f2a7d02b42",
+      "replay_identical": true
+    },
+    {
+      "file": "28-uriel/back.jpg",
+      "page": 58,
+      "sha256": "a8a1d110599166b7a176c4305f3b610b17aa8b1652c4b924a789a081ff6b58b6",
+      "replay_identical": true
+    },
+    {
+      "file": "29-chasseur-draygakk/0.jpg",
+      "page": 59,
+      "sha256": "0990a158bead8720eb2619513039cdf2bb29682087d3229e69e20c1267511e96",
+      "replay_identical": true
+    },
+    {
+      "file": "29-chasseur-draygakk/back.jpg",
+      "page": 60,
+      "sha256": "43d3a288b697cbff9891ad678abbe77d73dc820580c6e9e4f76c7102cf35cc77",
+      "replay_identical": true
+    },
+    {
+      "file": "30-police-secrete-du-vatican/0.jpg",
+      "page": 61,
+      "sha256": "a08b14ac6035b042ba9a92b353659339413587e003bd4b1411eefe78f0ef207c",
+      "replay_identical": true
+    },
+    {
+      "file": "30-police-secrete-du-vatican/back.jpg",
+      "page": 62,
+      "sha256": "19585d5e25121d6383cdbbb019d5e9fef1dc9e90309310c17c6576ba30688214",
+      "replay_identical": true
+    }
+  ],
+  "instructions": [
+    {
+      "source": "s0",
+      "page": 1,
+      "output": "instructions/recto.jpg",
+      "dpi": 300,
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "52a4ff972088db5490c0c3019e3a49c37b030effd4b00b591bdde3926ec3bf07"
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "output": "instructions/verso.jpg",
+      "dpi": 300,
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "a1cace85da80259677db91c2d25a957c3cec5d917e9db2b296f55911c438e55a"
+    }
+  ]
+}

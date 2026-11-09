@@ -1,0 +1,2095 @@
+{
+  "tool_version": "1.1.0",
+  "pymupdf_version": "2.0",
+  "pillow_version": "12.1.1",
+  "dpi": 300,
+  "sources": [
+    {
+      "id": "s0",
+      "filename": "Deck Aysle (Full, v1).pdf",
+      "sha256": "967dcdfc18881bfcc3a78410d5c9ed11fb96758f47e303ffa9649044b59a0ddd"
+    }
+  ],
+  "output_format": "JPEG",
+  "jpeg_quality": 95,
+  "jpeg_subsampling": 0,
+  "start_indices": {
+    "action": 40,
+    "cosm-aysle": 11,
+    "destin": 6
+  },
+  "numbering_confirmed": true,
+  "decks": {
+    "action": {
+      "faces": 40,
+      "start_index": 40,
+      "end_index": 79,
+      "back": "action/back.jpg"
+    },
+    "cosm-aysle": {
+      "faces": 10,
+      "start_index": 11,
+      "end_index": 20,
+      "back": "cosm-aysle/back.jpg"
+    },
+    "destin": {
+      "faces": 5,
+      "start_index": 6,
+      "end_index": 10,
+      "back": "destin/back.jpg"
+    }
+  },
+  "cards": [
+    {
+      "source": "s0",
+      "page": 1,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/40.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "c75b2596fc640333049d7f41bf2e08c8973e08304cf179cb18ed3b833c676aa6"
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "deck": "action",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/back.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "a11e8e19c394d3b9ad05da6b13b875316bd69c775bc5f02f530ce3bac2d8a53e"
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/41.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "6f06428958022dee3405bb7aba73772c48f1d369b1b1576a67225be32dae6bf1"
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/42.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "f5204de3ded3c6d2213e1a9f2b69daa8de180847f4e5c584ff9a74be7ce1bbe4"
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/43.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "8ed24a3f23f5bcc42a2597e01ba7462c263cbeead1ff4c572d17e9138c2724f5"
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/44.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "a8884aae1e34839e9eb1d655d25912b88dd106303f957f0bdaa1f455f1d82e42"
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/45.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "ff56410e18bd4360cb346dff2de111a66bca14c44d33aba49ccfeefc86297f48"
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/46.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "77b2cbda7797af5a36fc9dbdc4ce8c57e4e5a6aeb1934a599cdb961d1db15506"
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 15,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/47.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "77b983799c3f35293189ec819b19b8daaf6ff07039086e5eaac306de02aa7e0f"
+    },
+    {
+      "source": "s0",
+      "page": 16,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 17,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/48.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "4a9f585db5e3c403f5e1c0b8891a9659f84501d54429e7a5aade7e1833edc798"
+    },
+    {
+      "source": "s0",
+      "page": 18,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 19,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/49.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "7548cf2fc8b2423791b4e87f54a3d6ea1da9ee0846958b311bb5cea5eb3fe0d3"
+    },
+    {
+      "source": "s0",
+      "page": 20,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 21,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/50.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "a2f50587edca7a5974e81d9119847cd8ffa98a5a265ea5cd38c8595d553bcd88"
+    },
+    {
+      "source": "s0",
+      "page": 22,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 23,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/51.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "9cd3265c9e7ce4876b98e5ce050e9bf3c1c66fb1dec5fcd647f966f7dd1136e6"
+    },
+    {
+      "source": "s0",
+      "page": 24,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 25,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/52.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "bbb0c2dfc72849290c8e41fdf67e94d23dbd6e0492b05182572992792d6996f9"
+    },
+    {
+      "source": "s0",
+      "page": 26,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 27,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/53.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "b070a89e57d60836dc0560b0cb3688b81bcb7d495bc7e1445a0c7b906bf7f3b7"
+    },
+    {
+      "source": "s0",
+      "page": 28,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 29,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/54.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "219219869e820af84932a0550a65d26417175b1a94ad1df76931158826c5990f"
+    },
+    {
+      "source": "s0",
+      "page": 30,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 31,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/55.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "2f9180414a689afb5f2b757acbfceecc3c08894889d516c2659cd72529e23468"
+    },
+    {
+      "source": "s0",
+      "page": 32,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 33,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/56.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "6a9c2b357fed54e2ee67f57621017bd6deb8a1771fb341e6060a02e5fdfa6167"
+    },
+    {
+      "source": "s0",
+      "page": 34,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 35,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/57.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "5411799233dfe08765cb6be9f2f763b4fc1de953bdc2c901d40ecf7fe3c04ca8"
+    },
+    {
+      "source": "s0",
+      "page": 36,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 37,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/58.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "1a442e6e3be9776e28191909043da64f1dd88b00f3f95d2b4b4d8f36261ed21f"
+    },
+    {
+      "source": "s0",
+      "page": 38,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 39,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/59.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "c858f6962f9b923521f68a4029e613fe6e90c8f3c952cb5d2bec3314e401e317"
+    },
+    {
+      "source": "s0",
+      "page": 40,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 41,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/60.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "852fa97fe13473aa7bc355950fb8a9cc7fcaf15501ce1a95a7cc1a1b4ad71c83"
+    },
+    {
+      "source": "s0",
+      "page": 42,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 43,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/61.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "898f0e80a47d040fb0aead2369c447bb57e4256d4f6a5e411b639623c8e441c7"
+    },
+    {
+      "source": "s0",
+      "page": 44,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 45,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/62.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "0466e787f954dc998b304f3cc8be6a2603320c55937b56f6676a84f59076dec0"
+    },
+    {
+      "source": "s0",
+      "page": 46,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 47,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/63.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "96e797a46253a3686942e7f367590b399b8fccb78c74319135c612730aa73795"
+    },
+    {
+      "source": "s0",
+      "page": 48,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 49,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/64.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "83cf8ed1c9ad162dd71d0c4293e50ca80177e43a9f4c071966915051113d3029"
+    },
+    {
+      "source": "s0",
+      "page": 50,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 51,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/65.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "72a472f9c2c425bd618d61f1a4327495b861dacf9ffbcf64e7bfb56d8ea5103e"
+    },
+    {
+      "source": "s0",
+      "page": 52,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 53,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/66.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "8fa56aa3e8cb2696bc2a676d0a6c39fae6cd4a95ad04d8b19042687027b24b39"
+    },
+    {
+      "source": "s0",
+      "page": 54,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 55,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/67.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "7935aa5ede5e9aae4ad8e3cd101a8a4a0217d7a81c7df3782f181426028f3155"
+    },
+    {
+      "source": "s0",
+      "page": 56,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 57,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/68.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "d84ccb7de03863d143b02610bb6cd1475f67fb7d5dc621e90ed8d325d3850457"
+    },
+    {
+      "source": "s0",
+      "page": 58,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 59,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/69.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "3001a6ad4123192cb0badbca2f0743fb256c60283ab93089b6b85c042ac94257"
+    },
+    {
+      "source": "s0",
+      "page": 60,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 61,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/70.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "637a3d612043818364917d4428cd5a6cc39aa6df4db66f1a2f667ff835b6e90d"
+    },
+    {
+      "source": "s0",
+      "page": 62,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 63,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/71.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "e01ecb5c6cdfc1314229f327e6682f4d99512db490913f1d8c5e334306cbabc9"
+    },
+    {
+      "source": "s0",
+      "page": 64,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 65,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/72.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "e47f39651dee8e088503407c96dcd355d2eab049a1f31a1895da6e1149301bd6"
+    },
+    {
+      "source": "s0",
+      "page": 66,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 67,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/73.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "f33a3c4df695fc28129642e74bc5534792d93bb0815445657f35718745cda867"
+    },
+    {
+      "source": "s0",
+      "page": 68,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 69,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/74.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "71aba93407c08b252d91c57a61345db7daff9a0c4edfb19c7c0981d76d15ea85"
+    },
+    {
+      "source": "s0",
+      "page": 70,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 71,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/75.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "dbb0df7ded1d2de2d76507869d17eefc3fb79364ade12f6d67dd0dfec1b6a2c3"
+    },
+    {
+      "source": "s0",
+      "page": 72,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 73,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/76.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "004c11da2d0ac771f061dd29bb3252ef30358ed91bf775e236b1f77b78562767"
+    },
+    {
+      "source": "s0",
+      "page": 74,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 75,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/77.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "09418daa3e56f273ad70888f67b573c328bc06b813e823b1955ea01933c10c44"
+    },
+    {
+      "source": "s0",
+      "page": 76,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 77,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/78.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "0e1d3e743e82f210c8ddb4e6bc079844161ee772be3ad2f5c1898904d496582a"
+    },
+    {
+      "source": "s0",
+      "page": 78,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 79,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage.",
+      "output": "action/79.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "1b1efca2c152996c51d0f0b14cffdd8db67a809fd8a47684716c9cda1bc2b27a"
+    },
+    {
+      "source": "s0",
+      "page": 80,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Carte Action et logo lus normalement après rotation horaire de 90 degrés ; format paysage. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 81,
+      "deck": "cosm-aysle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait.",
+      "output": "cosm-aysle/11.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "4988029474d04cae07d247be2ec2de51353ee8265a7791d691e1ffc46a274721"
+    },
+    {
+      "source": "s0",
+      "page": 82,
+      "deck": "cosm-aysle",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait.",
+      "output": "cosm-aysle/back.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "9e5b6c3b0e2018013247ba2cae28969b1a8eb76e8e485ac3fe144dbe4cd761e8"
+    },
+    {
+      "source": "s0",
+      "page": 83,
+      "deck": "cosm-aysle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait.",
+      "output": "cosm-aysle/12.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "e019d23e8cb5101000d86bd2cd0e0220d530336273fd2662f1d1f5faa12fb34b"
+    },
+    {
+      "source": "s0",
+      "page": 84,
+      "deck": "cosm-aysle",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 85,
+      "deck": "cosm-aysle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait.",
+      "output": "cosm-aysle/13.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "93999fba1337fb7967dd9467883ab731f3973abea0b2dcc925c2f63f29047986"
+    },
+    {
+      "source": "s0",
+      "page": 86,
+      "deck": "cosm-aysle",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 87,
+      "deck": "cosm-aysle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait.",
+      "output": "cosm-aysle/14.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "dd2acef70400f15bd0cd721313086f439811a118fe4f36430dd5b06358d03342"
+    },
+    {
+      "source": "s0",
+      "page": 88,
+      "deck": "cosm-aysle",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 89,
+      "deck": "cosm-aysle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait.",
+      "output": "cosm-aysle/15.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "8094abeced07c5fa5a86697fa33c8fc5cf58390a298e7b60cf319d5bec7b9b92"
+    },
+    {
+      "source": "s0",
+      "page": 90,
+      "deck": "cosm-aysle",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 91,
+      "deck": "cosm-aysle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait.",
+      "output": "cosm-aysle/16.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "48e90bbc9a29cb732f34c30e471b9eeefe65349556e465c2cb35989b8fb735ed"
+    },
+    {
+      "source": "s0",
+      "page": 92,
+      "deck": "cosm-aysle",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 93,
+      "deck": "cosm-aysle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait.",
+      "output": "cosm-aysle/17.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "a9fc55909f47029ddb48b88a1b01889fe34a03ba7af52990d0ff13b86017456b"
+    },
+    {
+      "source": "s0",
+      "page": 94,
+      "deck": "cosm-aysle",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 95,
+      "deck": "cosm-aysle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait.",
+      "output": "cosm-aysle/18.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "ad0b04328f22ace0e4e760348562e1362b683c7e861c9fc60089a69e59073183"
+    },
+    {
+      "source": "s0",
+      "page": 96,
+      "deck": "cosm-aysle",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 97,
+      "deck": "cosm-aysle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait.",
+      "output": "cosm-aysle/19.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "5f944c912c0f561893502dbb8d9d87330d5f670f59d981c64ec43d7d19359ac6"
+    },
+    {
+      "source": "s0",
+      "page": 98,
+      "deck": "cosm-aysle",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 99,
+      "deck": "cosm-aysle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait.",
+      "output": "cosm-aysle/20.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "4f7705adf8a7af6b51be2701846c488b1587370e3c57c1a70a78b05476bd3dc7"
+    },
+    {
+      "source": "s0",
+      "page": 100,
+      "deck": "cosm-aysle",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cosm Aysle et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 101,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Destin et logo lus normalement sans rotation ; format portrait.",
+      "output": "destin/6.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "6de434b3063712b894d048eb108b87e909047ece4b14a86d57350ba901e3ec8b"
+    },
+    {
+      "source": "s0",
+      "page": 102,
+      "deck": "destin",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Destin et logo lus normalement sans rotation ; format portrait.",
+      "output": "destin/back.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "805f16b530fa208caf626efd9cf4812ee152555c14d1130989a7f343f97f5f4c"
+    },
+    {
+      "source": "s0",
+      "page": 103,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Destin et logo lus normalement sans rotation ; format portrait.",
+      "output": "destin/7.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "53d2708dcae9a1897bd3769f0d029d9300a35391155d46ba98bde08f72318a98"
+    },
+    {
+      "source": "s0",
+      "page": 104,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Destin et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 105,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Destin et logo lus normalement sans rotation ; format portrait.",
+      "output": "destin/8.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "89f76d1bb47a8124ff1075dccde04c43057c0b330d943117be4d5f0abf313494"
+    },
+    {
+      "source": "s0",
+      "page": 106,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Destin et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 107,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Destin et logo lus normalement sans rotation ; format portrait.",
+      "output": "destin/9.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "a31b3efd718a4cfc68e137ac04d58ca8536ff540dd96a8a52f8332309002fa01"
+    },
+    {
+      "source": "s0",
+      "page": 108,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Destin et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 109,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Destin et logo lus normalement sans rotation ; format portrait.",
+      "output": "destin/10.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "03b66dcc4e1bce73166bf33ef399161b6bd6efa5b2b8031bebc71a949752dd1c"
+    },
+    {
+      "source": "s0",
+      "page": 110,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Destin et logo lus normalement sans rotation ; format portrait. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    }
+  ],
+  "ignored": []
+}

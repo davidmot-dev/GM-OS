@@ -1,0 +1,1507 @@
+{
+  "tool_version": "1.1.0",
+  "pymupdf_version": "2.0",
+  "pillow_version": "12.1.1",
+  "dpi": 300,
+  "sources": [
+    {
+      "id": "s0",
+      "filename": "Cartes De Menaces De La Cyberpapaut+_ (v0).pdf",
+      "sha256": "8b9d4561857c160a2e32e9d095427005273744852d71a44019b70c3734a5a8df"
+    }
+  ],
+  "output_format": "JPEG",
+  "jpeg_quality": 95,
+  "jpeg_subsampling": 0,
+  "start_indices": {
+    "01-gospog-de-la-5e-recolte": 0,
+    "02-gospog-de-la-4e-recolte": 0,
+    "03-gospog-de-la-3e-recolte": 0,
+    "04-gospog-de-la-2de-recolte": 0,
+    "05-cygoyle": 0,
+    "06-aenge": 0,
+    "07-survoltchien": 0,
+    "08-cartagras": 0,
+    "09-jean-malraux": 0,
+    "10-molosse-infernal": 0,
+    "11-inquisiteur": 0,
+    "12-veilleur-de-babel": 0,
+    "13-cyberchevalier": 0,
+    "14-parangon-de-la-police-de-l-eglise": 0,
+    "15-parjure": 0,
+    "16-hospitalier": 0,
+    "17-connectpretre-sentinelle": 0,
+    "18-inspecteur-de-la-police-de-l-eglise": 0,
+    "19-devoreur": 0,
+    "20-char-a-repulsion-magnetique-samson": 0,
+    "21-drone-d-assaut": 0,
+    "22-morgana": 0,
+    "23-le-directeur": 0,
+    "24-cybernonne-possedee": 0,
+    "25-fanatiques": 0,
+    "26-apostats": 0,
+    "27-irzzometh": 0,
+    "28-uriel": 0,
+    "29-chasseur-draygakk": 0,
+    "30-police-secrete-du-vatican": 0
+  },
+  "numbering_confirmed": true,
+  "decks": {
+    "01-gospog-de-la-5e-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "01-gospog-de-la-5e-recolte/back.jpg"
+    },
+    "02-gospog-de-la-4e-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "02-gospog-de-la-4e-recolte/back.jpg"
+    },
+    "03-gospog-de-la-3e-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "03-gospog-de-la-3e-recolte/back.jpg"
+    },
+    "04-gospog-de-la-2de-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "04-gospog-de-la-2de-recolte/back.jpg"
+    },
+    "05-cygoyle": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "05-cygoyle/back.jpg"
+    },
+    "06-aenge": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "06-aenge/back.jpg"
+    },
+    "07-survoltchien": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "07-survoltchien/back.jpg"
+    },
+    "08-cartagras": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "08-cartagras/back.jpg"
+    },
+    "09-jean-malraux": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "09-jean-malraux/back.jpg"
+    },
+    "10-molosse-infernal": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "10-molosse-infernal/back.jpg"
+    },
+    "11-inquisiteur": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "11-inquisiteur/back.jpg"
+    },
+    "12-veilleur-de-babel": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "12-veilleur-de-babel/back.jpg"
+    },
+    "13-cyberchevalier": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "13-cyberchevalier/back.jpg"
+    },
+    "14-parangon-de-la-police-de-l-eglise": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "14-parangon-de-la-police-de-l-eglise/back.jpg"
+    },
+    "15-parjure": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "15-parjure/back.jpg"
+    },
+    "16-hospitalier": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "16-hospitalier/back.jpg"
+    },
+    "17-connectpretre-sentinelle": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "17-connectpretre-sentinelle/back.jpg"
+    },
+    "18-inspecteur-de-la-police-de-l-eglise": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "18-inspecteur-de-la-police-de-l-eglise/back.jpg"
+    },
+    "19-devoreur": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "19-devoreur/back.jpg"
+    },
+    "20-char-a-repulsion-magnetique-samson": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "20-char-a-repulsion-magnetique-samson/back.jpg"
+    },
+    "21-drone-d-assaut": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "21-drone-d-assaut/back.jpg"
+    },
+    "22-morgana": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "22-morgana/back.jpg"
+    },
+    "23-le-directeur": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "23-le-directeur/back.jpg"
+    },
+    "24-cybernonne-possedee": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "24-cybernonne-possedee/back.jpg"
+    },
+    "25-fanatiques": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "25-fanatiques/back.jpg"
+    },
+    "26-apostats": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "26-apostats/back.jpg"
+    },
+    "27-irzzometh": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "27-irzzometh/back.jpg"
+    },
+    "28-uriel": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "28-uriel/back.jpg"
+    },
+    "29-chasseur-draygakk": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "29-chasseur-draygakk/back.jpg"
+    },
+    "30-police-secrete-du-vatican": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "30-police-secrete-du-vatican/back.jpg"
+    }
+  },
+  "cards": [
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "01-gospog-de-la-5e-recolte",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 5E RÉCOLTE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "01-gospog-de-la-5e-recolte/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "d5a9e736c71e0bbe6ed2952650e08433418d7d4c3112835b8356821c425d9222"
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "01-gospog-de-la-5e-recolte",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 5E RÉCOLTE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "01-gospog-de-la-5e-recolte/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "18e4880a34c0e43e5c298b92cc2775922d1fa568ce6c94bc3cd00a3a2b8b1130"
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "02-gospog-de-la-4e-recolte",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 4E RÉCOLTE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "02-gospog-de-la-4e-recolte/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "7a145e69dfcdb4433a75bdfd17a9296c85a82d491da94c99532e523b46a9cd87"
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "02-gospog-de-la-4e-recolte",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 4E RÉCOLTE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "02-gospog-de-la-4e-recolte/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "5588f93b686d4fd59dc66f70d1f088e623a016a375a884cb8ac68020944db13e"
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "03-gospog-de-la-3e-recolte",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 3E RÉCOLTE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "03-gospog-de-la-3e-recolte/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "7af4627d80b4467767434a4e6ff5be2c325de48825ca794f4cc831c8a29ac97b"
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "03-gospog-de-la-3e-recolte",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 3E RÉCOLTE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "03-gospog-de-la-3e-recolte/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "a78088e9ec589060078dac567c26373fc122af6671fb4de534d11eede3977d71"
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "04-gospog-de-la-2de-recolte",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 2DE RÉCOLTE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "04-gospog-de-la-2de-recolte/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "d1bf01be7fb64dfc9edcd297546b4a0cada2f19d2684296a57d33ddcd963bfe6"
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "04-gospog-de-la-2de-recolte",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 2DE RÉCOLTE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "04-gospog-de-la-2de-recolte/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "e2ef42dfaf3d2212b22f32eb784b8c409c45572efe49b640b72326bfcc01cf64"
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "05-cygoyle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CYGOYLE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "05-cygoyle/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "a661376ab680d918fedc76ea228019cf776c49694a3129a9c395ce926946fb41"
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "05-cygoyle",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CYGOYLE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "05-cygoyle/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "77b38dbfbc12404782941a10ca8a114c2d99ee8aa09eb64d512401c95656190f"
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "06-aenge",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "AENGE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "06-aenge/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "c2a9034e342c3068f67e12c64d1b7ccd4f4c835edaf81d5c29cd336bda85d4b6"
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "06-aenge",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "AENGE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "06-aenge/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "7f29d8444fb1697395f266cd791f0a11e81e3cf1b4a57f1869db8db2ef104910"
+    },
+    {
+      "source": "s0",
+      "page": 15,
+      "deck": "07-survoltchien",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SURVOLTCHIEN : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "07-survoltchien/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "bd8f92809fb381dd61a4c46e0f45ceb7330bc241152d086924bb59256e43e26a"
+    },
+    {
+      "source": "s0",
+      "page": 16,
+      "deck": "07-survoltchien",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SURVOLTCHIEN : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "07-survoltchien/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "f093b9d66e6909695474fc22c0d8700463b7fb5b1c8234bbf19a4fc13cf2d9f2"
+    },
+    {
+      "source": "s0",
+      "page": 17,
+      "deck": "08-cartagras",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CARTAGRAS : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "08-cartagras/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "a5e7178f915d30b42330ff896be9eca51c10dc643edc69fe039f4a1791c39c0e"
+    },
+    {
+      "source": "s0",
+      "page": 18,
+      "deck": "08-cartagras",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CARTAGRAS : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "08-cartagras/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "4b8f9d952c28fe9c4eb2af5531e99a10c0822af07b7ca02511916ef5491a3db6"
+    },
+    {
+      "source": "s0",
+      "page": 19,
+      "deck": "09-jean-malraux",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "JEAN MALRAUX : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "09-jean-malraux/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "c49013b0ee4662c7120ba72315236c45b0d70deab29e5ade58ef0c7bdf52e16d"
+    },
+    {
+      "source": "s0",
+      "page": 20,
+      "deck": "09-jean-malraux",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "JEAN MALRAUX : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "09-jean-malraux/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "9ef37e1a852396fc185457d7dae9b9b6c2faa1c6e174508730c5b4abc6c1b901"
+    },
+    {
+      "source": "s0",
+      "page": 21,
+      "deck": "10-molosse-infernal",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "MOLOSSE INFERNAL : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "10-molosse-infernal/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "1bc4dbe530bf69e720d36ef1ead0638555b9295d1892f3af77ec5ece66bc86d7"
+    },
+    {
+      "source": "s0",
+      "page": 22,
+      "deck": "10-molosse-infernal",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "MOLOSSE INFERNAL : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "10-molosse-infernal/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "a235036b7c884f2dbc2a593e973c6a8228fbe733d3f27a9380dfe3a0442dea9e"
+    },
+    {
+      "source": "s0",
+      "page": 23,
+      "deck": "11-inquisiteur",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "INQUISITEUR : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "11-inquisiteur/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "be28d0c5eb9fd4464f62bd7c3875d86c440a3876f1a5d6ff02f73344250b0399"
+    },
+    {
+      "source": "s0",
+      "page": 24,
+      "deck": "11-inquisiteur",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "INQUISITEUR : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "11-inquisiteur/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "d44f843e763172da4fc5bb71ed27d9424116ea02be1fdd8962e792d435a35801"
+    },
+    {
+      "source": "s0",
+      "page": 25,
+      "deck": "12-veilleur-de-babel",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "VEILLEUR DE BABEL : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "12-veilleur-de-babel/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "ce033a6063eb70810af374434247396bae573b1e2af8422c147cdeca5944ea0a"
+    },
+    {
+      "source": "s0",
+      "page": 26,
+      "deck": "12-veilleur-de-babel",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "VEILLEUR DE BABEL : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "12-veilleur-de-babel/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "c50365a8452415d19ba9131e718eae460171dfa9e158bd54d5677493dadab421"
+    },
+    {
+      "source": "s0",
+      "page": 27,
+      "deck": "13-cyberchevalier",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CYBERCHEVALIER : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "13-cyberchevalier/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "984e79a632d07999023e8d0b0f8d520bb60382fa6ef50a118e75f4530f49c476"
+    },
+    {
+      "source": "s0",
+      "page": 28,
+      "deck": "13-cyberchevalier",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CYBERCHEVALIER : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "13-cyberchevalier/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "ecdcdd7f2e546974060f94551ee0eddf4749e860de3c13d58b5af8b6c2873e71"
+    },
+    {
+      "source": "s0",
+      "page": 29,
+      "deck": "14-parangon-de-la-police-de-l-eglise",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "PARANGON DE LA POLICE DE L'ÉGLISE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "14-parangon-de-la-police-de-l-eglise/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "6cfc7256ca663e52ca1e6e07eabbf58ec3a5daa5af3aa4cc1f6121e57d5c50dc"
+    },
+    {
+      "source": "s0",
+      "page": 30,
+      "deck": "14-parangon-de-la-police-de-l-eglise",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "PARANGON DE LA POLICE DE L'ÉGLISE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "14-parangon-de-la-police-de-l-eglise/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "fae91526c60fbdea5c8ff3f91047f276b84b16b3376b912f667c4f624bf82767"
+    },
+    {
+      "source": "s0",
+      "page": 31,
+      "deck": "15-parjure",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "PARJURE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "15-parjure/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "a5ba8fc50735f4887d95b53d7d5f7c15cf23cd970f5b4355ef4dc184da50366a"
+    },
+    {
+      "source": "s0",
+      "page": 32,
+      "deck": "15-parjure",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "PARJURE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "15-parjure/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "a6ef4473c659cd18f5400948873c53e6e31d7b27caa04a296ba67be58a6b58eb"
+    },
+    {
+      "source": "s0",
+      "page": 33,
+      "deck": "16-hospitalier",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "HOSPITALIER : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "16-hospitalier/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "1dfc7bf3e46a2a16c9a14ca442ee5ce79bfbb3454e998fa13c12fee00e56b555"
+    },
+    {
+      "source": "s0",
+      "page": 34,
+      "deck": "16-hospitalier",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "HOSPITALIER : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "16-hospitalier/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "8a43ad33bacbf46e08592372b56e22dc7ddd5067f706f31845cf9da717bf6934"
+    },
+    {
+      "source": "s0",
+      "page": 35,
+      "deck": "17-connectpretre-sentinelle",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CONNECTPRÊTRE SENTINELLE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "17-connectpretre-sentinelle/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "8fe3dbedf25052dfb5b273363398648cfc34077b30c68a8a91e049144ee174a0"
+    },
+    {
+      "source": "s0",
+      "page": 36,
+      "deck": "17-connectpretre-sentinelle",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CONNECTPRÊTRE SENTINELLE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "17-connectpretre-sentinelle/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "193fe8178c47fea1a0315a3a74c6876647d725990c60a6509b0e0316af791936"
+    },
+    {
+      "source": "s0",
+      "page": 37,
+      "deck": "18-inspecteur-de-la-police-de-l-eglise",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "INSPECTEUR DE LA POLICE DE L'ÉGLISE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "18-inspecteur-de-la-police-de-l-eglise/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "975a244ec8254e1e16ffc8dc517e92c05e091a148ebdd7f39e21fffc08a98b86"
+    },
+    {
+      "source": "s0",
+      "page": 38,
+      "deck": "18-inspecteur-de-la-police-de-l-eglise",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "INSPECTEUR DE LA POLICE DE L'ÉGLISE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "18-inspecteur-de-la-police-de-l-eglise/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "59d5823366b29707a3e9f129ce6bae67e2ee00759a9758f9664470bd41c02768"
+    },
+    {
+      "source": "s0",
+      "page": 39,
+      "deck": "19-devoreur",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "DÉVOREUR : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "19-devoreur/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "b787c26432c78ecb80faacb005cf04989cbf58373487ca8a2ac75d0fddb3f039"
+    },
+    {
+      "source": "s0",
+      "page": 40,
+      "deck": "19-devoreur",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "DÉVOREUR : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "19-devoreur/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "b4e0bcaef5242c67bfc94ec48d53fbbebbee9172ea2028d1967244991223bc62"
+    },
+    {
+      "source": "s0",
+      "page": 41,
+      "deck": "20-char-a-repulsion-magnetique-samson",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CHAR À RÉPULSION MAGNÉTIQUE SAMSON : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "20-char-a-repulsion-magnetique-samson/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "55e77364ad5d7b6dddb7596438c2b8f2560fb77a150980156c7afd39af21a876"
+    },
+    {
+      "source": "s0",
+      "page": 42,
+      "deck": "20-char-a-repulsion-magnetique-samson",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CHAR À RÉPULSION MAGNÉTIQUE SAMSON : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "20-char-a-repulsion-magnetique-samson/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "934c7bb9f0d14f42df7d8c5e8dad4cdb45400c3562985ca6bbb4a3630ba77a4e"
+    },
+    {
+      "source": "s0",
+      "page": 43,
+      "deck": "21-drone-d-assaut",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "DRONE D'ASSAUT : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "21-drone-d-assaut/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "f806498ccb2940af4ed9b0354245f34b4e2d784367afd89e6432fd225f4f3944"
+    },
+    {
+      "source": "s0",
+      "page": 44,
+      "deck": "21-drone-d-assaut",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "DRONE D'ASSAUT : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "21-drone-d-assaut/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "64a2518f5b7176da87ff980830e09347dd08cb2abf54b8ce4c02a94a54d3ed59"
+    },
+    {
+      "source": "s0",
+      "page": 45,
+      "deck": "22-morgana",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "MORGANA : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "22-morgana/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "4bf55f0d068bebc48cb42f81e19dd76fa2b5a938661eea397958f4f37a1f02c7"
+    },
+    {
+      "source": "s0",
+      "page": 46,
+      "deck": "22-morgana",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "MORGANA : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "22-morgana/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "fea81cf484d3cd16d18d8509d9454d9e218cc7ac0aa206dc4debc6a73dbd3dfb"
+    },
+    {
+      "source": "s0",
+      "page": 47,
+      "deck": "23-le-directeur",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "LE DIRECTEUR : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "23-le-directeur/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "77215883b2f32075938256a8bcd13a3e7bd6de6b982f66ea03139b33376ad3ee"
+    },
+    {
+      "source": "s0",
+      "page": 48,
+      "deck": "23-le-directeur",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "LE DIRECTEUR : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "23-le-directeur/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "3e4290ffa0c5a10a82f22e501a846839d43911f92f1c81a6a7615bfaabc5747a"
+    },
+    {
+      "source": "s0",
+      "page": 49,
+      "deck": "24-cybernonne-possedee",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CYBERNONNE POSSÉDÉE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "24-cybernonne-possedee/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "d869b9e125c5e2408ea1889a0f3b40ac9a15b8d997e6999d711b748c6b5197bc"
+    },
+    {
+      "source": "s0",
+      "page": 50,
+      "deck": "24-cybernonne-possedee",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CYBERNONNE POSSÉDÉE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "24-cybernonne-possedee/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "98393bb07c1fa2efe6ca4da688b55cfad105aec7db00e4057d2bcffdf06c2b82"
+    },
+    {
+      "source": "s0",
+      "page": 51,
+      "deck": "25-fanatiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "FANATIQUES : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "25-fanatiques/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "1eda9a5c776cfdead0d31563558b905767cd20f764e4453d1d2e3defffe28d31"
+    },
+    {
+      "source": "s0",
+      "page": 52,
+      "deck": "25-fanatiques",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "FANATIQUES : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "25-fanatiques/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "f510561d111da4087eb594317d7a01cd86cc7419400eb975a1c7f43b18f83c08"
+    },
+    {
+      "source": "s0",
+      "page": 53,
+      "deck": "26-apostats",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "APOSTATS : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "26-apostats/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "9b5ae21a8b0a2d73073c1dddefbe9fd1732ad86b3335ee02fd24c73ee7b5dcee"
+    },
+    {
+      "source": "s0",
+      "page": 54,
+      "deck": "26-apostats",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "APOSTATS : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "26-apostats/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "77076fbdd8d076e9203a53d688331a797ddbab41efe5cc4ca268d2cc0676d7fe"
+    },
+    {
+      "source": "s0",
+      "page": 55,
+      "deck": "27-irzzometh",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "IRZZOMETH : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "27-irzzometh/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "d4f63ee5d9497c7a148379a91f89090025eb2970065b5d4554fc24b3130b5fb4"
+    },
+    {
+      "source": "s0",
+      "page": 56,
+      "deck": "27-irzzometh",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "IRZZOMETH : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "27-irzzometh/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "71caa8242bb65e5b8d22e23508c589e761dde9f424716ae1034033abfd53da1b"
+    },
+    {
+      "source": "s0",
+      "page": 57,
+      "deck": "28-uriel",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "URIEL : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "28-uriel/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "130d81be7e399cb47bd002ecf5d487411f621df8d6a66c62473064f2a7d02b42"
+    },
+    {
+      "source": "s0",
+      "page": 58,
+      "deck": "28-uriel",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "URIEL : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "28-uriel/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "a8a1d110599166b7a176c4305f3b610b17aa8b1652c4b924a789a081ff6b58b6"
+    },
+    {
+      "source": "s0",
+      "page": 59,
+      "deck": "29-chasseur-draygakk",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CHASSEUR DRAYGAKK : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "29-chasseur-draygakk/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "0990a158bead8720eb2619513039cdf2bb29682087d3229e69e20c1267511e96"
+    },
+    {
+      "source": "s0",
+      "page": 60,
+      "deck": "29-chasseur-draygakk",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CHASSEUR DRAYGAKK : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "29-chasseur-draygakk/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "43d3a288b697cbff9891ad678abbe77d73dc820580c6e9e4f76c7102cf35cc77"
+    },
+    {
+      "source": "s0",
+      "page": 61,
+      "deck": "30-police-secrete-du-vatican",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "POLICE SECRÈTE DU VATICAN : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "30-police-secrete-du-vatican/0.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "a08b14ac6035b042ba9a92b353659339413587e003bd4b1411eefe78f0ef207c"
+    },
+    {
+      "source": "s0",
+      "page": 62,
+      "deck": "30-police-secrete-du-vatican",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "POLICE SECRÈTE DU VATICAN : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure.",
+      "output": "30-police-secrete-du-vatican/back.jpg",
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "19585d5e25121d6383cdbbb019d5e9fef1dc9e90309310c17c6576ba30688214"
+    }
+  ],
+  "ignored": [
+    {
+      "source": "s0",
+      "page": 1,
+      "role": "ignore",
+      "reason": "Page d’instructions, conservée séparément dans les suppléments de la recette."
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "role": "ignore",
+      "reason": "Page d’instructions, conservée séparément dans les suppléments de la recette."
+    }
+  ]
+}

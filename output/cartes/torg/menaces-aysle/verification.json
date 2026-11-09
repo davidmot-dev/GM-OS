@@ -1,0 +1,630 @@
+{
+  "status": "passed",
+  "date": "2026-11-08",
+  "source_sha256": "8c3ab1398f51a2fb62a859586811e92c6457344f26f0b1ac4ffa95dda8b42528",
+  "source_pages": 62,
+  "covered_pages": 62,
+  "threat_pairs": 30,
+  "illustrated_fronts": 30,
+  "distinct_stat_backs": 30,
+  "card_jpegs": 60,
+  "instruction_jpegs": 2,
+  "replay_identical_card_jpegs": 60,
+  "replay_identical_instruction_jpegs": 2,
+  "decks": {
+    "01-gospog-de-la-5e-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "01-gospog-de-la-5e-recolte/back.jpg"
+    },
+    "02-gospog-de-la-4e-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "02-gospog-de-la-4e-recolte/back.jpg"
+    },
+    "03-gospog-de-la-3e-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "03-gospog-de-la-3e-recolte/back.jpg"
+    },
+    "04-gospog-de-la-2de-recolte": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "04-gospog-de-la-2de-recolte/back.jpg"
+    },
+    "05-machine-dabominations": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "05-machine-dabominations/back.jpg"
+    },
+    "06-charybde": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "06-charybde/back.jpg"
+    },
+    "07-barghest": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "07-barghest/back.jpg"
+    },
+    "08-geant-du-givre": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "08-geant-du-givre/back.jpg"
+    },
+    "09-uthorion-thorfin": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "09-uthorion-thorfin/back.jpg"
+    },
+    "10-ghillie": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "10-ghillie/back.jpg"
+    },
+    "11-esprit-follet": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "11-esprit-follet/back.jpg"
+    },
+    "12-nibikrid": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "12-nibikrid/back.jpg"
+    },
+    "13-squelette": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "13-squelette/back.jpg"
+    },
+    "14-bandit": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "14-bandit/back.jpg"
+    },
+    "15-chevalier": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "15-chevalier/back.jpg"
+    },
+    "16-sorcier": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "16-sorcier/back.jpg"
+    },
+    "17-jeune-drake": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "17-jeune-drake/back.jpg"
+    },
+    "18-drake": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "18-drake/back.jpg"
+    },
+    "19-zombi": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "19-zombi/back.jpg"
+    },
+    "20-liche": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "20-liche/back.jpg"
+    },
+    "21-tas-de-ferraille": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "21-tas-de-ferraille/back.jpg"
+    },
+    "22-grand-dragon": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "22-grand-dragon/back.jpg"
+    },
+    "23-viking-berserker": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "23-viking-berserker/back.jpg"
+    },
+    "24-draugr-viking": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "24-draugr-viking/back.jpg"
+    },
+    "25-pillard-viking": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "25-pillard-viking/back.jpg"
+    },
+    "26-skjaldmo-viking": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "26-skjaldmo-viking/back.jpg"
+    },
+    "27-scalde-viking": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "27-scalde-viking/back.jpg"
+    },
+    "28-seigneur-de-guerre-viking": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "28-seigneur-de-guerre-viking/back.jpg"
+    },
+    "29-baronne-svecha": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "29-baronne-svecha/back.jpg"
+    },
+    "30-tueur-de-mages": {
+      "faces": 1,
+      "start_index": 0,
+      "end_index": 0,
+      "back": "30-tueur-de-mages/back.jpg"
+    }
+  },
+  "labels": {
+    "01-gospog-de-la-5e-recolte": "GOSPOG DE LA 5E RÉCOLTE",
+    "02-gospog-de-la-4e-recolte": "GOSPOG DE LA 4E RÉCOLTE",
+    "03-gospog-de-la-3e-recolte": "GOSPOG DE LA 3E RÉCOLTE",
+    "04-gospog-de-la-2de-recolte": "GOSPOG DE LA 2DE RÉCOLTE",
+    "05-machine-dabominations": "MACHINE D’ABOMINATIONS",
+    "06-charybde": "CHARYBDE",
+    "07-barghest": "BARGHEST",
+    "08-geant-du-givre": "GÉANT DU GIVRE",
+    "09-uthorion-thorfin": "UTHORION (THORFIN)",
+    "10-ghillie": "GHILLIE",
+    "11-esprit-follet": "ESPRIT-FOLLET",
+    "12-nibikrid": "NIBIKRID",
+    "13-squelette": "SQUELETTE",
+    "14-bandit": "BANDIT",
+    "15-chevalier": "CHEVALIER",
+    "16-sorcier": "SORCIER",
+    "17-jeune-drake": "JEUNE DRAKE",
+    "18-drake": "DRAKE",
+    "19-zombi": "ZOMBI",
+    "20-liche": "LICHE",
+    "21-tas-de-ferraille": "TAS DE FERRAILLE",
+    "22-grand-dragon": "GRAND DRAGON",
+    "23-viking-berserker": "VIKING BERSERKER",
+    "24-draugr-viking": "DRAUGR VIKING",
+    "25-pillard-viking": "PILLARD VIKING",
+    "26-skjaldmo-viking": "SKJALDMÖ VIKING",
+    "27-scalde-viking": "SCALDE VIKING",
+    "28-seigneur-de-guerre-viking": "SEIGNEUR DE GUERRE VIKING",
+    "29-baronne-svecha": "BARONNE SVECHA",
+    "30-tueur-de-mages": "TUEUR DE MAGES"
+  },
+  "format": "JPEG RGB; quality 95; 4:4:4; PDF rendered at 300 dpi",
+  "visual_checks": "Both source sheets and both final preview sheets inspected; all 30 final stat backs inspected at full resolution in eight sheets; first illustrated front and the Charybde pair opened separately. All text upright; complete card borders retained.",
+  "source_notes": [
+    "Pages 13–14 form the Charybde pair, but the original verso prints CHARYB. Both original spellings preserved.",
+    "Some original numeric labels overlap adjacent text. Original PDF rendering preserved without retouching.",
+    "Pages 1–2 are instructions, exported separately rather than treated as threats."
+  ],
+  "runtime": {
+    "pymupdf": "2.0",
+    "pillow": "12.1.1"
+  },
+  "extractor": {
+    "original_sha256": "132f32f7a609d528d38c8f322d143a322cc28d612b2aebc225a46b1d9fcfac45",
+    "adapted_sha256": "fc3f4bf94997a8834e0f4045d171e038f7ef0cce0d49da69b365e4d23aeced2e",
+    "adaptation": "Only stage.rename(out) replaced by copytree with SHA-256 equality checks. Rendering unchanged."
+  },
+  "cards": [
+    {
+      "file": "01-gospog-de-la-5e-recolte/0.jpg",
+      "page": 3,
+      "sha256": "30daba387c481100c6db4c30b8c3f928cc5998904bb15e280813cfd703c479c6",
+      "replay_identical": true
+    },
+    {
+      "file": "01-gospog-de-la-5e-recolte/back.jpg",
+      "page": 4,
+      "sha256": "1edb0f9883d0206ae626e7559efaf48633dbbe0cdf284fe46bfe0ba4cfe6a193",
+      "replay_identical": true
+    },
+    {
+      "file": "02-gospog-de-la-4e-recolte/0.jpg",
+      "page": 5,
+      "sha256": "5a212f21daa62d94e7b424d2b699765af6a4b27636d5abdcdc6cabcd78842925",
+      "replay_identical": true
+    },
+    {
+      "file": "02-gospog-de-la-4e-recolte/back.jpg",
+      "page": 6,
+      "sha256": "eceaa7723cc930b94595a9c0fe7d298ea26a91f796df8a5e5084191c6df854cc",
+      "replay_identical": true
+    },
+    {
+      "file": "03-gospog-de-la-3e-recolte/0.jpg",
+      "page": 7,
+      "sha256": "63ab83d6da86e2a025fa15ab25bd879229788113c0f7356defe342a680d43e67",
+      "replay_identical": true
+    },
+    {
+      "file": "03-gospog-de-la-3e-recolte/back.jpg",
+      "page": 8,
+      "sha256": "84b009902e6014b16bf266df521cddc689ee4227943c9952f90031a75c55354d",
+      "replay_identical": true
+    },
+    {
+      "file": "04-gospog-de-la-2de-recolte/0.jpg",
+      "page": 9,
+      "sha256": "779d8de745581428e526657ad740ac4fd38c70c910774af1d7bc9d3fc722f3cb",
+      "replay_identical": true
+    },
+    {
+      "file": "04-gospog-de-la-2de-recolte/back.jpg",
+      "page": 10,
+      "sha256": "7d76507cb759ea7ff8ec5e2b96c42ec908695be59fea37bc9717f6bd7c8ce226",
+      "replay_identical": true
+    },
+    {
+      "file": "05-machine-dabominations/0.jpg",
+      "page": 11,
+      "sha256": "05700b8d41f2db0c968a6b257d8acd65abefcaeab38abb4694561a5fd8643a5c",
+      "replay_identical": true
+    },
+    {
+      "file": "05-machine-dabominations/back.jpg",
+      "page": 12,
+      "sha256": "0e55dd7381047930fd0a6893fadbeaeca945e28718829d00c345071716608690",
+      "replay_identical": true
+    },
+    {
+      "file": "06-charybde/0.jpg",
+      "page": 13,
+      "sha256": "5c6df249a1759d1589d470546ccf0f5c61de4c81e71cd95f6c9275a8778cb740",
+      "replay_identical": true
+    },
+    {
+      "file": "06-charybde/back.jpg",
+      "page": 14,
+      "sha256": "fd1d58eaad63cc9e0003eca6c6df8882f4cff94c09766492f0a107c71e7468d7",
+      "replay_identical": true
+    },
+    {
+      "file": "07-barghest/0.jpg",
+      "page": 15,
+      "sha256": "5c783c173908d56ae5dc2e760a9f6a104915ac072a6c55e4cf01751192efd6cb",
+      "replay_identical": true
+    },
+    {
+      "file": "07-barghest/back.jpg",
+      "page": 16,
+      "sha256": "fa1542a7cd46b3c0c6a61b869c45c772272d557c4e1f8748eca578232e7372d7",
+      "replay_identical": true
+    },
+    {
+      "file": "08-geant-du-givre/0.jpg",
+      "page": 17,
+      "sha256": "8a6281f3a8b023a6916e70bd632190bda8952969e3249d67f667051ecdda70ab",
+      "replay_identical": true
+    },
+    {
+      "file": "08-geant-du-givre/back.jpg",
+      "page": 18,
+      "sha256": "30781b3390c84966ea8e7a90ed74ebeabf1b5a452aabf844a50bc8dd02288ff4",
+      "replay_identical": true
+    },
+    {
+      "file": "09-uthorion-thorfin/0.jpg",
+      "page": 19,
+      "sha256": "6b7a3e6c5244763b13f90c6cf3ff845d99ed097102398de6b853927165761050",
+      "replay_identical": true
+    },
+    {
+      "file": "09-uthorion-thorfin/back.jpg",
+      "page": 20,
+      "sha256": "5e5564f12da4b09e4e8681c54250242d22b12933b9a3f525ce9aa6b4cc837543",
+      "replay_identical": true
+    },
+    {
+      "file": "10-ghillie/0.jpg",
+      "page": 21,
+      "sha256": "fcd42f9fe3468821d975f9e02cb539ef2b4ebe8594d8cda0695839570fb5b158",
+      "replay_identical": true
+    },
+    {
+      "file": "10-ghillie/back.jpg",
+      "page": 22,
+      "sha256": "4f3e6135041ed3b95575a7659f20999da7be612ad61b73139c514f9e5f1df825",
+      "replay_identical": true
+    },
+    {
+      "file": "11-esprit-follet/0.jpg",
+      "page": 23,
+      "sha256": "f74fbc73a43ed35f4b47912e45901646561b661a9fc5ffff875fedfcb5667a1d",
+      "replay_identical": true
+    },
+    {
+      "file": "11-esprit-follet/back.jpg",
+      "page": 24,
+      "sha256": "2ff2ce779696b3da6e347caeef2d42802b7e715a3d51d2c80ae7f879d2538d57",
+      "replay_identical": true
+    },
+    {
+      "file": "12-nibikrid/0.jpg",
+      "page": 25,
+      "sha256": "2e51257e74d44fe89099df9f9813197990aa924680c6432d8962e9136b5420ec",
+      "replay_identical": true
+    },
+    {
+      "file": "12-nibikrid/back.jpg",
+      "page": 26,
+      "sha256": "cf56be30f59e913adba2e48a9941f4d495d2ec835069a8cbbbd186b39858bd58",
+      "replay_identical": true
+    },
+    {
+      "file": "13-squelette/0.jpg",
+      "page": 27,
+      "sha256": "ff16968c6016faccba03e6c163c1451ed1b570f5ae9eff9d650cf2df7be54733",
+      "replay_identical": true
+    },
+    {
+      "file": "13-squelette/back.jpg",
+      "page": 28,
+      "sha256": "c4ed96619cfede978211e440bec1efdc1a11647d7ec85423c53d50e219376e77",
+      "replay_identical": true
+    },
+    {
+      "file": "14-bandit/0.jpg",
+      "page": 29,
+      "sha256": "1479cfed8f2193d5c9e61a146e9d3214ec1fc411fd7ec4c957be28cd0818cd09",
+      "replay_identical": true
+    },
+    {
+      "file": "14-bandit/back.jpg",
+      "page": 30,
+      "sha256": "4afaa172059186705ec0d92d95d7b153102ebb1113500ba33483cc0b7cd7b4f6",
+      "replay_identical": true
+    },
+    {
+      "file": "15-chevalier/0.jpg",
+      "page": 31,
+      "sha256": "0d51326f85cdf6d9509b3fa8cba64e1d2c0aa0b244a094c5ae714df40d8af1bc",
+      "replay_identical": true
+    },
+    {
+      "file": "15-chevalier/back.jpg",
+      "page": 32,
+      "sha256": "17fdbcd917525807014f4e2e6b0d7a2efabde2f95e22f0f5c8874d5b9c92c96d",
+      "replay_identical": true
+    },
+    {
+      "file": "16-sorcier/0.jpg",
+      "page": 33,
+      "sha256": "46db1d69ec425061926932c179684579d812d227d9c5173341bdc2322269cba2",
+      "replay_identical": true
+    },
+    {
+      "file": "16-sorcier/back.jpg",
+      "page": 34,
+      "sha256": "deef50d22cf4051f363e695ac0eba3ba2579c98c436e8779c7fc45d92936cd14",
+      "replay_identical": true
+    },
+    {
+      "file": "17-jeune-drake/0.jpg",
+      "page": 35,
+      "sha256": "bfe3309354188abda4bdfa2a52c5f9de2924214fa10b1678fa1055227eabf5ab",
+      "replay_identical": true
+    },
+    {
+      "file": "17-jeune-drake/back.jpg",
+      "page": 36,
+      "sha256": "840d99b9ea0c8fdf10ca8adc1b354a36da5ab98cdc88a0c46d0b9512dcd94d73",
+      "replay_identical": true
+    },
+    {
+      "file": "18-drake/0.jpg",
+      "page": 37,
+      "sha256": "8d97e8402cce4340a761c642045fc0c855141aedc35a0b8be8a3358dde12c8fb",
+      "replay_identical": true
+    },
+    {
+      "file": "18-drake/back.jpg",
+      "page": 38,
+      "sha256": "7177315c5f9bb3a08fef598bbb3e7f5b1e04c4f11058487071f1e12d65c820f5",
+      "replay_identical": true
+    },
+    {
+      "file": "19-zombi/0.jpg",
+      "page": 39,
+      "sha256": "f3a658927cbc4239a943365b419d2137ef888fbff96485ab6ae1907e011e67af",
+      "replay_identical": true
+    },
+    {
+      "file": "19-zombi/back.jpg",
+      "page": 40,
+      "sha256": "22af1404077b73f9412460eac4d4d9d964b0c0366b2e5f1c94238ff38fe5e38b",
+      "replay_identical": true
+    },
+    {
+      "file": "20-liche/0.jpg",
+      "page": 41,
+      "sha256": "d33aba1b14d1119b53673759e6300bbb2884d53f62d027bc151918873d91c4a9",
+      "replay_identical": true
+    },
+    {
+      "file": "20-liche/back.jpg",
+      "page": 42,
+      "sha256": "4606b661975f215b4dd39ca5c12a01327fa2567b6a0dbe260dc4eb8add85477b",
+      "replay_identical": true
+    },
+    {
+      "file": "21-tas-de-ferraille/0.jpg",
+      "page": 43,
+      "sha256": "9f23df4bf43eee81e0f485584292ba64b0a405ce668b9a6f2270384e8cd00dc2",
+      "replay_identical": true
+    },
+    {
+      "file": "21-tas-de-ferraille/back.jpg",
+      "page": 44,
+      "sha256": "1a150cdcba59fe1ed23c7ef8ca228e844798de74802e41b171107be47a568c96",
+      "replay_identical": true
+    },
+    {
+      "file": "22-grand-dragon/0.jpg",
+      "page": 45,
+      "sha256": "a8a357ffeee318947d29f1effb6f4b28299f785c8ca19ca544bfef5238a33555",
+      "replay_identical": true
+    },
+    {
+      "file": "22-grand-dragon/back.jpg",
+      "page": 46,
+      "sha256": "8e1ab23764a1bae883de824ab1ab4a248f689ee1ca0b6f6e5388058420b071e6",
+      "replay_identical": true
+    },
+    {
+      "file": "23-viking-berserker/0.jpg",
+      "page": 47,
+      "sha256": "9a5eaf29f9a9fa9a1f756a15069044b66a8e01a2f03612d141c85e1e5ffb88c1",
+      "replay_identical": true
+    },
+    {
+      "file": "23-viking-berserker/back.jpg",
+      "page": 48,
+      "sha256": "b9dcc72668b034e1ca1edb86233ae3ff3a4e696ffefca6064158b9caba7242ac",
+      "replay_identical": true
+    },
+    {
+      "file": "24-draugr-viking/0.jpg",
+      "page": 49,
+      "sha256": "08bb352c8c5e66a61636cd4238a96b153691159a2b58a88971eea45560b59970",
+      "replay_identical": true
+    },
+    {
+      "file": "24-draugr-viking/back.jpg",
+      "page": 50,
+      "sha256": "13c20fc35f6dad5c8be620e94946d937433bd7b2ae768daf7157fec6d2a8893c",
+      "replay_identical": true
+    },
+    {
+      "file": "25-pillard-viking/0.jpg",
+      "page": 51,
+      "sha256": "e47c3d11e71f332df3edf529b8d7a58366f438a18fa26b621cb0b8e5023085ee",
+      "replay_identical": true
+    },
+    {
+      "file": "25-pillard-viking/back.jpg",
+      "page": 52,
+      "sha256": "35313aabcc1b125485575dc6319d5bad5d2c48d8cade4fb677d5ae85cc7a00bf",
+      "replay_identical": true
+    },
+    {
+      "file": "26-skjaldmo-viking/0.jpg",
+      "page": 53,
+      "sha256": "bbd001bb08d120b199250456eb1b642a67a52b22be7fd2d1e7bf0b070a3eb467",
+      "replay_identical": true
+    },
+    {
+      "file": "26-skjaldmo-viking/back.jpg",
+      "page": 54,
+      "sha256": "5128c1e982959c3a62d535d019fe2a148cff584b02eafaee4b8daebeb5f59340",
+      "replay_identical": true
+    },
+    {
+      "file": "27-scalde-viking/0.jpg",
+      "page": 55,
+      "sha256": "7cc697de152b147cefe83f9670581a423bb0c4b8d44401b1a9922489533e3907",
+      "replay_identical": true
+    },
+    {
+      "file": "27-scalde-viking/back.jpg",
+      "page": 56,
+      "sha256": "2e8acec928dbbde3192fa468eeb8d234f1ccb83fd69561b76fe8daa8113acb99",
+      "replay_identical": true
+    },
+    {
+      "file": "28-seigneur-de-guerre-viking/0.jpg",
+      "page": 57,
+      "sha256": "cb89b95cee23673e65b8789bf328ad8d288ce90f032eedc06a0d69518d6020c2",
+      "replay_identical": true
+    },
+    {
+      "file": "28-seigneur-de-guerre-viking/back.jpg",
+      "page": 58,
+      "sha256": "d55f33426fd51b0d844056b5ba8c13565c0383b85fa56cd1b19e9a83c741bea6",
+      "replay_identical": true
+    },
+    {
+      "file": "29-baronne-svecha/0.jpg",
+      "page": 59,
+      "sha256": "768db8db2ff62c26f1d5058666f35a89231e1186fb40c24c707eed69c6da2f17",
+      "replay_identical": true
+    },
+    {
+      "file": "29-baronne-svecha/back.jpg",
+      "page": 60,
+      "sha256": "67ae281821fce519e628d8f0133a65fff4d45a083403a2421cfc9cdb7b8f8de5",
+      "replay_identical": true
+    },
+    {
+      "file": "30-tueur-de-mages/0.jpg",
+      "page": 61,
+      "sha256": "018004ee8a6f3420101a0937b085fb5c0ce9da346f9369b7a61e44e4a87f8d31",
+      "replay_identical": true
+    },
+    {
+      "file": "30-tueur-de-mages/back.jpg",
+      "page": 62,
+      "sha256": "9e316389723a580aff0b1ab0588cdc63ce6491a5a487281fdc49383727cd2038",
+      "replay_identical": true
+    }
+  ],
+  "instructions": [
+    {
+      "source": "s0",
+      "page": 1,
+      "output": "instructions/recto.jpg",
+      "dpi": 300,
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "d819c991819ac81e6b59186cbbbf9ebc832a7aa9bd34f55c20a55b32c4e7804e"
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "output": "instructions/verso.jpg",
+      "dpi": 300,
+      "size_pixels": [
+        721,
+        1323
+      ],
+      "sha256": "4c0cda909fed828a9ed717ab850882d56d2efa4615b0d9239617ffa62713e817"
+    }
+  ]
+}

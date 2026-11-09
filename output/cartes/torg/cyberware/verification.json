@@ -1,0 +1,316 @@
+{
+  "status": "passed",
+  "date": "2026-11-08",
+  "source_sha256": "378a9d0de2a3fc0fe2165a6dd0d19e2f704ef5cd61abaff0e2573f955993d9a4",
+  "source_pages": 110,
+  "covered_pages": 110,
+  "faces": 55,
+  "distinct_backs": 1,
+  "jpeg_cards": 56,
+  "replay_identical_jpeg_count": 56,
+  "duplicate_backs_identical_at_300dpi": 54,
+  "decks": {
+    "cyberware": {
+      "faces": 55,
+      "start_index": 0,
+      "end_index": 54,
+      "back": "cyberware/back.jpg"
+    }
+  },
+  "format": "JPEG RGB; quality 95; 4:4:4; PDF rendered at 300 dpi",
+  "visual_checks": "All four source contact sheets, both final preview sheets, one full-resolution face and each back inspected. Main text and logos upright. Complete card borders retained. No rotations or crops required.",
+  "limitations": [
+    "Raster illustrations and back textures retain their original source resolution; 300 dpi rendering adds no missing raster detail."
+  ],
+  "runtime": {
+    "pymupdf": "2.0",
+    "pillow": "12.1.1"
+  },
+  "extractor": {
+    "original_sha256": "132f32f7a609d528d38c8f322d143a322cc28d612b2aebc225a46b1d9fcfac45",
+    "adapted_sha256": "fc3f4bf94997a8834e0f4045d171e038f7ef0cce0d49da69b365e4d23aeced2e",
+    "adaptation": "Only stage.rename(out) replaced by copytree with SHA-256 equality checks. Rendering unchanged."
+  },
+  "files": [
+    {
+      "file": "cyberware/0.jpg",
+      "sha256": "3767091747f39cd09e7ace92a272ff6dfe3ac14259d9d99048b6d0fa732ddf40",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/back.jpg",
+      "sha256": "20251f67c69001aa6d371fe9c61627b9b47b6c747fa693f438dd84fdd54bcde5",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/1.jpg",
+      "sha256": "d2be36726480947d5c6d9bf038c2200363b54b61c5b26277f791bf86c9151399",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/2.jpg",
+      "sha256": "537429287fcf0eca5c256f9c80b28ac72f5714f9d22b44a545cbccb22863e54a",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/3.jpg",
+      "sha256": "02ba11670c2942b96cee8680b1c5126a7f5e0f9ffb16764923ba00b037065a5e",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/4.jpg",
+      "sha256": "31d8cdbd7536fbf8920ccbfc63c03a81235259870abcddeabab6137099166973",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/5.jpg",
+      "sha256": "2db076745a5ce19cccc36aade8e8cfc20f6f25182236673cb29a0f0abdf968ba",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/6.jpg",
+      "sha256": "577e0ecb1cd718b00485428b2cd9e9ea2dc6357c6d5cd601e94963bc4f05f3b7",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/7.jpg",
+      "sha256": "435c6b2b96232cb9550b1dd09f43114b9d1fce4d95929dd0d4bf012080d3297d",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/8.jpg",
+      "sha256": "516305e1e52f726f2267fd9d9d367bd0bbf6ab8ad73eb514bf1dc76a8aba9651",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/9.jpg",
+      "sha256": "97635729eafc42bfcd40d453ebfec341f4f7b88fdbe682b7b8757570fee63a56",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/10.jpg",
+      "sha256": "f5c50be695556a5227df7c1f7f929198b3a7ea0a7e460fb723be3c1b07a2a0cc",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/11.jpg",
+      "sha256": "10147d1e841befcb9e6bdcb857a48ae22eef591efe7296fe800c45bc30e2b05b",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/12.jpg",
+      "sha256": "2d1b2a007c8abe795d9e07d63846b9209cf746b38a80403a8525d3dc2ae67e5f",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/13.jpg",
+      "sha256": "d5353f0e61f0487a7453890f5aa43409f96aecc4144a192badb5ef89c44978aa",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/14.jpg",
+      "sha256": "401e2e82ae1dea501bcd7cfc3b901ee3d1094d2e06dacbb2573e937e681e5451",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/15.jpg",
+      "sha256": "ff410e76f41d89c3bf45ef1d74f9e59d3ed204263d879fff7599dacd6e820468",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/16.jpg",
+      "sha256": "c52f27a4e1b896762935c75204cdbb88f49c01751347517cc97b80f2a2a54458",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/17.jpg",
+      "sha256": "003516ffc72ed0047577cfaac34990b7289448242272fc81c4dfe93966a627cf",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/18.jpg",
+      "sha256": "4b93810d97fe1b01d75322f616696f6fe6d24b49e30133898e756ed17f2e81d4",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/19.jpg",
+      "sha256": "3acf5e501443cf53e6a73f88e2c1440f74bafeda090f1e9daca85cd2c152402c",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/20.jpg",
+      "sha256": "1b15ca7caa49ebba6520f6b5c28911f68859801a521597fbb9ad5c692b853f74",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/21.jpg",
+      "sha256": "c4d3f3042768d5f5f8948656435a1d77944265c352509c03992cb32624324d12",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/22.jpg",
+      "sha256": "082fa10218c5a71430b373bf5d918e5673c50684786c8daadb63386553a2efc0",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/23.jpg",
+      "sha256": "216773fba56a6c56a90e9c4b63dac29e7e54780a0a930e50c82661f22e4b4a3b",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/24.jpg",
+      "sha256": "ee43845992c979d848e2c3e22493773117f9b242e62a9e1fbf2761d19bfdacd2",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/25.jpg",
+      "sha256": "7a8955a8890236f0d54c0c2aad900d35d7175a241d608fd84e65cde6eab3046a",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/26.jpg",
+      "sha256": "3346cae974d79cf63077e89ec8f0c458a3fa1f61a14e088e65afa8e68e72f2d2",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/27.jpg",
+      "sha256": "90b84d78fe26fa27c08cd328ad5950a8f534f51f6aad8239e7a920bff421c3fc",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/28.jpg",
+      "sha256": "f455d99ad8eda3026ea3781e22d3948bf8726e336a85f4eed9ec58dfaae007e5",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/29.jpg",
+      "sha256": "1bd2b44763ff997731682aa74a83c7c6b169a5f5bc942920d983c5aed65ac27e",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/30.jpg",
+      "sha256": "1b087a8f73ea909ee1b0796c319805cd5a2261e3bfca2cd634200c39d8d9458d",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/31.jpg",
+      "sha256": "51777aff6288a4ac98416462507be39954d0341da8a34b6b72a49076ecd1ccab",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/32.jpg",
+      "sha256": "8a923bee400dd038e4569b2f24d0395cd3849ece410a5fa37fc78323e91e6a64",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/33.jpg",
+      "sha256": "f20109453e615619531a8a0a89f2d62e45124ae0f7a42b53d4fa057d0a33ca42",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/34.jpg",
+      "sha256": "4d72192177f1df56eafce7ad4ae169e4fdf894486ac992e00cbffcba1326fd50",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/35.jpg",
+      "sha256": "9cf4e3c83558807f53cb68897b34ef0d7bfd18afc5dc7cde5a14edd5a45e341f",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/36.jpg",
+      "sha256": "bd146cfcd7c5c525b236f54af324eec139d2cf7ab7dbe7cc6a08d36c315c42c9",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/37.jpg",
+      "sha256": "d82f8142de8f8cf870fbeba761d86acdf4ed77f634acc7658b29cb378e08041f",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/38.jpg",
+      "sha256": "74d81db9f35478a3b9bd65f21f2d7abd877fac794c5212954553cbe0de000011",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/39.jpg",
+      "sha256": "a255b5b6d886e94abfe4729fef9c4d2592151c6b2e01e6791d1c9c60e15ce784",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/40.jpg",
+      "sha256": "e276aaea4e141f8cf6c9dd55f49cbd04d663ad4e2872c0385fd67aeae21ba111",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/41.jpg",
+      "sha256": "334154ea2314a3f177603eba24f16e39a0af4219af1dd416c52f8123ed9c30f3",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/42.jpg",
+      "sha256": "b18758d5f8262167c95b406f7ef90c04f47854dafec22b186649d1f061760ecd",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/43.jpg",
+      "sha256": "a1ec13ec115e53b6ffb508c3873d71d2d03bd87b4b00ea4abc6d54d8c7897d1b",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/44.jpg",
+      "sha256": "4db7151db1ea8d7bd98ae2c810474a60fd5e4b2d4607610ee60ce41418d1471e",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/45.jpg",
+      "sha256": "ceccdca5c9dd0ccf3d88ae26eed255f1a1973d5803d49bdd2f6bfe6ab17ed7b9",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/46.jpg",
+      "sha256": "bd02b11200abaf3db8d2706abe3272aaa37bffe420a069f142d85bf2fd68aa4f",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/47.jpg",
+      "sha256": "c68318296643c70c7770778b750af518ba9b6835355a16f0b7b834e963857fca",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/48.jpg",
+      "sha256": "33191856d513953d6a6d530bf2e9996a6183fdd48a6e904e1b46715fbe4b0f6f",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/49.jpg",
+      "sha256": "de5f2d36193a94401e1ca7eb136ec0693a879f525393283dc8d657ca09f46581",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/50.jpg",
+      "sha256": "0c52d3a9c08092ca8b567c7099934e3807cd5a582c6ffc183cd7df9a452c1b7d",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/51.jpg",
+      "sha256": "9b1f4fb8357b782de62b25c7403a6345a43e577defa424d108bff87fd65cf2fc",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/52.jpg",
+      "sha256": "2dc916c729d2b9233cc3d97f4da3bf2659a5a769cdb916765f28a289fccd5007",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/53.jpg",
+      "sha256": "5a55b20158820bd0eb80c08ecbf428331643e96dde5bcc5f243e1429f3afe94c",
+      "replay_identical": true
+    },
+    {
+      "file": "cyberware/54.jpg",
+      "sha256": "e53d999b0d0711d71cdf75b05b0deafb2d0036b8a85ea7110238a434a9c242f2",
+      "replay_identical": true
+    }
+  ]
+}

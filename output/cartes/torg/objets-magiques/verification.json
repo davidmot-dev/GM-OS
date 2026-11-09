@@ -1,0 +1,316 @@
+{
+  "status": "passed",
+  "date": "2026-11-08",
+  "source_sha256": "d5a4c7884d28a6d0e7837c65213ee43de53ab56ea240b1e164bef5dc92a71051",
+  "source_pages": 110,
+  "covered_pages": 110,
+  "faces": 55,
+  "distinct_backs": 1,
+  "jpeg_cards": 56,
+  "replay_identical_jpeg_count": 56,
+  "duplicate_backs_identical_at_300dpi": 54,
+  "decks": {
+    "objets-magiques": {
+      "faces": 55,
+      "start_index": 0,
+      "end_index": 54,
+      "back": "objets-magiques/back.jpg"
+    }
+  },
+  "format": "JPEG RGB; quality 95; 4:4:4; PDF rendered at 300 dpi",
+  "visual_checks": "All four source contact sheets, both final preview sheets, one full-resolution face and each back inspected. Main text and logos upright. Complete card borders retained. No rotations or crops required.",
+  "limitations": [
+    "Raster illustrations and back textures retain their original source resolution; 300 dpi rendering adds no missing raster detail."
+  ],
+  "runtime": {
+    "pymupdf": "2.0",
+    "pillow": "12.1.1"
+  },
+  "extractor": {
+    "original_sha256": "132f32f7a609d528d38c8f322d143a322cc28d612b2aebc225a46b1d9fcfac45",
+    "adapted_sha256": "fc3f4bf94997a8834e0f4045d171e038f7ef0cce0d49da69b365e4d23aeced2e",
+    "adaptation": "Only stage.rename(out) replaced by copytree with SHA-256 equality checks. Rendering unchanged."
+  },
+  "files": [
+    {
+      "file": "objets-magiques/0.jpg",
+      "sha256": "388ac46c1e8f44636d82b605920a21fb69797e915bd439aaef2a00f4b1737025",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/back.jpg",
+      "sha256": "18f7606f33ad55e43394898286c7dd13f14b3d0414b271575d116df63b44b82c",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/1.jpg",
+      "sha256": "c28b513bb64c2875f913e6c77ac35bb142e37540c322948f715aab10d7f66224",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/2.jpg",
+      "sha256": "85550f216d16377945d2c4c1a07bbbc448ecbfb4986b404f4d6a575158574acd",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/3.jpg",
+      "sha256": "d76bee31753001fb229d7b6bc861cfadcfed7e6a7ac929eaa84297ba55762c2f",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/4.jpg",
+      "sha256": "2a87b8c46ecf94bbec2ed564f904872fb83662b153c1781ff2c09db2c6495a66",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/5.jpg",
+      "sha256": "aa3af3ab608d11ff858b665406138f3f8ac69c0fbe7dff7ae285d967df7d12cb",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/6.jpg",
+      "sha256": "6643854f26a5d85e3b60637d79c1338e8b61366d35e8747ad93de729f5050292",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/7.jpg",
+      "sha256": "5927b93ed4ae5b8c12336dc2543642dfa6ed27735ca09e076e6dfac070bb6578",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/8.jpg",
+      "sha256": "45e267b72c6120a146b5ba5696d7dd6cac9a594ad9d81e35898ffd0b27a466fe",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/9.jpg",
+      "sha256": "d393bd2c8ee7349ac24e2d723475fd532f3569f3518fc49a9c9f257b6f012fb6",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/10.jpg",
+      "sha256": "3e762ff68ce531e80fade0e7e53f590acf23a07b803289cb9e10c40e389f2256",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/11.jpg",
+      "sha256": "0d26e4a240931398686222f8ebce007870079ea26c78477ab96d5ba2dc81f6d7",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/12.jpg",
+      "sha256": "969da6f3b1baf4e1516cdb64d66ff4fa44a80eaa85ba86b540ad4f865dd2ff74",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/13.jpg",
+      "sha256": "c7d63e57713c0218f9c90cf8bd68831b0c625163771c99be19356db8bd1afe6a",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/14.jpg",
+      "sha256": "cb677e919ebd137121dae7899c8bb3a5a74a2c1869afb8b7136f60db669cf467",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/15.jpg",
+      "sha256": "dcc293f67f00335880299d02780a6bc094a5fb08bb33463ec768251ad25838d0",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/16.jpg",
+      "sha256": "b76db9ebac88dc251906ba5370c797137edacfc62b3f3f51e4883793f67ad890",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/17.jpg",
+      "sha256": "02f1fc556ab1076d3fb913352593e407832f0cdbbe4c159a08ede2812aa8a91d",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/18.jpg",
+      "sha256": "2712ea0ab4c2bde5f93ff163b291a820d3bd685919cc12dd13ddb78a1a879de4",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/19.jpg",
+      "sha256": "29dae0286fec65776e8b82a7580277179c9b6e5d064d150eec0cd96f0c3e3db2",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/20.jpg",
+      "sha256": "a3d4551542693a5ea451f05a0adbeeaaa70d6795e5ba6620b299ad6b0fcc4076",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/21.jpg",
+      "sha256": "5f5f21e674b116e6827c9e626be6b4b08c56fce812c69134b9fd05058926636b",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/22.jpg",
+      "sha256": "4e15a7719c63b74ff63479086cc5dcae4c11aa2d583861aef63822c2bb4ddc88",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/23.jpg",
+      "sha256": "a7725b00e902f8b36173fb26923048c3049d567984766e9cfa7ab760a47bc4fd",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/24.jpg",
+      "sha256": "3f2a7357ce7993938505ce9be86745046082246f9f79e31ffb86146cbaa67f95",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/25.jpg",
+      "sha256": "0f671120a5149aab8018a45f9756b8d6ed5be6e64744e0e47985caac2287bd40",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/26.jpg",
+      "sha256": "762d6229c7d69dc7a0e05aaad260e92f3915ff0d9b53da710a6c235a9a624246",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/27.jpg",
+      "sha256": "5980fdb8bfab6cd7d4a62aa87fa4b6cfd987434084dd1a0b476639bcb771527f",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/28.jpg",
+      "sha256": "7fd82a7b71d3be527a44c088dc41d5c813c894f2a015b13c6087ce998f0e50aa",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/29.jpg",
+      "sha256": "1f196bad6ce314f838558fcc82b143e28c5c7e321499f20ea8958c81770ff348",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/30.jpg",
+      "sha256": "2820e817c7107c22db715ecb8e7279f92ed32bbcd42a1133560bc46d28f45d87",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/31.jpg",
+      "sha256": "dc48b3c8133bd942a778c91b522d88abe3919e6db35a7f4799f925461d3541bb",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/32.jpg",
+      "sha256": "c2431c59f04abda33d2154aae854a5df346a5e0d217c99e640314fc5897563af",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/33.jpg",
+      "sha256": "dcd626b88195cd58d38a9c76b0f1c60932ce9ca6ff6822a20ab393a2f84ed12f",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/34.jpg",
+      "sha256": "d76f5996ff1cc836c350bf924849ea4dc9e54d67e660445fcdb02240f2565fde",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/35.jpg",
+      "sha256": "fdf002ca6982196c4eca8964fd9beea8e829a933699eedc6420d1b923d2d537d",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/36.jpg",
+      "sha256": "c96b7344647d3193c679499e707947f549c4b16068ca41cb27021da07fb609a4",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/37.jpg",
+      "sha256": "ca7ed4e94da063e24adee0f69ec912e13106c28a488f5f7e36fa0f4aeacfbc6d",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/38.jpg",
+      "sha256": "98c193ee52af21f645ebe7f9356bbae39a060446effbbf4ac2faf2bc3762375d",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/39.jpg",
+      "sha256": "854f3235132102066e83983696e43cbf1a827d2fc4897086c1d0ca6a8e234311",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/40.jpg",
+      "sha256": "7f4385f48345d7589712119c3e1e966cdc1d7226feb315d8fbbaed9c044d40ec",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/41.jpg",
+      "sha256": "ef2051b6bebe83add8da79125789d3d433cb5e33124a080c917005b52eeaa869",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/42.jpg",
+      "sha256": "a9c46229c7eafe7a2e805f0a9667f1822b4691a0da2fbe712dd4e5b43bc94831",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/43.jpg",
+      "sha256": "af45c25a8b6b9723140db65f7504963e99b32a2bae1450ad9aab9dbb1fd3e131",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/44.jpg",
+      "sha256": "0633acd71406f18f9878085d2c2c2395efe23e2a6d186ddd9191273cad57f24e",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/45.jpg",
+      "sha256": "0de4b5177c0b844ed8847fda76aad26698dbcdc65070fb789a89b94c18a56359",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/46.jpg",
+      "sha256": "887ea6ab587fb8b3635588dfeb7c45d33c6363a85bb057fa2dac743579fb84a7",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/47.jpg",
+      "sha256": "06f016f629afbf574c41bf9ebdded88eb6ac794be720e07dc0f97cfd1d26684d",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/48.jpg",
+      "sha256": "cd16c12dfbf99b4f115fee555b245ad265252d29e787af1a46c6731bebf62c4b",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/49.jpg",
+      "sha256": "c2d3fb063f0aafc34070dfa3b44076af7df446baef249aa8ce5087714c0c64a5",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/50.jpg",
+      "sha256": "3da1b3bd3fe2783c580e6d686d0f39b43e31cc162e54b950d0645677c822b3cc",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/51.jpg",
+      "sha256": "47d75464e6cd083b034b8b8a0cebdefce7c3d41faf4f67f08ab15f816a254b59",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/52.jpg",
+      "sha256": "0748ca66e87e72abd8cf7a4f17a1eea80c5318674b6e01c141878fe9f3cfe905",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/53.jpg",
+      "sha256": "eade93dd54772336702e043fdbb9ed4e4675711379db7d73bd3fd6102ed2c164",
+      "replay_identical": true
+    },
+    {
+      "file": "objets-magiques/54.jpg",
+      "sha256": "0597ab147fe9e30d21732c2edadb985efe78c9c6a9cbba37409e844687214d21",
+      "replay_identical": true
+    }
+  ]
+}
