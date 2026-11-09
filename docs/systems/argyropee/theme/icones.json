@@ -1,0 +1,17 @@
+{
+  "journal": "icones/journal.svg",
+  "forge": "icones/forge.svg",
+  "combat": "icones/combat.svg",
+  "des": "icones/des.svg",
+  "carte": "icones/carte.svg",
+  "sante": "icones/sante.svg",
+  "butin": "icones/butin.svg",
+  "indice": "icones/indice.svg",
+  "lieu": "icones/lieu.svg",
+  "horloge": "icones/horloge.svg",
+  "musique": "icones/musique.svg",
+  "pj": "icones/pj.svg",
+  "oracle": "icones/oracle.svg",
+  "lumiere": "icones/lumiere.svg",
+  "scene": "icones/scene.svg"
+}

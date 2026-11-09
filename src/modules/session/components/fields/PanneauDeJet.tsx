@@ -80,6 +80,11 @@ import { lireSymbaroum, sansCritiqueDeBase, type NatureDuTest } from '../../../d
 import { PreparationBarbarians, SuitesBarbarians } from './BarbariansAuJet';
 import { CHOIX_DE_BARBARIANS, appliquerLeGeste, heroismeDeLaFiche, lancerBarbarians, modificateursDeBarbarians, soldeDesDes,
     LIBELLES_DE_BARBARIANS, type ChoixDeBarbarians, type GesteDeBarbarians, type JetDeBarbarians } from '../../../dice/systemes/barbarians';
+import { JourneeArgyropee, MagieArgyropee, OppositionArgyropee, PreparationArgyropee, SuitesArgyropee, type CompetenceDArgyropee } from './ArgyropeeAuJet';
+import { CHOIX_D_ARGYROPEE, CHANCES_DE_SILENCIADA, LIBELLES_D_ARGYROPEE, bilanDeLOpposition, bonusDuMetierChoisi, coutDuSort, depenserLePanache,
+    doubleHumeur, entierDArgyropee, lancerArgyropee, lancerLAdversaire, magieDuCombatApres, metiersDeLaFiche, obstacleALExuberance,
+    panacheDeLaFiche, prieresRestantes, regainDuMatin, silenciadaContractee,
+    type ChoixDArgyropee, type JetDArgyropee, type MancheDOpposition } from '../../../dice/systemes/argyropee';
 import { PreparationRuneQuest, SuitesRuneQuest } from './RuneQuestAuJet';
 import { CHOIX_DE_RUNEQUEST, nommerLeJetDeRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest } from '../../../dice/systemes/runequest';
 import { CHOIX_DE_DEGENESIS, lancerDegenesis, type ChoixDeDegenesis, type JetDeDegenesis } from '../../../dice/systemes/degenesis';
@@ -450,6 +455,41 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ecrireSurLaFiche?.(maj);
     };
     const heroismeBarbarians = regleBarbarians?.heroisme ? heroismeDeLaFiche(valeursBarbarians[regleBarbarians.heroisme]) : undefined;
+
+    /**
+     * **Argyropée** (2026-11-08) : le métier choisi au jet, le modificateur du Conteur,
+     * l'entraide ; ce que le dernier lancer savait, pour titrer la dépense de Panache ;
+     * le Panache écrit par la carte, relu sans attendre la fiche.
+     */
+    const regleArgyropee = descripteur.argyropee;
+    const [choixArgyropee, setChoixArgyropee] = useState<ChoixDArgyropee>(CHOIX_D_ARGYROPEE);
+    const [argyropeeDuLancer, setArgyropeeDuLancer] = useState<{ titre: string; compte: number } | null>(null);
+    /** Les manches du test en opposition en cours (p. 46) ; vide hors opposition. */
+    const [oppositionArgyropee, setOppositionArgyropee] = useState<MancheDOpposition[]>([]);
+    const [ecritsArgyropee, setEcritsArgyropee] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const valeursArgyropee = useMemo(() => ({ ...valeurs,
+        ...(ecritsArgyropee.base === valeurs && ecritsArgyropee.personnageId === personnageId ? ecritsArgyropee.maj : {}),
+    }), [valeurs, ecritsArgyropee, personnageId]);
+    const ecrireArgyropee = (maj: Record<string, unknown>) => {
+        setEcritsArgyropee(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche?.(maj);
+    };
+    const metiersArgyropee = useMemo(() => metiersDeLaFiche(regleArgyropee, valeursArgyropee), [regleArgyropee, valeursArgyropee]);
+    const panacheArgyropee = regleArgyropee?.panache ? panacheDeLaFiche(valeursArgyropee[regleArgyropee.panache]) : undefined;
+    /*
+      Argyropée, le 09/11/2026 (« l'Exubérance, la Faveur divine, la Guigne, la magie et le
+      dé de compétence des PNJ ») : ce que les cartes lisent sur la fiche. Rien ne se
+      propose sans `ecrireSurLaFiche` : on ne dépense pas ce qu'on ne saurait décompter.
+    */
+    const nombreArgyropee = (champ?: string) => (champ ? entierDArgyropee(valeursArgyropee[champ]) : 0);
+    const faveurDuPilote = regleArgyropee?.faveur;
+    const prieresArgyropee = faveurDuPilote && ecrireSurLaFiche ? {
+        restantes: prieresRestantes(valeursArgyropee[faveurDuPilote.competence], valeursArgyropee[faveurDuPilote.prieres]),
+        total: Math.max(0, nombreArgyropee(faveurDuPilote.competence)),
+    } : undefined;
+    const faveurArgyropee = choixArgyropee.faveur && !!prieresArgyropee && prieresArgyropee.restantes > 0;
+    /** Le dernier adversaire d'une opposition : un autre adversaire recommence le compte. */
+    const adversaireArgyropee = useRef('');
 
     /**
      * **RuneQuest** (2026-10-30) : le test de caractéristique ou de résistance, la
@@ -1046,6 +1086,37 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const nomDe = (id?: string) =>
         ressourcesDeTable?.find(r => r.id === id)?.label ?? id ?? '';
 
+    /**
+     * Argyropée, l'action complexe (p. 46) : les autres compétences de la section du jet,
+     * que la carte « Préparer » peut réunir à celle qui est choisie.
+     */
+    const competencesArgyropee: CompetenceDArgyropee[] = regleArgyropee
+        ? (template.sections.find(s => s.id === descripteur.seuil?.[0]?.sectionId)?.fields ?? [])
+            .filter(f => f.type === 'number' && f.id !== jet.composantes[0]?.champ)
+            .map(f => ({ id: f.id, label: f.label, valeur: entierDArgyropee(valeursArgyropee[f.id]) }))
+        : [];
+    const reuniesArgyropee = competencesArgyropee.filter(c => choixArgyropee.complexe.includes(c.id));
+    const bilanOppositionArgyropee = oppositionArgyropee.length ? bilanDeLOpposition(oppositionArgyropee) : null;
+
+    /** Argyropée : « Serrurerie 3 · Malandrin +2 · modificateur −1 », la compétence par son libellé. */
+    const titreArgyropee = () => {
+        const champs = template.sections.flatMap(sec => sec.fields);
+        const metierChoisi = metiersArgyropee.find(m => m.index === choixArgyropee.metier);
+        return [
+            `${jet.composantes.map(c => champs.find(f => f.id === c.champ)?.label ?? c.label).join(' + ')} ${jet.seuil}`,
+            ...reuniesArgyropee.map(c => `${c.label} ${c.valeur}`),
+            reuniesArgyropee.length ? 'action complexe' : '',
+            !choixArgyropee.opposition ? ''
+                : choixArgyropee.adversairePnj ? `opposition contre un PNJ (${choixArgyropee.adversairePrivilegiee ? '1d6' : '1d6 ÷ 2'}`
+                    + ` ${choixArgyropee.adversaire < 0 ? '−' : '+'} ${Math.abs(choixArgyropee.adversaire)})`
+                : `opposition contre ${choixArgyropee.adversaire}`,
+            faveurArgyropee ? 'Faveur divine' : '',
+            metierChoisi ? `${metierChoisi.libelle} +${metierChoisi.bonus}` : '',
+            choixArgyropee.modificateur ? `modificateur ${choixArgyropee.modificateur > 0 ? '+' : '−'}${Math.abs(choixArgyropee.modificateur)}` : '',
+            choixArgyropee.aidants ? `${choixArgyropee.aidants} aidant${choixArgyropee.aidants > 1 ? 's' : ''}` : '',
+        ].filter(Boolean).join(' · ');
+    };
+
     const lancer = () => {
         if (!pret || briseAlien) return;
         if (prepCoc?.blocage) { gmToast(prepCoc.blocage, 'info'); return; }
@@ -1346,8 +1417,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const modificateurCH = effetCH?.desavantage ? (modificateur === 'avantage' ? 'aucun' : 'desavantage') : modificateur;
         const soldeBarbarians = soldeDesDes(choixBarbarians.bonus, choixBarbarians.malus);
         const modificateursBarbarians = modificateursDeBarbarians(jet.seuil, choixBarbarians);
+        const metierArgyropee = bonusDuMetierChoisi(metiersArgyropee, choixArgyropee.metier);
         const brutDuMoteur = regleBarbarians
             ? lancerBarbarians(soldeBarbarians, modificateursBarbarians, () => DiceEngine.roll(6), regleBarbarians.cible ?? 9)
+            // Argyropée : 1d10 lu de 0 à 9 + compétence + métier, sur des paliers fixes (p. 44).
+            : regleArgyropee
+            ? lancerArgyropee(jet.seuil, metierArgyropee, choixArgyropee, () => DiceEngine.roll(10),
+                reuniesArgyropee.length ? [jet.seuil, ...reuniesArgyropee.map(c => c.valeur)] : undefined, faveurArgyropee)
             // COC : d20 (ou 3d6) + caractéristique + modificateurs contre la difficulté (p. 56-59).
             : regleCoc && prepCoc
             ? lancerCoc(prepCoc, faces => DiceEngine.roll(faces))
@@ -1465,6 +1541,38 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 titre: `${choixBarbarians.reaction ? 'Réaction : ' : ''}${jet.composantes.map(c => c.label).join(' + ')}${reglage ? ` · ${reglage}` : ''}`,
                 compte: (d?.compte ?? 0) + 1, pointAccorde: false,
             }));
+        }
+        let oppositionADire: { titre: string; res: RollResult } | null = null;
+        if (regleArgyropee) {
+            const titre = titreArgyropee();
+            setArgyropeeDuLancer(d => ({ titre, compte: (d?.compte ?? 0) + 1 }));
+            // La Faveur divine se dit avant le jet et vaut pour un seul dé : la prière est comptée, la case se décoche (p. 81).
+            if (faveurArgyropee && faveurDuPilote) {
+                ecrireArgyropee({ [faveurDuPilote.prieres]: Math.max(0, nombreArgyropee(faveurDuPilote.prieres)) + 1 });
+                setChoixArgyropee(c => ({ ...c, faveur: false }));
+            }
+            /*
+              Le test en opposition (p. 46) : l'adversaire teste en même temps la même
+              compétence ; chaque lancer est une manche, jusqu'à 5 succès. Une opposition
+              finie, ou un autre adversaire, recommence le compte. Un PNJ tire le d6 de sa
+              compétence à chaque manche (p. 185).
+            */
+            if (choixArgyropee.opposition) {
+                const adversaire = lancerLAdversaire(choixArgyropee.adversaire, () => DiceEngine.roll(10),
+                    choixArgyropee.adversairePnj ? { privilegiee: choixArgyropee.adversairePrivilegiee, d6: () => DiceEngine.roll(6) } : undefined);
+                const cle = `${entierDArgyropee(choixArgyropee.adversaire)}|${choixArgyropee.adversairePnj}|${choixArgyropee.adversairePrivilegiee}`;
+                const precedentes = bilanOppositionArgyropee?.issue || adversaireArgyropee.current !== cle ? [] : oppositionArgyropee;
+                adversaireArgyropee.current = cle;
+                const manches = [...precedentes, { joueur: res as JetDArgyropee, adversaire }];
+                setOppositionArgyropee(manches);
+                const b = bilanDeLOpposition(manches);
+                oppositionADire = { titre: `${titre} · opposition`, res: { total: adversaire.total, modifier: 0, rolls: adversaire.rolls,
+                    totalDisplay: `Adversaire : ${adversaire.totalDisplay} — succès ${b.joueur} contre ${b.adversaire}`
+                        + (b.issue === 'joueur' ? ', le personnage l’emporte' : b.issue === 'adversaire' ? ', l’adversaire l’emporte'
+                            : b.issue === 'egalite' ? ', égalité : pas d’accord' : '') } };
+            } else if (oppositionArgyropee.length) {
+                setOppositionArgyropee([]);
+            }
         }
         if (regleCoc && prepCoc) {
             const reglage = [
@@ -1586,6 +1694,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             : regleCoc && nomCoc
             ? [nomCoc, ...capacitesDisponiblesCoc(regleCoc, valeursCoc, champCoc).filter(c => choixCoc.capacites?.includes(c.cle))
                 .map(c => `${c.nom} (p. ${c.page}, ${c.deBonus ? 'dé bonus' : `+${c.bonus}`}, coût 0, ce test)`)].join(' · ')
+            : regleArgyropee && jet.composantes.length > 0
+            ? titreArgyropee()
             : jet.composantes.length > 0
             ? jet.composantes.map(c => c.label).join(' + ')
             // Shadowrun : « Armes à distance + Agilité (11 dés, 7 de risque) », la compétence par son libellé.
@@ -1650,6 +1760,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 seuil: descripteur.cible || jet.composantes.length > 0 ? jet.seuil : undefined,
             });
         }
+        // Argyropée : la manche de l'adversaire se dit APRÈS le test du personnage.
+        if (oppositionADire) redire(oppositionADire.titre, oppositionADire.res);
 
         /**
          * « Après la résolution d'un test réussi, chaque réussite excédentaire
@@ -1885,6 +1997,100 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ecrireBarbarians({ [regleBarbarians.heroisme]: heroismeBarbarians + 1 });
         setBarbariansDuLancer(d => d && { ...d, pointAccorde: true });
         redire(`${barbariansDuLancer.titre} · échec critique`, { total: 0, modifier: 0, rolls: [], totalDisplay: `+1 point d’héroïsme accordé par le MJ → ${heroismeBarbarians + 1}` });
+    };
+
+    /** Le Panache d'Argyropée : des points ajoutés au dé déjà tiré, jusqu'à 9 (p. 84-85). */
+    const depenserLePanacheArgyropee = (points: number) => {
+        const jetA = resultat as JetDArgyropee | null;
+        if (!regleArgyropee || !jetA?.argyropee || !argyropeeDuLancer || points < 1) return;
+        if (panacheArgyropee !== undefined && panacheArgyropee < points) return;
+        const apres = depenserLePanache(jetA, points);
+        if (apres === jetA) return;
+        const depense = apres.argyropee.panache - jetA.argyropee.panache;
+        if (regleArgyropee.panache && panacheArgyropee !== undefined) {
+            // La Guigne : le Panache qui rehausse un test entre au repère du Conteur ; la magie, jamais (p. 177).
+            const guigne = regleArgyropee.guigne;
+            ecrireArgyropee({ [regleArgyropee.panache]: panacheArgyropee - depense,
+                ...(guigne ? { [guigne.depense]: Math.max(0, nombreArgyropee(guigne.depense)) + depense } : {}) });
+        }
+        // En opposition, le Panache relève le test de la dernière manche, et donc son compte de succès.
+        if (oppositionArgyropee.length && oppositionArgyropee[oppositionArgyropee.length - 1].joueur === jetA) {
+            setOppositionArgyropee(m => [...m.slice(0, -1), { ...m[m.length - 1], joueur: apres }]);
+        }
+        setResultat(apres);
+        redire(`${argyropeeDuLancer.titre} · ${LIBELLES_D_ARGYROPEE[apres.argyropee.bilan]} (${depense} Panache)`, apres);
+    };
+
+    /*
+      **La journée et la magie d'Argyropée** — 09/11/2026, à la demande de David. Chaque
+      geste écrit sur la fiche et se dit au journal ; aucun n'arbitre : le Conteur valide
+      le récit d'une Exubérance ou d'un sort (p. 85-86, 136).
+    */
+    const nomArgyropee = regleArgyropee?.nom ? String(valeursArgyropee[regleArgyropee.nom] ?? '').trim() : '';
+    const direArgyropee = (quoi: string, texte: string) =>
+        redire(`${nomArgyropee ? `${nomArgyropee} · ` : ''}${quoi}`, { total: 0, modifier: 0, rolls: [], totalDisplay: texte });
+    const santeArgyropee = regleArgyropee?.sante && String(valeursArgyropee[regleArgyropee.sante] ?? '').trim() !== ''
+        ? nombreArgyropee(regleArgyropee.sante) : undefined;
+    const magieDuPilote = regleArgyropee?.magie;
+    const sortsArgyropee = magieDuPilote
+        ? magieDuPilote.sorts.map(id => String(valeursArgyropee[id] ?? '').trim()).filter(Boolean)
+        : [];
+    const doubleHumeurArgyropee = !!magieDuPilote?.domaines && doubleHumeur(magieDuPilote.domaines.map(id => valeursArgyropee[id]));
+    const silenciadaArgyropee = !!magieDuPilote?.silenciada && valeursArgyropee[magieDuPilote.silenciada] === true;
+
+    /** Le regain du matin : 1d10 + 10 + bonus (+ la Guigne), le reste de la veille perdu ; un nouveau jour (p. 84, 177). */
+    const reveilArgyropee = () => {
+        if (!regleArgyropee?.panache) return;
+        const guigne = regleArgyropee.guigne;
+        const bonus = Math.max(0, nombreArgyropee(regleArgyropee.panacheBonus));
+        const offrande = Math.max(0, nombreArgyropee(guigne?.offert));
+        const r = regainDuMatin(DiceEngine.roll(10), bonus, offrande);
+        ecrireArgyropee({
+            [regleArgyropee.panache]: r.panache,
+            ...(faveurDuPilote ? { [faveurDuPilote.prieres]: 0 } : {}),
+            ...(guigne ? { [guigne.depense]: 0, [guigne.offert]: 0 } : {}),
+            ...(magieDuPilote ? { [magieDuPilote.combat]: 0 } : {}),
+        });
+        direArgyropee('Réveil', `Panache : 1d10 = ${r.de} + 10${bonus ? ` + bonus ${bonus}` : ''}${offrande ? ` + Guigne ${offrande}` : ''}`
+            + ` = ${r.panache} ; le Panache de la veille est perdu${faveurDuPilote ? ', les prières du jour reviennent' : ''} (p. 84).`);
+    };
+
+    const mangerArgyropee = (points: number, quoi: string) => {
+        if (!regleArgyropee?.panache || panacheArgyropee === undefined) return;
+        ecrireArgyropee({ [regleArgyropee.panache]: panacheArgyropee + points });
+        direArgyropee(quoi, `+${points} Panache (${panacheArgyropee} → ${panacheArgyropee + points}, p. 85).`);
+    };
+
+    const exuberanceArgyropee = () => {
+        if (!regleArgyropee?.panache || panacheArgyropee === undefined || obstacleALExuberance(panacheArgyropee, santeArgyropee)) return;
+        ecrireArgyropee({ [regleArgyropee.panache]: 0 });
+        direArgyropee('Exubérance', `Sacrifie ses ${panacheArgyropee} points de Panache pour berner la mort, la sienne ou celle d’un allié`
+            + ' ; le Conteur valide le récit (p. 85-86).');
+    };
+
+    /** Exprimer un sort : son coût en Panache, le Panache magique du combat, et la silenciada au point qui atteint 7. */
+    const exprimerUnSortArgyropee = (sort: string, discret: boolean) => {
+        if (!regleArgyropee?.panache || !magieDuPilote || panacheArgyropee === undefined) return;
+        const cout = coutDuSort(discret, doubleHumeurArgyropee);
+        if (panacheArgyropee < cout) return;
+        const { apres, franchit } = magieDuCombatApres(valeursArgyropee[magieDuPilote.combat], cout);
+        const maj: Record<string, unknown> = { [regleArgyropee.panache]: panacheArgyropee - cout, [magieDuPilote.combat]: apres };
+        let silenciada = '';
+        if (franchit && !silenciadaArgyropee) {
+            const d100 = DiceEngine.roll(100);
+            const atteint = silenciadaContractee(d100);
+            if (atteint && magieDuPilote.silenciada) maj[magieDuPilote.silenciada] = true;
+            silenciada = ` ${apres} points en sorts dans ce combat : d100 = ${d100}, ${atteint
+                ? `${d100} ≤ ${CHANCES_DE_SILENCIADA}, la silenciada le rend muet — 2 tests de Sens magique réussis pour en guérir (p. 127).`
+                : `au-dessus de ${CHANCES_DE_SILENCIADA}, pas de silenciada (p. 127).`}`;
+        }
+        ecrireArgyropee(maj);
+        direArgyropee(`Sort : ${sort}`, `${cout} Panache, ${discret || doubleHumeurArgyropee ? 'sans lueur' : 'avec sa lueur'}`
+            + ` (${panacheArgyropee} → ${panacheArgyropee - cout}, p. 136).${silenciada}`);
+    };
+
+    const finDuCombatArgyropee = () => {
+        if (magieDuPilote) ecrireArgyropee({ [magieDuPilote.combat]: 0 });
     };
 
     /** L'échelle du héros : un ou deux échelons pour un bonus au test qui vient d'être fait (p. 81-82). */
@@ -2231,7 +2437,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** Une réserve, qui compte ses réussites — et non un verdict sur un seul dé. */
     const barbariansDuResultat = (resultat as JetDeBarbarians | null)?.barbarians;
     const cocDuResultat = (resultat as JetDeCoc | null)?.coc;
-    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat && !barbariansDuResultat && !cocDuResultat
+    const argyropeeDuResultat = (resultat as JetDArgyropee | null)?.argyropee;
+    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat && !barbariansDuResultat && !argyropeeDuResultat && !cocDuResultat
         && (jet.desEchelonnes.length > 0 || jet.nombreDeDes + jet.desSecondaires > 1);
     const v = verdict(reussites, regleDune && duneDuLancer ? duneDuLancer.difficulte : jet.reussitesRequises);
     // Un dé écarté n'a rien déclenché : le compter ici annoncerait une
@@ -2249,7 +2456,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       si le jeu y a quelque chose : une difficulté, des réserves où puiser, la
       préparation d'Alien… — une étape vide numérotée mentirait sur l'ordre.
     */
-    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleCoc || !!regleRuneQuest || !!regleDegenesis || !!regleShadowrun || disponiblesPerso.length > 0
+    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleArgyropee || !!regleCoc || !!regleRuneQuest || !!regleDegenesis || !!regleShadowrun || disponiblesPerso.length > 0
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
         || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable
@@ -2265,10 +2472,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const runequestDuResultat = (resultat as JetDeRuneQuest | null)?.runequest;
     const degenesisDuResultat = (resultat as JetDeDegenesis | null)?.degenesis;
     const shadowrunDuResultat = (resultat as JetDeShadowrun | null)?.shadowrun;
-    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || runequestDuResultat || degenesisDuResultat || shadowrunDuResultat || cocDuResultat)
-        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, RuneQuest p. 142, Degenesis p. 19, COC p. 58), et non le degré générique du moteur.
+    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || argyropeeDuResultat || runequestDuResultat || degenesisDuResultat || shadowrunDuResultat || cocDuResultat)
+        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, Argyropée p. 44, RuneQuest p. 142, Degenesis p. 19, COC p. 58), et non le degré générique du moteur.
         ? <span className={'font-black uppercase tracking-widest ' + (resultat.tagSuccess ? 'text-etat-succes' : 'text-etat-danger')}>
-            {gardeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? shadowrunDuResultat?.libelle ?? cocDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
+            {gardeDuResultat?.libelle ?? argyropeeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? shadowrunDuResultat?.libelle ?? cocDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
         </span>
         : resultat && !paniqueEnAttente
         && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
@@ -2773,6 +2980,20 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {regleBarbarians && (
                         <PreparationBarbarians choix={choixBarbarians} setChoix={setChoixBarbarians} seuil={jet.seuil} />
                     )}
+                    {regleArgyropee && (
+                        <PreparationArgyropee choix={choixArgyropee} setChoix={setChoixArgyropee} seuil={jet.seuil} metiers={metiersArgyropee}
+                            competences={competencesArgyropee} opposition={bilanOppositionArgyropee && !bilanOppositionArgyropee.issue ? bilanOppositionArgyropee : null}
+                            faveur={prieresArgyropee} />
+                    )}
+                    {regleArgyropee?.panache && panacheArgyropee !== undefined && ecrireSurLaFiche && (
+                        <JourneeArgyropee panache={panacheArgyropee} sante={santeArgyropee} prieres={prieresArgyropee}
+                            offrande={regleArgyropee.guigne ? nombreArgyropee(regleArgyropee.guigne.offert) : undefined}
+                            silenciada={silenciadaArgyropee} reveil={reveilArgyropee} manger={mangerArgyropee} exuberance={exuberanceArgyropee} />
+                    )}
+                    {magieDuPilote && panacheArgyropee !== undefined && ecrireSurLaFiche && (
+                        <MagieArgyropee sorts={sortsArgyropee} double={doubleHumeurArgyropee} panache={panacheArgyropee}
+                            combat={Math.max(0, nombreArgyropee(magieDuPilote.combat))} exprimer={exprimerUnSortArgyropee} finDuCombat={finDuCombatArgyropee} />
+                    )}
                     {regleCoc?.suivi && attaqueCoc && <DefenseCibleCoc choisir={defense => setChoixCoc(c => ({ ...c, difficulte: defense }))} />}
                     {regleCoc?.heroisme && regleCoc.evolution && <HeroismeCoc regle={regleCoc} valeurs={valeursCoc} ecrire={ecrireCoc} consigner={texte => redire(`${nomCoc} · héroïsme COC`, { total: 0, modifier: 0, rolls: [], totalDisplay: texte })} />}
                     {regleCoc?.psychisme && <PsychismeCoc regle={regleCoc} valeurs={valeursCoc} ecrire={ecrireCoc} joueur={pourLesJoueurs} consigner={texte => redire(`${nomCoc} · psychisme COC`, { total: 0, modifier: 0, rolls: [], totalDisplay: texte })} />}
@@ -2988,7 +3209,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système.
                         Pas chez Crimes : le Potentiel dit le nombre de dés, rien ne s'y ajoute ;
                         ni chez Barbarians, dont les dés de bonus et de malus se règlent à l'étape 2. */}
-                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleCoc || regleRuneQuest || regleDegenesis || regleShadowrun ? 'hidden' : ''}`}>
+                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleArgyropee || regleCoc || regleRuneQuest || regleDegenesis || regleShadowrun ? 'hidden' : ''}`}>
                         <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                         <button
                             onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -3420,6 +3641,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 heroisme={ecrireSurLaFiche ? heroismeBarbarians : undefined} pointAccorde={barbariansDuLancer.pointAccorde}
                                 geste={gesteBarbarians} faveurDivine={faveurDivineBarbarians} accorderUnPoint={accorderUnPointBarbarians} />
                         )}
+                        {regleArgyropee && argyropeeDuLancer && argyropeeDuResultat && (
+                            <SuitesArgyropee key={argyropeeDuLancer.compte} jet={resultat as JetDArgyropee}
+                                panache={ecrireSurLaFiche ? panacheArgyropee : undefined} depenser={depenserLePanacheArgyropee} />
+                        )}
+                        {regleArgyropee && oppositionArgyropee.length > 0 && (
+                            <OppositionArgyropee manches={oppositionArgyropee} recommencer={() => setOppositionArgyropee([])} />
+                        )}
                         {regleSymbaroum && symbaroumDuLancer && ecrireSurLaFiche && (
                             <SuitesSymbaroum key={symbaroumDuLancer.compte} regle={regleSymbaroum} nature={symbaroumDuLancer.nature}
                                 resultat={resultat} seuil={seuilDuLancer} avantage={symbaroumDuLancer.avantage}
@@ -3547,7 +3775,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         {/* Torg ne lance pas sous un seuil : son calcul dit déjà le ND. Une
                             réserve sans seuil (NOC, Alien) affichait « sous 0 ». */}
-                        {!descripteur.tableDeBonus && !destin && !regleBarbarians && !regleCoc && seuilDuLancer > 0 && (
+                        {!descripteur.tableDeBonus && !destin && !regleBarbarians && !regleArgyropee && !regleCoc && seuilDuLancer > 0 && (
                             <span className="ml-auto text-app-text/25 font-mono text-ui-10">sous {seuilDuLancer}</span>
                         )}
                     </div>

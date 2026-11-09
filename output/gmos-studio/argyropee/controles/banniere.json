@@ -1,0 +1,21 @@
+{
+  "sourcePixels": [
+    2172,
+    724
+  ],
+  "recadrage": [
+    0,
+    90,
+    2172,
+    633
+  ],
+  "sortiePixels": [
+    2400,
+    600
+  ],
+  "poidsOctets": 337959,
+  "agrandissement": 1.1049723756906078,
+  "accordDavid": "2026-11-08 : Oui, livrer en 2400 × 600",
+  "outil": "image_gen natif ; recadrage, rééchantillonnage et compression Pillow",
+  "apercu": "Simulation hors GM-OS : 1188 × 54 et 768 × 54, cover centré"
+}

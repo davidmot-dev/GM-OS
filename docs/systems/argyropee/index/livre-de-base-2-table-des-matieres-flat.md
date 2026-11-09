@@ -1,0 +1,103 @@
+# Table des matières — Argyropée : Règles & Bestiaire
+
+- INTENTIONS DE JEU — 7
+- Préambule
+- Matériel de jeu
+- Note d’intention
+- LA CITÉ D’ARGYROPÉE — 10
+- Vade-mecum
+- Le domaine gyropéen
+- CONSTRUIRE SON PERSONNAGE — 19
+- Résumé de la création de personnage
+- Étape 1 : anthropométrie
+- Étape 2 : humeurs et magie
+- Étape 3 : naissance et citoyenneté
+- Étape 4 : parcours de vie
+- Étape 5 : vie d’adulte
+- Étape 6 : cercles intimes
+- Étape 7 : dernières touches
+- COMMENT JOUER — 43
+- Généralités
+- Déplacements
+- Tests de compétences
+- Combats
+- Manœuvres de combat
+- Course-poursuite
+- Protections
+- Santé
+- États préjudiciables
+- Expérience
+- LES COMPÉTENCES — 64
+- Les aptitudes : généralités
+- Agilité
+- Alchimie
+- Art
+- Artificerie
+- Artisanat
+- Bagout
+- Charisme
+- Combat à distance
+- Combat rapproché
+- Commerce
+- Conduite
+- Déduction
+- Détection
+- Empathie animale
+- Endurance morale
+- Endurance physique
+- Escalade
+- Faux et usage de faux
+- Fouille
+- Furtivité
+- Herboristerie
+- Médecine
+- Piégeage
+- Pratique nautique
+- Rixe
+- Sciences naturelles
+- Sciences religieuses
+- Sciences sociales
+- Sciences techniques
+- Sens magique
+- Serrurerie
+- Urbanisme
+- PANACHE ET EXUBÉRANCE — 84
+- Le Panache
+- L’Exubérance
+- L’ÉQUIPEMENT ET LES POSSESSIONS — 89
+- Achat et vente
+- Armement
+- Protections
+- Matériel commun et services
+- Potions, baumes et décoctions de soins
+- Produits alchimiques
+- Drogues
+- Poisons
+- Maladies
+- Pièges
+- Transports
+- Possessions immobilières
+- LA MAGIE — 134
+- Rappel sur la magie
+- Utiliser la magie
+- Les domaines magiques
+- Les sorts
+- Sorts de magie naturelle (faune)
+- Sorts de magie naturelle (flore)
+- Sorts de magie naturelle (toxines)
+- Sorts de magie élémentaire (air)
+- Sorts de magie élémentaire (eau)
+- Sorts de magie élémentaire (feu)
+- Sorts de magie élémentaire (terre)
+- Sorts de magie industrielle (électricité)
+- Sorts de magie industrielle (métal)
+- Sorts de magie industrielle (textile)
+- Sorts de magie industrielle (verre)
+- VARIATIONS DE PERSONNAGES — 170
+- Jouer un jeunot
+- Jouer un ancien
+- Jouer un personnage puissant
+- RÈGLES SUPPLÉMENTAIRES — 176
+- Section réservée au Conteur
+- LE BESTIAIRE — 182
+- Section réservée au Conteur

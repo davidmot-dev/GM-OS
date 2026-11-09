@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-08",
+  "pages": 2,
+  "zones": 326,
+  "cles": 128,
+  "pistes": 33,
+  "hotspots": 231,
+  "erreursJavaScript": [],
+  "requetesReseau": [],
+  "geometriesSansChevauchement": true,
+  "saisieDeuxPages": true,
+  "pistesCumulativesEtZero": true,
+  "sauvegardeRechargement": true,
+  "importExportJSON": true,
+  "importIncompatibleRefuse": true,
+  "reinitialisationAvecConfirmation": true,
+  "zoom20a400": true,
+  "raccourcisEtMolette": true,
+  "tabletteTactile": true,
+  "importMoteurEtRetourJSON": true,
+  "htmlSHA256": "6806eb2c918aa003b596cc0c6dced0b1157c51f50e879a1c63ee79c8a37a5244",
+  "capturesExaminees": true,
+  "integration": "Fiche importable ; ni installation builtinTemplates ni correspondance de pilote.",
+  "impression": {
+    "pages": 2,
+    "format": "A4",
+    "captureRelue": true
+  }
+}

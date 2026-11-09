@@ -1,0 +1,42 @@
+/* Argyropée — papier, encre et argent ; contrat GM-OS v1.7. */
+:root[data-theme="argyropee"] {
+  color-scheme: light;
+  --rpg-bg: #e7e5df;
+  --rpg-surface: #f8f7f2;
+  --rpg-surface-2: #eeece6;
+  --rpg-text: #20201e;
+  --rpg-muted: #5d5b55;
+  --rpg-accent: #25251f;
+  --rpg-accent-contrast: #ffffff;
+  --rpg-border: #7c7a73;
+  --rpg-border-soft: rgba(68, 65, 58, 0.22);
+  --rpg-success: #30633e;
+  --rpg-danger: #9c3034;
+  --rpg-warning: #80570c;
+  --rpg-info: #305c80;
+  --rpg-font-display: Georgia, "Times New Roman", serif;
+  --rpg-font-body: Georgia, "Times New Roman", serif;
+  --rpg-font-mono: "Courier New", monospace;
+  --rpg-title-tracking: 0.025em;
+  --rpg-kicker-tracking: 0.08em;
+  --rpg-title-transform: none;
+  --rpg-radius-sm: 0px;
+  --rpg-radius-md: 1px;
+  --rpg-radius-lg: 1px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 1px 1px rgba(25, 24, 20, 0.12);
+  --rpg-elevation-2: 0 3px 9px rgba(25, 24, 20, 0.18);
+  --rpg-elevation-3: 0 8px 24px rgba(25, 24, 20, 0.24);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(248, 247, 242, 0.95);
+  --rpg-glass-border: rgba(68, 65, 58, 0.4);
+  --rpg-glass-blur: 0px;
+  --rpg-frame-bg: #242522;
+  --rpg-frame-text: #f4f3ed;
+  --rpg-frame-accent: #c9cdd4;
+  --rpg-texture-bg: url('matieres/papier.svg');
+  --rpg-texture-panel: url('matieres/papier.svg');
+  --rpg-texture-opacity: 0.025;
+}

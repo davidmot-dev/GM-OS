@@ -1,0 +1,257 @@
+[
+  {
+    "fichier": "docs/fiches/Argyropée/argyropee-fiche-interactive.html",
+    "octets": 1376916,
+    "sha256": "6806eb2c918aa003b596cc0c6dced0b1157c51f50e879a1c63ee79c8a37a5244"
+  },
+  {
+    "fichier": "docs/systems/argyropee/Argyropée Band.jpg",
+    "octets": 337959,
+    "sha256": "17304229b472d93069cee1d3e7e3c58ceec175909283f5cc56d6b2c976ff1bea"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/.ragignore",
+    "octets": 4,
+    "sha256": "d114db9736af98d0231fb6654bce1a1b35b60e1d955da1ca07603e47241da326"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/butin.svg",
+    "octets": 236,
+    "sha256": "8b7246957da2d3472aac4927f618f31fcc690eb60c8e5c9d794025716e20b4c2"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/carte.svg",
+    "octets": 226,
+    "sha256": "c57b7aa668ecc679618417b37252645ea8bc839407ce2461441c462027f9cdaa"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/combat.svg",
+    "octets": 258,
+    "sha256": "0007459a4f1306bad57b78c55ac872775f8b4ed432030d5afcaa752dc202bb05"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/des.svg",
+    "octets": 229,
+    "sha256": "66279316ec3b1a498ff15e3568bdfa7f131e5441431748ca086d166f37b3c122"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/forge.svg",
+    "octets": 223,
+    "sha256": "e79a32b2c1356b72597fd7cbb19405ae72f4568c302afde1b7255ce6fb5e0309"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/horloge.svg",
+    "octets": 250,
+    "sha256": "50a8f9bfa35dbfacd5d049f406a5b576eb19e95d53d58d7933563dd2ad5737cf"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/indice.svg",
+    "octets": 236,
+    "sha256": "233a21163b36915c4577ded0bd406b2de441539ebc57cb3e937ab77ca83f830a"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/journal.svg",
+    "octets": 211,
+    "sha256": "1f05ee3c62ce96274e959a776aa79c11a56944f66e98ce4c2d902a9d5628134d"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/lieu.svg",
+    "octets": 217,
+    "sha256": "dc3caa7b3d8a2c7273bb5537f3f099bb6f414b44b0538338cf1772172a14c872"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/lumiere.svg",
+    "octets": 243,
+    "sha256": "b1d528de006555a8b246ffbad5b19cf577f77da1c1872985794f157d86e74e6d"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/musique.svg",
+    "octets": 281,
+    "sha256": "ab79aa4780da5188613bc9cbd506bff1710a2f80cfc42179b1d478b1786d8b57"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/oracle.svg",
+    "octets": 256,
+    "sha256": "6e2f7d0d90fb4d69c72bafe5f23125b39c2f2c4a886db80e0c01bfa26fd12ebd"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/pj.svg",
+    "octets": 245,
+    "sha256": "f4874c80895dcbf53696834699762391480ffd929d17205733000b5d1f21b890"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/sante.svg",
+    "octets": 207,
+    "sha256": "3a52d0f9a9cd3683814273d25ae7861367a99b460ddb88d69333b5659d11114c"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones/scene.svg",
+    "octets": 233,
+    "sha256": "d575999ec9fa7d501205ebaf964445fc12abca4aa97da946b1235e44337afe00"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/icones.json",
+    "octets": 495,
+    "sha256": "b4ae15f94013d704b7e78f83b4a8e48e7c7bbf0cda8503da9ce27a31e422ad44"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/intention.md",
+    "octets": 1082,
+    "sha256": "26d495e587661f7b53f3bb1b942872ebb5bbd52d9da359f69dab5f0fd5449798"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/matieres/papier.svg",
+    "octets": 274,
+    "sha256": "504091181afab4070ae3c2f08a3c56c3b9d0143d15c97aa35a452ccfec74197f"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/ornements/coin.svg",
+    "octets": 307,
+    "sha256": "3cd944bd4817e1f94212f98eafb8e635a28109e906b68ce71d6825f27e8d235b"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/ornements/fond.svg",
+    "octets": 389,
+    "sha256": "ffba7a5509b51ec2843fc0dd8eb0bb56fabe1ea10a32d587eb2efe6cd8a9114c"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/ornements/separateur.svg",
+    "octets": 284,
+    "sha256": "4f0b8d748e7d947c084b9f0d8645bd4cbc3482ab7e2d6efdc1ea29dbf7564f31"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/ornements.json",
+    "octets": 116,
+    "sha256": "92507e2f74a36465ce727063345b7ead40c397bebf27f4c5a7cb0dd272f66c11"
+  },
+  {
+    "fichier": "docs/systems/argyropee/theme/theme.css",
+    "octets": 1443,
+    "sha256": "83365ca4434da0bbfd2c28f5ffd88250fba74a16defb7f09f5cc7eacede5541b"
+  },
+  {
+    "fichier": "docs/systems/argyropee/index/livre-de-base-2-index-flat.md",
+    "octets": 10599,
+    "sha256": "dfdc829fcb65a6fffb82cd3d0ff6c924d0a711800a95797319cea66dcf19d1ef"
+  },
+  {
+    "fichier": "docs/systems/argyropee/index/livre-de-base-2-table-des-matieres-flat.md",
+    "octets": 2399,
+    "sha256": "3447282350e5c16729864aa9a268452179a7e2d37fc1eb4d16ae816c97ec64ed"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/LIRE-MOI.md",
+    "octets": 7667,
+    "sha256": "c7e5a81453dc2fd3f7c308a4c6f5d8710bcc9fd78917cf114ae5777e4ac550ab"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/identite-visuelle.txt",
+    "octets": 426,
+    "sha256": "013d1cd81d94e016e8e6850a1d502f51f150285048063142850807e3a8ca7fa4"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/prompt-banniere.txt",
+    "octets": 1015,
+    "sha256": "2af7232069e1b9eb76632642e13c32921f67c2cd253f39d9fed0f8fe6822bc6e"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/cles-du-modele.json",
+    "octets": 3496,
+    "sha256": "be963605bfb33b05a4507c65b7fa5da41a2b8c46799dc77b8942bc9ac33546c3"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/sources.json",
+    "octets": 1400,
+    "sha256": "7371d34d4da1ea855e6a8b3af86c5c18dffff5955cd6b94e602fe1bc44848e72"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/banniere-entetes.png",
+    "octets": 200482,
+    "sha256": "cc341896a415ae89e6b39e4bec702775b101b572219c5451c8299916b906f174"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/banniere.json",
+    "octets": 453,
+    "sha256": "d7d2540cfea9188068885a44a2ee748fb9b706157d85614d2d39474bbcf0da48"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/fiche-page-1-remplie.png",
+    "octets": 755442,
+    "sha256": "5fe73a9381bebf552d4b68bd557493f23cf3649b7274dcbc8c42968b2e359e57"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/fiche-page-1-vierge.png",
+    "octets": 736570,
+    "sha256": "ded76f51a6c9dc72eb9b9718fb95b5c4b723aa54673e4b12abe539bc919706f2"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/fiche-page-1-zones.png",
+    "octets": 764365,
+    "sha256": "c79f8214073105a0fc5ea748e1726d67784c2ac2823b4d71662aaf02c3b07944"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/fiche-page-2-remplie.png",
+    "octets": 564973,
+    "sha256": "ab70c9513f939909360374f01f58a13abb86e007033a3f3f7cda37fe0d8ce866"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/fiche-page-2-vierge.png",
+    "octets": 552351,
+    "sha256": "1d2e87c4a2ce85d810df3c3f951f2d7ecb3db8a8b9ab1a0196c7410a0fe91550"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/fiche-page-2-zones.png",
+    "octets": 549053,
+    "sha256": "0e245b2939020b23d45feaeae2f85a55815a329de1ee12544995efea6e58d9cf"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/impression-1.png",
+    "octets": 563520,
+    "sha256": "7042bb30368464cedac9f95d7c85c24f2dea62af1c078ea776be49854d24b9a2"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/impression-2.png",
+    "octets": 394981,
+    "sha256": "78419ed8dcac1e5cb2c27fc494aa88e58b1cddd893b1b1fc3bb2fa0f694301cc"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/impression.pdf",
+    "octets": 1019138,
+    "sha256": "93d37ffeb75fa9bebd6e4220b5069a2ad2cd75e255e45361532fb407ac92c509"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/moteur-page-1.png",
+    "octets": 853539,
+    "sha256": "0cc5028347f0739d04bd9144c22031c8c5674e2f5795e61758a2e6e1a4c5feb7"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/tablette-768.png",
+    "octets": 381943,
+    "sha256": "ef4dfb24834a0761c0824fb27f886955e37d18ad6387a7fc5434326a6466cea7"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/theme.png",
+    "octets": 83790,
+    "sha256": "afe972f31c648c80b6b581044108d6137cd826dca6a9a257bed6c88119183961"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/validation-fiche.md",
+    "octets": 1007,
+    "sha256": "008939baaa936f7f2df3cdcf59982997a39d1b48430d084b14f4f9f0f2144e28"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/validation-theme.md",
+    "octets": 2366,
+    "sha256": "37446f4bd80c57143bfdccf56feb2ea3449931429ecd7e039c376d5b997c6b41"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/verification.json",
+    "octets": 815,
+    "sha256": "8f9d98b8b41073e426ebb70622e966da55a5e615a83914437059dbb0edd3809f"
+  },
+  {
+    "fichier": "output/gmos-studio/argyropee/controles/vitrine-theme.html",
+    "octets": 12312,
+    "sha256": "0a141e7f58881c361fd0fe6b2171f6a176ec565db196cfe8adbc0d85848082ae"
+  }
+]

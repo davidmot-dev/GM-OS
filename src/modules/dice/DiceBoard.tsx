@@ -15,6 +15,8 @@ import { DES_D_USURE } from './desDUsure';
 import { deCourant, ecrireLeDe, ressourcesDUsure } from './ressourcesDUsure';
 import { estUneSauvegarde, decrireLeJetDuPilote } from './lectureDuPilote';
 import { resoudreLaGarde } from './systemes/potentielGarde';
+import { lancerUnPnj } from './systemes/argyropee';
+import GuigneDArgyropee from './GuigneDArgyropee';
 import { Panneau, Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../../components/socle';
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 import { estUnJetYearZero, forcerLeDernierJet, pourquoiNePasForcerAuPupitre } from './forcerAuPupitre';
@@ -41,7 +43,9 @@ type DiceMode = 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' |
     /** Cthulhu Hack, 2026-09-30 : la Sauvegarde (d20 sous la caractéristique) et le dé de ressource. */
     | 'sauvegarde' | 'usure'
     /** Crimes, C1 (2026-10-23) : Potentiel GARDE Compétence, au pupitre comme au panneau. */
-    | 'garde';
+    | 'garde'
+    /** Argyropée (2026-11-09) : le test d'un PNJ, son degré de compétence tiré au d6 (p. 185). */
+    | 'argyropee-pnj';
 
 /**
  * Les niveaux que le pupitre propose, du meilleur au pire.
@@ -72,7 +76,7 @@ const LETTRES_ECHELONNEES = ['A', 'B', 'C', 'D'] as const;
  * sans se confondre — `formula` et `fate` sont ici et pas là-bas.
  */
 const MODES_SANS_CHOIX_DE_FACES: readonly DiceMode[] = [
-    'formula', 'fate', 'rolemaster', 'yze', 'yze-echelonne', 'sauvegarde',
+    'formula', 'fate', 'rolemaster', 'yze', 'yze-echelonne', 'sauvegarde', 'argyropee-pnj',
 ];
 
 /**
@@ -80,7 +84,7 @@ const MODES_SANS_CHOIX_DE_FACES: readonly DiceMode[] = [
  * de ressource n'est jamais le jet principal du jeu ; la Sauvegarde se lance
  * avec l'avantage que l'écran tient, et que `rollFromConfig` ne connaît pas.
  */
-const MODES_HORS_DU_PILOTE: readonly DiceMode[] = ['usure', 'sauvegarde', 'garde'];
+const MODES_HORS_DU_PILOTE: readonly DiceMode[] = ['usure', 'sauvegarde', 'garde', 'argyropee-pnj'];
 
 interface RemoteDiceOptions {
     sides?: number;
@@ -130,6 +134,9 @@ const DiceBoard: React.FC = () => {
     const [gearCount, setGearCount] = useState<number>(1); // For YZE secondary pool
     /** Les dés gardés d'un jet gardé (Crimes) : le niveau de la compétence, un sans elle. */
     const [desGardes, setDesGardes] = useState<number>(1);
+    /** Argyropée, le test d'un PNJ (p. 185) : compétence privilégiée ou non, bonus de carrière. */
+    const [pnjPrivilegiee, setPnjPrivilegiee] = useState(true);
+    const [pnjCarriere, setPnjCarriere] = useState(0);
     const [formulaInput, setFormulaInput] = useState<string>('2d6+5');
 
     // v3 Features State
@@ -261,7 +268,14 @@ const DiceBoard: React.FC = () => {
               lançait une réserve qui comptait TOUTES les réussites — un résultat
               plausible et faux. Seuil 8 (compétent) d'office ; le meneur l'ajuste.
             */
-            if (activeDriver.jet?.garde) {
+            /*
+              **Argyropée** (2026-11-09, demandé par David) : le pupitre sert au Conteur, donc
+              aux PNJ — leur degré de compétence se tire au d6 à chaque test (p. 185). Le
+              test d'un personnage joueur se fait depuis sa fiche.
+            */
+            if (activeDriver.jet?.argyropee) {
+                setMode('argyropee-pnj');
+            } else if (activeDriver.jet?.garde) {
                 setMode('garde');
                 setDiceCount(3);
                 setDesGardes(1);
@@ -488,6 +502,14 @@ const DiceBoard: React.FC = () => {
                     if (useSystemDriver && activeDriver) title = `${activeDriver.name} — ${title}`;
                     break;
                 }
+                case 'argyropee-pnj': {
+                    result = lancerUnPnj({ privilegiee: pnjPrivilegiee, carriere: pnjCarriere, modificateur: modVal },
+                        () => DiceEngine.roll(6), () => DiceEngine.roll(10));
+                    title = `PNJ — compétence ${pnjPrivilegiee ? 'privilégiée (1d6)' : 'non privilégiée (1d6 ÷ 2)'}`
+                        + (pnjCarriere ? ` · carrière ${pnjCarriere > 0 ? '+' : '−'}${Math.abs(pnjCarriere)}` : '');
+                    if (useSystemDriver && activeDriver) title = `${activeDriver.name} — ${title}`;
+                    break;
+                }
                 case 'usure':
                     result = DiceEngine.rollUsure(sides);
                     title = t('dice.results.usure', { faces: sides }) + (libelleDeLaRessource ? ` — ${libelleDeLaRessource}` : '');
@@ -507,7 +529,8 @@ const DiceBoard: React.FC = () => {
     }, [useSystemDriver, activeDriver, modifier, diceCount, gearCount, target, formulaInput, mode, targetRule,
         // Sans elles, un changement de niveau ne serait pas relu : le pupitre
         // lancerait la poignée d'avant, et le résultat resterait plausible.
-        poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee, modificateurSauvegarde, libelleDeLaRessource, desGardes, t]);
+        poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee, modificateurSauvegarde, libelleDeLaRessource, desGardes,
+        pnjPrivilegiee, pnjCarriere, t]);
 
     const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "", remoteOverrides?: RemoteDiceOptions): RollRecord | null => {
         try {
@@ -618,6 +641,7 @@ const DiceBoard: React.FC = () => {
         : echelonne ? libelleDeLaPoignee
         : mode === 'usure' ? (ressourceEpuisee ? 'épuisée' : `d${faces}`) + (ressourceLiee ? ` · ${ressourceLiee.label}` : '')
         : mode === 'sauvegarde' ? avecLeModificateur(`d20 ≤ ${target}`) + (modificateurSauvegarde === 'avantage' ? ' · avantage' : modificateurSauvegarde === 'desavantage' ? ' · désavantage' : '')
+        : mode === 'argyropee-pnj' ? avecLeModificateur(`1d10 + ${pnjPrivilegiee ? '1d6' : '1d6 ÷ 2'}${pnjCarriere ? ` ${pnjCarriere > 0 ? '+' : '−'} ${Math.abs(pnjCarriere)}` : ''}`)
         : mode === 'yze' ? `${diceCount}B + ${gearCount}E`
         : mode === 'fate' ? avecLeModificateur(`${diceCount}dF`)
         : mode === 'rolemaster' ? avecLeModificateur('d100')
@@ -662,7 +686,8 @@ const DiceBoard: React.FC = () => {
         if (typeof deDeLaFiche === 'number') setFaces(deDeLaFiche);
     }, [deDeLaFiche]);
 
-    const libelleDuMode = (m: DiceMode) => m === 'yze-echelonne' ? 'Year Zero — dés échelonnés' : t(`dice.modes.${m}`);
+    const libelleDuMode = (m: DiceMode) => m === 'yze-echelonne' ? 'Year Zero — dés échelonnés'
+        : m === 'argyropee-pnj' ? 'Argyropée — test de PNJ' : t(`dice.modes.${m}`);
     const etiquetteDeChamp = 'text-ui-11 font-semibold text-app-muted uppercase tracking-widest';
     const champ = 'flex bg-app-bg border border-app-border rounded-lg overflow-hidden h-[38px]';
     const sansFleches = '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
@@ -719,6 +744,7 @@ const DiceBoard: React.FC = () => {
                         <option value="sauvegarde">{t('dice.modes.sauvegarde')}</option>
                         <option value="usure">{t('dice.modes.usure')}</option>
                         <option value="garde">Potentiel GARDE Compétence</option>
+                        <option value="argyropee-pnj">Argyropée — test de PNJ</option>
                     </select>
                 </div>
 
@@ -812,6 +838,45 @@ const DiceBoard: React.FC = () => {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                ) : mode === 'argyropee-pnj' ? (
+                    /*
+                      **Le test d'un PNJ d'Argyropée** (p. 185) : un PNJ n'a pas de degrés fixes.
+                      Compétence privilégiée : 1d6 ; sinon 1d6 divisé par deux. Plus son bonus de
+                      carrière (aucun pour un animal ou une créature, p. 196), puis le d10 lu de 0
+                      à 9 et les paliers du livre (p. 44). Le d6 n'est pas conservé.
+                    */
+                    <div className="space-y-3" data-pupitre-argyropee>
+                        <label className="flex items-center gap-2 text-sm text-app-text">
+                            <input type="checkbox" checked={pnjPrivilegiee} onChange={e => setPnjPrivilegiee(e.target.checked)} />
+                            Compétence privilégiée (1d6 ; sinon 1d6 ÷ 2)
+                        </label>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-1.5">
+                                <label className={etiquetteDeChamp}>Bonus de carrière</label>
+                                <div className={champ}>
+                                    <button onClick={() => setPnjCarriere(c => c - 1)} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">-</button>
+                                    <input type="number" value={pnjCarriere} aria-label="Bonus de carrière"
+                                        onChange={e => setPnjCarriere(parseInt(e.target.value) || 0)}
+                                        className={`w-full min-w-0 bg-transparent text-center font-semibold text-app-text outline-none ${sansFleches}`} />
+                                    <button onClick={() => setPnjCarriere(c => c + 1)} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">+</button>
+                                </div>
+                            </div>
+                            {/* Le modificateur du Conteur : chaque source de −5 à +5, cumulées (p. 45). */}
+                            <div className="space-y-1.5">
+                                <label className={etiquetteDeChamp}>Modificateur</label>
+                                <div className={champ}>
+                                    <button onClick={() => setModifier(valeurDuModificateur - 1)} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">-</button>
+                                    <input type="number" value={valeurDuModificateur} aria-label="Modificateur du Conteur"
+                                        onChange={e => setModifier(parseInt(e.target.value) || 0)}
+                                        className={`w-full min-w-0 bg-transparent text-center font-semibold text-app-text outline-none ${sansFleches}`} />
+                                    <button onClick={() => setModifier(valeurDuModificateur + 1)} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <p className="text-ui-11 text-app-muted">
+                            Animal ou créature : pas de bonus de carrière (p. 196). 8-9 réussite partielle, 10-14 réussite, 15 et plus critique ; 0 ou moins, échec critique (p. 44).
+                        </p>
                     </div>
                 ) : mode === 'usure' ? (
                     <div className="space-y-3">
@@ -1070,6 +1135,10 @@ const DiceBoard: React.FC = () => {
                     </p>
                 )}
             </Panneau>
+
+            {activeDriver?.jet?.argyropee?.guigne && (
+                <GuigneDArgyropee regle={activeDriver.jet.argyropee} personnages={personnages} ecrire={updateCharacterSheetData} />
+            )}
 
             {/* Tactical Advice Panel — il règle le modificateur : sa place est ici. */}
             {tokens.length >= 2 && (

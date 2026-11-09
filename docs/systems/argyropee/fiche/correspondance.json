@@ -1,0 +1,519 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "argyropee-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS d’Argyropée (pilote 2.1.0, outils/argyropee/finir_argyropee.mjs) et le gabarit argyropee-fr livré le 2026-11-08. Les champs du pilote reprennent un à un les clés de la fiche : aucune transformation. Le Châtiment vermeil, le pécule et le suivi de la journée (prières, magie du combat, silenciada, Guigne) n’existent que dans GM-OS.",
+  "champs": [
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "sexe",
+      "fiche": "identity.gender"
+    },
+    {
+      "gmos": "age",
+      "fiche": "identity.age"
+    },
+    {
+      "gmos": "taille",
+      "fiche": "identity.height"
+    },
+    {
+      "gmos": "poids",
+      "fiche": "identity.weight"
+    },
+    {
+      "gmos": "citoyennete",
+      "fiche": "identity.citizenship"
+    },
+    {
+      "gmos": "description",
+      "fiche": "profile.description"
+    },
+    {
+      "gmos": "humeur1",
+      "fiche": "temperaments.0.mood"
+    },
+    {
+      "gmos": "humeur1_domaine",
+      "fiche": "temperaments.0.domain"
+    },
+    {
+      "gmos": "humeur2",
+      "fiche": "temperaments.1.mood"
+    },
+    {
+      "gmos": "humeur2_domaine",
+      "fiche": "temperaments.1.domain"
+    },
+    {
+      "gmos": "metier1_nom",
+      "fiche": "careers.0.name"
+    },
+    {
+      "gmos": "metier1_rang",
+      "fiche": "careers.0.rank"
+    },
+    {
+      "gmos": "metier1_bonus",
+      "fiche": "careers.0.bonus"
+    },
+    {
+      "gmos": "metier1_salaire",
+      "fiche": "careers.0.salary"
+    },
+    {
+      "gmos": "metier2_nom",
+      "fiche": "careers.1.name"
+    },
+    {
+      "gmos": "metier2_rang",
+      "fiche": "careers.1.rank"
+    },
+    {
+      "gmos": "metier2_bonus",
+      "fiche": "careers.1.bonus"
+    },
+    {
+      "gmos": "metier2_salaire",
+      "fiche": "careers.1.salary"
+    },
+    {
+      "gmos": "metier3_nom",
+      "fiche": "careers.2.name"
+    },
+    {
+      "gmos": "metier3_rang",
+      "fiche": "careers.2.rank"
+    },
+    {
+      "gmos": "metier3_bonus",
+      "fiche": "careers.2.bonus"
+    },
+    {
+      "gmos": "metier3_salaire",
+      "fiche": "careers.2.salary"
+    },
+    {
+      "gmos": "metier4_nom",
+      "fiche": "careers.3.name"
+    },
+    {
+      "gmos": "metier4_rang",
+      "fiche": "careers.3.rank"
+    },
+    {
+      "gmos": "metier4_bonus",
+      "fiche": "careers.3.bonus"
+    },
+    {
+      "gmos": "metier4_salaire",
+      "fiche": "careers.3.salary"
+    },
+    {
+      "gmos": "metier5_nom",
+      "fiche": "careers.4.name"
+    },
+    {
+      "gmos": "metier5_rang",
+      "fiche": "careers.4.rank"
+    },
+    {
+      "gmos": "metier5_bonus",
+      "fiche": "careers.4.bonus"
+    },
+    {
+      "gmos": "metier5_salaire",
+      "fiche": "careers.4.salary"
+    },
+    {
+      "gmos": "agilite",
+      "fiche": "skills.agility.level"
+    },
+    {
+      "gmos": "alchimie",
+      "fiche": "skills.alchemy.level"
+    },
+    {
+      "gmos": "art",
+      "fiche": "skills.art.level"
+    },
+    {
+      "gmos": "artificerie",
+      "fiche": "skills.artificery.level"
+    },
+    {
+      "gmos": "artisanat",
+      "fiche": "skills.craft.level"
+    },
+    {
+      "gmos": "bagout",
+      "fiche": "skills.fast_talk.level"
+    },
+    {
+      "gmos": "charisme",
+      "fiche": "skills.charisma.level"
+    },
+    {
+      "gmos": "combat_a_distance",
+      "fiche": "skills.ranged_combat.level"
+    },
+    {
+      "gmos": "combat_rapproche",
+      "fiche": "skills.close_combat.level"
+    },
+    {
+      "gmos": "commerce",
+      "fiche": "skills.trade.level"
+    },
+    {
+      "gmos": "conduite",
+      "fiche": "skills.driving.level"
+    },
+    {
+      "gmos": "deduction",
+      "fiche": "skills.deduction.level"
+    },
+    {
+      "gmos": "detection",
+      "fiche": "skills.detection.level"
+    },
+    {
+      "gmos": "empathie_animale",
+      "fiche": "skills.animal_empathy.level"
+    },
+    {
+      "gmos": "endurance_morale",
+      "fiche": "skills.moral_endurance.level"
+    },
+    {
+      "gmos": "endurance_physique",
+      "fiche": "skills.physical_endurance.level"
+    },
+    {
+      "gmos": "escalade",
+      "fiche": "skills.climbing.level"
+    },
+    {
+      "gmos": "faux_et_usage_de_faux",
+      "fiche": "skills.forgery.level"
+    },
+    {
+      "gmos": "fouille",
+      "fiche": "skills.search.level"
+    },
+    {
+      "gmos": "furtivite",
+      "fiche": "skills.stealth.level"
+    },
+    {
+      "gmos": "herboristerie",
+      "fiche": "skills.herbalism.level"
+    },
+    {
+      "gmos": "medecine",
+      "fiche": "skills.medicine.level"
+    },
+    {
+      "gmos": "piegeage",
+      "fiche": "skills.trapping.level"
+    },
+    {
+      "gmos": "pratique_nautique",
+      "fiche": "skills.seamanship.level"
+    },
+    {
+      "gmos": "rixe",
+      "fiche": "skills.brawling.level"
+    },
+    {
+      "gmos": "sciences_naturelles",
+      "fiche": "skills.natural_sciences.level"
+    },
+    {
+      "gmos": "sciences_religieuses",
+      "fiche": "skills.religious_sciences.level"
+    },
+    {
+      "gmos": "sciences_sociales",
+      "fiche": "skills.social_sciences.level"
+    },
+    {
+      "gmos": "sciences_techniques",
+      "fiche": "skills.technical_sciences.level"
+    },
+    {
+      "gmos": "sens_magique",
+      "fiche": "skills.magic_sense.level"
+    },
+    {
+      "gmos": "serrurerie",
+      "fiche": "skills.locksmithing.level"
+    },
+    {
+      "gmos": "urbanisme",
+      "fiche": "skills.urbanism.level"
+    },
+    {
+      "gmos": "competence_libre_nom",
+      "fiche": "skills.other.name"
+    },
+    {
+      "gmos": "competence_libre",
+      "fiche": "skills.other.level"
+    },
+    {
+      "gmos": "panache",
+      "fiche": "tracks.panache"
+    },
+    {
+      "gmos": "panache_bonus",
+      "fiche": "tracks.panache_bonus"
+    },
+    {
+      "gmos": "points_de_sante",
+      "fiche": "tracks.health"
+    },
+    {
+      "gmos": "points_de_sante_max",
+      "fiche": "tracks.health_max"
+    },
+    {
+      "gmos": "bonus_initiative",
+      "fiche": "combat.initiative_bonus"
+    },
+    {
+      "gmos": "arme1_nom",
+      "fiche": "weapons.0.name"
+    },
+    {
+      "gmos": "arme1_portee",
+      "fiche": "weapons.0.range"
+    },
+    {
+      "gmos": "arme1_degats",
+      "fiche": "weapons.0.damage"
+    },
+    {
+      "gmos": "arme1_munitions",
+      "fiche": "weapons.0.ammo"
+    },
+    {
+      "gmos": "arme2_nom",
+      "fiche": "weapons.1.name"
+    },
+    {
+      "gmos": "arme2_portee",
+      "fiche": "weapons.1.range"
+    },
+    {
+      "gmos": "arme2_degats",
+      "fiche": "weapons.1.damage"
+    },
+    {
+      "gmos": "arme2_munitions",
+      "fiche": "weapons.1.ammo"
+    },
+    {
+      "gmos": "arme3_nom",
+      "fiche": "weapons.2.name"
+    },
+    {
+      "gmos": "arme3_portee",
+      "fiche": "weapons.2.range"
+    },
+    {
+      "gmos": "arme3_degats",
+      "fiche": "weapons.2.damage"
+    },
+    {
+      "gmos": "arme3_munitions",
+      "fiche": "weapons.2.ammo"
+    },
+    {
+      "gmos": "arme4_nom",
+      "fiche": "weapons.3.name"
+    },
+    {
+      "gmos": "arme4_portee",
+      "fiche": "weapons.3.range"
+    },
+    {
+      "gmos": "arme4_degats",
+      "fiche": "weapons.3.damage"
+    },
+    {
+      "gmos": "arme4_munitions",
+      "fiche": "weapons.3.ammo"
+    },
+    {
+      "gmos": "arme5_nom",
+      "fiche": "weapons.4.name"
+    },
+    {
+      "gmos": "arme5_portee",
+      "fiche": "weapons.4.range"
+    },
+    {
+      "gmos": "arme5_degats",
+      "fiche": "weapons.4.damage"
+    },
+    {
+      "gmos": "arme5_munitions",
+      "fiche": "weapons.4.ammo"
+    },
+    {
+      "gmos": "protection1_nom",
+      "fiche": "armour.0.name"
+    },
+    {
+      "gmos": "protection1_valeur",
+      "fiche": "armour.0.protection"
+    },
+    {
+      "gmos": "protection1_malus",
+      "fiche": "armour.0.penalty"
+    },
+    {
+      "gmos": "protection2_nom",
+      "fiche": "armour.1.name"
+    },
+    {
+      "gmos": "protection2_valeur",
+      "fiche": "armour.1.protection"
+    },
+    {
+      "gmos": "protection2_malus",
+      "fiche": "armour.1.penalty"
+    },
+    {
+      "gmos": "protection3_nom",
+      "fiche": "armour.2.name"
+    },
+    {
+      "gmos": "protection3_valeur",
+      "fiche": "armour.2.protection"
+    },
+    {
+      "gmos": "protection3_malus",
+      "fiche": "armour.2.penalty"
+    },
+    {
+      "gmos": "sort1",
+      "fiche": "magic.0.name"
+    },
+    {
+      "gmos": "sort2",
+      "fiche": "magic.1.name"
+    },
+    {
+      "gmos": "sort3",
+      "fiche": "magic.2.name"
+    },
+    {
+      "gmos": "sort4",
+      "fiche": "magic.3.name"
+    },
+    {
+      "gmos": "sort5",
+      "fiche": "magic.4.name"
+    },
+    {
+      "gmos": "sort6",
+      "fiche": "magic.5.name"
+    },
+    {
+      "gmos": "sort7",
+      "fiche": "magic.6.name"
+    },
+    {
+      "gmos": "sort8",
+      "fiche": "magic.7.name"
+    },
+    {
+      "gmos": "sort9",
+      "fiche": "magic.8.name"
+    },
+    {
+      "gmos": "sort10",
+      "fiche": "magic.9.name"
+    },
+    {
+      "gmos": "sort11",
+      "fiche": "magic.10.name"
+    },
+    {
+      "gmos": "sort12",
+      "fiche": "magic.11.name"
+    },
+    {
+      "gmos": "sort13",
+      "fiche": "magic.12.name"
+    },
+    {
+      "gmos": "sort14",
+      "fiche": "magic.13.name"
+    },
+    {
+      "gmos": "sort15",
+      "fiche": "magic.14.name"
+    },
+    {
+      "gmos": "famille",
+      "fiche": "relations.family"
+    },
+    {
+      "gmos": "amours",
+      "fiche": "relations.loves"
+    },
+    {
+      "gmos": "amis",
+      "fiche": "relations.friends"
+    },
+    {
+      "gmos": "ennemis",
+      "fiche": "relations.enemies"
+    },
+    {
+      "gmos": "travail",
+      "fiche": "relations.work"
+    },
+    {
+      "gmos": "residences",
+      "fiche": "possessions.residences"
+    },
+    {
+      "gmos": "biens_mobiliers",
+      "fiche": "possessions.movables"
+    },
+    {
+      "gmos": "compagnon_animal",
+      "fiche": "possessions.animal"
+    },
+    {
+      "gmos": "equipement_porte",
+      "fiche": "equipment.worn"
+    },
+    {
+      "gmos": "equipement_sac",
+      "fiche": "equipment.bag"
+    },
+    {
+      "gmos": "charge_legere",
+      "fiche": "load.light"
+    },
+    {
+      "gmos": "charge_lourde",
+      "fiche": "load.heavy"
+    },
+    {
+      "gmos": "charge_soulevable",
+      "fiche": "load.lift"
+    },
+    {
+      "gmos": "charge_poussable",
+      "fiche": "load.push"
+    }
+  ]
+}

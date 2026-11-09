@@ -1076,6 +1076,41 @@ export function controlerLePilote(
         if (bol.heroisme && !tousLesChamps.has(bol.heroisme)) erreur('jet.barbarians.heroisme', `Barbarians lit les points d'héroïsme dans « ${bol.heroisme} », absent de la fiche.`);
     }
     /*
+      Argyropée (2026-11-08) : 1d10 lu de 0 à 9 + compétence + bonus du métier choisi,
+      lu sur des paliers fixes (p. 44). Le pilote forgé comparait le dé seul à la
+      compétence et exigeait dix réussites d'un dé : chaque test échouait.
+    */
+    const argy = driver.jet?.argyropee;
+    if (argy) {
+        if (driver.jet?.sens !== 'superieur-ou-egal' || driver.jet?.cible || facesLancees(driver) !== 10 || !(driver.jet?.seuil ?? []).length) {
+            avertir('jet.argyropee', 'Le bloc Argyropée suppose un d10 additionné à la compétence (p. 44) : déclarer « seuil », un d10 et « sens: superieur-ou-egal ».');
+        }
+        if (driver.jet?.difficulte) avertir('jet.difficulte', 'Argyropée lit le total sur des paliers fixes (p. 44) : la difficulté en réussites est ignorée.');
+        if (driver.jet?.modificateurDuSeuil) avertir('jet.modificateurDuSeuil', 'Argyropée règle le modificateur au jet (−5 à +5, p. 45) : ce modificateur est ignoré.');
+        if (driver.jet?.critique || driver.jet?.complication) avertir('jet.critique', 'Argyropée lit critiques et complications sur le total (p. 44), pas sur le dé : retirer « critique » et « complication ».');
+        if (argy.panache && !tousLesChamps.has(argy.panache)) erreur('jet.argyropee.panache', `Argyropée lit le Panache dans « ${argy.panache} », absent de la fiche.`);
+        (argy.metiers ?? []).forEach((m, i) => {
+            for (const champ of [m.nom, m.bonus]) {
+                if (champ && !tousLesChamps.has(champ)) erreur(`jet.argyropee.metiers.${i}`, `Le métier ${i + 1} lit « ${champ} », absent de la fiche.`);
+            }
+        });
+        // 09/11/2026 : la journée, la Faveur divine, la magie et la Guigne lisent et écrivent ces champs.
+        const lus: [string, string | undefined][] = [
+            ['nom', argy.nom], ['panacheBonus', argy.panacheBonus], ['sante', argy.sante],
+            ['faveur.competence', argy.faveur?.competence], ['faveur.prieres', argy.faveur?.prieres],
+            ['magie.combat', argy.magie?.combat], ['magie.silenciada', argy.magie?.silenciada],
+            ['guigne.depense', argy.guigne?.depense], ['guigne.offert', argy.guigne?.offert],
+            ...(argy.magie?.sorts ?? []).map((s, i) => [`magie.sorts.${i}`, s] as [string, string]),
+            ...(argy.magie?.domaines ?? []).map((s, i) => [`magie.domaines.${i}`, s] as [string, string]),
+        ];
+        for (const [cle, champ] of lus) {
+            if (champ && !tousLesChamps.has(champ)) erreur(`jet.argyropee.${cle}`, `Argyropée lit « ${champ} » (${cle}), absent de la fiche.`);
+        }
+        if ((argy.faveur || argy.magie || argy.guigne) && !argy.panache) {
+            erreur('jet.argyropee.panache', 'La Faveur divine, la magie et la Guigne supposent le champ du Panache (« panache »).');
+        }
+    }
+    /*
       Chroniques Oubliées Contemporain (2026-10-31) : un d20 (ou 3d6) ajouté à UNE
       caractéristique, contre une difficulté réglée au jet. Le pilote forgé additionnait
       Agilité et Intelligence, exigeait dix réussites d'un dé et comptait un 1 double.

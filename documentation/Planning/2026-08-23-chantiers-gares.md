@@ -438,6 +438,17 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**08/11/2026 — Torg : portée des distributions collectives dans une campagne avec ateliers.**
+`mainsDeLaCampagne` (`session/store/deckSlice.ts`) sélectionne tous les PJ de la campagne,
+sans filtrer les participants de la séance. La campagne de recette Torg (§ 236) contient
+trois principaux et six `[RECETTE]` : Fin de scène/Acte vise neuf mains, soit 36 cartes à
+quatre, 45 sous Héroïsme. Un essai par la vraie action du magasin le vérifie dans
+`outils/campagnes-de-recette/torg.test.ts`. Le guide préconise une distribution manuelle
+aux seuls principaux pour la fiction et réserve ces gestes collectifs aux ateliers.
+Une éventuelle sélection des destinataires relève d’un chantier séparé ; aucun code
+applicatif modifié dans cette création de données. Le sous-ensemble de cinq images du
+Destin est une autre limite, explicitement documentée, pas un motif de fabriquer des cartes.
+
 **07/11/2026 — Forcer Atelier ne libère pas la Bibliothèque pendant une séance active.**
 
 Constaté dans la recette Torg isolée : le bandeau affiche « Atelier (forcé) », mais une
@@ -14143,10 +14154,64 @@ David : « peux-tu faire un clips avec Playright les mécanismes particulier de 
 - **Vérifié :** `npm run build`, eslint des deux scripts, répétition puis tournage normal Playwright réussis ; assertions de réception. MP4 H.264 et WebM VP9 1440×900 de 178,2 s, sans piste audio ; décodage intégral du MP4 sans erreur. Quatorze scènes et vingt-six images du MP4 relues, dont les trois raccords. Aucun code applicatif ou pilote modifié, paquet installé ou donnée personnelle utilisée.
 - **Reste :** regarder le clip ; aucun reste de fabrication. Sélection de mécanismes, sans recette exhaustive ou appareil physique essayé. Aucun commit/push demandé.
 
+### 236 · Campagne de recette Torg — Les Balises de l’Aube — 08/11/2026
+
+David : « peux-tu créer une campagne de test pour TORG dans le même style que pour COC ».
+
+- **Livré :** [ZIP](../../output/campagnes-tests/torg/TORG-Les-Balises-de-l-Aube-Recette.zip) avec une seule campagne .gmos, douze séances prévues, quatre actes de fiction et six ateliers dans un acte séparé de la même Trame. Trente-six scènes narratives, seize PNJ, douze lieux et indices, trois fins et des pistes alternatives ; fiction originale, aucune ancienne campagne COC régénérée.
+- **Joueurs :** trois nouveaux principaux rattachés à Thomas D. `p-1`, Marie C. `p-2`, Lucas R. `p-3`, six `[RECETTE]` seulement dans les ateliers. Profils et matériel aux valeurs choisies ; création novice réglementaire non revendiquée. Pilote réel Torg 2.0.0, 80 champs, copie identique séparée dans le ZIP et dépendance corrigée conservée dans `Export Dirvers/corriges/`.
+- **Recette :** 63 cas humains NON TESTÉS, matrice, CSV vierge, états de référence, préparation des cartes et reproduction. Jet/Table des Bonus/Possibilités, critiques, santé/annulation, cartes/Atouts, Lois, Sbires/Horde et fiche HTML. Aucun module indépendant Torg compatible ; outils natifs, pas de module inventé.
+- **Vérifié :** suite ciblée Vitest avec quatre workers, utilitaire Nexus du plugin, build/lint et import réel en instance jetable ; une seule campagne ajoutée, anciens profils/PJ/avatars fictifs et paquets sentinelles conservés. Trois Hub 360/768/1180 sans appBridge : jets, dépenses et HTML reçus au MJ ; rechargement et restauration locale de SANTE sans perte d’une note de fiction ni de XP 17 du principal. Aucun marqueur privé fictif reçu (GM-05). 41 SVG + un JPEG, trois WAV décodés ; neuf rendus et six captures applicatives relus. Rapports liés aux SHA du lot final.
+- **Limites :** dix cartes Destin disponibles après l’ajout de David le 08/11, pas de Relation ; régler explicitement le nombre du paquet à dix dans Deck-OS (le pilote fourni déclare encore cinq) ; paquet complet requis pour certains cas, sans carte officielle inventée. Fin de scène/Acte vise les neuf PJ de campagne, pas les seuls trois de séance : distribution manuelle aux principaux pour la fiction, constat au § 1 bis. Corpus partiellement relu seulement ; matériel, partie humaine et sorties IA/TTS non éprouvés.
+- **Ancres :** [suivi détaillé](2026-11-08-campagne-recette-torg.md), [note de reprise](2026-11-08-etat-et-reprise-codex-campagne-torg.md), `outils/campagnes-de-recette/torg*`, `emballer-torg.mjs`, `e2e/campagneDeRecetteTorg.spec.ts`. Aucun code applicatif modifié, paquet installé ou donnée personnelle utilisée ; services locaux déjà autorisés, chemins et ports jetables. Aucun commit/push demandé.
+- **Reste :** importer l’unique campagne et suivre le cahier ; recette humaine de David et paquet complet de cartes pour les cas dépendants.
+
+### 237 · Argyropée fini — pilote 2.0.0, test, action complexe, opposition, corpus relu — 08/11/2026
+
+David : « Argyropée (j'ai fait le thème et la fiche de PJ, le bestaire et l'équipement) », puis « mets à jour le corpus et le drivers avec le livre. Fais la documentation et mets en place les actions complexes et les tests en opposition ».
+
+- **Constat (pilote forgé 1.0.0)** : le jet comparait le d10 seul à « compétence + métier » et exigeait dix réussites d'un dé — **chaque test échouait** ; fiche à 7 compétences sur 32, sans Agilité ni Détection ni bonus de métier ; initiative sur Agilité (absente) + Sens magique ; `controlerLePilote` : 2 erreurs.
+- **Décisions de David (08/11)** : « Tout, dans l'ordre » ; le **métier se choisit au jet** ; un **total de 0 ou moins est un échec critique** (le livre dit « test = 0 ») ; aucun personnage sur la fiche forgée.
+- **Mécanique `jet.argyropee`** — `src/modules/dice/systemes/argyropee.ts` (+ essais) : d10 lu de 0 à 9 (le 10 du moteur vaut 0), compétence + métier choisi + modificateur (chaque source ±5, **cumulées sans plafond**, p. 45 — le plafond ±5 du corpus était faux) + entraide (+5 au plus), cinq paliers (p. 44) ; **Panache** après le tirage, jusqu'à 9 au dé, paliers atteignables et leur coût (p. 84-85) ; **action complexe** (moyenne arrondie à l'inférieur, rattrapage sur la meilleure compétence, p. 46) ; **test en opposition** (1 succès par réussite, 2 sur critique, premier à 5, égalité, p. 46). Cartes `ArgyropeeAuJet.tsx` ; branchement `PanneauDeJet.tsx` (titre au journal « Serrurerie 3 · Malandrin +2 », manche adverse consignée après le test) ; `DescripteurDeJet.argyropee` ; contrôle `controlesDuPilote.ts` (+ essai).
+- **Pilote 2.0.0** — `outils/argyropee/finir_argyropee.mjs` → `Export Dirvers/corriges/Argyropee-2.0.0.gmos-driver`, identifiants gardés (`custom-1794176660508`, `tpl-1794176660508`) : fiche sur les 128 clés de la fiche HTML (32 compétences, 5 métiers…) + Châtiment vermeil et pécule ; initiative 1d10 + Agilité + Détection + bonus (p. 46) ; jauges Panache 22 et santé 16 ; portées sans malus générique (il dépend de chaque arme). `verifier_pilote.mjs` : **zéro constat**, cas de Vanille (p. 45, 85).
+- **Fiche HTML reliée** : `integrer_au_moteur.mjs` (BUILTIN_VERSION 24 → 25), `docs/systems/argyropee/fiche/correspondance.json` (128 clés) ; `fiche:valider` : 0 erreur, 0 avertissement ; `electron/ficheDArgyropee.test.ts`.
+- **Corpus relu 20/20** contre le livre 2 (`livres.json` : décalage **+1**, mesuré ; il disait 0) : quinze fiches corrigées — règles inventées retirées (verres teintés −2, surcharge et fatigue, « réserve de Guigne »), Panache après le tirage, Exubérance, sommeil qui remonte AU tiers, asphyxie, hypothermie en 1d10 min, 3 Panache de la Guigne à la fin de la péripétie (**faux**, recorrigé au § 239 : offerts au prochain réveil), ciblage magique par un objet tenu… **Bestiaire réécrit** : les 163 profils du livre (68 humains, 76 animaux, 13 créatures, 6 monstres), lus par `remplirLeBestiaire` sans ligne perdue. **Équipement réécrit** : 18 tableaux (p. 89-133) extraits ligne par ligne et vérifiés en image, 349 objets lus par le catalogue ; la fiche forgée doublait ses tableaux et portait un reste de sortie d'outil.
+- **Lot GM-OS Studio du même jour** (Codex, `2026-11-08-argyropee-gmos-studio.md`) : thème accepté sans avertissement, fiche, bannière, identité, sommaire et index — rapporté ici comme sa note le demandait.
+- **Documentation** : `54-Jeu-Argyropee.md` (nouvelle), ligne du jeu et mécanique `argyropee` au 53, synthèse des pilotes.
+- **Vérifié** : `npx vitest run --maxWorkers=4` sur `argyropee.test.ts` (21), `PanneauDeJet.argyropee.test.tsx` (8), `PanneauDeJet.test/barbarians/coc`, `controlesDuPilote*.test.ts`, `electron/ficheDArgyropee.test.ts`, `electron/manuelDesJeux.test.ts`, `corpusDerivable.test.ts` ; `npx tsc -b` ; eslint des fichiers touchés. **Captures** : `e2e/capturesDesJeux.spec.ts --grep Argyrop` passé, sept images relues et versées au manuel.
+- **Reste** : réimporter le pilote 2.0.0 avec « Remplacer » et l'essayer (un test avec métier, une action complexe, une opposition, le Panache, la fiche HTML) ; remplir bestiaire et catalogue depuis les fiches relues.
+
+### 238 · Deux skills : `specifier-un-chantier` et `/mes-skills` — 08/11/2026
+
+David : « est-ce que l'outil GitHub Spec Kit peut nous aider ? », puis « oui vas-y. Et je voudrais que tu me fasses un skill facile à appeler qui me décrit tous mes skills perso ».
+
+- **Spec Kit écarté** (branche git par chantier, dossier `specs/` qui doublerait le registre, installation) ; ses idées reprises dans `.claude/skills/specifier-un-chantier/` : quoi, clarifier (cinq questions au plus), comment (risques propres à GM-OS), tâches liées aux critères, relecture croisée, registre.
+- **`/mes-skills`** : `.claude/skills/mes-skills/` et `lister.mjs`, qui lit les `SKILL.md` à chaque appel (`tout` : aussi ceux de la machine) et signale ceux qu'AGENTS.md ne cite pas ; il a trouvé `auditer-un-parcours` absent d'AGENTS.md, ajouté avec les deux nouveaux.
+- **Vérifié** : `node .claude/skills/mes-skills/lister.mjs` (sept skills, AGENTS.md à jour) ; `/mes-skills` appelé par David.
+- **Reste** : rien ; `specifier-un-chantier` s'essaiera au prochain chantier neuf.
+
+### 239 · Argyropée — Exubérance, Faveur divine, Guigne, magie, PNJ — pilote 2.1.0 — 09/11/2026
+
+David : « Peux-tu gérer ceci : l'Exubérance, la Faveur divine, la Guigne, la magie et le dé de compétence des PNJ. »
+
+- **Décisions de David (09/11)** : la silenciada se tire **au sort qui porte à 7** le Panache magique du combat ; un bouton **Réveil** avec **repas +3 et collation +1** ; la Guigne en **repère sans alerte + bouton** au pupitre.
+- **Relu dans le livre 2** (p. 81, 84-87, 127, 135-137, 176-178, 185-186) : la Guigne offre ses 3 points « **au prochain jet matinal de regain** » (p. 177) — la relecture du 08/11 (§ 237) avait lu la moitié de la phrase : `la-guigne.md` et `inventaire-des-mecaniques.md` recorrigés ; le repère compte les tests **et l'initiative** rehaussés, jamais la magie.
+- **Logique** — `argyropee.ts` (+ essais, 31) : `lancerArgyropee(…, faveur)` (deux d10, le meilleur, gardés par `depenserLePanache`), `prieresRestantes`, `regainDuMatin`, `obstacleALExuberance` (3 points, santé ≥ 0), `coutDuSort`/`doubleHumeur`/`magieDuCombatApres`/`silenciadaContractee`, `degreDuPnj`/`lancerUnPnj`, `lancerLAdversaire(…, pnj)` ; `RegleDArgyropee` gagne `nom`, `panacheBonus`, `sante`, `faveur`, `magie`, `guigne`.
+- **Panneau** — `ArgyropeeAuJet.tsx`, `PanneauDeJet.tsx` : case **Faveur divine** à « Préparer » (prière comptée, case décochée après le jet) ; **Adversaire PNJ** en opposition (d6 à chaque manche) ; carte **Journée** (Réveil, Repas +3, Collation +1, Exubérance confirmée d'un second clic, grisée sous 3 points ou inconscient) ; carte **Magie** (sorts de la fiche, sans lueur, double humeur, compte du combat, d100 de la silenciada, Fin du combat) ; le Panache dépensé sur un test entre au repère de la Guigne. Chaque geste s'écrit sur la fiche et se dit au journal ; rien sans `ecrireSurLaFiche`.
+- **Pupitre** — `DiceBoard.tsx` : mode **Argyropée — test de PNJ** choisi par le pilote (1d6, ÷ 2 hors compétence privilégiée, + carrière + modificateur du Conteur + d10) ; `GuigneDArgyropee.tsx` : Panache dépensé aux tests par personnage depuis le réveil, **Guigne réglée** (+3 au prochain réveil, repères à zéro, journal).
+- **Pilote 2.1.0** — `finir_argyropee.mjs` → `Export Dirvers/corriges/Argyropee-2.1.0.gmos-driver` (le 2.0.0, jamais commité, retiré du dossier) : mêmes identifiants ; cinq champs GM-OS dans « Panache et santé » (`faveur_divine`, `magie_du_combat`, `silenciada`, `guigne_depense`, `guigne_offerte`) ; jauge de Panache 25 ; `jet.argyropee` complet. `controlesDuPilote.ts` vérifie les nouveaux champs (+ essai) ; `verifier_pilote.mjs` : **zéro constat**. Correspondance HTML inchangée (128 clés).
+- **Documentation** : `54-Jeu-Argyropee.md` (journée, Faveur divine, magie, pupitre du Conteur, reste), ligne du jeu et mécanique `argyropee` au 53, synthèse des pilotes.
+- **Vérifié** : `npx vitest run --maxWorkers=4` sur `src/modules/dice`, `src/modules/session/components/fields`, `src/modules/forge/rules`, `electron/manuelDesJeux.test.ts`, `electron/ficheDArgyropee.test.ts` — 158 fichiers, 2 064 essais, dont `PanneauDeJet.argyropee-journee.test.tsx` (12) et `argyropeeAuPupitre.test.tsx` (4) ; `corpusDerivable.test.ts` (145) ; `npx tsc -b` ; eslint des fichiers touchés. `npm run build` puis `capturesDesJeux.spec.ts --grep Argyrop` passé ; neuf images relues et versées au manuel (nouvelles : `jeu-argyropee-journee`, `jeu-argyropee-pupitre`). La relecture des images a trouvé un défaut corrigé avant livraison : le pupitre annonçait un modificateur qu'il n'affichait pas.
+- **Reste** : réimporter **`Argyropee-2.1.0.gmos-driver`** avec « Remplacer » et essayer une Faveur divine, un Réveil, une Exubérance, un sort jusqu'à 7, un test de PNJ au pupitre et « Guigne réglée ». Hors outil : la Faveur divine sur un dé de dégâts ou d'initiative, le Panache sur l'initiative, le Châtiment vermeil.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 175 | **Argyropée — Exubérance, Faveur divine, Guigne, magie, PNJ** | 🟠 § 239 ; journée et magie au panneau, test de PNJ et Guigne au pupitre, pilote 2.1.0, Guigne recorrigée dans le corpus —09/11 | Réimporter `Argyropee-2.1.0.gmos-driver` avec « Remplacer » | Essai de David |
+| 174 | **Skills `specifier-un-chantier` et `/mes-skills`** | 🟢 § 238 ; liste lue dans les fichiers, AGENTS.md à jour —08/11 | `/mes-skills` | Rien |
+| 173 | **Argyropée fini** | 🟠 § 237 ; test, action complexe, opposition, Panache, pilote 2.0.0, fiche reliée, corpus relu 20/20 (bestiaire 163, équipement 18 tableaux) —08/11 | Réimporter le pilote **2.1.0** (§ 239), qui remplace le 2.0.0 | Essai de David |
+| 172 | **Campagne de recette Torg — Les Balises de l’Aube** | 🟢 § 236 ; une campagne, douze séances, six ateliers, import/trois Hub/restauration locale vérifiés —08/11 | Importer l’unique .gmos et ouvrir le cahier | 63 cas humains NON TESTÉS ; paquet complet pour certains cas de cartes |
 | 171 | **Clip Torg et joueur tactile** | 🟢 § 235 ; MP4 2 min 58, huit chapitres, cartes et vrai Hub → MJ vérifiés —07/11 | Ouvrir le MP4 | Rien pour le clip ; appareil physique non essayé |
 | 170 | **Fiche PJ de Torg reliée à GM-OS** | 🟢 § 234 ; raccord et Choc/Blessures validés par David —07/11 | Rien pour ce lot | Rien |
 | 169 | **Modules du jeu sur la tablette du meneur** | 🟠 § 233 ; onglet Modules, transport appairé, panneau commun, e2e vérifiés —07/11 | Ouvrir l'onglet Modules sur la tablette, en séance Alien | Essai de David sur une vraie tablette |

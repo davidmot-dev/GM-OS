@@ -1,0 +1,42 @@
+[
+  {
+    "fichier": "livre_de_base_2_regles_et_bestiaire.pdf",
+    "octets": 5580228,
+    "sha256": "094915d45c12612ce8dbf97dc6dc66569d6bcc6e1a7b2a95503d5eb1c62b703f"
+  },
+  {
+    "fichier": "livre_de_base_2_regles_et_bestiaire_Fiche PJ.pdf",
+    "octets": 5685596,
+    "sha256": "7a305a7b9b49c9271177b52becd272a18b4314b91735795a46142e7a05ff5965"
+  },
+  {
+    "fichier": "livre_de_base_2_regles_et_bestiaire_index.pdf",
+    "octets": 2762079,
+    "sha256": "20d2a3c5853aa4312bc202493b55cacac1eedb02cd97fbfd280cb7180813c029"
+  },
+  {
+    "fichier": "livre_de_base_2_regles_et_bestiaire_TOC.pdf",
+    "octets": 1655811,
+    "sha256": "bc42f86d65c857beb1324c5d1c17b9b3920e230141992925782f7b4a8e20e01e"
+  },
+  {
+    "fichier": "Screenshot 2026-10-30 172732.png",
+    "octets": 320085,
+    "sha256": "fc0f1b0efb40152663020867e904f53e5ddfbd9df990d33357237d78251d367d"
+  },
+  {
+    "fichier": "Screenshot 2026-10-30 172818.png",
+    "octets": 365973,
+    "sha256": "c2865a5981f1a20289250d052c8322b2b23770629962d6ea56181fa3f0c4331d"
+  },
+  {
+    "fichier": "Screenshot 2026-10-30 172847.png",
+    "octets": 371117,
+    "sha256": "a80e6a5fd90bc66821f5fdc60a8b12e20a5a2ff2fde60d7d6aad614346311c58"
+  },
+  {
+    "fichier": "Screenshot 2026-10-30 172910.png",
+    "octets": 443573,
+    "sha256": "c91377d280e98975317855de1548a0eff1464b3ef8fb88ae77294c5c550b81e2"
+  }
+]

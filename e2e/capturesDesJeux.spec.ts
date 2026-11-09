@@ -183,6 +183,23 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         scenes: c => scenesDeBarbarians(c),
     },
     {
+        // Argyropée (2026-11-08) : Vanille, l'exemple du livre 2 — Serrurerie 3, Malandrin +2 (p. 45).
+        corpusId: 'argyropee', slug: 'argyropee', personnage: 'Vanille',
+        sheetData: {
+            nom: 'Vanille', sexe: 'Femme', age: 23, citoyennete: 'Gyropéenne',
+            metier1_nom: 'Malandrin', metier1_rang: 'Apprenti', metier1_bonus: 2, metier1_salaire: 24,
+            metier2_nom: 'Politicienne', metier2_rang: 'Profane', metier2_bonus: 1, metier2_salaire: 56,
+            serrurerie: 3, commerce: 3, agilite: 2, detection: 3, furtivite: 4, escalade: 1, rixe: 1,
+            endurance_morale: 3, endurance_physique: 2, points_de_sante: 7, points_de_sante_max: 7, panache: 14,
+            arme1_nom: 'Dague', arme1_degats: '1d4',
+            // 09/11/2026 : la Faveur divine, la magie et la Guigne (pilote 2.1.0).
+            sciences_religieuses: 2, panache_bonus: 1, humeur1_domaine: 'Faune', humeur2_domaine: 'Flore',
+            sort1: 'Ami des bêtes', sort2: 'Aura vermicide', magie_du_combat: 3, guigne_depense: 4,
+        },
+        composantes: ['serrurerie'],
+        scenes: c => scenesDArgyropee(c),
+    },
+    {
         // RuneQuest (2026-10-30) : Vasana, l'aventurière du livre — Épée large 65 %, POU 15 (p. 52-57).
         corpusId: 'runequest', slug: 'runequest', personnage: 'Vasana',
         sheetData: {
@@ -1093,6 +1110,71 @@ async function scenesDeBarbarians(c: ContexteDeScene): Promise<void> {
     await expect(ficheHtml.locator('[data-key="weapons.0.damage"]')).toHaveValue('d6+3');
     await f.waitForTimeout(1_000);
     await photographier(f.locator('body'), 'jeu-barbarians-fiche');
+}
+
+/**
+ * **Argyropée** (2026-11-08) : le test préparé (métier, entraide, action complexe), le
+ * résultat et le Panache, un test en opposition, puis la fiche HTML reliée. Le 09/11 : la
+ * Faveur divine, la journée et la magie au panneau, le test de PNJ et la Guigne au pupitre.
+ */
+async function scenesDArgyropee(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await panneau.locator('select').nth(0).selectOption('serrurerie');
+    await panneau.getByLabel('Métier', { exact: true }).selectOption('0');
+    const preparation = panneau.locator('[data-preparation-argyropee]');
+    await expect(preparation.locator('[data-composition-argyropee]')).toContainText('1d10 (0 à 9) + 5');
+    await photographier(preparation, 'jeu-argyropee-preparation');
+    await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    await expect(panneau.locator('[data-suites-argyropee]')).toBeVisible();
+    await photographier(panneau, 'jeu-argyropee-suites');
+
+    await preparation.locator('[data-action-complexe] summary').click();
+    await preparation.getByLabel(/Furtivité 4/).check();
+    await expect(preparation.locator('[data-action-complexe]')).toContainText('moyenne 3');
+    await photographier(preparation, 'jeu-argyropee-action-complexe');
+    await preparation.getByLabel(/Furtivité 4/).uncheck();
+
+    await preparation.getByLabel('Test en opposition').check();
+    await preparation.getByLabel('Score de l’adversaire').fill('4');
+    for (let i = 0; i < 2; i++) await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    await expect(panneau.locator('[data-suite-opposition-argyropee]')).toBeVisible();
+    await photographier(panneau, 'jeu-argyropee-opposition');
+    await preparation.getByLabel('Test en opposition').uncheck();
+
+    // 09/11/2026 : la Faveur divine cochée, la journée (réveil, repas, Exubérance) et la magie.
+    if (await panneau.locator('[data-journee-argyropee]').count()) {
+        await preparation.locator('[data-faveur-argyropee] input').check();
+        await expect(panneau.locator('[data-magie-argyropee]')).toContainText('3 points en sorts');
+        await panneau.getByLabel('Sans lueur').check();
+        await photographier(panneau.locator('[data-journee-argyropee]').locator('xpath=..'), 'jeu-argyropee-journee');
+        await panneau.getByLabel('Sans lueur').uncheck();
+        await preparation.locator('[data-faveur-argyropee] input').uncheck();
+
+        // Le pupitre du Conteur : un PNJ, compétence non privilégiée, carrière +2, et la Guigne.
+        await ouvrirLeModule(gmos, 'Dice-OS');
+        const pnj = f.locator('[data-pupitre-argyropee]');
+        await expect(pnj).toBeVisible({ timeout: 15_000 });
+        await pnj.getByLabel('Bonus de carrière').fill('2');
+        await pnj.getByLabel('Modificateur du Conteur').fill('-1');
+        await expect(f.locator('[data-guigne-argyropee]')).toContainText('Vanille');
+        await f.getByRole('button', { name: 'LANCER', exact: true }).first().click();
+        await f.waitForTimeout(800);
+        await photographier(pnj.locator('xpath=ancestor::*[@data-panneau][1]/..'), 'jeu-argyropee-pupitre');
+        await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    }
+
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });
+    await creerLaFiche.click();
+    const ficheHtml = f.frameLocator('iframe').first();
+    await expect(ficheHtml.locator('[data-key="careers.0.name"]')).toHaveValue('Malandrin', { timeout: 30_000 });
+    await expect(ficheHtml.locator('[data-key="identity.name"]')).toHaveValue('Vanille');
+    await f.waitForTimeout(1_000);
+    await photographier(f.locator('body'), 'jeu-argyropee-fiche');
 }
 
 /**

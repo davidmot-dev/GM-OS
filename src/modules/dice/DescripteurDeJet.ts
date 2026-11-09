@@ -528,6 +528,13 @@ export interface DescripteurDeJet {
      */
     barbarians?: import('./systemes/barbarians').RegleDeBarbarians;
     /**
+     * **Argyropée** — 2026-11-08 (`systemes/argyropee.ts`) : un d10 lu de 0 à 9,
+     * additionné à la compétence et au bonus du métier choisi au jet, lu sur cinq
+     * paliers fixes (0 ou moins, 1-7, 8-9, 10-14, 15+) ; modificateur ±5, entraide,
+     * Panache dépensé après le tirage. Le panneau ne compte alors aucune réussite par dé.
+     */
+    argyropee?: import('./systemes/argyropee').RegleDArgyropee;
+    /**
      * **RuneQuest** — 2026-10-30 (`systemes/runequest.ts`) : le d100 sous l'aptitude
      * gradue en cinq niveaux lus sur les chances MODIFIÉES (critique au vingtième,
      * spéciale au cinquième, échec critique dans les 5 % des chances d'échec),
@@ -1644,7 +1651,8 @@ export function preparerLeJet(
         // Torg compare un total à un Niveau de Difficulté : il ne compte pas de réussites.
         // NOC compare aussi un niveau à la difficulté : sa difficulté n'est pas un compte de réussites.
         // Barbarians compare une somme à 9, COC un d20 + caractéristique à la difficulté : une réussite ou aucune.
-        reussitesRequises: oppositionSR ? succesAdversesShadowrun(oppositionSR) : matriceSR?.seuil ?? (descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians || descripteur.coc ? 1 : bornes ? difficulte : 1),
+        // Argyropée lit une somme sur des paliers fixes (p. 44) : de même.
+        reussitesRequises: oppositionSR ? succesAdversesShadowrun(oppositionSR) : matriceSR?.seuil ?? (descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians || descripteur.argyropee || descripteur.coc ? 1 : bornes ? difficulte : 1),
         /*
           Une poignée échelonnée n'a pas UNE taille. On rend celle du plus gros
           dé, pour que les écrans qui écrivent « 2d10 » disent quelque chose de
