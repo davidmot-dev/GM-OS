@@ -13,6 +13,7 @@ import { useSessionStore } from '../../../store/useSessionStore';
 import { demanderLAtelierDesRegles } from '../../forge/ouvertureDeLaForge';
 import { PenLine, Wand2, X as Fermer } from 'lucide-react';
 import { useBrainstormStore } from '../../forge/rules/store/useBrainstormStore';
+import { corpsDeLaFiche } from '../../forge/rules/lectureDuCorpus';
 
 import type { DocEntry } from '../../ai/RAGService';
 import { tousLesPilotes } from '../store/tousLesPilotes';
@@ -261,7 +262,8 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
         
         const payload = {
             title: selectedCard.title,
-            content: selectedCard.content,
+            // Les joueurs lisent la règle, pas l'en-tête de la Forge (sources, empreinte…).
+            content: corpsDeLaFiche(selectedCard.content),
             category: selectedCard.category || 'rule'
         };
 
@@ -516,7 +518,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                             <LoupeDeLecture>
                                 <div className="max-w-4xl mx-auto prose prose-invert prose-emerald prose-headings:font-display prose-headings:tracking-tighter prose-p:text-lg prose-p:leading-relaxed prose-strong:text-accent prose-li:text-app-text/80">
                                     <TexteMarkdown>
-                                        {readingContent || ''}
+                                        {corpsDeLaFiche(readingContent || '')}
                                     </TexteMarkdown>
                                 </div>
                             </LoupeDeLecture>
@@ -606,7 +608,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                                     <LoupeDeLecture>
                                         <div className="max-w-3xl mx-auto prose prose-invert prose-emerald prose-p:text-lg prose-headings:font-display prose-headings:tracking-tighter">
                                             <TexteMarkdown>
-                                                {editContent}
+                                                {corpsDeLaFiche(editContent)}
                                             </TexteMarkdown>
                                         </div>
                                     </LoupeDeLecture>
