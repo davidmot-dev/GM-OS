@@ -158,6 +158,20 @@ describe('composerLaDemande', () => {
         expect(titreDeLaComposition({ champs: { competence: 'esquive', carac: 'force' } }, CIBLE, SECTIONS, {}))
             .toBe('Force + Esquive');
     });
+
+    it('un libellé à espace final donne le même titre chez le meneur et sur la tablette', () => {
+        // Rêve de Dragon : « Bricolage␣ » et « Chirurgie␣ » dans la fiche exportée le 11/11.
+        const sections = [
+            { id: 'attributs', label: 'Attributs', fields: [champ('agilite', 'Agilité')] },
+            { id: 'competences', label: 'Compétences', fields: [champ('bricolage', 'Bricolage ')] },
+        ] as unknown as SheetSection[];
+        const demande = composerLaDemande({
+            id: 'd', characterId: 'c', emiseLe: 1, descripteur: SEUIL, sections, valeurs: {},
+            composition: { champs: { attribut: 'agilite', competence: 'bricolage' } },
+        });
+        expect(demande!.titre).toBe('Agilité + Bricolage');
+        expect(lireLaDemande(JSON.parse(JSON.stringify(demande)))).toEqual(demande);
+    });
 });
 
 describe('le pilote Dune livré dans le code', () => {

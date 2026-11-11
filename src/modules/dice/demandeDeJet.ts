@@ -167,7 +167,12 @@ export function compositionValable(
     };
 }
 
-/** « Agilité + Mobilité » — les champs retenus, dans l'ordre des composantes. */
+/**
+ * « Agilité + Mobilité » — les champs retenus, dans l'ordre des composantes.
+ * Les libellés sont rognés : la fiche de Rêve de Dragon porte « Bricolage␣ »,
+ * et `lireLaDemande` rogne le titre à l'arrivée — sans cela, le meneur et la
+ * tablette tiendraient deux titres différents pour la même demande (11/11).
+ */
 export function titreDeLaComposition(
     composition: CompositionDemandee,
     descripteur: DescripteurDeJet | null | undefined,
@@ -177,7 +182,7 @@ export function titreDeLaComposition(
     return composantesARetenir(descripteur)
         .map(c => {
             const id = composition.champs[c.id];
-            return id ? (champsProposes(c, sections, valeurs).find(p => p.id === id)?.label ?? id) : null;
+            return id ? (champsProposes(c, sections, valeurs).find(p => p.id === id)?.label ?? id).trim() : null;
         })
         .filter((l): l is string => !!l)
         .join(' + ');

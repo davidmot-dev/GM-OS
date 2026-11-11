@@ -14,8 +14,11 @@ import { calculerLeCoup, lireLaManiabilite, lireLesDegats, lireLesProprietes, so
  * `maxima_et_jets_lies_degenesis.py` ; 2.3.0 le 04/11 : DEG-A5 et DEG-A6, `contamination_degenesis.py`). Sauté tant que le fichier n'est pas là :
  * `Export Dirvers/` ne se commite pas.
  */
-const fichier = 'Export Dirvers/corriges/Degenesis_driver_gmos_finir.gmos-driver';
-describe.skipIf(!fs.existsSync(fichier))('export Degenesis 2.3.0 fourni à David', () => {
+// Depuis le 11/11/2026 : l'export de référence d'`Export Dirvers/`, versionné dans git (les corrigés
+// visés jusque-là avaient été supprimés le 31/10 et l'essai sautait en silence). Absent : il échoue.
+const fichier = 'Export Dirvers/Degenesis_driver_gmos_1794393425002.gmos-driver';
+if (!fs.existsSync(fichier)) throw new Error(`Export absent : ${fichier} — réexporter le pilote depuis GM-OS.`);
+describe('export Degenesis 2.3.0 fourni à David', () => {
     const x = JSON.parse(new AdmZip(fichier).getEntry('state.json')!.getData().toString('utf8'));
     const sections = x.sheetTemplate.sections;
     const defauts = Object.fromEntries(sections.flatMap((s: { fields: { id: string; defaultValue?: unknown }[] }) =>

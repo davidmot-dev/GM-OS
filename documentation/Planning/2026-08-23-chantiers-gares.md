@@ -14282,6 +14282,21 @@ et suivi tâche par tâche : [`2026-11-11-jets-demandes-et-caches.md`](2026-11-1
   (`jetsCaches.ts`), jamais `setLastRoll` ; journal marqué « Jet caché », toujours `trace`.
 - **Commun aux dix-sept pilotes**, aucun pilote à modifier ; C10 vérifié sur les 20 exports du dépôt (8
   jeux non exportés restent à passer par `GMOS_PILOTES_DES_JEUX`).
+- **Contrôle des 17 exports frais de David (11/11, 11 h 34–11 h 38)** : C10 passe sur les 32 archives
+  d'`Export Dirvers/`, les 8 jeux manquants compris, après un correctif : **Rêve de Dragon** porte
+  « Bricolage␣ » et « Chirurgie␣ » dans sa fiche ; le titre gardait l'espace chez le meneur et la perdait
+  à la relecture de la tablette (`lireLaDemande` rogne). `titreDeLaComposition` rogne les libellés, essai
+  dans `demandeDeJet.test.ts` ; `src/modules/dice` 80 fichiers / 1 143 réussis, `tsc -b`, eslint.
+  Hors lot, même contrôle : aucune perte à l'import (chaque export identique à son corrigé, ou enrichi
+  dans l'app : identité visuelle, catalogue, bestiaire, carrière d'Alien à neuf options), versions
+  conformes à la synthèse, Forge sans constat sur 15 pilotes ; Alien (17) et COC (8) n'ont que des
+  valeurs textuelles du livre dans catalogue/bestiaire (« Puissance 9 », « 4/8 », « Bande de sbires »),
+  Crimes l'avertissement connu du § 150. Les `outils/*/pilote.test.ts` visent pour la plupart des
+  corrigés supprimés le 31/10 et sautaient en silence : **les huit visent désormais l'export de
+  référence d'`Export Dirvers/`** (commité avec ce correctif) et échouent s'il manque ; Shadowrun attend
+  2.2.0 et 139 champs. Une commande pour tous :
+  `npx vitest run --config outils/pilotes.vitest.config.mts --maxWorkers=4` → 8 fichiers, 22 réussis.
+  ⚠️ vitest lancé depuis `c:/` (minuscule) échoue partout sur « reading 'config' » : lancer en `C:\`.
 - **Vérifié** : passe `vitest` 459 fichiers / 5 400 réussis, `tsc -b`, eslint ;
   `e2e/jetsDemandesEtCaches.spec.ts` 2 réussis (vraie porte WebSocket, reconnexion, jet caché absent du
   segment des dés). Manuel : page 53 (« Demander un jet au joueur, lancer en caché »), 34 (Dice-OS),
