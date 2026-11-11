@@ -3,7 +3,7 @@
 > Demande de David (11/11) : « tout est testé c'est bon, on va faire le lot 2 » — le lot 2 de
 > [`2026-11-11-jets-demandes-et-caches.md`](2026-11-11-jets-demandes-et-caches.md), idée 3 :
 > « **Rappel d'un jet dû** : bandeau qui pulse et signal de MU/TH/UR quand le temps a passé ».
-> État : **livré, à essayer par David** — T1 à T6 faits le 11/11 ; reste T7 (essai de David). Registre § 244.
+> État : **clos** — T1 à T7 faits ; essayé et validé par David le 11/11 (« c'est testé c'est bon »), commit `41b8286d`. Registre § 244.
 
 ## Ce qui existe (lu dans le code le 11/11)
 
@@ -178,7 +178,7 @@
       passent toujours · touche src/ ⛔ · à essayer par David
 - [x] T6 · Manuel (page 36 Clock-OS, renvoi page 53), registre, synthèse des pilotes (ligne commune)
       — couvre C7 · essai : `electron/guidesDuManuel.test.ts`
-- [ ] T7 · Essai de David : une jauge « Air respirable » qui s'épuise, rappel « Jet d'Endurance »,
+- [x] T7 · Essai de David : une jauge « Air respirable » qui s'épuise, rappel « Jet d'Endurance »,
       la vider ; la ligne et la carte ; Fait ; la remplir puis la revider — à essayer par David
 
 ## Réalisation (11/11)

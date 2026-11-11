@@ -367,7 +367,8 @@ Deux éléments neufs, à dessiner d'abord (consigne du 02/11), captures Playwri
   chaque pas), rappeler ce jet » ; le rappel s'allume au cockpit du meneur, discret, et
   s'éteint au jet. Commun à tous les jeux ; à relier au lot 1 (le rappel peut ouvrir une
   demande). Questions à poser alors : son, place du rappel, jauges cachées seulement ?
-- **Lot 3 — Modules ouverts par l'équipement.** Un objet du catalogue déclare le module qu'il
+- **Lot 3 — Modules ouverts par l'équipement.** ⏸️ **Mis de côté par David le 11/11** (« on ne va pas
+  faire le lot 3, on va le mettre de côté »). Un objet du catalogue déclare le module qu'il
   donne (détecteur, MU/TH/UR) ; quand une fiche le porte, GM-OS **propose** au meneur de
   remettre le module au personnage. Alien seul tant que le catalogue n'a pas gagné d'autres
   jeux (« Reste : les autres jeux », § 203).
