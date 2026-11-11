@@ -170,6 +170,24 @@ faisant défiler ce panneau. La navigation reste accessible pendant la lecture.
 Un jet projeté s'affiche en plein écran pendant cinq secondes. →
 [Guide de la projection des dés](./35-Projeter-un-jet.md)
 
+### Le meneur te demande un jet — 11/11/2026
+
+Quand le meneur demande un jet à **ton** personnage, une bannière l'annonce : « Le meneur te
+demande un jet », le jet en grand (« Agilité + Mobilité »), ce qu'il a fixé (difficulté,
+modificateur), et un gros bouton **Lancer**. Fiche fermée, elle paraît en haut de l'écran ;
+fiche ouverte, entre son en-tête et ses onglets.
+
+- **Lancer** ouvre « Lancer un test » **déjà composé**. Tu peux encore ajouter ce que ton jeu
+  permet, puis tu lances : le résultat part au meneur, et la bannière devient « Jet envoyé au
+  meneur ✓ » quelques secondes.
+- À Cthulhu Hack, c'est le bouton de la **Sauvegarde demandée** qui porte la mention
+  « demandée » ; le meneur la lance, comme toujours.
+- Si le meneur annule, la bannière disparaît. Si la tablette se recharge, la demande revient.
+- Aucune autre tablette ne la voit. Et un jet que le meneur lance **en caché** ne s'affiche nulle
+  part ici : rien ne dit qu'il a eu lieu.
+
+> À photographier sur tablette : la bannière n'a pas encore sa capture dans ce guide.
+
 ### Le combat
 
 Dans chaque onglet, le bouton **Initiative** dans la barre du haut ouvre l'ordre du combat.

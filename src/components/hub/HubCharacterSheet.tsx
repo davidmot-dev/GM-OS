@@ -43,18 +43,23 @@ import ChampDuReferentiel from '../../modules/session/components/fields/ChampDuR
 import { useSheetCalculator } from '../../modules/session/hooks/useSheetCalculator';
 import { plafondDuChamp } from '../../modules/session/logic/plafondDuChamp';
 import { useSaisieDifferee } from './useSaisieDifferee';
+import BanniereDeDemande from './BanniereDeDemande';
+import { useDemandesDeLaTablette } from '../../modules/dice/demandesDeLaTablette';
+import { compositionValable, type DemandeDeJet } from '../../modules/dice/demandeDeJet';
 
 type OngletDuJoueur = 'synthese' | 'test' | 'fiche' | 'groupe';
 
 interface HubCharacterSheetProps {
     onClose: () => void;
+    /** La demande dont on a touché « Lancer » hors de la fiche : la fiche s'ouvre dessus (T8). */
+    demandeAOuvrir?: string;
 }
 
 /**
  * HubCharacterSheet - Main Wrapper
  * Gère la sélection du personnage et injecte une 'key' pour réinitialiser l'état lors d'un changement.
  */
-const HubCharacterSheet: React.FC<HubCharacterSheetProps> = ({ onClose }) => {
+const HubCharacterSheet: React.FC<HubCharacterSheetProps> = ({ onClose, demandeAOuvrir }) => {
     const { characterId } = useClientStore();
     const { players, campaigns, remoteUpdateCharacterVitals, customSheetTemplates, remoteUpdateCharacterNarrative, remoteUpdateCharacterSheetData, customGameDrivers, activeCampaignId } = useSessionOSStore();
 
@@ -76,6 +81,7 @@ const HubCharacterSheet: React.FC<HubCharacterSheetProps> = ({ onClose }) => {
             campaigns={campaigns}
             customGameDrivers={customGameDrivers}
             campaignId={character.campaignId ?? activeCampaignId ?? null}
+            demandeAOuvrir={demandeAOuvrir}
         />
     );
 };
@@ -93,10 +99,11 @@ interface ContentProps {
     customGameDrivers: GameDriver[];
     /** Table à laquelle ce personnage joue — celle dont les réserves comptent. */
     campaignId: string | null;
+    demandeAOuvrir?: string;
 }
 
 const HubCharacterSheetContent: React.FC<ContentProps> = ({
-    character, playerId, onClose, remoteUpdateCharacterVitals, customSheetTemplates, remoteUpdateCharacterNarrative, remoteUpdateCharacterSheetData, campaigns, customGameDrivers, campaignId
+    character, playerId, onClose, remoteUpdateCharacterVitals, customSheetTemplates, remoteUpdateCharacterNarrative, remoteUpdateCharacterSheetData, campaigns, customGameDrivers, campaignId, demandeAOuvrir
 }) => {
     // État local pour une saisie fluide
     const [localDescription, setLocalDescription] = useState(character.description ?? '');
@@ -156,7 +163,20 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
      * la tablette la redessine* — et ce que le joueur y écrit remonte au meneur.
      */
     const correspondance = useCorrespondanceDuJeu(character);
-    const [onglet, setOnglet] = useState<OngletDuJoueur>('synthese');
+    /*
+      **Les jets que le meneur demande** (T8, 11/11 ; maquette Stitch adoptée).
+      « Lancer » ouvre l'onglet du test sur la demande : composée, et portant son
+      identifiant jusqu'au résultat. Ouverte depuis la bannière du Hub, la fiche
+      arrive directement dessus.
+    */
+    const { aLancer, envoyees } = useDemandesDeLaTablette(character.id);
+    const [demandeActive, setDemandeActive] = useState<DemandeDeJet | null>(
+        () => aLancer.find(d => d.id === demandeAOuvrir) ?? null);
+    const [onglet, setOnglet] = useState<OngletDuJoueur>(() => (demandeActive ? 'test' : 'synthese'));
+    const ouvrirLaDemande = (demande: DemandeDeJet) => {
+        setDemandeActive(demande);
+        setOnglet('test');
+    };
     const [ficheDejaOuverte, setFicheDejaOuverte] = useState(false);
 
     /**
@@ -253,6 +273,8 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                     </div>
                 </div>
             </EnTeteDeModule>
+
+            <BanniereDeDemande aLancer={aLancer} envoyees={envoyees} onLancer={ouvrirLaDemande} className="mb-4 flex-shrink-0" />
 
             {onglets.length > 1 && (
                 <OngletsDeLaFiche
@@ -365,6 +387,8 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                             le meneur lit la fiche et lance — voir `JetsDeLaFiche`.
                         */}
                         <JetsDeLaFiche
+                            key={demandeActive?.genre === 'sauvegarde' ? demandeActive.id : 'sans-demande'}
+                            demande={demandeActive?.genre === 'sauvegarde' ? demandeActive : undefined}
                             playerId={playerId}
                             characterId={character.id}
                             sheetData={character.sheetData ?? {}}
@@ -396,6 +420,12 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                 ecrireSurLaFiche={maj => remoteUpdateCharacterSheetData(playerId, character.id, { sheetData: maj })}
                                 pourLesJoueurs
                                 personnageId={character.id}
+                                key={demandeActive?.genre === 'test' ? demandeActive.id : 'sans-demande'}
+                                {...(demandeActive?.genre === 'test' ? {
+                                    demandeId: demandeActive.id,
+                                    /* Relue contre CETTE fiche : un champ disparu ne se préremplit pas. */
+                                    compositionInitiale: compositionValable(demandeActive.composition, pilote.jet, template.sections, valeursVues) ?? undefined,
+                                } : {})}
                             />
                         )}
 

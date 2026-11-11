@@ -17,6 +17,8 @@ import { ResolvedImage } from './ResolvedImage';
 import { Bouton, EnTeteDeModule, Etiquette, Panneau } from './socle';
 import LobbyOnboarding from './hub/LobbyOnboarding';
 import HubCharacterSheet from './hub/HubCharacterSheet';
+import BanniereDeDemande from './hub/BanniereDeDemande';
+import { useDemandesDeLaTablette, useSuiviDesEnvois } from '../modules/dice/demandesDeLaTablette';
 import { HubMessenger } from './hub/HubMessenger';
 import HubNotificationCenter from './hub/HubNotificationCenter';
 import { HubClueViewer } from './hub/HubClueViewer';
@@ -85,6 +87,12 @@ const TabletHub: React.FC = () => {
 
     const [currentTab, setCurrentTab] = useState<OngletDuHub>('live');
     const [isInventoryOpen, setIsInventoryOpen] = useState(false);
+    /*
+      **Les jets que le meneur demande** (T8, 11/11). La bannière se voit aussi
+      fiche fermée ; « Lancer » ouvre la fiche sur la demande. Les jets qui y
+      répondent sont notés à leur départ (`useSuiviDesEnvois`).
+    */
+    const [demandeAOuvrir, setDemandeAOuvrir] = useState<string | undefined>(undefined);
     const [isNotesOpen, setIsNotesOpen] = useState(false);
     const [isMessengerOpen, setIsMessengerOpen] = useState(false);
     const [isCombatOverlayOpen, setIsCombatOverlayOpen] = useState(false);
@@ -98,6 +106,8 @@ const TabletHub: React.FC = () => {
     const activeHubId = projections['hub'];
     const activeSession = sessions.find((s: { status: string }) => s.status === 'active');
     const messages = useSessionOSStore((state) => state.messages);
+    useSuiviDesEnvois();
+    const demandesDuJoueur = useDemandesDeLaTablette(characterId);
     const players = useSessionOSStore((state) => state.players);
     const { activeToast, masquerNotification } = useNotificationDeMessage({
         messages, characterId, lastReadMessageTime, isMessengerOpen, selectedRecipientId,
@@ -441,7 +451,18 @@ const TabletHub: React.FC = () => {
             {(!isOnboarded || !activeSession) && <LobbyOnboarding latency={latency} />}
             {characterId && (
                 <>
-                    {isInventoryOpen && <HubCharacterSheet onClose={() => setIsInventoryOpen(false)} />}
+                    {isInventoryOpen && <HubCharacterSheet key={demandeAOuvrir ?? 'fiche'} demandeAOuvrir={demandeAOuvrir}
+                        onClose={() => { setIsInventoryOpen(false); setDemandeAOuvrir(undefined); }} />}
+                    {!isInventoryOpen && isOnboarded && activeSession && (
+                        <BanniereDeDemande {...demandesDuJoueur}
+                            onLancer={demande => {
+                                setDemandeAOuvrir(demande.id);
+                                setIsMessengerOpen(false);
+                                setIsNotesOpen(false);
+                                setIsInventoryOpen(true);
+                            }}
+                            className="fixed top-3 inset-x-3 z-[140] rounded-xl bg-app-surface shadow-2xl lg:left-auto lg:w-[560px]" />
+                    )}
                     <AnimatePresence>
                         {isNotesOpen && playerId && (
                             <motion.section role="dialog" aria-modal="true" aria-label="Notes & Feedback"

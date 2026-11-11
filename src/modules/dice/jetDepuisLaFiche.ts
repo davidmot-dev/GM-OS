@@ -26,6 +26,8 @@ export interface DemandeDeJetDeFiche {
     /** Le champ de la fiche : la caractéristique, ou la ressource. */
     champ: string;
     modificateur?: ModificateurDeSauvegarde;
+    /** La demande du meneur à laquelle cette Sauvegarde répond (T4, 11/11). */
+    demandeId?: string;
 }
 
 export interface JetDeFicheResolu {

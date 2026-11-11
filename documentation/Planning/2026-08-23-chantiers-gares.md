@@ -14266,10 +14266,35 @@ David, captures du Dr Asher Webb à l'appui : « dans alien comment aligner les 
 - **Carrière** : le champ `type_personnage` du modèle de fiche est un menu **sans options** — la Forge a mis la liste dans le libellé (« Marine, Marshall, Gamin, Camionneur de l'Espace, Colon » ; les deux derniers sont des types de partie, p. 16, pas des carrières). Donnée de David, pas du code : à corriger dans Modèles de fiches › Éditer le modèle (libellé « Carrière », options = les neuf carrières du livre, p. 38-54). La fiche HTML prend `identity.career` en texte libre.
 - **Reste** : essai de David (console du Dr Webb à 2/2, un coup, la fiche suit) ; options de la carrière à saisir par David, ou à porter dans un pilote corrigé à partir d'un export frais.
 
+### 243 · Jets demandés et jets cachés — idées reprises de GM Codex, lot 1 — 11/11/2026
+
+David, après l'examen de `C:\Projet_David\gm-codex.exe` : « fais moi un plan et vois si les propositions
+peuvent être généralisé à d'autre drivers », puis « commence le lot 1 ». Spécification, décisions, plan
+et suivi tâche par tâche : [`2026-11-11-jets-demandes-et-caches.md`](2026-11-11-jets-demandes-et-caches.md)
+(skill `specifier-un-chantier`) ; maquettes Stitch adoptées par David : `stitch/jets-demandes/`.
+
+- **Demander un jet** : « Demander à (personnage) » dans l'étape 3 de « Lancer un test », chez le meneur ;
+  la demande voyage dans le **fil des messages** (remise au seul visé, rendue à la reconnexion, champs du
+  meneur retirés des messages de joueur au serveur). La tablette montre une bannière (Hub et fiche) ;
+  « Lancer » ouvre le test **composé** ; le résultat porte l'identifiant et clôt la demande. Jeu à
+  Sauvegarde (Cthulhu Hack) : demande de Sauvegarde, même règle que la tablette (`composerPourLaTablette`).
+- **Jet caché** : interrupteur au panneau de fiche et au pupitre ; magasin à part en mémoire
+  (`jetsCaches.ts`), jamais `setLastRoll` ; journal marqué « Jet caché », toujours `trace`.
+- **Commun aux dix-sept pilotes**, aucun pilote à modifier ; C10 vérifié sur les 20 exports du dépôt (8
+  jeux non exportés restent à passer par `GMOS_PILOTES_DES_JEUX`).
+- **Vérifié** : passe `vitest` 459 fichiers / 5 400 réussis, `tsc -b`, eslint ;
+  `e2e/jetsDemandesEtCaches.spec.ts` 2 réussis (vraie porte WebSocket, reconnexion, jet caché absent du
+  segment des dés). Manuel : page 53 (« Demander un jet au joueur, lancer en caché »), 34 (Dice-OS),
+  61 (tablette) ; synthèse des pilotes, ligne commune.
+- **Reste** : essai de David à l'écran (meneur, pupitre) et **sur tablette physique** (bannière ; sa
+  capture manque au guide 61). Lots 2 (rappel d'un jet dû par une jauge) et 3 (onglets du Hub suivant
+  l'équipement) à spécifier ; idée 5 garée, idée 6 écartée (on ne joue jamais hors ligne).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 179 | **Jets demandés et jets cachés (GM Codex, lot 1)** | 🟠 § 243 ; « Demander à » et bannière de tablette, jet caché au panneau et au pupitre, e2e sur la vraie porte —11/11 | Demander un jet à un PJ depuis « Lancer un test », le lancer sur sa tablette | Essai de David, dont une tablette physique |
 | 178 | **Alien — console d'un PNJ alignée sur sa Santé ; carrière sans options** | 🟠 § 242 ; PNJ humain par défaut, quatre lecteurs alignés —09/11 | Ouvrir le Dr Webb : console à 2/2 ; saisir les options de la carrière | Essai de David |
 | 177 | **Alien — bestiaires des suppléments, Forge des suppléments réparée** | 🟠 § 241 ; Cœur de Ténèbre relu (8 créatures, 4 tables), invites de supplément ramenées sous la limite, espèces reconnues comme créatures —09/11 | Reforger le bestiaire de Building Better Worlds, puis « Remplir depuis le corpus » | Essai de David |
 | 176 | **Campagne de recette Argyropée — Les Comptes de la marée** | 🟠 § 240 ; une campagne, douze séances, six ateliers, 120 tests, deux écarts de règle conservés —09/11 | Lire les anomalies puis importer l’unique .gmos avec le pilote 2.1.0 | Import natif/Hub NON EXÉCUTÉS ; 61 cas humains NON TESTÉS |

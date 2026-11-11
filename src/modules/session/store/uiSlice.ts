@@ -14,6 +14,8 @@ import type { CreateurDeSlice } from './contratDesSlices';
 import type { SessionOSStore } from './index';
 import type { CurrentView, RemoteNotification, HubNotification, SessionMessage } from './types';
 import { ajouterAuFil } from '../logic/filDesMessages';
+import type { DemandeDeJet } from '../../dice/demandeDeJet';
+import { messageDeDemande, messageDeSuite } from '../../dice/filDesDemandes';
 
 // ─────────────────────────────────────────────
 // State
@@ -89,6 +91,10 @@ export interface UiSliceActions {
     fusionnerLeFil: (messages: SessionMessage[]) => void;
     remoteSendMessage: (toId: string, toName: string, fromId: string, fromName: string, content: string) => void;
     sendDirectMessage: (toId: string, toName: string, content: string) => void;
+    /** Le meneur demande un jet à un personnage (T3, 11/11) — un message privé qui porte la demande. */
+    demanderUnJet: (demande: DemandeDeJet, nomDuPersonnage: string) => void;
+    /** Le meneur clôt une demande : lancée (le résultat est arrivé) ou annulée. */
+    cloreLaDemande: (demande: Pick<DemandeDeJet, 'id' | 'characterId' | 'titre'>, etat: 'lancee' | 'annulee', nomDuPersonnage: string) => void;
     saveMessageToJournal: (messageId: string) => void;
     setSystemSyncing: (isSyncing: boolean) => void;
 }
@@ -252,6 +258,23 @@ export const createUiSlice: CreateurDeSlice<UiSlice, SessionOSStore> = (set, get
           plus qu'à son destinataire et à la tablette du meneur — voir
           `electron/destinatairesDesMessages.ts`.
         */
+        window.appBridge?.remote?.acheminerUnMessage?.(msg);
+    },
+
+    /*
+      **Une demande de jet est un message privé du meneur** (11/11) : même
+      ajout au fil, même acheminement — le serveur la remet au seul personnage,
+      et le fil la rendra à sa tablette si elle se recharge. Voir `filDesDemandes`.
+    */
+    demanderUnJet: (demande, nomDuPersonnage) => {
+        const msg = messageDeDemande(demande, nomDuPersonnage, get().activeCampaignId ?? undefined);
+        get().addSessionMessage(msg);
+        window.appBridge?.remote?.acheminerUnMessage?.(msg);
+    },
+
+    cloreLaDemande: (demande, etat, nomDuPersonnage) => {
+        const msg = messageDeSuite(demande, etat, nomDuPersonnage, get().activeCampaignId ?? undefined);
+        get().addSessionMessage(msg);
         window.appBridge?.remote?.acheminerUnMessage?.(msg);
     },
 

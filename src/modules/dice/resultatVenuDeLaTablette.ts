@@ -20,6 +20,8 @@ export interface ResultatVenuDeLaTablette {
     /** Ce qui a été lancé — « Combat + Devoir », « 2d20 »… sans le nom du personnage. */
     titre: string;
     resultat: RollResult;
+    /** La demande du meneur à laquelle ce jet répond (T4, 11/11) — relue comme le reste. */
+    demandeId?: string;
 }
 
 const texte = (v: unknown, max: number): string | null =>
@@ -60,9 +62,11 @@ export function lireLeResultatDeLaTablette(payload: unknown): ResultatVenuDeLaTa
         : [];
     const degre = DEGRES_DE_REUSSITE.includes(p.degre as DegreDeReussite) ? p.degre as DegreDeReussite : undefined;
 
+    const demandeId = texte(p.demandeId, 200);
     return {
         characterId,
         titre,
+        ...(demandeId ? { demandeId } : {}),
         resultat: {
             total: nombre(p.total) ?? 0,
             rolls,

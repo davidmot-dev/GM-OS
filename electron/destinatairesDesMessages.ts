@@ -69,6 +69,27 @@ export function messagePourLeLecteur(
 }
 
 /**
+ * **Ce qu'un message ne porte qu'au nom du meneur** — la demande de jet et sa
+ * clôture (11/11, plan `2026-11-11-jets-demandes-et-caches.md`, T3).
+ *
+ * Un joueur ne parle qu'en son nom (`actionPolicy` vérifie `fromId`), mais rien
+ * ne l'empêchait de glisser une `demandeDeJet` dans son message : relayé à un
+ * autre joueur, il aurait fait apparaître une fausse demande du meneur. Ces
+ * champs sont donc retirés **au serveur**, avant tout relais, de chaque message
+ * venu d'un rôle qui n'est pas le meneur. La tablette, de son côté, ne croit une
+ * demande que si elle vient de `GM` : deux ceintures, chacune suffisante.
+ */
+export const CHAMPS_DU_MENEUR = ['demandeDeJet', 'suiteDeDemande'] as const;
+
+export function sansLesChampsDuMeneur<M>(message: M): M {
+    if (!message || typeof message !== 'object') return message;
+    if (!CHAMPS_DU_MENEUR.some(champ => champ in (message as object))) return message;
+    const copie = { ...(message as Record<string, unknown>) };
+    for (const champ of CHAMPS_DU_MENEUR) delete copie[champ];
+    return copie as M;
+}
+
+/**
  * **Le fil d'un lecteur pour une campagne**, du plus ancien au plus récent, et
  * seulement les `plafond` derniers.
  *

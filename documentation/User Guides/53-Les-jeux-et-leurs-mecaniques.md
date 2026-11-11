@@ -197,6 +197,43 @@ tranche d'un seul dé (Sauvegarde, pourcentage, Table des Bonus).
 la réserve, **pleine**, ne peut pas garder reste sur le test : « **Dépenser un point** » sur ce test,
 ou « **Verser à la réserve** » quand elle a fait de la place — sinon il est perdu, et c'est dit.
 
+### Demander un jet au joueur, lancer en caché — 11/11/2026
+
+Deux gestes de meneur, **communs à tous les jeux** : aucun pilote n'a rien à déclarer. Ils
+vivent dans l'étape **3 · Lancer les dés** de la fiche, chez le meneur seulement.
+
+![« Demander à Wilson », « Jet caché » et la liste des demandes, chez le meneur](./captures/jet-demande-au-joueur.jpg)
+
+**« Demander à (personnage) ».** Le meneur compose le jet comme s'il allait le lancer — les
+valeurs retenues, la difficulté, le modificateur —, puis le **demande** au lieu de le lancer.
+La tablette du personnage, **et elle seule**, affiche alors « Le meneur te demande un jet » avec
+le jet en grand et un bouton **Lancer** ; fiche fermée, la bannière paraît en haut du Hub.
+« Lancer » ouvre l'onglet « Lancer un test » **déjà composé** : le joueur peut encore ajouter
+ce que son jeu lui permet (dés achetés, avantage…), puis lance lui-même. Le résultat revient
+au meneur comme tout jet de tablette, et la demande passe à **« lancé »**.
+
+- **Demandes en cours**, sous les boutons : celles qui attendent, avec **Annuler** (la bannière
+  disparaît de la tablette), puis les trois dernières closes.
+- **Un jeu à Sauvegarde** (Cthulhu Hack) : la tablette n'a pas de test à composer ; le meneur
+  demande donc **la Sauvegarde** retenue, avec l'avantage choisi. Sur la tablette, son bouton
+  porte la mention « demandée », et c'est toujours le meneur qui la résout.
+- La demande voyage **dans le fil des messages** : elle revient à une tablette rechargée, et
+  reste ouverte après un redémarrage de GM-OS tant qu'elle n'est ni lancée ni annulée. Le joueur
+  voit aussi passer « ✓ Jet reçu » ou « Demande annulée » dans sa messagerie.
+- Grisé tant que le jet n'est pas composé, et quand **Jet caché** est allumé : le joueur
+  verrait son propre résultat.
+
+**« Jet caché ».** L'interrupteur transforme « Lancer » en **« Lancer en caché »** : le résultat
+s'affiche chez le meneur, s'inscrit au journal sous « Jet caché : … », et **rien ne part à la
+table** — ni tablette, ni Player Hub, ni projection ; rien ne dit qu'un jet a eu lieu. Il reste
+une simple trace du journal, même sur une réussite particulière : il n'entre pas dans le récit
+que résume l'IA, sauf si le meneur l'y remonte à la revue de séance. Ce que le jet **écrit** sur
+une fiche ou sur une réserve de table (l'Impulsion de Dune) s'écrit quand même : la réserve est
+commune. Au pupitre de dés, le même interrupteur : voir [Dice-OS](./34-Dice-OS-le-pupitre.md),
+« Le jet caché ».
+
+Le panneau du Voyageur de Rêve de Dragon porte les mêmes trois éléments.
+
 ---
 
 ## Les réserves de table (`ressourcesDeTable`)

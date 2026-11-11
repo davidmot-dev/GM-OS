@@ -45,3 +45,15 @@ describe('un résultat venu de la tablette', () => {
         expect(lireLeResultatDeLaTablette(null)).toBe(null);
     });
 });
+
+describe('la demande à laquelle le jet répond (T4, 11/11)', () => {
+    const base = { characterId: 'p1', titre: 'Force', totalDisplay: '7' };
+    it('se relit quand elle est là', () => {
+        expect(lireLeResultatDeLaTablette({ ...base, demandeId: 'd1' })?.demandeId).toBe('d1');
+    });
+    it('est absente sinon, ou quand elle n’a pas la forme attendue', () => {
+        expect(lireLeResultatDeLaTablette(base)).not.toHaveProperty('demandeId');
+        expect(lireLeResultatDeLaTablette({ ...base, demandeId: 42 })).not.toHaveProperty('demandeId');
+        expect(lireLeResultatDeLaTablette({ ...base, demandeId: '   ' })).not.toHaveProperty('demandeId');
+    });
+});

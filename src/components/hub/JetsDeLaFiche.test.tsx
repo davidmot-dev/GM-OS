@@ -59,3 +59,21 @@ describe('lancer depuis sa fiche, sur sa tablette', () => {
         expect(container.innerHTML).toBe('');
     });
 });
+
+describe('la Sauvegarde que le meneur a demandée (T8, 11/11)', () => {
+    const DEMANDE = { genre: 'sauvegarde' as const, id: 'd-1', characterId: 'p1', emiseLe: 1, titre: 'Sauvegarde de Sagesse · avantage', champ: 'sagesse', modificateur: 'avantage' as const };
+
+    it('se signale, part de l’avantage demandé, et porte la demande avec le jet', () => {
+        render(<JetsDeLaFiche playerId="j1" characterId="p1" sheetData={{ force: 11, sagesse: 13 }} pilote={PILOTE} gabarit={GABARIT} demande={DEMANDE} />);
+        expect(screen.getByText('Sagesse').closest('button')!.hasAttribute('data-demandee')).toBe(true);
+        expect(screen.getByText('Avantage').closest('button')!.getAttribute('aria-pressed')).toBe('true');
+        fireEvent.click(screen.getByText('Sagesse'));
+        expect(demandes).toEqual([{ playerId: 'j1', characterId: 'p1', genre: 'sauvegarde', champ: 'sagesse', modificateur: 'avantage', demandeId: 'd-1' }]);
+    });
+
+    it('une autre Sauvegarde que celle demandée part sans la demande', () => {
+        render(<JetsDeLaFiche playerId="j1" characterId="p1" sheetData={{ force: 11, sagesse: 13 }} pilote={PILOTE} gabarit={GABARIT} demande={DEMANDE} />);
+        fireEvent.click(screen.getByText('Force'));
+        expect(demandes).toEqual([{ playerId: 'j1', characterId: 'p1', genre: 'sauvegarde', champ: 'force', modificateur: 'avantage' }]);
+    });
+});

@@ -5,7 +5,24 @@ import { resolveSheetTemplate } from '../../session/logic/templateResolver';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { resoudreLeJetDeFiche, type DemandeDeJetDeFiche } from '../../dice/jetDepuisLaFiche';
 import { lireLeResultatDeLaTablette } from '../../dice/resultatVenuDeLaTablette';
+import { demandesOuvertes } from '../../dice/filDesDemandes';
 import type { ActionRegistry } from './types';
+
+/**
+ * **Un jet qui répond à une demande du meneur la clôt** — plan
+ * `2026-11-11-jets-demandes-et-caches.md`, T4 (C4, C5).
+ *
+ * Seule une demande **ouverte**, adressée à **ce** personnage, se clôt : un
+ * identifiant inconnu, déjà clos ou visant un autre ne change rien — le jet,
+ * lui, s'inscrit comme tout jet. La clôture part à la tablette dans le fil,
+ * pour qu'elle retire sa bannière, même après un rechargement.
+ */
+function cloreLaDemandeSatisfaite(demandeId: string | undefined, characterId: string, nomDuPersonnage: string) {
+    if (!demandeId) return;
+    const store = useSessionOSStore.getState();
+    const ouverte = demandesOuvertes(store.messages, characterId).find(d => d.id === demandeId);
+    if (ouverte) store.cloreLaDemande(ouverte, 'lancee', nomDuPersonnage);
+}
 
 /**
  * **Un joueur lance depuis sa fiche, sur sa tablette** — Cthulhu Hack,
@@ -59,6 +76,7 @@ const jetDeFiche = (payload: unknown) => {
         // Pour que le pupitre propose la Fortune ou la suite d'un déclin, sur la bonne fiche.
         deFiche: { joueurId: joueur.id, characterId: personnage.id, genre: demande.genre, champ: demande.champ, modificateur: demande.modificateur },
     });
+    cloreLaDemandeSatisfaite(typeof demande.demandeId === 'string' ? demande.demandeId.slice(0, 200) : undefined, personnage.id, personnage.name);
 };
 
 /**
@@ -87,6 +105,7 @@ const resultatDeFiche = (payload: unknown) => {
         timestamp: new Date(),
         title: `${personnage.name} — ${lu.titre}`,
     });
+    cloreLaDemandeSatisfaite(lu.demandeId, personnage.id, personnage.name);
 };
 
 export const ficheActions: ActionRegistry = {

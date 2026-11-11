@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-    estEntreJoueurs, filDuLecteur, lecteurDuRole, messagePourLeLecteur, type MessageAchemine,
+    estEntreJoueurs, filDuLecteur, lecteurDuRole, messagePourLeLecteur, sansLesChampsDuMeneur, type MessageAchemine,
 } from './destinatairesDesMessages';
 
 /*
@@ -87,5 +87,41 @@ describe('filDuLecteur — le fil rendu à une tablette', () => {
 
     it('ne garde que les derniers', () => {
         expect(filDuLecteur(fil, 'c-1', ALICE, 2).map(m => m.timestamp)).toEqual([2, 3]);
+    });
+});
+
+/*
+  11/11 — demandes de jet (plan `2026-11-11-jets-demandes-et-caches.md`, T3) :
+  la demande voyage dans un message privé du meneur ; un joueur ne peut pas en
+  fabriquer une.
+*/
+describe('une demande de jet dans le fil', () => {
+    const demande = { fromId: 'GM', toId: 'wilson', campaignId: 'c-1', timestamp: 5, demandeDeJet: { id: 'd1' } };
+
+    it('n’est remise qu’au personnage visé, et au meneur (C1)', () => {
+        expect(messagePourLeLecteur(demande, { role: 'joueur', characterId: 'wilson' })).toBe(true);
+        expect(messagePourLeLecteur(demande, { role: 'joueur', characterId: 'ripley' })).toBe(false);
+        expect(messagePourLeLecteur(demande, { role: 'joueur' })).toBe(false);
+        expect(messagePourLeLecteur(demande, { role: 'meneur' })).toBe(true);
+    });
+
+    it('revient dans le fil rendu à la tablette qui se reconnecte (C6)', () => {
+        const fil = filDuLecteur([msg('ripley', 'GM'), demande], 'c-1', lecteurDuRole('player', 'wilson'));
+        expect(fil).toEqual([demande]);
+    });
+});
+
+describe('sansLesChampsDuMeneur', () => {
+    it('retire la demande et la suite d’un message de joueur, sans toucher au reste', () => {
+        const forge = { fromId: 'ripley', toId: 'wilson', content: 'lance !', demandeDeJet: { id: 'x' }, suiteDeDemande: { id: 'y', etat: 'annulee' } };
+        expect(sansLesChampsDuMeneur(forge)).toEqual({ fromId: 'ripley', toId: 'wilson', content: 'lance !' });
+        expect(forge.demandeDeJet).toEqual({ id: 'x' });
+    });
+
+    it('rend tel quel un message qui n’en porte pas, et ce qui n’est pas un objet', () => {
+        const simple = { fromId: 'ripley', toId: 'GM' };
+        expect(sansLesChampsDuMeneur(simple)).toBe(simple);
+        expect(sansLesChampsDuMeneur(null)).toBeNull();
+        expect(sansLesChampsDuMeneur('texte')).toBe('texte');
     });
 });

@@ -18,6 +18,7 @@ const { ficheActions } = await import('./ficheActions');
 const { DiceEngine } = await import('../../dice/DiceEngine');
 const { useSessionOSStore } = await import('../../session/useSessionOSStore');
 const { useDiceStore } = await import('../../../stores/useDiceStore');
+const { demandesOuvertes } = await import('../../dice/filDesDemandes');
 
 const GABARIT = {
     id: 't-ch', name: 'Cthulhu Hack', emoji: '🐙',
@@ -110,5 +111,61 @@ describe('un résultat lancé sur la tablette', () => {
     it('ignore un résultat pour un personnage que le meneur ne connaît pas', () => {
         ficheActions['fiche:resultat']({ characterId: 'inconnu', titre: 'Faux', totalDisplay: '20' }, {} as never);
         expect(useDiceStore.getState().history).toHaveLength(0);
+    });
+});
+
+/**
+ * **Un jet qui répond à une demande du meneur la clôt** — plan
+ * `2026-11-11-jets-demandes-et-caches.md`, T4 (C4, C5).
+ */
+describe('la réponse à une demande de jet', () => {
+    const demande = (id: string, characterId = 'p1') => ({
+        genre: 'test' as const, id, characterId, emiseLe: 1, titre: 'Force',
+        composition: { champs: { s: 'force' } },
+    });
+    const ouvertes = () => demandesOuvertes((useSessionOSStore.getState() as never as { messages: never[] }).messages).map(d => d.id);
+    const resultat = (extra: Record<string, unknown>) => ficheActions['fiche:resultat']({
+        characterId: 'p1', titre: 'Force', totalDisplay: '7 (seuil 11)', total: 7, rolls: [{ val: 7, sides: 20 }], ...extra,
+    }, {} as never);
+
+    beforeEach(() => {
+        useSessionOSStore.setState({ messages: [] } as never);
+        useSessionOSStore.getState().demanderUnJet(demande('d1'), 'Dan');
+    });
+
+    it('le résultat qui porte la demande la clôt, et s’inscrit comme tout jet', () => {
+        expect(ouvertes()).toEqual(['d1']);
+        resultat({ demandeId: 'd1' });
+        expect(ouvertes()).toEqual([]);
+        expect(useDiceStore.getState().history[0].title).toBe('Dan — Force');
+        const fil = (useSessionOSStore.getState() as never as { messages: { suiteDeDemande?: unknown; toId: string }[] }).messages;
+        expect(fil.at(-1)).toMatchObject({ toId: 'p1', suiteDeDemande: { id: 'd1', etat: 'lancee' } });
+    });
+
+    it('un second jet avec la même demande ne la rouvre pas, et ne la reclôt pas', () => {
+        resultat({ demandeId: 'd1' });
+        const avant = (useSessionOSStore.getState() as never as { messages: unknown[] }).messages.length;
+        resultat({ demandeId: 'd1' });
+        expect((useSessionOSStore.getState() as never as { messages: unknown[] }).messages).toHaveLength(avant);
+        expect(useDiceStore.getState().history).toHaveLength(2);
+    });
+
+    it('un identifiant inconnu, ou un jet sans demande, ne ferme rien', () => {
+        resultat({ demandeId: 'autre' });
+        resultat({});
+        expect(ouvertes()).toEqual(['d1']);
+        expect(useDiceStore.getState().history).toHaveLength(2);
+    });
+
+    it('la demande d’un autre personnage ne se ferme pas par ce jet', () => {
+        useSessionOSStore.getState().demanderUnJet(demande('d2', 'p2'), 'Autre');
+        resultat({ demandeId: 'd2' });
+        expect(ouvertes()).toEqual(['d1', 'd2']);
+    });
+
+    it('une Sauvegarde demandée (Cthulhu Hack) clôt sa demande', () => {
+        tirer(5);
+        ficheActions['fiche:jet']({ playerId: 'j1', characterId: 'p1', genre: 'sauvegarde', champ: 'force', demandeId: 'd1' }, {} as never);
+        expect(ouvertes()).toEqual([]);
     });
 });

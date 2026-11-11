@@ -50,6 +50,21 @@ export interface JetAConsigner extends Pick<RollResult, 'degre' | 'tagSuccess' |
     titre: string;
     /** La cible, quand le jet en avait une. */
     seuil?: number;
+    /**
+     * **Un jet caché** — lancé par le meneur, que seul le meneur voit (plan
+     * `2026-11-11-jets-demandes-et-caches.md`, T5, C8).
+     *
+     * Il s'écrit au journal, **marqué**, et il y reste une `trace` quel que soit
+     * son degré : une réussite particulière cachée ne monte pas au récit, donc
+     * n'entre dans aucun résumé que le meneur pourrait reprendre pour la table.
+     * Le promouvoir à la revue reste son geste à lui.
+     */
+    cache?: boolean;
+}
+
+/** L'événement de journal est-il un jet caché ? Pour les lecteurs qui doivent le taire. */
+export function estUnJetCache(evenement: { type: string; metadata?: Record<string, unknown> }): boolean {
+    return evenement.type === 'DICE' && evenement.metadata?.cache === true;
 }
 
 /**
@@ -76,12 +91,13 @@ export function consignerLeJet(jet: JetAConsigner): void {
 
     useJournalStore.getState().addEvent({
         type: 'DICE',
-        title: `Jet : ${jet.titre}`,
+        title: jet.cache ? `Jet caché : ${jet.titre}` : `Jet : ${jet.titre}`,
         content: morceaux.join(' — '),
-        nature: natureDuJet(degre ?? undefined),
+        nature: jet.cache ? 'trace' : natureDuJet(degre ?? undefined),
         metadata: {
             degre: degre ?? undefined,
             reussi: degre ? estUneReussite(degre) : undefined,
+            ...(jet.cache ? { cache: true } : {}),
         },
     });
 }

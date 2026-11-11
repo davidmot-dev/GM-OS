@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { EtiquetteDuDegre } from './EtiquetteDuDegre';
 import { DiceEngine } from './DiceEngine';
 import type { RollResult, ModificateurDeSauvegarde } from './DiceEngine';
-import { Dices, RotateCcw, Zap, BookmarkPlus, X, Target, Info, XCircle, Cast, SlidersHorizontal } from 'lucide-react';
+import { Dices, RotateCcw, Zap, BookmarkPlus, X, Target, Info, XCircle, Cast, SlidersHorizontal, EyeOff } from 'lucide-react';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useMapStore } from '../map/useMapStore';
 import { tacticalService } from '../map/TacticalService';
@@ -29,6 +29,8 @@ import { jetARegler, lireLeJetAuPupitre, reglerLesReservesDuDernierJet } from '.
 import { gmToast } from '../../stores/useToastStore';
 import { placerLaFortune, suitesProposees, tirerLaSuiteDuDeclin } from './suitesDuJetDeFiche';
 import { resoudreLeJetDeFiche } from './jetDepuisLaFiche';
+import { garderLeJetCache, useJetsCachesStore } from './jetsCaches';
+import { InterrupteurJetCache } from '../session/components/fields/CommandesDuMeneur';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -532,6 +534,28 @@ const DiceBoard: React.FC = () => {
         poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee, modificateurSauvegarde, libelleDeLaRessource, desGardes,
         pnjPrivilegiee, pnjCarriere, t]);
 
+    /**
+     * **Le jet caché** (plan `2026-11-11-jets-demandes-et-caches.md`, T7 ; maquette
+     * Stitch adoptée le 11/11). Allumé, « Lancer » et les jets rapides passent par
+     * `garderLeJetCache` : ni `setLastRoll`, ni projection, ni historique persisté —
+     * le dernier jet visible reste affiché, et rien ne dit à la table qu'un jet a eu lieu.
+     */
+    const [cache, setCache] = useState(false);
+    const jetsCaches = useJetsCachesStore(s => s.jets);
+    const lancerEnCache = (sides: number, isFormulaText: boolean, customFormula = '', remoteOverrides?: RemoteDiceOptions) => {
+        try {
+            for (let i = 0; i < batchCount; i++) {
+                const { result, title } = executeRoll(sides, isFormulaText, customFormula, remoteOverrides);
+                garderLeJetCache({
+                    ...result, id: generateId(), timestamp: new Date(),
+                    title: batchCount > 1 ? t('dice.results.batch', { title, current: i + 1, total: batchCount }) : title,
+                });
+            }
+        } catch (error) {
+            console.error('Erreur de lancer caché:', error);
+        }
+    };
+
     const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "", remoteOverrides?: RemoteDiceOptions): RollRecord | null => {
         try {
             /* Un dé de ressource se lance une fois : il change à chaque jet. */
@@ -571,6 +595,7 @@ const DiceBoard: React.FC = () => {
     }, [batchCount, mode, executeRoll, isDiceProjected, triggerDiceProjection, setLastRoll, t]);
 
     const handleQuickRoll = (formula: string, label: string) => {
+        if (cache) { lancerEnCache(0, true, formula, { mode: 'formula', title: label }); return; }
         handleRoll(0, true, formula, { mode: 'formula', title: label });
     };
 
@@ -655,6 +680,12 @@ const DiceBoard: React.FC = () => {
       décider de la suite.
     */
     const lancer = () => {
+        if (cache) {
+            /* Un dé de ressource s'écrit sur la fiche, que la tablette du joueur lit. */
+            if (mode === 'usure') { gmToast(t('dice.agencement.hidden_unavailable'), 'info'); return; }
+            lancerEnCache(avecFaces ? faces : 0, mode === 'formula');
+            return;
+        }
         if(mode==='usure'&&activeDriver?.jet?.cthulhuHack&&lien&&ressourceLiee){
             const demande={playerId:lien.joueurId,characterId:lien.personnage.id,genre:'ressource' as const,champ:ressourceLiee.fieldId};
             const jet=resoudreLeJetDeFiche(demande,lien.personnage,activeDriver,null);
@@ -1268,18 +1299,19 @@ const DiceBoard: React.FC = () => {
     /* ── La barre : l'action, puis les jets rapides ─────────────────────── */
     const barreDOutils = (
         <>
+            <InterrupteurJetCache actif={cache} changer={setCache} />
             <Bouton
-                variante="accent"
+                variante={cache ? 'neutre' : 'accent'}
                 aLaTable={regime.aLaTable}
-                icone={<Dices size={20} />}
+                icone={cache ? <EyeOff size={20} /> : <Dices size={20} />}
                 onClick={lancer}
                 /* Une ressource épuisée ne se lance plus : elle se regagne. */
                 disabled={ressourceEpuisee}
-                aria-label={t('dice.actions.roll')}
+                aria-label={cache ? t('dice.agencement.hidden_roll') : t('dice.actions.roll')}
                 title={resumeDuJet}
-                className="px-8 text-sm"
+                className={`px-8 text-sm ${cache ? 'border-2 border-dashed border-accent text-accent' : ''}`}
             >
-                <span>{t('dice.actions.roll')}</span>
+                <span>{cache ? t('dice.agencement.hidden_roll') : t('dice.actions.roll')}</span>
                 <span className="font-mono normal-case tracking-normal opacity-80">{resumeDuJet}</span>
             </Bouton>
 
@@ -1569,6 +1601,35 @@ const DiceBoard: React.FC = () => {
                         </div>
                     )}
                 </Panneau>
+
+                {/* ── Les jets cachés : vus ici seulement, jamais projetés (T7) ── */}
+                {jetsCaches.length > 0 && (
+                    <Panneau niveau={1} aria-label={t('dice.agencement.hidden_title')} data-jets-caches
+                        className="shrink-0 p-4 flex flex-col border border-dashed border-accent/50">
+                        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2 pb-2 border-b border-app-border">
+                            <h2 className={`${etiquetteDeChamp} flex items-center gap-1.5 text-accent`}>
+                                <EyeOff size={13} aria-hidden /> {t('dice.agencement.hidden_title')}
+                            </h2>
+                            <span className="text-ui-11 text-app-muted">{t('dice.agencement.hidden_hint')}</span>
+                        </div>
+                        <ul className="max-h-40 overflow-y-auto custom-scrollbar pr-1 divide-y divide-app-border/50">
+                            {jetsCaches.map(jet => (
+                                <li key={jet.id} className="grid grid-cols-[4.5rem_minmax(0,1fr)_auto_auto] items-center gap-3 py-1.5 pl-2">
+                                    <span className="text-ui-11 font-mono text-app-subtle">
+                                        {new Date(jet.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                                    </span>
+                                    <span className="min-w-0 text-xs font-semibold text-app-text truncate">{jet.titre}</span>
+                                    <span className="text-base font-black text-accent text-right">{jet.totalDisplay}</span>
+                                    <EtiquetteDuDegre
+                                        resultat={jet}
+                                        classes={reussi => 'text-ui-10 uppercase font-bold text-right '
+                                            + (reussi ? 'text-etat-succes' : 'text-etat-danger')}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+                    </Panneau>
+                )}
 
                 {/* ── L'historique, sobre : une ligne par jet ── */}
                 <Panneau niveau={1} className="flex-1 min-h-0 p-4 flex flex-col">

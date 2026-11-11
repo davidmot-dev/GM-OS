@@ -13,19 +13,32 @@ import { actionAdmetRecours, enregistrerAction, preparerAppelMoral, type ActionV
 import { useOperationDeVoyageur } from '../hooks/useOperationDeVoyageur';
 import { ValidationOperationVoyageur } from './ValidationOperationVoyageur';
 import { useAstrologieVoyageur } from '../hooks/useAstrologieVoyageur';
+import { composerPourLaTablette, joindreLaDemande, type CompositionDemandee } from '../../dice/demandeDeJet';
+import { consignerUnJetCache } from '../../dice/jetsCaches';
+import { BoutonDemanderA, DemandesEnCours, InterrupteurJetCache } from './fields/CommandesDuMeneur';
 
 /** Panneau spécialisé R1 ; le panneau commun est en cours de travail Nephilim.
  * Les calculs, dés, degrés et transport des résultats restent ceux du socle.
  */
-export function PanneauJetVoyageur({descripteur, dice, template, valeurs, personnageId, pourLesJoueurs = false,ecrireSurLaFiche,campaignId}: {
+export function PanneauJetVoyageur({descripteur, dice, template, valeurs, personnageId, pourLesJoueurs = false,ecrireSurLaFiche,campaignId,compositionInitiale,demandeId,nomDuPersonnage}: {
     descripteur: DescripteurDeJet; dice: DiceConfig; template: SheetTemplate; valeurs: Record<string, unknown>;
     personnageId: string; pourLesJoueurs?: boolean;
     ecrireSurLaFiche?: (maj:Record<string,unknown>) => void;
     campaignId?:string;
+    /** Le jet demandé par le meneur (T2, 11/11) : sa difficulté est un ajustement de colonne. */
+    compositionInitiale?: CompositionDemandee;
+    /** La demande à laquelle ce panneau répond (T4). */
+    demandeId?: string;
+    /** Chez le meneur : « Demander à (personnage) » et ses demandes (T7, 11/11). */
+    nomDuPersonnage?: string;
 }) {
-    const [champs, setChamps] = useState<Record<string, string>>({});
+    const avecLaDemande = joindreLaDemande(demandeId);
+    /** Le jet caché, chez le meneur seulement (T7) : marqué au journal, au pupitre, nulle part ailleurs. */
+    const [cache, setCache] = useState(false);
+    const enCache = cache && !pourLesJoueurs;
+    const [champs, setChamps] = useState<Record<string, string>>(() => ({ ...(compositionInitiale?.champs ?? {}) }));
     const [nature, setNature] = useState<NatureDeJetVoyageur>('action');
-    const [difficulte, setDifficulte] = useState(0);
+    const [difficulte, setDifficulte] = useState(compositionInitiale?.ajustementDeDifficulte ?? 0);
     const [offensif,setOffensif] = useState(false);
     const [appelMoral,setAppelMoral]=useState(false),[perceptionActive,setPerceptionActive]=useState(false),[deDesespoir,setDeDesespoir]=useState('');
     const [dernier, setDernier] = useState<{id:string; resultat: RollResult; seuil: number; titre: string;action?:Omit<ActionVoyageur,'moralAvant'|'moralApres'|'recours'>;empreinte:string;appel:boolean;desespoir?:number} | null>(null);
@@ -98,7 +111,16 @@ export function PanneauJetVoyageur({descripteur, dice, template, valeurs, person
         </label>
         {jet.avertissements.map(a => <p role="status" key={a} className="text-xs text-etat-alerte">{a}</p>)}
         {valeurs.reve_pts !== undefined && valeurs.reve_pts !== '' && Number(valeurs.reve_pts) === 0 && <p role="alert">Zéro point de rêve : endormi jusqu’à récupération de rêve.</p>}
-        <button type="button" disabled={!!op.apercu || !!erreurAstrale || !!erreurMoral || jet.avertissements.length > 0 || sante?.horsCombat || assomme || valeurs.reve_pts !== undefined && valeurs.reve_pts !== '' && Number(valeurs.reve_pts) === 0} className="rounded px-4 py-2 font-bold bg-accent text-app-bg disabled:opacity-40"
+        {!pourLesJoueurs && <div className="flex flex-wrap items-center gap-3">
+            <InterrupteurJetCache actif={cache} changer={setCache} />
+            {personnageId && nomDuPersonnage && <BoutonDemanderA nom={nomDuPersonnage} desactive={cache}
+                composer={() => composerPourLaTablette({
+                    id: crypto.randomUUID(), characterId: personnageId, emiseLe: Date.now(),
+                    descripteur, sections: template.sections, valeurs,
+                    composition: { champs, ajustementDeDifficulte: difficulte }, dice,
+                })} />}
+        </div>}
+        <button type="button" disabled={!!op.apercu || !!erreurAstrale || !!erreurMoral || jet.avertissements.length > 0 || sante?.horsCombat || assomme || valeurs.reve_pts !== undefined && valeurs.reve_pts !== '' && Number(valeurs.reve_pts) === 0} className={`rounded px-4 py-2 font-bold disabled:opacity-40 ${enCache ? 'border-2 border-dashed border-accent text-accent bg-app-bg' : 'bg-accent text-app-bg'}`}
             onClick={() => {
                 const brut = DiceEngine.rollFromConfig({...dice, successThreshold: jet.seuil, sens: jet.sens},
                     {baseCount: jet.nombreDeDes, gearCount: jet.desSecondaires, echelle: jet.echelle});
@@ -116,13 +138,15 @@ export function PanneauJetVoyageur({descripteur, dice, template, valeurs, person
                     perceptionActive,sonne:!!sante?.sonne&&(nature==='action'||nature==='ethylisme'),offensif,moralEngage:bonusMoral===1} : undefined;
                 setDernier({id, resultat, seuil: jet.seuil, titre,action,empreinte:JSON.stringify(valeurs),appel:appelMoral,desespoir:deDesespoir.trim()?Number(deDesespoir):undefined});
                 if(appelMoral&&action&&ecrireSurLaFiche)op.proposer(operation=>enregistrerAction(valeurs,action,true,deDesespoir.trim()?Number(deDesespoir):undefined,operation));
-                if (pourLesJoueurs) window.dispatchEvent(new CustomEvent('fiche:resultat', {detail: {
+                if (pourLesJoueurs) window.dispatchEvent(new CustomEvent('fiche:resultat', avecLaDemande({detail: {
                     characterId: personnageId, titre, total: resultat.total, modifier: resultat.modifier,
                     totalDisplay: `${resultat.totalDisplay} (seuil ${jet.seuil})`, rolls: resultat.rolls,
                     successes: resultat.successes, tagSuccess: resultat.tagSuccess, degre: resultat.degre,
-                }}));
+                }})));
+                else if (enCache) consignerUnJetCache({...resultat, titre, seuil: jet.seuil});
                 else consignerLeJet({...resultat, titre, seuil: jet.seuil});
-            }}>Lancer</button>
+            }}>{enCache ? 'Lancer en caché' : 'Lancer'}</button>
+        {!pourLesJoueurs && personnageId && nomDuPersonnage && <DemandesEnCours personnageId={personnageId} nom={nomDuPersonnage} />}
         {dernier && <div aria-label="Dernier jet du Voyageur" className="rounded border border-app-border p-3 space-y-1">
             <p className="text-xs">{dernier.titre} · seuil {dernier.seuil} %</p>
             <p className="text-xl font-bold">{dernier.resultat.totalDisplay}</p>

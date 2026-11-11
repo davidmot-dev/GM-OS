@@ -111,6 +111,25 @@ La **difficulté** (les réussites exigées) se règle à côté, celle du jeu p
 se règle plus : on ne paie pas deux fois. La télécommande propose les deux mêmes boutons, avec la
 difficulté par défaut.
 
+## 🙈 Le jet caché — 11/11/2026
+
+« 1d100 pour savoir si la patrouille passe », sans que la table le sache. L'interrupteur
+**Jet caché**, à gauche de « Lancer », change le bouton en **« Lancer en caché »** (contour en
+pointillés) ; les jets rapides se lancent en caché eux aussi.
+
+![Le panneau « Jets cachés » du pupitre](captures/jets-caches-au-pupitre.jpg)
+
+- Le résultat va au panneau **Jets cachés**, entre le dernier jet et l'historique — vingt jets au
+  plus, oubliés à la fermeture de GM-OS — et au journal, sous « Jet caché : … ».
+- **Le dernier jet reste le dernier jet visible** : un jet caché ne le remplace pas, n'entre pas
+  dans l'historique, ne se projette pas, et n'atteint ni les tablettes ni le Player Hub.
+- Les jets cachés lancés depuis une fiche (onglet « Lancer un test ») paraissent dans le même
+  panneau.
+- Un **dé de ressource** (Cthulhu Hack) ne se lance pas en caché : il s'écrit sur la fiche que la
+  tablette du joueur lit. Le pupitre le dit.
+
+Voir aussi [demander un jet au joueur](./53-Les-jeux-et-leurs-mecaniques.md), section « Le jet ».
+
 ## 📜 Historique et Analyse
 
 Chaque jet est archivé dans l'historique :

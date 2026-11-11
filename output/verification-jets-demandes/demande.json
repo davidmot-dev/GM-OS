@@ -1,0 +1,7 @@
+{
+  "remiseAuSeulVise": true,
+  "reponseClotLaDemande": true,
+  "secondJetSansEffet": true,
+  "filRenduALaReconnexion": true,
+  "annulationTransmise": true
+}

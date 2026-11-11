@@ -349,6 +349,8 @@ const CharacterSheetEditor: React.FC = () => {
                             dice={piloteDeLaFiche!.dice}
                             template={template}
                             personnageId={character.id}
+                            // « Demander à (personnage) » et ses demandes en cours (T7, 11/11).
+                            nomDuPersonnage={character.name}
                             valeurs={{...character.sheetData, ...editor.localData}}
                             campaignId={activeCampaignId ?? undefined}
                             ressourcesDeTable={ressourcesDeLaTable(piloteDeLaFiche!, campaigns.find(c => c.id === activeCampaignId))}

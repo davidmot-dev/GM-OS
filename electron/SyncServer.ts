@@ -19,9 +19,9 @@ import { filtrerAstrologieDistante } from '../src/modules/session/logic/astrolog
 import { caviarderPourLesJoueurs } from '../src/modules/remote/logic/caviardageDesJoueurs';
 import { mediaAccess } from './MediaAccess';
 import { pairingManager } from './PairingManager';
-import { evaluateAction, retirerCeQuiRevientAuMeneur } from './actionPolicy';
+import { evaluateAction, isPrivilegedRole, retirerCeQuiRevientAuMeneur } from './actionPolicy';
 import { auditDenied } from './auditLog';
-import { lecteurDuRole, messagePourLeLecteur, type MessageAchemine } from './destinatairesDesMessages';
+import { lecteurDuRole, messagePourLeLecteur, sansLesChampsDuMeneur, type MessageAchemine } from './destinatairesDesMessages';
 import {
     lireLAppui, ENTETE_DU_JETON, TAILLE_MAX_DU_CORPS,
 } from './boutonsDeLUlanzi';
@@ -748,10 +748,19 @@ export class SyncServer {
         return true;
     }
 
-    private forwardToGM(ws: ExtendedWebSocket, data: MessageRecu) {
+    private forwardToGM(ws: ExtendedWebSocket, recu: MessageRecu) {
         // Contrôle avant tout effet : la branche P2P ci-dessous rediffuse aux
         // autres clients sans repasser par le renderer.
-        if (!this.isActionAuthorized(ws, data)) return;
+        if (!this.isActionAuthorized(ws, recu)) return;
+
+        /*
+          Une demande de jet ne vient que du meneur (11/11) : retirée ici du
+          message d'un joueur, avant le relais aux autres tablettes comme avant
+          la remise au meneur. Voir `sansLesChampsDuMeneur`.
+        */
+        const data: MessageRecu = recu.type === 'session:send-message' && !isPrivilegedRole(ws.role)
+            ? { ...recu, payload: sansLesChampsDuMeneur(recu.payload) }
+            : recu;
 
         /*
           ⛔ **Un message de séance est ACHEMINÉ, plus diffusé** (2026-10-12).

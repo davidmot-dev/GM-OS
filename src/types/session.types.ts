@@ -190,4 +190,14 @@ export interface SessionMessage {
      * posée par l'expéditeur, sinon par le meneur à la réception.
      */
     campaignId?: string;
+    /**
+     * **Le jet que le meneur demande à ce personnage** (11/11, plan
+     * `2026-11-11-jets-demandes-et-caches.md`, T3). La demande voyage dans un
+     * message privé : le serveur la remet au seul destinataire, et le fil la rend
+     * à une tablette qui se reconnecte. **Crue seulement si `fromId` vaut `GM`**
+     * — le serveur retire ce champ des messages de joueur (`sansLesChampsDuMeneur`).
+     */
+    demandeDeJet?: import('../modules/dice/demandeDeJet').DemandeDeJet;
+    /** La demande `id` est close : lancée par le joueur, ou annulée par le meneur. Même règle. */
+    suiteDeDemande?: { id: string; etat: 'lancee' | 'annulee' };
 }

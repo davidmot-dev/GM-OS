@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Dices, Flame, Send } from 'lucide-react';
 import { type DemandeDeJetDeFiche } from '../../modules/dice/jetDepuisLaFiche';
+import type { DemandeDeSauvegarde } from '../../modules/dice/demandeDeJet';
 import { lireLesJetsDeLaFiche } from './lectureDesJetsDeLaFiche';
 import type { ModificateurDeSauvegarde } from '../../modules/dice/DiceEngine';
 import type { GameDriver } from '../../types/drivers';
@@ -25,6 +26,13 @@ interface JetsDeLaFicheProps {
     sheetData: Record<string, unknown>;
     pilote: GameDriver | null | undefined;
     gabarit: { sections: { id: string; fields: { id: string; label: string }[] }[] };
+    /**
+     * La Sauvegarde que le meneur a demandée (T8, 11/11) : son bouton se signale,
+     * l'avantage part de celui demandé, et la demande voyage avec le jet pour que
+     * le meneur la clôe (`fiche:jet`, T4). Lue au montage : l'appelant change la
+     * `key` pour une nouvelle demande.
+     */
+    demande?: DemandeDeSauvegarde;
 }
 
 const MODIFICATEURS: { cle: ModificateurDeSauvegarde; titre: string }[] = [
@@ -33,8 +41,8 @@ const MODIFICATEURS: { cle: ModificateurDeSauvegarde; titre: string }[] = [
     { cle: 'desavantage', titre: 'Désavantage' },
 ];
 
-export const JetsDeLaFiche: React.FC<JetsDeLaFicheProps> = ({ playerId, characterId, sheetData, pilote, gabarit }) => {
-    const [modificateur, setModificateur] = useState<ModificateurDeSauvegarde>('aucun');
+export const JetsDeLaFiche: React.FC<JetsDeLaFicheProps> = ({ playerId, characterId, sheetData, pilote, gabarit, demande: demandeDuMeneur }) => {
+    const [modificateur, setModificateur] = useState<ModificateurDeSauvegarde>(demandeDuMeneur?.modificateur ?? 'aucun');
     const [envoye, setEnvoye] = useState<string | null>(null);
 
     const { sauvegardes, ressources } = lireLesJetsDeLaFiche(pilote, gabarit, sheetData);
@@ -45,6 +53,7 @@ export const JetsDeLaFiche: React.FC<JetsDeLaFicheProps> = ({ playerId, characte
         const demande: DemandeDeJetDeFiche = {
             playerId, characterId, genre, champ,
             ...(genre === 'sauvegarde' ? { modificateur } : {}),
+            ...(genre === 'sauvegarde' && demandeDuMeneur?.champ === champ ? { demandeId: demandeDuMeneur.id } : {}),
         };
         window.dispatchEvent(new CustomEvent('fiche:jet', { detail: demande }));
         setEnvoye(libelle);
@@ -75,16 +84,24 @@ export const JetsDeLaFiche: React.FC<JetsDeLaFicheProps> = ({ playerId, characte
                         </div>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                        {sauvegardes.map(s => (
+                        {sauvegardes.map(s => {
+                            const demandee = demandeDuMeneur?.champ === s.fieldId;
+                            return (
                             <Bouton habillage="libre" cibleTactile aLaTable
                                 key={s.fieldId}
                                 onClick={() => demander('sauvegarde', s.fieldId, `Sauvegarde de ${s.label}`)}
-                                className="flex items-center justify-between gap-2 px-4 rounded-xl border border-app-border bg-app-bg hover:border-accent active:bg-accent/15 transition-all"
+                                {...(demandee ? { 'data-demandee': '' } : {})}
+                                className={`flex items-center justify-between gap-2 px-4 rounded-xl border bg-app-bg hover:border-accent active:bg-accent/15 transition-all ${
+                                    demandee ? 'border-accent ring-2 ring-accent/50' : 'border-app-border'}`}
                             >
-                                <span className="truncate text-sm font-bold text-app-text">{s.label}</span>
+                                <span className="truncate text-sm font-bold text-app-text">
+                                    {s.label}
+                                    {demandee && <span className="ml-2 text-ui-9 font-black uppercase tracking-widest text-accent">demandée</span>}
+                                </span>
                                 <span className="shrink-0 font-mono text-lg font-black text-accent">{s.valeur}</span>
                             </Bouton>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             )}

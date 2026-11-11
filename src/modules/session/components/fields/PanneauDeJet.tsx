@@ -1,7 +1,9 @@
 import React, { Fragment, useMemo, useRef, useState } from 'react';
-import { AlertTriangle, Info, Plus, Minus, Coins } from 'lucide-react';
+import { AlertTriangle, Info, Plus, Minus, Coins, EyeOff } from 'lucide-react';
 import { EtiquetteDuDegre } from '../../../dice/EtiquetteDuDegre';
-import { consignerLeJet } from '../../../journal/consignerLeJet';
+import { consignerLeJet, type JetAConsigner } from '../../../journal/consignerLeJet';
+import { consignerUnJetCache } from '../../../dice/jetsCaches';
+import { BoutonDemanderA, DemandesEnCours, InterrupteurJetCache } from './CommandesDuMeneur';
 import { DiceEngine, type RollResult } from '../../../dice/DiceEngine';
 import {
     preparerLeJet, sectionsDeLaComposante, verdict,
@@ -125,6 +127,7 @@ import {
 import { useModulesDuJeuJoueur, useModulesDuJeuMJ } from '../../../modulesDuJeu/magasins';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
 import type { ApportDuGroupe, DiceConfig } from '../../../../types/drivers';
+import { composantesARetenir as composantesDuJet, champsProposes, composerPourLaTablette, joindreLaDemande, type CompositionDemandee } from '../../../dice/demandeDeJet';
 
 /**
  * Lancer depuis la fiche de personnage.
@@ -191,25 +194,49 @@ interface PanneauDeJetProps {
      * champ du jet sont rappelés, avec une case ; aucun n'est coché d'office.
      */
     objetsPortes?: ObjetDuCatalogue[];
+    /**
+     * **Le jet que le meneur a demandé** (plan `2026-11-11-jets-demandes-et-caches.md`,
+     * T2) : les champs retenus, la difficulté et le modificateur du seuil, déjà
+     * vérifiés contre cette fiche (`compositionValable`). Lu au montage seulement —
+     * l'appelant change la `key` du panneau pour une nouvelle demande. Le joueur
+     * garde la main sur tout le reste, et peut encore changer ce qui est prérempli.
+     */
+    compositionInitiale?: CompositionDemandee;
+    /** La demande à laquelle ce panneau répond : son identifiant part avec le résultat (T4). */
+    demandeId?: string;
+    /**
+     * Le nom du personnage, chez le meneur : il ouvre « Demander à (personnage) »
+     * et la liste de ses demandes (T7, 11/11). Sans lui, ni l'un ni l'autre.
+     */
+    nomDuPersonnage?: string;
 }
 
 const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false, personnageId,
-    ecrireSurLaFiche, objetsPortes,
+    ecrireSurLaFiche, objetsPortes, compositionInitiale, demandeId, nomDuPersonnage,
 }) => {
+    const avecLaDemande = joindreLaDemande(demandeId);
+    /**
+     * **Le jet caché** (T7, C7 à C9) : chez le meneur seulement. Le panneau ne
+     * touche déjà pas `setLastRoll` ; caché, ce qu'il consigne est marqué au
+     * journal et rejoint la liste des jets cachés du pupitre. Ce que le jet
+     * écrit sur la fiche ou sur une réserve de table s'écrit quand même.
+     */
+    const [cache, setCache] = useState(false);
+    const consignerIci = (j: JetAConsigner) => (cache && !pourLesJoueurs ? consignerUnJetCache(j) : consignerLeJet(j));
     /** Champ retenu pour chaque composante — `{ competence: 'combat' }`. */
-    const [choix, setChoix] = useState<Record<string, string>>({});
+    const [choix, setChoix] = useState<Record<string, string>>(() => ({ ...(compositionInitiale?.champs ?? {}) }));
     const [desAchetes, setDesAchetes] = useState(0);
     // Un jeu sans difficulté déclarée n'en affiche pas, et part de zéro : chez
     // Alien, un seul six suffit — il n'y a pas de seuil à atteindre.
-    const [difficulte, setDifficulte] = useState(descripteur.difficulte?.defaut ?? 0);
+    const [difficulte, setDifficulte] = useState(compositionInitiale?.difficulte ?? descripteur.difficulte?.defaut ?? 0);
     /**
      * L'ajustement de difficulté — **et ce n'est pas la même chose que
      * `difficulte`**, qui compte des réussites à atteindre. Celui-ci déplace la
      * colonne de la table et change le pourcentage. Zéro est la difficulté
      * moyenne, et c'est pourquoi il est le défaut.
      */
-    const [ajustementDeDifficulte, setAjustementDeDifficulte] = useState(0);
+    const [ajustementDeDifficulte, setAjustementDeDifficulte] = useState(compositionInitiale?.ajustementDeDifficulte ?? 0);
     /**
      * **Le seuil que le meneur déplace** (Symbaroum, 2026-10-22) : un
      * modificateur de situation, et la valeur adverse d'une opposition —
@@ -218,7 +245,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const seuilDeplacable = descripteur.sens === 'sous-ou-egal' && !descripteur.cible && !descripteur.desEchelonnes
         && !descripteur.tableDeBonus && !descripteur.destin ? descripteur.modificateurDuSeuil : undefined;
     const libellesDuTirage = seuilDeplacable?.avantage ? LIBELLES_DU_DOUBLE_LANCER : LIBELLES;
-    const [modificateurDuSeuil, setModificateurDuSeuil] = useState(descripteur.modificateurDuSeuil?.defaut ?? 0);
+    const [modificateurDuSeuil, setModificateurDuSeuil] = useState(compositionInitiale?.modificateurDuSeuil ?? descripteur.modificateurDuSeuil?.defaut ?? 0);
     const [valeurAdverse, setValeurAdverse] = useState('');
     /** L'Avantage tactique de Symbaroum (+2, +1D4 aux dégâts) — S3, 2026-10-22. */
     const [avantageTactique, setAvantageTactique] = useState(false);
@@ -1034,28 +1061,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * à l'une seulement aurait donné un menu qu'on ne peut pas remplir, ou un
      * bouton qui part sans caractéristique.
      */
-    const composantesARetenir = useMemo(() => [
-        /*
-          **Ce que les dés échelonnés décident, ils le décident seuls.**
-
-          La Forge enrichit sans jamais remplacer : un pilote qui portait déjà un
-          `seuil` le garde après une nouvelle dérivation. Continuer à réclamer
-          ses composantes demanderait au joueur de choisir deux fois la même
-          chose — et le bouton resterait gris sur un pilote pourtant corrigé.
-          `preparerLeJet` applique la même préséance.
-        */
-        ...(descripteur.desEchelonnes
-            ? descripteur.desEchelonnes.composantes
-            : [
-                ...(descripteur.cible ? [descripteur.cible.caracteristique] : []),
-                ...(descripteur.cible?.ajustement ?? []),
-                ...(descripteur.seuil ?? []),
-            ]),
-        ...(descripteur.reserve?.composantes ?? []),
-        ...(descripteur.reserve?.secondaire?.composantes ?? []),
-        // Crimes : la compétence ne s'additionne pas, elle dit combien de dés se gardent.
-        ...(descripteur.garde ? [descripteur.garde.competence] : []),
-    ], [descripteur]);
+    /*
+      **La règle vit dans `demandeDeJet`** (11/11) : la demande de jet du meneur
+      doit retenir exactement les composantes que ce panneau fait choisir. Ce que
+      les dés échelonnés décident, ils le décident seuls ; les composantes de la
+      réserve comptent autant que celles du seuil ; Crimes y ajoute sa garde.
+    */
+    const composantesARetenir = useMemo(() => composantesDuJet(descripteur), [descripteur]);
 
     /** Rien ne part tant que chaque composante n'a pas son champ. */
     // Un jeu qui ne compose rien depuis la fiche est prêt d'emblée. Les
@@ -1348,15 +1360,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             setDesDeDestin(null);
             const titre = `${jet.composantes.map(c => c.label).join(' + ') || 'Destin'}`;
             if (pourLesJoueurs && personnageId) {
-                window.dispatchEvent(new CustomEvent('fiche:resultat', {
+                window.dispatchEvent(new CustomEvent('fiche:resultat', avecLaDemande({
                     detail: {
                         characterId: personnageId, titre, total: resultatDuDestin.total, modifier: 0,
                         totalDisplay: verdictDuDestin.texte, rolls: resultatDuDestin.rolls,
                         successes: resultatDuDestin.successes, tagSuccess: resultatDuDestin.tagSuccess, degre: resultatDuDestin.degre,
                     },
-                }));
+                })));
             } else {
-                consignerLeJet({ titre, totalDisplay: verdictDuDestin.texte, degre: verdictDuDestin.degre, tagSuccess: resultatDuDestin.tagSuccess });
+                consignerIci({ titre, totalDisplay: verdictDuDestin.texte, degre: verdictDuDestin.degre, tagSuccess: resultatDuDestin.tagSuccess });
             }
             setMouvements(dits);
             };
@@ -1735,7 +1747,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           l'inscrit à son historique et à son journal (`fiche:resultat`).
         */
         if (pourLesJoueurs && personnageId) {
-            window.dispatchEvent(new CustomEvent('fiche:resultat', {
+            window.dispatchEvent(new CustomEvent('fiche:resultat', avecLaDemande({
                 detail: {
                     characterId: personnageId,
                     titre: titreDuJet + (modificateur !== 'aucun' ? ` · ${libellesDuTirage[modificateur]}` : ''),
@@ -1750,9 +1762,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     tagSuccess: res.tagSuccess,
                     degre: res.degre,
                 },
-            }));
+            })));
         } else {
-            consignerLeJet({
+            consignerIci({
                 titre: titreDuJet,
                 totalDisplay: avecLaNevrose(res),
                 degre: res.degre,
@@ -1852,14 +1864,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             setMouvements(m => [...m, `Possibilités −1 → ${reste}${geste === 'action' ? ' (Loi de l’Action : la meilleure des deux compte)' : ''}`]);
         }
         if (pourLesJoueurs && personnageId) {
-            window.dispatchEvent(new CustomEvent('fiche:resultat', {
+            window.dispatchEvent(new CustomEvent('fiche:resultat', avecLaDemande({
                 detail: {
                     characterId: personnageId, titre: `${titre} · ${nomDuGeste}`, total: res.total, modifier: res.modifier,
                     totalDisplay: res.totalDisplay, rolls: res.rolls, successes: res.successes, tagSuccess: res.tagSuccess, degre: res.degre,
                 },
-            }));
+            })));
         } else {
-            consignerLeJet({ titre: `${titre} · ${nomDuGeste}`, totalDisplay: res.totalDisplay, degre: res.degre, tagSuccess: res.tagSuccess });
+            consignerIci({ titre: `${titre} · ${nomDuGeste}`, totalDisplay: res.totalDisplay, degre: res.degre, tagSuccess: res.tagSuccess });
         }
     };
     const torgCritique = resultat?.degre === 'echec-total';
@@ -1931,14 +1943,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setResultat(ecrit);
         setMouvements([`Possibilités −1 → ${possibilitesTorg - 1}`]);
         if (pourLesJoueurs && personnageId) {
-            window.dispatchEvent(new CustomEvent('fiche:resultat', {
+            window.dispatchEvent(new CustomEvent('fiche:resultat', avecLaDemande({
                 detail: {
                     characterId: personnageId, titre: 'Annulation des dommages', total: ecrit.total, modifier: ecrit.modifier,
                     totalDisplay: ecrit.totalDisplay, rolls: ecrit.rolls, successes: ecrit.successes, tagSuccess: ecrit.tagSuccess, degre: ecrit.degre,
                 },
-            }));
+            })));
         } else {
-            consignerLeJet({ titre: 'Annulation des dommages', totalDisplay: ecrit.totalDisplay, degre: ecrit.degre, tagSuccess: ecrit.tagSuccess });
+            consignerIci({ titre: 'Annulation des dommages', totalDisplay: ecrit.totalDisplay, degre: ecrit.degre, tagSuccess: ecrit.tagSuccess });
         }
     };
 
@@ -2112,14 +2124,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
     const redire = (titre: string, res: RollResult) => {
         if (pourLesJoueurs && personnageId) {
-            window.dispatchEvent(new CustomEvent('fiche:resultat', {
+            window.dispatchEvent(new CustomEvent('fiche:resultat', avecLaDemande({
                 detail: {
                     characterId: personnageId, titre, total: res.total, modifier: res.modifier,
                     totalDisplay: res.totalDisplay, rolls: res.rolls, successes: res.successes, tagSuccess: res.tagSuccess, degre: res.degre,
                 },
-            }));
+            })));
         } else {
-            consignerLeJet({ titre, totalDisplay: res.totalDisplay, degre: res.degre, tagSuccess: res.tagSuccess });
+            consignerIci({ titre, totalDisplay: res.totalDisplay, degre: res.degre, tagSuccess: res.tagSuccess });
         }
     };
 
@@ -2503,6 +2515,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
                     {composantesARetenir.map(composante => {
                       const sousGroupes = sousGroupesDe(composante);
+                      const proposes = champsProposes(composante, template.sections, valeurs);
                       return (
                         <label key={composante.id} className="flex flex-col gap-1">
                             <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
@@ -2530,16 +2543,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                       il ne se lance pas. Et une ligne sans nom saisi —
                                       un Vécu vide — n'a rien à proposer.
                                     */
-                                    const noms = new Set(section.fields.map(f => f.libelleSur).filter(Boolean));
-                                    // Le motif de la composante : le degré d'une formule, pas son aire (Nephilim).
-                                    const motif = (() => { try { return composante.motif ? new RegExp(composante.motif) : null; } catch { return null; } })();
-                                    const options = section.fields
-                                        .filter(f => !noms.has(f.id))
-                                        .filter(f => !motif || motif.test(f.id))
-                                        .filter(f => !f.libelleSur || String(valeurs[f.libelleSur] ?? '').trim() !== '')
-                                        .map(f => (
-                                            <option key={f.id} value={f.id}>
-                                                {(f.libelleSur && String(valeurs[f.libelleSur] ?? '').trim()) || f.label} ({String(valeurs[f.id] ?? f.defaultValue)})
+                                    // Le motif de la composante (le degré d'une formule, pas son aire) et
+                                    // les champs nommés : la règle est celle de `champsProposes`.
+                                    const options = proposes.filter(p => p.sectionId === section.id)
+                                        .map(p => (
+                                            <option key={p.id} value={p.id}>
+                                                {p.label} ({String(valeurs[p.id] ?? section.fields.find(f => f.id === p.id)?.defaultValue)})
                                             </option>
                                         ));
                                     return sousGroupes.length > 1
@@ -3335,18 +3344,47 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         </label>
                     )}
 
-                    <button
-                        onClick={lancer}
-                        disabled={!pret || briseAlien || (!!suiteDuDestin && suiteDuDestin.personnageId === personnageId) || (!!regleDune && (suiviDune.bafoues.includes(principeDune) || (!!duneDuLancer && !duneDuLancer.bilan.clos)))}
-                        className={`ml-auto w-full sm:w-auto min-h-[44px] px-10 py-3 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all ${
-                            pret
-                                ? 'bg-accent text-app-on-accent hover:scale-105 active:scale-95'
-                                : 'bg-app-text/5 text-app-text/20 cursor-not-allowed'
-                        }`}
-                    >
-                        Lancer
-                    </button>
+                    {!pourLesJoueurs && <InterrupteurJetCache actif={cache} changer={setCache} />}
+
+                    <div className="ml-auto flex w-full sm:w-auto flex-wrap items-center gap-2">
+                        {!pourLesJoueurs && personnageId && nomDuPersonnage && (
+                            <BoutonDemanderA
+                                nom={nomDuPersonnage}
+                                /* Un jet caché se lance ici : le joueur verrait son propre résultat. */
+                                desactive={cache || !pret}
+                                composer={() => composerPourLaTablette({
+                                    id: crypto.randomUUID(),
+                                    characterId: personnageId,
+                                    emiseLe: Date.now(),
+                                    descripteur,
+                                    sections: template.sections,
+                                    valeurs,
+                                    composition: { champs: choix, difficulte, ajustementDeDifficulte, modificateurDuSeuil },
+                                    dice,
+                                    modificateur,
+                                })}
+                            />
+                        )}
+                        <button
+                            onClick={lancer}
+                            disabled={!pret || briseAlien || (!!suiteDuDestin && suiteDuDestin.personnageId === personnageId) || (!!regleDune && (suiviDune.bafoues.includes(principeDune) || (!!duneDuLancer && !duneDuLancer.bilan.clos)))}
+                            className={`w-full sm:w-auto min-h-[44px] px-10 py-3 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all ${
+                                !pret
+                                    ? 'bg-app-text/5 text-app-text/20 cursor-not-allowed'
+                                    : cache && !pourLesJoueurs
+                                    ? 'border-2 border-dashed border-accent text-accent bg-app-bg/60 hover:scale-105 active:scale-95'
+                                    : 'bg-accent text-app-on-accent hover:scale-105 active:scale-95'
+                            }`}
+                        >
+                            {cache && !pourLesJoueurs
+                                ? <span className="flex items-center gap-2"><EyeOff size={13} aria-hidden />Lancer en caché</span>
+                                : 'Lancer'}
+                        </button>
+                    </div>
                 </div>
+                {!pourLesJoueurs && personnageId && nomDuPersonnage && (
+                    <div className="mt-3"><DemandesEnCours personnageId={personnageId} nom={nomDuPersonnage} /></div>
+                )}
             </Etape>
 
             {suiteDuDestin && suiteDuDestin.personnageId === personnageId && <section aria-label="Dés supplémentaires de destin" className="space-y-2 rounded-xl border border-accent/40 p-3">
