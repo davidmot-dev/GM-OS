@@ -14297,6 +14297,47 @@ et suivi tâche par tâche : [`2026-11-11-jets-demandes-et-caches.md`](2026-11-1
   2.2.0 et 139 champs. Une commande pour tous :
   `npx vitest run --config outils/pilotes.vitest.config.mts --maxWorkers=4` → 8 fichiers, 22 réussis.
   ⚠️ vitest lancé depuis `c:/` (minuscule) échoue partout sur « reading 'config' » : lancer en `C:\`.
+- **Essai de David sur tablette physique (11/11, Argyropée) : la bannière paraît, LANCER du test ne fait
+  rien.** Cause : `lancer()` du panneau appelle `crypto.randomUUID()` dès son début (depuis `1e79cb85`,
+  21/10, A0–A3 d'Alien — **tous les jeux**, pas seulement les demandes). Le navigateur ne fournit
+  `randomUUID` qu'en **contexte sûr** (HTTPS, `localhost`, `127.0.0.1`) ; le Hub d'une tablette s'ouvre en
+  `http://192.168.…` : « crypto.randomUUID is not a function », rien ne part, sans message. **Invisible à
+  tous les essais** (jsdom la fournit ; les e2e ouvrent le Hub en `127.0.0.1`). Plus de cent appels dans
+  `src/` (combat, modules du jeu, Voyageur…) cassaient de même. Correctif : `src/utils/randomUUIDHorsContexteSur.ts`,
+  importé **en premier** par `main.tsx`, fournit `randomUUID` depuis `crypto.getRandomValues` (UUID v4)
+  quand le navigateur le retient, sans jamais remplacer le sien. Essais : `randomUUIDHorsContexteSur.test.ts`
+  (forme v4, unicité, natif conservé) et, dans `HubCharacterSheet.demande.test.tsx`, le jet demandé part
+  sans `randomUUID` — contre-épreuve faite : sans le palliatif, l'essai échoue. Suite complète 876 fichiers /
+  10 341 réussis, `tsc -b`, eslint. **Reste : refaire l'essai sur la tablette** (relancer GM-OS ; une
+  version construite demande `npm run build`).
+- **Jet caché** : David l'a vu fonctionner (11/11). Au panneau de fiche, il ne change à l'écran que le
+  journal et la liste du pupitre — un jet de fiche du meneur ne partait déjà pas à la table.
+- **Le résultat d'un jet demandé, dans la messagerie et 5 s en fenêtre volante** — David, 11/11 :
+  « Quand je demande un jet je voudrais voir aussi le résultat dans la messagerie. Et je voudrais que
+  le résultat apparaisse 5 sec dans une fenêtre volante » ; décisions : chez le meneur, jets demandés
+  seulement, habillage de l'alerte « Nouveau message » (pas de maquette Stitch). La suite qui clôt la
+  demande porte le résultat (`suiteDeDemande.resultat`, `ResultatDeLaDemande` dans `filDesDemandes.ts`,
+  `cloreLaDemande(…, resultat)`, `ficheActions` pour le test de tablette et la Sauvegarde) ; son texte
+  devient « ✓ Jet reçu : <titre> — <verdict> — <détail> », le verdict tu quand le texte du jeu le
+  nomme déjà (Argyropée : « Réussite partielle — … » sous le degré commun « Réussite »). La carte :
+  `ResultatsDesDemandesVolants.tsx`, montée dans la colonne de `MessageAlertOverlay` (qui reste montée
+  sans alerte), 5 s puis effacée, « ✕ », rien de rejoué au démarrage ni pour une annulation.
+  **Trouvé en route** : `consignerLeJet` écrivait la **clé** du verdict au journal
+  (« dice.degres.reussite-particuliere ») — `i18next.t` sans `ns: 'modules'`, l'espace par défaut
+  étant `common` ; l'essai ne vérifiait pas le verdict. Corrigé, essai ajouté. Essais :
+  `filDesDemandes.test.ts`, `ficheActions.test.ts`, `ResultatsDesDemandesVolants.test.tsx` (5 s, ✕,
+  pas de rejeu), `consignerLeJet.test.ts` ; suite 877 fichiers / 10 349 réussis, `tsc -b`, eslint.
+  **Reste** : essai de David (une demande, la carte 5 s, la messagerie des deux côtés).
+- **Centre de liaison du meneur : « je ne vois pas tous les joueurs »** (David, 11/11, capture de la
+  campagne de recette Argyropée). Deux causes dans `CockpitMessenger.tsx` : (1) le menu maison s'ouvrait
+  **dans** le cadre `overflow-hidden` du Centre et ne défilait pas — tout ce qui passait sous le bord
+  (après « [RECETTE] SANTE ») était invisible et inatteignable ; (2) la liste ne gardait que les
+  personnages des joueurs **en ligne** et ceux qui avaient écrit. Correctif : `<select>` natif (dessiné
+  par-dessus tout, défilant) ; `destinatairesDuMeneur` (`session/logic/`) liste tous les personnages de la
+  campagne active, en ligne ou non (« · hors ligne »), puis ceux du fil — qui a écrit, à qui le meneur a
+  écrit. Un message à un absent lui revient à la reconnexion par le fil. Essais :
+  `destinatairesDuMeneur.test.ts`, `CockpitMessenger.test.tsx` ; `session`, `remote`, `dice` 312 fichiers
+  / 3 238 réussis, `tsc -b`, eslint.
 - **Vérifié** : passe `vitest` 459 fichiers / 5 400 réussis, `tsc -b`, eslint ;
   `e2e/jetsDemandesEtCaches.spec.ts` 2 réussis (vraie porte WebSocket, reconnexion, jet caché absent du
   segment des dés). Manuel : page 53 (« Demander un jet au joueur, lancer en caché »), 34 (Dice-OS),

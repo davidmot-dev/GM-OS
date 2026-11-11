@@ -1,20 +1,19 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { 
-    MessageSquare, 
-    ChevronDown, 
-    User, 
-    Shield, 
-    Save, 
+import {
+    MessageSquare,
+    User,
+    Shield,
+    Save,
     Clock,
     Filter,
     Send
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import type { Player, PlayerCharacter, SessionMessage } from '../store/types';
 import { format } from 'date-fns';
 import { filDuLecteur } from '../../../../electron/destinatairesDesMessages';
 import { MESSAGES_PAR_CAMPAGNE } from '../logic/filDesMessages';
+import { destinatairesDuMeneur } from '../logic/destinatairesDuMeneur';
 
 export const CockpitMessenger: React.FC = () => {
     const { t } = useTranslation(['modules']);
@@ -30,34 +29,17 @@ export const CockpitMessenger: React.FC = () => {
         [tousLesMessages, activeCampaignId],
     );
     const [selectedFilter, setSelectedFilter] = useState<'all' | string>('all');
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [messageInput, setMessageInput] = useState('');
 
-    // Get characters from online players AND characters who have sent messages
-    const activeCharacters = useMemo(() => {
-        // 1. Get characters from online players (filtered by active campaign)
-        const onlineChars = players
-            .filter((p: Player) => p.isOnline)
-            .flatMap((p: Player) => 
-                (p.characters || [])
-                    .filter((c: PlayerCharacter) => c.campaignId === activeCampaignId)
-                    .map((c: PlayerCharacter) => ({ id: c.id, name: c.name }))
-            );
-
-        // 2. Get characters from message history (in case they went offline)
-        const historyChars = messages
-            .filter((m: SessionMessage) => m.fromId !== 'GM')
-            .map((m: SessionMessage) => ({ id: m.fromId, name: m.fromName }));
-
-        // 3. Merge, deduplicate and sort
-        const combined = [...onlineChars, ...historyChars];
-        const uniqueMap = new Map<string, string>();
-        combined.forEach((char: { id: string, name: string }) => uniqueMap.set(char.id, char.name));
-
-        return Array.from(uniqueMap.entries())
-            .map(([id, name]) => ({ id, name }))
-            .sort((a, b) => a.name.localeCompare(b.name));
-    }, [messages, players, activeCampaignId]);
+    /*
+      **Tous les personnages de la campagne, en ligne ou non, puis ceux du fil**
+      (11/11) — la liste ne gardait que les joueurs en ligne et ceux qui avaient
+      écrit. Voir `destinatairesDuMeneur`.
+    */
+    const activeCharacters = useMemo(
+        () => destinatairesDuMeneur(players, messages, activeCampaignId),
+        [messages, players, activeCampaignId],
+    );
 
     const filteredMessages = selectedFilter === 'all' 
         ? messages 
@@ -95,37 +77,29 @@ export const CockpitMessenger: React.FC = () => {
                     <span className="text-ui-10 font-bold uppercase tracking-wider">{t('modules:session.messenger.title')}</span>
                 </div>
                 
-                <div className="relative">
-                    <button 
-                        onClick={() => setIsFilterOpen(!isFilterOpen)}
-                        className="flex items-center gap-1 px-2 py-1 rounded-md bg-app-bg/40 border border-app-border/30 hover:border-accent/40 transition-colors"
+                {/*
+                  ⛔ **Un `<select>` natif, plus un menu maison** (11/11, « je ne vois pas tous
+                  les joueurs ») : le menu s'ouvrait DANS ce cadre, qui coupe ce qui dépasse
+                  (`overflow-hidden`), et ne défilait pas — tout ce qui passait sous le bord
+                  était invisible et inatteignable. Le navigateur dessine la liste d'un
+                  `<select>` par-dessus tout, et la fait défiler.
+                */}
+                <label className="flex items-center gap-1 px-2 py-1 rounded-md bg-app-bg/40 border border-app-border/30 hover:border-accent/40 focus-within:border-accent/60 transition-colors">
+                    <Filter size={10} className="text-accent/60 shrink-0" aria-hidden />
+                    <span className="sr-only">{t('modules:session.messenger.player_label')}</span>
+                    <select
+                        value={selectedFilter}
+                        onChange={e => setSelectedFilter(e.target.value)}
+                        className="bg-transparent text-ui-9 font-bold uppercase max-w-[9rem] truncate outline-none cursor-pointer"
                     >
-                        <Filter size={10} className="text-accent/60" />
-                        <span className="text-ui-9 font-bold uppercase truncate max-w-[60px]">
-                            {selectedFilter === 'all' ? t('modules:session.messenger.filter_all') : (activeCharacters.find(c => c.id === selectedFilter)?.name || t('modules:session.messenger.player_label'))}
-                        </span>
-                        <ChevronDown size={10} className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    {isFilterOpen && (
-                        <div className="absolute right-0 top-full mt-1 w-32 bg-app-surface border border-app-border shadow-2xl rounded-lg z-50 overflow-hidden py-1">
-                            <button 
-                                onClick={() => { setSelectedFilter('all'); setIsFilterOpen(false); }}
-                                className={`w-full text-left px-3 py-1.5 text-ui-10 hover:bg-accent/10 transition-colors ${selectedFilter === 'all' ? 'text-accent font-bold' : 'text-app-text/70'}`}
-                            >
-                                {t('modules:session.messenger.filter_all')}
-                            </button>
-                            {activeCharacters.map(char => (
-                                <button 
-                                    key={char.id}
-                                    onClick={() => { setSelectedFilter(char.id); setIsFilterOpen(false); }}
-                                    className={`w-full text-left px-3 py-1.5 text-ui-10 hover:bg-accent/10 transition-colors ${selectedFilter === char.id ? 'text-accent font-bold' : 'text-app-text/70'}`}
-                                >
-                                    {char.name}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                        <option value="all">{t('modules:session.messenger.filter_all')}</option>
+                        {activeCharacters.map(char => (
+                            <option key={char.id} value={char.id}>
+                                {char.enLigne ? char.name : `${char.name} · hors ligne`}
+                            </option>
+                        ))}
+                    </select>
+                </label>
             </div>
 
             {/* Message Feed */}
