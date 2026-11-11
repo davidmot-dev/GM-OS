@@ -14338,19 +14338,64 @@ et suivi tâche par tâche : [`2026-11-11-jets-demandes-et-caches.md`](2026-11-1
   écrit. Un message à un absent lui revient à la reconnexion par le fil. Essais :
   `destinatairesDuMeneur.test.ts`, `CockpitMessenger.test.tsx` ; `session`, `remote`, `dice` 312 fichiers
   / 3 238 réussis, `tsc -b`, eslint.
+- **À la Table, seulement ceux qui jouent** — David, 11/11 : « lorsqu'on est à Table, je voudrais quand
+  je vais sur un joueur, ne voir que ses personnages actifs dans la partie. Même chose dans le centre de
+  liaison, je ne veux voir que les personnages connectés ». Décisions : **à la Table seulement** (régime
+  `useRegimeDInterface().aLaTable`) ; « actif » = **ajouté à la séance** (`sessionEntityIds`) ;
+  « connecté » = **tenu par une tablette** (`connectedCharacters`, reflet des clients du serveur — pas
+  l'interrupteur manuel `isOnline`). `personnagesALaTable.ts` (pur) ; `CharacterGrid` : ligne « N autres
+  ne sont pas dans la séance » + **Afficher** (pour en remettre un sans quitter la Table) ;
+  `CockpitMessenger` : seulement les connectés, le choisi gardé et marqué « déconnecté » s'il perd sa
+  tablette. En Atelier, rien ne change. Manuel page 10 (régime table, point 4). Essais :
+  `personnagesALaTable.test.ts`, `CharacterGrid.table.test.tsx`, `CockpitMessenger.test.tsx` (deux cas
+  Table) ; suite complète 886 fichiers / 10 391 réussis, `tsc -b`, eslint. **Reste** : essai de David.
 - **Vérifié** : passe `vitest` 459 fichiers / 5 400 réussis, `tsc -b`, eslint ;
   `e2e/jetsDemandesEtCaches.spec.ts` 2 réussis (vraie porte WebSocket, reconnexion, jet caché absent du
   segment des dés). Manuel : page 53 (« Demander un jet au joueur, lancer en caché »), 34 (Dice-OS),
   61 (tablette) ; synthèse des pilotes, ligne commune.
-- **Reste** : essai de David à l'écran (meneur, pupitre) et **sur tablette physique** (bannière ; sa
-  capture manque au guide 61). Lots 2 (rappel d'un jet dû par une jauge) et 3 (onglets du Hub suivant
-  l'équipement) à spécifier ; idée 5 garée, idée 6 écartée (on ne joue jamais hors ligne).
+- **Essayé et validé par David le 11/11, tablette physique comprise** : « tout est testé c'est bon »
+  (demande, bannière, LANCER, carte 5 s, messagerie, jet caché, Centre de liaison). Commits
+  `3f770642`, `89f17947`, `07c8b9c9`.
+- **Reste** : la capture de la bannière au guide 61 (photo sur tablette). Lot 2 spécifié (§ 244) ;
+  lot 3 (onglets du Hub suivant l'équipement) à spécifier ; idée 5 garée, idée 6 écartée (on ne joue
+  jamais hors ligne).
+
+### 244 · Rappel d'un jet dû par une jauge — idées reprises de GM Codex, lot 2 — 11/11/2026
+
+David, le 11/11 : « tout est testé c'est bon, on va faire le lot 2 ». Spécification, décisions, plan
+et tâches : [`2026-11-11-rappel-de-jet-du.md`](2026-11-11-rappel-de-jet-du.md) (skill
+`specifier-un-chantier`).
+
+- **Le quoi** : une jauge de Clock-OS porte un **rappel** en texte libre (« Jet d'Endurance, tout le
+  monde ») ; **au bout** (plein, ou vide pour une jauge qui s'épuise), une ligne paraît au cockpit sous
+  le bandeau, qui pulse, avec **Fait** (journal) / **Écarter**, et la carte volante de 5 s ; une fois
+  par passage, réarmé quand la jauge repart. Commun aux dix-sept pilotes.
+- **Décisions de David (11/11)** : au bout seulement ; texte libre (pas de jet composé) ; bandeau +
+  carte 5 s, sans son ; **rien à la table** (ni Ulanzi, ni MU/TH/UR, ni tablette). Habillages
+  existants, pas de maquette Stitch.
+- **Plan** : champ `rappel` de `TensionClock`, logique pure `rappelDeLaJauge.ts`, **réarmement dans un
+  seul abonnement au magasin** (une douzaine d'écrivains, plus la synchronisation entre fenêtres et la
+  restauration d'une séance), `jaugesVuesParLesJoueurs` retire le rappel du segment des tablettes.
+  Sept critères, sept tâches (T1–T6 touchent `src/` sauf T6 ; T7 = essai de David).
+- **Fait le 11/11 (T1–T6, GM-OS fermé)** : `rappelDeLaJauge.ts` (pur) ; `useClockStore` (champ, deux
+  actions, abonnement de réarmement, filtre vers la table) ; champ « Au bout, rappeler » dans le menu
+  ⋮ de `CarteDeJauge` et mention ⏰ sur la carte ; `RappelsDesJauges` au cockpit (`SessionDashboard`,
+  tous les jeux), « Fait » au journal ; carte volante commune extraite (`CarteVolante`,
+  `useCartesEphemeres`) et `RappelsVolants` dans la colonne des alertes. Manuel pages 36 et 53.
+  Essais : 5 fichiers neufs (20 essais) ; suite complète 884 fichiers / 10 380 réussis, `tsc -b`,
+  eslint.
+- **Essai de David, 11/11 : « je ne vois pas de Fait pour cliquer »** — la jauge vidée dans Clock-OS,
+  la seule réponse était au Tableau de bord (autre module). Corrigé : Fait / Écarter aussi **sur la
+  carte de la jauge** (au bout) et **sur la carte volante** ; une seule écriture
+  (`repondreAuRappel.ts`, `BoutonsDuRappel.tsx`). Essais ajoutés ; `tsc -b`, eslint.
+- **Reste** : T7 à refaire — vider la jauge dans Clock-OS : Fait sur sa carte ; puis au Tableau de bord.
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 179 | **Jets demandés et jets cachés (GM Codex, lot 1)** | 🟠 § 243 ; « Demander à » et bannière de tablette, jet caché au panneau et au pupitre, e2e sur la vraie porte —11/11 | Demander un jet à un PJ depuis « Lancer un test », le lancer sur sa tablette | Essai de David, dont une tablette physique |
+| 180 | **Rappel d'un jet dû par une jauge (GM Codex, lot 2)** | 🟠 § 244 ; « Au bout, rappeler » dans le menu ⋮ d'une jauge, ligne au cockpit (Fait / Écarter) et carte 5 s, une fois par passage, rien à la table —11/11 | Une jauge qui s'épuise avec un rappel, la vider | Essai de David |
+| 179 | **Jets demandés et jets cachés (GM Codex, lot 1)** | 🟢 § 243 ; demande, bannière, jet caché, résultat en messagerie et carte 5 s, Centre de liaison — **validés par David le 11/11, tablette physique comprise** | Rien ; la capture de la bannière au guide 61 | Rien |
 | 178 | **Alien — console d'un PNJ alignée sur sa Santé ; carrière sans options** | 🟠 § 242 ; PNJ humain par défaut, quatre lecteurs alignés —09/11 | Ouvrir le Dr Webb : console à 2/2 ; saisir les options de la carrière | Essai de David |
 | 177 | **Alien — bestiaires des suppléments, Forge des suppléments réparée** | 🟠 § 241 ; Cœur de Ténèbre relu (8 créatures, 4 tables), invites de supplément ramenées sous la limite, espèces reconnues comme créatures —09/11 | Reforger le bestiaire de Building Better Worlds, puis « Remplir depuis le corpus » | Essai de David |
 | 176 | **Campagne de recette Argyropée — Les Comptes de la marée** | 🟠 § 240 ; une campagne, douze séances, six ateliers, 120 tests, deux écarts de règle conservés —09/11 | Lire les anomalies puis importer l’unique .gmos avec le pilote 2.1.0 | Import natif/Hub NON EXÉCUTÉS ; 61 cas humains NON TESTÉS |

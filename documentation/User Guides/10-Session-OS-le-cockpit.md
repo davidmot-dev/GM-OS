@@ -366,6 +366,11 @@ journal** — passent en régime **table**. Concrètement, trois choses :
 2. **Les valeurs sont déjà choisies** : l'écran ne pose pas les questions qu'il sait résoudre.
 3. **Les actions destructives s'éloignent** de ce que vous touchez dix fois par tour. Elles restent
    atteignables — elles cessent seulement d'être voisines du bouton que vous pressez sans regarder.
+4. **Seulement ceux qui jouent** (11/11/2026) : la fiche d'un joueur ne montre que ses personnages
+   **ajoutés à la séance** (le bouton de leur carte) — une ligne dit combien d'autres sont masqués, et
+   **Afficher** les retrouve pour en remettre un dans la séance. Le **centre de liaison** ne propose que
+   les personnages **tenus par une tablette connectée** ; celui à qui vous écriviez reste proposé,
+   marqué « déconnecté », s'il perd sa tablette. En atelier, tout reste visible.
 
 **La barre du haut affiche toujours le régime en cours et sa raison** — *Table (séance ouverte)*,
 *Atelier (hors séance)*, ou *Table (forcé)*. Le libellé à côté bascule d'un clic, et quand vous avez

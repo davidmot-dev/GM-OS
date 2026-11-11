@@ -13,6 +13,8 @@ import { useImageStore } from '../../image/useImageStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { EcartDeJeuDuPersonnage } from './EcartDeJeuDuPersonnage';
 import { ecartAuLien } from '../logic/jeuDuPersonnage';
+import { useRegimeDInterface } from '../hooks/useRegimeDInterface';
+import { personnagesDeLaSeance } from '../logic/personnagesALaTable';
 
 const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCampaignFilter = false }) => {
     const { t } = useTranslation(['modules']);
@@ -22,6 +24,20 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
     const activeSession = sessions.find(s => s.status === 'active' && String(s.campaignId) === String(activeCampaignId));
 
     const selectedPlayer = players.find(p => p.id === selectedPlayerId);
+
+    /*
+      **À la Table, seulement les personnages de la séance** (David, 11/11) : en
+      partie, on n'ouvre pas un joueur pour y chercher son PJ parmi ceux des autres
+      scénarios. En Atelier, ou sans séance en cours, tous ceux de la campagne.
+    */
+    const regime = useRegimeDInterface();
+    /* « Afficher » : retrouver un personnage retiré de la séance, pour l'y remettre, sans quitter la Table. */
+    const [voirHorsSeance, setVoirHorsSeance] = useState(false);
+    const deLaCampagne = (selectedPlayer?.characters ?? [])
+        .filter(c => ignoreCampaignFilter || !activeCampaignId || c.campaignId === activeCampaignId);
+    const filtreDeSeance = regime.aLaTable && !ignoreCampaignFilter ? activeSession : undefined;
+    const { visibles, masques: horsSeance } = personnagesDeLaSeance(deLaCampagne, filtreDeSeance);
+    const personnagesVus = voirHorsSeance ? deLaCampagne : visibles;
 
     /*
       **Le transfert d'un PJ vers un autre joueur** — demandé par David le
@@ -180,9 +196,18 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                         <p className="text-sm">{t('modules:session.characters.no_characters')}</p>
                     </div>
                 ) : (
+                    <>
+                    {horsSeance > 0 && (
+                        <p data-hors-seance className="mb-3 flex flex-wrap items-center gap-2 text-xs italic text-app-text/40">
+                            {t('modules:session.characters.hors_seance', { count: horsSeance })}
+                            <button type="button" onClick={() => setVoirHorsSeance(v => !v)}
+                                className="not-italic font-bold uppercase tracking-wider text-accent/70 hover:text-accent">
+                                {voirHorsSeance ? t('modules:session.characters.hors_seance_masquer') : t('modules:session.characters.hors_seance_afficher')}
+                            </button>
+                        </p>
+                    )}
                     <div className="grid grid-cols-2 gap-6">
-                        {selectedPlayer.characters
-                            .filter(c => ignoreCampaignFilter || !activeCampaignId || c.campaignId === activeCampaignId)
+                        {personnagesVus
                             .map(character => (
                             <CharacterCard
                                 key={character.id}
@@ -218,6 +243,7 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                             />
                         ))}
                     </div>
+                    </>
                 )}
             </div>
 

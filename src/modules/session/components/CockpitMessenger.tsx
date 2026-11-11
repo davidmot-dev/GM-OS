@@ -14,10 +14,13 @@ import { format } from 'date-fns';
 import { filDuLecteur } from '../../../../electron/destinatairesDesMessages';
 import { MESSAGES_PAR_CAMPAGNE } from '../logic/filDesMessages';
 import { destinatairesDuMeneur } from '../logic/destinatairesDuMeneur';
+import { seulementLesConnectes } from '../logic/personnagesALaTable';
+import { useRegimeDInterface } from '../hooks/useRegimeDInterface';
 
 export const CockpitMessenger: React.FC = () => {
     const { t } = useTranslation(['modules']);
-    const { messages: tousLesMessages, players, sendDirectMessage, saveMessageToJournal, activeCampaignId } = useSessionOSStore();
+    const { messages: tousLesMessages, players, sendDirectMessage, saveMessageToJournal, activeCampaignId, connectedCharacters } = useSessionOSStore();
+    const regime = useRegimeDInterface();
     /*
       **Le fil du meneur, de la campagne active** (2026-10-12). Le magasin garde
       aussi ce que deux joueurs se disent, pour le rendre à une tablette
@@ -40,6 +43,19 @@ export const CockpitMessenger: React.FC = () => {
         () => destinatairesDuMeneur(players, messages, activeCampaignId),
         [messages, players, activeCampaignId],
     );
+    /*
+      **À la Table, seulement les personnages connectés** (David, 11/11 : « je ne
+      veux voir que les personnages connectés ») — tenus par une tablette
+      (`connectedCharacters`), pas l'interrupteur manuel « en ligne ». En Atelier,
+      la liste complète, pour préparer ou écrire à un absent. Le personnage choisi
+      reste proposé s'il se déconnecte : la conversation ne disparaît pas sous la main.
+    */
+    const proposes = useMemo(() => {
+        if (!regime.aLaTable) return activeCharacters;
+        const connectes = seulementLesConnectes(activeCharacters, connectedCharacters);
+        const choisi = activeCharacters.find(c => c.id === selectedFilter);
+        return choisi && !connectes.includes(choisi) ? [...connectes, { ...choisi, enLigne: false }] : connectes;
+    }, [regime.aLaTable, activeCharacters, connectedCharacters, selectedFilter]);
 
     const filteredMessages = selectedFilter === 'all' 
         ? messages 
@@ -93,9 +109,11 @@ export const CockpitMessenger: React.FC = () => {
                         className="bg-transparent text-ui-9 font-bold uppercase max-w-[9rem] truncate outline-none cursor-pointer"
                     >
                         <option value="all">{t('modules:session.messenger.filter_all')}</option>
-                        {activeCharacters.map(char => (
+                        {proposes.map(char => (
                             <option key={char.id} value={char.id}>
-                                {char.enLigne ? char.name : `${char.name} · hors ligne`}
+                                {regime.aLaTable
+                                    ? (connectedCharacters?.[char.id] ? char.name : `${char.name} · déconnecté`)
+                                    : (char.enLigne ? char.name : `${char.name} · hors ligne`)}
                             </option>
                         ))}
                     </select>
