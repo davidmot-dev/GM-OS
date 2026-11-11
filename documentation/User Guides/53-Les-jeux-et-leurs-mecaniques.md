@@ -212,14 +212,19 @@ le jet en grand et un bouton **Lancer** ; fiche fermée, la bannière paraît en
 ce que son jeu lui permet (dés achetés, avantage…), puis lance lui-même. Le résultat revient
 au meneur comme tout jet de tablette, et la demande passe à **« lancé »**.
 
+- **Le résultat, sous vos yeux** (11/11) : une carte **« Jet demandé »** paraît en haut à droite
+  de l'écran du meneur, dans la colonne des alertes de message — le personnage, le jet, le
+  verdict en couleur et le détail des dés — et s'efface seule **au bout de 5 secondes** (le « ✕ »
+  la ferme avant). Seuls les jets **demandés** l'ouvrent, et seulement chez le meneur.
 - **Demandes en cours**, sous les boutons : celles qui attendent, avec **Annuler** (la bannière
   disparaît de la tablette), puis les trois dernières closes.
 - **Un jeu à Sauvegarde** (Cthulhu Hack) : la tablette n'a pas de test à composer ; le meneur
   demande donc **la Sauvegarde** retenue, avec l'avantage choisi. Sur la tablette, son bouton
   porte la mention « demandée », et c'est toujours le meneur qui la résout.
 - La demande voyage **dans le fil des messages** : elle revient à une tablette rechargée, et
-  reste ouverte après un redémarrage de GM-OS tant qu'elle n'est ni lancée ni annulée. Le joueur
-  voit aussi passer « ✓ Jet reçu » ou « Demande annulée » dans sa messagerie.
+  reste ouverte après un redémarrage de GM-OS tant qu'elle n'est ni lancée ni annulée. La
+  messagerie, chez le meneur comme chez le joueur, garde la trace avec **le résultat** :
+  « ✓ Jet reçu : Agilité — Réussite partielle — dé 8 + compétence 0 = 8 » ; ou « Demande annulée ».
 - Grisé tant que le jet n'est pas composé, et quand **Jet caché** est allumé : le joueur
   verrait son propre résultat.
 

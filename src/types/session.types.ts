@@ -199,5 +199,10 @@ export interface SessionMessage {
      */
     demandeDeJet?: import('../modules/dice/demandeDeJet').DemandeDeJet;
     /** La demande `id` est close : lancée par le joueur, ou annulée par le meneur. Même règle. */
-    suiteDeDemande?: { id: string; etat: 'lancee' | 'annulee' };
+    suiteDeDemande?: {
+        id: string;
+        etat: 'lancee' | 'annulee';
+        /** Ce que le jet a donné (11/11, David : « voir aussi le résultat dans la messagerie »). */
+        resultat?: import('../modules/dice/filDesDemandes').ResultatDeLaDemande;
+    };
 }

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { messagePourLeLecteur } from '../../../../electron/destinatairesDesMessages';
+import ResultatsDesDemandesVolants from '../../dice/ResultatsDesDemandesVolants';
 
 interface Alert {
     id: string;
@@ -66,10 +67,13 @@ export const MessageAlertOverlay: React.FC = () => {
         handleDismiss(alert.id);
     };
 
-    if (alerts.length === 0) return null;
-
+    /*
+      La colonne reste montée, même sans alerte : les résultats des jets demandés
+      (11/11, 5 s) s'y empilent sous les messages, sans les chevaucher.
+    */
     return (
         <div className="fixed top-20 right-8 z-[100] flex flex-col gap-3 pointer-events-none">
+            <ResultatsDesDemandesVolants />
             {alerts.slice(-3).map((alert, index) => (
                 <div 
                     key={alert.id}

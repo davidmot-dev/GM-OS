@@ -15,7 +15,7 @@ import type { SessionOSStore } from './index';
 import type { CurrentView, RemoteNotification, HubNotification, SessionMessage } from './types';
 import { ajouterAuFil } from '../logic/filDesMessages';
 import type { DemandeDeJet } from '../../dice/demandeDeJet';
-import { messageDeDemande, messageDeSuite } from '../../dice/filDesDemandes';
+import { messageDeDemande, messageDeSuite, type ResultatDeLaDemande } from '../../dice/filDesDemandes';
 
 // ─────────────────────────────────────────────
 // State
@@ -93,8 +93,8 @@ export interface UiSliceActions {
     sendDirectMessage: (toId: string, toName: string, content: string) => void;
     /** Le meneur demande un jet à un personnage (T3, 11/11) — un message privé qui porte la demande. */
     demanderUnJet: (demande: DemandeDeJet, nomDuPersonnage: string) => void;
-    /** Le meneur clôt une demande : lancée (le résultat est arrivé) ou annulée. */
-    cloreLaDemande: (demande: Pick<DemandeDeJet, 'id' | 'characterId' | 'titre'>, etat: 'lancee' | 'annulee', nomDuPersonnage: string) => void;
+    /** Le meneur clôt une demande : lancée (le résultat est arrivé, et voyage avec la suite) ou annulée. */
+    cloreLaDemande: (demande: Pick<DemandeDeJet, 'id' | 'characterId' | 'titre'>, etat: 'lancee' | 'annulee', nomDuPersonnage: string, resultat?: ResultatDeLaDemande) => void;
     saveMessageToJournal: (messageId: string) => void;
     setSystemSyncing: (isSyncing: boolean) => void;
 }
@@ -272,8 +272,8 @@ export const createUiSlice: CreateurDeSlice<UiSlice, SessionOSStore> = (set, get
         window.appBridge?.remote?.acheminerUnMessage?.(msg);
     },
 
-    cloreLaDemande: (demande, etat, nomDuPersonnage) => {
-        const msg = messageDeSuite(demande, etat, nomDuPersonnage, get().activeCampaignId ?? undefined);
+    cloreLaDemande: (demande, etat, nomDuPersonnage, resultat) => {
+        const msg = messageDeSuite(demande, etat, nomDuPersonnage, get().activeCampaignId ?? undefined, resultat);
         get().addSessionMessage(msg);
         window.appBridge?.remote?.acheminerUnMessage?.(msg);
     },

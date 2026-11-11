@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import '../../i18n';
 import { consignerLeJet, natureDuJet } from './consignerLeJet';
 import { useJournalStore } from './useJournalStore';
 import { TYPES_D_EVENEMENT, natureParDefaut } from './types';
@@ -100,6 +101,8 @@ describe('ce qui s’écrit au journal', () => {
         expect(dernier?.type).toBe('DICE');
         expect(dernier?.title).toBe('Jet : Discrétion');
         expect(dernier?.content).toContain('cible 78');
+        // Le verdict nommé, jamais sa clé (« dice.degres.reussite-particuliere » jusqu'au 11/11).
+        expect(dernier?.content).toBe('4 vs 78 — cible 78 — Réussite particulière');
         expect(dernier?.nature, 'une particulière est un fait de fiction').toBe('chronique');
     });
 });

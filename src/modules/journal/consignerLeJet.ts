@@ -83,7 +83,12 @@ export function consignerLeJet(jet: JetAConsigner): void {
       les trois vocabulaires que le chantier des degrés vient de fermer — et
       cette fois dans le texte que l'Oracle relira dans six mois.
     */
-    const verdict = degre ? i18next.t(cleI18nDuDegre(degre)) : null;
+    /*
+      ⚠️ **`ns: 'modules'`** (11/11/2026) : les degrés vivent dans `modules`, et
+      l'espace par défaut est `common`. Sans lui, le journal écrivait la clé —
+      « dice.degres.reussite-particuliere » — dans le texte même que l'Oracle relit.
+    */
+    const verdict = degre ? i18next.t(cleI18nDuDegre(degre), { ns: 'modules' }) : null;
 
     const morceaux = [jet.totalDisplay];
     if (jet.seuil !== undefined) morceaux.push(`cible ${jet.seuil}`);

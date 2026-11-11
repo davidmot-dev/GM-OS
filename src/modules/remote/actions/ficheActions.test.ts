@@ -142,6 +142,15 @@ describe('la réponse à une demande de jet', () => {
         expect(fil.at(-1)).toMatchObject({ toId: 'p1', suiteDeDemande: { id: 'd1', etat: 'lancee' } });
     });
 
+    it('la clôture porte le résultat jusqu’à la messagerie (David, 11/11)', () => {
+        resultat({ demandeId: 'd1', tagSuccess: false });
+        const fil = (useSessionOSStore.getState() as never as { messages: { content: string; suiteDeDemande?: unknown }[] }).messages;
+        expect(fil.at(-1)!.content).toContain('7 (seuil 11)');
+        expect(fil.at(-1)!.suiteDeDemande).toMatchObject({
+            resultat: { titre: 'Force', totalDisplay: '7 (seuil 11)', tagSuccess: false },
+        });
+    });
+
     it('un second jet avec la même demande ne la rouvre pas, et ne la reclôt pas', () => {
         resultat({ demandeId: 'd1' });
         const avant = (useSessionOSStore.getState() as never as { messages: unknown[] }).messages.length;

@@ -5,8 +5,17 @@ import { resolveSheetTemplate } from '../../session/logic/templateResolver';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { resoudreLeJetDeFiche, type DemandeDeJetDeFiche } from '../../dice/jetDepuisLaFiche';
 import { lireLeResultatDeLaTablette } from '../../dice/resultatVenuDeLaTablette';
-import { demandesOuvertes } from '../../dice/filDesDemandes';
+import { demandesOuvertes, type ResultatDeLaDemande } from '../../dice/filDesDemandes';
+import type { RollResult } from '../../dice/DiceEngine';
 import type { ActionRegistry } from './types';
+
+/** Ce qui, du lancer, part avec la clôture : le titre, le total dit, le verdict. */
+const resultatPourLaSuite = (titre: string, r: Pick<RollResult, 'totalDisplay' | 'degre' | 'tagSuccess'>): ResultatDeLaDemande => ({
+    titre,
+    totalDisplay: r.totalDisplay ?? '',
+    ...(r.degre ? { degre: r.degre } : {}),
+    ...(typeof r.tagSuccess === 'boolean' ? { tagSuccess: r.tagSuccess } : {}),
+});
 
 /**
  * **Un jet qui répond à une demande du meneur la clôt** — plan
@@ -17,11 +26,11 @@ import type { ActionRegistry } from './types';
  * lui, s'inscrit comme tout jet. La clôture part à la tablette dans le fil,
  * pour qu'elle retire sa bannière, même après un rechargement.
  */
-function cloreLaDemandeSatisfaite(demandeId: string | undefined, characterId: string, nomDuPersonnage: string) {
+function cloreLaDemandeSatisfaite(demandeId: string | undefined, characterId: string, nomDuPersonnage: string, resultat: ResultatDeLaDemande) {
     if (!demandeId) return;
     const store = useSessionOSStore.getState();
     const ouverte = demandesOuvertes(store.messages, characterId).find(d => d.id === demandeId);
-    if (ouverte) store.cloreLaDemande(ouverte, 'lancee', nomDuPersonnage);
+    if (ouverte) store.cloreLaDemande(ouverte, 'lancee', nomDuPersonnage, resultat);
 }
 
 /**
@@ -76,7 +85,8 @@ const jetDeFiche = (payload: unknown) => {
         // Pour que le pupitre propose la Fortune ou la suite d'un déclin, sur la bonne fiche.
         deFiche: { joueurId: joueur.id, characterId: personnage.id, genre: demande.genre, champ: demande.champ, modificateur: demande.modificateur },
     });
-    cloreLaDemandeSatisfaite(typeof demande.demandeId === 'string' ? demande.demandeId.slice(0, 200) : undefined, personnage.id, personnage.name);
+    cloreLaDemandeSatisfaite(typeof demande.demandeId === 'string' ? demande.demandeId.slice(0, 200) : undefined, personnage.id, personnage.name,
+        resultatPourLaSuite(jet.titre, jet.resultat));
 };
 
 /**
@@ -105,7 +115,7 @@ const resultatDeFiche = (payload: unknown) => {
         timestamp: new Date(),
         title: `${personnage.name} — ${lu.titre}`,
     });
-    cloreLaDemandeSatisfaite(lu.demandeId, personnage.id, personnage.name);
+    cloreLaDemandeSatisfaite(lu.demandeId, personnage.id, personnage.name, resultatPourLaSuite(lu.titre, lu.resultat));
 };
 
 export const ficheActions: ActionRegistry = {
