@@ -1,0 +1,39 @@
+---
+sujet: Personnages non joueurs
+campagne: premiers-pas
+jeu: custom-1794176660508
+partie: MICMAC SOUS LES PAVÉS
+couverture: complète
+hors_canevas: false
+sources: "supplement_01_premiers_pas.pdf"
+sections: "« Le cas de Basile » ; « La confrontation » ; « Le retour de la mémoire »"
+genere_par: notebooklm
+gabarit: v3
+relu: false
+empreinte: 20389e70
+---
+
+# Personnages non joueurs
+
+## Contenu
+
+**La mère de famille au landau**
+Habitante de la promenade de Gobagne que les personnages interrogent pour retrouver la trace d'individus liés aux excavations souterraines (section « Le cas de Basile »). Promenant tranquillement son nourrisson en landau le long des pavés, elle est attentive à la vie de son quartier (section « Le cas de Basile »). Elle cherche à échanger les nouvelles de la rue tout en s'occupant de son enfant (section « Le cas de Basile »). Le Conteur la joue comme une femme du peuple loquace et observatrice; interrogée avec un peu de bagout, elle se remémore distinctement avoir vu passer ces derniers jours des individus aux habits humides et maculés de terre rouge, transportant pelles et pioches, qui entraient et sortaient par l'arrière d'une bicoque abandonnée située en face des Caves du Fronton (section « Le cas de Basile »). Faction: résidentes des Portes du Blé (section « Le cas de Basile »). Liens: voisine observant le manège des complices de Basile et désignant leur repaire aux héros (section « Le cas de Basile »).
+
+**Guibert Apfel**
+Marchand de vin renommé, propriétaire de l'établissement commercial Les Caves du Fronton situé sur la promenade de Gobagne (section « Le cas de Basile »). C'est un commerçant décrit par le voisinage comme un homme taciturne et froid (section « Le cas de Basile »). Il cherche à préserver ses réserves de crus de garde de grande valeur, surveillées le jour par des vigiles et protégées la nuit par une solide grille métallique (section « Le cas de Basile »). Le Conteur le met en scène comme un propriétaire rigoureux et soupçonneux, cible inconsciente du creusement souterrain mené par les cambrioleurs qui convoitent un stock de bouteilles estimé à quatre cent dix florins (section « Le cas de Basile », section « La confrontation »). Faction: commerçants et négociants d'Argyropée (section « Le cas de Basile »). Liens: propriétaire des Caves du Fronton dont le cellier est directement menacé par le boyau d'excavation (section « Le cas de Basile », section « La confrontation »).
+
+**Amaury Botrel**
+Compagnon cambrioleur de la bande de Basile, retranché au fond du tunnel souterrain sous la promenade de Gobagne pour percer le mur des Caves du Fronton (section « La confrontation »). C'est un homme vigoureux et musclé d'une trentaine d'années, aux cheveux blonds coiffés en arrière mais actuellement maculés de boue, au visage charpenté arborant un éternel sourire en coin (section « La confrontation »). Vêtu d'un pantalon serré, d'une chemise entrouverte et d'un manteau gris poudré de terre rouge, il s'est tourné vers le cambriolage par dépit pour nourrir sa famille et cherche à passer le plus de temps possible avec son jeune enfant lorsqu'il n'est pas sur un coup (section « La confrontation »). Il cherche à achever le forage, à faire sauter la grille de la cave avec des feux à main sous le couvert d'une diversion nocturne et à emporter les bouteilles sans blesser personne, tout en s'inquiétant de la disparition de Basile à qui il prête des dettes de jeu (section « La confrontation »). Le Conteur le joue avec un franc-parler populaire, maniant volontiers des plaisanteries un peu lestes tout en sachant se tenir avec respect, loyal envers ses comparses et refusant d'attaquer Basile en premier (section « La confrontation »). C'est lui qui détient dans sa poche le plan d'urbanisme des égouts dérobé dans l'impasse de l'Étourneau (section « La confrontation »). Faction: bande de cambrioleurs des Caves du Fronton (section « La confrontation »). Liens: complice de Junien Bennet, de Marc Trottier et de Basile Latulipe (section « La confrontation »).
+
+**Junien Bennet**
+Compagnon cambrioleur travaillant au pic aux côtés d'Amaury Botrel dans la galerie souterraine sous la promenade de Gobagne (section « La confrontation »). Homme d'une vingtaine d'années à la peau claire, de petite taille, le crâne rasé couvert d'un béret sombre, il porte une combinaison de travail et un gilet de cuir souillés par la boue du tunnel (section « La confrontation »). Ses yeux ambrés regardent le monde avec une nonchalance placide (section « La confrontation »). C'est un homme d'un naturel fruste et primitif qui ne croit qu'en l'amitié, considérant son groupe de copains comme sa seule et unique famille (section « La confrontation »). Il cherche à poser les charges explosives dès la nuit tombée, à partager le butin viticole et à retrouver Basile pour lui réclamer les six deniers qu'il lui doit (section « La confrontation »). Le Conteur le joue d'une voix traînante et pragmatique, grignotant une carotte crue entre deux coups de pioche, prêt à fuir plutôt qu'à tuer si le combat éclate, et refusant catégoriquement d'agresser Basile (section « La confrontation »). Faction: bande de cambrioleurs des Caves du Fronton (section « La confrontation »). Liens: camarade d'Amaury Botrel, de Marc Trottier et de Basile Latulipe (section « La confrontation »).
+
+**Marc Trottier**
+Troisième larron de la bande de cambrioleurs, assurant la logistique et le ravitaillement extérieur du chantier clandestin (section « La confrontation »). C'est un freluquet blond à peine majeur, à la silhouette et à la carrure modestes, coiffé d'une casquette et portant un manteau gris couvrant une armure de cuir souple léguée par son défunt père (section « La confrontation »). Ayant abandonné son apprentissage de maçon par ennui mortel, il préfère utiliser ses notions architecturales pour abattre les cloisons plutôt que pour les édifier (section « La confrontation »). Il cherche à se donner des airs de dur à cuire plus imposant qu'il ne l'est, à ravitailler ses comparses en nourriture et à organiser la diversion nocturne en faisant sonner les cloches du Temple dyadique voisin pour masquer le bruit des détonations (section « La confrontation »). Le Conteur le joue comme un jeune coq effronté et vantard; lorsqu'il fait irruption dans la cave les bras chargés de victuailles en criant à la bouffe tout en mordant dans une saucisse sèche, il cède à une panique confuse s'il tombe nez à nez sur des inconnus, hésitant entre la fuite, la bravade et les appels à l'aide, mais refusant de frapper Basile (section « La confrontation »). Faction: bande de cambrioleurs des Caves du Fronton (section « La confrontation »). Liens: pourvoyeur de vivres d'Amaury Botrel, de Junien Bennet et complice de Basile Latulipe (section « La confrontation »).
+
+**Les patrouilles de la Garde municipale**
+Détachement de gardes armés que les personnages peuvent aller alerter au poste de la rue de Nanmont pour faire cesser l'effraction souterraine (section « La confrontation »). Ils cherchent à appréhender les cambrioleurs, à sécuriser les accès de la bâtisse abandonnée et à escorter les suspects aux geôles (section « La confrontation »). Le Conteur les joue comme des hommes de loi appliqués et rigoureux qui encerclent la maison et investissent la cave pour arrêter les malfrats sans effusion de sang; si Basile est reconnu par ses acolytes au cours de l'opération, les gardes l'embarquent également sans ménagement pour complicité de cambriolage (section « La confrontation »). Faction: la Garde municipale des Portes du Blé (section « La confrontation »). Liens: forces de l'ordre alertées par les personnages et arrêtant la bande de Basile (section « La confrontation »).
+
+## Non couvert
+Les sources ne mentionnent pas l'identité des vigiles surveillant les Caves du Fronton en journée ni celle du propriétaire légal de la bâtisse abandonnée sous fausse pancarte de quarantaine.
