@@ -89,6 +89,25 @@ describe('la fiche de la tablette, ouverte sur une demande', () => {
         expect(String(resultats[0].totalDisplay)).toContain('seuil 58');
     });
 
+    it('sur une tablette servie en http (sans crypto.randomUUID), le jet part quand même', async () => {
+        // David, Argyropée, 11/11 : hors contexte sûr, le navigateur retient randomUUID,
+        // et le lancer s'arrêtait sur « crypto.randomUUID is not a function ».
+        const { fournirRandomUUID } = await import('../../utils/randomUUIDHorsContexteSur');
+        const natif = Object.getOwnPropertyDescriptor(crypto, 'randomUUID');
+        Object.defineProperty(crypto, 'randomUUID', { value: undefined, configurable: true, writable: true });
+        try {
+            expect(fournirRandomUUID()).toBe(true);
+            render(<HubCharacterSheet onClose={() => {}} demandeAOuvrir="d-1" />);
+            const panneau = document.getElementById('fiche-joueur-test')!;
+            fireEvent.click(Array.from(panneau.querySelectorAll('button')).find(b => b.textContent?.trim() === 'Lancer')!);
+            expect(resultats).toHaveLength(1);
+            expect(resultats[0]).toMatchObject({ characterId: 'pj-wilson', demandeId: 'd-1' });
+        } finally {
+            if (natif) Object.defineProperty(crypto, 'randomUUID', natif);
+            else delete (crypto as { randomUUID?: unknown }).randomUUID;
+        }
+    });
+
     it('la bannière se montre dans la fiche, et « Lancer » y ouvre la demande', () => {
         render(<HubCharacterSheet onClose={() => {}} />);
         expect(screen.getByRole('tab', { name: /Vue synthétique/ }).getAttribute('aria-selected')).toBe('true');

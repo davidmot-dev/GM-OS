@@ -1,3 +1,6 @@
+// ⛔ EN PREMIER : une tablette servie en `http` n'a pas `crypto.randomUUID` (contexte non sûr),
+// et le lancer du panneau de jet l'appelle — voir le module (11/11/2026).
+import './utils/randomUUIDHorsContexteSur'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
