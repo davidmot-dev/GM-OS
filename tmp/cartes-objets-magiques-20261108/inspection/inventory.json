@@ -1,0 +1,6654 @@
+{
+  "version": "1.1.0",
+  "sources": [
+    {
+      "id": "s0",
+      "filename": "Objets Magiques (v0).pdf",
+      "sha256": "d5a4c7884d28a6d0e7837c65213ee43de53ab56ea240b1e164bef5dc92a71051",
+      "pages": [
+        {
+          "page": 1,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0001.png",
+          "pixel_sha256": "7c3bf98bfb13d145d7f3870d9905ea3b4c0c7e85ece493ac64e127a331c2d730",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n1\nUsage unique. Augmente la Force \nd’un personnage de +3 pour le \nreste de la Scène.\nPOTION DE FORCE\n12\n12\n14\n14\n16\n16\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 2,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0002.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 3,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0003.png",
+          "pixel_sha256": "2eac38f8b9a140fd57adec9be95f9adab4b97be8743ef413f55d15a26fa62ba6",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n2\nUsage unique. Soigne une Blessure \net restaure un Dé Bonus de points \nde Choc.\nPOTION DE SOINS\n12\n12\n14\n14\n13\n13\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 4,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0004.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 5,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0005.png",
+          "pixel_sha256": "275e1f6db9033fadcb6ca358f019fa99bb0bd7eddcaf3f5ba5c08a8519953bf8",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n3\nUsage unique. Le personnage \ngagne +3 en Résistance pour le \nreste de la Scène.\nPOTION DE PROTECTION\n16\n16\n12\n12\n14\n14\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 6,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0006.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 7,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0007.png",
+          "pixel_sha256": "bbaaf4b52c053208a291bac1aa8f3c8aeb86e5a6cb5add4c6f0a2a8ebd1230c2",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n4\nUsage unique. Toutes les compé­\ntences magiques sont Favorisées \npour le reste de la Scène.\nÉLIXIR DE MAGIE\n12\n12\n14\n14\n16\n16\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 8,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0008.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 9,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0009.png",
+          "pixel_sha256": "11aca0bfb7b31ff60deb6c4b93656ffc91d69fd9a4e76e1fb68c474cc61c74cc",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n5\nUsage unique. Durée d’appli­\ncation : 1 min. Le personnage \net son équipement deviennent \ntransparents (−6 pour les voir \nou attaquer) pour le reste de la \nScène.\nBAUME D’INVISIBILITÉ\n12\n12\n14\n14\n16\n16\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 10,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0010.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 11,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0011.png",
+          "pixel_sha256": "0a958d8f5f7522401c241ed540038b74bbe9852888820dd926361c99e4fdfb0f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n6\nUsage unique. Un test d’Altéra­\ntion octroie à une arme tran­\nchante Pénétration d’armure 4 \n(ignore 4 points d’Armure) pour \nle reste de la Scène.\nPARCHEMIN D’AFFÛTAGE\n9\n14\n14\n16\n16\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 12,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0012.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 13,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0013.png",
+          "pixel_sha256": "930e63691d8b88e5dc2ac0ab44ba3ba01638c47819f66fe1ee6e54879a48642e",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n7\nUsage \nunique. \nTest \nde \nConjuration opposé à Esquive \npour \ninfliger \n14 dommages \ndans une Zone d’effet moyenne. \nPortée : 50 m.\nPARCHEMIN DE BOULE DE FEU\n18\n18\n9\n14\n14\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 14,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0014.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 15,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0015.png",
+          "pixel_sha256": "628535c58e8a28d3858535c3c9d9dd90a1379265dfe4d4afc04cadd785db0e7a",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n8\nUsage unique. Test de Conjuration \n(ND 8) pour créer de la lumière \ndepuis le parchemin pour le reste \nde la Scène. Annule l’Obscurité du \nmage.\nPARCHEMIN DE LUMIÈRE DU MAGE\n13\n13\n9\n14\n14\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 16,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0016.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 17,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0017.png",
+          "pixel_sha256": "7d343bc798226f272879cf2ae42375cfaafa239298120d1ab7f613eb1b105734",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n9\nUsage unique. Test de Cinétique \n(ND 8) pour crocheter une ser­\nrure. Les serrures complexes né­\ncessitent un succès Supérieur ou \nSpectaculaire.\nPARCHEMIN DE DÉVERROUILLAGE\n13\n13\n9\n14\n14\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 18,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0018.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 19,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0019.png",
+          "pixel_sha256": "5f7abb344289cda425508f05071da5c231f74d20f27658d2238b683c1030e7d5",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n10\n10\nUsage unique, quand le sort est \nlibéré. Capture le premier sort \nqui cible le personnage. Ce sort \npeut être incanté contre une nou­\nvelle cible.\nPARCHEMIN DE PIÈGE À SORT\n21\n21\n9\n14\n14\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 20,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0020.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 21,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0021.png",
+          "pixel_sha256": "54907bad4df5c8bd215693718b76d113112bf51e4a871d728324046dab160a66",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n11\n11\nAjoute +2 en Armure. Ce bonus \nn’est pas cumulable avec d’autres \narmures mais compte comme \nune protection intégrale.\nBRACELET DE PROTECTION\n21\n21\n9\n23\n23\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 22,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0022.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 23,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0023.png",
+          "pixel_sha256": "e317d3854ca359d96cad0adcfc5813e4321c722cfbea816d3d6f729f0d823103",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n12\n12\nGagne un bonus en Équitation \nde +2.\nCEINTURE ÉQUESTRE\n8\n23\n23\n21\n21\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 24,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0024.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 25,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0025.png",
+          "pixel_sha256": "10ee3fe4c67a5cdf4c32aac9fbeba1b5df22914e36cd969cc63842b026d65d61",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n13\n13\nGagne un bonus en Manœuvre \nde +2.\nCEINTURE AGILE\n8\n23\n23\n21\n21\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 26,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0026.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 27,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0027.png",
+          "pixel_sha256": "f8eca277db70b1527df05e4facd3e48aa3e2da2a299b4118001afaa1275d97c7",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n14\n14\nAjoute +2 m à la Vitesse de dépla­\ncement et les tests de Discrétion \ndeviennent Favorisés.\nBOTTES D’AGILITÉ\n8\n14\n14\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 28,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0028.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 29,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0029.png",
+          "pixel_sha256": "2f53658e0fd3a0890a574ebff5c51fc1d71beed48fa164b52ea0956ec15d0b16",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n15\n15\nVol à une Vitesse égale à sa \nDextérité (en mètres) par round.\nBOTTES AILÉES\n30\n30\n8\n24\n24\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 30,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0030.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 31,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0031.png",
+          "pixel_sha256": "33dd92ecf8372f9cd7777872363a464e897692fd0cc8d0160c754c3a860f2b49",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n16\n16\nLa Force du porteur augmente \nde +1 (la Résistance n’est pas \naffectée).\nBRACELETS DE FORCE\n9\n23\n23\n21\n21\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 32,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0032.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 33,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0033.png",
+          "pixel_sha256": "63e4beedb8fadb74d5face411b5fd8c5d9cc052b302d702763f5ae1f4b24fd1f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n17\n17\nLe Charisme du porteur augmente \nde +1.\nCHAPEAU ÉLÉGANT\n8\n23\n23\n21\n21\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 34,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0034.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 35,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0035.png",
+          "pixel_sha256": "403c05eb57e8a7e9b86a44471c34b94cda45f7698edf6f58c04a7f3095c42835",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n18\n18\nUn bonus de +2 est ajouté à \nl’Intimidation.\nCAPE IMPOSANTE\n8\n23\n23\n21\n21\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 36,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0036.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 37,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0037.png",
+          "pixel_sha256": "f95f7f22665625e21ec6e8c7aae1e4b3c80d99ca75ce0c0252285227e7aa5bcb",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n19\n19\nLe personnage peut jouer des \nCartes de Destin dans n’importe \nquelle Réserve d’Action.\nCOURONNE DE COMMANDEMENT\n10\n10\n14\n14\n20\n20\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 38,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0038.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 39,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0039.png",
+          "pixel_sha256": "0918826b8bb70cb4d5f3ce7b4919bb9080cfa88a647fd704cfb4ed74bdc0d9a7",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n20\n20\nLes tentatives de Vision sur le \nporteur subissent un malus de −4 \net sont Défavorisées.\nCAPE DE DISSIMULATION\n18\n18\n8\n14\n14\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 40,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0040.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 41,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0041.png",
+          "pixel_sha256": "620761b194904b0ad91b778890889815be0b9a7088499bd6a5d453c053b0971b",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n21\n21\nSupprime six points de malus \npour tout test d’escalade concer­\nnant les murs de pierre ou  \nles falaises.\nGANTS D’ESCALADE\n21\n21\n8\n23\n23\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 42,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0042.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 43,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0043.png",
+          "pixel_sha256": "6fd2a3ca218a470750e0fa92ad98f99a6bac7406b83a5bee05ded959463dec78",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n22\n22\nUne dague (dommages Force +2, \nDiscret) apparaît en main avec \nune action gratuite.\nGANTS GÉNÉRATEURS DE DAGUES\n8\n14\n14\n13\n13\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 44,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0044.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 45,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0045.png",
+          "pixel_sha256": "d75047b62515070162329840037fcb072a4d192418ae3548348b2036cd00b640",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n23\n23\nGagne un bonus en Véhicules \naquatiques de +2.\nCHAPEAU DE MARIN\n21\n21\n8\n23\n23\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 46,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0046.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 47,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0047.png",
+          "pixel_sha256": "0be7d53f30bd5d6dce08a32923ef94db4faa892849deb8a6032b697b093f01c6",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n24\n24\nIgnore jusqu’à 4 points de malus \nd’obscurité.\nLENTILLES DE VISION NOCTURNE\n14\n14\n23\n23\n20\n20\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 48,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0048.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 49,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0049.png",
+          "pixel_sha256": "aeb3565610386aa0f27c8c4967ea3f2fd17c67e81a5194616688d0b317106f0c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n25\n25\nLes tests de Pistage sont Favorisés.\nTRAQUEURS VISUEL\n14\n14\n14\n14\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 50,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0050.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 51,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0051.png",
+          "pixel_sha256": "8e28ce09e1c0a29a9b50a0e35aa68d384d3b5b6ed8c471a9a7a990687cd429af",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n26\n26\nLes flèches tirées prises dans ce \ncarquois y réapparaissent.\nCARQUOIS DE RÉCUPÉRATION\n7\n14\n14\n13\n13\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 52,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0052.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 53,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0053.png",
+          "pixel_sha256": "ecfc517b5dd622a907fc2e9391d52f40817c2dfe6182a05660302ac1722bb611",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n27\n27\nDevient Très petit (−4 pour tou­\ncher) au prix d’une action simple. \nPeut être utilisé durant un total \nde 30 min par jour.\nANNEAU DE RÉDUCTION\n9\n14\n14\n24\n24\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 54,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0054.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 55,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0055.png",
+          "pixel_sha256": "1e8f28fa03de1bd5db8cbbe288b708954c6bdcef967a13422eac698495cc2984",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n28\n28\nUn bouclier moyen (défense +2) \napparaît au prix d’une action \ngratuite.\nANNEAU BOUCLIER\n9\n14\n14\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 56,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0056.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 57,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0057.png",
+          "pixel_sha256": "354fe7a329916b7c61df8ca24d08b60c66a06fd6c588d28e570ffe63c85bab36",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n29\n29\nLes tests de Discrétion gagnent \nun bonus de +3.\nCHAUSSURES SILENCIEUSES\n8\n23\n23\n25\n25\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 58,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0058.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 59,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0059.png",
+          "pixel_sha256": "6bcca17b13fd0bfd16154652a2734402da4b81161b31d6f5c2d37dc7fd6a32fd",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n30\n30\nOctroie un bonus de +2 en dé­\nfense. Force minimum de 7.\nRONDACHE ENCHANTÉE\n9\n14\n14\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 60,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0060.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 61,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0061.png",
+          "pixel_sha256": "0a8f85040105fde885af4084975c0a6d21d797c81a9df2ead4ecb7b52515f61c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n31\n31\nAccorde un bonus de +2 aux dé­\nfenses et un bonus de +4 à la \nRésistance contre les attaques de feu.\nBOUCLIER DE RÉSISTANCE AU FEU\n9\n14\n14\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 62,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0062.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 63,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0063.png",
+          "pixel_sha256": "d018d9ed1de6ef63206a530dee5327829699ad2a7b2d393f3dfdf4b6d47ef8c6",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n32\n32\nAccorde un bonus de +2 à la dé­\nfense et, en cas de Défense active \nréussie, un sort qui échoue contre \nlui peut être redirigé vers une \nautre cible en utilisant le bonus \ngénéré pour la Défense active.\nBOUCLIER DÉFLECTEUR DE SORTS\n9\n23\n23\n21\n21\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 64,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0064.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 65,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0065.png",
+          "pixel_sha256": "221f1302896ac2fcb0726a9da6e18b2c94b5de17f414f0c6250ee3451ce6fab9",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n33\n33\nPavois (+3 à la défense, Force mi­\nnimum 9, ne peut pas se déplacer \nni agir si la Force est inférieure à \n11). Tout sort ciblant le porteur \nsubit un malus de −4.\nBOUCLIER ANTI-SORTS\n9\n23\n23\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 66,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0066.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 67,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0067.png",
+          "pixel_sha256": "c030fd743fd34aeb021cf32a50a2bb7a865b73f471cf10637ef0a2c2358ee7a2",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n34\n34\nCotte de mailles (Armure +2, \nDex max 8, Force min 8, Fatigue), \nignore les 4 premiers points de ma­\nlus de n’importe quel test de Foi.\nSERMENT DE DUNAD\n10\n10\n23\n23\n20\n20\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 68,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0068.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 69,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0069.png",
+          "pixel_sha256": "b36ac280bc9575225d377d350a5ac7d171ee0a2c8bd11e706c2d661ee76e55ab",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n35\n35\nCotte \nde \nmailles \nelfique \n(Armure +3, Dex max 10, Torse), \nignore jusqu’à 3 points de Péné­\ntration d’armure.\nCOTTE DE MAILLES INDÉFECTIBLE\n10\n10\n23\n23\n20\n20\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 70,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0070.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 71,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0071.png",
+          "pixel_sha256": "415eb586108989776eb6a7bc93ef28ac7a14c58b6c910c2212c825ecb53d20f7",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n36\n36\nArmure +3, Dex max 10.\nARMURE DE CUIR ENCHANTÉE\n8\n23\n23\n21\n21\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 72,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0072.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 73,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0073.png",
+          "pixel_sha256": "3b95ab451e519da7a62ac351fcea5ffabc447fcfa5a94fe8a2dc5a798195165c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n37\n37\nArmure +1, Dex max 10, bonus \nde +2 aux tests de Discrétion.\nARMURE DE CUIR DE LA NUIT\n8\n23\n23\n21\n21\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 74,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0074.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 75,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0075.png",
+          "pixel_sha256": "57678d0afd8ed757df30cd69a9ff20e67caeb5cf13cc555ba7e3a48c5c1c15e1",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n38\n38\nArmure de plates (Armure +3, \nDex max 8, Intégrale, Fatigue) \nTout sort ciblant le porteur subit \nun malus de −4.\nARMURE ANTI-SORTS\n12\n12\n23\n23\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 76,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0076.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 77,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0077.png",
+          "pixel_sha256": "46b419ec64b5a600e45028b982a004b918fa98f98bdabcad993e3efecc746816",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n39\n39\nArmure de fourrure (Armure +1, \nDex max 12), tests de Survie \ncontre le froid Favorisés, Ar­\nmure +4 contre les effets de froid.\nPEAU DE GLACE\n3\n14\n14\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 78,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0078.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 79,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0079.png",
+          "pixel_sha256": "f7bac41cfced34059d773e875d74059ae766b9af11496aeef6c708c537146e92",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n40\n40\nArmure +1, Dextérité +1.\nVÊTEMENTS OPULENTS\n8\n23\n23\n21\n21\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 80,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0080.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 81,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0081.png",
+          "pixel_sha256": "fdea2238521475795feaf6cb5cb8480c6574e0a67a553351ce998de77d0c63de",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n41\n41\nArmure de plates (Armure +3, \nDex max 8, Intégrale, Fatigue) \nInflige dommages Force +2 avec \nMutilation (Vulnérable si les dom­\nmages dépassent la Résistance) \nlors d’une attaque à Mains nues.\nARMURE HERSE PERVERSE\n12\n12\n14\n14\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 82,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0082.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 83,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0083.png",
+          "pixel_sha256": "76a0226579aa8558e6da37560099d7a524f230d2519b7e3c3064235bd6611d06",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n42\n42\nDommages 12, portée 20/40/80, \nPénétration d’armure 2.\nARC LONG TOUCHÉ PAR LA FOUDRE\n9\n23\n23\n20\n20\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 84,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0084.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 85,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0085.png",
+          "pixel_sha256": "aaacba5a503a12431b62e81506b78744d779aa3bf3d4a6e9578e27e78df47282",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n43\n43\nDommages Force +4, portée \n5/10/15, Discret, doit être récu­\npérée après avoir été lancée.\nLAME DE JET DE LA FATALITÉ\n8\n23\n23\n24\n24\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 86,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0086.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 87,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0087.png",
+          "pixel_sha256": "20e15f78884bb1b5bab5392ce0e9b758271a78602ac4bcb367fb2afc109a314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n44\n44\nDommages 13, portée 50/80/160, \nForce min 7, Mutilation (la \ncible \ndevient \nVulnérable \nsi \nles \ndommages \ndépassent \nla \nRésistance).\nARC D’ALLONGE ÉTENDUE\n13\n13\n14\n14\n16\n16\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 88,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0088.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 89,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0089.png",
+          "pixel_sha256": "614b097e9be77314d349c169373e5bde73751d21104e746713cee5f38fc46779",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n45\n45\nDommages 12, portée 10/25/40, \nmunition 1. Rechargement auto­\nmatique une fois par round.\nARC DE MUNITIONS INFINIES\n9\n14\n14\n14\n14\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 90,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0090.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 91,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0091.png",
+          "pixel_sha256": "2fff5f1a9c191721a03023d6205afd9885a9f049f19bf5e8da64a11f583610d7",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n46\n46\nDommages 13, portée 10/25/40, \nPé n é t r at i on d’ar mu re   2 , \nRechargement.\nARC DE PÉNÉTRATION\n12\n12\n23\n23\n20\n20\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 92,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0092.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 93,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0093.png",
+          "pixel_sha256": "f5d91b69e5a6128198ebc66ff60638166e6a6b753909a1b6e8bd58f29f7e2e13",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n47\n47\nDommages Force +2, portée \n5/10/15, revient automatique­\nment une fois lancé.\nHACHE DE RETOUR\n8\n14\n14\n13\n13\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 94,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0094.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 95,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0095.png",
+          "pixel_sha256": "d77cec1a24ae82b710d379a4feef3ae03456eca0059cfb7e46ab4023c1aad84b",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n48\n48\nDommages Force +2, portée \n5/10/15, Armes de jet Favorisées \nlorsque lancées.\nCOUTEAU TRAQUEUR\n8\n14\n14\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 96,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0096.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 97,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0097.png",
+          "pixel_sha256": "98bd44c92e8b4468509e55b592d0a8c2cbea128324f8447ba15654e560a92b50",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n49\n49\nDommages 13, Force min 12, \nencombrant, Pénétration d’ar­\nmure 1, cible la valeur d’armure \nla plus faible.\nFLÉAU D’ARME ENFLAMMÉ\n8\n14\n14\n20\n20\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 98,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0098.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 99,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0099.png",
+          "pixel_sha256": "a58f802a8b747a4b0ce711f869d2f5870031efee2f9fb02ada24f7d47c2be9d1",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n50\n50\nDommages Force +2, Déséquilibre \n(la cible est Déstabilisé si elle subit \ndes dommages).\nMASSE DE PUISSANCE\n8\n14\n14\n20\n20\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 100,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0100.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 101,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0101.png",
+          "pixel_sha256": "09def060a601976ee2721e1a07f5a6ab52d51cf75bee598f96773564f6542dc5",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n51\n51\nÉpée longue (dommages Force +3). \nToute Créature surnaturelle malé­\nfique touchée devient également \nTrès vulnérable.\nLAME DU CONQUÉRANT\n9\n14\n14\n30\n30\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 102,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0102.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 103,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0103.png",
+          "pixel_sha256": "dc1a5f0630bf274f1c314fd25aea6cbf72468518df6233cb2cc98f2681a47e84",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n52\n52\nDommages Force +3, Rapide \n(Favorisé si la cible est Déstabilisée).\nÉPÉE LONGUE RAPIDE\n9\n14\n14\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 104,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0104.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 105,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0105.png",
+          "pixel_sha256": "33592110042212dc1f4d03efa9f35d7cd5691873b6de5690b411871131abb744",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n53\n53\nDommages Force +2, Pénétration \nd’armure 4, peut être lancée.\nLANCE DE PÉNÉTRATION\n8\n23\n23\n23\n23\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 106,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0106.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 107,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0107.png",
+          "pixel_sha256": "8722384067114bdd42cae5f88b7ef7664494f117b5be09dc89ab19a57a3ade2f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n54\n54\nL’utilisateur peut incanter le sort \nBouclier (+1 en défense, +2 sur \nun succès Supérieur, +3 sur un \nsuccès Spectaculaire) avec un ND \nde Conjuration 10.\nBÂTON BOUCLIER\n5\n14\n14\n21\n21\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 108,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0108.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 109,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0109.png",
+          "pixel_sha256": "3d8ac1e6d6cd99d0ea91f5ed6bc4b174b5808b4d457afd1fee8ffa7d57e82e96",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nMagie\nValeur\n55\n55\nMarteau de guerre (dommages \nForce +4, Déséquilibre, Peu ma­\nniable, 2 mains). Les adversaires tou­\nchés reculent d’un nombre de mètres \négal au bonus de dommages infligés. \nLes adversaires de taille Grande ou \nsupérieure ne sont pas affectés.\nMARTEAU DU TONNERRE\n9\n14\n14\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 110,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0110.png",
+          "pixel_sha256": "afeb7c52030a7b08b6af0a337c9f2d1c0ad267cdd5fc8594ae87cfaa11b4314f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        }
+      ],
+      "identical_page_groups": [
+        [
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30,
+          32,
+          34,
+          36,
+          38,
+          40,
+          42,
+          44,
+          46,
+          48,
+          50,
+          52,
+          54,
+          56,
+          58,
+          60,
+          62,
+          64,
+          66,
+          68,
+          70,
+          72,
+          74,
+          76,
+          78,
+          80,
+          82,
+          84,
+          86,
+          88,
+          90,
+          92,
+          94,
+          96,
+          98,
+          100,
+          102,
+          104,
+          106,
+          108,
+          110
+        ]
+      ]
+    }
+  ]
+}

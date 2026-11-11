@@ -1,0 +1,1013 @@
+{
+  "schema_version": 2,
+  "dpi": 300,
+  "start_indices": {
+    "01-gospog-de-la-5e-recolte": 0,
+    "02-gospog-de-la-4e-recolte": 0,
+    "03-gospog-de-la-3e-recolte": 0,
+    "04-gospog-de-la-2de-recolte": 0,
+    "05-machine-dabominations": 0,
+    "06-charybde": 0,
+    "07-barghest": 0,
+    "08-geant-du-givre": 0,
+    "09-uthorion-thorfin": 0,
+    "10-ghillie": 0,
+    "11-esprit-follet": 0,
+    "12-nibikrid": 0,
+    "13-squelette": 0,
+    "14-bandit": 0,
+    "15-chevalier": 0,
+    "16-sorcier": 0,
+    "17-jeune-drake": 0,
+    "18-drake": 0,
+    "19-zombi": 0,
+    "20-liche": 0,
+    "21-tas-de-ferraille": 0,
+    "22-grand-dragon": 0,
+    "23-viking-berserker": 0,
+    "24-draugr-viking": 0,
+    "25-pillard-viking": 0,
+    "26-skjaldmo-viking": 0,
+    "27-scalde-viking": 0,
+    "28-seigneur-de-guerre-viking": 0,
+    "29-baronne-svecha": 0,
+    "30-tueur-de-mages": 0
+  },
+  "numbering_confirmed": true,
+  "numbering_choice": {
+    "user": "David",
+    "date": "2026-11-08",
+    "answer": "0",
+    "scope": "0 pour toutes les menaces, une face et un verso distinct par dossier."
+  },
+  "sources": [
+    {
+      "id": "s0",
+      "filename": "Cartes Menaces (v1).pdf",
+      "sha256": "8c3ab1398f51a2fb62a859586811e92c6457344f26f0b1ac4ffa95dda8b42528"
+    }
+  ],
+  "cards": [
+    {
+      "source": "s0",
+      "page": 1,
+      "role": "ignore",
+      "reason": "Page d’instructions, conservée séparément dans les suppléments de la recette."
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "role": "ignore",
+      "reason": "Page d’instructions, conservée séparément dans les suppléments de la recette."
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "01-gospog-de-la-5e-recolte",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 5E RÉCOLTE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "01-gospog-de-la-5e-recolte",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 5E RÉCOLTE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "02-gospog-de-la-4e-recolte",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 4E RÉCOLTE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "02-gospog-de-la-4e-recolte",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 4E RÉCOLTE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "03-gospog-de-la-3e-recolte",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 3E RÉCOLTE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "03-gospog-de-la-3e-recolte",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 3E RÉCOLTE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "04-gospog-de-la-2de-recolte",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 2DE RÉCOLTE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "04-gospog-de-la-2de-recolte",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GOSPOG DE LA 2DE RÉCOLTE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "05-machine-dabominations",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "MACHINE D’ABOMINATIONS : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "05-machine-dabominations",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "MACHINE D’ABOMINATIONS : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "06-charybde",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CHARYBDE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "06-charybde",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CHARYBDE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure. Le PDF imprime CHARYB au verso et CHARYBDE au recto page 13 ; paire vérifiée par illustration, statistiques et ordre source, graphisme conservé sans correction."
+    },
+    {
+      "source": "s0",
+      "page": 15,
+      "deck": "07-barghest",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "BARGHEST : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 16,
+      "deck": "07-barghest",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "BARGHEST : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 17,
+      "deck": "08-geant-du-givre",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GÉANT DU GIVRE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 18,
+      "deck": "08-geant-du-givre",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GÉANT DU GIVRE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 19,
+      "deck": "09-uthorion-thorfin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "UTHORION (THORFIN) : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 20,
+      "deck": "09-uthorion-thorfin",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "UTHORION (THORFIN) : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 21,
+      "deck": "10-ghillie",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GHILLIE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 22,
+      "deck": "10-ghillie",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GHILLIE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 23,
+      "deck": "11-esprit-follet",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "ESPRIT-FOLLET : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 24,
+      "deck": "11-esprit-follet",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "ESPRIT-FOLLET : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 25,
+      "deck": "12-nibikrid",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "NIBIKRID : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 26,
+      "deck": "12-nibikrid",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "NIBIKRID : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 27,
+      "deck": "13-squelette",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SQUELETTE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 28,
+      "deck": "13-squelette",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SQUELETTE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 29,
+      "deck": "14-bandit",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "BANDIT : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 30,
+      "deck": "14-bandit",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "BANDIT : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 31,
+      "deck": "15-chevalier",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CHEVALIER : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 32,
+      "deck": "15-chevalier",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "CHEVALIER : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 33,
+      "deck": "16-sorcier",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SORCIER : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 34,
+      "deck": "16-sorcier",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SORCIER : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 35,
+      "deck": "17-jeune-drake",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "JEUNE DRAKE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 36,
+      "deck": "17-jeune-drake",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "JEUNE DRAKE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 37,
+      "deck": "18-drake",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "DRAKE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 38,
+      "deck": "18-drake",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "DRAKE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 39,
+      "deck": "19-zombi",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "ZOMBI : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 40,
+      "deck": "19-zombi",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "ZOMBI : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 41,
+      "deck": "20-liche",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "LICHE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 42,
+      "deck": "20-liche",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "LICHE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 43,
+      "deck": "21-tas-de-ferraille",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "TAS DE FERRAILLE : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 44,
+      "deck": "21-tas-de-ferraille",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "TAS DE FERRAILLE : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 45,
+      "deck": "22-grand-dragon",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GRAND DRAGON : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 46,
+      "deck": "22-grand-dragon",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "GRAND DRAGON : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 47,
+      "deck": "23-viking-berserker",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "VIKING BERSERKER : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 48,
+      "deck": "23-viking-berserker",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "VIKING BERSERKER : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 49,
+      "deck": "24-draugr-viking",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "DRAUGR VIKING : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 50,
+      "deck": "24-draugr-viking",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "DRAUGR VIKING : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 51,
+      "deck": "25-pillard-viking",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "PILLARD VIKING : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 52,
+      "deck": "25-pillard-viking",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "PILLARD VIKING : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 53,
+      "deck": "26-skjaldmo-viking",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SKJALDMÖ VIKING : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 54,
+      "deck": "26-skjaldmo-viking",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SKJALDMÖ VIKING : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 55,
+      "deck": "27-scalde-viking",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SCALDE VIKING : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 56,
+      "deck": "27-scalde-viking",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SCALDE VIKING : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 57,
+      "deck": "28-seigneur-de-guerre-viking",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SEIGNEUR DE GUERRE VIKING : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 58,
+      "deck": "28-seigneur-de-guerre-viking",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "SEIGNEUR DE GUERRE VIKING : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 59,
+      "deck": "29-baronne-svecha",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "BARONNE SVECHA : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 60,
+      "deck": "29-baronne-svecha",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "BARONNE SVECHA : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 61,
+      "deck": "30-tueur-de-mages",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "TUEUR DE MAGES : recto illustré destiné aux joueurs ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    },
+    {
+      "source": "s0",
+      "page": 62,
+      "deck": "30-tueur-de-mages",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "TUEUR DE MAGES : verso de statistiques destiné au meneur, associé au recto précédent de même titre ; texte principal à l’endroit sans rotation ; carte portrait entière avec bordure."
+    }
+  ],
+  "deck_labels": {
+    "01-gospog-de-la-5e-recolte": "GOSPOG DE LA 5E RÉCOLTE",
+    "02-gospog-de-la-4e-recolte": "GOSPOG DE LA 4E RÉCOLTE",
+    "03-gospog-de-la-3e-recolte": "GOSPOG DE LA 3E RÉCOLTE",
+    "04-gospog-de-la-2de-recolte": "GOSPOG DE LA 2DE RÉCOLTE",
+    "05-machine-dabominations": "MACHINE D’ABOMINATIONS",
+    "06-charybde": "CHARYBDE",
+    "07-barghest": "BARGHEST",
+    "08-geant-du-givre": "GÉANT DU GIVRE",
+    "09-uthorion-thorfin": "UTHORION (THORFIN)",
+    "10-ghillie": "GHILLIE",
+    "11-esprit-follet": "ESPRIT-FOLLET",
+    "12-nibikrid": "NIBIKRID",
+    "13-squelette": "SQUELETTE",
+    "14-bandit": "BANDIT",
+    "15-chevalier": "CHEVALIER",
+    "16-sorcier": "SORCIER",
+    "17-jeune-drake": "JEUNE DRAKE",
+    "18-drake": "DRAKE",
+    "19-zombi": "ZOMBI",
+    "20-liche": "LICHE",
+    "21-tas-de-ferraille": "TAS DE FERRAILLE",
+    "22-grand-dragon": "GRAND DRAGON",
+    "23-viking-berserker": "VIKING BERSERKER",
+    "24-draugr-viking": "DRAUGR VIKING",
+    "25-pillard-viking": "PILLARD VIKING",
+    "26-skjaldmo-viking": "SKJALDMÖ VIKING",
+    "27-scalde-viking": "SCALDE VIKING",
+    "28-seigneur-de-guerre-viking": "SEIGNEUR DE GUERRE VIKING",
+    "29-baronne-svecha": "BARONNE SVECHA",
+    "30-tueur-de-mages": "TUEUR DE MAGES"
+  },
+  "order": "Increasing source page number; pages 1–2 retained as instructions, then 30 consecutive recto/verso pairs. No repeated back discarded.",
+  "geometry_evidence": "All 62 source pages inspected in both contact sheets. Instructions, first recto and first verso opened separately. All cards upright, full page retained.",
+  "supplementary_exports": [
+    {
+      "source": "s0",
+      "page": 1,
+      "output": "instructions/recto.jpg",
+      "dpi": 300
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "output": "instructions/verso.jpg",
+      "dpi": 300
+    }
+  ],
+  "provenance": "New recipe established from Cartes Menaces Aysle after fresh inspection. Each menace has its own illustrated recto and rules verso; no common back exists."
+}

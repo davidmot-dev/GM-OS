@@ -1,0 +1,2095 @@
+{
+  "tool_version": "1.1.0",
+  "pymupdf_version": "2.0",
+  "pillow_version": "12.1.1",
+  "dpi": 300,
+  "sources": [
+    {
+      "id": "s0",
+      "filename": "Paquet Bonus De La Cyberpapaut+_ (v0).pdf",
+      "sha256": "4b45693cb82f8ce65f14d246cb0e06ccb3a9d22a660647d9c9ad41aa9d078164"
+    }
+  ],
+  "output_format": "JPEG",
+  "jpeg_quality": 95,
+  "jpeg_subsampling": 0,
+  "start_indices": {
+    "action": 160,
+    "destin": 76,
+    "cosm-cyberpapaute": 10
+  },
+  "numbering_confirmed": true,
+  "decks": {
+    "action": {
+      "faces": 40,
+      "start_index": 160,
+      "end_index": 199,
+      "back": "action/back.jpg"
+    },
+    "cosm-cyberpapaute": {
+      "faces": 10,
+      "start_index": 10,
+      "end_index": 19,
+      "back": "cosm-cyberpapaute/back.jpg"
+    },
+    "destin": {
+      "faces": 5,
+      "start_index": 76,
+      "end_index": 80,
+      "back": "destin/back.jpg"
+    }
+  },
+  "cards": [
+    {
+      "source": "s0",
+      "page": 1,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/160.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "c5bda7928bc5d991f5f5a66086f4c102252f4f440d1dbb502399429af1b17210"
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "deck": "action",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/back.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "f900fd0f39bc37640c1cf94b9bfa33596b4749db8c12f82466b660b81d206cdc"
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/161.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "a3ea1c2d8b889c5a8c98146ce0e9ee506af8d657a9c8357e15a27ab98f6d3d66"
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/162.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "ea43e483f90c1ddbc07cf7395e6ac326673021ef4ea0c8bf3e9ebb504b44df06"
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/163.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "c721cb9563013187f874030775d33341a2c1ffd444d9413291ff07c97f60c34d"
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/164.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "9119f9f00a985b1c0637d02fcc5347c0ff953913f8fd221410e435ee45d69776"
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/165.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "d1e8f0f45edd725b44cdcfbc2f7bfadb165acfc17df50cf722d2755a0a093e6a"
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/166.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "5af1b232ccb252a458cde43c2779999a0489ba9226729933fcb664807311d76c"
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 15,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/167.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "41d64aa8ac1c28769cd102d873700e2a7c92a335b64645d78631cb762c75937f"
+    },
+    {
+      "source": "s0",
+      "page": 16,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 17,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/168.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "6a75438f6f2101b3f93649f2863eb3ec177b02b5b42653ee7034fceed9226192"
+    },
+    {
+      "source": "s0",
+      "page": 18,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 19,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/169.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "5972e2d2a5d26b3dda5c588db4fc0fda4df0d2d4719e43eeaafb3fd896f5b19f"
+    },
+    {
+      "source": "s0",
+      "page": 20,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 21,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/170.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "56a7aabb2dac510ff65e3bd2ce87794f45c90cd7f107aef972e9254207b5697b"
+    },
+    {
+      "source": "s0",
+      "page": 22,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 23,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/171.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "a6558ad630c5d01cccdee04c15b493c2c445a323978b8e4ade21ec583c3100d7"
+    },
+    {
+      "source": "s0",
+      "page": 24,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 25,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/172.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "7c7dd683f9d9b955c3fa44116fc28019aeee8fa3f8bf5161c8d166bc51e1b60d"
+    },
+    {
+      "source": "s0",
+      "page": 26,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 27,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/173.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "b282445abca502ee9b0feaa76d432abf92a4a509bf659916a93b3e855cf56ec5"
+    },
+    {
+      "source": "s0",
+      "page": 28,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 29,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/174.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "7c1da464859ed786ac34dadc28f05ba8ddd07a5a7f82a2ba95b7760f059dbbfb"
+    },
+    {
+      "source": "s0",
+      "page": 30,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 31,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/175.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "5b929a61e4403489d8068758569af59e72df59e222eb69bf7d43ea144c984f6f"
+    },
+    {
+      "source": "s0",
+      "page": 32,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 33,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/176.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "1b5aa21083546d626ef82749ad7929cdd15470c617ca40ee6465fafaaebc1624"
+    },
+    {
+      "source": "s0",
+      "page": 34,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 35,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/177.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "ecb7a1fcec196d3c03304aced8a7ca568f42a281429a25651cf93021f8d55924"
+    },
+    {
+      "source": "s0",
+      "page": 36,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 37,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/178.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "c5c119c3b4af4918f290c0c94e24fa9de2fcce7cfba2208ae41279a1b346e788"
+    },
+    {
+      "source": "s0",
+      "page": 38,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 39,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/179.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "748a2b0332a405854b2c638a5ac0a234310ea7a386249b93afd87b9dc89fdb4a"
+    },
+    {
+      "source": "s0",
+      "page": 40,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 41,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/180.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "5f78a4dcbac0f391705cde1629242a93b99718a5cae6fd553eb8364475988dbf"
+    },
+    {
+      "source": "s0",
+      "page": 42,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 43,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/181.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "46623dcf003d8ee8c252dd88978644f88a732d7b1558a8ac080e37b32248a3c2"
+    },
+    {
+      "source": "s0",
+      "page": 44,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 45,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/182.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "257cbbe43c06f10ac061a61d186d572d00bc7a7f7dbc4e7417de0f18a6228cde"
+    },
+    {
+      "source": "s0",
+      "page": 46,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 47,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/183.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "52abd5878eb42fe0b20816013d766fa2becee53923d72eddf93005dad834642f"
+    },
+    {
+      "source": "s0",
+      "page": 48,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 49,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/184.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "bdbfc03b8ca9cfc1f43ee6f051d0b8a408b4b9bdc1a8aa8d3c9a8a2572e872ae"
+    },
+    {
+      "source": "s0",
+      "page": 50,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 51,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/185.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "ca0af4cf1be2b8a0514bbc537b7ae3d871f9f55616133e3168eec7371d869664"
+    },
+    {
+      "source": "s0",
+      "page": 52,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 53,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/186.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "7b24f3ac9f1fa4b7ff75c986bbbca4e4f85da52592bbd3f79eb0cb86306d3836"
+    },
+    {
+      "source": "s0",
+      "page": 54,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 55,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/187.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "5000e635235ba1feb48f023a87ae000742761c9fc9e95eeabbfe316c45a83fb5"
+    },
+    {
+      "source": "s0",
+      "page": 56,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 57,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/188.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "780c483739ff1b926e67afd67fb7b70a2b6a7264ea72323d258449317df7b1dd"
+    },
+    {
+      "source": "s0",
+      "page": 58,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 59,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/189.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "f467185fd4495a3435abd9c67911e5eadfa52f2e3c836a4aac311402f0129149"
+    },
+    {
+      "source": "s0",
+      "page": 60,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 61,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/190.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "b05bb4435de6845ee2d1694670a783e4b82bf562efad80b91ab8b5bce45a5f9e"
+    },
+    {
+      "source": "s0",
+      "page": 62,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 63,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/191.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "5f48f0fb85672cfb8322555ee833bd7d083c5e38b303bcc1dfb6df52cf0b2050"
+    },
+    {
+      "source": "s0",
+      "page": 64,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 65,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/192.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "7c5a7fe38afaffdbdcafabc97eeaa59103d0c60aefb08820806c0f39503493b7"
+    },
+    {
+      "source": "s0",
+      "page": 66,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 67,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/193.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "61cc4247f1e54405c9603fa159ac17cce81af1f97d7b851aaa7a645b1d4c77e8"
+    },
+    {
+      "source": "s0",
+      "page": 68,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 69,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/194.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "537db88a1264201abf8482e1c8cecf66c2b515a90af3ae2ddb552fed0a68516d"
+    },
+    {
+      "source": "s0",
+      "page": 70,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 71,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/195.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "19e9505473c4dc2b067e4ccc779cc97f1b163dbb322d50d39a6ed9fea5e0dc0e"
+    },
+    {
+      "source": "s0",
+      "page": 72,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 73,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/196.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "3ffeb6587bb2fb6f6d4a8935a92c31d43064fc97ffd45b14fdfed9387dad85f8"
+    },
+    {
+      "source": "s0",
+      "page": 74,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 75,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/197.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "75048957dbbad6d83400c94b6f54122837c3895cd8fbe2882e2f9d972e93b172"
+    },
+    {
+      "source": "s0",
+      "page": 76,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 77,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/198.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "bb459930ce6a7da9e32d802d22f23962beb5d591819096019b3dc5c217d6deca"
+    },
+    {
+      "source": "s0",
+      "page": 78,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 79,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée.",
+      "output": "action/199.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "3d527744bfed779c439894875266ef3f370dbc68d70a251bcdabfeebc0757381"
+    },
+    {
+      "source": "s0",
+      "page": 80,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Action paysage : titre principal et logo à l’endroit sans rotation. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 81,
+      "deck": "cosm-cyberpapaute",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "cosm-cyberpapaute/10.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "6d135235d4d638494e9a91bf08ebcba0342216171b1c1f2a5e1253a901364d87"
+    },
+    {
+      "source": "s0",
+      "page": 82,
+      "deck": "cosm-cyberpapaute",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée.",
+      "output": "cosm-cyberpapaute/back.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "2b600602def9926d5c4b1fa5c5de647cc29854b82013fc1194c2c1ef0b7a45e6"
+    },
+    {
+      "source": "s0",
+      "page": 83,
+      "deck": "cosm-cyberpapaute",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "cosm-cyberpapaute/11.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "428c52e9fa38f44ac38f58cdb491aecc110e15816a95085cf30aadd93d6e0dcd"
+    },
+    {
+      "source": "s0",
+      "page": 84,
+      "deck": "cosm-cyberpapaute",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 85,
+      "deck": "cosm-cyberpapaute",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "cosm-cyberpapaute/12.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "8133ce69cfee20d4fa84ddb2b81fdf438c0af840dc0e40b5e02371e600e29fa1"
+    },
+    {
+      "source": "s0",
+      "page": 86,
+      "deck": "cosm-cyberpapaute",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 87,
+      "deck": "cosm-cyberpapaute",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "cosm-cyberpapaute/13.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "021c8bfaeaecd5a0e3302118d676dabefeace235182c23361ddca2fa5f61fb0c"
+    },
+    {
+      "source": "s0",
+      "page": 88,
+      "deck": "cosm-cyberpapaute",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 89,
+      "deck": "cosm-cyberpapaute",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "cosm-cyberpapaute/14.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "29cf9cd9595e43258242a04ea06486d0694b10d65b5803f9c41972574ae82b60"
+    },
+    {
+      "source": "s0",
+      "page": 90,
+      "deck": "cosm-cyberpapaute",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 91,
+      "deck": "cosm-cyberpapaute",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "cosm-cyberpapaute/15.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "55c8f5534c44ac9ae2805ab04b66112daf725b36ad346e5a529eea0a00151969"
+    },
+    {
+      "source": "s0",
+      "page": 92,
+      "deck": "cosm-cyberpapaute",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 93,
+      "deck": "cosm-cyberpapaute",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "cosm-cyberpapaute/16.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "c98195e4f73f90da71d378bbae94db7d0c1991921918baa333703ae072526da0"
+    },
+    {
+      "source": "s0",
+      "page": 94,
+      "deck": "cosm-cyberpapaute",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 95,
+      "deck": "cosm-cyberpapaute",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "cosm-cyberpapaute/17.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "a782bdc1031ccdaecd2cb82233cae49c1295f108e6d073598a7709a5cd93ebd0"
+    },
+    {
+      "source": "s0",
+      "page": 96,
+      "deck": "cosm-cyberpapaute",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 97,
+      "deck": "cosm-cyberpapaute",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "cosm-cyberpapaute/18.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "977b4370d483dfe529eab05551b5fb4d949ae900bef53e60bd90caae6318a4b2"
+    },
+    {
+      "source": "s0",
+      "page": 98,
+      "deck": "cosm-cyberpapaute",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 99,
+      "deck": "cosm-cyberpapaute",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "cosm-cyberpapaute/19.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "c4eee70da388354a77f6782fb99e1a1b0bc349cdd5293f2977a9626a138eab9d"
+    },
+    {
+      "source": "s0",
+      "page": 100,
+      "deck": "cosm-cyberpapaute",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 101,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "destin/76.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "18a8ba1bddbef607af90f055e0a4c9f477af84a34d4602250cab35ce14306f1e"
+    },
+    {
+      "source": "s0",
+      "page": 102,
+      "deck": "destin",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée.",
+      "output": "destin/back.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "9e02dc2909d0899253b2b0e7e30de5ada003fae3b96ba2d5331dfb4cfa3bc779"
+    },
+    {
+      "source": "s0",
+      "page": 103,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "destin/77.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "d7be84f1aa86d522c154307d341c1481efd5471aaf9adfd4bea4c99dfbd55bf5"
+    },
+    {
+      "source": "s0",
+      "page": 104,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 105,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "destin/78.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "4249f76de5cb11201b565db069ba1595805f158d6ba43425d2ab6e7b47529111"
+    },
+    {
+      "source": "s0",
+      "page": 106,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 107,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "destin/79.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "e3f1dd3e5fdf08acda96753b53796e7ed139e3dc2110524cd1843b88c8b5bb70"
+    },
+    {
+      "source": "s0",
+      "page": 108,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 109,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 90,
+      "orientation_verified": true,
+      "evidence": "Face portrait : titre et texte principaux à l’endroit après rotation horaire de 90 degrés. Carte complète, bordure noire préservée.",
+      "output": "destin/80.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "5c6ad967d4492eec68a85a19743efcb2e4c52d6b38acfa88c3aaa3a4ddb3bc4c"
+    },
+    {
+      "source": "s0",
+      "page": 110,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 270,
+      "orientation_verified": true,
+      "evidence": "Dos portrait : logo et mot COSM/DESTIN à l’endroit après rotation horaire de 270 degrés. Carte complète, bordure noire préservée. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    }
+  ],
+  "ignored": []
+}

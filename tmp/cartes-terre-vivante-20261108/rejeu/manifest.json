@@ -1,0 +1,2095 @@
+{
+  "tool_version": "1.1.0",
+  "pymupdf_version": "2.0",
+  "pillow_version": "12.1.1",
+  "dpi": 300,
+  "sources": [
+    {
+      "id": "s0",
+      "filename": "Paquet Bonus Terre Vivante (v1).pdf",
+      "sha256": "d7288e1ec9ad673071f5e76eeddc5011b7ec39ff7b7cb7af447044ac3bc398eb"
+    }
+  ],
+  "output_format": "JPEG",
+  "jpeg_quality": 95,
+  "jpeg_subsampling": 0,
+  "start_indices": {
+    "action": 120,
+    "destin": 71,
+    "cosm-terre-vivante": 10
+  },
+  "numbering_confirmed": true,
+  "decks": {
+    "action": {
+      "faces": 40,
+      "start_index": 120,
+      "end_index": 159,
+      "back": "action/back.jpg"
+    },
+    "cosm-terre-vivante": {
+      "faces": 10,
+      "start_index": 10,
+      "end_index": 19,
+      "back": "cosm-terre-vivante/back.jpg"
+    },
+    "destin": {
+      "faces": 5,
+      "start_index": 71,
+      "end_index": 75,
+      "back": "destin/back.jpg"
+    }
+  },
+  "cards": [
+    {
+      "source": "s0",
+      "page": 1,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/120.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "cf962bca4b44f65ea9532a63c3c9b4ffe6805832f2ce2bfdba539d728e895518"
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "deck": "action",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/back.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "323fc4017aab0ddc486259af1475c5d51d32ede3786857b79b8ea0ff2f77e656"
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/121.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "2ce2578af344cda0b83ea4a34bc57034ba94750c4bf13b0f4c814eac82b20463"
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/122.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "f8c812a661ba6b1b31df4cbacc1469bf0d80b5b113498a0756077ceeac8a7c3a"
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/123.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "4341651e96f59c7e2a9c04659768f1725b7a8cbbe4b90a2a3a3bc5509908267a"
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/124.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "9f3c3330b079f7ed9b0c607bbd413ba3c8442dd55b5443e2d399ba0ee7ad833c"
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/125.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "69e9b58df78e62c984522373eeedab42e31dee3c697d5bb01b13ea5da879f190"
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/126.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "f56d2f1ad6408857990ceb60f4c5fa7ee224a517eec5f8dbe28032d02c1a4766"
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 15,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/127.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "65f57057bf16e0ed026831b62d664ed34e3099d804eeaffd7248b187a75f5649"
+    },
+    {
+      "source": "s0",
+      "page": 16,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 17,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/128.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "d8c560599c036a1b4a3ced5496cc4c47cc5c49bf6021512d6f589981deadeded"
+    },
+    {
+      "source": "s0",
+      "page": 18,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 19,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/129.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "1c336fb0385cce56a22f3fbbd63b3c50ecce2f90c9fd6b9a2065543ab4821228"
+    },
+    {
+      "source": "s0",
+      "page": 20,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 21,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/130.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "7ae249303e7da4b77a35bb541b01b0f5faf6bc346ce1fb9b481a0cee18895f95"
+    },
+    {
+      "source": "s0",
+      "page": 22,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 23,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/131.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "82645c9fb8f68fbfd0b8884887a2b5f7e259d61f30483166b1a196f95640c12b"
+    },
+    {
+      "source": "s0",
+      "page": 24,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 25,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/132.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "246e7c1c549b9fc49fd272aac16a8d0320f2ecc0334f3d004197e66ed257f262"
+    },
+    {
+      "source": "s0",
+      "page": 26,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 27,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/133.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "c8aee9ce1f47ad166f8d970f71969bd56fdff06539356a3071fb296af0089002"
+    },
+    {
+      "source": "s0",
+      "page": 28,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 29,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/134.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "223b3752eb7fdaad7a3deb33d33968e0612d9eaa6087bd0fd2b871223fb421da"
+    },
+    {
+      "source": "s0",
+      "page": 30,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 31,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/135.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "9a36c61cb0396c269ffc85f3293d971310e8fe96d0f30b019cf7ada9dce52415"
+    },
+    {
+      "source": "s0",
+      "page": 32,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 33,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/136.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "8ac8170885807de19a45e5b3a0409101f6f7a087fa2430d7b2058469a00feff2"
+    },
+    {
+      "source": "s0",
+      "page": 34,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 35,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/137.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "4c00cb4df73f9b8a340487f6c160611e0ca3e4416d5e35806c22177c654b2ece"
+    },
+    {
+      "source": "s0",
+      "page": 36,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 37,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/138.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "6d43df3ae29201221d89833576d757005e18ec5dd901077f91c5dc00710e28ad"
+    },
+    {
+      "source": "s0",
+      "page": 38,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 39,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/139.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "70bee3b33bee94c22797ddf75d360e24f141a6ca0e325e39bb60cb525ae71f80"
+    },
+    {
+      "source": "s0",
+      "page": 40,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 41,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/140.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "c444270ee818d669d50f2a0029115514508c2fcb083db6fe3494ae57ecf19984"
+    },
+    {
+      "source": "s0",
+      "page": 42,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 43,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/141.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "3450867382db77b9f94a9c2a1b5236db68a92af7b184225642efbc8d80ff3ee7"
+    },
+    {
+      "source": "s0",
+      "page": 44,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 45,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/142.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "c92d8fd0daa7a9e0af6ca478e6cae611bef935c479ef2763f6bb14677aa0ef90"
+    },
+    {
+      "source": "s0",
+      "page": 46,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 47,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/143.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "d75273992a4c573b594a34b303215dad5232de12bb9908b92783f3ed3df3ccaf"
+    },
+    {
+      "source": "s0",
+      "page": 48,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 49,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/144.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "d6274264c38aca84b8dd0c95007a7e5557b0e41b87ccf4a9c55b6f0b88a7737b"
+    },
+    {
+      "source": "s0",
+      "page": 50,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 51,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/145.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "e6f0ff4fde09b06c7a4f8a618832be4ad4c661e7f8dfa7284ad605f5dedcdceb"
+    },
+    {
+      "source": "s0",
+      "page": 52,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 53,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/146.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "0966a0400b7ed07a5788fb51e0e09df1b400d4c64e6ec749a1e0018c5529c675"
+    },
+    {
+      "source": "s0",
+      "page": 54,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 55,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/147.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "4fa1ba1ec81872387ea9836e57b80460c950423e755bb87947dda4e9cbfbe42a"
+    },
+    {
+      "source": "s0",
+      "page": 56,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 57,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/148.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "df89ecdaf2f7de58f53b7532c2b8155c33545adc9db0bd26077757d9b6a239b4"
+    },
+    {
+      "source": "s0",
+      "page": 58,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 59,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/149.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "bdbb5c0ba473b029d8b823ad27f857de0bace4eb6758db4097d080edcb0eb692"
+    },
+    {
+      "source": "s0",
+      "page": 60,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 61,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/150.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "1b0c4f378fe8936beb026c1020ff9ae955655eb29ca8eab9ca94bfe7b282eaff"
+    },
+    {
+      "source": "s0",
+      "page": 62,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 63,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/151.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "19f2c8ebb7f8e2675e7881f05029137494633d601219d7d9fbc3df3ab892c610"
+    },
+    {
+      "source": "s0",
+      "page": 64,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 65,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/152.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "64ae74d292e7da6152d212d3e3d93116c6b4313721375ac9d603df6373374758"
+    },
+    {
+      "source": "s0",
+      "page": 66,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 67,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/153.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "c593122eee1611c0a7e79a3e8457d3b668c3b7fa9194cd756e468eb66b694d69"
+    },
+    {
+      "source": "s0",
+      "page": 68,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 69,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/154.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "1b2c8dbe24cf0c51e65da0fae0b9a3be29f6daff1e3100405d76205049904967"
+    },
+    {
+      "source": "s0",
+      "page": 70,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 71,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/155.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "589354d9f342c2b29ca06e54637348ea24103c1ba2cc30b3b3db2660139722bd"
+    },
+    {
+      "source": "s0",
+      "page": 72,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 73,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/156.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "a6eb90009e4aed31caa035bcfa49587f4e5ce0162364e722cf34275b77a91193"
+    },
+    {
+      "source": "s0",
+      "page": 74,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 75,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/157.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "12a8350e43d5e0264c216b0cd65620db73ecfdac7a61961e45437564629ae187"
+    },
+    {
+      "source": "s0",
+      "page": 76,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 77,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/158.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "44096adcc966ba2d86d51e5f791bcdaf79256a56237ec485dbaa818f7e224891"
+    },
+    {
+      "source": "s0",
+      "page": 78,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 79,
+      "deck": "action",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée.",
+      "output": "action/159.jpg",
+      "size_pixels": [
+        1040,
+        745
+      ],
+      "sha256": "f0920a9fa0b5052de00a7edb5a3ef840920ea79def660028f085f21673b46a2e"
+    },
+    {
+      "source": "s0",
+      "page": 80,
+      "deck": "action",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format paysage. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 81,
+      "deck": "cosm-terre-vivante",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "cosm-terre-vivante/10.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "08ecbd785b66eaf81441d070eb8a1c51bf362f26331b149f0e1a82430589651f"
+    },
+    {
+      "source": "s0",
+      "page": 82,
+      "deck": "cosm-terre-vivante",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "cosm-terre-vivante/back.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "2838062e1bd41926fea796917f17e2fd6c41de9c586ec620c0e4b1efe2b1bb8f"
+    },
+    {
+      "source": "s0",
+      "page": 83,
+      "deck": "cosm-terre-vivante",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "cosm-terre-vivante/11.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "ed2660d5a41ee7aaf414f6ff86a5c08da391bc60d82844c9cf23423110b1c783"
+    },
+    {
+      "source": "s0",
+      "page": 84,
+      "deck": "cosm-terre-vivante",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 85,
+      "deck": "cosm-terre-vivante",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "cosm-terre-vivante/12.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "e1118f90ce2b0ec091ebbbc57011b616df1f8afcda68346556a4d103661bc0c6"
+    },
+    {
+      "source": "s0",
+      "page": 86,
+      "deck": "cosm-terre-vivante",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 87,
+      "deck": "cosm-terre-vivante",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "cosm-terre-vivante/13.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "1a519365872218009518d8f121b579e69c69ffcff03841d26f29793fad126e3d"
+    },
+    {
+      "source": "s0",
+      "page": 88,
+      "deck": "cosm-terre-vivante",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 89,
+      "deck": "cosm-terre-vivante",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "cosm-terre-vivante/14.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "632eda0e88402176a839225b70460a0d39c2bc65fc6a706dbf2178811c3fb0fd"
+    },
+    {
+      "source": "s0",
+      "page": 90,
+      "deck": "cosm-terre-vivante",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 91,
+      "deck": "cosm-terre-vivante",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "cosm-terre-vivante/15.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "ee93f116ad9d8885e4658cdb61c48a944718063345c3f208a3249da414f385f1"
+    },
+    {
+      "source": "s0",
+      "page": 92,
+      "deck": "cosm-terre-vivante",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 93,
+      "deck": "cosm-terre-vivante",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "cosm-terre-vivante/16.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "ad33dcba98eead640434316c876d138473d1f65156d629ab268c7eb2445b52bd"
+    },
+    {
+      "source": "s0",
+      "page": 94,
+      "deck": "cosm-terre-vivante",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 95,
+      "deck": "cosm-terre-vivante",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "cosm-terre-vivante/17.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "976548fe204bb1b965807e3743b2a9d8a886b6fccbc31a5c21a69a9e24bbf50a"
+    },
+    {
+      "source": "s0",
+      "page": 96,
+      "deck": "cosm-terre-vivante",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 97,
+      "deck": "cosm-terre-vivante",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "cosm-terre-vivante/18.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "d4cc4e391517ba20a06bdbd94f450cd85111c127bb466c8dcd3c5b13b6bc7e7b"
+    },
+    {
+      "source": "s0",
+      "page": 98,
+      "deck": "cosm-terre-vivante",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 99,
+      "deck": "cosm-terre-vivante",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "cosm-terre-vivante/19.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "cf97cc33dc2e9033c749b2e516a9c987de7c7d5981bff4f4b235e56f7fbca452"
+    },
+    {
+      "source": "s0",
+      "page": 100,
+      "deck": "cosm-terre-vivante",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 82 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 101,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "destin/71.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "92f04475c80bb6609bd0f3a9c9e826555a56033b16ac3d34bbc66ed28f5aa558"
+    },
+    {
+      "source": "s0",
+      "page": 102,
+      "deck": "destin",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "destin/back.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "753d11931ddbf5237d7299ef4bef5114c84daf02254a143e8423ba59f7409437"
+    },
+    {
+      "source": "s0",
+      "page": 103,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "destin/72.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "846093d669ace830bd499cc04c9ec51894a0b47ec8ddb852903364d065a790ae"
+    },
+    {
+      "source": "s0",
+      "page": 104,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 105,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "destin/73.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "aaadf79f9fa75767cd0e50020cde048658b24e22b812df7d6a54e8e2a7e18440"
+    },
+    {
+      "source": "s0",
+      "page": 106,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 107,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "destin/74.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "10c89a66a99d2251fe420e4fb20064a6b9d1447f91b96472dc538a229f34eaf7"
+    },
+    {
+      "source": "s0",
+      "page": 108,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 109,
+      "deck": "destin",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée.",
+      "output": "destin/75.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "eb1f52ef09d1059cbc2b7669c4f879d634d0df966dc5732a12e936eea09a0cf6"
+    },
+    {
+      "source": "s0",
+      "page": 110,
+      "deck": "destin",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Inspection visuelle : texte principal et logo à l’endroit sans rotation ; format portrait. Carte entière, bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 102 à 144 dpi.",
+      "output": null
+    }
+  ],
+  "ignored": []
+}

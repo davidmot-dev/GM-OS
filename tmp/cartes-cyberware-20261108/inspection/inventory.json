@@ -1,0 +1,6450 @@
+{
+  "version": "1.1.0",
+  "sources": [
+    {
+      "id": "s0",
+      "filename": "Cyberware Deck (v0).pdf",
+      "sha256": "378a9d0de2a3fc0fe2165a6dd0d19e2f704ef5cd61abaff0e2573f955993d9a4",
+      "pages": [
+        {
+          "page": 1,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0001.png",
+          "pixel_sha256": "e8b1efc99d9617f49465c567310df0afd3501bcbeb92931ca946e932ed46268a",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nAccorde 2  rangs dans l’une des \ncompétences suivantes (non cumulables) : \nInformatique, Observation, Premiers \nsoins, Véhicules terrestres, Langue, \nManœuvre, Médecine, Profession, \nSciences humaines, Survie, Pistage ou \nVéhicules aquatiques.\nCoût d’installation : 1500 $\nPUCEMÉMOIRE\n26\n26\n16\n16\n1\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 2,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0002.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 3,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0003.png",
+          "pixel_sha256": "46c2602addc023dd34d502c105a934b37d5b1c87c4eddd787941f5274a7c96f4",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nAccorde 2 rangs dans l’une des \ncompétences suivantes (non cumulables) : \nAltération, Cinétique, Conjuration, \nDivination, Persuasion, Sciences ou \nDébrouillardise.\nCoût d’installation : 5000 $\nPUCEHÉRÉTIQUE\n26\n26\n18\n18\n2\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 4,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0004.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 5,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0005.png",
+          "pixel_sha256": "83bbe526b4f34d09a1372e7d99cede4435e4f42446252bdac9bf036d64c72344",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n3\nAccorde 2 rangs dans n’importe quelle \ncompétence (non cumulable) non \ncouverte par la PuceHérétique.\nCoût d’installation : 3000 $\nPUCEACTION\n17\n17\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 6,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0006.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 7,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0007.png",
+          "pixel_sha256": "114e6de52912aa91f6c354aececbfaefe77d41aad0ccd5c25e1bce7f4f6d0471",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n4\nPermet d’utiliser une puce de type \nPuceAction, PuceMémoire ou \nPuceHérétique.\nCoût d’installation : 500 $\nPORTEPUCE PIRATÉ\n26\n26\n13\n13\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 8,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0008.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 9,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0009.png",
+          "pixel_sha256": "02d1a6a1f07cbd6bb52022f190285aca1070005376bfcc871a6082b10c9681fa",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n5\nIgnore 2 points de malus d’Actions \nmultiples lors des tests de Véhicules, \nle porteur peut récupérer des points \nde Choc s’il ne fait que des tests de \nVéhicules.\nCoût d’installation : 1000 $\nCYBERPILOTE EEV\n26\n26\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 10,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0010.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 11,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0011.png",
+          "pixel_sha256": "148d98958ba6db4f47c477c55dd720e89f5595cc7f3842b26ae40d284e74a50d",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n6\nCommande à distance des armes \nmontées sur des véhicules et contrôlées \npar ordinateur. Utilise des Actions \ncombinées pour tirer avec plusieurs \narmes de même type ou des Actions \nmultiples si elles sont de type différent.\nCoût d’installation : 1000 $\nCYBERARTILLEUR EEV\n26\n26\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 12,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0012.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 13,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0013.png",
+          "pixel_sha256": "87492c95018e8682b7882fbbc05bcd214bc3046b7dae18279f92cc278aa3a2f2",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n7\nPermet le contrôle des drones à distance. \nDes cyberyeux ou un ATH ne sont pas \nnécessaires pour visualiser les données \nsensorielles du drone.\nCoût d’installation : 500 $\nCONTRÔLEUR DE DRONES EEV\n13\n13\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 14,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0014.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 15,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0015.png",
+          "pixel_sha256": "00b5a43ad364404194b8e54c41bbbef146f81fb02bce1c389e7dd1baf9b6091c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n8\nIgnore 2 points de Malus de vitesse.\nCoût d’installation : 1000 $\nBELLEMIRE\n15\n15\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 16,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0016.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 17,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0017.png",
+          "pixel_sha256": "ab2e7aac7d01d58efb08fa36cbfea1b8e2971ffefbe0229537fd69561f187b4c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n9\nL’option de combat Viser est une action \nsimple quand elle est utilisée avec \nune arme disposant d’un connecteur \nintelligent, mais uniquement si l’on \neffectue un tir unique sur une seule cible.\nCoût d’installation : 3000 $\nBELLECIBLE\n17\n17\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 18,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0018.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 19,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0019.png",
+          "pixel_sha256": "24a3810717c399c02be680e9174dfa27fff98e777da566ff4f7430e586b11113",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n10\n10\nLes tests d’Analyse d’indices, \nd’Observation et de Pistage liés à la vue \nsont Favorisés.\nCoût d’installation : 2000 $\nŒIL CYBERNÉTIQUE BELLEVUE 20-20\n16\n16\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 20,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0020.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 21,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0021.png",
+          "pixel_sha256": "558f66ab48e7265167176f492a5f08c81ad98490620e532388712516e236dd4d",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n11\n11\nIgnore 2 points de malus d’obscurité.\nCoût d’installation : 1000 $\nVISION DE NUIT BELLEVUE\n15\n15\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 22,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0022.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 23,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0023.png",
+          "pixel_sha256": "d6e99ec5e12b45431de96639cf57149dc52301739b9a24b58d1dc438095a1499",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nIgnore 4 points de malus d’obscurité \nsi la cible émet de la chaleur. Détecte \nautomatiquement toute présence \nd’implants cybernétiques ou d’Occultech \ndans une cible à moins qu’ils ne soient \ndotés d’un bouclier renforcé.\nCoût d’installation : 3000 $\nBELLESPECTRE BELLEVUE\n12\n12\n26\n26\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 24,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0024.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 25,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0025.png",
+          "pixel_sha256": "a68452f0c3ce728ce0314de2cae68f289f8cbc19adc322b01ae7a5548c916300",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n13\n13\nIgnore 2 points de malus de portée \nlorsque le porteur tire avec une arme \ndotée d’un connecteur intelligent.\nCoût d’installation : 2000 $\nŒIL LÉTAL CSI\n26\n26\n16\n16\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 26,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0026.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 27,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0027.png",
+          "pixel_sha256": "e0d2e915343da708b4664892d71bdec0c9b4ad20c9521f41f9af84c8de678f1e",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n14\n14\nImmunise contre la Surprise, mais \n-4 aux tests de Persuasion. Peut être \nretiré et déposé quelque part. Permet \nles rotations et transmet des images \njusqu’à 100 mètres.\nCoût d’installation : 5000 $\nŒIL ROTATIF IVC\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 28,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0028.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 29,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0029.png",
+          "pixel_sha256": "6f59c15fc317236be2f9a9ac5dee9778bc35588145bda34c0b87bb9b946ee436",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n15\n15\nAvec un schéma rétinien spécifique, les \ntests de Crochetage opposés aux scanners \nrétiniens obtiennent automatiquement \nun succès Spectaculaire. Sans ce schéma \nspécifique, le test est à la place Favorisé.\nCoût d’installation : 2000 $\nCOPIEUR RÉTINIEN CYBERHAM\n16\n16\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 30,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0030.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 31,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0031.png",
+          "pixel_sha256": "18d9bf3cbe564ad472d218a78bffb74e065540bccec37b186d39391aa489adc3",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nAffiche des documents transmis ou de \nvidéos sur la rétine.\nCoût d’installation : 500 $\n16\n16\nATH EEV\n26\n26\n13\n13\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 32,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0032.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 33,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0033.png",
+          "pixel_sha256": "bd3782b686f2baf4b0968a211adb34b2acf67b35fb6c930aa55914160f71cdef",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n17\n17\nPermet des communications radio qui ne \npeuvent être ni tracées ni interceptées. \nIl n’est pas nécessaire de parler pour \ntransmettre ces informations.\nCoût d’installation : 500 $\n26\n26\n13\n13\nCRYPTEUR DE COMMUNICATIONS CYBERHAM\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 34,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0034.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 35,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0035.png",
+          "pixel_sha256": "116ea67add3c3e7cd5120e16225b5a1e5f344d8c50288987cb0d4fa72f8cb094",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n18\n18\nReçoit et déchiffre automatiquement les \nsignaux radio, y compris les mouchards, \nles dispositifs du Réseau Divin, etc. Les \nsignaux peuvent être enregistrés et \ntéléchargés sur une PuceDonnées.\nCoût d’installation : 3000 $\nSCANNER CYBERHAM\n26\n26\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 36,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0036.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 37,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0037.png",
+          "pixel_sha256": "e917f27a807a0863845f467bcfc668b6a919a17a70bf94c23150bd143ce10e43",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nTraduit automatiquement dans sa langue \nmaternelle toute langue moderne de la \nPrime Terre ou de Magna Verita entendue \npar l’utilisateur.\nCoût d’installation : 500 $\nTRADUCTEUR CYBERHAM\n19\n19\n26\n26\n13\n13\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 38,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0038.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 39,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0039.png",
+          "pixel_sha256": "8f071f726954b488a096eeb05f6ec61328993d834af9e6e27df6d5eb4ada8673",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n20\n20\nEnregistre des photos, des vidéos et du \nson en haute résolution. Comprend le \nstockage.\nCoût d’installation : 500 $\nENREGISTREUR EEV\n13\n13\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 40,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0040.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 41,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0041.png",
+          "pixel_sha256": "235026fe384c20dfc62b7799f53e93fabee315f3e5795ab540cfb59e4ef136bd",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n21\n21\nLes tests d’Analyse d’indices, \nd’Observation et de Pistage liés au son \nsont Favorisés.\nCoût d’installation : 1500 $\nANALYSEUR EEV\n16\n16\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 42,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0042.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 43,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0043.png",
+          "pixel_sha256": "c21b65e6fc69f5d369909f4e40e314d3707bbe41aba1f1011c8101eb4b4e2c11",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n22\n22\nPermet d’entendre les sons subsoniques \net ultrasoniques. Ignore 4 points de \nmalus d’obscurité.\nCoût d’installation : 5000 $\nTRANSFRÉQUENCE EEV\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 44,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0044.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 45,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0045.png",
+          "pixel_sha256": "d27e8acbb57ed891e4c3d92324e8d6ef02ecfe9e1fef377b4038f1fe0be5ac06",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n23\n23\nLes tests d’Analyse d’indices, \nd’Observation et de Pistage liés aux gaz \net aux odeurs sont Favorisés.\nCoût d’installation : 2000 $\nLIMIER EEV\n16\n16\n26\n26\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 46,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0046.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 47,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0047.png",
+          "pixel_sha256": "81ed1fd49791bda34ba478372207e6dfb3fdb925cf46043ab7e4ebc1acb1869a",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n24\n24\nImmunise contre les attaques avec des \ngaz qui doivent être inhalés. Aucun effet \ncontre les neurotoxines.\nCoût d’installation : 2000 $\nCLAMP EEV\n26\n26\n16\n16\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 48,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0048.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 49,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0049.png",
+          "pixel_sha256": "960b17abe6982cddac26909dcdf4a9ada908fc94c7bfad0c3bc48068ca70f920",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n25\n25\nLes tests de Crochetage visant à tromper \nun lecteur d’empreintes digitales avec \nune empreinte enregistrée obtiennent \nun succès Spectaculaire. Sans ce schéma \nspécifique, le test est à la place Favorisé.\nCoût d’installation : 1000 $\nCOPIEUR D’EMPREINTES DIGITALES CYBERHAM\n26\n26\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 50,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0050.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 51,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0051.png",
+          "pixel_sha256": "234218ecd00acb017714c869801d0ca061e01e5bf0064805fa785f7a2e04891b",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nImmunise contre la condition Pris au \ndépourvu lorsque le porteur est la cible \nd’une attaque de mêlée.\nCoût d’installation : 5000 $\nLEDOS EEV\n26\n26\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 52,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0052.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 53,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0053.png",
+          "pixel_sha256": "49941aea808f4cffb5acee40bc4262e0092e9ca534748a13a1cd11c79c72c5e3",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nImmunise à la surprise (n’empêche pas \nles alliés d’être surpris). Nécessite LeDos \nEEV.\nCoût d’installation : 5000 $\nLETRES EEV\n27\n27\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 54,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0054.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 55,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0055.png",
+          "pixel_sha256": "7925d9043428117d30dad87f0a671122da20e1729f09f19c0c8ffa26bc8872a4",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nDétecte un mouvement jusqu’à \n100 mètres de distance, ou 20 mètres \ns’il est masqué par des obstacles ou des \nmurs.\nCoût d’installation : 5000 $\nLECUATRO EEV\n28\n28\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 56,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0056.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 57,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0057.png",
+          "pixel_sha256": "71a1ac4d5d36dff6ebcf2259ebc55e881aaa6f84b2fed1a4575302afebba913c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nUne fois par jour, en tant qu’action \ngratuite, supprime tous vos points de \nChoc. Le porteur ne peut pas subir de \npoints de Choc durant 30 secondes. S’il \nest désactivé ou après les 30 secondes, le \npersonnage subit de la Fatigue.\nCoût d’installation : 4000 $\nSURADRÉNALISATEUR COMPTE\n29\n29\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 58,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0058.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 59,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0059.png",
+          "pixel_sha256": "a522a51b65d76b19d008b24294da054559bab7381aafc3f1021d674b3da510a8",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nImmunise contre le poison (y compris \nl’alcool).\nCoût d’installation : 4000 $\nDETOX COMPTE\n30\n30\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 60,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0060.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 61,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0061.png",
+          "pixel_sha256": "c589194984b1f00aaa2214bd2697d592e8fbdab4d0df79bac21aaff017993b0d",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nUne fois par jour, en tant qu’action \nsimple, ignore les malus de Blessures \npour le reste de la Scène.\nCoût d’installation : 4000 $\nENDOPLUS COMPTE\n31\n31\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 62,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0062.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 63,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0063.png",
+          "pixel_sha256": "9725a6d781665eb8c953eaf4eb564e35db4fabfbf3f63f8f60c476cc764417c8",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nDonne un bonus de +1 en Esquive, \nManœuvre, de Défense en Mêlée et \nà mains nues. Ne se cumule pas avec \nd’autres bonus.\nCoût d’installation : 5000 $\nSTABILISATEUR COMPTE\n32\n32\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 64,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0064.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 65,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0065.png",
+          "pixel_sha256": "2551bb56f69924547cb1b64c578b7157263e4a0ca7f6295ff46a3309ec53881b",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nReproduit la voix d’une personne \nspécifique après une conversation. Les \ntests de Crochetage visant à tromper un \nscanner vocal avec une voix enregistrée \nbénéficient d’un succès Spectaculaire. \nSans ce schéma spécifique, le test est à la \nplace Favorisé.\nCoût d’installation : 1000 $\nSYNTHÉVOX CYBERHAM\n33\n33\n26\n26\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 66,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0066.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 67,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0067.png",
+          "pixel_sha256": "6cfea78253bb596a9d476136d3e7474180c5b5dcc7afa41738449523116666f8",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nIgnore 2 points de malus de Blessures \nlors des tests de Défaite.\nCoût d’installation : 3000 $\nSYSTÈMES DE SAUVEGARDE LIFELOCK HARDPLAS\n34\n34\n26\n26\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 68,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0068.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 69,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0069.png",
+          "pixel_sha256": "930b78a3be8187ab4ee90864b05c16651fb243d9adaa205c0044453a6b4faaed",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nIgnore la moitié des points de Choc en cas \nde Contrecoup (minimum 1).\nCoût d’installation : 5000 $\nHEXXER MK I\n35\n35\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 70,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0070.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 71,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0071.png",
+          "pixel_sha256": "0b36ffe491f2c6ad90782066142f27a44fe92c31a730b761be6c2e584f7ddd8b",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nLe nombre de points de Choc annulés est \nutilisé comme bonus au prochain test \nd’incantation du personnage effectué \nmoins d’une minute plus tard. Nécessite \nHexxer Mk I.\nCoût d’installation : 5000 $\nHEXXER MK II\n36\n36\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 72,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0072.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 73,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0073.png",
+          "pixel_sha256": "2078664a370086f9eb1e33265ac58c4ab1d374cf9e6aa42776c83beb2a0249f2",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nLe porteur peut choisir d’utiliser l’effet \nde Mk II ou d’ajouter +1DB points de \ndommages au prochain sort infligeant \ndes dommages. Le choix doit être fait \navant de lancer le sort. Nécessite Hexxer \nMk II.\nCoût d’installation : 5000 $\nHEXXER MK III\n37\n37\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 74,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0074.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 75,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0075.png",
+          "pixel_sha256": "3faaecedf764fa141be779daaf4d6fe6fb9a87f2a13a3479f896f29d68ff8a23",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nPiège un démon unique invoqué \naccidentellement (par exemple par une \nCarte de Cosm Magie hérétique). -2 aux \ntests d’incantation jusqu’à ce que le \ndémon soit libéré ou exorcisé.\nCoût d’installation : 5000 $\nHEXXER MK IV\n38\n38\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 76,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0076.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 77,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0077.png",
+          "pixel_sha256": "61317027ef53af84e8fd44ada32978392388dcd852a49830dfe1c2ef022b4ef2",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nLes tests de Dextérité ou de Force \nimpliquant l’escalade et l’équilibre sont \nFavorisés. Nécessite jambes HardPlas.\nCoût d’installation : 1000 $\nSERROGRIFF COMPTE\n39\n39\n26\n26\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 78,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0078.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 79,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0079.png",
+          "pixel_sha256": "a38c9be19ac2a0f2be0333a736649cbdd98d9e5fa89685b6d4d27877473dca7e",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nLes tests de Dextérité impliquant l’agilité \nmanuelle sont Favorisés si un cyberbras \na été amélioré. Si les deux bras sont \naméliorés, le test bénéficie d’un bonus \nde +4. Nécessite un ou deux bras \nHardPlas.\nCoût d’installation : 2500 $\nDOIGTSFOUS COMPTE\n40\n40\n26\n26\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 80,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0080.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 81,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0081.png",
+          "pixel_sha256": "2ca7cca284581a03a877c322c46845b731e41e5476e44f7d6eeab575492eb24d",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nPermet de sauter jusqu’à 2x le \nDéplacement de base, mais le personnage \ndevient Vulnérable. Il peut sauter en \nhauteur jusqu’à son Déplacement de \ncourse, mais il devient Très vulnérable. \nNécessite jambes HardPlas.\nCoût d’installation : 3000 $\nPROPULSAUT COMPTE\n41\n41\n26\n26\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 82,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0082.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 83,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0083.png",
+          "pixel_sha256": "821daf0ece6e91243f0e463a99d388c56011283a063a8d50c446104321d32be1",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nAugmente le Déplacement de base de +2. \nNécessite jambes HardPlas.\nCoût d’installation : 1000 $\nELASTOPIEDS COMPTE\n42\n42\n26\n26\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 84,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0084.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 85,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0085.png",
+          "pixel_sha256": "5c25429f0ff94a4d1785d2a7831fe1df23c7e7ffd65409fda53cfbe9cb4ce46e",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nIgnore 6 points de malus pour les tests \nd’escalade. Si deux cyberbras sont \naméliorés, les tests d’escalade deviennent \négalement Favorisés.\nCoût d’installation : 5000 $\nMAIN À DÉPRESSION COMPTE\n43\n43\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 86,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0086.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 87,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0087.png",
+          "pixel_sha256": "b2f0834e905a22fd05de225d9cace42fd5a31549ca8def572c47b35641800ff7",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nLes tests de Force et les dommages basés \ndessus bénéficient d’un bonus de +1. \nArmure +2 sur le cyberbras. Avec deux \nbras, le bonus passe à +2 aux tests et +2 à \nl’Armure pour les deux cyberbras.\nCoût d’installation : 5000 $\nBRAS HARDPLAS\n44\n44\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 88,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0088.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 89,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0089.png",
+          "pixel_sha256": "7575b1d005d05dc2aaf614c29070d9996b02e86a4a0a53a1c628a3e239c3790c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nRéduit de moitié les dommages de chute. \nPermet de sauter 2x la distance. Tests de \nForce Favorisés. +2 à l’Armure pour les \njambes.\nCoût d’installation : 5000 $\nJAMBES HARDPLAS\n45\n45\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 90,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0090.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 91,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0091.png",
+          "pixel_sha256": "296240600560d960217f3e7d56963841407066bb78dc572e10844351209b9143",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\n+2 Armure (Intégrale).\nCoût d’installation : 6000 $\nBLINDAGE CORPOREL TRIGON\n46\n46\n26\n26\n19\n19\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 92,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0092.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 93,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0093.png",
+          "pixel_sha256": "9620710b9d4e71d4e87a83a059045988375673cd8a4a090594f97fdbafc8515e",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nBonus de +1 à la Résistance.\nCoût d’installation : 5000 $\nCYBERSQUEL TRIGON\n47\n47\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 94,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0094.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 95,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0095.png",
+          "pixel_sha256": "a8f822c99b70257b768c5c9bcf5b8a5e2a6a7a56ef6f1177e500c96512ffc870",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nLes tentatives de désactivation des \nimplants cybernétiques du personnage \ndoivent se faire avec des jets en opposition \net le test de l’attaquant est Défavorisé. \nLes radiations électromagnétiques \nne peuvent pas détecter les implants \ncybernétiques.\nCoût d’installation : 4000 $\nBOUCLIER IEM TRIGON\n48\n48\n26\n26\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 96,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0096.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 97,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0097.png",
+          "pixel_sha256": "0314cdb3d41ab9f74c3d0f68a3b18d736042168e7e457100e00f90310825b021",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nArme. Dommages Force +5, Déséquilibre, \nPeu maniable, utilise Combat à mains \nnues. Les tests de Dextérité sont \nDéfavorisés. Nécessite bras HardPlas.\nCoût d’installation : 2500 $\nPLASMAPOING COMPTE\n49\n49\n26\n26\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 98,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0098.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 99,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0099.png",
+          "pixel_sha256": "f384ec5ccf04910f0bb378aadf1277f416566f1b4623ccd0eb3253cf2f01f256",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nArme. Dommages Force +2, Douleur, \nDiscret, 3 coups par Scène. Utilise \nCombat à mains nues.\nCoût d’installation : 1000 $\nELECTROPOINGS COMPTE\n50\n50\n26\n26\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 100,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0100.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 101,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0101.png",
+          "pixel_sha256": "2e377191153ff8f5b85ac80dc7611e4ac738f4555ca43238f1678e16bf9809ce",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nArme. Dommages 16, Zone d’effet \nmoyenne, -4 à la détection, utilise Armes \nde jet. Ce cyberœil peut être utilisé \ncomme grenade. Il peut être remplacé \nau début de l’Acte suivant.\nCoût d’installation : 1000 $\nBOMBŒIL IVC\n51\n51\n26\n26\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 102,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0102.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 103,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0103.png",
+          "pixel_sha256": "2cfa99122107d103c93996b5da6bf89acdb7537c4f9b3d3933934b0f1a4c669e",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nTransmet des images à l’installateur, \nqui peut également faire exploser le \ndispositif. En cas de détonation, la \nvictime doit effectuer un test de Défaite \nPresque impossible (ND 20).\nCoût d’installation : 10 000 $\nDISPOSITIF DAMOCLÈS\n52\n52\n26\n26\n20\n20\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 104,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0104.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 105,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0105.png",
+          "pixel_sha256": "9bf44a4f2f765edac29b4945303049f7c4c347a63454e6e5903818316f4cc089",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nArme. Force +2 dommages, PA 1, Discret, \nutilise Armes de mêlée.\nCoût d’installation : 1000 $\nTRANCHEURS TRIGON\n53\n53\n26\n26\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 106,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0106.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 107,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0107.png",
+          "pixel_sha256": "d5e356a83387dacfcf543ba67e42903d387803189f94b6c646dac635202aebdd",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nL’arme ou l’appareil peut être stocké \ndans un cybermembre (soit un bras \nou une jambe HardPlas, soit dans \nun cybermembre qui n’apporte pas \nde bonus). Pas d’armes Lourdes ou \nEncombrantes.\nCoût d’installation : 1000 $\nARME INTÉGRÉE TRIGON\n54\n54\n26\n26\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 108,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0108.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 109,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0109.png",
+          "pixel_sha256": "d360138bcd69e4cbc510ff9279147f1337212779315a4e3713d4b039a9d55203",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Tech\nValeur\nArme. Force +1 dommages, PA 1, Discret, \nutilise Combat à mains nues.\nCoût d’installation : 500 $\nSCALPELS TRIGON\n55\n55\n26\n26\n13\n13\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 110,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0110.png",
+          "pixel_sha256": "f3a11ef7cd18664da5986a1ac48a141732a5ad8d2fb9bdfc4e8715cc33989a6c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        }
+      ],
+      "identical_page_groups": [
+        [
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30,
+          32,
+          34,
+          36,
+          38,
+          40,
+          42,
+          44,
+          46,
+          48,
+          50,
+          52,
+          54,
+          56,
+          58,
+          60,
+          62,
+          64,
+          66,
+          68,
+          70,
+          72,
+          74,
+          76,
+          78,
+          80,
+          82,
+          84,
+          86,
+          88,
+          90,
+          92,
+          94,
+          96,
+          98,
+          100,
+          102,
+          104,
+          106,
+          108,
+          110
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2071 @@
+{
+  "tool_version": "1.1.0",
+  "pymupdf_version": "2.0",
+  "pillow_version": "12.1.1",
+  "dpi": 300,
+  "sources": [
+    {
+      "id": "s0",
+      "filename": "Cyberware Deck (v0).pdf",
+      "sha256": "378a9d0de2a3fc0fe2165a6dd0d19e2f704ef5cd61abaff0e2573f955993d9a4"
+    }
+  ],
+  "output_format": "JPEG",
+  "jpeg_quality": 95,
+  "jpeg_subsampling": 0,
+  "start_indices": {
+    "cyberware": 0
+  },
+  "numbering_confirmed": true,
+  "decks": {
+    "cyberware": {
+      "faces": 55,
+      "start_index": 0,
+      "end_index": 54,
+      "back": "cyberware/back.jpg"
+    }
+  },
+  "cards": [
+    {
+      "source": "s0",
+      "page": 1,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/0.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "3767091747f39cd09e7ace92a272ff6dfe3ac14259d9d99048b6d0fa732ddf40"
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "deck": "cyberware",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/back.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "20251f67c69001aa6d371fe9c61627b9b47b6c747fa693f438dd84fdd54bcde5"
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/1.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "d2be36726480947d5c6d9bf038c2200363b54b61c5b26277f791bf86c9151399"
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/2.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "537429287fcf0eca5c256f9c80b28ac72f5714f9d22b44a545cbccb22863e54a"
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/3.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "02ba11670c2942b96cee8680b1c5126a7f5e0f9ffb16764923ba00b037065a5e"
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/4.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "31d8cdbd7536fbf8920ccbfc63c03a81235259870abcddeabab6137099166973"
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/5.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "2db076745a5ce19cccc36aade8e8cfc20f6f25182236673cb29a0f0abdf968ba"
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/6.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "577e0ecb1cd718b00485428b2cd9e9ea2dc6357c6d5cd601e94963bc4f05f3b7"
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 15,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/7.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "435c6b2b96232cb9550b1dd09f43114b9d1fce4d95929dd0d4bf012080d3297d"
+    },
+    {
+      "source": "s0",
+      "page": 16,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 17,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/8.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "516305e1e52f726f2267fd9d9d367bd0bbf6ab8ad73eb514bf1dc76a8aba9651"
+    },
+    {
+      "source": "s0",
+      "page": 18,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 19,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/9.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "97635729eafc42bfcd40d453ebfec341f4f7b88fdbe682b7b8757570fee63a56"
+    },
+    {
+      "source": "s0",
+      "page": 20,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 21,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/10.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "f5c50be695556a5227df7c1f7f929198b3a7ea0a7e460fb723be3c1b07a2a0cc"
+    },
+    {
+      "source": "s0",
+      "page": 22,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 23,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/11.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "10147d1e841befcb9e6bdcb857a48ae22eef591efe7296fe800c45bc30e2b05b"
+    },
+    {
+      "source": "s0",
+      "page": 24,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 25,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/12.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "2d1b2a007c8abe795d9e07d63846b9209cf746b38a80403a8525d3dc2ae67e5f"
+    },
+    {
+      "source": "s0",
+      "page": 26,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 27,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/13.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "d5353f0e61f0487a7453890f5aa43409f96aecc4144a192badb5ef89c44978aa"
+    },
+    {
+      "source": "s0",
+      "page": 28,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 29,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/14.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "401e2e82ae1dea501bcd7cfc3b901ee3d1094d2e06dacbb2573e937e681e5451"
+    },
+    {
+      "source": "s0",
+      "page": 30,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 31,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/15.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "ff410e76f41d89c3bf45ef1d74f9e59d3ed204263d879fff7599dacd6e820468"
+    },
+    {
+      "source": "s0",
+      "page": 32,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 33,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/16.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "c52f27a4e1b896762935c75204cdbb88f49c01751347517cc97b80f2a2a54458"
+    },
+    {
+      "source": "s0",
+      "page": 34,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 35,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/17.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "003516ffc72ed0047577cfaac34990b7289448242272fc81c4dfe93966a627cf"
+    },
+    {
+      "source": "s0",
+      "page": 36,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 37,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/18.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "4b93810d97fe1b01d75322f616696f6fe6d24b49e30133898e756ed17f2e81d4"
+    },
+    {
+      "source": "s0",
+      "page": 38,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 39,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/19.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "3acf5e501443cf53e6a73f88e2c1440f74bafeda090f1e9daca85cd2c152402c"
+    },
+    {
+      "source": "s0",
+      "page": 40,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 41,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/20.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "1b15ca7caa49ebba6520f6b5c28911f68859801a521597fbb9ad5c692b853f74"
+    },
+    {
+      "source": "s0",
+      "page": 42,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 43,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/21.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "c4d3f3042768d5f5f8948656435a1d77944265c352509c03992cb32624324d12"
+    },
+    {
+      "source": "s0",
+      "page": 44,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 45,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/22.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "082fa10218c5a71430b373bf5d918e5673c50684786c8daadb63386553a2efc0"
+    },
+    {
+      "source": "s0",
+      "page": 46,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 47,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/23.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "216773fba56a6c56a90e9c4b63dac29e7e54780a0a930e50c82661f22e4b4a3b"
+    },
+    {
+      "source": "s0",
+      "page": 48,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 49,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/24.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "ee43845992c979d848e2c3e22493773117f9b242e62a9e1fbf2761d19bfdacd2"
+    },
+    {
+      "source": "s0",
+      "page": 50,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 51,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/25.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "7a8955a8890236f0d54c0c2aad900d35d7175a241d608fd84e65cde6eab3046a"
+    },
+    {
+      "source": "s0",
+      "page": 52,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 53,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/26.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "3346cae974d79cf63077e89ec8f0c458a3fa1f61a14e088e65afa8e68e72f2d2"
+    },
+    {
+      "source": "s0",
+      "page": 54,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 55,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/27.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "90b84d78fe26fa27c08cd328ad5950a8f534f51f6aad8239e7a920bff421c3fc"
+    },
+    {
+      "source": "s0",
+      "page": 56,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 57,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/28.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "f455d99ad8eda3026ea3781e22d3948bf8726e336a85f4eed9ec58dfaae007e5"
+    },
+    {
+      "source": "s0",
+      "page": 58,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 59,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/29.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "1bd2b44763ff997731682aa74a83c7c6b169a5f5bc942920d983c5aed65ac27e"
+    },
+    {
+      "source": "s0",
+      "page": 60,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 61,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/30.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "1b087a8f73ea909ee1b0796c319805cd5a2261e3bfca2cd634200c39d8d9458d"
+    },
+    {
+      "source": "s0",
+      "page": 62,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 63,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/31.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "51777aff6288a4ac98416462507be39954d0341da8a34b6b72a49076ecd1ccab"
+    },
+    {
+      "source": "s0",
+      "page": 64,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 65,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/32.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "8a923bee400dd038e4569b2f24d0395cd3849ece410a5fa37fc78323e91e6a64"
+    },
+    {
+      "source": "s0",
+      "page": 66,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 67,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/33.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "f20109453e615619531a8a0a89f2d62e45124ae0f7a42b53d4fa057d0a33ca42"
+    },
+    {
+      "source": "s0",
+      "page": 68,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 69,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/34.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "4d72192177f1df56eafce7ad4ae169e4fdf894486ac992e00cbffcba1326fd50"
+    },
+    {
+      "source": "s0",
+      "page": 70,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 71,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/35.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "9cf4e3c83558807f53cb68897b34ef0d7bfd18afc5dc7cde5a14edd5a45e341f"
+    },
+    {
+      "source": "s0",
+      "page": 72,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 73,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/36.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "bd146cfcd7c5c525b236f54af324eec139d2cf7ab7dbe7cc6a08d36c315c42c9"
+    },
+    {
+      "source": "s0",
+      "page": 74,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 75,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/37.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "d82f8142de8f8cf870fbeba761d86acdf4ed77f634acc7658b29cb378e08041f"
+    },
+    {
+      "source": "s0",
+      "page": 76,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 77,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/38.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "74d81db9f35478a3b9bd65f21f2d7abd877fac794c5212954553cbe0de000011"
+    },
+    {
+      "source": "s0",
+      "page": 78,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 79,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/39.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "a255b5b6d886e94abfe4729fef9c4d2592151c6b2e01e6791d1c9c60e15ce784"
+    },
+    {
+      "source": "s0",
+      "page": 80,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 81,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/40.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "e276aaea4e141f8cf6c9dd55f49cbd04d663ad4e2872c0385fd67aeae21ba111"
+    },
+    {
+      "source": "s0",
+      "page": 82,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 83,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/41.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "334154ea2314a3f177603eba24f16e39a0af4219af1dd416c52f8123ed9c30f3"
+    },
+    {
+      "source": "s0",
+      "page": 84,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 85,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/42.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "b18758d5f8262167c95b406f7ef90c04f47854dafec22b186649d1f061760ecd"
+    },
+    {
+      "source": "s0",
+      "page": 86,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 87,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/43.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "a1ec13ec115e53b6ffb508c3873d71d2d03bd87b4b00ea4abc6d54d8c7897d1b"
+    },
+    {
+      "source": "s0",
+      "page": 88,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 89,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/44.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "4db7151db1ea8d7bd98ae2c810474a60fd5e4b2d4607610ee60ce41418d1471e"
+    },
+    {
+      "source": "s0",
+      "page": 90,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 91,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/45.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "ceccdca5c9dd0ccf3d88ae26eed255f1a1973d5803d49bdd2f6bfe6ab17ed7b9"
+    },
+    {
+      "source": "s0",
+      "page": 92,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 93,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/46.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "bd02b11200abaf3db8d2706abe3272aaa37bffe420a069f142d85bf2fd68aa4f"
+    },
+    {
+      "source": "s0",
+      "page": 94,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 95,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/47.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "c68318296643c70c7770778b750af518ba9b6835355a16f0b7b834e963857fca"
+    },
+    {
+      "source": "s0",
+      "page": 96,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 97,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/48.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "33191856d513953d6a6d530bf2e9996a6183fdd48a6e904e1b46715fbe4b0f6f"
+    },
+    {
+      "source": "s0",
+      "page": 98,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 99,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/49.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "de5f2d36193a94401e1ca7eb136ec0693a879f525393283dc8d657ca09f46581"
+    },
+    {
+      "source": "s0",
+      "page": 100,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 101,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/50.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "0c52d3a9c08092ca8b567c7099934e3807cd5a582c6ffc183cd7df9a452c1b7d"
+    },
+    {
+      "source": "s0",
+      "page": 102,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 103,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/51.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "9b1f4fb8357b782de62b25c7403a6345a43e577defa424d108bff87fd65cf2fc"
+    },
+    {
+      "source": "s0",
+      "page": 104,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 105,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/52.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "2dc916c729d2b9233cc3d97f4da3bf2659a5a769cdb916765f28a289fccd5007"
+    },
+    {
+      "source": "s0",
+      "page": 106,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 107,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/53.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "5a55b20158820bd0eb80c08ecbf428331643e96dde5bcc5f243e1429f3afe94c"
+    },
+    {
+      "source": "s0",
+      "page": 108,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    },
+    {
+      "source": "s0",
+      "page": 109,
+      "deck": "cyberware",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée.",
+      "output": "cyberware/54.jpg",
+      "size_pixels": [
+        745,
+        1040
+      ],
+      "sha256": "e53d999b0d0711d71cdf75b05b0deafb2d0036b8a85ea7110238a434a9c242f2"
+    },
+    {
+      "source": "s0",
+      "page": 110,
+      "deck": "cyberware",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Cyberware portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi.",
+      "output": null
+    }
+  ],
+  "ignored": []
+}

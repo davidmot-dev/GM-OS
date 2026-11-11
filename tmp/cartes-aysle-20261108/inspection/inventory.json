@@ -1,0 +1,7590 @@
+{
+  "version": "1.1.0",
+  "sources": [
+    {
+      "id": "s0",
+      "filename": "Deck Aysle (Full, v1).pdf",
+      "sha256": "967dcdfc18881bfcc3a78410d5c9ed11fb96758f47e303ffa9649044b59a0ddd",
+      "pages": [
+        {
+          "page": 1,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0001.png",
+          "pixel_sha256": "0c659c9f1e0dec4626dbc0c03af0c31181d5756d9c0218abe95d18e7aac916bc",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV Fatigués\nDramatique : V — \nH Fatigués\nMANŒUVRE/RUSE\nMANŒUVRE/RUSE\nPRENEZ DE LA HAUTEUR !\nPRENEZ DE LA HAUTEUR !\n1-A\n1-A\nA\nC\nAu cours de ce round, les attaques avec \nAu cours de ce round, les attaques avec \ndes armes de jet sont Favorisées.\ndes armes de jet sont Favorisées.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 2,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0002.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 3,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0003.png",
+          "pixel_sha256": "e37b067d1a784d1a8da34bb3dddab2719bcb6dda62957781eb1f92df84232aa6",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV Déstabilisés \nH —\nDramatique : H Déferlement \nV —\nMANŒUVRE / PROVOCATION\nMANŒUVRE / PROVOCATION\nBARRAGE MYSTIQUE !\nBARRAGE MYSTIQUE !\n2-A\n2-A\nA\nB\nD\nTous les sorts qui infligent des \nTous les sorts qui infligent des \ndommages gagnent +1BD en cas de \ndommages gagnent +1BD en cas de \nsuccès.\nsuccès.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 4,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0004.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 5,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0005.png",
+          "pixel_sha256": "913d3b22175f2771939c401ea41df90d282d91749e9150bec682eb0a33840bf4",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV Vivacité\nDramatique : V — \nH Déferlement\nPROVOCATION / RUSE\nPROVOCATION / RUSE\nPAS AUJOURD’HUI !\nPAS AUJOURD’HUI !\n3-A\n3-A\nA\nB\nAu cours de ce round, les dés ajoutés \nAu cours de ce round, les dés ajoutés \npar des Possibilités (ou un équivalent) \npar des Possibilités (ou un équivalent) \nne font pas au minimum 10.\nne font pas au minimum 10.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 6,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0006.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 7,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0007.png",
+          "pixel_sha256": "7fc084c3164fd43738fc8d38a2c86375263d69e448c07739ff63841a0fbfcef5",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Déferlement\nDramatique : H Fatigués \nV —\nMANŒUVRE / RUSE\nMANŒUVRE / RUSE\nBÉNÉDICTION DE DUNAD !\nBÉNÉDICTION DE DUNAD !\n4-A\n4-A\nA\nC\nTout personnage peut utiliser une Action et tenter un \nTout personnage peut utiliser une Action et tenter un \ntest de Foi ND 20. Un succès simple guérit une Blessure, \ntest de Foi ND 20. Un succès simple guérit une Blessure, \nun succès Supérieur deux et un succès Spectaculaire \nun succès Supérieur deux et un succès Spectaculaire \ntrois. Un échec provoque un Contrecoup.\ntrois. Un échec provoque un Contrecoup.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 8,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0008.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 9,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0009.png",
+          "pixel_sha256": "4ab08b1c99a185200ead3d991d123ca853bee7b95dbeadf7fb5eee765b9483bb",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV Fatigués\nDramatique : V Fatigués \nH —\nRUSE\nRUSE\nTENEZ BON !\nTENEZ BON !\n5-A\n5-A\nA\nD\nAu cours de ce round, les résultats \nAu cours de ce round, les résultats \n∞ n’ajoutent pas de dé bonus aux \n∞ n’ajoutent pas de dé bonus aux \ndommages pour les Vilains.\ndommages pour les Vilains.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 10,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0010.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 11,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0011.png",
+          "pixel_sha256": "7a0c067502c9ee3effefffc482842dc666f36426abd1e98ef6aae98dc2841c8f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV Inspiration\nDramatique : V Inspiration \nH —\nPROVOCATION\nPROVOCATION\nLANGUES BIEN PENDUES !\nLANGUES BIEN PENDUES !\n6-A\n6-A\nA\nB\nC\nLa \ncompétence \nProvocation \npeut \nêtre \nLa \ncompétence \nProvocation \npeut \nêtre \nutilisée comme défense contre toute attaque \nutilisée comme défense contre toute attaque \nd’Armes de mêlée ou de Combat à mains \nd’Armes de mêlée ou de Combat à mains \nnues durant ce round.\nnues durant ce round.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 12,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0012.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 13,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0013.png",
+          "pixel_sha256": "34668de97591bd572b1ec8ac227fa63d3e756631680c0310fcb73f2927c22d28",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Fatigués\nDramatique : H — \nV Un de plus !\nMANŒUVRE\nMANŒUVRE\nPAS SI VITE !\nPAS SI VITE !\n7-A\n7-A\nB\nC\nLes personnages qui se désengagent en \nLes personnages qui se désengagent en \nmêlée avec un ennemi durant ce round \nmêlée avec un ennemi durant ce round \nsubissent 2 points de Choc et deviennent Très \nsubissent 2 points de Choc et deviennent Très \nvulnérables.\nvulnérables.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 14,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0014.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 15,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0015.png",
+          "pixel_sha256": "24bf9d7c67c15028e374555826d200769650b672e50be24a6616e7ed4bf69e8a",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV Inspiration \nH —\nDramatique : H Déferlement \nV —\nINTIMIDATION\nINTIMIDATION\nLA RÈGLE DE LA MAGIE\nLA RÈGLE DE LA MAGIE\n8-A\n8-A\nB\nD\nTous les Ords subissent 2 points de Choc et \nTous les Ords subissent 2 points de Choc et \nsont Déconnectés. Les personnages chargés \nsont Déconnectés. Les personnages chargés \nen possibilités font un test de Réalité et \nen possibilités font un test de Réalité et \nperdent 1 Possibilité en cas d’échec.\nperdent 1 Possibilité en cas d’échec.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 16,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0016.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 17,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0017.png",
+          "pixel_sha256": "de312baf4d9c6559bfa03d5cc5c1186192b855c1f19894ec23bebb709d9523ad",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV Fatigués\nDramatique : V — \nH Déferlement\nPROVOCATION / RUSE\nPROVOCATION / RUSE\nALTÉRATION DU DESTIN !\nALTÉRATION DU DESTIN !\n9-A\n9-A\nB\nC\nSi votre score d’Altération est de 14+, \nSi votre score d’Altération est de 14+, \ntous les tests que vous tentez au cours \ntous les tests que vous tentez au cours \nde ce round sont Favorisés.\nde ce round sont Favorisés.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 18,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0018.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 19,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0019.png",
+          "pixel_sha256": "d313bdeb45753aeae56e835a77a0bce1d8d2af472dfc729e6cdceb4085102b48",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Inspiration\nDramatique : H Déstabilisés \nV —\nTOUS\nTOUS\nPRÊTEZ ATTENTION !\nPRÊTEZ ATTENTION !\n10-A\n10-A\nCOMPLICATION\nCOMPLICATION\nAu cours de ce round, la compétence \nAu cours de ce round, la compétence \nPersuasion peut être utilisée comme une \nPersuasion peut être utilisée comme une \nInteraction offensive. La cible est la Persuasion \nInteraction offensive. La cible est la Persuasion \ndu défenseur.\ndu défenseur.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 20,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0020.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 21,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0021.png",
+          "pixel_sha256": "2c112b50c1599fce662f825499a3e55ddc53936c485ad6880e3a5b283c60910d",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH Fatigués \nV —\nDramatique : V Fatigués \nH —\nATTAQUE / DÉFENSE\nATTAQUE / DÉFENSE\nOURAGAN D’ACIER !\nOURAGAN D’ACIER !\n11-A\n11-A\nA\nB\nAu cours de ce round, les attaques \nAu cours de ce round, les attaques \navec des armes de mêlée sont \navec des armes de mêlée sont \nFavorisées pour les deux camps.\nFavorisées pour les deux camps.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 22,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0022.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 23,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0023.png",
+          "pixel_sha256": "e31e662c76e50a51aeec6864fc001d75f52cdbf0c3fb24bc079fbdadf7d4f08e",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Un de plus !\nDramatique : H — \nV Vivacité\nTOUTES LES ACTIONS MULTIPLES\nTOUTES LES ACTIONS MULTIPLES\nBALAYÉ !\nBALAYÉ !\n12-A\n12-A\nA\nB\nC\nD\nAu cours de ce round, tout résultat \nAu cours de ce round, tout résultat \nde 1-4 est considéré comme un \nde 1-4 est considéré comme un \néchec critique.\néchec critique.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 24,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0024.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 25,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0025.png",
+          "pixel_sha256": "2656be3ea1c45e73aebf33dc399b9b68c6dbf5626af06ae039db248c93e3b713",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH Un de plus ! \nV —\nDramatique : V Fatigués \nH —\nINTIMIDATION / PROVOCATION\nINTIMIDATION / PROVOCATION\nRESTEZ CONCENTRÉ !\nRESTEZ CONCENTRÉ !\n13-A\n13-A\nA\nD\nTous les tests sont Favorisés tant qu’ils ne \nTous les tests sont Favorisés tant qu’ils ne \nfont pas partie d’Actions multiples et qu’ils \nfont pas partie d’Actions multiples et qu’ils \nn’affectent pas des Cibles multiples.\nn’affectent pas des Cibles multiples.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 26,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0026.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 27,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0027.png",
+          "pixel_sha256": "9b0fc6710f9de2821423479d6e4e7bb2196df4a2015d70bbf02dab9be22b139f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV Revers \nH —\nDramatique : H Fatigués \nV —\nINTIMIDATION / MANŒUVRE\nINTIMIDATION / MANŒUVRE\nDISTRACTION !\nDISTRACTION !\n14-A\n14-A\nA\nB\nC\nLes personnages bénéficiant d’effets de \nLes personnages bénéficiant d’effets de \nConcentration doivent réussir un test de \nConcentration doivent réussir un test de \nConcentration ND 16 ou les effets prennent \nConcentration ND 16 ou les effets prennent \nfin immédiatement.\nfin immédiatement.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 28,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0028.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 29,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0029.png",
+          "pixel_sha256": "f85fd50247f73963770a8e8fbdca45ac0e594c688908e7791d6b048c5107b688",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH Déferlement \nV —\nDramatique : V — \nH Désorientés\nATTAQUE\nATTAQUE\nHACK & SLASH !\nHACK & SLASH !\n15-A\n15-A\nREVERS POSSIBLE\nREVERS POSSIBLE\nAttaque \ntotale \nrend \nl’attaquant \nAttaque \ntotale \nrend \nl’attaquant \nVulnérable \nà \nla \nplace \nde Très \nVulnérable \nà \nla \nplace \nde Très \nvulnérable.\nvulnérable.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 30,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0030.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 31,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0031.png",
+          "pixel_sha256": "142df176aa86766ba45045e9df87b82abad3bb4c742469be2c18ad4a8f89515c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH —\nDramatique : H Inspiration \nV —\nTOUTE LES ACTIONS MULTIPLES\nTOUTE LES ACTIONS MULTIPLES\nSÉRIEUSEMENT ?\nSÉRIEUSEMENT ?\n16-A\n16-A\nPROBLÈME \nPROBLÈME \nCRITIQUE\nCRITIQUE\nTout \ntest \nportant \nsur \nun \nTout \ntest \nportant \nsur \nun \nProblème critique subit un malus \nProblème critique subit un malus \nsupplémentaire de –4.\nsupplémentaire de –4.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 32,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0032.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 33,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0033.png",
+          "pixel_sha256": "c63e4bccd7bfac3067fe607e42c9d6c00669a182a6aed12336588244e46fb88a",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV Fatigués\nDramatique : V — \nH Désorientés\nINTIMIDATION / RUSE\nINTIMIDATION / RUSE\nPUISSANCE ÉLÉMENTAIRE !\nPUISSANCE ÉLÉMENTAIRE !\n17-A\n17-A\nA\nB\nD\nToutes \nles \ncompétences \nmagiques \nsont \nToutes \nles \ncompétences \nmagiques \nsont \nFavorisées, mais un échec provoque le double \nFavorisées, mais un échec provoque le double \ndu Contrecoup normal et laisse le lanceur de \ndu Contrecoup normal et laisse le lanceur de \nsorts Vulnérable.\nsorts Vulnérable.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 34,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0034.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 35,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0035.png",
+          "pixel_sha256": "0c13e5b15c24976d3242187b436557f5b8eea27c93826c1247c4fb7b7c0c025f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Vivacité\nDramatique : H Déferlement \nV —\nINTIMIDATION / PROVOCATION\nINTIMIDATION / PROVOCATION\nON NE SE LAISSE PAS ABATTRE !\nON NE SE LAISSE PAS ABATTRE !\n18-A\n18-A\nA\nB\nTout personnage avec un Axiome Social 17+ \nTout personnage avec un Axiome Social 17+ \ndoit effectuer un test pour éviter d’être \ndoit effectuer un test pour éviter d’être \nDéconnecté comme en cas de Déferlement.\nDéconnecté comme en cas de Déferlement.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 36,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0036.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 37,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0037.png",
+          "pixel_sha256": "15e5e7db1d745c81526948c428a9c96e4404d45b589e65c67ec099fe4e785c3d",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV —\nDramatique : V — \nH Vivacité\nATTAQUE / RUSE\nATTAQUE / RUSE\nCOUPS INEFFICACES !\nCOUPS INEFFICACES !\n19-A\n19-A\nA\nC\nAu cours de ce round, les résultats \nAu cours de ce round, les résultats \n∞ n’ajoutent pas de dé bonus aux \n∞ n’ajoutent pas de dé bonus aux \ndommages pour les Héros.\ndommages pour les Héros.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 38,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0038.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 39,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0039.png",
+          "pixel_sha256": "2ad2f44971e610011733bab49c544384f490f867f2b1caa4c27d86f4478f3197",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH —\nDramatique : H — \nV Vivacité\nINTIMIDATION / MANŒUVRE\nINTIMIDATION / MANŒUVRE\nVENT CONTRAIRE !\nVENT CONTRAIRE !\n20-A\n20-A\nA\nD\nLes Armes de jet des Vilains peuvent \nLes Armes de jet des Vilains peuvent \ntirer à portée Extrême et ignorer les \ntirer à portée Extrême et ignorer les \nmalus de portée jusqu’à –2 points.\nmalus de portée jusqu’à –2 points.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 40,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0040.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 41,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0041.png",
+          "pixel_sha256": "bc5bcd5e8b095669aa16f55a2ce2311442cf21d737639ea4f95e1bc7a08b05c4",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH Un de plus ! \nV —\nDramatique : H — \nV Revers\nINTIMIDATION\nINTIMIDATION\nL’EFFORT ULTIME \nL’EFFORT ULTIME \n21-A\n21-A\nA\nB\nC\nD\nTout Vilain Vaincu ce round inflige \nTout Vilain Vaincu ce round inflige \n10 +1DB points de dommages à chaque \n10 +1DB points de dommages à chaque \nennemi adjacent avant d’expirer.\nennemi adjacent avant d’expirer.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 42,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0042.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 43,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0043.png",
+          "pixel_sha256": "8f6954b5fd2ce91ad11b3741d2b2ffb76bf11f5948f1af8183575a76014fe76e",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH Inspiration \nV —\nDramatique : H — \nV —\nTOUTES\nTOUTES\nMAGIE MYSTÉRIEUSE !\nMAGIE MYSTÉRIEUSE !\n22-A\n22-A\nA\nB\nC\nTout jet de 1-4 est considéré comme un \nTout jet de 1-4 est considéré comme un \néchec \ncritique \npour \nles \ncompétences \néchec \ncritique \npour \nles \ncompétences \nmagiques (Altération, Cinétique, Conjuration \nmagiques (Altération, Cinétique, Conjuration \net Divination) ce round.\net Divination) ce round.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 44,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0044.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 45,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0045.png",
+          "pixel_sha256": "b29a4fa077b83d485cb062e37f87337a0a5a72a4467f3ef4d71785208ecf3e6d",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV Revers\nDramatique : H — \nV —\n MANŒUVRE\n MANŒUVRE\nRESTEZ EN ARRIÈRE !\nRESTEZ EN ARRIÈRE !\n23-A\n23-A\nA\nB\nD\nLes sorts de zone qui n’affectent normalement \nLes sorts de zone qui n’affectent normalement \nque les alliés ou les adversaires affectent \nque les alliés ou les adversaires affectent \ndésormais \nles \ndeux \ncamps, \ny \ncompris \ndésormais \nles \ndeux \ncamps, \ny \ncompris \nl’incantateur.\nl’incantateur.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 46,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0046.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 47,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0047.png",
+          "pixel_sha256": "b10bbb799ee040afa0ed78ca9db48f8ef563b522c228a4b81838a214455912cb",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV —\nDramatique : H — \nV Revers\nATTAQUE / MANŒUVRE\nATTAQUE / MANŒUVRE\nTERRAIN FAVORABLE !\nTERRAIN FAVORABLE !\n24-A\n24-A\nA\nB\nC\nD\nLes Armes de jet des Héros peuvent \nLes Armes de jet des Héros peuvent \ntirer à portée Extrême et ignorer les \ntirer à portée Extrême et ignorer les \nmalus de portée jusqu’à –2 points.\nmalus de portée jusqu’à –2 points.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 48,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0048.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 49,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0049.png",
+          "pixel_sha256": "1d8e44f2bbb658897a3f6cab795d66adfe1d9fa9d250851045a4f1b3e3ac103c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH Vivacité \nV —\nDramatique : H Un de plus ! \nV —\nPROVOCATION\nPROVOCATION\nACIER CASSANT !\nACIER CASSANT !\n25-A\n25-A\nA\nB\nC\nD\nToute arme utilisée au cours de ce \nToute arme utilisée au cours de ce \nround gagne Défaillance 1-4 et casse \nround gagne Défaillance 1-4 et casse \nen cas de Défaillance.\nen cas de Défaillance.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 50,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0050.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 51,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0051.png",
+          "pixel_sha256": "1c24f9c3d2f5bdb0e5e7dc93f55b2952ac05b17e09b4dd14e13682799056f9d4",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV Fatigués\nDramatique : H — \nV Déstabilisés\nINTIMIDATION / RUSE\nINTIMIDATION / RUSE\nLA SAGESSE DES DIEUX !\nLA SAGESSE DES DIEUX !\n26-A\n26-A\nA\nB\nD\nLa Foi peut être utilisée en tant \nLa Foi peut être utilisée en tant \nque \ndéfense \ncontre \ntoutes \nles \nque \ndéfense \ncontre \ntoutes \nles \nInteractions offensives de ce round.\nInteractions offensives de ce round.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 52,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0052.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 53,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0053.png",
+          "pixel_sha256": "ca5cf5fcf1189a588b0f37d7fc63e6a419d9921824a38276a6dc7edbcf350282",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV Fatigués\nDramatique : H Inspiration \nV —\nMANŒUVRE / PROVOCATION\nMANŒUVRE / PROVOCATION\nSURSIS !\nSURSIS !\n27-A\n27-A\nA\nB\nLes personnages doublent le nombre \nLes personnages doublent le nombre \nde points de Choc récupérés ce \nde points de Choc récupérés ce \nround, quelle qu’en soit la source.\nround, quelle qu’en soit la source.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 54,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0054.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 55,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0055.png",
+          "pixel_sha256": "47cdfbbf9b79a779da577db4b80696374b95b1988426620188d704e891b5cdd0",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV —\nDramatique : H Vivacité \nV —\nATTAQUE / INTIMIDATION\nATTAQUE / INTIMIDATION\nHÂTEZ-VOUS !\nHÂTEZ-VOUS !\n28-A\n28-A\nA\nB\nC\nLe déplacement des Héros est \nLe déplacement des Héros est \naugmenté de 5 m ou de 15 m s’ils \naugmenté de 5 m ou de 15 m s’ils \ncourent.\ncourent.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 56,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0056.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 57,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0057.png",
+          "pixel_sha256": "1020c29c7798aa2112f987c7985dd7cc09cae6dd744ea1199d15e84510207bfb",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH — \nV Déstabilisés\nDramatique : H Inspiration \nV —\nATTAQUE / PROVOCATION\nATTAQUE / PROVOCATION\nDOMINATION DE LA LUMIÈRE !\nDOMINATION DE LA LUMIÈRE !\n29-A\n29-A\nA\nD\nLes personnages avec des Atouts de Lumière voient \nLes personnages avec des Atouts de Lumière voient \nleurs tests Favorisés ce round. Tout personnage \nleurs tests Favorisés ce round. Tout personnage \nayant un Atout des Ténèbres (ou s’il agit d’une \nayant un Atout des Ténèbres (ou s’il agit d’une \nCréature surnaturelle maléfique) est Déstabilisé.\nCréature surnaturelle maléfique) est Déstabilisé.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 58,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0058.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 59,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0059.png",
+          "pixel_sha256": "0c8f951d63bbaa48881b2da17b462ea1e22c8200c3175986041b82001666ec71",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nH Vivacité \nV —\nDramatique : H — \nV —\nRUSE\nRUSE\nENSORCELÉ !\nENSORCELÉ !\n30-A\n30-A\nA\nB\nToute compétence magique peut être \nToute compétence magique peut être \nutilisée en tant qu’Interaction offensive. \nutilisée en tant qu’Interaction offensive. \nLa cible est la Ruse du défenseur.\nLa cible est la Ruse du défenseur.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 60,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0060.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 61,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0061.png",
+          "pixel_sha256": "8136793872ac1edbb60ab6c73abb67258055219c9264c0281c3bc8c426b9d49c",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Fatigués\nDramatique : V — \nH Déferlement\nDÉFENSE\nDÉFENSE\nMUR DE FER !\nMUR DE FER !\n31-A\n31-A\nB\nD\nTout personnage ou créature ayant \nTout personnage ou créature ayant \nun indice d’armure de 3 ou plus gagne \nun indice d’armure de 3 ou plus gagne \n+2 en Résistance pour le round.\n+2 en Résistance pour le round.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 62,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0062.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 63,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0063.png",
+          "pixel_sha256": "1dc8cd095151914aeb005fc65809b6193325ec9d21813e0b0ae7e7624dac7d68",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Déferlement\nDramatique : V Inspiration \nH —\nDÉFENSE / MANŒUVRE\nDÉFENSE / MANŒUVRE\nLÈVE TON BOUCLIER !\nLÈVE TON BOUCLIER !\n32-A\n32-A\nLes \nboucliers \ns’ajoutent \nà \nla \nLes \nboucliers \ns’ajoutent \nà \nla \nRésistance, qu’une Défense active \nRésistance, qu’une Défense active \nsoit effectuée ou non.\nsoit effectuée ou non.\nA\nC\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 64,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0064.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 65,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0065.png",
+          "pixel_sha256": "d9aead8b256a66f749d10aee470646fdbad80417307819e020ca8bb03812ee8f",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH —\nDramatique : V — \nH Déstabilisés\nDÉFENSE / PROVOCATION\nDÉFENSE / PROVOCATION\nSUBMERGÉ !\nSUBMERGÉ !\n33-A\n33-A\nLes Hordes de chaque camp gagnent \nLes Hordes de chaque camp gagnent \nle double du bonus normal pour les \nle double du bonus normal pour les \nActions combinées.\nActions combinées.\nCOMPLICATION\nCOMPLICATION\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 66,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0066.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 67,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0067.png",
+          "pixel_sha256": "f8694750a60d566c8cd66cad3881a17bd3b512a3454ddaf0cbc2966b5293a92e",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Revers\nDramatique : V Inspiration \nH —\nDÉFENSE / RUSE\nDÉFENSE / RUSE\nL’ÉVEIL DE LA TERREUR !\nL’ÉVEIL DE LA TERREUR !\n34-A\n34-A\nB\nC\nLes Héros doivent faire un test de \nLes Héros doivent faire un test de \nPeur Difficile (ND 14) ou devenir \nPeur Difficile (ND 14) ou devenir \nTrès déstabilisés.\nTrès déstabilisés.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 68,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0068.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 69,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0069.png",
+          "pixel_sha256": "c273bbefe665078fcbd25a64e2787993ceba1582d26dd6cfcb6ca5b876ced063",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH —\nDramatique : V Un de plus ! \nH —\nDÉFENSE\nDÉFENSE\nLA COLÈRE DES DIEUX !\nLA COLÈRE DES DIEUX !\n35-A\n35-A\nLa compétence Foi est Favorisée au cours \nLa compétence Foi est Favorisée au cours \nde ce round, mais le contrecoup pour avoir \nde ce round, mais le contrecoup pour avoir \néchoué à invoquer un miracle passe à une \néchoué à invoquer un miracle passe à une \nBlessure.\nBlessure.\nB\nD\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 70,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0070.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 71,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0071.png",
+          "pixel_sha256": "fd5cf533439e72f634fe0ac8d984494725ae124f5a2c250d420a52a496be3c4b",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Déstabilisés\nDramatique : V — \nH Désorientés\nDÉFENSE / PROVOCATION\nDÉFENSE / PROVOCATION\nDOMINATION DES TÉNÈBRES !\nDOMINATION DES TÉNÈBRES !\n36-A\n36-A\nLes personnages avec des Atouts des Ténèbres \nLes personnages avec des Atouts des Ténèbres \nvoient leurs tests Favorisés ce round. Tout \nvoient leurs tests Favorisés ce round. Tout \npersonnage avec un Atout de Lumière est \npersonnage avec un Atout de Lumière est \nDéstabilisé.\nDéstabilisé.\nREVERS POSSIBLE\nREVERS POSSIBLE\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 72,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0072.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 73,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0073.png",
+          "pixel_sha256": "110faabb9f669d9f200240bdbed265fc7b2140e6be12f9d4cd8f53c282dd8047",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Déferlement\nDramatique : V Un de plus ! \nH —\nDÉFENSE / INTIMIDATION\nDÉFENSE / INTIMIDATION\nOUPS !\nOUPS !\n37-A\n37-A\nB\nC\nDétruisez 1 potion de manière aléatoire (si \nDétruisez 1 potion de manière aléatoire (si \nvous en avez sur vous) à chaque fois qu’une \nvous en avez sur vous) à chaque fois qu’une \nattaque touche ce round, même si elle \nattaque touche ce round, même si elle \nn’inflige pas de dommages.\nn’inflige pas de dommages.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 74,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0074.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 75,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0075.png",
+          "pixel_sha256": "a9aff424d868f46c4843db0e3778b61fee93a8c827ba4308c375b7af683147c3",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV Un de plus ! \nH —\nDramatique : V Inspiration \nH —\nDÉFENSE / MANŒUVRE\nDÉFENSE / MANŒUVRE\nASSAUT !\nASSAUT !\n38-A\n38-A\nB\nD\nLe déplacement des Vilains est \nLe déplacement des Vilains est \naugmenté de 5 m ou de 15 m s’ils \naugmenté de 5 m ou de 15 m s’ils \ncourent.\ncourent.\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 76,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0076.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 77,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0077.png",
+          "pixel_sha256": "1cfe9d5419a816f7c415efea2e70d6e85b1af39b84dcca4b2dde4fca5900173a",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Désorientés\nDramatique : V — \nH Revers\nDÉFENSE / INTIMIDATION\nDÉFENSE / INTIMIDATION\nGROS PROBLÈMES !\nGROS PROBLÈMES !\n39-A\n39-A\nAu cours de ce round, la compétence \nAu cours de ce round, la compétence \nIntimidation est basée sur la Force \nIntimidation est basée sur la Force \net non sur l’Esprit.\net non sur l’Esprit.\nA\nB\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ]
+          ]
+        },
+        {
+          "page": 78,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0078.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 79,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0079.png",
+          "pixel_sha256": "7c8614d3eb199b8a30cff0708a54f4c198c1f752140b321b20d6e05923b6220d",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Normale : \nV — \nH Revers\nDramatique : V — \nH Revers\nDÉFENSE / RUSE\nDÉFENSE / RUSE\nUNE OBSCURITÉ PALPABLE !\nUNE OBSCURITÉ PALPABLE !\n40-A\n40-A\nAu cours de ce tour, toutes les \nAu cours de ce tour, toutes les \nattaques \nsubissent \nun \nmalus \nattaques \nsubissent \nun \nmalus \nsupplémentaire d’obscurité de –2.\nsupplémentaire d’obscurité de –2.\nPROBLÈME \nPROBLÈME \nCRITIQUE\nCRITIQUE\n",
+          "text_directions": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 80,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0080.png",
+          "pixel_sha256": "13afa3dcead45821dfa282302550b0d180455c092eb72ffcac78c36ea205ca32",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 81,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0081.png",
+          "pixel_sha256": "a3ca0c37ea108fa7e88b910fe7cc31d37b19a94a3912d9bc8a08772e2cdf7a02",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "À jouer lorsque vous faites face à une \nCréature surnaturelle maléfique ou \nà un adversaire avec des Atouts de \nTénèbres. La Lumière vous renforce et \nvous redonne les points de Choc que \nvous avez perdus. Vous et deux alliés au \nchoix sans Atout des Ténèbres gagnez \n1 Possibilité chacun. Si vous avez un \nAtout des Ténèbres, défaussez cette \nCarte de Cosm sans en tirer une \nnouvelle.\nLA LOI DE LA LUMIÈRE\n11\n11\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 82,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0082.png",
+          "pixel_sha256": "1031bb0a60110576c4a552062ace526239490eaf0a1dc2a2176b70840089e789",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 83,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0083.png",
+          "pixel_sha256": "359a87c4ead601d3be478a8b924e898a28a67a851b507230e22aa9fc8ce03a51",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "À jouer immédiatement quand vous la \npiochez. Les personnages avec un Atout \ndes Ténèbres gagnent 3 Possibilités. \nCeux disposant d’Atouts de Lumière \nperdent l’accès à ces derniers pour \nle restant de l’Acte à moins qu’ils ne \ndépensent une Possibilité.\nLA LOI DES TÉNÈBRES\n12\n12\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 84,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0084.png",
+          "pixel_sha256": "1031bb0a60110576c4a552062ace526239490eaf0a1dc2a2176b70840089e789",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 85,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0085.png",
+          "pixel_sha256": "5377083494c29b048f8005a1f413ed60d55bc7c271f93bc1f74e3ea90587af21",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "À jouer pour obtenir des informations \nsur la direction à prendre pour atteindre \nun emplacement ou le nom et l’histoire \nd’un adversaire majeur de la région. \nL’information peut être de n’importe \nquel type ; venant aussi bien d’un ancien \npoteau indicateur que d’un paysan \nvieillissant avec une propension aux \ncommérages, ou encore d’un survivant \nqui vient de cette direction ou qui \na échappé à l’ennemi.\nGUIDÉ PAR LA SAGESSE\n13\n13\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 86,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0086.png",
+          "pixel_sha256": "1031bb0a60110576c4a552062ace526239490eaf0a1dc2a2176b70840089e789",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 87,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0087.png",
+          "pixel_sha256": "4bf52ed248284b1aac65ed7b5dcde4a1bec0187dab31691b9e43ed9b403b0c88",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Vous invoquez la magie ancienne pour \nparticiper à un concours d’énigmes. \nCela fonctionne exactement comme \ninvoquer une tempête, mais chaque \nparticipant doit faire un test de Sciences \nhumaines à la place du test de Réalité. \nAu lieu d’être Déconnecté, le perdant doit \ndonner au vainqueur son objet le plus \nprécieux et fuir ensuite ou permettre \nau vainqueur de s’enfuir s’il est en \ninfériorité numérique.\nMAGIE DES ÉNIGMES\n14\n14\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 88,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0088.png",
+          "pixel_sha256": "1031bb0a60110576c4a552062ace526239490eaf0a1dc2a2176b70840089e789",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 89,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0089.png",
+          "pixel_sha256": "e10c9f60c6a90f417a6ed12277b587405c63a710a1a264328dfe416cc9209913",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Si une quête liée à la Loi des Légendes \nest en cours, jouez cette carte pour \nqu’une étape négative se produise. Dans \nle cas contraire, si elle est jouée, un ou \nplusieurs alliés sont temporairement \néliminés au titre de l’aide apportée, \nquelle qu’en soit sa nature. Chaque \nChevalier des Tempêtes gagne entre 1 et \n3 Possibilités en fonction de l’aide \napportée par les alliés.\nTRAGÉDIE\n15\n15\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 90,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0090.png",
+          "pixel_sha256": "1031bb0a60110576c4a552062ace526239490eaf0a1dc2a2176b70840089e789",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 91,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0091.png",
+          "pixel_sha256": "973505c5946679dd04286895b5f190b4ef20d9a9ff4da9a0fb1a1bfc43d37de8",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Un piège ou un danger mortel \nsurvient au cours de cet Acte. Il affecte \nun membre du groupe déterminé \naléatoirement et inflige 1 DB Blessures. \nCes blessures peuvent être annulées \nnormalement.\nGagnez trois Possibilités après la \nrésolution du piège.\nPIÉGÉ !\n16\n16\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 92,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0092.png",
+          "pixel_sha256": "1031bb0a60110576c4a552062ace526239490eaf0a1dc2a2176b70840089e789",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 93,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0093.png",
+          "pixel_sha256": "a393c9792eb470507d1b7cdcd2d45e909bc57262a23d233210117bad6a50f566",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Priez pour obtenir de l’aide et faites un test \nde Foi. En cas de succès Simple, ajoutez une \nCarte de Destin de la défausse dans votre \nmain. Sur un succès Supérieur, chaque \nChevalier des Tempêtes gagne également \n1 Possibilité. Sur un succès Spectaculaire, \nun miracle survient : le groupe est \ntransporté en lieu sûr, un objet ou une \npersonne importante apparaît, etc. Si le \ntest échoue, le personnage subit une \nBlessure sans pouvoir l’annuler.\nPRÉSENCE DIVINE\n17\n17\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 94,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0094.png",
+          "pixel_sha256": "1031bb0a60110576c4a552062ace526239490eaf0a1dc2a2176b70840089e789",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 95,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0095.png",
+          "pixel_sha256": "bc61753444e1979f44e018624147d29b9992be789060caa60b6257a3dc846680",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "À placer devant vous immédiatement \nquand elle est tirée. Si vous \naccomplissez un acte des Ténèbres \n(tromperie, trahison, meurtre — à \nl’appréciation du MJ), défaussez une \nCarte de Cosm et gagnez un Atout des \nTénèbres de votre choix. Vous n’avez \npas à payer les PX pour cet Atout, mais \nil compte dans le calcul du coût \ndes prochains Atouts.\nTOUCHÉ PAR LES TÉNÈBRES\n18\n18\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 96,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0096.png",
+          "pixel_sha256": "1031bb0a60110576c4a552062ace526239490eaf0a1dc2a2176b70840089e789",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 97,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0097.png",
+          "pixel_sha256": "9f9b10d54d62a784a9fe3e6380c5c443b3448f9fe0190c70543f917df273da74",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "À jouer sur n’importe quel Ord. \nL’individu doit une faveur à l’Armée de \nla Lumière : elle l’a laissé partir si c’était \nun ennemi, l’a sauvé ou a sauvé un être \ncher s’il était neutre, l’a aidé à obtenir \nsa position actuelle, etc. Les Chevaliers \ndes Tempêtes viennent recueillir cette \nfaveur, obtenant un service gratuit que \nl’individu peut fournir, même s’il \ncomporte un certain risque.\nAPPEL SOUS LES DRAPEAUX\n19\n19\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 98,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0098.png",
+          "pixel_sha256": "1031bb0a60110576c4a552062ace526239490eaf0a1dc2a2176b70840089e789",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 99,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0099.png",
+          "pixel_sha256": "1ff9f9a7237c84b810d53522321f1bf45785e2024d7e6a541a9a4a3d6fb6b391",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Si la Loi de l’Enchantement s’active, \njouez cette carte pour permettre à \nn’importe quel objet de bénéficier de \nl’effet de la magie, sans tenir compte \ndes axiomes.\nENCHANTEMENT VÉRITABLE\n20\n20\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 100,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0100.png",
+          "pixel_sha256": "1031bb0a60110576c4a552062ace526239490eaf0a1dc2a2176b70840089e789",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 101,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0101.png",
+          "pixel_sha256": "bf4e20b363e3f412667497cae8548194040885c03baa84b243c23b4dde96929b",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "À jouer pour vous remettre \nde 5 points de Choc.\nSECOND SOUFFLE\n71\n71\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 102,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0102.png",
+          "pixel_sha256": "2136fc87d908ad9676db0e21564560d9e6a6c66f18bfcbc88982e968999939a2",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 103,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0103.png",
+          "pixel_sha256": "e884ad6ea308fc23a842262ecd57b03b5c414d2d3d8d1d8abbadb0e3af4017e2",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Reconnectez-vous \nimmédiatement sans test.\nRECONNEXION\n72\n72\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 104,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0104.png",
+          "pixel_sha256": "2136fc87d908ad9676db0e21564560d9e6a6c66f18bfcbc88982e968999939a2",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 105,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0105.png",
+          "pixel_sha256": "82c2206f1f74cb3a95071e483ae79420a88a598f479aa8b35c85d37d1a572520",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "À jouer pour déclencher un Revers \npour les adversaires, comme \ns’il apparaissait sur la Ligne de \nConflit de la Carte d’Action.\nREVERS\n73\n73\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 106,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0106.png",
+          "pixel_sha256": "2136fc87d908ad9676db0e21564560d9e6a6c66f18bfcbc88982e968999939a2",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 107,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0107.png",
+          "pixel_sha256": "09761585c9c6ebf5bee59a63d13eb230e16a46461d5b3e1c778550576e88f61a",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Jouer cette carte pour ignorer la règle \ndes Tirs amis ou pour empêcher un \nallié qui serait normalement inclus \ndans une zone d’effet d’être affecté.\nPRÉCISION\n74\n74\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 108,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0108.png",
+          "pixel_sha256": "2136fc87d908ad9676db0e21564560d9e6a6c66f18bfcbc88982e968999939a2",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        },
+        {
+          "page": 109,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0109.png",
+          "pixel_sha256": "67ad625396d53e3107938633441c9bada4891233217a088f9aa666875440ff65",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "Le personnage qui joue cette carte \npeut tenter l’étape A d’une Poursuite \nou de la Résolution dramatique d’une \ntâche, même si elle n’est pas présente \nsur la Carte d’Action. Si elle l’est, le \npersonnage peut la tenter même si un \nautre personnage a essayé et échoué.\nÉTAPE A\n75\n75\n",
+          "text_directions": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "page": 110,
+          "size_pixels": [
+            358,
+            499
+          ],
+          "preview": "s0-p0110.png",
+          "pixel_sha256": "2136fc87d908ad9676db0e21564560d9e6a6c66f18bfcbc88982e968999939a2",
+          "size_points": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "pdf_rotation": 0,
+          "trimbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            178.58299255371094,
+            249.44900512695312
+          ],
+          "text": "",
+          "text_directions": []
+        }
+      ],
+      "identical_page_groups": [
+        [
+          2,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30,
+          32,
+          34,
+          36,
+          38,
+          40,
+          42,
+          44,
+          46,
+          48,
+          50,
+          52,
+          54,
+          56,
+          58,
+          60,
+          62,
+          64,
+          66,
+          68,
+          70,
+          72,
+          74,
+          76,
+          78,
+          80
+        ],
+        [
+          82,
+          84,
+          86,
+          88,
+          90,
+          92,
+          94,
+          96,
+          98,
+          100
+        ],
+        [
+          102,
+          104,
+          106,
+          108,
+          110
+        ]
+      ]
+    }
+  ]
+}

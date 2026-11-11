@@ -1,0 +1,1676 @@
+{
+  "schema_version": 2,
+  "dpi": 300,
+  "start_indices": {
+    "objets-magiques": 0
+  },
+  "numbering_confirmed": true,
+  "numbering_choice": {
+    "user": "David",
+    "date": "2026-11-08",
+    "answer": "fais celui-ci ensuite commence à 0",
+    "interpretation": "Numérotation des faces Objets Magiques à partir de 0."
+  },
+  "sources": [
+    {
+      "id": "s0",
+      "filename": "Objets Magiques (v0).pdf",
+      "sha256": "d5a4c7884d28a6d0e7837c65213ee43de53ab56ea240b1e164bef5dc92a71051"
+    }
+  ],
+  "cards": [
+    {
+      "source": "s0",
+      "page": 1,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 2,
+      "deck": "objets-magiques",
+      "role": "back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 3,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 4,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 5,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 6,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 7,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 8,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 9,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 10,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 11,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 12,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 13,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 14,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 15,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 16,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 17,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 18,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 19,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 20,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 21,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 22,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 23,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 24,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 25,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 26,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 27,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 28,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 29,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 30,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 31,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 32,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 33,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 34,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 35,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 36,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 37,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 38,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 39,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 40,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 41,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 42,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 43,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 44,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 45,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 46,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 47,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 48,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 49,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 50,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 51,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 52,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 53,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 54,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 55,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 56,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 57,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 58,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 59,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 60,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 61,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 62,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 63,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 64,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 65,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 66,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 67,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 68,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 69,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 70,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 71,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 72,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 73,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 74,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 75,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 76,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 77,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 78,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 79,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 80,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 81,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 82,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 83,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 84,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 85,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 86,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 87,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 88,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 89,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 90,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 91,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 92,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 93,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 94,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 95,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 96,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 97,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 98,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 99,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 100,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 101,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 102,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 103,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 104,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 105,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 106,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 107,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 108,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    },
+    {
+      "source": "s0",
+      "page": 109,
+      "deck": "objets-magiques",
+      "role": "face",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée."
+    },
+    {
+      "source": "s0",
+      "page": 110,
+      "deck": "objets-magiques",
+      "role": "duplicate-back",
+      "bbox": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "rotate_cw": 0,
+      "orientation_verified": true,
+      "evidence": "Carte Objets Magiques portrait entière ; texte principal et logo à l’endroit sans rotation. Bordure noire conservée. Dos comparé visuellement et pixels identiques au dos de référence page 2 à 144 dpi."
+    }
+  ],
+  "order": "Source order and increasing page number; one full card per page. All repeated faces retained.",
+  "geometry_evidence": "All 110 source pages inspected in all four contact sheets. First face and reference back opened separately. Finished card format; entire page retained; all cards upright.",
+  "provenance": "New recipe established from the Objets Magiques source after fresh inspection."
+}
