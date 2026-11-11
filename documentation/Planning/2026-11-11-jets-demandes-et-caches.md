@@ -372,6 +372,78 @@ Deux éléments neufs, à dessiner d'abord (consigne du 02/11), captures Playwri
   donne (détecteur, MU/TH/UR) ; quand une fiche le porte, GM-OS **propose** au meneur de
   remettre le module au personnage. Alien seul tant que le catalogue n'a pas gagné d'autres
   jeux (« Reste : les autres jeux », § 203).
+- **Lot 2 — fait** le 11/11 (§ 244) ; **lots 1 et 2 validés par David le 11/11.**
+
+## Second examen, 11/11 — le détecteur de mouvement et les autres outils (⏸️ mis de côté)
+
+> Question de David (11/11) : « Si tu prends gm-codex.exe, est-ce qu'il y a quelque chose sur les
+> détecteurs d'Alien ou autres ? » — puis « tu as noté toutes ces idées ? ». **Rien n'est
+> décidé : idées consignées, aucun chantier ouvert.** On reprend des idées, jamais des contenus.
+
+**Comment on l'a lu.** L'exécutable n'a pas été lancé. GM Codex est une application Tauri : ses
+18 fichiers d'interface sont rangés dans une table de l'exécutable (nom → contenu compressé en
+Brotli). Script de lecture : relever chaque nom (`/index.html`, `/dane/aplikacja.js`,
+`/js/nostromo-bundle.js`, 21 Mo…), retrouver son entrée dans la table (pointeur et longueur du nom,
+puis pointeur et longueur du contenu, 32 octets par entrée), décompresser. Extraction faite dans le
+dossier temporaire de la session, **non conservée** — à refaire si besoin (deux minutes). Le
+journal des versions y compte **56 entrées sur le détecteur** (1er octobre–9 novembre 2026), en
+polonais, anglais et allemand.
+
+**La différence de fond.** Le détecteur de GM Codex **lit le jeu** : une carte tactique en cases de
+2,5 m, des PNJ qui vivent selon un emploi du temps, et le détecteur qui voit ce qui bouge vraiment.
+Celui de GM-OS (§ 163, A8, page 54 Alien) est un **accessoire de mise en scène** — contacts tirés au
+hasard dans une proximité choisie, faux écho, bips, préréglages — avec un **mode discret** (plan de
+zones, pions cachés, batterie du M314). La plupart des idées ci-dessous se brancheraient sur ce mode
+discret.
+
+**Le détecteur, de la plus rentable à la plus coûteuse :**
+
+1. **Ce qu'il ne voit pas** : les morts, les endormis, les inconscients, ceux qui guettent ; et
+   surtout le **xénomorphe immobile**, qui se fond dans la ruche ou attend en embuscade — dès qu'il
+   bouge pour chasser, il paraît. Pour GM-OS : un état « immobile » sur un pion caché du mode discret.
+2. **Un cône à orienter** : il ne voit que dans son champ, autour d'un cap que le joueur tourne.
+   Sur téléphone, le cap suit le **gyroscope** — GM Codex sert pour cela la page des joueurs en
+   **HTTPS** (certificat créé une fois, adresse `http` gardée « sans gyroscope »). ⚠️ C'est la même
+   limite de **contexte non sûr** qui bloquait le LANCER de la tablette le 11/11 (§ 243,
+   `randomUUIDHorsContexteSur.ts`) : le gyroscope, comme `randomUUID`, est réservé au contexte sûr.
+3. **Des modèles différents** — portée, angle, autonomie, écran (secteur vert avec voyants de charge ;
+   arc bleu avec la distance de l'écho le plus proche en chiffres rouges ; grille d'un appareil
+   bricolé), son, montage sous le canon. ⚠️ **À recouper avec les appareils du livre** (skill
+   `relire-un-corpus`) avant d'en reprendre un seul : plusieurs modèles du Codex peuvent être des
+   inventions de son auteur.
+4. **Le détecteur bricolé** : l'écho tombe jusqu'à 3 cases à côté du vrai point, différent à chaque
+   onde ; la distance ment ; il vide sa batterie vite.
+5. **Brouillage et tempête magnétique, en cinq niveaux** : parasites à l'écran → écho décalé de ±1 à
+   ±3 cases → portée réduite (×¾, ×½) → échos fantômes → taches au lieu de points. Un appareil
+   **blindé** compte deux niveaux de moins. Dans la zone d'un brouilleur : plus de retour, parasites
+   sur tout l'écran, un grésillement au lieu du ton.
+6. **Un anneau de huit segments** (module « tout autour ») : il s'allume dans la direction d'un
+   mouvement **hors du champ**, sans point ni distance — il faut tourner l'appareil pour voir.
+7. **Le son** : une onde à chaque balayage ; un ton plus aigu quand la cible approche ; des ondes qui
+   s'accélèrent dès qu'une cible est à portée. **Aucune étiquette** sur les points, même chez le
+   meneur : on voit l'écho, pas le nom de ce qui bouge.
+8. **La batterie** : un jet de charge à chaque tour de combat, et toutes les 10 minutes de séance hors
+   combat (comme une lampe) ; le « moment de calme » remet le compteur.
+9. **L'écho qui erre** : un être dans une pièce n'est pas immobile ; son écho glisse d'une case à
+   l'autre à chaque onde, sans sauter.
+
+**Les autres outils du meneur relevés :**
+
+- **La voix et la radio** : la voix ne traverse pas les murs (parler, chuchoter : même pièce ; crier :
+  la pièce voisine) ; la radio demande un appareil de communication ; un message diffusé sur un canal
+  n'a pas de destinataire — c'est ainsi qu'on joue l'écoute de deux PNJ.
+- **L'alarme des PNJ qui se propage** : par un cri dans la pièce, par la radio vers les pièces
+  voisines si le PNJ en porte une (les xénomorphes n'en ont pas besoin).
+- **Les objets bricolés**, à la manière d'*Alien: Isolation* : recettes faites de l'équipement du
+  personnage, un test par fabrication.
+- **Le radar spatial** à écran circulaire (balayage, anneaux de portée, rémanence), ombres radar
+  derrière les gros objets, faux échos dans une nébuleuse ; le lien tactique entre vaisseaux alliés.
+- **Les autres jeux** : Cyberpunk Red, Delta Green, Twilight: 2000, Tales from the Loop, Vaesen sont
+  annoncés mais marqués « bientôt » ; seul Alien est servi.
+
+**Si l'on reprend un jour** : les idées 1 et 2 d'abord (les plus rentables), par le skill
+`specifier-un-chantier`, Alien seul ; le gyroscope impose de servir le Hub en HTTPS, ce qui touche
+`electron/SyncServer.ts` et le certificat — un chantier à part entière.
 
 ## Analyse
 

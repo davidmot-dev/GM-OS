@@ -14358,7 +14358,10 @@ et suivi tâche par tâche : [`2026-11-11-jets-demandes-et-caches.md`](2026-11-1
   `3f770642`, `89f17947`, `07c8b9c9`.
 - **Reste** : la capture de la bannière au guide 61 (photo sur tablette). Lot 2 fait (§ 244) ;
   lot 3 (onglets du Hub suivant l'équipement) **mis de côté par David le 11/11** (« on ne va pas faire le
-  lot 3, on va le mettre de côté ») ; idée 5 garée, idée 6 écartée (on ne joue
+  lot 3, on va le mettre de côté ») ; **second examen de GM Codex** (11/11, question de David sur le
+  détecteur) : neuf idées pour le détecteur de mouvement et quatre autres outils du meneur,
+  **consignées et mises de côté**, sans chantier ouvert — voir
+  [`2026-11-11-jets-demandes-et-caches.md`](2026-11-11-jets-demandes-et-caches.md), « Second examen » ; idée 5 garée, idée 6 écartée (on ne joue
   jamais hors ligne).
 
 ### 244 · Rappel d'un jet dû par une jauge — idées reprises de GM Codex, lot 2 — 11/11/2026
