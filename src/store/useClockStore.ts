@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { stockageLocalDuMJ } from '../utils/ecritureReserveeAuMJ';
 import { exposerMagasinDuHub } from '../utils/magasinsDuHub';
 import type { FormeDeJauge } from '../modules/clock/components/formesDeJauge';
+import { rappelRegle, rearmerLesRappels, type RappelDeJauge } from '../modules/clock/logic/rappelDeLaJauge';
 import {
     dateDeDepart,
     estBissextile,
@@ -198,6 +199,16 @@ export interface TensionClock {
      * endroit de l'application qui sache qu'une scène s'achève.
      */
     pasParScene?: number;
+    /**
+     * **Ce qu'il faudra lancer quand la jauge arrivera au bout** — lot 2 des
+     * idées de GM Codex, 11/11/2026 (`modules/clock/logic/rappelDeLaJauge.ts`).
+     * « Jet d'Endurance, tout le monde » : au bout, le rappel paraît au cockpit
+     * du meneur, **jamais à la table** (retiré par `jaugesVuesParLesJoueurs`).
+     * `traite` : on y a répondu à ce passage ; réarmé quand la jauge repart.
+     *
+     * Absent : pas de rappel, comme toutes les jauges d'avant ce champ.
+     */
+    rappel?: RappelDeJauge;
 }
 
 /**
@@ -209,10 +220,23 @@ export interface TensionClock {
  * caviardage qui sera oublié dans la quatrième.* On filtre **à la source**,
  * avant l'émission : une jauge secrète ne quitte pas la machine du meneur.
  */
-export function jaugesVuesParLesJoueurs<T extends { vueParLesJoueurs?: boolean }>(
+export function jaugesVuesParLesJoueurs<T extends { vueParLesJoueurs?: boolean; rappel?: unknown }>(
     tensions: T[] | undefined,
 ): T[] {
-    return (tensions ?? []).filter((jauge) => jauge.vueParLesJoueurs ?? true);
+    return (tensions ?? [])
+        .filter((jauge) => jauge.vueParLesJoueurs ?? true)
+        /*
+          **Le rappel du meneur ne part pas avec la jauge** (lot 2, 11/11 — David :
+          « rien à la table »). ⚠️ Relevé ce jour-là : ce filtre sert le segment
+          des tablettes (`segmentDesHorloges`) ; l'afficheur a le sien
+          (`horlogesPourLaTable`), qui ne recopie que ses champs.
+        */
+        .map((jauge) => {
+            if (!('rappel' in jauge)) return jauge;
+            const sansRappel = { ...jauge };
+            delete sansRappel.rappel;
+            return sansRappel;
+        });
 }
 
 /**
@@ -385,6 +409,10 @@ interface ClockState {
     setIsClockProjected: (projected: boolean) => void;
     /** Allume ou éteint la cloche de fin de minuteur. */
     basculerLaSonnerie: () => void;
+    /** Écrit (ou efface, texte vide ou `null`) ce qu'il faudra lancer au bout de la jauge (lot 2). */
+    reglerLeRappel: (id: string, texte: string | null) => void;
+    /** « Fait » ou « Écarter » : le rappel ne revient plus avant le prochain passage. */
+    traiterLeRappel: (id: string) => void;
 }
 
 /**
@@ -719,6 +747,22 @@ export const useClockStore = create<ClockState>()(
 
             basculerLaSonnerie: () => set((etat) => ({ sonnerieDuMinuteur: !etat.sonnerieDuMinuteur })),
 
+            reglerLeRappel: (id, texte) => set((state) => ({
+                tensions: state.tensions.map((c) => {
+                    if (c.id !== id) return c;
+                    const rappel = rappelRegle(c.rappel, texte);
+                    if (rappel) return { ...c, rappel };
+                    const sansRappel = { ...c };
+                    delete sansRappel.rappel;
+                    return sansRappel;
+                }),
+            })),
+
+            traiterLeRappel: (id) => set((state) => ({
+                tensions: state.tensions.map((c) =>
+                    c.id === id && c.rappel ? { ...c, rappel: { ...c.rappel, traite: true } } : c),
+            })),
+
             getFantasyDate: () => {
                 const { timestamp, activeCalendarId, calendars } = get();
                 if (!activeCalendarId || !calendars[activeCalendarId]) return null;
@@ -930,5 +974,23 @@ export const useClockStore = create<ClockState>()(
         }
     )
 );
+
+/*
+  ⭐ **Le réarmement des rappels, en un seul endroit** (lot 2, 11/11/2026).
+
+  Un rappel traité doit revenir au prochain passage de la jauge au bout — donc
+  se réarmer dès qu'elle en repart. Or les jauges ont **une douzaine
+  d'écrivains** ici (clic ±, remplir, remettre à zéro, sens, fin de scène…), et
+  deux au-dehors : la synchronisation entre fenêtres (`CrossWindowEventService`)
+  et la restauration d'une séance (`SessionService`), qui écrivent par
+  `setState`. Réarmer dans chaque action en oublierait une ; l'abonnement les
+  voit toutes. `rearmerLesRappels` rend le même tableau quand rien ne change :
+  sans cela, cette écriture relancerait l'abonnement sans fin.
+*/
+useClockStore.subscribe((etat, avant) => {
+    if (etat.tensions === avant.tensions) return;
+    const rearmees = rearmerLesRappels(etat.tensions);
+    if (rearmees !== etat.tensions) useClockStore.setState({ tensions: rearmees });
+});
 
 exposerMagasinDuHub('useClockStore', useClockStore);

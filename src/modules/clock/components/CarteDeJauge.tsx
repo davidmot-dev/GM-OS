@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronsUp, EllipsisVertical, Eye, EyeOff, Hourglass, Minus, MonitorSmartphone, Plus, Trash2, TriangleAlert } from 'lucide-react';
+import { AlarmClock, ChevronsUp, EllipsisVertical, Eye, EyeOff, Hourglass, Minus, MonitorSmartphone, Plus, Trash2, TriangleAlert } from 'lucide-react';
 import { useClockStore } from '../../../store/useClockStore';
 import type { ClockTheme } from '../../../store/useClockStore';
 import NarrativeClock from './NarrativeClock';
@@ -10,6 +10,36 @@ import { FORME_PAR_DEFAUT } from './formesDeJauge';
 import { elleSeVide, graviteDeLaJauge, pasDuClicPrincipal, sensDe } from '../logic/sensDeLaJauge';
 import { COULEURS_DU_COMPTE } from '../../ulanzi/widgets/compteARebours';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
+import { LONGUEUR_DU_RAPPEL, rappelsEnAttente, texteDuRappel } from '../logic/rappelDeLaJauge';
+import BoutonsDuRappel from './BoutonsDuRappel';
+
+/**
+ * **Ce qu'il faudra lancer au bout** — lot 2 (`2026-11-11-rappel-de-jet-du.md`,
+ * T3). Saisi ici, écrit au magasin **en quittant le champ** (ou Entrée) : écrire
+ * à chaque frappe rognerait l'espace qu'on vient de taper.
+ */
+const ChampDuRappel: React.FC<{ texte: string; regler: (texte: string) => void }> = ({ texte, regler }) => {
+    const { t } = useTranslation('modules');
+    const [saisie, setSaisie] = React.useState(texte);
+    const valider = () => { if (texteDuRappel(saisie) !== texte) regler(saisie); };
+    return (
+        <label className="flex flex-col gap-1.5" title={t('clock.rappel_hint')}>
+            <span className="flex items-center gap-1.5 text-ui-9 font-black uppercase tracking-widest text-app-subtle">
+                <AlarmClock size={11} aria-hidden /> {t('clock.rappel_label')}
+            </span>
+            <input
+                type="text"
+                value={saisie}
+                maxLength={LONGUEUR_DU_RAPPEL}
+                placeholder={t('clock.rappel_placeholder')}
+                onChange={(e) => setSaisie(e.target.value)}
+                onBlur={valider}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); valider(); } }}
+                className="w-full rounded border border-app-border/40 bg-app-bg/60 px-2 py-1 text-xs text-app-text placeholder:text-app-subtle/70 focus:border-accent focus:outline-none"
+            />
+        </label>
+    );
+};
 
 /** Ce que l'afficheur montre quand une jauge n'a pas de couleur choisie. */
 const COULEUR_DE_JAUGE_PAR_DEFAUT = COULEURS_DU_COMPTE.plein;
@@ -35,7 +65,10 @@ export const CarteDeJauge: React.FC<{ clock: Jauge; theme: ClockTheme }> = ({ cl
     const {
         removeTensionClock, updateTensionSegments, changerLaFormeDeLaJauge, changerLaCouleurDeLaJauge,
         remplirLaJauge, changerLeSensDeLaJauge, reglerLePasParScene, basculerSurLAfficheur, basculerLaVueDesJoueurs,
+        reglerLeRappel,
     } = useClockStore();
+    const rappel = texteDuRappel(clock.rappel?.texte);
+    const [rappelAuBout] = rappelsEnAttente([clock]);
     const [menuOuvert, setMenuOuvert] = React.useState(false);
     useFermetureParEchap(menuOuvert, () => setMenuOuvert(false), 'Réglages de la jauge');
 
@@ -121,6 +154,26 @@ export const CarteDeJauge: React.FC<{ clock: Jauge; theme: ClockTheme }> = ({ cl
                 {clock.filledSegments} / {clock.totalSegments}{' '}
                 {elleSeVide(clock) ? t('clock.remaining') : t('clock.segments')}
             </p>
+            {/*
+              **Au bout, le rappel se traite ici même** (11/11, David : « je ne vois pas
+              de Fait pour cliquer » — la seule réponse vivait au Tableau de bord, un
+              autre module). Sinon, une jauge qui porte un rappel se reconnaît sans
+              ouvrir ses réglages (lot 2).
+            */}
+            {rappelAuBout ? (
+                <div data-rappel-au-bout className="flex flex-col gap-2 rounded-lg border border-accent/40 bg-accent/10 px-3 py-2">
+                    <p className="flex items-start gap-1.5 text-xs font-bold text-app-text">
+                        <AlarmClock size={13} className="mt-0.5 shrink-0 text-accent animate-pulse" aria-hidden />
+                        <span className="break-words">{rappelAuBout.texte}</span>
+                    </p>
+                    <BoutonsDuRappel rappel={rappelAuBout} />
+                </div>
+            ) : rappel && (
+                <p className="flex items-center justify-center gap-1 text-ui-10 text-app-subtle" title={t('clock.rappel_sur_la_carte', { texte: rappel })}>
+                    <AlarmClock size={11} className="shrink-0" aria-hidden />
+                    <span className="truncate">{rappel}</span>
+                </p>
+            )}
 
             {/*
               **Ce qu'une fin de scène coûte à cette jauge** (portée choisie par
@@ -192,6 +245,7 @@ export const CarteDeJauge: React.FC<{ clock: Jauge; theme: ClockTheme }> = ({ cl
                             <span className={etiquette}>{t('clock.agencement.sens')}</span>
                             <ChoixDuSens compact valeur={sensDe(clock)} onChoisir={(s) => changerLeSensDeLaJauge(clock.id, s)} />
                         </div>
+                        <ChampDuRappel texte={rappel} regler={(texte) => reglerLeRappel(clock.id, texte)} />
 
                         {/*
                           **Remplir d'un coup.** Un instrument qui *se vide* — le

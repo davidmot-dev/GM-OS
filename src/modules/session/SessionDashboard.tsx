@@ -6,6 +6,7 @@ import SessionSnapshotModal from './components/SessionSnapshotModal';
 import RemoteNotificationCenter from './components/RemoteNotificationCenter';
 import PanneauDesRessources from '../table/PanneauDesRessources';
 import AlertesDeFranchissement from '../table/AlertesDeFranchissement';
+import RappelsDesJauges from '../clock/components/RappelsDesJauges';
 import { useSessionOSStore } from './useSessionOSStore';
 import { useSessionStore } from '../../store/useSessionStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
@@ -103,6 +104,8 @@ const SessionDashboard: React.FC = () => {
                     gabarit={activeTemplate}
                 />
             )}
+            {/* Les rappels des jauges de Clock-OS (lot 2, 11/11) : pour tous les jeux, sans condition du pilote. */}
+            <RappelsDesJauges />
 
             {/* Registre de Vues (Contenu principal dynamique) */}
             <SessionViewRegistry />

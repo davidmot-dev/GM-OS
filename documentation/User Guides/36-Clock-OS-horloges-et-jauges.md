@@ -10,9 +10,9 @@ L'écran est en deux colonnes : à gauche la **configuration**, le **minuteur** 
 ![Clock-OS : à gauche la configuration, le minuteur et la nouvelle jauge ; à droite l'heure et trois jauges de tension](captures/module-horloge-temps.jpg)
 
 Chaque jauge montre son pourcentage, son nom, ses segments, le **pas par scène**, et **−** / **+**.
-Tout le reste vit dans son menu **⋮ — Réglages de la jauge** : la **forme**, le **sens**,
-**Remplir**, **Sur l'afficheur de table**, **Vue par les joueurs**, la couleur sur l'afficheur, et la
-suppression. *Une rangée de dix icônes sans nom sous chaque carte a laissé la place à un menu
+Tout le reste vit dans son menu **⋮ — Réglages de la jauge** : la **forme**, le **sens**, le
+**rappel au bout**, **Remplir**, **Sur l'afficheur de table**, **Vue par les joueurs**, la couleur sur
+l'afficheur, et la suppression. *Une rangée de dix icônes sans nom sous chaque carte a laissé la place à un menu
 (refonte, 2026-10-02).*
 
 ---
@@ -338,6 +338,31 @@ rien, et c'est le cas de toutes vos jauges actuelles.
 Clock-OS. Refermer une scène déjà close ne reprend rien une seconde fois. Chaque mouvement est
 annoncé en bas de l'écran : *une jauge qui bouge sans que vous l'ayez touchée doit le dire.*
 
+### ⭐ « Au bout, rappeler » — le jet dû — 11/11/2026
+
+Dans le menu **⋮** de la jauge, sous le sens, écrivez **ce qu'il faudra lancer quand elle arrivera
+au bout** : « Jet d'Endurance, tout le monde », « La patrouille passe : 1d6 ». Le champ s'enregistre
+quand vous le quittez (ou par Entrée) ; le vider retire le rappel. La carte de la jauge le rappelle
+sous ses segments (⏰).
+
+- **Le bout**, c'est la même règle que le rouge qui pulse : **pleine** pour une jauge qui monte,
+  **vide** pour une jauge qui s'épuise — quel que soit le geste qui l'y amène (−/+, « Remplir », la
+  fin d'une scène).
+- **Trois endroits pour y répondre**, et répondre à l'un éteint les autres :
+  - **la carte de la jauge**, ici dans Clock-OS : au bout, le rappel s'y affiche en clair, icône qui
+    pulse, avec **Fait** et **Écarter** ;
+  - **le Tableau de bord**, sous le bandeau des réserves : une ligne « ⏰ Air respirable — à vide : Jet
+    d'Endurance, tout le monde », avec les mêmes boutons ;
+  - **la carte volante**, 5 secondes en haut à droite quel que soit l'écran ouvert, avec les mêmes
+    boutons.
+
+  **Fait** : vous avez lancé ou [demandé le jet](./53-Les-jeux-et-leurs-mecaniques.md) — le journal de
+  séance le note. **Écarter** : on n'en parle plus, sans rien noter.
+- **Une fois par passage** : tant que la jauge reste au bout, le rappel ne revient pas. Qu'elle en
+  reparte, et il se réarme pour la fois suivante.
+- **Rien à la table** : ni tablette, ni Player Hub, ni afficheur — même pour une jauge vue par les
+  joueurs. C'est vous qui annoncez le jet.
+
 ---
 
 ## 📡 Où part une jauge — deux réglages, pas un
@@ -367,6 +392,7 @@ ajoute pas.*
 | :--- | :--- |
 | **Les joueurs voient une jauge que je voulais garder** | Menu **⋮** de la jauge → **Vue par les joueurs** : la referme, elle seule. *Cette ligne disait « il n'existe pas de jauge privée » : c'était vrai jusqu'au 2026-09-04, ça ne l'est plus.* |
 | **Mes rations ont baissé sans que j'y touche** | Elle a un **Par scène**, et vous venez de terminer une scène. Videz le champ pour la détacher. |
+| **Le rappel de ma jauge ne revient pas** | Vous y avez répondu (**Fait** ou **Écarter**) et la jauge est restée au bout : il attend qu'elle en reparte. Faites-la bouger d'un cran, puis revenir. |
 | **Ma jauge de vivres crie alors qu'elle est pleine** | Son sens est resté sur **Monte**. Basculez-le sur **S'épuise** au survol de la carte. |
 | **Ma jauge est orange alors que tout va bien** | Elle a passé la mi-course. C'est le code couleur, pas un défaut — voir le tableau des seuils. |
 | **Sur l'Ulanzi, je ne vois pas l'orange** | Cette jauge n'a pas de couleur choisie, et l'orange y est déjà la couleur de repos. Donnez-lui une couleur. |

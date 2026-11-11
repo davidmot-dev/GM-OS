@@ -216,6 +216,10 @@ au meneur comme tout jet de tablette, et la demande passe à **« lancé »**.
   de l'écran du meneur, dans la colonne des alertes de message — le personnage, le jet, le
   verdict en couleur et le détail des dés — et s'efface seule **au bout de 5 secondes** (le « ✕ »
   la ferme avant). Seuls les jets **demandés** l'ouvrent, et seulement chez le meneur.
+- **Un jet dû, rappelé par une jauge** (11/11) : une jauge de Clock-OS peut porter « au bout,
+  rappeler : … » ; arrivée au bout, le rappel paraît au cockpit — voir
+  [Clock-OS](./36-Clock-OS-horloges-et-jauges.md), « Au bout, rappeler ». On y répond en demandant le
+  jet ici, puis **Fait**.
 - **Demandes en cours**, sous les boutons : celles qui attendent, avec **Annuler** (la bannière
   disparaît de la tablette), puis les trois dernières closes.
 - **Un jeu à Sauvegarde** (Cthulhu Hack) : la tablette n'a pas de test à composer ; le meneur

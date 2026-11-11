@@ -8,6 +8,7 @@ import {
 import { useSessionOSStore } from '../useSessionOSStore';
 import { messagePourLeLecteur } from '../../../../electron/destinatairesDesMessages';
 import ResultatsDesDemandesVolants from '../../dice/ResultatsDesDemandesVolants';
+import RappelsVolants from '../../clock/components/RappelsVolants';
 
 interface Alert {
     id: string;
@@ -69,10 +70,12 @@ export const MessageAlertOverlay: React.FC = () => {
 
     /*
       La colonne reste montée, même sans alerte : les résultats des jets demandés
-      (11/11, 5 s) s'y empilent sous les messages, sans les chevaucher.
+      et les rappels des jauges (11/11, 5 s) s'y empilent avec les messages, sans
+      les chevaucher.
     */
     return (
         <div className="fixed top-20 right-8 z-[100] flex flex-col gap-3 pointer-events-none">
+            <RappelsVolants />
             <ResultatsDesDemandesVolants />
             {alerts.slice(-3).map((alert, index) => (
                 <div 
