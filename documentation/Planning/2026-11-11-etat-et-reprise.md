@@ -5,7 +5,11 @@
 **Le lot 1 des idées reprises de GM Codex : jets demandés et jets cachés** — livré, **à essayer
 par David**. Registre § 243, ligne 179 ; spécification et suivi tâche par tâche :
 [`2026-11-11-jets-demandes-et-caches.md`](2026-11-11-jets-demandes-et-caches.md) (T1 à T10).
-**Rien n'est commité** (aucune demande de David).
+**Lot commité dans `27c832a9`.** Reprise par Codex le 11/11 : David demande
+« on reprend commit tout ce qu'il te reste ». Les fichiers encore en attente sont enregistrés
+par sujet : registre Alien (carrières saisies par David), corpus de campagne « Premiers pas »,
+exports et travail de préparation Argyropée, extractions des cartes Torg et script associé.
+Cette reprise ne modifie pas le code de l'application et ne comprend pas de push.
 
 - **Demander un jet** : « Demander à (personnage) » dans « Lancer un test » chez le meneur ; la
   tablette montre une bannière (Hub et fiche) et ouvre le test composé ; le résultat clôt la
@@ -26,7 +30,7 @@ par David**. Registre § 243, ligne 179 ; spécification et suivi tâche par tâ
 1. **David** : ouvrir un PJ, « Lancer un test », composer, **« Demander à … »** ; sur la tablette
    du joueur, toucher **Lancer** dans la bannière, lancer ; vérifier « lancé » chez le meneur.
    Puis « Jet caché » au pupitre. Photographier la bannière pour le guide 61.
-2. Si c'est bon : commit (sur demande) — un commit pour ce lot.
+2. Le lot est déjà commité (`27c832a9`) ; consigner le résultat de l'essai de David.
 3. Ensuite : spécifier le **lot 2** (rappel d'un jet dû par une jauge Clock-OS) avec
    `specifier-un-chantier`.
 
@@ -53,7 +57,7 @@ par David**. Registre § 243, ligne 179 ; spécification et suivi tâche par tâ
   guillemets et accents graves) ; une écriture Windows échoue parfois en `OSError 22` : vérifier
   que le fichier est intact, puis refaire.
 
-## Fichiers non commités
+## Fichiers du lot commité (`27c832a9`)
 
 Ce lot : `electron/SyncServer.ts`, `electron/destinatairesDesMessages(.test).ts` ;
 `src/types/session.types.ts`, `src/modules/session/store/uiSlice.ts` ;
@@ -71,5 +75,8 @@ Ce lot : `electron/SyncServer.ts`, `electron/destinatairesDesMessages(.test).ts`
 `documentation/Planning/` — la spécification, `stitch/jets-demandes/`, cette note, la synthèse
 des pilotes et le registre (§ 243, ligne 179).
 
-**Pas à moi**, présents avant la session : la ligne du § 242 dans le registre,
-`docs/campaigns/premiers-pas/`, `tmp/…`, `Export Dirvers/Argyropee…`.
+**Présents avant la session de Claude**, puis inclus dans les commits de reprise de Codex
+à la demande de David : la ligne du § 242 dans le registre,
+`docs/campaigns/premiers-pas/`, `tmp/…`, `Export Dirvers/Argyropee…` et son export corrigé.
+Ces fichiers sont conservés en l'état ; leur archivage ne vaut pas relecture du corpus
+(`relu: false`) ni nouvel essai des pilotes et des cartes.
