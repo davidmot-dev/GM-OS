@@ -146,6 +146,7 @@ Avant toute modification du code applicatif, vérifier avec David que GM-OS est 
 
 | Pilote | Avancement | État de la connaissance | Première amélioration ou prochaine étape proposée |
 | --- | --- | --- | --- |
+| [Delta Green](#delta-green) | 🟠 Préparation graphique | **12/11 (§ 246)** : index, sommaire, thème, bannière, identité et fiche française de deux pages livrés ; validateurs et parcours autonome contrôlés. Pilote 1.0.0 en cours de création par David, règles non auditées. | Essai visuel, nommer les compétences du pilote puis intégrer et raccorder la fiche ; voir le [compte rendu](2026-11-12-delta-green-studio.md) |
 | [Alien](#alien) | 🟢 11 · 🟠 0 · 🔴 0 | A0–A9 validés par David ; **A10, préréglages et remise à zéro des modules, livré et essayé le 23/10** (registre § 163) ; campagne de recette avec trois modules préparés livrée le 26/10 (§ 180) | Essayer les 74 cas du cahier ; GM-05 transversal signalé ; aucun lot A0–A10 à refaire |
 | [Argyropée](#argyropée) | 🟢 11 · 🟠 0 · 🔴 0 | **Pilote 2.1.0 le 09/11** (§ 237, § 239) : test d10 de 0 à 9, Panache, action complexe/opposition, Faveur, journée, magie, PNJ/Guigne ; fiche HTML reliée, corpus relu 20/20. **Campagne de recette préparée** (§ 240) : douze séances, six ateliers, 61 cas humains, 120 tests en mémoire. **Deux écarts corrigés le 12/11 (§ 245)** : sous zéro, inconscient à −1 ; d10 d'initiative lu de 0 à 9 | **Pilote 2.1.0, campagne de recette et bestiaire validés par David le 12/11.** Corrections du combat (§ 245) **validées le 12/11** ; rien ne reste à essayer |
 | [Barbarians of Lemuria](#barbarians-of-lemuria) | 🟢 5 · 🟠 0 · 🔴 0 | **Nouveau pilote, fini le 27/10**, 2.0.0 (registre § 184) : corpus relu, jet contre 9 avec dés de bonus/malus et héroïsme, fiche HTML au moteur 19 reliée, thème contrôlé | Réimport avec Remplacer et essai de David |
@@ -647,6 +648,23 @@ dit pas) ; la Discordia sans Égo ni Sporulation (le livre ne lui donne pas de s
 
 **Cas témoin :** Falberg, INS 2 + Dressage 1 : 3 dés, 2-4-6 contre 2 — réussite « bien » ;
 PHY+Résistance 4 : 10 dégâts → 8 Blessures superficielles et 2 Traumatismes (p. 18-19, 107).
+
+## Delta Green
+
+**Préparation GM-OS Studio — 12/11/2026, registre § 246.** David crée le pilote et demande
+index/sommaire, thème, bannière, identité visuelle et fiche. Livrés : 93 entrées de sommaire et
+791 lignes d’index ; thème papier grisé et cadre vert sombre, trois ornements et quinze icônes ;
+bannière 2400 × 600 ; identité STYLE / AVOID ; fiche française de deux pages, 239 zones et
+233 clés, fidèle au formulaire fourni. Voir le [compte rendu des ateliers](2026-11-12-delta-green-studio.md).
+
+**Contrôlé** : thème accepté (zéro erreur et avertissement), fiche acceptée (zéro erreur ; nouveau
+modèle et absence de correspondance signalés), parcours autonome hors ligne, import/export,
+calculs imprimés et captures des deux pages. **Reste** : jugement visuel et essai de David,
+stabilisation des compétences du pilote puis intégration de la fiche et correspondance.
+L’export 1.0.0 déposé pendant le travail contient encore `comp1` à `comp12` : aucune signification
+ne leur est attribuée. Les calculs PV/SAN maximum sont automatiques dans le HTML autonome et
+restent à raccorder dans GM-OS. **Règles du pilote non auditées à ce stade** : aucun mécanisme
+du corpus généré n’est déclaré relu ou validé par ces ateliers graphiques.
 
 ## Dune
 

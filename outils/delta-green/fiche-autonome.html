@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Delta Green — Fiche d’Agent interactive</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#28342d;color:#f4f2e9;font:14px Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 14px;background:#182920;border-bottom:1px solid #8c9d86}
+header strong{margin-right:auto}button,select{font:inherit;padding:8px 10px;background:#e4e5dc;color:#17281d;border:1px solid #8c9d86;border-radius:2px;cursor:pointer}button:focus-visible,select:focus-visible{outline:3px solid #b5d9ae;outline-offset:2px}button[aria-pressed=true]{background:#a7c5a8}button:disabled{opacity:.45;cursor:default}
+#status{font-size:12px;padding:6px 14px;min-height:26px}main{display:flex;flex-direction:column;align-items:center;gap:24px;padding:14px 12px 40px;overflow:auto}.page-wrap{position:relative;flex-shrink:0}.sheet{position:absolute;top:0;left:0;transform-origin:top left;background:white;color:black;box-shadow:0 5px 22px #0008}.background{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.dg-field{position:absolute;margin:0;min-width:0;min-height:0}.dg-field[type=number]{appearance:textfield;-moz-appearance:textfield}.dg-field::-webkit-inner-spin-button{display:none}.dg-checkbox{appearance:none}.dg-checkbox:checked::after{content:'×';position:absolute;inset:0;line-height:7px;text-align:center;font-size:10px;font-weight:bold}.dg-hotspot{cursor:pointer}.zones .dg-field{outline:1px solid #1592a5!important;background-color:#42c9e51c!important}.zones .dg-field[readonly]{outline-color:#ba7109!important}
+/*CUSTOM_CSS*/
+@media print{@page{size:A4;margin:0}body{background:white}header,#status{display:none}main{display:block;padding:0;overflow:visible}.page-wrap{width:210mm!important;height:297mm!important;break-after:page;page-break-after:always}.page-wrap:last-child{break-after:auto;page-break-after:auto}.sheet{width:595.276px!important;height:841.89px!important;transform:scale(1.333333)!important;box-shadow:none}.zones .dg-field{outline:none!important;background:transparent!important}.dg-hotspot.active{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+</style></head><body>
+<header aria-label="Commandes de la fiche"><strong>DELTA GREEN · Dossier d’Agent</strong>
+<button id="previous" aria-label="Page précédente">←</button><select id="pages" aria-label="Page"></select><button id="next" aria-label="Page suivante">→</button>
+<button id="minus" aria-label="Réduire le zoom">−</button><output id="zoom" aria-live="polite">100 %</output><button id="plus" aria-label="Agrandir le zoom">+</button><button id="fit">Ajuster</button>
+<button id="zones" aria-pressed="false">Zones</button><button id="export">Exporter JSON</button><button id="import">Importer JSON</button><input id="file" type="file" accept=".json,application/json" hidden>
+<button id="reset">Réinitialiser</button><button id="print">Imprimer toutes les pages</button></header>
+<div id="status" role="status"></div><main id="document"></main>
+<!--MANIFEST-->
+<script>
+'use strict';
+const template=JSON.parse(document.getElementById('character-sheet-template').textContent).template;
+const fields=template.pages.flatMap(p=>p.fields),byKey=new Map(fields.map(f=>[f.key,f]));
+const storageKey='fiche-autonome:'+template.id;let data={},scale=1,selectedPage=0;
+const $=id=>document.getElementById(id),controls=[];
+function get(key){if(Object.prototype.hasOwnProperty.call(data,key))return data[key];return key.split('.').reduce((o,k)=>o==null?undefined:o[k],data)}
+function set(key,value){const parts=key.split('.');let o=data;for(const k of parts.slice(0,-1)){if(!o[k]||typeof o[k]!=='object')o[k]={};o=o[k]}o[parts.at(-1)]=value}
+function defaults(){for(const f of fields)if(f.defaultValue!==undefined&&get(f.key)===undefined)set(f.key,f.defaultValue)}
+function calculate(){for(const f of fields){if(!f.derive)continue;const v=get(f.derive.source);if(v===undefined||v===''){set(f.key,'');continue}const n=Number(v);if(!Number.isFinite(n))continue;const d=f.derive;set(f.key,d.operation==='copy'?n:d.operation==='floor-divide'?Math.floor(n/(d.divisor||1)):Math.round(n/(d.divisor||1)))}
+// Formules imprimées, sans modification des valeurs actuelles : ces deux calculs composés
+// ne sont pas exprimables par les opérations à source unique du manifeste GM-OS v1.
+if(get('attributes.strength')!==undefined&&get('attributes.constitution')!==undefined&&get('attributes.strength')!==''&&get('attributes.constitution')!=='')set('health.hp_max',(Number(get('attributes.strength'))+Number(get('attributes.constitution')))/2);
+if(get('skills.unnatural')!==undefined&&get('skills.unnatural')!=='')set('health.sanity_max',99-Number(get('skills.unnatural')));
+}
+function notify(message){$('status').textContent=message}
+function save(){try{localStorage.setItem(storageKey,JSON.stringify(data));notify('Sauvegarde locale effectuée.')}catch{notify('Sauvegarde locale indisponible : utilisez Exporter JSON.')}}
+function refresh(){for(const {el,f}of controls){const v=get(f.key);if(f.type==='hotspot'){const active=typeof f.value==='number'?Number(v)>=f.value:v===f.value;el.classList.toggle('active',active);el.setAttribute('aria-pressed',String(active))}else if(f.type==='checkbox'){el.checked=!!v}else if(document.activeElement!==el){el.value=v??''}}}
+function changed(f,el){if(f.type==='hotspot'){const v=get(f.key);set(f.key,v===f.value?(typeof f.value==='number'?0:''):f.value)}else set(f.key,f.type==='checkbox'?el.checked:f.type==='number'?(el.value===''?'':Number(el.value)):el.value);calculate();refresh();save()}
+try{const raw=localStorage.getItem(storageKey);if(raw){const d=JSON.parse(raw);if(d&&typeof d==='object'&&!Array.isArray(d))data=d}}catch{notify('Sauvegarde locale indisponible : utilisez Exporter JSON.')}
+defaults();calculate();
+for(const [i,p]of template.pages.entries()){
+ const option=document.createElement('option');option.value=String(i);option.textContent=`${i+1} · ${p.label}`;$('pages').append(option);
+ const wrap=document.createElement('section');wrap.className='page-wrap';wrap.id=p.id;wrap.setAttribute('aria-label',p.label);wrap.dataset.index=String(i);
+ const sheet=document.createElement('div');sheet.className='sheet';sheet.dataset.template=template.id;sheet.style.width=p.width+'px';sheet.style.height=p.height+'px';
+ const bg=document.createElement('img');bg.className='background';bg.src=p.backgroundData;bg.alt='';sheet.append(bg);
+ for(const f of p.fields){const el=document.createElement(f.type==='textarea'?'textarea':f.type==='hotspot'?'button':'input');el.className=f.className;el.dataset.key=f.key;el.title=f.label;el.setAttribute('aria-label',f.label);Object.assign(el.style,{left:f.x+'px',top:f.y+'px',width:f.w+'px',height:f.h+'px'});
+ if(f.type==='hotspot'){el.type='button';el.addEventListener('click',()=>changed(f,el))}else{if(f.type!=='textarea')el.type=f.type==='number'?'number':f.type==='checkbox'?'checkbox':'text';if(f.readonly||f.derive)el.readOnly=true;if(f.min!==undefined)el.min=f.min;if(f.max!==undefined)el.max=f.max;el.autocomplete='off';el.spellcheck=false;el.addEventListener('input',()=>changed(f,el))}
+ sheet.append(el);controls.push({el,f})}wrap.append(sheet);$('document').append(wrap)
+}
+function zoom(value){scale=Math.min(4,Math.max(.2,value));document.querySelectorAll('.page-wrap').forEach((wrap,i)=>{const p=template.pages[i];wrap.style.width=p.width*scale+'px';wrap.style.height=p.height*scale+'px';wrap.firstChild.style.transform=`scale(${scale})`});$('zoom').value=Math.round(scale*100)+' %'}
+function fit(){zoom(Math.min((window.innerWidth-40)/template.pages[0].width,(window.innerHeight-110)/template.pages[0].height))}
+function navigate(i){selectedPage=Math.max(0,Math.min(template.pages.length-1,i));$('pages').value=String(selectedPage);$(template.pages[selectedPage].id).scrollIntoView({behavior:'instant',block:'start'});window.scrollBy(0,-$('pages').closest('header').offsetHeight-12);$('previous').disabled=selectedPage===0;$('next').disabled=selectedPage===template.pages.length-1}
+$('minus').onclick=()=>zoom(scale-.1);$('plus').onclick=()=>zoom(scale+.1);$('fit').onclick=fit;$('previous').onclick=()=>navigate(selectedPage-1);$('next').onclick=()=>navigate(selectedPage+1);$('pages').onchange=()=>navigate(Number($('pages').value));
+$('zones').onclick=()=>{$('document').classList.toggle('zones');$('zones').setAttribute('aria-pressed',String($('document').classList.contains('zones')))};
+$('export').onclick=()=>{const blob=new Blob([JSON.stringify({format:'interactive-character-sheet',version:1,sheet:template.id,data},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='delta-green-agent.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+$('import').onclick=()=>$('file').click();$('file').onchange=async()=>{try{const file=$('file').files[0];if(!file)return;const obj=JSON.parse(await file.text());if(obj.format!=='interactive-character-sheet'||obj.sheet!==template.id||!obj.data||typeof obj.data!=='object'||Array.isArray(obj.data))throw Error('Ce fichier ne contient pas un dossier Delta Green compatible.');if(!confirm('Remplacer les valeurs actuelles par ce dossier ?'))return;const clean={};for(const f of fields){const v=f.key.split('.').reduce((o,k)=>o==null?undefined:o[k],obj.data);const value=Object.hasOwn(obj.data,f.key)?obj.data[f.key]:v;if(['string','number','boolean'].includes(typeof value))clean[f.key]=value}data={};for(const [key,value]of Object.entries(clean))set(key,value);defaults();calculate();refresh();save()}catch(e){notify('Import refusé : '+e.message)}finally{$('file').value=''}};
+$('reset').onclick=()=>{if(!confirm('Effacer toutes les valeurs de cette fiche ?'))return;data={};defaults();calculate();refresh();save()};$('print').onclick=()=>window.print();
+window.addEventListener('keydown',e=>{if(!(e.ctrlKey||e.metaKey))return;if(['+','=','-','0'].includes(e.key)){e.preventDefault();e.key==='0'?fit():zoom(scale+(e.key==='-'?-.1:.1))}});
+window.addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey){e.preventDefault();zoom(scale+(e.deltaY<0?.1:-.1))}},{passive:false});
+refresh();fit();$('previous').disabled=true;notify('Fiche prête · sauvegarde locale · Ctrl + molette pour zoomer.');
+</script></body></html>

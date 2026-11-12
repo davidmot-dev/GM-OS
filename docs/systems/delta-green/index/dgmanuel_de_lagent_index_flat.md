@@ -1,0 +1,793 @@
+# Index — Delta Green — Manuel de l’Agent
+
+- activité personnelles — Voir vie quotidienne
+- agences fédérales — 104–161
+- accès à des financements — 106
+- aperçu — 106
+- budget opérationnel / objets
+- Défense — 124
+- droit de procéder à une arrestation — 106
+- forces de l’ordre — 107
+- professions suggérées — 106
+- réglementés — 106
+- renseignement et diplomatie — 144
+- sécurité publique — 155
+- Agent (création) — 14
+- Attaches — Voir Attaches
+- attributs dérivés — 18
+- captivité ou emprisonnement — 38
+- ce qu’aucun humain ne devrait savoir — 38
+- expérience douloureuse — 38
+- points de compétence bonus — 20 — Voir aussi Packs optionnels de points de compétences bonus
+- points de santé mentale (SAN) — 17 — Voir aussi santé mentale (SAN)
+- points de vie — 17
+- points de volonté — 18 — Voir aussi Volonté (points (VOL)
+- profession — Voir profession
+- seuil de rupture — 18, 68–69, 74, 78
+- vétérans abîmés — 37
+- violence extrême — 38
+- agent (employé du gouvernement) — 21, 171 — Voir aussi Investigateur, Officiel, Agent spécial
+- Agent (personnage joueur) — 7
+- Votre Agent durant le jeu — 10
+- agent (substance dangereuse) — 61, 170
+- Agent Daryl — Voir Massim, Yusif
+- agent spécial — 20, 89, 108, 135, 154, 156, 171
+- armes — 31–33, 50-54, 56, 57–60, 84, 89, 92–99, 101–103, 106, 109, 115, 118–119, 122–123, 127–128, 135, 147–148, 169, 170, 174, 176
+- accessoires d’armes — 102
+- armes à électrochocs — 93, 96
+- armes à feu — 30, 32, 50–51, 54, 56, 93, 97
+- armes de jet — 53
+- armes de mêlée — 30, 50–51, 53–54, 56, 92, 96
+- armes lourdes — 30, 56, 97–98
+- artillerie — 94, 98
+- bombe au poivre — 85, 93, 96
+- caractéristiques des armes — 56, 96–98
+- cartouches à plomb (fusil à pompe) — 94
+- dissimulation — 53, 92
+- fusil — 56, 94–97
+- Fusil à pompe — 56, 85, 89, 93–94, 97, 108, 111, 119, 137, 159
+- fusils à pompe — 56, 94, 97
+- gaz lacrymogène — 30, 52, 85, 93, 95
+- grenades — 30, 93, 96
+- lumières éblouissantes — 93
+- munitions spéciales — 95
+- perforant — 59–60, 95–97 — Voir aussi protection au combat
+- pistolet — 30, 32, 35, 50, 52, 54, 56, 84–85, 92–97, 101, 170
+- pistolet-mitrailleur — 56, 58, 91–92, 94–95, 97
+- pointe creuse — 95
+- port d’arme — 106, 109, 114, 117, 121, 125, 146, 159
+- tirer avec les deux canons (fusil à pompe) — 94
+- armure — Voir protection en combat
+- Attaches — 36, 38, 74, 75, 78–81, 88, 89, 91
+- Attache avec Delta Green — 37
+- Attaches de groupe ou d’individus — 36
+- Attaches rompues — 36
+- définir les Attaches — 36
+- attributs dérivés — Voir Agent (création)
+- Bureau de l’alcool, du tabac, des armes à feu et des explosifs (ATF) — 92, 108, 116, 119, 123
+- caractéristiques — 10, 14–16, 18–26, 29, 37, 43, 45
+- charisme (CHA) — 14–15, 18–19, 21, 23–26, 29–30, 36–38, 43–44, 73, 78–81, 87–89, 92, 112
+- constitution (CON) — 14, 16, 18–19, 21–23, 25–26, 43–44, 47, 55, 60, 61–63, 69, 93, 167
+- dextérité (DEX) — 14, 18–19, 21, 23, 25, 28–31, 43–44, 50–51, 53–54, 62, 93, 96, 100–101, 165, 167
+- force (FOR) — 14, 16, 18–20, 22–23, 25–26, 43–44, 51, 54–55, 79, 100–101
+- intelligence (INT) — 14, 18–26, 29–31, 34–35, 43–44, 69, 79, 86, 89, 92, 100–103
+- pouvoir (POU) — 14, 16, 18–19, 21–22, 24–26, 38, 43–44, 68, 73, 78–79
+- caractéristiques, utilisation — 19, 29, 30, 43, 45
+- Centers for Disease Control and Prevention (CDC) — 106, 129, 156–158
+- Bureau de la santé publique pour la préparation et l’intervention — 158
+- Centre de surveillance, d’épidémiologie et des services de laboratoire — 158
+- Centre des opérations d’urgence — 158
+- Centre national des maladies émergentes et des infections zoonotiques — 156
+- Directions clés du CDC — 156
+- Global Rapid Response Team — 158
+- Incarner un professionnel du CDC — 157
+- professions suggérées — 158
+- Public Health Service Commissioned Corps (PHSCC) — 158
+- Central Intelligence Agency (CIA) — 7, 22–24, 106, 140, 144, 146–149, 150, 171, 172, 173, 175, 176, 177
+- direction de la science et des technologies — 147, 148
+- direction des analyses (DA) — 148, 150
+- direction des opérations (DO) Clandestine Services — 150
+- direction des opérations — 146, 147, 148, 149, 150
+- direction des soutiens — 146
+- directions clés de la CIA — 147
+- Incarner un espion — 149
+- professions suggérées — 150
+- Special Activities Division Political Action Group — 146, 147, 148, 149, 150
+- Special Activities Division Special Operations Group — 146, 147, 148, 149, 150
+- chute — Voir dégâts
+- combat — 50
+- action : attaque — 50
+- action : attaque précise — 50, 52, 53–54, 60
+- action : attente — 51
+- action : autre — 51
+- action : dégagement — 51, 96
+- action : désarmement — 50, 52, 53–54
+- action : esquive — 51, 53–54
+- action : immobilisation — 51 53–54
+- action : mouvement — 51
+- action : riposte — 51, 53–54
+- action : viser — 50, 53, 94, 102
+- actions multiples ultiples — Voir actions par tour
+- actions par tour — 51
+- armes de jet — 53
+- attaque précise : égratigner — 52
+- attaque précise : étourdir — 52
+- attaque précise : tir à la tête — 52
+- attaques surprises — 53
+- conséquences — 63
+- couvert — Voir protection en combat
+- initiative (ordre du tour) — 50
+- jet d’attaque — 52
+- jet de défense — Voir jet de défense
+- modificateurs à l’attaque — 52
+- réussite et échec critique — 52
+- tirer dans une foule — 53
+- tour — 50
+- compétences
+- anthropologie — 20, 23–25, 27–30, 33, 150, 154
+- archéologie — 20, 24, 27, 29, 30, 33
+- armes à feu — 21–28, 30, 50, 54, 56, 58, 60, 97, 113, 117, 121, 124, 130, 134, 137–138, 141–143, 150, 161
+- armes de mêlée — 22–23, 25, 27–30, 50–51, 54, 92, 96, 113, 121, 137–138, 141–143, 150
+- armes lourdes — 21–22, 25–29, 30, 56, 84, 94, 96–98, 113, 117, 121, 124, 130, 137–138, 141–143, 150
+- art (type) — 24–25, 27, 29–30,137, 142, 163–164
+- artillerie — 26–29, 31, 94, 98, 130
+- artisanat (type) — 21–23, 25–30, 32–33, 38, 42, 91–92, 100, 102, 130–132, 134, 137, 142, 164–168
+- athlétisme — 22–23, 26–30, 31, 45, 50, 53, 56, 75, 96, 97, 113, 117, 121, 124, 130, 134, 137, 141–143, 150, 164, 166
+- bureaucratie — 20–29, 32, 80, 86–88, 91, 103, 109, 112, 114, 117, 120–121, 124–125, 130, 132, 134, 137–138, 140, 142, 146, 150, 154–156, 158–159, 161, 163–165, 167
+- chirurgie — 21, 29, 32–34, 55, 130, 134, 158, 167
+- combat à mains nues — 9, 21–29, 32, 45, 50–51, 54, 92, 96, 113, 117, 121, 124, 130, 137–138, 141–143, 150
+- comptabilité — 21–25, 27, 29, 32, 87–91, 117, 121, 150, 154, 158, 163, 165, 167
+- conduite — 21, 23–29, 32, 45–46, 95, 117, 121, 124, 130, 134, 137–138, 142, 161, 163–164
+- criminalistique — 21–23, 25, 27–29, 32, 113, 117, 120–121, 123–124, 134, 158, 161, 163–168
+- criminologie — 21, 23–25, 27–30, 32, 35, 79, 87, 91–92, 100–102, 113–114, 116–118, 120–121, 123–124, 134, 150, 154, 161, 163, 165, 167
+- culture générale — 29
+- déguisement — 23–24, 27, 29, 32, 150
+- discrétion — 22–24, 27–29, 32, 34–35, 38, 43, 45–46, 113–114, 121, 124, 130, 137, 141–143, 150, 163–168
+- droit — 21–25, 27–30, 32, 81, 87–88, 112, 113–114, 117, 121, 123–124, 134, 150, 154, 161, 163–167
+- engins lourds — 21, 23, 25–29, 33, 45, 130, 137–138
+- équitation — 20, 25, 27, 29, 33, 45
+- esquive — 23, 27–29, 33, 45, 51, 53–54, 113, 121, 124, 137
+- explosifs — 22–23, 26, 28, 29, 33, 56, 98, 113, 130, 134, 137–138, 141–143, 150
+- histoire — 9, 20, 23–25, 27–30, 33, 42, 137, 150, 154
+- inconcevable — 16, 29, 33, 34, 38, 68–69, 75, 80
+- informatique — 21–22, 24–29, 33, 38, 91–92, 100–101, 113, 117, 121, 130–132, 137, 142, 163–165, 167
+- langue étrangère (type) — 20–30, 33, 113, 117, 130, 137–138, 142, 150, 154
+- médecine — 21, 25, 27, 29, 32–34, 55, 62, 130, 134, 167
+- natation — 22, 25–27, 29 – 30, 33, 45, 102, 113, 130, 134, 137–138, 141–143, 150
+- occultisme — 20, 23–24, 27, 29, 34, 38, 79
+- orientation — 20, 22–23, 25–29, 34, 46, 113, 130–131, 134, 137–138, 141–143, 150
+- persuasion — 9, 20–21, 23–29, 34–35, 44–45, 80, 87, 117, 121, 124, 130–131, 134, 137–138, 140, 142–143, 150, 154–155, 158, 161, 163–168
+- pharmacologie — 21–25, 27, 29, 34, 61–62, 116–117, 130, 134, 158, 166–167
+- pilotage (type) — 25, 27–30, 34, 45, 95, 101, 131–132, 134, 142–143, 164
+- premiers secours — 21, 23, 25–29, 32–34, 55, 62, 101–102, 130–131, 134, 137–138, 141–142, 158
+- psychothérapie — 21, 25, 27–29, 34–35, 68–69, 70, 78, 113, 134, 142, 158
+- recherche — 20–21, 23, 25–29, 34, 45, 93, 116–117, 121, 123–124, 130, 134, 138, 143, 154, 161, 163–165
+- ROEM — 21, 24, 26–27, 29, 33, 34, 113, 117, 121, 130–132, 137–139, 141–143, 145, 150, 154, 163–164, 166, 173
+- ROHUM — 20–21, 23–25, 27–29, 35, 45, 113, 117, 120–121, 124, 130, 134, 137, 139, 142–143, 150, 154, 161, 163–165, 167
+- science (type) — 21–22, 24–25, 27–30, 35, 87, 98, 113, 116, 121, 130, 132, 134, 142, 158, 161, 165, 167
+- sciences militaires (type) — 22, 24–30, 35, 86, 88, 103, 113, 117, 125, 130, 134, 137–138, 140–143, 150
+- survie — 20, 22, 27, 29, 35, 46, 101, 102, 113, 117, 130, 134, 137–138, 141–143, 150
+- vigilance — 21–29, 35, 38, 43, 45–46, 47, 57, 92–93, 99, 101–102, 113, 117, 121, 124, 130–132, 134, 137–138, 141–143, 150, 161, 164, 165
+- compétences, améliorer — 28, 79
+- compétences, utilisation — 10, 28–35, 42–46
+- absence de compétence — 43
+- bonus et malus — 43
+- durée d’action — 44
+- échec — 44
+- échec critique — 44
+- qui lance les dés? — 43
+- résoudre un test avec les dés — 42
+- résoudre un test sans les dés — 42
+- réussite — 44
+- réussite critique — 44
+- réussite et échec — 44
+- tests en opposition — 45
+- utiliser une caractéristique — 43
+- compétences, valeur de base — 28
+- contrôleur d’agents — 24, 113, 149, 150, 170, 171
+- Corps des Marines des États-Unis (USMC) — 22, 107, 114, 124, 125–126, 133–139, 144, 174
+- Division caméra de combat des affaires publiques — 137
+- Force Reconnaissance Company (FORECON) — 137
+- interpréter un Marine — 136
+- marine (profession) — 26
+- Maritime Special Purpose Force (MSPF) — 137
+- pack optionnel de points de compétences bonus, marine — 27
+- professions suggérées — 137
+- Raider Regiment — 138, 139, 143
+- Security Force Regiment — 137
+- Defense Intelligence Agency (DIA) — 145
+- défense — 53
+- se défendre après avoir attaqué — 54
+- esquive — 33, 45, 51, 53–54
+- esquiver les attaques à distance — 54
+- riposte — 51, 53–54
+- dégâts
+- blessure permanente — 55
+- bonus aux dégâts — 54
+- collision — 95
+- étourdi — 52, 53, 55, 56, 62, 93, 96, 97
+- feu — 62, 101
+- froid — 62
+- guérison — Voir guérison
+- impact — 62
+- inconscient — 55
+- létalité — Voir létalité
+- lumières éblouissantes — 93
+- maladie — 33–34, 55, 60–62, 68
+- mort — 55
+- poisons — 34, 60–62
+- suffocation — 62
+- suffocation — 62
+- Delta Green (cadre de contexte) — 6
+- comment jouer — 9
+- fondamentaux — 8
+- l’inconcevable à l’époque moderne — 7
+- Delta Green (organisation) — 6–9, 14, 20, 21, 23, 26, 37, 38, 80, 86, 88, 89, 90, 91, 106, 107, 108, 151, 155, 161, 166, 167, 168, 169, 171, 172, 173, 175
+- briefing opérationnel — 7
+- recrues potentielles — 7
+- se retirer — 8
+- sur le terrain — 8
+- Département de la Défense (DOD) — 106, 124–125–129, 135
+- branches du département de la Défense — 106, 125
+- commandement central (CENTCOM) — 126
+- commandement d’Afrique (AFRICOM) — 126
+- commandement des opérations spéciales (SOCOM) — 106, 118, 126, 138–143, 145, 148, 151
+- commandement du Pacifique (PACOM) — 126
+- commandement du transport (TRANSCOM) — 126
+- commandement européen (EUCOM) — 126
+- commandement Nord (NORTHCOM) — 126, 128, 141
+- commandement stratégique (STRATCOM) — 126
+- commandement Sud (SOUTHCOM) — 126
+- cri de guerre — 124, 174
+- direction des commandements de combat — 126
+- grade et ancienneté — 126, 127
+- jouer les militaires — 128
+- U.S. Air Force — Voir U.S. Air Force
+- U.S. Army — Voir U.S. Army
+- U.S. Marine Corps — Voir Corps des Marines des États-Unis Voir U.S. Navy
+- vétérans — 126, 128, 175
+- Department of Health and Human Services (HHS) — 155
+- Department of State (DOS) — 107, 150–154
+- affaires d’Asie centrale et du Sud — 151
+- affaires du Proche-Orient — 151
+- affaires européennes — 151
+- affaires politico-militaires — 151
+- antiterrorisme — 151
+- Bureau de Lutte contre le trafic de drogue et la criminalité à l’international — 151, 154
+- Bureau de Recherche et de Renseignement — 151, 154
+- Bureau des Affaires de l’hémisphère occidental — 151, 154
+- Bureau of Diplomatic Security (DS) — 151, 150, 153, 154
+- bureaux clés du DOS — 151
+- courrier diplomatique — 154
+- gestion des conflits et opérations de stabilisation — 151
+- incarner un diplomate — 153
+- lutte contre le trafic de drogue — 151
+- professions suggérées — 154
+- service diplomatique (FSO) — 23, 150, 151, 150, 153, 154
+- drogues / médicaments — 34, 47, 70, 102
+- addiction — Voir santé mentale (SAN)
+- psychotropes — 70 — Voir aussi épuisement
+- sédatifs — Voir santé mentale (SAN) Voir aussi épuisement
+- stimulants — 47 — Voir aussi épuisement
+- Drug Enforcement Administration (DEA) — 106, 108, 112, 114–117, 119, 120, 122, 123, 154, 171
+- branches principales de la DEA — 115
+- division aérienne — 114, 115
+- équipes de conseil et soutien à déploiement extérieur (FAST) — 117
+- incarner la DEA — 116
+- opérations — 115
+- opérations de terrain — 115
+- opérations spéciales — 115
+- professions suggérées — 116
+- renseignement — 115
+- soutien opérationnel — 115
+- entraînement spécial — 30, 32–33, 35, 53, 56, 79, 92, 96, 98, 100–102, 164, 166
+- armes exotiques — 30
+- code pénal d’un pays étranger — 30
+- combinaison spatiale — 30
+- connaissance approfondie — 30
+- connaissance approfondie d’une conspiration — 30
+- crochetage — 30, 100, 101, 164, 166
+- grenades — 30, 93, 96
+- parachutisme — 30
+- parler couramment un dialecte rare — 30
+- plongée sous-marine — 30, 101
+- ski — 30
+- système de sécurité électronique — 30
+- Environmental Protection Agency (EPA) — 106, 159–161
+- incarner un employé de l’EPA — 161
+- Office of Criminal Enforcement, Criminalistique and Training (OCEFT) — 161
+- professions suggérées — 161
+- spécialiste du bureau régional — 161
+- épuisement — 44, 47, 69, 71
+- insomnie — 47
+- sédatifs — 47
+- sommeil — 47
+- stimulants — 47
+- équipement — 82–103, 106, 115, 116, 122, 125, 126, 128, 140, 148, 154, 156, 157, 159, 160, 170, 172, 173, 176
+- à chaque métier ses outils : agent des forces spéciales — 85
+- à chaque métier ses outils : agent fédéral — 85
+- à chaque métier ses outils : kit de surive du flic — 85
+- à chaque métier ses outils : membre du SWAT — 85
+- à chaque métier ses outils : policier — 85
+- accessoires d’armes — 102
+- armée (requête officielle) — 103
+- armure — 51, 58, 59, 94, 95, 99
+- bulle de confinement — 170
+- camelote — 93
+- catégories de dépense — 84
+- combinaison bleue — Voir combinaison Chemturion
+- combinaison Chemturion — 170, 177
+- communications et informatique — 100
+- complications — 87
+- couvrir ses traces — 88
+- délai — 87
+- demander à Delta Green — 88
+- demander une faveur — 88
+- dépense considérable — 84
+- dépense courante — 84
+- dépense importante — 84
+- dépense standard — 84
+- dépense substantielle — 84
+- droit d’accès — 87
+- drone — 34, 87, 101, 102, 126, 140, 170
+- éclairage et vision — 101
+- enquête administrative — Voir examen officiel
+- entraves — 100
+- entrée par effraction — 164, 166
+- examen officiel — 86–88, 109, 114, 118, 121, 146
+- explosifs — 94, 97, 98
+- fait maison — 92
+- faux papiers — 100
+- forces de l’ordre et équipement militaire — 109
+- gestionnaires de programme — 90
+- logement — 100
+- marché noir — 91
+- matériel de survie et de secours — 101
+- munitions spéciales — 95
+- obtenir du matériel pendant l’opération — 86
+- paré pour l’opération — 84–86
+- passer sous les radars — 88
+- piocher dans ses économies — 89
+- police (requête officielle) — 103
+- postes à responsabilité — 88
+- puissance de feu — 89
+- Racal suit — 170
+- recherches — 100
+- renseignement (requête officielle) — 103
+- requête officielle — 86–89
+- ressources réglementées — 91
+- sécurité publique (requête officielle) — 103
+- soins médicaux au noir — 102
+- soutien local — 88
+- stockage — 100
+- Surveillance — 101
+- téléphone jetable — 100, 170
+- transports — 100
+- expérience
+- améliorer les compétences — 29
+- améliorer des compétences ou des caractéristiques — 79
+- entraînement spécial — 79
+- s’accoutumer à la perte de SAN — 73
+- vétérans — 37
+- Federal Bureau of Investigation (FBI) — 7, 21–22, 24, 92, 103, 106, 107, 109–114, 116, 118, 119, 120, 128, 129, 140, 144, 150, 155, 161, 171, 172, 173, 175, 176, 177
+- branche criminelle, cyber, de réaction et de service — 110
+- branches principales du FBI — 110
+- Criminal Investigative Division (CID) — 113
+- Directorate of Intelligence (Direction du renseignement) — 113
+- équipe de libération d’otages (HRT) — 22, 110, 111, 113
+- Forces Opérationnelles Antiterroristes Interagences (JTTF) — 112, 117, 175
+- incarner/jouer le Bureau — 112
+- legal attaché (legat) — 110
+- National Security Branch (direction de la sécurité nationale, NSB) — 113
+- organigramme du FBI — 110
+- professions suggérées — 113
+- science et technologie — 110
+- Special Weapons and Tactics (SWAT) — 85, 91, 103, 109, 110, 111, 113
+- Federal Emergency Management Administration (FEMA) — 155
+- folie — Voir santé mentale (SAN)
+- fonds illicites — 91
+- dépenser des fonds illicites — 91
+- réunir des fonds illicites — 91
+- utiliser des fonds illicites — 91
+- forces de l’ordre — Voir maintien de l’ordre
+- Forces Opérationnelles Antiterroristes Interagences (JTTF) — Voir Federal Bureau of Investigation (FBI)
+- garde côtière des États-Unis — Voir U.S. Coast Guard (USCG)
+- garde-côtes — Voir U.S. Coast Guard (USCG)
+- gestionnaire d’agents — Voir contrôleur d’agents
+- gestionnaire d’agents — Voir contrôleur d’agents
+- guérison — 32–34, 55
+- antidotes — Voir dégâts
+- blessure permanente — 55
+- complications — 55
+- réanimation — 55
+- récupération — 55
+- récupérer des points de caractéristique — 55
+- stabilisation — 55
+- traitement — 55
+- habilitation — 103, 140, 144, 145, 161
+- confidentiel (C) — 144, 172
+- ears only — 172
+- eyes only — 172
+- information spéciale cloisonnée (ISC) — 145, 172
+- informations personnelles d’identification (IPI) — 144
+- non classifié (NC) — 108, 146
+- programme spécial — 145, 173
+- restrictions supplémentaires — 145
+- secret (S) — 144, 172
+- sensible mais non classifié (SNC) — 144
+- très secret (TS) — 144, 147, 150
+- Immigration and Customs Enforcement (Police des douanes et de contrôle des frontières, ICE) — 106, 107, 112, 114, 116, 118–121
+- Divisions des opérations intérieures (HSI/DO) — 118, 121
+- directions principales de l’ICE — 118
+- division d’enquêtes de sécurité nationale — 118
+- division de gestion des rétentions — 118
+- division de renvoi (ERO) — 118
+- division de soutien aux missions — 118
+- division du renseignement (HSI) — 118, 121
+- enquêtes de sécurité intérieure (HSI) — 118, 119, 120–121
+- groupes de renseignement de terrain — 118, 119
+- incarner l’ICE — 120
+- International Division — 118
+- opérations d’exécution et de renvoi (ERO) — 118, 121
+- opérations de terrain — 119
+- opérations internationales (HSI) — 118
+- professions suggérées — 121
+- Special Response Team (SRT) — 118, 121
+- inconcevable — 6–10, 18, 21, 24, 26, 33, 37, 38, 47, 50, 60, 68, 72, 74, 75, 78, 80, 94, 163, 166–168, 171–172
+- inconcevable, compétence — Voir compétences
+- inconcevable, perte de santé mentale — Voir santé mentale (SAN)
+- intervention d’urgence — 87, 111, 155, 156, 161
+- investigateur — 173 — Voir aussi Agent, agent spécial, Officiel (agent du gouvernement)
+- jet de chance — 44, 78, 79, 80, 81, 86, 91–92, 100, 102, 103
+- jet de défense — Voir défense
+- létalité — 51, 56, 57–60, 61, 62, 94, 95, 97–98, 167
+- à quoi sert le niveau de létalité — 57
+- cibles multiples — 57
+- modes de tir — 58
+- neutralisation — 57–58
+- rayon de mortalité — 57
+- tout faire sauter — 58
+- licenciement — 80, 88, 90, 91, 103, 114, 118
+- maintien de l’ordre — 8, 20, 21, 24, 86, 89, 93, 103, 106, 107–112, 115, 116, 119, 121, 122, 123, 127, 128, 133, 151–156, 161, 166, 171, 172
+- bureaux régionaux — 108
+- délégation de pouvoir — 108, 115, 122
+- droit de procéder à une arrestation — 106
+- juridictions — 25, 108, 160, 161
+- mandats — 103, 115, 119, 123, 165, 166, 176
+- surveillance — 101 –103, 110, 112, 114, 115, 122, 123, 160, 161, 164, 167, 170, 172, 173, 174, 176, 177
+- maladie — Voir dégâts
+- mandat — Voir habilitation
+- Massim, Yusif aka Agent Daryl — 37, 42, 43, 45–47, 52, 54, 57, 58, 59, 60, 62, 68, 74–75, 80, 92
+- motivations — 16, 37, 38, 47, 79
+- National Counterterrorism Center (NCTC) — 145
+- National Geospatial Intelligence Agency (NGA) — 145
+- National Reconnaissance Office (NRO) — 145
+- National Security Agency (NSA) — 145
+- National Transportation Safety Board (NTSB) — 155
+- niveau de biosécurité — 177
+- Office of Naval Intelligence (ONI) — 145
+- Officiel (agent du gouvernement) — 173 — Voir aussi Agent, agent spécial, investigateur
+- Officier Traitant (MJ) — 10
+- Packs optionnels de points de compétences bonus — 27
+- amateur d’urbex — 27
+- artiste, comédien ou musicien — 27
+- athlète — 27
+- auteur, éditeur ou journaliste — 27
+- bonus — 27
+- bureaucrate — 27
+- criminologue — 27
+- croyant (membre du clergé) — 27
+- diplômé en sciences humaines — 27
+- espion — 27
+- étudiant en filière scientifique — 27
+- gangster ou agent infiltré — 27
+- infirmier, secouriste ou étudiant en médecine — 27
+- interrogateur — 27
+- MBA (équivalent de maîtrise en gestion) — 27
+- occultiste ou complotiste — 27
+- officier de l’armée — 27
+- ouvrier — 27
+- passionné d’informatique ou hackeur — 27
+- passionné de nature — 27
+- photographe — 27
+- pilote ou marin — 27
+- policier — 27
+- pompier — 28
+- psychologue — 28
+- soldat ou marine — 28
+- traducteur — 28
+- travailleur social ou diplômé en droit pénal — 28
+- vétéran de l’armée — 28
+- points de vie (PV) — Voir Agent (création)
+- points de volonté — Voir volonté
+- poison — Voir dégâts
+- poursuite — 45
+- aide et avantages — 45
+- combat et poursuite — 46
+- prendre l’ascendant — 46
+- quelle compétence choisir — 45
+- poursuites judiciaires — 80, 87–88, 90, 91–92, 103, 111, 114, 118, 144
+- priorité de l’opération — 86
+- priorité faible — 86
+- priorité haute — 86
+- priorité normale — 86
+- Professions
+- agent du service diplomatique (FSO) — 23
+- agent fédéral — 21
+- analyste du renseignement — 24
+- anthropologue — 20
+- cadre supérieur — 26
+- CDC : bureau de la santé publique pour la
+- CDC : bureau des services scientifiques pour la santé publique — 156
+- CDC : centre des opérations d’urgence — 158
+- CDC : Corps des officiers du service de Santé publique (Public Health Commissioned Corps, PHSCC) — 158
+- CIA : direction des opérations (DO), Clandestine Service — 150
+- CIA : directions des analyses (DA) — 150
+- CIA : Special Activities Division Political Action Group (SAD/PAG) — 150
+- CIA : Special Activities Division Special Operations Group (SAD/SOG) — 150
+- Corps des officiers du service de Santé publique (Public Health Service Commissioned Corps, PHSCC) — 158
+- criminel — 23
+- DEA : division des opérations — 116
+- DEA : division des opérations spéciales — 117
+- DEA : division du soutien opérationnel — 117
+- DEA : équipes de conseil et soutien à déploiement extérieur (Foreign- Deployed Advisory and Support Teams, FAST) — 117
+- développer une profession inédite — 28
+- DOS : bureau de Lutte contre le trafic de drogue et la criminalité à l’international — 154
+- DOS : bureau de recherche et de renseignement — 154
+- DOS : bureau des affaires de l’hémisphère occidental — 154
+- DOS : Bureau of Diplomatic Security (DS) — 154
+- DOS : courrier diplomatique — 154
+- EPA : Bureau chargé de la répression judiciaire, de la criminalistique et de la formation (Office of Criminal Enforcement, Criminalistique and Training, OCEFT) — 161
+- EPA : spécialiste du bureau régional — 161
+- FBI : Criminal Investigations Division (CID) — 113
+- FBI : direction du renseignement (Directorate of Intelligence) — 113
+- FBI : équipe de libération d’otages (HRT) — 113
+- FBI : Intelligence and Operations Support Section — 113
+- FBI : National Security Branch (NSB) — 113
+- FBI : unité SWAT — 113
+- gestionnaire de programme — 27
+- historien — 20
+- ICE : division de renvoi (ERO) — 121
+- ICE : division du renseignement (HSI/
+- ICE : équipes de réaction spéciale (SRT) — 121
+- ICE : opérations HSI — 120
+- infirmier — 27
+- informaticien ou ingénieur — 20
+- ingénieur — 20
+- Intelligence) — 121
+- juriste — 24
+- marin — 27
+- marine — 28
+- médecin — 21
+- membre des forces spéciales — 22
+- officier traitant du renseignement — 24
+- pilote — 27
+- policier — 27
+- pompier — 23
+- préparation et l’intervention — 158
+- professionnel des médias — 24
+- scientifique — 22
+- secouriste — 27
+- soldat — 28
+- U.S. Army : 10e division de montagne — 130
+- U.S. Army : 160e régiment des opérations spéciales d’aviation (aéroporté) — 144
+- U.S. Army : 1er groupe de forces spéciales (Bérets verts) — 141
+- U.S. Army : 1re brigade, 1re division de cavalerie — 131
+- U.S. Army : 4e groupe de soutien d’informations militaires (4th Military Information Support Team, MIST) — 142
+- U.S. Army : 75e régiment de rangers — 142
+- U.S. Army : 902e groupe de renseignement militaire — 130
+- U.S. Army : Action de soutien et de renseignement — 142
+- U.S. Army : Corps médical de l’armée de Terre — 131
+- U.S. Army : Institut de recherche médicale de l’U.S. Army sur les maladies infectieuses (USAMRIID) — 129
+- U.S. Army, soldat — Voir soldat
+- U.S. Navy : Groupe de déminage (EOD) — 135
+- U.S. Navy : Groupe de développement de guerre spécial (DEVGRU)/ groupe naval de guerre spécial numéro un (SEALs) — 143
+- U.S. Navy : membre du corps des infirmiers — 134
+- U.S. Navy : Naval Criminal Investigative Service (NCIS) — 134
+- USAF : 24e escadron d’opérations spéciales, 720e groupe tactique spécial — 141
+- USAF : 318e groupe d’opérations en cyberespace — 133
+- USAF : 354e escadron de combat — 133
+- USAF : 41e escadron de sauvetage — 131
+- USAF : 432e groupe opérationnel — 133
+- USAF : 614e centre d’opérations aériennes et spatiales — 131
+- USAF : 70e escadron de renseignement, de surveillance et de reconnaissance — 133
+- USMC : Division caméra de combat des affaires publiques — 137
+- USMC : Force Reconnaissance Company (FORECON) — 137
+- USMC : Marine Corps Security Force Regiment — 137
+- USMC : Maritime Special Purpose Force (MSPF) — 137
+- USMC : Raider Regiment — 143
+- USMC, Marine — Voir Corps des Marines des États-Unis
+- USMS : Division des opérations d’enquête — 123
+- USMS : Division des opérations tactiques/ Groupe d’opérations spéciales (SOG) — 124
+- protection au combat — 58–60
+- armes perforantes — 60
+- armure — Voir équipement
+- couvert — 33, 50–51, 53–54, 57, 58, 59, 60
+- exposé — 58
+- fragile — 58
+- massif — 60
+- protégé — 58
+- transcendant — 60
+- quarantaine — 103, 156, 157, 177
+- renseignement
+- GEOINT (renseignement géospatial) — 145
+- MASINT (renseignement mesure et signature) — 145, 172
+- REOP (renseignement opérationnel) — 175
+- ROARCH (renseignement d’origine archéologique) — 173
+- ROEM (renseignement d’origine électromagnétique) — 34, 139, 145, 161, 164, 166, 173
+- ROHUM (renseignement d’origine humaine) — 35, 45, 139, 174
+- ROIM (renseignement d’origine image) — 145, 173
+- santé mentale (SAN) — 10, 15, 16, 18, 34–35, 63, 66–75, 78–80, 170, 172
+- accoutumé à l’impuissance — 73
+- accoutumé à l’inconcevable — 74
+- accoutumé à la violence — 73
+- acuité démentielle — 69
+- détruire l’inconcevable — 75
+- folie et troubles — 68
+- folie permanente — 68, 73
+- folie permanente : catatonie — 73
+- folie permanente : délires — 73
+- folie permanente : psychopathie — 73
+- folie temporaire — 68–69
+- folie temporaire : fuite — 69
+- folie temporaire : lutte — 69
+- folie temporaire : soumission — 69
+- guérison — 75
+- impuissance — 38, 66, 67, 69, 71–73, 80, 81
+- indications pour les pertes de SAN — 66
+- jet de SAN — 18, 37, 47, 66, 67, 71, 75, 78, 79, 80
+- projeter son traumatisme sur une Attache — 74
+- repousser la folie — 73–75
+- réprimer la folie — 75
+- s’accoutumer à la perte de SAN — 73
+- SAN en péril — 67–68
+- SAN maximum (inconcevable) — 33
+- sédatifs — Voir épuisement
+- tenir la SAN secrète — 66
+- test de SAN — Voir jet de SAN
+- thérapie ou vie de famille — 75, 78
+- troubles causés par l’impuissance — 71
+- troubles causés par l’Inconcevable — 72
+- troubles causés par la violence — 70
+- troubles psychiques — 68–69–72
+- Troubles psychiques : addiction — 47, 70, 71
+- Troubles psychiques : amnésie — 72
+- Troubles psychiques : compulsion totémique — 71
+- Troubles psychiques : crise — 69
+- Troubles psychiques : dépression — 70, 72
+- Troubles psychiques : fugue dissociative — 72
+- Troubles psychiques : ligyrophobie — 70
+- Troubles psychiques : mégalomanie — 72
+- Troubles psychiques : obsession — 72
+- Troubles psychiques : paranoïa — 71, 72
+- Troubles psychiques : phobie spatiale — 72
+- Troubles psychiques : SSPT (PTSD) — 71
+- Troubles psychiques : Trouble anxieux — 71
+- Troubles psychiques : trouble de conversion — 71
+- Troubles psychiques : trouble de la dépersonnalisation — 72
+- Troubles psychiques : trouble dissociatif de l’identité — 71
+- Troubles psychiques : trouble du sommeil — 71, 72
+- Troubles psychiques : trouble explosif intermittent — 70
+- Troubles psychiques : trouble obsessionnel compulsif — 72
+- une perte qui en dit long — 66
+- violence — 38, 58, 67, 69, 70, 73, 74, 167, 175
+- sécurité publique (agences) — 155–161
+- service des douanes et de la protection des frontières (CBP) — 108, 112
+- SOCOM — Voir U.S. Special Operations Command (SOCOM)
+- techniques du métier — 86, 163–169, 174
+- box vert — 169, 173
+- communications — 168
+- couverture — 29, 111, 115, 123, 146, 148, 163, 170–172, 176, 177
+- couvrir ses traces — Voir équipement
+- dissimuler des preuves — 34, 163, 165, 167, 171
+- entrée par effraction — 95, 101, 166–168, 175
+- fouille et arrestation — 166
+- goule — 171
+- infiltration — Voir couverture
+- interrogatoire — 18, 34, 103, 139, 147–148, 165–167, 173
+- légende (faux papiers) — 84, 95, 100, 163, 171, 177
+- manipulation de preuves — Voir dissimuler des preuves
+- nettoyeur — 171
+- passer inaperçu — 163
+- planques — 169, 173
+- poursuite — 32, 34, 44–47, 166
+- ressources humaines — 24, 88, 148–149, 152, 155, 163, 171, 174
+- se débarrasser d’un corps — 140, 165, 167
+- sérums de vérité — 166, 170
+- sites secrets — 140
+- soins médicaux — 165
+- surveillance — 8, 34, 92, 95, 101, 103, 110, 112–115, 117, 122–123, 126, 131–132, 137, 141, 146, 153, 159–160, 163–164, 167, 168, 172–174, 176–177
+- torture — 166
+- traits distinctifs — 18, 19
+- U.S. Air Force (USAF) — 106, 125, 131–133, 139, 172
+- 24e escadron d’opérations spéciales / 720e groupe tactique spécial — 132, 143
+- Air Force Space Command — 131
+- Joint Space Operations Center — 131
+- Professions suggérées — 131
+- U.S. Cyber Command — 133
+- U.S. Army — 22, 106, 125, 127, 129–131, 135, 173, 174
+- 10e division de montagne — 130
+- 160e régiment des opérations spéciales d’aviation (aéroporté) — 144
+- 1er groupe de forces spéciales (Bérets verts) — 130, 141
+- 1re brigade, 1re division de cavalerie — 131
+- 4e groupe de soutien d’informations militaires (4th Military Information Support Team, MIST) — 142
+- 75e régiment de rangers — 110, 130, 142
+- 902e groupe de renseignement militaire — 130
+- Action de soutien et de renseignement (Intelligence Support Activity, ISA) — 131, 140
+- Bérets Verts — Voir 1er groupe de forces spéciales
+- Corps médical de l’armée de Terre — 131
+- Delta Force — Voir Détachement opérationnel Delta du 1er Groupe de forces spéciales
+- Détachement opérationnel Delta du 1er Groupe de forces spéciales — 139, 141
+- Institut de recherche médicale de l’U.S. Army sur les maladies infectieuses (USAMRIID) — 129, 173
+- pack optionnel de points de compétences bonus, soldat — 27
+- professions suggérées — 129
+- soldat, profession — 26
+- U.S. Coast Guard (USCG) — 108, 122, 125, 127, 133, 160
+- U.S. Marine Corps (USMC) — Voir Corps des Marines des États-Unis
+- U.S. Marshals Service (USMS) — 107–108, 115–116, 121–124, 152, 154
+- direction des opérations — 122
+- Division de la sécurité des témoins — 122–123
+- Division de la sécurité judiciaire — 122–123
+- Division des opérations d’enquête — 123
+- Division des opérations relatives aux détenus — 122
+- Division des opérations tactiques — 122
+- divisions principales de la direction des opérations de l’USMS — 122
+- groupe d’opérations spéciales — 122
+- incarner un marshal adjoint — 123
+- professions suggérées — 123
+- système de transport des étrangers et des détenus — 122
+- U.S. Navy (USN) — 107, 124–126, 133–138, 145, 158, 174
+- corps des infirmiers — 134
+- Groupe de déminage (EOD) — 135
+- Groupe de développement de guerre spécial (DEVGRU)/ groupe naval de guerre spécial numéro un (SEALs) — 133, 134, 143 135
+- Naval Criminal Investigative Service (NCIS) — 128, 134
+- Office of Naval Intelligence (ONI) — 145
+- professions suggérées — 134
+- U.S. Public Health Commissioned Corps (PHSCC) — 158
+- U.S. Secret Service (USSS) — 108
+- U.S. Special Operations Command (SOCOM) — 106, 118, 124, 126, 130, 133, 134, 138–143, 145, 148
+- 160e régiment des opérations spéciales d’aviation (aéroporté) — 144
+- 1er groupe de forces spéciales (Bérets verts) — 130, 141
+- 24e escadron d’opérations spéciales / 720e groupe tactique spécial — 132, 143
+- 4e groupe de soutien d’informations militaires (4th Military Information Support Team, MIST) — 142
+- 75e régiment de rangers — 110, 130, 142
+- Action de soutien et de renseignement (Intelligence Support Activity, ISA) — 131, 140
+- Bérets Verts — Voir 1er groupe de forces spéciales
+- Delta Force — Voir 1st Special Forces Group Operational Detachment Delta
+- Groupe de développement de guerre spécial (DEVGRU)/ groupe naval de guerre spécial numéro un (SEALs) — 133, 134, 143 135
+- interpréter un membre des forces spéciales — 141
+- professions suggérées — 141
+- Raider Regiment — 138, 139, 143
+- USMC — Voir Corps des Marines des États-Unis
+- utiliser les bibliothèques — 29
+- véhicules — 32, 34, 45–46, 53, 58, 59, 88–89, 93, 94–95, 99, 101–102, 108, 111, 114, 118, 119, 122, 129, 131, 135, 138, 147, 148, 153, 159, 163, 164
+- collision — 95
+- dégâts et armure — 95, 99
+- véhicules aériens — 34, 46, 94–95, 99
+- véhicules maritimes — 99
+- véhicules terrestres — 32, 45, 94–95, 99
+- vitesse — 95, 99
+- vie quotidienne — 76–81
+- activité personnelle : améliorer des compétences ou des
+- activité personnelle : assumer ses responsabilités — 78
+- activité personnelle : dépenser des fonds illicites — 91
+- activité personnelle : effectuer une thérapie — 78
+- activité personnelle : entraînement spécial — 79
+- activité personnelle : établir une nouvelle Attache — 78
+- activité personnelle : étudier l’inconcevable — 80
+- activité personnelle : motivation personnelle — 79
+- activité personnelle : retour à la nature — 78
+- activité personnelle : réunir des fonds illicites — 91
+- activité personnelle : Suivre l’affaire — 79
+- activités personnelles — 78–80
+- caractéristiques — 79
+- ce qui a changé — 78
+- licenciement — 80
+- poursuites judiciaires — 80
+- volonté — 10, 15, 16, 18, 47, 71, 75
+- à court de volonté — 47
+- épuisement — Voir épuisement
+- interrogatoire — 165–167
+- réserve de volonté faible — 47
+- récupérer de la volonté — 47
+- repousser la folie — 73–75

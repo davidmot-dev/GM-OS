@@ -1,0 +1,44 @@
+/* Delta Green — dossier administratif et papier grisé ; contrat GM-OS v1.7. */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root[data-theme="delta-green"] {
+  color-scheme: light;
+  --rpg-bg: #e4e5dc;
+  --rpg-surface: #f3f2e9;
+  --rpg-surface-2: #d7dcd2;
+  --rpg-text: #1e2823;
+  --rpg-muted: #5b625d;
+  --rpg-accent: #285646;
+  --rpg-accent-contrast: #ffffff;
+  --rpg-border: #89948a;
+  --rpg-border-soft: rgba(40, 65, 49, 0.22);
+  --rpg-success: #56801f;
+  --rpg-danger: #9e293f;
+  --rpg-warning: #805c00;
+  --rpg-info: #3c4597;
+  --rpg-font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --rpg-font-body: Arial, Helvetica, sans-serif;
+  --rpg-font-mono: "IBM Plex Mono", "Courier New", monospace;
+  --rpg-title-tracking: 0.08em;
+  --rpg-kicker-tracking: 0.14em;
+  --rpg-title-transform: uppercase;
+  --rpg-radius-sm: 1px;
+  --rpg-radius-md: 2px;
+  --rpg-radius-lg: 2px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 1px 2px rgba(22, 35, 27, 0.12);
+  --rpg-elevation-2: 0 8px 24px rgba(22, 35, 27, 0.2);
+  --rpg-elevation-3: 0 18px 48px rgba(22, 35, 27, 0.28);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(243, 242, 233, 0.95);
+  --rpg-glass-border: rgba(40, 65, 49, 0.3);
+  --rpg-glass-blur: 0px;
+  --rpg-frame-bg: #182920;
+  --rpg-frame-text: #e8e7db;
+  --rpg-frame-accent: #b1c5a5;
+  --rpg-texture-bg: url('matieres/papier.svg');
+  --rpg-texture-panel: url('matieres/papier.svg');
+  --rpg-texture-opacity: 0.035;
+}

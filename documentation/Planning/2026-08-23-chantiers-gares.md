@@ -14435,10 +14435,32 @@ et COM-01 de la campagne de recette (§ 240, § 1 bis, `verification-ecarts.json
   suivant, p. 52) reste à la main. La tablette n'a pas été regardée : elle montre −1 sans le mot.
 - **Essayé et validé par David le 12/11** (« c'est bon c'est testé »). **Clos.**
 
+### 246 · Delta Green — préparation GM-OS Studio : index, thème, bannière, identité et fiche — 12/11/2026
+
+David prépare le pilote et demande d’abord « crée l'index et la table des matière » depuis
+`docs/Reference/Delta Green/`, puis « crée le theme, la bannière, l'ambiance visuelle, la fiche de
+personnage ». Ateliers GM-OS Studio ; comptes rendus :
+[`index et sommaire`](2026-11-12-delta-green-index-et-sommaire.md),
+[`quatre ateliers et contrôles`](2026-11-12-delta-green-studio.md).
+
+- **Livré** : index (791 lignes), sommaire (93 entrées) dans `docs/systems/delta-green/index/` ;
+  thème et trois ornements, matière, quinze icônes dans `theme/` ; `Delta Green Band.jpg`
+  (2400 × 600, 247 261 octets), identité STYLE / AVOID (46 / 13 mots) ; fiche autonome de
+  deux pages (239 zones, 233 clés), `docs/fiches/Delta Green/delta-green-fiche-agent-interactive.html`.
+- **Vérifié** : thème accepté sans erreur ni avertissement ; fiche acceptée sans erreur, avec les
+  avertissements attendus (nouveau modèle, correspondance absente). Essai autonome hors ligne
+  dans un navigateur jetable : calculs imprimés, pistes, sauvegarde, import/export, navigation,
+  zoom, impression en deux pages ; aucune erreur JavaScript ni requête réseau.
+- **Reste** : jugement visuel et essai de David ; stabiliser le pilote puis raccorder la fiche au
+  moteur et aux champs. L’export 1.0.0 de David a encore `comp1` à `comp12`, sans compétence
+  nommée ; aucune correspondance supposée. Les calculs composés PV/SAN maximum restent à
+  raccorder dans GM-OS. L’atelier ne vaut pas audit des règles du pilote.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 182 | **Delta Green — préparation GM-OS Studio** | 🟠 § 246 ; index, sommaire, thème, bannière, identité et fiche de deux pages construits et vérifiés —12/11 | Ouvrir la fiche HTML et choisir la bannière dans le pilote | Essai visuel de David ; compétences du pilote à nommer avant raccordement |
 | 181 | **Argyropée — écarts de combat corrigés** | 🟢 § 245 ; sous zéro inconscient (−1) et non mort, d10 d'initiative lu de 0 à 9 ; pilote inchangé —12/11 ; **validé par David le 12/11** | Rien | Rien |
 | 180 | **Rappel d'un jet dû par une jauge (GM Codex, lot 2)** | 🟢 § 244 ; « Au bout, rappeler », Fait / Écarter sur la carte de la jauge, au cockpit et sur la carte 5 s ; à la Table, seulement les personnages qui jouent — **validés par David le 11/11** | Rien ; lot 3 **mis de côté** par David (11/11) | Rien |
 | 179 | **Jets demandés et jets cachés (GM Codex, lot 1)** | 🟢 § 243 ; demande, bannière, jet caché, résultat en messagerie et carte 5 s, Centre de liaison — **validés par David le 11/11, tablette physique comprise** | Rien ; la capture de la bannière au guide 61 | Rien |
