@@ -1,6 +1,7 @@
 import type { HealthSystem, DamageImpact } from '../useSessionOSStore';
 import type { CasesDeSante } from '../../../types/drivers';
 import { lireProfilCoc, tailleSanteCoc, etatsDuProfilCoc } from '../../dice/systemes/profilsDeCoc';
+import { bornerLesPointsDeVie, santeSousZero } from './santeSousZero';
 
 /**
  * Le palier de blessure courant, tel qu'on l'affiche.
@@ -270,13 +271,16 @@ export const HealthInterpreter = {
         const currentHp = nombreOuRepli(health.data.current, 0);
         const maxHp = nombreOuRepli(health.data.max, 10);
         
+        // Argyropée (12/11/2026, p. 52-53) : sous zéro, inconscient, pas mort — `santeSousZero.ts`.
+        const sousZero = santeSousZero(health);
         let nextHp = impact.isRecovery ? currentHp + impact.value : currentHp - impact.value;
-        nextHp = Math.max(0, Math.min(maxHp, nextHp));
+        nextHp = bornerLesPointsDeVie(nextHp, maxHp, sousZero);
 
         let state: HealthSystem['state'] = 'healthy';
         const pct = (nextHp / maxHp) * 100;
 
-        if (nextHp === 0) state = 'dead';
+        if (sousZero && nextHp <= 0) state = 'critical';
+        else if (nextHp === 0) state = 'dead';
         else if (pct <= 25) state = 'critical';
         else if (pct <= 50) state = 'wounded';
         else if (pct <= 85) state = 'scratched';

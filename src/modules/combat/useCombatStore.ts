@@ -24,6 +24,7 @@ import {
     resolveInitiativeFormula
 } from './logic/CombatRules';
 import { HealthInterpreter } from '../session/logic/HealthInterpreter';
+import { laSantePasseSousZero } from '../session/logic/santeSousZero';
 import { impactDeTorg } from './logic/impactDeTorg';
 import { horlogeDeDefaite } from './logic/TacheDeDefaite';
 import { lireDune, santeDuConflitDune } from '../dice/systemes/duneRegles';
@@ -32,6 +33,7 @@ import { estHorsDeCombat, santeDeDepart, valeurDuChamp } from './logic/SanteDuCo
 import { coupSurLAdversaire, estUnAdversaireAutonome } from './logic/adversairesDeDegenesis';
 import { DiceEngine } from '../dice/DiceEngine';
 import { actionsDuRound, lancerDegenesis, reserveDeDegenesis } from '../dice/systemes/degenesis';
+import { faceDuD10 } from '../dice/systemes/argyropee';
 import { malusDeSante } from '../dice/systemes/coc';
 import { finDeTourCoc, porterImpactCoc, lireCibleCoc, nouvelleInitiativeCoc } from './coc';
 import { lireProfilCoc, ROLES_COC } from '../dice/systemes/profilsDeCoc';
@@ -87,7 +89,7 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
 function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'asc' | 'desc'; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien;
     initiativeEnReserve?: GameDriver['combat']['initiativeEnReserve']; pistesDeSante?: GameDriver['combat']['pistesDeSante'];
     statsToTrack?: GameDriver['combat']['statsToTrack'];
-    encaissement?: GameDriver['combat']['encaissement'] }; jet?: { coc?: { des?: 'd20' | '3d6'; heroisme?: boolean } } } | undefined {
+    encaissement?: GameDriver['combat']['encaissement'] }; jet?: { coc?: { des?: 'd20' | '3d6'; heroisme?: boolean }; argyropee?: { sante?: string } } } | undefined {
     try {
         return (window as unknown as {
             useSessionOSStore?: { getState: () => { getActiveDriver?: () => ReturnType<typeof piloteActif> } };
@@ -863,6 +865,8 @@ export const useCombatStore = create<CombatState>()(
                           goulot, comme pour `sheetData` et `healthSystem`.
                         */
                         statuses: combatant.statuses ?? [],
+                        // Argyropée : sous zéro, inconscient et non mort (p. 52) — `santeSousZero.ts`.
+                        ...(combatant.santeSousZero ?? laSantePasseSousZero(piloteActif()) ? { santeSousZero: true } : {}),
                         sheetData: fiche,
                         healthSystem: fiche && lireDune(fiche).defaite ? santeSelonLeSysteme(fiche) ?? combatant.healthSystem : combatant.healthSystem ?? santeSelonLeSysteme(fiche),
                         // La santé de départ vient de la fiche quand le pilote
@@ -1098,6 +1102,10 @@ export const useCombatStore = create<CombatState>()(
                 const encaissementCoc = piloteActif()?.combat?.encaissement;
                 const desCoc = piloteActif()?.jet?.coc?.des ?? 'd20';
                 const malusCoc: string[] = [];
+                // Argyropée (12/11/2026, écart COM-01) : le d10 se lit de 0 à 9, la face 10 vaut 0 (p. 44).
+                const lireLaFace = piloteActif()?.jet?.argyropee
+                    ? (face: number, faces: number) => (faces === 10 ? faceDuD10(face) : face)
+                    : undefined;
                 set((state) => {
                     const combatants = state.combatants;
                     if (combatants.length === 0) {
@@ -1139,7 +1147,8 @@ export const useCombatStore = create<CombatState>()(
                                 formula,
                                 combatant: c,
                                 resolver,
-                                diceMax
+                                diceMax,
+                                lireLaFace,
                             });
                             const sourceCoc = encaissementCoc?.suivi ? lireCibleCoc({ type: 'combatant', id: c.id }) : undefined;
                             const profil = lireProfilCoc(sourceCoc?.fiche ?? c.sheetData ?? {});

@@ -1,5 +1,6 @@
 import { seuilAtteint } from '../../session/logic/HealthInterpreter';
 import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
+import { bornerLesPointsDeVie, estInconscient, laSantePasseSousZero, santeSousZero } from '../../session/logic/santeSousZero';
 
 /**
  * Une seule réponse à « comment va ce combattant ».
@@ -58,6 +59,13 @@ export interface PorteurDeSante {
     hpMax?: number;
     maxHp?: number;
     healthSystem?: { type: string; data: Record<string, unknown>; state: string };
+    /** La santé passe sous zéro (Argyropée, `santeSousZero.ts`) — posé à l'entrée sur le plateau. */
+    santeSousZero?: boolean;
+}
+
+/** La règle « sous zéro, inconscient » vaut-elle pour ce porteur ? Sur sa santé, ou sur lui. */
+function passeSousZero(c: PorteurDeSante): boolean {
+    return c.santeSousZero === true || santeSousZero(c.healthSystem);
 }
 
 /**
@@ -431,8 +439,10 @@ export function estHorsDeCombat(c: PorteurDeSante): boolean {
     if (typeof synthetique?.arret === 'boolean') return synthetique.arret;
     const rdd = c.healthSystem?.data?.rdd as {horsCombat?: boolean} | undefined;
     if (typeof rdd?.horsCombat === 'boolean') return rdd.horsCombat;
+    // Argyropée : inconscient sous zéro, hors de combat sans être mort ; à zéro, il se traîne (p. 52).
+    if (estInconscient(c.healthSystem)) return true;
     if (c.healthSystem) return c.healthSystem.state === 'dead';
-    if (aUneJaugeDeVie(c)) return c.hp! <= 0;
+    if (aUneJaugeDeVie(c)) return passeSousZero(c) ? c.hp! < 0 : c.hp! <= 0;
     return false;
 }
 
@@ -444,7 +454,7 @@ export function estHorsDeCombat(c: PorteurDeSante): boolean {
  */
 export function pointsDeVieApres(c: PorteurDeSante, delta: number): number | null {
     if (!aUneJaugeDeVie(c)) return null;
-    return Math.min((c.hpMax ?? c.maxHp)!, Math.max(0, c.hp! + delta));
+    return bornerLesPointsDeVie(c.hp! + delta, (c.hpMax ?? c.maxHp)!, passeSousZero(c));
 }
 
 /**
@@ -465,14 +475,16 @@ export function santeAffichee(c: PorteurDeSante): PorteurDeSante['healthSystem']
     if (c.healthSystem) return c.healthSystem;
     if (!aUneJaugeDeVie(c)) return undefined;
     const max = (c.hpMax ?? c.maxHp)!;
-    const actuel = Math.max(0, Math.min(max, c.hp!));
+    const sousZero = passeSousZero(c);
+    const actuel = bornerLesPointsDeVie(c.hp!, max, sousZero);
     const pct = (actuel / max) * 100;
-    const state = actuel === 0 ? 'dead'
+    const state = sousZero && actuel <= 0 ? 'critical'
+        : actuel === 0 ? 'dead'
         : pct <= 25 ? 'critical'
         : pct <= 50 ? 'wounded'
         : pct <= 85 ? 'scratched'
         : 'healthy';
-    return { type: 'hp', data: { current: actuel, max }, state };
+    return { type: 'hp', data: { current: actuel, max, ...(sousZero ? { sousZero: true } : {}) }, state };
 }
 
 /**
@@ -510,7 +522,7 @@ export function santePrincipaleDeLaFiche(
     pilote: { combat?: { defaultHealthType?: string; santeDeDepart?: string; statsToTrack?: readonly { fieldId: string; isMainHP?: boolean; max?: string }[] } } | null | undefined,
     fiche: Record<string, unknown> | undefined | null,
     maxParDefaut?: number,
-): { champ: string; courant: number; max: number } | null {
+): { champ: string; courant: number; max: number; sousZero?: true } | null {
     const combat = pilote?.combat;
     if (!combat || (combat.defaultHealthType && combat.defaultHealthType !== 'hp')) return null;
     const principale = combat.statsToTrack?.find(s => s.isMainHP);
@@ -522,7 +534,9 @@ export function santePrincipaleDeLaFiche(
         ?? (maxParDefaut !== undefined && maxParDefaut > 0 ? maxParDefaut : null)
         ?? courant;
     const plafond = Math.max(1, max, courant);
-    return { champ: principale.fieldId, courant: Math.max(0, Math.min(plafond, courant)), max: plafond };
+    // Argyropée : la fiche peut porter −1, et c'est elle qui fait foi (`santeSousZero.ts`).
+    const sousZero = laSantePasseSousZero(pilote as Parameters<typeof laSantePasseSousZero>[0]);
+    return { champ: principale.fieldId, courant: bornerLesPointsDeVie(courant, plafond, sousZero), max: plafond, ...(sousZero ? { sousZero: true as const } : {}) };
 }
 
 /**
@@ -532,12 +546,16 @@ export function santePrincipaleDeLaFiche(
  */
 export function santeAlignee<S extends { type: string; data: Record<string, unknown>; state: string; badges?: unknown[] }>(
     sante: S | undefined,
-    principale: { courant: number; max: number } | null,
+    principale: { courant: number; max: number; sousZero?: true } | null,
 ): S | undefined {
     if (!principale || (sante && sante.type !== 'hp')) return sante;
-    if (sante && sante.data.current === principale.courant && sante.data.max === principale.max) return sante;
-    const lue = santeAffichee({ hp: principale.courant, maxHp: principale.max })!;
-    return { ...(sante ?? { badges: [] }), type: 'hp', data: { ...(sante?.data ?? {}), current: principale.courant, max: principale.max }, state: lue.state } as unknown as S;
+    const sousZero = principale.sousZero === true;
+    if (sante && sante.data.current === principale.courant && sante.data.max === principale.max
+        && (sante.data.sousZero === true) === sousZero) return sante;
+    const lue = santeAffichee({ hp: principale.courant, maxHp: principale.max, santeSousZero: sousZero })!;
+    const data: Record<string, unknown> = { ...(sante?.data ?? {}), current: principale.courant, max: principale.max };
+    if (sousZero) data.sousZero = true; else delete data.sousZero;
+    return { ...(sante ?? { badges: [] }), type: 'hp', data, state: lue.state } as unknown as S;
 }
 
 /** Le champ de santé principale qu'un jeu en points de vie fait suivre à la fiche — `null` sinon. */

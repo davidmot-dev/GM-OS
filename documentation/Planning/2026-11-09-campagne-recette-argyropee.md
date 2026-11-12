@@ -82,6 +82,10 @@ Le caviardage retire les marqueurs fictifs complets et partiels (GM-05), sans te
   Agilité 2, Détection 2, bonus 0 → **14**, alors que la lecture zéro attend 4.
 
 Preuves et SHA dans `verification-ecarts.json` ; gestes manuels et portée dans les anomalies.
+
+✅ **Corrigés dans GM-OS le 12/11/2026** (registre § 245) : sous zéro, l'avatar tombe à −1 et
+inconscient ; le d10 d'initiative se lit de 0 à 9. Pilote 2.1.0 inchangé. Les gestes manuels
+ci-dessus ne servent plus, sauf le réveil (test d'Endurance morale), qui reste à la main.
 Ces diagnostics réussis ne signifient pas que le combat est conforme à ces règles. Aucun correctif
 applicatif glissé dans la création de campagne. Constat au registre § 1 bis, suivi § 240.
 

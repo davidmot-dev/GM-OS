@@ -39,6 +39,7 @@ import { CLE_PROGRESSION_ALIEN } from '../../dice/systemes/progressionAlien';
 import { CLE_SURVIE_ALIEN, refusDeRecuperationAlien } from '../../dice/systemes/survieAlien';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
+import { laSantePasseSousZero, marquerSousZero, santeSousZero } from '../logic/santeSousZero';
 import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
 import { transfererLePersonnage } from '../logic/transfertDePersonnage';
 import { tousLesPilotes } from './tousLesPilotes';
@@ -94,10 +95,12 @@ export function syncHealthSystem(currentHp: number | undefined, maxHp: number | 
         return existingHealth;
     }
     const health = existingHealth || HealthInterpreter.createDefault('hp');
+    // Argyropée (`santeSousZero.ts`) : à zéro ou dessous, critique — inconscient ou à terre, pas mort.
+    const sousZero = santeSousZero(health);
     return {
         ...health,
         data: { ...health.data, current: currentHp, max: maxHp },
-        state: currentHp <= 0 ? 'dead' : (currentHp / maxHp) <= 0.25 ? 'critical' : (currentHp / maxHp) <= 0.5 ? 'wounded' : 'healthy'
+        state: currentHp <= 0 ? (sousZero ? 'critical' : 'dead') : (currentHp / maxHp) <= 0.25 ? 'critical' : (currentHp / maxHp) <= 0.5 ? 'wounded' : 'healthy'
     };
 }
 
@@ -322,16 +325,20 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             entities: state.entities.map((e) => {
                 if (e.id !== entityId) return e;
                 
-                // Calcul du nouvel état de santé
-                const nextHp = e.sheetData?.__rddSante231 ? hp : Math.max(0, hp);
-                const status = nextHp <= 0 ? 'dead' : nextHp < e.maxHp * 0.25 ? 'injured' : 'alive';
+                // Calcul du nouvel état de santé — sous zéro, Argyropée garde le total (p. 52).
+                const etatDesPilotes = state as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
+                const piloteDeLEntite = piloteDuPersonnage(e, etatDesPilotes.campaigns ?? [], etatDesPilotes.customGameDrivers ?? [], etatDesPilotes.activeCampaignId ?? null);
+                const sousZero = santeSousZero(e.healthSystem) || laSantePasseSousZero(piloteDeLEntite);
+                const nextHp = e.sheetData?.__rddSante231 || sousZero ? hp : Math.max(0, hp);
+                const status = nextHp <= 0 && !sousZero ? 'dead' : nextHp < e.maxHp * 0.25 ? 'injured' : 'alive';
                 
                 // Préparation de la mise à jour
                 const updated = { ...e, hp: nextHp, status } as Entity;
                 if (e.sheetData?.__rddSante231) updated.sheetData = {...e.sheetData,vie:nextHp};
 
                 // Synchronisation forcée du HealthSystem
-                updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {},syncHealthSystem(nextHp, e.maxHp, e.healthSystem));
+                const santeDeLEntite = sousZero ? marquerSousZero(e.healthSystem ?? HealthInterpreter.createDefault('hp'), piloteDeLEntite) : e.healthSystem;
+                updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {},syncHealthSystem(nextHp, e.maxHp, santeDeLEntite));
                 if (updated.healthSystem?.data.rdd) updated.status = (updated.healthSystem.data.rdd as {mort:boolean}).mort ? 'dead' : updated.healthSystem.state === 'healthy' ? 'alive' : 'injured';
                 
                 return alignerJaugeXeno(updated,get());
@@ -364,7 +371,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                 if (health.type === 'hp') {
                     updated.hp = Number(health.data.current) || 0;
                     updated.maxHp = Number(health.data.max) || 10;
-                    updated.status = updated.hp <= 0 ? 'dead' : updated.hp < updated.maxHp * 0.25 ? 'injured' : 'alive';
+                    updated.status = updated.hp <= 0 && !santeSousZero(health) ? 'dead' : updated.hp < updated.maxHp * 0.25 ? 'injured' : 'alive';
                 }
                 // Même contrat que les PJ : le compteur de la fiche suit les cases.
                 // Sinon la projection suivante rétablirait l'ancien compteur (COC-A3, bande).
@@ -521,12 +528,17 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                           ...p,
                           characters: p.characters.map((c) => {
                                 if (c.id !== characterId) return c;
-                                const nextHp = c.sheetData?.__rddSante231 ? hp : Math.max(0, hp);
+                                // Argyropée (`santeSousZero.ts`) : sous zéro, le total se garde — −1, inconscient (p. 52).
+                                const etatDesPilotes = state as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
+                                const piloteDuPJ = piloteDuPersonnage(c, etatDesPilotes.campaigns ?? [], etatDesPilotes.customGameDrivers ?? [], etatDesPilotes.activeCampaignId ?? null);
+                                const sousZero = santeSousZero(c.healthSystem) || laSantePasseSousZero(piloteDuPJ);
+                                const nextHp = c.sheetData?.__rddSante231 || sousZero ? hp : Math.max(0, hp);
                                 const updated = { ...c, hp: nextHp } as PlayerCharacter;
                                 if (c.sheetData?.__rddSante231) updated.sheetData = {...c.sheetData,vie:nextHp};
                                 
                                 // Synchronisation forcée du HealthSystem
-                                updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {},syncHealthSystem(nextHp, c.maxHp, c.healthSystem));
+                                const santeDuPJ = sousZero ? marquerSousZero(c.healthSystem ?? HealthInterpreter.createDefault('hp'), piloteDuPJ) : c.healthSystem;
+                                updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {},syncHealthSystem(nextHp, c.maxHp, santeDuPJ));
                                 return updated;
                           }),
                       }
@@ -989,7 +1001,8 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             // Humain par défaut (09/11/2026) : le premier coup l'inscrit, pour qu'un PNJ Brisé à 0 reste suivi.
             const humainParDefaut = !!piloteOuvert?.combat.alien && santeHumaineParDefaut(piloteOuvert.combat.alien, entity.sheetData ?? {});
             const baseHealth = humainAlien ? santeAlignee(entity.healthSystem || HealthInterpreter.createDefault('hp'),santePrincipaleDeLaFiche(piloteOuvert,xeno?.etat==='ruse'?{...entity.sheetData,[piloteOuvert!.combat.alien!.sante]:1}:entity.sheetData)) ?? HealthInterpreter.createDefault('hp') : casesAligneesSurLaFiche(entity.healthSystem, piloteOuvert?.combat, entity.sheetData) || HealthInterpreter.createDefault('hp');
-            const updatedHealth = HealthInterpreter.calculateNextState(baseHealth, impact);
+            // Argyropée : un PNJ aussi tombe inconscient sous zéro (p. 52) — `santeSousZero.ts`.
+            const updatedHealth = HealthInterpreter.calculateNextState(marquerSousZero(baseHealth, piloteOuvert), impact);
             const newHp = (updatedHealth.data.current as number) ?? entity.hp;
             
             get().updateEntityHealth(targetId, updatedHealth);

@@ -124,7 +124,8 @@ du personnage. Le Panache dépensé sur une manche relève son compte.
 ## Le combat
 
 - **Initiative** : 1d10 + Agilité + Détection (+ le bonus d'initiative de la fiche), tirée une fois ;
-  à égalité, le personnage joueur passe avant le PNJ (p. 46).
+  à égalité, le personnage joueur passe avant le PNJ (p. 46). Combat-OS lit le d10 de 0 à 9, comme
+  au test : la face 0 vaut zéro.
 - **Attaquer** : un test de Combat à distance, de Combat rapproché ou de Rixe. À 3 mètres ou moins,
   même une arme à feu se sert en Combat rapproché (p. 48). La cible ne se défend qu'en ayant
   **déclaré une parade** à son tour (test d'Agilité).
@@ -132,7 +133,10 @@ du personnage. Le Panache dépensé sur une manche relève son compte.
   l'arme (10 m pour l'arc court, 1 m pour l'arbalète de poing…). Combat-OS n'applique aucun malus
   générique : le Conteur le règle au modificateur.
 - **Santé** : 2 + Endurance morale + Endurance physique. Sous 0, l'avatar tombe inconscient ; la mort
-  est un acte volontaire, sauf péril absolu (p. 52-53).
+  est un acte volontaire, sauf péril absolu (p. 52-53). GM-OS garde le total négatif : santé 4 et
+  coup de 5 donnent −1, et la console dit **Inconscient** ; à 0, **À terre**. Combat-OS compte
+  l'inconscient hors de combat, jamais mort : la mort se décide à la main. Le réveil (test
+  d'Endurance morale au tour suivant) se joue au panneau de jet.
 
 ## La fiche du personnage
 
@@ -197,12 +201,9 @@ et six ateliers directement accessibles dans le cinquième acte de la Trame. Un 
 trois héros pour les joueurs existants et des personnages `[RECETTE]` réservés aux essais.
 [Livraison, guide et cahier de 61 cas](../Planning/2026-11-09-campagne-recette-argyropee.md).
 
-Le lot a été contrôlé par les fonctions et composants en mémoire ; son import natif Electron
-et ses Hub réseau restent NON EXÉCUTÉS. Deux écarts du combat générique ont été reproduits :
-les dégâts bornent la santé à zéro au lieu de conserver le négatif, et le d10 d’initiative
-générique conserve la face10 au lieu de la lire0. Lire les anomalies du lot et tenir ces deux
-valeurs à la main en attendant une correction spécifique. Les tests verts de diagnostic ne
-valident pas ces deux règles comme conformes.
+La campagne a été essayée par David le 12/11/2026. Les deux écarts de combat qu'elle avait
+reproduits sont corrigés depuis le 12/11 : la santé garde son total sous zéro, et le d10
+d'initiative se lit de 0 à 9.
 
 Pour refaire un cas, restaurer uniquement ses champs selon les états de référence.
 **Guigne réglée** agit sur tous les PJ de la campagne, profils de recette compris ; ce geste

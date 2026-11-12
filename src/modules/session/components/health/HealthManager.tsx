@@ -13,6 +13,7 @@ import { HarmBoxesDriver } from './HarmBoxesDriver';
 import { AnatomicalSilhouette, type PartStatus } from './AnatomicalSilhouette';
 import { typesDeDegats, nommerLeType } from '../../../combat/logic/TypesDeDegats';
 import { casesPourLaLimite } from '../../../combat/logic/sbiresEtHordes';
+import { motDeLaSanteSousZero } from '../../logic/santeSousZero';
 import { Plus, Minus, Heart, Settings2, Swords, Crosshair } from 'lucide-react';
 
 /**
@@ -418,7 +419,8 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
               {health.state === 'healthy' && 'Stable'}
               {health.state === 'scratched' && 'Égratigné'}
               {health.state === 'wounded' && 'Blessé'}
-              {health.state === 'critical' && 'Critique'}
+              {/* Argyropée : sous zéro « Inconscient », à zéro « À terre » (p. 52, `santeSousZero.ts`). */}
+              {health.state === 'critical' && (motDeLaSanteSousZero(health) ?? 'Critique')}
               {health.state === 'dead' && 'K.O'}
               </>}
           </div>

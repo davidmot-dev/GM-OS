@@ -53,6 +53,11 @@ export interface Combatant {
      */
     hp?: number;
     hpMax?: number;
+    /**
+     * Ses PV peuvent passer sous zéro : inconscient, pas mort — Argyropée, 12/11/2026
+     * (`session/logic/santeSousZero.ts`). Posé par `addCombatant` d'après le pilote.
+     */
+    santeSousZero?: boolean;
     /** Indique si le combattant est un PJ */
     isPlayer: boolean;
     /** Faction pour l'affichage et l'IA (Ami, Ennemi, Neutre) */

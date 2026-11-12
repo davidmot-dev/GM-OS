@@ -110,8 +110,15 @@ export function resolveInitiativeFormula(params: {
     combatant: Combatant;
     resolver?: (name: string, combatant: Combatant) => number;
     diceMax?: number;
+    /**
+     * **La face lue, selon le jeu** — Argyropée, 12/11/2026 (écart COM-01, registre § 240).
+     * Le moteur rend un d10 de 1 à 10 ; le d10 d'Argyropée se lit de 0 à 9, la face 10
+     * valant 0 (p. 44, `faceDuD10`). Sans elle, 1d10 + Agilité 2 + Détection 2 sur un 10
+     * donnait 14 au lieu de 4. Reçoit la face tirée et le nombre de faces du dé.
+     */
+    lireLaFace?: (face: number, faces: number) => number;
 }): number {
-    const { formula, combatant, resolver, diceMax = 20 } = params;
+    const { formula, combatant, resolver, diceMax = 20, lireLaFace } = params;
     
     let evaluatedFormula = formula;
     
@@ -145,7 +152,14 @@ export function resolveInitiativeFormula(params: {
 
     try {
         const res = DiceEngine.rollFormula(evaluatedFormula);
-        return Number.isNaN(res.total) ? 0 : res.total;
+        if (Number.isNaN(res.total)) return 0;
+        if (!lireLaFace) return res.total;
+        // Chaque dé est relu ; un dé retranché (« − 1d10 ») garde son signe.
+        return res.rolls.reduce((total, r) => {
+            if (typeof r.val !== 'number' || typeof r.sides !== 'number' || r.sides <= 0) return total;
+            const signe = r.val < 0 ? -1 : 1;
+            return total - r.val + signe * lireLaFace(Math.abs(r.val), r.sides);
+        }, res.total);
     } catch {
         return Math.floor(Math.random() * diceMax) + 1;
     }
