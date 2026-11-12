@@ -14456,10 +14456,66 @@ personnage ». Ateliers GM-OS Studio ; comptes rendus :
   nommée ; aucune correspondance supposée. Les calculs composés PV/SAN maximum restent à
   raccorder dans GM-OS. L’atelier ne vaut pas audit des règles du pilote.
 
+### 247 · Delta Green fini — pilote 2.0.0 : jet et critiques, 42 compétences, santé, fiche reliée — 12/11/2026
+
+David : « j'ai fait un commit et un push codex, quand c'est fini tu peux /finir-un-pilote Delta
+Green, pour les compétence vérifie dans le livre. Pour les points de vie, la règles c'est
+(FOR+CON)/2, Corrige le jet sur les critiques. » GM-OS fermé ; aucun personnage sur la fiche 1.0.0.
+Livre : *Manuel de l'Agent*, édition française, sur le NAS (`docs/systems/delta-green/livres.json`,
+nouveau, page du PDF = imprimée + 1). Suite du § 246 (préparation graphique de Codex).
+
+- **Constat sur l'export 1.0.0** : le jet portait `critique: 1` et `complication: 20` (des valeurs de
+  d20) ; sur le d100, aucun double ne comptait, et `controlerLePilote` ne signalait rien. Les
+  compétences étaient `comp1` à `comp12`. Aucune santé principale : les coups ne s'écrivaient pas
+  sur la fiche. Portées en texte (« +20 % »).
+- **Code** : `dice/systemes/deltaGreen.ts` (échelle, bornes 1-99 %, mots du livre) ;
+  `EchelleDuJet.critiqueSur01` (`degresDeReussite.ts` : le 01 n'est pas un double) ;
+  `DescripteurDeJet.deltaGreen` (caractéristique × 5 avant le modificateur, compétence à 0 %
+  refusée, p. 18, 29, 43) ; le panneau de jet nomme le résultat (`nommerLeJetDeDeltaGreen`) ; le
+  pupitre ouvre le mode « seuil » sous 50 % et lit le même d100 (le mode « standard » ne montrait
+  aucun seuil) ; contrôle de la Forge : `jet.deltaGreen` avec critique ou complication, ou une
+  caractéristique absente.
+- **Pilote 2.0.0** (`outils/delta-green/finir_delta_green.mjs`, mêmes identifiants) : les 42 lignes
+  de la table p. 29, vérifiées une à une contre les bases de la fiche HTML ; spécialités au menu du
+  jet (`libelleSur`) ; −40 à +40 % ; PV principal à (FOR + CON) / 2, VOL ≤ POU, SAN ≤ 99 −
+  Inconcevable ; cinq Attaches ; sept armes ; portées en nombres (p. 53). `verifier_pilote.mjs` :
+  zéro constat, cas de la p. 44 à 50 %.
+- **Fiche reliée** : `delta-green-agent-fr` au moteur, `BUILTIN_VERSION` 25 → 26
+  (`integrer_au_moteur.mjs`) ; `docs/systems/delta-green/fiche/correspondance.json`, 163 clés,
+  70 absents motivés ; `fiche:valider` : acceptée, 0/0. Thème : accepté, 0/0.
+- **Corpus** : « Degrés de réussite et critiques » et « Résolution des jets » dépassaient le budget
+  de l'invite de la Forge (26 392 pour 21 024) ; resserrées sans retrait de fait. Ajoutées : trois
+  options d'échec critique oubliées (p. 44). Corrigé : un « Non couvert » que le livre contredit
+  (p. 43). **0/18 relues** (`relu: false`, empreintes intactes).
+- **Vérifié** : `deltaGreen.test.ts` (10), `deltaGreenAuPupitre.test.tsx` (3), corpus dérivable
+  (152), manuel des jeux, garde des gabarits intégrés (26), `tsc -b`, eslint ; suite complète :
+  891 fichiers, 10 451 essais réussis, 4 en échec — tous dans `livres.test.ts`, le registre
+  d'Alien (ci-dessous), aucun de Delta Green ; verts une fois le registre rétabli. Manuel : page
+  `54-Jeu-Delta-Green`, deux lignes au 53, index des guides.
+- ⚠️ **Constaté hors de ce chantier, non touché** : `docs/systems/alien/livres.json` est modifié dans
+  le dépôt (pas par cette session) — le livre de base y a perdu son décalage (3 → 0), son errata et
+  ses notes, et `forge/rules/livres.test.ts` échoue (quatre essais). David : « oui rétabli alien
+  j'ai fait une fausse manoeuvre » — **rétabli le 12/11** depuis le dernier commit
+  (`git show HEAD:…`), `livres.test.ts` de nouveau vert.
+- **Essai de David, 12/11 : « ok les essais fonctionnent, je n'ai pas trouvé la compétence Pilotage
+  ou la spécialité dans la liste des lancers »** — capture : Pilotage s'affichait « +5 (10) ».
+  `libelleSur` (Nephilim) remplace l'intitulé par le nom saisi et cache la ligne vide : Art,
+  Artisanat, Pilotage, Science et Sciences militaires disparaissaient du menu sans spécialité.
+  Corrigé : `SheetField.libelleEnPrecision` (`defaultSheetTemplates.ts`) et
+  `libelleDuChampPropose` (`demandeDeJet.ts`, le seul lecteur du menu et de « Demander à ») —
+  « Pilotage — Hélicoptère (40) », « Art (0) » sans spécialité. Les autres lecteurs de
+  `libelleSur` (RuneQuest, COC, Shadowrun) ne changent pas, voulu : leurs pilotes n'ont pas le
+  drapeau. Pilote **2.0.1** ; `verifier_pilote.mjs` contrôle le menu (49 entrées). Essais :
+  `demandeDeJet.test.ts`, dés, session, manuel, fiches — 290 fichiers ; `tsc -b`, eslint.
+- **Reste** : réimporter `Delta-Green-2.0.1.gmos-driver` avec « Remplacer » et retrouver Pilotage au
+  menu. Puis les captures du jeu et la relecture du corpus. Hors outil : perte de SAN,
+  inconscience à 2 PV, létalité, oppositions.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 183 | **Delta Green fini — pilote 2.0.1** | 🟠 § 247 ; critiques sur 01 et doubles, 42 compétences du livre, caractéristique × 5, ±40 %, PV principal, fiche reliée — essais de David concluants le 12/11, sauf le menu des spécialités, corrigé en 2.0.1 | Réimporter `Delta-Green-2.0.1.gmos-driver` avec « Remplacer », retrouver Pilotage au menu | Essai de David |
 | 182 | **Delta Green — préparation GM-OS Studio** | 🟠 § 246 ; index, sommaire, thème, bannière, identité et fiche de deux pages construits et vérifiés —12/11 | Ouvrir la fiche HTML et choisir la bannière dans le pilote | Essai visuel de David ; compétences du pilote à nommer avant raccordement |
 | 181 | **Argyropée — écarts de combat corrigés** | 🟢 § 245 ; sous zéro inconscient (−1) et non mort, d10 d'initiative lu de 0 à 9 ; pilote inchangé —12/11 ; **validé par David le 12/11** | Rien | Rien |
 | 180 | **Rappel d'un jet dû par une jauge (GM Codex, lot 2)** | 🟢 § 244 ; « Au bout, rappeler », Fait / Écarter sur la carte de la jauge, au cockpit et sur la carte 5 s ; à la Table, seulement les personnages qui jouent — **validés par David le 11/11** | Rien ; lot 3 **mis de côté** par David (11/11) | Rien |
