@@ -1,0 +1,941 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "delta-green-agent-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Delta Green (pilote 2.0.1, outils/delta-green/finir_delta_green.mjs) et le gabarit delta-green-agent-fr livré le 2026-11-12. Les identifiants GM-OS sont courts et en français ; les 42 compétences suivent la table du Manuel de l’Agent, p. 29, vérifiée contre les valeurs de base de la fiche HTML. Le trouble psychique permanent n’existe que dans GM-OS.",
+  "champs": [
+    {
+      "gmos": "etat_civil",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "metier",
+      "fiche": "identity.profession"
+    },
+    {
+      "gmos": "employeur",
+      "fiche": "identity.employer"
+    },
+    {
+      "gmos": "nationalite",
+      "fiche": "identity.nationality"
+    },
+    {
+      "gmos": "genre",
+      "fiche": "identity.gender"
+    },
+    {
+      "gmos": "age",
+      "fiche": "identity.age_birth"
+    },
+    {
+      "gmos": "parcours",
+      "fiche": "identity.education"
+    },
+    {
+      "gmos": "officier_traitant",
+      "fiche": "identity.handler"
+    },
+    {
+      "gmos": "FOR",
+      "fiche": "attributes.strength"
+    },
+    {
+      "gmos": "CON",
+      "fiche": "attributes.constitution"
+    },
+    {
+      "gmos": "DEX",
+      "fiche": "attributes.dexterity"
+    },
+    {
+      "gmos": "INT",
+      "fiche": "attributes.intelligence"
+    },
+    {
+      "gmos": "POU",
+      "fiche": "attributes.power"
+    },
+    {
+      "gmos": "CHA",
+      "fiche": "attributes.charisma"
+    },
+    {
+      "gmos": "trait_for",
+      "fiche": "traits.strength"
+    },
+    {
+      "gmos": "trait_con",
+      "fiche": "traits.constitution"
+    },
+    {
+      "gmos": "trait_dex",
+      "fiche": "traits.dexterity"
+    },
+    {
+      "gmos": "trait_int",
+      "fiche": "traits.intelligence"
+    },
+    {
+      "gmos": "trait_pou",
+      "fiche": "traits.power"
+    },
+    {
+      "gmos": "trait_cha",
+      "fiche": "traits.charisma"
+    },
+    {
+      "gmos": "PV",
+      "fiche": "health.hp"
+    },
+    {
+      "gmos": "VOL",
+      "fiche": "health.willpower"
+    },
+    {
+      "gmos": "SAN",
+      "fiche": "health.sanity"
+    },
+    {
+      "gmos": "SR",
+      "fiche": "health.breaking_point"
+    },
+    {
+      "gmos": "anthropologie",
+      "fiche": "skills.anthropology"
+    },
+    {
+      "gmos": "archeologie",
+      "fiche": "skills.archeology"
+    },
+    {
+      "gmos": "armes_a_feu",
+      "fiche": "skills.firearms"
+    },
+    {
+      "gmos": "armes_de_melee",
+      "fiche": "skills.melee"
+    },
+    {
+      "gmos": "armes_lourdes",
+      "fiche": "skills.heavy_weapons"
+    },
+    {
+      "gmos": "art",
+      "fiche": "skills.art"
+    },
+    {
+      "gmos": "art_specialite",
+      "fiche": "specialties.art"
+    },
+    {
+      "gmos": "artillerie",
+      "fiche": "skills.artillery"
+    },
+    {
+      "gmos": "artisanat",
+      "fiche": "skills.craft"
+    },
+    {
+      "gmos": "artisanat_specialite",
+      "fiche": "specialties.craft"
+    },
+    {
+      "gmos": "athletisme",
+      "fiche": "skills.athletics"
+    },
+    {
+      "gmos": "bureaucratie",
+      "fiche": "skills.bureaucracy"
+    },
+    {
+      "gmos": "chirurgie",
+      "fiche": "skills.surgery"
+    },
+    {
+      "gmos": "combat_a_mains_nues",
+      "fiche": "skills.unarmed"
+    },
+    {
+      "gmos": "comptabilite",
+      "fiche": "skills.accounting"
+    },
+    {
+      "gmos": "conduite",
+      "fiche": "skills.drive"
+    },
+    {
+      "gmos": "criminalistique",
+      "fiche": "skills.forensics"
+    },
+    {
+      "gmos": "criminologie",
+      "fiche": "skills.criminology"
+    },
+    {
+      "gmos": "deguisement",
+      "fiche": "skills.disguise"
+    },
+    {
+      "gmos": "discretion",
+      "fiche": "skills.stealth"
+    },
+    {
+      "gmos": "droit",
+      "fiche": "skills.law"
+    },
+    {
+      "gmos": "engins_lourds",
+      "fiche": "skills.heavy_machinery"
+    },
+    {
+      "gmos": "equitation",
+      "fiche": "skills.ride"
+    },
+    {
+      "gmos": "esquive",
+      "fiche": "skills.dodge"
+    },
+    {
+      "gmos": "explosifs",
+      "fiche": "skills.demolitions"
+    },
+    {
+      "gmos": "histoire",
+      "fiche": "skills.history"
+    },
+    {
+      "gmos": "inconcevable",
+      "fiche": "skills.unnatural"
+    },
+    {
+      "gmos": "informatique",
+      "fiche": "skills.computer_science"
+    },
+    {
+      "gmos": "medecine",
+      "fiche": "skills.medicine"
+    },
+    {
+      "gmos": "natation",
+      "fiche": "skills.swim"
+    },
+    {
+      "gmos": "occultisme",
+      "fiche": "skills.occult"
+    },
+    {
+      "gmos": "orientation",
+      "fiche": "skills.navigate"
+    },
+    {
+      "gmos": "persuasion",
+      "fiche": "skills.persuade"
+    },
+    {
+      "gmos": "pharmacologie",
+      "fiche": "skills.pharmacy"
+    },
+    {
+      "gmos": "pilotage",
+      "fiche": "skills.pilot"
+    },
+    {
+      "gmos": "pilotage_specialite",
+      "fiche": "specialties.pilot"
+    },
+    {
+      "gmos": "premiers_secours",
+      "fiche": "skills.first_aid"
+    },
+    {
+      "gmos": "psychotherapie",
+      "fiche": "skills.psychotherapy"
+    },
+    {
+      "gmos": "recherche",
+      "fiche": "skills.search"
+    },
+    {
+      "gmos": "roem",
+      "fiche": "skills.sigint"
+    },
+    {
+      "gmos": "rohum",
+      "fiche": "skills.humint"
+    },
+    {
+      "gmos": "science",
+      "fiche": "skills.science"
+    },
+    {
+      "gmos": "science_specialite",
+      "fiche": "specialties.science"
+    },
+    {
+      "gmos": "sciences_militaires",
+      "fiche": "skills.military_science"
+    },
+    {
+      "gmos": "sciences_militaires_specialite",
+      "fiche": "specialties.military_science"
+    },
+    {
+      "gmos": "survie",
+      "fiche": "skills.survival"
+    },
+    {
+      "gmos": "vigilance",
+      "fiche": "skills.alertness"
+    },
+    {
+      "gmos": "autre1_nom",
+      "fiche": "skills.custom_0.name"
+    },
+    {
+      "gmos": "autre1",
+      "fiche": "skills.custom_0.level"
+    },
+    {
+      "gmos": "autre2_nom",
+      "fiche": "skills.custom_1.name"
+    },
+    {
+      "gmos": "autre2",
+      "fiche": "skills.custom_1.level"
+    },
+    {
+      "gmos": "autre3_nom",
+      "fiche": "skills.custom_2.name"
+    },
+    {
+      "gmos": "autre3",
+      "fiche": "skills.custom_2.level"
+    },
+    {
+      "gmos": "autre4_nom",
+      "fiche": "skills.custom_3.name"
+    },
+    {
+      "gmos": "autre4",
+      "fiche": "skills.custom_3.level"
+    },
+    {
+      "gmos": "autre5_nom",
+      "fiche": "skills.custom_4.name"
+    },
+    {
+      "gmos": "autre5",
+      "fiche": "skills.custom_4.level"
+    },
+    {
+      "gmos": "autre6_nom",
+      "fiche": "skills.custom_5.name"
+    },
+    {
+      "gmos": "autre6",
+      "fiche": "skills.custom_5.level"
+    },
+    {
+      "gmos": "attache1_nom",
+      "fiche": "bonds.0.name"
+    },
+    {
+      "gmos": "attache1",
+      "fiche": "bonds.0.score"
+    },
+    {
+      "gmos": "attache1_endommagee",
+      "fiche": "bonds.0.damaged"
+    },
+    {
+      "gmos": "attache2_nom",
+      "fiche": "bonds.1.name"
+    },
+    {
+      "gmos": "attache2",
+      "fiche": "bonds.1.score"
+    },
+    {
+      "gmos": "attache2_endommagee",
+      "fiche": "bonds.1.damaged"
+    },
+    {
+      "gmos": "attache3_nom",
+      "fiche": "bonds.2.name"
+    },
+    {
+      "gmos": "attache3",
+      "fiche": "bonds.2.score"
+    },
+    {
+      "gmos": "attache3_endommagee",
+      "fiche": "bonds.2.damaged"
+    },
+    {
+      "gmos": "attache4_nom",
+      "fiche": "bonds.3.name"
+    },
+    {
+      "gmos": "attache4",
+      "fiche": "bonds.3.score"
+    },
+    {
+      "gmos": "attache4_endommagee",
+      "fiche": "bonds.3.damaged"
+    },
+    {
+      "gmos": "attache5_nom",
+      "fiche": "bonds.4.name"
+    },
+    {
+      "gmos": "attache5",
+      "fiche": "bonds.4.score"
+    },
+    {
+      "gmos": "attache5_endommagee",
+      "fiche": "bonds.4.damaged"
+    },
+    {
+      "gmos": "motivations",
+      "fiche": "psychology.motivations_disorders"
+    },
+    {
+      "gmos": "accoutumance_violence",
+      "fiche": "adaptation.violence"
+    },
+    {
+      "gmos": "accoutumance_impuissance",
+      "fiche": "adaptation.helplessness"
+    },
+    {
+      "gmos": "armure",
+      "fiche": "equipment.armor_gear"
+    },
+    {
+      "gmos": "blessures",
+      "fiche": "health.wounds_diseases"
+    },
+    {
+      "gmos": "premiers_secours_recus",
+      "fiche": "health.first_aid_received"
+    },
+    {
+      "gmos": "arme1",
+      "fiche": "weapons.0.name"
+    },
+    {
+      "gmos": "arme1_competence",
+      "fiche": "weapons.0.skill"
+    },
+    {
+      "gmos": "arme1_portee",
+      "fiche": "weapons.0.range"
+    },
+    {
+      "gmos": "arme1_degats",
+      "fiche": "weapons.0.damage"
+    },
+    {
+      "gmos": "arme1_perforant",
+      "fiche": "weapons.0.armor_piercing"
+    },
+    {
+      "gmos": "arme1_letalite",
+      "fiche": "weapons.0.lethality"
+    },
+    {
+      "gmos": "arme1_rayon",
+      "fiche": "weapons.0.kill_radius"
+    },
+    {
+      "gmos": "arme1_munitions",
+      "fiche": "weapons.0.ammo"
+    },
+    {
+      "gmos": "arme2",
+      "fiche": "weapons.1.name"
+    },
+    {
+      "gmos": "arme2_competence",
+      "fiche": "weapons.1.skill"
+    },
+    {
+      "gmos": "arme2_portee",
+      "fiche": "weapons.1.range"
+    },
+    {
+      "gmos": "arme2_degats",
+      "fiche": "weapons.1.damage"
+    },
+    {
+      "gmos": "arme2_perforant",
+      "fiche": "weapons.1.armor_piercing"
+    },
+    {
+      "gmos": "arme2_letalite",
+      "fiche": "weapons.1.lethality"
+    },
+    {
+      "gmos": "arme2_rayon",
+      "fiche": "weapons.1.kill_radius"
+    },
+    {
+      "gmos": "arme2_munitions",
+      "fiche": "weapons.1.ammo"
+    },
+    {
+      "gmos": "arme3",
+      "fiche": "weapons.2.name"
+    },
+    {
+      "gmos": "arme3_competence",
+      "fiche": "weapons.2.skill"
+    },
+    {
+      "gmos": "arme3_portee",
+      "fiche": "weapons.2.range"
+    },
+    {
+      "gmos": "arme3_degats",
+      "fiche": "weapons.2.damage"
+    },
+    {
+      "gmos": "arme3_perforant",
+      "fiche": "weapons.2.armor_piercing"
+    },
+    {
+      "gmos": "arme3_letalite",
+      "fiche": "weapons.2.lethality"
+    },
+    {
+      "gmos": "arme3_rayon",
+      "fiche": "weapons.2.kill_radius"
+    },
+    {
+      "gmos": "arme3_munitions",
+      "fiche": "weapons.2.ammo"
+    },
+    {
+      "gmos": "arme4",
+      "fiche": "weapons.3.name"
+    },
+    {
+      "gmos": "arme4_competence",
+      "fiche": "weapons.3.skill"
+    },
+    {
+      "gmos": "arme4_portee",
+      "fiche": "weapons.3.range"
+    },
+    {
+      "gmos": "arme4_degats",
+      "fiche": "weapons.3.damage"
+    },
+    {
+      "gmos": "arme4_perforant",
+      "fiche": "weapons.3.armor_piercing"
+    },
+    {
+      "gmos": "arme4_letalite",
+      "fiche": "weapons.3.lethality"
+    },
+    {
+      "gmos": "arme4_rayon",
+      "fiche": "weapons.3.kill_radius"
+    },
+    {
+      "gmos": "arme4_munitions",
+      "fiche": "weapons.3.ammo"
+    },
+    {
+      "gmos": "arme5",
+      "fiche": "weapons.4.name"
+    },
+    {
+      "gmos": "arme5_competence",
+      "fiche": "weapons.4.skill"
+    },
+    {
+      "gmos": "arme5_portee",
+      "fiche": "weapons.4.range"
+    },
+    {
+      "gmos": "arme5_degats",
+      "fiche": "weapons.4.damage"
+    },
+    {
+      "gmos": "arme5_perforant",
+      "fiche": "weapons.4.armor_piercing"
+    },
+    {
+      "gmos": "arme5_letalite",
+      "fiche": "weapons.4.lethality"
+    },
+    {
+      "gmos": "arme5_rayon",
+      "fiche": "weapons.4.kill_radius"
+    },
+    {
+      "gmos": "arme5_munitions",
+      "fiche": "weapons.4.ammo"
+    },
+    {
+      "gmos": "arme6",
+      "fiche": "weapons.5.name"
+    },
+    {
+      "gmos": "arme6_competence",
+      "fiche": "weapons.5.skill"
+    },
+    {
+      "gmos": "arme6_portee",
+      "fiche": "weapons.5.range"
+    },
+    {
+      "gmos": "arme6_degats",
+      "fiche": "weapons.5.damage"
+    },
+    {
+      "gmos": "arme6_perforant",
+      "fiche": "weapons.5.armor_piercing"
+    },
+    {
+      "gmos": "arme6_letalite",
+      "fiche": "weapons.5.lethality"
+    },
+    {
+      "gmos": "arme6_rayon",
+      "fiche": "weapons.5.kill_radius"
+    },
+    {
+      "gmos": "arme6_munitions",
+      "fiche": "weapons.5.ammo"
+    },
+    {
+      "gmos": "arme7",
+      "fiche": "weapons.6.name"
+    },
+    {
+      "gmos": "arme7_competence",
+      "fiche": "weapons.6.skill"
+    },
+    {
+      "gmos": "arme7_portee",
+      "fiche": "weapons.6.range"
+    },
+    {
+      "gmos": "arme7_degats",
+      "fiche": "weapons.6.damage"
+    },
+    {
+      "gmos": "arme7_perforant",
+      "fiche": "weapons.6.armor_piercing"
+    },
+    {
+      "gmos": "arme7_letalite",
+      "fiche": "weapons.6.lethality"
+    },
+    {
+      "gmos": "arme7_rayon",
+      "fiche": "weapons.6.kill_radius"
+    },
+    {
+      "gmos": "arme7_munitions",
+      "fiche": "weapons.6.ammo"
+    },
+    {
+      "gmos": "description",
+      "fiche": "profile.description"
+    },
+    {
+      "gmos": "foyer",
+      "fiche": "profile.home_family"
+    },
+    {
+      "gmos": "notes",
+      "fiche": "profile.personal_notes"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "identity.gender_other",
+      "pourquoi": "Précision libre du genre : propre au formulaire DD 315."
+    },
+    {
+      "fiche": "attributes.strength_x5",
+      "pourquoi": "Calculée par la fiche HTML (× 5) ; le jet de GM-OS la calcule aussi (p. 18)."
+    },
+    {
+      "fiche": "attributes.constitution_x5",
+      "pourquoi": "Calculée par la fiche HTML (× 5) ; le jet de GM-OS la calcule aussi (p. 18)."
+    },
+    {
+      "fiche": "attributes.dexterity_x5",
+      "pourquoi": "Calculée par la fiche HTML (× 5) ; le jet de GM-OS la calcule aussi (p. 18)."
+    },
+    {
+      "fiche": "attributes.intelligence_x5",
+      "pourquoi": "Calculée par la fiche HTML (× 5) ; le jet de GM-OS la calcule aussi (p. 18)."
+    },
+    {
+      "fiche": "attributes.power_x5",
+      "pourquoi": "Calculée par la fiche HTML (× 5) ; le jet de GM-OS la calcule aussi (p. 18)."
+    },
+    {
+      "fiche": "attributes.charisma_x5",
+      "pourquoi": "Calculée par la fiche HTML (× 5) ; le jet de GM-OS la calcule aussi (p. 18)."
+    },
+    {
+      "fiche": "health.hp_max",
+      "pourquoi": "Maximum calculé par GM-OS depuis le pilote (statsToTrack[].max, p. 18)."
+    },
+    {
+      "fiche": "health.willpower_max",
+      "pourquoi": "Maximum calculé par GM-OS depuis le pilote (statsToTrack[].max, p. 18)."
+    },
+    {
+      "fiche": "health.sanity_max",
+      "pourquoi": "Maximum calculé par GM-OS depuis le pilote (statsToTrack[].max, p. 18)."
+    },
+    {
+      "fiche": "experience.anthropology",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.archeology",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.firearms",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.melee",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.heavy_weapons",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.art",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.artillery",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.craft",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.athletics",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.bureaucracy",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.surgery",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.unarmed",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.accounting",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.drive",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.forensics",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.criminology",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.disguise",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.stealth",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.law",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.heavy_machinery",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.ride",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.dodge",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.demolitions",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.history",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.computer_science",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.medicine",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.swim",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.occult",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.navigate",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.persuade",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.pharmacy",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.pilot",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.first_aid",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.psychotherapy",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.search",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.sigint",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.humint",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.science",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.military_science",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.survival",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.alertness",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.custom_0",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.custom_1",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.custom_2",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.custom_3",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.custom_4",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "experience.custom_5",
+      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
+    },
+    {
+      "fiche": "training.0.name",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "training.0.skill",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "training.1.name",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "training.1.skill",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "training.2.name",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "training.2.skill",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "training.3.name",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "training.3.skill",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "training.4.name",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "training.4.skill",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "training.5.name",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "training.5.skill",
+      "pourquoi": "Formation particulière (nom et compétence liée) : un texte de la fiche HTML, que le jet ne lit pas."
+    },
+    {
+      "fiche": "identity.signature",
+      "pourquoi": "La signature de l’Agent : propre au formulaire DD 315."
+    }
+  ]
+}
