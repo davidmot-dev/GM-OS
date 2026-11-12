@@ -97,6 +97,13 @@ export interface EchelleDuJet {
      */
     doubles?: boolean;
     /**
+     * **Le 01 est toujours une réussite critique** — Delta Green, 12/11/2026 (*Manuel de
+     * l'Agent*, p. 44) : *« Les résultats de 01 et les réussites obtenues avec un double
+     * sur les dés sont des réussites critiques. »* Avec `doubles`, le 01 n'était qu'une
+     * réussite : ce n'est pas un double.
+     */
+    critiqueSur01?: boolean;
+    /**
      * **La marge de réussite se lit sur le dé des dizaines** (Nephilim), plus ce
      * nombre — les degrés de la cible au-delà de dix. Présent, le résultat d'une
      * réussite dit sa marge (`margeDuJet`).
@@ -142,6 +149,7 @@ export function degreDuDe(de: number, echelle: EchelleDuJet, facesDuDe = 100): D
 
     if (echelle.doubles) {
         if (cestUnDoubleZero) return 'echec-total';
+        if (echelle.critiqueSur01 && de === 1) return 'reussite-particuliere';
         if (de <= chances) return estUnDouble(de) ? 'reussite-particuliere' : 'reussite-normale';
         return estUnDouble(de) ? 'echec-total' : 'echec-normal';
     }

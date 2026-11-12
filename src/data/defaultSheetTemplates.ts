@@ -27,6 +27,14 @@ export interface SheetField {
      */
     libelleSur?: string;
     /**
+     * **Le nom saisi précise l'intitulé au lieu de le remplacer** — Delta Green, 12/11/2026.
+     * Pilotage, Art, Science… existent sans spécialité : le menu du jet propose
+     * « Pilotage — Hélicoptère (40) », et « Pilotage (40) » quand la spécialité est vide.
+     * Sans ce drapeau, `libelleSur` remplace l'intitulé et cache la ligne vide (Nephilim) :
+     * David, « je n'ai pas trouvé la compétence Pilotage », qui s'affichait « +5 (10) ».
+     */
+    libelleEnPrecision?: boolean;
+    /**
      * **Un référentiel du jeu** (2026-10-17) : le chemin, dans le dossier du jeu,
      * d'une liste nommée — `vecus/index.json` pour les Vécus de Nephilim. La
      * fiche en propose les noms et relie un nom saisi à sa description. Voir

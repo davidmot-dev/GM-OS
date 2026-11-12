@@ -29,6 +29,7 @@ import { jetARegler, lireLeJetAuPupitre, reglerLesReservesDuDernierJet } from '.
 import { gmToast } from '../../stores/useToastStore';
 import { placerLaFortune, suitesProposees, tirerLaSuiteDuDeclin } from './suitesDuJetDeFiche';
 import { resoudreLeJetDeFiche } from './jetDepuisLaFiche';
+import { bornerLesChances, echelleDeDeltaGreen, nommerLeJetDeDeltaGreen } from './systemes/deltaGreen';
 import { garderLeJetCache, useJetsCachesStore } from './jetsCaches';
 import { InterrupteurJetCache } from '../session/components/fields/CommandesDuMeneur';
 
@@ -275,7 +276,16 @@ const DiceBoard: React.FC = () => {
               aux PNJ — leur degré de compétence se tire au d6 à chaque test (p. 185). Le
               test d'un personnage joueur se fait depuis sa fiche.
             */
-            if (activeDriver.jet?.argyropee) {
+            if (activeDriver.jet?.deltaGreen) {
+                /*
+                  **Delta Green** (12/11/2026) : le mode « standard » ne montre aucun seuil, et le
+                  d100 se serait lancé contre une valeur invisible. Le mode « seuil » montre les
+                  chances, sous lesquelles on jette ; l'échelle du livre s'applique au lancer.
+                */
+                setMode('threshold');
+                setTargetRule('under');
+                setTarget(50);
+            } else if (activeDriver.jet?.argyropee) {
                 setMode('argyropee-pnj');
             } else if (activeDriver.jet?.garde) {
                 setMode('garde');
@@ -390,7 +400,14 @@ const DiceBoard: React.FC = () => {
             const echelonne = activeDriver.dice.engine === 'yze-echelonne'
                 || !!activeDriver.jet?.desEchelonnes
                 || finalMode === 'yze-echelonne';
-            result = DiceEngine.rollFromConfig(
+            /*
+              **Delta Green** (12/11/2026) : au pupitre aussi, le d100 sous les chances lit le 01
+              et les doubles, et dit « Réussite critique » ou « Échec critique » (p. 43-44).
+            */
+            const deltaGreen = !echelonne && activeDriver.jet?.deltaGreen
+                ? echelleDeDeltaGreen(bornerLesChances(finalTarget).chances) : null;
+            if (deltaGreen) result = nommerLeJetDeDeltaGreen(DiceEngine.rollThreshold(100, 1, 0, deltaGreen.chances, 'under', deltaGreen), deltaGreen);
+            else result = DiceEngine.rollFromConfig(
                 {
                     ...activeDriver.dice,
                     ...(activeDriver.jet?.sens ? { sens: activeDriver.jet.sens } : {}),

@@ -88,6 +88,7 @@ import { CHOIX_D_ARGYROPEE, CHANCES_DE_SILENCIADA, LIBELLES_D_ARGYROPEE, bilanDe
     panacheDeLaFiche, prieresRestantes, regainDuMatin, silenciadaContractee,
     type ChoixDArgyropee, type JetDArgyropee, type MancheDOpposition } from '../../../dice/systemes/argyropee';
 import { PreparationRuneQuest, SuitesRuneQuest } from './RuneQuestAuJet';
+import { nommerLeJetDeDeltaGreen } from '../../../dice/systemes/deltaGreen';
 import { CHOIX_DE_RUNEQUEST, nommerLeJetDeRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest } from '../../../dice/systemes/runequest';
 import { CHOIX_DE_DEGENESIS, lancerDegenesis, type ChoixDeDegenesis, type JetDeDegenesis } from '../../../dice/systemes/degenesis';
 import { AttaqueDegenesis, PreparationDegenesis, SuitesDegenesis, type AttaqueLancee } from './DegenesisAuJet';
@@ -524,6 +525,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * le dernier lancer savait, pour trancher l'opposition et localiser le coup.
      */
     const regleRuneQuest = descripteur.sens === 'sous-ou-egal' && !descripteur.cible ? descripteur.runequest : undefined;
+    // Delta Green (12/11/2026) : réussite et échec critiques, dits avec les mots du livre (p. 44).
+    const regleDeltaGreen = descripteur.sens === 'sous-ou-egal' && !descripteur.cible ? descripteur.deltaGreen : undefined;
     const [choixRuneQuest, setChoixRuneQuest] = useState<ChoixDeRuneQuest>(CHOIX_DE_RUNEQUEST);
     const [runequestDuLancer, setRuneQuestDuLancer] = useState<{ calcul: CalculDeRuneQuest; compte: number } | null>(null);
     // RQ-A6 (2026-11-03) : le sort payé, l'inspiration, la coche d'expérience s'écrivent sur la
@@ -1501,6 +1504,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             : regleSymbaroum ? sansCritiqueDeBase(brutDuMoteur)
             // RuneQuest : le degré du moteur, dit avec les mots du livre (p. 142).
             : regleRuneQuest && jet.echelle ? nommerLeJetDeRuneQuest(brutDuMoteur, jet.echelle)
+            : regleDeltaGreen && jet.echelle ? nommerLeJetDeDeltaGreen(brutDuMoteur, jet.echelle)
             : desStarTrek ? resultatDeStarTrek(desStarTrek, complicationStarTrek, jet.reussitesRequises)
             : brutDuMoteur;
         /*

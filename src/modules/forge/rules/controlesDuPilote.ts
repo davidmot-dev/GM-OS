@@ -1111,6 +1111,23 @@ export function controlerLePilote(
         }
     }
     /*
+      Delta Green (12/11/2026) : un d100 sous la compétence ou la caractéristique × 5 ;
+      critiques sur 01 et les doubles (p. 18, 44). Le pilote forgé portait « critique: 1 »
+      et « complication: 20 », des nombres de d20 : le contrôle ne disait rien, et le jet
+      ne voyait aucun double.
+    */
+    const dg = driver.jet?.deltaGreen;
+    if (dg) {
+        if (driver.jet?.sens !== 'sous-ou-egal' || driver.jet?.cible || facesLancees(driver) !== 100 || !(driver.jet?.seuil ?? []).length) {
+            avertir('jet.deltaGreen', 'Le bloc Delta Green suppose un d100 sous un seuil composé (p. 44) : déclarer « seuil », un d100 et « sens: sous-ou-egal ».');
+        }
+        if (driver.jet?.critique || driver.jet?.complication) avertir('jet.critique', 'Delta Green lit ses critiques sur 01, 00 et les doubles (p. 44) : retirer « critique » et « complication ».');
+        if (driver.jet?.difficulte) avertir('jet.difficulte', 'Delta Green compare un seul d100 aux chances (p. 44) : la difficulté en réussites est ignorée.');
+        (dg.caracteristiques ?? []).forEach((champ, i) => {
+            if (!tousLesChamps.has(champ)) erreur(`jet.deltaGreen.caracteristiques.${i}`, `Delta Green multiplie « ${champ} » par 5 (p. 18), absent de la fiche.`);
+        });
+    }
+    /*
       Chroniques Oubliées Contemporain (2026-10-31) : un d20 (ou 3d6) ajouté à UNE
       caractéristique, contre une difficulté réglée au jet. Le pilote forgé additionnait
       Agilité et Intelligence, exigeait dix réussites d'un dé et comptait un 1 double.

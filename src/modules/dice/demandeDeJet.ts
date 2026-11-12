@@ -97,6 +97,21 @@ export interface ChampPropose {
 }
 
 /**
+ * Ce que le menu affiche d'un champ : le nom saisi à la place de l'intitulé (un Vécu de
+ * Nephilim, une arme), ou à sa suite quand il n'est qu'une précision (`libelleEnPrecision` :
+ * « Pilotage — Hélicoptère », Delta Green, 12/11/2026).
+ */
+export function libelleDuChampPropose(
+    f: { id: string; label?: string; libelleSur?: string; libelleEnPrecision?: boolean },
+    valeurs: Record<string, unknown>,
+): string {
+    const intitule = f.label || f.id;
+    const saisi = f.libelleSur ? String(valeurs[f.libelleSur] ?? '').trim() : '';
+    if (!saisi) return intitule;
+    return f.libelleEnPrecision ? `${intitule} — ${saisi}` : saisi;
+}
+
+/**
  * **Les champs qu'une composante propose sur cette fiche.**
  *
  * Quatre règles, celles du menu du panneau :
@@ -105,7 +120,8 @@ export interface ChampPropose {
  *   `libelleSur` le nomme, il ne se lance pas (Nephilim, 17/10) ;
  * - le `motif` de la composante filtre les identifiants (le degré d'une
  *   formule, pas son aire) ;
- * - une ligne nommée par un champ vide n'a rien à proposer (un Vécu vide).
+ * - une ligne nommée par un champ vide n'a rien à proposer (un Vécu vide) —
+ *   sauf si le nom n'est qu'une précision (`libelleEnPrecision`, Delta Green).
  */
 export function champsProposes(
     composante: ComposanteDeJet,
@@ -120,10 +136,10 @@ export function champsProposes(
         return section.fields
             .filter(f => !noms.has(f.id))
             .filter(f => !motif || motif.test(f.id))
-            .filter(f => !f.libelleSur || String(valeurs[f.libelleSur] ?? '').trim() !== '')
+            .filter(f => !f.libelleSur || f.libelleEnPrecision || String(valeurs[f.libelleSur] ?? '').trim() !== '')
             .map(f => ({
                 id: f.id,
-                label: (f.libelleSur && String(valeurs[f.libelleSur] ?? '').trim()) || f.label || f.id,
+                label: libelleDuChampPropose(f, valeurs),
                 sectionId: section.id,
             }));
     });

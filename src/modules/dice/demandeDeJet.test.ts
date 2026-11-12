@@ -103,6 +103,23 @@ describe('champsProposes — les règles du menu', () => {
             { id: 'vecu_1', label: 'Marin', sectionId: 'vecus' },
         ]);
     });
+
+    // Delta Green, 12/11/2026 — David : « je n'ai pas trouvé la compétence Pilotage » (elle s'affichait « +5 »).
+    it('une spécialité précise le nom (« Pilotage — Hélicoptère ») et la compétence vide reste proposée', () => {
+        const sections = [{
+            id: 'competences', label: 'Compétences', fields: [
+                champ('pilotage', 'Pilotage', { libelleSur: 'pilotage_specialite', libelleEnPrecision: true }),
+                champ('pilotage_specialite', 'Pilotage : spécialité'),
+                champ('art', 'Art', { libelleSur: 'art_specialite', libelleEnPrecision: true }),
+                champ('art_specialite', 'Art : spécialité'),
+            ],
+        }] as unknown as SheetSection[];
+        const comp = { id: 'competence', label: 'Compétence', sectionId: 'competences' };
+        expect(champsProposes(comp, sections, { pilotage_specialite: 'Hélicoptère' })).toEqual([
+            { id: 'pilotage', label: 'Pilotage — Hélicoptère', sectionId: 'competences' },
+            { id: 'art', label: 'Art', sectionId: 'competences' },
+        ]);
+    });
 });
 
 describe('compositionValable', () => {

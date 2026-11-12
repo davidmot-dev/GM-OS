@@ -35,6 +35,7 @@ import { succesAdversesShadowrun } from './systemes/oppositionDeShadowrun';
 import { effetsRiggingShadowrun } from './systemes/riggingDeShadowrun';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 import type { EchelleDuJet } from './degresDeReussite';
+import { bornerLesChances, echelleDeDeltaGreen, MULTIPLICATEUR_DE_CARACTERISTIQUE } from './systemes/deltaGreen';
 import {
     facesDuNiveau, composerLaPoignee,
     type NomDEchelle, type DeEchelonne, type ModificateurDeDes,
@@ -534,6 +535,13 @@ export interface DescripteurDeJet {
      * Panache dépensé après le tirage. Le panneau ne compte alors aucune réussite par dé.
      */
     argyropee?: import('./systemes/argyropee').RegleDArgyropee;
+    /**
+     * **Delta Green** — 12/11/2026 (`systemes/deltaGreen.ts`) : le d100 sous la compétence,
+     * ou la caractéristique × 5 ; chances bornées de 1 à 99 % ; réussite critique sur 01 ou
+     * un double réussi, échec critique sur 00 ou un double raté (p. 18, 43-44). Une
+     * compétence à 0 % ne se tente pas (p. 29).
+     */
+    deltaGreen?: import('./systemes/deltaGreen').RegleDeDeltaGreen;
     /**
      * **RuneQuest** — 2026-10-30 (`systemes/runequest.ts`) : le d100 sous l'aptitude
      * gradue en cinq niveaux lus sur les chances MODIFIÉES (critique au vingtième,
@@ -1294,6 +1302,28 @@ export function preparerLeJet(
       Hors bornes, la valeur est ramenée et **remarquée, pas avertie** : un
       avertissement empêche de lancer, et le jet reste juste.
     */
+    /*
+      **Delta Green** (12/11/2026) : une caractéristique se teste à sa valeur × 5 (p. 18), AVANT
+      le bonus ou le malus du meneur, qui s'ajoute aux chances ; une compétence à 0 % ne se
+      tente jamais (p. 29).
+    */
+    const regleDeltaGreen = descripteur.deltaGreen && descripteur.sens === 'sous-ou-egal'
+        && !descripteur.cible && !descripteur.desEchelonnes && !runequest && composantes.length > 0
+        ? descripteur.deltaGreen : undefined;
+    if (regleDeltaGreen) {
+        const caracteristiques = new Set(regleDeltaGreen.caracteristiques ?? []);
+        composantes = composantes.map(c => {
+            if (!caracteristiques.has(c.champ)) {
+                if (c.valeur <= 0) avertissements.push(`${c.label} : une compétence à 0 % ne se tente pas (p. 29) — un test de caractéristique × 5, peut-être.`);
+                return c;
+            }
+            const fois = c.valeur * MULTIPLICATEUR_DE_CARACTERISTIQUE;
+            seuil += fois - c.valeur;
+            remarques.push(`${c.champ} ${c.valeur} × ${MULTIPLICATEUR_DE_CARACTERISTIQUE} = ${fois} % (test de caractéristique, p. 18).`);
+            return { ...c, valeur: fois };
+        });
+    }
+
     const regle = descripteur.modificateurDuSeuil;
     let modificationDuSeuil: JetPrepare['modificationDuSeuil'];
     if (regle && descripteur.sens === 'sous-ou-egal' && composantes.length > 0
@@ -1319,6 +1349,14 @@ export function preparerLeJet(
             seuil += (opposition?.modificateur ?? 0) + situation + (avantage?.seuil ?? 0);
             modificationDuSeuil = { situation, opposition, ...(avantage ? { avantage } : {}) };
         }
+    }
+
+    // Delta Green : les chances modifiées restent entre 1 et 99 % (p. 43), puis l'échelle du livre (p. 44).
+    if (regleDeltaGreen) {
+        const bornees = bornerLesChances(seuil);
+        if (bornees.ramenees) remarques.push(`Chances ramenées à ${bornees.chances} % : elles restent entre 1 et 99 % (p. 43).`);
+        seuil = bornees.chances;
+        echelle = echelleDeDeltaGreen(seuil);
     }
 
     /*
