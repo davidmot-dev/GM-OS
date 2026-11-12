@@ -448,6 +448,7 @@ bonus 0 → **14**, au lieu de 4 si ce dé est lu zéro (p. 46). Preuves :
 `output/campagnes-tests/argyropee/verification-ecarts.json`, cas humains SAN-02 / COM-01.
 Les tests de diagnostic réussis **conservent une non-conformité**, pas un succès de règle.
 La fiche signée et l’arbitrage manuel sont documentés ; import natif et Hub non exécutés.
+✅ **Corrigés le 12/11/2026 (§ 245)** : sous zéro, inconscient à −1 ; le d10 d'initiative lu de 0 à 9. Validés par David le 12/11.
 Autre portée à connaître : `Guigne réglée` cible tous les PJ de la campagne, dont les
 huit `[RECETTE]` du lot, et ajoute trois à l’offrande déjà présente. Ce geste collectif
 n’est jamais présenté comme une restauration locale d’atelier. Corrections éventuelles
@@ -13797,6 +13798,8 @@ bouquins de règles / suppléments »*, puis *« écris le plan »*. **Plan seul
     règles, combat, équipement, corpus, manuel), `tsc -b`, eslint.
 - **Reste** : l'essai de David (« Remplir depuis le corpus » : 27 créatures du livre de base, puis
   poser un Drone et tirer une attaque) ; les autres jeux à la demande.
+- **Bestiaires chargés par David et validés le 12/11** (« les bestiaire d'Alien est bien chargé », « le
+  bestiaire d'Argyropée est chargé »). **Clos** pour Alien et Argyropée.
 
 ### 211 · Shadowrun Anarchy — SR-A1, SR-A2 et SR-A3 — 04/11/2026
 
@@ -14194,7 +14197,8 @@ David : « Argyropée (j'ai fait le thème et la fiche de PJ, le bestaire et l'�
 - **Lot GM-OS Studio du même jour** (Codex, `2026-11-08-argyropee-gmos-studio.md`) : thème accepté sans avertissement, fiche, bannière, identité, sommaire et index — rapporté ici comme sa note le demandait.
 - **Documentation** : `54-Jeu-Argyropee.md` (nouvelle), ligne du jeu et mécanique `argyropee` au 53, synthèse des pilotes.
 - **Vérifié** : `npx vitest run --maxWorkers=4` sur `argyropee.test.ts` (21), `PanneauDeJet.argyropee.test.tsx` (8), `PanneauDeJet.test/barbarians/coc`, `controlesDuPilote*.test.ts`, `electron/ficheDArgyropee.test.ts`, `electron/manuelDesJeux.test.ts`, `corpusDerivable.test.ts` ; `npx tsc -b` ; eslint des fichiers touchés. **Captures** : `e2e/capturesDesJeux.spec.ts --grep Argyrop` passé, sept images relues et versées au manuel.
-- **Reste** : réimporter le pilote 2.0.0 avec « Remplacer » et l'essayer (un test avec métier, une action complexe, une opposition, le Panache, la fiche HTML) ; remplir bestiaire et catalogue depuis les fiches relues.
+- **Reste** (au 08/11) : réimporter le pilote 2.0.0 avec « Remplacer » et l'essayer (un test avec métier, une action complexe, une opposition, le Panache, la fiche HTML) ; remplir bestiaire et catalogue depuis les fiches relues.
+- **Essayé et validé par David le 12/11** (« sont testé c'est bon »), par le pilote 2.1.0 du § 239. **Clos.**
 
 ### 238 · Deux skills : `specifier-un-chantier` et `/mes-skills` — 08/11/2026
 
@@ -14218,6 +14222,7 @@ David : « Peux-tu gérer ceci : l'Exubérance, la Faveur divine, la Guigne, la 
 - **Documentation** : `54-Jeu-Argyropee.md` (journée, Faveur divine, magie, pupitre du Conteur, reste), ligne du jeu et mécanique `argyropee` au 53, synthèse des pilotes.
 - **Vérifié** : `npx vitest run --maxWorkers=4` sur `src/modules/dice`, `src/modules/session/components/fields`, `src/modules/forge/rules`, `electron/manuelDesJeux.test.ts`, `electron/ficheDArgyropee.test.ts` — 158 fichiers, 2 064 essais, dont `PanneauDeJet.argyropee-journee.test.tsx` (12) et `argyropeeAuPupitre.test.tsx` (4) ; `corpusDerivable.test.ts` (145) ; `npx tsc -b` ; eslint des fichiers touchés. `npm run build` puis `capturesDesJeux.spec.ts --grep Argyrop` passé ; neuf images relues et versées au manuel (nouvelles : `jeu-argyropee-journee`, `jeu-argyropee-pupitre`). La relecture des images a trouvé un défaut corrigé avant livraison : le pupitre annonçait un modificateur qu'il n'affichait pas.
 - **Reste** : réimporter **`Argyropee-2.1.0.gmos-driver`** avec « Remplacer » et essayer une Faveur divine, un Réveil, une Exubérance, un sort jusqu'à 7, un test de PNJ au pupitre et « Guigne réglée ». Hors outil : la Faveur divine sur un dé de dégâts ou d'initiative, le Panache sur l'initiative, le Châtiment vermeil.
+- **Essayé et validé par David le 12/11** (« sont testé c'est bon »). **Clos.**
 
 ### 240 · Campagne de recette Argyropée — Les Comptes de la marée — 09/11/2026
 
@@ -14241,6 +14246,8 @@ David : « peux-tu faire une campagne test pour Argyropee? » — plugin GM-OS C
   n’affirment pas la conformité de ces deux règles. Guigne collective à onze PJ documentée.
 - **Reste :** import natif Electron, sauvegarde/rechargement réel, trois Hub réseau et
   matériel NON EXÉCUTÉS (aucun service lancé) ; les 61 cas de David à jouer.
+- **Essayé et validé par David le 12/11** (« sont testé c'est bon »). **Restent ouverts** les deux écarts de combat (santé négative
+  bornée à 0, face zéro du d10 d'initiative), à cadrer à part.
   Lot **PRÉPARÉ**, guides/états/CSV/provenance et ZIP dans `output/campagnes-tests/argyropee/`.
   Sources `argyropee*.mjs`, `.test.ts`, `.test.tsx`, config et emballeur sous
   `outils/campagnes-de-recette/`. Note de reprise du 09/11 liée au sujet. Non commité.
@@ -14256,6 +14263,7 @@ David : « dans le corpus d'Alien j'ai introduit des nouvelles créatures dans l
 - **Vérifié** : `natureDuSujet.test.ts` (nouveau), `supplements.test.ts`, `questionAuCarnet.test.ts`, `livres.test.ts` (le registre réel d'Alien compte quatre livres), dossiers `forge`, `bestiaire`, `equipement`, `session/components/rules` — 76 fichiers ; `npx tsc -b`, eslint ; corpus dérivable. **Sur le vrai carnet** : la nouvelle fiche de règle au titre de 134 caractères (3 553) et l'en-tête des tableaux « Protomorphes » passent.
 - **Second défaut, trouvé à la forge de David** (« je l'ai forgé mais je ne vois pas les nouvelles créatures ») : le carnet avait rendu les profils des quinze créatures annoncées, en trois lots, et la fiche `bestiaire-table-des-creatures.md` n'en gardait aucun. `nettoyerLeLot` (anti-doublons de Barbarians, 07/11) comptait la **liste annoncée** comme des lignes déjà reçues, et reconnaissait les rangées des tables de dés à leur seule valeur (« 1 », « 2 ») : chaque table d'attaques après la première perdait ses lignes. Corrigé (`tableauxParRequete.ts`) : la liste est exclue, une valeur de dé se reconnaît avec le titre de sa table ; le contrôle « annoncées sans profil » et la reprise d'une forge comparent le nom sans l'original entre parenthèses (fausse alerte « 15 sur 15 »). Rejoué sur les vraies réponses du carnet, tirées de `~/mcp_bridge_debug.log` : 0 ligne écartée, puis `remplirLeBestiaire` lit **15 créatures**, leurs attaques, rien d'orphelin. Essais : quatre nouveaux dans `tableauxParRequete.test.ts` ; 76 fichiers, 1 093 essais ; `tsc -b`, eslint.
 - **Reste** : David **reforge** le bestiaire de Building Better Worlds (la fiche actuelle n'a aucun profil), puis Forge › Bestiaire › « Remplir depuis le corpus », en cochant Cœur de Ténèbre et Building Better Worlds. La fiche forgée sera `relu: false` : ses chiffres viennent du carnet (rejouée, la Naïade y a Vitesse 3 quand Cœur de Ténèbre imprime 2). La fiche des armes de Cœur de Ténèbre est lisible par le catalogue mais pas relue.
+- **Essayé et validé par David le 12/11** (« sont testé c'est bon »). **Clos** ; la fiche forgée reste `relu: false`.
 
 ### 242 · Alien — la console d'un PNJ suit sa Santé ; la carrière sans options — 09/11/2026
 
@@ -14265,6 +14273,7 @@ David, captures du Dr Asher Webb à l'appui : « dans alien comment aligner les 
 - **La carte de la galerie des PNJ** (David : « pourquoi il y a des PNJ avec Vitalité (10/10) pour Webb qui est faux, ou Hobbs qui n'a pas de vitalité ») : les deux montraient le 10/10 par défaut, Webb par ses `hp`/`maxHp` de naissance (barre), Hobbs par sa seule santé par défaut, sans `hp` (ligne de texte). `NpcGallery` lit désormais `santePrincipaleDuPnj` (nouvelle, `santePrincipale.ts`, partagée avec `HealthManager`) : « Santé 2 / 2 » lue sur la fiche ; et une santé en points de vie chiffrée donne la même barre, qu'elle vienne des champs `hp` ou du modèle de santé. Essais dans `santePrincipale.test.ts` ; `session`, `combat`, `dice` passent (un essai Shadowrun du panneau, instable sous charge, passe seul).
 - **Carrière** : le champ `type_personnage` du modèle de fiche est un menu **sans options** — la Forge a mis la liste dans le libellé (« Marine, Marshall, Gamin, Camionneur de l'Espace, Colon » ; les deux derniers sont des types de partie, p. 16, pas des carrières). Donnée de David, pas du code : à corriger dans Modèles de fiches › Éditer le modèle (libellé « Carrière », options = les neuf carrières du livre, p. 38-54). La fiche HTML prend `identity.career` en texte libre.
 - **Reste** : essai de David (console du Dr Webb à 2/2, un coup, la fiche suit). Options de la carrière **saisies par David le 09/11** dans le modèle de fiche ; elles voyageront avec le prochain export du pilote.
+- **Essayé et validé par David le 12/11** (« sont testé c'est bon »). **Clos.**
 
 ### 243 · Jets demandés et jets cachés — idées reprises de GM Codex, lot 1 — 11/11/2026
 
@@ -14394,18 +14403,51 @@ et tâches : [`2026-11-11-rappel-de-jet-du.md`](2026-11-11-rappel-de-jet-du.md) 
   (`repondreAuRappel.ts`, `BoutonsDuRappel.tsx`). Essais ajoutés ; `tsc -b`, eslint.
 - **Essayé et validé par David le 11/11** (T7 : « c'est testé c'est bon »), commit `41b8286d`. **Clos.**
 
+### 245 · Argyropée — les deux écarts de combat corrigés : santé sous zéro, d10 d'initiative — 12/11/2026
+
+David, le 12/11 : « fais les écarts de combat d'Argyropée », GM-OS fermé. Ce sont les écarts SAN-02
+et COM-01 de la campagne de recette (§ 240, § 1 bis, `verification-ecarts.json`).
+
+- **Santé sous zéro (SAN-02, livre 2 p. 52-53)** : santé 4, coup de 5 → **−1, inconscient**, et plus
+  0 « K.O ». À 0 tout juste, l'avatar est **à terre**, conscient. La mort reste un geste du Conteur
+  (coup d'achèvement, péril absolu) : aucun total ne la décide. Une seule règle,
+  `session/logic/santeSousZero.ts` (`laSantePasseSousZero`, `marquerSousZero`,
+  `bornerLesPointsDeVie`, `motDeLaSanteSousZero`), et le drapeau `data.sousZero` sur la santé. Ses
+  lecteurs : `HealthInterpreter.handleHP` ; `santePrincipaleDeLaFiche` et `santeAlignee` (la fiche
+  peut porter −1 et fait foi) ; `syncHealthSystem`, `updateCharacterHP`, `updateEntityHP`,
+  `updateEntityHealth` (plus de borne à 0 ni de statut `dead`) ; `handleApplyImpact` pour un PNJ ;
+  Combat-OS : `pointsDeVieApres`, `santeAffichee`, `estHorsDeCombat` (inconscient = hors de combat,
+  à 0 il reste en jeu), et `addCombatant`, qui pose `santeSousZero` sur le combattant. La console de
+  dommage dit « Inconscient » ou « À terre » au lieu de « Critique ». L'Exubérance, qui se refuse
+  sous zéro (p. 86), voit enfin un total négatif. **Les autres jeux ne changent pas.**
+- **Initiative (COM-01, p. 44, 46)** : `resolveInitiativeFormula` reçoit `lireLaFace` ; Combat-OS lui
+  passe `faceDuD10` quand le pilote déclare `jet.argyropee`. Face « 0 » + Agilité 2 + Détection 2 =
+  **4**, et plus 14.
+- **Pilote inchangé, aucun réimport** : la règle se déduit de `jet.argyropee.sante`, déjà dans le
+  2.1.0.
+- **Vérifié** : essais neufs `santeSousZero.test.ts` (14) et `combat/initiativeDArgyropee.test.ts` (4) ;
+  `src/modules/session`, `combat` et `dice` : 352 fichiers / 3 492 réussis ; suite complète 888 fichiers
+  / 10 409 réussis (1 fichier et 4 essais ignorés, comme avant) ; `tsc -b` ; eslint propre. Les essais de
+  diagnostic de `outils/campagnes-de-recette/argyropee.test.ts` appellent le chemin générique sans
+  la règle, et décrivent donc toujours l'ancien comportement.
+- **Reste** : l'essai de David. Depuis la console d'un PJ : santé 4, coup de 5 → −1 « Inconscient »,
+  un soin de 3 → 2. Puis l'initiative dans Combat-OS. Le réveil (test d'Endurance morale au tour
+  suivant, p. 52) reste à la main. La tablette n'a pas été regardée : elle montre −1 sans le mot.
+- **Essayé et validé par David le 12/11** (« c'est bon c'est testé »). **Clos.**
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 181 | **Argyropée — écarts de combat corrigés** | 🟢 § 245 ; sous zéro inconscient (−1) et non mort, d10 d'initiative lu de 0 à 9 ; pilote inchangé —12/11 ; **validé par David le 12/11** | Rien | Rien |
 | 180 | **Rappel d'un jet dû par une jauge (GM Codex, lot 2)** | 🟢 § 244 ; « Au bout, rappeler », Fait / Écarter sur la carte de la jauge, au cockpit et sur la carte 5 s ; à la Table, seulement les personnages qui jouent — **validés par David le 11/11** | Rien ; lot 3 **mis de côté** par David (11/11) | Rien |
 | 179 | **Jets demandés et jets cachés (GM Codex, lot 1)** | 🟢 § 243 ; demande, bannière, jet caché, résultat en messagerie et carte 5 s, Centre de liaison — **validés par David le 11/11, tablette physique comprise** | Rien ; la capture de la bannière au guide 61 | Rien |
-| 178 | **Alien — console d'un PNJ alignée sur sa Santé ; carrière sans options** | 🟠 § 242 ; PNJ humain par défaut, quatre lecteurs alignés —09/11 | Ouvrir le Dr Webb : console à 2/2 ; saisir les options de la carrière | Essai de David |
-| 177 | **Alien — bestiaires des suppléments, Forge des suppléments réparée** | 🟠 § 241 ; Cœur de Ténèbre relu (8 créatures, 4 tables), invites de supplément ramenées sous la limite, espèces reconnues comme créatures —09/11 | Reforger le bestiaire de Building Better Worlds, puis « Remplir depuis le corpus » | Essai de David |
-| 176 | **Campagne de recette Argyropée — Les Comptes de la marée** | 🟠 § 240 ; une campagne, douze séances, six ateliers, 120 tests, deux écarts de règle conservés —09/11 | Lire les anomalies puis importer l’unique .gmos avec le pilote 2.1.0 | Import natif/Hub NON EXÉCUTÉS ; 61 cas humains NON TESTÉS |
-| 175 | **Argyropée — Exubérance, Faveur divine, Guigne, magie, PNJ** | 🟠 § 239 ; journée et magie au panneau, test de PNJ et Guigne au pupitre, pilote 2.1.0, Guigne recorrigée dans le corpus —09/11 | Réimporter `Argyropee-2.1.0.gmos-driver` avec « Remplacer » | Essai de David |
+| 178 | **Alien — console d'un PNJ alignée sur sa Santé ; carrière sans options** | 🟢 § 242 ; PNJ humain par défaut, quatre lecteurs alignés —09/11 ; **validé par David le 12/11** | Rien | Rien |
+| 177 | **Alien — bestiaires des suppléments, Forge des suppléments réparée** | 🟢 § 241 ; Cœur de Ténèbre relu (8 créatures, 4 tables), invites de supplément ramenées sous la limite, espèces reconnues comme créatures —09/11 ; **validé par David le 12/11** | Rien ; la fiche forgée reste `relu: false` | Rien |
+| 176 | **Campagne de recette Argyropée — Les Comptes de la marée** | 🟢 § 240 ; une campagne, douze séances, six ateliers, 120 tests, deux écarts de règle conservés —09/11 ; **validé par David le 12/11** | Rien ; les deux écarts de combat sont corrigés au § 245 | Rien |
+| 175 | **Argyropée — Exubérance, Faveur divine, Guigne, magie, PNJ** | 🟢 § 239 ; journée et magie au panneau, test de PNJ et Guigne au pupitre, pilote 2.1.0, Guigne recorrigée dans le corpus —09/11 ; **validé par David le 12/11** | Rien | Rien |
 | 174 | **Skills `specifier-un-chantier` et `/mes-skills`** | 🟢 § 238 ; liste lue dans les fichiers, AGENTS.md à jour —08/11 | `/mes-skills` | Rien |
-| 173 | **Argyropée fini** | 🟠 § 237 ; test, action complexe, opposition, Panache, pilote 2.0.0, fiche reliée, corpus relu 20/20 (bestiaire 163, équipement 18 tableaux) —08/11 | Réimporter le pilote **2.1.0** (§ 239), qui remplace le 2.0.0 | Essai de David |
+| 173 | **Argyropée fini** | 🟢 § 237 ; test, action complexe, opposition, Panache, pilote 2.0.0, fiche reliée, corpus relu 20/20 (bestiaire 163, équipement 18 tableaux) —08/11 ; **validé par David le 12/11** | Rien (pilote 2.1.0) | Rien |
 | 172 | **Campagne de recette Torg — Les Balises de l’Aube** | 🟢 § 236 ; une campagne, douze séances, six ateliers, import/trois Hub/restauration locale vérifiés —08/11 | Importer l’unique .gmos et ouvrir le cahier | 63 cas humains NON TESTÉS ; paquet complet pour certains cas de cartes |
 | 171 | **Clip Torg et joueur tactile** | 🟢 § 235 ; MP4 2 min 58, huit chapitres, cartes et vrai Hub → MJ vérifiés —07/11 | Ouvrir le MP4 | Rien pour le clip ; appareil physique non essayé |
 | 170 | **Fiche PJ de Torg reliée à GM-OS** | 🟢 § 234 ; raccord et Choc/Blessures validés par David —07/11 | Rien pour ce lot | Rien |
@@ -14432,7 +14474,7 @@ et tâches : [`2026-11-11-rappel-de-jet-du.md`](2026-11-11-rappel-de-jet-du.md) 
 | 149 | **Clip des nouveautés Shadowrun Anarchy** | 🟢 § 213 ; clip MP4 3 min 12 livré et relu, parcours Playwright passé — 04/11 | Ouvrir le MP4 ; rien à développer | Rien |
 | 148 | **Shadowrun — SR-A4/A5/A6** | 🟢 § 212 ; pilote 2.2.0 livré et validé par David — 04/11 | Rien pour les six lots ; clip des nouveautés demandé | Rien |
 | 147 | **Shadowrun — SR-A1/A2/A3** | 🟢 § 211 ; pilote 2.1.0 livré et validé par David — 04/11 | Rien pour ce lot ; choisir SR-A4/A5/A6 séparément | Rien pour SR-A1/A2/A3 |
-| 146 | **Le bestiaire du pilote** | 🟠 § 210 ; étapes A à E validées le 05/11 ; le bestiaire du livre de base d'Alien transcrit (27 créatures reliées aux tables du jeu) et deux défauts de lecture corrigés — 06/11 | Remplir le bestiaire depuis le livre de base, poser un Drone | Essai de David |
+| 146 | **Le bestiaire du pilote** | 🟢 § 210 ; étapes A à E validées le 05/11 ; le bestiaire du livre de base d'Alien transcrit (27 créatures reliées aux tables du jeu) et deux défauts de lecture corrigés — 06/11 ; **chargé par David, Alien et Argyropée, le 12/11** | Rien ; les autres jeux à la demande | Rien |
 | 145 | **Degenesis — DEG-A5 et DEG-A6** | 🟢 § 209 ; carte « Sporulation et Brûlure » (Germe, exposition, EX, Brûlure, stimulation aux jets, Argus, Potentiel), adversaires sans fiche à deux pistes, pilote 2.3.0, validés par David — 04/11 | Rien : DEG-A1 à DEG-A6 tous faits ; ensuite un autre lot (COC, Shadowrun) | Rien |
 | 144 | **Degenesis — DEG-A3 et DEG-A4** | 🟢 § 208 ; carte « Maxima » (branches, Égo maximal), aide, combinaison, confrontation et action complexe livrées, pilote 2.2.0, validées par David — 04/11 | Rien pour DEG-A1 à DEG-A4 ; ensuite DEG-A5 et DEG-A6 | Rien |
 | 143 | **Degenesis — DEG-A1 et DEG-A2** | 🟢 § 207 ; round (Égo payé une fois, actions), défense passive ou active, dégâts nets livrés, pilote 2.1.0, validés par David — 04/11 | Rien pour DEG-A1 et DEG-A2 ; ensuite DEG-A3 et DEG-A4 | Rien |

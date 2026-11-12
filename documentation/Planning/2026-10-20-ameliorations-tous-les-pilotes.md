@@ -147,7 +147,7 @@ Avant toute modification du code applicatif, vérifier avec David que GM-OS est 
 | Pilote | Avancement | État de la connaissance | Première amélioration ou prochaine étape proposée |
 | --- | --- | --- | --- |
 | [Alien](#alien) | 🟢 11 · 🟠 0 · 🔴 0 | A0–A9 validés par David ; **A10, préréglages et remise à zéro des modules, livré et essayé le 23/10** (registre § 163) ; campagne de recette avec trois modules préparés livrée le 26/10 (§ 180) | Essayer les 74 cas du cahier ; GM-05 transversal signalé ; aucun lot A0–A10 à refaire |
-| [Argyropée](#argyropée) | 🟢 0 · 🟠 9 · 🔴 2 | **Pilote 2.1.0 le 09/11** (§ 237, § 239) : test d10 de 0 à 9, Panache, action complexe/opposition, Faveur, journée, magie, PNJ/Guigne ; fiche HTML reliée, corpus relu 20/20. **Campagne de recette préparée** (§ 240) : douze séances, six ateliers, 61 cas humains, 120 tests en mémoire. **Deux écarts reproduits :** santé négative bornée à0 et initiative générique lisant10 au lieu de0 | Lire les anomalies du lot, vérifier le pilote2.1.0 et importer l’unique .gmos ; import natif/Hub NON EXÉCUTÉS, essai de David attendu |
+| [Argyropée](#argyropée) | 🟢 11 · 🟠 0 · 🔴 0 | **Pilote 2.1.0 le 09/11** (§ 237, § 239) : test d10 de 0 à 9, Panache, action complexe/opposition, Faveur, journée, magie, PNJ/Guigne ; fiche HTML reliée, corpus relu 20/20. **Campagne de recette préparée** (§ 240) : douze séances, six ateliers, 61 cas humains, 120 tests en mémoire. **Deux écarts corrigés le 12/11 (§ 245)** : sous zéro, inconscient à −1 ; d10 d'initiative lu de 0 à 9 | **Pilote 2.1.0, campagne de recette et bestiaire validés par David le 12/11.** Corrections du combat (§ 245) **validées le 12/11** ; rien ne reste à essayer |
 | [Barbarians of Lemuria](#barbarians-of-lemuria) | 🟢 5 · 🟠 0 · 🔴 0 | **Nouveau pilote, fini le 27/10**, 2.0.0 (registre § 184) : corpus relu, jet contre 9 avec dés de bonus/malus et héroïsme, fiche HTML au moteur 19 reliée, thème contrôlé | Réimport avec Remplacer et essai de David |
 | [Blade Runner](#blade-runner) | 🟢 4 · 🟠 0 · 🔴 0 | **Fini le 24/10, pilote 2.0.0** (registre § 174) : audit, pupitre, mort et stabilisation, guérison, et au-delà ; **essayé par David le 25/10** | Rien : tous les lots faits |
 | [Chroniques Oubliées Contemporain](#chroniques-oubliées-contemporain) | 🟢 16 · 🟠 0 · 🔴 0 | **Pilote 2.2.0, 04/11 (§ 215)** : COC-A1 à COC-A6 réalisés et **validés par David le 05/11** ; A4 héroïsme hors test et Légende, A5 choc/séquelle persistants sans seconde jauge, A6 premier ensemble de cinq capacités contextuelles. Deux variantes d20/3d6 ; corpus 19/19 relu, 9 871 tests et deux parcours Electron réussis, neuf captures 2.2 relues (clôture le 05/11). Les acquis 2.0 restent validés depuis le 01/11  ; [clip avec joueur tactile (3 min 52)](../../output/clips/coc-mecanismes-et-tablette.mp4) livré le 06/11 (§227) |
@@ -271,7 +271,13 @@ d'attaques. Le chapitre 11 est transcrit depuis le PDF, tableau par tableau (p. 
 Xénomorphes XX121, autres espèces), chacune reliée à l'une des onze tables d'attaques du jeu par
 la nouvelle colonne « Table d'attaques ». Corrigés en même temps : le faux écart sur des attaques
 identiques, et la reconnaissance d'un en-tête qui *commence* par « Créature ». **Essai de David
-attendu** : « Remplir depuis le corpus » dans la section Bestiaire, puis poser un Drone.
+attendu** : « Remplir depuis le corpus » dans la section Bestiaire, puis poser un Drone. **Chargé par
+David, validé le 12/11.**
+
+**Bestiaires des suppléments et console des PNJ, livrés le 09/11, validés par David le 12/11**
+(registre § 241, § 242) : Cœur de Ténèbre relu (8 créatures, 4 tables), la Forge des suppléments
+ramenée sous la limite du carnet et le bestiaire de Building Better Worlds reforgé (fiche `relu: false`) ;
+la console de dommage d'un PNJ suit sa Santé (Dr Webb à 2/2), carrières complétées par David.
 
 **Cas témoin :** des six suivis d'une Panique effective de 10 annulent l'action ; un Point
 de Récit ne doit pas contourner cette conséquence. L'export réel a été vérifié le 20/10.
@@ -288,17 +294,17 @@ pilote **2.1.0** (`Export Dirvers/corriges/Argyropee-2.1.0.gmos-driver`, `outils
 
 | Priorité | Amélioration | Réalisation |
 | --- | --- | --- |
-| 🟠 P0 | Le test : le pilote forgé comparait le d10 seul à « compétence + métier » et exigeait dix réussites d'un dé — tout échouait | **Livré le 08/11** : `jet.argyropee`, d10 lu de 0 à 9 + compétence + métier choisi au jet + modificateur cumulé + entraide, cinq paliers ; 0 ou moins échec critique (décision de David, p. 44-45) |
-| 🟠 P1 | Le Panache au jet | **Livré le 08/11** : après le tirage, +1 au dé par point jusqu'à 9, coût de chaque palier affiché, écrit sur la fiche (p. 84-85) |
-| 🟠 P1 | Action complexe et test en opposition | **Livré le 08/11** à la demande de David : moyenne arrondie à l'inférieur et rattrapage sur la meilleure compétence ; manches jusqu'à 5 succès, critique compté double, égalité (p. 46) |
-| 🟠 P1 | La fiche HTML reliée | **Livré le 08/11** : moteur 25, fiche GM-OS sur les 128 clés (32 compétences, 5 métiers), Châtiment vermeil et pécule côté GM-OS ; initiative 1d10 + Agilité + Détection |
-| 🟠 P0 avant extension | Corpus relu contre le livre | **Fait le 08/11** : 20/20, quinze fiches corrigées ; bestiaire (163 profils) et équipement (18 tableaux, 349 objets) réécrits d'après le livre |
-| 🟠 P2 | Remplir bestiaire et catalogue | Fiches prêtes et lues sans perte par `remplirLeBestiaire` et `remplirDepuisLesFiches` ; **à verser par David** depuis la Forge |
-| 🟠 P1 | La journée, la Faveur divine, l'Exubérance, la magie | **Livré le 09/11** à la demande de David : Faveur divine cochée avant le jet (deux d10, le meilleur, quota sur Sciences religieuses, p. 81) ; Réveil 1d10 + 10 + bonus (+ la Guigne), repas +3, collation +1 (p. 84-85) ; Exubérance, 3 points au moins et conscient, second clic (p. 85-86) ; sorts de la fiche à 1 ou 2 points, double humeur, d100 de la silenciada au sort qui porte le combat à 7 (décision de David, p. 127, 136) |
-| 🟠 P1 | Les PNJ et la Guigne au pupitre | **Livré le 09/11** : mode « Argyropée — test de PNJ » (1d6, ÷ 2 hors compétence privilégiée, + carrière + modificateur, p. 185) et adversaire PNJ en opposition ; carte « La Guigne » : Panache dépensé aux tests depuis le réveil, sans alerte, « Guigne réglée » +3 au prochain réveil (p. 177 — le corpus disait « à la fin de la péripétie », recorrigé) |
-| 🟠 Essai | Campagne complète de recette | **Préparée le 09/11, § 240** : Les Comptes de la marée, un seul `.gmos`, douze séances, trois héros pour les joueurs existants, huit `[RECETTE]`, six ateliers et 61 cas humains NON TESTÉS ; 120 tests en mémoire, médias décodés et relus. Import natif Electron et Hub réseau NON EXÉCUTÉS |
-| 🔴 P1 | Santé négative dans le chemin de combat générique | **Écart reproduit le 09/11** : santé4 moins impact5 →0 et état générique `dead`, au lieu de−1 inconscient sans mort automatique. `HealthInterpreter.handleHP`, preuve `verification-ecarts.json`, cas SAN-02 ; suivi signé et états à arbitrer, aucune correction livrée |
-| 🔴 P1 | Face zéro du d10 d’initiative générique | **Écart reproduit le 09/11** : face moteur10 + Agilité2 + Détection2 →14, au lieu de4. `CombatRules.resolveInitiativeFormula`, même preuve, cas COM-01 ; correction manuelle du dé, aucune correction applicative livrée |
+| 🟢 P0 | Le test : le pilote forgé comparait le d10 seul à « compétence + métier » et exigeait dix réussites d'un dé — tout échouait | **Livré le 08/11** : `jet.argyropee`, d10 lu de 0 à 9 + compétence + métier choisi au jet + modificateur cumulé + entraide, cinq paliers ; 0 ou moins échec critique (décision de David, p. 44-45) |
+| 🟢 P1 | Le Panache au jet | **Livré le 08/11** : après le tirage, +1 au dé par point jusqu'à 9, coût de chaque palier affiché, écrit sur la fiche (p. 84-85) |
+| 🟢 P1 | Action complexe et test en opposition | **Livré le 08/11** à la demande de David : moyenne arrondie à l'inférieur et rattrapage sur la meilleure compétence ; manches jusqu'à 5 succès, critique compté double, égalité (p. 46) |
+| 🟢 P1 | La fiche HTML reliée | **Livré le 08/11** : moteur 25, fiche GM-OS sur les 128 clés (32 compétences, 5 métiers), Châtiment vermeil et pécule côté GM-OS ; initiative 1d10 + Agilité + Détection |
+| 🟢 P0 avant extension | Corpus relu contre le livre | **Fait le 08/11** : 20/20, quinze fiches corrigées ; bestiaire (163 profils) et équipement (18 tableaux, 349 objets) réécrits d'après le livre |
+| 🟢 P2 | Remplir bestiaire et catalogue | Fiches prêtes et lues sans perte par `remplirLeBestiaire` et `remplirDepuisLesFiches` ; **à verser par David** depuis la Forge ; **bestiaire versé par David, validé le 12/11** |
+| 🟢 P1 | La journée, la Faveur divine, l'Exubérance, la magie | **Livré le 09/11** à la demande de David : Faveur divine cochée avant le jet (deux d10, le meilleur, quota sur Sciences religieuses, p. 81) ; Réveil 1d10 + 10 + bonus (+ la Guigne), repas +3, collation +1 (p. 84-85) ; Exubérance, 3 points au moins et conscient, second clic (p. 85-86) ; sorts de la fiche à 1 ou 2 points, double humeur, d100 de la silenciada au sort qui porte le combat à 7 (décision de David, p. 127, 136) |
+| 🟢 P1 | Les PNJ et la Guigne au pupitre | **Livré le 09/11** : mode « Argyropée — test de PNJ » (1d6, ÷ 2 hors compétence privilégiée, + carrière + modificateur, p. 185) et adversaire PNJ en opposition ; carte « La Guigne » : Panache dépensé aux tests depuis le réveil, sans alerte, « Guigne réglée » +3 au prochain réveil (p. 177 — le corpus disait « à la fin de la péripétie », recorrigé) |
+| 🟢 Essai | Campagne complète de recette | **Préparée le 09/11, § 240** : Les Comptes de la marée, un seul `.gmos`, douze séances, trois héros pour les joueurs existants, huit `[RECETTE]`, six ateliers et 61 cas humains NON TESTÉS ; 120 tests en mémoire, médias décodés et relus. Import natif Electron et Hub réseau NON EXÉCUTÉS à la préparation ; **essayée et validée par David le 12/11** |
+| 🟢 P1 | Santé négative dans le chemin de combat générique | **Corrigé le 12/11 (registre § 245)** : santé 4, coup de 5 → −1 inconscient, sans mort automatique ; à 0, « À terre » (p. 52-53). Une règle, `session/logic/santeSousZero.ts`, lue par le moteur de santé, la fiche, la console et Combat-OS ; pilote inchangé. Écart reproduit le 09/11 (SAN-02, `verification-ecarts.json`). **Essayé et validé par David le 12/11** |
+| 🟢 P1 | Face zéro du d10 d’initiative générique | **Corrigé le 12/11 (registre § 245)** : `resolveInitiativeFormula` lit la face par `faceDuD10` quand le pilote déclare `jet.argyropee` ; face « 0 » + Agilité 2 + Détection 2 = 4 (p. 44, 46). Écart reproduit le 09/11 (COM-01). **Essayé et validé par David le 12/11** |
 
 **Vérifié le 08/11 :** essais ciblés (logique 21, panneau 8, contrôle du pilote, fiche reliée, manuel, corpus dérivable), `npx tsc -b`, eslint ; `verifier_pilote.mjs` : zéro constat. **Captures** : e2e des captures passé le 08/11, sept images au manuel.
 **Vérifié le 09/11 :** logique 31, panneau de la journée 12, pupitre 4, contrôle du pilote 3 ; dossiers `dice`, `fields`, `forge/rules`, manuel et fiche reliée — 158 fichiers, 2 064 essais ; `npx tsc -b`, eslint ; `verifier_pilote.mjs` 2.1.0 : zéro constat ; captures repassées, neuf images au manuel.
@@ -309,9 +315,9 @@ registre § 240. Injection Nexus et restauration par le magasin **en mémoire**,
 sans les convertir en règles conformes. `Guigne réglée` touche tous les onze personnages
 du lot et ajoute trois à l’offrande existante : geste collectif, jamais reset local d’atelier.
 
-**Reste :** l’essai de David sur le 2.1.0 ; import natif et Hub du nouveau lot non exécutés,
-61 cas humains NON TESTÉS. Deux écarts de combat à cadrer séparément : santé négative et
-lecture zéro de l’initiative. Hors outil, par choix : le Châtiment vermeil, la Faveur divine sur un dé de dégâts ou d'initiative, le Panache sur l'initiative (compté par la Guigne, à ajouter à la main).
+**Essayé et validé par David le 12/11** (« sont testé c'est bon ») : le pilote 2.1.0 (registre § 237,
+§ 239) et la campagne de recette (§ 240) ; le bestiaire versé. **Corrigés le 12/11 (§ 245)** : la santé
+sous zéro (inconscient à −1) et la face zéro du d10 d'initiative. **Essayées et validées par David le 12/11.** Hors outil, par choix : le Châtiment vermeil, la Faveur divine sur un dé de dégâts ou d'initiative, le Panache sur l'initiative (compté par la Guigne, à ajouter à la main).
 
 **Sujets à auditer :** la Faveur divine sur les dés de dégâts ; le Panache dépensé à l'initiative de Combat-OS ; le malus de portée propre à chaque arme ; la lecture du domaine de magie sur la fiche HTML (double humeur).
 
