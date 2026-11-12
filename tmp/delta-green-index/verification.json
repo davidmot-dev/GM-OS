@@ -1,0 +1,126 @@
+{
+  "table_des_matieres": {
+    "entrees": 93,
+    "premiere": [
+      "Vue d’ensemble",
+      "4"
+    ],
+    "derniere": [
+      "Fiches de personnage",
+      "190"
+    ]
+  },
+  "index": {
+    "entrees": 791,
+    "par_page": {
+      "179": 147,
+      "180": 166,
+      "181": 188,
+      "182": 165,
+      "183": 125
+    },
+    "colonnes": [
+      {
+        "page": 179,
+        "colonne": 1,
+        "premiere_ligne": "activité personnelles Voir vie quotidienne",
+        "derniere_ligne": "Attaches 36, 38, 74, 75, 78–81, 88, 89, 91"
+      },
+      {
+        "page": 179,
+        "colonne": 2,
+        "premiere_ligne": "Attache avec Delta Green 37",
+        "derniere_ligne": "action : viser 50, 53, 94, 102"
+      },
+      {
+        "page": 179,
+        "colonne": 3,
+        "premiere_ligne": "actions multiples ultiples Voir actions",
+        "derniere_ligne": "113, 121, 124, 137"
+      },
+      {
+        "page": 180,
+        "colonne": 1,
+        "premiere_ligne": "explosifs 22–23, 26, 28, 29, 33, 56, 98,",
+        "derniere_ligne": "(FORECON) 137"
+      },
+      {
+        "page": 180,
+        "colonne": 2,
+        "premiere_ligne": "interpréter un Marine 136",
+        "derniere_ligne": "affaires européennes 151"
+      },
+      {
+        "page": 180,
+        "colonne": 3,
+        "premiere_ligne": "affaires politico-militaires 151",
+        "derniere_ligne": "bulle de confinement 170"
+      },
+      {
+        "page": 181,
+        "colonne": 1,
+        "premiere_ligne": "camelote 93",
+        "derniere_ligne": "professions suggérées 113"
+      },
+      {
+        "page": 181,
+        "colonne": 2,
+        "premiere_ligne": "science et technologie 110",
+        "derniere_ligne": "spécial, Officiel (agent du gouvernement)"
+      },
+      {
+        "page": 181,
+        "colonne": 3,
+        "premiere_ligne": "jet de chance 44, 78, 79, 80, 81, 86,",
+        "derniere_ligne": "poison Voir dégâts"
+      },
+      {
+        "page": 182,
+        "colonne": 1,
+        "premiere_ligne": "poursuite 45",
+        "derniere_ligne": "ingénieur 20"
+      },
+      {
+        "page": 182,
+        "colonne": 2,
+        "premiere_ligne": "Intelligence) 121",
+        "derniere_ligne": "armure Voir équipement"
+      },
+      {
+        "page": 182,
+        "colonne": 3,
+        "premiere_ligne": "couvert 33, 50–51, 53–54, 57, 58, 59,",
+        "derniere_ligne": "de l’identité 71"
+      },
+      {
+        "page": 183,
+        "colonne": 1,
+        "premiere_ligne": "Troubles psychiques : trouble du",
+        "derniere_ligne": "Groupe de forces spéciales 139, 141"
+      },
+      {
+        "page": 183,
+        "colonne": 2,
+        "premiere_ligne": "Institut de recherche médicale de l’U.S.",
+        "derniere_ligne": "vitesse 95, 99"
+      },
+      {
+        "page": 183,
+        "colonne": 3,
+        "premiere_ligne": "vie quotidienne 76–81",
+        "derniere_ligne": "repousser la folie 73–75"
+      }
+    ]
+  },
+  "integralite_caracteres_hors_espaces": true,
+  "sources": [
+    {
+      "fichier": "docs\\Reference\\Delta Green\\dgmanuel_de_lagent_Index.pdf",
+      "sha256": "d42a22e8b5cbf21a578e4816c5549270cc892450950c82e4c8f966e8a9f19864"
+    },
+    {
+      "fichier": "docs\\Reference\\Delta Green\\dgmanuel_de_lagent_TOC.pdf",
+      "sha256": "5aaab8203b732321aac27b9679ad79803b84538aba8ec2001ceaaf464ce48112"
+    }
+  ]
+}

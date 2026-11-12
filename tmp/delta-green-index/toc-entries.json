@@ -1,0 +1,374 @@
+[
+  [
+    "Vue d’ensemble",
+    "4"
+  ],
+  [
+    "Le Monde de Delta Green",
+    "6"
+  ],
+  [
+    "Qu’est-ce que Delta Green ?",
+    "7"
+  ],
+  [
+    "Les fondamentaux",
+    "8"
+  ],
+  [
+    "Comment jouer",
+    "9"
+  ],
+  [
+    "Comment interpréter un Agent",
+    "10"
+  ],
+  [
+    "Agents",
+    "12"
+  ],
+  [
+    "Description d'un Agent",
+    "14"
+  ],
+  [
+    "Quand, où, pourquoi",
+    "14"
+  ],
+  [
+    "Création d’Agent",
+    "14"
+  ],
+  [
+    "Caractéristiques et attributs dérivés",
+    "16"
+  ],
+  [
+    "Touches finales",
+    "16"
+  ],
+  [
+    "Profession, compétences et Attaches",
+    "16"
+  ],
+  [
+    "Professions supplémentaires",
+    "23"
+  ],
+  [
+    "Les règles",
+    "40"
+  ],
+  [
+    "Utilisation des compétences",
+    "42"
+  ],
+  [
+    "Réussite et échec",
+    "44"
+  ],
+  [
+    "Jet de Chance",
+    "44"
+  ],
+  [
+    "Durée d’action",
+    "44"
+  ],
+  [
+    "Tests en opposition",
+    "45"
+  ],
+  [
+    "Poursuite",
+    "45"
+  ],
+  [
+    "Points de Volonté",
+    "47"
+  ],
+  [
+    "Combat",
+    "48"
+  ],
+  [
+    "Le tour",
+    "50"
+  ],
+  [
+    "Jets d’attaque",
+    "52"
+  ],
+  [
+    "Jets de défense",
+    "53"
+  ],
+  [
+    "Dégâts",
+    "54"
+  ],
+  [
+    "Valeur de létalité",
+    "57"
+  ],
+  [
+    "Protection au combat",
+    "58"
+  ],
+  [
+    "Autres menaces",
+    "60"
+  ],
+  [
+    "Conséquences",
+    "63"
+  ],
+  [
+    "Santé mentale",
+    "64"
+  ],
+  [
+    "Indications pour les pertes de SAN",
+    "66"
+  ],
+  [
+    "Une perte qui en dit long",
+    "66"
+  ],
+  [
+    "La SAN en péril",
+    "66"
+  ],
+  [
+    "Folie et troubles",
+    "68"
+  ],
+  [
+    "Folie temporaire",
+    "69"
+  ],
+  [
+    "Troubles psychiques",
+    "69"
+  ],
+  [
+    "Folie permanente",
+    "73"
+  ],
+  [
+    "Repousser la folie",
+    "73"
+  ],
+  [
+    "Guérison",
+    "75"
+  ],
+  [
+    "Vie quotidienne",
+    "76"
+  ],
+  [
+    "Ce qui a changé",
+    "78"
+  ],
+  [
+    "Activités personnelles",
+    "78"
+  ],
+  [
+    "Licenciement",
+    "80"
+  ],
+  [
+    "Poursuites judiciaires",
+    "80"
+  ],
+  [
+    "Équipements & Véhicules",
+    "82"
+  ],
+  [
+    "Catégories de dépense",
+    "84"
+  ],
+  [
+    "Paré pour l’opération",
+    "84"
+  ],
+  [
+    "Requête officielle",
+    "86"
+  ],
+  [
+    "Piocher dans ses économies",
+    "89"
+  ],
+  [
+    "Utiliser des fonds illicites",
+    "91"
+  ],
+  [
+    "Ressources réglementées",
+    "91"
+  ],
+  [
+    "Armes",
+    "92"
+  ],
+  [
+    "Équipements de protection",
+    "94"
+  ],
+  [
+    "Véhicules",
+    "94"
+  ],
+  [
+    "Autres biens et services",
+    "95"
+  ],
+  [
+    "Tables d’équipement",
+    "96"
+  ],
+  [
+    "Agences fédérales",
+    "104"
+  ],
+  [
+    "Aperçu",
+    "106"
+  ],
+  [
+    "Professions suggérées",
+    "106"
+  ],
+  [
+    "Le FBI (Federal Bureau of Investigation)",
+    "109"
+  ],
+  [
+    "La DEA (Drug Enforcement Administration)",
+    "114"
+  ],
+  [
+    "L’ICE (Immigration and Customs Enforcement)",
+    "117"
+  ],
+  [
+    "L’U.S. Marshals Service (USMS)",
+    "121"
+  ],
+  [
+    "Branches du département de la Défense (DoD pour Department of Defense)",
+    "125"
+  ],
+  [
+    "U.S. Army (armée de Terre des États-Unis)",
+    "129"
+  ],
+  [
+    "U.S. Air Force (USAF)",
+    "131"
+  ],
+  [
+    "U.S. Navy (USN)",
+    "133"
+  ],
+  [
+    "Corps des Marines des États-Unis (USMC)",
+    "135"
+  ],
+  [
+    "Commandement des opérations spéciales (SOCOM)",
+    "138"
+  ],
+  [
+    "Central Intelligence Agency (CIA)",
+    "146"
+  ],
+  [
+    "Department of State (DOS)",
+    "150"
+  ],
+  [
+    "Center for Disease Control and Prevention (CDC)",
+    "156"
+  ],
+  [
+    "Environmental Protection Agency (EPA)",
+    "159"
+  ],
+  [
+    "Annexes",
+    "162"
+  ],
+  [
+    "Passer inaperçu",
+    "163"
+  ],
+  [
+    "Surveillance",
+    "163"
+  ],
+  [
+    "Poursuite",
+    "166"
+  ],
+  [
+    "Entrée par effraction",
+    "166"
+  ],
+  [
+    "Fouille et arrestation",
+    "166"
+  ],
+  [
+    "Interrogatoire",
+    "166"
+  ],
+  [
+    "Sources",
+    "167"
+  ],
+  [
+    "Soins médicaux",
+    "167"
+  ],
+  [
+    "Manipulation de preuves",
+    "167"
+  ],
+  [
+    "Se débarrasser d’un corps",
+    "167"
+  ],
+  [
+    "Communications",
+    "168"
+  ],
+  [
+    "Planques et Box Verts",
+    "169"
+  ],
+  [
+    "Glossaire",
+    "170"
+  ],
+  [
+    "Sources d’inspiration",
+    "178"
+  ],
+  [
+    "Index",
+    "179"
+  ],
+  [
+    "Remerciements",
+    "184"
+  ],
+  [
+    "Fiches de personnage",
+    "190"
+  ]
+]

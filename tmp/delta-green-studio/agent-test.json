@@ -1,0 +1,86 @@
+{
+  "format": "interactive-character-sheet",
+  "version": 1,
+  "sheet": "delta-green-agent-fr",
+  "data": {
+    "skills": {
+      "anthropology": 0,
+      "archeology": 0,
+      "firearms": 62,
+      "melee": 30,
+      "heavy_weapons": 0,
+      "art": 0,
+      "artillery": 0,
+      "craft": 0,
+      "athletics": 30,
+      "bureaucracy": 10,
+      "surgery": 0,
+      "unarmed": 40,
+      "accounting": 10,
+      "drive": 20,
+      "forensics": 0,
+      "criminology": 10,
+      "disguise": 10,
+      "stealth": 10,
+      "law": 0,
+      "heavy_machinery": 10,
+      "ride": 10,
+      "dodge": 30,
+      "demolitions": 0,
+      "history": 10,
+      "computer_science": 0,
+      "medicine": 0,
+      "swim": 20,
+      "occult": 10,
+      "navigate": 10,
+      "persuade": 20,
+      "pharmacy": 0,
+      "pilot": 0,
+      "first_aid": 10,
+      "psychotherapy": 10,
+      "search": 20,
+      "sigint": 0,
+      "humint": 10,
+      "science": 0,
+      "military_science": 0,
+      "survival": 10,
+      "alertness": 20,
+      "unnatural": 7
+    },
+    "attributes": {
+      "strength_x5": 55,
+      "constitution_x5": 65,
+      "dexterity_x5": "",
+      "intelligence_x5": "",
+      "power_x5": 60,
+      "charisma_x5": "",
+      "strength": 11,
+      "constitution": 13,
+      "power": 12
+    },
+    "health": {
+      "willpower_max": 12,
+      "sanity_max": 92,
+      "hp_max": 12,
+      "hp": 10,
+      "sanity": 57,
+      "breaking_point": 45
+    },
+    "identity": {
+      "name": "AGENT MERCIER",
+      "profession": "Analyste du renseignement"
+    },
+    "bonds": {
+      "0": {
+        "name": "Camille, sœur",
+        "score": 11
+      }
+    },
+    "experience": {
+      "firearms": true
+    },
+    "adaptation": {
+      "violence": 2
+    }
+  }
+}
