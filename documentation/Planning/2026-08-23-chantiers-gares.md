@@ -14511,11 +14511,74 @@ nouveau, page du PDF = imprimée + 1). Suite du § 246 (préparation graphique d
   menu. Puis les captures du jeu et la relecture du corpus. Hors outil : perte de SAN,
   inconscience à 2 PV, létalité, oppositions.
 
+### 248 · Delta Green — campagne de recette « Les dossiers de la pluie » — 12/11/2026
+
+Demande de David : « GM-OS Campagnes de test pour Delta Green ». Une campagne complète,
+pilote corrigé 2.0.1 inchangé ; [note et liens de livraison](2026-11-12-campagne-recette-delta-green.md).
+
+- **Livré :** un `.gmos`, douze séances prévues, quatre actes narratifs et cinq ateliers hors
+  fiction ; trois héros nouveaux pour les trois profils autorisés, trois `[RECETTE]`, dix PNJ,
+  douze lieux et douze indices. Fins alternatives, conséquences et sources reproductibles.
+- **Cahier :** 36 cas NON TESTÉS, matrice, CSV, états de référence et restauration manuelle
+  des seuls champs d’essai. Aucun remplacement global présenté comme reset local.
+- **Vérifié :** 59 essais automatiques, injection Nexus en mémoire conservant anciens PJ et
+  avatars, caviardage GM-05 complet/partiel, structure portable, 25 images et un WAV décodés
+  hors ligne, rendus examinés. Les tests en mémoire ne prouvent pas l’import Electron.
+- **Reste :** import natif, sauvegarde/rechargement réel, Hub 360/768/1180 px et recette humaine.
+  Corpus toujours non relu ; SAN, Attaches, soins, létalité et progression manuels. Aucun
+  service lancé ni profil privé utilisé ; pas de modification du code applicatif.
+
+### 249 · Delta Green — les cinq suites du pilote 2.1.0 — 13/11/2026
+
+David : « faire les améliorations de Delta Green du fichier améliorations tous les pilotes ».
+GM-OS fermé confirmé ; accord de compléter ces documents en conservant le travail du § 248.
+[Bilan, périmètre et vérifications](2026-11-13-delta-green-ameliorations.md).
+
+**Validation de David — 13/11/2026 :** « ok c’est bon tout est testé, corrige la doc, commit et pousse ». Les fonctions du pilote 2.1.0, la perte directe de SAN et les quatre boutons harmonisés sont validés. La relecture du corpus reste distincte : 1 fiche sur 18 relue ; les 17 autres ne sont pas déclarées relues par cet essai.
+
+- **Réalisé :** perte SAN réussite/échec et extrêmes critiques, rupture et nouveau SR,
+  rappels des folies/troubles, accoutumance avec coût permanent ; inconscience à 1–2 PV,
+  mort à 0 et absence de faux décès au journal ; létalité/critique des sept armes et
+  complications au choix ; opposition, expérience cochée et D4 après la partie ; mots du livre
+  conservés jusque dans le journal et les résultats distants.
+- **Pilote 2.1.0 :** mêmes identifiants et compétences ; 213 champs, 210 correspondances HTML,
+  dont 47 cases d’amélioration, 23 absents motivés. `Export Dirvers/corriges/Delta-Green-2.1.0.gmos-driver`,
+  générateur `outils/delta-green/finir_delta_green.mjs`, réimport avec **Remplacer**.
+- **Corpus :** 1/18 relue, accoutumance corrigée contre p. 66, 73–74 ; les autres restent non relues.
+  Livre lu en place sur le NAS, sans copie ni texte intégral conservé.
+- **Vérifié :** contrôle du pilote sans constat ; 301 essais ciblés / 17 fichiers verts.
+  Suite générale : 10 478 réussis, un contrôle d’images absent au départ puis corrigé et
+  repassé (manuel 28/28) ; 25 nouveaux essais repris après les derniers ajustements.
+  Types, lint et build réussis ; fiche acceptée 0/0 ; parcours Electron **1/1**, six captures relues,
+  conservation des valeurs après rechargement. Voir le bilan pour la portée exacte.
+- **Documentation et captures complétées le 13/11** (Claude Code, David : « Fais la doc et les
+  captures ») : la scène Delta Green de `e2e/capturesDesJeux.spec.ts` prend cinq images de plus —
+  menu avec la spécialité, FOR × 5 avec malus (étape « Résultat » masquée, elle aurait gardé le
+  jet précédent), réussite critique à 33, pupitre en échec critique à 55, fiche d'Agent HTML —
+  dés fixés. Onze captures relues, toutes à leur section de la page 54 (trois étaient produites
+  sans être affichées ; la létalité passe dans « Le combat »). `npm run build`, parcours 1/1,
+  documentation copiée avant.
+- **Correction de la perte directe après essai de David, 13/11** : « SAN 60 SR 48 POU 12 Perte -5 ».
+  La saisie ne reconnaissait que les barèmes avec `/` ; les montants directs (`5`, `-5`, `−5`) et
+  un dé seul sont désormais acceptés. Les refus sont affichés près du bouton, sans consommer le jet.
+  Cas exact : SAN 55, SR 48, une application ; rechargement conservé. 25 essais ciblés et Electron
+  `e2e/perteSanDeltaGreen.spec.ts` 1/1, types/lint/build verts. Correction applicative, pilote 2.1.0
+  conservé ; nouvel essai validé par David le 13/11. Le parcours de captures de l’autre travail est conservé.
+- **Boutons harmonisés, 13/11, à la demande de David** : perte de SAN et amélioration en boutons
+  pleins comme « Lancer », dé adverse et consignation en boutons bordés comme « Demander à ».
+  Même typographie, cible tactile et états ; règles conservées. Sept essais de commande, lint,
+  types/build et deux parcours Playwright **2/2** réussis ; captures du manuel actualisées et relues.
+- **Reste :** relecture des 17 autres fiches et catalogue à instruire ; aucun essai fonctionnel du pilote en attente sur la validation globale de David.
+  La campagne/cahier du § 248 restent historiques, aucun écrasement de leurs fichiers.
+  Aucun profil privé modifié ; commit et push demandés par David le 13/11, voir la note de reprise.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 183 | **Delta Green fini — pilote 2.0.1** | 🟠 § 247 ; critiques sur 01 et doubles, 42 compétences du livre, caractéristique × 5, ±40 %, PV principal, fiche reliée — essais de David concluants le 12/11, sauf le menu des spécialités, corrigé en 2.0.1 | Réimporter `Delta-Green-2.0.1.gmos-driver` avec « Remplacer », retrouver Pilotage au menu | Essai de David |
+| 185 | **Delta Green — les cinq suites du pilote 2.1.0** | 🟢 § 249 ; SAN/rupture/accoutumance, 2 PV, létalité/critiques, opposition/expérience, vocabulaire et boutons validés par David — 13/11 | Rien pour les fonctions livrées | Relecture du corpus à part : 1/18 relue ; catalogue à instruire |
+| 184 | **Delta Green — campagne de recette** | 🟠 § 248 ; Les dossiers de la pluie, 12 séances, 5 ateliers et 36 cas préparés ; 59 essais automatiques réussis — 12/11 | Vérifier le pilote 2.0.1 puis importer l’unique `.gmos` en Tel quel | Import natif et recette de David ; corpus non relu |
+| 183 | **Delta Green — pilote 2.0.1 puis 2.1.0** | 🟢 § 247 et § 249 ; jet, compétences, santé et fiche reliée, suites complétées ; validation globale de David le 13/11 | Rien ; la 2.1.0 remplace la 2.0.1 | Rien pour ces fonctions |
 | 182 | **Delta Green — préparation GM-OS Studio** | 🟠 § 246 ; index, sommaire, thème, bannière, identité et fiche de deux pages construits et vérifiés —12/11 | Ouvrir la fiche HTML et choisir la bannière dans le pilote | Essai visuel de David ; compétences du pilote à nommer avant raccordement |
 | 181 | **Argyropée — écarts de combat corrigés** | 🟢 § 245 ; sous zéro inconscient (−1) et non mort, d10 d'initiative lu de 0 à 9 ; pilote inchangé —12/11 ; **validé par David le 12/11** | Rien | Rien |
 | 180 | **Rappel d'un jet dû par une jauge (GM Codex, lot 2)** | 🟢 § 244 ; « Au bout, rappeler », Fait / Écarter sur la carte de la jauge, au cockpit et sur la carte 5 s ; à la Table, seulement les personnages qui jouent — **validés par David le 11/11** | Rien ; lot 3 **mis de côté** par David (11/11) | Rien |

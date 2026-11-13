@@ -82,6 +82,13 @@ interface ContexteDeScene { pilote: Pilote; campagne: string; personnage: string
 
 const MISES_EN_SCENE: MiseEnScene[] = [
     {
+        corpusId: 'delta-green', slug: 'delta-green', personnage: 'Agent Daryl',
+        sheetData: { FOR: 10, CON: 10, DEX: 12, INT: 13, POU: 10, CHA: 12, PV: 10, VOL: 10, SAN: 50, SR: 40, inconcevable: 0,
+            armes_a_feu: 50, pilotage: 40, pilotage_specialite: 'Hélicoptère',
+            arme1: 'Grenade de test', arme1_degats: '1D10', arme1_letalite: '15' },
+        composantes: ['armes_a_feu'], scenes: c => scenesDeDeltaGreen(c),
+    },
+    {
         corpusId: 'noc', slug: 'noc', personnage: 'Ilya Vorn',
         sheetData: { combat: 2, action: 3, vie: 2, vecu: 2, espoir: 1, singularite: 1, trauma: 2, extase: 1, ferveur: 2, folie: 1, fatigue: true, soupcon: 6 },
         scenes: c => scenesDeNoc(c),
@@ -475,7 +482,7 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
         // SR-A4/A5/A6 ajoutent trois cartes à photographier avant l’ouverture de la fiche HTML.
-        if (['shadowrun-anarchy', 'coc'].includes(mise.corpusId)) test.setTimeout(120_000);
+        if (['shadowrun-anarchy', 'coc', 'delta-green'].includes(mise.corpusId)) test.setTimeout(120_000);
         // RuneQuest joue aussi la magie, l'inspiration et les cartes de la fiche depuis RQ-A6 (03/11).
         if (['dune', 'noc', 'runequest', 'degenesis'].includes(mise.corpusId)) test.setTimeout(180_000);
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
@@ -717,6 +724,135 @@ async function ecrireLaFiche(c: ContexteDeScene, maj: Record<string, unknown>): 
 }
 
 /** NOC : le moment de calme, les effets du Fiel, le jet d'un Rouage au pupitre. */
+/** Delta Green 2.1 : vrais gestes, fiche sauvegardée, SAN, expérience et dégâts sur le plateau jetable. */
+async function scenesDeDeltaGreen(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    const lire = () => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState().players.flatMap(p => p.characters).find(ch => ch.id === id)!.sheetData!, c.personnage);
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    const composer = panneau.locator('select').first();
+    // Les trois prises du jet (12/11, Claude Code) : la carte des suites est masquée, elle a ses propres prises.
+    const sansSuites = await panneau.evaluateHandle(p => { const st = document.createElement('style'); st.textContent = '[data-panneau-de-jet] > [data-carte-du-jeu] { display: none !important; }'; p.ownerDocument.head.appendChild(st); return st; });
+    // Le résultat du jet précédent resterait sous les deux premières prises et contredirait leur seuil.
+    const sansResultat = await panneau.evaluateHandle(p => { const st = document.createElement('style'); st.textContent = '[data-panneau-de-jet] section[aria-label="Résultat"] { display: none !important; }'; p.ownerDocument.head.appendChild(st); return st; });
+    // 2.0.1 : la spécialité suit le nom au menu du jet.
+    await expect(composer.locator('option', { hasText: 'Pilotage — Hélicoptère (40)' })).toHaveCount(1);
+    await composer.selectOption('pilotage');
+    await photographierLePanneau(panneau, 'jeu-delta-green-specialite');
+    // Une caractéristique × 5 et un malus de 20 (p. 18, 43) : FOR 10 → 50 − 20 = 30 %.
+    await composer.selectOption('FOR');
+    await panneau.getByRole('slider').first().fill('-20');
+    await expect(panneau).toContainText('× 5 = 50');
+    await expect(panneau).toContainText('50 − 20');
+    await photographierLePanneau(panneau, 'jeu-delta-green-caracteristique');
+    await panneau.getByRole('slider').first().fill('0');
+    await sansResultat.evaluate(st => (st as HTMLStyleElement).remove());
+    // Une réussite critique : 33 sous 50 % (p. 44) — un double réussi.
+    await composer.selectOption('armes_a_feu');
+    await f.evaluate(() => { (window as unknown as { __aleatoireDG0: () => number }).__aleatoireDG0 = Math.random; Math.random = () => 0.35; });
+    await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    await f.evaluate(() => { Math.random = (window as unknown as { __aleatoireDG0: () => number }).__aleatoireDG0; });
+    await expect(panneau).toContainText('Réussite critique — 33 contre 50 %');
+    await photographierLePanneau(panneau, 'jeu-delta-green-critique');
+    await sansSuites.evaluate(st => (st as HTMLStyleElement).remove());
+
+    await panneau.locator('select').first().selectOption('armes_a_feu');
+    await f.evaluate(() => {
+        (window as unknown as { __aleatoireDG: () => number }).__aleatoireDG = Math.random;
+        Math.random = () => 0.85;
+    });
+    try {
+        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+        const suites = panneau.locator('[data-delta-green]');
+        // La carte du jeu est repliable : la rendre visible avant ses commandes.
+        const carte = panneau.locator('[data-carte-du-jeu="delta-green"]');
+        if (await carte.count() && !await suites.isVisible()) await carte.locator('summary').click();
+        await expect.poll(async () => (await lire()).experience_armes_a_feu).toBe(true);
+        await f.evaluate(() => { Math.random = () => 0.5; });
+        await suites.getByRole('button', { name: /Améliorer les compétences/ }).click();
+        await expect.poll(async () => (await lire()).armes_a_feu).toBe(53);
+        await expect(suites.getByRole('button', { name: /Améliorer les compétences/ })).toBeDisabled();
+
+        await panneau.locator('select').first().selectOption('SAN');
+        await f.evaluate(() => { Math.random = () => 0.85; });
+        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+        await suites.getByLabel('Perte de SAN').fill('0/1D10');
+        await suites.getByRole('button', { name: 'Appliquer la perte de SAN' }).click();
+        await expect.poll(async () => (await lire()).SAN).toBe(40);
+        await expect.poll(async () => (await lire()).SR).toBe(30);
+        await expect(suites.getByRole('button', { name: 'Perte déjà appliquée' })).toBeDisabled();
+        await photographierLePanneau(suites, 'jeu-delta-green-san-et-rupture');
+
+        await suites.getByLabel('Chances adverses').fill('60');
+        await suites.getByLabel('Dé adverse').fill('67');
+        await suites.getByRole('checkbox', { name: /Poursuite/ }).check();
+        await expect(suites.getByText(/L’adversaire l’emporte/)).toBeVisible();
+        await photographierLePanneau(suites, 'jeu-delta-green-opposition');
+
+        // Les identifiants de combattants utilisent aussi l’aléatoire : rétablir celui-ci
+        // avant de créer deux cartes, puis ne fixer que le temps du lancer de dégâts.
+        await f.evaluate(() => { Math.random = (window as unknown as { __aleatoireDG: () => number }).__aleatoireDG; });
+        await f.evaluate(({ id, nom }) => {
+            const combat = (window as unknown as Fenetre).useCombatStore.getState();
+            combat.clearCombatants();
+            combat.addCombatant({ name: nom, init: 12, isPlayer: true, faction: 'player', statuses: [], sourcePlayerId: id });
+            combat.addCombatant({ name: 'Garde de test', init: 10, isPlayer: false, faction: 'enemy', statuses: [], hp: 10, hpMax: 10, sheetData: { PV: 10, FOR: 10, CON: 10 } });
+        }, { id: c.personnage, nom: c.nom });
+        await ouvrirLeModule(gmos, 'Combat-OS');
+        const cartes = f.locator('[data-combattant]');
+        const agent = cartes.filter({ has: f.getByText(c.nom, { exact: true }) }).first();
+        const combat = agent.locator('[data-combat-delta-green]');
+        await combat.locator('summary').click();
+        await combat.getByLabel('Cible Delta Green').selectOption({ label: 'Garde de test' });
+        await combat.getByRole('checkbox', { name: 'Attaque réussie confirmée' }).check();
+        await combat.getByRole('checkbox', { name: /Cible humaine/ }).check();
+        await combat.getByLabel('Protection Delta Green').fill('10');
+        await f.evaluate(() => { Math.random = () => 0.795; }); // 80 : 8 + 10 − 10 = 8.
+        await combat.getByRole('button', { name: 'Lancer et appliquer les dégâts' }).click();
+        const garde = () => f.evaluate(() => (window as unknown as Fenetre).useCombatStore.getState().combatants.find(ch => ch.name === 'Garde de test')!);
+        await expect.poll(async () => (await garde()).hp).toBe(2);
+        await expect.poll(async () => (await garde()).healthSystem?.state).toBe('critical');
+        await photographierLePanneau(agent, 'jeu-delta-green-combat-letalite');
+        await photographierLePanneau(f.locator(`[data-combattant="${(await garde()).id}"]`), 'jeu-delta-green-inconscience');
+        await combat.getByRole('button', { name: 'Nouvelle attaque' }).click();
+        await combat.getByRole('checkbox', { name: 'Attaque réussie confirmée' }).check();
+        await f.evaluate(() => { Math.random = () => 0.1; }); // 11 ≤ 15 : 0 PV même avec une armure.
+        await combat.getByRole('button', { name: 'Lancer et appliquer les dégâts' }).click();
+        await expect.poll(async () => (await garde()).hp).toBe(0);
+        await expect.poll(async () => (await garde()).healthSystem?.state).toBe('dead');
+    } finally {
+        await f.evaluate(() => { Math.random = (window as unknown as { __aleatoireDG: () => number }).__aleatoireDG; });
+    }
+    await f.waitForTimeout(500); // L’écriture différée du profil jetable doit être arrivée avant rechargement.
+    await f.reload(); await attendreLHydratation(gmos);
+    await expect.poll(async () => (await lire()).SAN).toBe(40);
+    await expect.poll(async () => (await lire()).SR).toBe(30);
+    await expect.poll(async () => (await lire()).armes_a_feu).toBe(53);
+
+    // Le pupitre de l'Officier Traitant (12/11) : mode « seuil », sous 50 %, le 01 et les doubles lus.
+    await ouvrirLeModule(gmos, 'Dice-OS');
+    await expect(f.getByLabel('Mode', { exact: true }).first()).toHaveValue('threshold', { timeout: 15_000 });
+    await f.evaluate(() => { (window as unknown as { __aleatoireDG0: () => number }).__aleatoireDG0 = Math.random; Math.random = () => 0.55; });
+    await f.getByRole('button', { name: 'LANCER', exact: true }).first().click();
+    await f.evaluate(() => { Math.random = (window as unknown as { __aleatoireDG0: () => number }).__aleatoireDG0; });
+    await expect(f.getByText('Échec critique — 55 contre 50 %').first()).toBeVisible();
+    await f.waitForTimeout(800);
+    await photographier(f.locator('body'), 'jeu-delta-green-pupitre');
+
+    // La fiche d'Agent HTML, remplie depuis GM-OS (moteur 26).
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });
+    await creerLaFiche.click();
+    const ficheHtml = f.frameLocator('iframe').first();
+    await expect(ficheHtml.locator('[data-key="skills.firearms"]')).toHaveValue('53', { timeout: 30_000 });
+    await expect(ficheHtml.locator('[data-key="specialties.pilot"]')).toHaveValue('Hélicoptère');
+    await f.waitForTimeout(1_000);
+    await photographier(f.locator('body'), 'jeu-delta-green-fiche');
+}
+
 async function scenesDeNoc(c: ContexteDeScene): Promise<void> {
     if (!(c.pilote.gameDriver as { gestesDesHeros?: unknown }).gestesDesHeros) return;
     const f = gmos.fenetre;
