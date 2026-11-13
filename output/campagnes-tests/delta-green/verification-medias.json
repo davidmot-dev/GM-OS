@@ -1,0 +1,222 @@
+{
+  "archive": {
+    "fichier": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "sha256": "5b36e86ff40424dfe131a7441ecb05b16239bdf321f37cf659024a9a561b3f60"
+  },
+  "structure": true,
+  "tests": 59,
+  "imagesDecodees": 25,
+  "wavDecodes": 1,
+  "medias": [
+    {
+      "fichier": "assets/images/plan-motel.svg",
+      "sha256": "463cfab0ee14f44cfbba047aa5083bb9fdc6d87f575054acca58078363fc976d",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-archives.svg",
+      "sha256": "bea5dfaeb87db05c97e9429a722f6f3aebf34f0842d409834c4150859a5f9104",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-clinique.svg",
+      "sha256": "35d2f06ec7a37c10e7f567679c545e3534cacc8eeff8b6e22b5fa231d029b99c",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-radio.svg",
+      "sha256": "01d7717b70a4a648a33726d75007d81b14e3eab50581e13e6045595149c21780",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-depot.svg",
+      "sha256": "72f75eaa0ab709c145c896bce8560c79e985108c2ec4a94907ec21d169a09833",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-refuge.svg",
+      "sha256": "9e21758adde0abc19d6c2c47e7cdfe6b6ee4776bc687d84ffdc52cbdd0333b38",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-pont.svg",
+      "sha256": "46e9044115c63030822b63f6b72fea13a1a37aa7d42a1f8cbdb70710fede3254",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-centre.svg",
+      "sha256": "9017e77a265e68e845690f146087fc9bcca3152f291802fbc4c131171b1b899c",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-foyer.svg",
+      "sha256": "1653afc30c3b37866901684b81397dc0fed79d374428696032277724a9521a4f",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-station.svg",
+      "sha256": "aff99abbc5beb5119651ee545585f1c248cc8761aabf9bee30d5e5286a441642",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-silo.svg",
+      "sha256": "d1b18aaaa87f264201bfc73c3bfdcec6da60ea97ff31f0a83ca7ba64abe5d139",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-aube.svg",
+      "sha256": "a75c266b55352fb9c0a6a6b3680e2f989a5bfc5184173facc61c8c80077ecad3",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-1.svg",
+      "sha256": "88ff7c2e35a787eaf0d4106f86ce6af1adda8d94eaf9ac3661627a623556cfcb",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-2.svg",
+      "sha256": "c45242fb21a0e47bb841113da3c8970d2a886c092da67912f2cf52688062461c",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-3.svg",
+      "sha256": "873da84fefe7cf94c4b13d163349f305dddff5212dcd2a7de55a356285976e0b",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-4.svg",
+      "sha256": "bf6ea4080e2a06c0b349e73f8e11c2f0b87938b64bb9c80acc93aefafda81fee",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-5.svg",
+      "sha256": "ca6a4d7fcdc2a293500e14a35a4d247b9f2b6109239bc275ac3eb7fe1ab3c942",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-6.svg",
+      "sha256": "e02d99729f694c3deee8ea4d0b79fdfd8795bd27a02f41284f95cd588cbb996b",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-7.svg",
+      "sha256": "df5c05587e3197fa17511a8efba360c23869ece6b6718e3259940f5bd6312b35",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-8.svg",
+      "sha256": "a69801c2e8bbab6cf4a6cd93b57d55a16b4bb66148ff29f3fd7a60e81febec79",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-9.svg",
+      "sha256": "967fa72396d52456ee9ced655cf392a7301aa1e4a8980d582205ba81ec60c736",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-10.svg",
+      "sha256": "3d32616f50115aa2eae48819e55003062d4c3cb288753527a2a7438b7febb3f4",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-11.svg",
+      "sha256": "53c3fb56301d8099713ea33a718987afb60084b79d5f6957bb0ea71905686fc0",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-12.svg",
+      "sha256": "049db1cc8c30f45e117ed786b03b7dfa5d0bbb173c6af17b8919410686c0c2f7",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/banniere.jpg",
+      "sha256": "9dd3fe23b874725a8c02392e017aed79c4630bc741e4a4ed7b292a30e4e9504e",
+      "dimensions": [
+        2400,
+        600
+      ]
+    },
+    {
+      "fichier": "assets/audio/signal.wav",
+      "sha256": "82574daca8324dcbee3d2c17ade9ffe780173d0fbf84b855c289506fe0525843",
+      "dureeSecondes": 4,
+      "ecouteHumaine": false
+    }
+  ],
+  "capturesExaminees": true,
+  "importNatif": false,
+  "hubReseau": false,
+  "recetteHumaine": "NON TESTÉ"
+}

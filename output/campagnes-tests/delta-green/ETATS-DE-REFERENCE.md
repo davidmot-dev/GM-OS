@@ -1,0 +1,557 @@
+# États de référence — restauration locale manuelle
+
+Annexe à lire, aucun import d’états ni bouton de reset. Nexus Remplacer réimporte toute la campagne : ne pas l’utiliser pour recommencer un atelier.
+
+Avant chaque cas, relever une note de fiction et SAN de Nora comme témoins. Saisir les préconditions du cahier sur le seul [RECETTE] désigné, puis restaurer ses seuls champs modifiés. Restaurer aussi les munitions, cases et état de santé s’ils ont été touchés. Fermer/rouvrir et comparer les deux témoins. Aucune restauration des héros.
+
+## [RECETTE] JET
+
+ID : recette-dg-pluie-20261112-pj-jet
+
+- etat_civil : "[RECETTE] JET"
+- metier : "Profil aux valeurs choisies pour recette"
+- employeur : ""
+- nationalite : "Américaine — fiction originale"
+- genre : ""
+- age : ""
+- parcours : ""
+- officier_traitant : "Reed"
+- FOR : 11
+- CON : 12
+- DEX : 13
+- INT : 14
+- POU : 12
+- CHA : 12
+- trait_for : ""
+- trait_con : ""
+- trait_dex : ""
+- trait_int : ""
+- trait_pou : ""
+- trait_cha : ""
+- PV : 12
+- VOL : 12
+- SAN : 60
+- SR : 48
+- anthropologie : 0
+- archeologie : 0
+- armes_a_feu : 20
+- armes_de_melee : 30
+- armes_lourdes : 0
+- art : 0
+- art_specialite : ""
+- artillerie : 0
+- artisanat : 0
+- artisanat_specialite : ""
+- athletisme : 30
+- bureaucratie : 10
+- chirurgie : 0
+- combat_a_mains_nues : 40
+- comptabilite : 10
+- conduite : 20
+- criminalistique : 0
+- criminologie : 10
+- deguisement : 10
+- discretion : 10
+- droit : 0
+- engins_lourds : 10
+- equitation : 10
+- esquive : 30
+- explosifs : 0
+- histoire : 10
+- inconcevable : 0
+- informatique : 0
+- medecine : 0
+- natation : 20
+- occultisme : 10
+- orientation : 10
+- persuasion : 20
+- pharmacologie : 0
+- pilotage : 40
+- pilotage_specialite : "Hélicoptère"
+- premiers_secours : 10
+- psychotherapie : 10
+- recherche : 50
+- roem : 0
+- rohum : 10
+- science : 0
+- science_specialite : ""
+- sciences_militaires : 0
+- sciences_militaires_specialite : ""
+- survie : 10
+- vigilance : 20
+- autre1_nom : "Test haut"
+- autre1 : 99
+- autre2_nom : "Test bas"
+- autre2 : 1
+- autre3_nom : ""
+- autre3 : 0
+- autre4_nom : ""
+- autre4 : 0
+- autre5_nom : ""
+- autre5 : 0
+- autre6_nom : ""
+- autre6 : 0
+- attache1_nom : "Ruth de recette"
+- attache1 : 12
+- attache1_endommagee : false
+- attache2_nom : ""
+- attache2 : 0
+- attache2_endommagee : false
+- attache3_nom : ""
+- attache3 : 0
+- attache3_endommagee : false
+- attache4_nom : ""
+- attache4 : 0
+- attache4_endommagee : false
+- attache5_nom : ""
+- attache5 : 0
+- attache5_endommagee : false
+- motivations : ""
+- accoutumance_violence : false
+- accoutumance_impuissance : false
+- armure : ""
+- blessures : ""
+- premiers_secours_recus : false
+- arme1 : ""
+- arme1_competence : ""
+- arme1_portee : ""
+- arme1_degats : ""
+- arme1_perforant : ""
+- arme1_letalite : ""
+- arme1_rayon : ""
+- arme1_munitions : ""
+- arme2 : ""
+- arme2_competence : ""
+- arme2_portee : ""
+- arme2_degats : ""
+- arme2_perforant : ""
+- arme2_letalite : ""
+- arme2_rayon : ""
+- arme2_munitions : ""
+- arme3 : ""
+- arme3_competence : ""
+- arme3_portee : ""
+- arme3_degats : ""
+- arme3_perforant : ""
+- arme3_letalite : ""
+- arme3_rayon : ""
+- arme3_munitions : ""
+- arme4 : ""
+- arme4_competence : ""
+- arme4_portee : ""
+- arme4_degats : ""
+- arme4_perforant : ""
+- arme4_letalite : ""
+- arme4_rayon : ""
+- arme4_munitions : ""
+- arme5 : ""
+- arme5_competence : ""
+- arme5_portee : ""
+- arme5_degats : ""
+- arme5_perforant : ""
+- arme5_letalite : ""
+- arme5_rayon : ""
+- arme5_munitions : ""
+- arme6 : ""
+- arme6_competence : ""
+- arme6_portee : ""
+- arme6_degats : ""
+- arme6_perforant : ""
+- arme6_letalite : ""
+- arme6_rayon : ""
+- arme6_munitions : ""
+- arme7 : ""
+- arme7_competence : ""
+- arme7_portee : ""
+- arme7_degats : ""
+- arme7_perforant : ""
+- arme7_letalite : ""
+- arme7_rayon : ""
+- arme7_munitions : ""
+- trouble_permanent : ""
+- description : ""
+- foyer : ""
+- notes : ""
+
+Santé initiale : {"type":"hp","data":{"current":12,"max":12},"state":"healthy","badges":[]}. Remettre PV12/12 et retirer les états artificiels via les contrôles de santé disponibles, puis vérifier les trois affichages. Ne pas coller cet objet JSON dans GM-OS.
+
+## [RECETTE] SANTE
+
+ID : recette-dg-pluie-20261112-pj-sante
+
+- etat_civil : "[RECETTE] SANTE"
+- metier : "Profil aux valeurs choisies pour recette"
+- employeur : ""
+- nationalite : "Américaine — fiction originale"
+- genre : ""
+- age : ""
+- parcours : ""
+- officier_traitant : "Reed"
+- FOR : 11
+- CON : 12
+- DEX : 13
+- INT : 14
+- POU : 12
+- CHA : 12
+- trait_for : ""
+- trait_con : ""
+- trait_dex : ""
+- trait_int : ""
+- trait_pou : ""
+- trait_cha : ""
+- PV : 12
+- VOL : 12
+- SAN : 60
+- SR : 48
+- anthropologie : 0
+- archeologie : 0
+- armes_a_feu : 20
+- armes_de_melee : 30
+- armes_lourdes : 0
+- art : 0
+- art_specialite : ""
+- artillerie : 0
+- artisanat : 0
+- artisanat_specialite : ""
+- athletisme : 30
+- bureaucratie : 10
+- chirurgie : 0
+- combat_a_mains_nues : 40
+- comptabilite : 10
+- conduite : 20
+- criminalistique : 0
+- criminologie : 10
+- deguisement : 10
+- discretion : 10
+- droit : 0
+- engins_lourds : 10
+- equitation : 10
+- esquive : 30
+- explosifs : 0
+- histoire : 10
+- inconcevable : 0
+- informatique : 0
+- medecine : 0
+- natation : 20
+- occultisme : 10
+- orientation : 10
+- persuasion : 20
+- pharmacologie : 0
+- pilotage : 40
+- pilotage_specialite : "Hélicoptère"
+- premiers_secours : 10
+- psychotherapie : 10
+- recherche : 50
+- roem : 0
+- rohum : 10
+- science : 0
+- science_specialite : ""
+- sciences_militaires : 0
+- sciences_militaires_specialite : ""
+- survie : 10
+- vigilance : 20
+- autre1_nom : "Test haut"
+- autre1 : 99
+- autre2_nom : "Test bas"
+- autre2 : 1
+- autre3_nom : ""
+- autre3 : 0
+- autre4_nom : ""
+- autre4 : 0
+- autre5_nom : ""
+- autre5 : 0
+- autre6_nom : ""
+- autre6 : 0
+- attache1_nom : "Ruth de recette"
+- attache1 : 12
+- attache1_endommagee : false
+- attache2_nom : ""
+- attache2 : 0
+- attache2_endommagee : false
+- attache3_nom : ""
+- attache3 : 0
+- attache3_endommagee : false
+- attache4_nom : ""
+- attache4 : 0
+- attache4_endommagee : false
+- attache5_nom : ""
+- attache5 : 0
+- attache5_endommagee : false
+- motivations : ""
+- accoutumance_violence : false
+- accoutumance_impuissance : false
+- armure : ""
+- blessures : ""
+- premiers_secours_recus : false
+- arme1 : ""
+- arme1_competence : ""
+- arme1_portee : ""
+- arme1_degats : ""
+- arme1_perforant : ""
+- arme1_letalite : ""
+- arme1_rayon : ""
+- arme1_munitions : ""
+- arme2 : ""
+- arme2_competence : ""
+- arme2_portee : ""
+- arme2_degats : ""
+- arme2_perforant : ""
+- arme2_letalite : ""
+- arme2_rayon : ""
+- arme2_munitions : ""
+- arme3 : ""
+- arme3_competence : ""
+- arme3_portee : ""
+- arme3_degats : ""
+- arme3_perforant : ""
+- arme3_letalite : ""
+- arme3_rayon : ""
+- arme3_munitions : ""
+- arme4 : ""
+- arme4_competence : ""
+- arme4_portee : ""
+- arme4_degats : ""
+- arme4_perforant : ""
+- arme4_letalite : ""
+- arme4_rayon : ""
+- arme4_munitions : ""
+- arme5 : ""
+- arme5_competence : ""
+- arme5_portee : ""
+- arme5_degats : ""
+- arme5_perforant : ""
+- arme5_letalite : ""
+- arme5_rayon : ""
+- arme5_munitions : ""
+- arme6 : ""
+- arme6_competence : ""
+- arme6_portee : ""
+- arme6_degats : ""
+- arme6_perforant : ""
+- arme6_letalite : ""
+- arme6_rayon : ""
+- arme6_munitions : ""
+- arme7 : ""
+- arme7_competence : ""
+- arme7_portee : ""
+- arme7_degats : ""
+- arme7_perforant : ""
+- arme7_letalite : ""
+- arme7_rayon : ""
+- arme7_munitions : ""
+- trouble_permanent : ""
+- description : ""
+- foyer : ""
+- notes : ""
+
+Santé initiale : {"type":"hp","data":{"current":12,"max":12},"state":"healthy","badges":[]}. Remettre PV12/12 et retirer les états artificiels via les contrôles de santé disponibles, puis vérifier les trois affichages. Ne pas coller cet objet JSON dans GM-OS.
+
+## [RECETTE] MENTAL
+
+ID : recette-dg-pluie-20261112-pj-mental
+
+- etat_civil : "[RECETTE] MENTAL"
+- metier : "Profil aux valeurs choisies pour recette"
+- employeur : ""
+- nationalite : "Américaine — fiction originale"
+- genre : ""
+- age : ""
+- parcours : ""
+- officier_traitant : "Reed"
+- FOR : 11
+- CON : 12
+- DEX : 13
+- INT : 14
+- POU : 12
+- CHA : 12
+- trait_for : ""
+- trait_con : ""
+- trait_dex : ""
+- trait_int : ""
+- trait_pou : ""
+- trait_cha : ""
+- PV : 12
+- VOL : 12
+- SAN : 60
+- SR : 48
+- anthropologie : 0
+- archeologie : 0
+- armes_a_feu : 20
+- armes_de_melee : 30
+- armes_lourdes : 0
+- art : 0
+- art_specialite : ""
+- artillerie : 0
+- artisanat : 0
+- artisanat_specialite : ""
+- athletisme : 30
+- bureaucratie : 10
+- chirurgie : 0
+- combat_a_mains_nues : 40
+- comptabilite : 10
+- conduite : 20
+- criminalistique : 0
+- criminologie : 10
+- deguisement : 10
+- discretion : 10
+- droit : 0
+- engins_lourds : 10
+- equitation : 10
+- esquive : 30
+- explosifs : 0
+- histoire : 10
+- inconcevable : 0
+- informatique : 0
+- medecine : 0
+- natation : 20
+- occultisme : 10
+- orientation : 10
+- persuasion : 20
+- pharmacologie : 0
+- pilotage : 40
+- pilotage_specialite : "Hélicoptère"
+- premiers_secours : 10
+- psychotherapie : 10
+- recherche : 50
+- roem : 0
+- rohum : 10
+- science : 0
+- science_specialite : ""
+- sciences_militaires : 0
+- sciences_militaires_specialite : ""
+- survie : 10
+- vigilance : 20
+- autre1_nom : "Test haut"
+- autre1 : 99
+- autre2_nom : "Test bas"
+- autre2 : 1
+- autre3_nom : ""
+- autre3 : 0
+- autre4_nom : ""
+- autre4 : 0
+- autre5_nom : ""
+- autre5 : 0
+- autre6_nom : ""
+- autre6 : 0
+- attache1_nom : "Ruth de recette"
+- attache1 : 12
+- attache1_endommagee : false
+- attache2_nom : ""
+- attache2 : 0
+- attache2_endommagee : false
+- attache3_nom : ""
+- attache3 : 0
+- attache3_endommagee : false
+- attache4_nom : ""
+- attache4 : 0
+- attache4_endommagee : false
+- attache5_nom : ""
+- attache5 : 0
+- attache5_endommagee : false
+- motivations : ""
+- accoutumance_violence : false
+- accoutumance_impuissance : false
+- armure : ""
+- blessures : ""
+- premiers_secours_recus : false
+- arme1 : ""
+- arme1_competence : ""
+- arme1_portee : ""
+- arme1_degats : ""
+- arme1_perforant : ""
+- arme1_letalite : ""
+- arme1_rayon : ""
+- arme1_munitions : ""
+- arme2 : ""
+- arme2_competence : ""
+- arme2_portee : ""
+- arme2_degats : ""
+- arme2_perforant : ""
+- arme2_letalite : ""
+- arme2_rayon : ""
+- arme2_munitions : ""
+- arme3 : ""
+- arme3_competence : ""
+- arme3_portee : ""
+- arme3_degats : ""
+- arme3_perforant : ""
+- arme3_letalite : ""
+- arme3_rayon : ""
+- arme3_munitions : ""
+- arme4 : ""
+- arme4_competence : ""
+- arme4_portee : ""
+- arme4_degats : ""
+- arme4_perforant : ""
+- arme4_letalite : ""
+- arme4_rayon : ""
+- arme4_munitions : ""
+- arme5 : ""
+- arme5_competence : ""
+- arme5_portee : ""
+- arme5_degats : ""
+- arme5_perforant : ""
+- arme5_letalite : ""
+- arme5_rayon : ""
+- arme5_munitions : ""
+- arme6 : ""
+- arme6_competence : ""
+- arme6_portee : ""
+- arme6_degats : ""
+- arme6_perforant : ""
+- arme6_letalite : ""
+- arme6_rayon : ""
+- arme6_munitions : ""
+- arme7 : ""
+- arme7_competence : ""
+- arme7_portee : ""
+- arme7_degats : ""
+- arme7_perforant : ""
+- arme7_letalite : ""
+- arme7_rayon : ""
+- arme7_munitions : ""
+- trouble_permanent : ""
+- description : ""
+- foyer : ""
+- notes : ""
+
+Santé initiale : {"type":"hp","data":{"current":12,"max":12},"state":"healthy","badges":[]}. Remettre PV12/12 et retirer les états artificiels via les contrôles de santé disponibles, puis vérifier les trois affichages. Ne pas coller cet objet JSON dans GM-OS.
+
+## Par cas
+
+- JET-01 → [RECETTE] JET ; préparation : Recherche 50, modificateur 0. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- JET-02 → [RECETTE] JET ; préparation : FOR 11. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- JET-03 → [RECETTE] JET ; préparation : Recherche 50. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- JET-04 → [RECETTE] JET ; préparation : Autre 1 nommé Test haut, valeur99 ; Autre 2 nommé Test bas, valeur1. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- JET-05 → [RECETTE] JET ; préparation : Inconcevable 0. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- JET-06 → [RECETTE] JET ; préparation : Pilotage40 et spécialité Hélicoptère ; Art0 sans spécialité. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- JET-07 → [RECETTE] JET ; préparation : Recherche50 ; contrôle automatique distinct de l’interface. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- JET-08 → [RECETTE] JET ; préparation : Deux Agents, chances annoncées et règle ouverte. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- SAN-01 → [RECETTE] SANTE ; préparation : FOR11 CON12 ; PV12. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- SAN-02 → [RECETTE] SANTE ; préparation : Restaurer PV12, maximum12. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- SAN-03 → [RECETTE] SANTE ; préparation : PV3, maximum12. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- SAN-04 → [RECETTE] SANTE ; préparation : PV1, maximum12 ; cible de recette seule. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- COM-01 → [RECETTE] SANTE ; préparation : Recette DEX13 ; Nora DEX13 ; Sarah DEX12. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- COM-02 → [RECETTE] SANTE ; préparation : Arme choisie et portée de base lue. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- COM-03 → [RECETTE] SANTE ; préparation : Une ligne arme renseignée ; munitions notées. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- COM-04 → [RECETTE] SANTE ; préparation : PV9, premiers_secours_recus false. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- MEN-01 → [RECETTE] MENTAL ; préparation : POU12 ; VOL12 ; SAN60 ; SR48 ; Inconcevable0. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- MEN-02 → [RECETTE] MENTAL ; préparation : Restaurer VOL12, SAN60, SR48. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- MEN-03 → [RECETTE] MENTAL ; préparation : SAN49 SR48 ; valeurs artificielles. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- MEN-04 → [RECETTE] MENTAL ; préparation : Attache1 Ruth de recette, score12, endommagée false ; VOL12. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- MEN-05 → [RECETTE] MENTAL ; préparation : Deux cases accoutumance false. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- MEN-06 → [RECETTE] MENTAL ; préparation : VOL2 puis0, restaurer entre les essais. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- MEN-07 → [RECETTE] MENTAL ; préparation : Séance7 prévue ; aucune activité passée. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- FIC-01 → [RECETTE] JET ; préparation : Fiche du jeu du personnage de recette. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- FIC-02 → [RECETTE] JET ; préparation : FOR11 CON12 ; noter jauges avant modification. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- FIC-03 → [RECETTE] JET ; préparation : Ajouter une note témoin de fiction ; noter SAN de Nora. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- IMP-01 → [RECETTE] JET ; préparation : Pilote2.0.1 installé ; anciens PJ conservés comme témoins. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- IMP-02 → [RECETTE] JET ; préparation : Campagne importée une fois. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- MED-01 → [RECETTE] JET ; préparation : Connexion externe coupée. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- HUB-01 → [RECETTE] JET ; préparation : Instance jetable autorisée ; Hub p-1/p-2/p-3 en360/768/1180px. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- HUB-02 → [RECETTE] JET ; préparation : Chaque Hub connecté à son joueur ; personnage actif de cette partie. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- HUB-03 → [RECETTE] JET ; préparation : Messagerie ouverte sur poste de recette. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- MOD-01 → [RECETTE] JET ; préparation : Pilote2.0.1 et catalogue courant. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- ENV-01 → [RECETTE] SANTE ; préparation : Atelier seul ; PV12 ; scène de galerie sèche préparée. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- POU-01 → [RECETTE] JET ; préparation : Deux profils synthétiques ; itinéraire avec deux sorties. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.
+- PRO-01 → [RECETTE] JET ; préparation : Recherche50 ; notes vides ; aucun échec d’histoire simulé. Restaurer ensuite les valeurs de ce personnage ci-dessus pour les seuls champs touchés.

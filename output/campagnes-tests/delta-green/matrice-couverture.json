@@ -1,0 +1,328 @@
+[
+  {
+    "id": "DG-test",
+    "mecanique": "test",
+    "source": "Manuel p.44 ; src/modules/dice/systemes/deltaGreen.ts ; Manuel p.18 ; Manuel p.43",
+    "support": "natif",
+    "casIds": [
+      "JET-01",
+      "JET-02",
+      "JET-03"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Import natif et parcours humain à exécuter ; fonctions pures seules contrôlables ici."
+  },
+  {
+    "id": "DG-bornes",
+    "mecanique": "bornes",
+    "source": "Manuel p.43 ; bornerLesChances",
+    "support": "natif",
+    "casIds": [
+      "JET-04"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Import natif et parcours humain à exécuter ; fonctions pures seules contrôlables ici."
+  },
+  {
+    "id": "DG-zero",
+    "mecanique": "zero",
+    "source": "Manuel p.29",
+    "support": "natif",
+    "casIds": [
+      "JET-05"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Import natif et parcours humain à exécuter ; fonctions pures seules contrôlables ici."
+  },
+  {
+    "id": "DG-specialites",
+    "mecanique": "specialites",
+    "source": "Pilote2.0.1 ; src/modules/session/components/fields/PanneauDeJet.tsx",
+    "support": "natif",
+    "casIds": [
+      "JET-06"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Import natif et parcours humain à exécuter ; fonctions pures seules contrôlables ici."
+  },
+  {
+    "id": "DG-critique",
+    "mecanique": "critique",
+    "source": "Manuel p.44 ; degrés réels du moteur",
+    "support": "natif",
+    "casIds": [
+      "JET-07"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Import natif et parcours humain à exécuter ; fonctions pures seules contrôlables ici."
+  },
+  {
+    "id": "DG-opposition",
+    "mecanique": "opposition",
+    "source": "docs/systems/delta-green/rules/jets-opposes-aide-et-cooperation.md — relu:false",
+    "support": "manuel",
+    "casIds": [
+      "JET-08"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Noter les deux résultats et l’arbitrage ; aucune résolution spécialisée automatique annoncée. À confirmer contre le livre. "
+  },
+  {
+    "id": "DG-pv",
+    "mecanique": "pv",
+    "source": "Manuel p.18 ; santeDeDepart ; Pilote combat.statsToTrack ; Manuel p.18",
+    "support": "natif",
+    "casIds": [
+      "SAN-01",
+      "SAN-02"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Import natif et parcours humain à exécuter ; fonctions pures seules contrôlables ici."
+  },
+  {
+    "id": "DG-etats",
+    "mecanique": "etats",
+    "source": "Manuel p.18 ; documentation/User Guides/54-Jeu-Delta-Green.md ; Manuel p.18 ; HealthInterpreter",
+    "support": "à vérifier",
+    "casIds": [
+      "SAN-03",
+      "SAN-04"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Règle : inconscience à2 ; signal automatique encore absent selon manuel GM-OS. Consigner tout écart, ne pas cocher conforme sur la seule jauge."
+  },
+  {
+    "id": "DG-initiative",
+    "mecanique": "initiative",
+    "source": "Manuel p.50 ; pilote initiativeFormula",
+    "support": "natif",
+    "casIds": [
+      "COM-01"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Import natif et parcours humain à exécuter ; fonctions pures seules contrôlables ici."
+  },
+  {
+    "id": "DG-portees",
+    "mecanique": "portees",
+    "source": "Manuel p.53",
+    "support": "manuel",
+    "casIds": [
+      "COM-02"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "+20 à3m ou moins ;0 jusqu’à la base ;−20 jusqu’au double ;−40 jusqu’au quintuple ; au-delà impossible. Saisir les modificateurs."
+  },
+  {
+    "id": "DG-armes",
+    "mecanique": "armes",
+    "source": "docs/systems/delta-green/rules/degats-et-types-de-degats.md ; equipement-et-materiel.md — relu:false",
+    "support": "manuel",
+    "casIds": [
+      "COM-03"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Champs conservés ; aucune consommation, absorption ou létalité automatique revendiquée. Vérifier la règle exacte avant résolution. "
+  },
+  {
+    "id": "DG-soins",
+    "mecanique": "soins",
+    "source": "docs/systems/delta-green/rules/sante-et-blessures.md — relu:false",
+    "support": "manuel",
+    "casIds": [
+      "COM-04"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Une modification locale explicite des PV et du suivi ; pas de guérison automatique par repos ou changement de scène. Règle de soin à vérifier. "
+  },
+  {
+    "id": "DG-mental",
+    "mecanique": "mental",
+    "source": "Manuel p.18 ; pilote statsToTrack ; docs/systems/delta-green/rules/jauges-et-ressources-individuelles.md — relu:false ; test de saisie",
+    "support": "natif",
+    "casIds": [
+      "MEN-01",
+      "MEN-02"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "SAN57 ; VOL12 et SR48 inchangés tant qu’aucune autre décision ; pas de trouble automatique promis."
+  },
+  {
+    "id": "DG-rupture",
+    "mecanique": "rupture",
+    "source": "docs/systems/delta-green/rules/jauges-et-ressources-individuelles.md — relu:false",
+    "support": "manuel",
+    "casIds": [
+      "MEN-03"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "SAN48 ; arbitrer trouble et nouveau seuil selon le livre. Pas d’automate de rupture annoncé."
+  },
+  {
+    "id": "DG-attaches",
+    "mecanique": "attaches",
+    "source": "docs/systems/delta-green/rules/projection-du-traumatisme-sur-les-attaches-erosion-des-relations.md — relu:false",
+    "support": "manuel",
+    "casIds": [
+      "MEN-04"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Les champs choisis seuls changent ; aucune projection automatique. Vérifier conditions et montants avant la recette de règle."
+  },
+  {
+    "id": "DG-accoutumance",
+    "mecanique": "accoutumance",
+    "source": "docs/systems/delta-green/rules/accoutumance-violence-et-impuissance.md — relu:false",
+    "support": "manuel",
+    "casIds": [
+      "MEN-05"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Deux cases indépendantes ; pas de compteur des trois événements ni accoutumance automatique."
+  },
+  {
+    "id": "DG-volonte",
+    "mecanique": "volonte",
+    "source": "docs/systems/delta-green/rules/jauges-et-ressources-individuelles.md — relu:false",
+    "support": "à vérifier",
+    "casIds": [
+      "MEN-06"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Repérer si le malus ou refus attendu est appliqué ; ne pas présumer une automatisation du jet liée à VOL. Règle à confirmer."
+  },
+  {
+    "id": "DG-quotidien",
+    "mecanique": "quotidien",
+    "source": "docs/systems/delta-green/rules/scenes-de-vie-quotidienne-vignettes-d-intermede.md — relu:false",
+    "support": "manuel",
+    "casIds": [
+      "MEN-07"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Promesses et Attaches documentées ; aucun gain automatique de SAN, VOL ou compétence."
+  },
+  {
+    "id": "DG-fiche",
+    "mecanique": "fiche",
+    "source": "docs/systems/delta-green/fiche/correspondance.json ; Manuel p.18 ; fiche HTML",
+    "support": "à vérifier",
+    "casIds": [
+      "FIC-01",
+      "FIC-02"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Contrôler maxima calculés et actuels conservés ; relever tout arrondi incohérent. Ne pas promettre recalcul automatique du SR."
+  },
+  {
+    "id": "DG-restauration",
+    "mecanique": "restauration",
+    "source": "src/types/trame.types.ts ; ETATS-DE-REFERENCE.md",
+    "support": "natif",
+    "casIds": [
+      "FIC-03"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Import natif et parcours humain à exécuter ; fonctions pures seules contrôlables ici."
+  },
+  {
+    "id": "DG-import",
+    "mecanique": "import",
+    "source": "NexusService ; nexus.types.ts",
+    "support": "natif",
+    "casIds": [
+      "IMP-01"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Import natif et parcours humain à exécuter ; fonctions pures seules contrôlables ici."
+  },
+  {
+    "id": "DG-persistance",
+    "mecanique": "persistance",
+    "source": "src/types/trame.types.ts ; nexus.types.ts",
+    "support": "natif",
+    "casIds": [
+      "IMP-02"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Import natif et parcours humain à exécuter ; fonctions pures seules contrôlables ici."
+  },
+  {
+    "id": "DG-medias",
+    "mecanique": "medias",
+    "source": "manifest.json assetMap",
+    "support": "natif",
+    "casIds": [
+      "MED-01"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Import natif et parcours humain à exécuter ; fonctions pures seules contrôlables ici."
+  },
+  {
+    "id": "DG-droits",
+    "mecanique": "droits",
+    "source": "src/modules/remote/logic/caviardageDesJoueurs.ts ; Parcours Hub et centre de liaison de GM-OS",
+    "support": "à vérifier",
+    "casIds": [
+      "HUB-01",
+      "HUB-02"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Marqueur absent des charges joueurs ; GM-05 testé sur réseau, distinct du caviardage pur. Écriture et jet autorisés reçus par MJ ; écriture sur autrui refusée ; personnages actifs seuls listés."
+  },
+  {
+    "id": "DG-resultats",
+    "mecanique": "resultats",
+    "source": "Demande de David ; parcours de jets distants",
+    "support": "à vérifier",
+    "casIds": [
+      "HUB-03"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Résultat public visible en messagerie et fenêtre volante5s ; vérifier les destinataires du caché sans annoncer sa valeur aux autres."
+  },
+  {
+    "id": "DG-modules",
+    "mecanique": "modules",
+    "source": "src/modules/modulesDuJeu/catalogue.ts ; pilote2.0.1",
+    "support": "absent",
+    "casIds": [
+      "MOD-01"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Aucun module spécialisé Delta Green déclaré ; outils génériques seuls, aucun module inventé."
+  },
+  {
+    "id": "DG-environnement",
+    "mecanique": "environnement",
+    "source": "docs/systems/delta-green/rules/environnement-et-dangers.md — relu:false",
+    "support": "manuel",
+    "casIds": [
+      "ENV-01"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Appliquer seulement les effets arbitrés et les noter dans blessures ; aucun dégât automatique associé au changement de carte."
+  },
+  {
+    "id": "DG-poursuite",
+    "mecanique": "poursuite",
+    "source": "docs/systems/delta-green/rules/poursuites.md — relu:false",
+    "support": "manuel",
+    "casIds": [
+      "POU-01"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Suivi manuel ; ne pas assimiler une poursuite à un module d’opposition ni inventer un compteur natif."
+  },
+  {
+    "id": "DG-progression",
+    "mecanique": "progression",
+    "source": "docs/systems/delta-green/rules/composition-de-la-fiche-de-personnage.md ; scenes-de-vie-quotidienne-vignettes-d-intermede.md — relu:false",
+    "support": "manuel",
+    "casIds": [
+      "PRO-01"
+    ],
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "limite": "Suivi et progression arbitrés ; pas de gain automatique ou de case de progression persistante inventée dans le gabarit. Restaurer Recherche50 et les notes."
+  }
+]

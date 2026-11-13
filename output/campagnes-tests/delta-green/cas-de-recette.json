@@ -1,0 +1,686 @@
+[
+  {
+    "id": "JET-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "test",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-jets",
+      "scene": "R1 — Tests et critiques",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Recherche 50, modificateur 0.",
+    "action": "Lancer Recherche et relever le dé.",
+    "attendu": "Succès si dé ≤50 ; 01 ou double réussi critique ; double échoué ou 00 échec critique.",
+    "source": "Manuel p.44 ; src/modules/dice/systemes/deltaGreen.ts",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "JET-02",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "test",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-jets",
+      "scene": "R1 — Tests et critiques",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "FOR 11.",
+    "action": "Choisir FOR puis Préparer.",
+    "attendu": "Chances 55 avant modificateur ; pas 11.",
+    "source": "Manuel p.18",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "JET-03",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "test",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-jets",
+      "scene": "R1 — Tests et critiques",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Recherche 50.",
+    "action": "Comparer préparation −40, 0, +40 puis lancer.",
+    "attendu": "Chances 10, 50, 90 ; seul le tirage réel décide de l’issue.",
+    "source": "Manuel p.43",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "JET-04",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "bornes",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-jets",
+      "scene": "R1 — Tests et critiques",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Autre 1 nommé Test haut, valeur99 ; Autre 2 nommé Test bas, valeur1.",
+    "action": "Préparer +40 sur Test haut et −40 sur Test bas.",
+    "attendu": "Chances bornées à99 et1 ; message de correction visible.",
+    "source": "Manuel p.43 ; bornerLesChances",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "JET-05",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "zero",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-jets",
+      "scene": "R1 — Tests et critiques",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Inconcevable 0.",
+    "action": "Sélectionner Inconcevable, même avec bonus.",
+    "attendu": "Jet de compétence à0 refusé ; aucun résultat ni dépense.",
+    "source": "Manuel p.29",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "JET-06",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "specialites",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-jets",
+      "scene": "R1 — Tests et critiques",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Pilotage40 et spécialité Hélicoptère ; Art0 sans spécialité.",
+    "action": "Ouvrir la liste, puis effacer temporairement la spécialité Pilotage.",
+    "attendu": "Pilotage reste proposé avec ou sans spécialité ; Art existe, son jet à0 est refusé.",
+    "source": "Pilote2.0.1 ; src/modules/session/components/fields/PanneauDeJet.tsx",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "JET-07",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "critique",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-jets",
+      "scene": "R1 — Tests et critiques",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Recherche50 ; contrôle automatique distinct de l’interface.",
+    "action": "Dans le cahier comparer les sorties de dé01,11,44,50,51,55,99,00.",
+    "attendu": "Critiques réussis01/11/44 ; réussite50 ; échec51 ; critiques échoués55/99/00. Aucun dé imposable promis en interface.",
+    "source": "Manuel p.44 ; degrés réels du moteur",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "JET-08",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "opposition",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-jets",
+      "scene": "R1 — Tests et critiques",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Deux Agents, chances annoncées et règle ouverte.",
+    "action": "Résoudre une opposition puis une aide selon le livre.",
+    "attendu": "Noter les deux résultats et l’arbitrage ; aucune résolution spécialisée automatique annoncée. À confirmer contre le livre. ",
+    "source": "docs/systems/delta-green/rules/jets-opposes-aide-et-cooperation.md — relu:false",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "SAN-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "pv",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-sante",
+      "scene": "R2 — PV et combat",
+      "personnageId": "recette-dg-pluie-20261112-pj-sante",
+      "personnage": "[RECETTE] SANTE"
+    },
+    "precondition": "FOR11 CON12 ; PV12.",
+    "action": "Comparer fiche HTML, fiche GM-OS et santé du combat.",
+    "attendu": "Maximum12, arrondi au supérieur de11,5 ; actuel12.",
+    "source": "Manuel p.18 ; santeDeDepart",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "SAN-02",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "pv",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-sante",
+      "scene": "R2 — PV et combat",
+      "personnageId": "recette-dg-pluie-20261112-pj-sante",
+      "personnage": "[RECETTE] SANTE"
+    },
+    "precondition": "Restaurer PV12, maximum12.",
+    "action": "Appliquer3 dégâts ordinaires à la seule cible de recette.",
+    "attendu": "PV9 ; jauge, fiche et combat concordent ; aucune perte de SAN ou VOL inventée.",
+    "source": "Pilote combat.statsToTrack ; Manuel p.18",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "SAN-03",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "etats",
+    "support": "à vérifier",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-sante",
+      "scene": "R2 — PV et combat",
+      "personnageId": "recette-dg-pluie-20261112-pj-sante",
+      "personnage": "[RECETTE] SANTE"
+    },
+    "precondition": "PV3, maximum12.",
+    "action": "Appliquer1 dégât puis consulter les états.",
+    "attendu": "Règle : inconscience à2 ; signal automatique encore absent selon manuel GM-OS. Consigner tout écart, ne pas cocher conforme sur la seule jauge.",
+    "source": "Manuel p.18 ; documentation/User Guides/54-Jeu-Delta-Green.md",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "SAN-04",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "etats",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-sante",
+      "scene": "R2 — PV et combat",
+      "personnageId": "recette-dg-pluie-20261112-pj-sante",
+      "personnage": "[RECETTE] SANTE"
+    },
+    "precondition": "PV1, maximum12 ; cible de recette seule.",
+    "action": "Appliquer1 dégât puis restaurer manuellement PV12.",
+    "attendu": "PV0 et état de mort du moteur ; restauration locale sans changer les héros.",
+    "source": "Manuel p.18 ; HealthInterpreter",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "COM-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "initiative",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-sante",
+      "scene": "R2 — PV et combat",
+      "personnageId": "recette-dg-pluie-20261112-pj-sante",
+      "personnage": "[RECETTE] SANTE"
+    },
+    "precondition": "Recette DEX13 ; Nora DEX13 ; Sarah DEX12.",
+    "action": "Ouvrir une rencontre et demander initiative.",
+    "attendu": "DEX détermine l’ordre décroissant ; égalité13 simultanée arbitrée à la table. Aucun d20 ajouté.",
+    "source": "Manuel p.50 ; pilote initiativeFormula",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "COM-02",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "portees",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-sante",
+      "scene": "R2 — PV et combat",
+      "personnageId": "recette-dg-pluie-20261112-pj-sante",
+      "personnage": "[RECETTE] SANTE"
+    },
+    "precondition": "Arme choisie et portée de base lue.",
+    "action": "Comparer3m, portée de base, double, quintuple et au-delà.",
+    "attendu": "+20 à3m ou moins ;0 jusqu’à la base ;−20 jusqu’au double ;−40 jusqu’au quintuple ; au-delà impossible. Saisir les modificateurs.",
+    "source": "Manuel p.53",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "COM-03",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "armes",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-sante",
+      "scene": "R2 — PV et combat",
+      "personnageId": "recette-dg-pluie-20261112-pj-sante",
+      "personnage": "[RECETTE] SANTE"
+    },
+    "precondition": "Une ligne arme renseignée ; munitions notées.",
+    "action": "Résoudre un tir puis décrémenter les munitions ; comparer dégâts, protection et létalité au livre.",
+    "attendu": "Champs conservés ; aucune consommation, absorption ou létalité automatique revendiquée. Vérifier la règle exacte avant résolution. ",
+    "source": "docs/systems/delta-green/rules/degats-et-types-de-degats.md ; equipement-et-materiel.md — relu:false",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "COM-04",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "soins",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-sante",
+      "scene": "R2 — PV et combat",
+      "personnageId": "recette-dg-pluie-20261112-pj-sante",
+      "personnage": "[RECETTE] SANTE"
+    },
+    "precondition": "PV9, premiers_secours_recus false.",
+    "action": "Lire le livre puis résoudre un soin, noter son résultat et sa disponibilité.",
+    "attendu": "Une modification locale explicite des PV et du suivi ; pas de guérison automatique par repos ou changement de scène. Règle de soin à vérifier. ",
+    "source": "docs/systems/delta-green/rules/sante-et-blessures.md — relu:false",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "MEN-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "mental",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-mental",
+      "scene": "R3 — Volonté, SAN et Attaches",
+      "personnageId": "recette-dg-pluie-20261112-pj-mental",
+      "personnage": "[RECETTE] MENTAL"
+    },
+    "precondition": "POU12 ; VOL12 ; SAN60 ; SR48 ; Inconcevable0.",
+    "action": "Lire les jauges et préparer un test de SAN.",
+    "attendu": "VOL maximum12 ; SAN maximum99 ; test à60 ; SR48 champ distinct.",
+    "source": "Manuel p.18 ; pilote statsToTrack",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "MEN-02",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "mental",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-mental",
+      "scene": "R3 — Volonté, SAN et Attaches",
+      "personnageId": "recette-dg-pluie-20261112-pj-mental",
+      "personnage": "[RECETTE] MENTAL"
+    },
+    "precondition": "Restaurer VOL12, SAN60, SR48.",
+    "action": "Simuler une perte décidée de3 SAN, sans dé de règle imposé.",
+    "attendu": "SAN57 ; VOL12 et SR48 inchangés tant qu’aucune autre décision ; pas de trouble automatique promis.",
+    "source": "docs/systems/delta-green/rules/jauges-et-ressources-individuelles.md — relu:false ; test de saisie",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "MEN-03",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "rupture",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-mental",
+      "scene": "R3 — Volonté, SAN et Attaches",
+      "personnageId": "recette-dg-pluie-20261112-pj-mental",
+      "personnage": "[RECETTE] MENTAL"
+    },
+    "precondition": "SAN49 SR48 ; valeurs artificielles.",
+    "action": "Consulter la règle puis simuler une perte jusqu’au seuil.",
+    "attendu": "SAN48 ; arbitrer trouble et nouveau seuil selon le livre. Pas d’automate de rupture annoncé.",
+    "source": "docs/systems/delta-green/rules/jauges-et-ressources-individuelles.md — relu:false",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "MEN-04",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "attaches",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-mental",
+      "scene": "R3 — Volonté, SAN et Attaches",
+      "personnageId": "recette-dg-pluie-20261112-pj-mental",
+      "personnage": "[RECETTE] MENTAL"
+    },
+    "precondition": "Attache1 Ruth de recette, score12, endommagée false ; VOL12.",
+    "action": "Lire la projection dans le livre ; noter dé, coût, perte et Attache après arbitrage.",
+    "attendu": "Les champs choisis seuls changent ; aucune projection automatique. Vérifier conditions et montants avant la recette de règle.",
+    "source": "docs/systems/delta-green/rules/projection-du-traumatisme-sur-les-attaches-erosion-des-relations.md — relu:false",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "MEN-05",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "accoutumance",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-mental",
+      "scene": "R3 — Volonté, SAN et Attaches",
+      "personnageId": "recette-dg-pluie-20261112-pj-mental",
+      "personnage": "[RECETTE] MENTAL"
+    },
+    "precondition": "Deux cases accoutumance false.",
+    "action": "Tenir les événements dans notes puis cocher seulement la case décidée avec le livre.",
+    "attendu": "Deux cases indépendantes ; pas de compteur des trois événements ni accoutumance automatique.",
+    "source": "docs/systems/delta-green/rules/accoutumance-violence-et-impuissance.md — relu:false",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "MEN-06",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "volonte",
+    "support": "à vérifier",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-mental",
+      "scene": "R3 — Volonté, SAN et Attaches",
+      "personnageId": "recette-dg-pluie-20261112-pj-mental",
+      "personnage": "[RECETTE] MENTAL"
+    },
+    "precondition": "VOL2 puis0, restaurer entre les essais.",
+    "action": "Comparer préparation d’un test avec la règle ouverte.",
+    "attendu": "Repérer si le malus ou refus attendu est appliqué ; ne pas présumer une automatisation du jet liée à VOL. Règle à confirmer.",
+    "source": "docs/systems/delta-green/rules/jauges-et-ressources-individuelles.md — relu:false",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "MEN-07",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "quotidien",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-mental",
+      "scene": "R3 — Volonté, SAN et Attaches",
+      "personnageId": "recette-dg-pluie-20261112-pj-mental",
+      "personnage": "[RECETTE] MENTAL"
+    },
+    "precondition": "Séance7 prévue ; aucune activité passée.",
+    "action": "Jouer une vignette puis appliquer seulement les changements arbitrés.",
+    "attendu": "Promesses et Attaches documentées ; aucun gain automatique de SAN, VOL ou compétence.",
+    "source": "docs/systems/delta-green/rules/scenes-de-vie-quotidienne-vignettes-d-intermede.md — relu:false",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "FIC-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "fiche",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-fiche",
+      "scene": "R4 — Fiche et remise en état",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Fiche du jeu du personnage de recette.",
+    "action": "Modifier Nom, Recherche et Attache1 puis rouvrir.",
+    "attendu": "Correspondance dans les deux sens et persistance à constater ; ne modifier aucun héros.",
+    "source": "docs/systems/delta-green/fiche/correspondance.json",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "FIC-02",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "fiche",
+    "support": "à vérifier",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-fiche",
+      "scene": "R4 — Fiche et remise en état",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "FOR11 CON12 ; noter jauges avant modification.",
+    "action": "Passer CON13 puis revenir12.",
+    "attendu": "Contrôler maxima calculés et actuels conservés ; relever tout arrondi incohérent. Ne pas promettre recalcul automatique du SR.",
+    "source": "Manuel p.18 ; fiche HTML",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "FIC-03",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "restauration",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-fiche",
+      "scene": "R4 — Fiche et remise en état",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Ajouter une note témoin de fiction ; noter SAN de Nora.",
+    "action": "Changer seulement Recherche du PJ recette, restaurer50, recharger GM-OS.",
+    "attendu": "Recherche50 ; note et SAN de Nora inchangées. Restauration manuelle locale ; aucun Nexus Remplacer.",
+    "source": "src/types/trame.types.ts ; ETATS-DE-REFERENCE.md",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "IMP-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "import",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-liaison",
+      "scene": "R5 — Import, médias et liaison",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Pilote2.0.1 installé ; anciens PJ conservés comme témoins.",
+    "action": "Importer une fois le .gmos en Tel quel.",
+    "attendu": "Une seule campagne ; nouveaux PJ sous p-1/p-2/p-3 ; anciens PJ et avatars conservés.",
+    "source": "NexusService ; nexus.types.ts",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "IMP-02",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "persistance",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-liaison",
+      "scene": "R5 — Import, médias et liaison",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Campagne importée une fois.",
+    "action": "Fermer puis rouvrir GM-OS et consulter Trame, Atlas, séances.",
+    "attendu": "12 séances prévues,4 actes narratifs et5 ateliers ; aucun réimport nécessaire.",
+    "source": "src/types/trame.types.ts ; nexus.types.ts",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "MED-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "medias",
+    "support": "natif",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-liaison",
+      "scene": "R5 — Import, médias et liaison",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Connexion externe coupée.",
+    "action": "Ouvrir les plans et pièces, puis lire le signal synthétique.",
+    "attendu": "Images embarquées et WAV lisibles ; aucune voix enregistrée ni matériel configuré.",
+    "source": "manifest.json assetMap",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "HUB-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "droits",
+    "support": "à vérifier",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-liaison",
+      "scene": "R5 — Import, médias et liaison",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Instance jetable autorisée ; Hub p-1/p-2/p-3 en360/768/1180px.",
+    "action": "Inspecter charges complètes et partielles, rechercher SECRET_MJ_DG_PLUIE.",
+    "attendu": "Marqueur absent des charges joueurs ; GM-05 testé sur réseau, distinct du caviardage pur.",
+    "source": "src/modules/remote/logic/caviardageDesJoueurs.ts",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "HUB-02",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "droits",
+    "support": "à vérifier",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-liaison",
+      "scene": "R5 — Import, médias et liaison",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Chaque Hub connecté à son joueur ; personnage actif de cette partie.",
+    "action": "Modifier sa compétence, demander un jet, tenter accès au personnage d’autrui.",
+    "attendu": "Écriture et jet autorisés reçus par MJ ; écriture sur autrui refusée ; personnages actifs seuls listés.",
+    "source": "Parcours Hub et centre de liaison de GM-OS",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "HUB-03",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "resultats",
+    "support": "à vérifier",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-liaison",
+      "scene": "R5 — Import, médias et liaison",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Messagerie ouverte sur poste de recette.",
+    "action": "Demander un jet public puis un jet caché et attendre plus de5secondes.",
+    "attendu": "Résultat public visible en messagerie et fenêtre volante5s ; vérifier les destinataires du caché sans annoncer sa valeur aux autres.",
+    "source": "Demande de David ; parcours de jets distants",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "MOD-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "modules",
+    "support": "absent",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-liaison",
+      "scene": "R5 — Import, médias et liaison",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Pilote2.0.1 et catalogue courant.",
+    "action": "Consulter les modules disponibles du jeu.",
+    "attendu": "Aucun module spécialisé Delta Green déclaré ; outils génériques seuls, aucun module inventé.",
+    "source": "src/modules/modulesDuJeu/catalogue.ts ; pilote2.0.1",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "ENV-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "environnement",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-sante",
+      "scene": "R2 — PV et combat",
+      "personnageId": "recette-dg-pluie-20261112-pj-sante",
+      "personnage": "[RECETTE] SANTE"
+    },
+    "precondition": "Atelier seul ; PV12 ; scène de galerie sèche préparée.",
+    "action": "Lire la règle de noyade, fatigue et danger choisie ; annoncer sorties et risque avant un test synthétique.",
+    "attendu": "Appliquer seulement les effets arbitrés et les noter dans blessures ; aucun dégât automatique associé au changement de carte.",
+    "source": "docs/systems/delta-green/rules/environnement-et-dangers.md — relu:false",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "POU-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "poursuite",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-jets",
+      "scene": "R1 — Tests et critiques",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Deux profils synthétiques ; itinéraire avec deux sorties.",
+    "action": "Préparer une poursuite livre ouvert et consigner distances, tests et conséquences.",
+    "attendu": "Suivi manuel ; ne pas assimiler une poursuite à un module d’opposition ni inventer un compteur natif.",
+    "source": "docs/systems/delta-green/rules/poursuites.md — relu:false",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  },
+  {
+    "id": "PRO-01",
+    "archive": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "mecanique": "progression",
+    "support": "manuel",
+    "repere": {
+      "acteId": "recette-dg-pluie-20261112-acte-recette",
+      "acte": "ATELIERS DE RECETTE — hors fiction",
+      "sceneId": "recette-dg-pluie-20261112-atelier-fiche",
+      "scene": "R4 — Fiche et remise en état",
+      "personnageId": "recette-dg-pluie-20261112-pj-jet",
+      "personnage": "[RECETTE] JET"
+    },
+    "precondition": "Recherche50 ; notes vides ; aucun échec d’histoire simulé.",
+    "action": "Consigner un échec de recette puis vérifier dans le livre quand une amélioration devient disponible.",
+    "attendu": "Suivi et progression arbitrés ; pas de gain automatique ou de case de progression persistante inventée dans le gabarit. Restaurer Recherche50 et les notes.",
+    "source": "docs/systems/delta-green/rules/composition-de-la-fiche-de-personnage.md ; scenes-de-vie-quotidienne-vignettes-d-intermede.md — relu:false",
+    "preuvePrevue": "Capture avant/après, dé réellement tiré, valeurs après rechargement ; noter les écarts et les limites."
+  }
+]

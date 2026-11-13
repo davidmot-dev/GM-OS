@@ -1,0 +1,187 @@
+{
+  "genereLe": "2026-11-12T12:00:00.000Z",
+  "generateur": "delta-green.mjs v1",
+  "gmosVersion": "6.5.0",
+  "node": "v24.13.1",
+  "campagne": {
+    "fichier": "01-Delta-Green-Les-dossiers-de-la-pluie.gmos",
+    "sha256": "5b36e86ff40424dfe131a7441ecb05b16239bdf321f37cf659024a9a561b3f60"
+  },
+  "pilote": {
+    "id": "custom-1794500163201",
+    "version": "2.0.1",
+    "source": "Export Dirvers/corriges/Delta-Green-2.0.1.gmos-driver",
+    "sha256": "67cc38c66b3085963e615b7b7f65aaa9dcd5bdf5606b458ae516e70fb64a699b"
+  },
+  "gabarit": {
+    "id": "tpl-1794500163202",
+    "champs": 164
+  },
+  "joueurs": [
+    {
+      "id": "p-1",
+      "realName": "Thomas D."
+    },
+    {
+      "id": "p-2",
+      "realName": "Marie C."
+    },
+    {
+      "id": "p-3",
+      "realName": "Lucas R."
+    }
+  ],
+  "seances": 12,
+  "scenes": 41,
+  "ateliers": 5,
+  "pjPrincipaux": 3,
+  "pjRecette": 3,
+  "pnj": 10,
+  "medias": 26,
+  "cas": 36,
+  "modules": {
+    "corpusId": "delta-green",
+    "implicite": true,
+    "references": [],
+    "modules": [],
+    "erreurs": []
+  },
+  "sources": [
+    {
+      "fichier": "outils/campagnes-de-recette/delta-green.mjs",
+      "sha256": "4434ad874f34ec927fd0d3e6a9d088b756dba0e350a9f1087700ca884a1557d4"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/delta-green-scenario.mjs",
+      "sha256": "f4d008fb5f61a687be23f32c5e2f37d55dac7355bf3dc98b2cecb3fadc22d7a9"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/delta-green-recette.mjs",
+      "sha256": "2fbc3a60a031100d88c56390998beac3247bb1d44f22e701a6b3b5a13137575d"
+    }
+  ],
+  "corpus": {
+    "relu": false,
+    "limite": "18 fiches non relues ; règles manuelles à confirmer contre le livre."
+  },
+  "sourcesRegles": [
+    {
+      "fichier": "docs/systems/delta-green/rules/accoutumance-violence-et-impuissance.md",
+      "sha256": "1c58996534fb819148c185bc4ec41d1c7ae63a458394d6e4b94eb136913d9cf1"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/composition-de-la-fiche-de-personnage.md",
+      "sha256": "75d9fc00b4d58903c58c2975cd0b3d2e73e2216ff5788e5ec35f856a5d911217"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/degats-et-types-de-degats.md",
+      "sha256": "0d420cdfceade3dc7ad4f4d56d6428f66cc986ccc046258fcda87e58d226a86d"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/degres-de-reussite-et-critiques.md",
+      "sha256": "3d506e9e031c467408289728628a7cdc89c88a86233ec8910efdf323617e5ed6"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/distances-et-portees.md",
+      "sha256": "b6bb30bf15476d0a8321e0a9259ab8f0749e230497f0db4290c4cd19512ff383"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/environnement-et-dangers.md",
+      "sha256": "d4c3676b421ce8f8bdd9d6588ba8655ca1c95ac802703d0b070663504cc944c0"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/equipement-et-materiel.md",
+      "sha256": "49dfb5fe0a54d87d4c10bcc16ea4bd47a805501c0627b0528ab52a19ca715777"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/etats-et-conditions.md",
+      "sha256": "7b7cc8a1fb8eee7ec5a288be109d1c3d6acd5e8161b6be0666f66bb46181b860"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/initiative-et-deroulement-du-tour.md",
+      "sha256": "45d36aa72001510133e8acf4af93c8c09618a4d399ae8af01ac2ba5ab29617b6"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/inventaire-des-mecaniques.md",
+      "sha256": "2da046af3efbb508dcac4f3ff5492cedfe4aa101cc27eb3f11c9c314af97d836"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/jauges-et-ressources-individuelles.md",
+      "sha256": "24710a5d080712dc1a122b042d3a73d6d33571bae6fa7e64cab40775b7f34937"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/jets-opposes-aide-et-cooperation.md",
+      "sha256": "ee3ff23480ca5803d0976e5e2fecac21e6e8e713bafaafaaddc35f61590ac8c4"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/poursuites.md",
+      "sha256": "dfc26052971a0e9d16dd88a07a52fa51c151528e915a65458efad80b95bd06d3"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/projection-du-traumatisme-sur-les-attaches-erosion-des-relations.md",
+      "sha256": "85e6f0c5f0cb96cc1ac536318181b48f40d75e52ab8d72459b94267181164831"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/resolution-des-jets.md",
+      "sha256": "1dc7dfee2c7072f7a9c34222cc79d2cc92989d581d390f4269ab079ef3d2154a"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/sante-et-blessures.md",
+      "sha256": "be9a3f91c285edf248c6ffc896618154b3ccffffb31f8fa72bc4246e3470df81"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/scenes-de-vie-quotidienne-vignettes-d-intermede.md",
+      "sha256": "6690bf4ce0b6ca8bc1ac8dfde3bd3f0499b7f270978024e64e528ed618220b5c"
+    },
+    {
+      "fichier": "docs/systems/delta-green/rules/ton-registre-et-ambiance.md",
+      "sha256": "ef66f5f3c414c9e34dd6732399c616001b4fa9a891114a0420ef9c5ee1d1817f"
+    }
+  ],
+  "sourcesTechniques": [
+    {
+      "fichier": "src/modules/session/logic/ficheNeuve.ts",
+      "sha256": "41a0b772292ec5e628b8730305b8d97c14a45b1a821cc48fc47a325a3309d351"
+    },
+    {
+      "fichier": "src/modules/session/logic/HealthInterpreter.ts",
+      "sha256": "ecefe409a27c8e73a366d791aa70553b48b01d10ebc48e8856efcd9adc78c923"
+    },
+    {
+      "fichier": "src/modules/combat/logic/SanteDuCombattant.ts",
+      "sha256": "2c6f5d4875a73a7199f4e16662419431d4e57e83c0c92f087390df6576eed6b6"
+    },
+    {
+      "fichier": "src/modules/dice/systemes/deltaGreen.ts",
+      "sha256": "d7cc3af3b5087f128f0bc2e7af469fa1c5750dbb66f01f15f2a44e88baa7b4cb"
+    },
+    {
+      "fichier": "src/modules/dice/DescripteurDeJet.ts",
+      "sha256": "45e7bdd8d1197d32fd3756b90286218073ef21033d7c82adb38c26a1f9d0853c"
+    },
+    {
+      "fichier": "src/modules/remote/logic/caviardageDesJoueurs.ts",
+      "sha256": "04b88370dc581ce59b03c2516b24e8d8aecb5bceb0d71b8ad3b9684db70d68f7"
+    },
+    {
+      "fichier": "src/modules/modulesDuJeu/catalogue.ts",
+      "sha256": "3dd87df4456da340881fa332bf0bf393266940338e3a4133b82f5dc2d0b1e520"
+    },
+    {
+      "fichier": "src/modules/system/archive/nexus.types.ts",
+      "sha256": "3df1e4d908110a12c5d9a47b903b1087b5e9d2e270c3e61be95b0242a4b8f1bd"
+    },
+    {
+      "fichier": "docs/systems/delta-green/fiche/correspondance.json",
+      "sha256": "9ec68b13fc3cdfa307429e869d8c9f88e6c46455229d01160cf965b0fb8cd161"
+    },
+    {
+      "fichier": "docs/systems/delta-green/Delta Green Band.jpg",
+      "sha256": "9dd3fe23b874725a8c02392e017aed79c4630bc741e4a4ed7b292a30e4e9504e"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/cthulhu-hack-joueurs.json",
+      "sha256": "0032dc5a6bec43dbf515ade46ce461b71858a2a5e2cb81bb27f1380d95d912fa"
+    }
+  ]
+}
