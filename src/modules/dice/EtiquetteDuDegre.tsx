@@ -23,7 +23,7 @@ import type { RollResult } from './DiceEngine';
  * serait pire que de n'en montrer aucun.
  */
 export const EtiquetteDuDegre: React.FC<{
-    resultat: Pick<RollResult, 'degre' | 'tagSuccess'>;
+    resultat: Pick<RollResult, 'degre' | 'tagSuccess' | 'libelleDuDegre'>;
     /** Les classes de l'étiquette, selon que le jet est réussi ou non. */
     classes: (reussi: boolean) => string;
     /** Enveloppe facultative — la tablette anime la sienne. */
@@ -41,7 +41,7 @@ export const EtiquetteDuDegre: React.FC<{
     if (!degre) return null;
 
     const reussi = estUneReussite(degre);
-    const contenu = <div className={classes(reussi)}>{t(cleI18nDuDegre(degre))}</div>;
+    const contenu = <div className={classes(reussi)}>{resultat.libelleDuDegre || t(cleI18nDuDegre(degre))}</div>;
 
     return <>{enveloppe ? enveloppe(contenu, reussi) : contenu}</>;
 };

@@ -654,6 +654,194 @@
     {
       "gmos": "notes",
       "fiche": "profile.personal_notes"
+    },
+    {
+      "gmos": "experience_anthropologie",
+      "fiche": "experience.anthropology"
+    },
+    {
+      "gmos": "experience_archeologie",
+      "fiche": "experience.archeology"
+    },
+    {
+      "gmos": "experience_armes_a_feu",
+      "fiche": "experience.firearms"
+    },
+    {
+      "gmos": "experience_armes_de_melee",
+      "fiche": "experience.melee"
+    },
+    {
+      "gmos": "experience_armes_lourdes",
+      "fiche": "experience.heavy_weapons"
+    },
+    {
+      "gmos": "experience_art",
+      "fiche": "experience.art"
+    },
+    {
+      "gmos": "experience_artillerie",
+      "fiche": "experience.artillery"
+    },
+    {
+      "gmos": "experience_artisanat",
+      "fiche": "experience.craft"
+    },
+    {
+      "gmos": "experience_athletisme",
+      "fiche": "experience.athletics"
+    },
+    {
+      "gmos": "experience_bureaucratie",
+      "fiche": "experience.bureaucracy"
+    },
+    {
+      "gmos": "experience_chirurgie",
+      "fiche": "experience.surgery"
+    },
+    {
+      "gmos": "experience_combat_a_mains_nues",
+      "fiche": "experience.unarmed"
+    },
+    {
+      "gmos": "experience_comptabilite",
+      "fiche": "experience.accounting"
+    },
+    {
+      "gmos": "experience_conduite",
+      "fiche": "experience.drive"
+    },
+    {
+      "gmos": "experience_criminalistique",
+      "fiche": "experience.forensics"
+    },
+    {
+      "gmos": "experience_criminologie",
+      "fiche": "experience.criminology"
+    },
+    {
+      "gmos": "experience_deguisement",
+      "fiche": "experience.disguise"
+    },
+    {
+      "gmos": "experience_discretion",
+      "fiche": "experience.stealth"
+    },
+    {
+      "gmos": "experience_droit",
+      "fiche": "experience.law"
+    },
+    {
+      "gmos": "experience_engins_lourds",
+      "fiche": "experience.heavy_machinery"
+    },
+    {
+      "gmos": "experience_equitation",
+      "fiche": "experience.ride"
+    },
+    {
+      "gmos": "experience_esquive",
+      "fiche": "experience.dodge"
+    },
+    {
+      "gmos": "experience_explosifs",
+      "fiche": "experience.demolitions"
+    },
+    {
+      "gmos": "experience_histoire",
+      "fiche": "experience.history"
+    },
+    {
+      "gmos": "experience_informatique",
+      "fiche": "experience.computer_science"
+    },
+    {
+      "gmos": "experience_medecine",
+      "fiche": "experience.medicine"
+    },
+    {
+      "gmos": "experience_natation",
+      "fiche": "experience.swim"
+    },
+    {
+      "gmos": "experience_occultisme",
+      "fiche": "experience.occult"
+    },
+    {
+      "gmos": "experience_orientation",
+      "fiche": "experience.navigate"
+    },
+    {
+      "gmos": "experience_persuasion",
+      "fiche": "experience.persuade"
+    },
+    {
+      "gmos": "experience_pharmacologie",
+      "fiche": "experience.pharmacy"
+    },
+    {
+      "gmos": "experience_pilotage",
+      "fiche": "experience.pilot"
+    },
+    {
+      "gmos": "experience_premiers_secours",
+      "fiche": "experience.first_aid"
+    },
+    {
+      "gmos": "experience_psychotherapie",
+      "fiche": "experience.psychotherapy"
+    },
+    {
+      "gmos": "experience_recherche",
+      "fiche": "experience.search"
+    },
+    {
+      "gmos": "experience_roem",
+      "fiche": "experience.sigint"
+    },
+    {
+      "gmos": "experience_rohum",
+      "fiche": "experience.humint"
+    },
+    {
+      "gmos": "experience_science",
+      "fiche": "experience.science"
+    },
+    {
+      "gmos": "experience_sciences_militaires",
+      "fiche": "experience.military_science"
+    },
+    {
+      "gmos": "experience_survie",
+      "fiche": "experience.survival"
+    },
+    {
+      "gmos": "experience_vigilance",
+      "fiche": "experience.alertness"
+    },
+    {
+      "gmos": "experience_autre1",
+      "fiche": "experience.custom_0"
+    },
+    {
+      "gmos": "experience_autre2",
+      "fiche": "experience.custom_1"
+    },
+    {
+      "gmos": "experience_autre3",
+      "fiche": "experience.custom_2"
+    },
+    {
+      "gmos": "experience_autre4",
+      "fiche": "experience.custom_3"
+    },
+    {
+      "gmos": "experience_autre5",
+      "fiche": "experience.custom_4"
+    },
+    {
+      "gmos": "experience_autre6",
+      "fiche": "experience.custom_5"
     }
   ],
   "absents": [
@@ -696,194 +884,6 @@
     {
       "fiche": "health.sanity_max",
       "pourquoi": "Maximum calculé par GM-OS depuis le pilote (statsToTrack[].max, p. 18)."
-    },
-    {
-      "fiche": "experience.anthropology",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.archeology",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.firearms",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.melee",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.heavy_weapons",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.art",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.artillery",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.craft",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.athletics",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.bureaucracy",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.surgery",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.unarmed",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.accounting",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.drive",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.forensics",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.criminology",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.disguise",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.stealth",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.law",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.heavy_machinery",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.ride",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.dodge",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.demolitions",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.history",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.computer_science",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.medicine",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.swim",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.occult",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.navigate",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.persuade",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.pharmacy",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.pilot",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.first_aid",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.psychotherapy",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.search",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.sigint",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.humint",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.science",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.military_science",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.survival",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.alertness",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.custom_0",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.custom_1",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.custom_2",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.custom_3",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.custom_4",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
-    },
-    {
-      "fiche": "experience.custom_5",
-      "pourquoi": "Case d’amélioration cochée après un test raté, puis 1D4 après la partie : elle se tient sur la fiche HTML."
     },
     {
       "fiche": "training.0.name",

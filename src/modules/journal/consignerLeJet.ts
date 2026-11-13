@@ -45,7 +45,7 @@ export function natureDuJet(degre: string | undefined): 'trace' | 'chronique' {
 }
 
 /** Ce qu'il faut d'un lancer pour le consigner — jamais le `RollResult` entier. */
-export interface JetAConsigner extends Pick<RollResult, 'degre' | 'tagSuccess' | 'totalDisplay'> {
+export interface JetAConsigner extends Pick<RollResult, 'degre' | 'tagSuccess' | 'totalDisplay' | 'libelleDuDegre'> {
     /** Ce que le jet cherchait — « Combat + Devoir », « Discrétion ». */
     titre: string;
     /** La cible, quand le jet en avait une. */
@@ -88,7 +88,7 @@ export function consignerLeJet(jet: JetAConsigner): void {
       l'espace par défaut est `common`. Sans lui, le journal écrivait la clé —
       « dice.degres.reussite-particuliere » — dans le texte même que l'Oracle relit.
     */
-    const verdict = degre ? i18next.t(cleI18nDuDegre(degre), { ns: 'modules' }) : null;
+    const verdict = jet.libelleDuDegre || (degre ? i18next.t(cleI18nDuDegre(degre), { ns: 'modules' }) : null);
 
     const morceaux = [jet.totalDisplay];
     if (jet.seuil !== undefined) morceaux.push(`cible ${jet.seuil}`);

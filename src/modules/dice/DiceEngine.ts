@@ -48,6 +48,8 @@ export interface RollResult {
      * que le jeu ne le sait pas.
      */
     degre?: DegreDeReussite;
+    /** Le vocabulaire du jeu voyage avec le résultat, jusque dans le journal et sur la tablette. */
+    libelleDuDegre?: string;
     totalDisplay: string;
     fateRank?: number; // For Fate/Fudge results
     /**

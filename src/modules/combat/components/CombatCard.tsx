@@ -37,6 +37,7 @@ import { useTranslation } from 'react-i18next';
 import { estUneFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
 import { etatDuPhysique, physiqueActuel } from '../../dice/systemes/potentielGarde';
 import { DefaiteDune } from './ConflitDune';
+import DommagesDeltaGreen from './DommagesDeltaGreen';
 
 const PRESET_STATUSES = [
     { name: 'poison', icon: '🤢', duration: 3 },
@@ -581,6 +582,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
             {/* À zéro : le Hors Jeu (Cthulhu Hack), Brisé par les dégâts ou par le stress (Blade Runner). */}
             <HorsJeuDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
+            {activeDriver?.jet?.deltaGreen && <div className="mx-3 my-2"><DommagesDeltaGreen attaquant={combatant} regle={activeDriver.jet.deltaGreen} /></div>}
             {/* Blade Runner : la protection se lance à chaque coup subi. */}
             <ProtectionDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
             {/* RuneQuest : le coup reçu passe par l'armure et la zone avant le total. */}

@@ -22,6 +22,14 @@ import { degreDuDe, estUneReussite, type DegreDeReussite, type EchelleDuJet } fr
 export interface RegleDeDeltaGreen {
     /** Les caractéristiques de la fiche (FOR, CON…) : un test se fait à la valeur × 5 (p. 18). */
     caracteristiques?: string[];
+    sante?: string;
+    san?: string;
+    pouvoir?: string;
+    charisme?: string;
+    seuilRupture?: string;
+    inconcevable?: string;
+    /** Compétence → case d’amélioration de la fiche (p. 29), hors Inconcevable. */
+    experience?: Record<string, string>;
 }
 
 /** Les bornes des chances modifiées (p. 43). */
@@ -71,6 +79,7 @@ export function nommerLeJetDeDeltaGreen(brut: RollResult, echelle: EchelleDuJet)
         ...brut,
         degre,
         tagSuccess: estUneReussite(degre),
+        libelleDuDegre: libelle,
         totalDisplay: `${libelle} — ${deuxChiffres(de)} contre ${echelle.chances} %`,
     };
 }

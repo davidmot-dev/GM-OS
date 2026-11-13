@@ -64,6 +64,7 @@ export function consignerUnJetCache(jet: JetAConsigner): void {
         titre: jet.titre,
         totalDisplay: jet.totalDisplay,
         degre: jet.degre,
+        libelleDuDegre: jet.libelleDuDegre,
         tagSuccess: jet.tagSuccess,
         seuil: jet.seuil,
         id: crypto.randomUUID(),
@@ -85,6 +86,7 @@ export function garderLeJetCache(jet: RollRecord, seuil?: number): void {
         titre: jet.title,
         totalDisplay: jet.totalDisplay,
         degre: jet.degre,
+        libelleDuDegre: jet.libelleDuDegre,
         tagSuccess: jet.tagSuccess,
         seuil,
     });

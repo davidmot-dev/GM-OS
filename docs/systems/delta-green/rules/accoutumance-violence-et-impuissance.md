@@ -7,7 +7,7 @@ sources: "dgmanuel_de_lagent_signets.pdf"
 sections: "« Repousser la folie » ; « S’accoutumer à la perte de SAN » ; « La SAN en péril » ; « Violence » ; « Impuissance »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: ad73cedd
 ---
 
@@ -38,13 +38,13 @@ Compteur d'accoutumance (Violence ou Impuissance)
 - Dynamique: s'accumule (subit les événements).
 
 Pertes permanentes d'accoutumance
-- Violence: perte de 1D6 Charisme (CHA) et perte de 1D6 sur chaque Attache.
+- Violence: tirer un seul 1D6, retirer ce même montant au Charisme (CHA) et au score de chaque Attache.
 - Impuissance: perte de 1D6 Pouvoir (POU).
 
 ## À la table
 Lorsqu'un Agent subit une perte de Santé Mentale (SAN) liée à la Violence ou à l'Impuissance, le déroulement s'articule comme suit (section « S’accoutumer à la perte de SAN »):
 
-1. Constat de la perte: si le test de SAN échoue ou si l'événement impose une perte automatique d'au moins 1 point de SAN, le joueur vérifie si son personnage est déjà accoutumé à ce traumatisme. Si c'est le cas, il ignore la perte et réussit automatiquement (sections « Violence », « Impuissance »).
+1. Constat de la perte: vérifier si l'Agent est déjà accoutumé à ce traumatisme. Si c'est le cas, il réussit automatiquement son test de SAN et utilise la perte indiquée pour une réussite ; cela ne garantit pas une perte nulle (p. 66, 73). Sinon, résoudre le test normalement.
 2. Vérification de crise: si l'Agent n'est pas accoutumé, le joueur applique la perte. Si celle-ci atteint ou dépasse le seuil déclenchant une folie temporaire (perte de 5 points de SAN ou plus en une seule fois) ou fait franchir le Seuil de Rupture, l'Agent sombre dans la folie: le traumatisme est trop violent pour être assimilé, toutes les cases déjà cochées dans cette catégorie sont effacées et le compteur repart à zéro.
 3. Coche de progression: si la perte est comprise entre 1 et 4 points de SAN et qu'aucun Seuil de Rupture n'est franchi, l'Agent encaisse le choc sans s'effondrer. Le joueur coche l'une des trois cases d'accoutumance de la catégorie correspondante.
 4. Bascule vers l'accoutumance: dès que la troisième case est cochée, le joueur coche définitivement la mention « Accoutumé ». Il applique immédiatement et de façon irréversible la perte de caractéristique correspondante (Charisme et Attaches pour la Violence, Pouvoir pour l'Impuissance).
@@ -56,3 +56,5 @@ Lorsqu'un Agent subit une perte de Santé Mentale (SAN) liée à la Violence ou 
 
 ## Non couvert
 Les sources ne précisent pas si un Agent peut délibérément chercher à s'exposer à des traumatismes contrôlés durant son temps libre pour forcer l'obtention de l'accoutumance.
+
+*Relu le 2026-11-13 contre le Manuel de l’Agent, p. 66, 73–74 (PDF = imprimée + 1) ; corrigé : réussite automatique ne signifie pas perte nulle ; le même D6 diminue le CHA et toutes les Attaches.*

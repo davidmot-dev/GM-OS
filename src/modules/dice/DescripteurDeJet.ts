@@ -1353,6 +1353,10 @@ export function preparerLeJet(
 
     // Delta Green : les chances modifiées restent entre 1 et 99 % (p. 43), puis l'échelle du livre (p. 44).
     if (regleDeltaGreen) {
+        if (valeursDeLaFiche.distraction_dg === true) {
+            seuil -= 20;
+            remarques.push('Distraction : −20 % sur ce test (p. 44), puis le malus disparaît.');
+        }
         const bornees = bornerLesChances(seuil);
         if (bornees.ramenees) remarques.push(`Chances ramenées à ${bornees.chances} % : elles restent entre 1 et 99 % (p. 43).`);
         seuil = bornees.chances;

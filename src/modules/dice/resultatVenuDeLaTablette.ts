@@ -1,5 +1,6 @@
 import type { DieResult, RollResult } from './DiceEngine';
 import { DEGRES_DE_REUSSITE, type DegreDeReussite } from './degresDeReussite';
+import { LIBELLES_DE_DELTA_GREEN } from './systemes/deltaGreen';
 
 /**
  * **Un résultat de jet lancé sur la tablette d'un joueur, relu chez le meneur**
@@ -75,6 +76,7 @@ export function lireLeResultatDeLaTablette(payload: unknown): ResultatVenuDeLaTa
             ...(nombre(p.successes) !== undefined ? { successes: nombre(p.successes) } : {}),
             ...(booleen(p.tagSuccess) !== undefined ? { tagSuccess: booleen(p.tagSuccess) } : {}),
             ...(degre ? { degre } : {}),
+            ...(degre && p.libelleDuDegre === LIBELLES_DE_DELTA_GREEN[degre] ? { libelleDuDegre: String(p.libelleDuDegre) } : {}),
         },
     };
 }

@@ -18,7 +18,7 @@ const { degreDuDe } = await import('../../src/modules/dice/degresDeReussite.ts')
 const { santeDeDepart } = await import('../../src/modules/combat/logic/SanteDuCombattant.ts');
 const { champsProposes } = await import('../../src/modules/dice/demandeDeJet.ts');
 
-const fichier = process.argv[2] ?? 'Export Dirvers/corriges/Delta-Green-2.0.1.gmos-driver';
+const fichier = process.argv[2] ?? 'Export Dirvers/corriges/Delta-Green-2.1.0.gmos-driver';
 const { gameDriver: pilote, sheetTemplate: fiche } = JSON.parse(new AdmZip(fichier).readAsText('state.json'));
 const constats = controlerLePilote(pilote, fiche);
 console.log(JSON.stringify({ fichier, version: pilote.version, constats }, null, 2));
@@ -52,6 +52,15 @@ assert.ok(preparer('anthropologie').avertissements.some(a => a.includes('0 %')),
 // p. 18 : PV = (FOR + CON) / 2, arrondi au supérieur — FOR 15, CON 12 → 14.
 assert.equal(santeDeDepart(pilote.combat.santeDeDepart, c => Number(valeurs[c])), 14);
 assert.equal(pilote.combat.statsToTrack.find(s => s.isMainHP)?.fieldId, 'PV');
+if (pilote.version === '2.1.0') {
+    assert.equal(pilote.jet.deltaGreen.sante, 'PV');
+    assert.equal(pilote.jet.deltaGreen.san, 'SAN');
+    assert.equal(Object.keys(pilote.jet.deltaGreen.experience).length, 47);
+    assert.ok(!Object.hasOwn(pilote.jet.deltaGreen.experience, 'inconcevable'));
+    assert.equal(santeDeDepart(pilote.combat.santeDeDepart, c => Number(valeurs[c])), 14);
+    const { santePrincipaleDeLaFiche, santeAlignee } = await import('../../src/modules/combat/logic/SanteDuCombattant.ts');
+    assert.equal(santeAlignee(undefined, santePrincipaleDeLaFiche(pilote, { ...valeurs, PV: 2 })).data.inconscienceA, 2);
+}
 
 // Le menu du jet (2.0.1) : la spécialité précise le nom ; sans elle, la compétence reste proposée.
 const menu = new Map(champsProposes(pilote.jet.seuil[0], fiche.sections, valeurs).map(c => [c.id, c.label]));

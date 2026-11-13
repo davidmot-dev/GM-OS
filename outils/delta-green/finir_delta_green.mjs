@@ -1,4 +1,7 @@
-// Le pilote Delta Green 2.0.1 — 12/11/2026, à la demande de David (« /finir-un-pilote Delta Green,
+// Le pilote Delta Green 2.1.0 — 13/11/2026 : SAN/rupture (p. 66–74), inconscience à 2 PV (p. 18),
+// létalité et critiques (p. 44, 52, 57–60), opposition (p. 45), amélioration (p. 29).
+// Demande de David : « faire les améliorations de Delta Green du fichier améliorations tous les pilotes ».
+// Base du 12/11/2026 (« /finir-un-pilote Delta Green,
 // pour les compétences vérifie dans le livre ; pour les points de vie, la règle c'est (FOR+CON)/2 ;
 // corrige le jet sur les critiques »). Part de l'export de David
 // (Export Dirvers/Delta_Green_driver_gmos_*.gmos-driver), GARDE l'identifiant du pilote et de sa
@@ -144,6 +147,8 @@ const sections = [
         z('motivations', 'Motivations et troubles psychiques', 'psychology.motivations_disorders'),
         c('accoutumance_violence', 'Accoutumé à la violence', 'adaptation.violence'),
         c('accoutumance_impuissance', 'Accoutumé à l’impuissance', 'adaptation.helplessness'),
+        n('progression_violence', 'Progression vers l’accoutumance à la violence (0–3)', undefined, { max: 3 }),
+        n('progression_impuissance', 'Progression vers l’accoutumance à l’impuissance (0–3)', undefined, { max: 3 }),
     ] },
     { id: 'materiel_combat', label: 'Matériel et combat', fields: [
         z('armure', 'Protection et équipement', 'equipment.armor_gear'),
@@ -165,6 +170,10 @@ const sections = [
         z('description', 'Description physique', 'profile.description'),
         z('foyer', 'Domicile et famille', 'profile.home_family'),
         z('notes', 'Notes personnelles', 'profile.personal_notes'),
+    ] },
+    { id: 'experience', label: 'Compétences à améliorer après la partie', fields: [
+        ...COMPETENCES.filter(([id]) => id !== 'inconcevable').map(([id, nom, cle]) => c(`experience_${id}`, `${nom} — échec à améliorer`, `experience.${cle}`)),
+        ...[0, 1, 2, 3, 4, 5].map(i => c(`experience_autre${i + 1}`, `Langue ou autre compétence ${i + 1} — échec à améliorer`, `experience.custom_${i}`)),
     ] },
 ];
 
@@ -194,7 +203,7 @@ const fiche = { ...ancienneFiche, name: 'Fiche d’Agent (formulaire DD 315)', s
 // --- Le pilote. ---
 const pilote = {
     ...ancien,
-    version: '2.0.1',
+    version: '2.1.0',
     dice: { defaultDice: '1d100', logic: 'd100-low', engine: 'standard' },
     jet: {
         seuil: [{
@@ -206,7 +215,12 @@ const pilote = {
         reserve: { base: 1, max: 1, faces: 100 },
         sens: 'sous-ou-egal',
         modificateurDuSeuil: { min: -40, max: 40, defaut: 0 },
-        deltaGreen: { caracteristiques: CARACTERISTIQUES.map(([id]) => id) },
+        deltaGreen: {
+            caracteristiques: CARACTERISTIQUES.map(([id]) => id),
+            sante: 'PV', san: 'SAN', pouvoir: 'POU', charisme: 'CHA', seuilRupture: 'SR', inconcevable: 'inconcevable',
+            experience: Object.fromEntries([...COMPETENCES.filter(([id]) => id !== 'inconcevable').map(([id]) => [id, `experience_${id}`]),
+                ...[1, 2, 3, 4, 5, 6].map(i => [`autre${i}`, `experience_autre${i}`])]),
+        },
     },
     combat: {
         ...ancien.combat,
@@ -245,7 +259,7 @@ const sortie = new AdmZip();
 sortie.addFile('manifest.json', Buffer.from(JSON.stringify({ ...manifeste, exportedAt: new Date().toISOString() }, null, 2), 'utf8'));
 sortie.addFile('state.json', Buffer.from(JSON.stringify({ ...etat, gameDriver: pilote, sheetTemplate: fiche }), 'utf8'));
 fs.mkdirSync(path.join(dossier, 'corriges'), { recursive: true });
-const cible = path.join(dossier, 'corriges', 'Delta-Green-2.0.1.gmos-driver');
+const cible = path.join(dossier, 'corriges', 'Delta-Green-2.1.0.gmos-driver');
 sortie.writeZip(cible);
 
 const cheminCorrespondance = 'docs/systems/delta-green/fiche/correspondance.json';

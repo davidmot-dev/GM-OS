@@ -21,6 +21,10 @@ describe('un résultat venu de la tablette', () => {
             rolls: [{ val: 3, sides: 20 }, { val: 17, sides: 20, isDropped: true, displayStr: '(17)' }],
         });
     });
+    it('conserve les mots de Delta Green et rejette un libellé qui ne correspond pas au degré', () => {
+        expect(lireLeResultatDeLaTablette({ ...BON, degre: 'echec-total', libelleDuDegre: 'Échec critique' })!.resultat.libelleDuDegre).toBe('Échec critique');
+        expect(lireLeResultatDeLaTablette({ ...BON, degre: 'echec-total', libelleDuDegre: 'Réussite critique' })!.resultat.libelleDuDegre).toBeUndefined();
+    });
 
     it('jette ce qu’il n’attend pas', () => {
         const lu = lireLeResultatDeLaTablette({

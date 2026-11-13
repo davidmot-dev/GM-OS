@@ -1126,6 +1126,14 @@ export function controlerLePilote(
         (dg.caracteristiques ?? []).forEach((champ, i) => {
             if (!tousLesChamps.has(champ)) erreur(`jet.deltaGreen.caracteristiques.${i}`, `Delta Green multiplie « ${champ} » par 5 (p. 18), absent de la fiche.`);
         });
+        for (const nom of ['sante', 'san', 'pouvoir', 'charisme', 'seuilRupture', 'inconcevable'] as const) {
+            const champ = dg[nom];
+            if (champ && !tousLesChamps.has(champ)) erreur(`jet.deltaGreen.${nom}`, `Le champ « ${champ} » est absent de la fiche.`);
+        }
+        for (const [competence, caseId] of Object.entries(dg.experience ?? {})) {
+            if (!tousLesChamps.has(competence) || !tousLesChamps.has(caseId)) erreur('jet.deltaGreen.experience', `Amélioration : « ${competence} » / « ${caseId} » absent de la fiche.`);
+            if (competence === dg.inconcevable || dg.caracteristiques?.includes(competence) || competence === dg.san) erreur('jet.deltaGreen.experience', 'Seules les compétences hors Inconcevable ont une case d’amélioration (p. 29).');
+        }
     }
     /*
       Chroniques Oubliées Contemporain (2026-10-31) : un d20 (ou 3d6) ajouté à UNE

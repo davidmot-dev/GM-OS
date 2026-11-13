@@ -89,6 +89,8 @@ import { CHOIX_D_ARGYROPEE, CHANCES_DE_SILENCIADA, LIBELLES_D_ARGYROPEE, bilanDe
     type ChoixDArgyropee, type JetDArgyropee, type MancheDOpposition } from '../../../dice/systemes/argyropee';
 import { PreparationRuneQuest, SuitesRuneQuest } from './RuneQuestAuJet';
 import { nommerLeJetDeDeltaGreen } from '../../../dice/systemes/deltaGreen';
+import { cocherExperienceDG } from '../../../dice/systemes/deltaGreenSuites';
+import DeltaGreenAuJet, { type DernierJetDG } from './DeltaGreenAuJet';
 import { CHOIX_DE_RUNEQUEST, nommerLeJetDeRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest } from '../../../dice/systemes/runequest';
 import { CHOIX_DE_DEGENESIS, lancerDegenesis, type ChoixDeDegenesis, type JetDeDegenesis } from '../../../dice/systemes/degenesis';
 import { AttaqueDegenesis, PreparationDegenesis, SuitesDegenesis, type AttaqueLancee } from './DegenesisAuJet';
@@ -527,6 +529,18 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const regleRuneQuest = descripteur.sens === 'sous-ou-egal' && !descripteur.cible ? descripteur.runequest : undefined;
     // Delta Green (12/11/2026) : réussite et échec critiques, dits avec les mots du livre (p. 44).
     const regleDeltaGreen = descripteur.sens === 'sous-ou-egal' && !descripteur.cible ? descripteur.deltaGreen : undefined;
+    const [dernierDG, setDernierDG] = useState<{ personnageId?: string; jet: DernierJetDG } | null>(null);
+    const [ecritsDG, setEcritsDG] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const refDG = useRef(ecritsDG);
+    const valeursDG = { ...valeurs, ...(ecritsDG.base === valeurs && ecritsDG.personnageId === personnageId ? ecritsDG.maj : {}) };
+    const ecrireDG = (maj: Record<string, unknown>) => {
+        const avant = refDG.current.base === valeurs && refDG.current.personnageId === personnageId ? refDG.current.maj : {};
+        refDG.current = { base: valeurs, personnageId, maj: { ...avant, ...maj } };
+        setEcritsDG(refDG.current);
+        // Le porteur du PC fusionne avec sa capture de fiche : deux conséquences d’un même
+        // jet doivent se transmettre ensemble avant le prochain rendu (expérience + distraction).
+        ecrireSurLaFiche?.(refDG.current.maj);
+    };
     const [choixRuneQuest, setChoixRuneQuest] = useState<ChoixDeRuneQuest>(CHOIX_DE_RUNEQUEST);
     const [runequestDuLancer, setRuneQuestDuLancer] = useState<{ calcul: CalculDeRuneQuest; compte: number } | null>(null);
     // RQ-A6 (2026-11-03) : le sort payé, l'inspiration, la coche d'expérience s'écrivent sur la
@@ -1523,6 +1537,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const enAttente = !!suitesAlien && resDuJet.rolls.some(d => d.source === 'gear' && d.val === 1);
         const res = regleJetAlien ? enregistrerLeResultatAlien(resDuJet, enAttente)
             : enAttente ? resultatAvecPanique(resDuJet) : resDuJet;
+        if (regleDeltaGreen) {
+            const champ = Object.values(choix).find(Boolean) ?? '';
+            setDernierDG({ personnageId, jet: { id: crypto.randomUUID(), champ, chances: jet.seuil, resultat: res } });
+            const maj = cocherExperienceDG(regleDeltaGreen, valeursDG, champ, res.degre);
+            if (ecrireSurLaFiche && Object.keys(maj).length) ecrireDG(maj);
+            if (ecrireSurLaFiche && valeursDG.distraction_dg === true) ecrireDG({ distraction_dg: false });
+        }
         setSeuilDuLancer(jet.seuil);
         setBonusDuLancer(bonusDuGroupe + bonusPerso);
         setResultat(res);
@@ -1765,6 +1786,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     successes: res.successes,
                     tagSuccess: res.tagSuccess,
                     degre: res.degre,
+                    libelleDuDegre: res.libelleDuDegre,
                 },
             })));
         } else {
@@ -1772,6 +1794,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 titre: titreDuJet,
                 totalDisplay: avecLaNevrose(res),
                 degre: res.degre,
+                libelleDuDegre: res.libelleDuDegre,
                 tagSuccess: res.tagSuccess,
                 seuil: descripteur.cible || jet.composantes.length > 0 ? jet.seuil : undefined,
             });
@@ -2496,7 +2519,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         : resultat && !paniqueEnAttente
         && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
         ? <EtiquetteDuDegre
-            resultat={{ degre: resultat.degre, tagSuccess: v.reussi }}
+            resultat={{ degre: resultat.degre, tagSuccess: v.reussi, libelleDuDegre: resultat.libelleDuDegre }}
             classes={reussi => 'font-black uppercase tracking-widest ' + (reussi ? 'text-etat-succes' : 'text-etat-danger')}
         />
         : null;
@@ -4256,6 +4279,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     ?? Number(template.sections.flatMap(s=>s.fields).find(f=>f.id===descripteur.cthulhuHack?.pv)?.defaultValue)}
                 joueur={pourLesJoueurs} libelle={id=>template.sections.flatMap(s=>s.fields).find(f=>f.id===id)?.label??id}
                 consigner={(titre,texte)=>redire(titre,{total:0,modifier:0,rolls:[],totalDisplay:texte})}/>}
+            {regleDeltaGreen && ecrireSurLaFiche && <CarteDuJeu id="delta-green" titre="Delta Green : suites du jet">
+                <DeltaGreenAuJet key={personnageId} regle={regleDeltaGreen} valeurs={valeursDG}
+                    dernier={dernierDG?.personnageId === personnageId ? dernierDG?.jet ?? null : null}
+                    ecrire={ecrireDG} libelle={id => template.sections.flatMap(s => s.fields).find(f => f.id === id)?.label ?? id}
+                    consigner={texte => redire('Delta Green', { total: 0, modifier: 0, rolls: [], totalDisplay: texte })} />
+            </CarteDuJeu>}
             {/* **Le stress subi** (Blade Runner) : au meneur, sous le jet — un geste à part, sans lancer le test. */}
             {descripteur.stressSubi && ecrireSurLaFiche && !pourLesJoueurs && (
                 <StressSubi

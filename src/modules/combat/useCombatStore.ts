@@ -29,7 +29,7 @@ import { impactDeTorg } from './logic/impactDeTorg';
 import { horlogeDeDefaite } from './logic/TacheDeDefaite';
 import { lireDune, santeDuConflitDune } from '../dice/systemes/duneRegles';
 import { comparerLInitiative, departager } from './logic/departageDInitiative';
-import { estHorsDeCombat, santeDeDepart, valeurDuChamp } from './logic/SanteDuCombattant';
+import { estHorsDeCombat, santeDeDepart, valeurDuChamp, santeAlignee, santePrincipaleDeLaFiche } from './logic/SanteDuCombattant';
 import { coupSurLAdversaire, estUnAdversaireAutonome } from './logic/adversairesDeDegenesis';
 import { DiceEngine } from '../dice/DiceEngine';
 import { actionsDuRound, lancerDegenesis, reserveDeDegenesis } from '../dice/systemes/degenesis';
@@ -89,7 +89,7 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
 function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'asc' | 'desc'; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien;
     initiativeEnReserve?: GameDriver['combat']['initiativeEnReserve']; pistesDeSante?: GameDriver['combat']['pistesDeSante'];
     statsToTrack?: GameDriver['combat']['statsToTrack'];
-    encaissement?: GameDriver['combat']['encaissement'] }; jet?: { coc?: { des?: 'd20' | '3d6'; heroisme?: boolean }; argyropee?: { sante?: string } } } | undefined {
+    encaissement?: GameDriver['combat']['encaissement'] }; jet?: { coc?: { des?: 'd20' | '3d6'; heroisme?: boolean }; argyropee?: { sante?: string }; deltaGreen?: { sante?: string } } } | undefined {
     try {
         return (window as unknown as {
             useSessionOSStore?: { getState: () => { getActiveDriver?: () => ReturnType<typeof piloteActif> } };
@@ -347,6 +347,16 @@ function pointsDeVieDeDepart(
     const depart = santeDeDepart(formule, champ => valeurDuChamp(fiche, champ));
 
     return depart === null ? {} : { hp: c.hp ?? depart, hpMax: c.hpMax ?? depart };
+}
+
+function santeDeCombatDG(c: { hp?: number; hpMax?: number; healthSystem?: HealthSystem }, fiche: Combatant['sheetData']): Partial<Combatant> {
+    const pilote = piloteActif();
+    if (!pilote?.jet?.deltaGreen?.sante) return {};
+    const principale = santePrincipaleDeLaFiche(pilote, fiche)
+        ?? (typeof c.hp === 'number' && typeof c.hpMax === 'number' ? { courant: c.hp, max: c.hpMax, inconscienceA: 2 } : null);
+    if (!principale) return {};
+    return { hp: principale.courant, hpMax: principale.max,
+        healthSystem: santeAlignee(c.healthSystem ?? HealthInterpreter.createDefault('hp'), principale) };
 }
 
 // Re-export pour compatibilité descendante
@@ -874,6 +884,7 @@ export const useCombatStore = create<CombatState>()(
                         // ce que l'appelant a fourni : *on ne fait pas payer une
                         // nouveauté à l'existant.*
                         ...pointsDeVieDeDepart(combatant, fiche),
+                        ...santeDeCombatDG(combatant, fiche),
                     }]
                 }));
                 // Le rattachement suit l'ajout, jamais l'inverse : il peut lui

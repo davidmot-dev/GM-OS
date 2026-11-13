@@ -281,6 +281,7 @@ export const HealthInterpreter = {
 
         if (sousZero && nextHp <= 0) state = 'critical';
         else if (nextHp === 0) state = 'dead';
+        else if (health.data.inconscienceA === 2 && nextHp <= 2) state = 'critical';
         else if (pct <= 25) state = 'critical';
         else if (pct <= 50) state = 'wounded';
         else if (pct <= 85) state = 'scratched';

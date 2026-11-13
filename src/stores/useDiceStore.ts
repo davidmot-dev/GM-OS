@@ -109,6 +109,7 @@ export const useDiceStore = create<DiceState>()(
                     titre: roll.title,
                     totalDisplay: roll.totalDisplay,
                     degre: roll.degre,
+                    libelleDuDegre: roll.libelleDuDegre,
                     tagSuccess: roll.tagSuccess,
                 });
                 set((state) => ({

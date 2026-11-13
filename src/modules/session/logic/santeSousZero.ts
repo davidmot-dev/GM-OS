@@ -24,7 +24,7 @@
 
 /** Ce qu'il faut savoir du pilote — la forme minimale, pour ne fermer aucun cycle d'import. */
 interface PiloteDeLaSante {
-    jet?: { argyropee?: { sante?: string } };
+    jet?: { argyropee?: { sante?: string }; deltaGreen?: { sante?: string } };
     combat?: { statsToTrack?: readonly { fieldId: string; isMainHP?: boolean }[] };
 }
 
@@ -50,6 +50,7 @@ export function marquerSousZero<S extends { type: string; data: Record<string, u
     sante: S,
     pilote: PiloteDeLaSante | null | undefined,
 ): S {
+    if (sante.type === 'hp' && seuilDInconscience(pilote) === 2) return { ...sante, data: { ...sante.data, inconscienceA: 2 } };
     if (sante.type !== 'hp' || sante.data.sousZero === true || !laSantePasseSousZero(pilote)) return sante;
     return { ...sante, data: { ...sante.data, sousZero: true } };
 }
@@ -68,10 +69,22 @@ export function bornerLesPointsDeVie(courant: number, max: number, sousZero: boo
  * **à terre** (p. 52). `null` au-dessus de zéro ou sans la règle : l'écran garde son mot.
  */
 export function motDeLaSanteSousZero(sante: { type?: string; data?: Record<string, unknown> } | null | undefined): string | null {
+    if (sante?.type === 'hp' && sante.data?.inconscienceA === 2) {
+        const pv = Number(sante.data.current);
+        return pv > 0 && pv <= 2 ? 'Inconscient' : null;
+    }
     if (!santeSousZero(sante)) return null;
     const courant = Number(sante!.data!.current);
     if (!Number.isFinite(courant) || courant > 0) return null;
     return courant < 0 ? 'Inconscient' : 'À terre';
+}
+
+/** Delta Green, Manuel de l’Agent p. 18 : 1–2 PV inconscient, 0 PV mort (13/11/2026). */
+export function seuilDInconscience(pilote: PiloteDeLaSante | null | undefined): 2 | undefined {
+    const champ = pilote?.jet?.deltaGreen?.sante;
+    if (!champ) return undefined;
+    const principale = pilote?.combat?.statsToTrack?.find(s => s.isMainHP)?.fieldId;
+    return !principale || principale === champ ? 2 : undefined;
 }
 
 /** Inconscient : la règle s'applique et la santé est strictement sous zéro. */

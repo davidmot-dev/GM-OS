@@ -48,6 +48,7 @@ export function chutesEntre(
 ): ChuteObservable[] {
     // RdD distingue une chute non mortelle (coma, inconscience) d'un décès.
     const mort = (c: ChuteObservable) => {
+        if (c.healthSystem?.data?.inconscienceA === 2) return c.healthSystem.state === 'dead' || porteLEtiquetteDeMort(c);
         const rdd = c.healthSystem?.data?.rdd as {mort?: boolean} | undefined;
         return typeof rdd?.mort === 'boolean' ? rdd.mort || porteLEtiquetteDeMort(c) : estTombe(c);
     };

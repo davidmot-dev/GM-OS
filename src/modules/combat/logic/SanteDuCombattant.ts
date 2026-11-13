@@ -1,6 +1,6 @@
 import { seuilAtteint } from '../../session/logic/HealthInterpreter';
 import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
-import { bornerLesPointsDeVie, estInconscient, laSantePasseSousZero, santeSousZero } from '../../session/logic/santeSousZero';
+import { bornerLesPointsDeVie, estInconscient, laSantePasseSousZero, santeSousZero, seuilDInconscience, motDeLaSanteSousZero } from '../../session/logic/santeSousZero';
 
 /**
  * Une seule réponse à « comment va ce combattant ».
@@ -131,7 +131,7 @@ export function decrireLaSante(c: PorteurDeSante): string | null {
     if (sys) {
         const rdd = sys.data?.rdd as {libelle?: string} | undefined;
         const synthetique = sys.data?.alienSynthetique as { arret?: boolean } | undefined;
-        const etat = synthetique ? synthetique.arret ? 'Arrêt du système' : 'synthétique actif selon les avaries' : rdd?.libelle ?? ETATS[sys.state] ?? sys.state;
+        const etat = synthetique ? synthetique.arret ? 'Arrêt du système' : 'synthétique actif selon les avaries' : rdd?.libelle ?? motDeLaSanteSousZero(sys) ?? ETATS[sys.state] ?? sys.state;
         const d = sys.data ?? {};
         switch (sys.type) {
             case 'hp':
@@ -522,7 +522,7 @@ export function santePrincipaleDeLaFiche(
     pilote: { combat?: { defaultHealthType?: string; santeDeDepart?: string; statsToTrack?: readonly { fieldId: string; isMainHP?: boolean; max?: string }[] } } | null | undefined,
     fiche: Record<string, unknown> | undefined | null,
     maxParDefaut?: number,
-): { champ: string; courant: number; max: number; sousZero?: true } | null {
+): { champ: string; courant: number; max: number; sousZero?: true; inconscienceA?: number } | null {
     const combat = pilote?.combat;
     if (!combat || (combat.defaultHealthType && combat.defaultHealthType !== 'hp')) return null;
     const principale = combat.statsToTrack?.find(s => s.isMainHP);
@@ -536,7 +536,8 @@ export function santePrincipaleDeLaFiche(
     const plafond = Math.max(1, max, courant);
     // Argyropée : la fiche peut porter −1, et c'est elle qui fait foi (`santeSousZero.ts`).
     const sousZero = laSantePasseSousZero(pilote as Parameters<typeof laSantePasseSousZero>[0]);
-    return { champ: principale.fieldId, courant: bornerLesPointsDeVie(courant, plafond, sousZero), max: plafond, ...(sousZero ? { sousZero: true as const } : {}) };
+    const inconscienceA = seuilDInconscience(pilote as Parameters<typeof seuilDInconscience>[0]);
+    return { champ: principale.fieldId, courant: bornerLesPointsDeVie(courant, plafond, sousZero), max: plafond, ...(sousZero ? { sousZero: true as const } : {}), ...(inconscienceA ? { inconscienceA } : {}) };
 }
 
 /**
@@ -546,16 +547,18 @@ export function santePrincipaleDeLaFiche(
  */
 export function santeAlignee<S extends { type: string; data: Record<string, unknown>; state: string; badges?: unknown[] }>(
     sante: S | undefined,
-    principale: { courant: number; max: number; sousZero?: true } | null,
+    principale: { courant: number; max: number; sousZero?: true; inconscienceA?: number } | null,
 ): S | undefined {
     if (!principale || (sante && sante.type !== 'hp')) return sante;
     const sousZero = principale.sousZero === true;
     if (sante && sante.data.current === principale.courant && sante.data.max === principale.max
-        && (sante.data.sousZero === true) === sousZero) return sante;
+        && (sante.data.sousZero === true) === sousZero && sante.data.inconscienceA === principale.inconscienceA) return sante;
     const lue = santeAffichee({ hp: principale.courant, maxHp: principale.max, santeSousZero: sousZero })!;
     const data: Record<string, unknown> = { ...(sante?.data ?? {}), current: principale.courant, max: principale.max };
     if (sousZero) data.sousZero = true; else delete data.sousZero;
-    return { ...(sante ?? { badges: [] }), type: 'hp', data, state: lue.state } as unknown as S;
+    if (principale.inconscienceA) data.inconscienceA = principale.inconscienceA; else delete data.inconscienceA;
+    const state = principale.inconscienceA && principale.courant > 0 && principale.courant <= principale.inconscienceA ? 'critical' : lue.state;
+    return { ...(sante ?? { badges: [] }), type: 'hp', data, state } as unknown as S;
 }
 
 /** Le champ de santé principale qu'un jeu en points de vie fait suivre à la fiche — `null` sinon. */
