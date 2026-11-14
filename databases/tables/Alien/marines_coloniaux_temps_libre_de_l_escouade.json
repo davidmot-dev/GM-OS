@@ -1,0 +1,60 @@
+{
+    "name": "Marines coloniaux — Temps libre de l'escouade (p. 131-132)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Un PNJ du peloton disparaît.",
+            "description": "A-t-il abandonné son poste ou été victime d'un événement plus sinistre?"
+        },
+        {
+            "min": 3,
+            "max": 4,
+            "title": "Sur la base, on s'ennuie à mourir.",
+            "description": "L'escouade doit se divertir par ses propres moyens, mais sans enfreindre le règlement militaire, de crainte de se faire prendre!"
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Les membres de l'escouade sont traités comme des cobayes et doivent s'entraîner sans arrêt à de nouvelles procédures de combat, avec un nouveau matériel ou des prototypes d'armes.",
+            "description": "Tout ça est expérimental, bien sûr, ce qui explique les scientifiques de Weyland-Yutani qui restent à portée de main."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Une partie de cartes est organisée et tout le monde joue vraiment de l'argent.",
+            "description": ""
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "L'escouade sort pour boire.",
+            "description": "Les ennuis ne tardent pas!"
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Inspection!",
+            "description": "Exercice, nettoyage, et nettoyage supplémentaire. Toutes les permissions sont annulées jusqu'à la fin de l'inspection. Le sergent-artilleur de la compagnie est sur le dos des Marines."
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "L'escouade doit jouer les baby-sitters pour de nouvelles recrues, leur éviter les ennuis et leur montrer les ficelles du métier.",
+            "description": "Et comme un haut gradé est en visite, les nouveaux ont intérêt à se tenir à carreau."
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "L'escouade est confinée dans ses quartiers, accusée d'infraction au règlement, et s'expose à une audience disciplinaire.",
+            "description": "Les PJ parviendront-ils à prouver leur innocence avant l'audience, ou aggraveront-ils leur cas?"
+        },
+        {
+            "min": 11,
+            "max": 12,
+            "title": "L'escouade reçoit une évaluation psychologique pendant un entraînement de routine consacré au travail d'équipe.",
+            "description": "Dans le cadre de cette expérience, on pousse en privé chaque Marine à douter de la loyauté et des mobiles d'un autre Marine."
+        }
+    ]
+}

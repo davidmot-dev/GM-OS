@@ -1,6 +1,6 @@
 # 👽 Jeu — Alien
 
-> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-20, corrigé A8 le 2026-10-22 (version 1.8.0, conserve A0–A7), puis complété le 2026-10-23 du **combat spatial** (version 1.9.0, `outils/alien/ajouter-combat-spatial.mjs`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-20, corrigé A8 le 2026-10-22 (version 1.8.0, conserve A0–A7), puis complété le 2026-10-23 du **combat spatial** (version 1.9.0, `outils/alien/ajouter-combat-spatial.mjs`), et le 2026-11-14 des **Marines coloniaux** (version 1.10.0, `outils/alien/ameliorer-pilote-a12-colonial-marines.mjs`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font monter la peur.
 
@@ -977,6 +977,42 @@ respectées. La tablette consulte le suivi ; Maman conserve les commandes de val
 
 Le même suivi est vérifié à [768 px](captures/jeu-alien-a7-tablette-768.jpg) et
 [1 180 px](captures/jeu-alien-a7-tablette-1180.jpg).
+
+## Marines coloniaux — A12 (*Colonial Marines*), 14/11/2026
+
+Le pilote **1.10.0** ajoute à la fiche de personnage une section **Marines coloniaux**, tirée du
+supplément *Colonial Marines Operations Manual* (édition française, p. 53-59). Les autres
+carrières la laissent vide.
+
+- **Spécialité militaire (SM)** : les dix spécialités du livre, de l'Aide-soignant militaire au
+  Tireur dédié. Chacune fixe l'attribut clef (jusqu'à 5), deux compétences de SM (jusqu'à 4 à la
+  création) et cinq talents au choix. Le détail est dans la fiche du corpus *Spécialités
+  militaires (SM)*, que l'Oracle cite.
+- **Statut** : Engagé, Sous-officier, ou Pilote ou chef d'équipage. Il dit quelles tables
+  d'événements de terrain tirer : A pour un engagé, A puis B pour un sous-officier, C pour un
+  pilote ou un chef d'équipage.
+- **Grade** : en texte libre. Le livre en fait un repère du récit, sans règle : « oubliez la
+  hiérarchie » (p. 119).
+- **Événements de terrain** : un par ligne, avec son gain. Le gain lui-même se reporte à la main
+  sur l'attribut, la compétence, le talent ou l'équipement concerné, sans dépasser 5 (sinon on
+  retire sur la table).
+
+**Les tables se tirent dans Table-OS**, univers *Alien*, à côté des blessures critiques et des
+avaries :
+
+| Table | Dé | Quand |
+| --- | --- | --- |
+| Marines coloniaux — Événements de terrain A, Engagé | D66 | à la création |
+| Marines coloniaux — Événements de terrain B, Sous-officier | D66 | à la création, après la A |
+| Marines coloniaux — Événements de terrain C, Pilotes et chefs d'équipage | D66 | à la création, au lieu de la A |
+| Marines coloniaux — Temps libre de l'escouade | 2D6 | après une mission, pour qui ne dépense pas de PX |
+| Marines coloniaux — Temps libre personnel | D6 | après une mission, pour qui dépense des PX |
+
+Les entrées des trois tables de terrain couvrent des plages du D66 (« 25-31 » = 25, 26 et 31),
+comme le livre les imprime. Les armes, protections et véhicules du supplément sont déjà dans le
+catalogue d'équipement, et ses créatures dans le bestiaire. Pour l'installer : réimporter
+`Export Dirvers/corriges/Alien-1.10.0.gmos-driver` avec **Remplacer**. Les identifiants ne
+changent pas, et les personnages gardent leurs valeurs.
 
 ## La fiche HTML
 

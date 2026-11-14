@@ -1,0 +1,72 @@
+{
+    "name": "Marines coloniaux — Événements de terrain B, Sous-officier (p. 57-59)",
+    "dice": "d66",
+    "entries": [
+        {
+            "min": 11,
+            "max": 13,
+            "title": "Soutien moral et rôle de confident auprès de l'escouade",
+            "description": "Le personnage gagne un bonus de +1 dans l'attribut Empathie (Empathy)."
+        },
+        {
+            "min": 14,
+            "max": 16,
+            "title": "Volontariat constant pour effectuer des tours de garde",
+            "description": "Le personnage gagne le talent Sommeil réparateur (Light Sleeper)."
+        },
+        {
+            "min": 21,
+            "max": 24,
+            "title": "Entraînement avec les troupes de reconnaissance",
+            "description": "Obtention d'un pistolet M4A3 des forces spéciales doté d'un silencieux artisan."
+        },
+        {
+            "min": 25,
+            "max": 31,
+            "title": "Nuit passée grièvement blessé derrière les lignes ennemies",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Endurance (Stamina)."
+        },
+        {
+            "min": 32,
+            "max": 34,
+            "title": "Combat désespéré au corps-à-corps avec une pelle de tranchée",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Combat rapproché (Close Combat)."
+        },
+        {
+            "min": 35,
+            "max": 41,
+            "title": "Négociation réussie pour la libération d'otages insurgés",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Manipulation (Manipulation)."
+        },
+        {
+            "min": 42,
+            "max": 44,
+            "title": "Confrontation avec les pièges et tirs d'un sniper invisible",
+            "description": "Le personnage gagne le talent Impitoyable (Merciless)."
+        },
+        {
+            "min": 45,
+            "max": 52,
+            "title": "Soins d'urgence prodigués sans hésitation à un camarade agonisant",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Soins médicaux (Medical Aid)."
+        },
+        {
+            "min": 53,
+            "max": 55,
+            "title": "Évacuation réussie de l'escouade sous le feu en terrain accidenté",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Mobilité (Mobility)."
+        },
+        {
+            "min": 56,
+            "max": 62,
+            "title": "Survie de l'escouade en milieu inhospitalier grâce à l'ingéniosité",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Survie (Survival)."
+        },
+        {
+            "min": 63,
+            "max": 66,
+            "title": "Réparation d'urgence d'un véhicule abandonné sous attaque imminente",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Machines lourdes (Heavy Machinery)."
+        }
+    ]
+}

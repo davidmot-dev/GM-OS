@@ -1,0 +1,72 @@
+{
+    "name": "Marines coloniaux — Événements de terrain A, Engagé (p. 57-59)",
+    "dice": "d66",
+    "entries": [
+        {
+            "min": 11,
+            "max": 13,
+            "title": "Cric d'entretien ramassé lors du siège d'une colonie",
+            "description": "Octroie un bonus supplémentaire de +1 aux tests de Machines lourdes (Heavy Machinery)."
+        },
+        {
+            "min": 14,
+            "max": 16,
+            "title": "Repli dans le bureau d'un Marshal lors d'une épidémie",
+            "description": "Le personnage conserve un fusil à pompe calibre 12."
+        },
+        {
+            "min": 21,
+            "max": 24,
+            "title": "Engagement chez les Marines pour éviter la prison",
+            "description": "Le personnage gagne le talent Esprit de contradiction (Hothead)."
+        },
+        {
+            "min": 25,
+            "max": 31,
+            "title": "Sauvetage d'un colon sous le feu des insurgés",
+            "description": "Le personnage obtient une décoration et le talent Garde du corps (Bodyguard)."
+        },
+        {
+            "min": 32,
+            "max": 34,
+            "title": "Tir à la tête stoppé par le casque",
+            "description": "La balle conservée devient l'objet fétiche (tiny item) du personnage."
+        },
+        {
+            "min": 35,
+            "max": 41,
+            "title": "Prise de commandement après la mort des supérieurs",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Commandement (Command)."
+        },
+        {
+            "min": 42,
+            "max": 44,
+            "title": "Préparation à l'opération Crossbow",
+            "description": "Le personnage gagne le talent Entraînement en gravité zéro (Zero-G Training)."
+        },
+        {
+            "min": 45,
+            "max": 52,
+            "title": "Entraînement brutal au camp Pendleton sous un sergent instructeur",
+            "description": "Le personnage gagne le talent Robuste (Tough)."
+        },
+        {
+            "min": 53,
+            "max": 55,
+            "title": "Action héroïque récompensée par la Croix galactique",
+            "description": "Traitement de faveur des officiers et tensions au sein du peloton."
+        },
+        {
+            "min": 56,
+            "max": 62,
+            "title": "Neutralisation d'un kamikaze à un point de contrôle",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Observation (Observation)."
+        },
+        {
+            "min": 63,
+            "max": 66,
+            "title": "Bonnes relations avec le sergent logistique de la compagnie",
+            "description": "Le personnage gagne le talent Réserve cachée (Hidden Stash)."
+        }
+    ]
+}

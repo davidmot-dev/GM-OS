@@ -1,0 +1,72 @@
+{
+    "name": "Marines coloniaux — Événements de terrain C, Pilotes et chefs d'équipage (p. 57-59)",
+    "dice": "d66",
+    "entries": [
+        {
+            "min": 11,
+            "max": 13,
+            "title": "Missions d'évacuation médicale intensives sous tension",
+            "description": "Le personnage devient dépendant aux pilules antisommeil."
+        },
+        {
+            "min": 14,
+            "max": 16,
+            "title": "Reprise de contrôle d'un convoyeur aérien en vrille sous une accélération de 9G",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Endurance (Stamina)."
+        },
+        {
+            "min": 21,
+            "max": 24,
+            "title": "Réputation de détection anticipée des menaces à six heures",
+            "description": "Le personnage gagne le talent Vigilant (Watchful)."
+        },
+        {
+            "min": 25,
+            "max": 31,
+            "title": "Transport de fournitures lors d'une catastrophe coloniale",
+            "description": "Obtention d'un rosaire offert par un colon comme objet fétiche (tiny item)."
+        },
+        {
+            "min": 32,
+            "max": 34,
+            "title": "Indicatif de soutien aérien célèbre auprès des bidasses",
+            "description": "Obtention d'un ouvre-bouteille gravé comme objet fétiche (tiny item)."
+        },
+        {
+            "min": 35,
+            "max": 41,
+            "title": "Convoyeur abattu et survie d'une semaine derrière les lignes ennemies",
+            "description": "Le personnage gagne le talent Furtif (Stealthy)."
+        },
+        {
+            "min": 42,
+            "max": 44,
+            "title": "Défense d'un convoyeur envahi par des créatures à la hache d'incendie",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Combat rapproché (Close Combat)."
+        },
+        {
+            "min": 45,
+            "max": 52,
+            "title": "Réparations d'urgence répétées sur le terrain sans ressources",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Machines lourdes (Heavy Machinery)."
+        },
+        {
+            "min": 53,
+            "max": 55,
+            "title": "Pistolet magnum 357 envoyé par son père pour le protéger",
+            "description": "Obtention de cette arme comme objet fétiche (tiny item)."
+        },
+        {
+            "min": 56,
+            "max": 62,
+            "title": "Balle reçue en vol et tourniquet improvisé à 3 000 mètres d'altitude",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Soins médicaux (Medical Aid)."
+        },
+        {
+            "min": 63,
+            "max": 66,
+            "title": "Éjection et survie pendant plusieurs jours dans un désert hostile",
+            "description": "Le personnage gagne un bonus de +1 dans la compétence Survie (Survival)."
+        }
+    ]
+}
