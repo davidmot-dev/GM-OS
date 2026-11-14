@@ -7,7 +7,7 @@ sources: "ALIEN, le jeu de rôle"
 sections: "« ACTIONS ET INITIATIVE » ; « TIRER L’INITIATIVE » ; « CHANGER L’INITIATIVE » ; « ACTIONS LENTES ET RAPIDES » ; « MESURE DU TEMPS » ; « Tenir le compte de vos actions » ; « DÉPLACEMENT » ; « AIDER LES AUTRES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Initiative et déroulement du tour
@@ -42,11 +42,13 @@ L'ordre d'action est défini par l'initiative. Chaque participant, personnage jo
 ## Cas limites
 - Échange de cartes : Deux personnages joueurs peuvent échanger leurs initiatives au début du combat ou d'un Round, mais jamais pendant le Round (section « Changer l’initiative »).
 - Interruption d'initiative : Aider un allié coûte une action de même type et interrompt l'ordre de l'initiative (section « Aider les autres »).
-- Posture de Surveillance : Se poster en Surveillance est une action rapide qui permet de tirer (action lente) sur un ennemi avant qu'il n'agisse (section « Surveillance »). Subir des dégâts ou une attaque au corps à corps l'annule (section « Interruption de surveillance »).
-- Bloquer : C'est une réaction rapide hors-tour qui consomme l'action rapide du Round. Impossible de bloquer si les deux actions du Round ont déjà été faites (section « Réaction »).
+- Posture de Surveillance : Se poster en Surveillance est une action rapide qui permet de tirer (action lente) sur un ennemi avant qu'il n'agisse (section « Surveillance »). Toute autre action, une attaque en combat rapproché ou des dégâts subis l'interrompent (section « Interruption de surveillance »).
+- Bloquer : C'est une réaction hors tour qui compte parmi les deux actions du Round : chaque blocage fait perdre une action ultérieure, et il est impossible de bloquer si les deux actions du Round ont déjà été faites (section « Réaction »).
 - Groupes de personnages non joueurs : Si le nombre de combattants dépasse dix, Maman regroupe les adversaires identiques et tire une carte par groupe (section « Personnages non joueurs »).
 - Talents d'initiative : Le talent Bons réflexes permet de tirer deux cartes d'initiative et d'en choisir une (section « Bons réflexes »), tandis que Vif comme l'éclair permet de dégainer sans consommer d'action (section « Vif comme l’éclair »).
 
 ## Non couvert
 - La procédure de résolution lorsqu'un combattant entre dans l'affrontement au milieu d'un Round déjà entamé.
 - La méthode de tirage de l'initiative si plus de dix participants individuels et impossibles à regrouper par Maman s'affrontent.
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; conforme, précisé : blocage et fin de la Surveillance (p. 83, 86-89, 92, 97).*

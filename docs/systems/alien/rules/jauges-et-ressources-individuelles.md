@@ -7,7 +7,7 @@ sources: "ALIEN, le jeu de rôle"
 sections: "« CONCEPTS DE BASE » ; « STRESS » ; « SANTÉ » ; « CONSOMMABLES » ; « POINTS DE RÉCIT » ; « ENCOMBREMENT »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Jauges et ressources individuelles
@@ -40,29 +40,30 @@ Points de Récit (Mode Cinéma uniquement) :
 
 Réserves de consommables (Air, Eau, Nourriture, Énergie) :
 - Mesure : ressources de survie (section « Consommables »).
-- Bornes : départ variable selon l'équipement, minimum de zéro, maximum de six (section « Réserves »).
+- Bornes : départ variable selon l'équipement, minimum de zéro, sans maximum ; le test lance au plus six dés (section « Réserves »).
 - Dynamique : descend quand la situation empire (section « Réserves »).
 - Mouvements : diminue de un point par symbole de panique (un un) obtenu lors des lancers de tests de Réserve (section « Réserves ») ; augmente par réapprovisionnement (section « Consommables »).
 - Seuils et effets :
   1. Valeur de un à quatre : la jauge d'eau ou de nourriture compte pour un seul objet dans l'encombrement (section « Encombrement »).
-  2. Valeur de cinq à six : compte pour deux objets (section « Encombrement »).
+  2. Valeur de cinq à huit : compte pour deux objets, puis un objet de plus par tranche de quatre (section « Encombrement »).
   3. Valeur à zéro : la ressource est épuisée, n'encombre plus (section « Encombrement ») et inflige l'état Déshydraté pour l'eau (section « Déshydraté »), l'état Affamé pour la nourriture (section « Affamé ») ou la Suffocation pour l'air (section « Suffocation »).
 - Fréquence : l'Air est testé à chaque Tour et après activité éprouvante ; l'Eau une fois par jour et après activité ; la Nourriture une fois par jour ; l'Énergie selon l'usage (section « Quand effectuer un test de Réserve »).
 - Type : jauge de consommation passive.
 
 ## À la table
-1. Stress : À chaque test de compétence, le joueur ajoute à son jet des dés de stress égaux à son Niveau de Stress (section « Recevoir des dés de stress »). S'il obtient au moins un symbole de panique sur ces dés, il résout l'action mais subit immédiatement un test de Panique (section « Test de Panique »).
+1. Stress : À chaque test de compétence, le joueur ajoute à son jet des dés de stress égaux à son Niveau de Stress (section « Recevoir des dés de stress »). S'il obtient au moins un symbole de panique sur ces dés, il ne peut pas forcer et fait immédiatement un test de Panique ; à 10 ou plus, l'action est annulée (section « Test de Panique »).
 2. Récit : En Mode Cinéma, le joueur peut dépenser un point de Récit pour s'assurer un symbole de réussite automatique sur son jet (section « Points de Récit »).
 3. Consommables : Sur ordre de Maman, le joueur fait un test de Réserve en lançant des dés de stress égaux à sa Réserve actuelle, sans dépasser six dés (section « Réserves »). Chaque symbole de panique obtenu réduit sa Réserve de un point (section « Réserves »).
 
 ## Cas limites
 - Androïdes : Les synthétiques n'ont pas de Niveau de Stress, ne lancent pas de dés de stress, ne paniquent pas et n'ont pas d'objet fétiche (section « Jouer un androïde »). De plus, ils n'ont pas besoin d'air, de nourriture, d'eau ou de sommeil, et ignorent ces consommables (section « Êtres synthétiques »).
 - Limite des consommables : Si la Réserve d'eau ou de nourriture tombe à zéro, le personnage subit l'état Déshydraté ou Affamé, mais ce consommable ne pèse plus dans son encombrement (section « Encombrement »).
-- Blocage du stress : Si le personnage est Affamé ou Gelé, il ne peut pas soulager son stress par le repos ou par son objet fétiche (section « Soulager le stress »).
+- Blocage du stress : Si le personnage est Affamé, Déshydraté, Épuisé ou Gelé, il ne peut pas soulager son stress (section « Soulager le stress » et chapitre « Périls »).
 - Surdose de Naproleve : Prendre plus d'une dose de Naproleve par Quart pour réduire son stress à zéro inflige une pénalité de moins un à tous les tests basés sur l'Agilité (section « Produits pharmaceutiques »).
 - Alcool fort : Boire de l'alcool fort réduit le stress de un point, mais inflige une pénalité de moins un aux compétences d'Esprit pendant le Quart suivant (section « Nourriture et boisson »).
 
 ## Non couvert
 - Le partage ou transfert des points de Récit ou des consommables individuels entre les personnages joueurs (section « Consommables de groupe »).
-- L'impact d'une Réserve de consommables supérieure à six sur le test de Réserve, car la réserve de dés lancés est plafonnée à six dés (section « Réserves »).
 - L'utilisation des points de Récit ou l'accumulation de stress par les personnages non joueurs (section « PNJ et tests forcés »).
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; corrigé : Réserve sans maximum (six dés au plus), encombrement 5-8 et par tranche de 4, panique qui annule l'action, états qui bloquent le stress (p. 31, 34-35, 61, 103-107, 137-138).*

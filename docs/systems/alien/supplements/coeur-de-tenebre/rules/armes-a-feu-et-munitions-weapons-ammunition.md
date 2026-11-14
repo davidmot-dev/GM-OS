@@ -8,7 +8,7 @@ sources: "Alien - Heart of Darkness.pdf"
 sections: "« APPENDIX II: GEAR » ; « WEAPONS » ; « EXPLOSIVES AND AMMUNITION »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 7e0b6bf2
 ---
 
@@ -57,7 +57,9 @@ En séance de jeu, l'utilisation des armes et munitions s'articules autour des a
 Les sources précisent les règles suivantes:
 - **Inoculation du pistolet TX-9**: Si la Protection doublée annule les dégâts, le produit n'est pas inoculé (section « WEAPONS »).
 - **Effet d'étourdissement**: Le test d'Endurance à -2 des armes ES-4 et ES-7 s'applique uniquement aux cibles humaines blessées (section « WEAPONS »).
-- **Protection contre le gaz T3**: Un équipement étanche annule le malus du gaz. Les félins y restent vulnérables (section « EXPLOSIVES AND AMMUNITION »).
+- **Protection contre le gaz T3**: Le gaz frappe tout humain ou félin non protégé dans la zone de la cartouche ; un équipement oculaire et respiratoire l'en garde (section « EXPLOSIVES AND AMMUNITION »).
 
 ## Non couvert
-Les sources ne précisent pas la capacité des chargeurs ni le délai de rechargement. Elles n'indiquent pas non plus la compatibilité du lanceur U4C avec d'autres munitions.
+Les sources ne précisent pas la capacité des chargeurs ni le délai de rechargement. Le lanceur U4C peut tirer d'autres munitions, que le livre ne détaille pas.
+
+*Relu le 2026-11-14 contre le supplément (PDF = imprimée + 2) ; tableaux conformes ; corrigé : cibles du gaz T3, munitions du U4C (p. 72-74).*

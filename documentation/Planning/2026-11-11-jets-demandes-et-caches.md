@@ -4,7 +4,7 @@
 > éléments intéressants à reprendre dans GM-OS ? » (`C:\Projet_David\gm-codex.exe`), puis
 > (11/11) : « fais-moi un plan et vois si les propositions peuvent être généralisées à
 > d'autres drivers ».
-> État : **livré, à essayer par David** — T1 à T10 faits le 11/11 ; reste l'essai à l'écran (meneur, pupitre) et sur tablette physique, et la capture de la bannière. Registre § 243. Registre : à inscrire (voir Analyse).
+> État : **livré et validé par David le 11/11, tablette physique comprise** — T1 à T10 faits le 11/11 ; reste la capture de la bannière au guide 61. Registre § 243 (lot 1) et § 244 (lot 2) ; lot 3 mis de côté, second examen consigné plus bas (vérifié le 14/11).
 
 ## Origine
 

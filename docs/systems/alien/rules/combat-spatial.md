@@ -3,10 +3,9 @@ sujet: Le Combat Spatial
 systeme: alien
 couverture: complète
 hors_canevas: true
-sources: ALIEN_le_jeu_de_rôle.pdf (p. 83, 111, 120, 167, 172, 180, 181, 186, 188-201)
-pages_fiables: false
+sources: ALIEN_le_jeu_de_rôle.pdf (p. 83, 111, 181-186, 188-201)
 genere_par: notebooklm
-relu: false
+relu: true
 ---
 
 # Le Combat Spatial
@@ -14,7 +13,7 @@ relu: false
 Le combat spatial d'ALIEN est bref et mortel (p. 188). Résolu en Tours de cinq à dix minutes (p. 83, p. 188), l'équipage se répartit en cinq postes (Capitaine, Opérateur-senseurs, Pilote, Artilleur, Ingénieur) (p. 188). L'I.A. Maman peut occuper ces rôles (p. 188).
 
 La jauge de Coque :
-- Mesure/départ : Intégrité structurelle (p. 167); égale à la Coque d'origine (deux pour Starcub, six pour Corvus, neuf pour Bison, douze pour Conestoga) (p. 172, p. 180, p. 181, p. 186).
+- Mesure/départ : Intégrité structurelle (p. 167); égale à la Coque d'origine (deux pour Starcub, six pour Corvus, neuf pour Bison, douze pour Conestoga) (p. 181-183, 186).
 - Bornes/dynamique : Borne de zéro au max (p. 197). Descend par dégâts, monte par réparation (p. 197, p. 200).
 - Mouvements : Diminue par Tir offensif (p. 196) ou Éperonnage (p. 193) net. Augmente via test de Machines Lourdes (un point par réussite) (p. 200).
 - Seuils : À zéro Coque, le vaisseau est Hors service : moteurs/armes coupés, décompression explosive (p. 197). Un seul tir égalant ou dépassant la Coque maximale détruit le vaisseau et l'équipage (p. 197).
@@ -51,12 +50,15 @@ Le combat s'organise de manière séquentielle (p. 190, p. 191) :
 ## Cas limites
 - Stress et panique : Les humains stressent normalement mais lancent un test de Panique spécifique au combat spatial (un à quinze ou plus) (p. 201). Impossible de soulager son stress en combat spatial (p. 201).
 - Surveillance simultanée : Un test opposé de Combat à distance détermine la priorité de tir (p. 97).
-- Synthétiques : Ils n'ont pas de stress ni de panique et ne forcent pas leurs tests (p. 120). À zéro Coque, ils subissent un jet d'avarie spécifique sur leur table d'arrêt (p. 111).
-- Angles morts : Le Conestoga possède deux angles morts d'artillerie situés directement dans son axe avant et arrière, l'empêchant de tirer sur ces vecteurs au canon électrique (p. 579, p. 580).
-- Combat rapproché simultané : Si un combat rapproché survient à bord pendant le combat spatial, résolvez-le en rounds avant de reprendre le combat spatial en Tours (p. 197).
+- Synthétiques : Ils n'ont pas de stress ni de panique et ne forcent pas leurs tests (p. 111).
+- Combat rapproché simultané : Si un combat rapproché survient à bord pendant le combat spatial, résolvez-le en rounds avant de reprendre le combat spatial en Tours ; Maman peut aussi glisser un Tour spatial au milieu (p. 197).
+- Canons à particules : ils n'infligent pas de dégâts de coque, seulement des avaries (p. 197).
+- Une seule arme par Tour et par vaisseau, même avec plusieurs artilleurs ; un seul ingénieur agit, les autres l'aident jusqu'à +3 (p. 196).
 
 ## Non couvert
 - L'impact de l'encombrement des soutes sur les tests de pilotage ou d'évasion d'un vaisseau civil lors d'un combat spatial.
 - L'effet gravitationnel ou atmosphérique des géantes gazeuses sur les missiles ASAT à longue portée (p. 177).
 - L'aveuglement complet des senseurs par des éruptions solaires de naines rouges lors d'un Tour actif de combat spatial (p. 191).
 - Les effets de la décompression explosive d'une section sur la réserve d'énergie globale du vaisseau.
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; pages vérifiées ; retiré : les angles morts du Conestoga et un critique synthétique « à zéro Coque », introuvables ; ajouté : canons à particules, une arme par Tour (p. 83, 111, 181-186, 188-201).*

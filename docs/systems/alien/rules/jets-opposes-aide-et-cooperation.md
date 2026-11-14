@@ -7,7 +7,7 @@ sources: "ALIEN, le jeu de rôle"
 sections: "« TESTS DE GROUPE » ; « S’ENTRAIDER » ; « TESTS OPPOSÉS »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Jets opposés, aide et coopération
@@ -42,9 +42,12 @@ Face à un défi collectif, on effectue un test de groupe (section « Tests de g
 - Échec de groupe : Si un test de groupe hors combat échoue, aucun autre personnage ne peut retenter l'action (section « Tests de groupe »). Cette règle est ignorée en combat (section « Tests de groupe »).
 - Entraide des PNJ : Les PNJ s'entraident de la même façon, facilitant la gestion des grands groupes par Maman (section « S’entraider »).
 - PNJ et tests opposés : Les PNJ ne peuvent jamais forcer un test, même s'ils attaquent (section « PNJ et tests forcés »).
+- Égalité : à nombre égal de réussites, l'attaquant n'a pas « plus de six » que son adversaire et échoue (section « Tests opposés »).
+- Embuscade de groupe : le plus faible en Mobilité lance pour les assaillants, la meilleure Observation pour les cibles, avec +2 car c'est la cible qui se déplace (section « Embuscade »).
 
 ## Non couvert
 - L'aide d'un PNJ à un personnage joueur lors d'un test opposé (section « S’entraider »).
-- La résolution d'un test opposé si les deux opposants obtiennent le même nombre de réussites après un jet forcé (section « Tests opposés »).
 - Le cumul des aides si des personnages utilisent des compétences ou talents spécifiques d'entraide (section « S’entraider »).
 - L'impact sur le stress des assistants si l'acteur obtient un symbole de panique sur ses dés de stress lors d'une action en coopération (section « S’entraider »).
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; conforme, ajouté : l'égalité et l'embuscade de groupe (p. 62-64, 67, 89-90).*

@@ -7,7 +7,7 @@ sources: "ALIEN, le jeu de rôle"
 sections: "« TRAITS DES ZONES » ; « LE VIDE » ; « DÉCOMPRESSION EXPLOSIVE » ; « GELÉ » ; « RADIATIONS » ; « MALADIE » ; « NOYADE » ; « SUFFOCATION »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Environnement et dangers
@@ -31,7 +31,7 @@ L'environnement d'ALIEN est hostile. Les zones de conflit présentent des traits
 1. Maman détermine si un personnage est exposé à un danger environnemental à la suite de ses mouvements ou d'un événement (section « Traits des zones » et section « Autres périls »).
 2. Pour les dangers immédiats comme les explosions ou le feu, le jet de dés de base est résolu à l'instant de l'impact ou au début de chaque Round (section « Explosions » et section « Feu »).
 3. Pour les dangers progressifs comme le vide, la suffocation ou la noyade, le joueur effectue son test d'Endurance au début de son tour, avant toute autre action (section « Le vide », section « Suffocation » et section « Noyade »).
-4. Pour les maladies et les radiations, les lancers de dés s'effectuent à des intervalles plus longs, généralement au début de chaque Quart de travail (section « Maladie » et section « Radiations »).
+4. Pour les maladies, le test d'Infection a lieu au début de chaque Quart ; les radiations frappent à chaque Rad reçu, par Quart, par Tour ou par Round selon leur niveau (section « Maladie » et section « Radiations »).
 5. Si un personnage tombe à zéro Santé, il devient Brisé et subit un test de Trépas à chaque Round ou Tour selon le cas, jusqu'à sa mort ou son sauvetage (section « Brisé » et section « La mort »).
 
 ## Cas limites
@@ -45,3 +45,5 @@ L'environnement d'ALIEN est hostile. Les zones de conflit présentent des traits
 - Le détail des effets de la fumée non toxique sur la ligne de vue au combat (section « Traits des zones »).
 - La résistance des structures non blindées ou du matériel transporté face au feu (section « Feu »).
 - L'influence exacte de la gravité d'une planète sur les dégâts d'une chute (section « Chute »).
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; conforme, corrigé : le rythme des radiations (p. 83, 107-111).*

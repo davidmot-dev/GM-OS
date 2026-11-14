@@ -8,7 +8,7 @@ sources: "Alien - Building Better Worlds [EN].pdf"
 sections: "« ABOMINATIONS » ; « PROTO-XENOMORPHS » ; « XENOMORPHS »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 5edf9541
 ---
 
@@ -23,12 +23,12 @@ Le livre décrit les créatures et menaces de la Frontière (section « ABOMINAT
 
 | D6 | Attaque |
 |:--- |:--- |
-| **1** | **Fuite éclair *(Bolt)***: S'enfuit à deux zones en un Round (+1 en Stress). |
+| **1** | **Fuite éclair *(Bolt)***: S'enfuit à deux zones en un Round ; tous les présents +1 en Stress. |
 | **2** | **Danse hypnotique *(Mesmerizing Dance)***: Test d'Esprit *(WITS)* pur ou perte des prochaines actions rapide et lente. |
 | **3** | **Intimidation *(Intimidate)***: Déploie sa collerette et siffle (+1 en Stress). |
 | **4** | **Saisie *(Grasp)***: Dix dés de base. Si réussi, cible agrippée (Broyage et fracture au Round suivant). |
 | **5** | **Broyage et fracture *(Squeeze and Snap)***: Dix dés de base sur un membre. Test de Panique. Si dégâts, inflige la blessure critique n° 36 ou n° 41 et déchire la tenue de protection. |
-| **6** | **Frappe et enfoncement gorge *(Punch and Deep Throat)***: Six dés de base, Dégâts 1. Si dégâts, tentative d'enfoncement dans la gorge à six dés: suffocation jusqu'à extraction par test opposé de Force contre six dés. |
+| **6** | **Frappe et enfoncement gorge *(Punch and Deep Throat)***: Six dés de base, Dégâts 1. Si dégâts, tentative d'enfoncement dans la gorge à six dés : test de Panique et effets de la noyade jusqu'à extraction par un test de Force opposé à six dés. |
 
 ### Tableau des attaques de Popper pathogène *(Xenoixodida)*
 
@@ -36,18 +36,27 @@ Le livre décrit les créatures et menaces de la Frontière (section « ABOMINAT
 |:--- |:--- |
 | **1–2** | **Sifflement et charge *(Chitter and Rush)***: Test de Panique dans la zone. Test de Mobilité *(MOBILITY)* pour la cible ou chute à terre (Explosion au tour suivant si non retiré). |
 | **3–4** | **Essaim *(Swarm)***: Test d'Endurance *(STAMINA)* dans la zone ou perte d'action au Round suivant et attaque Bond et pilonnage. |
+| **5** | **Bond et pilonnage *(Pounce and Jab)***: Cinq dés de base, Dégâts 2. |
+| **6** | **Éclatement *(Pop)***: Cinq dés de base ; réussi, Éclaboussure d'acide 6 sur les proches. |
 
 ### Tableau des attaques de Naïade de Stade II *(Squid-Baby)*
 
 | D6 | Attaque |
 |:--- |:--- |
 | **1–3** | **Fuite en ondulant *(Slithering Escape)***: Le Bébé-pieuvre s'enfuit d'une zone vers le couvert ou conduit le plus proche. Dès la perte de vue, le combat prend fin et le mode discret commence. Après un Quart *(Shift)*, il devient un Trilobite. |
+| **4** | **Répulsion *(Revulsion)***: À portée Courte, test de Maladie contre Virulence 8 ou l'on lâche ce qu'on tient et perd un Round. |
+| **5** | **Étreinte *(Vice-like Grapple)***: Six dés de base, Dégâts 2 ; si dégâts, cible agrippée, blessure critique n° 13 et test de Panique. |
+| **6** | **Étouffement *(Smother Attack)***: Six dés de base, Dégâts 1 ; si dégâts, blessure critique n° 16, la Naïade reste fixée et la victime suffoque jusqu'à ce qu'on l'en arrache. |
 
 ### Tableau des attaques de Trilobite de Stade III *(Cuddles)*
 
 | D6 | Attaque |
 |:--- |:--- |
+| **1** | **Intimidation *(Intimidate)***: Le Trilobite se dresse de ses trois mètres ; test de Panique pour tous les PJ de la zone. |
 | **2–3** | **Saisie au tentacule *(Grabbing Tentacle)***: Attaque à huit dés de base, Dégâts 1. Si touché, cible entraînée dans une zone voisine, à terre. Niveau de Stress +1 et test de Panique immédiat. |
+| **4** | **Fouet renversant *(Toppling Lash)***: Dix dés de base, Dégâts 1 ; touchée, la cible tombe, lâche ce qu'elle tient, +1 en Stress et test de Panique. |
+| **5** | **Étreinte broyante *(Crushing Grapple)***: Huit dés de base, Dégâts 2 ; touchée, blessure critique n° 33 et test de Panique. |
+| **6** | **Violation *(Violation)***: Test opposé à dix dés contre le Combat rapproché de la cible ; s'il gagne, attaque à dix dés : un six Brise la victime (blessure critique n° 46) et implante un embryon ; sinon, test de Panique. |
 
 ## À la table
 En séance de jeu, Maman (Game Mother) gère l'affrontement des créatures de la Frontière tour par tour (section « ABOMINATIONS » et section « PROTO-XENOMORPHS »):
@@ -59,9 +68,11 @@ En séance de jeu, Maman (Game Mother) gère l'affrontement des créatures de la
 ## Cas limites
 Le livre précise plusieurs situations particulières concernant les créatures:
 - **Immunité environnementale**: Les Protomorphes agissent dans le vide spatial, résistent au froid extrême, ne respirent pas et absorbent les dix premiers Rads subis sans test de radiation (section « PROTOMORPH SPECIAL ABILITIES »).
-- **Cécité des Perfectionnés**: Les Perfectionnés ne détectent pas les organismes en cryosommeil (Hyperblind) (section « FULFREMMEN (THE PERFECTED) »).
+- **Cécité des Perfectionnés**: ils ne détectent pas les êtres en cryosommeil ; c'est un fait du scénario *Cœur de Ténèbre* (p. 14 et 32), absent de ce livre.
 - **Dégâts de feu et acide**: Le feu ne provoque aucune Éclaboussure d'acide chez la Proto-ruche vivante (Living Proto-Hive), car seul le sang versé projette de l'acide (section « PROTO-HIVE SPECIAL ABILITIES »).
 - **Nouveau-né désorienté**: À sa naissance, un Aéthon (Deacon) reste désorienté durant un Round complet pour se déconnecter de son sac nutritif avant d'agir (section « STAGE IV: AETHON (JUVENILE) “DEACON” »).
 
 ## Non couvert
 Les sources ne précisent pas la durée de vie maximale des Perfectionnés ni de traitement médical pour inverser la mutation au Stade V (Shambler).
+
+*Relu le 2026-11-14 contre le supplément (PDF = imprimée + 4) ; complété : les tables du Popper, de la Naïade et du Trilobite ; corrigé : la gorge du Xénocobra (noyade) ; la cécité des Perfectionnés rendue à Cœur de Ténèbre (p. 121-122, 133-136).*

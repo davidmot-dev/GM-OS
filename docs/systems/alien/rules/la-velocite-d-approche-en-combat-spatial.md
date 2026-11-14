@@ -7,7 +7,7 @@ sources: "ALIEN, le jeu de rôle"
 sections: "« VÉLOCITÉ D’APPROCHE, 2. ACTIONS DE PILOTE » ; « DISTANCE ET ZONES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # La Vélocité d'approche en combat spatial
@@ -41,12 +41,14 @@ Jauge de Vélocité d'approche :
 5. À la fin de cette phase, le déplacement se produit : les vaisseaux se rapprochent ou s'éloignent d'un nombre de zones égal à la Vélocité d'approche (section « 2. Actions de pilote »).
 
 ## Cas limites
-- Synchronisation : Si la Vélocité d'approche tombe à zéro, les vaisseaux synchronisent leurs vecteurs (section « Vélocité d’approche »). Cela permet de tenter un Amarrage s'ils sont déjà au Contact au début du Tour (section « 2. Actions de pilote »).
+- Synchronisation : Si la Vélocité d'approche tombe à zéro, les vaisseaux synchronisent leurs vecteurs (section « Vélocité d’approche »). Cela permet de tenter un Amarrage s'ils sont déjà au Contact au début du Tour, avec un Ombilic de connexion ; reliés, seul le plus grand des deux pilote (section « 2. Actions de pilote »).
 - Multiples vaisseaux : S'il y a plus de deux vaisseaux, ils sont répartis en deux camps. Tous les vaisseaux d'un même camp partagent une valeur de Vélocité d'approche commune face au camp adverse (section « Vélocité d’approche »).
 - Sortie de carte : Si le déplacement fait sortir un pion des limites de la carte de combat spatial, mais que la distance relative séparant les adversaires reste inférieure ou égale à huit zones, les deux pions sont simplement reculés d'une distance équivalente (section « Déplacement de vaisseau »).
-- Perte de moteur : Si un ingénieur coupe les moteurs pour réduire la Signature ou si le vaisseau subit une panne de moteur suite à une avarie ou à la Panique, le pilote ne peut plus effectuer d'actions de pilote ni modifier la Vélocité d'approche (section « Atténuer la signature », table « Avarie majeure » et table « Test de Panique lors d’un combat spatial »).
+- Perte de moteur : Si l'équipage coupe les moteurs pour réduire la Signature (deux Tours d'ingénieur pour les rallumer) ou si le vaisseau subit une panne de moteur suite à une avarie ou à la Panique, le pilote ne peut plus effectuer d'actions de pilote ni modifier la Vélocité d'approche (section « Atténuer la signature », table « Avarie majeure » et table « Test de Panique lors d’un combat spatial »).
 
 ## Non couvert
 - L'impact d'une gravité planétaire ou d'un champ d'astéroïdes sur la modification de la Vélocité d'approche (section « Débarquement planétaire »).
 - L'effet sur la Vélocité d'approche si un vaisseau Hors service dérive sans propulsion alors que son adversaire conserve une vitesse élevée (section « Dégâts de coque »).
 - La modification de la Vélocité d'approche lors du lancement d'un missile ou d'un projectile de taille différente (section « Armement »).
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; conforme, précisé : amarrage et moteurs coupés (p. 189-193, 196, 199).*

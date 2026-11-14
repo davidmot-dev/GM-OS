@@ -7,7 +7,7 @@ sources: "ALIEN, le jeu de rôle"
 sections: "« JOUER UN ANDROÏDE » ; « ÊTRES SYNTHÉTIQUES » ; « BLESSURES CRITIQUES CHEZ LES ÊTRES SYNTHÉTIQUES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # La physiologie et les avaries des Synthétiques (Androïdes)
@@ -49,3 +49,5 @@ Les synthétiques possèdent une physiologie supérieure (section « Jouer un an
 - Le cumul précis des pénalités si un androïde subit plusieurs blessures critiques différentes (section « Blessures critiques chez les êtres synthétiques »).
 - L'utilisation autonome d'un AutoDoc ou d'un Pauling pour s'auto-réparer sans test de Comtech (section « Articles médicaux »).
 - La résistance exacte ou les dégâts subis en cas d'irradiation supérieure à dix Rads (section « Radiations »).
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; conforme (p. 28-29, 96, 111).*

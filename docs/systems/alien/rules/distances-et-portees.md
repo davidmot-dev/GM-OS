@@ -7,7 +7,7 @@ sources: "ALIEN, le jeu de rôle"
 sections: "« PLANS ET ZONES » ; « FRONTIÈRES ET LIGNE DE VUE » ; « CATÉGORIES DE PORTÉE » ; « COMBAT À DISTANCE » ; « PORTÉE » ; « DISTANCE ET ZONES »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Distances et portées
@@ -44,7 +44,7 @@ En combat spatial, le jeu emploie également des zones abstraites mesurant des c
 1. En exploration, les mouvements se font en Tours sous le Mode Discret. Les personnages parcourent deux zones par Tour (section « Mode discret »).
 2. Au combat, le temps se découpe en Rounds (section « Mesure du temps »).
 3. Pour se déplacer d'une zone à une zone voisine, ou passer de Courte à Contact avec une cible dans la même zone, le joueur utilise une action rapide pour Courir (section « Déplacement »).
-4. Si un ennemi se trouve au Contact, s'éloigner exige une action rapide et un test de Mobilité réussi pour faire une Retraite vers la portée Courte (section « Retraite »). En cas d'échec, le personnage se déplace mais l'ennemi gagne une attaque de Combat rapproché gratuite (section « Retraite »).
+4. Si un ennemi se trouve au Contact, s'éloigner exige une action rapide et un test de Mobilité réussi pour faire une Retraite vers la portée Courte (section « Retraite »). En cas d'échec, le personnage se déplace mais l'ennemi gagne une attaque de Combat rapproché gratuite, hors de ses deux actions et impossible à bloquer (section « Retraite »).
 5. Le tir exige une ligne de vue dégagée et utilise le Combat à distance (section « Combat à distance »). La distance applique un modificateur à la réserve de dés (section « Portée »).
 
 ## Cas limites
@@ -58,3 +58,5 @@ En combat spatial, le jeu emploie également des zones abstraites mesurant des c
 - La hauteur d'une zone en mètres ou sa conversion en déplacement horizontal lors de l'escalade d'une échelle (section « Plans et zones »).
 - L'influence des variations de gravité sur les portées maximales d'armes de jet (section « Portée »).
 - La ligne de vue à travers la fumée non toxique (section « Traits des zones »).
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; conforme, précisé : l'attaque gratuite de la Retraite (p. 82-83, 85, 89, 93-95, 188-189).*

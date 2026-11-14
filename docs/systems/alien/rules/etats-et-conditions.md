@@ -7,13 +7,13 @@ sources: "ALIEN, le jeu de rôle"
 sections: "« ÉTATS » ; « DÉSHYDRATÉ » ; « ÉPUISÉ » ; « AFFAMÉ » ; « GELÉ »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # États et conditions
 
 ## Règle
-Un personnage peut subir quatre états : **Affamé**, **Déshydraté**, **Épuisé** et **Gelé** (section « États »). Ces conditions bloquent la récupération et infligent des dégâts périodiques (section « États »).
+Un personnage peut subir quatre états : **Affamé**, **Déshydraté**, **Épuisé** et **Gelé** (section « États »). Ces conditions bloquent la récupération et peuvent infliger des dégâts ; Épuisé n'en inflige pas (section « États »).
 
 Être **Déshydraté** survient après une journée sans boire (section « Déshydraté »). Cet état bloque toute récupération et inflige du stress et des dégâts à chaque Quart (section « Déshydraté »). L'état **Affamé** survient après une journée sans nourriture, exigeant un test d'Endurance quotidien sous peine de blessure (section « Affamé »).
 
@@ -60,3 +60,5 @@ L'état **Épuisé** résulte d'un manque de sommeil (section « Épuisé »). L
 - Cumul d'états : Les sources ne disent pas si cumuler les états d'inanition et de soif applique des dégâts cumulatifs à chaque période, ni s'il faut résoudre plusieurs tests de Trépas différents si le personnage est Brisé.
 - Traitement automatique : L'interaction des états avec l'usage d'un AutoDoc ou d'un Pauling sans intervention d'un allié n'est pas détaillée (section « Articles médicaux »).
 - Simulation par les synthétiques : La possibilité pour un androïde de simuler la fatigue pour protéger sa couverture n'est pas mentionnée (section « Êtres synthétiques »).
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; conforme, une précision sur Épuisé (p. 106-107, 111).*

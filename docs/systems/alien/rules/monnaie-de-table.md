@@ -7,7 +7,7 @@ sources: "ALIEN, le jeu de rôle"
 sections: "« aucune »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Monnaie de table
@@ -40,6 +40,8 @@ Le livre de règles d'ALIEN ne contient absolument rien sur le sujet d'une monna
 Sont totalement absents des sources :
 - Tout système de points d'élan, de momentum ou d'héroïsme partagés que les joueurs pourraient dépenser collectivement pour s'entraider ou ajouter des dés bonus à un jet de dés.
 - Toute jauge de menace, de destin ou de réserve de Maman qui permettrait au meneur de jeu d'accumuler des points collectifs suite aux échecs des personnages joueurs pour s'en servir ultérieurement contre eux.
-- Une mécanique de mise en commun ou de transfert de ressources narratives ou physiques entre les fiches de personnage autour de la table.
+- Une mécanique de transfert de ressources narratives entre les fiches de personnage. Seule exception physique : Maman peut décider de compter les consommables pour le groupe entier plutôt qu'individuellement (section « Consommables de groupe »).
 
 Les seules mécaniques de ressources et de jauges existantes sont purement individuelles et gérées séparément sur la fiche de chaque personnage joueur, telles que le Niveau de Stress (section « Niveau de Stress »), les points de Récit (section « Points de Récit ») ou les Réserves personnelles de consommables d'air, d'eau, de nourriture et d'énergie (section « Consommables »).
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; conforme : aucune monnaie de table ; ajouté : les consommables de groupe (p. 34, 61-62).*

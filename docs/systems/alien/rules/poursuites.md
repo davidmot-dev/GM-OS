@@ -7,7 +7,7 @@ sources: "ALIEN, le jeu de rôle"
 sections: "« aucune »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Poursuites
@@ -25,6 +25,7 @@ En l'absence de règles et de procédures de poursuite dédiées dans le livre d
 - Nombre de dés de poursuite : aucun.
 - Vitesse de déplacement générique au combat : une zone par action rapide consacrée à courir (section « Déplacement »).
 - Vitesse d'un personnage à terre : une zone par action lente consacrée à ramper (section « Déplacement »).
+- Véhicule au combat : une action de pilotage, rapide, le déplace d'autant de zones que sa Vitesse ; deux par Round au plus (section « Les véhicules au combat »).
 
 ## À la table
 1. En exploration, la traque s'organise en Tours sous le Mode Discret. Les personnages se déplacent de deux zones par Tour tandis que Maman gère les ennemis en secret (section « Déplacement ennemi »).
@@ -37,7 +38,7 @@ En l'absence de règles et de procédures de poursuite dédiées dans le livre d
 - Fuite de panique : Un résultat de treize au test de Panique déclenche une Fuite obligatoire où le personnage doit fuir et ne peut pas faire de test de Mobilité pour battre en retraite en cas d'ennemi au contact (section « Fuite »).
 - Encombrement : Un personnage encombré doit réussir un test de Mobilité pour courir ou ramper pendant un Round (section « Encombré »). En cas d'échec, il doit lâcher son matériel ou rester immobile (section « Encombré »).
 - Zones exiguës : Dans un conduit étroit, il est impossible de courir ; ramper (action lente) est le seul déplacement autorisé pour fuir (section « Exiguë »).
-- Véhicules : Un poursuivant peut percuter un fuyard au moyen d'une action de pilotage en réussissant un test de Pilotage à la place de Combat rapproché (section « Percuter des ennemis »).
+- Véhicules : Un poursuivant peut percuter un fuyard : attaque de Combat rapproché tirée sur le Pilotage, avec la Maniabilité, Dégâts égaux au cinquième de la Coque arrondi au supérieur (section « Percuter des ennemis »).
 
 ## Non couvert
 Le livre de règles d'ALIEN ne contient aucune mécanique dédiée aux poursuites. Sont absents des sources :
@@ -45,3 +46,5 @@ Le livre de règles d'ALIEN ne contient aucune mécanique dédiée aux poursuite
 - Des règles pour simuler des obstacles ou des choix de trajectoires lors d'une poursuite (section « Déplacement »).
 - Des actions de poursuite spécifiques pour les véhicules, en dehors de la vitesse en zones (section « Les véhicules au combat »).
 - Des règles d'interception entre vaisseaux spatiaux, en dehors de la modification de la Vélocité d'approche (section « Actions de combat spatial »).
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; conforme : aucune règle de poursuite dans le livre ; précisé : véhicules (p. 34, 85, 89, 93, 105, 114).*

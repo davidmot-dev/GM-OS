@@ -7,7 +7,7 @@ sources: "ALIEN, le jeu de rôle"
 sections: "« THÈMES ESSENTIELS » ; « PRINCIPES DE JEU » ; « THÈMES » ; « LE STRESS ET L'HORREUR » ; « LES TROIS ÉTAPES DE LA PEUR » ; « RÉTROFUTURISME »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Ton, registre et ambiance
@@ -47,3 +47,5 @@ Les mécanismes de tension physique (Niveau de Stress et Panique) appartiennent 
 ## Non couvert
 - La limite de sécurité émotionnelle des joueurs face aux trois étapes de la peur (section « Les trois étapes de la peur »).
 - Le dosage exact ou l'équilibre du ton lorsque l'on mélange l'horreur, la science-fiction d'action et d'émerveillement au sein d'une même session (section « Thèmes »).
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; conforme (p. 32, 160, 206-213).*

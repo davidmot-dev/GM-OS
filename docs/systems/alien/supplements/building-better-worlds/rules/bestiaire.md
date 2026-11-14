@@ -8,7 +8,7 @@ sources: "Alien - Building Better Worlds [EN].pdf"
 sections: "« ABOMINATIONS » ; « PROTO-XENOMORPHS » ; « XENOMORPHS »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: d4e5d538
 ---
 
@@ -27,6 +27,9 @@ Le supplément rassemble un catalogue de créatures et de menaces extrasolaires 
 | **Popper pathogène *(Xenoixodida)*** | 2 | 1 | 6 | 8 | 0 | 6 | Attaque en essaims; explosion acide en cas de dégâts subis lorsqu'il est mûr. |
 | **Traqueur pathogène *(Venator)*** | 2 | 8 | 8 | 4 | 4 (2 contre le feu) | 4 | Camouflage actif *(Active Camouflage)*. |
 | **Abomination humaine *(Spinward Variant)*** | 2 | – | – | – | – | – | Stade II *(Mutate)*: Force +3, Agilité +1, Empathie 1, immunité à la Manipulation *(MANIPULATION)*, armes à feu inutilisables, devient PNJ après une attaque. |
+| **Revenant (Stade III)** | 2 | 7 | 5 | 3 | 3 (0 contre le feu) | – | Discrétion 5. |
+| **Tête-de-béluga *(Beluga-Head)* (Stade IV)** | 2 | 9 | 5 | 3 | 6 (3 contre le feu) | – | Discrétion 5 ; Force encore +2. |
+| **Shambler (Stade V)** | 1 | 10 | 4 | 2 | – | – | Projection de goudron noir *(Black Goo Splatter)* 6. |
 | **Les Perfectionnés *(Fulfremmen)*** | 3 | 12 | 9 | 12 | 12 (5 contre le feu) | – | Fluidité de mouvement *(Fluidity of Motion)* (saute le double de la distance humaine); communication psionique (+1 en Stress dans la zone). |
 | **Proto-ruche vivante *(Living Proto-Hive)*** | 1 | 24 (par zone) | – | – | 8 (4 contre le feu) | 8 | Régénère 1 Santé par Round sous radiation Forte (jusqu'à 10 Rads); masque thermique; spores irritantes à portée Engagé *(ENGAGED)* (+1 en Stress sur échec de Mobilité). |
 
@@ -34,12 +37,12 @@ Le supplément rassemble un catalogue de créatures et de menaces extrasolaires 
 
 | D6 | Attaque |
 |:--- |:--- |
-| **1** | **Fuite éclair *(Bolt)***: S'enfuit à deux zones en un Round (+1 en Stress). |
+| **1** | **Fuite éclair *(Bolt)***: S'enfuit à deux zones en un Round ; tous les présents +1 en Stress. |
 | **2** | **Danse hypnotique *(Mesmerizing Dance)***: Test d'Esprit *(WITS)* pur ou perte des prochaines actions rapide et lente. |
 | **3** | **Intimidation *(Intimidate)***: Déploie sa collerette et siffle (+1 en Stress). |
 | **4** | **Saisie *(Grasp)***: Dix dés de base. Si réussi, cible agrippée (Broyage et fracture au Round suivant). |
 | **5** | **Broyage et fracture *(Squeeze and Snap)***: Dix dés de base sur un membre. Test de Panique. Si dégâts, inflige la blessure critique n° 36 ou n° 41 et déchire la tenue de protection. |
-| **6** | **Frappe et enfoncement gorge *(Punch and Deep Throat)***: Six dés de base, Dégâts 1. Si dégâts, tentative d'enfoncement dans la gorge à six dés: suffocation jusqu'à extraction par test opposé de Force contre six dés. |
+| **6** | **Frappe et enfoncement gorge *(Punch and Deep Throat)***: Six dés de base, Dégâts 1. Si dégâts, tentative d'enfoncement dans la gorge à six dés : test de Panique et effets de la noyade jusqu'à extraction par un test de Force opposé à six dés. |
 
 ### Tableau des attaques de Popper pathogène *(Xenoixodida)*
 
@@ -174,9 +177,11 @@ En séance de jeu, Maman (Game Mother) gère l'affrontement des créatures de la
 ## Cas limites
 Le livre précise plusieurs situations particulières concernant les créatures:
 - **Immunité environnementale**: Les Protomorphes agissent dans le vide spatial, résistent au froid extrême, ne respirent pas et absorbent les dix premiers Rads subis sans test de radiation (section « PROTOMORPH SPECIAL ABILITIES »).
-- **Cécité des Perfectionnés**: Les Perfectionnés ne détectent pas les organismes en cryosommeil (Hyperblind) (section « FULFREMMEN (THE PERFECTED) »).
+- **Cécité des Perfectionnés**: ils ne détectent pas les êtres en cryosommeil ; c'est un fait du scénario *Cœur de Ténèbre* (p. 14 et 32), absent de ce livre.
 - **Dégâts de feu et acide**: Le feu ne provoque aucune Éclaboussure d'acide chez la Proto-ruche vivante (Living Proto-Hive), car seul le sang versé projette de l'acide (section « PROTO-HIVE SPECIAL ABILITIES »).
 - **Nouveau-né désorienté**: À sa naissance, un Aéthon (Deacon) reste désorienté durant un Round complet pour se déconnecter de son sac nutritif avant d'agir (section « STAGE IV: AETHON (JUVENILE) “DEACON” »).
 
 ## Non couvert
 Les sources ne précisent pas la durée de vie maximale des Perfectionnés ni de traitement médical pour inverser la mutation au Stade V (Shambler).
+
+*Relu le 2026-11-14 contre le supplément (PDF = imprimée + 4) ; profils vérifiés ; ajouté : Revenant, Tête-de-béluga et Shambler ; corrigé : la gorge du Xénocobra ; la cécité des Perfectionnés rendue à Cœur de Ténèbre (p. 120-138).*

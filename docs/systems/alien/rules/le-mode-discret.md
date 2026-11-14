@@ -3,10 +3,9 @@ sujet: Le Mode Discret (Infiltration et Détection)
 systeme: alien
 couverture: complète
 hors_canevas: true
-sources: ALIEN, le jeu de rôle (p. 67, 83, 85, 86, 134, 139)
-pages_fiables: false
+sources: ALIEN, le jeu de rôle (p. 34, 67-68, 83, 85-87, 90, 134)
 genere_par: notebooklm
-relu: false
+relu: true
 ---
 
 # Le Mode Discret (Infiltration et Détection)
@@ -17,7 +16,7 @@ Le Mode Discret régit l'exploration silencieuse et l'infiltration dans ALIEN, l
 - Durée d'un Tour : de cinq à dix minutes (p. 83, 85).
 - Déplacement : deux zones par Tour (p. 85).
 - Détecteur de mouvement : utilisable une fois par Tour (p. 86).
-- Portée du détecteur M314 : Longue (quatre zones) en intérieur, Extrême (un kilomètre) en extérieur (p. 82, 86).
+- Portée du détecteur M314 : Longue (quatre zones) en intérieur, Extrême (un kilomètre) en extérieur (p. 83, 86).
 - Test de Réserve du détecteur : requis après utilisation, lance des dés de stress égaux à la Réserve actuelle (p. 34, 86).
 - Réduction de Réserve : chaque symbole de panique (un un) obtenu sur les dés de stress diminue la Réserve de un point (p. 34).
 - Modificateurs de distance pour le test de Mobilité d'infiltration (p. 86) :
@@ -48,7 +47,7 @@ Le Mode Discret régit l'exploration silencieuse et l'infiltration dans ALIEN, l
 - Énergie du détecteur : L'appareil s'éteint dès que sa jauge de Réserve d'Énergie tombe à zéro (p. 34, 86).
 - Cibles immobiles : Le détecteur ne repère que les objets en mouvement. Si l'ennemi reste immobile, il n'est pas détecté (p. 86).
 - Ligne de vue : Détecter une menace n'équivaut pas à une détection visuelle directe (p. 86). Pour attaquer, le personnage doit se trouver dans la même zone et posséder une ligne de vue dégagée (p. 83, 86).
-- Tests de groupe : En déplacement collectif, le moins compétent en Mobilité effectue le test (p. 67). Pour l'Observation collective, c'est le plus compétent qui lance les dés (p. 67).
+- Tests de groupe : En déplacement collectif, le moins compétent en Mobilité effectue le test (p. 67). Pour l'Observation collective, un seul personnage, choisi par les joueurs, lance les dés pour tous (p. 68).
 - Surprise par un ennemi actif : Un ennemi actif peut tenter une attaque furtive (p. 85). Maman effectue un test de Mobilité contre l'Observation de la cible. Si l'ennemi réussit, il gagne une action gratuite avant l'initiative (p. 85, 90).
 
 ## Non couvert
@@ -56,3 +55,5 @@ Le Mode Discret régit l'exploration silencieuse et l'infiltration dans ALIEN, l
 - Aucun modificateur d'encombrement physique ou d'objets lourds n'est détaillé pour la discrétion, hors surcharge en combat (p. 34).
 - Les effets d'un environnement bruyant (alarmes, réacteurs) sur l'Observation ou l'efficacité des détecteurs sont absents des sources (p. 85).
 - Aucun modificateur de discrétion dans l'obscurité n'est mentionné pour les synthétiques ou les xénomorphes, hors leurs compétences (p. 111, 290).
+
+*Relu le 2026-11-14 contre le livre (PDF = imprimée + 3) ; pages vérifiées ; corrigé : l'Observation de groupe, choisie par les joueurs (p. 34, 67-68, 83, 85-87, 90).*
