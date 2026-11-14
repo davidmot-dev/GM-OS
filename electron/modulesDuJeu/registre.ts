@@ -86,11 +86,11 @@ export const REGISTRE_DES_MOTEURS: ReadonlyMap<string, MoteurEnregistre> = new M
     [manifesteDetecteur.id, {
         manifeste: manifesteDetecteur, creerEtat: detecteur.creerEtat, migrerEtat: detecteur.migrerEtat,
         arreterEffets(donnees) { detecteur.validerEtat(donnees); return detecteur.arreterEffets(donnees); },
-        appliquerCommande(donnees, commande, lecteur) {
+        appliquerCommande(donnees, commande, lecteur, table) {
             detecteur.validerEtat(donnees);
-            return detecteur.appliquerCommande(donnees, commande as CommandeDetecteur, lecteur);
+            return detecteur.appliquerCommande(donnees, commande as CommandeDetecteur, lecteur, table);
         },
-        vuePour(donnees, lecteur) { detecteur.validerEtat(donnees); return detecteur.vuePour(donnees, lecteur); },
+        vuePour(donnees, lecteur, table) { detecteur.validerEtat(donnees); return detecteur.vuePour(donnees, lecteur, table); },
     }],
     [manifesteCombatSpatial.id, {
         manifeste: manifesteCombatSpatial, creerEtat: combatSpatial.creerEtat, migrerEtat: combatSpatial.migrerEtat,

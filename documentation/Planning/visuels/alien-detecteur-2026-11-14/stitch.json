@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-14",
+  "projectId": "10111230835253923961",
+  "autorisation": "Oui, envoie ces prompts à Stitch",
+  "screens": [
+    {
+      "label": "joueur",
+      "name": "projects/10111230835253923961/screens/f004cd61d363401a9c5c6fb91c1d6f14",
+      "width": "780",
+      "height": "2390",
+      "screenshot": "projects/10111230835253923961/files/bac0cfa6b8334381954f84e30167d062",
+      "html": "projects/10111230835253923961/files/a65e3a759abe4659a1f0c5fabcc66d58"
+    },
+    {
+      "label": "meneur",
+      "name": "projects/10111230835253923961/screens/4345ab6839a242c4a4c607096301d386",
+      "width": "2560",
+      "height": "2864",
+      "screenshot": "projects/10111230835253923961/files/7247ed3dc331481f974f3de4f0a92d73",
+      "html": "projects/10111230835253923961/files/adc0b78afee84c3d9b10b2f61a09f485"
+    }
+  ]
+}

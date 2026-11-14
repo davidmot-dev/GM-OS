@@ -140,9 +140,10 @@ Décocher revient à la mise en scène habituelle, en conservant le suivi discre
 Pendant un Tour, déplace d'abord les PJ puis les ennemis en secret. **Déplacer d'une zone**
 utilise un passage préparé et dépense un pas : **deux zones au maximum pour un humain**,
 limite de l'espèce confirmée par Maman pour une créature. **Examiner pendant ce Tour** exige
-de rester sur place pendant tout le Tour. Un déplacement rend le pion mobile ; pour un
-objet bougeant sur place, confirme **En mouvement actuellement** dans sa préparation.
-Décoche cette case si Maman décide qu'il s'immobilise avant le scan. **Objet de bonne taille
+de rester sur place pendant tout le Tour. Un déplacement rend le pion mobile. Le bouton
+**Immobile / En mouvement** de sa ligne permet de changer cet état directement, sans changer
+sa zone ni ses pas dépensés. Le prochain scan en tient compte. Le formulaire de préparation
+conserve aussi **En mouvement actuellement**. **Objet de bonne taille
 détectable** écarte les mouvements trop petits pour l'appareil.
 
 **Scanner ce Tour et tester l'Énergie** ne s'utilise qu'une fois par Tour. Le M314 repère
@@ -167,6 +168,43 @@ concernées. Le temps réel et les alarmes n'avancent jamais ces compteurs.
 
 Le détecteur est aussi vérifié à [768 px](captures/jeu-alien-a8-detecteur-768.jpg) et
 [1 180 px](captures/jeu-alien-a8-detecteur-1180.jpg).
+
+### Orienter le détecteur — A11
+
+Dans **Orientation**, Maman choisit l'**Ouverture du cône** : 45°, 90°, 180° ou **360° —
+toutes directions**. Il s'agit d'un réglage de mise en scène. Les anciennes préparations
+restent à 360°. Le nord est en haut du plan, l'est à droite.
+
+Après avoir confirmé le pion porteur, choisis **Joueur qui oriente le M314**. Ce choix
+désigne sa tablette ; le pion du plan et le personnage de tablette sont deux sélections
+distinctes. **Meneur seul** retire le droit au joueur. Changer le pion porteur retire aussi
+cette attribution : il faut alors choisir le joueur de nouveau.
+
+Le porteur et Maman tournent l'appareil avec les boutons **↶ 15° / 15° ↷**, ou avec
+**Cap du détecteur**. Relâche le curseur pour transmettre ; les flèches du clavier permettent
+un réglage fin. Le cap se partage entre les destinataires. Les autres joueurs consultent
+l'instrument sans commande de direction ; seule Maman choisit son ouverture.
+
+Le cône explore **le relevé du dernier scan**, pas les positions actuelles des créatures.
+Tourner n'utilise aucune batterie et ne permet pas de rescanner dans le même Tour. Un changement
+de mouvement après le scan attend le prochain. La tablette ne reçoit ni les cibles hors champ,
+ni le plan privé : elles sont filtrées avant l'envoi. Un mouvement dans la zone du porteur
+reste visible quelle que soit la direction.
+
+Le module passe en **0.5.0**, données v5, sans réimport du pilote : les anciens états et
+préréglages sont repris avec leurs réglages et leur scan déjà payé. Reconnexion et redémarrage
+conservent le cap ; les accès restent à ouvrir par Maman après un redémarrage, comme auparavant.
+
+![Cap et ouverture au pupitre du meneur](captures/jeu-alien-a11-orientation-mj.jpg)
+
+![Le porteur sur le Hub à 360 px, cap partagé et écho dans le cône](captures/jeu-alien-a11-joueur-360.jpg)
+
+Les [pions et leur état de mouvement](captures/jeu-alien-a11-plan-mj.jpg) restent privés.
+Voir aussi le [pupitre complet](captures/jeu-alien-a11-meneur.jpg), le Hub à
+[768 px](captures/jeu-alien-a11-joueur-768.jpg) et à [1 180 px](captures/jeu-alien-a11-joueur-1180.jpg).
+
+*Complété le 2026-11-14 pour A11 : module 0.5.0, six captures réelles relues, 242 essais ciblés,
+sept parcours Electron/Hub distincts réussis, types/lint/build. Essai physique de David attendu.*
 
 ### Préparer les dossiers et objectifs d'un acte — A8
 

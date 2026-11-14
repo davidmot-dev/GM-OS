@@ -14369,7 +14369,8 @@ et suivi tâche par tâche : [`2026-11-11-jets-demandes-et-caches.md`](2026-11-1
   lot 3 (onglets du Hub suivant l'équipement) **mis de côté par David le 11/11** (« on ne va pas faire le
   lot 3, on va le mettre de côté ») ; **second examen de GM Codex** (11/11, question de David sur le
   détecteur) : neuf idées pour le détecteur de mouvement et quatre autres outils du meneur,
-  **consignées et mises de côté**, sans chantier ouvert — voir
+  **consignées et mises de côté le 11/11** ; les deux premières pistes du détecteur sont
+  reprises le 14/11 au **§ 250 (A11)**, les autres restent garées — voir
   [`2026-11-11-jets-demandes-et-caches.md`](2026-11-11-jets-demandes-et-caches.md), « Second examen » ; idée 5 garée, idée 6 écartée (on ne joue
   jamais hors ligne).
 
@@ -14572,10 +14573,39 @@ GM-OS fermé confirmé ; accord de compléter ces documents en conservant le tra
   La campagne/cahier du § 248 restent historiques, aucun écrasement de leurs fichiers.
   Aucun profil privé modifié ; commit et push demandés par David le 13/11, voir la note de reprise.
 
+### 250 · Alien — détecteur orientable et mouvement des pions (A11) — 14/11/2026
+
+David signale les idées du second examen de GM Codex puis demande : **« ok on va commencer »**.
+Reprise des deux premières pistes, distincte du lot 3 équipement toujours garé.
+[Spécification, plan et tâches](2026-11-14-alien-detecteur-orientation.md),
+[prompts des deux maquettes](2026-11-14-alien-detecteur-prompts-stitch.md).
+
+- **Décisions de David :** « Le porteur et le meneur » pour l'orientation manuelle ; « Oui, une
+  commande rapide par pion » pour En mouvement/Immobile ; « Non, GM-OS est fermé ». Les quatre
+  documents partagés déjà modifiés peuvent être complétés, leurs changements conservés.
+- **Réalisé le 14/11, à essayer par David :** module **0.5.0**, données **v5** ; mouvement rapide
+  par pion, orientation manuelle partagée avec le joueur désigné, ouverture 45/90/180/360°.
+  Les destinataires non porteurs consultent seulement ; Maman peut reprendre la main.
+- **Réalisation :** `outils/alien/modules/detecteur/`, rendu `outils/alien/detecteur.js` et
+  contexte transmis par `electron/modulesDuJeu/registre.ts`. Le filtre du cône s'applique au
+  relevé privé du scan payé, avant diffusion des positions et compteurs. Un scan par Tour,
+  aucune batterie consommée par une rotation. Migrations des anciens états et préréglages,
+  dernier scan payé conservé ; aucun nouveau pilote à importer ni nouveau service.
+- **Dessin adopté :** David autorise les prompts Stitch (« Oui, envoie ces prompts à Stitch »),
+  puis « Oui, intègre cette disposition corrigée ». Les inventions non retenues et les images
+  originales restent dans le dossier des maquettes ; captures de départ réelles conservées.
+- **Vérifié :** 242 essais ciblés / 29 fichiers, 7 vérifications autonomes, manifeste conforme,
+  types, lint et build. Playwright : A11, A8, trois tailles de scan partagé, reprise/import
+  et préréglages des trois modules — **7 parcours distincts réussis** ; A11 repris après
+  espacement des boutons. Six captures finales relues, manuel 53/54 complété.
+- **Reste :** T9, essai tactile de David dans sa campagne. Commit demandé le 14/11 (« commit »),
+  sans push ; modifications du corpus et passages historiques de l'autre travail préservés.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 186 | **Alien — détecteur orientable et mouvement des pions** | 🟠 § 250, A11 ; module 0.5.0 réalisé et vérifié — 14/11 ; 242 tests, 7 parcours, six captures | T9 : essayer le cap partagé et l'immobilité dans la campagne | Essai physique de David ; aucun pilote à réimporter |
 | 185 | **Delta Green — les cinq suites du pilote 2.1.0** | 🟢 § 249 ; SAN/rupture/accoutumance, 2 PV, létalité/critiques, opposition/expérience, vocabulaire et boutons validés par David — 13/11 | Rien pour les fonctions livrées | Relecture du corpus à part : 1/18 relue ; catalogue à instruire |
 | 184 | **Delta Green — campagne de recette** | 🟠 § 248 ; Les dossiers de la pluie, 12 séances, 5 ateliers et 36 cas préparés ; 59 essais automatiques réussis — 12/11 | Vérifier le pilote 2.0.1 puis importer l’unique `.gmos` en Tel quel | Import natif et recette de David ; corpus non relu |
 | 183 | **Delta Green — pilote 2.0.1 puis 2.1.0** | 🟢 § 247 et § 249 ; jet, compétences, santé et fiche reliée, suites complétées ; validation globale de David le 13/11 | Rien ; la 2.1.0 remplace la 2.0.1 | Rien pour ces fonctions |

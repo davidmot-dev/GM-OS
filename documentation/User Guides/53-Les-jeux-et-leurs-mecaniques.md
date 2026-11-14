@@ -110,6 +110,11 @@ les brouillons de dossiers au MJ jusqu'à publication et remet chaque objectif a
 opérateur, une fois par acte. Les conséquences narratives et l'entrée en combat restent
 arbitrées par Maman ; le suivi A7 conserve les gains de Récit.
 
+**Alien A11 :** en mode discret, Maman choisit un cône de détection et peut en partager
+l'orientation manuelle avec le joueur porteur. La rotation explore le dernier scan payé,
+sans nouveau jet d'Énergie ; seuls les échos du champ courant sont transmis. La commande
+rapide **Immobile / En mouvement** sur les pions privés agit au prochain scan.
+
 LCARS propose sept consoles attribuées aux personnages réels de la campagne. Les affectations
 se préparent au pupitre ; l’accès au module s’ouvre séparément pendant la séance. Ses 19 actions
 arrivent dans une file arbitrée par le MJ, avec réponses privées, partage autorisé, publications

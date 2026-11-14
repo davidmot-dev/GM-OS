@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>M314 GM-OS // W-Y CORP</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-high": "#252b29",
+            "secondary": "#adcebe",
+            "tertiary": "#fefffa",
+            "tertiary-fixed": "#67fe98",
+            "on-secondary-fixed-variant": "#2f4d40",
+            "on-tertiary-container": "#007438",
+            "on-background": "#dee4e0",
+            "tertiary-fixed-dim": "#45e17e",
+            "error-container": "#93000a",
+            "on-error": "#690005",
+            "surface-container-low": "#171d1b",
+            "tertiary-container": "#66fe97",
+            "inverse-on-surface": "#2b322f",
+            "on-error-container": "#ffdad6",
+            "on-primary-container": "#496b56",
+            "on-tertiary-fixed": "#00210c",
+            "surface-container": "#1b211f",
+            "inverse-surface": "#dee4e0",
+            "secondary-fixed-dim": "#adcebe",
+            "on-primary-fixed-variant": "#2c4e3a",
+            "on-tertiary-fixed-variant": "#005226",
+            "on-surface": "#dee4e0",
+            "surface-variant": "#303634",
+            "on-tertiary": "#003918",
+            "surface-tint": "#aacfb5",
+            "primary": "#fefffa",
+            "error": "#ffb4ab",
+            "outline-variant": "#424843",
+            "surface-bright": "#343b38",
+            "surface": "#0e1513",
+            "on-primary-fixed": "#002111",
+            "on-secondary-fixed": "#012016",
+            "surface-dim": "#0e1513",
+            "background": "#0e1513",
+            "outline": "#8c928c",
+            "primary-container": "#c5ebd0",
+            "secondary-container": "#2f4d40",
+            "primary-fixed-dim": "#aacfb5",
+            "surface-container-highest": "#303634",
+            "secondary-fixed": "#c8ead9",
+            "on-secondary-container": "#9bbcac",
+            "on-secondary": "#18362a",
+            "on-surface-variant": "#c1c8c1",
+            "primary-fixed": "#c6ecd1",
+            "inverse-primary": "#446650",
+            "surface-container-lowest": "#090f0d",
+            "on-primary": "#153724"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-mobile": "0.5rem",
+            "margin": "1rem",
+            "gutter": "0.75rem",
+            "gutter-mobile": "0.5rem",
+            "space-xs": "0.25rem",
+            "space-xl": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-md": "0.75rem",
+            "space-lg": "1rem"
+          },
+          "fontFamily": {
+            "headline-md": ["Space Mono", "monospace"],
+            "display-lg": ["Space Mono", "monospace"],
+            "label-sm": ["Space Mono", "monospace"],
+            "headline-sm": ["Space Mono", "monospace"],
+            "code-sm": ["Space Mono", "monospace"],
+            "body-lg": ["Space Mono", "monospace"],
+            "display-lg-mobile": ["Space Mono", "monospace"],
+            "label-md": ["Space Mono", "monospace"],
+            "body-md": ["Space Mono", "monospace"]
+          },
+          "fontSize": {
+            "headline-md": ["20px", { "lineHeight": "24px", "letterSpacing": "0.06em", "fontWeight": "700" }],
+            "display-lg": ["32px", { "lineHeight": "36px", "letterSpacing": "0.08em", "fontWeight": "700" }],
+            "label-sm": ["10px", { "lineHeight": "12px", "letterSpacing": "0.12em", "fontWeight": "400" }],
+            "headline-sm": ["16px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+            "code-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "400" }],
+            "body-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+            "display-lg-mobile": ["24px", { "lineHeight": "28px", "letterSpacing": "0.06em", "fontWeight": "700" }],
+            "label-md": ["11px", { "lineHeight": "14px", "letterSpacing": "0.1em", "fontWeight": "700" }],
+            "body-md": ["12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #080e0c;
+      color: #c5ebd0;
+      font-family: 'Space Mono', monospace;
+      font-feature-settings: "tnum";
+      -webkit-font-smoothing: antialiased;
+    }
+    /* CRT Scanline Overlay */
+    .crt-overlay {
+      background: linear-gradient(rgba(14, 21, 19, 0) 50%, rgba(5, 10, 8, 0.4) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+      background-size: 100% 3px, 3px 100%;
+      pointer-events: none;
+    }
+    /* Phosphor Glow Pulse */
+    @keyframes phosphor-pulse {
+      0%, 100% {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 4px #45e17e) drop-shadow(0 0 8px rgba(69, 225, 126, 0.6));
+      }
+      50% {
+        opacity: 0.4;
+        filter: drop-shadow(0 0 2px #45e17e) drop-shadow(0 0 3px rgba(69, 225, 126, 0.3));
+      }
+    }
+    .echo-blip {
+      animation: phosphor-pulse 1.8s infinite ease-in-out;
+    }
+    /* Tactical Slider Styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    input[type=range]:focus {
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 10px;
+      cursor: pointer;
+      background: #171d1b;
+      border: 1px solid #424843;
+      border-radius: 0px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      height: 24px;
+      width: 16px;
+      border-radius: 0px;
+      background: #66fe97;
+      cursor: pointer;
+      -webkit-appearance: none;
+      margin-top: -8px;
+      border: 1px solid #00210c;
+      box-shadow: 0 0 6px rgba(102, 254, 151, 0.6);
+    }
+    input[type=range]::-moz-range-track {
+      width: 100%;
+      height: 10px;
+      cursor: pointer;
+      background: #171d1b;
+      border: 1px solid #424843;
+      border-radius: 0px;
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 24px;
+      width: 16px;
+      border-radius: 0px;
+      background: #66fe97;
+      cursor: pointer;
+      border: 1px solid #00210c;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-primary-container selection:bg-tertiary-container selection:text-surface flex flex-col items-center justify-start min-h-screen relative overflow-x-hidden pb-16">
+<!-- Scanline Vector Overlay -->
+<div class="fixed inset-0 crt-overlay z-40"></div>
+<!-- Shared Component: TopAppBar (from JSON) -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-space-md py-space-xs bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-container text-lg">terminal</span>
+<span class="font-headline-sm text-headline-sm text-primary tracking-widest">M314 GM-OS // W-Y CORP</span>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-tertiary-container text-xl">settings_power</span>
+</div>
+</header>
+<!-- Mobile Tactical Container: strictly 360px -->
+<main class="w-[360px] max-w-[360px] pt-12 px-space-sm flex flex-col gap-space-sm z-10 box-border">
+<!-- 1. Small Header -->
+<div class="pt-2">
+<div class="font-label-sm text-label-sm text-secondary uppercase tracking-widest flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-outline inline-block"></span>
+<span>INSTRUMENT PORTATIF · MODÈLE M314</span>
+</div>
+</div>
+<!-- 2. Main Title -->
+<div>
+<h1 class="font-headline-md text-headline-md text-tertiary uppercase tracking-wider">
+        Détecteur de mouvement
+      </h1>
+</div>
+<!-- 3. Short Subtitle -->
+<div>
+<p class="font-body-md text-body-md text-secondary tracking-normal">
+        M314 · échos du dernier scan de jeu.
+      </p>
+</div>
+<!-- 4. Square Dark Radar Enclosure -->
+<section class="border border-outline-variant bg-surface-container-lowest p-2 flex flex-col gap-1.5 relative select-none">
+<!-- Top Bar Inside Enclosure -->
+<div class="flex items-center justify-between border-b border-outline-variant/60 pb-1 text-[11px] font-bold tracking-widest">
+<span class="text-secondary">WEYLAND-YUTANI</span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary-container shadow-[0_0_6px_#66fe97] inline-block animate-pulse"></span>
+<span class="text-tertiary-container">SCAN ACTIF</span>
+</div>
+</div>
+<!-- Radar Scope CRT Canvas (290px x 290px) -->
+<div class="relative w-full aspect-square bg-[#050a08] flex items-center justify-center overflow-hidden border border-outline-variant/40">
+<svg class="w-full h-full" viewbox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- 90° Sector gradient facing East (from 45° to 135° -> center pointing directly East 90°) -->
+<radialgradient cx="150" cy="150" gradientunits="userSpaceOnUse" id="sectorGlow" r="140">
+<stop offset="0%" stop-color="#45e17e" stop-opacity="0.32"></stop>
+<stop offset="85%" stop-color="#45e17e" stop-opacity="0.08"></stop>
+<stop offset="100%" stop-color="#45e17e" stop-opacity="0.0"></stop>
+</radialgradient>
+<filter height="140%" id="bloom" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="3"></fegaussianblur>
+<femerge>
+<femergenode in="blur"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+</defs>
+<!-- Concentric Range Rings (Faint outside sector) -->
+<circle cx="150" cy="150" fill="none" r="35" stroke="#252b29" stroke-width="1"></circle>
+<circle cx="150" cy="150" fill="none" r="70" stroke="#252b29" stroke-width="1"></circle>
+<circle cx="150" cy="150" fill="none" r="105" stroke="#252b29" stroke-width="1"></circle>
+<circle cx="150" cy="150" fill="none" r="140" stroke="#344b3f" stroke-width="1.2"></circle>
+<!-- Crosshairs -->
+<line stroke="#252b29" stroke-dasharray="2 4" stroke-width="1" x1="10" x2="290" y1="150" y2="150"></line>
+<line stroke="#252b29" stroke-dasharray="2 4" stroke-width="1" x1="150" x2="150" y1="10" y2="290"></line>
+<!-- Distance Markers (m) -->
+<text fill="#8c928c" font-family="Space Mono" font-size="8" x="153" y="118">5m</text>
+<text fill="#8c928c" font-family="Space Mono" font-size="8" x="153" y="83">10m</text>
+<text fill="#8c928c" font-family="Space Mono" font-size="8" x="153" y="48">15m</text>
+<!-- ACTIVE RADAR SECTOR: 90° Wedge facing directly East (covering 45° to 135°) -->
+<!-- Pointing from (150,150) to (249,51) -> Arc to (249,249) -> Close -->
+<path d="M 150 150 L 249 51 A 140 140 0 0 1 249 249 Z" fill="url(#sectorGlow)"></path>
+<!-- Sector bounding lines (vector beam intensity) -->
+<line stroke="#45e17e" stroke-opacity="0.85" stroke-width="1.2" x1="150" x2="249" y1="150" y2="51"></line>
+<line stroke="#45e17e" stroke-opacity="0.85" stroke-width="1.2" x1="150" x2="249" y1="150" y2="249"></line>
+<path d="M 249 51 A 140 140 0 0 1 249 249" fill="none" stroke="#66fe97" stroke-opacity="0.9" stroke-width="1.8"></path>
+<!-- EXACTLY ONE GLOWING ECHO / BLIP (Inside the 90° East sector at approx 8.5m distance, bearing 82°) -->
+<g class="echo-blip" filter="url(#bloom)">
+<!-- Outer beacon ring -->
+<circle cx="218" cy="138" fill="#45e17e" fill-opacity="0.3" r="5" stroke="#66fe97" stroke-width="1"></circle>
+<!-- Inner solid contact phosphor core -->
+<circle cx="218" cy="138" fill="#fefffa" r="2.8"></circle>
+<!-- Tactical contact coordinate brackets -->
+<path d="M 212 133 L 210 133 L 210 143 L 212 143" fill="none" stroke="#66fe97" stroke-width="0.8"></path>
+<path d="M 224 133 L 226 133 L 226 143 L 224 143" fill="none" stroke="#66fe97" stroke-width="0.8"></path>
+</g>
+<!-- Center Marker: Distinct Directional Chevron pointing right (Est · 90°) -->
+<g transform="translate(150, 150)">
+<circle cx="0" cy="0" fill="#050a08" r="4.5" stroke="#66fe97" stroke-width="1.5"></circle>
+<!-- Chevron pointing explicitly towards East (Right) -->
+<polygon fill="#66fe97" points="2,-4 9,0 2,4 4,0"></polygon>
+</g>
+<!-- Direction Cardinal Indices -->
+<text fill="#66fe97" font-family="Space Mono" font-size="10" font-weight="700" x="278" y="153">E</text>
+<text fill="#8c928c" font-family="Space Mono" font-size="9" x="147" y="24">N</text>
+<text fill="#8c928c" font-family="Space Mono" font-size="9" x="14" y="153">O</text>
+<text fill="#8c928c" font-family="Space Mono" font-size="9" x="147" y="284">S</text>
+</svg>
+<!-- Dynamic scanline sheen on CRT enclosure -->
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#66fe97]/5 to-transparent pointer-events-none opacity-40"></div>
+</div>
+<!-- Radar Bottom Bar -->
+<div class="flex items-center justify-between border-t border-outline-variant/60 pt-1 text-[11px] font-bold tracking-widest">
+<span class="text-tertiary-container bg-surface-container px-1 py-0.5 border border-outline-variant">ÉCHOS : 1</span>
+<span class="text-secondary">ACQUISITION</span>
+</div>
+</section>
+<!-- 5. CONTROL: Orientation (Directly below radar) -->
+<section class="border border-outline-variant bg-surface-container-low p-2.5 flex flex-col gap-2.5">
+<!-- Panel Header -->
+<div class="flex items-center justify-between border-b border-outline-variant pb-1">
+<span class="font-headline-sm text-headline-sm uppercase text-tertiary tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-tertiary-container">screen_rotation</span>
+          Orientation
+        </span>
+<span class="font-label-sm text-label-sm text-secondary">SERVO-LOCK</span>
+</div>
+<!-- Readout Row -->
+<div class="grid grid-cols-2 gap-2">
+<div class="border border-outline-variant bg-surface-container-lowest p-2 flex flex-col items-center justify-center">
+<span class="font-label-sm text-label-sm text-secondary uppercase">Cap</span>
+<span class="font-headline-sm text-headline-sm text-primary tracking-widest" id="cap-readout">Est · 90°</span>
+</div>
+<div class="border border-outline-variant bg-surface-container-lowest p-2 flex flex-col items-center justify-center">
+<span class="font-label-sm text-label-sm text-secondary uppercase">Champ</span>
+<span class="font-headline-sm text-headline-sm text-tertiary-container tracking-widest">90°</span>
+</div>
+</div>
+<!-- Stepper Buttons (Min 48px height) -->
+<div class="grid grid-cols-2 gap-2">
+<button class="h-12 min-h-[48px] bg-surface-container hover:bg-surface-container-high active:bg-tertiary-container active:text-surface border border-outline-variant flex items-center justify-center font-headline-sm text-headline-sm text-primary transition-none select-none tracking-widest cursor-pointer" id="btn-left" type="button">
+          ↶ 15°
+        </button>
+<button class="h-12 min-h-[48px] bg-surface-container hover:bg-surface-container-high active:bg-tertiary-container active:text-surface border border-outline-variant flex items-center justify-center font-headline-sm text-headline-sm text-primary transition-none select-none tracking-widest cursor-pointer" id="btn-right" type="button">
+          15° ↷
+        </button>
+</div>
+<!-- Slider Control -->
+<div class="flex flex-col gap-1.5 pt-1">
+<label class="font-label-sm text-label-sm text-secondary uppercase flex justify-between" for="azimuth-slider">
+<span>Cap du détecteur</span>
+<span class="text-tertiary-container" id="slider-deg">90°</span>
+</label>
+<input aria-label="Cap du détecteur" class="w-full h-12 min-h-[48px] py-3 cursor-pointer" id="azimuth-slider" max="360" min="0" name="azimuth" step="15" type="range" value="90"/>
+<!-- Tick Marks Indicator -->
+<div class="flex justify-between text-[10px] font-bold text-outline px-1">
+<span>N (0°)</span>
+<span class="text-tertiary-container">E (90°)</span>
+<span>S (180°)</span>
+<span>O (270°)</span>
+<span>N (360°)</span>
+</div>
+</div>
+<!-- Explanatory Text (Body 15px) -->
+<p class="text-[15px] leading-5 text-primary-container font-body-md pt-0.5 border-t border-outline-variant/50">
+        Tourne le détecteur pour explorer le dernier scan.
+      </p>
+<!-- Sync Status Indicator -->
+<div class="flex items-center gap-2 bg-surface-container-lowest px-2 py-1.5 border border-outline-variant text-[11px] text-secondary">
+<span class="material-symbols-outlined text-tertiary-container text-base animate-pulse">sync</span>
+<span>Orientation partagée avec le meneur</span>
+</div>
+</section>
+<!-- 6. Audio Section -->
+<section class="border border-outline-variant bg-surface-container-low p-2.5 flex flex-col gap-2">
+<!-- Audio Button (min 48px) -->
+<button class="h-12 min-h-[48px] w-full bg-surface-container-lowest hover:bg-surface-container active:bg-tertiary-container active:text-surface border border-outline-variant flex items-center justify-center gap-2 text-primary font-headline-sm text-headline-sm uppercase tracking-wider transition-none cursor-pointer" id="audio-toggle-btn" type="button">
+<span class="material-symbols-outlined text-tertiary-container">volume_up</span>
+<span>Activer les bips ici</span>
+</button>
+<!-- Short Local Audio Help -->
+<p class="font-body-md text-body-md text-secondary leading-tight">
+        Signal sonore local lié au cône actif.
+      </p>
+</section>
+<!-- 7. Status Readout Section -->
+<section class="border border-outline-variant bg-surface-container-low p-2.5 flex flex-col gap-2 font-body-md text-body-md">
+<!-- Mode discret · Tour 3 -->
+<div class="flex items-center justify-between border-b border-outline-variant/60 pb-1.5">
+<span class="text-secondary uppercase">État opérationnel</span>
+<span class="text-primary font-bold tracking-wider">Mode discret · Tour 3</span>
+</div>
+<!-- Énergie du M314 : 4 (Tactical Battery Blocks) -->
+<div class="flex items-center justify-between border-b border-outline-variant/60 pb-1.5">
+<span class="text-secondary">Énergie du M314 : 4</span>
+<div aria-label="Niveau d'énergie 4 barres" class="flex items-center gap-1">
+<span class="w-3.5 h-4 bg-tertiary-container border border-outline-variant inline-block shadow-[0_0_4px_#66fe97]"></span>
+<span class="w-3.5 h-4 bg-tertiary-container border border-outline-variant inline-block shadow-[0_0_4px_#66fe97]"></span>
+<span class="w-3.5 h-4 bg-tertiary-container border border-outline-variant inline-block shadow-[0_0_4px_#66fe97]"></span>
+<span class="w-3.5 h-4 bg-tertiary-container border border-outline-variant inline-block shadow-[0_0_4px_#66fe97]"></span>
+</div>
+</div>
+<!-- Coursive A : 1 écho -->
+<div class="flex items-center justify-between pt-0.5">
+<span class="text-secondary">Secteur balayé</span>
+<span class="text-tertiary-container font-bold tracking-wider">Coursive A : 1 écho</span>
+</div>
+</section>
+</main>
+<!-- Shared Component: BottomNavBar (from JSON) -->
+<!-- Context Lock: Active tab corresponds strictly to RADAR (item 0) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-14 bg-surface-container-lowest border-t border-outline-variant">
+<!-- Tab 1: RADAR (Active) -->
+<button class="flex flex-col items-center justify-center flex-1 bg-surface-container text-tertiary-container border-t-2 border-tertiary-container py-space-xs cursor-pointer" type="button">
+<span class="material-symbols-outlined text-lg leading-none" style="font-variation-settings: 'FILL' 1;">radar</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest mt-0.5">RADAR</span>
+</button>
+<!-- Tab 2: CAP 90° -->
+<button class="flex flex-col items-center justify-center flex-1 text-on-surface-variant py-space-xs hover:bg-surface-container hover:text-primary transition-none cursor-pointer" type="button">
+<span class="material-symbols-outlined text-lg leading-none">explore</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest mt-0.5">CAP 90°</span>
+</button>
+<!-- Tab 3: AUDIO -->
+<button class="flex flex-col items-center justify-center flex-1 text-on-surface-variant py-space-xs hover:bg-surface-container hover:text-primary transition-none cursor-pointer" type="button">
+<span class="material-symbols-outlined text-lg leading-none">volume_up</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest mt-0.5">AUDIO</span>
+</button>
+<!-- Tab 4: TÉLÉM. -->
+<button class="flex flex-col items-center justify-center flex-1 text-on-surface-variant py-space-xs hover:bg-surface-container hover:text-primary transition-none cursor-pointer" type="button">
+<span class="material-symbols-outlined text-lg leading-none">query_stats</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest mt-0.5">TÉLÉM.</span>
+</button>
+</nav>
+<!-- Interactive Prop Controller (Vanilla JS for Tabletop Experience) -->
+<script>
+    (function initPropControls() {
+      const slider = document.getElementById('azimuth-slider');
+      const capReadout = document.getElementById('cap-readout');
+      const sliderDeg = document.getElementById('slider-deg');
+      const btnLeft = document.getElementById('btn-left');
+      const btnRight = document.getElementById('btn-right');
+      const audioBtn = document.getElementById('audio-toggle-btn');
+
+      function getHeadingName(deg) {
+        deg = ((deg % 360) + 360) % 360;
+        if (deg >= 337.5 || deg < 22.5) return 'Nord';
+        if (deg >= 22.5 && deg < 67.5) return 'Nord-Est';
+        if (deg >= 67.5 && deg < 112.5) return 'Est';
+        if (deg >= 112.5 && deg < 157.5) return 'Sud-Est';
+        if (deg >= 157.5 && deg < 202.5) return 'Sud';
+        if (deg >= 202.5 && deg < 247.5) return 'Sud-Ouest';
+        if (deg >= 247.5 && deg < 292.5) return 'Ouest';
+        return 'Nord-Ouest';
+      }
+
+      function updateHeading(val) {
+        let numeric = parseInt(val, 10);
+        numeric = ((numeric % 360) + 360) % 360;
+        slider.value = numeric;
+        sliderDeg.textContent = numeric + '°';
+        const name = getHeadingName(numeric);
+        capReadout.textContent = name + ' · ' + numeric + '°';
+      }
+
+      slider.addEventListener('input', function(e) {
+        updateHeading(e.target.value);
+      });
+
+      btnLeft.addEventListener('click', function() {
+        let current = parseInt(slider.value, 10) || 0;
+        updateHeading(current - 15);
+      });
+
+      btnRight.addEventListener('click', function() {
+        let current = parseInt(slider.value, 10) || 0;
+        updateHeading(current + 15);
+      });
+
+      let audioActive = false;
+      audioBtn.addEventListener('click', function() {
+        audioActive = !audioActive;
+        if (audioActive) {
+          audioBtn.classList.add('bg-tertiary-container', 'text-surface');
+          audioBtn.classList.remove('bg-surface-container-lowest', 'text-primary');
+          audioBtn.innerHTML = '<span class="material-symbols-outlined text-surface">volume_up</span><span>BIPS ACTIFS [ACTIF]</span>';
+        } else {
+          audioBtn.classList.remove('bg-tertiary-container', 'text-surface');
+          audioBtn.classList.add('bg-surface-container-lowest', 'text-primary');
+          audioBtn.innerHTML = '<span class="material-symbols-outlined text-tertiary-container">volume_up</span><span>Activer les bips ici</span>';
+        }
+      });
+    })();
+  </script>
+</body></html>

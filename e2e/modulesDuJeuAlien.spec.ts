@@ -8,6 +8,7 @@ import { creerSemenceAlien } from '../outils/modules-du-jeu/recette-alien.mjs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { VueDesModulesMJ, SauvegardeDesModules } from '../src/modules/modulesDuJeu/protocole';
 import type { VueMuthurMJ } from '../outils/alien/modules/muthur/moteur.mjs';
+import type { EtatDetecteur } from '../outils/alien/modules/detecteur/moteur.mjs';
 
 /** A4/A6 : vrai Electron, vrai HTTP/WebSocket et deux navigateurs sans pont natif.
  * Aucun profil personnel ni pilote exporté lu ; sorties seulement dans scratch/.
@@ -162,6 +163,87 @@ async function capturerPanneauA8(page:Page, cible:ReturnType<Page['locator']>, n
     try { await cible.screenshot({path:path.join(SORTIE,`${nom}.jpg`),quality:85,animations:'disabled'}); }
     finally { await page.evaluate(()=>(window as unknown as {restaurerCaptureA8:()=>void}).restaurerCaptureA8()); }
 }
+
+test('A11 : cône partagé, immobilité, droits du porteur et reprise du scan payé',async({browser})=>{
+    test.setTimeout(180_000);
+    const nel=await rejoindre(browser,'Nel Varga',360),idris=await rejoindre(browser,'Idris Koa',768);
+    for(const nom of ['Nel Varga','Idris Koa'])await autoriser('Détecteur de mouvement',nom);
+    const commander=async(id:string,charge:unknown)=>{
+        const vue=await vueMJ();return gmos.fenetre.evaluate(({vue,id,charge})=>window.appBridge!.modulesDuJeu!.commander({
+            campagneId:vue.campagneId!,contexte:vue.contexte,requeteId:crypto.randomUUID(),moduleId:'alien-detecteur',commande:{id,charge},
+        }),{vue,id,charge});
+    };
+    const agir=async(id:string,charge:unknown)=>expect(await commander(id,charge)).toEqual({ok:true});
+    const etat=async()=>(await vueMJ()).modules.find(m=>m.id==='alien-detecteur')!.vue as EtatDetecteur;
+    for(const [id,nom,x,y,liens] of [['sas','Sas',0,0,[]],['est','Coursive Est',25,0,['sas']],['nord','Coursive Nord',0,-25,['sas']]] as const)
+        await agir('zone-discrete',{id,nom,x,y,liens});
+    for(const [id,nom,zoneId,mobile] of [['nel','Nel Varga','sas',false],['xeno-est','Menace Est privée','est',true],['xeno-nord','Menace Nord privée','nord',true],['dormeur','Créature immobile','est',false]] as const)
+        await agir('pion-discret',{id,nom,zoneId,humain:id==='nel',limite:id==='nel'?2:3,mobile,detectable:true});
+    await agir('regler-discret',{terrain:'interieur',energie:8,porteurId:'nel'});await agir('mode-discret',{actif:true});
+    const poste=await pupitre('Détecteur de mouvement');
+    await poste.getByLabel('Joueur qui oriente le M314',{exact:true}).selectOption({label:'Nel Varga'});
+    await expect(poste.getByLabel('Joueur qui oriente le M314',{exact:true})).toBeEnabled();
+    await poste.getByLabel('Ouverture du cône',{exact:true}).selectOption('90');
+    for(let i=0;i<6;i++)await poste.getByRole('button',{name:'Tourner de 15° vers la droite',exact:true}).click();
+    await expect(poste.getByText('Cap : Est · 90°',{exact:true})).toBeVisible();
+    await poste.getByRole('button',{name:'Scanner ce Tour et tester l’Énergie',exact:true}).click();
+    const scan=structuredClone((await etat()).discret.dernierScan),energie=(await etat()).discret.energie;
+    for(const appareil of [nel,idris]) {
+        await instrument(appareil.page,'Détecteur de mouvement');
+        await expect(appareil.page.getByText('Coursive Est : 1 écho',{exact:true})).toBeVisible();
+        await expect(appareil.page.getByText('Coursive Nord : 1 écho',{exact:true})).toHaveCount(0);
+        const projection=await appareil.page.evaluate(()=>JSON.stringify((window as FenetreSonde).sondeAlien.paquets.filter(p=>p.type==='modules:vue').at(-1)));
+        expect(projection).not.toMatch(/Coursive Nord|Menace|xeno-|dormeur|dernierScan|joueurPorteurId|"liens"/);
+    }
+    await expect(nel.page.getByRole('slider',{name:'Cap du détecteur'})).toBeVisible();
+    await expect(idris.page.getByRole('slider')).toHaveCount(0);
+    await expect(nel.page.getByLabel('Ouverture du cône')).toHaveCount(0);
+    for(const largeur of [360,768,1180]) {
+        await nel.page.setViewportSize({width:largeur,height:1000});await sansDebordement(nel.page);
+        const rotation=nel.page.getByRole('button',{name:'Tourner de 15° vers la droite',exact:true});
+        expect((await rotation.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+        await capturerPanneauA8(nel.page,nel.page.locator('.gmos-detecteur'),`jeu-alien-a11-joueur-${largeur}`);
+    }
+    await capturerPanneauA8(gmos.fenetre,poste,'jeu-alien-a11-meneur');
+    await capturerPanneauA8(gmos.fenetre,poste.getByRole('region',{name:'Orientation du détecteur'}),'jeu-alien-a11-orientation-mj');
+    await capturerPanneauA8(gmos.fenetre,poste.getByRole('region',{name:'Mode discret du détecteur'}),'jeu-alien-a11-plan-mj');
+    await nel.page.getByRole('slider',{name:'Cap du détecteur'}).focus();
+    await nel.page.getByRole('slider',{name:'Cap du détecteur'}).press('Home');
+    await expect(poste.getByText('Cap : Nord · 0°',{exact:true})).toBeVisible();
+    await expect(nel.page.getByText('Coursive Nord : 1 écho',{exact:true})).toBeVisible();
+    expect((await etat()).discret.dernierScan).toEqual(scan);expect((await etat()).discret.energie).toBe(energie);
+    await poste.getByRole('button',{name:'En mouvement : Menace Nord privée',exact:true}).click();
+    await expect(poste.getByRole('button',{name:'Immobile : Menace Nord privée',exact:true})).toBeVisible();
+    await expect(nel.page.getByText('Coursive Nord : 1 écho',{exact:true})).toBeVisible();
+    expect(await commander('scanner-discret',{tour:1})).toMatchObject({ok:false});
+    await nel.page.reload();await expect(nel.page.getByText('Connecté',{exact:true})).toBeVisible();
+    await instrument(nel.page,'Détecteur de mouvement');
+    await expect(nel.page.getByRole('slider',{name:'Cap du détecteur'})).toHaveValue('0');
+    await expect(nel.page.getByText('Coursive Nord : 1 écho',{exact:true})).toBeVisible();
+    await poste.getByLabel('Joueur qui oriente le M314',{exact:true}).selectOption({label:'Idris Koa'});
+    await expect(nel.page.getByRole('slider')).toHaveCount(0);await expect(idris.page.getByRole('slider')).toBeVisible();
+    // Le serveur doit refuser l'ancien porteur même s'il émet lui-même une commande.
+    const dernier=(await vueMJ()).contexte;
+    await nel.page.evaluate(({contexte})=>{
+        const socket=(window as FenetreSonde).sondeAlien.sockets.find(s=>s.readyState===WebSocket.OPEN)!;
+        socket.send(JSON.stringify({type:'modules:commander',payload:{campagneId:'temoin-campagne',moduleId:'alien-detecteur',contexte,requeteId:'ancien-porteur-a11',commande:{id:'orienter-discret',charge:{cap:180,tour:1}}}}));
+    },{contexte:dernier});
+    await expect.poll(()=>nel.page.evaluate(()=>JSON.stringify((window as FenetreSonde).sondeAlien.paquets.filter(p=>JSON.stringify(p).includes('ancien-porteur-a11'))))).toContain('false');
+    expect((await etat()).discret.cap).toBe(0);
+    await poste.getByRole('button',{name:'Valider le Tour suivant',exact:true}).click();
+    await poste.getByRole('button',{name:'Scanner ce Tour et tester l’Énergie',exact:true}).click();
+    await expect(idris.page.getByText('Aucun écho à afficher.',{exact:true})).toBeVisible();
+    const sauvegarde=(await vueMJ()).sauvegarde!;
+    for(const contexte of contextes)await contexte.close();contextes=[];await gmos.fermer();
+    gmos=await demarrer(sauvegarde);
+    expect((await vueMJ()).modules.find(m=>m.id==='alien-detecteur')!.acces).toEqual([]);
+    expect((await etat()).discret.dernierScan?.tour).toBe(2);
+    expect(await commander('scanner-discret',{tour:2})).toMatchObject({ok:false});
+    await autoriser('Détecteur de mouvement','Idris Koa');
+    const reprise=await rejoindre(browser,'Idris Koa',360);await instrument(reprise.page,'Détecteur de mouvement');
+    await expect(reprise.page.getByRole('slider',{name:'Cap du détecteur'})).toHaveValue('0');
+    await expect(reprise.page.getByText('Aucun écho à afficher.',{exact:true})).toBeVisible();
+});
 
 test('A8 : plan privé, scan payé une fois, dossiers d’acte et remise au seul opérateur', async ({ browser }) => {
     test.setTimeout(180_000);

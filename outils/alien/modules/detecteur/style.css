@@ -31,4 +31,14 @@
 .gmos-detecteur .detecteur-plan { width:100%; max-height:360px; border:1px solid currentColor; margin:12px 0; }
 .gmos-detecteur summary { cursor:pointer; padding:12px 0; }
 .gmos-detecteur form { min-width:0; }
+.gmos-detecteur form.detecteur-reglages > strong { display:block; margin-bottom:8px; }
+.gmos-detecteur form.detecteur-reglages > button[aria-pressed] { display:block; margin-bottom:12px; }
+.gmos-detecteur .detecteur-orientation { border:1px solid #344b3f; border-radius:8px; padding:14px; }
+.gmos-detecteur .detecteur-mesures,.gmos-detecteur .detecteur-rotation { display:flex; flex-wrap:wrap; gap:12px; }
+.gmos-detecteur .detecteur-mesures > *,.gmos-detecteur .detecteur-rotation > * { flex:1; }
+.gmos-detecteur .detecteur-orientation input[type=range] { width:100%; min-width:0; min-height:48px; accent-color:#b8e2c4; }
+.gmos-detecteur .detecteur-orientation fieldset { margin-bottom:12px; }
+.gmos-detecteur button[aria-pressed=true] { border-color:#b8e2c4; background:#213b2c; }
+.gmos-detecteur select:focus-visible { outline:2px solid #b8e2c4; outline-offset:3px; }
+@media (max-width:760px) { .gmos-detecteur .detecteur-orientation button { min-height:48px; } }
 .gmos-detecteur strong,.gmos-detecteur li,.gmos-detecteur figcaption { overflow-wrap:anywhere; }

@@ -3,12 +3,16 @@
   "id": "alien-detecteur",
   "libelle": "Détecteur de mouvement",
   "description": "Radar Alien scénarisé : contacts partagés, proximité, faux écho et intensité contrôlés par le meneur.",
-  "version": "0.4.0",
-  "versionDonnees": 4,
+  "version": "0.5.0",
+  "versionDonnees": 5,
   "corpusCompatibles": [
     "alien"
   ],
   "commandes": [
+    {"id": "orienter-discret", "roles": ["mj", "joueur"]},
+    {"id": "champ-discret", "roles": ["mj"]},
+    {"id": "attribuer-porteur", "roles": ["mj"]},
+    {"id": "mouvement-discret", "roles": ["mj"]},
     {"id": "mode-discret", "roles": ["mj"]},
     {"id": "regler-discret", "roles": ["mj"]},
     {"id": "zone-discrete", "roles": ["mj"]},

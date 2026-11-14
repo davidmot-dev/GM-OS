@@ -1,0 +1,18 @@
+{
+  "version": 4, "system": "alien", "revision": 7,
+  "config": { "crt": true, "glitches": false },
+  "tracker": { "power": true, "intensity": 25, "volume": 25, "contacts": 3, "proximity": 45, "noise": 10, "target": "all", "seed": 1234, "anomalyUntil": 0 },
+  "prereglages": [],
+  "discret": {
+    "actif": true, "tour": 2, "terrain": "interieur", "energie": 4, "porteurId": "porteur",
+    "zones": [
+      { "id": "sas", "nom": "Sas", "x": 0, "y": 0, "liens": ["est"] },
+      { "id": "est", "nom": "Coursive Est", "x": 25, "y": 0, "liens": ["sas"] }
+    ],
+    "pions": [
+      { "id": "porteur", "nom": "Porteur privé", "zoneId": "sas", "humain": true, "limite": 2, "depense": 0, "mobile": false, "detectable": true },
+      { "id": "secret", "nom": "Créature cachée", "zoneId": "est", "humain": false, "limite": 3, "depense": 1, "mobile": true, "detectable": true }
+    ],
+    "dernierScan": { "tour": 2, "avant": 5, "apres": 4, "des": [1,3,3,3,3], "echos": [{ "zone": "Coursive Est", "nombre": 1, "x": 0.25, "y": 0 }] }
+  }
+}

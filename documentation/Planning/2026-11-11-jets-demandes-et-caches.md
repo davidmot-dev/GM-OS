@@ -445,6 +445,17 @@ discret.
 `specifier-un-chantier`, Alien seul ; le gyroscope impose de servir le Hub en HTTPS, ce qui touche
 `electron/SyncServer.ts` et le certificat — un chantier à part entière.
 
+**Reprise le 14/11 — détecteur A11, registre § 250.** David : « ok on va commencer » ;
+orientation « Le porteur et le meneur », immobilité « Oui, une commande rapide par pion ».
+GM-OS confirmé fermé. [Spécification et tâches](2026-11-14-alien-detecteur-orientation.md) :
+les pistes 1 et 2 sont reprises, sans gyroscope. Le filtre `mobile` existe déjà ; ajout du
+geste rapide et du cône. Les autres pistes et le lot 3 équipement restent mis de côté.
+État : **réalisé le 14/11, à essayer par David** ; envoi des prompts puis maquettes corrigées
+autorisés. Module 0.5.0 / données v5, migration des anciennes préparations, cap partagé et
+filtrage avant diffusion. 242 tests ciblés, 7 vérifications autonomes, types/lint/build et
+7 parcours réels réussis ; six captures au manuel. Pas de réimport de pilote. Les autres
+pistes ne sont pas déclarées réalisées par cette livraison.
+
 ## Analyse
 
 - 11/11 — relecture croisée :

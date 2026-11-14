@@ -73,6 +73,7 @@ et leurs raccords manquants.
 | **A8** | Livré et essayé | **Accessoires et mode discret** : plan privé de zones, déplacements par Tour, scan M314 unique avec batterie propre et mouvements à portée ; dossiers d'acte publiés explicitement et objectifs remis au seul opérateur dans MU/TH/UR. Mise en scène conservée, arbitrage de Maman et report des Tours dans A5 explicites. Combat spatial séparé. | Livré et contrôlé le 22/10, export v1.8.0 incluant A0–A7, 49 champs et 46 liens ; 173 tests/21 fichiers et 74 vérifications autonomes, types/build/lint ciblé réussis. Recette A8 et quatre parcours existants Electron/Hub réussis, six captures relues ; [bilan A8](2026-10-22-alien-a8.md). Essai de David attendu ; inclus dans le présent commit |
 | **A9** | Livré et essayé | **Combat spatial (p. 188-201)** : vaisseaux du livre ou libres, postes tenus par les PJ, Tours en quatre phases, ordres secrets depuis la tablette, verrouillage, pilotage, tirs, Protection, coque, avaries D66/2D6 (errata 55), réparations d'urgence, Panique spatiale ; pilote 1.9.0. Plan privé d'A8 affiché dès la première zone. | Livré le 23/10 (registre général § 162) |
 | **A10** | Livré et essayé | **Préréglages et remise à zéro** : (MU/TH/UR, détecteur, combat spatial) : la préparation complète sous un nom, rappel et suppression confirmés, remise à zéro qui garde les préréglages ; exemple « relais à sept salles » pour le mode discret. Aucun pilote à réimporter. | Livré le 23/10 (registre général § 163) |
+| **A11** | Extension du détecteur | **Immobilité et orientation** : commande rapide En mouvement/Immobile par pion ; cône manuel partagé entre le porteur désigné et Maman ; filtrage privé des échos du dernier scan, sans deuxième paiement de batterie. | **Réalisé le 14/11, à essayer par David**, module 0.5.0 / données v5 ; 242 tests ciblés, 7 vérifications autonomes, types/lint/build, 7 parcours réels et six captures relues. Aucun pilote à réimporter ; [bilan et T9](2026-11-14-alien-detecteur-orientation.md), registre § 250. |
 
 ## Ordre proposé et dépendances
 
@@ -106,6 +107,14 @@ les deux écrans. Les choix de victimes, de portée audible/visible et de consé
 restent validés par Maman.
 
 ## Décisions et suivi
+
+**Reprise du détecteur le 14/11 (A11)** : David, « ok on va commencer ». Il choisit
+« Le porteur et le meneur » et « Oui, une commande rapide par pion », confirme GM-OS fermé
+et autorise les compléments aux documents partagés. Le champ `mobile` et le filtre des pions
+immobiles existent déjà ; le travail porte sur le geste en séance et l'orientation.
+Le scan reste un relevé payé une fois par Tour. David approuve ensuite les maquettes corrigées :
+« Oui, intègre cette disposition corrigée ». A0–A10 restent validés ; A11 est réalisé et vérifié,
+avec son essai physique T9 restant à faire. Voir le [bilan](2026-11-14-alien-detecteur-orientation.md).
 
 | Date | Auteur | Décision ou événement |
 | --- | --- | --- |

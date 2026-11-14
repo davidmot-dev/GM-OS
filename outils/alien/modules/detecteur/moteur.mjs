@@ -3,6 +3,7 @@ import '../../core.js';
 import { creerDiscret, validerDiscret, commanderDiscret, lectureDiscrete } from './discret.mjs';
 import { COMMANDES_DE_PREREGLAGE, enregistrerPrereglage, lireCharge, prereglageDe, sansPrereglage, validerPrereglages } from '../prereglages.mjs';
 import { EXEMPLE_DU_RELAIS } from './exemple.mjs';
+import { anglesDuChamp } from './orientation.mjs';
 const coeur = globalThis.AlienCore;
 const copier = valeur => JSON.parse(JSON.stringify(valeur));
 const exiger = condition => { if (!condition) throw new Error('Données du détecteur invalides.'); };
@@ -14,19 +15,19 @@ function forme(valeur, requis, facultatifs = []) {
 const REGLAGES = ['intensity', 'volume', 'contacts', 'proximity', 'noise'];
 function validerConfig(config) { forme(config, ['crt', 'glitches']); exiger(typeof config.crt === 'boolean' && typeof config.glitches === 'boolean'); }
 /** v4 : un préréglage garde toute la préparation ; ceux d'avant n'ont que les réglages de mise en scène. */
-function validerContenu(contenu) {
+function validerContenu(contenu, version = 5) {
   forme(contenu, ['reglages'], ['config', 'discret']);
   forme(contenu.reglages, REGLAGES);
   exiger(REGLAGES.every(cle => Number.isFinite(contenu.reglages[cle]) && contenu.reglages[cle] >= 0 && contenu.reglages[cle] <= (cle === 'contacts' ? 9 : 100))
     && Number.isInteger(contenu.reglages.contacts) && Object.hasOwn(contenu, 'config') === Object.hasOwn(contenu, 'discret'));
-  if (contenu.config) { validerConfig(contenu.config); validerDiscret(contenu.discret); }
+  if (contenu.config) { validerConfig(contenu.config); validerDiscret(contenu.discret,version); }
 }
-export function validerEtat(etat, version = 4) {
+export function validerEtat(etat, version = 5) {
   forme(etat, ['version', 'system', 'revision', 'config', 'tracker', ...(version >= 2 ? ['prereglages'] : []), ...(version >= 3 ? ['discret'] : [])]);
   exiger(etat.version === version && etat.system === 'alien' && Number.isSafeInteger(etat.revision) && etat.revision >= 0);
-  if (version >= 4) validerPrereglages(etat.prereglages, validerContenu);
+  if (version >= 4) validerPrereglages(etat.prereglages, contenu => validerContenu(contenu,version));
   else if (version >= 2) coeur.validerPrereglages(etat.prereglages);
-  if (version >= 3) validerDiscret(etat.discret);
+  if (version >= 3) validerDiscret(etat.discret,version);
   validerConfig(etat.config);
   const t = etat.tracker;
   forme(t, ['power', 'intensity', 'volume', 'contacts', 'proximity', 'noise', 'target', 'seed', 'anomalyUntil']);
@@ -37,7 +38,7 @@ export function validerEtat(etat, version = 4) {
     && Number.isFinite(t.anomalyUntil) && t.anomalyUntil >= 0);
 }
 export function creerEtat() {
-  return { version: 4, system: 'alien', revision: 0, config: { crt: true, glitches: true }, tracker: coeur.initial().tracker, prereglages: [copier(EXEMPLE_DU_RELAIS)], discret: creerDiscret() };
+  return { version: 5, system: 'alien', revision: 0, config: { crt: true, glitches: true }, tracker: coeur.initial().tracker, prereglages: [copier(EXEMPLE_DU_RELAIS)], discret: creerDiscret() };
 }
 export function arreterEffets(etat) {
   validerEtat(etat);
@@ -45,19 +46,20 @@ export function arreterEffets(etat) {
   return suivant;
 }
 export function migrerEtat(donnees, versionDonnees) {
-  if (![1, 2, 3, 4].includes(versionDonnees)) throw new Error('Version du détecteur non prise en charge.');
+  if (![1, 2, 3, 4, 5].includes(versionDonnees)) throw new Error('Version du détecteur non prise en charge.');
   validerEtat(donnees, versionDonnees);
-  const prereglages = copier(donnees.prereglages ?? []);
+  const enrichir = d => ({ cap:0, ouverture:360, joueurPorteurId:'', ...copier(d) });
+  const prereglages = copier(donnees.prereglages ?? []).map(p => p.discret ? { ...p, discret:enrichir(p.discret) } : p);
   // L'exemple du relais arrive une fois, au passage en v4 ; supprimé ensuite, il ne revient pas.
   const libre = !prereglages.some(p => p.id === EXEMPLE_DU_RELAIS.id || p.nom.toLocaleLowerCase('fr') === EXEMPLE_DU_RELAIS.nom.toLocaleLowerCase('fr'));
   if (versionDonnees < 4 && libre && prereglages.length < 32) prereglages.push(copier(EXEMPLE_DU_RELAIS));
-  return arreterEffets({ ...copier(donnees), version: 4, prereglages, discret: donnees.discret ?? creerDiscret() });
+  return arreterEffets({ ...copier(donnees), version: 5, prereglages, discret: donnees.discret ? enrichir(donnees.discret) : creerDiscret() });
 }
 /** La préparation du mode discret, sans ce qui s'est joué : Tour 1, aucun pas dépensé, aucun scan. */
 function preparationDiscrete(discret) {
   return { ...copier(discret), tour: 1, dernierScan: null, pions: discret.pions.map(p => ({ ...p, depense: 0 })) };
 }
-export function vuePour(etat, lecteur) {
+export function vuePour(etat, lecteur, table = { personnages: [] }) {
   validerEtat(etat);
   exiger(lecteur?.role === 'mj' || (lecteur?.role === 'joueur' && typeof lecteur.personnageId === 'string' && lecteur.personnageId.length > 0));
   // Le choix des destinataires appartient à l'hôte, indépendamment du terminal.
@@ -66,17 +68,26 @@ export function vuePour(etat, lecteur) {
     vue.lectureDiscrete = lectureDiscrete(vue.discret);
     vue.tracker.contacts = vue.lectureDiscrete.echos.length;
     vue.tracker.positions = vue.lectureDiscrete.echos.map(({x,y}) => ({x,y}));
+    vue.tracker.champ = { cap:vue.discret.cap, ouverture:vue.discret.ouverture, ...anglesDuChamp(vue.discret) };
+    vue.peutOrienter = lecteur.role === 'mj' || (lecteur.personnageId === vue.discret.joueurPorteurId
+      && table.personnages.some(p => p.id === lecteur.personnageId));
     vue.tracker.anomalyUntil = 0;
   }
+  if (lecteur.role === 'mj') vue.personnagesOrientables = table.personnages.map(({id,nom}) => ({id,nom}));
   if (lecteur.role === 'joueur') { delete vue.prereglages; delete vue.discret; }
   return vue;
 }
-export function appliquerCommande(etat, commande, contexte) {
+export function appliquerCommande(etat, commande, contexte, table = { personnages: [] }) {
   validerEtat(etat);
-  if (contexte?.role !== 'mj') throw new Error('Commande réservée au meneur.');
   forme(commande, ['id', 'charge']);
+  if (contexte?.role !== 'mj' && !(commande.id === 'orienter-discret' && contexte?.role === 'joueur'
+    && etat.discret.actif && contexte.personnageId === etat.discret.joueurPorteurId
+    && table.personnages.some(p => p.id === contexte.personnageId))) throw new Error('Commande réservée au meneur ou au porteur désigné.');
+  if (commande.id === 'attribuer-porteur') exiger(commande.charge?.personnageId === '' ||
+    table.personnages.some(p => p.id === commande.charge?.personnageId));
   const charge = commande.charge, suivant = copier(etat);
-  if (['mode-discret','regler-discret','zone-discrete','pion-discret','deplacer-discret','examiner-discret','tour-discret','scanner-discret'].includes(commande.id)) {
+  if (['mode-discret','regler-discret','zone-discrete','pion-discret','deplacer-discret','examiner-discret','tour-discret','scanner-discret',
+    'mouvement-discret','orienter-discret','champ-discret','attribuer-porteur'].includes(commande.id)) {
     suivant.discret = commanderDiscret(etat.discret,commande);
     if (commande.id === 'scanner-discret') suivant.tracker.power = true;
     if (['mode-discret','tour-discret'].includes(commande.id)) suivant.tracker.power = false;

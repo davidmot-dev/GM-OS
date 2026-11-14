@@ -1,4 +1,5 @@
 /** Livre français p. 83, 85–86 et 134 : plan privé et batterie du M314. */
+import { OUVERTURES, dansLeChamp } from './orientation.mjs';
 const exiger = (ok, message = 'Plan discret invalide.') => { if (!ok) throw new Error(message); };
 const objet = v => v && typeof v === 'object' && !Array.isArray(v) && [Object.prototype, null].includes(Object.getPrototypeOf(v));
 const texte = (v, max = 80) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
@@ -6,10 +7,14 @@ const id = v => typeof v === 'string' && /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,79}$/.test
 const entier = (v, max) => Number.isSafeInteger(v) && v >= 0 && v <= max;
 function forme(v, cles) { exiger(objet(v) && Object.keys(v).length === cles.length && cles.every(k => Object.hasOwn(v, k))); }
 export function creerDiscret() {
-  return { actif: false, tour: 1, terrain: 'interieur', energie: 5, zones: [], pions: [], porteurId: '', dernierScan: null };
+  return { actif: false, tour: 1, terrain: 'interieur', energie: 5, zones: [], pions: [], porteurId: '', dernierScan: null,
+    cap: 0, ouverture: 360, joueurPorteurId: '' };
 }
-export function validerDiscret(d) {
-  forme(d, ['actif','tour','terrain','energie','zones','pions','porteurId','dernierScan']);
+export function validerDiscret(d, version = 5) {
+  forme(d, ['actif','tour','terrain','energie','zones','pions','porteurId','dernierScan', ...(version >= 5 ? ['cap','ouverture','joueurPorteurId'] : [])]);
+  if (version >= 5) exiger(entier(d.cap,359) && OUVERTURES.includes(d.ouverture)
+    && typeof d.joueurPorteurId === 'string' && (d.joueurPorteurId === '' ||
+      (/^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,127}$/.test(d.joueurPorteurId) && d.joueurPorteurId !== 'prototype' && !Object.hasOwn(Object.prototype,d.joueurPorteurId))));
   exiger(typeof d.actif === 'boolean' && entier(d.tour, 1000000) && d.tour > 0 && ['interieur','exterieur'].includes(d.terrain) && entier(d.energie, 1000));
   exiger(Array.isArray(d.zones) && d.zones.length <= 80 && Array.isArray(d.pions) && d.pions.length <= 80);
   const zones = new Set(d.zones.map(z => z.id)), pions = new Set(d.pions.map(p => p.id));
@@ -54,7 +59,16 @@ export function commanderDiscret(discret, commande) {
   } else if (commande.id === 'regler-discret') {
     forme(c,['terrain','energie','porteurId']);
     exiger(['interieur','exterieur'].includes(c.terrain) && entier(c.energie,1000) && d.pions.some(p => p.id === c.porteurId));
+    if (d.porteurId !== c.porteurId) d.joueurPorteurId = '';
     Object.assign(d,c);
+  } else if (commande.id === 'orienter-discret') {
+    forme(c,['cap','tour']); exiger(d.actif && c.tour === d.tour, 'Le Tour a changé.');
+    exiger(entier(c.cap,359)); d.cap = c.cap;
+  } else if (commande.id === 'champ-discret') {
+    forme(c,['ouverture']); exiger(OUVERTURES.includes(c.ouverture)); d.ouverture = c.ouverture;
+  } else if (commande.id === 'attribuer-porteur') {
+    forme(c,['personnageId']); exiger(typeof c.personnageId === 'string' && (c.personnageId === '' || d.porteurId !== ''));
+    d.joueurPorteurId = c.personnageId;
   } else if (commande.id === 'zone-discrete') {
     forme(c,['id','nom','x','y','liens']);
     exiger(id(c.id) && texte(c.nom) && ['x','y'].every(k => Number.isFinite(c[k]) && Math.abs(c[k]) <= 10000)
@@ -69,6 +83,10 @@ export function commanderDiscret(discret, commande) {
     exiger(!ancien || ancien.zoneId === c.zoneId, 'Utilise Déplacer pour changer la zone d’un pion existant.');
     const pion = { ...c, depense: ancien?.depense ?? 0 };
     if (ancien) Object.assign(ancien,pion); else { exiger(d.pions.length < 80); d.pions.push(pion); }
+  } else if (commande.id === 'mouvement-discret') {
+    forme(c,['pionId','mobile','tour']); exiger(d.actif && c.tour === d.tour, 'Le Tour a changé.');
+    const p = d.pions.find(p => p.id === c.pionId);
+    exiger(p && typeof c.mobile === 'boolean'); p.mobile = c.mobile;
   } else if (commande.id === 'deplacer-discret') {
     forme(c,['pionId','zoneId','tour']); exiger(d.actif && c.tour === d.tour, 'Le Tour a changé.');
     const p = d.pions.find(p => p.id === c.pionId), zone = d.zones.find(z => z.id === p?.zoneId);
@@ -100,5 +118,7 @@ export function commanderDiscret(discret, commande) {
 /** Le plan, les identités et les pions immobiles ne quittent jamais le poste MJ. */
 export function lectureDiscrete(d) {
   return { tour:d.tour, energie:d.energie, scanneTour:d.dernierScan?.tour ?? null,
-    echos:structuredClone(d.dernierScan?.tour === d.tour ? d.dernierScan.echos : []) };
+    cap:d.cap, ouverture:d.ouverture,
+    // La rotation explore le relevé payé, jamais les positions actuelles des pions.
+    echos:structuredClone(d.dernierScan?.tour === d.tour ? d.dernierScan.echos.filter(e => dansLeChamp(e,d)) : []) };
 }

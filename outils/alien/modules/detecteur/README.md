@@ -1,6 +1,17 @@
 # Détecteur Alien — module du Tablet Hub
 
-Version 0.4.0, contrat v1, données v4. A8 du 22/10/2026 ; préréglages complets et remise à zéro le 23/10.
+Version 0.5.0, contrat v1, données v5. A11 du 14/11/2026 : orientation manuelle et commande
+rapide de mouvement ; A8 et préréglages conservés.
+
+**Orientation A11 :** Maman choisit 45/90/180/360° et désigne explicitement le personnage
+de tablette qui peut tourner l'appareil. Nord en haut du plan, degrés horaires. Le porteur
+et Maman partagent le cap ; les autres destinataires consultent. La rotation explore le
+relevé privé du dernier scan payé : ni nouveau déplacement, ni nouveau jet de batterie.
+Seuls les échos dans le champ quittent le moteur, même dans `tracker.positions` et le compteur.
+Le bouton En mouvement/Immobile sur chaque pion change `mobile` sans changer zone ni budget ;
+le prochain scan le prend en compte. Choisir un autre pion porteur retire l'attribution joueur.
+Les sauvegardes/préréglages v1–v4 migrent vers v5 à 360°, cap nord, sans porteur joueur désigné ;
+le scan payé est conservé. Le prototype autonome conserve son radar sans orientation.
 
 **Préréglages (23/10) :** un préréglage garde réglages, effets visuels et plan discret ; son rappel arrête
 le scan et repart au Tour 1, sans pas dépensés ni scan. Ceux d'avant la v4 n'ont que `reglages` et laissent
@@ -45,10 +56,16 @@ dans Survie Alien. Voir le [manuel Alien](../../../../documentation/User%20Guide
 
 ## Commandes et sauvegarde
 
-Commandes réservées au MJ ; le joueur consulte et active son audio local sans commande réseau.
+Commandes réservées au MJ, sauf `orienter-discret` pour le personnage désigné : rôle, accès,
+campagne et contexte contrôlés par l'hôte ; identité du porteur et Tour courant par le moteur.
+Le joueur active aussi son audio local.
 
 | Commande | Charge |
 | --- | --- |
+| `mouvement-discret` | `{ pionId, mobile, tour }` ; MJ, mode discret actif, Tour actuel. Ne change ni zone ni pas dépensés. |
+| `orienter-discret` | `{ cap, tour }` ; entier 0–359, MJ ou joueur désigné, mode discret actif et Tour actuel. |
+| `champ-discret` | `{ ouverture }` ; 45, 90, 180 ou 360 ; MJ seul. |
+| `attribuer-porteur` | `{ personnageId }` ; personnage de la campagne validé par l'hôte, ou chaîne vide pour Maman seule ; MJ seul. Changer le pion porteur retire cette attribution. |
 | `configurer` | Facultatifs : `contacts` entier 0–9 ; `proximite`, `intensite`, `volume`, `parasites` nombres 0–100 ; `crt`, `effetsParasites` booléens. |
 | `scanner` | `{ actif: boolean }` ; le passage arrêté → actif renouvelle la graine partagée. |
 | `faux-echo` | `{}` ; scan actif requis, échéance autoritaire de neuf secondes. |

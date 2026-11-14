@@ -3,6 +3,7 @@ import * as radar from '../../outils/alien/modules/detecteur/moteur.mjs';
 import * as maman from '../../outils/alien/modules/muthur/moteur.mjs';
 import * as spatial from '../../outils/alien/modules/combat-spatial/moteur.mjs';
 import { extraireConfiguration } from '../../outils/alien/modules/muthur/configuration.mjs';
+import detecteurV4 from './fixtures/detecteur-v4.json';
 
 /** Préréglages et remise à zéro des trois modules Alien — 23/10/2026, demande de David. */
 const mj = { role: 'mj' as const }, alice = { role: 'joueur' as const, personnageId: 'alice' };
@@ -16,12 +17,12 @@ afterEach(() => vi.restoreAllMocks());
 describe('détecteur : préréglage complet et exemple du relais', () => {
     it('livre l’exemple une seule fois, au passage en v4, et ne le ramène pas après suppression', () => {
         expect(radar.creerEtat().prereglages.map(p => p.id)).toEqual(['exemple-relais']);
-        const v3 = { ...radar.creerEtat(), version: 3, prereglages: [{ id: 'couloir', nom: 'Couloir', reglages: { intensity: 1, volume: 2, contacts: 3, proximity: 4, noise: 5 } }] };
+        const v3 = { ...structuredClone(detecteurV4), version: 3, prereglages: [{ id: 'couloir', nom: 'Couloir', reglages: { intensity: 1, volume: 2, contacts: 3, proximity: 4, noise: 5 } }] };
         const migre = radar.migrerEtat(v3, 3);
         expect(migre.prereglages.map(p => p.id)).toEqual(['couloir', 'exemple-relais']);
-        expect(radar.migrerEtat(migre, 4).prereglages).toEqual(migre.prereglages);
+        expect(radar.migrerEtat(migre, migre.version).prereglages).toEqual(migre.prereglages);
         const sansExemple = detecter(migre, 'supprimer-prereglage', { prereglageId: 'exemple-relais' });
-        expect(radar.migrerEtat(sansExemple, 4).prereglages.map(p => p.id)).toEqual(['couloir']);
+        expect(radar.migrerEtat(sansExemple, sansExemple.version).prereglages.map(p => p.id)).toEqual(['couloir']);
     });
     it('l’exemple rappelé donne l’écho de la gaine au premier Tour, sans la vermine ni le chien hors de portée', () => {
         let e = detecter(radar.creerEtat(), 'rappeler-prereglage', { prereglageId: 'exemple-relais' });

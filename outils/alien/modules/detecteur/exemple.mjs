@@ -13,6 +13,7 @@ export const EXEMPLE_DU_RELAIS = Object.freeze({
   config: { crt: true, glitches: true },
   discret: {
     actif: true, tour: 1, terrain: 'interieur', energie: 5, porteurId: 'pj-rye', dernierScan: null,
+    cap: 0, ouverture: 360, joueurPorteurId: '',
     zones: [
       zone('sas', 'Sas principal', 0, 0, ['coursive-a']),
       zone('coursive-a', 'Coursive A', 25, 0, ['sas', 'mess', 'gaine']),

@@ -24,9 +24,17 @@
         ctx.lineTo(cx + Math.cos(a) * (r + (i % 5 ? 3 : 7)), cy + Math.sin(a) * (r + (i % 5 ? 3 : 7))); ctx.stroke();
       }
       if (!t.power) return 0;
-      const angle = time / (7000 - t.intensity * 40) * Math.PI * 2;
+      const champ = t.champ;
+      if (champ && champ.ouverture < 360) {
+        ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,radius,champ.debut,champ.fin); ctx.closePath();
+        ctx.fillStyle = 'rgba(128,228,157,.07)'; ctx.fill(); ctx.strokeStyle = '#9bddae66'; ctx.stroke();
+      }
+      const phase = (time / (7000 - t.intensity * 40)) % 1;
+      const angle = champ ? (mouvementReduit ? (champ.debut + champ.fin)/2 : champ.debut + phase*(champ.fin-champ.debut)) : phase*Math.PI*2;
       for (let i = 30; i >= 0; i--) {
-        const a = angle - i * .013; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, radius, a, a + .015); ctx.closePath();
+        const a = angle - i * .013;
+        if (champ && champ.ouverture < 360 && (a < champ.debut || a+.015 > champ.fin)) continue;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, radius, a, a + .015); ctx.closePath();
         ctx.fillStyle = 'rgba(128,228,157,' + (.17 * (1 - i / 31)) + ')'; ctx.fill();
       }
       ctx.strokeStyle = '#9bddae99'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius); ctx.stroke();
@@ -34,13 +42,19 @@
       if (signature !== signatureContacts) { positionsContacts = t.positions || globalThis.AlienCore.positionsDuDetecteur(t, anomaly); signatureContacts = signature; }
       const count = positionsContacts.length, tone = t.intensity > 89 ? '#e7b17d' : '#b9f8c9';
       for (let i = 0; i < count; i++) {
-        const point = positionsContacts[i], a = Math.atan2(point.y, point.x) + Math.sin(time / 800 + i) * t.intensity / 1000;
+        const point = positionsContacts[i], a = Math.atan2(point.y, point.x) + (champ ? 0 : Math.sin(time / 800 + i) * t.intensity / 1000);
         const r = radius * Math.hypot(point.x, point.y), x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
         ctx.globalAlpha = mouvementReduit ? .9 : .6 + Math.sin(time / (500 - t.intensity * 3) + i) * .3;
         ctx.shadowColor = tone; ctx.shadowBlur = 14; ctx.fillStyle = tone; ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
         ctx.strokeStyle = tone; ctx.globalAlpha = .12; ctx.beginPath(); ctx.arc(x, y, 8 + Math.sin(time / 600 + i) * 3, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1;
       }
-      ctx.fillStyle = '#dcfce4'; ctx.beginPath(); ctx.moveTo(cx, cy - 5); ctx.lineTo(cx - 4, cy + 4); ctx.lineTo(cx + 4, cy + 4); ctx.closePath(); ctx.fill();
+      const cap = champ ? (champ.debut + champ.fin)/2 : -Math.PI/2;
+      ctx.fillStyle = '#dcfce4'; ctx.beginPath();
+      for (const [i,delta,r] of [[0,0,6],[1,2.4,5],[2,-2.4,5]]) {
+        const x=cx+Math.cos(cap+delta)*r,y=cy+Math.sin(cap+delta)*r;
+        if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+      }
+      ctx.closePath(); ctx.fill();
       if (t.noise > 0 && parasites && !mouvementReduit) {
         ctx.globalAlpha = t.noise / 100 * .17; ctx.fillStyle = '#98bd9f'; ctx.fillRect(0, (time * .09) % h, w, 3); ctx.globalAlpha = 1;
       }

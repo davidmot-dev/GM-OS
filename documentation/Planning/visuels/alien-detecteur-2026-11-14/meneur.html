@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M314 · Plan privé de Maman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            appBg: '#080e0c',
+            surfacePanel: '#0e1513',
+            surfaceSub: '#131c19',
+            textPale: '#c5ebd0',
+            textSecondary: '#9abbab',
+            textMuted: '#5d7d70',
+            borderThin: '#344b3f',
+            borderSubtle: '#1d2d26',
+            alertAccent: '#52b788',
+          },
+          fontFamily: {
+            mono: ['"Space Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #080e0c;
+      color: #c5ebd0;
+      font-family: 'Space Mono', monospace;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    /* CRT Scanline overlay effect subtle */
+    .crt-overlay {
+      background: linear-gradient(rgba(18, 28, 24, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      height: 20px;
+      width: 14px;
+      border-radius: 2px;
+      background: #c5ebd0;
+      cursor: pointer;
+      -webkit-appearance: none;
+      box-shadow: 0 0 8px rgba(197, 235, 208, 0.6);
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 6px;
+      background: #1d2d26;
+      border: 1px solid #344b3f;
+      border-radius: 2px;
+    }
+    select, button, input {
+      font-family: 'Space Mono', monospace;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-6 flex flex-col relative selection:bg-[#344b3f] selection:text-[#c5ebd0]">
+  <!-- Scanline texture layer -->
+  <div class="fixed inset-0 crt-overlay z-50"></div>
+
+  <!-- Header -->
+  <header class="border-b border-borderThin pb-3 mb-6 flex flex-wrap justify-between items-center gap-4">
+    <div class="flex items-center space-x-3">
+      <span class="inline-block w-3 h-3 bg-textPale animate-pulse"></span>
+      <h1 class="text-xl md:text-2xl font-bold tracking-wider text-textPale uppercase">
+        M314 · Plan privé de Maman
+      </h1>
+      <span class="text-xs px-2 py-0.5 bg-surfaceSub border border-borderThin text-textSecondary uppercase tracking-widest">
+        GM-OS // W-Y CORP
+      </span>
+    </div>
+    <div class="flex items-center space-x-6 text-sm text-textSecondary">
+      <div class="flex items-center space-x-2">
+        <span class="w-2 h-2 rounded-full bg-alertAccent"></span>
+        <span>LIAISON TACTIQUE ÉTABLIE</span>
+      </div>
+      <div class="border border-borderThin px-3 py-1 bg-surfaceSub text-textPale">
+        TOUR ACTIF : 03
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid 2-columns desktop -->
+  <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 max-w-[1720px] mx-auto w-full">
+
+    <!-- LEFT COLUMN: Radar, Orientation Controls, Audio (5 cols) -->
+    <div class="lg:col-span-5 flex flex-col space-y-6">
+
+      <!-- Panel Radar -->
+      <section class="bg-surfacePanel border border-borderThin rounded-lg p-5 flex flex-col items-center">
+        <!-- Top status bar inside radar card -->
+        <div class="w-full flex justify-between items-center text-xs tracking-wider mb-3 text-textSecondary font-bold">
+          <span class="tracking-widest">WEYLAND-YUTANI</span>
+          <span class="flex items-center space-x-1.5 text-alertAccent font-bold">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-alertAccent animate-ping opacity-75"></span>
+            <span>● SCAN ACTIF</span>
+          </span>
+        </div>
+
+        <!-- Radar Display (Square with circular grid) -->
+        <div class="relative w-[340px] h-[340px] md:w-[380px] md:h-[380px] bg-[#050a08] border border-borderThin rounded-lg flex items-center justify-center overflow-hidden my-2">
+          <!-- Concentric range rings -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-[85%] h-[85%] rounded-full border border-borderThin/50"></div>
+            <div class="w-[60%] h-[60%] rounded-full border border-borderThin/70"></div>
+            <div class="w-[35%] h-[35%] rounded-full border border-borderThin"></div>
+            <div class="w-[12%] h-[12%] rounded-full border border-textSecondary/40"></div>
+          </div>
+
+          <!-- Cardinal axes & Distance annotations -->
+          <div class="absolute inset-0 pointer-events-none flex flex-col justify-between p-2 text-[11px] text-textMuted font-bold">
+            <div class="text-center">N (0°) <span class="text-[9px] block text-textMuted/60">15m</span></div>
+            <div class="flex justify-between items-center px-1">
+              <span>O (270°)</span>
+              <span>E (90°)</span>
+            </div>
+            <div class="text-center"><span class="text-[9px] block text-textMuted/60">S (180°)</span>S</div>
+          </div>
+          <!-- Crosshairs -->
+          <div class="absolute w-full h-[1px] bg-borderThin/50"></div>
+          <div class="absolute h-full w-[1px] bg-borderThin/50"></div>
+
+          <!-- 90° Stable Vision Cone Facing East (Right) -->
+          <!-- SVG cone overlay spanning right (from -45° to +45° relative to East/90°) -->
+          <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 380 380">
+            <defs>
+              <radialGradient id="coneGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#52b788" stop-opacity="0.35"/>
+                <stop offset="70%" stop-color="#52b788" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="#c5ebd0" stop-opacity="0.05"/>
+              </radialGradient>
+            </defs>
+            <!-- Sector: Center at (190, 190), Radius ~160, East direction (0 rad) with 90° spread (-45° to +45°) -->
+            <!-- -45° is (190 + 160*cos(-pi/4), 190 + 160*sin(-pi/4)) = (190 + 113.1, 190 - 113.1) = (303.1, 76.9) -->
+            <!-- +45° is (190 + 113.1, 190 + 113.1) = (303.1, 303.1) -->
+            <path d="M 190 190 L 303.1 76.9 A 160 160 0 0 1 303.1 303.1 Z" fill="url(#coneGrad)" stroke="#52b788" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <!-- Center tracker focal beacon -->
+            <circle cx="190" cy="190" r="4" fill="#c5ebd0" stroke="#080e0c" stroke-width="1.5"/>
+          </svg>
+
+          <!-- Single anonymous echo inside the cone (Coursive A) -->
+          <div class="absolute top-[44%] right-[22%] flex items-center justify-center pointer-events-none z-10" title="Écho M314">
+            <span class="absolute w-7 h-7 rounded-sm border border-textPale/80 animate-ping"></span>
+            <div class="w-4 h-4 bg-textPale rounded-sm flex items-center justify-center shadow-[0_0_12px_#c5ebd0]">
+              <span class="w-1.5 h-1.5 bg-[#080e0c]"></span>
+            </div>
+          </div>
+          <!-- Note: No echoes placed outside the 90° cone -->
+
+          <!-- Tracker scanner sweep grid lines -->
+          <div class="absolute inset-0 bg-[radial-gradient(#344b3f_1px,transparent_1px)] [background-size:16px_16px] opacity-25 pointer-events-none"></div>
+        </div>
+
+        <!-- Radar Bottom Status -->
+        <div class="w-full flex justify-between items-center mt-3 pt-2 border-t border-borderSubtle text-xs">
+          <div class="px-2.5 py-1 bg-surfaceSub border border-borderThin rounded text-textPale font-bold">
+            ÉCHOS : <span class="text-alertAccent font-bold text-sm">1</span>
+          </div>
+          <div class="tracking-widest text-textSecondary uppercase font-bold text-[11px]">
+            ACQUISITION MATRICIELLE ACTIVE
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel Compact Orientation (Beneath Radar) -->
+      <section class="bg-surfacePanel border border-borderThin rounded-lg p-5 space-y-4">
+        <div class="flex justify-between items-center border-b border-borderSubtle pb-2">
+          <div class="flex items-center space-x-2">
+            <span class="material-symbols-outlined text-alertAccent text-xl">explore</span>
+            <h2 class="text-base font-bold uppercase tracking-wider text-textPale">Orientation</h2>
+          </div>
+          <span class="text-xs uppercase px-2 py-0.5 border border-borderThin text-textSecondary bg-surfaceSub">
+            SERVO-LOCK
+          </span>
+        </div>
+
+        <!-- Metrics: Cap & Champ + Opening select -->
+        <div class="grid grid-cols-3 gap-3">
+          <div class="bg-surfaceSub border border-borderThin p-2.5 rounded text-center">
+            <div class="text-[11px] text-textMuted uppercase tracking-wider">Cap</div>
+            <div class="text-base font-bold text-textPale mt-0.5">Est · 90°</div>
+          </div>
+          <div class="bg-surfaceSub border border-borderThin p-2.5 rounded text-center">
+            <div class="text-[11px] text-textMuted uppercase tracking-wider">Champ</div>
+            <div class="text-base font-bold text-alertAccent mt-0.5">90°</div>
+          </div>
+          <div class="bg-surfaceSub border border-borderThin p-2 rounded flex flex-col justify-center">
+            <label for="openingSelect" class="text-[11px] text-textMuted uppercase tracking-wider block text-center mb-0.5">Ouverture</label>
+            <select id="openingSelect" class="w-full min-h-[36px] bg-[#080e0c] border border-borderThin text-textPale text-xs px-2 py-1 rounded focus:outline-none focus:border-textPale cursor-pointer">
+              <option value="45">45°</option>
+              <option value="90" selected>90°</option>
+              <option value="180">180°</option>
+              <option value="360">360°</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Two Large Rotation Buttons (min 44px) -->
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" class="min-h-[48px] bg-surfaceSub hover:bg-[#1a2923] active:bg-[#253d34] border border-borderThin rounded text-textPale font-bold flex items-center justify-center space-x-2 transition-colors">
+            <span class="text-lg">↶</span>
+            <span class="tracking-wide">15°</span>
+          </button>
+          <button type="button" class="min-h-[48px] bg-surfaceSub hover:bg-[#1a2923] active:bg-[#253d34] border border-borderThin rounded text-textPale font-bold flex items-center justify-center space-x-2 transition-colors">
+            <span class="tracking-wide">15°</span>
+            <span class="text-lg">↷</span>
+          </button>
+        </div>
+
+        <!-- Horizontal slider "Cap du détecteur" -->
+        <div class="space-y-1.5 pt-1">
+          <div class="flex justify-between items-center text-xs text-textSecondary">
+            <span>Cap du détecteur</span>
+            <span class="font-bold text-alertAccent text-sm">90° (Est)</span>
+          </div>
+          <input type="range" min="0" max="360" value="90" step="5" class="w-full accent-[#c5ebd0] cursor-pointer" />
+          <div class="flex justify-between text-[10px] text-textMuted uppercase pt-1">
+            <span>N (0°)</span>
+            <span class="text-textPale font-bold">E (90°)</span>
+            <span>S (180°)</span>
+            <span>O (270°)</span>
+            <span>N (360°)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Local Audio Toggle Section (min 44px control) -->
+      <section class="bg-surfacePanel border border-borderThin rounded-lg p-4">
+        <button type="button" class="w-full min-h-[48px] px-4 py-2.5 bg-surfaceSub hover:bg-[#1a2923] border border-borderThin rounded flex items-center justify-between transition-colors">
+          <div class="flex items-center space-x-3 text-left">
+            <span class="material-symbols-outlined text-alertAccent text-xl">volume_up</span>
+            <div>
+              <div class="font-bold text-sm text-textPale tracking-wider uppercase">Bips sonores locaux</div>
+              <div class="text-xs text-textSecondary">Signal audio synchronisé avec le cône actif</div>
+            </div>
+          </div>
+          <span class="text-xs px-2.5 py-1 bg-borderSubtle border border-borderThin text-alertAccent font-bold rounded">
+            ACTIF
+          </span>
+        </button>
+      </section>
+
+    </div>
+
+    <!-- RIGHT COLUMN: GM Controls, M314 Mode, Private Plan, Turn Movement Tokens (7 cols) -->
+    <div class="lg:col-span-7 flex flex-col space-y-6">
+
+      <!-- Section: Mode Discret — M314 & Configuration -->
+      <section class="bg-surfacePanel border border-borderThin rounded-lg p-5 space-y-4">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-borderSubtle pb-3">
+          <div class="flex items-center space-x-2">
+            <span class="material-symbols-outlined text-textPale text-xl">settings_input_component</span>
+            <h2 class="text-lg font-bold uppercase tracking-wider text-textPale">Mode discret — M314</h2>
+          </div>
+          <div class="text-xs bg-[#080e0c] border border-borderThin px-2.5 py-1 rounded text-textSecondary">
+            STATUT : OPÉRATIONNEL
+          </div>
+        </div>
+
+        <!-- Checkbox: Raccorder le détecteur au plan et à sa batterie (min 44px touch target) -->
+        <label class="flex items-center space-x-3 cursor-pointer min-h-[44px] p-2 rounded hover:bg-surfaceSub/70 transition-colors border border-transparent hover:border-borderSubtle">
+          <input type="checkbox" checked class="w-5 h-5 rounded border-borderThin bg-[#080e0c] text-[#52b788] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#52b788]">
+          <span class="text-sm font-bold text-textPale select-none">
+            Raccorder le détecteur au plan et à sa batterie
+          </span>
+        </label>
+
+        <!-- Two collapsed preparations: "Préparer les zones du plan" and "Préparer les pions cachés" -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+          <details class="bg-surfaceSub border border-borderThin rounded overflow-hidden group">
+            <summary class="min-h-[44px] px-3 py-2 cursor-pointer flex justify-between items-center text-xs font-bold uppercase tracking-wider text-textSecondary hover:text-textPale select-none list-none">
+              <span class="flex items-center space-x-2">
+                <span class="material-symbols-outlined text-base">map</span>
+                <span>Préparer les zones du plan</span>
+              </span>
+              <span class="material-symbols-outlined text-base transition-transform group-open:rotate-180">expand_more</span>
+            </summary>
+            <div class="p-3 border-t border-borderSubtle text-xs text-textSecondary bg-[#080e0c]/60 space-y-1">
+              <div>• Sas : Sas étanche principal, capteurs pressiométriques actifs.</div>
+              <div>• Coursive A : Conduits de ventilation et coursive principale (1 écho).</div>
+              <div>• Soute : Confinement fermé, 2 sas étanches scellés.</div>
+            </div>
+          </details>
+
+          <details class="bg-surfaceSub border border-borderThin rounded overflow-hidden group">
+            <summary class="min-h-[44px] px-3 py-2 cursor-pointer flex justify-between items-center text-xs font-bold uppercase tracking-wider text-textSecondary hover:text-textPale select-none list-none">
+              <span class="flex items-center space-x-2">
+                <span class="material-symbols-outlined text-base">visibility_off</span>
+                <span>Préparer les pions cachés</span>
+              </span>
+              <span class="material-symbols-outlined text-base transition-transform group-open:rotate-180">expand_more</span>
+            </summary>
+            <div class="p-3 border-t border-borderSubtle text-xs text-textSecondary bg-[#080e0c]/60 space-y-1">
+              <div>• Rôdeur dissimulé : Dissimulé en Coursive A (se déplace vers Sas).</div>
+              <div>• Créature immobile : Suspendue dans les structures de la Soute.</div>
+            </div>
+          </details>
+        </div>
+
+        <!-- PRIVATE Zone Plan (Sas — Coursive A — Soute) -->
+        <div class="border border-borderThin rounded p-3 bg-[#080e0c]">
+          <div class="text-xs uppercase text-textMuted font-bold mb-2 tracking-wider flex items-center justify-between">
+            <span>PLAN PRIVÉ DES ZONES (SECRET DU MENEUR)</span>
+            <span class="text-[10px] text-alertAccent">CONNECTIVITÉ EN LIGNE</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <!-- Zone 1: Sas -->
+            <div class="border border-borderThin bg-surfaceSub p-3 rounded flex flex-col justify-between min-h-[90px]">
+              <div>
+                <div class="text-xs font-bold text-textPale uppercase tracking-wider">Sas</div>
+                <div class="text-[11px] text-textMuted mt-0.5">Accès extérieur</div>
+              </div>
+              <div class="mt-2 pt-1 border-t border-borderSubtle flex items-center justify-between text-[11px]">
+                <span class="text-textSecondary">Nel Varga (Pion)</span>
+                <span class="w-2 h-2 rounded-full bg-textPale"></span>
+              </div>
+            </div>
+
+            <!-- Zone 2: Coursive A (with 1 echo) -->
+            <div class="border-2 border-alertAccent/60 bg-[#12221b] p-3 rounded flex flex-col justify-between min-h-[90px] relative">
+              <div class="absolute top-1.5 right-1.5 px-1.5 py-0.5 bg-alertAccent text-[#080e0c] font-bold text-[9px] rounded">
+                1 ÉCHO
+              </div>
+              <div>
+                <div class="text-xs font-bold text-alertAccent uppercase tracking-wider">Coursive A</div>
+                <div class="text-[11px] text-textSecondary mt-0.5">Secteur balayé (90°)</div>
+              </div>
+              <div class="mt-2 pt-1 border-t border-borderThin flex items-center justify-between text-[11px]">
+                <span class="text-alertAccent font-bold">Rôdeur dissimulé</span>
+                <span class="w-2 h-2 rounded-full bg-alertAccent animate-ping"></span>
+              </div>
+            </div>
+
+            <!-- Zone 3: Soute -->
+            <div class="border border-borderThin bg-surfaceSub p-3 rounded flex flex-col justify-between min-h-[90px]">
+              <div>
+                <div class="text-xs font-bold text-textPale uppercase tracking-wider">Soute</div>
+                <div class="text-[11px] text-textMuted mt-0.5">Zone sombre</div>
+              </div>
+              <div class="mt-2 pt-1 border-t border-borderSubtle flex items-center justify-between text-[11px]">
+                <span class="text-textSecondary">Créature immobile</span>
+                <span class="w-2 h-2 rounded-full bg-textMuted"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Battery / Porter Controls & Orientation player linking -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+          <!-- Left: Porteur & Terrain & Battery -->
+          <div class="space-y-3 bg-surfaceSub border border-borderThin p-3 rounded">
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-textSecondary">Porteur du M314 :</span>
+              <span class="font-bold text-textPale">Nel Varga (Pion privé)</span>
+            </div>
+            <div class="flex justify-between items-center text-xs">
+              <span class="text-textSecondary">Terrain du scan :</span>
+              <span class="font-bold text-textPale">Intérieur</span>
+            </div>
+            <div class="flex justify-between items-center text-xs pt-1 border-t border-borderSubtle">
+              <span class="text-textSecondary">Réserve batterie propre :</span>
+              <div class="flex items-center space-x-1">
+                <span class="font-bold text-alertAccent text-sm mr-1">4 / 4</span>
+                <span class="w-3 h-4 bg-alertAccent inline-block rounded-xs"></span>
+                <span class="w-3 h-4 bg-alertAccent inline-block rounded-xs"></span>
+                <span class="w-3 h-4 bg-alertAccent inline-block rounded-xs"></span>
+                <span class="w-3 h-4 bg-alertAccent inline-block rounded-xs"></span>
+              </div>
+            </div>
+            <button type="button" class="w-full min-h-[44px] bg-[#080e0c] hover:bg-[#1a2923] border border-borderThin rounded text-xs font-bold uppercase tracking-wider text-textPale transition-colors">
+              Confirmer les paramètres de charge
+            </button>
+          </div>
+
+          <!-- Right: Joueur qui oriente le M314 (Tablet linking without exposing tokens) -->
+          <div class="space-y-3 bg-surfaceSub border border-borderThin p-3 rounded flex flex-col justify-between">
+            <div>
+              <label for="playerOrientationSelect" class="block text-xs font-bold uppercase tracking-wider text-textSecondary mb-1.5">
+                Joueur qui oriente le M314
+              </label>
+              <select id="playerOrientationSelect" class="w-full min-h-[44px] bg-[#080e0c] border border-borderThin text-textPale text-xs px-3 py-2 rounded focus:outline-none focus:border-textPale cursor-pointer">
+                <option value="none">Meneur seul</option>
+                <option value="wilson" selected>Wilson</option>
+                <option value="ripley">Ripley</option>
+                <option value="parker">Parker</option>
+              </select>
+            </div>
+
+            <!-- Plain help text requested -->
+            <p class="text-xs text-textSecondary leading-relaxed border-l-2 border-alertAccent pl-2.5 py-0.5 bg-[#080e0c]/40">
+              Le porteur et Maman partagent la même orientation.
+            </p>
+            <div class="text-[11px] text-textMuted italic">
+              Liaison tablette active — n'expose pas l'identité des pions aux joueurs.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Déplacements — Tour 3 -->
+      <section class="bg-surfacePanel border border-borderThin rounded-lg p-5 space-y-4">
+        <div class="flex justify-between items-center border-b border-borderSubtle pb-3">
+          <div class="flex items-center space-x-2">
+            <span class="material-symbols-outlined text-alertAccent text-xl">directions_walk</span>
+            <h2 class="text-lg font-bold uppercase tracking-wider text-textPale">Déplacements — Tour 3</h2>
+          </div>
+          <span class="text-xs text-textSecondary uppercase tracking-widest bg-surfaceSub px-2 py-0.5 border border-borderThin">
+            PHASE TACTIQUE
+          </span>
+        </div>
+
+        <!-- 3 Private Token Cards -->
+        <div class="space-y-3">
+
+          <!-- Card 1: Nel Varga -->
+          <div class="bg-surfaceSub border border-borderThin rounded p-3.5 space-y-3">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+              <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-textPale"></span>
+                <span class="font-bold text-sm text-textPale">Nel Varga · Sas · 0/2 zones</span>
+              </div>
+              <!-- Compact distinct toggle button for state (min 44px touch) -->
+              <button type="button" aria-pressed="false" class="min-h-[44px] px-3.5 py-1.5 bg-[#080e0c] hover:bg-[#1a2923] border border-borderThin rounded text-xs font-bold text-textSecondary uppercase tracking-wider flex items-center space-x-2 transition-colors">
+                <span class="material-symbols-outlined text-sm">pause_circle</span>
+                <span>État : Immobile</span>
+              </button>
+            </div>
+            <!-- Destination select & Movement actions (min 44px) -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 pt-1 border-t border-borderSubtle">
+              <div class="sm:col-span-5">
+                <select class="w-full min-h-[44px] bg-[#080e0c] border border-borderThin text-textPale text-xs px-2.5 rounded focus:outline-none focus:border-textPale">
+                  <option selected>Destination : Coursive A</option>
+                  <option>Destination : Sas extérieur</option>
+                </select>
+              </div>
+              <div class="sm:col-span-4">
+                <button type="button" class="w-full min-h-[44px] bg-[#0e1714] hover:bg-[#182721] border border-borderThin rounded text-xs font-bold uppercase tracking-wider text-textPale transition-colors">
+                  Déplacer d’une zone
+                </button>
+              </div>
+              <div class="sm:col-span-3">
+                <button type="button" class="w-full min-h-[44px] bg-[#0e1714] hover:bg-[#182721] border border-borderThin rounded text-xs font-bold uppercase tracking-wider text-textSecondary hover:text-textPale transition-colors">
+                  Examiner ce Tour
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Rôdeur dissimulé (En mouvement) -->
+          <div class="bg-surfaceSub border-2 border-alertAccent/50 rounded p-3.5 space-y-3">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+              <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-alertAccent animate-ping"></span>
+                <span class="font-bold text-sm text-alertAccent">Rôdeur dissimulé · Coursive A · 1/3 zones</span>
+              </div>
+              <!-- Compact distinct toggle button for state (En mouvement -> pressed) -->
+              <button type="button" aria-pressed="true" class="min-h-[44px] px-3.5 py-1.5 bg-[#172b22] hover:bg-[#203a2e] border border-alertAccent rounded text-xs font-bold text-alertAccent uppercase tracking-wider flex items-center space-x-2 shadow-[0_0_8px_rgba(82,183,136,0.3)] transition-colors">
+                <span class="material-symbols-outlined text-sm">directions_run</span>
+                <span>État : En mouvement</span>
+              </button>
+            </div>
+            <!-- Destination select & Movement actions (min 44px) -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 pt-1 border-t border-borderSubtle">
+              <div class="sm:col-span-5">
+                <select class="w-full min-h-[44px] bg-[#080e0c] border border-borderThin text-textPale text-xs px-2.5 rounded focus:outline-none focus:border-textPale">
+                  <option selected>Destination : Sas</option>
+                  <option>Destination : Soute</option>
+                  <option>Destination : Conduits A-3</option>
+                </select>
+              </div>
+              <div class="sm:col-span-4">
+                <button type="button" class="w-full min-h-[44px] bg-[#0e1714] hover:bg-[#182721] border border-borderThin rounded text-xs font-bold uppercase tracking-wider text-textPale transition-colors">
+                  Déplacer d’une zone
+                </button>
+              </div>
+              <div class="sm:col-span-3">
+                <button type="button" class="w-full min-h-[44px] bg-[#0e1714] hover:bg-[#182721] border border-borderThin rounded text-xs font-bold uppercase tracking-wider text-textSecondary hover:text-textPale transition-colors">
+                  Examiner ce Tour
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Créature immobile -->
+          <div class="bg-surfaceSub border border-borderThin rounded p-3.5 space-y-3">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+              <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-textMuted"></span>
+                <span class="font-bold text-sm text-textPale">Créature immobile · Soute · 0/3 zones</span>
+              </div>
+              <!-- Compact distinct toggle button for state (min 44px touch) -->
+              <button type="button" aria-pressed="false" class="min-h-[44px] px-3.5 py-1.5 bg-[#080e0c] hover:bg-[#1a2923] border border-borderThin rounded text-xs font-bold text-textSecondary uppercase tracking-wider flex items-center space-x-2 transition-colors">
+                <span class="material-symbols-outlined text-sm">pause_circle</span>
+                <span>État : Immobile</span>
+              </button>
+            </div>
+            <!-- Destination select & Movement actions (min 44px) -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 pt-1 border-t border-borderSubtle">
+              <div class="sm:col-span-5">
+                <select class="w-full min-h-[44px] bg-[#080e0c] border border-borderThin text-textPale text-xs px-2.5 rounded focus:outline-none focus:border-textPale">
+                  <option selected>Destination : Sas ventral</option>
+                  <option>Destination : Coursive A</option>
+                </select>
+              </div>
+              <div class="sm:col-span-4">
+                <button type="button" class="w-full min-h-[44px] bg-[#0e1714] hover:bg-[#182721] border border-borderThin rounded text-xs font-bold uppercase tracking-wider text-textPale transition-colors">
+                  Déplacer d’une zone
+                </button>
+              </div>
+              <div class="sm:col-span-3">
+                <button type="button" class="w-full min-h-[44px] bg-[#0e1714] hover:bg-[#182721] border border-borderThin rounded text-xs font-bold uppercase tracking-wider text-textSecondary hover:text-textPale transition-colors">
+                  Examiner ce Tour
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Helper Note requested -->
+        <div class="flex items-center space-x-2 text-xs text-textSecondary p-2 bg-[#080e0c] border border-borderSubtle rounded">
+          <span class="material-symbols-outlined text-alertAccent text-sm">info</span>
+          <span>L’état de mouvement sera pris en compte au prochain scan.</span>
+        </div>
+
+        <!-- Turn Completion Actions -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-borderSubtle">
+          <!-- "Scanner ce Tour et tester l’Énergie" (disabled after scan) -->
+          <button type="button" disabled class="min-h-[48px] px-4 py-2 bg-[#0e1513] border border-borderThin/50 text-textMuted text-xs font-bold uppercase tracking-wider rounded cursor-not-allowed flex items-center justify-center space-x-2 opacity-60">
+            <span class="material-symbols-outlined text-base">radar</span>
+            <span>Scanner ce Tour et tester l’Énergie (Effectué)</span>
+          </button>
+
+          <!-- "Valider le Tour suivant" (active min 48px control) -->
+          <button type="button" class="min-h-[48px] px-4 py-2 bg-[#172b22] hover:bg-[#203a2e] active:bg-[#2a4d3d] border border-alertAccent text-textPale text-xs font-bold uppercase tracking-widest rounded flex items-center justify-center space-x-2 transition-colors shadow-[0_0_10px_rgba(82,183,136,0.2)]">
+            <span class="material-symbols-outlined text-base text-alertAccent">check_circle</span>
+            <span>Valider le Tour suivant (Tour 4)</span>
+          </button>
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Footer status line -->
+  <footer class="mt-6 pt-3 border-t border-borderThin flex flex-wrap justify-between items-center text-xs text-textMuted uppercase tracking-wider">
+    <div>TERMINAL GM-OS // MATRICIEL TACTIQUE M314 // MODE TABLE VIRTUELLE</div>
+    <div>SÉCURITÉ W-Y NIVEAU 4 · ACCÈS RESTREINT MENEUR DE JEU</div>
+  </footer>
+</body>
+</html>

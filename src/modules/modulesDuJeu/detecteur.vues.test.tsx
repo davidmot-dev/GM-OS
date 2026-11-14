@@ -43,6 +43,45 @@ afterEach(() => { cleanup(); vi.useRealTimers(); vi.restoreAllMocks(); vi.unstub
 const cliquer = async (element: HTMLElement) => { await act(async () => fireEvent.click(element)); };
 
 describe('instrument du détecteur', () => {
+    it('raccorde le joueur, oriente le cône et bascule le mouvement depuis les vrais contrôles du meneur',async()=>{
+        const table={personnages:[{id:'alice',nom:'Alice'}]};
+        let etat=moteur.appliquerCommande(moteur.creerEtat(),{id:'rappeler-prereglage',charge:{prereglageId:'exemple-relais'}},{role:'mj'});
+        const props=()=>({vue:moteur.vuePour(etat,{role:'mj'},table),envoyerCommande:async(commande:moteur.CommandeDetecteur)=>{
+            etat=moteur.appliquerCommande(etat,commande,{role:'mj'},table);vue.rerender(<PupitreMJ {...props()}/>);return {ok:true as const};
+        }});
+        const vue=render(<PupitreMJ {...props()}/>);
+        await act(async()=>fireEvent.change(vue.getByLabelText('Joueur qui oriente le M314'),{target:{value:'alice'}}));
+        expect(etat.discret.joueurPorteurId).toBe('alice');
+        await act(async()=>fireEvent.change(vue.getByLabelText('Ouverture du cône'),{target:{value:'90'}}));
+        await cliquer(vue.getByRole('button',{name:'Tourner de 15° vers la gauche'}));
+        expect(etat.discret).toMatchObject({cap:345,ouverture:90});
+        const ancien=structuredClone(etat.discret.pions.find(p=>p.id==='xeno')!);
+        await cliquer(vue.getByRole('button',{name:'Immobile : Xénomorphe'}));
+        expect(etat.discret.pions.find(p=>p.id==='xeno')).toEqual({...ancien,mobile:true});
+        expect(vue.getByRole('button',{name:'En mouvement : Xénomorphe'}).getAttribute('aria-pressed')).toBe('true');
+    });
+    it('la tablette oriente au clavier, affiche les refus, et devient consultative après retrait du droit',async()=>{
+        const table={personnages:[{id:'alice',nom:'Alice'}]},lecteur={role:'joueur' as const,personnageId:'alice'};
+        let etat=moteur.appliquerCommande(moteur.creerEtat(),{id:'rappeler-prereglage',charge:{prereglageId:'exemple-relais'}},{role:'mj'});
+        etat=moteur.appliquerCommande(etat,{id:'attribuer-porteur',charge:{personnageId:'alice'}},{role:'mj'},table);
+        let refuser=true;const commandes=moteur.appliquerCommande;
+        const props=()=>({vue:moteur.vuePour(etat,lecteur,table),envoyerCommande:async(commande:moteur.CommandeDetecteur)=>{
+            if(refuser)return {ok:false as const,erreur:'Liaison indisponible.'};
+            etat=commandes(etat,commande,lecteur,table);vue.rerender(<VueJoueur {...props()}/>);return {ok:true as const};
+        }});
+        const vue=render(<VueJoueur {...props()}/>);
+        expect(vue.queryByLabelText('Ouverture du cône')).toBeNull();
+        expect(vue.queryByLabelText('Joueur qui oriente le M314')).toBeNull();
+        fireEvent.change(vue.getByRole('slider',{name:'Cap du détecteur'}),{target:{value:'90'}});
+        await act(async()=>fireEvent.keyUp(vue.getByRole('slider'),{key:'ArrowRight'}));
+        expect(vue.getByRole('alert').textContent).toBe('Liaison indisponible.');expect(etat.discret.cap).toBe(0);
+        refuser=false;await act(async()=>fireEvent.keyUp(vue.getByRole('slider'),{key:'ArrowRight'}));
+        expect(etat.discret.cap).toBe(90);expect(vue.queryByRole('alert')).toBeNull();
+        etat=commandes(etat,{id:'attribuer-porteur',charge:{personnageId:''}},{role:'mj'},table);
+        vue.rerender(<VueJoueur {...props()}/>);
+        expect(vue.queryByRole('slider')).toBeNull();expect(vue.queryByRole('button',{name:/Tourner/})).toBeNull();
+        expect(vue.getByText('Cap : Est · 90°')).toBeTruthy();
+    });
     it('prépare une zone et le porteur, puis conserve le scan payé dans le formulaire du mode discret', async () => {
         let etat=moteur.creerEtat();
         const props=()=>({vue:moteur.vuePour(etat,{role:'mj'}),envoyerCommande:async(commande:moteur.CommandeDetecteur)=>{

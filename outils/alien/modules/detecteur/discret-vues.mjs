@@ -47,7 +47,7 @@ function Pions({ d,envoyer,occupe }) {
       h('label',{className:'detecteur-case'},h('input',{name:'detectable',type:'checkbox',defaultChecked:p?.detectable??true}),'Objet de bonne taille détectable'),
       h('button',{type:'submit'},'Enregistrer le pion'))));
 }
-export function DiscretMJ({ d,envoyer,occupe }) {
+export function DiscretMJ({ d,envoyer,occupe,personnages=[] }) {
   return h('section',{className:'detecteur-reglages','aria-label':'Mode discret du détecteur'},
     h('h3',null,'Mode discret — M314'),
     h('label',{className:'detecteur-case'},h('input',{type:'checkbox',checked:d.actif,disabled:occupe,onChange:e=>envoyer('mode-discret',{actif:e.target.checked})}),'Raccorder le détecteur au plan et à sa batterie'),
@@ -63,13 +63,19 @@ export function DiscretMJ({ d,envoyer,occupe }) {
         choix('Terrain du scan','terrain',d.terrain,[['interieur','Intérieur ou terrain obstrué : quatre zones, 100 m'],['exterieur','Terrain découvert : 1 km']]),
         champ('Réserve propre à la batterie du M314','energie',{type:'number',min:0,max:1000,required:true,defaultValue:d.energie}),
         h('button',{type:'submit'},'Confirmer porteur et batterie'))),
+      choix('Joueur qui oriente le M314','joueurPorteurId',d.joueurPorteurId,[['','Meneur seul'],...personnages.map(p=>[p.id,p.nom])],{
+        value:d.joueurPorteurId,disabled:occupe||!d.porteurId,onChange:e=>envoyer('attribuer-porteur',{personnageId:e.target.value})}),
+      h('p',null,'Le porteur et Maman partagent la même orientation. Un changement de pion porteur retire cette attribution.'),
       h('h3',null,`Déplacements — Tour ${d.tour}`),h('p',null,'Déplace d’abord les PJ, puis les ennemis en secret. Examiner prend un Tour entier. Maman arbitre détection, obstacles et entrée en combat.'),
       ...d.pions.map(p=>h('form',{key:p.id+':'+p.zoneId+':'+d.tour,className:'detecteur-reglages','aria-label':`Déplacer ${p.nom}`,onSubmit:e=>{
         e.preventDefault();void envoyer('deplacer-discret',{pionId:p.id,zoneId:new FormData(e.currentTarget).get('zoneId'),tour:d.tour});
       }},h('strong',null,`${p.nom} · ${d.zones.find(z=>z.id===p.zoneId)?.nom} · ${p.depense}/${p.limite} zones`),
+        h('button',{type:'button','aria-pressed':p.mobile,'aria-label':`${p.mobile?'En mouvement':'Immobile'} : ${p.nom}`,disabled:occupe,
+          onClick:()=>envoyer('mouvement-discret',{pionId:p.id,mobile:!p.mobile,tour:d.tour})},p.mobile?'En mouvement':'Immobile'),
         choix('Destination','zoneId','',d.zones.filter(z=>d.zones.find(a=>a.id===p.zoneId).liens.includes(z.id)).map(z=>[z.id,z.nom])),
         h('button',{type:'submit',disabled:occupe||p.depense>=p.limite||!d.zones.find(z=>z.id===p.zoneId).liens.length},'Déplacer d’une zone'),
         bouton('Examiner pendant ce Tour',()=>envoyer('examiner-discret',{pionId:p.id,tour:d.tour}),occupe||p.depense>0))),
+      h('p',null,'L’état de mouvement sera pris en compte au prochain scan.'),
       h('div',{className:'detecteur-actions'},bouton('Scanner ce Tour et tester l’Énergie',()=>envoyer('scanner-discret',{tour:d.tour}),occupe||!d.porteurId||d.energie===0||d.dernierScan?.tour===d.tour),
         bouton('Valider le Tour suivant',()=>envoyer('tour-discret',{tour:d.tour}),occupe)),
       d.dernierScan&&h('p',null,`Scan du Tour ${d.dernierScan.tour} · Énergie : ${d.dernierScan.avant} → ${d.dernierScan.apres} · dés : ${d.dernierScan.des.join(', ')}. Aucun Stress ni Panique.`),

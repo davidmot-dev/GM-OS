@@ -4,6 +4,7 @@ import '../../core.js';
 import '../../detecteur.js';
 import { DiscretMJ, LectureDiscrete } from './discret-vues.mjs';
 import { PrereglagesEtRemise } from '../prereglages-vues.mjs';
+import { Orientation } from './orientation-vues.mjs';
 
 const bouton = (texte, props = {}) => h('button', { type: 'button', ...props }, texte);
 function useMouvementsReduits() {
@@ -105,14 +106,18 @@ function Son({ tracker: t, horloge }) {
   return h('div', { className: 'detecteur-son' }, bouton(active ? 'Couper les bips' : 'Activer les bips ici', { onClick: basculer, 'aria-pressed': active }),
     h('small', null, 'Son local à cet appareil. Les bips suivent l’intensité décidée par le meneur.'), erreur && h('p', { role: 'status' }, erreur));
 }
-function Instrument({ vue, children, horloge }) {
+function Instrument({ vue, children, horloge, envoyer, occupe }) {
   const reduit = useMouvementsReduits();
   return h('section', { className: 'gmos-detecteur' },
     h('header', null, h('p', { className: 'detecteur-sur-titre' }, 'INSTRUMENT PORTATIF · MODÈLE M314'),
       h('h2', null, 'Détecteur de mouvement'), h('p', null, vue.lectureDiscrete ? 'M314 · échos du dernier scan de jeu.' : 'Signal scénarisé · aucune distance physique mesurée.')),
-    h('div', { className: children ? 'detecteur-grille' : '' }, h('div', null, h(Radar, { vue, reduit, horloge }), h(Son, { tracker: vue.tracker, horloge }),vue.lectureDiscrete&&h(LectureDiscrete,{lecture:vue.lectureDiscrete})), children));
+    h('div', { className: children ? 'detecteur-grille' : '' }, h('div', null, h(Radar, { vue, reduit, horloge }),
+      h(Orientation,{vue,envoyer,occupe}),h(Son, { tracker: vue.tracker, horloge }),vue.lectureDiscrete&&h(LectureDiscrete,{lecture:vue.lectureDiscrete})), children));
 }
-export function VueJoueur({ vue, horloge }) { return h(Instrument, { vue, horloge }); }
+export function VueJoueur({ vue, horloge, envoyerCommande }) {
+  const {envoyer,occupe,erreur}=useCommandesDetecteur(envoyerCommande);
+  return h('div',null,erreur&&h('p',{role:'alert'},erreur),h(Instrument, { vue, horloge, envoyer, occupe }));
+}
 
 function Reglages({ vue, envoyer, occupe }) {
   function enregistrer(e) {
@@ -144,7 +149,7 @@ function Prereglages({ vue, envoyer, occupe }) {
     remise: 'Remet le détecteur à neuf : réglages, plan, pions et Tours effacés, scan arrêté. Les préréglages et les accès des PJ restent.',
     resume: id => resumeDuPrereglage(vue.prereglages.find(p => p.id === id)) });
 }
-export function PupitreMJ({ vue, envoyerCommande }) {
+function useCommandesDetecteur(envoyerCommande) {
   const [occupe, occuper] = useState(false), [erreur, signaler] = useState('');
   const enCours = useRef(false), vivant = useRef(true);
   useEffect(() => { vivant.current = true; return () => { vivant.current = false; }; }, []);
@@ -155,14 +160,18 @@ export function PupitreMJ({ vue, envoyerCommande }) {
     catch { if (vivant.current) signaler('La commande n’a pas pu être transmise.'); return false; }
     finally { enCours.current = false; if (vivant.current) occuper(false); }
   }
-  return h(Instrument, { vue }, h('aside', null,
+  return {envoyer,occupe,erreur};
+}
+export function PupitreMJ({ vue, envoyerCommande }) {
+  const {envoyer,occupe,erreur}=useCommandesDetecteur(envoyerCommande);
+  return h(Instrument, { vue,envoyer,occupe }, h('aside', null,
     h('h3', null, 'Poste meneur'),
     h('div', { className: 'detecteur-actions' },
       bouton(vue.tracker.power ? 'Arrêter le scan' : 'Démarrer le scan', { disabled: occupe || (vue.discret?.actif && !vue.tracker.power), 'aria-pressed': vue.tracker.power, onClick: () => envoyer('scanner', { actif: !vue.tracker.power }) }),
       bouton('Faux écho · 9 s', { disabled: occupe || !vue.tracker.power || vue.discret?.actif, onClick: () => envoyer('faux-echo', {}) })),
     erreur && h('p', { role: 'alert' }, erreur),
     h(Reglages, { key: JSON.stringify([vue.config, vue.tracker.contacts, vue.tracker.proximity, vue.tracker.intensity, vue.tracker.volume, vue.tracker.noise]), vue, envoyer, occupe }),
-    h(DiscretMJ, { d:vue.discret, envoyer, occupe }),
+    h(DiscretMJ, { d:vue.discret, envoyer, occupe,personnages:vue.personnagesOrientables }),
     h(Prereglages, { vue, envoyer, occupe }),
     h('p', null, 'Arrêter le scan conserve les accès et les réglages. Aucun effet automatique sur le Stress.')));
 }

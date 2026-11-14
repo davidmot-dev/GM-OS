@@ -29,7 +29,7 @@ describe('A8 : mode discret et plan privé',()=>{
         vi.spyOn(Math,'random').mockReturnValue(0);
         const e=agir(preparerRadar(),'scanner-discret',{tour:1});
         expect(e.discret.energie).toBe(2);expect(e.discret.dernierScan?.des).toEqual([1,1,1,1,1,1]);
-        const reprise=radar.migrerEtat(JSON.parse(JSON.stringify(e)),4);
+        const reprise=radar.migrerEtat(JSON.parse(JSON.stringify(e)),e.version);
         expect(reprise.tracker.power).toBe(false);
         expect(()=>agir(reprise,'scanner-discret',{tour:1})).toThrow(/seul scan/);
         expect(()=>agir(reprise,'scanner',{actif:true})).toThrow(/scan discret/);
@@ -64,7 +64,7 @@ describe('A8 : mode discret et plan privé',()=>{
     });
     it('migre un vrai état v2 sans plan et sans perdre ses réglages',()=>{
         const ancien:Record<string,unknown>={...radar.creerEtat(),version:2,prereglages:[]};delete ancien.discret;
-        const e=radar.migrerEtat(ancien,2);expect(e.version).toBe(4);expect(e.discret.actif).toBe(false);expect(e.tracker.contacts).toBe(3);
+        const e=radar.migrerEtat(ancien,2);expect(e.version).toBe(5);expect(e.discret.actif).toBe(false);expect(e.tracker.contacts).toBe(3);
     });
 });
 function preparerTerminal(){let e=maman.creerEtat();for(const id of ['alice','bob'])e=terminal(e,'preparer-operateur',{personnageId:id,nom:id});return e;}
