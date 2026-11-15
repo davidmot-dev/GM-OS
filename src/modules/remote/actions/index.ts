@@ -10,6 +10,7 @@ import { deckActions } from './deckActions';
 import { ulanziActions } from './ulanziActions';
 import { ficheActions } from './ficheActions';
 import { groupeActions } from './groupeActions';
+import { tablesOSActions } from './tablesOSActions';
 import { HIGH_FREQUENCY_ACTIONS, type ActionContext, type ActionRegistry } from './types';
 import { avecOrigine } from '../../session/logic/origineDesModifications';
 
@@ -48,6 +49,7 @@ export const actionRegistry: ActionRegistry = {
     ...ulanziActions,
     ...ficheActions,
     ...groupeActions,
+    ...tablesOSActions,
 };
 
 /** Types reconnus, utile aux tests et à l'inspection. */

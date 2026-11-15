@@ -438,6 +438,13 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**15/11/2026 — Les couleurs translucides manquent sur les navigateurs Chromium < 111.** Essai de la
+Fire HD 8 (§ 256) : sous Silk 108, le Hub démarre et se connecte, mais « Quitter la session » devient
+un pavé rose plein, texte invisible. Tailwind 4.2.1 vise Chrome 111 ; la feuille construite porte
+1 798 `color-mix()` dont 885 seulement ont une valeur de repli (`@supports`). Firefox 143 sur la même
+tablette : correct. **Aucun code modifié** ; la Fire passe par Firefox. À traiter si une autre
+tablette n'a qu'un vieux Chromium.
+
 **09/11/2026 — Argyropée : santé négative et zéro du d10 dans le combat générique.**
 La campagne de recette (§ 240) reproduit deux écarts, sans toucher le code applicatif :
 `HealthInterpreter.handleHP`, santé 4 moins impact 5 → **0** et état générique `dead`
@@ -14665,10 +14672,44 @@ d'Alien ? » ; choix : « Les trois modules, focus sur le M314 ».
   par David. Commit demandé le 15/11 (« ok commit »), aucun push demandé ; aucun fichier
   applicatif modifié.
 
+### 256 · La Fire HD 8 comme interface de GM-OS — spécifié le 15/11/2026
+
+David : « j'ai une vieille Fire Tablet d'Amazon […] la modifier pour servir d'interface pour mon
+GM-OS ? », puis trois usages : aider le MJ (combat, dés, tables, campagne active), piloter les
+modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
+
+- **Spécification** : [2026-11-15-fire-hd8-interface.md](2026-11-15-fire-hd8-interface.md)
+  (skill `specifier-un-chantier`) : 12 critères, 15 tâches, dont 11 touchent `src/` ou `electron/`.
+- **Décisions de David (15/11)** : un rôle à la fois, choisi sur un accueil ; la Fire **appareil
+  commun du groupe** pour les modules (accès « table », sans personnage) ; widgets de l'écran de
+  table **choisis à la volée** au PC ; tables **du jeu actif**, résultat au MJ seul avec « Montrer
+  aux joueurs ».
+- **Fait (T1)** : ADB installé à sa demande (`%LOCALAPPDATA%\Android\platform-tools`, PATH du compte) ;
+  Fire HD 8 7ᵉ gén., Android 5.1.1, Silk et WebView 108, **Firefox 143** déjà installé. Essai en
+  répétition : Hub et télécommande appairée corrects sous Firefox ; Silk perd les couleurs
+  translucides (§ 1 bis). **Firefox retenu**, aucune compilation pour vieux moteurs.
+- **Q5 et Q6 tranchées le 15/11** : l'écran de table a sa propre sélection de widgets ; un code à
+  quatre chiffres, gardé et comparé au poste, protège le retour au rôle MJ.
+- **T2 faite le 15/11** : `outils/fire/preparer-la-fire.ps1` (écran allumé sur secteur ou USB,
+  épinglage d'écran disponible, Wi-Fi déjà jamais en veille) ; raccourci et épingle à poser par David.
+- **T3, 15/11** : cinq maquettes Stitch (accueil, code du meneur, onglet Tables, appareil de table,
+  écran de table) générées et relues — [maquettes](visuels/fire-hd8-2026-11-15/README.md) ; ajout au
+  plan d'un widget « Ordre du tour » (absent de la librairie de l'Ulanzi).
+- **Maquettes validées par David le 15/11** (« vas-y, je suis d'accord avec les maquettes »).
+- **T4 à T7 faites le 15/11 — l'onglet Tables de la télécommande** : `universDuJeu` (le dossier de
+  tables du jeu actif, d'abord par les tables que cite le pilote, puis par le nom), `tirerSur` et
+  `journaliserUnTirage` dans `useTableStore`, actions `remote:tables:*` (`tablesOSActions.ts`,
+  réponses au rôle `remote` seul), `RemoteTables.tsx`. « Montrer aux joueurs » = journal + annonce
+  sur les tablettes (au PC, « partager » n'écrit qu'au journal). Suite complète 10 535 essais
+  réussis, `tsc -b` et eslint propres. **Essayé sur la Fire** (campagne Dune de la répétition) puis
+  par David : *« ca marche »*. Commit demandé le 15/11 (« Commit »), sans push.
+- **Reste** : T8 à T15 (appareil de table, écran de table, accueil et code), l'e2e de l'onglet.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 192 | **La Fire HD 8 comme interface de GM-OS** | 🟠 § 256 ; spécifié le 15/11, T1 à T2 faites (Firefox 143 retenu, Fire préparée), T3 : maquettes validées, T4 à T7 : onglet Tables essayé sur la Fire — 15/11 | T8 (rôle `table` au serveur) | Rien |
 | 191 | **Alien — vidéo des trois modules, détail du M314** | 🟢 § 255 ; MP4 2 min 57, pilote 1.11.0, cap partagé et immobilité filmés — 15/11 | Ouvrir le MP4 | Rien pour la vidéo ; essai physique A11 distinct |
 | 190 | **Alien — *Building Better Worlds* dans le pilote (A13)** | 🟢 § 254 ; pilote 1.11.0 (Prospecteur, Artiste, 53 objets au catalogue) et 23 tables Table-OS — 15/11 ; **validé par David le 15/11** | Rien ; la colonie est un chantier à spécifier | Rien |
 | 189 | **Alien — *Building Better Worlds* relu** | 🟢 § 253 ; seize fiches forgées par David et relues le 15/11, toutes corrigées, tables du livre ajoutées | Rien ; l'étape 2 est faite (§ 254) | Rien |

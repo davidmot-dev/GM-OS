@@ -36,6 +36,8 @@ const EXPECTED_TYPES = [
     // Le meneur qui parle depuis sa tablette, et son coffre Obsidian.
     'remote:session:gm-message',
     'remote:obsidian:lister', 'remote:obsidian:lire',
+    // Table-OS sur la télécommande (Fire HD 8, § 256) : réservé aux rôles appairés, réponses au rôle 'remote'.
+    'remote:tables:lister', 'remote:tables:tirer', 'remote:tables:montrer',
     'session:request-item-transfer', 'remote:session:request-item-transfer',
     'session:approve-item-transfer', 'remote:session:approve-item-transfer',
     'session:reject-item-transfer', 'remote:session:reject-item-transfer',

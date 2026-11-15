@@ -32,6 +32,16 @@ interface TableState {
     reinjecter: (resultat: TableResult) => void;
     effacerLHistorique: () => void;
     sendToSession: (recipientName?: string) => void;
+    /**
+     * **Tirer sur une table sans l'ouvrir** — demandé par la télécommande (Fire HD 8, registre
+     * § 256, T5). Charge la table par le pont, tire, et **écrit l'historique** comme un tirage du
+     * tableau de bord. Ne touche pas au résultat affiché au PC (`currentResult`) : David peut
+     * avoir une autre table ouverte. Ne journalise rien — le résultat est au meneur seul tant
+     * qu'il ne l'a pas montré. `null` si le pont, la table ou la résolution manque.
+     */
+    tirerSur: (univers: string, table: string, modificateur: number) => Promise<TableResult | null>;
+    /** Écrit un tirage au journal — le seul écrivain des tirages au journal, PC et télécommande. */
+    journaliserUnTirage: (resultat: TableResult, recipientName?: string) => void;
 }
 
 const getBridge = () => (window as Window & typeof globalThis & { appBridge?: { tables: TableBridge } }).appBridge?.tables;
@@ -120,10 +130,39 @@ export const useTableStore = create<TableState>()(
 
             effacerLHistorique: () => set({ history: [] }),
 
+            tirerSur: async (univers, table, modificateur) => {
+                const bridge = getBridge();
+                if (!bridge) return null;
+                try {
+                    const data = await bridge.loadTable(univers, table);
+                    if (!data) return null;
+                    const rawRoll = TableEngine.rollDice(data.dice);
+                    const finalValue = rawRoll + modificateur;
+                    const result: TableResult = {
+                        rawRoll,
+                        modifier: modificateur,
+                        finalValue,
+                        entry: TableEngine.resolveEntry(data, finalValue),
+                        timestamp: Date.now(),
+                        tableName: data.name || table,
+                    };
+                    set((state) => ({ history: [result, ...state.history].slice(0, 50) }));
+                    return result;
+                } catch (err) {
+                    console.error(`[Table-OS] tirage impossible sur ${univers}/${table}:`, err);
+                    return null;
+                }
+            },
+
             sendToSession: (recipientName?: string) => {
                 const { currentResult } = get();
                 if (!currentResult) return;
+                get().journaliserUnTirage(currentResult, recipientName);
+                // UI feedback
+                console.log("SENDING TO SESSION:", currentResult.entry.title);
+            },
 
+            journaliserUnTirage: (currentResult, recipientName) => {
                 // Log the actual roll result to Journal only when shared
                 useJournalStore.getState().addEvent({
                     type: 'ORACLE',
@@ -137,9 +176,6 @@ export const useTableStore = create<TableState>()(
                         recipient: recipientName ? i18next.t('modules:random_tables.journal.given_to', { name: recipientName }) : ''
                     })
                 });
-
-                // UI feedback
-                console.log("SENDING TO SESSION:", currentResult.entry.title);
             }
         }),
         {

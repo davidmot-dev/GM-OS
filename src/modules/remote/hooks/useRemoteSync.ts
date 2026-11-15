@@ -10,6 +10,8 @@ import { type RollResult as BaseRollResult } from '../../dice/DiceEngine';
 import { capturePairingTokenFromUrl, getPairingToken } from '../pairingToken';
 import type { NoteEntry } from '../../session/useObsidianStore';
 import { appliquerApparenceTablettes } from '../../../theme/apparenceTablettes';
+import type { TableResult } from '../../tables/types';
+import type { TableDuJeu } from '../actions/tablesOSActions';
 
 /** L'état du coffre Obsidian sur la tablette — hors du flux périodique. */
 export interface CoffreObsidian {
@@ -19,6 +21,23 @@ export interface CoffreObsidian {
     contenu: string | null;
     chargement: boolean;
     erreur?: string;
+}
+
+/**
+ * **Les tables du jeu actif sur la télécommande** (Fire HD 8, registre § 256, T7) — hors du flux
+ * périodique, en question/réponse comme le coffre. Le tirage est fait au poste du MJ ; il revient
+ * ici seulement (rôle `remote`). `montres` : les horodatages des tirages déjà montrés aux joueurs.
+ */
+export interface TablesDuJeu {
+    univers: string | null;
+    liste: TableDuJeu[];
+    raison?: string;
+    chargement: boolean;
+    /** La table dont on attend le tirage. */
+    tirageEnCours: string | null;
+    resultat: TableResult | null;
+    erreur?: string;
+    montres: number[];
 }
 
 export interface RollRecord extends BaseRollResult {
@@ -65,6 +84,9 @@ export const useRemoteSync = () => {
     */
     const [coffre, setCoffre] = useState<CoffreObsidian>({
         notes: [], chemin: null, contenu: null, chargement: false,
+    });
+    const [tables, setTables] = useState<TablesDuJeu>({
+        univers: null, liste: [], chargement: false, tirageEnCours: null, resultat: null, montres: [],
     });
     const socketRef = useRef<WebSocket | null>(null);
     /*
@@ -185,6 +207,28 @@ export const useRemoteSync = () => {
                         chargement: false,
                     }));
                 }
+                /* Les tables du jeu actif : réponses à cette télécommande seule. Voir `tablesOSActions`. */
+                else if (data.type === 'tables:liste') {
+                    setTables((avant) => ({
+                        ...avant, chargement: false,
+                        univers: data.payload?.univers ?? null,
+                        liste: Array.isArray(data.payload?.tables) ? data.payload.tables : [],
+                        raison: data.payload?.raison,
+                    }));
+                }
+                else if (data.type === 'tables:resultat') {
+                    setTables((avant) => ({
+                        ...avant, tirageEnCours: null,
+                        resultat: data.payload?.resultat ?? null,
+                        erreur: data.payload?.resultat ? undefined : (data.payload?.erreur ?? 'Tirage impossible.'),
+                    }));
+                }
+                else if (data.type === 'tables:montre') {
+                    const horodatage = data.payload?.timestamp;
+                    if (data.payload?.montre && typeof horodatage === 'number') {
+                        setTables((avant) => ({ ...avant, montres: [...avant.montres, horodatage].slice(-50) }));
+                    }
+                }
                 // Le serveur confirme le rôle réellement accordé, qui peut être
                 // inférieur à celui demandé si l'appairage n'a pas été validé.
                 else if (data.type === 'remote:registered') {
@@ -246,6 +290,21 @@ export const useRemoteSync = () => {
         sendAction('remote:obsidian:lire', { chemin });
     }, [sendAction]);
 
+    /** Les tables du jeu actif, puis un tirage, puis le montrer aux joueurs. */
+    const demanderLesTables = useCallback(() => {
+        setTables((avant) => ({ ...avant, chargement: true }));
+        sendAction('remote:tables:lister', {});
+    }, [sendAction]);
+
+    const tirerUneTable = useCallback((table: string, modificateur: number) => {
+        setTables((avant) => ({ ...avant, tirageEnCours: table, erreur: undefined }));
+        sendAction('remote:tables:tirer', { table, modificateur });
+    }, [sendAction]);
+
+    const montrerLeTirage = useCallback((timestamp: number) => {
+        sendAction('remote:tables:montrer', { timestamp });
+    }, [sendAction]);
+
     /* Refermer est local : rien à demander au meneur pour revenir à la liste. */
     const fermerLaNote = useCallback(() => {
         setCoffre((avant) => ({ ...avant, chemin: null, contenu: null, erreur: undefined }));
@@ -273,5 +332,9 @@ export const useRemoteSync = () => {
         demanderLeCoffre,
         ouvrirUneNote,
         fermerLaNote,
+        tables,
+        demanderLesTables,
+        tirerUneTable,
+        montrerLeTirage,
     };
 };

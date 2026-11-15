@@ -282,7 +282,11 @@ export type RemoteActionType =
       **seulement aux tablettes de meneur**.
     */
     | 'remote:obsidian:lister'
-    | 'remote:obsidian:lire';
+    | 'remote:obsidian:lire'
+    /** Table-OS sur la télécommande : les tables du jeu actif, tirées au poste, réponses au rôle `remote` seul (Fire HD 8, § 256). */
+    | 'remote:tables:lister'
+    | 'remote:tables:tirer'
+    | 'remote:tables:montrer';
 
 export interface RemoteAction {
     type: RemoteActionType;

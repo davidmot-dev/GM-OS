@@ -373,3 +373,24 @@ describe('ce qui revient au meneur', () => {
         expect(retirerCeQuiRevientAuMeneur('session:update-character-sheet-data', fiche, 'player')).toBe(fiche);
     });
 });
+
+/**
+ * **Table-OS sur la télécommande** (Fire HD 8, registre § 256, T6) : lister, tirer et montrer
+ * restent au meneur. Une tablette de joueur — avec ou sans personnage — est refusée ; seule une
+ * tablette appairée passe.
+ */
+describe('evaluateAction — les tables du meneur', () => {
+    const types = ['remote:tables:lister', 'remote:tables:tirer', 'remote:tables:montrer'];
+
+    it('refuse les trois actions à un joueur, même avec un personnage', () => {
+        for (const type of types) {
+            expect(PLAYER_ALLOWED_ACTIONS.has(type)).toBe(false);
+            expect(evaluateAction(type, { table: 'test_de_panique' }, 'player', 'perso-1')).toMatchObject({ allowed: false, reason: 'role' });
+            expect(evaluateAction(type, {}, 'hub', undefined)).toMatchObject({ allowed: false, reason: 'role' });
+        }
+    });
+
+    it('les laisse à la télécommande appairée', () => {
+        for (const type of types) expect(evaluateAction(type, {}, 'remote', undefined)).toEqual({ allowed: true });
+    });
+});

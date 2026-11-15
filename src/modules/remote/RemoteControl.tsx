@@ -11,6 +11,7 @@ import {
     Film,
     MessageSquare,
     Blocks,
+    ListOrdered,
 } from 'lucide-react';
 import { useRemoteSync } from './hooks/useRemoteSync';
 import { type RemoteActionType } from './types/remote.types';
@@ -27,6 +28,7 @@ import RemoteStatusBar from './components/RemoteStatusBar';
 import RemoteMessenger from './components/RemoteMessenger';
 import { RemoteModule } from './components/RemoteModule';
 import { RemoteModulesDuJeu } from './components/RemoteModulesDuJeu';
+import RemoteTables from './components/RemoteTables';
 import { useDernierJet } from './hooks/useDernierJet';
 
 /**
@@ -48,11 +50,13 @@ import { useDernierJet } from './hooks/useDernierJet';
  * filet qui évite qu'améliorer le paysage casse le portrait.
  */
 
-type Onglet = 'pads' | 'dice' | 'sound' | 'combat' | 'whiteboard' | 'notes' | 'story' | 'messages' | 'modules';
+type Onglet = 'pads' | 'dice' | 'tables' | 'sound' | 'combat' | 'whiteboard' | 'notes' | 'story' | 'messages' | 'modules';
 
 const ONGLETS = [
     { id: 'pads', icon: LayoutDashboard, label: 'Pads' },
     { id: 'dice', icon: Dices, label: 'Dés' },
+    /* Les tables du jeu actif, tirées au poste du MJ (Fire HD 8, 15/11/2026, maquette Stitch validée). */
+    { id: 'tables', icon: ListOrdered, label: 'Tables' },
     { id: 'sound', icon: Volume2, label: 'Sons' },
     { id: 'story', icon: Film, label: 'Scénario' },
     { id: 'combat', icon: Sword, label: 'Combat' },
@@ -67,6 +71,7 @@ const RemoteControl: React.FC = () => {
     const {
         status, isPaired, syncData, sendAction, vueDesModules, gestesDesModules,
         coffre, demanderLeCoffre, ouvrirUneNote, fermerLaNote,
+        tables, demanderLesTables, tirerUneTable, montrerLeTirage,
     } = useRemoteSync();
     /*
       **Le résultat des dés vient du flux, pas d'un message dédié.**
@@ -147,6 +152,16 @@ const RemoteControl: React.FC = () => {
                         onForcer={isPaired && syncData.session?.jetForcable ? () => sendAction('remote:dice:forcer', {}) : undefined}
                         onReglerLesReserves={isPaired && syncData.session?.reservesAuPupitre
                             ? qui => sendAction('remote:dice:reserves', { qui }) : undefined}
+                    />
+                );
+            case 'tables':
+                return (
+                    <RemoteTables
+                        tables={tables}
+                        appaire={isPaired}
+                        onCharger={demanderLesTables}
+                        onTirer={tirerUneTable}
+                        onMontrer={montrerLeTirage}
                     />
                 );
             case 'sound':
