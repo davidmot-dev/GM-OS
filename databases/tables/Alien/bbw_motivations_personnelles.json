@@ -1,0 +1,114 @@
+{
+    "name": "Building Better Worlds — Motivations personnelles (p. 55)",
+    "dice": "d66",
+    "entries": [
+        {
+            "min": 11,
+            "max": 12,
+            "title": "Opportunité de profit",
+            "description": "Obtenir coûte que coûte une plus grande part des bénéfices de la Frontière."
+        },
+        {
+            "min": 13,
+            "max": 14,
+            "title": "Soif de pouvoir et d'influence",
+            "description": "Dominer et diriger les autres colons sur la Frontière."
+        },
+        {
+            "min": 15,
+            "max": 16,
+            "title": "Tremplin de carrière",
+            "description": "Relancer des perspectives professionnelles stagnantes par une mission locale."
+        },
+        {
+            "min": 21,
+            "max": 22,
+            "title": "Retrouver un être cher",
+            "description": "Suivre un proche parti refaire sa vie sur la Frontière pour comprendre sa fuite."
+        },
+        {
+            "min": 23,
+            "max": 24,
+            "title": "Reconnaissance d'un groupe d'élite",
+            "description": "Agir pour aider et gagner le respect d'une organisation sélecte."
+        },
+        {
+            "min": 25,
+            "max": 26,
+            "title": "Vengeance personnelle",
+            "description": "Retrouver le criminel en fuite responsable de la mort d'un proche ou d'un vol d'héritage."
+        },
+        {
+            "min": 31,
+            "max": 32,
+            "title": "Promotion corporatiste",
+            "description": "Servir loyalement la Compagnie pour décrocher un poste garanti à vie."
+        },
+        {
+            "min": 33,
+            "max": 34,
+            "title": "Vocation d'explorateur",
+            "description": "Perpétuer la lignée familiale en nourrissant une curiosité insatiable."
+        },
+        {
+            "min": 35,
+            "max": 36,
+            "title": "Fonder un nouveau monde",
+            "description": "Fouler une terre vierge et participer concrètement à sa colonisation."
+        },
+        {
+            "min": 41,
+            "max": 42,
+            "title": "Quête scientifique",
+            "description": "Percer les mystères inconnus de la Frontière au profit du savoir ou de son compte en banque."
+        },
+        {
+            "min": 43,
+            "max": 44,
+            "title": "Quête spirituelle",
+            "description": "Raviver une foi défaillante et chercher la présence divine aux confins de l'espace."
+        },
+        {
+            "min": 45,
+            "max": 46,
+            "title": "Vérifier les légendes",
+            "description": "Percer le secret des récits et livres interdits pour en tirer un avantage personnel."
+        },
+        {
+            "min": 51,
+            "max": 52,
+            "title": "Rédemption personnelle",
+            "description": "Effacer un passé de raté en reconstruisant une vie digne pour les siens."
+        },
+        {
+            "min": 53,
+            "max": 54,
+            "title": "Revanche sur l'échec",
+            "description": "Prouver sa valeur aux yeux de tous jusqu'à voir une planète baptisée en son honneur."
+        },
+        {
+            "min": 55,
+            "max": 56,
+            "title": "Idéal pastoral",
+            "description": "Vivre paisiblement dans une cabane au bord d'un lac gelé à des millions de kilomètres de son passé."
+        },
+        {
+            "min": 61,
+            "max": 62,
+            "title": "Nouveau départ forcé",
+            "description": "Fuir une ancienne vie détruite par des mensonges pour recommencer à zéro."
+        },
+        {
+            "min": 63,
+            "max": 64,
+            "title": "Fuite d'un traumatisme",
+            "description": "Échapper aux accusations et au souvenir d'une tragédie passée en disparaissant sur la Frontière."
+        },
+        {
+            "min": 65,
+            "max": 66,
+            "title": "Appel des étoiles",
+            "description": "Se laisser porter sans compromis par l'esprit pur de l'exploration spatiale."
+        }
+    ]
+}

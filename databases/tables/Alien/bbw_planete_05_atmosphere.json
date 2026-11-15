@@ -1,0 +1,48 @@
+{
+    "name": "Building Better Worlds — Planète 5, atmosphère (p. 276)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 3,
+            "title": "Aucune",
+            "description": "−4 Climat, −4 Hydrosphère"
+        },
+        {
+            "min": 4,
+            "max": 5,
+            "title": "Ténue",
+            "description": "−2 Climat, −2 Hydrosphère"
+        },
+        {
+            "min": 6,
+            "max": 8,
+            "title": "Respirable",
+            "description": ""
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Dense",
+            "description": "+1 Climat"
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Toxique",
+            "description": ""
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Corrosive",
+            "description": "+4 Climat"
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Spéciale",
+            "description": ""
+        }
+    ]
+}

@@ -1,0 +1,36 @@
+{
+    "name": "Building Better Worlds — Planète 7, climat (p. 276)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 3,
+            "title": "Glacial",
+            "description": "−50 °C ou moins"
+        },
+        {
+            "min": 4,
+            "max": 5,
+            "title": "Froid",
+            "description": "−50 à 0 °C, +1 Hydrosphère"
+        },
+        {
+            "min": 6,
+            "max": 7,
+            "title": "Tempéré",
+            "description": "0 à 30 °C, +1 Hydrosphère"
+        },
+        {
+            "min": 8,
+            "max": 10,
+            "title": "Chaud",
+            "description": "31 à 60 °C, −2 Hydrosphère"
+        },
+        {
+            "min": 11,
+            "max": 99,
+            "title": "Brûlant",
+            "description": "61 °C ou plus, −4 Hydrosphère"
+        }
+    ]
+}

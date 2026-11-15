@@ -1,0 +1,66 @@
+{
+    "name": "Building Better Worlds — Colonie, sponsor (p. 279)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 3,
+            "title": "Compagnie mineure (livre de base p.",
+            "description": "222)"
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Seegson (peut-être une colonie « Sloppy Joe », p.",
+            "description": "84)"
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "ICSC",
+            "description": ""
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Weyland-Yutani",
+            "description": ""
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Empire des Trois Mondes",
+            "description": ""
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Amériques Unies",
+            "description": ""
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "Union des Peuples Progressistes",
+            "description": ""
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Confédération centrale d'Afrique",
+            "description": ""
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Lasalle Bionational",
+            "description": ""
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Consortium indépendant",
+            "description": ""
+        }
+    ]
+}

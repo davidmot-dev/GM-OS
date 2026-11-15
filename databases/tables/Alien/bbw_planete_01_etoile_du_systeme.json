@@ -1,0 +1,24 @@
+{
+    "name": "Building Better Worlds — Planète 1, étoile du système (p. 275)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 9,
+            "title": "Unique",
+            "description": ""
+        },
+        {
+            "min": 10,
+            "max": 11,
+            "title": "Binaire",
+            "description": "On tire deux étoiles, puis celle autour de laquelle tourne la planète"
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Trinaire",
+            "description": "On tire trois étoiles, puis celle autour de laquelle tourne la planète"
+        }
+    ]
+}

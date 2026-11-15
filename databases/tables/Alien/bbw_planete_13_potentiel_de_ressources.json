@@ -1,0 +1,36 @@
+{
+    "name": "Building Better Worlds — Planète 13, potentiel de ressources d'une région (p. 278)",
+    "dice": "d66",
+    "entries": [
+        {
+            "min": 0,
+            "max": 13,
+            "title": "Abyssal : −2",
+            "description": "Exemple : Rien que de la boue inutile ; le climat ou le milieu empêche toute opération, rien ne pousse."
+        },
+        {
+            "min": 14,
+            "max": 26,
+            "title": "Pauvre : −1",
+            "description": "Exemple : Ressources rares et médiocres ; les opérations seront dures et chères."
+        },
+        {
+            "min": 31,
+            "max": 46,
+            "title": "Moyen : ±0",
+            "description": "Exemple : La région semble raisonnable et mérite d'être explorée."
+        },
+        {
+            "min": 51,
+            "max": 63,
+            "title": "Bon : +1",
+            "description": "Exemple : Région riche, terre prometteuse, eau propre."
+        },
+        {
+            "min": 64,
+            "max": 99,
+            "title": "Superbe : +2",
+            "description": "Exemple : Un jardin d'Éden gorgé de ressources, terre et eau d'une fertilité incroyable."
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+{
+    "name": "Building Better Worlds — Incidents d'intermède, campagne The Lost Worlds (p. 164)",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Une colonie aléatoire (hors expédition) a été explorée.",
+            "description": "Les PJ en apprennent les résultats."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Rien de particulier à signaler",
+            "description": "Tout est en ordre."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Tensions entre factions de la mission de la Grande Mère",
+            "description": "Lutte du 3WE contre les partisans de NAPRO, rixe UA-UPP avec une hospitalisation, ou médiation ratée de l'UNISC qui envenime la situation."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Nouvelles de la métropole",
+            "description": "Escalade de la guerre de la Frontière UA-UPP étendant les hostilités, ou sécession de nouveaux mondes du 3WE rejoignant NAPRO."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Maladie inconnue parmi l'équipage de l'Ìyánlá entraînant une quarantaine ICC de D6 semaines (aucun ravitaillement ni réparation majeure), ou sursaut de neutrinos imposant des réparations essentielles durant 6D6 jours.",
+            "description": ""
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Panne d'entretien sur l'UNCSS Ìyánlá causant la mort de D6 multiplié par 100 colons en stase.",
+            "description": ""
+        }
+    ]
+}

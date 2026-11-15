@@ -1,0 +1,54 @@
+{
+    "name": "Building Better Worlds — Planète 4, taille et gravité (p. 276)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Moins de 1 000 km",
+            "description": "Gravité : 0,2G ou moins ; Atmosphère : Atmosphère automatiquement Aucune"
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "2 000 km",
+            "description": "Gravité : 0,3G ; Atmosphère : -4 au jet d'Atmosphère"
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "4 000 km",
+            "description": "Gravité : 0,5G ; Atmosphère : -3 au test d'Atmosphère"
+        },
+        {
+            "min": 5,
+            "max": 6,
+            "title": "7 000 km",
+            "description": "Gravité : 0,7G ; Atmosphère : -2 au test d'Atmosphère"
+        },
+        {
+            "min": 7,
+            "max": 8,
+            "title": "10 000 km",
+            "description": "Gravité : 1G ; Atmosphère : Aucun"
+        },
+        {
+            "min": 9,
+            "max": 10,
+            "title": "12 500 km",
+            "description": "Gravité : 1G ; Atmosphère : Aucun"
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "15 000 km",
+            "description": "Gravité : 1,5G ; Atmosphère : Aucun"
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "20 000 km",
+            "description": "Gravité : 2G ; Atmosphère : Aucun"
+        }
+    ]
+}

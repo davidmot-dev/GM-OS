@@ -46,3 +46,53 @@ describe('pilote Alien 1.10.0 — Colonial Marines', () => {
         expect(ajout.fields[1].options).toEqual(['Engagé', 'Sous-officier', "Pilote ou chef d'équipage"]);
     });
 });
+
+/**
+ * **Le pilote Alien 1.11.0 (A13, Building Better Worlds, 15/11/2026)**, produit par
+ * `ameliorer-pilote-a13-building-better-worlds.mjs` depuis la 1.10.0 : deux carrières, 53 objets au
+ * catalogue. Les 23 tables du supplément vont dans Table-OS, contrôlées par `tablesDuDepot.test.ts`.
+ */
+const a13 = 'Export Dirvers/corriges/Alien-1.11.0.gmos-driver';
+if (!fs.existsSync(a13)) throw new Error(`Pilote absent : ${a13}`);
+type Objet = { nom: string; source?: { livre?: string }; effets?: unknown[] };
+
+describe('pilote Alien 1.11.0 — Building Better Worlds', () => {
+    const avant = lire(corrige), apres = lire(a13);
+
+    it("n'ajoute que des avertissements du catalogue et garde les identifiants", () => {
+        const deja = new Set(controlerLePilote(avant.gameDriver, avant.sheetTemplate).map(c => JSON.stringify(c)));
+        const nouveaux = controlerLePilote(apres.gameDriver, apres.sheetTemplate).filter(c => !deja.has(JSON.stringify(c)));
+        expect(nouveaux.filter(c => c.gravite !== 'avertissement' || !c.ou.startsWith('catalogue.'))).toEqual([]);
+        expect(apres.gameDriver.version).toBe('1.11.0');
+        expect([apres.gameDriver.id, apres.gameDriver.templateId, apres.sheetTemplate.id])
+            .toEqual([avant.gameDriver.id, avant.gameDriver.templateId, avant.sheetTemplate.id]);
+    });
+
+    it('ajoute Prospecteur et Artiste, et rien d’autre à la fiche', () => {
+        const options = (t: typeof avant) => t.sheetTemplate.sections.flatMap((s: { fields: { id: string; options?: string[] }[] }) => s.fields)
+            .find((f: { id: string }) => f.id === 'type_personnage').options;
+        expect(options(apres)).toEqual([...options(avant), 'Prospecteur', 'Artiste']);
+        const sansCarriere = (t: typeof avant) => JSON.stringify(t.sheetTemplate).replace(/"Prospecteur",\s*"Artiste"/, '').replace(/,\s*\]/g, ']');
+        expect(JSON.parse(sansCarriere(apres))).toEqual(JSON.parse(sansCarriere(avant)));
+        expect(apres.bestiaire).toEqual(avant.bestiaire);
+    });
+
+    it('verse 53 objets du supplément au catalogue sans toucher aux autres', () => {
+        expect({ ...apres.gameDriver, version: '1.10.0', catalogue: null }).toEqual({ ...avant.gameDriver, catalogue: null });
+        const objets: Objet[] = apres.gameDriver.catalogue.objets;
+        expect(objets.slice(0, avant.gameDriver.catalogue.objets.length)).toEqual(avant.gameDriver.catalogue.objets);
+        const ajoutes = objets.slice(avant.gameDriver.catalogue.objets.length);
+        expect(ajoutes).toHaveLength(53);
+        expect(ajoutes.every(o => o.source?.livre === 'Building Better Worlds')).toBe(true);
+        expect(apres.gameDriver.catalogue.colonnes).toEqual(avant.gameDriver.catalogue.colonnes);
+        // Les deux effets qui visent les autres, pas le porteur, sont retirés.
+        for (const nom of ['LAG Laser Attunement Guide', 'Omni-Tech SDDG Sonic Deterrent Defense Grid']) {
+            expect(ajoutes.find(o => o.nom === nom)?.effets).toBeUndefined();
+        }
+    });
+
+    it('a ses 23 tables dans Table-OS', () => {
+        const tables = fs.readdirSync('databases/tables/Alien').filter(f => f.startsWith('bbw_'));
+        expect(tables).toHaveLength(23);
+    });
+});

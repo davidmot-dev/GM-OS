@@ -1,6 +1,6 @@
 # 👽 Jeu — Alien
 
-> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-20, corrigé A8 le 2026-10-22 (version 1.8.0, conserve A0–A7), puis complété le 2026-10-23 du **combat spatial** (version 1.9.0, `outils/alien/ajouter-combat-spatial.mjs`), et le 2026-11-14 des **Marines coloniaux** (version 1.10.0, `outils/alien/ameliorer-pilote-a12-colonial-marines.mjs`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-20, corrigé A8 le 2026-10-22 (version 1.8.0, conserve A0–A7), puis complété le 2026-10-23 du **combat spatial** (version 1.9.0, `outils/alien/ajouter-combat-spatial.mjs`), le 2026-11-14 des **Marines coloniaux** (version 1.10.0, `outils/alien/ameliorer-pilote-a12-colonial-marines.mjs`), et le 2026-11-15 de ***Building Better Worlds*** (version 1.11.0, `outils/alien/ameliorer-pilote-a13-building-better-worlds.mjs`). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font monter la peur.
 
@@ -1011,8 +1011,47 @@ avaries :
 Les entrées des trois tables de terrain couvrent des plages du D66 (« 25-31 » = 25, 26 et 31),
 comme le livre les imprime. Les armes, protections et véhicules du supplément sont déjà dans le
 catalogue d'équipement, et ses créatures dans le bestiaire. Pour l'installer : réimporter
-`Export Dirvers/corriges/Alien-1.10.0.gmos-driver` avec **Remplacer**. Les identifiants ne
+`Export Dirvers/corriges/Alien-1.11.0.gmos-driver` avec **Remplacer** (la 1.11.0 contient A12). Les identifiants ne
 changent pas, et les personnages gardent leurs valeurs.
+
+## Building Better Worlds — A13, 15/11/2026
+
+Le pilote **1.11.0** ajoute ce que le supplément *Building Better Worlds* (édition anglaise) apporte
+aux personnages et au matériel. Le corpus du supplément a été relu contre le livre le même jour.
+
+- **Deux carrières** : Prospecteur (*Wildcatter*) et Artiste (*Entertainer*), dans la liste
+  « Carrière » de la fiche. Leurs talents et leur matériel de départ, comme les talents de Frontière
+  des autres carrières, sont dans la fiche du corpus *Adaptations des carrières et nouveaux
+  talents*, que l'Oracle cite ; le talent choisi s'écrit dans le champ « Talent ».
+- **53 objets au catalogue d'équipement** : 9 armes et 2 munitions, 4 uniformes, 11 combinaisons
+  et protections, 10 objets de matériel d'expédition, 10 véhicules et 7 vaisseaux. Dix d'entre eux
+  rappellent un effet au jet : les bottes thermiques +1 en Endurance contre le froid, le treuil +2 en
+  Mobilité pour grimper, la combinaison CCC4 −1 en Observation et en Mobilité… Quelques valeurs
+  restent du texte, comme le livre les imprime (« 1–3 » passagers, une Protection « 1/2* ») : la
+  Forge les signale en avertissement.
+- **23 tables dans Table-OS**, univers *Alien*, dont le nom commence par « Building Better
+  Worlds — » :
+
+| Table | Dé | Quand |
+| --- | --- | --- |
+| Motivations personnelles | D66 | à la création |
+| Trouvailles de prospection | D66 | après un test d'Observation réussi |
+| Aiguillon contre un humain | D6 | quand l'aiguillon d'un dresseur de Moissonneur touche quelqu'un |
+| Brèches de combinaison | D6 | quand un dégât passe la Protection d'une combinaison pressurisée |
+| Incidents d'intermède | D6 | entre deux expéditions de la campagne *The Lost Worlds* |
+| Planète 1 à 14 | 2D6 ou D66 | pour créer un système, dans l'ordre ; terrain et potentiel pour chacune des sept régions |
+| Colonie : nombre de sponsors, sponsor, mission principale | 2D6 ou D66 | à la fondation d'une colonie |
+| Incidents de colonie | D66 | à la fin de chaque Cycle de six mois |
+
+**Les modificateurs se mettent dans le champ « Modificateur » de Table-OS.** Sur un D66, un +1 au
+dé des dizaines vaut **+10** : une prospection à trois réussites (+2 aux dizaines) se tire avec
++20. Les entrées au-delà du dé (trouvailles 71 et plus, brèches 7 et 8, terrain 71 et plus) ne
+s'atteignent qu'ainsi. La colonie elle-même (attributs, initiatives, Cycle) n'a pas encore d'écran :
+ses règles sont dans le corpus.
+
+Pour l'installer : réimporter `Export Dirvers/corriges/Alien-1.11.0.gmos-driver` avec
+**Remplacer**. Il contient A12. Les identifiants ne changent pas, et les personnages gardent leurs
+valeurs.
 
 ## La fiche HTML
 

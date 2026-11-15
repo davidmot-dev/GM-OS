@@ -1,0 +1,30 @@
+{
+    "name": "Building Better Worlds — Planète 10, durée du jour (p. 277)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 3,
+            "title": "Jour court",
+            "description": "D6 heures"
+        },
+        {
+            "min": 4,
+            "max": 7,
+            "title": "Jour terrestre",
+            "description": "3D6 × 2 heures"
+        },
+        {
+            "min": 8,
+            "max": 10,
+            "title": "Longue rotation",
+            "description": "2D6 × 2D6 heures"
+        },
+        {
+            "min": 11,
+            "max": 12,
+            "title": "Rotation extrême",
+            "description": "D666 heures"
+        }
+    ]
+}

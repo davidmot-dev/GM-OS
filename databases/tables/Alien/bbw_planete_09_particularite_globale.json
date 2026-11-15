@@ -1,0 +1,72 @@
+{
+    "name": "Building Better Worlds — Planète 9, particularité globale (p. 277)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Station ou satellites abandonnés, ou artefacts extraterrestres",
+            "description": ""
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Rotation synchrone (Tidally locked)",
+            "description": ""
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Biodiversité abondante et complexe",
+            "description": ""
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Formes de vie simples éparses (microbes, plantes primitives)",
+            "description": ""
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Ciel chargé de poussière, crépuscule permanent",
+            "description": ""
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Super-canyon qui fait le tour du monde",
+            "description": ""
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Plusieurs petites lunes rapides",
+            "description": ""
+        },
+        {
+            "min": 9,
+            "max": 9,
+            "title": "D3 grandes lunes ou un système d'anneaux",
+            "description": ""
+        },
+        {
+            "min": 10,
+            "max": 10,
+            "title": "Longue orbite elliptique, saisons rudes",
+            "description": ""
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Une énorme lune domine le ciel, marées géantes",
+            "description": ""
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Tirer deux fois",
+            "description": ""
+        }
+    ]
+}

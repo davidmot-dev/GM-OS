@@ -1,0 +1,66 @@
+{
+    "name": "Building Better Worlds — Colonie, mission principale (p. 279)",
+    "dice": "d66",
+    "entries": [
+        {
+            "min": 11,
+            "max": 16,
+            "title": "Terraformation",
+            "description": ""
+        },
+        {
+            "min": 21,
+            "max": 23,
+            "title": "Recherche",
+            "description": ""
+        },
+        {
+            "min": 24,
+            "max": 26,
+            "title": "Prospection",
+            "description": ""
+        },
+        {
+            "min": 31,
+            "max": 32,
+            "title": "Prison",
+            "description": ""
+        },
+        {
+            "min": 33,
+            "max": 36,
+            "title": "Mines et raffinage",
+            "description": ""
+        },
+        {
+            "min": 41,
+            "max": 43,
+            "title": "Nouvelle Frontière",
+            "description": ""
+        },
+        {
+            "min": 44,
+            "max": 46,
+            "title": "Relais de communications",
+            "description": ""
+        },
+        {
+            "min": 51,
+            "max": 53,
+            "title": "Militaire",
+            "description": ""
+        },
+        {
+            "min": 54,
+            "max": 64,
+            "title": "Agriculture",
+            "description": ""
+        },
+        {
+            "min": 65,
+            "max": 66,
+            "title": "Siège de compagnie ou de gouvernement",
+            "description": ""
+        }
+    ]
+}

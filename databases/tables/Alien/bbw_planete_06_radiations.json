@@ -1,0 +1,30 @@
+{
+    "name": "Building Better Worlds — Planète 6, radiations (p. 276)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 9,
+            "title": "Aucune",
+            "description": ""
+        },
+        {
+            "min": 10,
+            "max": 11,
+            "title": "Faibles",
+            "description": ""
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Fortes",
+            "description": ""
+        },
+        {
+            "min": 13,
+            "max": 99,
+            "title": "Extrêmes",
+            "description": ""
+        }
+    ]
+}

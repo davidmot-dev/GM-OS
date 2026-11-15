@@ -1,0 +1,24 @@
+{
+    "name": "Building Better Worlds — Colonie, nombre de sponsors (p. 279)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 7,
+            "title": "Un seul gouvernement ou une seule compagnie",
+            "description": ""
+        },
+        {
+            "min": 8,
+            "max": 10,
+            "title": "Deux organisations ou gouvernements",
+            "description": ""
+        },
+        {
+            "min": 11,
+            "max": 12,
+            "title": "Trois, ou plus",
+            "description": ""
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+{
+    "name": "Building Better Worlds — Aiguillon contre un humain (p. 90)",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Faux contact (It’s a Dud)",
+            "description": "Charge échouée; attaque sans effet."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Choc léger (Mild Shock)",
+            "description": "Décharge modérée; huit dés de base, Dégâts 1."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Souffle électrique (Electric Blast)",
+            "description": "Projection à terre en zone voisine; six dés de base, Dégâts 1, et +1 en Stress."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Choc étourdissant (Stunning Shock)",
+            "description": "Dix dés de base, Dégâts 1 ; si un dégât passe (armure ignorée), un seul point de dégât, puis test d'Endurance : raté, la cible est étourdie et ne peut agir avant de réussir un test d'Endurance, fait au début de chaque Round ; +1 en Stress."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Éclair foudroyant (Lightning Blast)",
+            "description": "Dix dés de base, Dégâts 2."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Charge mortelle (Killing Charge)",
+            "description": "Deux blessures critiques immédiates, que la cible soit Brisée ou non."
+        }
+    ]
+}

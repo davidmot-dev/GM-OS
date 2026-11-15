@@ -1,0 +1,181 @@
+{
+    "name": "Building Better Worlds — Incidents de colonie, fin de Cycle (p. 287)",
+    "dice": "d66",
+    "entries": [
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Tout s'est si bien passé que bâtir un monde paraît facile.",
+            "description": "",
+            "effect": "+1 à tous les attributs"
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Le temps a été clément, chacun en a profité.",
+            "description": "",
+            "effect": "Maintenance +2, Science +1, Potentiel +1"
+        },
+        {
+            "min": 13,
+            "max": 13,
+            "title": "Baby-boom",
+            "description": "Les colons sont heureux et ça se voit.",
+            "effect": "Moral +2, Productivité +1, Économie +1"
+        },
+        {
+            "min": 14,
+            "max": 14,
+            "title": "Un petit séisme a mis au jour des ressources inconnues.",
+            "description": "",
+            "effect": "Science +2, Potentiel +2"
+        },
+        {
+            "min": 15,
+            "max": 15,
+            "title": "Un cadre de la compagnie vient inspecter les progrès ; l'animation gagne la colonie.",
+            "description": "",
+            "effect": "Économie +1, Moral +1, Productivité +1"
+        },
+        {
+            "min": 16,
+            "max": 16,
+            "title": "Une campagne d'économie d'énergie a regonflé les réserves ; tout fonctionne comme jamais.",
+            "description": "",
+            "effect": "Maintenance +2, Productivité +1"
+        },
+        {
+            "min": 21,
+            "max": 21,
+            "title": "Des fauteurs de troubles ont vite été remis à leur place par le Marshal.",
+            "description": "",
+            "effect": "Moral +1, Économie +1"
+        },
+        {
+            "min": 22,
+            "max": 22,
+            "title": "De nouvelles méthodes rendent les usines plus efficaces et les ouvriers plus heureux.",
+            "description": "",
+            "effect": "Productivité +1, Moral +1"
+        },
+        {
+            "min": 23,
+            "max": 23,
+            "title": "De nouveaux techniciens de laboratoire se sont faits à la colonie comme s'ils y étaient nés.",
+            "description": "",
+            "effect": "Science +1"
+        },
+        {
+            "min": 24,
+            "max": 24,
+            "title": "Un prospecteur solitaire a repéré par hasard quelque chose de précieux.",
+            "description": "",
+            "effect": "Potentiel +1"
+        },
+        {
+            "min": 25,
+            "max": 25,
+            "title": "Les équipes de maintenance ont fait merveille, la base tourne sans accroc.",
+            "description": "",
+            "effect": "Maintenance +1"
+        },
+        {
+            "min": 26,
+            "max": 26,
+            "title": "Ravitaillement inattendu",
+            "description": "Erreur de comptabilité ou générosité inhabituelle de la compagnie.",
+            "effect": "Économie +1"
+        },
+        {
+            "min": 31,
+            "max": 46,
+            "title": "Tout est calme, la colonie roule d'un jour de travail à l'autre.",
+            "description": "",
+            "effect": "Rien"
+        },
+        {
+            "min": 51,
+            "max": 51,
+            "title": "Les relevés ne donnent plus rien ; on murmure que ce n'était pas le bon endroit.",
+            "description": "",
+            "effect": "Potentiel −1"
+        },
+        {
+            "min": 52,
+            "max": 52,
+            "title": "Quelqu'un a mal fait son travail, beaucoup de données sont perdues.",
+            "description": "",
+            "effect": "Science −1"
+        },
+        {
+            "min": 53,
+            "max": 53,
+            "title": "Il y a de la tension dans l'air ; personne ne sort plus après le travail.",
+            "description": "",
+            "effect": "Moral −1"
+        },
+        {
+            "min": 54,
+            "max": 54,
+            "title": "Un cadre est venu tempêter sur l'état de la colonie ; les équipes de maintenance ont pris du retard.",
+            "description": "",
+            "effect": "Maintenance −1"
+        },
+        {
+            "min": 55,
+            "max": 55,
+            "title": "Grave problème de comptabilité",
+            "description": "Erreur, détournement par la compagnie, ou pire.",
+            "effect": "Économie −2"
+        },
+        {
+            "min": 56,
+            "max": 56,
+            "title": "Un conflit a dégénéré en grève ; on reproche au Délégué syndical sa gestion.",
+            "description": "",
+            "effect": "Productivité −1, Moral −1"
+        },
+        {
+            "min": 61,
+            "max": 61,
+            "title": "Un satellite s'est consumé dans l'atmosphère ; on accuse le Prospecteur général.",
+            "description": "",
+            "effect": "Potentiel −2, Science −1"
+        },
+        {
+            "min": 62,
+            "max": 62,
+            "title": "Le Marshal n'a pas su ou voulu contenir les tensions",
+            "description": "Violences dans les rues, bagarres dans les bars.",
+            "effect": "Moral −1, Potentiel −1, Productivité −1"
+        },
+        {
+            "min": 63,
+            "max": 63,
+            "title": "Une maladie ravage la colonie avant d'être maîtrisée.",
+            "description": "",
+            "effect": "Moral −2, Science +1, Productivité −2, Maintenance −1 ; un PNJ de l'équipe de commandement tombe malade"
+        },
+        {
+            "min": 64,
+            "max": 64,
+            "title": "Une défaillance prive la colonie de fournitures et de pièces ; les systèmes tombent en panne.",
+            "description": "",
+            "effect": "Maintenance −2, Productivité −1, Économie −1"
+        },
+        {
+            "min": 65,
+            "max": 65,
+            "title": "Un temps épouvantable a frappé la colonie.",
+            "description": "",
+            "effect": "Moral −1, Science −1, Économie −1, Maintenance −1"
+        },
+        {
+            "min": 66,
+            "max": 66,
+            "title": "Terrible accident dans la colonie.",
+            "description": "",
+            "effect": "Un PNJ de l'équipe de commandement est tué ; −1 à tous les attributs"
+        }
+    ]
+}

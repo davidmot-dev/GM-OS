@@ -1,0 +1,78 @@
+{
+    "name": "Building Better Worlds — Planète 14, personnalité (p. 278)",
+    "dice": "d66",
+    "entries": [
+        {
+            "min": 11,
+            "max": 13,
+            "title": "Sereine",
+            "description": ""
+        },
+        {
+            "min": 14,
+            "max": 16,
+            "title": "Accueillante",
+            "description": ""
+        },
+        {
+            "min": 21,
+            "max": 23,
+            "title": "Clémente",
+            "description": ""
+        },
+        {
+            "min": 24,
+            "max": 26,
+            "title": "Espiègle",
+            "description": ""
+        },
+        {
+            "min": 31,
+            "max": 33,
+            "title": "Froidement indifférente",
+            "description": ""
+        },
+        {
+            "min": 34,
+            "max": 36,
+            "title": "Désolée",
+            "description": ""
+        },
+        {
+            "min": 41,
+            "max": 43,
+            "title": "Maussade",
+            "description": ""
+        },
+        {
+            "min": 44,
+            "max": 46,
+            "title": "Acariâtre",
+            "description": ""
+        },
+        {
+            "min": 51,
+            "max": 53,
+            "title": "Rancunière",
+            "description": ""
+        },
+        {
+            "min": 54,
+            "max": 56,
+            "title": "Malveillante par dépit",
+            "description": ""
+        },
+        {
+            "min": 61,
+            "max": 63,
+            "title": "Vengeresse",
+            "description": ""
+        },
+        {
+            "min": 64,
+            "max": 66,
+            "title": "Malfaisante",
+            "description": ""
+        }
+    ]
+}

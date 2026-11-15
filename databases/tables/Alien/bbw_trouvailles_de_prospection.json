@@ -1,0 +1,96 @@
+{
+    "name": "Building Better Worlds — Trouvailles de prospection, +1 aux dizaines par réussite en plus (p. 92)",
+    "dice": "d66",
+    "entries": [
+        {
+            "min": 11,
+            "max": 26,
+            "title": "Rien.",
+            "description": "Il n'y a rien ici."
+        },
+        {
+            "min": 31,
+            "max": 36,
+            "title": "Petits gisements de pierre de qualité",
+            "description": "Marbre, granit, calcaire."
+        },
+        {
+            "min": 41,
+            "max": 46,
+            "title": "Petits gisements de fer, d'étain et d'autres minerais courants.",
+            "description": ""
+        },
+        {
+            "min": 51,
+            "max": 52,
+            "title": "Lits de sable siliceux ou marais salants.",
+            "description": ""
+        },
+        {
+            "min": 53,
+            "max": 54,
+            "title": "Gisements profonds de gaz naturel ou de pétrole.",
+            "description": ""
+        },
+        {
+            "min": 55,
+            "max": 56,
+            "title": "Évents volcaniques riches en soufre ou en énergie géothermique.",
+            "description": ""
+        },
+        {
+            "min": 61,
+            "max": 62,
+            "title": "Eau souterraine, sources gelées ou nappes, propres et fraîches.",
+            "description": ""
+        },
+        {
+            "min": 63,
+            "max": 64,
+            "title": "Vastes gisements fossiles d'une vie disparue.",
+            "description": ""
+        },
+        {
+            "min": 65,
+            "max": 66,
+            "title": "Profond bassin d'argile avec pierres précieuses et diamants.",
+            "description": ""
+        },
+        {
+            "min": 71,
+            "max": 72,
+            "title": "Prairies d'une flore nouvelle aux usages médicaux, industriels ou agricoles, ou gisements et évents riches en gaz nobles (argon, hélium, radon, xénon…).",
+            "description": ""
+        },
+        {
+            "min": 73,
+            "max": 74,
+            "title": "Énorme filon souterrain de métaux précieux (or, platine, titane, uranium…).",
+            "description": ""
+        },
+        {
+            "min": 75,
+            "max": 76,
+            "title": "La tache grise sur ce rocher est une forme de vie microbienne inconnue.",
+            "description": ""
+        },
+        {
+            "min": 81,
+            "max": 82,
+            "title": "Forme de vie extraterrestre complexe jamais détectée, ou vastes gisements fossiles d'une vie disparue.",
+            "description": ""
+        },
+        {
+            "min": 83,
+            "max": 84,
+            "title": "Ruines de quelque chose d'inidentifiable, qui n'a pas l'air naturel…",
+            "description": "Le rêve d'un archéologue."
+        },
+        {
+            "min": 85,
+            "max": 99,
+            "title": "Restes à demi enfouis d'un vaisseau ancien.",
+            "description": ""
+        }
+    ]
+}

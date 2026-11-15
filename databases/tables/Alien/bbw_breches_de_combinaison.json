@@ -1,0 +1,42 @@
+{
+    "name": "Building Better Worlds — Brèches de combinaison, +1 par dégât antérieur (p. 93)",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 2,
+            "title": "Éraflures, pas de brèche.",
+            "description": ""
+        },
+        {
+            "min": 3,
+            "max": 4,
+            "title": "Dégâts sans brèche, pour l'instant",
+            "description": "+1 au prochain jet sur cette table pour cette combinaison (cumulatif)."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Brèche refermée d'elle-même",
+            "description": "−1 en Réserve d'air aussitôt, puis deux points perdus au lieu d'un pour chaque symbole de panique aux tests de Réserve d'air."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Mauvaise brèche",
+            "description": "Test de Réserve d'air à chaque Round ; +1 en Stress."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Terrible brèche",
+            "description": "−1 en Réserve d'air par Round ; −1 au test de Machines lourdes pour la colmater ; +1 en Stress et test de Panique."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Combinaison perdue",
+            "description": "La moitié de l'air restant part à la fin du Round (arrondi en dessous), le reste à la fin du suivant ; −2 au test de Machines lourdes ; +1 en Stress et test de Panique."
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+{
+    "name": "Building Better Worlds — Planète 8, hydrosphère (p. 277)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 4,
+            "title": "Désertique",
+            "description": "Pas d'eau"
+        },
+        {
+            "min": 5,
+            "max": 6,
+            "title": "Aride",
+            "description": "Traces d'eau seulement, souterraine ou en permafrost"
+        },
+        {
+            "min": 7,
+            "max": 8,
+            "title": "Tempérée sèche",
+            "description": "Océans sur 30 % au plus, parfois gelés"
+        },
+        {
+            "min": 9,
+            "max": 10,
+            "title": "Tempérée humide",
+            "description": "Océans sur 60 à 70 %, parfois gelés"
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "Monde humide",
+            "description": "Océan global et quelques îles, parfois gelé"
+        },
+        {
+            "min": 12,
+            "max": 99,
+            "title": "Monde aquatique",
+            "description": "Aucune terre émergée, parfois gelé"
+        }
+    ]
+}

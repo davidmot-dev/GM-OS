@@ -1,0 +1,48 @@
+{
+    "name": "Building Better Worlds — Planète 3, position (p. 276)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 3,
+            "title": "Lune intérieure d'une géante gazeuse",
+            "description": "−4 Taille, −1 Climat, +2 Radiations"
+        },
+        {
+            "min": 4,
+            "max": 5,
+            "title": "Lune extérieure d'une géante gazeuse",
+            "description": "−2 Taille, −2 Climat, +1 Radiations"
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "1re planète",
+            "description": "+3 Climat, +2 Radiations"
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "2e planète",
+            "description": "+1 Climat"
+        },
+        {
+            "min": 8,
+            "max": 9,
+            "title": "3e planète",
+            "description": ""
+        },
+        {
+            "min": 10,
+            "max": 11,
+            "title": "4e planète",
+            "description": "−1 Climat, −1 Radiations"
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "5e planète",
+            "description": "−3 Climat, −2 Radiations"
+        }
+    ]
+}

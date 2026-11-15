@@ -1,0 +1,42 @@
+{
+    "name": "Building Better Worlds — Planète 2, type d'étoile (p. 275)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 3,
+            "title": "Supergéante",
+            "description": "Blanche, jaune ou rouge, rayon de 0,5 UA ou plus"
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Géante",
+            "description": "Bleue, blanche, jaune ou rouge, rayon jusqu'à 0,25 UA"
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Sous-géante",
+            "description": "Bleue, blanche, jaune ou rouge, rayon jusqu'à 0,1 UA"
+        },
+        {
+            "min": 6,
+            "max": 8,
+            "title": "Séquence principale de classe G",
+            "description": "Blanche, jaune ou orange, rayon jusqu'à 1,5 million de km"
+        },
+        {
+            "min": 9,
+            "max": 11,
+            "title": "Naine rouge",
+            "description": "Orange ou rouge, rayon de 100 000 à 500 000 km"
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "Naine blanche",
+            "description": "Blanche ou bleue, rayon de moins de 5 000 km"
+        }
+    ]
+}

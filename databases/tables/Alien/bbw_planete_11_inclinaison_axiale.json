@@ -1,0 +1,30 @@
+{
+    "name": "Building Better Worlds — Planète 11, inclinaison axiale (p. 277)",
+    "dice": "2d6",
+    "entries": [
+        {
+            "min": 2,
+            "max": 8,
+            "title": "Aucune",
+            "description": ""
+        },
+        {
+            "min": 9,
+            "max": 10,
+            "title": "Jusqu'à 25°",
+            "description": "Saisons douces"
+        },
+        {
+            "min": 11,
+            "max": 11,
+            "title": "25 à 50°",
+            "description": "Saisons rudes"
+        },
+        {
+            "min": 12,
+            "max": 12,
+            "title": "50 à 75°",
+            "description": "Saisons dévastatrices"
+        }
+    ]
+}
