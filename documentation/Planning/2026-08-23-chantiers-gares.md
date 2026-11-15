@@ -14640,13 +14640,14 @@ David : *« oui au 1,2,3,4 »* sur les quatre propositions du § 253 : les carri
 - **Pilote 1.11.0** (`outils/alien/ameliorer-pilote-a13-building-better-worlds.mjs` → `Export Dirvers/corriges/Alien-1.11.0.gmos-driver`, depuis la 1.10.0) : deux options de carrière ; **53 objets** au catalogue par `remplirDepuisLesFiches` (la fonction de la Forge, chargée par jiti), aucune colonne nouvelle, aucun objet existant touché ; deux effets lus de travers retirés (la visée LAG et la clôture SDDG visent les autres, pas le porteur) ; dix objets gardent un effet rappelé au jet. 17 avertissements de catalogue en plus, des valeurs imprimées en texte.
 - **23 tables Table-OS** (`databases/tables/Alien/bbw_*.json`) lues dans les fiches relues ; chaque valeur du dé tombe sur une entrée et une seule, les queues ouvertes (85+, ≤ 13) ne se chevauchent pas.
 - **Vérifié** : `outils/alien/pilote.test.ts` (6 : A12 et A13), `src/modules/tables` et `src/modules/equipement` (10 fichiers, 176 essais, dont toutes les tables du dépôt), Forge, IA et `electron`. Manuel 54 complété (section A13).
-- **Reste** : l'essai de David — réimporter `Alien-1.11.0` avec Remplacer (contient A12), choisir Prospecteur sur une fiche, prendre un objet du supplément dans le catalogue, tirer une trouvaille de prospection avec +10 par réussite en plus. La colonie (attributs, initiatives, Cycle) reste à spécifier. Non commité.
+- **Commit et push le 15/11** (« commit et pousse ») : `7fc46451` (relecture, § 253), `ab8dd771` (A13), `6d8ce001` (l'essai d'A12 lit sa référence 1.9.0 dans git, au commit `cab150d1` : David avait réexporté la 1.11.0 sous le même nom).
+- **Validé par David le 15/11** : *« oui c'est concluant »*, après réimport de la 1.11.0 et réexport depuis GM-OS. Reste seulement la colonie (attributs, initiatives, Cycle), à spécifier.
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 190 | **Alien — *Building Better Worlds* dans le pilote (A13)** | 🟠 § 254 ; pilote 1.11.0 (Prospecteur, Artiste, 53 objets au catalogue) et 23 tables Table-OS — 15/11 | Réimporter `corriges/Alien-1.11.0.gmos-driver` avec Remplacer, tirer une trouvaille de prospection | Essai de David ; la colonie reste à spécifier |
+| 190 | **Alien — *Building Better Worlds* dans le pilote (A13)** | 🟢 § 254 ; pilote 1.11.0 (Prospecteur, Artiste, 53 objets au catalogue) et 23 tables Table-OS — 15/11 ; **validé par David le 15/11** | Rien ; la colonie est un chantier à spécifier | Rien |
 | 189 | **Alien — *Building Better Worlds* relu** | 🟢 § 253 ; seize fiches forgées par David et relues le 15/11, toutes corrigées, tables du livre ajoutées | Rien ; l'étape 2 est faite (§ 254) | Rien |
 | 188 | **Alien — Marines coloniaux dans le pilote (A12)** | 🟠 § 252 ; pilote 1.10.0 (SM, Statut, Grade, Événements de terrain) et cinq tables Table-OS du supplément — 14/11 | Réimporter `corriges/Alien-1.11.0.gmos-driver` (contient A12) avec Remplacer, tirer une table de terrain | Essai de David |
 | 187 | **Alien — corpus relu en entier** | 🟢 § 251 ; 27 fiches relues (22 + 2 + 1 corrigées), plus aucune `relu: false` hors archive — 14/11 | Rien | Rien |
