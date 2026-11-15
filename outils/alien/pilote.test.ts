@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import AdmZip from 'adm-zip';
 import { describe, it, expect } from 'vitest';
 import { controlerLePilote } from '../../src/modules/forge/rules/controlesDuPilote';
@@ -9,13 +10,19 @@ import { controlerLePilote } from '../../src/modules/forge/rules/controlesDuPilo
  * Il n'ajoute qu'une section à la fiche ; tout le reste doit être identique à l'export.
  *   npx vitest run --config outils/pilotes.vitest.config.mts --maxWorkers=4 outils/alien
  */
+/*
+  La référence est lue dans git, au commit qui l'a fixée (`cab150d1`, 11/11/2026) : GM-OS réexporte le
+  pilote sous le même nom, et David l'a fait le 15/11 avec la 1.11.0 — le fichier de travail n'est plus
+  la 1.9.0 dont A12 est parti.
+*/
 const reference = 'Export Dirvers/Alien_driver_gmos_1793655035463.gmos-driver';
+const referenceFigee = execFileSync('git', ['show', `cab150d1:${reference}`], { maxBuffer: 1 << 28 });
 const corrige = 'Export Dirvers/corriges/Alien-1.10.0.gmos-driver';
-for (const f of [reference, corrige]) if (!fs.existsSync(f)) throw new Error(`Pilote absent : ${f}`);
-const lire = (f: string) => JSON.parse(new AdmZip(f).getEntry('state.json')!.getData().toString('utf8'));
+if (!fs.existsSync(corrige)) throw new Error(`Pilote absent : ${corrige}`);
+const lire = (f: string | Buffer) => JSON.parse(new AdmZip(f).getEntry('state.json')!.getData().toString('utf8'));
 
 describe('pilote Alien 1.10.0 — Colonial Marines', () => {
-    const avant = lire(reference), apres = lire(corrige);
+    const avant = lire(referenceFigee), apres = lire(corrige);
 
     it("n'ajoute aucun constat de la Forge et garde les identifiants", () => {
         // La 1.9.0 porte déjà des avertissements sur le catalogue (« Puissance 9 », « 1 ou 2 » dans
