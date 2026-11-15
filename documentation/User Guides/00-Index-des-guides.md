@@ -104,6 +104,7 @@ question la page répond — de quoi choisir sans ouvrir.
 | [Tablet Hub](./61-Tablette-des-joueurs.md) | L'écran du joueur : fiche, inventaire, cartes, messages. **Commencez par celui-ci.** |
 | [Tablet Hub — usages avancés](./62-Tablette-des-joueurs-reglages-fins.md) | Les réglages fins de ce même écran. |
 | [La fiche de personnage HTML](./63-Fiche-de-personnage-HTML.md) | La vraie fiche du jeu, branchée sur les données ; dernière écriture gagnante. Livret du voyageur RdD de cinq pages et page Archétype reliée au formulaire. |
+| 🆕 [**La tablette de la table**](./64-Tablette-de-la-table.md) | Une tablette posée sur la table (Fire HD 8), un rôle à la fois : **Aide au MJ** (avec l'onglet Tables), **Appareil de table** (le M314 d'Alien pour tout le groupe), **Écran de table** (ordre du tour, jauges, minuteur, heure, en grand). Préparation, plein écran, dépannage. |
 
 ## 🎧 L'ambiance
 

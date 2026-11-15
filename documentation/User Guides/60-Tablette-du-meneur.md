@@ -118,6 +118,11 @@ plusieurs lignes sans recouvrir les commandes ou la navigation.
 
 ## 🕹️ Les neuf panneaux
 
+🆕 **Un onglet de plus depuis le 2026-11-16 : Tables**, sous **Dés** — tirer sur les tables du jeu
+actif, résultat pour vous seul, puis « Montrer aux joueurs ». Il est décrit dans
+[La tablette de la table](./64-Tablette-de-la-table.md#-aide-au-mj--et-longlet-tables), avec le
+plein écran au premier toucher.
+
 > ⛔ **Ce guide décrivait cinq panneaux. Il y en a sept**, et il manquait **celui qui s'ouvre en
 > premier**. Corrigé le 2026-09-04.
 

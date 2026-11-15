@@ -26,6 +26,10 @@ Toutes les idées de widget se ramènent à **quatre types** :
 
 ## 2. Les six widgets
 
+> 🆕 **Depuis le 2026-11-16, le même cadre a une section « Écran de table »** : les widgets montrés en
+> grand sur une tablette face aux joueurs — sélection distincte de celle de l'Ulanzi, réglable
+> afficheur éteint. Voir [La tablette de la table](./64-Tablette-de-la-table.md#-écran-de-table--en-grand-face-aux-joueurs).
+
 | Widget | Ce qu'il affiche | Étagère |
 | :--- | :--- | :--- |
 | **Défilé des Quarts** | Les quarts de *Blade Runner*, avec une couleur par moment du jour et la barre des consécutifs. | composé |
