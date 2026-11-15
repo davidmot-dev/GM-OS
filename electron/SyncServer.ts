@@ -6,7 +6,7 @@ import type { LecteurDeModule } from './modulesDuJeu/registre';
 import { ServiceDesModules } from './modulesDuJeu/service';
 import { stockageDesModules } from './modulesDuJeu/stockage';
 import type { StockageDesModules } from './modulesDuJeu/stockage';
-import { objetSimple, identifiantDeTable } from '../src/modules/modulesDuJeu/protocole';
+import { objetSimple, identifiantDeTable, APPAREIL_DE_TABLE } from '../src/modules/modulesDuJeu/protocole';
 import type { ContexteDesModules, RequeteDeModule, SauvegardeDesModules, VueDesModulesMJ } from '../src/modules/modulesDuJeu/protocole';
 import { demandeDuMeneur } from './modulesDuJeu/demandesDuMeneur';
 import http from 'node:http';
@@ -26,10 +26,15 @@ import {
     lireLAppui, ENTETE_DU_JETON, TAILLE_MAX_DU_CORPS,
 } from './boutonsDeLUlanzi';
 
-export type ClientRole = 'gm' | 'remote' | 'player' | 'hub';
+/*
+  **`table` — l'appareil commun du groupe** (Fire HD 8, registre § 256, T8) : une tablette posée au
+  milieu de la table, sans personnage, sur laquelle le meneur ouvre un module à tous. Rôle **non
+  privilégié** : flux caviardé comme celui d'un joueur ; un seul appareil de table à la fois.
+*/
+export type ClientRole = 'gm' | 'remote' | 'player' | 'hub' | 'table';
 
 /** Rôles acceptés sur le fil ; tout le reste retombe sur 'player'. */
-const ALLOWED_ROLES: ClientRole[] = ['gm', 'remote', 'player', 'hub'];
+const ALLOWED_ROLES: ClientRole[] = ['gm', 'remote', 'player', 'hub', 'table'];
 
 /** Rôles qui reçoivent le flux non caviardé — voir useNexusSynchronizer. */
 const PRIVILEGED_ROLES: ClientRole[] = ['gm', 'remote'];
@@ -501,7 +506,7 @@ export class SyncServer {
         const { deviceId, pseudo: nomRecu, role, playerName: joueurRecu, characterId: personnageRecu, token, repriseModules } = (payload || {}) as InscriptionRecue;
         const pseudo = typeof nomRecu === 'string' ? nomRecu.slice(0, 80) : 'Unknown';
         const playerName = typeof joueurRecu === 'string' ? joueurRecu.slice(0, 80) : undefined;
-        const characterId = identifiantDeTable(personnageRecu) ? personnageRecu : undefined;
+        let characterId = identifiantDeTable(personnageRecu) ? personnageRecu : undefined;
         const actualDeviceId = identifiantDeTable(deviceId)
             ? deviceId
             : `remote-${Math.random().toString(36).substring(2, 9)}`;
@@ -532,6 +537,17 @@ export class SyncServer {
             ws.send(JSON.stringify({ type: 'remote:error', payload: { code: 'reprise_refusee', message: 'Cet appareil est déjà enregistré. Reprends sa session d’origine ou utilise un nouvel appareil.' } }));
             return;
         }
+        /* L'identité des modules de la table n'appartient qu'à l'appareil de table : un joueur ne l'annonce pas. */
+        if (characterId === APPAREIL_DE_TABLE.id) characterId = undefined;
+        /* L'appareil de table n'a pas de personnage, et il n'y en a qu'un : le second est refusé, comme un personnage déjà pris. */
+        if (claimedRole === 'table') {
+            characterId = undefined;
+            if (sessionManager.getAllClients().some(client => client.role === 'table' && client.deviceId !== actualDeviceId
+                && (client.status === 'active' || client.status === 'ghost'))) {
+                ws.send(JSON.stringify({ type: 'remote:error', payload: { code: 'table_prise', message: 'Un autre appareil sert déjà d’appareil de table.' } }));
+                return;
+            }
+        }
         if (characterId && sessionManager.getAllClients().some(client => client.characterId === characterId
             && client.deviceId !== actualDeviceId && (client.status === 'active' || client.status === 'ghost'))) {
             // Une adresse IP partagée (Wi-Fi/NAT) ne prouve pas l'identité d'une tablette.
@@ -553,15 +569,17 @@ export class SyncServer {
             }
             ws.deviceId = actualDeviceId; ws.role = claimedRole;
             if (!this.deviceSocketMap.has(actualDeviceId)) this.deviceSocketMap.set(actualDeviceId, new Set());
+            const personnageDesModules = claimedRole === 'table' ? APPAREIL_DE_TABLE.id
+                : typeof characterId === 'string' && characterId ? characterId : null;
             for (const autre of this.deviceSocketMap.get(actualDeviceId) ?? []) {
                 const socket = autre as ExtendedWebSocket;
-                if (socket !== ws && socket.identiteModules?.personnageId !== (characterId || null)) {
+                if (socket !== ws && socket.identiteModules?.personnageId !== personnageDesModules) {
                     socket.identiteModules = undefined;
                     if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ type: 'modules:fermes' }));
                 }
             }
             this.deviceSocketMap.get(actualDeviceId)!.add(ws);
-            ws.identiteModules = { appareilId: actualDeviceId, personnageId: typeof characterId === 'string' && characterId ? characterId : null };
+            ws.identiteModules = { appareilId: actualDeviceId, personnageId: personnageDesModules };
             const nouveauJeton = repriseConnue ?? randomBytes(32).toString('hex');
             this.reprisesDesModules.set(actualDeviceId, nouveauJeton);
             this.updateGMClients();
@@ -827,8 +845,12 @@ export class SyncServer {
             if (client !== sender && client.readyState === WebSocket.OPEN) {
                 if (!targetRole || client.role === targetRole) {
                     const a = action as {type?:string;payload?:unknown};
-                    if (a?.type === 'sync' && (client.role === 'player' || client.role === 'hub')) {
+                    if (a?.type === 'sync' && !(client.role && PRIVILEGED_ROLES.includes(client.role))) {
                         /*
+                          **Tout ce qui n'est pas appairé est caviardé** (15/11/2026, § 256) : la
+                          condition visait `player` et `hub` seulement. Un nouveau rôle (`table`)
+                          aurait reçu le flux du meneur, et une socket **jamais inscrite** recevait
+                          déjà telle quelle toute diffusion sans rôle cible — celle du combat.
                           **Le dernier rempart avant la tablette d'un joueur** (S1, S2
                           de l'audit du 2026-10-22). Le renderer caviarde déjà ce qu'il
                           adresse aux joueurs, mais une diffusion partie SANS rôle — celle

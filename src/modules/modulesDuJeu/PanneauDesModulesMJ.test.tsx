@@ -78,3 +78,31 @@ describe('le pupitre', () => {
         expect(screen.queryByTestId('pupitre')).toBeNull();
     });
 });
+
+/** « La table » — l'appareil commun du groupe (Fire HD 8, 15/11/2026, § 256, T11). */
+describe('l’appareil de table dans le panneau', () => {
+    const avecTable: VueDesModulesMJ = {
+        ...vue,
+        appareils: [...vue.appareils!, { id: 'fire', libelle: 'Fire', personnageId: 'table:commune' }],
+        modules: vue.modules.map(m => m.id === 'alien-detecteur' ? { ...m, servirLaTable: true } : m),
+    };
+
+    it('ajoute « La table » aux accès du seul module qui la sert, et l’ouvre d’une case', async () => {
+        const gestes = monter('tablette', { vue: avecTable });
+        const detecteur = screen.getByRole('heading', { name: 'Détecteur de mouvement' }).closest('article')!;
+        const muthur = screen.getByRole('heading', { name: 'MU/TH/UR 6000' }).closest('article')!;
+        expect(detecteur.querySelectorAll('input[type="checkbox"]')).toHaveLength(3);
+        expect(muthur.querySelectorAll('input[type="checkbox"]')).toHaveLength(2);
+        fireEvent.click(screen.getByRole('checkbox', { name: 'La table' }));
+        await waitFor(() => expect(gestes.autoriser).toHaveBeenCalledWith('alien-detecteur', ['table:commune']));
+    });
+
+    it('dit, quand une Fire est branchée, quels modules ne la servent pas encore', () => {
+        monter('tablette', { vue: avecTable });
+        const muthur = screen.getByRole('heading', { name: 'MU/TH/UR 6000' }).closest('article')!;
+        expect(muthur.textContent).toContain('ne sert pas encore l’appareil de table');
+        cleanup();
+        monter('tablette');
+        expect(screen.queryByText(/ne sert pas encore/)).toBeNull();
+    });
+});

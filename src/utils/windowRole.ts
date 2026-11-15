@@ -20,6 +20,14 @@ export function getWindowRole(): WindowRole {
     switch (target) {
         case 'hub': return 'hub';
         case 'tablet': return 'tablet';
+        /*
+          Les rôles de la Fire HD 8 (15/11/2026, § 256) : des tablettes, qui n'écrivent rien.
+          ⛔ Sans ces lignes, une fenêtre inconnue est prise pour la fenêtre du MJ — démarrage
+          complet et écritures de campagne dans le navigateur de la tablette.
+        */
+        case 'accueil-tablette':
+        case 'appareil-de-table':
+        case 'ecran-de-table': return 'tablet';
         case 'projector': return 'projector';
         case 'remote': return 'remote';
         default: return 'gm';

@@ -142,6 +142,11 @@ pas de campagne active, le parcours réel reste à voir avec une campagne (T13).
   que l'écran de table affiche (parmi les widgets de l'Ulanzi). Reste public par construction.
 - 15/11 — Q4, David : « Jeu actif, résultat au MJ » → seules les tables du jeu de la campagne active ;
   le résultat n'est vu que du meneur, avec un bouton « Montrer aux joueurs ».
+- 15/11 — Q7, David : « Le M314 d'abord » → seul le détecteur M314 sert l'appareil de table dans
+  cette version ; les six autres modules sont dits « pas encore pour la table » au panneau du MJ et
+  viendront un par un.
+- 15/11 — Q8, David : « Orienter si tu la désignes » → « La table » s'ajoute aux choix de « Joueur qui
+  oriente le M314 » ; désignée, la Fire oriente le détecteur comme le porteur.
 - 15/11 — **« Montrer aux joueurs », lu dans le code** : au PC, « partager » un tirage n'écrit qu'au
   journal, que les joueurs ne voient pas. Le bouton de la Fire fera donc **journal + annonce sur les
   tablettes** (`addHubNotification`, comme l'annonce du butin). Interprétation de Claude, à
@@ -318,15 +323,41 @@ captures ADB du 15/11 comme point de départ ; David choisit le dessin **avant**
       trouvé, trois tables, tirage « 2 · Une citerne bloque le quai » fait au poste et revenu à la
       seule Fire, « Montrer aux joueurs » → badge « Montré aux joueurs », bouton grisé. Défaut vu et
       corrigé : titre « Tables » en double. Restent l'e2e et l'essai de David en séance.
-- [ ] T8 · Rôle `table` au `SyncServer` (non privilégié, une seule Fire) — couvre C8 · essai : test du
-      serveur (flux caviardé, second appareil refusé) · touche electron/ ⛔.
-- [ ] T9 · Lecteur `table` et accès `@table` au service des modules ; écriture de fiche refusée —
-      couvre C6, C7 · essai : `service.test.ts` · touche electron/ ⛔.
-- [ ] T10 · Audit des moteurs pour la table (M314, MU/TH/UR, combat spatial, Dune, TMR, LCARS,
-      Opérations) ; indisponible si non servi — couvre C7 · essai : un cas par moteur · touche src/ et
-      electron/ ⛔.
-- [ ] T11 · « Table » au panneau des modules du MJ + `AppareilDeTable.tsx` — couvre C6 · essai :
-      `e2e/appareilDeTable.spec.ts` · touche src/ ⛔ · **à essayer par David** (M314 sur la Fire).
+- [x] T8 · Rôle `table` au `SyncServer` (non privilégié, une seule Fire) — couvre C8 · essai : test du
+      serveur (flux caviardé, second appareil refusé) · touche electron/ ⛔ · **fait le 15/11** : rôle
+      `table` (`SyncServer.ts`, `SessionManager.ts`, `src/types/shared.ts`), sans personnage même
+      annoncé, second appareil refusé (`table_prise`). ⚠️ **Trou existant fermé au passage** : le
+      caviardage ne visait que `player` et `hub` ; **une socket jamais inscrite recevait telle quelle
+      toute diffusion sans rôle cible** (le combat). La règle devient « tout ce qui n'est pas appairé
+      est caviardé ». 4 essais neufs (`SyncServer.relais.test.ts`) ; `electron` 1 724/1 724, `tsc -b`
+      et eslint propres.
+- [x] T9 · Lecteur `table` et accès « La table » au service des modules ; écriture de fiche refusée —
+      couvre C6, C7 · touche electron/ ⛔ · **fait le 15/11** : identité `APPAREIL_DE_TABLE` =
+      `table:commune` (pas `@table` : le M314 valide son porteur avec la règle des identifiants de
+      personnage), dans `protocole.ts` ; le service ajoute « La table » aux lecteurs des seuls moteurs
+      `servirLaTable`, garde son accès quand les personnages changent, refuse un personnage qui
+      porterait cet identifiant et tout accusé de fiche pour elle ; le serveur donne cette identité au
+      rôle `table` et la retire à un joueur qui l'annoncerait. `electron/modulesDuJeu/appareilDeTable.test.ts`,
+      8 essais ; 2 de plus au serveur.
+- [x] T10 · Audit des moteurs pour la table — couvre C7 · touche electron/ ⛔ · **fait le 15/11,
+      réduit par Q7** : le M314 seul (`servirLaTable: true` dans `registre.ts`) ; il ne lit la liste
+      des personnages que pour « joueur qui oriente » et son contrôle, donc aucune ligne du moteur
+      ne change. Les six autres refusent la table (essai sur MU/TH/UR) et le panneau le dit.
+- [ ] T11 · « La table » au panneau des modules du MJ + `AppareilDeTable.tsx` — couvre C6 · essai :
+      `e2e/appareilDeTable.spec.ts` · touche src/ ⛔ · **à essayer par David** (M314 sur la Fire) ·
+      **codé le 15/11** : case « La table » (`PanneauDesModulesMJ.tsx`), `useAppareilDeTable.ts`
+      (WebSocket en rôle `table`, `CanalDesModulesJoueur` réutilisé), `AppareilDeTable.tsx`
+      (`?window=appareil-de-table`, bandeau de 40 px de la maquette), route dans `App.tsx`.
+      ⚠️ `getWindowRole()` prenait toute fenêtre inconnue pour celle du MJ : les trois fenêtres de la
+      Fire y sont classées tablettes. Essais : panneau +2, écran 4, `windowRole` +1. Le bouton
+      « Changer de rôle » attend l'accueil (T14). Suite complète 10 555 réussis. **e2e
+      `e2e/appareilDeTable.spec.ts` réussi** (campagne Alien fictive, Fire émulée à 960 × 600) :
+      « La table » cochée → M314 sur la Fire ; non désignée → pas de boutons d'orientation ;
+      désignée → la table tourne le M314 (cap lu au poste) ; décochée → « Aucun module ouvert ».
+      Sur la vraie Fire : connexion en rôle `table` vue (« Aucun module ouvert à la table ») ; le M314
+      n'a pas pu y être ouvert, la répétition n'ayant pas le pilote Alien (import manuel raté
+      par David). ⚠️ **Reste** : en paysage, la vue joueur du M314 s'empile (radar à faire défiler) ;
+      la maquette mettait le radar à gauche — dessin du module, à reprendre à part.
 - [ ] T12 · Sélection de l'écran de table (magasin, librairie, tableau de bord de l'Ulanzi), widget
       « Ordre du tour », widgets composés dans le flux `hub` — couvre C9, C10 · essai :
       `librairie.test.ts` (dont l'ordre du tour : combat non projeté → rien), test du flux · touche

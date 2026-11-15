@@ -24,6 +24,14 @@ describe('getWindowRole', () => {
         expect(getWindowRole()).toBe('remote');
     });
 
+    it('classe les trois rôles de la Fire parmi les tablettes, jamais comme le MJ (§ 256)', () => {
+        for (const fenetre of ['accueil-tablette', 'appareil-de-table', 'ecran-de-table']) {
+            setSearch(`?window=${fenetre}`);
+            expect(getWindowRole()).toBe('tablet');
+            expect(isMainWindow()).toBe(false);
+        }
+    });
+
     it('considère comme fenêtre MJ tout ce qui n\'est pas reconnu', () => {
         setSearch('');
         expect(getWindowRole()).toBe('gm');

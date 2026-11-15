@@ -32,3 +32,16 @@ Répétition recompilée, campagne Dune, Firefox 143, gestes envoyés par ADB.
 | `essai-t7-1-liste-dune.png` | Dossier `Dune` retrouvé, trois tables de recette avec leur dé. Le titre « Tables » en double y est visible ; corrigé depuis |
 | `essai-t7-2-tirage.png` | Tirage fait au poste du MJ, revenu à la Fire seule : « 2 · Une citerne bloque le quai », « Vu par toi seul » |
 | `essai-t7-3-montre.png` | Après « Montrer aux joueurs » : badge « Montré aux joueurs », bouton grisé |
+
+## Essai de l'appareil de table (T11, 15/11)
+
+`e2e/appareilDeTable.spec.ts` : profil jetable, campagne Alien fictive, pilote 1.11.0, « Fire » en client
+HTTP/WebSocket de 960 × 600 sans pont Electron.
+
+| Fichier | Ce qu'il montre |
+| --- | --- |
+| `essai-t11-1-m314-ouvert-a-la-table.png` | Le meneur coche « La table » sur le détecteur : la Fire l'affiche sous le bandeau « Appareil de table · Ouvert par le meneur » |
+| `essai-t11-2-m314-oriente-par-la-table.png` | Désignée « joueur qui oriente », la table tourne le M314 : cap 15°, lu au poste du meneur |
+
+⚠️ En paysage, la vue joueur du M314 s'empile : le radar ne tient pas sans défiler. La maquette prévoyait
+le radar à gauche et l'orientation à droite ; ce dessin appartient au module (`outils/alien/modules/detecteur/`).

@@ -2,7 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { VueDeModule } from './vuesDuRegistre';
 import type { GestesDuMeneur } from './canalMeneur';
-import type { ResultatDeModule, VueDesModulesMJ } from './protocole';
+import { APPAREIL_DE_TABLE, type ResultatDeModule, type VueDesModulesMJ } from './protocole';
 import type { ModuleDuPilote } from './types';
 
 const ETATS = { pret: 'Adaptateur prêt', 'a-adapter': 'Adaptateur à préparer', inconnu: 'Absent du catalogue', incompatible: 'Incompatible avec ce jeu' };
@@ -72,6 +72,8 @@ export function PanneauDesModulesMJ({ habillage, campagneId, vue, erreur, propos
     const [erreurLocale, signaler] = useState('');
     const [occupe, occuper] = useState(false);
     const ouvert = vue?.modules.find(m => m.id === selection);
+    /* Une Fire est-elle branchée en appareil de table ? (Fire HD 8, 15/11/2026, § 256, T11) */
+    const tableConnectee = !!vue?.appareils?.some(a => a.personnageId === APPAREIL_DE_TABLE.id);
 
     async function executer(action: () => Promise<ResultatDeModule>): Promise<ResultatDeModule> {
         occuper(true); signaler('');
@@ -127,8 +129,10 @@ export function PanneauDesModulesMJ({ habillage, campagneId, vue, erreur, propos
                     </div>}
                     <fieldset disabled={occupe} className="space-y-2">
                         <legend className={h.legende}>Accès des personnages</legend>
+                        {/* « La table » : l'appareil commun du groupe, pour les seuls modules qui savent le servir (décision du 15/11). */}
+                        {tableConnectee && !module.servirLaTable && <p className="text-sm text-app-muted">Ce module ne sert pas encore l’appareil de table.</p>}
                         <div className={h.grilleAcces}>
-                            {personnages.map(p => {
+                            {(module.servirLaTable ? [...personnages, APPAREIL_DE_TABLE] : personnages).map(p => {
                                 const coche = module.acces.includes(p.id);
                                 return <label key={p.id} className={`${h.acces} ${coche ? h.accesActif : h.accesInactif}`}>
                                     {habillage === 'tablette' && <span className="min-w-0 break-words">{p.nom}</span>}

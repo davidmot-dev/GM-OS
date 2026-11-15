@@ -3,7 +3,7 @@ export interface ClientContext {
     pseudo: string;
     playerName?: string;
     characterId?: string;      // NEW: ID of the selected character
-    role: 'combat' | 'narrative' | 'player' | 'remote' | 'hub';
+    role: 'combat' | 'narrative' | 'player' | 'remote' | 'hub' | 'table';
     status: 'active' | 'ghost' | 'disconnected';
     lastSeen: number;
 }

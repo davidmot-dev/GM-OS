@@ -56,6 +56,18 @@ function Radar({ vue, reduit, horloge }) {
     !t.power && h('p', { className: 'detecteur-veille' }, 'EN ATTENTE DU SCAN'),
     h('div', { className: 'detecteur-bandeau' }, h('span', { role: 'status' }, `ÉCHOS : ${nombre}`), h('span', null, t.power ? 'ACQUISITION' : 'LIAISON ÉTABLIE')));
 }
+/**
+ * **La cadence des bips.** Hors mode discret, l'intensité du meneur. En mode discret (`positions`
+ * présentes, David, 15/11/2026) : la distance de l'écho le plus proche — très rapide dans la zone du
+ * porteur (140 ms), de plus en plus lent vers le bord du radar (1,8 s au bord).
+ */
+/** Gain d'un bip au volume 100 (le plein, sans saturer). Le curseur de volume du pupitre le dose de 0 à 100 %. */
+export const GAIN_MAX_DU_BIP = 1;
+export function cadenceDesBips(t) {
+  if (!Array.isArray(t.positions) || !t.positions.length) return Math.max(260, 2300 - t.intensity * 21);
+  const proche = Math.min(...t.positions.map(({ x, y }) => Math.hypot(x, y)));
+  return proche <= 0.1 ? 140 : Math.round(Math.min(1800, 200 + proche * 1600));
+}
 function Son({ tracker: t, horloge }) {
   const heure = useHeureStable(horloge);
   const [active, activer] = useState(false), [erreur, signaler] = useState('');
@@ -78,19 +90,25 @@ function Son({ tracker: t, horloge }) {
       const nombre = t.contacts + (t.anomalyUntil > heure() ? 1 : 0);
       if (nombre > 0) {
         oscillateur = contexte.createOscillator(); gain = contexte.createGain();
-        oscillateur.frequency.value = t.intensity > 70 ? 960 : 760;
-        gain.gain.setValueAtTime(t.volume / 100 * .15, contexte.currentTime);
-        gain.gain.exponentialRampToValueAtTime(.0001, contexte.currentTime + .09);
+        /* Fait pour s'entendre sur le haut-parleur d'une tablette (David, 15/11/2026 : « très faible »,
+           puis « au moins 4x plus encore ») : onde carrée et ton aigu, la plage que ces haut-parleurs
+           rendent ; gain plein sans saturer, tenu 50 ms avant de décroître. */
+        oscillateur.type = 'square';
+        oscillateur.frequency.value = t.intensity > 70 ? 1900 : 1500;
+        const maintenant = contexte.currentTime, niveau = t.volume / 100 * GAIN_MAX_DU_BIP;
+        gain.gain.setValueAtTime(niveau, maintenant);
+        gain.gain.setValueAtTime(niveau, maintenant + .05);
+        gain.gain.exponentialRampToValueAtTime(.0001, maintenant + .13);
         oscillateur.connect(gain); gain.connect(contexte.destination);
         oscillateur.onended = () => { oscillateur?.disconnect(); gain?.disconnect(); oscillateur = null; gain = null; };
-        oscillateur.start(); oscillateur.stop(contexte.currentTime + .1);
+        oscillateur.start(); oscillateur.stop(maintenant + .14);
       }
-      minuterie = setTimeout(jouer, Math.max(260, 2300 - t.intensity * 21));
+      minuterie = setTimeout(jouer, cadenceDesBips(t));
     };
     const visibilite = () => { silence(); if (!document.hidden) jouer(); };
     jouer(); document.addEventListener('visibilitychange', visibilite);
     return () => { document.removeEventListener('visibilitychange', visibilite); silence(); };
-  }, [active, t.power, t.intensity, t.volume, t.contacts, t.anomalyUntil, heure]);
+  }, [active, t.power, t.intensity, t.volume, t.contacts, t.anomalyUntil, t.positions, heure]);
   async function basculer() {
     if (bascule.current) return;
     bascule.current = true;

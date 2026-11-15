@@ -23,6 +23,8 @@ export type LecteurDeModule = { role: 'mj' | 'joueur'; personnageId?: string; ap
 export type ContexteDeMoteur = { personnages: { id: string; nom: string }[] };
 export interface MoteurEnregistre {
     manifeste: { id: string; libelle: string; versionDonnees: number; commandes: { id: string; roles: string[] }[] };
+    /** Le moteur sait servir l'appareil de table (`APPAREIL_DE_TABLE`, Fire HD 8, § 256) : vérifié module par module. */
+    servirLaTable?: boolean;
     creerEtat(): unknown;
     preparerLecteur?(donnees: unknown, id: string, nom: string): unknown;
     preparerContexte?(donnees: unknown, personnages: ContexteDeMoteur['personnages']): unknown;
@@ -85,6 +87,10 @@ export const REGISTRE_DES_MOTEURS: ReadonlyMap<string, MoteurEnregistre> = new M
     }],
     [manifesteDetecteur.id, {
         manifeste: manifesteDetecteur, creerEtat: detecteur.creerEtat, migrerEtat: detecteur.migrerEtat,
+        /* Le M314 sur la table (David, 15/11/2026, Q7-Q8) : « La table » rejoint les personnages du moteur,
+           peut être désignée « joueur qui oriente » et oriente alors comme un porteur. Sans autre effet :
+           le moteur ne lit la liste que pour ce choix et ce contrôle (`moteur.mjs`, lignes 72-87). */
+        servirLaTable: true,
         arreterEffets(donnees) { detecteur.validerEtat(donnees); return detecteur.arreterEffets(donnees); },
         appliquerCommande(donnees, commande, lecteur, table) {
             detecteur.validerEtat(donnees);

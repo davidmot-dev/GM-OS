@@ -1,5 +1,13 @@
 import type { ReferenceDeModuleDuJeu } from './types';
 
+/**
+ * **L'appareil de table** (Fire HD 8, registre § 256, T9) : une tablette commune, sans personnage, à
+ * laquelle le meneur ouvre un module comme à un PJ. Son identifiant passe les mêmes contrôles qu'un
+ * identifiant de personnage (le M314 le garde comme porteur) ; le service refuse qu'un personnage le
+ * porte, le serveur qu'un joueur l'annonce. Seuls les moteurs qui déclarent `servirLaTable` la voient.
+ */
+export const APPAREIL_DE_TABLE = { id: 'table:commune', nom: 'La table' } as const;
+
 export interface CommandeDeModule { id: string; charge: unknown }
 export type ResultatDeModule = { ok: true } | { ok: false; erreur: string };
 export interface InstanceSauvegardee { versionDonnees: number; donnees: unknown }
@@ -23,7 +31,7 @@ export interface VueDesModulesJoueurRecue extends VueDesModulesJoueur {
 }
 export interface VueDesModulesMJ {
     campagneId: string | null; contexte: number; revision: number;
-    modules: (CarteDeModule & { acces: string[]; diffusionSonore?: boolean; appareilDeDiffusion?: string | null })[];
+    modules: (CarteDeModule & { acces: string[]; diffusionSonore?: boolean; appareilDeDiffusion?: string | null; servirLaTable?: boolean })[];
     appareils?: { id: string; libelle: string; personnageId: string }[];
     sauvegarde?: SauvegardeDesModules;
     /** Une séance est ouverte : les accès joueurs peuvent s'ouvrir. Lu par la tablette du meneur (07/11/2026). */

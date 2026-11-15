@@ -164,6 +164,13 @@ ou **1 km en terrain découvert**. Le joueur reçoit les zones repérées et leu
 sans nom, nature ni emplacement des pions immobiles. **Un écho n'accorde aucune ligne de vue** :
 Maman arbitre l'Observation, les embuscades et le passage au combat.
 
+Depuis le 15/11/2026, un écho **dans la zone du porteur** se montre en points tout proches du
+centre, un par pion (six au plus), au lieu d'un point caché sous le marqueur. En mode discret, la
+**cadence des bips suit l'écho le plus proche** : très rapide dans la zone du porteur (140 ms),
+jusqu'à 1,8 s au bord du radar. Le bip est un ton aigu et carré, fait pour le haut-parleur d'une
+tablette ; le **Volume** du pupitre le dose. Le M314 peut aussi s'ouvrir à **« La table »**, une
+tablette commune au centre de la table, que le meneur peut désigner pour l'orienter.
+
 Après chaque utilisation, le suivi lance la réserve d'Énergie, **six dés au maximum** :
 chaque 1 retire un point, sans Stress ni Panique. Le scan qui épuise la dernière charge reste
 consultable ; une batterie vide interdit le suivant. Fermer, rouvrir, changer de mode ou se

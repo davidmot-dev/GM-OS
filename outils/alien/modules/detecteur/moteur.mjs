@@ -3,7 +3,7 @@ import '../../core.js';
 import { creerDiscret, validerDiscret, commanderDiscret, lectureDiscrete } from './discret.mjs';
 import { COMMANDES_DE_PREREGLAGE, enregistrerPrereglage, lireCharge, prereglageDe, sansPrereglage, validerPrereglages } from '../prereglages.mjs';
 import { EXEMPLE_DU_RELAIS } from './exemple.mjs';
-import { anglesDuChamp } from './orientation.mjs';
+import { anglesDuChamp, pointsDeMemeZone } from './orientation.mjs';
 const coeur = globalThis.AlienCore;
 const copier = valeur => JSON.parse(JSON.stringify(valeur));
 const exiger = condition => { if (!condition) throw new Error('Données du détecteur invalides.'); };
@@ -66,8 +66,10 @@ export function vuePour(etat, lecteur, table = { personnages: [] }) {
   const vue = copier(etat);
   if (vue.discret.actif) {
     vue.lectureDiscrete = lectureDiscrete(vue.discret);
-    vue.tracker.contacts = vue.lectureDiscrete.echos.length;
-    vue.tracker.positions = vue.lectureDiscrete.echos.map(({x,y}) => ({x,y}));
+    // Même zone que le porteur : des points tout proches du centre, un par pion, au lieu d'un seul caché sous le marqueur.
+    vue.tracker.positions = vue.lectureDiscrete.echos.flatMap(({x,y,nombre}) =>
+      Math.hypot(x, y) < 1e-9 ? pointsDeMemeZone(nombre, vue.discret) : [{x,y}]);
+    vue.tracker.contacts = vue.tracker.positions.length;
     vue.tracker.champ = { cap:vue.discret.cap, ouverture:vue.discret.ouverture, ...anglesDuChamp(vue.discret) };
     vue.peutOrienter = lecteur.role === 'mj' || (lecteur.personnageId === vue.discret.joueurPorteurId
       && table.personnages.some(p => p.id === lecteur.personnageId));

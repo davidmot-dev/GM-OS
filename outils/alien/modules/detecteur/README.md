@@ -32,7 +32,10 @@ explicitement dans les registres natif et React, sans branche Alien dans le Hub.
    positions dans la proximité choisie (valeur élevée = plus près).
 5. **Faux écho · 9 s** ajoute un contact temporaire sans redistribuer les autres.
 6. Sur chaque appareil souhaité, **Activer les bips ici** autorise son audio local.
-   Le choix du diffuseur d’alarme MU/TH/UR ne commande pas ces bips.
+   Le choix du diffuseur d’alarme MU/TH/UR ne commande pas ces bips. Depuis le 15/11/2026, le bip
+   est carré et aigu (1 500 / 1 900 Hz), gain plein au volume 100 (`GAIN_MAX_DU_BIP`) ; en mode
+   discret, sa cadence suit l'écho le plus proche (`cadenceDesBips`), et un écho de la zone du
+   porteur s'affiche en points proches du centre (`pointsDeMemeZone`).
 
 **Arrêter le scan** conserve accès et réglages. Retirer un PJ ferme uniquement son
 instrument ; les autres restent ouverts. Le dernier retrait arrête le radar.

@@ -438,6 +438,22 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**15/11/2026 — ⛔ La sauvegarde automatique ne se relit plus : restauration et répétition refusées.**
+`npm run repetition` a refusé la semence `gmos-auto-2026-11-15T16-25-25-095.json` : « Sauvegarde illisible —
+`players.0.characters.17.sheetData._gmos_dune`, `characters.26.sheetData._gmos_runequest`,
+`characters.36.sheetData.__deltaGreen` et 2 autres ». `DonneesDeFicheSchema` (`src/types/donneesDeFiche.ts`)
+n'accepte de JSON structuré que pour une liste fermée (`__rdd*`, cinq clés Alien, Cthulhu Hack) ; les
+pilotes plus récents écrivent les leurs, et **un champ refusé fait rejeter le fichier entier**. Même
+contrôle à la restauration (`SessionService.loadFullSession` → `validateSession`). Les données sont
+dans le fichier ; c'est le lecteur qui est trop strict. Conséquence vue : la répétition démarre sur les
+campagnes de démonstration (c-1, c-2), et la garde de sauvegarde préalable refuse alors tout import
+(capture de David, essai de la Fire, § 256). ✅ **Corrigé le 15/11** sur le feu vert de David (« gm-os est
+fermé ») : `CLES_RESERVEES_DE_LA_FICHE` porte les 21 clés réservées déclarées dans `src/` (plus `__rdd…`), la clé
+inconnue reste refusée ; garde `src/types/clesReserveesDeLaFiche.test.ts` qui relit chaque `export const CLE_…`
+réservé du code et échoue si l'une manque. Preuve : la répétition relancée a semé la sauvegarde de 16 h 25
+(« Instance de répétition semée »). ⚠️ `entitySlice.ts` garde encore deux listes à lui des clés à conserver
+(lignes 284 et 629), sans Dune ni RuneQuest : non touchées, à examiner.
+
 **15/11/2026 — Les couleurs translucides manquent sur les navigateurs Chromium < 111.** Essai de la
 Fire HD 8 (§ 256) : sous Silk 108, le Hub démarre et se connecte, mais « Quitter la session » devient
 un pavé rose plein, texte invisible. Tailwind 4.2.1 vise Chrome 111 ; la feuille construite porte
@@ -14703,13 +14719,28 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
   sur les tablettes (au PC, « partager » n'écrit qu'au journal). Suite complète 10 535 essais
   réussis, `tsc -b` et eslint propres. **Essayé sur la Fire** (campagne Dune de la répétition) puis
   par David : *« ca marche »*. Commit demandé le 15/11 (« Commit »), sans push.
-- **Reste** : T8 à T15 (appareil de table, écran de table, accueil et code), l'e2e de l'onglet.
+- **T8 à T11 faites le 15/11 — l'appareil de table** (David : le M314 d'abord, la table l'oriente si on
+  la désigne) : rôle `table` au serveur (sans privilège, un seul appareil), identité des modules
+  `table:commune`, « La table » dans les accès du M314 seul, `AppareilDeTable.tsx`
+  (`?window=appareil-de-table`). ⚠️ **Deux trous existants fermés au passage** : le serveur ne
+  caviardait que `player` et `hub` (une socket jamais inscrite recevait le combat en clair) ;
+  `getWindowRole()` prenait toute fenêtre inconnue pour celle du MJ. Suite complète 10 555 réussis ;
+  e2e `appareilDeTable.spec.ts` réussi. Sur la vraie Fire, la connexion en rôle `table` est vue ; le
+  M314 n'a pas pu y être ouvert (pas de pilote Alien dans la répétition, import manuel raté).
+- **M314 sur la vraie Fire, 15/11 au soir** (répétition semée depuis la sauvegarde, après la correction
+  du § 1 bis) : ouvert à « La table », il marche. Sur les retours de David : les échos **de la zone du
+  porteur** sont montrés en points proches du centre (un par pion, `pointsDeMemeZone`) au lieu d'un
+  point caché sous le marqueur ; en mode discret, la **cadence des bips suit l'écho le plus proche**
+  (`cadenceDesBips`, 140 ms dans la zone) ; le bip devient **carré et aigu, gain plein** (« au moins 4x
+  plus encore »). Haut-parleur de la Fire mis à 25/25. David : *« ok c'est bien »*.
+- **Reste** : T12 à T15 (écran de table, accueil et code, essai en séance), l'e2e de l'onglet Tables,
+  la vue du M314 en paysage.
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 192 | **La Fire HD 8 comme interface de GM-OS** | 🟠 § 256 ; spécifié le 15/11, T1 à T2 faites (Firefox 143 retenu, Fire préparée), T3 : maquettes validées, T4 à T7 : onglet Tables essayé sur la Fire — 15/11 | T8 (rôle `table` au serveur) | Rien |
+| 192 | **La Fire HD 8 comme interface de GM-OS** | 🟠 § 256 ; spécifié le 15/11, T1 à T2 faites (Firefox 143 retenu, Fire préparée), T3 : maquettes validées, T4 à T7 : onglet Tables essayé sur la Fire, T8 à T11 : appareil de table (e2e) — 15/11 | T12 (écran de table) | Rien |
 | 191 | **Alien — vidéo des trois modules, détail du M314** | 🟢 § 255 ; MP4 2 min 57, pilote 1.11.0, cap partagé et immobilité filmés — 15/11 | Ouvrir le MP4 | Rien pour la vidéo ; essai physique A11 distinct |
 | 190 | **Alien — *Building Better Worlds* dans le pilote (A13)** | 🟢 § 254 ; pilote 1.11.0 (Prospecteur, Artiste, 53 objets au catalogue) et 23 tables Table-OS — 15/11 ; **validé par David le 15/11** | Rien ; la colonie est un chantier à spécifier | Rien |
 | 189 | **Alien — *Building Better Worlds* relu** | 🟢 § 253 ; seize fiches forgées par David et relues le 15/11, toutes corrigées, tables du livre ajoutées | Rien ; l'étape 2 est faite (§ 254) | Rien |

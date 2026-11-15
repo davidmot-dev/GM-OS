@@ -310,4 +310,60 @@ describe('SyncServer — messages reçus et relais', () => {
         expect(String(destinataire.send.mock.calls[0][0])).not.toContain('SECRET-COMBATTANT');
         expect(String(mj.send.mock.calls[0][0])).toContain('SECRET-COMBATTANT');
     });
+
+    /*
+      **L'appareil de table et la socket jamais inscrite** (Fire HD 8, 15/11/2026, § 256, T8). Le
+      caviardage visait `player` et `hub` : tout autre client recevait le flux du meneur.
+    */
+    it('caviarde aussi l’appareil de table et une socket qui ne s’est pas inscrite', () => {
+        emetteur.role = 'remote';
+        destinataire.role = 'table';
+        const anonyme = new SocketFictif();
+        serveur.wss.clients.add(anonyme);
+        const action = { type: 'sync', payload: { combat: { combatants: [{ id: 'k', gmSecretInfo: 'SECRET-COMBATTANT' }] } } };
+        serveur.broadcastAction(action, emetteur);
+        expect(String(destinataire.send.mock.calls[0][0])).not.toContain('SECRET-COMBATTANT');
+        expect(String(anonyme.send.mock.calls[0][0])).not.toContain('SECRET-COMBATTANT');
+    });
+});
+
+describe('SyncServer — l’appareil de table', () => {
+    const erreurs = (socket: SocketFictif) => socket.send.mock.calls.map(([brut]) => JSON.parse(brut))
+        .filter(m => m.type === 'remote:error').map(m => m.payload.code);
+    beforeEach(() => serveur.handleConnection(destinataire));
+
+    it('s’inscrit sans privilège et sans personnage, même s’il en annonce un', () => {
+        inscrire(destinataire, 'fire-1', 'table', 'perso-wilson');
+        expect(destinataire.role).toBe('table');
+        expect(sessionManager.getClient('fire-1')).toMatchObject({ role: 'table' });
+        expect(sessionManager.getClient('fire-1')?.characterId).toBeUndefined();
+    });
+
+    it('refuse un second appareil de table tant que le premier est là', () => {
+        inscrire(destinataire, 'fire-1', 'table');
+        const autre = new SocketFictif();
+        serveur.wss.clients.add(autre);
+        serveur.handleConnection(autre);
+        recevoir({ type: 'remote:register', payload: { deviceId: 'fire-2', pseudo: 'Autre', role: 'table' } }, autre);
+        expect(erreurs(autre)).toEqual(['table_prise']);
+        expect(autre.role).toBeUndefined();
+    });
+
+    it('porte l’identité des modules de la table, qu’un joueur ne peut pas s’attribuer', () => {
+        inscrire(destinataire, 'fire-1', 'table');
+        expect((destinataire as SocketFictif & { identiteModules?: unknown }).identiteModules)
+            .toEqual({ appareilId: 'fire-1', personnageId: 'table:commune' });
+        const tricheur = new SocketFictif();
+        serveur.wss.clients.add(tricheur);
+        serveur.handleConnection(tricheur);
+        inscrire(tricheur, 'tablette-x', 'player', 'table:commune');
+        expect(sessionManager.getClient('tablette-x')?.characterId).toBeUndefined();
+        expect((tricheur as SocketFictif & { identiteModules?: { personnageId: unknown } }).identiteModules?.personnageId).toBeNull();
+    });
+
+    it('reste joignable par l’appareil lui-même après une reconnexion', () => {
+        inscrire(destinataire, 'fire-1', 'table');
+        inscrire(destinataire, 'fire-1', 'table');
+        expect(destinataire.role).toBe('table');
+    });
 });

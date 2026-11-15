@@ -6,13 +6,14 @@ import * as moteur from '../../../outils/alien/modules/detecteur/moteur.mjs';
 
 const oscillateurs = new Set<object>();
 const demarrerSon = vi.fn();
+const gains: number[] = [];
 const fermerSon = vi.fn();
 class AudioFictif {
     state = 'running'; currentTime = 0; destination = {};
     resume = async () => { this.state = 'running'; };
     suspend = async () => { this.state = 'suspended'; };
     close = async () => { this.state = 'closed'; fermerSon(); };
-    createGain = () => ({ gain: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() }, connect: vi.fn(), disconnect: vi.fn() });
+    createGain = () => ({ gain: { setValueAtTime: vi.fn((valeur: number) => { gains.push(valeur); }), exponentialRampToValueAtTime: vi.fn() }, connect: vi.fn(), disconnect: vi.fn() });
     createOscillator() {
         let minuterie: ReturnType<typeof setTimeout>;
         const oscillateur = { frequency: { value: 0 }, onended: null as (() => void) | null, connect: vi.fn(), disconnect: vi.fn(),
@@ -28,7 +29,7 @@ class AudioFictif {
 const actif = () => moteur.appliquerCommande(moteur.creerEtat(), { id: 'scanner', charge: { actif: true } }, { role: 'mj' });
 const envoyerCommande = vi.fn(async () => ({ ok: true as const }));
 beforeEach(() => {
-    vi.useFakeTimers(); vi.clearAllMocks(); oscillateurs.clear();
+    vi.useFakeTimers(); vi.clearAllMocks(); oscillateurs.clear(); gains.length = 0;
     vi.stubGlobal('AudioContext', AudioFictif);
     vi.stubGlobal('matchMedia', () => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
     vi.stubGlobal('requestAnimationFrame', vi.fn((cb: FrameRequestCallback) => setTimeout(() => cb(Date.now()), 16)));
@@ -153,6 +154,18 @@ describe('instrument du détecteur', () => {
         await cliquer(vue.getByRole('button', { name: 'Couper les bips' }));
         expect(oscillateurs.size).toBe(0);
         act(() => vi.advanceTimersByTime(5000)); expect(demarrerSon).toHaveBeenCalledTimes(1);
+    });
+    it('le volume du pupitre dose un bip plus fort qu’avant : le plein au volume 100 (David, 15/11/2026)', async () => {
+        for (const [volume, attendu] of [[100, 1], [50, 0.5]] as const) {
+            gains.length = 0;
+            const etat = moteur.appliquerCommande(actif(), { id: 'configurer', charge: { volume } }, { role: 'mj' });
+            const vue = render(<VueJoueur vue={etat} envoyerCommande={envoyerCommande} />);
+            await cliquer(vue.getByRole('button', { name: 'Activer les bips ici' }));
+            expect(gains[0]).toBeCloseTo(attendu, 6);
+            const bip = [...oscillateurs][0] as unknown as { type?: string; frequency: { value: number } };
+            expect(bip.type).toBe('square'); expect(bip.frequency.value).toBeGreaterThanOrEqual(1500);
+            vue.unmount();
+        }
     });
     it('arrêt du scan, volume nul et démontage coupent les bips sans attendre une animation', async () => {
         let etat = actif();

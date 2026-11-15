@@ -1,5 +1,5 @@
 import { modulesDuPilote } from '../../src/modules/modulesDuJeu/catalogue';
-import { identifiantDeTable, objetSimple, validerSauvegardeDesModules } from '../../src/modules/modulesDuJeu/protocole';
+import { APPAREIL_DE_TABLE, identifiantDeTable, objetSimple, validerSauvegardeDesModules } from '../../src/modules/modulesDuJeu/protocole';
 import type { AccuseFicheDeModule, ContexteDesModules, RequeteDeModule, SauvegardeDesModules, VueDesModulesMJ, VueDesModulesJoueur } from '../../src/modules/modulesDuJeu/protocole';
 import { REGISTRE_DES_MOTEURS, type MoteurEnregistre, type LecteurDeModule } from './registre';
 import type { StockageDesModules } from './stockage';
@@ -56,8 +56,8 @@ export class ServiceDesModules {
         exiger(!this.erreur && campagneId === this.contexte.campagneId && this.utiliseMediasPrives(moduleId));
         const moteur = this.moteur(moduleId);
         if (lecteur.role === 'joueur') exiger(!!lecteur.personnageId && !!this.contexte.seanceId
-            && this.contexte.personnages.some(p => p.id === lecteur.personnageId) && this.acces.get(moduleId)?.has(lecteur.personnageId));
-        const vue = moteur.vuePour(this.etat(moduleId), lecteur, { personnages: this.contexte.personnages });
+            && this.estLecteur(moduleId, lecteur.personnageId) && this.acces.get(moduleId)?.has(lecteur.personnageId));
+        const vue = moteur.vuePour(this.etat(moduleId), lecteur, { personnages: this.lecteursDe(moduleId) });
         const media = mediasDeLaVue(vue).get(id); exiger(media); return media!;
     }
     private versionFuture(id: string) {
@@ -70,6 +70,17 @@ export class ServiceDesModules {
         return this.registre.get(id)!;
     }
     private etat(id: string) { return this.donnees.campagnes[this.contexte.campagneId!]?.[id]?.donnees ?? this.moteur(id).creerEtat(); }
+    /**
+     * **Qui peut lire ce module** : les personnages de la séance, plus « La table » si le moteur sait
+     * la servir (Fire HD 8, § 256, T9). C'est aussi la liste que le moteur reçoit : le M314 y prend
+     * son « joueur qui oriente ».
+     */
+    private lecteursDe(id: string) {
+        return this.registre.get(id)?.servirLaTable ? [...this.contexte.personnages, { ...APPAREIL_DE_TABLE }] : this.contexte.personnages;
+    }
+    private estLecteur(id: string, personnageId: string | undefined) {
+        return !!personnageId && this.lecteursDe(id).some(p => p.id === personnageId);
+    }
     private async ecrire(suivante: SauvegardeDesModules) {
         exiger(!this.erreur, this.erreur);
         validerSauvegardeDesModules(suivante);
@@ -111,6 +122,7 @@ export class ServiceDesModules {
                 && (brut.seanceId === null || identifiantDeTable(brut.seanceId)) && Array.isArray(brut.personnages) && brut.personnages.length <= 256, 'Contexte de table invalide.');
             exiger(brut.personnages.every(p => objetSimple(p) && identifiantDeTable(p.id) && typeof p.nom === 'string' && p.nom.trim().length > 0 && p.nom.length <= 40));
             exiger(new Set(brut.personnages.map(p => p.id)).size === brut.personnages.length);
+            exiger(brut.personnages.every(p => p.id !== APPAREIL_DE_TABLE.id), 'Cet identifiant est réservé à l’appareil de table.');
             exiger(!modulesDuPilote(brut.pilote, brut.systemPath).erreurs.length);
             if (JSON.stringify(brut) === JSON.stringify(this.contexte)) return;
             const ancien = this.contexte, changementDeTable = ancien.campagneId !== brut.campagneId || ancien.seanceId !== brut.seanceId;
@@ -122,7 +134,8 @@ export class ServiceDesModules {
             this.contexte = copier(brut);
             if (changementDeTable) { this.acces.clear(); this.ouvertures.clear(); }
             for (const [id, joueurs] of this.acces) {
-                this.changerAcces(id, new Set([...joueurs].filter(joueur => !retires.has(id) && brut.personnages.some(p => p.id === joueur))));
+                this.changerAcces(id, new Set([...joueurs].filter(joueur => !retires.has(id)
+                    && (brut.personnages.some(p => p.id === joueur) || (joueur === APPAREIL_DE_TABLE.id && !!this.registre.get(id)?.servirLaTable)))));
             }
             const suivante = copier(this.donnees);
             this.arreter(suivante, ancien.campagneId, changementDeTable ? undefined : retires);
@@ -139,12 +152,13 @@ export class ServiceDesModules {
             const moteur = this.moteur(demande.moduleId);
             exiger(Array.isArray(demande.personnages) && demande.personnages.length <= 256
                 && new Set(demande.personnages).size === demande.personnages.length
-                && demande.personnages.every(id => this.contexte.personnages.some(p => p.id === id)));
+                && demande.personnages.every(id => this.estLecteur(demande.moduleId, id)));
             exiger(!!this.contexte.seanceId || demande.personnages.length === 0, 'Démarre une séance avant d’ouvrir un module aux joueurs.');
             const suivante = copier(this.donnees), campagne = this.contexte.campagneId!;
             suivante.campagnes[campagne] ??= {};
             let etat = this.etat(demande.moduleId);
-            for (const id of demande.personnages) if (moteur.preparerLecteur) etat = moteur.preparerLecteur(etat, id, this.contexte.personnages.find(p => p.id === id)!.nom);
+            // La table n'a pas de fiche à préparer : seuls les personnages passent par `preparerLecteur`.
+            for (const id of demande.personnages) if (moteur.preparerLecteur && id !== APPAREIL_DE_TABLE.id) etat = moteur.preparerLecteur(etat, id, this.contexte.personnages.find(p => p.id === id)!.nom);
             if (!demande.personnages.length) etat = moteur.arreterEffets(etat);
             suivante.campagnes[campagne][demande.moduleId] = { versionDonnees: moteur.manifeste.versionDonnees, donnees: etat };
             // Un retrait ne doit jamais attendre le disque pour couper une vue autorisée auparavant.
@@ -198,9 +212,9 @@ export class ServiceDesModules {
             const commande = requete.commande;
             exiger(objetSimple(commande) && typeof commande.id === 'string' && Object.keys(commande).every(k => ['id', 'charge'].includes(k)));
             exiger(moteur.manifeste.commandes.some(c => c.id === commande.id && c.roles.includes(lecteur.role)));
-            if (lecteur.role === 'joueur') exiger(!!lecteur.personnageId && this.contexte.personnages.some(p => p.id === lecteur.personnageId)
+            if (lecteur.role === 'joueur') exiger(!!lecteur.personnageId && this.estLecteur(requete.moduleId, lecteur.personnageId)
                 && this.acces.get(requete.moduleId)?.has(lecteur.personnageId) && !!this.contexte.seanceId);
-            const etat = moteur.appliquerCommande(this.etat(requete.moduleId), commande, lecteur, { personnages: this.contexte.personnages });
+            const etat = moteur.appliquerCommande(this.etat(requete.moduleId), commande, lecteur, { personnages: this.lecteursDe(requete.moduleId) });
             const suivante = copier(this.donnees), campagne = this.contexte.campagneId!;
             suivante.campagnes[campagne] ??= {};
             suivante.campagnes[campagne][requete.moduleId] = { versionDonnees: moteur.manifeste.versionDonnees, donnees: etat };
@@ -216,6 +230,8 @@ export class ServiceDesModules {
             exiger(objetSimple(accuse)); this.verifierContexte(accuse);
             exiger(Object.keys(accuse).length === 8 && identifiantDeTable(accuse.personnageId) && identifiantDeTable(accuse.transactionId)
                 && typeof accuse.appliquee === 'boolean' && typeof accuse.sortieForcee === 'boolean' && typeof accuse.detail === 'string' && accuse.detail.length <= 300);
+            // La table n'a pas de fiche : rien ne s'y écrit, quel que soit le module (C7, § 256).
+            exiger(accuse.personnageId !== APPAREIL_DE_TABLE.id, 'L’appareil de table n’a pas de fiche.');
             const moteur = this.moteur(accuse.moduleId); exiger(moteur.terminerEcriture, 'Ce module ne possède aucun raccord aux fiches.');
             const donnees = moteur.terminerEcriture!(this.etat(accuse.moduleId), accuse.personnageId, accuse.transactionId, accuse.appliquee, accuse.sortieForcee, accuse.detail);
             const suivante = copier(this.donnees);
@@ -232,17 +248,18 @@ export class ServiceDesModules {
             modules: this.erreur || !this.contexte.campagneId ? [] : this.disponibles().map(m => ({ id: m.reference.id, libelle: m.libelle,
                 revision: this.revision, acces: [...(this.acces.get(m.reference.id) ?? [])], diffusionSonore: !!this.moteur(m.reference.id).choisirDiffusion,
                 appareilDeDiffusion: this.moteur(m.reference.id).diffusionActuelle?.(this.etat(m.reference.id)),
-                vue: this.moteur(m.reference.id).vuePour(this.etat(m.reference.id), { role: 'mj', appareilId: 'poste-mj' }, { personnages: this.contexte.personnages }) })),
+                servirLaTable: !!this.registre.get(m.reference.id)?.servirLaTable,
+                vue: this.moteur(m.reference.id).vuePour(this.etat(m.reference.id), { role: 'mj', appareilId: 'poste-mj' }, { personnages: this.lecteursDe(m.reference.id) }) })),
             ...(!this.erreur ? { sauvegarde: copier(this.donnees) } : {}),
         };
     }
     async vueJoueur(personnageId: string | null, appareilId: string): Promise<VueDesModulesJoueur> {
         await this.pret();
         return { campagneId: this.contexte.campagneId, personnageId, contexte: this.generation, revision: this.revision, instantServeur: Date.now(),
-            modules: this.erreur || !personnageId || !this.contexte.seanceId || !this.contexte.personnages.some(p => p.id === personnageId) ? []
-                : this.disponibles().filter(m => this.acces.get(m.reference.id)?.has(personnageId)).map(m => ({ id: m.reference.id, libelle: m.libelle,
+            modules: this.erreur || !personnageId || !this.contexte.seanceId ? []
+                : this.disponibles().filter(m => this.estLecteur(m.reference.id, personnageId) && this.acces.get(m.reference.id)?.has(personnageId)).map(m => ({ id: m.reference.id, libelle: m.libelle,
                     revision: this.revision, ouverture: this.ouvertures.get(m.reference.id)!.get(personnageId)!,
-                    vue: this.moteur(m.reference.id).vuePour(this.etat(m.reference.id), { role: 'joueur', personnageId, appareilId }, { personnages: this.contexte.personnages }) })),
+                    vue: this.moteur(m.reference.id).vuePour(this.etat(m.reference.id), { role: 'joueur', personnageId, appareilId }, { personnages: this.lecteursDe(m.reference.id) }) })),
         };
     }
     importer(brut: SauvegardeDesModules) {

@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import * as radar from '../../outils/alien/modules/detecteur/moteur.mjs';
-import { anglesDuChamp, dansLeChamp } from '../../outils/alien/modules/detecteur/orientation.mjs';
+import { anglesDuChamp, dansLeChamp, pointsDeMemeZone } from '../../outils/alien/modules/detecteur/orientation.mjs';
+import { cadenceDesBips } from '../../outils/alien/modules/detecteur/vues.mjs';
 import v4 from './fixtures/detecteur-v4.json';
 import { ServiceDesModules } from './service';
 import type { CommandeDeModule } from '../../src/modules/modulesDuJeu/protocole';
@@ -139,4 +140,42 @@ it('passe par le vrai service : accès, contexte périmé, échec disque et expo
     const c2=(await service.vueMJ()).contexte;
     await expect(service.commander({...requete(),contexte:c2,commande:{id:'scanner-discret',charge:{tour:3}} as CommandeDeModule},{role:'mj',appareilId:'poste'})).resolves.toBeUndefined();
     await expect(service.commander({...requete(),contexte:c2,commande:{id:'scanner-discret',charge:{tour:3}}},{role:'mj',appareilId:'poste'})).rejects.toThrow(/seul scan/);
+});
+
+/**
+ * **Les échos de la zone du porteur et la cadence des bips** (David, 15/11/2026) : « je veux que l'écho
+ * affiche des points très proches et que le son aille très rapidement ». Un écho de même zone tombait
+ * au centre exact, sous le marqueur du porteur ; la cadence suivait l'intensité, pas la distance.
+ */
+describe('échos de même zone',()=>{
+    it('montrent un point par pion, tout près du centre, dans le cône',()=>{
+        for(const champ of [{cap:90,ouverture:90},{cap:0,ouverture:360},{cap:200,ouverture:45}]){
+            const points=pointsDeMemeZone(3,champ);
+            expect(points).toHaveLength(3);
+            for(const p of points){const r=Math.hypot(p.x,p.y);expect(r).toBeGreaterThan(0.04);expect(r).toBeLessThanOrEqual(0.07+1e-9);expect(dansLeChamp(p,champ)).toBe(true);}
+        }
+        expect(pointsDeMemeZone(20,{cap:0,ouverture:360})).toHaveLength(6);
+    });
+    it('remplacent le point caché au centre dans la vue du joueur, et le compteur suit',()=>{
+        let e=agir(preparer(),'pion-discret',{id:'voisin',nom:'Nom interdit voisin',zoneId:'sas',humain:false,limite:3,mobile:true,detectable:true});
+        e=agir(e,'mouvement-discret',{pionId:'voisin',mobile:true,tour:3});
+        e=agir(e,'scanner-discret',{tour:3});
+        const vue=radar.vuePour(e,alice,table) as {tracker:{contacts:number;positions:{x:number;y:number}[]}};
+        expect(vue.tracker.positions.some(p=>p.x===0&&p.y===0)).toBe(false);
+        expect(vue.tracker.positions.filter(p=>Math.hypot(p.x,p.y)<=0.07+1e-9).length).toBeGreaterThanOrEqual(1);
+        expect(vue.tracker.contacts).toBe(vue.tracker.positions.length);
+        expect(JSON.stringify(vue)).not.toContain('Nom interdit');
+    });
+});
+
+describe('cadence des bips',()=>{
+    it('suit l’intensité hors mode discret, comme avant',()=>{
+        expect(cadenceDesBips({intensity:25})).toBe(1775);
+        expect(cadenceDesBips({intensity:100,positions:[]})).toBe(260);
+    });
+    it('en mode discret, va très vite dans la zone du porteur et ralentit avec la distance',()=>{
+        expect(cadenceDesBips({intensity:25,positions:[{x:0.07,y:0}]})).toBe(140);
+        const proche=cadenceDesBips({intensity:25,positions:[{x:0.25,y:0},{x:0.9,y:0}]}),loin=cadenceDesBips({intensity:25,positions:[{x:0.9,y:0}]});
+        expect(proche).toBe(600);expect(loin).toBeGreaterThan(proche);expect(loin).toBeLessThanOrEqual(1800);
+    });
 });

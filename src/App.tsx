@@ -42,6 +42,8 @@ type RemoteAction = Parameters<typeof dispatchRemoteAction>[0];
 
 // --- LAZY COMPONENTS (Critical for Remote Stability) ---
 const RemoteControl = lazy(() => import('./modules/remote/RemoteControl'));
+/* La Fire HD 8 en appareil de table (15/11/2026, § 256). */
+const AppareilDeTable = lazy(() => import('./components/AppareilDeTable'));
 const SessionDashboard = lazy(() => import('./modules/session/SessionDashboard'));
 const ForgeOS = lazy(() => import('./modules/forge/ForgeOS'));
 const DiceBoard = lazy(() => import('./modules/dice/DiceBoard'));
@@ -335,6 +337,7 @@ function App() {
   const isHubView = searchParams.get('window') === 'hub' || pathname.includes('/player-hub');
   const isTabletView = searchParams.get('window') === 'tablet' || pathname.includes('/tablet-hub');
   const isRemoteView = searchParams.get('window') === 'remote' || pathname.includes('/remote');
+  const isAppareilDeTableView = searchParams.get('window') === 'appareil-de-table';
 
   /*
     ⛔ **L'ÉCRAN BLOQUÉ DU 2026-09-12, ET IL NE DISAIT QUE TROIS MOTS.**
@@ -371,6 +374,8 @@ function App() {
     <Suspense fallback={<div className="h-screen w-screen bg-app-bg" />}>
       {isRemoteView ? (
         <ErrorBoundary moduleName="Remote Control"><RemoteControl /></ErrorBoundary>
+      ) : isAppareilDeTableView ? (
+        <ErrorBoundary moduleName="Appareil de table"><AppareilDeTable /></ErrorBoundary>
       ) : isProjectorView ? (
         <ErrorBoundary moduleName="Projector View"><ProjectorView /></ErrorBoundary>
       ) : isHubView ? (
