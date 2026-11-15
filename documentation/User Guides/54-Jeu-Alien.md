@@ -4,6 +4,18 @@
 
 Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font monter la peur.
 
+## Utiliser les trois modules, avec le M314 orientable — 15/11/2026
+
+[Voir la nouvelle vidéo MP4 (2 min 57)](../../output/clips/alien-modules-m314-orientable.mp4),
+avec légendes françaises, sans voix. Le meneur ouvre les trois accès à Nel ; le joueur
+pose une question privée à MU/TH/UR, reçoit la réponse, puis utilise le M314 : porteur
+désigné, cône de 90°, cap partagé Est/Nord sans nouveau coût, pion rendu immobile,
+Tour suivant et nouveau scan. Un ordre du poste Senseurs rejoint ensuite le combat
+spatial ; le meneur révèle les ordres et enregistre un préréglage du détecteur.
+Pilote 1.11.0, détecteur 0.5.0, vrais clients Electron et Hub, données fictives et écran
+tactile émulé. L'essai sur appareil physique et la résolution complète du combat restent
+distincts. [Chapitres et précisions](../../output/clips/alien-modules-2026-11-15/README.md).
+
 ## Le clip des mécanismes, des modules et du joueur sur tablette — 06/11/2026
 
 [Voir le clip MP4 (3 min 08)](../../output/clips/alien-mecanismes-modules-et-tablette.mp4) : neuf chapitres, légendes françaises, sans voix.

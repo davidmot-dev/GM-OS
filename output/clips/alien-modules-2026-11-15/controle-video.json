@@ -1,0 +1,206 @@
+{
+  "formats": [
+    {
+      "fichier": "alien-modules-m314-orientable.mp4",
+      "codec": "h264",
+      "largeur": 1440,
+      "hauteur": 900,
+      "duree": 177.08,
+      "octets": 9199527,
+      "sha256": "06f7efb49dc2c7da01ed632c1085cc74ea65dce058198332f3ea33ec464985bb"
+    },
+    {
+      "fichier": "alien-modules-m314-orientable.webm",
+      "codec": "vp9",
+      "largeur": 1440,
+      "hauteur": 900,
+      "duree": 177.08,
+      "octets": 10175264,
+      "sha256": "b848c04e22d01e6bcd199e3d686e55019d2d23aa9c34df4775221bfcd1b1ebc9"
+    }
+  ],
+  "images": [
+    {
+      "nom": "generique-debut",
+      "temps": 3,
+      "fichier": "image-01.png"
+    },
+    {
+      "nom": "01-acces-modules",
+      "temps": 15.423,
+      "fichier": "image-02.png"
+    },
+    {
+      "nom": "raccord-1-avant",
+      "temps": 19.052,
+      "fichier": "image-03.png"
+    },
+    {
+      "nom": "raccord-1-apres",
+      "temps": 19.652,
+      "fichier": "image-04.png"
+    },
+    {
+      "nom": "02-question-tablette",
+      "temps": 36.725,
+      "fichier": "image-05.png"
+    },
+    {
+      "nom": "raccord-2-avant",
+      "temps": 36.774,
+      "fichier": "image-06.png"
+    },
+    {
+      "nom": "raccord-2-apres",
+      "temps": 37.373999999999995,
+      "fichier": "image-07.png"
+    },
+    {
+      "nom": "03-reponse-maman",
+      "temps": 47.034,
+      "fichier": "image-08.png"
+    },
+    {
+      "nom": "04-plan-prive",
+      "temps": 56.23,
+      "fichier": "image-09.png"
+    },
+    {
+      "nom": "05-orientation-meneur",
+      "temps": 70.357,
+      "fichier": "image-10.png"
+    },
+    {
+      "nom": "06-scan-paye",
+      "temps": 76.242,
+      "fichier": "image-11.png"
+    },
+    {
+      "nom": "raccord-3-avant",
+      "temps": 76.33,
+      "fichier": "image-12.png"
+    },
+    {
+      "nom": "raccord-3-apres",
+      "temps": 76.92999999999999,
+      "fichier": "image-13.png"
+    },
+    {
+      "nom": "07-m314-est",
+      "temps": 90.691,
+      "fichier": "image-14.png"
+    },
+    {
+      "nom": "08-m314-nord",
+      "temps": 105.911,
+      "fichier": "image-15.png"
+    },
+    {
+      "nom": "raccord-4-avant",
+      "temps": 105.95299999999999,
+      "fichier": "image-16.png"
+    },
+    {
+      "nom": "raccord-4-apres",
+      "temps": 106.55299999999998,
+      "fichier": "image-17.png"
+    },
+    {
+      "nom": "09-immobilite",
+      "temps": 111.95499999999998,
+      "fichier": "image-18.png"
+    },
+    {
+      "nom": "10-tour-suivant",
+      "temps": 120.876,
+      "fichier": "image-19.png"
+    },
+    {
+      "nom": "raccord-5-avant",
+      "temps": 120.95899999999999,
+      "fichier": "image-20.png"
+    },
+    {
+      "nom": "raccord-5-apres",
+      "temps": 121.55899999999998,
+      "fichier": "image-21.png"
+    },
+    {
+      "nom": "11-m314-tour-deux",
+      "temps": 136.21,
+      "fichier": "image-22.png"
+    },
+    {
+      "nom": "12-poste-senseurs",
+      "temps": 144.859,
+      "fichier": "image-23.png"
+    },
+    {
+      "nom": "13-ordre-spatial",
+      "temps": 152.144,
+      "fichier": "image-24.png"
+    },
+    {
+      "nom": "raccord-6-avant",
+      "temps": 152.19099999999997,
+      "fichier": "image-25.png"
+    },
+    {
+      "nom": "raccord-6-apres",
+      "temps": 152.791,
+      "fichier": "image-26.png"
+    },
+    {
+      "nom": "resolution-spatiale-film-final",
+      "temps": 155.08,
+      "fichier": "image-27.png"
+    },
+    {
+      "nom": "14-revelation",
+      "temps": 159.446,
+      "fichier": "image-28.png"
+    },
+    {
+      "nom": "prereglage-film-final",
+      "temps": 166.08,
+      "fichier": "image-29.png"
+    },
+    {
+      "nom": "15-prereglage",
+      "temps": 169.728,
+      "fichier": "image-30.png"
+    },
+    {
+      "nom": "generique-fin",
+      "temps": 174.08,
+      "fichier": "image-31.png"
+    }
+  ],
+  "raccords": [
+    19.352,
+    37.074,
+    76.63,
+    106.25299999999999,
+    121.25899999999999,
+    152.49099999999999
+  ],
+  "decodageComplet": true,
+  "controleVisuel": "31 images et six raccords relus ; radars Est, Nord et Tour 2 contrôlés en grand ; dernière séquence examinée aussi sur douze prélèvements supplémentaires",
+  "tablette": {
+    "client": "Hub HTTP/WebSocket réel sans appBridge",
+    "viewport": {
+      "largeur": 768,
+      "hauteur": 1024
+    },
+    "contexteTactile": true,
+    "touchersRecus": 23,
+    "appareilPhysique": false
+  },
+  "verifications": {
+    "build": true,
+    "eslint": true,
+    "playwrightFinal": 1,
+    "testsManuel": 28,
+    "diffCheck": true
+  }
+}

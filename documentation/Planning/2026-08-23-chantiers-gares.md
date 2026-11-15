@@ -14643,10 +14643,33 @@ David : *« oui au 1,2,3,4 »* sur les quatre propositions du § 253 : les carri
 - **Commit et push le 15/11** (« commit et pousse ») : `7fc46451` (relecture, § 253), `ab8dd771` (A13), `6d8ce001` (l'essai d'A12 lit sa référence 1.9.0 dans git, au commit `cab150d1` : David avait réexporté la 1.11.0 sous le même nom).
 - **Validé par David le 15/11** : *« oui c'est concluant »*, après réimport de la 1.11.0 et réexport depuis GM-OS. Reste seulement la colonie (attributs, initiatives, Cycle), à spécifier.
 
+### 255 · Alien — vidéo des trois modules, détail du M314 orientable — 15/11/2026
+
+David : « tu me refait une vidéeo avec playwright sur l'utilisation du module externe
+d'Alien ? » ; choix : « Les trois modules, focus sur le M314 ».
+
+- **Livré** : [MP4 de 2 min 57](../../output/clips/alien-modules-m314-orientable.mp4),
+  sept chapitres, légendes françaises sans son. MU/TH/UR privé, M314 (porteur, cône de
+  90°, rotation partagée sans nouveau coût, immobilité, Tour suivant), ordre Senseurs
+  transmis puis révélé et préréglage enregistré. Pilote 1.11.0, détecteur 0.5.0.
+- **Parcours reproductible** : `e2e/clipModulesAlien.spec.ts`, profils fictifs isolés,
+  vrais clients Electron et Hub HTTP/WebSocket. 23 événements tactiles émulés, aucune
+  tablette physique. Montage dans `outils/clips/monter_clip_alien.mjs`, décodage et
+  prélèvements dans `outils/clips/verifier_clip_modules_alien.mjs`. Ancien clip conservé.
+- **Vérifié** : build, eslint ciblé, répétition et tournage normal réussis ; MP4 et WebM
+  décodés en entier ; 31 images, six raccords et la dernière séquence relus ; 28 tests
+  du manuel réussis (`electron/manuelDesJeux.test.ts`, `--maxWorkers=4`).
+  [Dossier et limites](../../output/clips/alien-modules-2026-11-15/README.md),
+  [état et reprise](2026-11-15-etat-et-reprise-codex-film-modules-alien.md).
+- **Reste** : rien pour la vidéo. A11/T9 sur appareil physique et A12 restent à essayer
+  par David. Commit demandé le 15/11 (« ok commit »), aucun push demandé ; aucun fichier
+  applicatif modifié.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 191 | **Alien — vidéo des trois modules, détail du M314** | 🟢 § 255 ; MP4 2 min 57, pilote 1.11.0, cap partagé et immobilité filmés — 15/11 | Ouvrir le MP4 | Rien pour la vidéo ; essai physique A11 distinct |
 | 190 | **Alien — *Building Better Worlds* dans le pilote (A13)** | 🟢 § 254 ; pilote 1.11.0 (Prospecteur, Artiste, 53 objets au catalogue) et 23 tables Table-OS — 15/11 ; **validé par David le 15/11** | Rien ; la colonie est un chantier à spécifier | Rien |
 | 189 | **Alien — *Building Better Worlds* relu** | 🟢 § 253 ; seize fiches forgées par David et relues le 15/11, toutes corrigées, tables du livre ajoutées | Rien ; l'étape 2 est faite (§ 254) | Rien |
 | 188 | **Alien — Marines coloniaux dans le pilote (A12)** | 🟠 § 252 ; pilote 1.10.0 (SM, Statut, Grade, Événements de terrain) et cinq tables Table-OS du supplément — 14/11 | Réimporter `corriges/Alien-1.11.0.gmos-driver` (contient A12) avec Remplacer, tirer une table de terrain | Essai de David |

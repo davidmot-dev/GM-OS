@@ -1,0 +1,56 @@
+{
+  "nomFichier": "alien-modules-m314-orientable",
+  "dossier": "alien-modules-2026-11-15",
+  "dureeDepuisTitre": 189.257,
+  "dureeTournageTablette": 134.848,
+  "segmentsTablette": [
+    {
+      "debutMJ": 19.052,
+      "finMJ": 36.774,
+      "debutTablette": 1.703,
+      "finTablette": 19.425
+    },
+    {
+      "debutMJ": 76.33,
+      "finMJ": 105.953,
+      "debutTablette": 58.981,
+      "finTablette": 88.604
+    },
+    {
+      "debutMJ": 120.959,
+      "finMJ": 164.642,
+      "debutTablette": 103.61,
+      "finTablette": 134.842
+    }
+  ],
+  "chapitres": [
+    {
+      "titre": "1 · Le meneur ouvre les modules au bon personnage",
+      "secondesDepuisTitre": 6.981
+    },
+    {
+      "titre": "2 · MU/TH/UR : poser une question privée",
+      "secondesDepuisTitre": 19.052
+    },
+    {
+      "titre": "3 · Maman répond, puis prépare le M314",
+      "secondesDepuisTitre": 36.774
+    },
+    {
+      "titre": "4 · Le porteur explore le même scan en tournant",
+      "secondesDepuisTitre": 76.33
+    },
+    {
+      "titre": "5 · Rendre un pion immobile, puis scanner le Tour suivant",
+      "secondesDepuisTitre": 105.953
+    },
+    {
+      "titre": "6 · Le nouvel écho, puis un ordre de combat spatial",
+      "secondesDepuisTitre": 120.959
+    },
+    {
+      "titre": "7 · Révéler les ordres et garder une préparation",
+      "secondesDepuisTitre": 164.642
+    }
+  ]
+}
