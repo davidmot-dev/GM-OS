@@ -358,12 +358,33 @@ captures ADB du 15/11 comme point de départ ; David choisit le dessin **avant**
       n'a pas pu y être ouvert, la répétition n'ayant pas le pilote Alien (import manuel raté
       par David). ⚠️ **Reste** : en paysage, la vue joueur du M314 s'empile (radar à faire défiler) ;
       la maquette mettait le radar à gauche — dessin du module, à reprendre à part.
-- [ ] T12 · Sélection de l'écran de table (magasin, librairie, tableau de bord de l'Ulanzi), widget
-      « Ordre du tour », widgets composés dans le flux `hub` — couvre C9, C10 · essai :
-      `librairie.test.ts` (dont l'ordre du tour : combat non projeté → rien), test du flux · touche
-      src/ ⛔.
-- [ ] T13 · `EcranDeTable.tsx` — couvre C9, C10 · essai : e2e (cocher, décocher, jauge qui bouge) ·
-      touche src/ ⛔ · **à essayer par David**.
+- [x] T12 · Sélection de l'écran de table (magasin, librairie, tableau de bord de l'Ulanzi), widget
+      « Ordre du tour », widgets composés dans le flux `hub` — couvre C9, C10 · touche src/ ⛔ · **fait
+      le 15/11** : `src/modules/ulanzi/ecranDeTable.ts` (pur : `CATALOGUE_DE_L_ECRAN` = ordre du tour,
+      horloges, minuteur, heure, réserves ; `ordreDuTourPourLaTable` sans les combattants cachés,
+      rien si le combat n'est pas projeté ; `horlogesPourLEcran` = toutes les jauges vues par les
+      joueurs, `surLAfficheur` ne valant que pour l'Ulanzi), `selectionEcran` et
+      `basculerLeWidgetDeLEcran` dans `useUlanziStore` (persistés), section « Écran de table » du
+      tableau de bord de l'Ulanzi (visible afficheur éteint aussi), `useDiffusionDeLEcranDeTable`
+      (poste MJ : compose, envoie `{ ecranDeTable }` au rôle `hub` quand ça change et à chaque
+      connexion). Les trois widgets de Blade Runner restent à l'Ulanzi (dessins de 32 × 8).
+      `ecranDeTable.test.ts`, 9 essais.
+- [x] T13 · `EcranDeTable.tsx` — couvre C9, C10 · touche src/ ⛔ · **à essayer par David** · **codé le
+      15/11** : `useEcranDeTable.ts` (socket en rôle `hub`, jeton de reprise présenté — la Fire garde le
+      même identifiant dans tous ses rôles), `EcranDeTable.tsx` (`?window=ecran-de-table`, grille de
+      tuiles de la maquette). ⚠️ `.font-mono` fixe sa taille à `1em` hors des couches Tailwind : la
+      taille va sur le bloc, la police sur un élément intérieur (vu sur la capture, corrigé).
+      `EcranDeTable.test.tsx`, 4 essais ; e2e `e2e/ecranDeTable.spec.ts` réussi (cocher → tuiles ;
+      jauge cachée et rôdeur caché absents ; jauge qui bouge au poste → l'écran suit ; décocher →
+      la tuile part). **Essayé par David sur la Fire le 15/11**, puis repris sur ses retours :
+      « un peu plat » et « plus impactante » → relief, lueurs à la teinte du thème (`currentColor`),
+      éclair à chaque changement, jauge critique et minuteur sous la minute qui battent, chiffres
+      calés sur la tuile (`cqi`), fond de scène ; « je ne vois pas les horloges » → une jauge neuve
+      naît secrète (`vueParLesJoueurs`), le tableau de bord dit désormais à côté de chaque case
+      pourquoi elle ne montre rien (`etatDuWidgetDeLEcran`) ; « tout n'est pas lisible » (photo) → le
+      nom de l'heure (Rêve de Dragon) va sur sa ligne au lieu de remplacer les chiffres, libellés plus
+      grands et plus contrastés ; « le tout en full screen » → `usePleinEcranAuToucher` sur les trois
+      rôles (écran, appareil de table, télécommande), vérifié sur la Fire. David : *« ok c'est bon »*.
 - [ ] T14 · Accueil des rôles, rôle mémorisé, code à quatre chiffres (réglage au PC, comparaison au
       serveur) — couvre C11, C12 · essai : test du composant (stockage indisponible compris), test du
       serveur (code faux, essais limités), e2e · touche src/ et electron/ ⛔ · **à essayer par David**.

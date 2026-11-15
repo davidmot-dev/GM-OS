@@ -3,6 +3,9 @@ import { Coffee, MonitorSmartphone, ChevronRight, ChevronDown, WifiOff, RotateCc
 import { useUlanziStore } from './useUlanziStore';
 import { QUARTS, composerDefile, stressDuQuart, jourDe } from './widgets/defileDesQuarts';
 import { widgetsActifs, widgetsDuJeu, estActif, reservesPourLaTable } from './widgets/librairie';
+import { CATALOGUE_DE_L_ECRAN, etatDuWidgetDeLEcran } from './ecranDeTable';
+import { useCombatStore } from '../combat/useCombatStore';
+import { reservesDeLaCampagne } from './useBattementUlanzi';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useRessourcesDeTableStore } from '../table/useRessourcesDeTableStore';
 import { DEFAULT_GAME_DRIVERS } from '../../data/defaultGameDrivers';
@@ -169,6 +172,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                     Afficheur Ulanzi éteint — il garde sa routine.
                     {disponibles.length === 0 && ' Aucun widget pour ce jeu.'}
                 </p>
+                <SectionDeLEcranDeTable jeu={jeu} />
             </div>
         );
     }
@@ -176,6 +180,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
     return (
         <div className="flex-shrink-0 glass-bento rounded-xl px-4 py-3 flex flex-col gap-2.5">
             {entete}
+            <SectionDeLEcranDeTable jeu={jeu} />
 
             {/*
               **Le tableau de bord : ce que ce jeu peut montrer, et ce qui défile.**
@@ -510,3 +515,43 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
 };
 
 export default TableauDeBordUlanzi;
+
+/**
+ * **Les widgets de l'écran de table** (la Fire, 15/11/2026, § 256, T12) — une sélection à part de
+ * celle de l'Ulanzi (décision de David, Q5), et réglable même afficheur éteint : l'écran de table
+ * ne dépend pas de l'Ulanzi.
+ */
+function SectionDeLEcranDeTable({ jeu }: { jeu: string | null }) {
+    const selectionEcran = useUlanziStore(s => s.selectionEcran);
+    const basculer = useUlanziStore(s => s.basculerLeWidgetDeLEcran);
+    const choisis = new Set((jeu ? selectionEcran?.[jeu] : undefined)?.map(e => e.widgetId) ?? []);
+    // Les mêmes sources que l'écran : ce qui est dit ici est ce que la Fire montrera.
+    const isClockProjected = useClockStore(s => s.isClockProjected);
+    const tensions = useClockStore(s => s.tensions);
+    const timerDuration = useClockStore(s => s.timerDuration);
+    // Un champ par sélecteur : un objet fabriqué dans le sélecteur boucle sans fin sous zustand 5.
+    const isCombatProjected = useCombatStore(s => s.isCombatProjected);
+    const combatants = useCombatStore(s => s.combatants);
+    const currentTurnIdx = useCombatStore(s => s.currentTurnIdx);
+    const round = useCombatStore(s => s.round);
+    const combat = { isCombatProjected, combatants, currentTurnIdx, round };
+    useRessourcesDeTableStore(s => s.reserves);
+    const reserves = reservesDeLaCampagne().length;
+    return (
+        <fieldset className="flex flex-col gap-1 border-t border-app-border/40 pt-2" aria-label="Écran de table">
+            <legend className="text-ui-10 uppercase tracking-[0.18em] font-semibold text-app-text/60">Écran de table</legend>
+            {CATALOGUE_DE_L_ECRAN.map(widget => (
+                <label key={widget.id} className="flex items-center gap-2 text-ui-11 cursor-pointer">
+                    <input type="checkbox" checked={choisis.has(widget.id)} disabled={!jeu} aria-label={widget.nom}
+                        onChange={() => jeu && basculer(jeu, widget.id)}
+                        className="h-3 w-3 shrink-0 rounded border-app-border/60 bg-app-bg/60 accent-[var(--app-accent)]" />
+                    <span className={`flex-1 truncate ${choisis.has(widget.id) ? 'text-app-text' : 'text-app-text/40'}`}>{widget.nom}</span>
+                    {choisis.has(widget.id) && (() => {
+                        const { texte, vide } = etatDuWidgetDeLEcran(widget.id, { isClockProjected, tensions, timerDuration, combat, reserves });
+                        return <span className={`shrink-0 text-ui-10 ${vide ? 'text-etat-alerte/70' : 'text-app-text/40'}`}>{texte}</span>;
+                    })()}
+                </label>
+            ))}
+        </fieldset>
+    );
+}

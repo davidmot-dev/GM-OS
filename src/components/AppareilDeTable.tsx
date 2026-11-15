@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CadreDeTablette } from './socle/CadreDeTablette';
+import { usePleinEcranAuToucher } from '../hooks/usePleinEcranAuToucher';
 import { VueDeModule } from '../modules/modulesDuJeu/vuesDuRegistre';
 import { useAppareilDeTable } from '../modules/modulesDuJeu/useAppareilDeTable';
 
@@ -17,12 +18,14 @@ import { useAppareilDeTable } from '../modules/modulesDuJeu/useAppareilDeTable';
  */
 const AppareilDeTable: React.FC = () => {
     const { etat, vue, commander } = useAppareilDeTable();
+    // Plein écran au premier toucher, sans retenir ce toucher : il agit aussi sur le module.
+    const { demander: passerEnPleinEcran } = usePleinEcranAuToucher();
     const [choisi, choisir] = useState<string | null>(null);
     const modules = vue?.modules ?? [];
     const ouvert = modules.find(m => m.id === choisi) ?? modules[0] ?? null;
 
     return (
-        <CadreDeTablette className="h-dvh bg-app-bg text-app-text font-inter overflow-hidden flex flex-col">
+        <CadreDeTablette className="h-dvh bg-app-bg text-app-text font-inter overflow-hidden flex flex-col" onClickCapture={passerEnPleinEcran}>
             <header className="shrink-0 h-10 flex items-center gap-3 border-b border-app-border px-4 text-[13px]">
                 <span className="flex items-center gap-2 uppercase tracking-widest text-app-muted">
                     <span aria-hidden className={`h-2 w-2 rounded-full ${etat === 'connecte' ? 'bg-accent' : 'bg-app-text/30'}`} />

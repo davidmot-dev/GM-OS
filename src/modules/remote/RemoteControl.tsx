@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Bouton } from '../../components/socle/Bouton';
 import { CadreDeTablette } from '../../components/socle/CadreDeTablette';
+import { usePleinEcranAuToucher } from '../../hooks/usePleinEcranAuToucher';
 import {
     LayoutDashboard,
     Dices,
@@ -94,6 +95,8 @@ const RemoteControl: React.FC = () => {
         [syncData.messages],
     );
     const [activeTab, setActiveTab] = useState<Onglet>('pads');
+    // La Fire et toute tablette : plein écran au premier toucher, sans retenir ce toucher (15/11/2026, § 256).
+    const { demander: passerEnPleinEcran } = usePleinEcranAuToucher();
     const [isAventureMode] = useState(() => typeof window !== 'undefined' ? window.location.search.includes('mode=adventure') : false);
 
     /*
@@ -253,7 +256,7 @@ const RemoteControl: React.FC = () => {
     });
 
     return (
-        <CadreDeTablette className="h-[100dvh] bg-app-bg text-app-text font-sans selection:bg-accent/30 flex overflow-hidden">
+        <CadreDeTablette className="h-[100dvh] bg-app-bg text-app-text font-sans selection:bg-accent/30 flex overflow-hidden" onClickCapture={passerEnPleinEcran}>
             {/*
               **La colonne de navigation.** Cachée sous 900 px, où la barre du bas
               prend le relais. `w-32` suffit au plus long des sept libellés

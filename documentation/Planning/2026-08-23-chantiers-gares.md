@@ -14740,14 +14740,21 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
   point caché sous le marqueur ; en mode discret, la **cadence des bips suit l'écho le plus proche**
   (`cadenceDesBips`, 140 ms dans la zone) ; le bip devient **carré et aigu, gain plein** (« au moins 4x
   plus encore »). Haut-parleur de la Fire mis à 25/25. David : *« ok c'est bien »*.
-- **Reste** : T12 à T15 (écran de table, accueil et code, essai en séance), l'e2e de l'onglet Tables,
-  la vue du M314 en paysage.
+- **T12-T13 faites le 15/11 — l'écran de table** : `ecranDeTable.ts` (catalogue de l'écran : ordre du
+  tour, horloges, minuteur, heure, réserves ; public par construction), sélection à part dans
+  `useUlanziStore` et section « Écran de table » du tableau de bord de l'Ulanzi (qui dit pourquoi un
+  widget coché ne montre rien), `useDiffusionDeLEcranDeTable` (le poste compose et diffuse au rôle
+  `hub`), `EcranDeTable.tsx` (`?window=ecran-de-table`). Repris sur les retours de David à l'écran
+  (relief, lueurs, éclairs, alertes, lisibilité, nom de l'heure à part) ; plein écran au premier
+  toucher sur les trois rôles. e2e `ecranDeTable.spec.ts` réussi. David : *« ok c'est bon »*.
+- **Reste** : T14-T15 (accueil des rôles et code, essai en séance, page du manuel), l'e2e de l'onglet
+  Tables, la vue du M314 en paysage, les widgets de Blade Runner à l'écran.
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 192 | **La Fire HD 8 comme interface de GM-OS** | 🟠 § 256 ; spécifié le 15/11, T1 à T2 faites (Firefox 143 retenu, Fire préparée), T3 : maquettes validées, T4 à T7 : onglet Tables essayé sur la Fire, T8 à T11 : appareil de table (e2e) — 15/11 | T12 (écran de table) | Rien |
+| 192 | **La Fire HD 8 comme interface de GM-OS** | 🟠 § 256 ; spécifié le 15/11, T1 à T2 faites (Firefox 143 retenu, Fire préparée), T3 : maquettes validées, T4 à T7 : onglet Tables essayé sur la Fire, T8 à T11 : appareil de table, T12-T13 : écran de table, validé par David — 15/11 | T14 (accueil des rôles et code) | Rien |
 | 191 | **Alien — vidéo des trois modules, détail du M314** | 🟢 § 255 ; MP4 2 min 57, pilote 1.11.0, cap partagé et immobilité filmés — 15/11 | Ouvrir le MP4 | Rien pour la vidéo ; essai physique A11 distinct |
 | 190 | **Alien — *Building Better Worlds* dans le pilote (A13)** | 🟢 § 254 ; pilote 1.11.0 (Prospecteur, Artiste, 53 objets au catalogue) et 23 tables Table-OS — 15/11 ; **validé par David le 15/11** | Rien ; la colonie est un chantier à spécifier | Rien |
 | 189 | **Alien — *Building Better Worlds* relu** | 🟢 § 253 ; seize fiches forgées par David et relues le 15/11, toutes corrigées, tables du livre ajoutées | Rien ; l'étape 2 est faite (§ 254) | Rien |

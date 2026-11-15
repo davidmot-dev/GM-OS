@@ -38,7 +38,7 @@ export const NOMS_DES_WIDGETS = nomsAwtrixDeTousLesWidgets();
  * avec l'application : Dune est le seul du second groupe, et c'est justement
  * celui qui déclare des réserves aujourd'hui.
  */
-function reservesDeLaCampagne(): ReserveAAfficher[] {
+export function reservesDeLaCampagne(): ReserveAAfficher[] {
     const session = useSessionOSStore.getState();
     const campagne = session.campaigns?.find(c => c.id === session.activeCampaignId);
     if (!campagne) return [];

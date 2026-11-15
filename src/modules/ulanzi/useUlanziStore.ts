@@ -8,6 +8,7 @@ import {
     type EtatDesQuarts,
 } from './widgets/defileDesQuarts';
 import { HOTE_PAR_DEFAUT, type RoutineSauvegardee } from './UlanziService';
+import { CATALOGUE_DE_L_ECRAN } from './ecranDeTable';
 import { BOUTONS, type BoutonUlanzi } from '../../../electron/boutonsDeLUlanzi';
 import { GESTE_PAR_DEFAUT, type ReglageDeBouton } from './logic/gestesDesBoutons';
 import {
@@ -68,6 +69,8 @@ interface EtatUlanzi {
      * Un tableau **vide**, lui, est un choix — on ne pousse rien.
      */
     selection: SelectionParJeu;
+    /** Les widgets de l'écran de table (la Fire), par jeu — à côté de ceux de l'Ulanzi (David, 15/11/2026, Q5). */
+    selectionEcran: SelectionParJeu;
     /** Trois par défaut ; quatre avec la spécialité « Bourreau de travail ». */
     seuilSansPause: number;
     quarts: EtatDesQuarts;
@@ -106,6 +109,7 @@ interface EtatUlanzi {
     basculerActif: (force?: boolean) => void;
     /** Allume ou éteint un widget pour un jeu. Le premier geste fige l'implicite. */
     basculerLeWidget: (systemId: string, widgetId: string) => void;
+    basculerLeWidgetDeLEcran: (systemId: string, widgetId: string) => void;
     /** La part d'écran d'un widget, en secondes. Bornée par la librairie. */
     setSecondesDuWidget: (systemId: string, widgetId: string, secondes: number) => void;
     /** La couleur d'un widget. `null` l'efface, et le widget reprend la sienne. */
@@ -148,6 +152,7 @@ export const useUlanziStore = create<EtatUlanzi>()(
             silencerLesNatives: true,
             seuilSansPause: SEUIL_SANS_PAUSE,
             selection: {},
+            selectionEcran: {},
             quarts: ETAT_INITIAL,
             signal: SIGNAL_INITIAL,
             routine: null,
@@ -170,6 +175,9 @@ export const useUlanziStore = create<EtatUlanzi>()(
             */
             basculerLeWidget: (systemId, widgetId) => set(s => ({
                 selection: { ...s.selection, [systemId]: basculer(widgetId, systemId, s.selection) },
+            })),
+            basculerLeWidgetDeLEcran: (systemId, widgetId) => set(s => ({
+                selectionEcran: { ...s.selectionEcran, [systemId]: basculer(widgetId, systemId, s.selectionEcran, CATALOGUE_DE_L_ECRAN) },
             })),
             setSecondesDuWidget: (systemId, widgetId, secondes) => set(s => ({
                 selection: {
@@ -214,6 +222,7 @@ export const useUlanziStore = create<EtatUlanzi>()(
                 silencerLesNatives: s.silencerLesNatives,
                 seuilSansPause: s.seuilSansPause,
                 selection: s.selection,
+                selectionEcran: s.selectionEcran,
                 quarts: s.quarts,
                 signal: s.signal,
                 routine: s.routine,

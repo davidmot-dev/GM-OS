@@ -28,6 +28,7 @@ import { useDisplayDetection } from './hooks/useDisplayDetection';
 import { useRaccourcisDeNavigation } from './hooks/useRaccourcisDeNavigation';
 import { useNexusSynchronizer } from './modules/remote/hooks/useNexusSynchronizer';
 import { useHoteDesModules } from './modules/modulesDuJeu/useHoteDesModules';
+import { useDiffusionDeLEcranDeTable } from './modules/ulanzi/useDiffusionDeLEcranDeTable';
 import { crossWindowSync } from './services/CrossWindowEventService';
 import { dispatchRemoteAction } from './modules/remote/actions';
 import { useThemeDuJeu } from './theme/useThemeDuJeu';
@@ -44,6 +45,7 @@ type RemoteAction = Parameters<typeof dispatchRemoteAction>[0];
 const RemoteControl = lazy(() => import('./modules/remote/RemoteControl'));
 /* La Fire HD 8 en appareil de table (15/11/2026, § 256). */
 const AppareilDeTable = lazy(() => import('./components/AppareilDeTable'));
+const EcranDeTable = lazy(() => import('./components/EcranDeTable'));
 const SessionDashboard = lazy(() => import('./modules/session/SessionDashboard'));
 const ForgeOS = lazy(() => import('./modules/forge/ForgeOS'));
 const DiceBoard = lazy(() => import('./modules/dice/DiceBoard'));
@@ -131,6 +133,8 @@ function App() {
   // Le système est "prêt" si hydraté et (si Main PC) si le bootstrap est fini
   const isAppReady = isHydrated && (isMainPC ? isSystemReady : true);
   useHoteDesModules(isMainPC && isAppReady);
+  // L'écran de table de la Fire (15/11/2026, § 256) : le poste compose, la tablette affiche.
+  useDiffusionDeLEcranDeTable(isMainPC && isAppReady);
   useSuiviSanteVoyageur(isMainPC && isAppReady);
   // H1 (2026-10-22) : chaque modification de fiche s'inscrit au journal, avec son origine.
   useHistoriqueDesFiches(isMainPC && isAppReady);
@@ -338,6 +342,7 @@ function App() {
   const isTabletView = searchParams.get('window') === 'tablet' || pathname.includes('/tablet-hub');
   const isRemoteView = searchParams.get('window') === 'remote' || pathname.includes('/remote');
   const isAppareilDeTableView = searchParams.get('window') === 'appareil-de-table';
+  const isEcranDeTableView = searchParams.get('window') === 'ecran-de-table';
 
   /*
     ⛔ **L'ÉCRAN BLOQUÉ DU 2026-09-12, ET IL NE DISAIT QUE TROIS MOTS.**
@@ -376,6 +381,8 @@ function App() {
         <ErrorBoundary moduleName="Remote Control"><RemoteControl /></ErrorBoundary>
       ) : isAppareilDeTableView ? (
         <ErrorBoundary moduleName="Appareil de table"><AppareilDeTable /></ErrorBoundary>
+      ) : isEcranDeTableView ? (
+        <ErrorBoundary moduleName="Écran de table"><EcranDeTable /></ErrorBoundary>
       ) : isProjectorView ? (
         <ErrorBoundary moduleName="Projector View"><ProjectorView /></ErrorBoundary>
       ) : isHubView ? (
