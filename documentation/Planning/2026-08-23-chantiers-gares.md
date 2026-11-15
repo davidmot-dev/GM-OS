@@ -438,6 +438,13 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**15/11/2026 — Un essai Shadowrun échoue par intermittence dans la suite complète.**
+`src/modules/session/components/fields/PanneauDeJet.shadowrun.test.tsx` › « une blessure grave impose le
+désavantage : seuls les 6 réussissent ; l’avantage payé l’annule » : un échec sur 10 559 essais dans une
+suite complète, alors que le fichier passe trois fois sur trois seul, et passait dans les deux suites
+précédentes du jour. Probablement un délai sous charge. Sans lien avec le chantier de la Fire (§ 256) ;
+**aucun code modifié**.
+
 **15/11/2026 — ⛔ La sauvegarde automatique ne se relit plus : restauration et répétition refusées.**
 `npm run repetition` a refusé la semence `gmos-auto-2026-11-15T16-25-25-095.json` : « Sauvegarde illisible —
 `players.0.characters.17.sheetData._gmos_dune`, `characters.26.sheetData._gmos_runequest`,
