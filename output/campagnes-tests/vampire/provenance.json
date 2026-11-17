@@ -1,0 +1,228 @@
+{
+  "dateFixe": "2026-11-17T12:00:00.000Z",
+  "generateur": "vampire.mjs v1",
+  "gmosVersion": "6.5.0",
+  "node": "v24.13.1",
+  "campagne": {
+    "fichier": "01-Vampire-Le-registre-des-absents.gmos",
+    "sha256": "a674890257e6e86789ebffca640ac7fa2b3908dce7a3c1131a8e26d6dcc2db85"
+  },
+  "pilote": {
+    "source": "Export Dirvers/corriges/Vampire-2.0.0.gmos-driver",
+    "id": "custom-1794902116143",
+    "version": "2.0.0",
+    "sha256": "623e7dec0b94aac576005d568247af462379a13bb802dedf4397b7861f42fc0b"
+  },
+  "gabarit": {
+    "id": "tpl-1794902116144",
+    "champs": 137,
+    "htmlSha256": "d01be8efa0d4b7a7787ca3e62fcf2101d8c9f30de72d21d30587ab70cb24fcfb"
+  },
+  "joueurs": [
+    {
+      "id": "p-1",
+      "realName": "Thomas D."
+    },
+    {
+      "id": "p-2",
+      "realName": "Marie C."
+    },
+    {
+      "id": "p-3",
+      "realName": "Lucas R."
+    }
+  ],
+  "seances": 12,
+  "scenes": 42,
+  "actes": 5,
+  "ateliers": 6,
+  "pjPrincipaux": 3,
+  "pjRecette": 3,
+  "pnj": 11,
+  "medias": 33,
+  "cas": 53,
+  "modules": {
+    "corpusId": "vampire",
+    "implicite": true,
+    "references": [],
+    "modules": [],
+    "erreurs": []
+  },
+  "sources": [
+    {
+      "fichier": "outils/campagnes-de-recette/vampire.mjs",
+      "sha256": "67d61a3b2c060bed4de402d39efdea588898bcd94aeb40cc6f2ca0ecb200868c"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/vampire-scenario.mjs",
+      "sha256": "248cba0b62d079483388ec91837583246e183807eb306c938d052e777993b456"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/vampire-recette.mjs",
+      "sha256": "647b346a9c4d991cccef6ae6e27700b93b47ede665347817e6ad540f65b8c86c"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/charger-typescript.mjs",
+      "sha256": "0ce4d1d77e4017e39147f3eb7948e3934a3cd27ec128563754af8931d72782c2"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/archives-de-recette.mjs",
+      "sha256": "93a6fd79a4234574e2dabd2d8330e2c8c5f617df3152bbb038916040a94f18ec"
+    }
+  ],
+  "sourcesRegles": [
+    {
+      "fichier": "docs/systems/vampire/rules/bestiaire-et-adversaires.md",
+      "sha256": "0da01e0232e54960de26b4ecaa43793f3b3df334bf27397488076951e8e59e52"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/composition-de-la-fiche-de-personnage.md",
+      "sha256": "6d5fa158093c85204bfd072cf8b2f33c7229518cbc214197147a75a489889332"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/degats-et-types-de-degats.md",
+      "sha256": "7a77b19128d56e06a5c21cb19cb8888bc2d7c2ff6a74c8da22cae203e760dad9"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/degres-de-reussite-et-critiques.md",
+      "sha256": "968333c88b58ec12e60488d961c9a242872f7bea84b4915a3a6cc97d05840be6"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/distances-et-portees.md",
+      "sha256": "4cc3b3831a5a36a8d92a54198113f955a00b0a8908f63dd95d4670b6f5a0adb4"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/environnement-et-dangers.md",
+      "sha256": "631762d20d2a82844e80747c869b4dd68b1568c4f686d4f027f1c0a142e553ce"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/equipement-et-materiel.md",
+      "sha256": "dcc02da1f5f0724f276fea7eb863a57085d6a0a1556d44a37a250f637f1768a3"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/etats-et-conditions.md",
+      "sha256": "9cc6d899b5e7bf48ac5c2112a890e5d9937384707397f7218b60c2e181b279ed"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/initiative-et-deroulement-du-tour.md",
+      "sha256": "8491af587759ca0cef68041fd0f245be84f22c3f7be8aa20e20c6f8f516ccbbf"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/inventaire-des-mecaniques.md",
+      "sha256": "813c81842f31f284d8a90f7919a6a6a756aee95e4a254895040ff711f84dfad3"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/jauges-et-ressources-individuelles.md",
+      "sha256": "0dfd5c9e5bbc1e84870e67fb5774bd15c2667ffd51c4f00b9fae80b2fa903993"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/jets-opposes-aide-et-cooperation.md",
+      "sha256": "4f5cc7c34bc552ee8200d0a63c2e92e032e11d0b669aab51f90411f5966dfb4d"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/la-diablerie-l-amaranthe.md",
+      "sha256": "ed3b842bf066edcbca73207c2faaca4a329fac6b3f28bf3c53473e2e2fa1a0a6"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/la-frenesie-et-le-rotschreck.md",
+      "sha256": "3aa749bf1e0f79dd33c74fc2b086436898cc56db874f711c925e7ecf1a414778"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/le-coup-de-sang-blood-surge.md",
+      "sha256": "891cee7e92737c22a2919cc6eb3bdc02cdf064ae6f248fe637fe0a584ecb9aa6"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/le-lien-de-sang-blood-bond.md",
+      "sha256": "ff1ca0053c9e1aa41fcf2e077ba27ce1986de771440d4323c7fd4f76e73bd488"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/le-systeme-des-projets-intrigues-au-long-cours.md",
+      "sha256": "a7fc19b28fa8f0a112ccfd98548246c58b2605762d33c7326b1b713bf1c914bf"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/le-test-d-exaltation-rouse-check.md",
+      "sha256": "04db088296936b8d4f98d9bcdf164f81eb63e49e25c575bb6c2369361a528a57"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/les-des-de-soif-triomphes-brutaux-et-echecs-bestiaux.md",
+      "sha256": "d6825b84df86d6b6ead8003bc4031b5db5d04b5e773842ce2c7f22012bf07d95"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/poursuites.md",
+      "sha256": "dca4b832f3f6a74587527d30297eaed2fec00c634cacb33ea5e7efbfd5fe8052"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/principes-de-la-chronique-convictions-et-fletrissures.md",
+      "sha256": "d9a22b9ad306e3a9267c32ed0e4d591115c645ef7b8c5d44098f8caf982efa1c"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/resolution-des-jets.md",
+      "sha256": "eb7bf2f77eb3466dec680624a25a2ff7da9af6afa705eb94cec5719d844984ab"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/sante-et-blessures.md",
+      "sha256": "a3f3c2ac0d9cd8ecdd1f656c317944278d9858eaf3657b14822aa4c9be4fb10f"
+    },
+    {
+      "fichier": "docs/systems/vampire/rules/ton-registre-et-ambiance.md",
+      "sha256": "1d2243267ff8693cb8af5092501e241c813b7f969d85a5e0bd7d1196e53de106"
+    }
+  ],
+  "sourcesTechniques": [
+    {
+      "fichier": "src/modules/session/logic/ficheNeuve.ts",
+      "sha256": "41a0b772292ec5e628b8730305b8d97c14a45b1a821cc48fc47a325a3309d351"
+    },
+    {
+      "fichier": "src/modules/session/logic/jeuDuPersonnage.ts",
+      "sha256": "f57cb3e2f54aca9b0bedfa5d42d782198b5490677e8e3e73e408fe17924f2667"
+    },
+    {
+      "fichier": "src/modules/session/logic/HealthInterpreter.ts",
+      "sha256": "68d294630d584d83b3e7c377e858a2ad9b3c492dcb2a5996fbcd356c91e39c86"
+    },
+    {
+      "fichier": "src/modules/combat/logic/SanteDuCombattant.ts",
+      "sha256": "db2843f5965cfc2158504c5ff3e86139fe8f503f176a9f005a42c1e3eff9a42c"
+    },
+    {
+      "fichier": "src/modules/dice/systemes/vampire.ts",
+      "sha256": "85ff94a1e04ea930c84d699ff635e37e5bf1768e8e4557e02dc8bc8c7b46e93d"
+    },
+    {
+      "fichier": "src/modules/dice/DescripteurDeJet.ts",
+      "sha256": "2d713e562a6199c427cbcda7deb9ed32e1e572b02fb8e3739e4a8e0210b98578"
+    },
+    {
+      "fichier": "src/modules/remote/logic/caviardageDesJoueurs.ts",
+      "sha256": "04b88370dc581ce59b03c2516b24e8d8aecb5bceb0d71b8ad3b9684db70d68f7"
+    },
+    {
+      "fichier": "src/modules/system/archive/nexus.types.ts",
+      "sha256": "3df1e4d908110a12c5d9a47b903b1087b5e9d2e270c3e61be95b0242a4b8f1bd"
+    },
+    {
+      "fichier": "src/modules/modulesDuJeu/catalogue.ts",
+      "sha256": "3dd87df4456da340881fa332bf0bf393266940338e3a4133b82f5dc2d0b1e520"
+    },
+    {
+      "fichier": "docs/systems/vampire/fiche/correspondance.json",
+      "sha256": "a2e93885c270ebec4c3a9d762cb4714317c91a4b85ad5a31f47452689fcb8d5e"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/cthulhu-hack-joueurs.json",
+      "sha256": "0032dc5a6bec43dbf515ade46ce461b71858a2a5e2cb81bb27f1380d95d912fa"
+    }
+  ],
+  "corpus": {
+    "fiches": 24,
+    "relu": true,
+    "dateRelecture": "2026-11-17",
+    "limite": "Atelier de création de campagne ; aucune nouvelle relecture intégrale du livre revendiquée."
+  },
+  "limites": [
+    "VAM-A01 : cinq cases de santé génériques au lieu de six sur CORPS",
+    "Import Electron et Hub NON EXÉCUTÉS",
+    "Recette humaine NON TESTÉE"
+  ]
+}

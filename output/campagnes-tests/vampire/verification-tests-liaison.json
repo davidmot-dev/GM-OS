@@ -1,0 +1,32 @@
+{
+  "archive": {
+    "fichier": "01-Vampire-Le-registre-des-absents.gmos",
+    "sha256": "a674890257e6e86789ebffca640ac7fa2b3908dce7a3c1131a8e26d6dcc2db85"
+  },
+  "rapportSha256": "b36f8c07e1bfa0023bc59f56bc55dc62b8475784e6aebe638cc3329a0af4eab5",
+  "sources": [
+    {
+      "fichier": "outils/campagnes-de-recette/vampire.test.ts",
+      "sha256": "94821eb5980ef554a6add26536c39c9737e92c0d33ca53e564e2cd4f9940f9ac"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/vitest-vampire.config.mts",
+      "sha256": "70ad38431de1ef10879e49764856a7dd177f3314c13d5f0e7300a80b30bc3a2a"
+    }
+  ],
+  "controles": 105,
+  "reussis": 104,
+  "echecs": 1,
+  "conformiteGlobale": false,
+  "anomalies": [
+    {
+      "id": "VAM-A01",
+      "statut": "ÉCHEC CONSTATÉ",
+      "test": "Vampire — campagne réellement livrée [VAM-A01] conformité Santé : le profil CORPS doit avoir six cases, pas les cinq génériques",
+      "attendu": 6,
+      "observe": 5
+    }
+  ],
+  "importElectron": false,
+  "hubReseau": false
+}

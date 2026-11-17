@@ -1,0 +1,575 @@
+[
+  {
+    "id": "VAM-01",
+    "mecanique": "groupement",
+    "source": "docs/systems/vampire/rules/resolution-des-jets.md ; livre de base français, p. 118-120 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-01"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-02",
+    "mecanique": "specialite",
+    "source": "docs/systems/vampire/rules/resolution-des-jets.md ; livre de base français, p. 118 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-02"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-03",
+    "mecanique": "attribut-seul",
+    "source": "docs/systems/vampire/rules/resolution-des-jets.md ; livre de base français, p. 118 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-03"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-04",
+    "mecanique": "deux-attributs",
+    "source": "docs/systems/vampire/rules/resolution-des-jets.md ; livre de base français, p. 118 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-04"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-05",
+    "mecanique": "discipline",
+    "source": "docs/systems/vampire/rules/composition-de-la-fiche-de-personnage.md ; livre de base français, p. 152, 243-245 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-05"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-06",
+    "mecanique": "soif-zero",
+    "source": "docs/systems/vampire/rules/les-des-de-soif-triomphes-brutaux-et-echecs-bestiaux.md ; livre de base français, p. 205 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-06"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-07",
+    "mecanique": "soif-superieure-reserve",
+    "source": "docs/systems/vampire/rules/les-des-de-soif-triomphes-brutaux-et-echecs-bestiaux.md ; livre de base français, p. 205 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-07"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-08",
+    "mecanique": "minimum-modificateur",
+    "source": "docs/systems/vampire/rules/resolution-des-jets.md ; livre de base français, p. 120 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-08"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-09",
+    "mecanique": "difficulte",
+    "source": "docs/systems/vampire/rules/resolution-des-jets.md ; livre de base français, p. 119 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-09"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-10",
+    "mecanique": "victoire-critique",
+    "source": "docs/systems/vampire/rules/degres-de-reussite-et-critiques.md ; livre de base français, p. 120-121 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-10"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-11",
+    "mecanique": "triomphe-brutal",
+    "source": "docs/systems/vampire/rules/les-des-de-soif-triomphes-brutaux-et-echecs-bestiaux.md ; livre de base français, p. 205-207 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-11"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-12",
+    "mecanique": "echec-bestial",
+    "source": "docs/systems/vampire/rules/les-des-de-soif-triomphes-brutaux-et-echecs-bestiaux.md ; livre de base français, p. 207-208 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-12"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-13",
+    "mecanique": "victoire-avec-un-soif",
+    "source": "docs/systems/vampire/rules/les-des-de-soif-triomphes-brutaux-et-echecs-bestiaux.md ; livre de base français, p. 207 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-13"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-14",
+    "mecanique": "echec-total",
+    "source": "docs/systems/vampire/rules/degres-de-reussite-et-critiques.md ; livre de base français, p. 122 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-14"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-15",
+    "mecanique": "pyrrhus",
+    "source": "docs/systems/vampire/rules/degres-de-reussite-et-critiques.md ; livre de base français, p. 121-122 imprimées (PDF = imprimée + 4)",
+    "support": "manuel",
+    "casIds": [
+      "JET-15"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "La victoire à la Pyrrhus se négocie ; aucune réussite ni ressource ne se modifie automatiquement sur cette discussion."
+  },
+  {
+    "id": "VAM-16",
+    "mecanique": "compulsion",
+    "source": "docs/systems/vampire/rules/etats-et-conditions.md ; livre de base français, p. 208-210 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "JET-16"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-17",
+    "mecanique": "relance",
+    "source": "docs/systems/vampire/rules/jets-opposes-aide-et-cooperation.md ; livre de base français, p. 122, 205 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "VOL-01"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-18",
+    "mecanique": "refus-des-soif",
+    "source": "docs/systems/vampire/rules/les-des-de-soif-triomphes-brutaux-et-echecs-bestiaux.md ; livre de base français, p. 205 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "VOL-02"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-19",
+    "mecanique": "defaire-triomphe",
+    "source": "src/modules/dice/systemes/vampire.ts ; livre p. 206",
+    "support": "natif",
+    "casIds": [
+      "VOL-03"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-20",
+    "mecanique": "epuisement",
+    "source": "docs/systems/vampire/rules/jauges-et-ressources-individuelles.md ; livre de base français, p. 122, 157 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "VOL-04"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-21",
+    "mecanique": "usage-unique",
+    "source": "src/modules/dice/systemes/vampire.ts ; manuel GM-OS 54-Jeu-Vampire.md",
+    "support": "natif",
+    "casIds": [
+      "VOL-05"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-22",
+    "mecanique": "jet-jauge",
+    "source": "docs/systems/vampire/rules/resolution-des-jets.md ; livre de base français, p. 119, 122, 205 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "VOL-06"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-23",
+    "mecanique": "exaltation",
+    "source": "docs/systems/vampire/rules/le-test-d-exaltation-rouse-check.md ; livre de base français, p. 211 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "EXA-01",
+      "EXA-02"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-24",
+    "mecanique": "seuil-cinq",
+    "source": "src/modules/dice/systemes/vampire.ts ; livre p. 211, 220",
+    "support": "natif",
+    "casIds": [
+      "EXA-03"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-25",
+    "mecanique": "soif-max-reussite",
+    "source": "src/modules/dice/systemes/vampire.ts ; livre p. 211, 220",
+    "support": "natif",
+    "casIds": [
+      "EXA-04"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-26",
+    "mecanique": "soif-max-echec",
+    "source": "src/modules/dice/systemes/vampire.ts ; livre p. 219-220",
+    "support": "natif",
+    "casIds": [
+      "EXA-05"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-27",
+    "mecanique": "meilleur-de-deux",
+    "source": "docs/systems/vampire/rules/le-test-d-exaltation-rouse-check.md ; livre de base français, p. 211, 216 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "EXA-06"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-28",
+    "mecanique": "persistance-soif",
+    "source": "docs/systems/vampire/rules/les-des-de-soif-triomphes-brutaux-et-echecs-bestiaux.md ; livre de base français, p. 205, 211 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "EXA-07"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-29",
+    "mecanique": "maxima",
+    "source": "docs/systems/vampire/rules/jauges-et-ressources-individuelles.md ; livre de base français, p. 119, 157 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "COR-01"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-30",
+    "mecanique": "naissance-cases",
+    "source": "src/modules/session/logic/jeuDuPersonnage.ts ; src/modules/session/logic/HealthInterpreter.ts ; livre p. 119",
+    "support": "à vérifier",
+    "casIds": [
+      "COR-02"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "VAM-A01 : cinq cases génériques au lieu de six ; conformité en échec, assertion conservée."
+  },
+  {
+    "id": "VAM-31",
+    "mecanique": "sante-restante",
+    "source": "docs/systems/vampire/rules/sante-et-blessures.md ; livre de base français, p. 126-127 imprimées (PDF = imprimée + 4)",
+    "support": "à vérifier",
+    "casIds": [
+      "COR-03"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "La valeur restante doit persister ; aucun lien automatique avec les vingt cases de dégâts HTML n’est promis. Relever la divergence des cases génériques."
+  },
+  {
+    "id": "VAM-32",
+    "mecanique": "degats-html",
+    "source": "docs/systems/vampire/fiche/correspondance.json ; livre p. 126",
+    "support": "manuel",
+    "casIds": [
+      "COR-04"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Les marques mixtes persistent dans la fiche HTML ; elles ne déduisent pas automatiquement 2 points de Santé GM-OS."
+  },
+  {
+    "id": "VAM-33",
+    "mecanique": "degats-superficiels",
+    "source": "docs/systems/vampire/rules/degats-et-types-de-degats.md ; livre de base français, p. 126 imprimées (PDF = imprimée + 4)",
+    "support": "manuel",
+    "casIds": [
+      "COR-05"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "3 superficiels deviennent 2 après division/arrondi au supérieur selon le contexte ; distinguer le calcul de règle de la jauge générique du logiciel."
+  },
+  {
+    "id": "VAM-34",
+    "mecanique": "torpeur",
+    "source": "docs/systems/vampire/rules/sante-et-blessures.md ; livre de base français, p. 219-223 imprimées (PDF = imprimée + 4)",
+    "support": "manuel",
+    "casIds": [
+      "COR-06"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Ne pas assimiler un état générique dead à la Mort ultime V5 ; torpeur et exceptions sont arbitrées manuellement. Restaurer la fiche de recette."
+  },
+  {
+    "id": "VAM-35",
+    "mecanique": "initiative",
+    "source": "docs/systems/vampire/rules/initiative-et-deroulement-du-tour.md ; livre de base français, p. 124-125, 300 imprimées (PDF = imprimée + 4)",
+    "support": "natif",
+    "casIds": [
+      "COR-07"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-36",
+    "mecanique": "opposition-conflit",
+    "source": "docs/systems/vampire/rules/jets-opposes-aide-et-cooperation.md ; livre de base français, p. 123, 300 imprimées (PDF = imprimée + 4)",
+    "support": "manuel",
+    "casIds": [
+      "COR-08"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Reporter les réussites de l’adversaire comme difficulté ; égalité favorable à qui agit selon p. 123. Départages d’initiative et dégâts restent arbitrés."
+  },
+  {
+    "id": "VAM-37",
+    "mecanique": "guerison",
+    "source": "docs/systems/vampire/rules/sante-et-blessures.md ; livre de base français, p. 218-219 imprimées (PDF = imprimée + 4)",
+    "support": "manuel",
+    "casIds": [
+      "COR-09"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Le test change éventuellement la Soif ; il ne soigne pas automatiquement la fiche et ne synchronise pas les dégâts / X. Ne pas doubler une restauration."
+  },
+  {
+    "id": "VAM-38",
+    "mecanique": "chasse",
+    "source": "docs/systems/vampire/rules/le-coup-de-sang-blood-surge.md ; livre de base français, p. 211-218 imprimées (PDF = imprimée + 4)",
+    "support": "manuel",
+    "casIds": [
+      "MOR-01"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Aucune baisse de Soif au simple déplacement sur une carte ni au contact d’un PNJ. Les seuils, la résonance et le coût humain se règlent au livre."
+  },
+  {
+    "id": "VAM-39",
+    "mecanique": "coup-de-sang",
+    "source": "docs/systems/vampire/rules/le-coup-de-sang-blood-surge.md ; livre de base français, p. 216, 218 imprimées (PDF = imprimée + 4)",
+    "support": "manuel",
+    "casIds": [
+      "MOR-02"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Le tableau de Puissance et les coûts guident le conteur ; aucun pouvoir n’est activé par une ligne nommée Célérité. Restaurer le modificateur."
+  },
+  {
+    "id": "VAM-40",
+    "mecanique": "frenesie",
+    "source": "docs/systems/vampire/rules/la-frenesie-et-le-rotschreck.md ; livre de base français, p. 219-220 imprimées (PDF = imprimée + 4)",
+    "support": "manuel",
+    "casIds": [
+      "MOR-03"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Aucun dé de Soif sur le jet de Volonté ; frénésie, comportement et retour au calme sont arbitrés, pas joués par un automate."
+  },
+  {
+    "id": "VAM-41",
+    "mecanique": "remords",
+    "source": "docs/systems/vampire/rules/principes-de-la-chronique-convictions-et-fletrissures.md ; livre de base français, p. 238-241 imprimées (PDF = imprimée + 4)",
+    "support": "manuel",
+    "casIds": [
+      "MOR-04"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Un dé dans cet exemple (10−7−2) et minimum 1 ; ne pas lancer les 7 dés du score d’Humanité en prétendant un Remords automatique. Effacer les notes de recette ensuite."
+  },
+  {
+    "id": "VAM-42",
+    "mecanique": "lien-de-sang",
+    "source": "docs/systems/vampire/rules/le-lien-de-sang-blood-bond.md ; livre de base français, p. 233-234 imprimées (PDF = imprimée + 4)",
+    "support": "manuel",
+    "casIds": [
+      "MOR-05"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Aucun lien créé par l’entrée sur la carte ni par une promesse écrite. Le suivi est manuel ; restaurer les notes locales sans annuler les promesses de l’histoire."
+  },
+  {
+    "id": "VAM-43",
+    "mecanique": "progression",
+    "source": "docs/systems/vampire/rules/composition-de-la-fiche-de-personnage.md ; livre de base français, p. 130, 137 imprimées (PDF = imprimée + 4)",
+    "support": "manuel",
+    "casIds": [
+      "MOR-06"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Champs et éventuel trait modifiés explicitement ; pas de gain au changement de séance ni d’achat automatique de Discipline."
+  },
+  {
+    "id": "VAM-44",
+    "mecanique": "correspondance",
+    "source": "docs/systems/vampire/fiche/correspondance.json",
+    "support": "natif",
+    "casIds": [
+      "FIC-01"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-45",
+    "mecanique": "restauration-locale",
+    "source": "src/modules/session/store/entitySlice.ts ; ETATS-DE-REFERENCE.md",
+    "support": "natif",
+    "casIds": [
+      "FIC-02"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-46",
+    "mecanique": "import-unique",
+    "source": "src/modules/system/archive/NexusService.ts ; nexus.types.ts",
+    "support": "natif",
+    "casIds": [
+      "IMP-01"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-47",
+    "mecanique": "persistance",
+    "source": "src/modules/system/archive/nexus.types.ts ; src/types/trame.types.ts",
+    "support": "à vérifier",
+    "casIds": [
+      "IMP-02"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "12 séances prévues, 4 actes narratifs et 6 ateliers ; aucune séance activée ou terminée d’avance."
+  },
+  {
+    "id": "VAM-48",
+    "mecanique": "medias",
+    "source": "manifest.json assetMap ; médias originaux du lot",
+    "support": "natif",
+    "casIds": [
+      "MED-01"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Fonctions et données contrôlables hors ligne ; import Electron, écriture réseau, persistance réelle et recette humaine à exécuter séparément."
+  },
+  {
+    "id": "VAM-49",
+    "mecanique": "secrets",
+    "source": "src/modules/remote/logic/caviardageDesJoueurs.ts",
+    "support": "à vérifier",
+    "casIds": [
+      "HUB-01"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Marqueur absent ; pièces 2–12 non révélées absentes. Contrôle réseau distinct du test de caviardage pur GM-05."
+  },
+  {
+    "id": "VAM-50",
+    "mecanique": "droits",
+    "source": "src/modules/remote/actions/ficheActions.ts ; contrôle à faire en application",
+    "support": "à vérifier",
+    "casIds": [
+      "HUB-02"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Écriture et jet autorisés reçus par le MJ ; écriture sur autrui refusée, sans fuite de notes privées."
+  },
+  {
+    "id": "VAM-51",
+    "mecanique": "destinataires",
+    "source": "src/modules/dice/filDesDemandes.ts ; manuel GM-OS 54-Jeu-Vampire.md",
+    "support": "à vérifier",
+    "casIds": [
+      "HUB-03"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Vocabulaire Vampire conservé ; destinataires du caché respectés. Ne pas montrer sa valeur aux autres pour fabriquer la preuve."
+  },
+  {
+    "id": "VAM-52",
+    "mecanique": "modules",
+    "source": "src/modules/modulesDuJeu/catalogue.ts",
+    "support": "absent",
+    "casIds": [
+      "MOD-01"
+    ],
+    "archive": "01-Vampire-Le-registre-des-absents.gmos",
+    "limite": "Aucun module spécialisé compatible ; aucune console d’un autre jeu ni faux module Vampire livré."
+  }
+]

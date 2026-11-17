@@ -1,0 +1,287 @@
+{
+  "archive": {
+    "fichier": "01-Vampire-Le-registre-des-absents.gmos",
+    "sha256": "a674890257e6e86789ebffca640ac7fa2b3908dce7a3c1131a8e26d6dcc2db85"
+  },
+  "structurePartielle": true,
+  "controlesAutomatiques": 105,
+  "reussis": 104,
+  "echecs": 1,
+  "anomalies": [
+    {
+      "id": "VAM-A01",
+      "statut": "ÉCHEC CONSTATÉ",
+      "test": "Vampire — campagne réellement livrée [VAM-A01] conformité Santé : le profil CORPS doit avoir six cases, pas les cinq génériques",
+      "attendu": 6,
+      "observe": 5
+    }
+  ],
+  "imagesDecodees": 31,
+  "wavDecodes": 2,
+  "medias": [
+    {
+      "fichier": "assets/images/plan-lisiere.svg",
+      "sha256": "a59951ab99f1e8d42e224588c214db0d8db9281933f8ec3a54fda3e9175aa82f",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-permanence.svg",
+      "sha256": "22de3a7d12587e045001672e8ed3b2484ad446c1f85996e954a5ef5cfce790c1",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-theatre.svg",
+      "sha256": "59a86e4b2a808d1dadc0f8c062c4234fce242b5a4f7acfac0a5496b4345be61c",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-archives.svg",
+      "sha256": "d828139dfcbe6926ddb19bb199f900749a13cc5ed31a8ef3e45bfe5f78099877",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-port.svg",
+      "sha256": "533d58d9f6517013f485782afa0daa27bac5d26db032d4b1e85b25f91ab068cb",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-rotonde.svg",
+      "sha256": "dfb16e931bb3ad24cd006f52f61de4a90776908f225100cf7cd7830e0da09b61",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-atelier.svg",
+      "sha256": "24cd125eb47cbc6c9bdf0d24340381f406c766e3190791f798a82a9d85abdfe6",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-serre.svg",
+      "sha256": "492179b0672aa7c1231d05f48bf3b145439c696d8d97f9616a5d60959bacb231",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-meridien.svg",
+      "sha256": "9ed2a052e7f22407e2b82e23af7e21c3637db8d523a2343d5343a87e651e55d9",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-relais.svg",
+      "sha256": "57139a0461bc5e5d566998dc3197ffb86fbf7e8a6f328bed96193ce9a98240f6",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-audience.svg",
+      "sha256": "48e9218981c3a5a67056d0dba0526f5522ecd6c3b683941817e633578a11b027",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/plan-belvedere.svg",
+      "sha256": "1feebe21ecf6bf2d1f7bdcf5076786d9b5f7dbb63ee22b85a09df1d6e604a5a3",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-1.svg",
+      "sha256": "34ab2974a409c007b8455c07e934f8edc87115617dacf7181ebf3245633d4f59",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-2.svg",
+      "sha256": "9ca4a4aa00a899b3e2b4f692f62a18345ffdbbf700047bcd6c1d9d10b75bba2d",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-3.svg",
+      "sha256": "64d365083a0b8754dbf76d6f813c4f3314d6941caaa2f0322a59389a67740222",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-4.svg",
+      "sha256": "3617eedc8f7d11f501c84e4dc4bd79c782ec8ca78eb405ec76cf0ffa84ae2cbc",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-5.svg",
+      "sha256": "e0e33ff3e8eedeef8a96da026db38612b5510ef15be57ceea15c3fc2894c355a",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-6.svg",
+      "sha256": "821311bf9be97585572a55e8b91ff45ec949487ea45c01529cbf153755380ec9",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-7.svg",
+      "sha256": "bd68bdb4ee685cde898a5ed61a676ddd07058c129e6c7a05e3631f060ff97a51",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-8.svg",
+      "sha256": "98573e5f0fe3d02e65690246123ac701354f441badc29bbb55209e9e65eb3a1d",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-9.svg",
+      "sha256": "394826950a5a9231b97a7f1cb1e972781f1b1aa73960c06d6216d38ff8f1211c",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-10.svg",
+      "sha256": "b86c2621aadf39aaa1d0e0122fa9521b1bc0cfe86e15896f4ff2c7fe6807a1fa",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-11.svg",
+      "sha256": "86cbff60a882a436bff41e4ddab90969e1e791bd1b5cff077607e2a1c89866a8",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/piece-12.svg",
+      "sha256": "9e3cf28e3efae7554ad306f185879f71bb46297ed381d13fbd99f201a0b2cd97",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/cartouche-nadir.svg",
+      "sha256": "6771108130c05b59a0dd58773939269a7013c4f2a951dfe6593fda5712da9808",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/cartouche-alma.svg",
+      "sha256": "2cbd197ec1a8bb8ff23587a0229ea52309eb6d7bc1aa98ef4620a2e35bc70251",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/cartouche-sacha.svg",
+      "sha256": "4e3b59c56455a6aa60d27896d22f7ff8f756b5bad6d933e2126c7c4f461e9898",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/cartouche-jet.svg",
+      "sha256": "013b0f5cedc86f5d86a5756eed5601e479838c69d4ddab71376679323d3dee29",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/cartouche-sang.svg",
+      "sha256": "8fbbd72a762512412ecd4750faf07badc1ecbdcd96e58753be8ccdcf395dc0f0",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/cartouche-corps.svg",
+      "sha256": "1ad25e43c98e3d07d4576387d1b057d9cc2a15ad72d5fafdeb818b087b313212",
+      "dimensions": [
+        1200,
+        800
+      ]
+    },
+    {
+      "fichier": "assets/images/banniere.jpg",
+      "sha256": "dda0700dbc3913172bc6cee85449e71b37ee7eb2e70122e4e25fcd5cfecf5a00",
+      "dimensions": [
+        2400,
+        600
+      ]
+    },
+    {
+      "fichier": "assets/audio/appel.wav",
+      "sha256": "82574daca8324dcbee3d2c17ade9ffe780173d0fbf84b855c289506fe0525843",
+      "dureeSecondes": 4,
+      "ecouteHumaine": false
+    },
+    {
+      "fichier": "assets/audio/pulsation.wav",
+      "sha256": "cc9f16cde28ca00e8b521f6766a95a7743b746bde7bcd66e1d7899db7b904ca1",
+      "dureeSecondes": 4,
+      "ecouteHumaine": false
+    }
+  ],
+  "capturesExaminees": true,
+  "importElectron": false,
+  "hubReseau": false,
+  "recetteHumaine": "NON TESTÉ"
+}
