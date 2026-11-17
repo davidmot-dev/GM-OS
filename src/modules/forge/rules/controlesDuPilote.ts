@@ -1621,6 +1621,13 @@ export function controlerLePilote(
       choisit, jamais des valeurs qu'on ajoute.
     */
     composantesDuJet.forEach(([ou, liste]) => {
+        /*
+          Vampire (2026-11-17) : le second trait peut être un attribut, et les deux
+          s'additionnent bel et bien — « Force + Force pour soulever une lourde poutre »,
+          « Résolution + Sang-froid servant à résister à beaucoup de disciplines » (p. 118).
+          Le cas que ce contrôle craint est ici la règle du jeu.
+        */
+        if (ou === 'jet.reserve.composantes' && driver.jet?.vampire) return;
         const parSection = new Map<string, string[]>();
         for (const composante of liste ?? []) {
             // Même garde que la boucle précédente, et pour la même raison : une
@@ -2074,6 +2081,29 @@ export function controlerLePilote(
     }
     if (driver.combat?.initiativeEnReserve && !driver.combat.initiativeFormula?.trim()) {
         erreur('combat.initiativeEnReserve', "L'initiative en réserve lance autant de d6 que la formule d'initiative : elle est vide.");
+    }
+    /*
+      Vampire V5 (2026-11-17) : le pilote forgé faisait de l'attribut et de la compétence un
+      SEUIL par dé, sur une réserve de base à zéro — aucun dé lancé, et rien ne le disait.
+      Le livre : un d10 par point de l'attribut et de la compétence, chaque 6 réussit, la
+      Soif lue sur la fiche remplace des dés ordinaires (p. 118-120, 205).
+    */
+    const vamp = driver.jet?.vampire;
+    if (vamp) {
+        if (driver.jet?.sens !== 'superieur-ou-egal' || !driver.jet?.reserve?.composantes?.length || facesLancees(driver) !== 10 || (driver.jet?.seuil ?? []).length) {
+            avertir('jet.vampire', "Le bloc Vampire suppose une réserve de d10 composée de l'attribut et de la compétence, sans seuil composé (p. 118) : déclarer « reserve.composantes », « faces: 10 » et « sens: superieur-ou-egal ».");
+        }
+        if (driver.dice?.successThreshold !== undefined && driver.dice.successThreshold !== 6) {
+            avertir('dice.successThreshold', 'Chaque d10 de Vampire réussit sur 6 ou plus (p. 119) : `dice.successThreshold` doit valoir 6.');
+        }
+        if (!vamp.soif || !tousLesChamps.has(vamp.soif)) erreur('jet.vampire.soif', `Vampire lit la Soif dans « ${vamp.soif ?? ''} », absent de la fiche : aucun dé de Soif ne serait lancé (p. 205).`);
+        if (vamp.volonte && !tousLesChamps.has(vamp.volonte)) erreur('jet.vampire.volonte', `Vampire dépense la Volonté dans « ${vamp.volonte} », absent de la fiche.`);
+        for (const j of vamp.jauges ?? []) {
+            if (!tousLesChamps.has(j)) erreur('jet.vampire.jauges', `Le jet de jauge « ${j} » n'est pas un champ de la fiche.`);
+        }
+        if (driver.jet?.reserve?.cout?.length) {
+            avertir('jet.reserve.cout', "Vampire n'achète pas de dés : la Volonté relance jusqu'à trois dés ordinaires après le jet (p. 122).");
+        }
     }
     const deg = driver.jet?.degenesis;
     if (deg) {

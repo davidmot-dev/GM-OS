@@ -94,6 +94,9 @@ import DeltaGreenAuJet, { type DernierJetDG } from './DeltaGreenAuJet';
 import { CHOIX_DE_RUNEQUEST, nommerLeJetDeRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest, type JetDeRuneQuest } from '../../../dice/systemes/runequest';
 import { CHOIX_DE_DEGENESIS, lancerDegenesis, type ChoixDeDegenesis, type JetDeDegenesis } from '../../../dice/systemes/degenesis';
 import { AttaqueDegenesis, PreparationDegenesis, SuitesDegenesis, type AttaqueLancee } from './DegenesisAuJet';
+import { CHOIX_DE_VAMPIRE, compulsionAleatoire, lancerVampire, relanceImpossible, relancerVampire, testerLExaltation,
+    type ChoixDeVampire, type JetDeVampire, type TestDExaltation } from '../../../dice/systemes/vampire';
+import { PreparationVampire, SuitesVampire } from './VampireAuJet';
 import { useRoundDeDegenesisStore } from '../../../combat/useRoundDeDegenesisStore';
 import { actionsRestantes, bonusDeLaProchaineAction, maniabiliteDe } from '../../../dice/systemes/combatDeDegenesis';
 import { combinerLesDeclencheurs, desDeLAide, DIFFICULTE_DE_L_AIDE } from '../../../dice/systemes/jetsLiesDeDegenesis';
@@ -130,7 +133,7 @@ import {
 import { useModulesDuJeuJoueur, useModulesDuJeuMJ } from '../../../modulesDuJeu/magasins';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
 import type { ApportDuGroupe, DiceConfig } from '../../../../types/drivers';
-import { composantesARetenir as composantesDuJet, champsProposes, composerPourLaTablette, joindreLaDemande, type CompositionDemandee } from '../../../dice/demandeDeJet';
+import { composantesARetenir as composantesDuJet, champsProposes, composerPourLaTablette, joindreLaDemande, libelleDuChampPropose, type CompositionDemandee } from '../../../dice/demandeDeJet';
 
 /**
  * Lancer depuis la fiche de personnage.
@@ -561,6 +564,26 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      */
     const regleDegenesis = descripteur.degenesis;
     const [choixDegenesis, setChoixDegenesis] = useState<ChoixDeDegenesis>(CHOIX_DE_DEGENESIS);
+
+    /**
+     * **Vampire V5** (2026-11-17) : la spécialité, les dés du conteur et le jet de jauge se
+     * règlent avant ; la Volonté relance après coup et le test d'Exaltation monte la Soif
+     * (p. 122, 211). Ce qu'on écrit se voit aussitôt, avant le retour de la fiche — même
+     * parti que Barbarians.
+     */
+    const regleVampire = descripteur.vampire;
+    const [choixVampire, setChoixVampire] = useState<ChoixDeVampire>(CHOIX_DE_VAMPIRE);
+    const [vampireDuLancer, setVampireDuLancer] = useState<{ titre: string; sansSoif: boolean; compte: number; compulsion?: { nom: string; effet: string } } | null>(null);
+    const [exaltationVampire, setExaltationVampire] = useState<TestDExaltation | null>(null);
+    const [ecritsVampire, setEcritsVampire] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const valeursVampire = useMemo(() => ({ ...valeurs,
+        ...(ecritsVampire.base === valeurs && ecritsVampire.personnageId === personnageId ? ecritsVampire.maj : {}),
+    }), [valeurs, ecritsVampire, personnageId]);
+    const ecrireVampire = (maj: Record<string, unknown>) => {
+        setEcritsVampire(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche?.(maj);
+    };
+    const volonteVampire = regleVampire?.volonte && ecrireSurLaFiche ? Math.max(0, Math.trunc(Number(valeursVampire[regleVampire.volonte]) || 0)) : undefined;
     const egoDegenesis = regleDegenesis?.ego && ecrireSurLaFiche ? Math.max(0, Math.trunc(Number(valeurs[regleDegenesis.ego]) || 0)) : undefined;
     /*
       DEG-A1 et DEG-A2 (2026-11-03) : en combat, le personnage qui lance a son état du round
@@ -846,8 +869,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const jet = useMemo(
         () => {
             const prepare = preparerLeJet(
-            descripteur, regleDune ? valeursDune : descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : regleNephilim ? valeursNephilim : regleRuneQuest ? valeursRuneQuest : valeurs,
+            descripteur, regleDune ? valeursDune : descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : regleNephilim ? valeursNephilim : regleRuneQuest ? valeursRuneQuest : regleVampire ? valeursVampire : valeurs,
             {
+                ...(regleVampire ? { vampire: choixVampire } : {}),
                 ...(regleNephilim ? { nephilim: { ...choixNephilim, lieu: lieuN, conjonction: conjonctionN, intensite: intensiteN, seuilRK: seuilRKN } } : {}),
                 ...(regleRuneQuest ? { runequest: choixRuneQuest } : {}),
                 ...(regleDegenesis ? { degenesis: {
@@ -908,7 +932,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [stimulationDuJet, desDuPotentiel, desDAideDegenesis, aideVersDegenesis, maniabiliteDegenesis, etatDegenesis, bonusDegenesis, descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleShadowrun, choixShadowrunDuJet, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
+        [stimulationDuJet, desDuPotentiel, desDAideDegenesis, aideVersDegenesis, maniabiliteDegenesis, etatDegenesis, bonusDegenesis, descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleVampire, choixVampire, valeursVampire, regleShadowrun, choixShadowrunDuJet, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
     );
 
     /*
@@ -1463,6 +1487,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             : regleDegenesis && jet.degenesis
             // DEG-A4 : en combinaison, les déclencheurs reportés du premier test s'ajoutent s'il réussit (p. 20).
             ? combinerLesDeclencheurs(lancerDegenesis(jet.degenesis, jet.reussitesRequises, () => DiceEngine.roll(6)), liesDegenesis ? reportDegenesis : 0)
+            // Vampire : chaque 6 réussit, une paire de 10 en vaut quatre ; les dés de Soif à part (p. 120, 205).
+            : regleVampire && jet.vampire
+            ? lancerVampire(jet.vampire, jet.reussitesRequises, () => DiceEngine.roll(10))
             : descripteur.cthulhuHack
             ? DiceEngine.rollSauvegarde(jet.seuil, modificateurCH)
             : jet.garde
@@ -1741,6 +1768,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 const f = template.sections.flatMap(sec => sec.fields).find(x => x.id === c.champ);
                 return (f?.libelleSur && String(valeurs[f.libelleSur] ?? '').trim()) || f?.label || c.label;
             }).join(' + ')} (${jet.shadowrun.des} dés, ${jet.shadowrun.alternatif ? `${jet.shadowrun.speciaux} spéciaux` : `${jet.shadowrun.risque} de risque`}${jet.shadowrun.rr ? `, RR ${jet.shadowrun.rr}` : ''})`
+            // Vampire : « Dextérité + Mêlée (5 dés, dont 2 de Soif) », une discipline par son nom.
+            : jet.vampire
+            ? `${jet.composantesDeLaReserve.map(c => {
+                const f = template.sections.flatMap(sec => sec.fields).find(x => x.id === c.champ);
+                // Le libellé du menu : « Mêlée — Couteaux », « Célérité » (`libelleDuChampPropose`).
+                return f ? libelleDuChampPropose(f, valeurs) : c.label;
+            }).join(' + ')}${jet.vampire.specialite ? ' (spécialité)' : ''} (${jet.vampire.total} dé${jet.vampire.total > 1 ? 's' : ''}${jet.vampire.desDeSoif ? `, dont ${jet.vampire.desDeSoif} de Soif` : ''})`
             // Degenesis : « Instinct + Dressage (VA 3) », les champs de la réserve par leur nom.
             : jet.degenesis
             ? `${jet.composantesDeLaReserve.map(c => template.sections.flatMap(sec => sec.fields).find(f => f.id === c.champ)?.label ?? c.label).join(' + ')} (VA ${jet.degenesis.valeur})`
@@ -1757,6 +1791,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             + (engagesDuGroupe.length > 0
                 ? ` · ${engagesDuGroupe.map(d => `${d.apport.label}${d.apport.stocks.length > 1 ? ` (${d.stock!.label})` : ''} ×${d.points}`).join(', ')}`
                 : '');
+        // Vampire : la relance par la Volonté et la Compulsion se rattachent à ce lancer.
+        if (regleVampire && jet.vampire) {
+            setVampireDuLancer(d => ({ titre: titreDuJet, sansSoif: jet.vampire!.sansSoif, compte: (d?.compte ?? 0) + 1 }));
+            // La spécialité vaut pour une action (p. 118) : elle se décoche.
+            setChoixVampire(c => ({ ...c, specialite: false }));
+        }
         const seconde = jet.composantesDeLaSecondeReserve[0];
         setDernierLancer({
             titre: titreDuJet + (modificateur !== 'aucun' ? ` · ${libellesDuTirage[modificateur]}` : ''),
@@ -2036,6 +2076,35 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ecrireBarbarians({ [regleBarbarians.heroisme]: heroismeBarbarians + 1 });
         setBarbariansDuLancer(d => d && { ...d, pointAccorde: true });
         redire(`${barbariansDuLancer.titre} · échec critique`, { total: 0, modifier: 0, rolls: [], totalDisplay: `+1 point d’héroïsme accordé par le MJ → ${heroismeBarbarians + 1}` });
+    };
+
+    /** Vampire : un point de Volonté relance jusqu'à trois dés ordinaires, jamais ceux de Soif (p. 122, 205). */
+    const relancerVampireAuPanneau = (rangs: number[]) => {
+        const jetV = (resultat as JetDeVampire | null)?.vampire;
+        if (!regleVampire || !jetV || !vampireDuLancer || relanceImpossible(jetV, vampireDuLancer.sansSoif, volonteVampire)) return;
+        const apres = relancerVampire(jetV, rangs, () => DiceEngine.roll(10));
+        setResultat(apres);
+        const paye = regleVampire.volonte && volonteVampire !== undefined;
+        if (paye) ecrireVampire({ [regleVampire.volonte!]: volonteVampire - 1 });
+        redire(`${vampireDuLancer.titre} · relance par la Volonté${paye ? ` (${volonteVampire} → ${volonteVampire - 1})` : ''}`, apres);
+    };
+    /** Vampire : la Compulsion d'un échec bestial, tirée au tableau (p. 208). */
+    const compulsionVampire = () => {
+        if (!vampireDuLancer) return;
+        const c = compulsionAleatoire(DiceEngine.roll(10));
+        setVampireDuLancer(d => d && { ...d, compulsion: c });
+        redire(`${vampireDuLancer.titre} · Compulsion`, { total: 0, modifier: 0, rolls: [], totalDisplay: `${c.nom} — ${c.effet}` });
+    };
+    /** Vampire : le test d'Exaltation — un dé, et la Soif monte sur un échec (p. 211). */
+    const exalterVampire = (deuxDes: boolean) => {
+        if (!regleVampire) return;
+        const t = testerLExaltation(valeursVampire[regleVampire.soif], deuxDes, () => DiceEngine.roll(10));
+        setExaltationVampire(t);
+        if (t.soifApres !== t.soifAvant) ecrireVampire({ [regleVampire.soif]: t.soifApres });
+        redire('Test d’Exaltation', {
+            total: t.reussi ? 1 : 0, modifier: 0, successes: t.reussi ? 1 : 0, tagSuccess: t.reussi, totalDisplay: t.texte,
+            rolls: t.des.map(v => ({ val: v, sides: 10, isCritMax: v >= 6 })),
+        });
     };
 
     /** Le Panache d'Argyropée : des points ajoutés au dé déjà tiré, jusqu'à 9 (p. 84-85). */
@@ -2495,7 +2564,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       si le jeu y a quelque chose : une difficulté, des réserves où puiser, la
       préparation d'Alien… — une étape vide numérotée mentirait sur l'ordre.
     */
-    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleArgyropee || !!regleCoc || !!regleRuneQuest || !!regleDegenesis || !!regleShadowrun || disponiblesPerso.length > 0
+    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleArgyropee || !!regleCoc || !!regleRuneQuest || !!regleDegenesis || !!regleVampire || !!regleShadowrun || disponiblesPerso.length > 0
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
         || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable
@@ -2510,11 +2579,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     */
     const runequestDuResultat = (resultat as JetDeRuneQuest | null)?.runequest;
     const degenesisDuResultat = (resultat as JetDeDegenesis | null)?.degenesis;
+    const vampireDuResultat = (resultat as JetDeVampire | null)?.vampire;
     const shadowrunDuResultat = (resultat as JetDeShadowrun | null)?.shadowrun;
-    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || argyropeeDuResultat || runequestDuResultat || degenesisDuResultat || shadowrunDuResultat || cocDuResultat)
-        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, Argyropée p. 44, RuneQuest p. 142, Degenesis p. 19, COC p. 58), et non le degré générique du moteur.
+    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || argyropeeDuResultat || runequestDuResultat || degenesisDuResultat || vampireDuResultat || shadowrunDuResultat || cocDuResultat)
+        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, Argyropée p. 44, RuneQuest p. 142, Degenesis p. 19, Vampire p. 120 et 207, COC p. 58), et non le degré générique du moteur.
         ? <span className={'font-black uppercase tracking-widest ' + (resultat.tagSuccess ? 'text-etat-succes' : 'text-etat-danger')}>
-            {gardeDuResultat?.libelle ?? argyropeeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? shadowrunDuResultat?.libelle ?? cocDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
+            {gardeDuResultat?.libelle ?? argyropeeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? vampireDuResultat?.libelle ?? shadowrunDuResultat?.libelle ?? cocDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
         </span>
         : resultat && !paniqueEnAttente
         && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
@@ -2668,9 +2738,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             un nombre tombé du ciel. */}
                         {jet.composantesDeLaReserve.length > 0 && (
                             <div className="flex items-baseline gap-2 text-xs">
-                                {/* Degenesis : la valeur d'action avant modificateurs ; les dés modifiés se lisent à l'étape « Préparer ». */}
-                                <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">{destin ? 'Domaine' : jet.degenesis ? "Valeur d'action" : 'Réserve'}</span>
-                                <span className="font-mono text-lg font-black text-accent">{jet.degenesis ? jet.degenesis.base : jet.nombreDeDes}</span>
+                                {/* Degenesis : la valeur d'action avant modificateurs ; les dés modifiés se lisent à l'étape « Préparer ».
+                                    Vampire (17/11) : le groupement des traits — afficher les seuls dés ordinaires donnait « 3 = 3 + 2 ». */}
+                                <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">{destin ? 'Domaine' : jet.degenesis ? "Valeur d'action" : jet.vampire ? 'Groupement' : 'Réserve'}</span>
+                                <span className="font-mono text-lg font-black text-accent">{jet.degenesis ? jet.degenesis.base : jet.vampire ? jet.vampire.base : jet.nombreDeDes}</span>
                                 {regleJetAlien ? <span className="text-app-text/50">dés de base + {jet.desSecondaires} dés de Stress, après modificateurs</span> : <span className="text-app-text/30 font-mono">
                                     = {[
                                         ...(descripteur.reserve?.base ? [`${descripteur.reserve.base}`] : []),
@@ -2723,7 +2794,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {jet.desSecondaires > 0 && (
                             <div className="flex items-baseline gap-2 text-xs">
                                 <span className="text-etat-alerte/60 font-bold uppercase tracking-widest text-ui-9">
-                                    {descripteur.reserve?.secondaire?.label ?? 'Seconde réserve'}
+                                    {descripteur.reserve?.secondaire?.label ?? (regleVampire ? 'Dés de Soif' : 'Seconde réserve')}
                                 </span>
                                 <span className="font-mono text-lg font-black text-etat-alerte">{jet.desSecondaires}</span>
                                 {jet.composantesDeLaSecondeReserve.length > 0 && (
@@ -3067,6 +3138,20 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 }) : undefined}
                             arme={armeDegenesis} setArme={setArmeDegenesis} />
                     )}
+                    {regleVampire && (
+                        <PreparationVampire choix={choixVampire} setChoix={setChoixVampire} reserve={jet.vampire}
+                            difficulte={difficulte} setDifficulte={setDifficulte}
+                            specialites={(() => {
+                                // Le texte des spécialités : le champ que la compétence retenue nomme par `libelleSur` (p. 118).
+                                const champs = template.sections.flatMap(sec => sec.fields);
+                                const texte = jet.composantesDeLaReserve
+                                    .map(c => champs.find(f => f.id === c.champ)?.libelleSur)
+                                    .map(cle => (cle ? String(valeursVampire[cle] ?? '').trim() : ''))
+                                    .find(Boolean);
+                                return texte || undefined;
+                            })()}
+                            exalter={ecrireSurLaFiche ? exalterVampire : undefined} dernierTest={exaltationVampire} />
+                    )}
                     {regleDegenesis && contaminationDegenesis && (
                         <StimulationEtPotentielAuJet bonus={bonusDeStimulation} prise={stimulationPrise} setPrise={setStimulationPrise}
                             potentiels={potentielsDegenesis} potentiel={potentielDegenesis} setPotentiel={setPotentielDegenesis} />
@@ -3245,7 +3330,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système.
                         Pas chez Crimes : le Potentiel dit le nombre de dés, rien ne s'y ajoute ;
                         ni chez Barbarians, dont les dés de bonus et de malus se règlent à l'étape 2. */}
-                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleArgyropee || regleCoc || regleRuneQuest || regleDegenesis || regleShadowrun ? 'hidden' : ''}`}>
+                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleArgyropee || regleCoc || regleRuneQuest || regleDegenesis || regleVampire || regleShadowrun ? 'hidden' : ''}`}>
                         <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                         <button
                             onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -3463,6 +3548,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             const mention = aideStarTrek ? `${aideStarTrek}${critique ? ' · 2' : complique ? ' · compl.' : ''}`
                                 : ecarte ? 'Écarté'
                                 : gardeDuResultat ? (unGarde ? 'Un' : d.isCritMax ? 'Réussite' : 'Gardé')
+                                // Vampire : les dés de Soif se nomment ; un 10 apparié est critique (p. 120, 205).
+                                : vampireDuResultat ? (seconde ? (d.isCritMax ? 'Soif · crit.' : `Soif${val === 1 || val === 10 ? ` · ${val}` : ''}`)
+                                    : d.isCritMax ? 'Critique' : d.relance ? 'Relancé' : undefined)
                                 : declenche ? nomDuUn
                                 : seconde ? descripteur.reserve?.secondaire?.label
                                 : critique ? 'Critique'
@@ -3489,6 +3577,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                     title={echangeable ? (ecarte ? 'Garder ce dé à la place du meilleur gardé' : 'Écarter ce dé au profit du meilleur écarté')
                                         : unGarde ? 'Un 1 : gardé d’office'
                                         : ecarte ? 'Dé écarté — celui que le tirage n’a pas retenu'
+                                        : vampireDuResultat && seconde ? 'Dé de Soif : un 10 fait le triomphe brutal, un 1 l’échec bestial ; la Volonté ne le relance pas'
+                                        : vampireDuResultat && d.isCritMax ? 'Un 10 de la paire : quatre réussites pour deux dés'
                                         : declenche ? nomDuUn
                                         : seconde ? descripteur.reserve?.secondaire?.label
                                         : critique ? 'Deux réussites'
@@ -3535,7 +3625,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 {bonusDuLancer > 0 && ` (dont +${bonusDuLancer} ${ficheDeGroupe?.libelle ?? 'groupe'})`}
                                 {descripteur.difficulte
                                     // Degenesis : la difficulté du lancer, +1 pour un assistant (DEG-A4, p. 21).
-                                    ? ` / difficulté ${shadowrunDuResultat ? shadowrunDuResultat.seuil : regleStarTrek && starTrekDuLancer ? starTrekDuLancer.difficulte : degenesisDuResultat ? degenesisDuResultat.difficulte : difficulte}`
+                                    ? ` / difficulté ${shadowrunDuResultat ? shadowrunDuResultat.seuil : regleStarTrek && starTrekDuLancer ? starTrekDuLancer.difficulte : degenesisDuResultat ? degenesisDuResultat.difficulte : vampireDuResultat ? vampireDuResultat.difficulte : difficulte}`
                                     : ` / ${jet.reussitesRequises} requise${jet.reussitesRequises > 1 ? 's' : ''}`}
                                 {/* Star Trek : ce que l'aide a donné, ou pourquoi elle ne compte pas (p. 256). */}
                                 {regleStarTrek && starTrekDuLancer && resultat.totalDisplay.replace(/^\d+ réussites?/, '')}
@@ -3567,7 +3657,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {/* L'excédent alimente la monnaie de table — et depuis
                             le mur n° 4, il y est réellement versé. */}
                         {/* Degenesis n'a pas de monnaie à nourrir : ses succès en trop ne valent rien hors des actions complexes. */}
-                        {v.excedent > 0 && !regleJetAlien && !gardeDuResultat && !degenesisDuResultat && !shadowrunDuResultat && (
+                        {/* Vampire : l'excédent est la marge, dite avec les suites du jet (p. 121). */}
+                        {v.excedent > 0 && !regleJetAlien && !gardeDuResultat && !degenesisDuResultat && !vampireDuResultat && !shadowrunDuResultat && (
                             <span className="text-etat-alerte/80 font-mono">
                                 +{v.excedent}{monnaie && jet.cout.ressource ? ` ${nomDe(jet.cout.ressource)}` : ' excédent'}
                             </span>
@@ -3658,6 +3749,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 consigner={ligne => redire(dernierLancer?.titre ?? 'RuneQuest', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne })} />
                         )}
                         {regleDegenesis && degenesisDuResultat && <SuitesDegenesis jet={resultat as JetDeDegenesis} />}
+                        {regleVampire && vampireDuResultat && vampireDuLancer && (
+                            <SuitesVampire key={`${vampireDuLancer.compte}-${vampireDuResultat.relance ? 'r' : ''}`} jet={resultat as JetDeVampire}
+                                sansSoif={vampireDuLancer.sansSoif} volonte={volonteVampire}
+                                relancer={relancerVampireAuPanneau} tirerLaCompulsion={compulsionVampire} compulsion={vampireDuLancer.compulsion} />
+                        )}
                         {combatDegenesis && degenesisDuResultat && attaqueDegenesis && !pourLesJoueurs && (
                             <AttaqueDegenesis key={attaqueDegenesis.compte} regle={combatDegenesis} champTraumatismes={regleDegenesis?.traumatismes}
                                 valeurs={valeurs} jet={resultat as JetDeDegenesis} attaque={attaqueDegenesis} de={() => DiceEngine.roll(6)}

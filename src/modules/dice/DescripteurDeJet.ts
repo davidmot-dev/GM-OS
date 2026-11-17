@@ -28,6 +28,7 @@ import { estUnAndroide } from './systemes/paniqueAlien';
 import { CHOIX_DE_RUNEQUEST, calculerRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest } from './systemes/runequest';
 import { ajustementsDuJet, lireLEtat } from './systemes/progressionDeRuneQuest';
 import { reserveDeDegenesis, type ChoixDeDegenesis, type ReserveDeDegenesis } from './systemes/degenesis';
+import { reserveDeVampire, type ChoixDeVampire, type ReserveDeVampire } from './systemes/vampire';
 import { desDeRisqueConseilles, reserveDeShadowrun, rrBornee, type ChoixDeShadowrun, type ReserveDeShadowrun } from './systemes/shadowrun';
 import { lireSuiviShadowrun } from './systemes/suiviDeShadowrun';
 import { lireMatriceShadowrun, preparerMatriceShadowrun } from './systemes/matriceDeShadowrun';
@@ -552,6 +553,13 @@ export interface DescripteurDeJet {
      */
     runequest?: import('./systemes/runequest').RegleDeRuneQuest;
     /**
+     * **Vampire : la Mascarade (V5)** — 2026-11-17 (`systemes/vampire.ts`) : le groupement
+     * (attribut + compétence, + 1 dé de spécialité) se lance en d10, chaque 6 réussit, chaque
+     * paire de 10 vaut quatre réussites ; autant de dés que la Soif sont des dés de Soif, qui
+     * font les triomphes brutaux et les échecs bestiaux (p. 118-122, 205-208).
+     */
+    vampire?: import('./systemes/vampire').RegleDeVampire;
+    /**
      * **Degenesis** — 2026-10-30 (`systemes/degenesis.ts`) : la réserve (attribut +
      * compétence) se modifie en dés, perd un dé par Traumatisme, gagne l'Égo dépensé ;
      * au-delà de 12 dés, le surplus devient des succès d'office. Chaque 4+ est un
@@ -642,6 +650,8 @@ export interface ChoixDuJoueur {
     runequest?: Partial<ChoixDeRuneQuest>;
     /** Ce que le panneau règle pour Degenesis (`DescripteurDeJet.degenesis`) : modificateurs en dés, Égo dépensé. */
     degenesis?: Partial<ChoixDeDegenesis>;
+    /** Ce que le panneau règle pour Vampire (`DescripteurDeJet.vampire`) : spécialité, dés du conteur, jet de jauge. */
+    vampire?: Partial<ChoixDeVampire>;
     /** Ce que le panneau règle pour Shadowrun (`DescripteurDeJet.shadowrun`) : risque, RR, avantage, spécialisation. */
     shadowrun?: Partial<ChoixDeShadowrun>;
     /** La valeur de l'adversaire, quand le jet s'oppose à lui. Absente : pas d'opposition. */
@@ -754,6 +764,8 @@ export interface JetPrepare {
     runequest?: CalculDeRuneQuest;
     /** Degenesis : la valeur d'action modifiée, les dés lancés et les succès d'office. */
     degenesis?: ReserveDeDegenesis;
+    /** Le groupement de Vampire et ses dés de Soif (`DescripteurDeJet.vampire`). */
+    vampire?: ReserveDeVampire;
     /** Shadowrun : la réserve, ses dés de risque, la RR, l'avantage et la RR lue sur la ligne de la compétence. */
     shadowrun?: ReserveDeShadowrun & { rrDeLaCompetence?: number };
     nombreDeDes: number;
@@ -1499,6 +1511,20 @@ export function preparerLeJet(
     if (degenesis?.automatiques) remarques.push(`Valeur d'action ${degenesis.valeur} : ${degenesis.des} dés et ${degenesis.automatiques} succès d'office.`);
 
     /*
+      **Vampire** (2026-11-17) : le groupement n'a pas de plafond (« dix dés ou plus »,
+      p. 118) et ne tombe jamais sous un dé (p. 120) ; la Soif lue sur la fiche remplace
+      autant de dés ordinaires (p. 205), sauf sur un jet de jauge — coché par le joueur, ou
+      reconnu quand la Volonté ou l'Humanité est retenue au menu.
+    */
+    const jaugeRetenue = !!descripteur.vampire?.jauges?.some(j => deLaReserve.retenues.some(r => r.champ === j));
+    const vampire = descripteur.vampire && reserve
+        ? reserveDeVampire(reserveDeDepart, { ...choix.vampire, sansSoif: !!choix.vampire?.sansSoif || jaugeRetenue },
+            lireLeChamp(valeursDeLaFiche, descripteur.vampire.soif).valeur ?? 0)
+        : undefined;
+    if (vampire?.desDeSoif) remarques.push(`Soif ${vampire.soif} : ${vampire.desDeSoif} dé${vampire.desDeSoif > 1 ? 's' : ''} de Soif sur ${vampire.total}.`);
+    if (vampire?.sansSoif && vampire.soif > 0) remarques.push('Jet de jauge : aucun dé de Soif (p. 205).');
+
+    /*
       **Shadowrun : Anarchy** (2026-10-31) : *« aucune circonstance ne peut faire changer ce
       nombre de dés »* (p. 64) — les circonstances déplacent la valeur du succès, et le risque
       se prend DANS la réserve. La RR se lit sur la ligne de la compétence retenue, sauf si
@@ -1554,7 +1580,7 @@ export function preparerLeJet(
 
     // Les dés achetés ne franchissent pas le plafond du système : chez Dune,
     // cinq dés au total, quoi qu'on dépense.
-    const demandes = degenesis ? degenesis.des : shadowrun ? shadowrun.des + shadowrun.speciaux : reserveDeDepart + Math.max(0, choix.desSupplementaires ?? 0);
+    const demandes = degenesis ? degenesis.des : vampire ? vampire.total : shadowrun ? shadowrun.des + shadowrun.speciaux : reserveDeDepart + Math.max(0, choix.desSupplementaires ?? 0);
     const nombreDeDes = reserve?.sansPlafond ? demandes : Math.min(demandes, reserve?.max ?? 0);
     if (reserve && !reserve.sansPlafond && demandes > reserve.max) {
         avertissements.push(`Réserve plafonnée à ${reserve.max} dés.`);
@@ -1564,7 +1590,8 @@ export function preparerLeJet(
     // franchis, pas le nombre de dés fois un prix moyen.
     // Chez Degenesis, les dés en plus viennent des modificateurs et de l'Égo : aucun ne s'achète.
     // Chez Shadowrun non plus : la spécialisation et les dés spéciaux ne s'achètent pas.
-    const desAchetes = degenesis || shadowrun ? 0 : nombreDeDes - reserveDeDepart;
+    // Chez Vampire, les dés en plus viennent de la spécialité et du conteur (p. 118, 120).
+    const desAchetes = degenesis || shadowrun || vampire ? 0 : nombreDeDes - reserveDeDepart;
     const echelons = reserve?.cout ?? [];
     const total = echelons.slice(0, Math.max(0, desAchetes)).reduce((s, c) => s + c, 0);
 
@@ -1648,6 +1675,7 @@ export function preparerLeJet(
         ...(nephilim ? { nephilim } : {}),
         ...(runequest ? { runequest } : {}),
         ...(degenesis ? { degenesis } : {}),
+        ...(vampire ? { vampire } : {}),
         ...(shadowrun ? { shadowrun } : {}),
         echelle,
         /*
@@ -1656,7 +1684,8 @@ export function preparerLeJet(
           déclarée — un `Math.min` avec zéro aurait rendu « 0 dé » sur un jet
           parfaitement composé.
         */
-        nombreDeDes: descripteur.desEchelonnes ? poignee.des.length : nombreDeDes,
+        // Vampire : les dés ordinaires ; ceux de Soif sont la seconde poule, comptée à part (p. 205).
+        nombreDeDes: descripteur.desEchelonnes ? poignee.des.length : vampire ? vampire.ordinaires : nombreDeDes,
         desEchelonnes: poignee.des,
         composantesDeLaReserve: deLaReserve.retenues,
         /*
@@ -1664,7 +1693,8 @@ export function preparerLeJet(
           stress s'ajoute par-dessus, et le borner effacerait la pression que le
           jeu met précisément là.
         */
-        desSecondaires: descripteur.panique?.suites && estUnAndroide(descripteur.panique.suites, valeursDeLaFiche) ? 0
+        desSecondaires: vampire ? vampire.desDeSoif
+            : descripteur.panique?.suites && estUnAndroide(descripteur.panique.suites, valeursDeLaFiche) ? 0
             : Math.max(0, (descripteur.reserve?.secondaire?.base ?? 0) + deLaSeconde.total),
         composantesDeLaSecondeReserve: deLaSeconde.retenues,
         desAchetes: Math.max(0, desAchetes),
