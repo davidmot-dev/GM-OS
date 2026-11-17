@@ -1,0 +1,679 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "vampire-v5-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Vampire (pilote 2.0.0, outils/vampire/finir_vampire.mjs) et le gabarit vampire-v5-fr livré le 2026-11-17. Les identifiants GM-OS sont courts et en français ; les 27 compétences et les 9 attributs suivent le livre (p. 155-171). La Santé et la Volonté restantes n’existent que dans GM-OS ; leurs cases de dégâts restent sur la fiche HTML.",
+  "champs": [
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "concept",
+      "fiche": "identity.concept"
+    },
+    {
+      "gmos": "predateur",
+      "fiche": "identity.predator"
+    },
+    {
+      "gmos": "chronique",
+      "fiche": "identity.chronicle"
+    },
+    {
+      "gmos": "ambition",
+      "fiche": "identity.ambition"
+    },
+    {
+      "gmos": "desir",
+      "fiche": "identity.desire"
+    },
+    {
+      "gmos": "clan",
+      "fiche": "identity.clan"
+    },
+    {
+      "gmos": "sire",
+      "fiche": "identity.sire"
+    },
+    {
+      "gmos": "generation",
+      "fiche": "identity.generation"
+    },
+    {
+      "gmos": "force",
+      "fiche": "attributes.strength"
+    },
+    {
+      "gmos": "dexterite",
+      "fiche": "attributes.dexterity"
+    },
+    {
+      "gmos": "vigueur",
+      "fiche": "attributes.stamina"
+    },
+    {
+      "gmos": "charisme",
+      "fiche": "attributes.charisma"
+    },
+    {
+      "gmos": "manipulation",
+      "fiche": "attributes.manipulation"
+    },
+    {
+      "gmos": "sang_froid",
+      "fiche": "attributes.composure"
+    },
+    {
+      "gmos": "intelligence",
+      "fiche": "attributes.intelligence"
+    },
+    {
+      "gmos": "astuce",
+      "fiche": "attributes.wits"
+    },
+    {
+      "gmos": "resolution",
+      "fiche": "attributes.resolve"
+    },
+    {
+      "gmos": "armes_a_feu",
+      "fiche": "skills.firearms"
+    },
+    {
+      "gmos": "armes_a_feu_specialites",
+      "fiche": "specialties.firearms"
+    },
+    {
+      "gmos": "artisanat",
+      "fiche": "skills.craft"
+    },
+    {
+      "gmos": "artisanat_specialites",
+      "fiche": "specialties.craft"
+    },
+    {
+      "gmos": "athletisme",
+      "fiche": "skills.athletics"
+    },
+    {
+      "gmos": "athletisme_specialites",
+      "fiche": "specialties.athletics"
+    },
+    {
+      "gmos": "bagarre",
+      "fiche": "skills.brawl"
+    },
+    {
+      "gmos": "bagarre_specialites",
+      "fiche": "specialties.brawl"
+    },
+    {
+      "gmos": "conduite",
+      "fiche": "skills.drive"
+    },
+    {
+      "gmos": "conduite_specialites",
+      "fiche": "specialties.drive"
+    },
+    {
+      "gmos": "furtivite",
+      "fiche": "skills.stealth"
+    },
+    {
+      "gmos": "furtivite_specialites",
+      "fiche": "specialties.stealth"
+    },
+    {
+      "gmos": "larcin",
+      "fiche": "skills.larceny"
+    },
+    {
+      "gmos": "larcin_specialites",
+      "fiche": "specialties.larceny"
+    },
+    {
+      "gmos": "melee",
+      "fiche": "skills.melee"
+    },
+    {
+      "gmos": "melee_specialites",
+      "fiche": "specialties.melee"
+    },
+    {
+      "gmos": "survie",
+      "fiche": "skills.survival"
+    },
+    {
+      "gmos": "survie_specialites",
+      "fiche": "specialties.survival"
+    },
+    {
+      "gmos": "animaux",
+      "fiche": "skills.animal_ken"
+    },
+    {
+      "gmos": "animaux_specialites",
+      "fiche": "specialties.animal_ken"
+    },
+    {
+      "gmos": "commandement",
+      "fiche": "skills.leadership"
+    },
+    {
+      "gmos": "commandement_specialites",
+      "fiche": "specialties.leadership"
+    },
+    {
+      "gmos": "empathie",
+      "fiche": "skills.insight"
+    },
+    {
+      "gmos": "empathie_specialites",
+      "fiche": "specialties.insight"
+    },
+    {
+      "gmos": "etiquette",
+      "fiche": "skills.etiquette"
+    },
+    {
+      "gmos": "etiquette_specialites",
+      "fiche": "specialties.etiquette"
+    },
+    {
+      "gmos": "experience_de_la_rue",
+      "fiche": "skills.streetwise"
+    },
+    {
+      "gmos": "experience_de_la_rue_specialites",
+      "fiche": "specialties.streetwise"
+    },
+    {
+      "gmos": "intimidation",
+      "fiche": "skills.intimidation"
+    },
+    {
+      "gmos": "intimidation_specialites",
+      "fiche": "specialties.intimidation"
+    },
+    {
+      "gmos": "persuasion",
+      "fiche": "skills.persuasion"
+    },
+    {
+      "gmos": "persuasion_specialites",
+      "fiche": "specialties.persuasion"
+    },
+    {
+      "gmos": "representation",
+      "fiche": "skills.performance"
+    },
+    {
+      "gmos": "representation_specialites",
+      "fiche": "specialties.performance"
+    },
+    {
+      "gmos": "subterfuge",
+      "fiche": "skills.subterfuge"
+    },
+    {
+      "gmos": "subterfuge_specialites",
+      "fiche": "specialties.subterfuge"
+    },
+    {
+      "gmos": "erudition",
+      "fiche": "skills.academics"
+    },
+    {
+      "gmos": "erudition_specialites",
+      "fiche": "specialties.academics"
+    },
+    {
+      "gmos": "finances",
+      "fiche": "skills.finance"
+    },
+    {
+      "gmos": "finances_specialites",
+      "fiche": "specialties.finance"
+    },
+    {
+      "gmos": "investigation",
+      "fiche": "skills.investigation"
+    },
+    {
+      "gmos": "investigation_specialites",
+      "fiche": "specialties.investigation"
+    },
+    {
+      "gmos": "medecine",
+      "fiche": "skills.medicine"
+    },
+    {
+      "gmos": "medecine_specialites",
+      "fiche": "specialties.medicine"
+    },
+    {
+      "gmos": "occultisme",
+      "fiche": "skills.occult"
+    },
+    {
+      "gmos": "occultisme_specialites",
+      "fiche": "specialties.occult"
+    },
+    {
+      "gmos": "politique",
+      "fiche": "skills.politics"
+    },
+    {
+      "gmos": "politique_specialites",
+      "fiche": "specialties.politics"
+    },
+    {
+      "gmos": "sciences",
+      "fiche": "skills.science"
+    },
+    {
+      "gmos": "sciences_specialites",
+      "fiche": "specialties.science"
+    },
+    {
+      "gmos": "technologie",
+      "fiche": "skills.technology"
+    },
+    {
+      "gmos": "technologie_specialites",
+      "fiche": "specialties.technology"
+    },
+    {
+      "gmos": "vigilance",
+      "fiche": "skills.awareness"
+    },
+    {
+      "gmos": "vigilance_specialites",
+      "fiche": "specialties.awareness"
+    },
+    {
+      "gmos": "discipline_1_nom",
+      "fiche": "disciplines.0.name"
+    },
+    {
+      "gmos": "discipline_1",
+      "fiche": "disciplines.0.level"
+    },
+    {
+      "gmos": "discipline_1_pouvoirs",
+      "fiche": [
+        "disciplines.0.powers.0",
+        "disciplines.0.powers.1",
+        "disciplines.0.powers.2",
+        "disciplines.0.powers.3",
+        "disciplines.0.powers.4"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "discipline_2_nom",
+      "fiche": "disciplines.1.name"
+    },
+    {
+      "gmos": "discipline_2",
+      "fiche": "disciplines.1.level"
+    },
+    {
+      "gmos": "discipline_2_pouvoirs",
+      "fiche": [
+        "disciplines.1.powers.0",
+        "disciplines.1.powers.1",
+        "disciplines.1.powers.2",
+        "disciplines.1.powers.3",
+        "disciplines.1.powers.4"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "discipline_3_nom",
+      "fiche": "disciplines.2.name"
+    },
+    {
+      "gmos": "discipline_3",
+      "fiche": "disciplines.2.level"
+    },
+    {
+      "gmos": "discipline_3_pouvoirs",
+      "fiche": [
+        "disciplines.2.powers.0",
+        "disciplines.2.powers.1",
+        "disciplines.2.powers.2",
+        "disciplines.2.powers.3",
+        "disciplines.2.powers.4"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "discipline_4_nom",
+      "fiche": "disciplines.3.name"
+    },
+    {
+      "gmos": "discipline_4",
+      "fiche": "disciplines.3.level"
+    },
+    {
+      "gmos": "discipline_4_pouvoirs",
+      "fiche": [
+        "disciplines.3.powers.0",
+        "disciplines.3.powers.1",
+        "disciplines.3.powers.2",
+        "disciplines.3.powers.3",
+        "disciplines.3.powers.4"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "discipline_5_nom",
+      "fiche": "disciplines.4.name"
+    },
+    {
+      "gmos": "discipline_5",
+      "fiche": "disciplines.4.level"
+    },
+    {
+      "gmos": "discipline_5_pouvoirs",
+      "fiche": [
+        "disciplines.4.powers.0",
+        "disciplines.4.powers.1",
+        "disciplines.4.powers.2",
+        "disciplines.4.powers.3",
+        "disciplines.4.powers.4"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "discipline_6_nom",
+      "fiche": "disciplines.5.name"
+    },
+    {
+      "gmos": "discipline_6",
+      "fiche": "disciplines.5.level"
+    },
+    {
+      "gmos": "discipline_6_pouvoirs",
+      "fiche": [
+        "disciplines.5.powers.0",
+        "disciplines.5.powers.1",
+        "disciplines.5.powers.2",
+        "disciplines.5.powers.3",
+        "disciplines.5.powers.4"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "soif",
+      "fiche": "tracks.hunger"
+    },
+    {
+      "gmos": "humanite",
+      "fiche": "tracks.humanity"
+    },
+    {
+      "gmos": "puissance_du_sang",
+      "fiche": "blood.potency"
+    },
+    {
+      "gmos": "resonance",
+      "fiche": "blood.resonance"
+    },
+    {
+      "gmos": "coup_de_sang",
+      "fiche": "blood.surge"
+    },
+    {
+      "gmos": "degats_regeneres",
+      "fiche": "blood.mending"
+    },
+    {
+      "gmos": "bonus_aux_pouvoirs",
+      "fiche": "blood.power_bonus"
+    },
+    {
+      "gmos": "relance_exaltation",
+      "fiche": "blood.rouse_reroll"
+    },
+    {
+      "gmos": "penalite_nourriture",
+      "fiche": "blood.feeding_penalty"
+    },
+    {
+      "gmos": "score_de_fleau",
+      "fiche": "blood.bane_severity"
+    },
+    {
+      "gmos": "principes",
+      "fiche": "beliefs.tenets"
+    },
+    {
+      "gmos": "attaches_convictions",
+      "fiche": "beliefs.touchstones_convictions"
+    },
+    {
+      "gmos": "fleau_de_clan",
+      "fiche": "beliefs.clan_bane"
+    },
+    {
+      "gmos": "avantage_1",
+      "fiche": "advantages.0.name"
+    },
+    {
+      "gmos": "avantage_1_niveau",
+      "fiche": "advantages.0.level"
+    },
+    {
+      "gmos": "avantage_2",
+      "fiche": "advantages.1.name"
+    },
+    {
+      "gmos": "avantage_2_niveau",
+      "fiche": "advantages.1.level"
+    },
+    {
+      "gmos": "avantage_3",
+      "fiche": "advantages.2.name"
+    },
+    {
+      "gmos": "avantage_3_niveau",
+      "fiche": "advantages.2.level"
+    },
+    {
+      "gmos": "avantage_4",
+      "fiche": "advantages.3.name"
+    },
+    {
+      "gmos": "avantage_4_niveau",
+      "fiche": "advantages.3.level"
+    },
+    {
+      "gmos": "avantage_5",
+      "fiche": "advantages.4.name"
+    },
+    {
+      "gmos": "avantage_5_niveau",
+      "fiche": "advantages.4.level"
+    },
+    {
+      "gmos": "avantage_6",
+      "fiche": "advantages.5.name"
+    },
+    {
+      "gmos": "avantage_6_niveau",
+      "fiche": "advantages.5.level"
+    },
+    {
+      "gmos": "avantage_7",
+      "fiche": "advantages.6.name"
+    },
+    {
+      "gmos": "avantage_7_niveau",
+      "fiche": "advantages.6.level"
+    },
+    {
+      "gmos": "avantage_8",
+      "fiche": "advantages.7.name"
+    },
+    {
+      "gmos": "avantage_8_niveau",
+      "fiche": "advantages.7.level"
+    },
+    {
+      "gmos": "avantage_9",
+      "fiche": "advantages.8.name"
+    },
+    {
+      "gmos": "avantage_9_niveau",
+      "fiche": "advantages.8.level"
+    },
+    {
+      "gmos": "avantage_10",
+      "fiche": "advantages.9.name"
+    },
+    {
+      "gmos": "avantage_10_niveau",
+      "fiche": "advantages.9.level"
+    },
+    {
+      "gmos": "avantage_11",
+      "fiche": "advantages.10.name"
+    },
+    {
+      "gmos": "avantage_11_niveau",
+      "fiche": "advantages.10.level"
+    },
+    {
+      "gmos": "experience_totale",
+      "fiche": "experience.total"
+    },
+    {
+      "gmos": "experience_depensee",
+      "fiche": "experience.spent"
+    },
+    {
+      "gmos": "age_veritable",
+      "fiche": "profile.true_age"
+    },
+    {
+      "gmos": "age_apparent",
+      "fiche": "profile.apparent_age"
+    },
+    {
+      "gmos": "date_de_naissance",
+      "fiche": "profile.birth_date"
+    },
+    {
+      "gmos": "date_de_deces",
+      "fiche": "profile.death_date"
+    },
+    {
+      "gmos": "apparence",
+      "fiche": "profile.appearance"
+    },
+    {
+      "gmos": "signes_distinctifs",
+      "fiche": "profile.distinguishing_marks"
+    },
+    {
+      "gmos": "historique",
+      "fiche": "profile.history"
+    },
+    {
+      "gmos": "notes",
+      "fiche": "profile.notes"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "tracks.health_capacity",
+      "pourquoi": "Maximum calculé par GM-OS depuis le pilote : Santé = Vigueur + 3, Volonté = Résolution + Sang-froid (statsToTrack[].max, p. 119)."
+    },
+    {
+      "fiche": "damage.health.1",
+      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
+    },
+    {
+      "fiche": "damage.health.2",
+      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
+    },
+    {
+      "fiche": "damage.health.3",
+      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
+    },
+    {
+      "fiche": "damage.health.4",
+      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
+    },
+    {
+      "fiche": "damage.health.5",
+      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
+    },
+    {
+      "fiche": "damage.health.6",
+      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
+    },
+    {
+      "fiche": "damage.health.7",
+      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
+    },
+    {
+      "fiche": "damage.health.8",
+      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
+    },
+    {
+      "fiche": "damage.health.9",
+      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
+    },
+    {
+      "fiche": "damage.health.10",
+      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
+    },
+    {
+      "fiche": "tracks.willpower_capacity",
+      "pourquoi": "Maximum calculé par GM-OS depuis le pilote : Santé = Vigueur + 3, Volonté = Résolution + Sang-froid (statsToTrack[].max, p. 119)."
+    },
+    {
+      "fiche": "damage.willpower.1",
+      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
+    },
+    {
+      "fiche": "damage.willpower.2",
+      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
+    },
+    {
+      "fiche": "damage.willpower.3",
+      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
+    },
+    {
+      "fiche": "damage.willpower.4",
+      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
+    },
+    {
+      "fiche": "damage.willpower.5",
+      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
+    },
+    {
+      "fiche": "damage.willpower.6",
+      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
+    },
+    {
+      "fiche": "damage.willpower.7",
+      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
+    },
+    {
+      "fiche": "damage.willpower.8",
+      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
+    },
+    {
+      "fiche": "damage.willpower.9",
+      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
+    },
+    {
+      "fiche": "damage.willpower.10",
+      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
+    }
+  ]
+}
