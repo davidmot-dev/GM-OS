@@ -85,3 +85,38 @@ identité et prompt texte (ignorés par le motif global `*.txt`), archive ZIP, e
 empreinte Git). Les exports de pilotes, fichiers temporaires et travaux Alien/Delta Green
 restent hors du commit. L'envoi conserve le hook complet types, lint, tests et construction.
 
+## Suite du 17/11 — campagne de recette Vampire préparée
+
+David invoque **GM-OS Campagnes de test pour Vampire**. Registre **§ 260**, ligne **196** ;
+[livraison et preuves](2026-11-17-campagne-recette-vampire.md), synthèse du pilote actualisée.
+
+- [ZIP complet](../../output/campagnes-tests/vampire/Vampire-Le-registre-des-absents-Recette.zip) : **Le registre des absents**, une seule campagne, douze séances prévues, quatre actes de fiction et six ateliers hors fiction, 53 cas tous **NON TESTÉ**. Trois nouveaux PJ et trois profils d'essai associés aux trois joueurs autorisés ; dix PNJ de fiction et un opposant de recette, 33 médias embarqués.
+- **Vérifié hors ligne** : 105 contrôles ciblés, **104 réussites et un échec de conformité VAM-A01 conservé**. Le moteur crée cinq cases de Santé génériques, au lieu des six attendues sur CORPS (Vigueur 3). Aucun correctif applicatif ; cas COR-02, assertion dédiée, anomalies et registre § 1 bis documentés. Le rapport Vitest demeure en échec.
+- Manifeste, empreintes, liens, champs et fonctions natives contrôlés ; caviardage et injection/restauration en mémoire ; structure portable acceptée ; 31 images et deux WAV décodés hors ligne, rendus relus. **Import Electron, sauvegarde/rechargement réel, Hub réseau, matériel, IA/TTS et recette humaine non exécutés.** Aucun service lancé ni donnée privée lue.
+- **Reprendre par** : pilote 2.0.0 vérifié dans la Forge, campagne importée en **Tel quel**, puis Trame → **ATELIERS DE RECETTE — hors fiction**. Restaurer les seuls champs des profils de recette selon le cahier ; Nexus Remplacer remplace toute la campagne. Choix précis de pouvoirs/prédation à finaliser au livre pour la fiction ; profils avancés, création novice non certifiée.
+- Reproduction : `outils/campagnes-de-recette/vampire.mjs`, puis `vampire-executer-tests.mjs`, puis `vampire-verifier.mjs`. Aucun changement dans `src/` ou `electron/` ; aucun commit/push demandé pour ce nouveau lot. Travaux Alien/Delta Green et exports préexistants intacts.
+
+
+## Suite du 17/11 — Vampire 2.1.0 : dégâts case par case (Claude Code)
+
+David : « commence les améliorations pour Vampire » ; GM-OS fermé. Registre **§ 261**, ligne **197** ;
+synthèse des pilotes (🟠 14 · 🔴 0) et [page du jeu](../User%20Guides/54-Jeu-Vampire.md#les-dégâts) actualisées.
+
+- **Livré** : dégâts « / » et « X » sur la Santé et la Volonté, superficiels divisés par deux, **Affaibli** −2 dés au jet, conversion en « X », torpeur ; « Régénérer » et « Début de partie : Volonté » au panneau ; la relance par la Volonté coche un « / » ; les vingt cases de la fiche HTML reliées. Pupitre de Combat-OS compris.
+- **Pilote** : `Export Dirvers/corriges/Vampire-2.1.0.gmos-driver`, à réimporter avec **Remplacer**. Santé en points : **corrige VAM-A01** de la campagne de recette (§ 260) — Vigueur 3 naît à 6/6. L'essai `[VAM-A01]` de `outils/campagnes-de-recette/vampire.test.ts` compte encore des cases : à réécrire par son auteur, non touché ici.
+- **Vérifié** : suite complète verte (909 fichiers), types, lint, `verifier_pilote.mjs` zéro constat, `fiche:valider` 0/0, build + e2e des captures Vampire vert, huit captures relues.
+- **Piège** : un aperçu tenait les images de `documentation/User Guides/captures/` — l'e2e échouait sur « UNKNOWN: open ». Captures écrites par `GMOS_SORTIE_CAPTURES_JEUX=<dossier temporaire>`, puis copiées.
+- **Reprendre par** : l'essai de David (réimport, un coup superficiel puis aggravé au panneau de santé, la relance, « Régénérer »). Rien n'est commité.
+
+## Suite du 17/11 — Vampire 2.2.0 : bestiaire et équipement relus contre le livre (Claude Code)
+
+David : « tu peux vérifier le drivers Vampire avec le livre, vérifier l'équipement et le bestiaire ? »,
+puis « gm-os est fermé ». Registre **§ 262**, ligne **198** ; synthèse (🟠 17 · 🔴 0) et
+[page du jeu](../User%20Guides/54-Jeu-Vampire.md#le-bestiaire-et-léquipement) actualisées.
+
+- **Constat** : chiffres conformes au livre (p. 304, 370-377, lues en image), mais bestiaire injouable — une créature entrait à 10/10, fiche vide ; chapitre « Matériel » absent ; l'encadré « Antagonistes simplifiés » (p. 370) avait été retiré à tort du corpus le matin.
+- **Livré** : pilote `Export Dirvers/corriges/Vampire-2.2.0.gmos-driver` (bestiaire restructuré, 30 objets), Santé d'entrée et capacité lues sur la fiche (`src/`), contrôle de la Forge pour tous les jeux, corpus rectifié.
+- **Vérifié** : suite complète (910 fichiers), types, lint, `verifier_pilote.mjs` zéro constat, build + e2e Vampire vert (deux lieutenants 6/6, « XXX »).
+- **Suite** : « je ne sais pas lancer de jet à partir de la fiche d'un lieutenant » — exact, la fiche d'un combattant était en lecture seule. Ajouté : « Lancer un test pour … » dans la fiche du combattant (adversaires Vampire), écrit sur sa fiche ; e2e vert (« Armes à feu » seul, cinq dés).
+- **Incident** : la synthèse des pilotes a été écrasée à 23 h 30 par une copie ancienne (programme qui tenait le fichier ouvert) ; reconstruite à 23 h 50, rien de perdu. Vérifier qu'aucun éditeur ne garde une vieille copie ouverte.
+- **Reprendre par** : réimport du **2.2.0** avec « Remplacer » — ⚠️ pas le 2.1.0, antérieur à la Forge de David. Rien n'est commité.
