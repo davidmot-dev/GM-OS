@@ -75,3 +75,13 @@ Vampire », puis « l'ordre me convient et gm-os est fermé ».
 Fichiers des autres travaux (Alien, Delta Green, atelier Studio du matin) non touchés, sauf la
 ligne 194 du registre (raccord fait) et la section Vampire de la synthèse, actualisées.
 
+## Enregistrement et envoi demandés — 17/11/2026
+
+David demande ensuite : **« commit et pousse »**. Les quatre commits Vampire de Claude Code
+(`2184e516`, `b7708277`, `e1a04216`, `e9febe18`) sont déjà présents sur `production`, en attente d'envoi.
+Codex complète les fichiers encore non suivis de l'atelier : quatre références visuelles,
+identité et prompt texte (ignorés par le motif global `*.txt`), archive ZIP, et déplacement
+`docs/Reference/_Vampire/` → `docs/Reference/Vampire/` (les dix fichiers vérifiés identiques par
+empreinte Git). Les exports de pilotes, fichiers temporaires et travaux Alien/Delta Green
+restent hors du commit. L'envoi conserve le hook complet types, lint, tests et construction.
+
