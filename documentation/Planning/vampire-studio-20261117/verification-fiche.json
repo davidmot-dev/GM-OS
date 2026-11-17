@@ -1,0 +1,14 @@
+{
+  "pages": 2,
+  "zones": 455,
+  "cles": 181,
+  "checks": [
+    "20 cases : vide → / → X → vide, un bouton visible par case",
+    "identité, traits, spécialités, disciplines, avantages, réserves et sauvegarde après rechargement",
+    "export JSON, réinitialisation confirmée, réimport sans perte de marques",
+    "navigation, zoom 20–400 %, raccourcis et PDF d’impression",
+    "import réel du HTML et du personnage dans le moteur jetable, cycle / X conservé, export moteur v2 réimporté"
+  ],
+  "errors": [],
+  "network": []
+}

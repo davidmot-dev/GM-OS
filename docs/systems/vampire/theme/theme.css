@@ -1,0 +1,44 @@
+/* Vampire La Mascarade V5 — édition sobre, ivoire et bordeaux ; contrat GM-OS v1.7. */
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&display=swap');
+
+:root[data-theme="vampire"] {
+  color-scheme: light;
+  --rpg-bg: #e9e7e4;
+  --rpg-surface: #faf8f5;
+  --rpg-surface-2: #ded9d6;
+  --rpg-text: #201b1e;
+  --rpg-muted: #655b60;
+  --rpg-accent: #990f32;
+  --rpg-accent-contrast: #ffffff;
+  --rpg-border: #a88d96;
+  --rpg-border-soft: rgba(95, 64, 76, 0.22);
+  --rpg-success: #326744;
+  --rpg-danger: #b93d18;
+  --rpg-warning: #855c00;
+  --rpg-info: #375f85;
+  --rpg-font-display: "Bodoni Moda", "Times New Roman", serif;
+  --rpg-font-body: Georgia, "Times New Roman", serif;
+  --rpg-font-mono: "Courier New", monospace;
+  --rpg-title-tracking: 0.06em;
+  --rpg-kicker-tracking: 0.16em;
+  --rpg-title-transform: uppercase;
+  --rpg-radius-sm: 0px;
+  --rpg-radius-md: 1px;
+  --rpg-radius-lg: 1px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 1px 3px rgba(35, 18, 26, 0.10);
+  --rpg-elevation-2: 0 8px 24px rgba(35, 18, 26, 0.18);
+  --rpg-elevation-3: 0 20px 52px rgba(20, 10, 16, 0.28);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(250, 248, 245, 0.95);
+  --rpg-glass-border: rgba(95, 64, 76, 0.28);
+  --rpg-glass-blur: 0px;
+  --rpg-frame-bg: #171319;
+  --rpg-frame-text: #f2edeb;
+  --rpg-frame-accent: #f39ab4;
+  --rpg-texture-bg: url('matieres/papier.svg');
+  --rpg-texture-panel: url('matieres/papier.svg');
+  --rpg-texture-opacity: 0.025;
+}

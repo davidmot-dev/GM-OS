@@ -1,0 +1,176 @@
+# Table des matières — Vampire La Mascarade V5
+
+- CONCEPTS — 33
+- Le Monde des Ténèbres — 33
+- Jeux de rôle et conte — 40
+- Exemple de partie de V5 — 43
+- SOCIÉTÉ VAMPIRIQUE — 47
+- Perspectives anciennes et contemporaines — 47
+- Le Jyhad — 48
+- La Camarilla — 49
+- Les Autarkis — 56
+- Fins et commencements — 56
+- CLANS — 63
+- BRUJAH — 65
+- Qui sont les Brujahs ? — 65
+- Disciplines — 67
+- Fléau — 67
+- GANGREL — 69
+- Qui sont les Gangrels ? — 70
+- Disciplines — 72
+- Fléau — 73
+- MALKAVIEN — 75
+- Qui sont les Malkaviens ? — 76
+- Disciplines — 79
+- Fléau — 79
+- NOSFERATU — 81
+- Qui sont les Nosferatu ? — 82
+- Disciplines — 84
+- Fléau — 85
+- TORÉADOR — 87
+- Qui sont les Toréadors ? — 88
+- Disciplines — 90
+- Fléau — 91
+- TREMERE — 93
+- Qui sont les Tremeres ? — 94
+- Disciplines — 97
+- Fléau — 97
+- VENTRUE — 99
+- Qui sont les Ventrues ? — 99
+- Disciplines — 102
+- Fléau — 102
+- LES CAITIFFS — 105
+- Qui sont les Caitiffs ? — 105
+- Disciplines — 107
+- Fléau — 107
+- LES SANGS CLAIRS — 109
+- Qui sont les Sangs Clairs ? — 109
+- Caractéristiques des Sangs Clairs — 111
+- Échappatoires — 113
+- RÈGLES — 115
+- Temps — 115
+- Jets simples — 117
+- Jets en opposition — 123
+- Conflits — 123
+- Exemples de jets — 128
+- Expérience et progression — 130
+- La règle d’or — 130
+- PERSONNAGES — 133
+- Fondamentaux d’un personnage — 133
+- CRÉATION DE PERSONNAGE — 135
+- Le rôle du conteur — 135
+- Personnage, coterie et chronique — 139
+- Schéma des relations — 142
+- Vie humaine de votre personnage — 144
+- L’Étreinte et l’après — 148
+- Fiche récapitulative — 152
+- TRAITS ESSENTIELS — 155
+- Attributs physiques — 155
+- Attributs sociaux — 155
+- Attributs mentaux — 156
+- Volonté — 157
+- Compétences physiques — 159
+- Compétences sociales — 164
+- Compétences mentales — 166
+- CROYANCES — 172
+- Convictions — 172
+- Attaches — 173
+- Ambition et Désir — 173
+- STYLES DE PRÉDATION — 175
+- Biberonneur — 175
+- Chat de gouttière — 176
+- Consensualiste — 176
+- Fermier — 176
+- Lamproie — 177
+- Marchand de sable — 177
+- Osiris — 177
+- Parasite domestique — 177
+- Reine de la nuit — 178
+- Succube — 178
+- AVANTAGES — 179
+- Atouts — 179
+- Historiques — 184
+- CRÉATION DE COTERIE — 195
+- Domaine — 195
+- Historiques de coterie — 196
+- Types de coterie — 197
+- VAMPIRES — 201
+- Vérité et mensonges — 201
+- La Soif — 205
+- Dés de Soif — 205
+- Compulsions — 208
+- Exalter le sang — 211
+- Étancher la Soif — 211
+- LE SANG — 214
+- Génération — 214
+- Puissance du sang — 215
+- Pouvoirs du Sang — 217
+- Prix du Sang — 219
+- Menaces pour le Sang — 221
+- TU ES CE QUE TU MANGES — 225
+- Le sang, c’est la vie — 226
+- Chasse et humeurs — 228
+- Résonance et expérience — 231
+- DEGRÉS DE DAMNATION — 233
+- Le lien de sang — 233
+- Diablerie — 234
+- HUMANITÉ — 236
+- La spirale destructrice — 236
+- Jauge d’Humanité — 239
+- DISCIPLINES — 243
+- Règles générales — 244
+- Animalisme — 244
+- Auspex — 247
+- Célérité — 252
+- Domination — 254
+- Force d’âme — 257
+- Occultation — 260
+- Présence — 263
+- Protéisme — 266
+- Puissance — 268
+- Sorcellerie du sang — 271
+- Rituels — 274
+- Alchimie du sang clair — 282
+- SYSTÈMES AVANCÉS — 289
+- SCÈNES ET MODES — 290
+- Types de scènes — 290
+- Modes de jeu — 291
+- JETS ÉTENDUS — 293
+- Types de jets étendus — 293
+- Jets étendus et cas spéciaux — 294
+- CONFLITS AVANCÉS — 295
+- Valse en trois temps — 295
+- Options de conflit supplémentaires — 296
+- Mouvements et conflits — 298
+- Conflits à jet unique — 298
+- Conflit avancé : combat physique — 300
+- Conflit avancé : combat social — 304
+- LES SYSTÈMES DU SANG — 306
+- La chasse — 306
+- Intimité vampirique — 310
+- Variations sur la Compulsion — 311
+- Memoriam — 311
+- Praestation — 314
+- CITÉS — 317
+- Le système féodal — 319
+- L’atmosphère — 328
+- Votre ville « by Night » — 331
+- CHRONIQUES — 337
+- Concevoir une chronique — 337
+- Styles de jeu — 340
+- Faire jouer une partie — 354
+- La Seconde Inquisition dans les chroniques — 360
+- Quand le chasseur devient la proie — 366
+- OUTILS — 369
+- ANTAGONISTES — 370
+- Les mortels — 370
+- Animaux — 373
+- Vampires — 374
+- Créatures d’épouvante — 376
+- MATÉRIEL — 378
+- Équipement — 378
+- Armes conventionnelles — 379
+- Équipement surnaturel — 381
+- SAGAS — 382
+- APPENDICES — 407
+- INDEX — 424

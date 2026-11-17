@@ -1,0 +1,554 @@
+# Index — Vampire La Mascarade V5
+
+- Abus de substance (atouts et handicaps) — 179
+- Accro aux liens (handicap) — 180
+- Actions mentales — 409
+- Actions physiques — 411
+- Actions sociales — 413
+- Addict fonctionnel (atout) — 179
+- Addiction (handicap) — 179
+- Addiction sévère (handicap) — 179
+- Adversaires multiples — 125
+- Affaiblissement — 126
+- Affinité avec une discipline (atout) — 182
+- Agripper — 301
+- Alchimie du sang clair — 282
+- Aliénation (pouvoir de Domination) — 256
+- Alliés (historique) — 184
+- Altération mémorielle (pouvoir de Domination) — 256
+- Ambition — 146, 173
+- Ambrus Maropis (Saga) — 398
+- Anarch (mouvement) — 54, 140, 363
+- Animalisme (discipline) — 244
+- Animaux (antagoniste) — 373
+- Animaux (compétence) — 164
+- Antagonistes — 370
+- Apparence (atouts et handicaps) — 179
+- Apparence de la vie (atout) — 183
+- Appel de Dagon (rituel de Sorcellerie du sang) — 277
+- Archaïque (atouts et handicaps) — 179
+- Archaïque (handicap) — 180
+- Armes à distance — 125
+- Armes à feu (compétence) — 159
+- Armes bestiales (pouvoir de Protéisme) — 267
+- Armes conventionnelles — 379
+- Armes de jet — 301
+- Armes dissimulées — 379
+- Armes incendiaires — 379
+- Armure — 304
+- Armurerie dissimulée (atout) — 190
+- Arrogance (compulsion de clan) — 210
+- Artisanat (compétence) — 160
+- Assaut massif (option de conflit) — 298
+- Assaut précis — 302
+- Astuce (attribut) — 156
+- Athanor corporis (alchimie de sang clair) — 283
+- Athlétisme (compétence) — 160
+- Atouts de Sang Clair — 151, 182
+- Atouts — 179
+- Attaches — 146, 173
+- Attaque-surprise — 300
+- Attributs mentaux — 156
+- Attributs physiques — 155
+- Attributs sociaux — 155
+- Auspex (discipline) — 247
+- Autarkis — 56
+- Avancée (option de conflit) — 296
+- Avantages — 149, 179
+- Bagarre (compétence) — 160
+- Bahari (Saga) — 382
+- Baiser persistant (pouvoir de Présence) — 264
+- Bande de Crocs (type de coterie) — 197
+- Baratin (action sociale) — 414
+- Bas clans (Saga) — 383
+- Beau (atout) — 179
+- Bêtes endurantes (pouvoir de Force d’âme) — 258
+- Biberonneur (style de prédation) — 175, 307
+- Bibliothèque (atout) — 191
+- Blessures incapacitantes — 303
+- Bloc opératoire (atout) — 191
+- Blocage (option de conflit) — 297
+- Bond surhumain (pouvoir de Puissance) — 270
+- Breuvage de puissance (pouvoir de Puissance) — 271
+- Breuvage d’élégance (pouvoir de Célérité) — 254
+- Breuvage d’endurance (pouvoir de Force d’âme) — 259
+- Brouillage mémoriel (pouvoir de Domination) — 256
+- Brouillard (alchimie de sang clair) — 284
+- Brujah — 65
+- Buveur matinal (atout) — 183
+- Caitiff — 105
+- Calcinatio (alchimie de sang clair) — 284
+- Camarilla — 49, 140, 363
+- Captif des liens (handicap) — 180
+- Caresse de Baal (pouvoir de Sorcellerie du sang) — 274
+- Carmelita Neillson (Saga) — 399
+- Carna (Saga) — 385
+- Carte des relations — 142, 338
+- Célérité (discipline) — 252
+- Cellule (atout) — 190
+- Cerbère (type de coterie) — 197
+- Cercle de protection contre les caïnites (rituel de Sorcellerie du sang) — 280
+- Cercle de protection contre les esprits (rituel de Sorcellerie du sang) — 278
+- Cercle de protection contre les goules (rituel de Sorcellerie du sang) — 276
+- Cercle de protection contre les lupins (rituel de Sorcellerie du sang) — 279
+- Cercles de protection (Sorcellerie du sang) — 275
+- Chair de marbre (pouvoir de Force d’âme) — 259
+- Chair morte (handicap) — 183
+- Champions (type de coterie) — 197
+- Change-forme (pouvoir de Protéisme) — 267
+- Chaoscopes (équipement) — 378
+- Charisme (attribut) — 156
+- Chasse (mode) — 149
+- Chasse — 306
+- Chasseur de la Foi (antagoniste) — 371
+- Chat de gouttière (style de prédation) — 176, 307
+- Chaudron de sang (pouvoir de Sorcellerie du sang) — 274
+- Chauve-souris (antagoniste) — 373
+- Chemin du sang (rituel de Sorcellerie du sang) — 275
+- Cheval (antagoniste) — 373
+- Chien de garde (antagoniste) — 373
+- Chronique — 117
+- Clairvoyance (pouvoir d’Auspex) — 251
+- Clans — 63-113
+- Cocktail Molotov (équipement) — 380
+- Cœur de pierre (rituel de Sorcellerie du sang) — 280
+- Cœur sans entrave (pouvoir de Protéisme) — 269
+- Combat à distance (avancé) — 301
+- Combat physique — 300
+- Combat rapproché (avancé) — 301
+- Combat social — 304
+- Commandement (compétence) — 164
+- Commando (type de coterie) — 198
+- Communiquer avec son sire (rituel de Sorcellerie du sang) — 276
+- Compagnons anarchs (atout) — 183
+- Compétences mentales — 166
+- Compétences physiques — 159
+- Compétences sociales — 164
+- Compromis (handicap) — 192
+- Compulsions de clan — 210
+- Compulsions — 208, 311
+- Conduite (compétence) — 160
+- Conflit avancé — 300
+- Conflits à jet unique — 298
+- Conflits — 123
+- Connu des services (handicap) — 189
+- Consensualiste (style de prédation) — 176, 307
+- Contact de la Camarilla (atout) — 183
+- Contacts (historique) — 185
+- Contrainte (pouvoir de Domination) — 256
+- Convention de Thorns (Saga) — 386
+- Convictions — 146, 172
+- Convocation (pouvoir de Présence) — 265
+- Coterie (types) — 197
+- Coterie — 151, 197
+- Couleurs de la vie — 218
+- Coup de sang — 216, 218
+- Courses poursuites (actions physiques) — 411
+- Création artistique (action mentale) — 409
+- Création de personnage (résumé) — 136-137
+- Crédibilité (action sociale) — 414
+- Critiques en combat — 303
+- Critiques — 120
+- Croyances — 146, 172
+- Cryptophilie (compulsion de clan) — 210
+- Culte sanglant (type de coterie) — 198
+- Décapitation — 221
+- Déclaré mort (handicap) — 189
+- Décret ultime (pouvoir de Domination) — 257
+- Défense contre les attaques à distance — 301
+- Défense du refuge sacré (rituel de Sorcellerie du sang) — 279
+- Défense impénétrable (option de conflit) — 298
+- Défier les fléaux (pouvoir de Force d’âme) — 258
+- Défractionnement (alchimie de sang clair) — 285
+- Dégâts (types) — 126
+- Dégâts aggravés — 126
+- Dégâts des armes — 303
+- Dégâts superficiels — 126
+- Dégâts — 126
+- Dégénérescence — 239
+- Délire (compulsion de clan) — 210
+- Dents de lait (handicap) — 183
+- Dépendance à la vitae (handicap) — 183
+- Dés de Soif — 205
+- Désir — 174
+- Destruction (compulsion) — 209
+- Détective Inquisiteur (antagoniste) — 372
+- Dette de vie — 314
+- Dette majeure — 314
+- Dette mineure — 314
+- Dette triviale — 314
+- Dettes — 314
+- Déviation de la malédiction du bois (rituel de Sorcellerie du sang) — 278
+- Dextérité (attribut) — 155
+- Diablerie — 234
+- Difficultés — 119
+- Disciplines — 243-287
+- Disparition (pouvoir d’Occultation) — 262
+- Dissimulation (action mentale) — 409
+- Dissimulation (pouvoir d’Occultation) — 262
+- Domaine — 195, 319
+- Domination (compulsion) — 208
+- Domination (discipline) — 254
+- Dompter la bête (pouvoir d’Animalisme) — 246
+- Douleur salvatrice (pouvoir de Force d’âme) — 259
+- Dyscrasie — 227, 230
+- Ecclésiastiques (antagonistes) — 371
+- Échec bestial — 206
+- Élan aérien (alchimie de sang clair) — 286
+- Empalement fatal (handicap) — 182
+- Empathie (compétence) — 164
+- Enveloppement (alchimie de sang clair) — 285
+- Envoûtement (pouvoir de Présence) — 264
+- Équipement — 378
+- Érudition (compétence) — 168
+- Escalade (action physique) — 411
+- Escouade d’intervention tactique (antagoniste) — 366
+- Esquive — 125
+- Essaim serviteur (pouvoir d’Animalisme) — 246
+- Essence de l’air (rituel de Sorcellerie du sang) — 278
+- Estomac de fer (atout) — 182
+- Étancher la Soif — 211
+- Éteindre la vitae (pouvoir de Sorcellerie du sang) — 273
+- Étincelle de rage (pouvoir de Puissance) — 270
+- Étiquette (compétence) — 165
+- Évacuation (atout) — 191
+- Évêque nodiste (antagoniste) — 375
+- Exalter le sang — 211
+- Excunt — 296
+- Expérience de la rue (compétence) — 165
+- Expérience et progression — 130, 137, 151
+- Explosifs (action mentale) — 409
+- Faire la bringue (action sociale) — 415
+- Fantôme dans la machine (pouvoir d’Occultation) — 261
+- Fées (antagonistes) — 377
+- Fermier (style de prédation) — 176, 307
+- Festin animal (pouvoir d’Animalisme) — 246
+- Feu — 221
+- Filature (action physique) — 411
+- Finances (compétence) — 168
+- Fiorenza Savona (Saga) — 401
+- Fixatio (alchimie de sang clair) — 284
+- Fléau mythique (handicap) — 181
+- Flétrissures — 239, 240
+- Flippant (handicap) — 191
+- Force (attribut) — 155
+- Force d’âme (discipline) — 257
+- Forme de brume (pouvoir de Protéisme) — 267
+- Fortifier le masque intérieur (pouvoir de Force d’âme) — 259
+- Fraction de seconde (pouvoir de Célérité) — 254
+- Fragilité humaine (handicap) — 183
+- Frappe éclair (pouvoir de Célérité) — 254
+- Frappe tellurique (pouvoir de Puissance) — 271
+- Frénésie — 219
+- Froid extrême — 221
+- Fulgurance (pouvoir de Célérité) — 253
+- Furtivité (action physique) — 412
+- Furtivité (compétence) — 160
+- Fusil à filet (équipement) — 380
+- Fusion avec la terre (pouvoir de Protéisme) — 267
+- Gangrel — 69
+- Génération — 214
+- Golconde (Saga) — 387
+- Goule (antagoniste) — 372
+- Goût du sang (pouvoir de Sorcellerie du sang) — 272
+- Grâce féline (pouvoir de Célérité) — 252
+- Groupement de conflit social — 304
+- Groupements de conflit — 124
+- Groupements de dés — 118
+- Guérison — 127
+- Hafla DM34 (équipement) — 380
+- Haï (handicap) — 194
+- Handicaps de Sang Clair — 151, 183
+- Handicaps — 179
+- Hanté (handicap) — 191
+- Harceleur (handicap) — 193
+- Harpie de l’Elysium (antagoniste) — 374
+- Hauts clans (Saga) — 388
+- Hégémonie animale (pouvoir d’Animalisme) — 247
+- Hérésie caïnite (Saga) — 389
+- Historiques — 184
+- Humanité (jauge) — 239
+- Humanité — 236
+- Humeur — 226, 227
+- Humeurs animales — 227
+- Hypnose (pouvoir de Domination) — 256
+- Illettré (handicap) — 181
+- Imposture (pouvoir d’Occultation) — 262
+- Inaliénable (atout) — 180
+- Indigent (handicap) — 193
+- Infamie (handicap) — 192
+- Influence (historique) — 186
+- Informatique (action mentale) — 409
+- Ingurgitation brutale (pouvoir de Puissance) — 270
+- Injonction latente (pouvoir de Domination) — 257
+- Inquisiteur Delta (antagoniste) — 372
+- Intelligence (attribut) — 156
+- Interrogatoire (action sociale) — 415
+- Intimidation (action sociale) — 416
+- Intimidation (compétence) — 165
+- Intimider (pouvoir de Présence) — 264
+- Intrusions (actions physiques) — 412
+- Investigation (compétence) — 168
+- Jeanette et Thérèse Voerman (Saga) — 406
+- Jet unique — 296
+- Jets en opposition — 123
+- Jets étendus en opposition — 294
+- Jets étendus — 293
+- Jets simples — 117
+- Jyhad — 48
+- Laboratoire (atout) — 191
+- Lâcher la bête (pouvoir d’Animalisme) — 247
+- Laid (handicap) — 179
+- Lamproie (style de prédation) — 177, 307
+- Lance-flammes (équipement) — 380
+- Lance-pieu (équipement) — 381
+- Larcin (compétence) — 163
+- Lecture de l’âme (pouvoir d’Auspex) — 250
+- Lexique des damnés — 58-61
+- Lien de sang (atouts et handicaps) — 180
+- Lien de sang — 233
+- Liens durables (handicap) — 180
+- Liens réduits (atout) — 180
+- Lier le famulus (pouvoir d’Animalisme) — 245
+- Lieutenant de police (antagoniste) — 371
+- Lignée de Karl Schrekt (Saga) — 393
+- Lignée de Tyler (Saga) — 394
+- Lignée de Vasantasena (Saga) — 395
+- Lignée de Xaviar (Saga) — 396
+- Lignée de Zelios (Saga) — 397
+- Lignée d’Hardestadt (Saga) — 391
+- Lignée d’Hélène (Saga) — 392
+- Linguistique (atouts et handicaps) — 180
+- Localisation (atout) — 191
+- Loup (antagoniste) — 373
+- Loup-garou (antagoniste) — 376
+- Lumière du soleil — 221
+- Luxueux (atout) — 191
+- Mage (antagoniste) — 377
+- Magnétisme médiatique (pouvoir de Présence) — 265
+- Majesté (pouvoir de Présence) — 265
+- Mal-aimé (handicap) — 188
+- Malédiction de clan (handicap) — 184
+- Malkavien — 75
+- Manducation (atout) — 181
+- Manipulation (attribut) — 156
+- Manipulation des masses (pouvoir de Domination) — 257
+- Manœuvre (option de conflit) — 297
+- Manteau d’ombre (pouvoir d’Occultation) — 260
+- Marchand de sable (style de prédation) — 177, 307
+- Marcheur du feu (rituel de Sorcellerie du sang) — 278
+- Maréchaux (type de coterie) — 198
+- Marge — 121
+- Marqué par la Camarilla (handicap) — 184
+- Marques — 322
+- Masque (historique) — 188
+- Masque aux mille visages (pouvoir d’Occultation) — 261
+- Masquer l’assemblée (pouvoir d’Occultation) — 262
+- Matériel — 378
+- Maturation du sang (pouvoir de Sorcellerie du sang) — 273
+- Mawla (historique) — 189
+- Médecine (compétence) — 169
+- Mêlée (compétence) — 163
+- Memoriam — 311
+- Méprisé (handicap) — 188
+- Métamorphose (pouvoir de Protéisme) — 267
+- Méthodes de distillation (alchimie de sang clair) — 283
+- Modèles de mortels — 185
+- Modes de jeu — 291
+- Monnaies anciennes (équipement surnaturel) — 381
+- Mort ultime — 223
+- Mortels types — 185
+- Mouvements et conflits — 298
+- Munitions souffle-du-dragon (équipement) — 380
+- Murmures sauvages (pouvoir d’Animalisme) — 245
+- Mythes et légendes (atouts et handicaps) — 181
+- Natation (action physique) — 412
+- Nomades (type de coterie) — 198
+- Nosferatu — 81
+- Nuée (type de coterie) — 198
+- Obsession (compulsion de clan) — 210
+- Obstacle mythique (handicap) — 182
+- Occultation (discipline) — 260
+- Occultisme (compétence) — 169
+- Oiseau de proie (antagoniste) — 373
+- Options de conflit — 296
+- Oraison (action sociale) — 416
+- Organophage (handicap) — 182
+- Osiris (style de prédation) — 177, 307
+- Ostracisé par les anarchs (handicap) — 184
+- Ours (antagoniste) — 373
+- Paranoïa (compulsion) — 209
+- Parasite domestique (style de prédation) — 177, 308
+- Partage des sens (pouvoir d’Auspex) — 250
+- Partie de chasse (type de coterie) — 198
+- Partie — 116, 358
+- Passage incorporel (rituel de Sorcellerie du sang) — 279
+- Passage invisible (pouvoir d’Occultation) — 261
+- Pattes d’insecte (rituel de Sorcellerie du sang) — 276
+- Perception (action mentale) — 410
+- Perfectionnisme (compulsion de clan) — 210
+- Persuasion (compétence) — 166
+- Pierre de sang (rituel de Sorcellerie du sang) — 276
+- Pierres gravées (équipement surnaturel) — 381
+- Pieu à destruction différée (rituel de Sorcellerie du sang) — 280
+- Pieux — 221
+- Pilotage (action physique) — 412
+- Pistage (action mentale) — 411
+- Piste illuminée de la proie (rituel de Sorcellerie du sang) — 277
+- Poids plume (pouvoir de Protéisme) — 266
+- Poigne incroyable (pouvoir de Puissance) — 270
+- Poing de Caïn (pouvoir de Puissance) — 271
+- Politique (compétence) — 170
+- Portée lointaine (alchimie de sang clair) — 284
+- Possession (pouvoir d’Auspex) — 251
+- Pouvoirs amalgamés — 244
+- Praestation — 314
+- Prédateur indéniable (handicap) — 194
+- Prédation (style) — 149, 175
+- Première Inquisition (Saga) — 390
+- Prémonition (pouvoir d’Auspex) — 249
+- Préparation (action mentale) — 410
+- Présence (discipline) — 263
+- Prestation artistique (action sociale) — 416
+- Principes de la chronique — 172
+- Profanation de la hiérogamie (alchimie de sang clair) — 285
+- Proie taboue (handicap) — 182
+- Projets — 417
+- Prospectus — 135
+- Protection contre les caïnites (rituel de Sorcellerie du sang) — 279
+- Protection contre les esprits (rituel de Sorcellerie du sang) — 277
+- Protection contre les lupins (rituel de Sorcellerie du sang) — 279
+- Protections (Sorcellerie du sang) — 274
+- Protéisme (discipline) — 266
+- Prouesse (pouvoir de Puissance) — 270
+- Psychométrie (pouvoir d’Auspex) — 250
+- Puissance (discipline) — 269
+- Puissance du sang — 148, 214, 215
+- Pulsions sauvages (compulsion de clan) — 210
+- Questari (type de coterie) — 199
+- Rapidité (pouvoir de Célérité) — 253
+- Rat (antagoniste) — 373
+- Rationalisation (pouvoir de Domination) — 257
+- Raufoss (équipement) — 380
+- Rébellion (compulsion de clan) — 210
+- Rechargement — 302
+- Recherches (action mentale) — 410
+- Réflexes éclair (pouvoir de Célérité) — 252
+- Refuge (historique) — 190
+- Regard terrifiant (pouvoir de Présence) — 265
+- Régence (type de coterie) — 199
+- Régénération vampirique — 218
+- Règles des trois tours — 130
+- Reine de la nuit (style de prédation) — 178, 308
+- Remords — 239
+- Rempart — 196
+- Renommée (historique) — 192
+- Repoussant (handicap) — 179
+- Représentation (compétence) — 166
+- Résilience (pouvoir de Force d’âme) — 258
+- Résistance (pouvoir de Force d’âme) — 258
+- Résistance aux liens (atout) — 180
+- Résistance vampirique (atout) — 183
+- Résolution (attribut) — 157
+- Résonance — 226
+- Ressources (historique) — 192
+- Réussites critiques — 120
+- Réveil avec la fraîcheur du soir (rituel de Sorcellerie du sang) — 276
+- Réveiller le dormeur (alchimie de sang clair) — 286
+- Révérence (pouvoir de Présence) — 264
+- Révolutionnaire anarch (antagoniste) — 374
+- Rituel (Sorcellerie du sang) — 274
+- Rudi (Saga) — 400
+- Sacs pare-soleils (équipement) — 378
+- Saga (historique) — 151, 193
+- Sang actif (atout) — 183
+- Sang Clair alchimiste (atout) — 183
+- Sang contaminé — 310
+- Sang préservé (équipement surnaturel) — 381
+- Sang-froid (attribut) — 156
+- Sangs Clairs — 109, 140
+- Sans refuge (handicap) — 190
+- Sans-Âme (antagoniste) — 375
+- Sbirri (type de coterie) — 199
+- Sceau de protection (atout) — 191
+- Scénario — 117
+- Scène — 116, 290, 354
+- Schéma des relations — 142, 338
+- Sciences (compétence) — 170
+- Se nourrir (atouts et handicaps) — 182
+- Seconde Inquisition — 360
+- Sécurité du sanctuaire (rituel de Sorcellerie du sang) — 281
+- Séduction (action sociale) — 416
+- Semaine des Cauchemars (Saga) — 402
+- Sens accrus (pouvoir d’Auspex) — 249
+- Sentinelles (type de coterie) — 199
+- Sentir la bête (pouvoir d’Animalisme) — 245
+- Sentir l’invisible (pouvoir d’Auspex) — 249
+- Servage — 196
+- Servants (historique) — 193
+- Shérif sanguinaire (antagoniste) — 375
+- Silence de la mort (pouvoir d’Occultation) — 261
+- Soif (compulsion) — 208
+- Soif du mathusalem (handicap) — 182
+- Soif — 205
+- Sombre secret (handicap) — 192
+- Sorcellerie du sang (discipline) — 271
+- Soumission de l’esprit (pouvoir d’Animalisme) — 247
+- Spectre (antagoniste) — 377
+- Splendide (atout) — 179
+- Statut (historique) — 193
+- Stigmates (handicap) — 182
+- Styles de jeu — 340
+- Subterfuge (compétence) — 166
+- Succube (style de prédation) — 178, 308
+- Surchasse — 331
+- Survie (compétence) — 164
+- Suspect (handicap) — 194
+- Système circulatoire (Saga) — 403
+- Système de sécurité (atout) — 191
+- Technologie (compétence) — 171
+- Télépathie (pouvoir d’Auspex) — 251
+- Tempérament bestial (handicap) — 184
+- Temps — 115
+- Terrain de chasse — 308, 321
+- Terre de sépulcre (équipement surnaturel) — 381
+- Théo Bell (Saga) — 384
+- Toréador — 87
+- Torpeur — 223
+- Toucher du scorpion (pouvoir de Sorcellerie du sang) — 273
+- Tour de passe-passe (action physique) — 413
+- Tour — 115
+- Tours de force (action physique) — 412-413
+- Traditions — 51-52
+- Traits — 118, 155
+- Traqueur sanguin (atout) — 182
+- Travail d’équipe — 222
+- Traversée (pouvoir de Célérité) — 253
+- Tremere — 93
+- Trinité (Saga) — 404
+- Triomphe brutal — 206
+- Troupeau (historique) — 194
+- Truand (antagoniste) — 371
+- Urne des ancêtres (équipement surnaturel) — 381
+- Végane (handicap) — 182
+- Vehme (type de coterie) — 199
+- Veille diurne (type de coterie) — 199
+- Veilleurs (atout) — 191
+- Ventrue — 99
+- Vérité du sang (rituel de Sorcellerie du sang) — 277
+- Vestige du passé (handicap) — 179
+- Vétéran de la guerre des sectes (Saga) — 405
+- Viandis — 196
+- Victoire à la Pyrrhus — 121
+- Victoires automatiques — 120
+- Vigilance (compétence) — 171
+- Vigueur (attribut) — 155
+- Vitae corrosive (pouvoir de Sorcellerie du sang) — 272
+- Voix impérieuse (pouvoir de Présence) — 265
+- Vol de vitae (pouvoir de Sorcellerie du sang) — 273
+- Volonté — 123, 157
+- Vraie Foi — 222
+- XScopes (équipement) — 378
+- Yeux de Babel (rituel de Sorcellerie du sang) — 277
+- Yeux de la bête (pouvoir de Protéisme) — 267
+- Yeux de l’engoulevent (rituel de Sorcellerie du sang) — 280
