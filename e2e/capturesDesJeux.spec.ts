@@ -89,6 +89,18 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         composantes: ['armes_a_feu'], scenes: c => scenesDeDeltaGreen(c),
     },
     {
+        // Vampire V5 (2026-11-17) : Nadia, Brujah, sur les exemples du livre de base (p. 118-122, 205-211).
+        corpusId: 'vampire', slug: 'vampire', personnage: 'Nadia',
+        sheetData: {
+            nom: 'Nadia', clan: 'Brujah', concept: 'Coursière de nuit', predateur: 'Chat de gouttière', generation: '13e',
+            force: 2, dexterite: 3, vigueur: 3, charisme: 2, manipulation: 2, sang_froid: 2, intelligence: 2, astuce: 3, resolution: 3,
+            melee: 2, melee_specialites: 'Couteaux', athletisme: 2, bagarre: 2, vigilance: 2, experience_de_la_rue: 3,
+            discipline_1_nom: 'Célérité', discipline_1: 2, discipline_2_nom: 'Puissance', discipline_2: 1,
+            sante: 6, volonte: 5, soif: 2, humanite: 7, puissance_du_sang: 1,
+        },
+        composantes: ['dexterite', 'melee'], scenes: c => scenesDeVampire(c),
+    },
+    {
         corpusId: 'noc', slug: 'noc', personnage: 'Ilya Vorn',
         sheetData: { combat: 2, action: 3, vie: 2, vecu: 2, espoir: 1, singularite: 1, trauma: 2, extase: 1, ferveur: 2, folie: 1, fatigue: true, soupcon: 6 },
         scenes: c => scenesDeNoc(c),
@@ -721,6 +733,71 @@ async function ecrireLaFiche(c: ContexteDeScene, maj: Record<string, unknown>): 
         const joueur = s.players.find(p => p.characters.some(ch => ch.id === id))!;
         for (const [champ, valeur] of Object.entries(maj)) s.updateCharacterSheetData(joueur.id, id, champ, valeur as never);
     }, { id: c.personnage, maj });
+}
+
+/**
+ * **Vampire V5** (2026-11-17) : Nadia, Dextérité 3 + Mêlée 2 (Couteaux), Soif 2, contre une
+ * difficulté Délicate (4). Les dés de l'exemple de David (p. 206) : une paire de 10 dont un de Soif,
+ * le triomphe brutal ; la Volonté relance le 10 ordinaire et les deux échecs ; puis un test
+ * d'Exaltation raté, et la fiche HTML reliée.
+ */
+async function scenesDeVampire(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    // Les dés imposés, dans l'ordre où le moteur les tire : la face v d'un d10 vaut (v − 1) / 10.
+    const desImposes = async (des: number[], action: () => Promise<void>) => {
+        await f.evaluate(d => {
+            const w = window as unknown as { __hasardVampire?: () => number };
+            w.__hasardVampire = Math.random;
+            const file = d.map(v => (v - 1) / 10 + 0.05);
+            Math.random = () => (file.length ? file.shift()! : 0.5);
+        }, des);
+        try { await action(); } finally {
+            await f.evaluate(() => { Math.random = (window as unknown as { __hasardVampire: () => number }).__hasardVampire; });
+        }
+    };
+    const soifDeNadia = () => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState()
+        .players.flatMap(p => p.characters).find(ch => ch.id === id)?.sheetData, c.personnage);
+
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await panneau.locator('select').nth(0).selectOption('dexterite');
+    await panneau.locator('select').nth(1).selectOption('melee');
+    const preparation = panneau.locator('[data-preparation-vampire]');
+    await preparation.getByRole('button', { name: 'Délicate (4)', exact: true }).click();
+    await preparation.getByLabel(/Spécialité \(\+1 dé\)/).check();
+    await expect(preparation.locator('[data-composition-vampire]')).toContainText('= 6 dés, dont 2 de Soif (Soif 2)');
+    await photographier(preparation, 'jeu-vampire-preparation');
+
+    // Quatre dés ordinaires puis deux de Soif : 10, 7, 3, 2 et 10, 4 — cinq réussites, triomphe brutal.
+    await desImposes([10, 7, 3, 2, 10, 4], () => panneau.getByRole('button', { name: 'Lancer', exact: true }).click());
+    await expect(panneau.getByText('Triomphe brutal', { exact: true }).first()).toBeVisible();
+    await photographierLePanneau(panneau, 'jeu-vampire-triomphe-brutal');
+
+    // La Volonté relance le 10 ordinaire et les deux échecs : 3, 8 et 7 — quatre réussites, plus de critique.
+    const relance = panneau.locator('[data-relance-vampire]');
+    await relance.getByRole('button', { name: '10', exact: true }).click();
+    await desImposes([3, 8, 7], () => relance.getByRole('button', { name: /Relancer 3 dés/ }).click());
+    await expect(panneau.locator('[data-suites-vampire]')).toContainText('Relancé par la Volonté (3 dés)');
+    await expect.poll(async () => (await soifDeNadia())?.volonte).toBe(4);
+    await photographierLePanneau(panneau, 'jeu-vampire-volonte');
+
+    // Le test d'Exaltation raté (un 4) : Soif 2 → 3, et un dé de Soif de plus au jet suivant.
+    await desImposes([4], () => preparation.getByRole('button', { name: 'Test d’Exaltation', exact: true }).click());
+    await expect.poll(async () => (await soifDeNadia())?.soif).toBe(3);
+    await expect(preparation.locator('[data-composition-vampire]')).toContainText('dont 3 de Soif (Soif 3)');
+    await photographier(preparation, 'jeu-vampire-exaltation');
+
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });
+    await creerLaFiche.click();
+    const ficheHtml = f.frameLocator('iframe').first();
+    await expect(ficheHtml.locator('[data-key="identity.name"]')).toHaveValue('Nadia', { timeout: 30_000 });
+    await expect(ficheHtml.locator('[data-key="identity.clan"]')).toHaveValue('Brujah');
+    await expect(ficheHtml.locator('[data-key="specialties.melee"]')).toHaveValue('Couteaux');
+    await f.waitForTimeout(1_000);
+    await photographier(f.locator('body'), 'jeu-vampire-fiche');
 }
 
 /** NOC : le moment de calme, les effets du Fiel, le jet d'un Rouage au pupitre. */
