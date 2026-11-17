@@ -1,5 +1,6 @@
 import type { DieResult, RollResult } from '../DiceEngine';
 import type { DegreDeReussite } from '../degresDeReussite';
+import { lireLesMarques } from './degatsDeVampire';
 
 /**
  * **Le jet de Vampire : la Mascarade (V5)** — 17/11/2026, à la demande de David (« finir le
@@ -49,6 +50,22 @@ export interface RegleDeVampire {
      * menu, ils excluent les dés de Soif et la relance par la Volonté (p. 119, 122, 205).
      */
     jauges?: string[];
+    /**
+     * **Les dégâts case par case** (p. 126-127, `degatsDeVampire.ts`) — 17/11/2026. Les champs
+     * texte des marques « X » et « / » de chaque jauge, et la Santé restante (les cases sans
+     * « X ») : la santé principale du pilote. La Volonté restante est `volonte`. Absent : les
+     * dégâts suivent la jauge seule, comme avant.
+     */
+    degats?: { sante: string; volonte: string; jaugeDeSante: string };
+    /** La Puissance du sang : les « / » de Santé qu'un test d'Exaltation régénère (p. 216). */
+    puissance?: string;
+    /** Les champs dont le plus élevé efface des « / » de Volonté en début de partie (p. 127). */
+    recuperationDeVolonte?: string[];
+    /**
+     * Les champs de chaque famille, pour l'Affaiblissement : −2 dés aux groupements physiques
+     * (Santé) ou sociaux et mentaux (Volonté) qui en retiennent un (p. 126).
+     */
+    groupes?: { physique: string[]; social: string[]; mental: string[] };
     /*
       Les spécialités ne sont pas nommées ici : chaque compétence de la fiche porte son texte
       par `libelleSur` (« Mêlée — Couteaux » au menu du jet, p. 118, 159), et le panneau le lit
@@ -81,6 +98,12 @@ export interface ChoixDeVampire {
     modificateur: number;
     /** Un jet de jauge — Volonté, Humanité : aucun dé de Soif (p. 205). */
     sansSoif: boolean;
+    /**
+     * L'Affaiblissement, réglé à la main : `true` retire deux dés, `false` n'en retire aucun.
+     * Absent : ce que disent la fiche et la famille du groupement (p. 126) — le conteur peut
+     * juger un autre groupement touché, ou celui-ci épargné.
+     */
+    affaibli?: boolean;
 }
 
 export const CHOIX_DE_VAMPIRE: ChoixDeVampire = { specialite: false, modificateur: 0, sansSoif: false };
@@ -91,6 +114,10 @@ export interface ReserveDeVampire {
     base: number;
     specialite: number;
     modificateur: number;
+    /** Les dés retirés par l'Affaiblissement : deux par jauge Affaiblie qui touche ce groupement (p. 126). */
+    affaiblissement: number;
+    /** Ce que la fiche dit, avant le réglage à la main : les dés que l'Affaiblissement retirerait. */
+    affaiblissementDeLaFiche: number;
     /** Le groupement, jamais moins d'un dé. */
     total: number;
     /** La Soif lue sur la fiche, bornée de 0 à 5. */
@@ -105,15 +132,21 @@ export interface ReserveDeVampire {
 const entier = (n: unknown) => Math.trunc(Number(n) || 0);
 const borner = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 
-/** Le groupement et ses dés de Soif (p. 118, 120, 205). */
-export function reserveDeVampire(base: number, choix: Partial<ChoixDeVampire>, soifDeLaFiche: unknown): ReserveDeVampire {
+/** Deux dés par jauge Affaiblie (p. 126). */
+export const MALUS_D_AFFAIBLISSEMENT = 2;
+
+/** Le groupement et ses dés de Soif (p. 118, 120, 126, 205). */
+export function reserveDeVampire(base: number, choix: Partial<ChoixDeVampire>, soifDeLaFiche: unknown, affaiblissementDeLaFiche = 0): ReserveDeVampire {
     const specialite = choix.specialite ? 1 : 0;
     const modificateur = entier(choix.modificateur);
-    const total = Math.max(1, entier(base) + specialite + modificateur);
+    const deLaFiche = Math.max(0, entier(affaiblissementDeLaFiche));
+    const affaiblissement = choix.affaibli === false ? 0
+        : choix.affaibli === true ? Math.max(MALUS_D_AFFAIBLISSEMENT, deLaFiche) : deLaFiche;
+    const total = Math.max(1, entier(base) + specialite + modificateur - affaiblissement);
     const soif = borner(entier(soifDeLaFiche), 0, SOIF_MAXIMALE);
     const sansSoif = !!choix.sansSoif;
     const desDeSoif = sansSoif ? 0 : Math.min(soif, total);
-    return { base: entier(base), specialite, modificateur, total, soif, desDeSoif, ordinaires: total - desDeSoif, sansSoif };
+    return { base: entier(base), specialite, modificateur, affaiblissement, affaiblissementDeLaFiche: deLaFiche, total, soif, desDeSoif, ordinaires: total - desDeSoif, sansSoif };
 }
 
 export type BilanDeVampire = 'triomphe-brutal' | 'victoire-critique' | 'victoire' | 'echec' | 'echec-bestial' | 'echec-total';
@@ -298,4 +331,28 @@ export function compulsionAleatoire(de: number): { nom: string; effet: string } 
     if (v <= 7) return { nom: 'Destruction', effet: '−2 dés à toute action qui ne fait pas aussitôt du mal ou ne détruit pas, jusqu’à neutraliser, détruire ou faire fuir une cible (p. 209).' };
     if (v <= 9) return { nom: 'Paranoïa', effet: '−2 dés à toute action qui ne l’éloigne pas d’une menace, jusqu’à environ une heure passée en lieu sûr (p. 209).' };
     return { nom: 'Compulsion de clan', effet: 'Celle du clan du personnage ; relancer pour un Caitiff ou un Sang Clair (p. 208).' };
+}
+
+/**
+ * **Les dés que l'Affaiblissement retire à ce groupement** (p. 126) : deux si la Santé est
+ * Affaiblie et qu'il retient un trait physique, deux si la Volonté l'est et qu'il retient un
+ * trait social ou mental. Une jauge est Affaiblie quand ses « / » couvrent toutes ses cases
+ * sans « X » (`degatsDeVampire.ts` : la jauge restante compte les cases sans « X »).
+ */
+export function affaiblissementDuGroupement(
+    regle: RegleDeVampire | undefined,
+    champsRetenus: readonly string[],
+    lire: (champ: string) => unknown,
+): { des: number; sante: boolean; volonte: boolean } {
+    const rien = { des: 0, sante: false, volonte: false };
+    if (!regle?.degats || !regle.groupes) return rien;
+    const affaiblie = (marques: string, jauge: string | undefined) => {
+        if (!jauge) return false;
+        const { aggraves, superficiels } = lireLesMarques(lire(marques));
+        return aggraves + superficiels > 0 && superficiels >= Math.max(0, entier(lire(jauge)));
+    };
+    const retient = (familles: readonly string[]) => champsRetenus.some(c => familles.includes(c));
+    const sante = affaiblie(regle.degats.sante, regle.degats.jaugeDeSante) && retient(regle.groupes.physique);
+    const volonte = affaiblie(regle.degats.volonte, regle.volonte) && retient([...regle.groupes.social, ...regle.groupes.mental]);
+    return { des: (sante ? MALUS_D_AFFAIBLISSEMENT : 0) + (volonte ? MALUS_D_AFFAIBLISSEMENT : 0), sante, volonte };
 }

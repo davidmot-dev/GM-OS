@@ -63,21 +63,24 @@ Le chapitre sur les antagonistes propose une galerie de profils prêts à l'empl
 ## À la table
 La gestion des adversaires et créatures s'articule ainsi (section « Antagonistes », section « Antagonistes simplifiés », section « Conflits »):
 1. Choix du mode d'opposition:
+   - Antagoniste simplifié: un ennemi peut n'avoir qu'une description et une difficulté, par exemple « Malfrat ••• » : le vaincre demande une victoire contre une difficulté de 3 avec la capacité appropriée, et un échec peut occasionner des dégâts. S'il faut un groupement pour lui, lancer deux fois la difficulté; ou bien lancer un dé unique, qui réussit si le dé égale ou dépasse sa difficulté, un 0 étant une réussite critique qui ajoute +2 à sa difficulté pour ce jet (section « Antagonistes simplifiés », p. 370).
    - Opposition statique: pour accélérer, le conteur peut remplacer le jet d'un PNJ par une difficulté — la moitié de son groupement (couper la poire en deux), ou son score de compétence (section « Difficultés », section « Couper la poire en deux »).
    - Adversaire détaillé: face à un ennemi notable (chasseur, vampire, créature d'épouvante), le conteur fait agir le PNJ avec ses groupements généraux (Physique, Social, Mental) ou ses compétences exceptionnelles répertoriées (section « Les mortels », section « Vampires »).
 2. Résolution des conflits:
    - Au début du tour, le conteur déclare les intentions du PNJ; ses attaques s'opposent aux actions des joueurs selon les règles normales de combat (section « Combat physique »; renvoi vers le sujet sur les conflits et le combat).
    - Face à des attaques multiples au cours d'un même tour, le PNJ subit une pénalité cumulative de un dé sur sa défense pour chaque attaquant supplémentaire après le premier (section « Adversaires multiples »).
 3. Suivi des jauges et des dépenses:
-   - Pour simplifier la gestion de la Soif et de la Volonté des PNJ, le conteur peut fixer une réserve globale de dépenses pour la scène ou accorder un bonus fixe en compensation (section « Dépenses des antagonistes »).
+   - Pour simplifier la Soif et la Volonté des antagonistes, le conteur peut cesser de les tenir et augmenter leurs groupements en compensation, fixer un compte approximatif par scène (« au plus 5 tests d'Exaltation et 3 points de Volonté pour les antagonistes de cette scène ») ou garder une réserve de dés bonus où puiser (section « Dépenses des antagonistes », p. 375).
    - Quand les cases de Santé sont pleines, le mortel meurt ou perd connaissance, tandis que le vampire tombe en torpeur (section « Fin de la jauge »).
 
 ## Cas limites
 - Régénération des loups-garous: ils récupèrent 1 dégât superficiel de Santé par tour et ne subissent de dégâts aggravés que du feu et des armes en argent (section « Loup-garou »).
 - Immunité spectrale: les spectres sont invulnérables aux attaques physiques conventionnelles; seules la magie, un exorcisme ou leur forme tangible permettent de les blesser (section « Spectre »).
+- Créatures d'épouvante: elles ne possèdent pas de disciplines, mais leurs pouvoirs se jouent comme celles de leur fiche; sur un « test d'Exaltation » raté, elles subissent 1 dégât superficiel à la Volonté ou à la Santé au lieu de gagner de la Soif (section « Créatures d'épouvante », p. 376).
+- Sang de loup-garou: il étanche deux fois la Soif (une gorgée en apaise 2); deux vampires qui vident un loup-garou peuvent tous deux tomber à 0 de Soif. Chaque point de Soif ainsi étanché ajoute +1 à la difficulté des jets contre la frénésie tant que ce sang reste dans l'organisme, avec paranoïa et irritabilité, parfois des Compulsions temporaires. Résonances animale et bilieuse, souvent intenses; une formule alchimique qui l'emploie gagne deux réussites (encadré « Le sang de loup-garou », p. 376).
 - Sang des Chasseurs de la Foi: se nourrir sur un Chasseur de la Foi inflige 4 dégâts aggravés, sauf réussite d'un jet de Vigueur + Résolution de difficulté 5 (section « Chasseur de la Foi »).
 
 ## Non couvert
 Le livre ne détaille pas les statistiques des véhicules militaires lourds (hélicoptères, blindés) parfois associés aux escouades de l'Inquisition.
 
-*Relu le 2026-11-17 contre le livre (PDF = imprimée + 4) ; profils conformes ; corrigé : formats de PNJ ; retiré : « antagonistes simplifiés » à difficulté unique, introuvables (p. 119, 123, 127, 370-377).*
+*Relu le 2026-11-17 contre le livre (PDF = imprimée + 4) ; profils conformes ; corrigé : formats de PNJ. Seconde relecture le même jour, pages 370-377 lues en image : l'encadré « Antagonistes simplifiés » (p. 370), retiré à tort le matin comme introuvable, est rétabli ; ajoutés : les dépenses des antagonistes (p. 375), la règle des créatures d'épouvante et le sang de loup-garou (p. 376).*

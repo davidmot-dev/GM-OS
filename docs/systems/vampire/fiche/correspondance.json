@@ -1,7 +1,7 @@
 {
   "version": 1,
   "gabaritDeLaFiche": "vampire-v5-fr",
-  "commentaire": "Correspondance entre la fiche GM-OS de Vampire (pilote 2.0.0, outils/vampire/finir_vampire.mjs) et le gabarit vampire-v5-fr livré le 2026-11-17. Les identifiants GM-OS sont courts et en français ; les 27 compétences et les 9 attributs suivent le livre (p. 155-171). La Santé et la Volonté restantes n’existent que dans GM-OS ; leurs cases de dégâts restent sur la fiche HTML.",
+  "commentaire": "Correspondance entre la fiche GM-OS de Vampire (pilote 2.2.0, outils/vampire/finir_vampire.mjs) et le gabarit vampire-v5-fr livré le 2026-11-17. Les identifiants GM-OS sont courts et en français ; les 27 compétences et les 9 attributs suivent le livre (p. 155-171). La Santé et la Volonté restantes (cases sans « X ») n’existent que dans GM-OS ; leurs marques « X » et « / » sont reliées case par case (marquesDeVampire, p. 126).",
   "champs": [
     {
       "gmos": "nom",
@@ -414,6 +414,38 @@
       "fiche": "tracks.humanity"
     },
     {
+      "gmos": "sante_degats",
+      "fiche": [
+        "damage.health.1",
+        "damage.health.2",
+        "damage.health.3",
+        "damage.health.4",
+        "damage.health.5",
+        "damage.health.6",
+        "damage.health.7",
+        "damage.health.8",
+        "damage.health.9",
+        "damage.health.10"
+      ],
+      "transforme": "marquesDeVampire"
+    },
+    {
+      "gmos": "volonte_degats",
+      "fiche": [
+        "damage.willpower.1",
+        "damage.willpower.2",
+        "damage.willpower.3",
+        "damage.willpower.4",
+        "damage.willpower.5",
+        "damage.willpower.6",
+        "damage.willpower.7",
+        "damage.willpower.8",
+        "damage.willpower.9",
+        "damage.willpower.10"
+      ],
+      "transforme": "marquesDeVampire"
+    },
+    {
       "gmos": "puissance_du_sang",
       "fiche": "blood.potency"
     },
@@ -592,88 +624,8 @@
       "pourquoi": "Maximum calculé par GM-OS depuis le pilote : Santé = Vigueur + 3, Volonté = Résolution + Sang-froid (statsToTrack[].max, p. 119)."
     },
     {
-      "fiche": "damage.health.1",
-      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
-    },
-    {
-      "fiche": "damage.health.2",
-      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
-    },
-    {
-      "fiche": "damage.health.3",
-      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
-    },
-    {
-      "fiche": "damage.health.4",
-      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
-    },
-    {
-      "fiche": "damage.health.5",
-      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
-    },
-    {
-      "fiche": "damage.health.6",
-      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
-    },
-    {
-      "fiche": "damage.health.7",
-      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
-    },
-    {
-      "fiche": "damage.health.8",
-      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
-    },
-    {
-      "fiche": "damage.health.9",
-      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
-    },
-    {
-      "fiche": "damage.health.10",
-      "pourquoi": "Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126)."
-    },
-    {
       "fiche": "tracks.willpower_capacity",
       "pourquoi": "Maximum calculé par GM-OS depuis le pilote : Santé = Vigueur + 3, Volonté = Résolution + Sang-froid (statsToTrack[].max, p. 119)."
-    },
-    {
-      "fiche": "damage.willpower.1",
-      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
-    },
-    {
-      "fiche": "damage.willpower.2",
-      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
-    },
-    {
-      "fiche": "damage.willpower.3",
-      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
-    },
-    {
-      "fiche": "damage.willpower.4",
-      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
-    },
-    {
-      "fiche": "damage.willpower.5",
-      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
-    },
-    {
-      "fiche": "damage.willpower.6",
-      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
-    },
-    {
-      "fiche": "damage.willpower.7",
-      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
-    },
-    {
-      "fiche": "damage.willpower.8",
-      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
-    },
-    {
-      "fiche": "damage.willpower.9",
-      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
-    },
-    {
-      "fiche": "damage.willpower.10",
-      "pourquoi": "Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157)."
     }
   ]
 }

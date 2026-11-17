@@ -28,7 +28,7 @@ import { estUnAndroide } from './systemes/paniqueAlien';
 import { CHOIX_DE_RUNEQUEST, calculerRuneQuest, type CalculDeRuneQuest, type ChoixDeRuneQuest } from './systemes/runequest';
 import { ajustementsDuJet, lireLEtat } from './systemes/progressionDeRuneQuest';
 import { reserveDeDegenesis, type ChoixDeDegenesis, type ReserveDeDegenesis } from './systemes/degenesis';
-import { reserveDeVampire, type ChoixDeVampire, type ReserveDeVampire } from './systemes/vampire';
+import { affaiblissementDuGroupement, reserveDeVampire, type ChoixDeVampire, type ReserveDeVampire } from './systemes/vampire';
 import { desDeRisqueConseilles, reserveDeShadowrun, rrBornee, type ChoixDeShadowrun, type ReserveDeShadowrun } from './systemes/shadowrun';
 import { lireSuiviShadowrun } from './systemes/suiviDeShadowrun';
 import { lireMatriceShadowrun, preparerMatriceShadowrun } from './systemes/matriceDeShadowrun';
@@ -1519,10 +1519,14 @@ export function preparerLeJet(
     const jaugeRetenue = !!descripteur.vampire?.jauges?.some(j => deLaReserve.retenues.some(r => r.champ === j));
     const vampire = descripteur.vampire && reserve
         ? reserveDeVampire(reserveDeDepart, { ...choix.vampire, sansSoif: !!choix.vampire?.sansSoif || jaugeRetenue },
-            lireLeChamp(valeursDeLaFiche, descripteur.vampire.soif).valeur ?? 0)
+            lireLeChamp(valeursDeLaFiche, descripteur.vampire.soif).valeur ?? 0,
+            // L'Affaiblissement (p. 126) : lu sur les marques de la fiche et la famille des traits retenus.
+            affaiblissementDuGroupement(descripteur.vampire, deLaReserve.retenues.map(r => r.champ),
+                champ => valeursDeLaFiche?.[champ]).des)
         : undefined;
     if (vampire?.desDeSoif) remarques.push(`Soif ${vampire.soif} : ${vampire.desDeSoif} dé${vampire.desDeSoif > 1 ? 's' : ''} de Soif sur ${vampire.total}.`);
     if (vampire?.sansSoif && vampire.soif > 0) remarques.push('Jet de jauge : aucun dé de Soif (p. 205).');
+    if (vampire?.affaiblissement) remarques.push(`Affaibli : −${vampire.affaiblissement} dés (p. 126).`);
 
     /*
       **Shadowrun : Anarchy** (2026-10-31) : *« aucune circonstance ne peut faire changer ce

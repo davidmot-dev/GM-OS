@@ -1,7 +1,9 @@
-// Le pilote Vampire : la Mascarade (V5) 2.0.0 — 17/11/2026, skill finir-un-pilote.
+// Le pilote Vampire : la Mascarade (V5) 2.1.0 — 17/11/2026, skill finir-un-pilote (2.0.0), puis
+// « commence les améliorations pour Vampire » (2.1.0, les dégâts case par case), puis la vérification
+// de l'équipement et du bestiaire contre le livre (2.2.0, `bestiaire_et_catalogue.mjs`).
 // Demande de David : « /finir-un-pilote Vampire », puis « l'ordre me convient » (tout, dans l'ordre).
 // Part de l'export de David (Export Dirvers/Vampire_driver_gmos_*.gmos-driver), GARDE l'identifiant
-// du pilote et de sa fiche, et écrit Export Dirvers/corriges/Vampire-2.0.0.gmos-driver, plus la
+// du pilote et de sa fiche, et écrit Export Dirvers/corriges/Vampire-2.2.0.gmos-driver, plus la
 // correspondance docs/systems/vampire/fiche/correspondance.json.
 //
 // Source : Vampire : la Mascarade, livre de base français (docs/systems/vampire/livres.json), pages
@@ -31,11 +33,31 @@
 //    vigilance » visait des champs inexistants.
 //  - La Soif de 0 à 5 (p. 205), l'Humanité de 0 à 10 (p. 239), la Puissance du sang de 0 à 10 (p. 215).
 //
+// 2.1.0 — les dégâts case par case (p. 126-127, src/modules/dice/systemes/degatsDeVampire.ts) :
+//  - Deux champs de marques, « X » d'abord puis « / » (section « Dégâts »), reliés aux dix cases de
+//    Santé et de Volonté de la fiche HTML (transformation `marquesDeVampire`).
+//  - La Santé et la Volonté de GM-OS comptent les cases SANS « X » : elles tombent à zéro quand le
+//    livre met hors de combat (torpeur, p. 127). La santé passe donc en points (`defaultHealthType:
+//    'hp'`, comme Degenesis) : en « boxes » sans `casesDeSante`, GM-OS dessinait cinq cases.
+//  - Les types de dégâts du panneau de santé et du pupitre : superficiels (divisés par deux),
+//    aggravés, superficiels non divisés, et les deux pour la Volonté (p. 126).
+//  - L'Affaiblissement (p. 126) : les familles de traits (`groupes`) retirent deux dés.
+//  - La régénération par test d'Exaltation selon la Puissance du sang (p. 216, 218) et la Volonté
+//    du début de partie, Résolution ou Sang-froid (p. 127).
+//
+// 2.2.0 — l'équipement et le bestiaire, forgés par David et relus contre le livre le 17/11 :
+//  - Le bestiaire et le catalogue viennent de l'EXPORT (`ancien`), restructurés sans changer un chiffre
+//    (`bestiaire_et_catalogue.mjs`) : chaque colonne du bestiaire remplit un champ, chaque créature a sa
+//    page et sa catégorie ; le chapitre « Matériel » (p. 378-381) rejoint le catalogue.
+//  - Section « Antagoniste simplifié » (p. 370) : neuf groupements nommés — Physique, Social, Mental,
+//    puis les exceptionnels —, lancés seuls au menu de l'attribut ; sans nom, cachés chez un joueur.
+//
 // Usage : node outils/vampire/finir_vampire.mjs [export.gmos-driver]
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import AdmZip from 'adm-zip';
+import { completerLeCatalogue, restructurerLeBestiaire, sectionDesAntagonistes } from './bestiaire_et_catalogue.mjs';
 
 const dossier = 'Export Dirvers';
 const source = process.argv[2]
@@ -116,13 +138,20 @@ const sections = [
         n(`discipline_${i + 1}`, `Discipline ${i + 1}`, `disciplines.${i}.level`, { max: 5, libelleSur: `discipline_${i + 1}_nom` }),
         { ...z(`discipline_${i + 1}_pouvoirs`, `Discipline ${i + 1} — pouvoirs`, DISCIPLINES.slice(0, 5).map(p => `disciplines.${i}.powers.${p}`)), transforme: 'lignes' },
     ]) },
-    // Santé = Vigueur + 3, Volonté = Résolution + Sang-froid : ce qui reste (p. 119).
+    // Santé = Vigueur + 3, Volonté = Résolution + Sang-froid : les cases sans « X » (p. 119, 126).
     { id: 'jauges', label: 'Santé, Volonté, Soif, Humanité', fields: [
         { id: 'sante', label: 'Santé', type: 'gauge', defaultValue: 4, max: 10, fiche: undefined },
         { id: 'volonte', label: 'Volonté', type: 'gauge', defaultValue: 2, max: 10, fiche: undefined },
         n('soif', 'Soif', 'tracks.hunger', { defaultValue: 1, max: 5 }),
         n('humanite', 'Humanité', 'tracks.humanity', { defaultValue: 7, max: 10 }),
     ] },
+    // Les marques des deux jauges, « X » d'abord : `XX//` (p. 126). Hors des jauges, pour ne pas
+    // entrer au menu du jet.
+    { id: 'degats', label: 'Dégâts ( / superficiel, X aggravé )', fields: [
+        { ...t('sante_degats', 'Dégâts de Santé', Array.from({ length: 10 }, (_, i) => `damage.health.${i + 1}`)), transforme: 'marquesDeVampire' },
+        { ...t('volonte_degats', 'Dégâts de Volonté', Array.from({ length: 10 }, (_, i) => `damage.willpower.${i + 1}`)), transforme: 'marquesDeVampire' },
+    ] },
+    sectionDesAntagonistes(),
     { id: 'sang', label: 'Le Sang', fields: [
         n('puissance_du_sang', 'Puissance du sang', 'blood.potency', { max: 10 }),
         t('resonance', 'Résonance', 'blood.resonance'),
@@ -170,15 +199,15 @@ const relues = new Set(correspondance.flatMap(l => [l.fiche].flat()));
 const absents = [...zones.keys()].filter(k => !relues.has(k)).map(cle => ({
     fiche: cle,
     pourquoi: /^tracks\.(health|willpower)_capacity$/.test(cle) ? 'Maximum calculé par GM-OS depuis le pilote : Santé = Vigueur + 3, Volonté = Résolution + Sang-froid (statsToTrack[].max, p. 119).'
-        : /^damage\.health\./.test(cle) ? 'Dégâts de Santé case par case, superficiels ( / ) ou aggravés ( X ) : tenus sur la fiche HTML ; GM-OS tient la Santé restante (p. 126).'
-        : /^damage\.willpower\./.test(cle) ? 'Dégâts de Volonté case par case, superficiels ou aggravés : tenus sur la fiche HTML ; GM-OS tient la Volonté restante (p. 126, 157).'
         : 'Propre à la fiche HTML : GM-OS ne la lit ni ne l’écrit.',
 }));
 
 const fiche = { ...ancienneFiche, name: 'Fiche de Vampire (V5)', sections };
 
 // --- Le pilote. ---
-const ATTRIBUT = { id: 'attribut', label: 'Attribut ou jauge', sectionId: 'attributs', sectionsSupplementaires: ['jauges'],
+// 2.2.0 : un antagoniste simplifié lance son groupement seul — « Physique », « Armes à feu » (p. 370) ;
+// les groupements 1 à 3 sont toujours Physique, Social et Mental, d'où leur famille d'Affaiblissement.
+const ATTRIBUT = { id: 'attribut', label: 'Attribut ou jauge', sectionId: 'attributs', sectionsSupplementaires: ['jauges', 'antagoniste'],
     // Dans les jauges, la Volonté et l'Humanité se lancent ; la Santé et la Soif ne sont pas des groupements (p. 119, 205).
     motif: '^(?!(sante|soif)$)' };
 const SECOND = { id: 'competence', label: 'Compétence, attribut ou discipline', sectionId: 'competences_physiques',
@@ -188,19 +217,34 @@ const SECOND = { id: 'competence', label: 'Compétence, attribut ou discipline',
 
 const pilote = {
     ...ancien,
-    version: '2.0.0',
+    version: '2.2.0',
+    catalogue: completerLeCatalogue(ancien.catalogue),
+    bestiaire: restructurerLeBestiaire(ancien.bestiaire, { ATTRIBUTS, COMPETENCES }),
     dice: { defaultDice: '1d10', logic: 'count-success', engine: 'standard', successThreshold: 6 },
     jet: {
         reserve: { base: 0, max: 30, sansPlafond: true, faces: 10, composantes: [ATTRIBUT, SECOND] },
         sens: 'superieur-ou-egal',
         difficulte: { min: 1, max: 10, defaut: 3 },
-        vampire: { soif: 'soif', volonte: 'volonte', jauges: ['volonte', 'humanite'] },
+        vampire: {
+            soif: 'soif', volonte: 'volonte', jauges: ['volonte', 'humanite'],
+            degats: { sante: 'sante_degats', volonte: 'volonte_degats', jaugeDeSante: 'sante' },
+            puissance: 'puissance_du_sang',
+            recuperationDeVolonte: ['resolution', 'sang_froid'],
+            // Les familles de l'Affaiblissement (p. 126) : les attributs et les compétences de chaque colonne.
+            groupes: {
+                physique: [...ATTRIBUTS.slice(0, 3).map(a => a[0]), ...COMPETENCES.physiques.map(c => c[0]), 'groupement_1'],
+                social: [...ATTRIBUTS.slice(3, 6).map(a => a[0]), ...COMPETENCES.sociales.map(c => c[0]), 'groupement_2'],
+                mental: [...ATTRIBUTS.slice(6, 9).map(a => a[0]), ...COMPETENCES.mentales.map(c => c[0]), 'groupement_3'],
+            },
+        },
     },
     combat: {
         ...ancien.combat,
         initiativeFormula: 'sang_froid + vigilance',
         initiativeSort: 'desc',
-        defaultHealthType: 'boxes',
+        defaultHealthType: 'hp',
+        // Les mots du panneau de santé : la porte des dégâts lit « Volonté », « aggravé », « non divisés » (p. 126).
+        damageTypes: ['Superficiels', 'Aggravés', 'Superficiels non divisés', 'Volonté — superficiels', 'Volonté — aggravés'],
         santeDeDepart: 'vigueur + 3',
         statsToTrack: [
             { fieldId: 'sante', label: 'Santé', isMainHP: true, isResource: true, max: 'vigueur + 3' },
@@ -225,7 +269,7 @@ const sortie = new AdmZip();
 sortie.addFile('manifest.json', Buffer.from(JSON.stringify({ ...manifeste, exportedAt: new Date().toISOString() }, null, 2), 'utf8'));
 sortie.addFile('state.json', Buffer.from(JSON.stringify({ ...etat, gameDriver: pilote, sheetTemplate: fiche }), 'utf8'));
 fs.mkdirSync(path.join(dossier, 'corriges'), { recursive: true });
-const cible = path.join(dossier, 'corriges', 'Vampire-2.0.0.gmos-driver');
+const cible = path.join(dossier, 'corriges', 'Vampire-2.2.0.gmos-driver');
 sortie.writeZip(cible);
 
 const cheminCorrespondance = 'docs/systems/vampire/fiche/correspondance.json';
@@ -233,7 +277,7 @@ fs.mkdirSync(path.dirname(cheminCorrespondance), { recursive: true });
 fs.writeFileSync(cheminCorrespondance, `${JSON.stringify({
     version: 1,
     gabaritDeLaFiche: 'vampire-v5-fr',
-    commentaire: 'Correspondance entre la fiche GM-OS de Vampire (pilote 2.0.0, outils/vampire/finir_vampire.mjs) et le gabarit vampire-v5-fr livré le 2026-11-17. Les identifiants GM-OS sont courts et en français ; les 27 compétences et les 9 attributs suivent le livre (p. 155-171). La Santé et la Volonté restantes n’existent que dans GM-OS ; leurs cases de dégâts restent sur la fiche HTML.',
+    commentaire: 'Correspondance entre la fiche GM-OS de Vampire (pilote 2.2.0, outils/vampire/finir_vampire.mjs) et le gabarit vampire-v5-fr livré le 2026-11-17. Les identifiants GM-OS sont courts et en français ; les 27 compétences et les 9 attributs suivent le livre (p. 155-171). La Santé et la Volonté restantes (cases sans « X ») n’existent que dans GM-OS ; leurs marques « X » et « / » sont reliées case par case (marquesDeVampire, p. 126).',
     champs: correspondance,
     absents,
 }, null, 2)}\n`);

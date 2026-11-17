@@ -1,9 +1,9 @@
 // Contrôle du pilote Vampire V5 (skill finir-un-pilote) — 17/11/2026.
-// Lit state.json, passe controlerLePilote (zéro constat exigé sur le 2.0.0), prépare de vrais jets
+// Lit state.json, passe controlerLePilote (zéro constat exigé sur le 2.2.0), prépare de vrais jets
 // avec le moteur (preparerLeJet) sur les exemples du livre de base français, et vérifie la
 // correspondance avec la fiche HTML (pages IMPRIMÉES ; page du PDF = imprimée + 4).
 // Usage : node outils/vampire/verifier_pilote.mjs [chemin.gmos-driver]
-//   sans argument : Export Dirvers/corriges/Vampire-2.0.0.gmos-driver
+//   sans argument : Export Dirvers/corriges/Vampire-2.2.0.gmos-driver
 import '../campagnes-de-recette/charger-typescript.mjs';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
@@ -18,8 +18,11 @@ const { champsProposes } = await import('../../src/modules/dice/demandeDeJet.ts'
 const { santeDeDepart } = await import('../../src/modules/combat/logic/SanteDuCombattant.ts');
 const { resoudreVampire } = await import('../../src/modules/dice/systemes/vampire.ts');
 const { verifierLaCorrespondance, lireLaCorrespondance, versLaFiche, versGmOs } = await import('../../src/modules/fiches/correspondanceDeFiche.ts');
+const { degatsDeVampireSelonLeJeu } = await import('../../src/modules/combat/logic/pistesDeVampire.ts');
+const { typesDeDegats } = await import('../../src/modules/combat/logic/TypesDeDegats.ts');
+const { exemplairesDeLaCreature } = await import('../../src/modules/combat/logic/invocationDeRencontre.ts');
 
-const fichier = process.argv[2] ?? 'Export Dirvers/corriges/Vampire-2.0.0.gmos-driver';
+const fichier = process.argv[2] ?? 'Export Dirvers/corriges/Vampire-2.2.0.gmos-driver';
 const { gameDriver: pilote, sheetTemplate: fiche } = JSON.parse(new AdmZip(fichier).readAsText('state.json'));
 const constats = controlerLePilote(pilote, fiche);
 console.log(JSON.stringify({ fichier, version: pilote.version, constats }, null, 2));
@@ -83,4 +86,76 @@ const retour = versGmOs(lot, table).sheetData;
 for (const cle of ['melee', 'melee_specialites', 'discipline_1', 'discipline_1_nom', 'discipline_1_pouvoirs', 'soif', 'humanite', 'avantage_1_niveau']) {
     assert.equal(String(retour[cle]), String(nadia[cle]), `aller-retour de ${cle}`);
 }
-console.log(`OK : zéro constat ; groupements de Guillaume, Benoît et Claire (p. 118, 205) ; attribut seul, Force + Force, jet de Volonté sans Soif ; menu ${menu.size} entrées ; Santé et initiative (p. 119, 300) ; correspondance ${table.champs.length} champs, ${table.absents.length} absents, aller-retour tenu.`);
+// 2.1.0 — les dégâts case par case (p. 126-127), sur le vrai pilote et par la porte des dégâts.
+const stats = pilote.combat.statsToTrack;
+assert.equal(pilote.combat.defaultHealthType, 'hp', 'la Santé compte les cases sans « X »');
+assert.deepEqual(typesDeDegats(pilote), ['Superficiels', 'Aggravés', 'Superficiels non divisés', 'Volonté — superficiels', 'Volonté — aggravés']);
+const blesse = { ...valeurs, vigueur: 2, resolution: 2, sang_froid: 3, sante: 5, volonte: 5, sante_degats: '', volonte_degats: '' };
+// L'officier de police (p. 126-127) : cinq cases, six aggravés — hors de combat, la Santé tombe à zéro.
+const officier = degatsDeVampireSelonLeJeu(pilote, blesse, { value: 6, type: 'Aggravés' }, stats);
+assert.equal(officier.fiche.sante_degats, 'XXXXX');
+assert.deepEqual([officier.impact.value, !!officier.impact.isRecovery], [5, false]);
+assert.match(officier.texte, /torpeur pour un vampire, coma ou mort pour un mortel/);
+// Cinq superficiels en font trois ; la Santé (cases sans « X ») ne bouge pas.
+const coups = degatsDeVampireSelonLeJeu(pilote, blesse, { value: 5, type: 'Superficiels' }, stats);
+assert.deepEqual([coups.fiche.sante_degats, coups.impact.value], ['///', 0]);
+// Jauge pleine : chaque niveau change un « / » en « X », et la Santé perd une case.
+const plein = degatsDeVampireSelonLeJeu(pilote, { ...blesse, sante_degats: '/////' }, { value: 2, type: 'Superficiels' }, stats);
+assert.deepEqual([plein.fiche.sante_degats, plein.impact.value], ['X////', 1]);
+// La Volonté : l'impact vers la santé vaut zéro, la Volonté restante s'écrit avec ses marques.
+const honte = degatsDeVampireSelonLeJeu(pilote, blesse, { value: 2, type: 'Volonté — aggravés' }, stats);
+assert.deepEqual([honte.impact.value, honte.fiche.volonte_degats, honte.fiche.volonte], [0, 'XX', 3]);
+// L'Affaiblissement au jet (p. 126) : Santé pleine de « / », Dextérité + Mêlée perd deux dés, Astuce + Vigilance non.
+const affaibli = { ...valeurs, dexterite: 3, melee: 2, astuce: 2, vigilance: 2, soif: 0, sante: 5, sante_degats: '/////' };
+assert.equal(preparer({ attribut: 'dexterite', competence: 'melee' }, {}, affaibli).vampire.total, 3, 'Affaibli : 5 − 2');
+assert.equal(preparer({ attribut: 'astuce', competence: 'vigilance' }, {}, affaibli).vampire.total, 4, 'un groupement mental épargné');
+assert.equal(preparer({ attribut: 'dexterite', competence: 'melee' }, { vampire: { affaibli: false } }, affaibli).vampire.total, 5, 'le conteur l’épargne');
+// Les cases de la fiche HTML : « X » d'abord, puis « / », dans les deux sens.
+const cases = versLaFiche({ sheetData: { ...nadia, sante_degats: 'X//', volonte_degats: '/' } }, table);
+assert.deepEqual([1, 2, 3, 4].map(i => cases[`damage.health.${i}`]), ['aggravated', 'superficial', 'superficial', 'intact']);
+assert.equal(cases['damage.willpower.1'], 'superficial');
+assert.equal(versGmOs({ ...cases, 'damage.health.7': 'aggravated' }, table).sheetData.sante_degats, 'XX//');
+
+// 2.2.0 — le bestiaire et le catalogue relus contre le livre (p. 304, 370-381).
+const bestiaire = pilote.bestiaire, catalogue = pilote.catalogue;
+assert.equal(bestiaire.creatures.length, 23);
+assert.ok(bestiaire.colonnes.every(c => c.champ), 'chaque colonne du bestiaire remplit un champ');
+assert.ok(bestiaire.creatures.every(c => Number.isInteger(c.source?.page) && c.categorie), 'page et catégorie de chaque créature');
+const creature = id => bestiaire.creatures.find(c => c.id === id);
+const plateau = id => exemplairesDeLaCreature({ bestiaire, creature: creature(id), nombre: 1, typeDeSante: pilote.combat.defaultHealthType })[0].sheetData;
+// Le lieutenant de police (p. 371) : Physique 4, Armes à feu 5 — un groupement complet, lancé seul.
+const lieutenant = { ...valeurs, ...plateau('lieutenant-de-police') };
+assert.deepEqual([lieutenant.sante, lieutenant.volonte, lieutenant.groupement_1_nom, lieutenant.groupement_1, lieutenant.groupement_4_nom, lieutenant.groupement_4], [6, 5, 'Physique', 4, 'Armes à feu', 5]);
+const menuDuLieutenant = new Map(champsProposes(pilote.jet.reserve.composantes[0], fiche.sections, lieutenant).map(c => [c.id, c.label]));
+assert.equal(menuDuLieutenant.get('groupement_1'), 'Physique');
+assert.equal(menuDuLieutenant.get('groupement_4'), 'Armes à feu');
+assert.ok(!menuDuLieutenant.has('groupement_8'), 'un groupement sans nom reste hors du menu');
+assert.equal(preparer({ attribut: 'groupement_4' }, {}, lieutenant).vampire.total, 5, 'Armes à feu 5 : cinq dés');
+assert.equal(preparer({ attribut: 'groupement_1' }, {}, lieutenant).vampire.total, 4, 'Physique 4');
+// Affaibli (Santé pleine de « / ») : le groupement Physique perd deux dés, le Mental non (p. 126).
+const lieutenantAffaibli = { ...lieutenant, sante_degats: '//////' };
+assert.equal(preparer({ attribut: 'groupement_1' }, {}, lieutenantAffaibli).vampire.total, 2);
+assert.equal(preparer({ attribut: 'groupement_3' }, {}, lieutenantAffaibli).vampire.total, 4);
+// Sur la fiche d'un joueur, rien de l'antagoniste n'entre au menu.
+assert.ok(![...premier.keys()].some(id => id.startsWith('groupement_')), 'groupements cachés sur la fiche d’un joueur');
+// La Harpie (p. 374) : Manipulation 4 + Persuasion 4 ; Santé 5 = Vigueur 2 + 3, Volonté 6 = Résolution 3 + Sang-froid 3.
+const harpie = { ...valeurs, ...plateau('harpie-de-l-elysium') };
+assert.equal(preparer({ attribut: 'manipulation', competence: 'persuasion' }, {}, harpie).vampire.total, 8);
+assert.equal(santeDeDepart(pilote.combat.santeDeDepart, c => Number(harpie[c])), harpie.sante);
+for (const c of bestiaire.creatures.filter(x => x.valeurs.vigueur !== undefined)) {
+    assert.equal(c.valeurs.vigueur + 3, c.valeurs.sante, `${c.nom} : Santé = Vigueur + 3`);
+    assert.equal(c.valeurs.resolution + c.valeurs.sang_froid, c.valeurs.volonte, `${c.nom} : Volonté = Résolution + Sang-froid`);
+}
+// Les chiffres forgés n'ont pas bougé : Santé et Volonté de chaque créature, groupements des simplifiés.
+const forge = JSON.parse(new AdmZip('Export Dirvers/Vampire_driver_gmos_1794902541894.gmos-driver').readAsText('state.json')).gameDriver.bestiaire;
+for (const f of forge.creatures) {
+    const c = creature(f.id);
+    assert.deepEqual([c.valeurs.sante, c.valeurs.volonte], [f.valeurs.sante, f.valeurs.volonte], f.nom);
+    if (f.valeurs.physique !== undefined) assert.deepEqual([c.valeurs.groupement_1, c.valeurs.groupement_2, c.valeurs.groupement_3], [f.valeurs.physique, f.valeurs.social, f.valeurs.mental], f.nom);
+}
+// Le catalogue : la table des armes est p. 304 ; le chapitre « Matériel » (p. 378-381) y est.
+assert.equal(catalogue.objets.length, 30);
+assert.ok(catalogue.objets.filter(o => o.famille === 'arme' && o.categorie === 'Dégâts des armes').every(o => o.source.page === 304));
+assert.equal(catalogue.objets.find(o => o.id === 'munitions-raufoss').valeurs['valeur-de-degats'], '+5');
+
+console.log(`OK : zéro constat ; groupements de Guillaume, Benoît et Claire (p. 118, 205) ; attribut seul, Force + Force, jet de Volonté sans Soif ; menu ${menu.size} entrées ; Santé et initiative (p. 119, 300) ; correspondance ${table.champs.length} champs, ${table.absents.length} absents, aller-retour tenu ; dégâts : l'officier de police, superficiels divisés, conversion, Volonté, Affaiblissement au jet, cases de la fiche (p. 126-127) ; bestiaire jouable (23 créatures, lieutenant 6/6, Armes à feu 5, Harpie 8 dés) et catalogue de 30 objets (p. 304, 370-381).`);

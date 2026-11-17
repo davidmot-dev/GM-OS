@@ -97,6 +97,8 @@ import { AttaqueDegenesis, PreparationDegenesis, SuitesDegenesis, type AttaqueLa
 import { CHOIX_DE_VAMPIRE, compulsionAleatoire, lancerVampire, relanceImpossible, relancerVampire, testerLExaltation,
     type ChoixDeVampire, type JetDeVampire, type TestDExaltation } from '../../../dice/systemes/vampire';
 import { PreparationVampire, SuitesVampire } from './VampireAuJet';
+import { capaciteLueSurLaFiche, depenserUnPoint, ecrireLesMarques, etatDeLaPiste, lireLesMarques, recuperationDeVolonte,
+    regenerationParExaltation, soignerVampire } from '../../../dice/systemes/degatsDeVampire';
 import { useRoundDeDegenesisStore } from '../../../combat/useRoundDeDegenesisStore';
 import { actionsRestantes, bonusDeLaProchaineAction, maniabiliteDe } from '../../../dice/systemes/combatDeDegenesis';
 import { combinerLesDeclencheurs, desDeLAide, DIFFICULTE_DE_L_AIDE } from '../../../dice/systemes/jetsLiesDeDegenesis';
@@ -1795,7 +1797,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         if (regleVampire && jet.vampire) {
             setVampireDuLancer(d => ({ titre: titreDuJet, sansSoif: jet.vampire!.sansSoif, compte: (d?.compte ?? 0) + 1 }));
             // La spécialité vaut pour une action (p. 118) : elle se décoche.
-            setChoixVampire(c => ({ ...c, specialite: false }));
+            // L'Affaiblissement réglé à la main vaut pour ce jet seul : le suivant relit la fiche (p. 126).
+            setChoixVampire(c => ({ ...c, specialite: false, affaibli: undefined }));
         }
         const seconde = jet.composantesDeLaSecondeReserve[0];
         setDernierLancer({
@@ -2082,12 +2085,59 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const relancerVampireAuPanneau = (rangs: number[]) => {
         const jetV = (resultat as JetDeVampire | null)?.vampire;
         if (!regleVampire || !jetV || !vampireDuLancer || relanceImpossible(jetV, vampireDuLancer.sansSoif, volonteVampire)) return;
+        /*
+          La dépense se note « / » sur la jauge de Volonté, sans division ; sur une jauge pleine, un
+          « / » devient « X » (p. 126, relu le 17/11). Sans marques au pilote, la Volonté baisse d'un
+          point, comme avant.
+        */
+        const marques = regleVampire.degats && regleVampire.volonte && volonteVampire !== undefined
+            ? depenserUnPoint('Volonté', valeursVampire[regleVampire.degats.volonte], volonteVampire) : null;
+        if (regleVampire.degats && volonteVampire !== undefined && !marques) return;
         const apres = relancerVampire(jetV, rangs, () => DiceEngine.roll(10));
         setResultat(apres);
         const paye = regleVampire.volonte && volonteVampire !== undefined;
-        if (paye) ecrireVampire({ [regleVampire.volonte!]: volonteVampire - 1 });
-        redire(`${vampireDuLancer.titre} · relance par la Volonté${paye ? ` (${volonteVampire} → ${volonteVampire - 1})` : ''}`, apres);
+        if (marques) ecrireVampire({ [regleVampire.degats!.volonte]: marques.marques, [regleVampire.volonte!]: marques.restante });
+        else if (paye) ecrireVampire({ [regleVampire.volonte!]: volonteVampire - 1 });
+        redire(`${vampireDuLancer.titre} · relance par la Volonté${marques ? ` — ${marques.texte}` : paye ? ` (${volonteVampire} → ${volonteVampire - 1})` : ''}`, apres);
     };
+    /** Vampire : un test d'Exaltation régénère des « / » de Santé selon la Puissance du sang (p. 216, 218). */
+    const regenererVampire = () => {
+        const degats = regleVampire?.degats;
+        if (!regleVampire || !degats) return;
+        const avant = lireLesMarques(valeursVampire[degats.sante]);
+        if (!avant.superficiels) return;
+        const n = regenerationParExaltation(regleVampire.puissance ? valeursVampire[regleVampire.puissance] : 0);
+        const soin = soignerVampire(avant, n, 'superficiel');
+        const t = testerLExaltation(valeursVampire[regleVampire.soif], false, () => DiceEngine.roll(10));
+        setExaltationVampire(t);
+        ecrireVampire({ [degats.sante]: ecrireLesMarques(soin.piste), ...(t.soifApres !== t.soifAvant ? { [regleVampire.soif]: t.soifApres } : {}) });
+        const texte = `${t.texte} Santé : ${soin.rendus} « / » régénéré${soin.rendus > 1 ? 's' : ''} — ${ecrireLesMarques(soin.piste) || 'aucune marque'} (p. 218).`;
+        redire('Régénération', {
+            total: t.reussi ? 1 : 0, modifier: 0, successes: t.reussi ? 1 : 0, tagSuccess: t.reussi, totalDisplay: texte,
+            rolls: t.des.map(v => ({ val: v, sides: 10, isCritMax: v >= 6 })),
+        });
+    };
+    /** Vampire : au début de la partie, la Volonté perd des « / » — Résolution ou Sang-froid, le plus élevé (p. 127). */
+    const recuperationVampire = regleVampire?.recuperationDeVolonte?.length
+        ? recuperationDeVolonte(...(regleVampire.recuperationDeVolonte.slice(0, 2).map(c => valeursVampire[c]) as [unknown, unknown])) : undefined;
+    const debutDePartieVampire = () => {
+        const degats = regleVampire?.degats;
+        if (!degats || recuperationVampire === undefined) return;
+        const soin = soignerVampire(lireLesMarques(valeursVampire[degats.volonte]), recuperationVampire, 'superficiel');
+        if (!soin.rendus) return;
+        ecrireVampire({ [degats.volonte]: ecrireLesMarques(soin.piste) });
+        redire('Début de partie', { total: soin.rendus, modifier: 0, rolls: [],
+            totalDisplay: `Volonté : ${soin.rendus} « / » effacé${soin.rendus > 1 ? 's' : ''} — ${ecrireLesMarques(soin.piste) || 'aucune marque'} (p. 127).` });
+    };
+    /** Les deux jauges, lues sur la fiche : les marques et l'état (p. 126-127). */
+    const pistesVampire = regleVampire?.degats ? (() => {
+        const lire = (marques: string, jauge: string | undefined) => {
+            const texte = String(valeursVampire[marques] ?? '');
+            const restante = jauge ? valeursVampire[jauge] : undefined;
+            return { marques: ecrireLesMarques(lireLesMarques(texte)), etat: etatDeLaPiste(lireLesMarques(texte), capaciteLueSurLaFiche(texte, restante)) };
+        };
+        return { sante: lire(regleVampire.degats.sante, regleVampire.degats.jaugeDeSante), volonte: lire(regleVampire.degats.volonte, regleVampire.volonte) };
+    })() : undefined;
     /** Vampire : la Compulsion d'un échec bestial, tirée au tableau (p. 208). */
     const compulsionVampire = () => {
         if (!vampireDuLancer) return;
@@ -3144,13 +3194,21 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             specialites={(() => {
                                 // Le texte des spécialités : le champ que la compétence retenue nomme par `libelleSur` (p. 118).
                                 const champs = template.sections.flatMap(sec => sec.fields);
+                                // Seule une compétence (`libelleEnPrecision`) porte ses spécialités : le nom d'une
+                                // discipline ou d'un groupement d'antagoniste n'en est pas une (17/11, « — Armes à feu »).
                                 const texte = jet.composantesDeLaReserve
-                                    .map(c => champs.find(f => f.id === c.champ)?.libelleSur)
+                                    .map(c => champs.find(f => f.id === c.champ))
+                                    .map(f => (f?.libelleEnPrecision ? f.libelleSur : undefined))
                                     .map(cle => (cle ? String(valeursVampire[cle] ?? '').trim() : ''))
                                     .find(Boolean);
                                 return texte || undefined;
                             })()}
-                            exalter={ecrireSurLaFiche ? exalterVampire : undefined} dernierTest={exaltationVampire} />
+                            exalter={ecrireSurLaFiche ? exalterVampire : undefined} dernierTest={exaltationVampire}
+                            pistes={pistesVampire}
+                            regenerer={ecrireSurLaFiche && pistesVampire ? regenererVampire : undefined}
+                            regeneration={regenerationParExaltation(regleVampire.puissance ? valeursVampire[regleVampire.puissance] : 0)}
+                            debutDePartie={ecrireSurLaFiche && pistesVampire && recuperationVampire !== undefined ? debutDePartieVampire : undefined}
+                            recuperation={recuperationVampire} />
                     )}
                     {regleDegenesis && contaminationDegenesis && (
                         <StimulationEtPotentielAuJet bonus={bonusDeStimulation} prise={stimulationPrise} setPrise={setStimulationPrise}

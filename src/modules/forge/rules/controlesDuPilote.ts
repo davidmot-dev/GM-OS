@@ -2104,6 +2104,30 @@ export function controlerLePilote(
         if (driver.jet?.reserve?.cout?.length) {
             avertir('jet.reserve.cout', "Vampire n'achète pas de dés : la Volonté relance jusqu'à trois dés ordinaires après le jet (p. 122).");
         }
+        /*
+          Les dégâts case par case (17/11/2026, p. 126-127) : les champs des marques et les deux
+          jauges doivent exister, et les jauges avoir leur maximum — sans lui, la porte des dégâts
+          ne sait pas quand une jauge est pleine, et le coup suit la jauge seule.
+        */
+        if (vamp.degats) {
+            const d = vamp.degats;
+            for (const [cle, champ] of [['sante', d.sante], ['volonte', d.volonte], ['jaugeDeSante', d.jaugeDeSante]] as const) {
+                if (!champ || !tousLesChamps.has(champ)) erreur(`jet.vampire.degats.${cle}`, `Les dégâts de Vampire lisent « ${champ ?? ''} », absent de la fiche (p. 126).`);
+            }
+            if (!vamp.volonte) erreur('jet.vampire.volonte', 'Les dégâts de Vampire tiennent aussi la Volonté : nommer `jet.vampire.volonte` (p. 126).');
+            const principale = driver.combat?.statsToTrack?.find(s => s.isMainHP)?.fieldId;
+            if (principale && principale !== d.jaugeDeSante) {
+                avertir('jet.vampire.degats.jaugeDeSante', `La santé principale est « ${principale} », mais les dégâts de Vampire tiennent « ${d.jaugeDeSante} » : la jauge et les marques ne diraient pas la même chose.`);
+            }
+            for (const jauge of [d.jaugeDeSante, vamp.volonte].filter(Boolean) as string[]) {
+                if (!driver.combat?.statsToTrack?.find(s => s.fieldId === jauge)?.max) {
+                    avertir('combat.statsToTrack', `« ${jauge} » n'a pas de maximum (statsToTrack[].max) : sans lui, la jauge pleine ne se lit pas, et les dégâts suivent la jauge seule (p. 126).`);
+                }
+            }
+            for (const champ of [vamp.puissance, ...(vamp.recuperationDeVolonte ?? []), ...Object.values(vamp.groupes ?? {}).flat()]) {
+                if (champ && !tousLesChamps.has(champ)) erreur('jet.vampire', `Le bloc Vampire nomme « ${champ} », absent de la fiche.`);
+            }
+        }
     }
     const deg = driver.jet?.degenesis;
     if (deg) {
@@ -2550,6 +2574,23 @@ export function controlerLePilote(
     constats.push(...controlerLeCatalogue(driver.catalogue));
     // Le bestiaire du pilote (§ 210) : son contrôle vit avec lui, dans `bestiaire/bestiaire.ts`.
     constats.push(...controlerLeBestiaire(driver.bestiaire, tousLesChamps));
+    /*
+      **Une créature du livre doit entrer avec SA santé** — 17/11/2026, bestiaire de Vampire relu
+      contre le livre : aucune colonne ne remplissait de champ, et un lieutenant de police (Santé 6,
+      p. 371) entrait au combat à 10 / 10, la santé par défaut, sans que rien ne le dise. La santé
+      d'une créature vient d'une colonne qui remplit la santé principale, ou de la formule de départ
+      quand des colonnes en remplissent tous les champs, ou du rôle « santé » (Alien).
+    */
+    const bestiaire = driver.bestiaire;
+    const principale = driver.combat?.statsToTrack?.find(s => s.isMainHP)?.fieldId;
+    if (bestiaire?.creatures?.length && principale) {
+        const remplis = new Set(bestiaire.colonnes.map(c => c.champ).filter(Boolean) as string[]);
+        const formule = driver.combat?.santeDeDepart?.trim();
+        const parLaFormule = !!formule && champsDUneFormule(formule).length > 0 && champsDUneFormule(formule).every(c => remplis.has(c));
+        if (!remplis.has(principale) && !parLaFormule && !bestiaire.colonnes.some(c => c.role === 'sante')) {
+            avertir('bestiaire.colonnes', `Aucune colonne du bestiaire ne remplit la santé principale « ${principale} »${formule ? ` ni les champs de « ${formule} »` : ''} : une créature invoquée au combat entrerait avec la santé par défaut, pas celle du livre.`);
+        }
+    }
 
     return constats;
 }

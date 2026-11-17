@@ -45,6 +45,21 @@ Pour les armes et protections, le jeu privilégie des catégories génériques p
 | **Veste en kevlar/gilet pare-balles** | 4 | – |
 | **Combinaison tactique du RAID/ protections militaires** | 6 | –1 dé aux jets de Dextérité. |
 
+### Matériel du chapitre « Outils » (p. 378-381)
+| Objet | Effet |
+|:- |:- |
+| **Armes dissimulées** | −1 dé à l'attaque, sauf victoire critique à l'Artisanat du concepteur; repérer : Astuce + Vigilance, difficulté 1 + Furtivité du porteur ou Artisanat du créateur (p. 379) |
+| **Armes incendiaires artisanales** | −1 dé de dégâts; échec total : 3 aggravés à l'utilisateur (p. 379) |
+| **Munitions Raufoss** | +5 aggravés, ignorent toute armure (p. 380) |
+| **Hafla DM34** | Difficulté d'au moins 3; victoire : 3 aggravés, puis 3 par tour (p. 380) |
+| **Lance-flammes** | +0 aggravés à l'impact puis chaque tour (p. 380) |
+| **Cocktail Molotov** | Toucher : difficulté 4; 2 aggravés par tour; Sang-froid + Survie (3) pour s'en défaire (p. 380) |
+| **Fusil à filet** | Dégâts à la Dextérité, divisés par deux; à 0, immobilisé; se dégager : Force + Athlétisme contre les réussites cumulées (p. 380) |
+| **Lance-pieu** | Comme un pieu, +0 (p. 381) |
+| **Chaoscope** | Intelligence + Vigilance (6), −1 par vampire du même clan ou de la même génération déjà détecté (p. 378) |
+| **XScope** | Mort ou vivant à distance; trompé par les Couleurs de la vie; seconde génération : Sang-froid + Vigueur, difficulté 5 + Résolution de l'opérateur (p. 378-379) |
+| **Sac pare-soleil**, objets surnaturels (monnaies anciennes, pierres gravées, sang préservé, terre de sépulcre, urne des ancêtres) | Descriptions sans mécanique fixe : le conteur décide (p. 378, 381) |
+
 ## À la table
 L'utilisation et l'acquisition du matériel s'articulent ainsi (section « Équipement », section « Dégâts des armes », section « Armure »):
 1. Disponibilité: le personnage possède d'office les objets courants justifiés par son score de Ressources ou de Contacts (section « Équipement »). Pour un matériel rare ou illégal, le joueur teste Intelligence + Ressources ou Manipulation + Expérience de la rue (section « Équipement »).
@@ -63,4 +78,4 @@ L'utilisation et l'acquisition du matériel s'articulent ainsi (section « Équi
 ## Non couvert
 Le livre ne propose aucun système chiffré de gestion de l'encombrement, de poids en kilogrammes ou de prix monétaires en devises, l'ensemble reposant sur l'historique Ressources.
 
-*Relu le 2026-11-17 contre le livre (PDF = imprimée + 4) ; corrigé : groupement de tir, effet de l'armure, Souffle-du-Dragon ; retiré : un « errata » sans source (p. 119, 221, 253-254, 301-304).*
+*Relu le 2026-11-17 contre le livre (PDF = imprimée + 4) ; corrigé : groupement de tir, effet de l'armure, Souffle-du-Dragon ; retiré : un « errata » sans source (p. 119, 221, 253-254, 301-304). Seconde relecture le même jour, pages 304 et 378-381 lues en image : tableaux conformes ; ajouté le tableau du matériel (p. 378-381).*

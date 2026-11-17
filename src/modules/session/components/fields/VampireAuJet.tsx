@@ -3,6 +3,7 @@ import {
     DIFFICULTES_DE_VAMPIRE, MODIFICATEUR_CONSEILLE, RELANCE_MAXIMALE, relanceImpossible, relancesProposees,
     type ChoixDeVampire, type JetDeVampire, type ReserveDeVampire, type TestDExaltation,
 } from '../../../dice/systemes/vampire';
+import { LIBELLES_DE_LA_PISTE, lireLesMarques, type EtatDeLaPiste } from '../../../dice/systemes/degatsDeVampire';
 
 /**
  * **Le jet de Vampire : la Mascarade (V5)** — 17/11/2026, à la demande de David (« finir le
@@ -29,9 +30,18 @@ export const PreparationVampire: React.FC<{
     /** Le test d'Exaltation ; absent, il ne se lance pas d'ici. */
     exalter?: (deuxDes: boolean) => void;
     dernierTest?: TestDExaltation | null;
-}> = ({ choix, setChoix, reserve, difficulte, setDifficulte, specialites, exalter, dernierTest }) => {
+    /** Les marques des deux jauges, quand le pilote les tient (p. 126) ; absentes, rien ne s'affiche. */
+    pistes?: { sante: { marques: string; etat: EtatDeLaPiste }; volonte: { marques: string; etat: EtatDeLaPiste } };
+    /** Un test d'Exaltation qui régénère `regeneration` « / » de Santé (p. 216, 218). */
+    regenerer?: () => void;
+    regeneration?: number;
+    /** Le début de partie : la Volonté perd `recuperation` « / » (p. 127). */
+    debutDePartie?: () => void;
+    recuperation?: number;
+}> = ({ choix, setChoix, reserve, difficulte, setDifficulte, specialites, exalter, dernierTest, pistes, regenerer, regeneration, debutDePartie, recuperation }) => {
     const [deuxDes, setDeuxDes] = useState(false);
     const horsConseil = Math.abs(choix.modificateur) > MODIFICATEUR_CONSEILLE;
+    const affaibli = (reserve?.affaiblissement ?? 0) > 0;
     return (
         <div data-preparation-vampire className="flex flex-col gap-2 text-xs">
             <div className="flex flex-wrap items-center gap-1">
@@ -62,6 +72,14 @@ export const PreparationVampire: React.FC<{
                     <input type="checkbox" checked={choix.sansSoif} onChange={e => setChoix(c => ({ ...c, sansSoif: e.target.checked }))} />
                     Jet de jauge (Volonté, Humanité)
                 </label>
+                {pistes && (
+                    <label className={`flex items-center gap-1 ${affaibli ? 'text-etat-alerte' : ''}`}
+                        title="Une jauge pleine rend Affaibli : −2 dés aux groupements physiques (Santé) ou sociaux et mentaux (Volonté), et à tout autre que le conteur juge touché (p. 126). Cochée d'office selon la fiche.">
+                        <input type="checkbox" data-affaibli-vampire checked={affaibli}
+                            onChange={e => setChoix(c => ({ ...c, affaibli: e.target.checked }))} />
+                        Affaibli (−2 dés)
+                    </label>
+                )}
             </div>
             {horsConseil && <span className="text-etat-alerte/80">Le livre conseille au plus trois dés ajoutés ou retirés par le conteur (p. 120).</span>}
             {reserve && (
@@ -69,6 +87,7 @@ export const PreparationVampire: React.FC<{
                     Groupement {reserve.base}
                     {reserve.specialite > 0 && ' +1 de spécialité'}
                     {reserve.modificateur !== 0 && ` ${signe(reserve.modificateur)} du conteur`}
+                    {reserve.affaiblissement > 0 && ` −${reserve.affaiblissement} d’Affaiblissement`}
                     {' '}= <strong className="text-app-text">{des(reserve.total)}</strong>
                     {reserve.desDeSoif > 0 ? `, dont ${reserve.desDeSoif} de Soif (Soif ${reserve.soif})` : reserve.sansSoif && reserve.soif > 0 ? ', sans dé de Soif' : ''}.
                     {' '}Chaque 6 réussit ; une paire de 10 vaut quatre réussites.
@@ -85,6 +104,31 @@ export const PreparationVampire: React.FC<{
                         deux dés, le meilleur gardé
                     </label>
                     {dernierTest && <span data-dernier-test className={dernierTest.reussi ? 'text-etat-succes' : 'text-etat-danger'}>{dernierTest.texte}</span>}
+                </div>
+            )}
+            {pistes && (
+                <div data-pistes-vampire className="flex flex-wrap items-center gap-2 border-t border-app-border/20 pt-2">
+                    <span className={etiquette}>Dégâts</span>
+                    {(['sante', 'volonte'] as const).map(j => (
+                        <span key={j} data-piste={j} className={pistes[j].etat === 'indemne' || pistes[j].etat === 'blesse' ? '' : 'text-etat-alerte'}
+                            title="« / » superficiel, « X » aggravé ; une jauge pleine rend Affaibli, pleine de « X » met hors de combat (p. 126-127).">
+                            {j === 'sante' ? 'Santé' : 'Volonté'}{' '}
+                            <strong className="font-mono text-app-text">{pistes[j].marques || '—'}</strong>{' '}
+                            ({LIBELLES_DE_LA_PISTE[pistes[j].etat]})
+                        </span>
+                    ))}
+                    {regenerer && (
+                        <button type="button" className={bouton} onClick={regenerer} disabled={!lireLesMarques(pistes.sante.marques).superficiels}
+                            title={`Un test d'Exaltation régénère ${regeneration ?? 1} « / » de Santé selon la Puissance du sang ; un seul par tour (p. 216, 218).`}>
+                            Régénérer ({regeneration ?? 1} « / »)
+                        </button>
+                    )}
+                    {debutDePartie && (
+                        <button type="button" className={bouton} onClick={debutDePartie} disabled={!lireLesMarques(pistes.volonte.marques).superficiels}
+                            title={`Au début de chaque partie, la Volonté perd autant de « / » que la Résolution ou le Sang-froid, le plus élevé (p. 127).`}>
+                            Début de partie : Volonté ({recuperation ?? 0} « / »)
+                        </button>
+                    )}
                 </div>
             )}
         </div>

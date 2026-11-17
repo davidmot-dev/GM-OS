@@ -205,12 +205,39 @@ export const SPECIALISATIONS_DE_DUNE: Transformation = {
     },
 };
 
+/**
+ * **Les marques de Vampire ↔ les cases de la fiche** — 17/11/2026 (p. 126).
+ *
+ * GM-OS tient une jauge en un texte de marques, « X » d'abord puis « / » (`XX//`,
+ * `dice/systemes/degatsDeVampire.ts`) ; la fiche HTML (`vampire-v5-fr`) imprime dix cases
+ * `damage.health.1` … `damage.health.10`, chacune « aggravated », « superficial » ou
+ * « intact ». Vers la fiche, les « X » remplissent les premières cases, puis les « / ».
+ * Vers GM-OS, on compte les marques où qu'elles soient : un joueur qui coche la quatrième
+ * case sans la troisième a bien quatre marques, comme pour `serie`.
+ */
+export const MARQUES_DE_VAMPIRE: Transformation = {
+    cles: 'plusieurs',
+    decomposer(valeur, nombreDeCles) {
+        const texte = String(valeur ?? '');
+        const aggraves = (texte.match(/[xX]/g) ?? []).length;
+        const superficiels = (texte.match(/\//g) ?? []).length;
+        return Array.from({ length: nombreDeCles }, (_, i) =>
+            i < aggraves ? 'aggravated' : i < aggraves + superficiels ? 'superficial' : 'intact');
+    },
+    composer(valeurs) {
+        const lu = valeurs.map(v => String(v ?? '').trim().toLowerCase());
+        return 'X'.repeat(lu.filter(v => v === 'aggravated' || v === 'x').length)
+            + '/'.repeat(lu.filter(v => v === 'superficial' || v === '/').length);
+    },
+};
+
 /** Les transformations que le format connaît, par le nom qu'une table emploie. */
 export const TRANSFORMATIONS: Record<string, Transformation> = {
     niveauEtDe: NIVEAU_ET_DE,
     lignes: LIGNES,
     serie: SERIE,
     specialisationsDeDune: SPECIALISATIONS_DE_DUNE,
+    marquesDeVampire: MARQUES_DE_VAMPIRE,
 };
 
 /**

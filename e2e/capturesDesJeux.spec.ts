@@ -96,7 +96,8 @@ const MISES_EN_SCENE: MiseEnScene[] = [
             force: 2, dexterite: 3, vigueur: 3, charisme: 2, manipulation: 2, sang_froid: 2, intelligence: 2, astuce: 3, resolution: 3,
             melee: 2, melee_specialites: 'Couteaux', athletisme: 2, bagarre: 2, vigilance: 2, experience_de_la_rue: 3,
             discipline_1_nom: 'Célérité', discipline_1: 2, discipline_2_nom: 'Puissance', discipline_2: 1,
-            sante: 6, volonte: 5, soif: 2, humanite: 7, puissance_du_sang: 1,
+            // Pilote 2.1.0 : la Santé compte les cases sans « X » ; un aggravé et deux superficiels (p. 126).
+            sante: 5, sante_degats: 'X//', volonte: 5, volonte_degats: '', soif: 2, humanite: 7, puissance_du_sang: 1,
         },
         composantes: ['dexterite', 'melee'], scenes: c => scenesDeVampire(c),
     },
@@ -495,6 +496,8 @@ for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
         // SR-A4/A5/A6 ajoutent trois cartes à photographier avant l’ouverture de la fiche HTML.
         if (['shadowrun-anarchy', 'coc', 'delta-green'].includes(mise.corpusId)) test.setTimeout(120_000);
+        // Vampire 2.2.0 (17/11) : le bestiaire au combat et le jet d'un adversaire suivent la fiche HTML.
+        if (mise.corpusId === 'vampire') test.setTimeout(120_000);
         // RuneQuest joue aussi la magie, l'inspiration et les cartes de la fiche depuis RQ-A6 (03/11).
         if (['dune', 'noc', 'runequest', 'degenesis'].includes(mise.corpusId)) test.setTimeout(180_000);
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
@@ -779,7 +782,9 @@ async function scenesDeVampire(c: ContexteDeScene): Promise<void> {
     await relance.getByRole('button', { name: '10', exact: true }).click();
     await desImposes([3, 8, 7], () => relance.getByRole('button', { name: /Relancer 3 dés/ }).click());
     await expect(panneau.locator('[data-suites-vampire]')).toContainText('Relancé par la Volonté (3 dés)');
-    await expect.poll(async () => (await soifDeNadia())?.volonte).toBe(4);
+    // 2.1.0 : la dépense se note « / » sur la jauge de Volonté (p. 126) ; les cases sans « X » restent cinq.
+    await expect.poll(async () => (await soifDeNadia())?.volonte_degats).toBe('/');
+    await expect.poll(async () => (await soifDeNadia())?.volonte).toBe(5);
     await photographierLePanneau(panneau, 'jeu-vampire-volonte');
 
     // Le test d'Exaltation raté (un 4) : Soif 2 → 3, et un dé de Soif de plus au jet suivant.
@@ -787,6 +792,20 @@ async function scenesDeVampire(c: ContexteDeScene): Promise<void> {
     await expect.poll(async () => (await soifDeNadia())?.soif).toBe(3);
     await expect(preparation.locator('[data-composition-vampire]')).toContainText('dont 3 de Soif (Soif 3)');
     await photographier(preparation, 'jeu-vampire-exaltation');
+
+    // 2.1.0 — les dégâts case par case (p. 126-127), par la porte des dégâts du magasin : huit
+    // superficiels en font quatre ; trois remplissent la Santé (six cases), le quatrième change un
+    // « / » en « X ». Nadia est Affaiblie, sa Santé (cases sans « X ») passe à 4, et son groupement
+    // physique perd deux dés.
+    await f.evaluate(id => (window as unknown as { useSessionOSStore: { getState: () => {
+        handleApplyImpact: (cible: string, type: 'pc', impact: { value: number; type: string }) => void } } })
+        .useSessionOSStore.getState().handleApplyImpact(id, 'pc', { value: 8, type: 'Superficiels' }), c.personnage);
+    await expect.poll(async () => (await soifDeNadia())?.sante_degats).toBe('XX////');
+    await expect.poll(async () => (await soifDeNadia())?.sante).toBe(4);
+    const pistes = preparation.locator('[data-pistes-vampire]');
+    await expect(pistes.locator('[data-piste="sante"]')).toContainText('Affaibli');
+    await expect(preparation.locator('[data-composition-vampire]')).toContainText('−2 d’Affaiblissement');
+    await photographier(preparation, 'jeu-vampire-affaibli');
 
     await ongletDeLaFiche(f, 'Fiche du jeu');
     const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
@@ -798,6 +817,47 @@ async function scenesDeVampire(c: ContexteDeScene): Promise<void> {
     await expect(ficheHtml.locator('[data-key="specialties.melee"]')).toHaveValue('Couteaux');
     await f.waitForTimeout(1_000);
     await photographier(f.locator('body'), 'jeu-vampire-fiche');
+
+    // 2.2.0 — le bestiaire du livre (p. 370-377) : deux lieutenants de police posés au combat entrent
+    // avec la Santé du livre (6), pas les 10 par défaut ; trois aggravés notent trois « X » (p. 126).
+    await ouvrirLeModule(gmos, 'Combat-OS');
+    await f.getByRole('button', { name: /Fabriquer des adversaires/i }).first().click();
+    const atelier = f.locator('[data-atelier-des-adversaires]');
+    await atelier.getByRole('button', { name: /^Livre/ }).click();
+    const lieutenant = atelier.locator('[data-creature-du-livre="lieutenant-de-police"]');
+    await expect(lieutenant).toContainText('p. 371');
+    await lieutenant.scrollIntoViewIfNeeded();
+    await photographier(atelier, 'jeu-vampire-bestiaire');
+    await lieutenant.getByRole('button', { name: 'Au combat (2)' }).click();
+    const lieutenants = () => f.evaluate(() => (window as unknown as Fenetre).useCombatStore.getState().combatants
+        .filter(x => x.origineDuLivre?.creatureId === 'lieutenant-de-police')
+        .map(x => [x.name, x.hp, x.hpMax, x.sheetData?.groupement_4_nom, x.sheetData?.sante_degats ?? '']));
+    await expect.poll(lieutenants).toEqual([
+        ['Lieutenant de police 1', 6, 6, 'Armes à feu', ''], ['Lieutenant de police 2', 6, 6, 'Armes à feu', ''],
+    ]);
+    await f.evaluate(() => {
+        const combat = (window as unknown as Fenetre).useCombatStore.getState();
+        const premier = combat.combatants.find(x => x.name === 'Lieutenant de police 1')!;
+        combat.applyDamage(3, 'Aggravés', [premier.id]);
+    });
+    await expect.poll(lieutenants).toEqual([
+        ['Lieutenant de police 1', 3, 6, 'Armes à feu', 'XXX'], ['Lieutenant de police 2', 6, 6, 'Armes à feu', ''],
+    ]);
+
+    // Lancer un test pour un adversaire (17/11) : depuis sa fiche, « Armes à feu 5 » seul — cinq dés.
+    const idDuLieutenant = await f.evaluate(() => (window as unknown as Fenetre).useCombatStore.getState().combatants
+        .find(x => x.name === 'Lieutenant de police 1')!.id);
+    await f.locator(`[data-combattant="${idDuLieutenant}"]`).getByRole('button', { name: 'Fiche', exact: true }).click();
+    const jet = f.locator('[data-jet-du-combattant]');
+    await expect(jet).toContainText('Lancer un test pour Lieutenant de police 1');
+    const panneauDuLieutenant = jet.locator('[data-panneau-de-jet]');
+    await panneauDuLieutenant.locator('select').nth(0).selectOption('groupement_4');
+    await expect(panneauDuLieutenant.locator('[data-composition-vampire]')).toContainText('= 5 dés');
+    await desImposes([9, 6, 2, 10, 4], () => panneauDuLieutenant.getByRole('button', { name: 'Lancer', exact: true }).click());
+    await expect(panneauDuLieutenant.getByText('Victoire', { exact: true }).first()).toBeVisible();
+    // Le nom d'un groupement n'est pas un texte de spécialités.
+    await expect(jet.locator('[data-preparation-vampire]')).not.toContainText('— Armes à feu');
+    await photographier(panneauDuLieutenant, 'jeu-vampire-jet-adversaire');
 }
 
 /** NOC : le moment de calme, les effets du Fiel, le jet d'un Rouage au pupitre. */

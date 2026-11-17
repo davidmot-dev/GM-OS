@@ -21,6 +21,7 @@ import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
 import { dommagesDeTorg, ajouterLeChoc, direLesDommages } from '../../combat/logic/dommagesDeTorg';
 import { coupLocaliseSelonLeJeu } from '../../combat/logic/coupsDeRuneQuest';
 import { pistesDeSanteSelonLeJeu } from '../../combat/logic/pistesDeDegenesis';
+import { degatsDeVampireSelonLeJeu } from '../../combat/logic/pistesDeVampire';
 import { encaissementSelonLeJeu } from '../../combat/logic/encaissementDeCoc';
 import { moniteurSelonLeJeu } from '../../combat/logic/moniteurDeShadowrun';
 import { CLE_SUIVI_SHADOWRUN, lireSuiviShadowrun } from '../../dice/systemes/suiviDeShadowrun';
@@ -939,6 +940,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             // Degenesis (2026-10-30) : Blessures superficielles puis Traumatismes ; l'attaque mentale va à l'Égo.
             const pistes = pistesDeSanteSelonLeJeu(pilote?.combat?.pistesDeSante, fiche, impactSaisi, pilote?.combat?.statsToTrack);
             if (pistes) return pistes;
+            // Vampire (2026-11-17) : « / » et « X » sur la Santé ou la Volonté, Affaiblissement et torpeur (p. 126-127).
+            const vampire = degatsDeVampireSelonLeJeu(pilote, fiche, impactSaisi, pilote?.combat?.statsToTrack);
+            if (vampire) return vampire;
             // COC (2026-10-31) : la RD retirée, la mort instantanée et les états franchis de l'échelle de santé.
             const encaisse = encaissementSelonLeJeu(pilote?.combat?.encaissement, fiche, impactSaisi);
             if (encaisse) return encaisse;

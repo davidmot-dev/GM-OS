@@ -13,6 +13,8 @@ import { nomDeGabarit, origineOuDefaut } from '../logic/promotionDuCombattant';
 import { archetypeParId } from '../logic/archetypes';
 import { estUneFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
 import { SanteDuCombattantVoyageur } from './SanteDuCombattantVoyageur';
+import { JetDuCombattant } from './JetDuCombattant';
+import { jetDuCombattantPossible } from '../logic/jetDuCombattant';
 
 /**
  * **La fiche d'un combattant, en lecture.**
@@ -167,6 +169,11 @@ export const FicheDuCombattant: React.FC = () => {
             )}
 
             {gabarit && estUneFicheDeVoyageur(gabarit) && <SanteDuCombattantVoyageur combattant={combattant} fiche={gabarit} donnees={valeurs} />}
+
+            {/* Vampire (17/11/2026) : un adversaire du livre se lance d'ici — « Armes à feu 5 », p. 371. */}
+            {driver && gabarit && jetDuCombattantPossible(combattant, driver, gabarit) && (
+                <JetDuCombattant combattant={combattant} driver={driver} gabarit={gabarit} valeurs={valeurs} campaignId={activeCampaignId} />
+            )}
 
             {blocs.map(bloc => (
                 <section key={bloc.section} className="space-y-2">

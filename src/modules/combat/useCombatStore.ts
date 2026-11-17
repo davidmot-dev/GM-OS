@@ -31,6 +31,7 @@ import { lireDune, santeDuConflitDune } from '../dice/systemes/duneRegles';
 import { comparerLInitiative, departager } from './logic/departageDInitiative';
 import { estHorsDeCombat, santeDeDepart, valeurDuChamp, santeAlignee, santePrincipaleDeLaFiche } from './logic/SanteDuCombattant';
 import { coupSurLAdversaire, estUnAdversaireAutonome } from './logic/adversairesDeDegenesis';
+import { degatsDeVampireSelonLeJeu } from './logic/pistesDeVampire';
 import { DiceEngine } from '../dice/DiceEngine';
 import { actionsDuRound, lancerDegenesis, reserveDeDegenesis } from '../dice/systemes/degenesis';
 import { faceDuD10 } from '../dice/systemes/argyropee';
@@ -89,7 +90,8 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
 function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'asc' | 'desc'; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien;
     initiativeEnReserve?: GameDriver['combat']['initiativeEnReserve']; pistesDeSante?: GameDriver['combat']['pistesDeSante'];
     statsToTrack?: GameDriver['combat']['statsToTrack'];
-    encaissement?: GameDriver['combat']['encaissement'] }; jet?: { coc?: { des?: 'd20' | '3d6'; heroisme?: boolean }; argyropee?: { sante?: string }; deltaGreen?: { sante?: string } } } | undefined {
+    encaissement?: GameDriver['combat']['encaissement'] }; jet?: { coc?: { des?: 'd20' | '3d6'; heroisme?: boolean }; argyropee?: { sante?: string }; deltaGreen?: { sante?: string };
+        vampire?: import('../dice/systemes/vampire').RegleDeVampire } } | undefined {
     try {
         return (window as unknown as {
             useSessionOSStore?: { getState: () => { getActiveDriver?: () => ReturnType<typeof piloteActif> } };
@@ -357,6 +359,25 @@ function santeDeCombatDG(c: { hp?: number; hpMax?: number; healthSystem?: Health
     if (!principale) return {};
     return { hp: principale.courant, hpMax: principale.max,
         healthSystem: santeAlignee(c.healthSystem ?? HealthInterpreter.createDefault('hp'), principale) };
+}
+
+/**
+ * **Vampire : la Santé d'un combattant qui entre** (17/11/2026, bestiaire relu contre le livre,
+ * p. 370-377). La Santé de GM-OS compte les cases sans « X » (`degatsDeVampire.ts`) ; sa capacité est
+ * Vigueur + 3 (p. 119). Une créature du livre n'a souvent pas de Vigueur — un lieutenant de police
+ * n'a que « Physique 4 » et « Santé 6 » (p. 371) : la formule ne se lit pas, et elle entrait à 10 / 10,
+ * la santé par défaut. On prend alors la Santé que porte sa fiche. Les points de vie et la santé
+ * détaillée sont alignés, comme pour Delta Green : le coup suivant part des mêmes chiffres.
+ */
+function santeDeCombatVampire(c: { hp?: number; hpMax?: number; healthSystem?: HealthSystem }, fiche: Combatant['sheetData']): Partial<Combatant> {
+    const pilote = piloteActif();
+    const degats = pilote?.jet?.vampire?.degats;
+    if (!degats || !fiche || (typeof c.hp === 'number' && typeof c.hpMax === 'number')) return {};
+    const portee = valeurDuChamp(fiche, degats.jaugeDeSante);
+    const max = santeDeDepart(pilote?.combat?.santeDeDepart, champ => valeurDuChamp(fiche, champ)) ?? portee;
+    if (max === undefined || max === null || max <= 0) return {};
+    const courant = Math.max(0, Math.min(max, portee ?? max));
+    return { hp: courant, hpMax: max, healthSystem: santeAlignee(c.healthSystem ?? HealthInterpreter.createDefault('hp'), { courant, max }) };
 }
 
 // Re-export pour compatibilité descendante
@@ -885,6 +906,7 @@ export const useCombatStore = create<CombatState>()(
                         // nouveauté à l'existant.*
                         ...pointsDeVieDeDepart(combatant, fiche),
                         ...santeDeCombatDG(combatant, fiche),
+                        ...santeDeCombatVampire(combatant, fiche),
                     }]
                 }));
                 // Le rattachement suit l'ajout, jamais l'inverse : il peut lui
@@ -1498,6 +1520,41 @@ export const useCombatStore = create<CombatState>()(
                     transmis.add(c.id);
                 }
                 targetIds = targetIds.filter(id => !transmis.has(id));
+
+                /*
+                  **Vampire : la nature du coup compte** (2026-11-17, p. 126-127). Le calcul en PV
+                  ignore « / » et « X » : un combattant lié à une fiche passe par la porte du panneau
+                  de santé, **avec le type du coup** ; un adversaire autonome qui porte la règle se
+                  compte ici, sur sa propre fiche. Sans capacité lisible, le coup reste en PV.
+                */
+                const reglesVampire = piloteActif()?.jet?.vampire;
+                if (reglesVampire?.degats) {
+                    const comptes = new Set<string>();
+                    for (const c of get().combatants.filter(x => targetIds.includes(x.id))) {
+                        const source = !session ? undefined : c.isPlayer
+                            ? session.players.flatMap(p => p.characters).find(p => p.id === c.sourcePlayerId)
+                            : session.entities.find(e => e.id === c.sourceEntityId);
+                        const impact = { value: Math.abs(amount), isRecovery: amount < 0, type };
+                        if (source && session) {
+                            session.handleApplyImpact(source.id, c.isPlayer ? 'pc' : 'npc', impact);
+                            comptes.add(c.id); continue;
+                        }
+                        const r = degatsDeVampireSelonLeJeu(piloteActif(), c.sheetData, impact, piloteActif()?.combat?.statsToTrack);
+                        if (!r) continue;
+                        const hpMax = c.hpMax ?? c.hp ?? 0;
+                        const montant = r.impact.isRecovery ? -r.impact.value : r.impact.value;
+                        const healthSystem = c.healthSystem && montant !== 0
+                            ? HealthInterpreter.calculateNextState(c.healthSystem, { value: Math.abs(montant), isRecovery: montant < 0 })
+                            : c.healthSystem;
+                        get().updateCombatant(c.id, { hp: Math.max(0, Math.min(hpMax, (c.hp ?? hpMax) - montant)), healthSystem, sheetData: { ...c.sheetData, ...r.fiche } });
+                        get().noterUnCoup(c.id, r.impact);
+                        useJournalStore.getState().addEvent({ type: 'COMBAT', title: `${c.name} — ${amount < 0 ? 'soins' : 'dégâts'}`, content: r.texte });
+                        gmToast(`${c.name} — ${r.texte}`, 'info');
+                        comptes.add(c.id);
+                    }
+                    targetIds = targetIds.filter(id => !comptes.has(id));
+                    if (targetIds.length === 0) { get().broadcastSync(); return; }
+                }
 
                 /*
                   **Degenesis : l'adversaire sans fiche, à deux pistes** (DEG-A6, 2026-11-04). Préparé

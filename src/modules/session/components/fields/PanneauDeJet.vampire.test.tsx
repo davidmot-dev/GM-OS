@@ -150,3 +150,81 @@ describe('le jet de Vampire au panneau', () => {
         expect(composition(panneau)).toContain('dont 3 de Soif (Soif 3)');
     });
 });
+
+/**
+ * **Les dégâts case par case au panneau** (2026-11-17, pilote 2.1.0, p. 126-127, 216-218) : la
+ * relance coche un « / » de Volonté, l'Affaiblissement retire deux dés, la régénération efface
+ * des « / » de Santé contre un test d'Exaltation.
+ */
+const JET_DEGATS: DescripteurDeJet = {
+    ...JET,
+    vampire: {
+        ...JET.vampire!,
+        degats: { sante: 'sante_degats', volonte: 'volonte_degats', jaugeDeSante: 'sante' },
+        puissance: 'puissance_du_sang', recuperationDeVolonte: ['resolution', 'sang_froid'],
+        groupes: { physique: ['dexterite', 'melee'], social: ['sang_froid'], mental: ['resolution'] },
+    },
+};
+const FICHE_DEGATS = { ...FICHE, sections: [...FICHE.sections, { id: 'degats', label: 'Dégâts', fields: [
+    { id: 'sante', label: 'Santé', type: 'number', defaultValue: 0 },
+    { id: 'sante_degats', label: 'Dégâts de Santé', type: 'text', defaultValue: '' },
+    { id: 'volonte_degats', label: 'Dégâts de Volonté', type: 'text', defaultValue: '' },
+    { id: 'sang_froid', label: 'Sang-froid', type: 'number', defaultValue: 1 },
+    { id: 'puissance_du_sang', label: 'Puissance du sang', type: 'number', defaultValue: 0 },
+] }] } as unknown as SheetTemplate;
+
+const monterAvecDegats = (valeurs: Record<string, unknown>, ecrire = vi.fn()) => {
+    const panneau = render(<PanneauDeJet descripteur={JET_DEGATS} dice={DICE} template={FICHE_DEGATS} valeurs={valeurs} ecrireSurLaFiche={ecrire} />).container;
+    const [attribut, seconde] = screen.getAllByRole('combobox');
+    fireEvent.change(attribut, { target: { value: 'dexterite' } });
+    fireEvent.change(seconde, { target: { value: 'melee' } });
+    return { panneau, ecrire };
+};
+
+describe('les dégâts de Vampire au panneau', () => {
+    it('Santé pleine de « / » : Affaibli, deux dés de moins au groupement physique (p. 126)', () => {
+        const { panneau } = monterAvecDegats({ ...NADIA, soif: 0, sante: 5, sante_degats: '/////' });
+        expect(composition(panneau)).toContain('−2 d’Affaiblissement = 3 dés');
+        const caseAffaibli = panneau.querySelector('[data-affaibli-vampire]') as HTMLInputElement;
+        expect(caseAffaibli.checked).toBe(true);
+        expect(panneau.querySelector('[data-piste="sante"]')!.textContent).toContain('/////');
+        expect(panneau.querySelector('[data-piste="sante"]')!.textContent).toContain('Affaibli');
+        // Le conteur juge ce groupement épargné.
+        fireEvent.click(caseAffaibli);
+        expect(composition(panneau)).toContain('= 5 dés');
+    });
+
+    it('la relance par la Volonté coche un « / » de Volonté, sans la diviser (p. 122, 126)', () => {
+        const { ecrire } = monterAvecDegats({ ...NADIA, sante: 5, volonte: 5, volonte_degats: '' });
+        fireEvent.click(screen.getByText('Délicate (4)'));
+        faces(2, 3, 8, 6, 7);
+        lancer();
+        faces(9, 9);
+        fireEvent.click(screen.getByText(/Relancer 2 dés/));
+        expect(ecrire).toHaveBeenCalledWith({ volonte_degats: '/', volonte: 5 });
+        const relance = consigner.mock.calls[1][0] as { titre: string };
+        expect(relance.titre).toContain('Volonté : 1 dégât superficiel');
+    });
+
+    it('Volonté pleine de « / » : la relance en change un en « X » (p. 126-127)', () => {
+        const { ecrire } = monterAvecDegats({ ...NADIA, sante: 5, volonte: 3, volonte_degats: '///' });
+        faces(2, 3, 8, 6, 7);
+        lancer();
+        faces(9, 9);
+        fireEvent.click(screen.getByText(/Relancer 2 dés/));
+        expect(ecrire).toHaveBeenCalledWith({ volonte_degats: 'X//', volonte: 2 });
+    });
+
+    it('régénérer : un test d’Exaltation efface des « / » selon la Puissance du sang (p. 216, 218)', () => {
+        const { ecrire } = monterAvecDegats({ ...NADIA, soif: 2, sante: 5, sante_degats: 'X///', puissance_du_sang: 2 });
+        faces(4);
+        fireEvent.click(screen.getByText(/Régénérer \(2 « \/ »\)/));
+        expect(ecrire).toHaveBeenCalledWith({ sante_degats: 'X/', soif: 3 });
+    });
+
+    it('début de partie : la Volonté perd Résolution ou Sang-froid « / », le plus élevé (p. 127)', () => {
+        const { ecrire } = monterAvecDegats({ ...NADIA, resolution: 2, sang_froid: 3, sante: 5, volonte: 5, volonte_degats: 'X////' });
+        fireEvent.click(screen.getByText(/Début de partie : Volonté \(3 « \/ »\)/));
+        expect(ecrire).toHaveBeenCalledWith({ volonte_degats: 'X/' });
+    });
+});
