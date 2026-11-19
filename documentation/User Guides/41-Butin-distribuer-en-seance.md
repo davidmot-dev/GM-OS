@@ -13,13 +13,23 @@ onglets : **1. Génération**, **2. Pool actif**, **3. Historique**.
 
 Lorsqu'un groupe triomphe d'un défi ou fouille un lieu, le MJ peut ajouter des objets au **Pool de Butin**.
 
-Le butin arrive dans le pool par **quatre portes** :
+Le butin arrive dans le pool par **cinq portes** :
 
 1. **Une table du pilote** — onglet *Génération*, section « Tables de Système ».
 2. **Une description libre confiée à l'IA** — « un coffre de pirate maudit ».
 3. **Un oracle de Table-OS** — le bouton « Verser au butin » sur un résultat de tirage,
    quand l'entrée déclare ce qu'elle donne (voir le *Guide Table-OS*).
 4. **Une entrée de type Oracle** dans une table du pilote, qui appelle Table-OS pour vous.
+5. **Le catalogue d'équipement du pilote** (19/11/2026) — le bouton **« Depuis le catalogue »**,
+   à droite de « Tables de Système » : cochez les objets, **« Verser au butin »**. Ils arrivent
+   reliés au catalogue, un véhicule avec ce qu'il contient, sans passer par une table. Le bouton
+   n'existe que si le pilote a un catalogue. Les tables faites depuis le catalogue se décrivent
+   dans *Loot-OS — écrire ses tables*.
+
+![Loot-OS sur Alien : « Depuis le catalogue » à droite des tables, la table « Pistolets » tirée, puis un objet versé ; le résumé trésor compte leur valeur](captures/butin-catalogue-loot-os.jpg)
+
+Un objet du catalogue donné à un personnage reste **relié** au catalogue : dans son Sac à dos, il
+compte comme porté, et ses effets sont rappelés au jet.
 
 Puis :
 

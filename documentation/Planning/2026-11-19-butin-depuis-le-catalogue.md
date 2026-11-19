@@ -2,8 +2,8 @@
 
 > Demande de David (19/11) : « je voudrais faire le lien entre les équipements qui sont définis
 > dans un drivers et loot-os afin de pouvoir constituer des tables de loot plus facilement ».
-> État : **spécifié, pas commencé** — périmètre tranché par David le 19/11 ; un détail (Q5) à
-> confirmer avant T1. Premier geste : T1. Registre § 264.
+> État : **livré, à essayer par David** — T1 à T8 faits le 19/11 ; reste l'essai à l'écran
+> (C8). Registre § 264.
 > Suite annoncée du chantier du catalogue (§ 203, [plan du 02/11](2026-11-02-catalogue-d-equipement.md)) :
 > « Ensuite, hors de ce chantier : Loot-OS qui distribue un objet du catalogue ».
 
@@ -101,7 +101,7 @@
 - 19/11 — Q4, David : « Reprendre la fenêtre » → pas de nouveau dessin Stitch : la liste de
   « Prendre dans le catalogue » (familles, recherche, catégories, grille, « Livre, p. N ») est
   partagée, avec des cases à cocher pour le butin.
-- [À CONFIRMER Q5 — détail, avant T1] Proposition : **valeur** lue dans le coût quand il commence
+- 19/11 — Q5, David : « cela me convient » → retenu tel que proposé : **valeur** lue dans le coût quand il commence
   par un nombre (« 1 200 $ » → 1200 ; Alien 159 coûts sur 209, Blade Runner 33 sur 34 ; Delta
   Green « Courant » → 0) ; **rareté** réglée sur la ligne de la table, premier palier du jeu par
   défaut ; **objets contenus** versés au pool avec l'objet (le véhicule et ses armes), chacun
@@ -176,36 +176,121 @@ e2e de capture (Forge › Tables de butin, Loot-OS) pour les images du guide.
 
 ## Tâches
 
-- [ ] T1 · Le type de ligne « Objet du catalogue » et sa fabrique — `drivers.ts`,
+- [x] T1 · Le type de ligne « Objet du catalogue » et sa fabrique — `drivers.ts`,
       `butinDuCatalogue.ts` (neuf), `LootGenerator.ts`, `equiperLaFiche.ts` (export de
       `poidsEnNombre`) — couvre C2, C4, C5 · essais : `butinDuCatalogue.test.ts` (neuf : valeur du
       coût, rareté, contenus, objet absent), `LootGenerator.test.ts` (**neuf** — le générateur
       n'est essayé aujourd'hui que par `pontVersLesOracles.test.ts` : ligne catalogue, objet
-      corrigé, objet retiré, lignes ordinaires inchangées) · touche src/ ⛔
-- [ ] T2 · Le tirage de Loot-OS lit le catalogue du pilote, et l'objet donné compte comme porté —
+      corrigé, objet retiré, lignes ordinaires inchangées) · touche src/ ⛔ — **fait le 19/11**
+      (« gm-os est fermé »).
+      - `LootEntry.type` reçoit `'catalogue'`, `metadata.catalogueId` est typé.
+      - `equipement/butinDuCatalogue.ts` : `valeurDuCout` (« 1 200 $ » → 1200, espaces
+        insécables compris ; « Courant », « Spécial » → 0) et `objetsDuButin` (objet, puis ses
+        contenus, chacun une fois, sans boucler sur un cercle). **Écart au plan** :
+        `poidsEnNombre` reste privé, la fabrique part d'`objetPourLeSac`, qui l'emploie déjà —
+        une seule règle de l'objet de sac.
+      - `LootGenerator` : option `catalogue` ; une ligne `catalogue` se lit au tirage, rareté et
+        quantité de la ligne ; un objet absent (ou pas de catalogue) donne l'avertissement
+        « Objet du catalogue introuvable : « … » (depuis « … ») », jamais un objet vide ; les
+        tables imbriquées transmettent le catalogue.
+      Essais : `butinDuCatalogue.test.ts` (6, dont C3 : l'objet reçu compte comme porté),
+      `LootGenerator.test.ts` (6). **Vérifié** : `npx vitest run --maxWorkers=4
+      src/modules/equipement src/modules/session/logic src/modules/session/components/LootGeneratorPanel.test.tsx`
+      (96 fichiers, 1 100 essais) ; `npx tsc -b` ; eslint. Rien n'est encore visible à l'écran :
+      le tirage de Loot-OS reçoit le catalogue en T2.
+- [x] T2 · Le tirage de Loot-OS lit le catalogue du pilote, et l'objet donné compte comme porté —
       `LootGeneratorPanel.tsx` — couvre C2, C3 · essais : `LootGeneratorPanel.test.tsx` (+1),
-      `equiperLaFiche.test.ts` (`objetsPortes` d'un objet du butin) · touche src/ ⛔
-- [ ] T3 · Extraire la liste du catalogue, choix un ou plusieurs — `ListeDuCatalogue.tsx` (neuf),
+      `equiperLaFiche.test.ts` (`objetsPortes` d'un objet du butin) · touche src/ ⛔ — **fait le
+      19/11** (« GM-OS est fermé ») : le tirage passe `driver.catalogue` au générateur. Essai
+      `LootGeneratorPanel.test.tsx` (+1 : une table « Casier » versée au pool, l'objet relié,
+      aucun avertissement ; le pilote simulé devient réglable par essai). C3 est prouvé dans
+      `butinDuCatalogue.test.ts` (T1) plutôt que dans `equiperLaFiche.test.ts`.
+- [x] T3 · Extraire la liste du catalogue, choix un ou plusieurs — `ListeDuCatalogue.tsx` (neuf),
       `PrendreDansLeCatalogue.tsx` — prépare C1 · essais : `PrendreDansLeCatalogue.test.tsx`
       **inchangé** et vert, `ListeDuCatalogue.test.tsx` (neuf : cases, « Toute la catégorie »,
-      recherche) · touche src/ ⛔
-- [ ] T4 · La fenêtre du butin — `ChoisirDansLeCatalogue.tsx` (neuf) — couvre C1, C9, C10 en
+      recherche) · touche src/ ⛔ — **fait le 19/11** : familles, recherche, catégories, grille et
+      « Livre, p. N » sortent de « Prendre dans le catalogue », qui emploie la liste en choix
+      unique ; la famille reste tenue par l'appelant. En choix multiple : une case par ligne, la
+      liste `aria-multiselectable`, « Toute la catégorie » (coche ou décoche la catégorie
+      ouverte), la sélection survit aux changements de famille et de catégorie. Seule
+      différence à l'écran pour la fiche : l'en-tête de la grille centré verticalement.
+      Essais : `PrendreDansLeCatalogue.test.tsx` **inchangé** (5, verts), `ListeDuCatalogue.test.tsx`
+      (6). **Vérifié** : `npx vitest run --maxWorkers=4 src/modules/session src/modules/equipement`
+      (215 fichiers, 1 914 essais) ; `npx tsc -b` ; eslint.
+- [x] T4 · La fenêtre du butin — `ChoisirDansLeCatalogue.tsx` (neuf) — couvre C1, C9, C10 en
       partie · essai : `ChoisirDansLeCatalogue.test.tsx` (quatre familles, sélection rendue,
-      Échap) · touche src/ ⛔
-- [ ] T5 · L'éditeur des tables : « Ajouter depuis le catalogue », « Nouvelle table depuis le
+      Échap) · touche src/ ⛔ — **fait le 19/11** (GM-OS fermé, réponse du jour).
+      - `ChoisirDansLeCatalogue` : même cadre que « Prendre dans le catalogue », la liste partagée
+        en choix multiple sur **les quatre familles** (un butin peut contenir un véhicule),
+        ouverte sur la première famille qui a des objets ; au pied, le compte (« 3 objets
+        choisis »), « Tout décocher », « Annuler » et le geste nommé par l'appelant
+        (`geste` : « Ajouter à la table », « Créer la table », « Verser au butin ») ; elle rend
+        les objets cochés **dans l'ordre du catalogue**, puis se ferme ; Échap ferme sans rien
+        rendre.
+      - Règles des gestes, dans `butinDuCatalogue.ts` : `lignesDepuisLeCatalogue` (une ligne
+        `catalogue` par objet, poids 1, quantité 1, rareté donnée), `nomDUneTableDuCatalogue`
+        (la catégorie partagée, sinon « Sélection du catalogue »), `tableDepuisLeCatalogue`
+        (poids égaux, un seul tirage parmi la liste) — C10.
+      Essai : `ChoisirDansLeCatalogue.test.tsx` (7). **Vérifié** : `npx vitest run --maxWorkers=4`
+      sur la fenêtre, la liste, « Prendre dans le catalogue » et `src/modules/equipement`
+      (8 fichiers, 72 essais) ; `npx tsc -b` ; eslint. La fenêtre n'est ouverte nulle part avant
+      T5 et T6.
+- [x] T5 · L'éditeur des tables : « Ajouter depuis le catalogue », « Nouvelle table depuis le
       catalogue », ligne catalogue affichée, objet introuvable signalé, rien sans catalogue —
       `EditeurDesTablesDeButin.tsx`, locales — couvre C1, C5, C6, C10 · essai :
-      `EditeurDesTablesDeButin.test.tsx` (neuf) · touche src/ ⛔
-- [ ] T6 · En séance : « Depuis le catalogue » dans Loot-OS — `LootGeneratorPanel.tsx`, locales —
+      `EditeurDesTablesDeButin.test.tsx` (neuf) · touche src/ ⛔ — **fait le 19/11** (GM-OS fermé,
+      réponse du jour).
+      - En tête, à côté de « Créer une table » : **« Nouvelle table depuis le catalogue »** (la
+        fenêtre, puis `tableDepuisLeCatalogue`, rareté au premier palier du jeu).
+      - Dans chaque table, à côté de « Ajouter une entrée » : **« Ajouter depuis le
+        catalogue »** (les lignes s'ajoutent après celles de la table).
+      - Une ligne « Objet du catalogue » : le type dans la liste (seulement si le pilote a un
+        catalogue, ou si la ligne l'est déjà) ; le nom lu dans le catalogue, en lecture seule ;
+        une seconde rangée avec l'objet (liste groupée par famille, « nom — catégorie » ;
+        changer d'objet met à jour le lien et le nom), la rareté, le badge « Catalogue » et
+        « famille · catégorie » ; ni valeur, ni masse, ni description à taper (elles viennent
+        du catalogue) ; un objet disparu s'annonce en rouge sur la ligne (C5).
+      - Sans catalogue : aucun bouton, aucun type nouveau (C6).
+      - 11 clés `modules:session.rule_engine_editor.loot.catalogue.*` et `entry_types.catalogue`,
+        en français et en anglais.
+      Essai : `EditeurDesTablesDeButin.test.tsx` (6, le premier de l'éditeur). **Vérifié** :
+      `npx vitest run --maxWorkers=4 src/modules/session src/modules/equipement` (217 fichiers,
+      1 927 essais) ; `npx tsc -b` ; eslint. **Premier geste visible à l'écran** (Forge › Règles ›
+      Tables de butin) : à essayer par David avec T8.
+- [x] T6 · En séance : « Depuis le catalogue » dans Loot-OS — `LootGeneratorPanel.tsx`, locales —
       couvre C9 · essai : `LootGeneratorPanel.test.tsx` (+2 : versé au pool et relié ; absent sans
-      catalogue) · touche src/ ⛔
-- [ ] T7 · Les liens survivent à l'export et à l'import du pilote —
+      catalogue) · touche src/ ⛔ — **fait le 19/11** (GM-OS fermé) : le bouton à droite de
+      « Tables de Système », seulement si le pilote a un catalogue ; la fenêtre du butin, geste
+      « Verser au butin » ; les objets passent par `objetsDuButin` (reliés, premier palier de
+      rareté, contenus compris) puis `addLootToPool`. **Corrigé après la capture** : un second
+      message doublait celui que le pool affiche déjà (« N objet(s) ajouté(s) au butin de
+      séance ») ; il est retiré, et l'essai vérifie qu'aucun message n'est ajouté. Essai
+      `LootGeneratorPanel.test.tsx` (+2).
+- [x] T7 · Les liens survivent à l'export et à l'import du pilote —
       `system/archive/butinDuBundle.test.ts` (neuf, sur le modèle de `bestiaireDuBundle.test.ts`)
-      — couvre C7 · touche src/ ⛔ (essai seul)
-- [ ] T8 · Livraison : guides 41 et 42 avec captures, registre, synthèse des pilotes (ligne des
+      — couvre C7 · touche src/ ⛔ (essai seul) — **fait le 19/11** : l'export emporte la table,
+      sa ligne « Objet du catalogue » et le catalogue ; après l'aller-retour JSON de l'archive
+      et l'import (`injectDriverState`, qui remplace le pilote par son identifiant), tables et
+      catalogue sont identiques et la table tire encore l'objet relié, sans avertissement (2).
+- [x] T8 · Livraison : guides 41 et 42 avec captures, registre, synthèse des pilotes (ligne des
       améliorations communes) — couvre C6, C8 · captures relues · ne touche pas src/ · **à
       essayer par David** (C8 : une table « Casier d'armurerie » d'Alien, tirée, donnée à
-      Vasquez ; un objet versé en séance).
+      Vasquez ; un objet versé en séance). — **fait le 19/11.**
+      - e2e de capture `e2e/butinDuCatalogue.spec.ts` (instance jetable, vrai pilote Alien 1.11.0,
+        sortie hors du dépôt) : « Nouvelle table depuis le catalogue », toute la catégorie
+        Pistolets (13 objets) → table « Pistolets », 13 lignes `catalogue` ; Loot-OS : la table
+        tirée (M72 Starshell Flare Pistol, relié) puis « Depuis le catalogue » (Bolt Gun
+        Watatsumi DV-303, 400). Deux réussis, constats et images relus ; deux prises recadrées
+        (titre de la fenêtre, table de 13 lignes dans une fenêtre agrandie).
+      - Guides : `42-Butin-ecrire-les-tables.md` (le type `catalogue`, les deux gestes, ce que
+        donne une ligne, export) et `41-Butin-distribuer-en-seance.md` (cinquième porte du
+        pool), trois captures `captures/butin-catalogue-*.jpg`.
+      - Synthèse des pilotes (ligne commune du catalogue) et registre § 264.
+      **Vérifié** : `npx vitest run --maxWorkers=4 electron/guidesDuManuel.test.ts
+      electron/manuelDesJeux.test.ts src/modules/session src/modules/equipement
+      src/modules/system/archive` (235 fichiers, 2 134 essais) ; `npx tsc -b` ; eslint ; build ;
+      e2e. **À essayer par David (C8)**, sur Alien : créer une table depuis le catalogue, la tirer
+      dans Loot-OS, donner l'objet à un personnage, verser un objet « Depuis le catalogue ».
 
 ## Analyse
 

@@ -29,14 +29,15 @@ Une table de butin est un objet JSON structuré contenant une liste d'entrées p
 
 ## 2. Types d'Entrées
 
-Le système supporte quatre types d'entrées :
+Le système supporte cinq types d'entrées :
 
 | Type | Description | Usage |
 | :--- | :--- | :--- |
-| `item` | Un objet physique simple. | Armes, consommables, gadgets. |
+| `item` | Un objet physique simple, décrit à la main. | Armes, consommables, gadgets. |
 | `currency` | De l'argent ou des crédits. | Chinyen, Or, Dollars. |
 | `table` | Une référence à une *autre* table **du pilote**. | **Récursivité** (une table « Trésor » appelle « Gemmes »). |
 | `oracle` | Un tirage sur une table de **Table-OS**. | Faire fouiller un corps par la table de fouille du jeu. |
+| `catalogue` | **Un objet du catalogue d'équipement du pilote**, désigné, pas recopié. | Un casier d'armurerie, une épave, un coffre de contrebandier. |
 
 > ⭐ **La cible se choisit dans une liste, plus jamais à la main.** Jusqu'au 2026-09-04,
 > l'identifiant de la table appelée se recopiait dans un champ texte : une faute de frappe
@@ -52,6 +53,45 @@ qui ne déclare rien se lit, il ne verse pas — et il vous le dit.
 
 > ⚠️ Le **modificateur** du tableau de bord de Table-OS ne s'applique pas ici : il appartient à
 > l'écran où vous tirez à la main, pas à un appel depuis une table de butin.
+
+### Le type `catalogue` : les tables faites depuis l'équipement du jeu (19/11/2026)
+
+Quand le pilote a un **catalogue d'équipement** (Forge › Règles › Équipement : Alien, Delta Green,
+Blade Runner, Cthulhu Hack, COC, Barbarians, Vampire), deux boutons apparaissent dans la section
+des tables de butin :
+
+- **« Nouvelle table depuis le catalogue »**, à côté de « Créer une table » : cochez des objets,
+  ou toute une catégorie avec « Toute la catégorie », puis **« Créer la table »**. La table porte
+  le nom de leur catégorie (« Pistolets »), sinon « Sélection du catalogue » ; une ligne par
+  objet, poids égaux, un seul tirage parmi la liste. Réglez les poids ensuite.
+- **« Ajouter depuis le catalogue »**, dans chaque table, à côté de « Ajouter une entrée » : les
+  objets cochés s'ajoutent à la suite de ses lignes.
+
+La fenêtre est celle de « Prendre dans le catalogue » sur la fiche — familles, catégories,
+recherche, « Livre, p. N » —, avec des cases à cocher, et les **quatre** familles : un butin peut
+contenir un véhicule.
+
+![« Nouvelle table depuis le catalogue » sur Alien : toute la catégorie Pistolets cochée, 13 objets choisis](captures/butin-catalogue-fenetre.jpg)
+
+**Une ligne du catalogue désigne son objet ; elle ne le recopie pas.** Nom, valeur, masse et
+description se lisent **au tirage** dans le catalogue : corrigez le M41A une fois, toutes les
+tables qui le donnent suivent. Sur la ligne, vous réglez seulement la **rareté**, la
+**quantité** et le poids de tirage ; vous pouvez aussi désigner un autre objet. Un objet retiré
+du catalogue s'annonce en rouge sur sa ligne, et le tirage le dit au lieu de donner un objet vide.
+
+![La table « Pistolets » : chaque ligne est un objet du catalogue, avec sa rareté et sa quantité](captures/butin-catalogue-table.jpg)
+
+Ce que donne une ligne du catalogue :
+
+| | |
+| :--- | :--- |
+| **Valeur** | lue dans le coût s'il commence par un nombre (« 1 200 $ » → 1 200) ; un coût qui est une catégorie de prix (« Courant » chez Delta Green) ou « Spécial » vaut 0. |
+| **Masse** | le poids du catalogue (« ½ » → 0,5). |
+| **Objets contenus** | un véhicule ou une combinaison arrive **avec ce qu'il contient** (la CCC5 et son canon). |
+| **Lien** | l'objet reçu par un personnage reste relié au catalogue : il compte comme **porté**, et ses effets sont rappelés au jet. |
+
+> Les tables partent avec le pilote à l'export (`.gmos-driver`) et reviennent intactes au
+> réimport, catalogue compris.
 
 ## 2 bis. Ce qu'une entrée décrit
 
