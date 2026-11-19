@@ -52,4 +52,34 @@ describe('le montant du calculateur de dégâts', () => {
         fireEvent.click(screen.getByText('modules:combat.damage.last_roll'));
         expect(montant()).toBe('0');
     });
+
+    /*
+      C2, 19/11/2026 (registre § 263) : relevé à l'écran sur Blade Runner et Alien — « 2 Succès »
+      devenait 2 dégâts. Un jet Year Zero compte des réussites ; le montant ne le reprend pas, et la
+      pastille le dit au lieu de proposer de le reprendre.
+    */
+    it('ne reprend pas un jet qui compte des réussites, et le dit', () => {
+        useDiceStore.setState({ lastRoll: { ...jet(2, 'yze'), successes: 2, compte: 'reussites' } });
+        render(<DamageCalculator />);
+        expect(montant()).toBe('10');
+        expect(screen.queryByText('modules:combat.damage.last_roll')).toBeNull();
+        expect(screen.getByText('modules:combat.damage.last_roll_successes')).toBeTruthy();
+        fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '4' } });
+        act(() => useDiceStore.setState({ lastRoll: { ...jet(3, 'yze-2'), successes: 3, compte: 'reussites' } }));
+        expect(montant()).toBe('4');
+    });
+});
+
+describe('les cibles du calculateur', () => {
+    const combattant = (id: string, name: string) => ({ id, name, init: 0, isPlayer: false, faction: 'enemy', statuses: [] }) as never;
+
+    it('ouvert sur la cible seule (C1), la montre cochée, et l’attaquant non coché', () => {
+        useCombatStore.setState({ combatants: [combattant('rachel', 'Rachel'), combattant('agent', 'Agent')] });
+        useModalStore.setState({ defaultValue: { targetIds: ['rachel'] } } as never);
+        render(<DamageCalculator />);
+        expect(screen.getByRole('checkbox', { name: 'Rachel' }).getAttribute('aria-checked')).toBe('true');
+        expect(screen.getByRole('checkbox', { name: 'Agent' }).getAttribute('aria-checked')).toBe('false');
+        fireEvent.keyDown(screen.getByRole('checkbox', { name: 'Agent' }), { key: ' ' });
+        expect(screen.getByRole('checkbox', { name: 'Agent' }).getAttribute('aria-checked')).toBe('true');
+    });
 });

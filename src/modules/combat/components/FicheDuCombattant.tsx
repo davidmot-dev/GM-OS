@@ -14,7 +14,12 @@ import { archetypeParId } from '../logic/archetypes';
 import { estUneFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
 import { SanteDuCombattantVoyageur } from './SanteDuCombattantVoyageur';
 import { JetDuCombattant } from './JetDuCombattant';
-import { jetDuCombattantPossible } from '../logic/jetDuCombattant';
+import { attaqueDeCreaturePossible, cibleDeLAttaque, jetDuCombattantPossible, ripostePossible } from '../logic/jetDuCombattant';
+import { AttaqueDeCreature } from './AttaqueDeCreature';
+import { RiposteDeCthulhuHack } from './RiposteDeCthulhuHack';
+import { armesDeLAdversaire, armesDeLaFicheAlien, attaqueParDefaut } from '../logic/attaqueDeLAdversaire';
+import { protectionLue } from '../logic/protectionDeLaCible';
+import { valeursDuCombattant } from '../ficheDesCombattants';
 
 /**
  * **La fiche d'un combattant, en lecture.**
@@ -42,7 +47,7 @@ export const FicheDuCombattant: React.FC = () => {
     const { players, entities, customSheetTemplates, getActiveDriver, addEntity, activeCampaignId } = useSessionOSStore();
     const enregistrerAuBestiaire = useBestiaireStore(e => e.enregistrer);
 
-    const combatantId = (defaultValue as { combatantId?: string } | undefined)?.combatantId;
+    const { combatantId, ouvrirSur } = (defaultValue as { combatantId?: string; ouvrirSur?: 'jet' } | undefined) ?? {};
     const combattant = combatants.find(c => c.id === combatantId);
 
     if (!combattant) {
@@ -64,6 +69,12 @@ export const FicheDuCombattant: React.FC = () => {
     );
 
     const blocs = champsAMontrer(gabarit);
+    // « Attaquer » (§ 263, T5) : la cible de la carte, seulement quand la fenêtre s'ouvre sur le jet.
+    const cible = ouvrirSur === 'jet' ? cibleDeLAttaque(combattant, combatants) : null;
+    // T9 : les armes que le catalogue connaît pour cet adversaire du livre ; T12 : celles de sa fiche chez Alien.
+    const armes = ouvrirSur === 'jet' && driver
+        ? (driver.jet?.alien ? armesDeLaFicheAlien(driver, valeurs) : armesDeLAdversaire(driver, combattant.origineDuLivre?.creatureId))
+        : undefined;
     const sante = decrireLaSante(combattant);
     const origine2 = origineOuDefaut(combattant.origineFabriquee);
     const dejaEnCampagne = !!combattant.sourceEntityId || !!combattant.sourcePlayerId;
@@ -170,9 +181,26 @@ export const FicheDuCombattant: React.FC = () => {
 
             {gabarit && estUneFicheDeVoyageur(gabarit) && <SanteDuCombattantVoyageur combattant={combattant} fiche={gabarit} donnees={valeurs} />}
 
-            {/* Vampire (17/11/2026) : un adversaire du livre se lance d'ici — « Armes à feu 5 », p. 371. */}
-            {driver && gabarit && jetDuCombattantPossible(combattant, driver, gabarit) && (
-                <JetDuCombattant combattant={combattant} driver={driver} gabarit={gabarit} valeurs={valeurs} campaignId={activeCampaignId} />
+            {/* Vampire (17/11/2026) : un adversaire du livre se lance d'ici — « Armes à feu 5 », p. 371.
+                « Attaquer » (§ 263, T5) ouvre la même fenêtre sur ce jet, la cible de la carte en tête. */}
+            {/* Alien (§ 263, T10) : une créature n'a pas d'attributs humains — « Attaquer » tire son attaque au D6. */}
+            {/* Cthulhu Hack (§ 263, T16) : le meneur ne lance pas — « Riposte » applique les dégâts fixes. */}
+            {ouvrirSur === 'jet' && driver && ripostePossible(combattant, driver) ? (
+                <RiposteDeCthulhuHack combattant={combattant} cible={cible} driver={driver} />
+            ) : ouvrirSur === 'jet' && attaqueDeCreaturePossible(combattant, driver, valeurs) ? (
+                <AttaqueDeCreature combattant={combattant} valeurs={valeurs} cible={cible} />
+            ) : driver && gabarit && jetDuCombattantPossible(combattant, driver, gabarit, valeurs) ? (
+                <JetDuCombattant combattant={combattant} driver={driver} gabarit={gabarit} valeurs={valeurs} campaignId={activeCampaignId}
+                    auPremierPlan={ouvrirSur === 'jet'} cible={cible}
+                    // T9 (§ 263) : l'arme lue au catalogue, la protection que porte la cible.
+                    armes={armes}
+                    attaqueProposee={ouvrirSur === 'jet' ? attaqueParDefaut(driver, armes ?? [], valeurs) : null}
+                    protectionDeLaCible={cible ? protectionLue(driver.combat?.protection, valeursDuCombattant(cible)) : null} />
+            ) : ouvrirSur === 'jet' && (
+                /* Un geste qui ne fait rien doit le dire (skill auditer-un-parcours). */
+                <p data-aucun-jet className="rounded-xl border border-etat-alerte/40 p-3 text-sm text-app-muted">
+                    Aucun jet d’adversaire n’est prévu pour ce jeu : {gabarit ? 'le pilote ne le déclare pas' : 'le combattant n’a pas de gabarit de fiche'}.
+                </p>
             )}
 
             {blocs.map(bloc => (

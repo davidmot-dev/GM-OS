@@ -75,6 +75,18 @@ describe('EditeurDuBestiaire (§ 210, étape B)', () => {
         expect(dernier().creatures.map(c => c.id)).toEqual(['biodrone', 'stade-3']);
     });
 
+    it('T14 : une attaque porte ses dégâts fixes et son nombre ; un champ vidé retire la clé', () => {
+        const garde: BestiaireDuJeu = { colonnes: [], creatures: [{ id: 'garde', nom: 'Garde', valeurs: {},
+            attaques: { lignes: [{ de: '', nom: 'Matraque', effet: '', degats: 2 }] } }] };
+        const { dernier } = monter(garde);
+        fireEvent.click(screen.getByText('Garde'));
+        expect((screen.getByLabelText('Dégâts de l\'attaque') as HTMLInputElement).value).toBe('2');
+        fireEvent.change(screen.getByLabelText('Nombre de fois par round'), { target: { value: '2' } });
+        expect(dernier().creatures[0].attaques!.lignes![0]).toEqual({ de: '', nom: 'Matraque', effet: '', degats: 2, fois: 2 });
+        fireEvent.change(screen.getByLabelText('Dégâts de l\'attaque'), { target: { value: '' } });
+        expect(dernier().creatures[0].attaques!.lignes![0]).toEqual({ de: '', nom: 'Matraque', effet: '' });
+    });
+
     it('sans bestiaire : ajouter une colonne puis une créature, qui se déplie', () => {
         const { onUpdate, dernier } = monter(undefined);
         expect(screen.getByText('Aucune créature au bestiaire de ce jeu.')).toBeTruthy();

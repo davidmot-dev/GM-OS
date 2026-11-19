@@ -304,7 +304,16 @@ const FicheDeLaCreature: React.FC<{
         if (!suivantes.lignes?.length) delete suivantes.lignes;
         onChange({ attaques: Object.keys(suivantes).length ? suivantes : undefined });
     };
-    const changerLaLigne = (i: number, patch: Partial<LigneDAttaque>) => changerLesAttaques({ lignes: lignes.map((l, j) => (j === i ? { ...l, ...patch } : l)) });
+    // Un champ vidé retire la clé : `degats: undefined` ne doit pas rester dans le pilote exporté.
+    const changerLaLigne = (i: number, patch: Partial<LigneDAttaque>) => changerLesAttaques({ lignes: lignes.map((l, j) => {
+        if (j !== i) return l;
+        const suivante: LigneDAttaque = { ...l, ...patch };
+        if (suivante.degats === undefined) delete suivante.degats;
+        if (suivante.fois === undefined) delete suivante.fois;
+        return suivante;
+    }) });
+    /** « 4 » → 4 ; vide → rien ; une saisie qui n'est pas un nombre devient NaN, que le contrôle signale. */
+    const entierOuRien = (saisie: string): number | undefined => (saisie.trim() === '' ? undefined : Number(saisie.trim()));
     const changerLaTable = (cle: 'univers' | 'table', v: string) => {
         const t = { univers: attaques.table?.univers ?? '', table: attaques.table?.table ?? '', [cle]: v };
         changerLesAttaques({ table: t.univers.trim() || t.table.trim() ? t : undefined });
@@ -353,8 +362,11 @@ const FicheDeLaCreature: React.FC<{
                     </span>
                 </div>
                 <div className="space-y-2 rounded-xl border border-app-border/20 bg-app-bg/40 p-3">
-                    <div className="grid grid-cols-[4rem_12rem_1fr_auto] gap-2 text-ui-10 font-black uppercase tracking-widest text-app-muted">
-                        <span>D6</span><span>Attaque</span><span>Effet</span><span />
+                    {/* T14 (§ 263, 19/11/2026) : une attaque se tire au dé (Alien) ou porte ses dégâts fixes et
+                        son nombre par round (Cthulhu Hack : « Matraque (2 dégâts) x 2 »). */}
+                    <div className="grid grid-cols-[4rem_12rem_4.5rem_3.5rem_1fr_auto] gap-2 text-ui-10 font-black uppercase tracking-widest text-app-muted">
+                        <span title="Résultat du dé qui tire cette attaque — vide si elle ne se tire pas">Dé</span><span>Attaque</span>
+                        <span title="Dégâts fixes, sans dé (Cthulhu Hack)">Dégâts</span><span title="Nombre de fois par round">×</span><span>Effet</span><span />
                     </div>
                     {lignes.length === 0 && (
                         <p className="text-center text-sm italic text-app-muted">
@@ -362,9 +374,11 @@ const FicheDeLaCreature: React.FC<{
                         </p>
                     )}
                     {lignes.map((l, i) => (
-                        <div key={i} className="grid grid-cols-[4rem_12rem_1fr_auto] items-center gap-2">
+                        <div key={i} className="grid grid-cols-[4rem_12rem_4.5rem_3.5rem_1fr_auto] items-center gap-2">
                             <input value={l.de} onChange={e => changerLaLigne(i, { de: e.target.value })} aria-label="Résultat du dé" placeholder="1-2" className={`${CHAMP} text-center font-mono`} />
                             <input value={l.nom} onChange={e => changerLaLigne(i, { nom: e.target.value })} aria-label="Nom de l'attaque" placeholder="Impact" className={CHAMP} />
+                            <input value={l.degats ?? ''} onChange={e => changerLaLigne(i, { degats: entierOuRien(e.target.value) })} aria-label="Dégâts de l'attaque" placeholder="—" inputMode="numeric" className={`${CHAMP} text-center font-mono`} />
+                            <input value={l.fois ?? ''} onChange={e => changerLaLigne(i, { fois: entierOuRien(e.target.value) })} aria-label="Nombre de fois par round" placeholder="1" inputMode="numeric" className={`${CHAMP} text-center font-mono`} />
                             <input value={l.effet} onChange={e => changerLaLigne(i, { effet: e.target.value })} aria-label="Effet de l'attaque" placeholder="Neuf dés de base, Dégâts 2…" className={CHAMP} />
                             <button aria-label="Retirer l'attaque" onClick={() => changerLesAttaques({ lignes: lignes.filter((_, j) => j !== i) })} className="rounded-lg p-1.5 text-app-muted hover:text-etat-danger"><Trash2 size={15} /></button>
                         </div>

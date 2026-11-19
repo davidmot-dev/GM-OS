@@ -21,6 +21,7 @@ import PanneauDuRoundDeDegenesis from './PanneauDuRoundDeDegenesis';
 import LoisDuCosm from '../../session/components/LoisDuCosm';
 import { useCosmsCourants } from '../../session/hooks/useCosmsCourants';
 import { decrireLaSante } from '../logic/SanteDuCombattant';
+import { calculateurDisponible } from '../logic/calculateurDeDegats';
 import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
 import { taille } from '../../session/logic/regimeDInterface';
 import HorsDePortee from '../../session/components/HorsDePortee';
@@ -506,13 +507,14 @@ const CombatControls: React.FC = () => {
                     <span>Fabriquer des adversaires</span>
                 </button>
 
-                <button
+                {/* Dune n'a pas de points de vie (§ 263, David : « masque pour Dune »). */}
+                {calculateurDisponible(activeDriver) && <button
                     onClick={() => gmCustom('damage-calc')}
                     className="w-full bg-gm-crimson/10 hover:bg-gm-crimson/20 border border-gm-crimson/30 text-gm-crimson px-4 py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-glow-crimson/10 group"
                 >
                     <Zap size={18} className="group-hover:animate-pulse" />
                     <span className="font-bold uppercase tracking-widest text-xs">{t('modules:combat.controls.damage_calc')}</span>
-                </button>
+                </button>}
 
                 <div className="grid grid-cols-2 gap-2 mt-2">
                     <button

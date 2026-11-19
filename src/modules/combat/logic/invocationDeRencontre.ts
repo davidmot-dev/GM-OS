@@ -2,7 +2,7 @@ import type { SheetField } from '../../../data/defaultSheetTemplates';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { HealthSystem } from '../../../types/entity.types';
 import type { BestiaireDuJeu, CasesDeSante, CreatureDuBestiaire } from '../../../types/drivers';
-import { ficheDePlateau } from '../../bestiaire/bestiaire';
+import { ecrireLAttaque, ficheDePlateau } from '../../bestiaire/bestiaire';
 import { ficheAlienDeLaCreature } from '../../bestiaire/rolesDuBestiaire';
 import type { RegleDeCombatAlien } from '../../dice/systemes/combatAlien';
 import type { Entity } from '../../../types/entity.types';
@@ -103,7 +103,8 @@ export function notesDeLaCreature(bestiaire: BestiaireDuJeu, creature: CreatureD
         horsFiche.length ? horsFiche.join(' · ') : '',
         creature.particularites?.length ? creature.particularites.join(' ; ') : '',
         attaques?.table?.table ? `Attaques : table ${attaques.table.univers} / ${attaques.table.table}` : '',
-        ...(attaques?.lignes ?? []).map(l => `${l.de} — ${l.nom}${l.effet ? ` : ${l.effet}` : ''}`),
+        // T14 (§ 263) : une attaque à dégâts fixes s'écrit « Revolver (4) ×2 », sans résultat de dé.
+        ...(attaques?.lignes ?? []).map(ecrireLAttaque),
         creature.source ? `${creature.source.livre}${creature.source.page ? `, p. ${creature.source.page}` : ''}` : '',
     ];
     return lignes.filter(Boolean).join('\n');

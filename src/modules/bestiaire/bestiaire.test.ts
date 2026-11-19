@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bestiaireVide, controlerLeBestiaire, ficheDePlateau, identifiantDeCreature, rangerParCategorie } from './bestiaire';
+import { bestiaireVide, controlerLeBestiaire, ecrireLAttaque, ficheDePlateau, identifiantDeCreature, rangerParCategorie } from './bestiaire';
 import { controlerLePilote } from '../forge/rules/controlesDuPilote';
 import type { BestiaireDuJeu, GameDriver } from '../../types/drivers';
 import type { SheetTemplate } from '../../data/defaultSheetTemplates';
@@ -59,6 +59,42 @@ describe('le bestiaire du pilote (§ 210, étape A)', () => {
         expect(ou('bestiaire.creatures[0].source.page')).toBe(true);
         expect(ou('bestiaire.creatures[1].id')).toBe(true);
         expect(ou('bestiaire.creatures[1].nom')).toBe(true);
+    });
+
+    /*
+      T14 (§ 263, 19/11/2026) : Cthulhu Hack. Une attaque ne se tire pas au dé, elle porte ses dégâts
+      fixes et le nombre de fois qu'elle compte (« Garde : Revolver (4 dégâts), Matraque (2 dégâts) x
+      2 », livre p. 55).
+    */
+    it('T14 : une attaque à dégâts fixes, sans dé, est valable ; ses dégâts et son nombre se contrôlent', () => {
+        const garde: BestiaireDuJeu = {
+            colonnes: [{ id: 'pv', libelle: 'PV', nature: 'nombre' }],
+            creatures: [{ id: 'garde', nom: 'Garde', valeurs: { pv: 14 }, attaques: { lignes: [
+                { de: '', nom: 'Revolver', effet: '', degats: 4 },
+                { de: '', nom: 'Matraque', effet: '', degats: 2, fois: 2 },
+            ] } }],
+        };
+        expect(controlerLeBestiaire(garde)).toEqual([]);
+
+        const fautif: BestiaireDuJeu = { ...garde, creatures: [{ ...garde.creatures[0], attaques: { lignes: [
+            { de: '', nom: 'Revolver', effet: '', degats: -1 },
+            { de: '', nom: 'Matraque', effet: '', degats: 2, fois: 0 },
+            { de: '', nom: 'Couteau', effet: '', degats: Number.NaN },
+            { de: '', nom: 'Sans rien', effet: '' },
+        ] } }] };
+        const ou = controlerLeBestiaire(fautif).map(c => c.ou);
+        expect(ou).toEqual(expect.arrayContaining([
+            'bestiaire.creatures[0].attaques.lignes[0].degats',
+            'bestiaire.creatures[0].attaques.lignes[1].fois',
+            'bestiaire.creatures[0].attaques.lignes[2].degats',
+            'bestiaire.creatures[0].attaques.lignes[3]',
+        ]));
+    });
+
+    it('T14 : une attaque s’écrit comme le livre l’écrit', () => {
+        expect(ecrireLAttaque({ de: '', nom: 'Revolver', effet: '', degats: 4 })).toBe('Revolver (4)');
+        expect(ecrireLAttaque({ de: '', nom: 'Matraque', effet: '', degats: 2, fois: 2 })).toBe('Matraque (2) ×2');
+        expect(ecrireLAttaque({ de: '1-2', nom: 'Impact', effet: 'renverse sa cible' })).toBe('1-2 — Impact : renverse sa cible');
     });
 
     it('la Forge le contrôle avec les champs de la fiche du pilote', () => {

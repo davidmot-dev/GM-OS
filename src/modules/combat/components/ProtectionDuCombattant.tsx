@@ -4,7 +4,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useDiceStore } from '../../../stores/useDiceStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { DiceEngine } from '../../dice/DiceEngine';
-import { facesDuNiveau } from '../../dice/desEchelonnes';
+import { protectionLue } from '../logic/protectionDeLaCible';
 import type { Combatant } from '../types';
 
 /**
@@ -20,12 +20,11 @@ import type { Combatant } from '../types';
  */
 const ProtectionDuCombattant: React.FC<{ combatant: Combatant; valeurs: Record<string, unknown> }> = ({ combatant, valeurs }) => {
     const regle = useSessionOSStore(s => s.getActiveDriver())?.combat?.protection;
-    const niveau = regle ? valeurs[regle.champ] : undefined;
-    // Une lettre seule (« C », « C (D8) ») : « Aucune » ou « Sans » ne sont pas un D12.
-    const faces = regle && /^\s*[A-D](?![\p{L}])/iu.test(String(niveau ?? '')) ? facesDuNiveau(niveau) : null;
-    if (!regle || !faces) return null;
-    const nombre = Math.max(1, regle.des ?? 2);
-    const nom = (regle.nomSur && String(valeurs[regle.nomSur] ?? '').trim()) || regle.label || 'Protection';
+    // La lecture est partagée avec « Appliquer à [cible] » (§ 263, T9) : `protectionLue`.
+    const lue = protectionLue(regle, valeurs);
+    if (!lue) return null;
+    const { nom, nombre, faces } = lue;
+    const niveau = lue.niveau;
 
     const lancer = () => {
         const jet = DiceEngine.rollYZEEchelonne(Array.from({ length: nombre }, () => faces));

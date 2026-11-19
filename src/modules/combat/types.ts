@@ -95,6 +95,15 @@ export interface Combatant {
      * pour que « Garder le plateau comme rencontre » sache la nommer et que le plateau la reconnaisse.
      */
     origineDuLivre?: { creatureId: string };
+    /**
+     * **La dernière attaque de ce combattant** (registre § 263, T6, 19/11/2026 ; décision D4 de
+     * David : « Oui, retenue sur le combattant ») : les champs que son jet a composés —
+     * `{ attribut: 'agilite', competence: 'armesAFeu' }` — et leur libellé, « Agilité + Armes à
+     * feu ». « Attaquer » les propose d'emblée. Un seul écrivain, `retenirLAttaque` ; elle vit sur
+     * le plateau (`gmos-combat-storage`) et disparaît avec le combattant, jamais recopiée sur la
+     * fiche de campagne.
+     */
+    derniereAttaque?: { champs: Record<string, string>; libelle: string };
     /** Statistiques additionnelles (Mana, Santé Mentale, etc.) */
     extraStats?: Record<string, { value: number; max: number }>; 
     resistances?: string[];

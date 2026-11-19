@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { AlertTriangle, Info, Plus, Minus, Coins, EyeOff } from 'lucide-react';
 import { EtiquetteDuDegre } from '../../../dice/EtiquetteDuDegre';
 import { consignerLeJet, type JetAConsigner } from '../../../journal/consignerLeJet';
@@ -217,11 +217,34 @@ interface PanneauDeJetProps {
      * et la liste de ses demandes (T7, 11/11). Sans lui, ni l'un ni l'autre.
      */
     nomDuPersonnage?: string;
+    /**
+     * **Ce que le jet a composé, au moment où il part** (Combat-OS, registre § 263, T6,
+     * 19/11/2026) : les champs retenus, pour que « Attaquer » propose d'emblée la dernière
+     * attaque d'un adversaire (décision D4 de David). Le panneau ne garde rien lui-même.
+     */
+    surLeLancer?: (composition: CompositionDemandee) => void;
+    /**
+     * **Chaque résultat affiché** (§ 263, T7) — le jet, puis un forçage ou une relance : « Appliquer
+     * à [cible] » calcule le coup sur ce que le meneur voit. Le panneau ne fait rien de plus.
+     */
+    surLeResultat?: (resultat: RollResult) => void;
+    /**
+     * **L'arme de la fiche choisie d'emblée** (Alien, § 263, T12) : son identifiant parmi
+     * `equipementsAlien`. Lu au montage seulement, comme `compositionInitiale` ; le meneur la change.
+     */
+    equipementAlienInitial?: string;
+    /**
+     * **Le test d'un adversaire de Dune** (§ 263, T18, 19/11/2026), ouvert depuis Combat-OS. `ennemi` :
+     * « PNJ ennemi » coché d'emblée, car les PNJ ennemis paient en Menace (livre, p. 240) ; `cible` :
+     * celle de la carte, reprise par « Appliquer cette attaque réussie ». Lus au montage seulement.
+     */
+    duneDuCombattant?: { ennemi?: boolean; cible?: string };
 }
 
 const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false, personnageId,
-    ecrireSurLaFiche, objetsPortes, compositionInitiale, demandeId, nomDuPersonnage,
+    ecrireSurLaFiche, objetsPortes, compositionInitiale, demandeId, nomDuPersonnage, surLeLancer, surLeResultat, equipementAlienInitial,
+    duneDuCombattant,
 }) => {
     const avecLaDemande = joindreLaDemande(demandeId);
     /**
@@ -258,6 +281,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** L'Avantage tactique de Symbaroum (+2, +1D4 aux dégâts) — S3, 2026-10-22. */
     const [avantageTactique, setAvantageTactique] = useState(false);
     const [resultat, setResultat] = useState<RollResult | null>(null);
+    // § 263, T7 : l'appelant apprend chaque résultat affiché ; la référence évite de relancer
+    // l'effet quand il passe une nouvelle fonction à chaque rendu.
+    const surLeResultatRef = useRef(surLeResultat);
+    surLeResultatRef.current = surLeResultat;
+    useEffect(() => { if (resultat) surLeResultatRef.current?.(resultat); }, [resultat]);
     const [suiteDuDestin, setSuiteDuDestin] = useState<{ personnageId?: string; texte: string; disponibles: number; ajouter: () => void; terminer: () => void } | null>(null);
     const generationDuDestin = useRef(0);
     const [ecritsCH, setEcritsCH] = useState({base:valeurs, personnageId, maj:{} as Record<string,unknown>});
@@ -275,7 +303,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const evenementPanique = useRef('');
     const suitesAlien = descripteur.panique?.suites;
     const regleJetAlien = descripteur.alien;
-    const [reglagesAlien, setReglagesAlien] = useState(REGLAGES_ALIEN);
+    const [reglagesAlien, setReglagesAlien] = useState(() => (equipementAlienInitial ? { ...REGLAGES_ALIEN, equipement: equipementAlienInitial } : REGLAGES_ALIEN));
     /*
       L'équipement porté (§ 203, étape E) : les effets qui visent un champ
       choisi pour ce jet, et ceux que le meneur a cochés. Une case cochée dont
@@ -711,7 +739,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      */
     const regleStarTrek = descripteur.sens === 'sous-ou-egal' && !descripteur.cible ? descripteur.starTrek : undefined;
     const regleDune = descripteur.dune;
-    const [choixDune, setChoixDune] = useState<ChoixDune>(CHOIX_DUNE);
+    const [choixDune, setChoixDune] = useState<ChoixDune>(() => (duneDuCombattant?.ennemi ? { ...CHOIX_DUNE, ennemi: true } : CHOIX_DUNE));
     const [ecritsDune, setEcritsDune] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
     const valeursDune = useMemo(() => ({ ...valeurs, ...(ecritsDune.base === valeurs && ecritsDune.personnageId === personnageId ? ecritsDune.maj : {}) }), [valeurs, ecritsDune, personnageId]);
     const ecrireDune = (maj: Record<string, unknown>) => {
@@ -725,7 +753,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const maximeDune = suiviDune.maximes[principeDune] ?? '';
     const tourDune = useOrdreDuTourStore(s => s.tour);
     const acteursDune = useCombatStore(s => s.combatants);
-    const acteurDune = acteursDune.find(c => c.sourcePlayerId === personnageId && personnageId);
+    // Un adversaire de Combat-OS (§ 263, T18) est lui-même le combattant : son identifiant est `personnageId`.
+    const acteurDune = acteursDune.find(c => (c.sourcePlayerId === personnageId || (!!duneDuCombattant && c.id === personnageId)) && personnageId);
     const difficulteDeRepriseDune = regleDune && acteurDune?.id === tourDune?.dernierAgissant ? tourDune?.difficulteDune ?? 0 : 0;
     const [choixStarTrek, setChoixStarTrek] = useState<ChoixStarTrek>(CHOIX_STAR_TREK);
     const [starTrekDuLancer, setStarTrekDuLancer] = useState<{ des: DeDuJet[]; complication: number; difficulte: number; choix: ChoixStarTrek; compte: number } | null>(null);
@@ -1183,6 +1212,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         if (regleDune && (suiviDune.bafoues.includes(principeDune) || (duneDuLancer && !duneDuLancer.bilan.clos))) return;
         if (regleDune && choixDune.contradiction === 'bafouer' && suiviDune.recuperes.includes(principeDune)) return;
         if (regleDune && choixDune.unAutomatique && (!maximeDune || !choixDune.maximeAlignee || determinationDune < 1 || !ecrireSurLaFiche)) return;
+        // § 263, T6 : le jet part — l'appelant peut retenir ce qu'il a composé.
+        surLeLancer?.({ champs: { ...choix } });
         const dits: string[] = [];
         generationDuDestin.current++;
         setSuiteDuDestin(null);
@@ -3733,6 +3764,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 bilan={duneDuLancer.bilan} difficulte={duneDuLancer.difficulte} determination={determinationDune}
                                 maximeAlignee={duneDuLancer.choix.maximeAlignee && !!suiviDune.maximes[duneDuLancer.principe]}
                                 valeurs={valeursDune} regle={regleDune} ecrire={ecrireSurLaFiche ? ecrireDune : undefined} reserver={!!monnaie} meneur={!pourLesJoueurs}
+                                cibleInitiale={duneDuCombattant?.cible}
                                 remplacer={des => {
                                     const nouveau = resultatDune(des, duneDuLancer.choix.marge, duneDuLancer.difficulte);
                                     setDuneDuLancer(d => d && { ...d, des, bilan: bilanDune(nouveau.successes ?? 0, d.difficulte, d.choix.bonus) });

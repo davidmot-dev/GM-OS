@@ -163,10 +163,21 @@ export interface ColonneDuBestiaire {
 
 /** Une attaque écrite dans le livre : le résultat du dé, son nom, ce qu'elle fait. */
 export interface LigneDAttaque {
-    /** « 1 », « 1-2 », « 3 ». */
+    /**
+     * « 1 », « 1-2 », « 3 » : l'attaque se tire au dé (Alien). **Vide** pour une attaque qui ne se
+     * tire pas, et qui porte alors ses `degats` (Cthulhu Hack).
+     */
     de: string;
     nom: string;
     effet: string;
+    /**
+     * **Les dégâts fixes de l'attaque** (registre § 263, T14, 19/11/2026) — Cthulhu Hack : le meneur
+     * ne lance jamais de dé ; un investigateur qui rate sa Sauvegarde subit ces dégâts (livre, p. 48).
+     * « Revolver (4 dégâts) » → 4.
+     */
+    degats?: number;
+    /** Combien de fois l'attaque compte dans un round — « Matraque (2 dégâts) x 2 » → 2. Absent : 1. */
+    fois?: number;
 }
 
 export interface CreatureDuBestiaire {

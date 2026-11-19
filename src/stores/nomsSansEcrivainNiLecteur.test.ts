@@ -236,6 +236,12 @@ describe('les noms déclarés dans les magasins', () => {
      * se met à être employé ailleurs, sa ligne doit partir — sans quoi la liste
      * grandit sans jamais rétrécir, et cesse de vouloir dire quelque chose.
      */
+    /*
+      Limite de temps portée à 30 s le 19/11/2026 : ce contrôle refait la recherche de tous les
+      magasins dans tous les fichiers de `src/`, et sa durée suit la taille du dépôt. Il a dépassé
+      les 5 s par défaut (6,9 s lancé seul) sans qu'aucun nom soit en cause : les essais par magasin,
+      juste au-dessus, passaient tous.
+    */
     it('n’ont pas de tolérance devenue inutile', () => {
         const encoreOrphelins = new Set(magasins.flatMap(orphelinsDe));
         const perimees = Object.keys(TOLERES).filter(nom => !encoreOrphelins.has(nom));
@@ -244,5 +250,5 @@ describe('les noms déclarés dans les magasins', () => {
             perimees,
             `Ces noms sont désormais employés ailleurs : retirer leur ligne de TOLERES — ${perimees.join(', ')}`,
         ).toEqual([]);
-    });
+    }, 30_000);
 });

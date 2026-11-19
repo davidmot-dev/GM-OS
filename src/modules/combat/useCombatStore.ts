@@ -29,7 +29,8 @@ import { impactDeTorg } from './logic/impactDeTorg';
 import { horlogeDeDefaite } from './logic/TacheDeDefaite';
 import { lireDune, santeDuConflitDune } from '../dice/systemes/duneRegles';
 import { comparerLInitiative, departager } from './logic/departageDInitiative';
-import { estHorsDeCombat, santeDeDepart, valeurDuChamp, santeAlignee, santePrincipaleDeLaFiche } from './logic/SanteDuCombattant';
+import { estHorsDeCombat, santeDeDepart, valeurDuChamp, santeAlignee, santePrincipaleDeLaFiche, santeDeLaFicheDuCombattant, champDeSantePrincipale } from './logic/SanteDuCombattant';
+import { armureDeLAdversaire } from './logic/attaqueDeLAdversaire';
 import { coupSurLAdversaire, estUnAdversaireAutonome } from './logic/adversairesDeDegenesis';
 import { degatsDeVampireSelonLeJeu } from './logic/pistesDeVampire';
 import { DiceEngine } from '../dice/DiceEngine';
@@ -380,6 +381,37 @@ function santeDeCombatVampire(c: { hp?: number; hpMax?: number; healthSystem?: H
     return { hp: courant, hpMax: max, healthSystem: santeAlignee(c.healthSystem ?? HealthInterpreter.createDefault('hp'), { courant, max }) };
 }
 
+/**
+ * **Un combattant autonome naît avec la santé de sa fiche** (registre § 263, T20, 19/11/2026).
+ * Une créature posée depuis le livre (l'Agent du LAPD de Blade Runner, Santé 5 ; le Rôdeur d'Alien,
+ * 6) entrait avec la santé par défaut, 10/10, pendant que sa fiche portait celle du livre : la carte
+ * montrait les deux. Quand le jeu déclare sa santé principale, `hp`, `hpMax` et la santé du combat
+ * prennent celle de la fiche (`santeDeLaFicheDuCombattant`).
+ *
+ * Seulement pour un combattant **sans fiche de campagne**, et quand l'appelant n'a pas donné ses
+ * points de vie : un PJ ou un PNJ de la Galerie garde les siens, un combattant qui rejoint un combat
+ * en cours aussi. Delta Green et Vampire ont leur propre règle, au-dessus : on ne la double pas.
+ */
+function santeDuCombattantAutonome(c: Pick<Combatant, 'hp' | 'hpMax' | 'healthSystem' | 'isPlayer' | 'sourcePlayerId' | 'sourceEntityId'>, fiche: Combatant['sheetData']): Partial<Combatant> {
+    if (c.isPlayer || c.sourcePlayerId || c.sourceEntityId || !fiche) return {};
+    if (typeof c.hp === 'number' && typeof c.hpMax === 'number') return {};
+    const pilote = piloteActif();
+    if (pilote?.jet?.deltaGreen?.sante || pilote?.jet?.vampire?.degats) return {};
+    return santeDeLaFicheDuCombattant(pilote, fiche, c.healthSystem) ?? {};
+}
+
+/**
+ * **Le champ de santé de la fiche d'un combattant autonome, après un coup** (§ 263, T20) : la fiche
+ * fait foi, elle suit donc le coup. Seulement quand elle porte déjà ce champ — on n'invente pas une
+ * santé à un combattant fabriqué sans elle.
+ */
+function santeSurLaFicheAutonome(c: Combatant, hp: number | undefined): Pick<Combatant, 'sheetData'> | Record<string, never> {
+    if (c.isPlayer || c.sourcePlayerId || c.sourceEntityId || typeof hp !== 'number') return {};
+    const champ = champDeSantePrincipale(piloteActif());
+    if (!champ || c.sheetData?.[champ] === undefined) return {};
+    return { sheetData: { ...c.sheetData, [champ]: hp } };
+}
+
 // Re-export pour compatibilité descendante
 export type { Combatant, StatusEffect };
 export { STATUS_CONFLICT_MAP, COMBAT_AUTO_STATUS_RULES } from './logic/CombatRules';
@@ -622,6 +654,11 @@ interface CombatState {
     noterSuiteTorg: (id: string, suite: import('../dice/systemes/torgPersonnage').SuiteDeCoupTorg) => void;
     /** Définit la cible prioritaire d'un participant */
     setTarget: (combatantId: string, targetId: string | null) => void;
+    /**
+     * Retient la dernière attaque d'un combattant (§ 263, T6, décision D4). Seul écrivain de
+     * `derniereAttaque` ; n'appelle pas `syncCombatantToSession` : rien ne part vers la fiche.
+     */
+    retenirLAttaque: (combatantId: string, attaque: NonNullable<Combatant['derniereAttaque']>) => void;
     
     // Snapshot System
     /** Restaure l'état du combat à partir d'un snapshot de session */
@@ -907,6 +944,8 @@ export const useCombatStore = create<CombatState>()(
                         ...pointsDeVieDeDepart(combatant, fiche),
                         ...santeDeCombatDG(combatant, fiche),
                         ...santeDeCombatVampire(combatant, fiche),
+                        // § 263, T20 : un combattant autonome naît avec la santé de sa fiche.
+                        ...santeDuCombattantAutonome({ ...combatant, healthSystem: combatant.healthSystem ?? santeSelonLeSysteme(fiche) }, fiche),
                     }]
                 }));
                 // Le rattachement suit l'ajout, jamais l'inverse : il peut lui
@@ -1557,6 +1596,52 @@ export const useCombatStore = create<CombatState>()(
                 }
 
                 /*
+                  **Un combattant lié à une fiche passe par la porte de la fiche** (T21, registre
+                  § 263, 19/11/2026 ; accord de David : « Oui, fais T21 »).
+
+                  Le cas commun, plus bas, écrivait `hp` sur le plateau puis le recopiait par
+                  `updateCharacterHP`, qui ne touche pas le champ de santé de la fiche. Or ce champ
+                  fait foi (la Santé de Blade Runner et d'Alien, les PV de Cthulhu Hack) : la barre
+                  le lit, et le coup suivant en repart. « Calculer 3 » sur une Santé de 8 donnait 5
+                  à la carte, 8 à la fiche, et un coup de 1 à la console ramenait à 7. Les
+                  conséquences propres au jeu (Stress et critique d'un humain d'Alien, signal
+                  d'impact de Cthulhu Hack) ne vivent aussi que dans `handleApplyImpact`.
+
+                  Même porte que la console de santé, donc : le montant et son type, jamais de type
+                  sur un soin (décision de David du 2026-08-19, « une seule règle pour les deux
+                  portes »). Si les listes de résistances du combattant ont agi, leur résultat part
+                  sans type, pour que les étiquettes de la fiche ne le divisent pas une seconde
+                  fois. `handleApplyImpact` reflète la fiche sur le plateau (`refleterLaFiche`) ; ici
+                  ne s'ajoute que l'état automatique (« En feu », « Soin ») que le cas commun posait.
+                */
+                if (session && typeof session.handleApplyImpact === 'function') {
+                    const parLaFiche = new Set<string>();
+                    const etats: [string, Omit<StatusEffect, 'id'>][] = [];
+                    for (const c of get().combatants.filter(x => targetIds.includes(x.id))) {
+                        const source = c.isPlayer
+                            ? session.players.flatMap(p => p.characters).find(p => p.id === c.sourcePlayerId)
+                            : session.entities.find(e => e.id === c.sourceEntityId);
+                        if (!source) continue;
+                        const { finalAmount, statusToAdd } = calculateDamageImpact({ amount, type, target: c });
+                        const soin = finalAmount < 0;
+                        const listesOntAgi = finalAmount !== amount;
+                        session.handleApplyImpact(source.id, c.isPlayer ? 'pc' : 'npc', {
+                            value: Math.abs(finalAmount), isRecovery: soin, ...(soin || listesOntAgi || !type ? {} : { type }),
+                        });
+                        if (statusToAdd) etats.push([c.id, statusToAdd]);
+                        parLaFiche.add(c.id);
+                    }
+                    if (etats.length > 0) set(s => ({
+                        combatants: s.combatants.map(c => {
+                            const etat = etats.find(([id]) => id === c.id)?.[1];
+                            return etat ? { ...c, statuses: [...filterConflictingStatuses(c.statuses, etat.name), { ...etat, id: generateEffectId() }] } : c;
+                        }),
+                    }));
+                    targetIds = targetIds.filter(id => !parLaFiche.has(id));
+                    if (targetIds.length === 0) { get().broadcastSync(); return; }
+                }
+
+                /*
                   **Degenesis : l'adversaire sans fiche, à deux pistes** (DEG-A6, 2026-11-04). Préparé
                   au panneau du round, il passe par la même porte qu'un PJ : le coup coche ses Blessures
                   superficielles puis ses Traumatismes, le « mental » va à son Égo, et sa santé perd ce
@@ -1571,6 +1656,17 @@ export const useCombatStore = create<CombatState>()(
                 }
 
                 const coupsPortes: [string, number][] = [];
+                /*
+                  **Cthulhu Hack : l'Armure d'un adversaire du livre** (registre § 263, T17, C7,
+                  19/11/2026). « Jetez les dés de dégâts et déduisez la valeur des points d'Armure »
+                  (livre, p. 51). Pour un adversaire autonome posé depuis le bestiaire, l'Armure se
+                  retire du coup avant tout calcul, jamais d'un soin ; le journal le dit. La console
+                  de la carte passe ici elle aussi (`CombatCard`, `onApplyImpact`) : une seule règle.
+                */
+                const piloteCH = piloteActif() as (Parameters<typeof armureDeLAdversaire>[0] & { jet?: { cthulhuHack?: unknown } }) | undefined;
+                const armuresRetirees: Record<string, number> = {};
+                const armurePour = (c: Combatant) => (piloteCH?.jet?.cthulhuHack && amount > 0 && !c.isPlayer && !c.sourcePlayerId && !c.sourceEntityId
+                    ? armureDeLAdversaire(piloteCH, c) : 0);
                 set((state) => {
                     const newCombatants = state.combatants.map(c => {
                         if (!targetIds.includes(c.id)) return c;
@@ -1589,7 +1685,10 @@ export const useCombatStore = create<CombatState>()(
 
                         // Calcul pur des conséquences (Moteur de règles)
                         const synthetique = !!alien && estUnAndroide(alien, c.sheetData ?? {});
-                        const { finalAmount, newHp, statusToAdd } = calculateDamageImpact({ amount: synthetique && amount > 0 && immuniteSynthetique(type) ? 0 : amount, type, target: c });
+                        const armure = armurePour(c);
+                        if (armure) armuresRetirees[c.id] = Math.min(armure, amount);
+                        const montant = armure ? Math.max(0, amount - armure) : amount;
+                        const { finalAmount, newHp, statusToAdd } = calculateDamageImpact({ amount: synthetique && montant > 0 && immuniteSynthetique(type) ? 0 : montant, type, target: c });
 
                         let newStatuses = [...c.statuses];
                         if (statusToAdd) {
@@ -1637,7 +1736,8 @@ export const useCombatStore = create<CombatState>()(
                             const fiche={...c.sheetData,[alien.sante]:newHp,[CLE_COMBAT_ALIEN]:suivi};
                             return {...c,hp:newHp,sheetData:fiche,healthSystem:projeterSanteXeno(alien,fiche,suivi,healthSystem),statuses:newStatuses};
                         }
-                        return { ...c, hp: newHp, healthSystem, statuses: newStatuses };
+                        // § 263, T20 : la fiche d'un combattant autonome suit le coup — sa jauge de Santé avec.
+                        return { ...c, hp: newHp, healthSystem, statuses: newStatuses, ...santeSurLaFicheAutonome(c, newHp) };
                     });
                     return { combatants: newCombatants };
                 });
@@ -1677,7 +1777,7 @@ export const useCombatStore = create<CombatState>()(
                         content: raconterLImpact(
                             { value: Math.abs(valeur), isRecovery: soin, ...(soin ? {} : { type }) },
                             c,
-                        ),
+                        ) + (armuresRetirees[id] ? ` — ${amount} − Armure ${armuresRetirees[id]}` : ''),
                         sceneId: get().sceneId ?? undefined,
                     });
                 });
@@ -1686,6 +1786,11 @@ export const useCombatStore = create<CombatState>()(
                 targetIds.forEach(id => get().syncCombatantToSession(id));
                 get().broadcastSync();
             },
+
+            retenirLAttaque: (combatantId, attaque) => set(state => ({
+                combatants: state.combatants.map(c => c.id === combatantId
+                    ? { ...c, derniereAttaque: { champs: { ...attaque.champs }, libelle: attaque.libelle } } : c),
+            })),
 
             setTarget: (combatantId, targetId) => {
                 set((state) => ({

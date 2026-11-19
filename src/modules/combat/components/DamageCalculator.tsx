@@ -7,6 +7,7 @@ import { fractionDeVie, decrireLaSante } from '../logic/SanteDuCombattant';
 import { typesDeDegats } from '../logic/TypesDeDegats';
 import { Zap, HeartPulse, CheckCircle2, AlertTriangle, ShieldAlert, Shield, RotateCcw, Target as TargetIcon, Dices } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { degatsDuDernierJet } from '../logic/calculateurDeDegats';
 
 const DamageCalculator: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
@@ -27,12 +28,14 @@ const DamageCalculator: React.FC = () => {
         }
         return [];
     });
+    // Ce que le dernier jet vaut en dégâts — rien quand il compte des réussites (C2, 19/11/2026).
+    const degatsDuJet = degatsDuDernierJet(lastRoll);
     const [saisie, setSaisie] = useState(() => ({
-        jet: lastRoll, amount: lastRoll && lastRoll.total > 0 ? lastRoll.total : 10,
+        jet: lastRoll, amount: degatsDuJet !== null && degatsDuJet > 0 ? degatsDuJet : 10,
     }));
     if (saisie.jet !== lastRoll) {
-        // Seul un nouveau jet positif reprend la main sur le montant saisi.
-        setSaisie({ jet: lastRoll, amount: lastRoll && lastRoll.total > 0 ? lastRoll.total : saisie.amount });
+        // Seul un nouveau jet positif, qui se lit en dégâts, reprend la main sur le montant saisi.
+        setSaisie({ jet: lastRoll, amount: degatsDuJet !== null && degatsDuJet > 0 ? degatsDuJet : saisie.amount });
     }
     const amount = saisie.amount;
     const setAmount = (amount: number) => setSaisie(prev => ({ ...prev, amount }));
@@ -84,7 +87,7 @@ const DamageCalculator: React.FC = () => {
 
     return (
         <div className="flex flex-col h-full bg-app-bg text-app-text font-display p-8 overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-gm-crimson/5 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="relative z-10 flex flex-col h-full">
@@ -95,13 +98,23 @@ const DamageCalculator: React.FC = () => {
                                 {isHealing ? <HeartPulse size={12} className="text-etat-succes" /> : <Zap size={12} className="text-gm-crimson" />}
                                 {isHealing ? t('modules:combat.damage.amount_heal') : t('modules:combat.damage.amount_dmg')}
                             </label>
-                            {lastRoll && (
-                                <button 
-                                    onClick={() => setAmount(lastRoll.total)}
+                            {lastRoll && degatsDuJet !== null && (
+                                <button
+                                    onClick={() => setAmount(degatsDuJet)}
                                     className="flex items-center gap-1.5 px-2 py-1 bg-etat-info/10 hover:bg-etat-info/20 border border-etat-info/30 rounded text-ui-9 font-black text-etat-info transition-all"
                                 >
-                                    <Dices size={10} /> {t('modules:combat.damage.last_roll', { total: lastRoll.total })}
+                                    <Dices size={10} /> {t('modules:combat.damage.last_roll', { total: degatsDuJet })}
                                 </button>
+                            )}
+                            {/* Un jet qui compte des réussites se dit, mais ne se reprend pas : les dégâts dépendent de l'arme. */}
+                            {lastRoll && degatsDuJet === null && (
+                                <span
+                                    data-dernier-jet-en-reussites
+                                    title={t('modules:combat.damage.last_roll_successes_hint')}
+                                    className="flex items-center gap-1.5 px-2 py-1 border border-app-border rounded text-ui-9 font-black text-app-subtle"
+                                >
+                                    <Dices size={10} /> {t('modules:combat.damage.last_roll_successes', { count: lastRoll.total })}
+                                </span>
                             )}
                         </div>
                         
@@ -110,7 +123,7 @@ const DamageCalculator: React.FC = () => {
                                 type="number" 
                                 value={amount}
                                 onChange={(e) => setAmount(Math.max(0, parseInt(e.target.value) || 0))}
-                                className="w-full bg-app-text/[0.03] border border-app-text/10 rounded-2xl px-6 py-6 text-5xl font-black text-center focus:outline-none focus:ring-2 focus:ring-primary/40 focus:bg-app-text/[0.05] transition-all"
+                                className="w-full bg-app-text/[0.03] border border-app-text/10 rounded-2xl px-6 py-6 text-5xl font-black text-center focus:outline-none focus:ring-2 focus:ring-accent/40 focus:bg-app-text/[0.05] transition-all"
                             />
                         </div>
 
@@ -141,7 +154,7 @@ const DamageCalculator: React.FC = () => {
                                     onClick={() => setType(tKey)}
                                     className={`px-3 py-2.5 rounded-xl text-ui-10 font-black uppercase tracking-wider transition-all border ${
                                         type === tKey 
-                                        ? 'bg-primary text-app-on-accent border-primary shadow-glow-primary/30' 
+                                        ? 'bg-accent text-app-on-accent border-accent shadow-glow-accent/30' 
                                         : 'bg-app-text/[0.02] border-app-text/5 text-app-subtle hover:border-app-text/20 hover:text-app-text'
                                     }`}
                                 >
@@ -155,14 +168,14 @@ const DamageCalculator: React.FC = () => {
                 <div className="flex-1 flex flex-col min-h-0 bg-app-text/[0.02] rounded-[2rem] border border-app-text/5 p-6 mb-8 overflow-hidden shadow-2xl">
                     <div className="flex items-center justify-between mb-6 px-2">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
                                 <TargetIcon size={18} />
                             </div>
                             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-app-muted">{t('modules:combat.damage.targets', { count: selectedIds.length })}</h4>
                         </div>
                         <button 
                             onClick={toggleAll} 
-                            className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-app-text/5 hover:bg-app-text/10 text-ui-9 font-black text-app-subtle hover:text-primary transition-all uppercase tracking-widest border border-app-text/5"
+                            className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-app-text/5 hover:bg-app-text/10 text-ui-9 font-black text-app-subtle hover:text-accent transition-all uppercase tracking-widest border border-app-text/5"
                         >
                             <RotateCcw size={10} className="group-hover:rotate-180 transition-transform duration-500" />
                             {selectedIds.length === combatants.length ? t('common:actions.clear') : t('common:actions.all')}
@@ -178,20 +191,25 @@ const DamageCalculator: React.FC = () => {
                             const healthSys = getHealthSystem(c);
 
                             return (
-                                <div 
+                                <div
                                     key={c.id}
+                                    role="checkbox"
+                                    aria-checked={isSelected}
+                                    aria-label={c.name}
+                                    tabIndex={0}
+                                    onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleTarget(c.id); } }}
                                     onClick={() => toggleTarget(c.id)}
                                     className={`group flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
                                         isSelected 
-                                        ? 'bg-primary/10 border-primary/40 shadow-glow-primary/5' 
+                                        ? 'bg-accent/10 border-accent/40 shadow-glow-accent/5' 
                                         : 'bg-app-text/[0.02] border-transparent hover:border-app-text/10 hover:bg-app-text/[0.04]'
                                     }`}
                                 >
-                                    {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary animate-pulse" />}
+                                    {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent animate-pulse" />}
                                     
                                     <div className="flex items-center gap-4">
                                         <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${
-                                            isSelected ? 'bg-primary border-primary rotate-0' : 'border-app-text/10 rotate-45'
+                                            isSelected ? 'bg-accent border-accent rotate-0' : 'border-app-text/10 rotate-45'
                                         }`}>
                                             {isSelected && <CheckCircle2 size={14} className="text-app-on-accent" />}
                                         </div>
@@ -223,7 +241,7 @@ const DamageCalculator: React.FC = () => {
                                                         <div className={`px-1.5 py-0.5 rounded text-ui-8 font-black uppercase tracking-tighter border ${
                                                             healthSys.state === 'dead' ? 'bg-app-subtle/10 border-app-subtle/30 text-app-subtle' :
                                                             healthSys.state === 'critical' ? 'bg-etat-danger/10 border-etat-danger/30 text-etat-danger' :
-                                                            'bg-primary/10 border-primary/30 text-primary'
+                                                            'bg-accent/10 border-accent/30 text-accent'
                                                         }`}>
                                                             {healthSys.type}
                                                         </div>

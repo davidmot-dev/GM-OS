@@ -1,4 +1,4 @@
-import type { BestiaireDuJeu, ColonneDuBestiaire, CreatureDuBestiaire } from '../../types/drivers';
+import type { BestiaireDuJeu, ColonneDuBestiaire, CreatureDuBestiaire, LigneDAttaque } from '../../types/drivers';
 import { slug } from '../../../electron/corpusSysteme';
 
 /**
@@ -85,13 +85,36 @@ export function controlerLeBestiaire(bestiaire: BestiaireDuJeu | undefined, cham
         const t = cr.attaques?.table;
         if (t && (!t.univers?.trim() || !t.table?.trim())) erreur(`${ou}.attaques.table`, `${nom} : une table d'attaques nomme son jeu et sa table.`);
         (cr.attaques?.lignes ?? []).forEach((l, j) => {
-            if (!l.de?.trim() || !l.nom?.trim()) erreur(`${ou}.attaques.lignes[${j}]`, `${nom} : chaque attaque dit son résultat de dé et son nom.`);
+            const ligne = `${ou}.attaques.lignes[${j}]`;
+            /*
+              T14 (§ 263, 19/11/2026) : une attaque se tire au dé (Alien : son résultat de dé) ou porte
+              ses dégâts fixes (Cthulhu Hack : le meneur ne lance pas). L'une ou l'autre, et un nom.
+            */
+            if (!l.nom?.trim() || (!l.de?.trim() && l.degats === undefined)) {
+                erreur(ligne, `${nom} : chaque attaque dit son nom, et son résultat de dé ou ses dégâts.`);
+            }
+            if (l.degats !== undefined && !(Number.isInteger(l.degats) && l.degats >= 0)) {
+                erreur(`${ligne}.degats`, `${nom} : les dégâts de « ${l.nom} » sont un entier, zéro ou plus (« ${l.degats} »).`);
+            }
+            if (l.fois !== undefined && !(Number.isInteger(l.fois) && l.fois >= 1)) {
+                erreur(`${ligne}.fois`, `${nom} : « ${l.nom} » compte au moins une fois par round (« ${l.fois} »).`);
+            }
         });
         if (cr.source?.page !== undefined && !(Number.isInteger(cr.source.page) && cr.source.page > 0)) {
             erreur(`${ou}.source.page`, `${nom} : la page de la source est un entier positif.`);
         }
     });
     return constats;
+}
+
+/**
+ * **Une attaque, écrite comme le livre l'écrit** (T14, 19/11/2026) — « Revolver (4) », « Matraque
+ * (2) ×2 », « 1-2 — Impact : renverse sa cible ». Lue par les notes d'un combattant et le résumé
+ * d'une créature du livre : une seule écriture pour les deux.
+ */
+export function ecrireLAttaque(l: Pick<LigneDAttaque, 'de' | 'nom' | 'effet' | 'degats' | 'fois'>): string {
+    const nom = l.degats !== undefined ? `${l.nom} (${l.degats})${l.fois && l.fois > 1 ? ` ×${l.fois}` : ''}` : l.nom;
+    return `${l.de?.trim() ? `${l.de} — ` : ''}${nom}${l.effet ? ` : ${l.effet}` : ''}`;
 }
 
 /** Un identifiant tiré du nom, unique dans le bestiaire : « Biodrone XX121B » → `biodrone-xx121b`. */

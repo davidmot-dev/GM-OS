@@ -561,6 +561,29 @@ export function santeAlignee<S extends { type: string; data: Record<string, unkn
     return { ...(sante ?? { badges: [] }), type: 'hp', data, state } as unknown as S;
 }
 
+/**
+ * **La santé d'un combattant, tirée de sa fiche** — registre § 263, T20 (19/11/2026). David : « le
+ * Rôdeur affiche Points de vie 10/10 au-dessus de Santé xénomorphe 6/6 » ; l'Agent du LAPD de Blade
+ * Runner, « Points de vie 10/10 » au-dessus de sa Santé 5/5. Une créature posée depuis le livre
+ * naissait avec la santé par défaut (10/10) pendant que sa fiche portait celle du livre.
+ *
+ * Même règle que pour un PJ (`santePrincipaleDuPersonnage`) : quand le jeu compte en points de vie
+ * et déclare sa santé principale, **la fiche fait foi** ; `hp`, `hpMax` et la santé du combat la
+ * suivent. `null` : le jeu ne compte pas ainsi, la fiche ne porte pas la valeur, ou la santé du
+ * combattant est d'un autre moteur (horloges, cases).
+ */
+export function santeDeLaFicheDuCombattant<S extends { type: string; data: Record<string, unknown>; state: string; badges?: unknown[] }>(
+    pilote: Parameters<typeof santePrincipaleDeLaFiche>[0],
+    fiche: Record<string, unknown> | undefined | null,
+    sante: S | undefined,
+): { hp: number; hpMax: number; healthSystem: S } | null {
+    if (sante && sante.type !== 'hp') return null;
+    const principale = santePrincipaleDeLaFiche(pilote, fiche);
+    if (!principale) return null;
+    const alignee = santeAlignee(sante, principale);
+    return alignee ? { hp: principale.courant, hpMax: principale.max, healthSystem: alignee } : null;
+}
+
 /** Le champ de santé principale qu'un jeu en points de vie fait suivre à la fiche — `null` sinon. */
 export function champDeSantePrincipale(
     pilote: { combat?: { defaultHealthType?: string; statsToTrack?: readonly { fieldId: string; isMainHP?: boolean }[] } } | null | undefined,

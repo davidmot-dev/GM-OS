@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BookOpen, ChevronDown, ChevronRight, Minus, Plus } from 'lucide-react';
 import type { BestiaireDuJeu, CreatureDuBestiaire } from '../../../types/drivers';
 import type { CampDeRencontre } from '../../../types/rencontres.types';
-import { rangerParCategorie } from '../../bestiaire/bestiaire';
+import { ecrireLAttaque, rangerParCategorie } from '../../bestiaire/bestiaire';
 import LivreALaPage, { type RegistreDesLivres } from '../../forge/rules/components/LivreALaPage';
 import { livreDeLaSource } from '../../forge/rules/livres';
 
@@ -32,7 +32,11 @@ const CarteDeCreature: React.FC<{
     const [faction, setFaction] = useState<CampDeRencontre>('enemy');
     const valeurs = bestiaire.colonnes.filter(c => creature.valeurs[c.id] !== undefined && String(creature.valeurs[c.id]).trim() !== '');
     const attaques = creature.attaques;
-    const resumeDesAttaques = attaques?.lignes?.length
+    // T14 (§ 263) : des attaques à dégâts fixes (Cthulhu Hack) se disent telles quelles, pas en « lignes (D6) ».
+    const fixes = attaques?.lignes?.length && attaques.lignes.every(l => !l.de?.trim() && l.degats !== undefined);
+    const resumeDesAttaques = fixes
+        ? attaques!.lignes!.map(l => ecrireLAttaque({ ...l, effet: '' })).join(', ')
+        : attaques?.lignes?.length
         ? `${attaques.lignes.length} ligne${attaques.lignes.length > 1 ? 's' : ''} (D6)`
         : attaques?.table?.table ? `table ${attaques.table.univers} / ${attaques.table.table}` : '';
     // « Livre, p. N » (chemins des livres, étape D, 06/11/2026) : seulement si le PDF est enregistré.

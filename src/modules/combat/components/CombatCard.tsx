@@ -6,7 +6,7 @@ import { Select } from '../../../components/common/Select';
 import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore, type Entity } from '../../session/useSessionOSStore';
 import { HealthManager } from '../../session/components/health/HealthManager';
-import { estHorsDeCombat, santeAffichee, maximumDeLaJauge } from '../logic/SanteDuCombattant';
+import { estHorsDeCombat, santeAffichee, maximumDeLaJauge, champDeSantePrincipale } from '../logic/SanteDuCombattant';
 import type { HealthSystem } from '../../session/useSessionOSStore';
 import { Bouton, Icone } from '../../../components/socle';
 import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
@@ -38,6 +38,9 @@ import { estUneFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
 import { etatDuPhysique, physiqueActuel } from '../../dice/systemes/potentielGarde';
 import { DefaiteDune } from './ConflitDune';
 import DommagesDeltaGreen from './DommagesDeltaGreen';
+import { calculateurDisponible, ciblesDuCalculateur, majDeLaConsole } from '../logic/calculateurDeDegats';
+import { attaqueSurLaCarte } from '../logic/jetDuCombattant';
+import { armureDeLAdversaire } from '../logic/attaqueDeLAdversaire';
 
 const PRESET_STATUSES = [
     { name: 'poison', icon: '🤢', duration: 3 },
@@ -178,7 +181,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 <button
                     key={geste.libelle}
                     type="button"
-                    className="mr-1 px-1.5 h-5 rounded-sm border border-app-border/40 text-ui-10 font-bold uppercase tracking-wider text-app-text/80 hover:text-primary hover:border-primary/60 leading-none"
+                    className="mr-1 px-1.5 h-5 rounded-sm border border-app-border/40 text-ui-10 font-bold uppercase tracking-wider text-app-text/80 hover:text-accent hover:border-accent/60 leading-none"
                     onClick={(e) => handleGaugeClick(e, fieldId, geste.delta ?? 0, geste.valeur)}
                     onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); }}
                     title={geste.aide ?? geste.libelle}
@@ -189,7 +192,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             ))}
             <button
                 type="button"
-                className="w-5 h-5 grid place-items-center rounded-sm border border-app-border/40 text-app-text/80 hover:text-primary hover:border-primary/60 leading-none"
+                className="w-5 h-5 grid place-items-center rounded-sm border border-app-border/40 text-app-text/80 hover:text-accent hover:border-accent/60 leading-none"
                 onClick={(e) => handleGaugeClick(e, fieldId, -1)}
                 onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); }}
                 aria-label={`${label} : retirer 1`}
@@ -198,7 +201,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             {chiffre}
             <button
                 type="button"
-                className="w-5 h-5 grid place-items-center rounded-sm border border-app-border/40 text-app-text/80 hover:text-primary hover:border-primary/60 leading-none"
+                className="w-5 h-5 grid place-items-center rounded-sm border border-app-border/40 text-app-text/80 hover:text-accent hover:border-accent/60 leading-none"
                 onClick={(e) => handleGaugeClick(e, fieldId, 1)}
                 onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); }}
                 aria-label={`${label} : ajouter 1`}
@@ -520,14 +523,27 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                 type={combatant.isPlayer ? 'pc' : 'npc'}
                 initialHealthSystem={santeAffichee(combatant) as HealthSystem | undefined}
                 onHealthChange={(newHealth) => {
-                  updateCombatant(combatant.id, { healthSystem: newHealth });
+                  // T22 (§ 263) : `hp` suit la barre, sinon « Calculer » repart d'un compte périmé.
+                  updateCombatant(combatant.id, majDeLaConsole(newHealth, { champ: champDeSantePrincipale(activeDriver), sheetData: combatant.sheetData }));
                 }}
                 onApplyImpact={(impact, versLaCible) => {
+                    const vise = versLaCible && currentTarget ? currentTarget : combatant;
+                    /*
+                      Cthulhu Hack (§ 263, T17) : un coup de la console sur un adversaire du livre qui a
+                      une Armure passe par `applyDamage`, qui la retire — la même règle que « Calculer ».
+                    */
+                    if (activeDriver?.jet?.cthulhuHack && !impact.isRecovery && !vise.isPlayer && !vise.sourcePlayerId && !vise.sourceEntityId
+                        && armureDeLAdversaire(activeDriver, vise) > 0) {
+                        useCombatStore.getState().applyDamage(impact.value, impact.type ?? '', [vise.id]);
+                        return true;
+                    }
                     if (activeDriver?.combat.dommages?.mecanique !== 'torg') return false;
-                    useCombatStore.getState().applyDamage(impact.isRecovery ? -impact.value : impact.value, 'torg', [versLaCible && currentTarget ? currentTarget.id : combatant.id]);
+                    useCombatStore.getState().applyDamage(impact.isRecovery ? -impact.value : impact.value, 'torg', [vise.id]);
                     return true;
                 }}
                 disposition="carte"
+                // Dune n'a pas de points de vie : ni console ni « Calculer » (§ 263, 19/11/2026).
+                sansConsole={!calculateurDisponible(activeDriver)}
                 /*
                   **Les boutons Dégâts / Soins de cette ligne partent sur la
                   cible** (décision de David, 2026-08-29) : Tom vise Henri,
@@ -545,7 +561,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                   nom: currentTarget.name,
                   healthSystem: currentTarget.healthSystem,
                   onHealthChange: (newHealth) => {
-                    updateCombatant(currentTarget.id, { healthSystem: newHealth });
+                    updateCombatant(currentTarget.id, majDeLaConsole(newHealth, { champ: champDeSantePrincipale(activeDriver), sheetData: currentTarget.sheetData }));
                   },
                 } : null}
                 actionsDeCarte={<>
@@ -564,19 +580,26 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     >
                         Fiche
                     </Bouton>
-                    <Bouton
+                    {/* « Attaquer » (§ 263, T5, décision D2) : la fiche ouverte sur le jet, la cible en tête. */}
+                    {attaqueSurLaCarte(combatant, activeDriver, ficheLue.gabarit ?? null, ficheLue.valeurs) && <Bouton
+                        aLaTable={regime.aLaTable}
+                        icone={<Swords size={14} />}
+                        onClick={() => gmCustom('fiche-combattant', { combatantId: combatant.id, ouvrirSur: 'jet' })}
+                        title={t(activeDriver?.jet?.cthulhuHack ? 'combat.card.riposte_tooltip' : 'combat.card.attack_tooltip')}
+                        data-attaquer
+                    >
+                        {/* Cthulhu Hack (§ 263, T16) : le même bouton s'appelle « Riposte » — le meneur n'y lance pas. */}
+                        {t(activeDriver?.jet?.cthulhuHack ? 'combat.card.riposte' : 'combat.card.attack')}
+                    </Bouton>}
+                    {calculateurDisponible(activeDriver) && <Bouton
                         variante="accent"
                         aLaTable={regime.aLaTable}
                         icone={<Zap size={14} className="fill-current" />}
-                        onClick={() => {
-                            const ids = [combatant.id];
-                            if (combatant.targetId) ids.push(combatant.targetId);
-                            gmCustom('damage-calc', { targetIds: ids });
-                        }}
+                        onClick={() => gmCustom('damage-calc', { targetIds: ciblesDuCalculateur(combatant, combatants) })}
                         title={t('combat.card.calculate_tooltip')}
                     >
                         {t('combat.card.calculate')}
-                    </Bouton>
+                    </Bouton>}
                 </>}
             />}
 
@@ -637,6 +660,9 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         // Extract value from sheetData (persistent or local)
                         const sheetData = (sourceCharacter?.sheetData || combatant.sheetData) as Record<string, string | number | boolean> | undefined;
                         const sheetValRaw = sheetData?.[gaugeConfig.fieldId];
+                        /* § 263, T20 : une figure du livre n'a pas les jauges que le livre ne lui donne pas
+                           (le Sang-froid d'un adversaire de Blade Runner s'affichait « 0/10 »). */
+                        if (combatant.origineDuLivre && (sheetValRaw === undefined || sheetValRaw === '')) return null;
                         const ressource = deDeRessource(gaugeConfig.fieldId, gaugeConfig.label, sheetValRaw);
                         if (ressource) return ressource;
                         const val = typeof sheetValRaw === 'number'? sheetValRaw : parseInt(String(sheetValRaw || 0), 10);
@@ -671,7 +697,10 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         */
                         const couleur = gaugeConfig.color?.trim() ?? '';
                         const couleurEnClasse = couleur.startsWith('bg-');
-                        const classeRemplie = couleurEnClasse ? couleur : (couleur ? '' : 'bg-primary');
+                        /* `primary` n'existe pas dans GM-OS : `bg-primary` laissait le remplissage
+                           transparent, et `text-primary` le chiffre sans couleur. L'accent du thème
+                           le remplace (registre § 263, § 1 bis du 19/11/2026, accord de David). */
+                        const classeRemplie = couleurEnClasse ? couleur : (couleur ? '' : 'bg-accent');
                         const styleRempli = couleurEnClasse || !couleur ? undefined : { backgroundColor: couleur };
                         /* Le chiffre suit la jauge — sauf quand la couleur est une classe de fond,
                            qui ne dit rien de la couleur du texte : le doré du thème reprend la main. */
@@ -692,7 +721,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 >
                                     <div className="flex items-center justify-between px-1">
                                         <span className="stitch-label text-app-text">{gaugeConfig.label}</span>
-                                        {reglageDeJauge(gaugeConfig.fieldId, gaugeConfig.label, <span className="text-ui-12 font-black text-primary drop-shadow-[0_0_3px_rgba(231,176,8,0.3)]" style={styleDuChiffre}>{val} <span className="opacity-50">/ {max}</span></span>)}
+                                        {reglageDeJauge(gaugeConfig.fieldId, gaugeConfig.label, <span className="text-ui-12 font-black text-accent drop-shadow-[0_0_3px_rgba(231,176,8,0.3)]" style={styleDuChiffre}>{val} <span className="opacity-50">/ {max}</span></span>)}
                                     </div>
                                     <div className="flex gap-1 h-2.5 bg-app-bg/40 p-0.5 rounded-sm border border-app-border/20">
                                         {Array.from({ length: segments }).map((_, sIdx) => (
@@ -723,7 +752,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 >
                                     <div className="flex justify-between items-center px-1">
                                         <span className="stitch-label text-app-text">{gaugeConfig.label}</span>
-                                        {reglageDeJauge(gaugeConfig.fieldId, gaugeConfig.label, <span className="text-ui-12 font-black text-primary" style={styleDuChiffre}>{val} <span className="opacity-50">/ {max}</span></span>)}
+                                        {reglageDeJauge(gaugeConfig.fieldId, gaugeConfig.label, <span className="text-ui-12 font-black text-accent" style={styleDuChiffre}>{val} <span className="opacity-50">/ {max}</span></span>)}
                                     </div>
                                     <div className="h-3 bg-app-bg/60 rounded-full overflow-hidden border border-app-border/30 p-[1.5px]">
                                         <div 
@@ -770,6 +799,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             .map((stat, idx) => {
                                 const ressource = deDeRessource(stat.fieldId, stat.label, ficheLue.valeurs[stat.fieldId]);
                                 if (ressource) return ressource;
+                                // § 263, T20 : même règle que les jauges du pilote, plus haut.
+                                if (combatant.origineDuLivre && (ficheLue.valeurs[stat.fieldId] === undefined || ficheLue.valeurs[stat.fieldId] === '')) return null;
                                 const val = Number(ficheLue.valeurs[stat.fieldId] ?? 0);
                                 let max = 10;
                                 const fieldDef = sourceTemplate?.sections.flatMap(s => s.fields).find((f: { id: string; type: string; defaultValue?: string | number | boolean }) => f.id === stat.fieldId);
@@ -790,7 +821,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                     >
                                         <div className="flex items-center justify-between px-1">
                                             <span className="stitch-label text-app-text/70">{stat.label}</span>
-                                            {reglageDeJauge(stat.fieldId, stat.label, <span className="text-ui-11 font-black text-primary">{val} <span className="opacity-50">/ {max}</span></span>)}
+                                            {reglageDeJauge(stat.fieldId, stat.label, <span className="text-ui-11 font-black text-accent">{val} <span className="opacity-50">/ {max}</span></span>)}
                                         </div>
                                         <div className="flex gap-1 h-1.5 bg-app-bg/40 p-[1px] rounded-full border border-app-border/20">
                                             {Array.from({ length: segments }).map((_, sIdx) => {
@@ -800,7 +831,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                                         key={sIdx}
                                                         className={`flex-1 rounded-full transition-all duration-300 ${
                                                             isFilled 
-                                                                ? 'bg-primary shadow-glow-gold' 
+                                                                ? 'bg-accent shadow-glow-gold'
                                                                 : 'bg-app-surface/60 border border-app-border/10'
                                                         }`}
                                                     />

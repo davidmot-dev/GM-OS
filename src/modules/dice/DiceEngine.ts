@@ -57,6 +57,13 @@ export interface RollResult {
      * quand la ressource s'épuise. Absent sur tout autre jet. Voir `desDUsure`.
      */
     usure?: { avant: number; apres: number | null };
+    /**
+     * **`total` compte des réussites, ce n'est pas un montant** (Year Zero : Alien, Blade Runner —
+     * 19/11/2026, registre § 263). Le calculateur de dégâts reprenait ce total comme des dégâts :
+     * « 2 Succès » devenait 2 dégâts, alors que la règle donne *dégâts de l'arme + 1 par succès au-delà
+     * du premier*. Absent sur tout autre jet.
+     */
+    compte?: 'reussites';
 }
 
 /** Le jet de sauvegarde se lance normalement, à l'avantage, ou au désavantage. */
@@ -596,7 +603,8 @@ export class DiceEngine {
             fails: banes,
             tagSuccess,
             degre: degreDepuisLeBooleen(tagSuccess),
-            totalDisplay: `${successes} Succès${banes > 0 ? ` / ${banes} Fléaux` : ''}`
+            totalDisplay: `${successes} Succès${banes > 0 ? ` / ${banes} Fléaux` : ''}`,
+            compte: 'reussites',
         };
     }
 
@@ -660,6 +668,7 @@ export class DiceEngine {
             tagSuccess,
             degre: degreDepuisLeBooleen(tagSuccess),
             totalDisplay: `${successes} Succès${banes > 0 ? ` / ${banes} Écueils` : ''}`,
+            compte: 'reussites',
         };
     }
 

@@ -43,11 +43,13 @@ export function PreparationDune({ choix, changer, maxime, indisponible, determin
     </fieldset>;
 }
 
-export function SuitesDune({ resultat, des, choix, bilan, difficulte, determination, maximeAlignee, remplacer, depenser, clore, racheter, mitiger, ecrireDetermination, consigner, ecrire, valeurs, regle, reserver, meneur }: {
+export function SuitesDune({ resultat, des, choix, bilan, difficulte, determination, maximeAlignee, remplacer, depenser, clore, racheter, mitiger, ecrireDetermination, consigner, ecrire, valeurs, regle, reserver, meneur, cibleInitiale }: {
     resultat: RollResult; des: DeDune[]; choix: ChoixDune; bilan: BilanDune; difficulte: number; determination: number; maximeAlignee: boolean;
     remplacer: (des: DeDune[]) => void; depenser: (montant: number, motif: string) => boolean; clore: (depenseDuDefenseur: number) => void;
     racheter: () => boolean; mitiger: (complications: number) => void; ecrireDetermination: (n: number) => void;
     consigner: Consigner; ecrire?: Ecrire; valeurs: ValeursDune; regle: RegleDeDune; reserver: boolean; meneur: boolean;
+    /** La cible de la carte, pour l'attaque réussie d'un adversaire (§ 263, T18). */
+    cibleInitiale?: string;
 }) {
     const [indices, setIndices] = useState<number[]>([]), [achats, setAchats] = useState<string[]>([]);
     const [annulees, setAnnulees] = useState(0), [mitige, setMitige] = useState(0), [complications, setComplications] = useState(1), [effet, setEffet] = useState('');
@@ -77,7 +79,7 @@ export function SuitesDune({ resultat, des, choix, bilan, difficulte, determinat
                 {choix.opposition.pnj && <p>Le reliquat du défenseur ennemi devient de la Menace à la fin de ce test.</p>}
             </div>}
             {reussi && !mitige && <>
-                {meneur && <AttaqueDune regle={regle} valeurs={valeurs} payer={depenser} consigner={consigner} appliquee={() => setAttaqueAppliquee(true)} />}
+                {meneur && <AttaqueDune regle={regle} valeurs={valeurs} payer={depenser} consigner={consigner} appliquee={() => setAttaqueAppliquee(true)} cibleInitiale={cibleInitiale} />}
                 <input className={champ} aria-label="Effet de l’Impulsion" placeholder="Question, trait, atout… validé à la table" value={effet} onChange={e => setEffet(e.target.value)} />
                 <div className="flex flex-wrap gap-2">
                     <button type="button" className={bouton} onClick={() => payer('information', 1, effet, true)}>Obtenir une information (1)</button>

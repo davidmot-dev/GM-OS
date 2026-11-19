@@ -9,8 +9,12 @@ import type { Combatant } from '../types';
 const bouton = 'rounded border border-app-border/50 px-2 py-1 disabled:opacity-30';
 const champ = 'rounded border border-app-border/50 bg-app-bg px-2 py-1';
 
-export function AttaqueDune({ regle, valeurs, payer, consigner, appliquee }: { regle: RegleDeDune; valeurs: ValeursDune; payer: (n: number, motif: string) => boolean; consigner: (t: string, l: string) => void; appliquee: () => void }) {
-    const combattants = useCombatStore(s => s.combatants), [cibleId, setCible] = useState(''), [genre, setGenre] = useState<'mineur' | 'notable' | 'militaire'>('notable');
+/**
+ * `cibleInitiale` (registre § 263, T18, 19/11/2026) : la cible que vise la carte de l'attaquant,
+ * quand le test vient de « Attaquer ». Lue au montage seulement ; le meneur la change dans la liste.
+ */
+export function AttaqueDune({ regle, valeurs, payer, consigner, appliquee, cibleInitiale }: { regle: RegleDeDune; valeurs: ValeursDune; payer: (n: number, motif: string) => boolean; consigner: (t: string, l: string) => void; appliquee: () => void; cibleInitiale?: string }) {
+    const combattants = useCombatStore(s => s.combatants), [cibleId, setCible] = useState(cibleInitiale ?? ''), [genre, setGenre] = useState<'mineur' | 'notable' | 'militaire'>('notable');
     const [competence, setCompetence] = useState(regle.competences[1] ?? regle.competences[0]), [defense, setDefense] = useState(0), [qualite, setQualite] = useState(0), [ameliorer, setAmeliorer] = useState(false), [faite, setAppliquee] = useState(false);
     const cible = combattants.find(c => c.id === cibleId), v = cible ? valeursDuCombattant(cible) : {}, ancien = lireDune(v).defaite;
     const competenceDefensive = entierDune(v[competence], 4, 8);

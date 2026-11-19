@@ -80,9 +80,15 @@ interface HealthManagerProps {
   disposition?: 'bloc' | 'carte';
   /** En disposition `carte`, les actions de la carte posées après les commandes. */
   actionsDeCarte?: React.ReactNode;
+  /**
+   * En disposition `carte`, sans les boutons Dégâts / Soins ni la cible des coups : la jauge et
+   * les actions de la carte restent. Dune (19/11/2026, registre § 263, David : « masque aussi la
+   * console pour Dune ») : le jeu n'a pas de points de vie, on y est vaincu.
+   */
+  sansConsole?: boolean;
 }
 
-export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialHealthSystem, onHealthChange, onApplyImpact, cibleDesCoups, disposition = 'bloc', actionsDeCarte }) => {
+export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialHealthSystem, onHealthChange, onApplyImpact, cibleDesCoups, disposition = 'bloc', actionsDeCarte, sansConsole = false }) => {
   const { 
     players, 
     entities, 
@@ -624,9 +630,9 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
           {pastilles}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {commandes}
+          {!sansConsole && commandes}
           {actionsDeCarte}
-          <div className="ml-auto flex flex-col items-end gap-0.5">{cibleEtAvis}</div>
+          {!sansConsole && <div className="ml-auto flex flex-col items-end gap-0.5">{cibleEtAvis}</div>}
         </div>
       </div>
     );

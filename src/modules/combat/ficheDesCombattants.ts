@@ -2,7 +2,7 @@ import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useCombatStore } from './useCombatStore';
 import type { Combatant } from './types';
 import { ficheDuCombattant } from './logic/ficheDuCombattant';
-import { maximumDeLaJauge, valeurDuChamp } from './logic/SanteDuCombattant';
+import { champDeSantePrincipale, maximumDeLaJauge, santeDeLaFicheDuCombattant, valeurDuChamp } from './logic/SanteDuCombattant';
 import { ajouterLeChoc } from './logic/dommagesDeTorg';
 import { campDe, type Camp } from './logic/OrdreDuTour';
 
@@ -44,7 +44,15 @@ export function ecrireLaFicheDuCombattant(c: Combatant, maj: Record<string, Vale
         return;
     }
     // Le combattant autonome : sa fiche vit sur le plateau.
-    useCombatStore.getState().updateCombatant(c.id, { sheetData: { ...(c.sheetData ?? {}), ...maj } });
+    const sheetData = { ...(c.sheetData ?? {}), ...maj };
+    /*
+      § 263, T20 (19/11/2026) : écrire sa Santé (un clic sur la jauge de la carte) doit aussi déplacer
+      ses points de vie et sa barre ; sinon la jauge dit 3 et la barre 5, et le coup suivant repart
+      de 5. La fiche fait foi (`santeDeLaFicheDuCombattant`).
+    */
+    const champ = champDeSantePrincipale(s.getActiveDriver());
+    const sante = champ && champ in maj ? santeDeLaFicheDuCombattant(s.getActiveDriver(), sheetData, c.healthSystem) : null;
+    useCombatStore.getState().updateCombatant(c.id, { sheetData, ...(sante ?? {}) });
 }
 
 /**

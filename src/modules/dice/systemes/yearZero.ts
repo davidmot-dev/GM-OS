@@ -251,6 +251,8 @@ export function forcerLeJet(
         tagSuccess,
         degre: degreDepuisLeBooleen(tagSuccess),
         totalDisplay: `${successes} Succès${fails > 0 ? ` / ${fails} ${nom}${fails > 1 ? 's' : ''}` : ''} — jet forcé`,
+        // Un jet forcé compte toujours des réussites, pas des dégâts (registre § 263, T2 et T9).
+        compte: 'reussites',
     };
 }
 
