@@ -120,3 +120,11 @@ puis « gm-os est fermé ». Registre **§ 262**, ligne **198** ; synthèse (�
 - **Suite** : « je ne sais pas lancer de jet à partir de la fiche d'un lieutenant » — exact, la fiche d'un combattant était en lecture seule. Ajouté : « Lancer un test pour … » dans la fiche du combattant (adversaires Vampire), écrit sur sa fiche ; e2e vert (« Armes à feu » seul, cinq dés).
 - **Incident** : la synthèse des pilotes a été écrasée à 23 h 30 par une copie ancienne (programme qui tenait le fichier ouvert) ; reconstruite à 23 h 50, rien de perdu. Vérifier qu'aucun éditeur ne garde une vieille copie ouverte.
 - **Reprendre par** : réimport du **2.2.0** avec « Remplacer » — ⚠️ pas le 2.1.0, antérieur à la Forge de David. Rien n'est commité.
+
+## Suite du 18/11 — Vampire essayé par David
+
+David : « j'ai fait les tests de vampire marque comme fait », après réimport du 2.2.0. Synthèse des pilotes
+(🟢 17 · 🟠 0 · 🔴 0), registre (lignes 193 à 198, § 262) et [page du jeu](../User%20Guides/54-Jeu-Vampire.md) actualisés.
+Les résultats cas par cas de la recette ne sont pas reportés dans `output/campagnes-tests/vampire/resultats.csv`.
+- **Reprendre par** : rien d'obligatoire. Améliorations possibles : armure automatique (p. 304), blessures incapacitantes
+  (p. 303) ; l'assertion VAM-A01 de la recette, à réécrire par son auteur.

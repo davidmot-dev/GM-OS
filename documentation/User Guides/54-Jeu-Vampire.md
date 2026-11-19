@@ -1,7 +1,7 @@
 # 🧛 Jeu — Vampire : la Mascarade (V5)
 
 > **Pilote décrit :** « Vampire: la Mascarade », forgé par David, exporté le 2026-11-17, **fini le
-> 2026-11-17**, version 2.2.0 — les dégâts case par case, le bestiaire et l'équipement du livre
+> 2026-11-17**, **essayé par David le 2026-11-18**, version 2.2.0 — les dégâts case par case, le bestiaire et l'équipement du livre
 > (`outils/vampire/finir_vampire.mjs` → `Export Dirvers/corriges/Vampire-2.2.0.gmos-driver`, à
 > réimporter avec « Remplacer » ; les fichiers 2.0.0 et 2.1.0 n'ont ni bestiaire ni catalogue). Thème
 > `vampire`, bannière, fiche de personnage HTML et identité visuelle livrés le même jour par
