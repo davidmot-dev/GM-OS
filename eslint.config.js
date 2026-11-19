@@ -7,7 +7,10 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   // Les candidats archivés sont des témoins de conception, pas le code exécuté.
-  globalIgnores(['dist', 'dist-electron', 'v7-migration', 'backups', '**/chrome_profile_notebooklm', 'documentation/**/candidats/**']),
+  // `output/` (19/11/2026, David : « Exclure output/ ») : livrables et scripts de tournage des
+  // vidéos et clips, pas le code de l'application ; leurs brouillons non commités bloquaient la
+  // vérification avant envoi.
+  globalIgnores(['dist', 'dist-electron', 'v7-migration', 'backups', '**/chrome_profile_notebooklm', 'documentation/**/candidats/**', 'output/**']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
