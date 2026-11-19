@@ -1111,6 +1111,9 @@
       "input_placeholder": "Décrivez le contenu (ex: Un coffre de pirate maudit...)",
       "ai_hint": "L'IA créera des objets structurés basés sur votre description.",
       "tables_header": "Tables de Système",
+      "catalogue_btn": "Depuis le catalogue",
+      "catalogue_geste": "Verser au butin",
+      "catalogue_explication": "Les objets cochés vont au butin de séance, reliés au catalogue du pilote ; un véhicule arrive avec ce qu'il contient.",
       "search_placeholder": "Rechercher une table...",
       "table_stats": "{{count}} Entrées • {{mode}}",
       "empty_tables": "Aucune table de butin trouvée.",
@@ -2878,7 +2881,21 @@
           "item": "Objet / Loot",
           "table": "Sous-Table",
           "currency": "Monnaie / Or",
-          "oracle": "Oracle (Table-OS)"
+          "oracle": "Oracle (Table-OS)",
+          "catalogue": "Objet du catalogue"
+        },
+        "catalogue": {
+          "add_btn": "Ajouter depuis le catalogue",
+          "create_btn": "Nouvelle table depuis le catalogue",
+          "add_geste": "Ajouter à la table",
+          "create_geste": "Créer la table",
+          "add_explication": "Chaque objet coché devient une ligne de « {{table}} », reliée au catalogue : corriger l'objet corrige la table.",
+          "create_explication": "Une table neuve : une ligne par objet coché, poids égaux, nommée d'après leur catégorie. Réglez les poids ensuite.",
+          "object_label": "Objet du catalogue",
+          "object_choose": "Choisir un objet...",
+          "badge": "Catalogue",
+          "missing": "Objet introuvable dans le catalogue : « {{nom}} ». Le tirage le signalera ; choisissez un autre objet ou retirez la ligne.",
+          "linked_hint": "Nom, valeur, poids et description viennent du catalogue, lus au tirage."
         },
         "placeholder_display_name": "Nom affiché...",
         "placeholder_name": "Nom de l'objet...",

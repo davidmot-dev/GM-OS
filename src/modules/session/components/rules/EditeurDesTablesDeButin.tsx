@@ -1,10 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Archive, Plus, Trash2, Dices, Layers } from 'lucide-react';
+import { Archive, Plus, Trash2, Dices, Layers, Package } from 'lucide-react';
 import type { GameDriver, LootEntry, LootTable } from '../../../../types/drivers';
 import { pontDesTables } from '../../../tables/pontDesTables';
 import { modeDeTirage, tableImbriqueeDe } from '../../logic/LootGenerator';
 import { raretesDuJeu } from '../../logic/vocabulaireDuButin';
+import { FAMILLES_D_OBJET, objetsDeLaFamille } from '../../../equipement/catalogue';
+import { lignesDepuisLeCatalogue, tableDepuisLeCatalogue } from '../../../equipement/butinDuCatalogue';
+import ChoisirDansLeCatalogue from '../ChoisirDansLeCatalogue';
 
 /**
  * **Les tables de butin d'un jeu, éditées sans rien deviner.**
@@ -27,6 +30,15 @@ import { raretesDuJeu } from '../../logic/vocabulaireDuButin';
  *
  * S'y ajoute le pont vers Table-OS : une entrée de type **oracle** tire sur une
  * table de `databases/tables/` et verse ce que l'entrée tirée **déclare**.
+ *
+ * **Et le catalogue du pilote** (registre § 264, T5, 19/11/2026). David : « je
+ * voudrais faire le lien entre les équipements qui sont définis dans un drivers et
+ * loot-os afin de pouvoir constituer des tables de loot plus facilement ». Deux
+ * gestes (décision Q2, « Les deux ») : « Ajouter depuis le catalogue » dans une
+ * table, « Nouvelle table depuis le catalogue ». Une ligne « Objet du catalogue »
+ * **désigne** l'objet (décision Q1, « Lien vivant ») : nom, valeur, poids et
+ * description se lisent au tirage ; seules la rareté et la quantité se règlent ici.
+ * Un objet disparu du catalogue se dit sur la ligne. Sans catalogue, rien ne change.
  */
 interface EditeurDesTablesDeButinProps {
     driver: GameDriver;
@@ -37,6 +49,13 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
     const { t } = useTranslation(['modules', 'common']);
     const tables = useMemo(() => driver.lootTables || [], [driver.lootTables]);
     const raretes = raretesDuJeu(driver);
+    const rareteParDefaut = raretes[0]?.id || 'common';
+
+    /* ── Le catalogue du pilote (§ 264) ───────────────────────────────────── */
+    const catalogue = driver.catalogue;
+    const avecCatalogue = (catalogue?.objets.length ?? 0) > 0;
+    const [fenetre, setFenetre] = useState<null | { mode: 'creer' } | { mode: 'ajouter'; tableId: string }>(null);
+    const tableVisee = fenetre?.mode === 'ajouter' ? tables.find(t2 => t2.id === fenetre.tableId) : undefined;
 
     /* ── Les oracles disponibles, lus une fois ────────────────────────────── */
     const [univers, setUnivers] = useState<string[]>([]);
@@ -190,7 +209,15 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
             </div>
 
             {/* ─── Les tables ────────────────────────────────────────────── */}
-            <div className="flex justify-end">
+            <div className="flex flex-wrap justify-end gap-3">
+                {avecCatalogue && (
+                    <button
+                        onClick={() => setFenetre({ mode: 'creer' })}
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-app-bg/40 text-etat-alerte border border-etat-alerte/20 hover:bg-etat-alerte/10 transition-all font-black text-ui-10 uppercase tracking-widest"
+                    >
+                        <Package size={14} /> {t('modules:session.rule_engine_editor.loot.catalogue.create_btn')}
+                    </button>
+                )}
                 <button
                     onClick={() => onUpdate({
                         lootTables: [...tables, {
@@ -292,6 +319,15 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                 <span className="text-ui-9 font-black uppercase tracking-[0.3em] text-app-text/30">
                                     {t('modules:session.rule_engine_editor.loot.entries_title')}
                                 </span>
+                                <div className="flex items-center gap-4">
+                                {avecCatalogue && (
+                                    <button
+                                        onClick={() => setFenetre({ mode: 'ajouter', tableId: table.id })}
+                                        className="flex items-center gap-1.5 text-ui-9 font-black uppercase tracking-[0.2em] text-etat-alerte hover:text-etat-alerte transition-colors"
+                                    >
+                                        <Package size={12} /> {t('modules:session.rule_engine_editor.loot.catalogue.add_btn')}
+                                    </button>
+                                )}
                                 <button
                                     onClick={() => {
                                         const suivantes = [...tables];
@@ -310,12 +346,17 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                 >
                                     <Plus size={12} /> {t('modules:session.rule_engine_editor.loot.add_entry_btn')}
                                 </button>
+                                </div>
                             </div>
 
                             <div className="space-y-2">
                                 {table.entries.map((entry, eIdx) => {
                                     const estRenvoi = entry.type === 'table' || entry.type === 'oracle';
                                     const universChoisi = String(entry.metadata?.oracleUnivers || '');
+                                    // § 264 : l'objet que la ligne désigne, lu dans le catalogue comme au tirage.
+                                    const estCatalogue = entry.type === 'catalogue';
+                                    const idDuCatalogue = String(entry.metadata?.catalogueId || '');
+                                    const objetDuCatalogue = estCatalogue ? catalogue?.objets.find(o => o.id === idDuCatalogue) : undefined;
 
                                     return (
                                         <div key={eIdx} className="p-3 bg-app-bg/20 rounded-xl border border-app-border/5 hover:bg-app-bg/40 transition-all space-y-2">
@@ -332,6 +373,9 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                         <option value="currency">{t('modules:session.rule_engine_editor.loot.entry_types.currency')}</option>
                                                         <option value="table">{t('modules:session.rule_engine_editor.loot.entry_types.table')}</option>
                                                         <option value="oracle">{t('modules:session.rule_engine_editor.loot.entry_types.oracle')}</option>
+                                                        {(avecCatalogue || estCatalogue) && (
+                                                            <option value="catalogue">{t('modules:session.rule_engine_editor.loot.entry_types.catalogue')}</option>
+                                                        )}
                                                     </select>
                                                 </div>
 
@@ -341,11 +385,13 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                             ? t('modules:session.rule_engine_editor.loot.display_name_label')
                                                             : t('modules:session.rule_engine_editor.loot.name_label')}
                                                     </label>
+                                                    {/* Une ligne du catalogue prend le nom de son objet : il ne se tape pas. */}
                                                     <input
                                                         type="text"
-                                                        value={entry.name}
+                                                        value={estCatalogue ? (objetDuCatalogue?.nom ?? entry.name) : entry.name}
+                                                        readOnly={estCatalogue}
                                                         onChange={e => majEntree(tIdx, eIdx, { name: e.target.value })}
-                                                        className={champ}
+                                                        className={`${champ} ${estCatalogue ? 'opacity-70' : ''}`}
                                                         placeholder={estRenvoi
                                                             ? t('modules:session.rule_engine_editor.loot.placeholder_display_name')
                                                             : t('modules:session.rule_engine_editor.loot.placeholder_name')}
@@ -465,7 +511,70 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                 </div>
                                             )}
 
-                                            {!estRenvoi && (
+                                            {estCatalogue && (
+                                                <div className="grid grid-cols-12 gap-2 items-end" data-ligne-du-catalogue={idDuCatalogue}>
+                                                    <div className="col-span-6">
+                                                        <label className={etiquette}>
+                                                            <Package size={8} className="inline mr-1" />
+                                                            {t('modules:session.rule_engine_editor.loot.catalogue.object_label')}
+                                                        </label>
+                                                        <select
+                                                            aria-label={t('modules:session.rule_engine_editor.loot.catalogue.object_label')}
+                                                            value={objetDuCatalogue?.id ?? ''}
+                                                            onChange={e => {
+                                                                const o = catalogue?.objets.find(x => x.id === e.target.value);
+                                                                if (o) majEntree(tIdx, eIdx, { name: o.nom, metadata: { ...(entry.metadata || {}), catalogueId: o.id } });
+                                                            }}
+                                                            className={`${champ} text-gm-violet`}
+                                                        >
+                                                            <option value="">{t('modules:session.rule_engine_editor.loot.catalogue.object_choose')}</option>
+                                                            {FAMILLES_D_OBJET.map(f => {
+                                                                const objets = objetsDeLaFamille(catalogue, f.id);
+                                                                return objets.length > 0 && (
+                                                                    <optgroup key={f.id} label={f.pluriel.charAt(0).toUpperCase() + f.pluriel.slice(1)}>
+                                                                        {objets.map(o => <option key={o.id} value={o.id}>{o.categorie ? `${o.nom} — ${o.categorie}` : o.nom}</option>)}
+                                                                    </optgroup>
+                                                                );
+                                                            })}
+                                                        </select>
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                        <label className={etiquette}>{t('modules:session.rule_engine_editor.loot.rarity_label')}</label>
+                                                        <select
+                                                            value={String(entry.metadata?.rarity || rareteParDefaut)}
+                                                            onChange={e => majMetadata(tIdx, eIdx, { rarity: e.target.value })}
+                                                            className={champ}
+                                                        >
+                                                            {raretes.map(palier => (
+                                                                <option key={palier.id} value={palier.id}>{palier.label}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div className="col-span-3 pb-1.5">
+                                                        <span className="inline-block rounded border border-etat-alerte/30 bg-etat-alerte/10 px-2 py-0.5 text-ui-8 font-black uppercase tracking-widest text-etat-alerte">
+                                                            {t('modules:session.rule_engine_editor.loot.catalogue.badge')}
+                                                        </span>
+                                                        {objetDuCatalogue && (
+                                                            <span className="ml-2 text-ui-8 text-app-text/40">
+                                                                {[FAMILLES_D_OBJET.find(f => f.id === objetDuCatalogue.famille)?.libelle, objetDuCatalogue.categorie].filter(Boolean).join(' · ')}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="col-span-12">
+                                                        {idDuCatalogue && !objetDuCatalogue ? (
+                                                            <p role="alert" className="text-ui-9 text-etat-danger">
+                                                                {t('modules:session.rule_engine_editor.loot.catalogue.missing', { nom: entry.name || idDuCatalogue })}
+                                                            </p>
+                                                        ) : (
+                                                            <p className="text-ui-8 text-app-text/25 italic">
+                                                                {t('modules:session.rule_engine_editor.loot.catalogue.linked_hint')}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {!estRenvoi && !estCatalogue && (
                                                 <div className="grid grid-cols-12 gap-2 items-end">
                                                     <div className="col-span-3">
                                                         <label className={etiquette}>{t('modules:session.rule_engine_editor.loot.rarity_label')}</label>
@@ -517,6 +626,32 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                     </div>
                 ))}
             </div>
+
+            {/* ─── La fenêtre du catalogue (§ 264, T5) ───────────────────── */}
+            {fenetre?.mode === 'creer' && (
+                <ChoisirDansLeCatalogue
+                    driver={driver}
+                    geste={t('modules:session.rule_engine_editor.loot.catalogue.create_geste')}
+                    explication={t('modules:session.rule_engine_editor.loot.catalogue.create_explication')}
+                    onValider={objets => onUpdate({
+                        lootTables: [...tables, tableDepuisLeCatalogue(objets, rareteParDefaut, `table-${Date.now()}`)],
+                    })}
+                    onFermer={() => setFenetre(null)}
+                />
+            )}
+            {tableVisee && (
+                <ChoisirDansLeCatalogue
+                    driver={driver}
+                    geste={t('modules:session.rule_engine_editor.loot.catalogue.add_geste')}
+                    explication={t('modules:session.rule_engine_editor.loot.catalogue.add_explication', { table: tableVisee.name })}
+                    onValider={objets => onUpdate({
+                        lootTables: tables.map(t2 => t2.id === tableVisee.id
+                            ? { ...t2, entries: [...t2.entries, ...lignesDepuisLeCatalogue(objets, rareteParDefaut)] }
+                            : t2),
+                    })}
+                    onFermer={() => setFenetre(null)}
+                />
+            )}
         </div>
     );
 };

@@ -1111,6 +1111,9 @@
       "input_placeholder": "Describe the content (ex: A cursed pirate chest...)",
       "ai_hint": "The AI will create structured objects based on your description.",
       "tables_header": "System Tables",
+      "catalogue_btn": "From the catalogue",
+      "catalogue_geste": "Add to the loot",
+      "catalogue_explication": "Checked items go to the session loot, linked to the driver's catalogue; a vehicle comes with what it contains.",
       "search_placeholder": "Search for a table...",
       "table_stats": "{{count}} Entries • {{mode}}",
       "empty_tables": "No loot tables found.",
@@ -2878,7 +2881,21 @@
           "item": "Item / Loot",
           "table": "Sub-Table",
           "currency": "Currency / Gold",
-          "oracle": "Oracle (Table-OS)"
+          "oracle": "Oracle (Table-OS)",
+          "catalogue": "Catalogue item"
+        },
+        "catalogue": {
+          "add_btn": "Add from the catalogue",
+          "create_btn": "New table from the catalogue",
+          "add_geste": "Add to the table",
+          "create_geste": "Create the table",
+          "add_explication": "Each checked item becomes a row of “{{table}}”, linked to the catalogue: fixing the item fixes the table.",
+          "create_explication": "A new table: one row per checked item, equal weights, named after their category. Adjust the weights afterwards.",
+          "object_label": "Catalogue item",
+          "object_choose": "Pick an item...",
+          "badge": "Catalogue",
+          "missing": "Item not found in the catalogue: “{{nom}}”. The roll will report it; pick another item or remove the row.",
+          "linked_hint": "Name, value, weight and description come from the catalogue, read at roll time."
         },
         "placeholder_display_name": "Display name...",
         "placeholder_name": "Item name...",

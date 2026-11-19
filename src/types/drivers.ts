@@ -22,12 +22,15 @@ export interface LootEntry {
      * `table` imbrique une autre table **du pilote**.
      * `oracle` tire sur une table **de Table-OS** (`databases/tables/`) et verse
      * ce que son entrée déclare — voir `metadata.oracleUnivers` / `oracleTable`.
+     * `catalogue` **désigne** un objet du catalogue du pilote (`metadata.catalogueId`),
+     * résolu au tirage : corriger l'objet corrige la table (registre § 264, décision
+     * de David du 19/11/2026, « Lien vivant »). `name` garde son nom pour l'affichage.
      */
-    type: 'item' | 'table' | 'currency' | 'other' | 'oracle';
+    type: 'item' | 'table' | 'currency' | 'other' | 'oracle' | 'catalogue';
     minAmount?: number | string; // Supporte les formules comme "1d6"
     maxAmount?: number;
     /** Métadonnées versées à l'inventaire ; la quantité peut être une formule de dés. */
-    metadata?: InventoryItem['properties'] & { quantityFormula?: number | string };
+    metadata?: InventoryItem['properties'] & { quantityFormula?: number | string; catalogueId?: string };
 }
 
 /**

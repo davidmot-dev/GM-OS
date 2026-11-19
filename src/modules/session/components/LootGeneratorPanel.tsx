@@ -6,9 +6,12 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { LootGenerator, modeDeTirage } from '../logic/LootGenerator';
 import { chargerLesOracles } from '../../tables/pontDesTables';
 import { proposerDesObjets } from '../logic/propositionDeButinIA';
-import { Sparkles, Dices, Layers, Wand2, Search, Loader2, Zap, BookOpen } from 'lucide-react';
+import { Sparkles, Dices, Layers, Wand2, Search, Loader2, Zap, BookOpen, Package } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
 import { messageDException } from '../../../utils/messageDException';
+import ChoisirDansLeCatalogue from './ChoisirDansLeCatalogue';
+import { objetsDuButin } from '../../equipement/butinDuCatalogue';
+import { raretesDuJeu } from '../logic/vocabulaireDuButin';
 
 const LootGeneratorPanel: React.FC = () => {
     const { t } = useTranslation(['modules']);
@@ -16,6 +19,8 @@ const LootGeneratorPanel: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [aiInput, setAiInput] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
+    // § 264, T6 : « Depuis le catalogue », la fenêtre du butin en séance.
+    const [catalogueOuvert, setCatalogueOuvert] = useState(false);
     /*
       **Le défaut suit désormais le moment de jeu — axes F.1 et F.5.**
 
@@ -33,6 +38,8 @@ const LootGeneratorPanel: React.FC = () => {
     
     const driver = getActiveDriver();
     const lootTables = driver?.lootTables || [];
+    const catalogue = driver?.catalogue;
+    const avecCatalogue = (catalogue?.objets.length ?? 0) > 0;
 
     const filteredTables = lootTables.filter(t => 
         t.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -54,10 +61,11 @@ const LootGeneratorPanel: React.FC = () => {
             const oracles = await chargerLesOracles(
                 LootGenerator.referencesDOracle(table, lootTables),
             );
+            // § 264, T2 : les lignes « Objet du catalogue » se lisent dans le catalogue du pilote.
             const { objets, avertissements } = LootGenerator.generateFromTable(
                 table,
                 lootTables,
-                { oracles },
+                { oracles, catalogue: driver?.catalogue },
             );
 
             if (objets.length > 0) {
@@ -114,6 +122,20 @@ const LootGeneratorPanel: React.FC = () => {
         } finally {
             setIsGenerating(false);
         }
+    };
+
+    /*
+      **« Depuis le catalogue », en séance** — registre § 264, T6 (19/11/2026). David :
+      « Oui, aussi en séance ». Les objets cochés vont au pool par la même fabrique que
+      le tirage d'une table (`objetsDuButin`) : reliés au catalogue, au premier palier
+      de rareté du jeu, avec ce qu'ils contiennent. Ils se donnent ensuite comme le reste.
+      `addLootToPool` annonce lui-même ce qu'il reçoit : un second message ferait doublon
+      (vu sur la capture du 19/11).
+    */
+    const verserDepuisLeCatalogue = (objets: NonNullable<typeof catalogue>['objets']) => {
+        if (!catalogue || objets.length === 0) return;
+        const rarete = raretesDuJeu(driver)[0]?.id || 'common';
+        addLootToPool(objets.flatMap(o => objetsDuButin(catalogue, o, { rarete })));
     };
 
     return (
@@ -189,6 +211,15 @@ const LootGeneratorPanel: React.FC = () => {
                         <Layers size={18} className="text-accent" />
                         <h3 className="text-sm font-bold uppercase tracking-tighter">{t('modules:loot.generator.tables_header')}</h3>
                     </div>
+                    {avecCatalogue && (
+                        <button
+                            type="button"
+                            onClick={() => setCatalogueOuvert(true)}
+                            className="flex items-center gap-1.5 rounded-lg border border-accent/40 px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest text-accent transition-all hover:bg-accent hover:text-app-on-accent"
+                        >
+                            <Package size={13} /> {t('modules:loot.generator.catalogue_btn')}
+                        </button>
+                    )}
                 </div>
 
                 <div className="relative mb-2">
@@ -231,6 +262,16 @@ const LootGeneratorPanel: React.FC = () => {
                     )}
                 </div>
             </div>
+
+            {catalogueOuvert && driver && (
+                <ChoisirDansLeCatalogue
+                    driver={driver}
+                    geste={t('modules:loot.generator.catalogue_geste')}
+                    explication={t('modules:loot.generator.catalogue_explication')}
+                    onValider={verserDepuisLeCatalogue}
+                    onFermer={() => setCatalogueOuvert(false)}
+                />
+            )}
         </div>
     );
 };

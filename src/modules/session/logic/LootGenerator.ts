@@ -1,4 +1,5 @@
-import type { LootTable, LootEntry, LootRollMode } from '../../../types/drivers';
+import type { CatalogueDEquipement, LootTable, LootEntry, LootRollMode } from '../../../types/drivers';
+import { objetsDuButin } from '../../equipement/butinDuCatalogue';
 import type { InventoryItem } from '../store/types';
 import type { TableData } from '../../tables/types';
 import { TableEngine } from '../../tables/TableEngine';
@@ -61,6 +62,8 @@ export const cleDOracle = (ref: ReferenceDOracle) => `${ref.univers}/${ref.table
 export interface OptionsDeGeneration {
     /** Les oracles déjà chargés, rangés par `cleDOracle`. */
     oracles?: Map<string, TableData>;
+    /** Le catalogue du pilote, où se résolvent les lignes « Objet du catalogue » (§ 264). */
+    catalogue?: CatalogueDEquipement;
     iterationLimit?: number;
     totalItemsLimit?: number;
 }
@@ -185,6 +188,13 @@ export class LootGenerator {
                     continue;
                 }
 
+                if (entry.type === 'catalogue') {
+                    objets.push(
+                        ...this.tirerDansLeCatalogue(entry, table.name, options.catalogue, avertissements),
+                    );
+                    continue;
+                }
+
                 // Traitement comme objet (ou monnaie)
                 const qFormula =
                     metadata.quantityFormula ||
@@ -253,6 +263,34 @@ export class LootGenerator {
             );
         }
         return objets;
+    }
+
+    /**
+     * **Une ligne « Objet du catalogue »** (registre § 264, 19/11/2026) : l'objet est
+     * lu **au tirage** dans le catalogue du pilote — David corrige le M41A une fois,
+     * la table donne le M41A corrigé. Un objet retiré du catalogue se dit, comme une
+     * table imbriquée introuvable : jamais un objet vide.
+     */
+    private static tirerDansLeCatalogue(
+        entry: LootEntry,
+        nomDeLaTable: string,
+        catalogue: CatalogueDEquipement | undefined,
+        avertissements: string[],
+    ): InventoryItem[] {
+        const metadata = entry.metadata || {};
+        const id = String(metadata.catalogueId || '').trim();
+        const objet = id ? catalogue?.objets.find(o => o.id === id) : undefined;
+        if (!catalogue || !objet) {
+            avertissements.push(
+                `Objet du catalogue introuvable : « ${entry.name || id} » (depuis « ${nomDeLaTable} »).`,
+            );
+            return [];
+        }
+        const formule = metadata.quantityFormula || entry.minAmount;
+        return objetsDuButin(catalogue, objet, {
+            rarete: (metadata.rarity as string) || 'common',
+            quantite: formule ? resoudreUneQuantite(formule, entry.maxAmount) : 1,
+        });
     }
 
     private static pickWeightedEntry(entries: LootEntry[]): LootEntry | null {
