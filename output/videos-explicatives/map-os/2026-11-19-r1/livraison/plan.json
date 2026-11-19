@@ -1,0 +1,927 @@
+{
+  "schemaVersion": 2,
+  "titre": "Map-OS — le plateau, la projection et les configurations en détail",
+  "jeu": "GM-OS / Map-OS — module natif, contexte de recette Alien",
+  "portee": "module-map-os",
+  "profilRythme": "dynamique-demande-David-2026-11-19",
+  "demandeRythme": "Préférence de David : accélérer un peu les vidéos, retenue sur Alien ; textes plus courts, gestes à vitesse réelle.",
+  "pilote": {
+    "fichier": "C:\\Projet_David\\GM-OS-v5\\Export Dirvers\\corriges\\Alien-1.11.0.gmos-driver",
+    "sha256": "43fdb28cbf7f27fd8e90ccc13a9ed354452c54debfdd2c9fb33b0bda836132fb",
+    "id": "custom-1786696751491",
+    "version": "1.11.0"
+  },
+  "campagne": {
+    "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\Map-OS-Orphee-TOURNAGE.gmos",
+    "sha256": "0cafa7984ecde1ce2f097b072cdabcac8ff4b9b8a3c49b87b78c2c5cbaa12226",
+    "id": "recette-alien-campagne-orphee",
+    "nom": "TOURNAGE MAP-OS — Orphée",
+    "type": "test"
+  },
+  "moduleExterne": {
+    "present": false,
+    "raison": "Map-OS est un module natif transversal. Les entrées IA et matériels physiques sont repérées sans appel externe."
+  },
+  "presentation": {
+    "mode": "texte",
+    "langue": "fr-FR"
+  },
+  "lecture": {
+    "motsParMinute": 125,
+    "caracteresParSeconde": 14,
+    "minimumMs": 5000,
+    "installationMs": 800,
+    "margeMs": 1200,
+    "caracteresParLigne": 46,
+    "lignesMaximum": 3
+  },
+  "rythme": {
+    "avantGesteMs": 1000,
+    "stabilisationResultatMs": 700,
+    "apresResultatMs": 2500
+  },
+  "chapitres": [
+    {
+      "id": "reperes",
+      "titre": "Repères et préparation"
+    },
+    {
+      "id": "preparer",
+      "titre": "Plan, grille, navigation et acteurs"
+    },
+    {
+      "id": "projection",
+      "titre": "Projection vers le Player Hub"
+    },
+    {
+      "id": "brouillard",
+      "titre": "Brouillard et pings"
+    },
+    {
+      "id": "pions",
+      "titre": "Pions et tour de combat"
+    },
+    {
+      "id": "effets",
+      "titre": "Magie, météo et calques"
+    },
+    {
+      "id": "zones",
+      "titre": "Zones de danger et limites actuelles"
+    },
+    {
+      "id": "configurations",
+      "titre": "Configurations, persistance et vidéo"
+    },
+    {
+      "id": "zones-suite-2",
+      "titre": "Zones de danger et limites actuelles — suite"
+    },
+    {
+      "id": "configurations-suite-2",
+      "titre": "Configurations, persistance et vidéo — suite"
+    },
+    {
+      "id": "projection-suite-2",
+      "titre": "Projection vers le Player Hub — suite"
+    },
+    {
+      "id": "reperes-suite-2",
+      "titre": "Repères et préparation — suite"
+    },
+    {
+      "id": "bilan",
+      "titre": "Récapitulatif"
+    }
+  ],
+  "sequences": [
+    {
+      "id": "reperes",
+      "chapitre": "reperes",
+      "intention": "Repérer les trois parties de l’écran.",
+      "avant": "Map-OS s’appelle Cartographie dans la barre latérale.",
+      "geste": "Repérer les trois parties de l’écran.",
+      "apres": "Plan de recette et campagne Orphée. Aucun personnage personnel.",
+      "attendu": "En-tête, barre de jeu et réglages disponibles.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "importer",
+      "chapitre": "preparer",
+      "intention": "Importer et sélectionner le plan de recette.",
+      "avant": "Importer Média ouvre la bibliothèque d’images et de vidéos.",
+      "geste": "Importer et sélectionner le plan de recette.",
+      "apres": "Utiliser charge le plan ; Échap ferme la bibliothèque.",
+      "attendu": "Image 960 × 640 chargée, aucune projection.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "grille",
+      "chapitre": "preparer",
+      "intention": "Activer et régler la grille.",
+      "avant": "La taille de grille se règle en pixels de l’image.",
+      "geste": "Activer et régler la grille.",
+      "apres": "40 pixels par case et opacité 40 %. Le bouton blanc réinitialise la couleur.",
+      "attendu": "Grille active, taille 40, couleur #ffffff, opacité 0,4.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "navigation",
+      "chapitre": "preparer",
+      "intention": "Zoomer, déplacer puis recadrer.",
+      "avant": "La molette zoome ; le bouton central déplace la vue.",
+      "geste": "Zoomer, déplacer puis recadrer.",
+      "apres": "Recadrer la Vue ajuste de nouveau le plan à l’écran.",
+      "attendu": "Zoom et cadrage changés puis réajustés.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "acteurs",
+      "chapitre": "preparer",
+      "intention": "Invoquer la rencontre de recette avec Eli et Tor.",
+      "avant": "Les pions viennent des combattants de Combat-OS.",
+      "geste": "Invoquer la rencontre de recette avec Eli et Tor.",
+      "apres": "Deux acteurs pour le plateau. Aucun jet de combat dans ce parcours.",
+      "attendu": "Deux combattants liés, Santé inchangée.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "pions-poser",
+      "chapitre": "preparer",
+      "intention": "Ajouter les deux pions puis les espacer.",
+      "avant": "Le bouton + pose un combattant sur la carte.",
+      "geste": "Ajouter les deux pions puis les espacer.",
+      "apres": "Le pion est lié au combattant ; les positions se règlent ici.",
+      "attendu": "Deux pions liés à Eli et Tor.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "ouvrir-hub",
+      "chapitre": "projection",
+      "intention": "Ouvrir le vrai Player Hub local.",
+      "avant": "Le bouton Player Hub ouvre la vue de la table.",
+      "geste": "Ouvrir le vrai Player Hub local.",
+      "apres": "Deux fenêtres réelles : meneur et joueurs.",
+      "attendu": "Fenêtre Hub ouverte avec son propre enregistrement.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "projeter",
+      "chapitre": "projection",
+      "intention": "Choisir Synchroniser Player Hub.",
+      "avant": "Projeter la Carte propose le Hub ou les moniteurs.",
+      "geste": "Choisir Synchroniser Player Hub.",
+      "apres": "L’en-tête confirme la projection vers le Player Hub.",
+      "attendu": "Carte et état projetés reçus par le Hub.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "hub-noir",
+      "chapitre": "projection",
+      "intention": "Observer le vrai Hub avant toute révélation.",
+      "avant": "Une carte jamais explorée reste noire côté joueurs.",
+      "geste": "Observer le vrai Hub avant toute révélation.",
+      "apres": "Le brouillard est opaque ; le meneur distingue le plan à travers.",
+      "attendu": "Brouillard opaque rendu dans le Hub.",
+      "surface": "hub",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "calque-fog",
+      "chapitre": "brouillard",
+      "intention": "Masquer uniquement le calque du meneur.",
+      "avant": "Éteindre votre calque de brouillard aide à préparer.",
+      "geste": "Masquer uniquement le calque du meneur.",
+      "apres": "Le plan est dégagé chez vous. Le Hub reste dans le noir.",
+      "attendu": "Calque MJ éteint ; brouillard projeté inchangé.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "reveler-zone",
+      "chapitre": "brouillard",
+      "intention": "Rallumer le calque puis révéler une zone et confirmer.",
+      "avant": "Révéler + Zone dégage une pièce par rectangle.",
+      "geste": "Rallumer le calque puis révéler une zone et confirmer.",
+      "apres": "Le rectangle est ouvert. Aucun calcul de murs ou de ligne de vue.",
+      "attendu": "Pixels du brouillard effacés dans la zone dessinée.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "hub-revele",
+      "chapitre": "brouillard",
+      "intention": "Cadrer le plateau du Hub.",
+      "avant": "Comparons la zone révélée sur la vue des joueurs.",
+      "geste": "Cadrer le plateau du Hub.",
+      "apres": "La pièce est visible ; le reste demeure opaque.",
+      "attendu": "Zone transparente et noir extérieur dans le vrai Hub.",
+      "surface": "hub",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "pinceau",
+      "chapitre": "brouillard",
+      "intention": "Révéler un passage au pinceau.",
+      "avant": "Le Pinceau permet de suivre un couloir à main levée.",
+      "geste": "Révéler un passage au pinceau.",
+      "apres": "Le tracé retire le brouillard sans ouvrir les pièces voisines.",
+      "attendu": "Brouillard modifié par le geste libre.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "masquer-rond",
+      "chapitre": "brouillard",
+      "intention": "Refermer une partie du passage et confirmer.",
+      "avant": "Masquer remet du brouillard ; Rond fixe un rayon.",
+      "geste": "Refermer une partie du passage et confirmer.",
+      "apres": "Ce geste corrige la visibilité, sans déplacer les pions.",
+      "attendu": "Cercle opaque ajouté, pions conservés.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "tout-masquer",
+      "chapitre": "brouillard",
+      "intention": "Confirmer le masquage intégral.",
+      "avant": "Tout masquer agit sur l’ensemble de la carte.",
+      "geste": "Confirmer le masquage intégral.",
+      "apres": "Les zones explorées sont refermées pour la table.",
+      "attendu": "Brouillard opaque sur toute la carte.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "ping-joueur",
+      "chapitre": "brouillard",
+      "intention": "Cliquer sur le plateau du Hub pour envoyer un ping.",
+      "avant": "Le joueur peut signaler un point même dans le noir.",
+      "geste": "Cliquer sur le plateau du Hub pour envoyer un ping.",
+      "apres": "Le ping est éphémère. Il ne révèle pas la carte.",
+      "attendu": "Ping réel reçu par le meneur, brouillard inchangé.",
+      "surface": "hub",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "tout-reveler",
+      "chapitre": "brouillard",
+      "intention": "Confirmer la révélation complète.",
+      "avant": "Tout révéler montre l’intégralité du plan aux joueurs.",
+      "geste": "Confirmer la révélation complète.",
+      "apres": "En partie, ce geste sensible est protégé par le régime Table.",
+      "attendu": "Brouillard transparent et projection complète.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "deplacer-mj",
+      "chapitre": "pions",
+      "intention": "Déplacer Eli côté meneur.",
+      "avant": "Pions sélectionné : glissez le pion d’Eli sur le plateau.",
+      "geste": "Déplacer Eli côté meneur.",
+      "apres": "La grille sert de repère ; aucun coût de mouvement n’est débité.",
+      "attendu": "Position d’Eli modifiée et reçue par le Hub.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "cacher-tor",
+      "chapitre": "pions",
+      "intention": "Cacher Tor avec Espace puis vérifier la projection relancée.",
+      "avant": "Activez l’œil de Tor avec Espace, puis relancez la projection.",
+      "geste": "Cacher Tor avec Espace puis vérifier la projection relancée.",
+      "apres": "Tor reste grisé chez le meneur, même sur une zone révélée.",
+      "attendu": "Tor isVisible false, présent dans les données de la carte.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "hub-cache",
+      "chapitre": "pions",
+      "intention": "Observer le pion d’Eli et l’absence de Tor.",
+      "avant": "Vérifions la différence sur le vrai Hub.",
+      "geste": "Observer le pion d’Eli et l’absence de Tor.",
+      "apres": "Tor est caché par son réglage, et non par le brouillard.",
+      "attendu": "Pion Tor non affiché, Eli visible.",
+      "surface": "hub",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "montrer-tor",
+      "chapitre": "pions",
+      "intention": "Rendre le pion de Tor visible.",
+      "avant": "Rétablissez Tor avec Espace et relancez la projection.",
+      "geste": "Rendre le pion de Tor visible.",
+      "apres": "La visibilité du pion et le brouillard sont deux commandes distinctes.",
+      "attendu": "Tor à nouveau visible dans le Hub.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "deplacer-hub",
+      "chapitre": "pions",
+      "intention": "Déplacer Tor depuis la vue joueur.",
+      "avant": "Sur le Player Hub, un pion visible peut être déplacé.",
+      "geste": "Déplacer Tor depuis la vue joueur.",
+      "apres": "Même un adversaire peut être déplacé : la confiance de table compte.",
+      "attendu": "Nouvelle position reçue côté meneur.",
+      "surface": "hub",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "tour-combat",
+      "chapitre": "pions",
+      "intention": "Avancer le tour et observer le retour spécifique à Alien.",
+      "avant": "Suivant fait avancer le tour sans quitter la carte.",
+      "geste": "Avancer le tour et observer le retour spécifique à Alien.",
+      "apres": "Avec Alien, Précédent renvoie au choix d’une carte d’initiative.",
+      "attendu": "Index avancé ; retour Alien signalé, positions et combattants conservés.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "retirer-pion",
+      "chapitre": "pions",
+      "intention": "Retirer Tor de la carte puis le reposer avec +.",
+      "avant": "Attention : le clic droit supprime directement le pion.",
+      "geste": "Retirer Tor de la carte puis le reposer avec +.",
+      "apres": "Le combattant reste dans Combat-OS. Ce geste ne le supprime pas.",
+      "attendu": "Pion retiré puis ajouté, liste des combattants inchangée.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "magie-sphere",
+      "chapitre": "effets",
+      "intention": "Dessiner une sphère de feu.",
+      "avant": "Magie propose sept styles et quatre formes.",
+      "geste": "Dessiner une sphère de feu.",
+      "apres": "C’est une annotation visuelle : aucun dégât automatique n’est appliqué.",
+      "attendu": "Un effet circulaire de feu présent ; Santé inchangée.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "magie-cone",
+      "chapitre": "effets",
+      "intention": "Dessiner un cône d’Arcane orienté.",
+      "avant": "Pour un cône ou une ligne, le glissement donne la direction.",
+      "geste": "Dessiner un cône d’Arcane orienté.",
+      "apres": "Le second effet conserve sa forme, sa taille et son orientation.",
+      "attendu": "Deux effets, cône orienté selon le glissement.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "retirer-magie",
+      "chapitre": "effets",
+      "intention": "Retirer la sphère de feu.",
+      "avant": "Clic droit avec Magie retire un effet proche.",
+      "geste": "Retirer la sphère de feu.",
+      "apres": "La liste des effets permet aussi une suppression précise.",
+      "attendu": "Sphère retirée, cône conservé.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "meteo",
+      "chapitre": "effets",
+      "intention": "Choisir la pluie, son intensité et la nuit.",
+      "avant": "Pluie, neige et brume habillent la carte.",
+      "geste": "Choisir la pluie, son intensité et la nuit.",
+      "apres": "La brume atmosphérique est distincte du brouillard de guerre.",
+      "attendu": "Pluie à 50 %, moment Nuit, état projeté synchronisé.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "hub-ambiance",
+      "chapitre": "effets",
+      "intention": "Observer leur effet sur le Hub.",
+      "avant": "La météo et la teinte de nuit suivent la projection.",
+      "geste": "Observer leur effet sur le Hub.",
+      "apres": "Ces effets d’ambiance ne changent pas les zones explorées.",
+      "attendu": "Pluie et teinte présentes, brouillard inchangé.",
+      "surface": "hub",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "calques-locaux",
+      "chapitre": "effets",
+      "intention": "Éteindre puis rallumer Pions & Acteurs côté meneur.",
+      "avant": "Le calque Pions & Acteurs peut dégager la vue du meneur.",
+      "geste": "Éteindre puis rallumer Pions & Acteurs côté meneur.",
+      "apres": "Les pions du Hub restent affichés pendant cette préparation.",
+      "attendu": "Calque local sans suppression des pions projetés.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "calques-partages",
+      "chapitre": "effets",
+      "intention": "Comparer les calques locaux, puis couper météo et teinte à la source.",
+      "avant": "Pour couper l’ambiance du Hub, choisissez Aucun et Jour.",
+      "geste": "Comparer les calques locaux, puis couper météo et teinte à la source.",
+      "apres": "Pendant cet essai, les calques locaux seuls n’ont pas coupé l’ambiance du Hub.",
+      "attendu": "Calques locaux non transmis ; paramètres Aucun et Jour reçus par le Hub.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "modele-zone",
+      "chapitre": "zones",
+      "intention": "Créer un modèle Gravats, terrain difficile à coût ×2.",
+      "avant": "Gérer les Modèles prépare des zones réutilisables.",
+      "geste": "Créer un modèle Gravats, terrain difficile à coût ×2.",
+      "apres": "Nom, couleur et propriétés sont conservés dans le modèle.",
+      "attendu": "Modèle MAP-OS — Gravats, terrain difficile, coût 2.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "danger",
+      "chapitre": "zones",
+      "intention": "Dessiner la zone Gravats puis y déplacer Eli.",
+      "avant": "Danger pose une zone issue du modèle choisi.",
+      "geste": "Dessiner la zone Gravats puis y déplacer Eli.",
+      "apres": "La zone repère les pions à l’intérieur. Aucun dégât automatique.",
+      "attendu": "Zone liée au modèle, coût 2, Eli dans activeTokenIds.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "formes-limite",
+      "chapitre": "zones",
+      "intention": "Choisir Zone Rectangulaire et dessiner une seconde zone.",
+      "avant": "Limite constatée : la forme choisie n’est pas toujours appliquée.",
+      "geste": "Choisir Zone Rectangulaire et dessiner une seconde zone.",
+      "apres": "Dans cette version, la zone créée reste circulaire.",
+      "attendu": "UI rectangulaire, zone réelle de type circle.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "sauver-config",
+      "chapitre": "configurations",
+      "intention": "Nommer et sauver la configuration du plateau.",
+      "avant": "Sauver l’état capture une configuration complète.",
+      "geste": "Nommer et sauver la configuration du plateau.",
+      "apres": "Plan, brouillard, pions, zones, magie, grille et ambiance sont inclus.",
+      "attendu": "Preset complet nommé MAP-OS — Atelier préparé.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "zones-sur-noir",
+      "chapitre": "zones-suite-2",
+      "intention": "Masquer de nouveau toute la carte.",
+      "avant": "Ne comptez pas sur le brouillard pour cacher une zone de danger.",
+      "geste": "Masquer de nouveau toute la carte.",
+      "apres": "Le plan redevient opaque ; comparons maintenant le Hub.",
+      "attendu": "Brouillard opaque, zones de danger toujours présentes.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "hub-zones-noir",
+      "chapitre": "zones-suite-2",
+      "intention": "Observer les zones de danger sur le noir.",
+      "avant": "Voici la limite de superposition observée sur le Hub.",
+      "geste": "Observer les zones de danger sur le noir.",
+      "apres": "Les zones restent visibles. Elles ne conviennent pas aux pièges secrets.",
+      "attendu": "Zones visibles au-dessus du brouillard opaque.",
+      "surface": "hub",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "changer-carte",
+      "chapitre": "configurations-suite-2",
+      "intention": "Importer et choisir le plan Pont Nord.",
+      "avant": "Charger une autre image ne remplace pas toute la configuration.",
+      "geste": "Importer et choisir le plan Pont Nord.",
+      "apres": "Son brouillard démarre en noir. Pions et zones restent en place.",
+      "attendu": "Nouvelle image, brouillard vierge, autres éléments conservés.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "revenir-carte",
+      "chapitre": "configurations-suite-2",
+      "intention": "Revenir à l’image Atelier des Quais.",
+      "avant": "Le brouillard est enregistré sous l’identifiant du média.",
+      "geste": "Revenir à l’image Atelier des Quais.",
+      "apres": "Elle retrouve son dernier masquage, indépendamment du Pont Nord.",
+      "attendu": "Image d’origine et son brouillard retrouvés.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "charger-config",
+      "chapitre": "configurations-suite-2",
+      "intention": "Charger Atelier préparé.",
+      "avant": "Charger une configuration remplace l’état courant, après confirmation.",
+      "geste": "Charger Atelier préparé.",
+      "apres": "L’état capturé revient, y compris son brouillard et ses effets.",
+      "attendu": "État actuel comparé aux valeurs du preset.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "recharger",
+      "chapitre": "configurations-suite-2",
+      "intention": "Recharger puis revenir à Cartographie.",
+      "avant": "La recharge teste ce qui persiste, sans garder la projection.",
+      "geste": "Recharger puis revenir à Cartographie.",
+      "apres": "Pions et zones restent. Magie effacée, brouillard noir ; projection arrêtée.",
+      "attendu": "Preset et état persistant retrouvés, magie vide, brouillard opaque et projection arrêtée.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "restaurer-effet",
+      "chapitre": "configurations-suite-2",
+      "intention": "Charger Atelier préparé de nouveau.",
+      "avant": "Le preset conserve les effets même après rechargement.",
+      "geste": "Charger Atelier préparé de nouveau.",
+      "apres": "Le cône d’Arcane revient avec les autres réglages sauvés.",
+      "attendu": "Effet magique et positions restaurés par le preset.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "video-audio",
+      "chapitre": "configurations-suite-2",
+      "intention": "Relancer la projection, importer la vidéo et régler volume et coupure.",
+      "avant": "Carte vidéo : relancez la projection, puis réglez l’audio.",
+      "geste": "Relancer la projection, importer la vidéo et régler volume et coupure.",
+      "apres": "Le film reste sans son. La sortie physique n’est pas testée.",
+      "attendu": "Vidéo chargée sur les deux vues, volume 30 %, coupure synchronisée.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "couper-projection",
+      "chapitre": "projection-suite-2",
+      "intention": "Couper la projection de la carte.",
+      "avant": "Arrêter la Projection rend la main au décor du Hub.",
+      "geste": "Couper la projection de la carte.",
+      "apres": "Le plateau du meneur est conservé ; il n’est plus diffusé.",
+      "attendu": "Projection nulle et carte absente du Hub.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "entrees-ia",
+      "chapitre": "reperes-suite-2",
+      "intention": "Repérer leurs deux entrées dans l’interface.",
+      "avant": "Vision de l’Oracle et Cortex Tactique utilisent l’IA.",
+      "geste": "Repérer leurs deux entrées dans l’interface.",
+      "apres": "Ces appels externes ne sont pas exécutés dans cette démonstration.",
+      "attendu": "Deux boutons repérés, aucune génération inventée.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    },
+    {
+      "id": "bilan",
+      "chapitre": "bilan",
+      "intention": "Revenir au plateau préparé pour conclure.",
+      "avant": "Préparez, projetez, vérifiez le Hub, puis sauvez votre configuration.",
+      "geste": "Revenir au plateau préparé pour conclure.",
+      "apres": "Cartes, campagne de test, transcription et chapitres accompagnent le film.",
+      "attendu": "Plateau restauré, projection arrêtée et états finaux consignés.",
+      "surface": "mj",
+      "lectureSupplementaireMs": 0,
+      "sources": [
+        "documentation/User Guides/22-Map-OS-le-plateau.md",
+        "documentation/User Guides/23-Map-OS-calques-et-effets.md",
+        "src/modules/map/MapDashboard.tsx",
+        "src/modules/map/components/MapControls.tsx",
+        "src/modules/map/useMapStore.ts"
+      ]
+    }
+  ]
+}

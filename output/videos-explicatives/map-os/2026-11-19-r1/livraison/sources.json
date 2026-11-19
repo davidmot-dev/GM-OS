@@ -1,0 +1,109 @@
+{
+  "date": "2026-11-19",
+  "module": "Map-OS natif",
+  "buildOrigine": "19 novembre 2026 14h39",
+  "pilote": {
+    "fichier": "C:\\Projet_David\\GM-OS-v5\\Export Dirvers\\corriges\\Alien-1.11.0.gmos-driver",
+    "sha256": "43fdb28cbf7f27fd8e90ccc13a9ed354452c54debfdd2c9fb33b0bda836132fb",
+    "id": "custom-1786696751491",
+    "version": "1.11.0"
+  },
+  "campagne": {
+    "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\Map-OS-Orphee-TOURNAGE.gmos",
+    "sha256": "0cafa7984ecde1ce2f097b072cdabcac8ff4b9b8a3c49b87b78c2c5cbaa12226",
+    "id": "recette-alien-campagne-orphee",
+    "nom": "TOURNAGE MAP-OS — Orphée",
+    "type": "test"
+  },
+  "build": [
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\build-fixe\\dist\\index.html",
+      "sha256": "e4742c59189ddb1a4c8a64de75389bdca8acb0a61afb483d6f3ab34fe5673c11"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\build-fixe\\dist-electron\\main.js",
+      "sha256": "b74d355ddbfcc215fad9ec02f3ecbf347f9c8fe32ab2be127d7ae5015834381f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\build-fixe\\dist\\assets\\index-C-NhBaUW.js",
+      "sha256": "9116a07f2be79ef8d4ffcacf74cc84ec643ecbfb74d5f26fe90cb6ce86889de8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\build-fixe\\dist\\assets\\index-BM9iYs8l.css",
+      "sha256": "d780e57a2f5a018b3067c4df690cf6c13b2c52deae7d76e055da76a81eab26db"
+    }
+  ],
+  "fichiers": [
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\map\\MapDashboard.tsx",
+      "sha256": "907d6c2203c46e10fe63297a07cfa9bf7c8eb082213a93768be3567f5108f1fe"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\map\\components\\MapControls.tsx",
+      "sha256": "ebd6baf37c0bead2537473630d3cd853b1833e37998707f6c13e0b12b644852d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\map\\useMapStore.ts",
+      "sha256": "05e7d9b1f8bec6c4d86ee71cadbb02772ddbfab11d0116d8d3b3f6fbee061356"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\map\\useMapUIStore.ts",
+      "sha256": "e8cf4defcd07b57364b23b24a45a2c57ed8f456f2863f32987d1a3df8992dab9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\map\\hooks\\useMapInteraction.ts",
+      "sha256": "8a84d42e4f37e7b111616e78d73c404fa210ea158c5b03fc64b10e0b1e5a8840"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\map\\components\\MapCanvas.tsx",
+      "sha256": "4b751fc2a00a8e042d6d9359135c24270b2e0a9840734334903635854ab0d217"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\map\\components\\PlayerMapCanvas.tsx",
+      "sha256": "6351361db29acffdc04ab615abcc78cd4a8265dbe4cace462106a3aa03b051cc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\map\\components\\MapTokenNode.tsx",
+      "sha256": "1506be7bd5aa98b4b38488a030b7d1d8af6e71a8f03ffaa62ae0829218a5a6e3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\map\\components\\MapLayersPanel.tsx",
+      "sha256": "c45f5ed33b8df9efe8723ab78c05dc232d712a6e50590f2e3c715f3aace848f9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\map\\components\\MapPresetGallery.tsx",
+      "sha256": "18b0c051caef4ef451272524318f68f8ca608050050e5faa13db1f0e44081faf"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\map\\components\\DangerZonePresetEditor.tsx",
+      "sha256": "2800eb6f3689ef47caebedf59c4c65a10dce6db68acc85c94ae2bfa305198eb2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\documentation\\User Guides\\22-Map-OS-le-plateau.md",
+      "sha256": "62d6f5582d665ce3a7b7907ff43a48b30f32cc71c32bbb2a2d89ad552a896da6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\documentation\\User Guides\\23-Map-OS-calques-et-effets.md",
+      "sha256": "e4a905e8f5b01c07557e9ba658e2ff91c1b640bf34e9e9771d550eef594e335b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\e2e\\lancerGmOs.ts",
+      "sha256": "42c90efa2e331bd67a407d2c1f1e5061b3358b0cd88ed366689aa2e2b712d340"
+    }
+  ],
+  "medias": [
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\medias\\01-Atelier-des-Quais.png",
+      "sha256": "4d8b00fc2dc80cb7d27ff2787d8150ba37c319b27cb51bd2e1db3e39549d6d96"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\medias\\02-Pont-Nord.png",
+      "sha256": "164ebf18dcc762780fcbda4356c341f0501395da93c42c2f5b6287da2b7b86af"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\medias\\03-Atelier-anime.mp4",
+      "sha256": "c35f065863eca4e05f474d2f8d9786ee10f1b95d57d9a1fe275557a55ce8d306"
+    }
+  ],
+  "note": "Copie fixe du build existant et copie du launcher officiel dont seuls la racine du dépôt et le point d’entrée ont été adaptés. Toutes ses protections restent présentes. Aucun rebuild, changement produit, usage de données personnelles ou appel IA externe."
+}

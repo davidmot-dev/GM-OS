@@ -1,0 +1,8 @@
+{
+  "joueurs": 3,
+  "pnj": 12,
+  "version": "1.11.0",
+  "autresVoyageursConserves": true,
+  "sante": 4,
+  "stress": 1
+}

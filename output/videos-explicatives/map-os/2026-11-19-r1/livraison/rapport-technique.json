@@ -1,0 +1,479 @@
+{
+  "profilRythme": "dynamique-demande-David-2026-11-19",
+  "demandeRythme": "Préférence de David : accélérer un peu les vidéos, retenue sur Alien ; textes plus courts, gestes à vitesse réelle.",
+  "titre": "Map-OS — le plateau, la projection et les configurations en détail",
+  "mode": "texte",
+  "voix": false,
+  "pisteAudio": false,
+  "planSha256": "5d286e939764962e2af35bb38d0f4622223d4c405b38d1bc466b9799122eecdc",
+  "lectureSha256": "f9dc30dc4a4f573c26ef1b73071bbc8b0f10e4f9df022118e04a1f67075529dc",
+  "prisesSha256": "ffa1c0418300c2ba919f80060e526842c02eae9174382c0d1735ef0f24017fa7",
+  "videoSha256": "cd29bd8103cbf6b1d2fda61a7c70ce23b423db0c1323569eaaeb037ea1074cfb",
+  "dureeSecondes": 1122.48,
+  "decodageIntegral": true,
+  "acceleration": false,
+  "chapitres": [
+    {
+      "id": "reperes",
+      "titre": "Repères et préparation",
+      "debutMs": 0,
+      "finMs": 18720
+    },
+    {
+      "id": "preparer",
+      "titre": "Plan, grille, navigation et acteurs",
+      "debutMs": 18720,
+      "finMs": 135160
+    },
+    {
+      "id": "projection",
+      "titre": "Projection vers le Player Hub",
+      "debutMs": 135160,
+      "finMs": 202960
+    },
+    {
+      "id": "brouillard",
+      "titre": "Brouillard et pings",
+      "debutMs": 202960,
+      "finMs": 383480
+    },
+    {
+      "id": "pions",
+      "titre": "Pions et tour de combat",
+      "debutMs": 383480,
+      "finMs": 555880
+    },
+    {
+      "id": "effets",
+      "titre": "Magie, météo et calques",
+      "debutMs": 555880,
+      "finMs": 734800
+    },
+    {
+      "id": "zones",
+      "titre": "Zones de danger et limites actuelles",
+      "debutMs": 734800,
+      "finMs": 829680
+    },
+    {
+      "id": "configurations",
+      "titre": "Configurations, persistance et vidéo",
+      "debutMs": 829680,
+      "finMs": 855800
+    },
+    {
+      "id": "zones-suite-2",
+      "titre": "Zones de danger et limites actuelles — suite",
+      "debutMs": 855800,
+      "finMs": 900040
+    },
+    {
+      "id": "configurations-suite-2",
+      "titre": "Configurations, persistance et vidéo — suite",
+      "debutMs": 900040,
+      "finMs": 1057840
+    },
+    {
+      "id": "projection-suite-2",
+      "titre": "Projection vers le Player Hub — suite",
+      "debutMs": 1057840,
+      "finMs": 1078480
+    },
+    {
+      "id": "reperes-suite-2",
+      "titre": "Repères et préparation — suite",
+      "debutMs": 1078480,
+      "finMs": 1099240
+    },
+    {
+      "id": "bilan",
+      "titre": "Récapitulatif",
+      "debutMs": 1099240,
+      "finMs": 1122480
+    }
+  ],
+  "segments": [
+    {
+      "id": "reperes",
+      "fichier": "segments/000.mp4",
+      "dureeMs": 18720,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Cartographie vide, atelier de recette identifié."
+    },
+    {
+      "id": "importer",
+      "fichier": "segments/001.mp4",
+      "dureeMs": 21880,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Image importée et chargée, 960×640 ; aucune projection."
+    },
+    {
+      "id": "grille",
+      "fichier": "segments/002.mp4",
+      "dureeMs": 23920,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Grille 40px, opacité40%, couleur blanche."
+    },
+    {
+      "id": "navigation",
+      "fichier": "segments/003.mp4",
+      "dureeMs": 20600,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Zoom molette et pan central exécutés, vue recadrée."
+    },
+    {
+      "id": "acteurs",
+      "fichier": "segments/004.mp4",
+      "dureeMs": 25480,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Eli et Tor invoqués, deux combattants, aucun jet."
+    },
+    {
+      "id": "pions-poser",
+      "fichier": "segments/005.mp4",
+      "dureeMs": 24560,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Deux pions liés et espacés sur le plan."
+    },
+    {
+      "id": "ouvrir-hub",
+      "fichier": "segments/006.mp4",
+      "dureeMs": 23240,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Vrai Player Hub natif ouvert, deuxième source à mire indépendante."
+    },
+    {
+      "id": "projeter",
+      "fichier": "segments/007.mp4",
+      "dureeMs": 23160,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Carte et réglages reçus dans le vrai Hub."
+    },
+    {
+      "id": "hub-noir",
+      "fichier": "segments/008.mp4",
+      "dureeMs": 21400,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@d2149656952d6542699ceb0c5288d528.webm",
+      "sourceSha256": "2d1cc4e1cb28935130784196bae2158871e21d10e016e46996fcaa63bc54b68a",
+      "observation": "Plan entièrement masqué : pixel du Hub opaque."
+    },
+    {
+      "id": "calque-fog",
+      "fichier": "segments/009.mp4",
+      "dureeMs": 20760,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Calque MJ éteint, Hub toujours opaque."
+    },
+    {
+      "id": "reveler-zone",
+      "fichier": "segments/010.mp4",
+      "dureeMs": 28400,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Rectangle révélé et confirmé, pas de calcul de murs."
+    },
+    {
+      "id": "hub-revele",
+      "fichier": "segments/011.mp4",
+      "dureeMs": 18960,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@d2149656952d6542699ceb0c5288d528.webm",
+      "sourceSha256": "2d1cc4e1cb28935130784196bae2158871e21d10e016e46996fcaa63bc54b68a",
+      "observation": "Accueil visible, Réserve encore opaque."
+    },
+    {
+      "id": "pinceau",
+      "fichier": "segments/012.mp4",
+      "dureeMs": 23480,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Passage révélé au pinceau."
+    },
+    {
+      "id": "masquer-rond",
+      "fichier": "segments/013.mp4",
+      "dureeMs": 26040,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Cercle de brouillard ajouté, pions conservés."
+    },
+    {
+      "id": "tout-masquer",
+      "fichier": "segments/014.mp4",
+      "dureeMs": 21600,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Toute la carte opaque après confirmation."
+    },
+    {
+      "id": "ping-joueur",
+      "fichier": "segments/015.mp4",
+      "dureeMs": 19120,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@d2149656952d6542699ceb0c5288d528.webm",
+      "sourceSha256": "2d1cc4e1cb28935130784196bae2158871e21d10e016e46996fcaa63bc54b68a",
+      "observation": "Ping cyan éphémère du Hub reçu côté MJ, brouillard conservé."
+    },
+    {
+      "id": "tout-reveler",
+      "fichier": "segments/016.mp4",
+      "dureeMs": 22160,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Tout révélé après confirmation, table en atelier."
+    },
+    {
+      "id": "deplacer-mj",
+      "fichier": "segments/017.mp4",
+      "dureeMs": 25400,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Eli déplacé depuis le MJ et reçu par le Hub."
+    },
+    {
+      "id": "cacher-tor",
+      "fichier": "segments/018.mp4",
+      "dureeMs": 27560,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Tor conservé et grisé au MJ, visibilité contrôlée après éventuelle relance de la projection."
+    },
+    {
+      "id": "hub-cache",
+      "fichier": "segments/019.mp4",
+      "dureeMs": 19320,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@d2149656952d6542699ceb0c5288d528.webm",
+      "sourceSha256": "2d1cc4e1cb28935130784196bae2158871e21d10e016e46996fcaa63bc54b68a",
+      "observation": "Tor caché dans le Hub alors que le plan est révélé."
+    },
+    {
+      "id": "montrer-tor",
+      "fichier": "segments/020.mp4",
+      "dureeMs": 26000,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Tor visible à nouveau."
+    },
+    {
+      "id": "deplacer-hub",
+      "fichier": "segments/021.mp4",
+      "dureeMs": 23520,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@d2149656952d6542699ceb0c5288d528.webm",
+      "sourceSha256": "2d1cc4e1cb28935130784196bae2158871e21d10e016e46996fcaa63bc54b68a",
+      "observation": "Tor déplacé depuis le Hub, nouvelle position reçue par le MJ."
+    },
+    {
+      "id": "tour-combat",
+      "fichier": "segments/022.mp4",
+      "dureeMs": 23800,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Tour avancé ; retour spécifique Alien signalé, positions et combattants conservés."
+    },
+    {
+      "id": "retirer-pion",
+      "fichier": "segments/023.mp4",
+      "dureeMs": 26800,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Clic droit retire le pion directement ; combattant conservé, pion reposé."
+    },
+    {
+      "id": "magie-sphere",
+      "fichier": "segments/024.mp4",
+      "dureeMs": 29960,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Sphère de feu créée, aucune Santé débitée."
+    },
+    {
+      "id": "magie-cone",
+      "fichier": "segments/025.mp4",
+      "dureeMs": 27600,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Cône Arcane orienté par le glissement."
+    },
+    {
+      "id": "retirer-magie",
+      "fichier": "segments/026.mp4",
+      "dureeMs": 20160,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Sphère supprimée au clic droit, cône conservé."
+    },
+    {
+      "id": "meteo",
+      "fichier": "segments/027.mp4",
+      "dureeMs": 25800,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Pluie 50% et Nuit choisis, transmis au Hub."
+    },
+    {
+      "id": "hub-ambiance",
+      "fichier": "segments/028.mp4",
+      "dureeMs": 19200,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@d2149656952d6542699ceb0c5288d528.webm",
+      "sourceSha256": "2d1cc4e1cb28935130784196bae2158871e21d10e016e46996fcaa63bc54b68a",
+      "observation": "Pluie et nuit rendues sur le Hub, état du brouillard conservé."
+    },
+    {
+      "id": "calques-locaux",
+      "fichier": "segments/029.mp4",
+      "dureeMs": 25320,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Pions masqués puis rétablis seulement côté MJ."
+    },
+    {
+      "id": "calques-partages",
+      "fichier": "segments/030.mp4",
+      "dureeMs": 30880,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Les calques seuls restent locaux dans cet essai natif ; Aucun et Jour coupent réellement les ambiances projetées."
+    },
+    {
+      "id": "modele-zone",
+      "fichier": "segments/031.mp4",
+      "dureeMs": 30360,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Modèle Gravats créé, sans action de matériel, coût de terrain2."
+    },
+    {
+      "id": "danger",
+      "fichier": "segments/032.mp4",
+      "dureeMs": 36560,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Gravats circulaires, Eli présent dans la zone ; aucun dégât appliqué."
+    },
+    {
+      "id": "formes-limite",
+      "fichier": "segments/033.mp4",
+      "dureeMs": 27960,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Limite réelle : outil rectangulaire sélectionné, cercle créé."
+    },
+    {
+      "id": "sauver-config",
+      "fichier": "segments/034.mp4",
+      "dureeMs": 26120,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Configuration complète sauvée avec deux pions, deux zones et un effet."
+    },
+    {
+      "id": "zones-sur-noir",
+      "fichier": "segments/035.mp4",
+      "dureeMs": 24960,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Plan opaque ; deux zones restent dans la projection."
+    },
+    {
+      "id": "hub-zones-noir",
+      "fichier": "segments/036.mp4",
+      "dureeMs": 19280,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@d2149656952d6542699ceb0c5288d528.webm",
+      "sourceSha256": "2d1cc4e1cb28935130784196bae2158871e21d10e016e46996fcaa63bc54b68a",
+      "observation": "Anomalie de superposition constatée : zones visibles sur le noir du Hub."
+    },
+    {
+      "id": "changer-carte",
+      "fichier": "segments/037.mp4",
+      "dureeMs": 23560,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Pont Nord neuf et noir ; pions et zones conservés par le changement d’image."
+    },
+    {
+      "id": "revenir-carte",
+      "fichier": "segments/038.mp4",
+      "dureeMs": 23680,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Carte d’origine retrouve son dernier brouillard opaque."
+    },
+    {
+      "id": "charger-config",
+      "fichier": "segments/039.mp4",
+      "dureeMs": 23240,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Configuration chargée après confirmation : valeurs et éléments comparés."
+    },
+    {
+      "id": "recharger",
+      "fichier": "segments/040.mp4",
+      "dureeMs": 28640,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Après recharge : pions, zones et preset retrouvés ; magie vide et brouillard noir observé."
+    },
+    {
+      "id": "restaurer-effet",
+      "fichier": "segments/041.mp4",
+      "dureeMs": 23440,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Le preset restitue le cône après recharge."
+    },
+    {
+      "id": "video-audio",
+      "fichier": "segments/042.mp4",
+      "dureeMs": 35240,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Carte vidéo lue, volume30%, coupure réelle changée ; sorties physiques non testées."
+    },
+    {
+      "id": "couper-projection",
+      "fichier": "segments/043.mp4",
+      "dureeMs": 20640,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Projection arrêtée ; plateau conservé au MJ, retiré du Hub."
+    },
+    {
+      "id": "entrees-ia",
+      "fichier": "segments/044.mp4",
+      "dureeMs": 20760,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Entrées Oracle et Cortex repérées, aucune génération demandée."
+    },
+    {
+      "id": "bilan",
+      "fichier": "segments/045.mp4",
+      "dureeMs": 23240,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\map-os\\2026-11-19-r1\\prises-r1\\page@f7f57fc4cf88ff11a10145b236d0b089.webm",
+      "sourceSha256": "549b735326dd11b9510d76f088e8b7bcf9a9865c61ed67997b35e7fbf20975dc",
+      "observation": "Plateau préparé restauré et conservé, diffusion arrêtée."
+    }
+  ],
+  "cartes": 92,
+  "lecture": {
+    "motsParMinute": 125,
+    "caracteresParSeconde": 14,
+    "minimumMs": 5000,
+    "installationMs": 800,
+    "margeMs": 1200,
+    "caracteresParLigne": 46,
+    "lignesMaximum": 3
+  },
+  "pisteTextesParDefaut": false,
+  "visionnage": "NON EXÉCUTÉ",
+  "confortLectureHumain": "NON ÉVALUÉ — relire toutes les cartes et augmenter leurs durées si nécessaire.",
+  "note": "Calcul et minimums de lecture contrôlés ; ceci ne remplace pas la relecture du film final."
+}

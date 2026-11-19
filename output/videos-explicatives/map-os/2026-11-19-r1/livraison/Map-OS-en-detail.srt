@@ -1,0 +1,450 @@
+1
+00:00:00,000 --> 00:00:07,002
+Map-OS s’appelle Cartographie dans la barre
+latérale.
+
+2
+00:00:09,248 --> 00:00:16,250
+Plan de recette et campagne Orphée. Aucun
+personnage personnel.
+
+3
+00:00:18,720 --> 00:00:25,736
+Importer Média ouvre la bibliothèque d’images
+et de vidéos.
+
+4
+00:00:31,091 --> 00:00:38,103
+Utiliser charge le plan ; Échap ferme la
+bibliothèque.
+
+5
+00:00:40,600 --> 00:00:47,615
+La taille de grille se règle en pixels de
+l’image.
+
+6
+00:00:53,294 --> 00:01:02,017
+40 pixels par case et opacité 40 %. Le bouton
+blanc réinitialise la couleur.
+
+7
+00:01:04,520 --> 00:01:11,521
+La molette zoome ; le bouton central déplace
+la vue.
+
+8
+00:01:15,589 --> 00:01:22,596
+Recadrer la Vue ajuste de nouveau le plan à
+l’écran.
+
+9
+00:01:25,120 --> 00:01:32,133
+Les pions viennent des combattants de
+Combat-OS.
+
+10
+00:01:40,372 --> 00:01:48,133
+Deux acteurs pour le plateau. Aucun jet de
+combat dans ce parcours.
+
+11
+00:01:50,600 --> 00:01:57,603
+Le bouton + pose un combattant sur la carte.
+
+12
+00:02:04,891 --> 00:02:12,661
+Le pion est lié au combattant ; les positions
+se règlent ici.
+
+13
+00:02:15,160 --> 00:02:22,161
+Le bouton Player Hub ouvre la vue de la table.
+
+14
+00:02:28,886 --> 00:02:35,893
+Deux fenêtres réelles : meneur et joueurs.
+
+15
+00:02:38,400 --> 00:02:45,404
+Projeter la Carte propose le Hub ou les
+moniteurs.
+
+16
+00:02:52,032 --> 00:02:59,045
+L’en-tête confirme la projection vers le
+Player Hub.
+
+17
+00:03:01,560 --> 00:03:08,563
+Une carte jamais explorée reste noire côté
+joueurs.
+
+18
+00:03:12,700 --> 00:03:20,468
+Le brouillard est opaque ; le meneur distingue
+le plan à travers.
+
+19
+00:03:22,960 --> 00:03:29,964
+Éteindre votre calque de brouillard aide à
+préparer.
+
+20
+00:03:33,456 --> 00:03:41,223
+Le plan est dégagé chez vous. Le Hub reste
+dans le noir.
+
+21
+00:03:43,720 --> 00:03:50,722
+Révéler + Zone dégage une pièce par rectangle.
+
+22
+00:04:01,352 --> 00:04:09,596
+Le rectangle est ouvert. Aucun calcul de murs
+ou de ligne de vue.
+
+23
+00:04:12,120 --> 00:04:19,128
+Comparons la zone révélée sur la vue des
+joueurs.
+
+24
+00:04:21,541 --> 00:04:28,541
+La pièce est visible ; le reste demeure
+opaque.
+
+25
+00:04:31,080 --> 00:04:38,087
+Le Pinceau permet de suivre un couloir à main
+levée.
+
+26
+00:04:45,077 --> 00:04:52,081
+Le tracé retire le brouillard sans ouvrir les
+pièces voisines.
+
+27
+00:04:54,560 --> 00:05:01,561
+Masquer remet du brouillard ; Rond fixe un
+rayon.
+
+28
+00:05:11,070 --> 00:05:18,080
+Ce geste corrige la visibilité, sans déplacer
+les pions.
+
+29
+00:05:20,600 --> 00:05:27,604
+Tout masquer agit sur l’ensemble de la carte.
+
+30
+00:05:32,672 --> 00:05:39,681
+Les zones explorées sont refermées pour la
+table.
+
+31
+00:05:42,200 --> 00:05:49,204
+Le joueur peut signaler un point même dans le
+noir.
+
+32
+00:05:51,818 --> 00:05:58,818
+Le ping est éphémère. Il ne révèle pas la
+carte.
+
+33
+00:06:01,320 --> 00:06:08,323
+Tout révéler montre l’intégralité du plan aux
+joueurs.
+
+34
+00:06:13,723 --> 00:06:21,005
+En partie, ce geste sensible est protégé par
+le régime Table.
+
+35
+00:06:23,480 --> 00:06:30,483
+Pions sélectionné : glissez le pion d’Eli sur
+le plateau.
+
+36
+00:06:38,598 --> 00:06:46,359
+La grille sert de repère ; aucun coût de
+mouvement n’est débité.
+
+37
+00:06:48,880 --> 00:06:55,888
+Activez l’œil de Tor avec Espace, puis
+relancez la projection.
+
+38
+00:07:06,627 --> 00:07:13,908
+Tor reste grisé chez le meneur, même sur une
+zone révélée.
+
+39
+00:07:16,440 --> 00:07:23,440
+Vérifions la différence sur le vrai Hub.
+
+40
+00:07:25,945 --> 00:07:33,226
+Tor est caché par son réglage, et non par le
+brouillard.
+
+41
+00:07:35,760 --> 00:07:42,766
+Rétablissez Tor avec Espace et relancez la
+projection.
+
+42
+00:07:52,004 --> 00:07:59,285
+La visibilité du pion et le brouillard sont
+deux commandes distinctes.
+
+43
+00:08:01,760 --> 00:08:08,764
+Sur le Player Hub, un pion visible peut être
+déplacé.
+
+44
+00:08:14,981 --> 00:08:22,750
+Même un adversaire peut être déplacé : la
+confiance de table compte.
+
+45
+00:08:25,280 --> 00:08:32,283
+Suivant fait avancer le tour sans quitter la
+carte.
+
+46
+00:08:39,598 --> 00:08:46,599
+Avec Alien, Précédent renvoie au choix d’une
+carte d’initiative.
+
+47
+00:08:49,080 --> 00:08:56,084
+Attention : le clic droit supprime directement
+le pion.
+
+48
+00:09:06,133 --> 00:09:13,417
+Le combattant reste dans Combat-OS. Ce geste
+ne le supprime pas.
+
+49
+00:09:15,880 --> 00:09:22,883
+Magie propose sept styles et quatre formes.
+
+50
+00:09:36,236 --> 00:09:43,317
+C’est une annotation visuelle : aucun dégât
+automatique n’est appliqué.
+
+51
+00:09:45,840 --> 00:09:53,127
+Pour un cône ou une ligne, le glissement donne
+la direction.
+
+52
+00:10:03,696 --> 00:10:10,976
+Le second effet conserve sa forme, sa taille
+et son orientation.
+
+53
+00:10:13,440 --> 00:10:20,443
+Clic droit avec Magie retire un effet proche.
+
+54
+00:10:24,100 --> 00:10:31,106
+La liste des effets permet aussi une
+suppression précise.
+
+55
+00:10:33,600 --> 00:10:40,614
+Pluie, neige et brume habillent la carte.
+
+56
+00:10:49,918 --> 00:10:56,919
+La brume atmosphérique est distincte du
+brouillard de guerre.
+
+57
+00:10:59,400 --> 00:11:06,405
+La météo et la teinte de nuit suivent la
+projection.
+
+58
+00:11:09,112 --> 00:11:16,113
+Ces effets d’ambiance ne changent pas les
+zones explorées.
+
+59
+00:11:18,600 --> 00:11:25,886
+Le calque Pions & Acteurs peut dégager la vue
+du meneur.
+
+60
+00:11:34,390 --> 00:11:41,394
+Les pions du Hub restent affichés pendant
+cette préparation.
+
+61
+00:11:43,920 --> 00:11:50,927
+Pour couper l’ambiance du Hub, choisissez
+Aucun et Jour.
+
+62
+00:12:04,076 --> 00:12:12,319
+Pendant cet essai, les calques locaux seuls
+n’ont pas coupé l’ambiance du Hub.
+
+63
+00:12:14,800 --> 00:12:21,804
+Gérer les Modèles prépare des zones
+réutilisables.
+
+64
+00:12:35,621 --> 00:12:42,624
+Nom, couleur et propriétés sont conservés dans
+le modèle.
+
+65
+00:12:45,160 --> 00:12:52,161
+Danger pose une zone issue du modèle choisi.
+
+66
+00:13:12,210 --> 00:13:19,215
+La zone repère les pions à l’intérieur. Aucun
+dégât automatique.
+
+67
+00:13:21,720 --> 00:13:28,732
+Limite constatée : la forme choisie n’est pas
+toujours appliquée.
+
+68
+00:13:40,211 --> 00:13:47,214
+Dans cette version, la zone créée reste
+circulaire.
+
+69
+00:13:49,680 --> 00:13:56,684
+Sauver l’état capture une configuration
+complète.
+
+70
+00:14:06,270 --> 00:14:13,272
+Plan, brouillard, pions, zones, magie, grille
+et ambiance sont inclus.
+
+71
+00:14:15,800 --> 00:14:23,565
+Ne comptez pas sur le brouillard pour cacher
+une zone de danger.
+
+72
+00:14:31,222 --> 00:14:38,235
+Le plan redevient opaque ; comparons
+maintenant le Hub.
+
+73
+00:14:40,760 --> 00:14:47,773
+Voici la limite de superposition observée sur
+le Hub.
+
+74
+00:14:50,287 --> 00:14:57,568
+Les zones restent visibles. Elles ne
+conviennent pas aux pièges secrets.
+
+75
+00:15:00,040 --> 00:15:07,044
+Charger une autre image ne remplace pas toute
+la configuration.
+
+76
+00:15:13,853 --> 00:15:21,135
+Son brouillard démarre en noir. Pions et zones
+restent en place.
+
+77
+00:15:23,600 --> 00:15:30,603
+Le brouillard est enregistré sous
+l’identifiant du média.
+
+78
+00:15:37,767 --> 00:15:44,770
+Elle retrouve son dernier masquage,
+indépendamment du Pont Nord.
+
+79
+00:15:47,280 --> 00:15:54,282
+Charger une configuration remplace l’état
+courant, après confirmation.
+
+80
+00:16:01,056 --> 00:16:08,057
+L’état capturé revient, y compris son
+brouillard et ses effets.
+
+81
+00:16:10,520 --> 00:16:17,522
+La recharge teste ce qui persiste, sans garder
+la projection.
+
+82
+00:16:29,230 --> 00:16:36,668
+Pions et zones restent. Magie effacée,
+brouillard noir ; projection arrêtée.
+
+83
+00:16:39,160 --> 00:16:46,162
+Le preset conserve les effets même après
+rechargement.
+
+84
+00:16:53,081 --> 00:17:00,082
+Le cône d’Arcane revient avec les autres
+réglages sauvés.
+
+85
+00:17:02,600 --> 00:17:09,606
+Carte vidéo : relancez la projection, puis
+réglez l’audio.
+
+86
+00:17:28,020 --> 00:17:35,310
+Le film reste sans son. La sortie physique
+n’est pas testée.
+
+87
+00:17:37,840 --> 00:17:44,846
+Arrêter la Projection rend la main au décor du
+Hub.
+
+88
+00:17:48,722 --> 00:17:56,005
+Le plateau du meneur est conservé ; il n’est
+plus diffusé.
+
+89
+00:17:58,480 --> 00:18:05,489
+Vision de l’Oracle et Cortex Tactique
+utilisent l’IA.
+
+90
+00:18:09,696 --> 00:18:16,706
+Ces appels externes ne sont pas exécutés dans
+cette démonstration.
+
+91
+00:18:19,240 --> 00:18:26,243
+Préparez, projetez, vérifiez le Hub, puis
+sauvez votre configuration.
+
+92
+00:18:32,676 --> 00:18:39,965
+Cartes, campagne de test, transcription et
+chapitres accompagnent le film.
+
