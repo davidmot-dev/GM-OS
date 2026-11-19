@@ -914,6 +914,38 @@ Chaque carte donne une lente et une rapide. Maman tire une attaque spéciale D6,
 ou la choisit, puis résout ses victimes et effets comme indiqué par la table.
 Les attaques spéciales demandent généralement une arme ou un outil robuste pour être bloquées.
 
+**« Attaquer » sur la carte de la créature** (19/11/2026, chantier Combat-OS, registre § 263) : le
+même tirage, au premier plan. La fenêtre s'ouvre sur « Rôdeur 1 attaque Vasquez » (la cible de la
+carte) : **Tirer l'attaque (D6)**, ou **choisir** le résultat puis **Prendre cette attaque**. Elle
+dit d'où l'attaque est tirée (les attaques propres de l'espèce, ou la table du jeu), l'affiche —
+« 3 — Enlèvement : … Attaque avec 10 dés de base, Dégâts 1 » — la note sur la carte (comme le
+tirage du bloc « Xénomorphe ») et la dit au journal du jet. Une table introuvable, ou un résultat
+qu'aucune ligne ne couvre, se disent : rien n'est tiré à la place. Sa barre **Points de vie** dit
+la Santé de l'espèce (6/6 pour le Rôdeur), comme « Santé xénomorphe ».
+
+Quand l'attaque tirée dit **« N dés de base, Dégâts M »**, un bouton **Lancer N dés — Dégâts M**
+lance la réserve de la créature (dés de base seuls) et la dit au journal. Dessous, le bloc
+d'application reprend l'attaque comme arme (« arme 1 + 5 succès − 1 = 5 ») et **prépare le coup sur
+la carte de la cible** : **Préparer ce coup de 5 sur Vasquez**. Sur la carte de Vasquez, le coup
+attend dans « Blessures et soins Alien » : **Lancer la Protection** (ses dés d'armure, la moitié
+contre une attaque perforante), puis **Appliquer les dégâts restants** — la même résolution qu'un
+coup préparé à la main. Un **test opposé** (« contre le Combat rapproché de la cible ») se signale :
+à comparer avant de préparer le coup. Une attaque sans « dés de base » (un cri, un renfort) se
+résout telle quelle.
+
+![« Attaquer » sur un Rôdeur : l'attaque tirée au D6 (4 — Prêt à tuer), ses dix dés lancés, puis le coup à préparer sur Vasquez](captures/jeu-alien-attaquer-creature.jpg)
+
+### « Attaquer » pour un humain ou un synthétique — 19/11/2026
+
+Sur la carte d'un PNJ humain (un garde, un marine fabriqué, un PNJ de la Galerie), **Attaquer**
+ouvre sa fiche **sur son jet**, la cible en tête : l'**attaque proposée** suit sa première arme de
+fiche — **Agilité + Combat à distance** pour une arme à distance, **Force + Combat rapproché** pour
+une arme au Contact — ou, ensuite, sa dernière attaque ; l'**arme est déjà choisie** dans « Préparer
+le test Alien » (le tir, sa portée et son bonus passent par la préparation habituelle). **Lancer**,
+puis le bloc d'application : l'arme de la fiche et ses dégâts, « arme 2 + 1 succès − 1 = 2 », et
+**Préparer ce coup de 2 sur Vasquez** — sa Protection se lance ensuite sur sa carte. Un coup qui
+attend déjà sur la cible n'est pas écrasé : le résoudre ou l'abandonner d'abord.
+
 À zéro, la créature demande un **critique xénomorphe D6**, sans blessure humaine :
 
 - **Indemne** : elle feint la mort ; sa prochaine initiative la relève à 1 Santé.

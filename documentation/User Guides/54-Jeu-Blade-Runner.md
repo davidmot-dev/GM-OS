@@ -1,9 +1,48 @@
 # 🌃 Jeu — Blade Runner
 
-> **Pilote décrit :** « Blade Runner: Le Jeu de Rôle » **2.0.0**, exporté le 2026-10-24 (`Export Dirvers/corriges/BladeRunner_driver_gmos_finir.gmos-driver`), selon le livre de base français (Arkhane Asylum, pages imprimées). Il ajoute au pilote du 16/10 le **suivi des blessures critiques** (mort, stabilisation, guérison, secours), le **soutien**, le **souvenir clé**, l'**objet fétiche** et lève le plafond de deux D12. Réimportez-le avec **Remplacer** : aucun identifiant de champ ne change. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Blade Runner: Le Jeu de Rôle » **2.1.0**, exporté le 2026-11-19 (`Export Dirvers/corriges/Blade-Runner-2.1.0.gmos-driver`), selon le livre de base français (Arkhane Asylum, pages imprimées). Le 2.0.0 du 24/10 ajoutait au pilote du 16/10 le **suivi des blessures critiques** (mort, stabilisation, guérison, secours), le **soutien**, le **souvenir clé**, l'**objet fétiche** et levait le plafond de deux D12 ; le 2.1.0 **relie le bestiaire à la fiche** (ci-dessous). Réimportez-le avec **Remplacer** : aucun identifiant de champ ne change. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Le moteur Year Zero, en **dés échelonnés** : chaque valeur de la fiche est une lettre, et chaque
 lettre est un dé.
+
+---
+
+## Les adversaires du livre au combat — 19/11/2026
+
+Dans Combat-OS, **Fabriquer des adversaires → Livre** pose une des treize figures du livre (Agent du
+LAPD en uniforme, Loubard, Blade Runner…). Depuis le pilote 2.1.0, elle entre avec **ses valeurs sur
+sa fiche** : attributs, compétences et Santé, dans la forme de la fiche (« B (D10) »). La fenêtre
+**Fiche** de la carte les montre, et un jet se compose dessus comme pour un personnage (Agilité +
+Armes à feu de l'Agent : deux D8). Avant, l'adversaire entrait avec une fiche vide, ses valeurs
+seulement dans les notes.
+
+Quand le livre nomme une arme présente au catalogue du pilote, la colonne **« Armes (catalogue) »**
+la rappelle dans les notes de l'adversaire : Matraque de policier (Agent du LAPD), Couteau pliant
+(Arnaqueur, Sympathisant), Blaster PK-D 5223 (Blade Runner), Coups-de-poing (Loubard). Un « couteau »
+ou une « matraque » sans précision, le fusil d'assaut Ender et le .357 subcompact ne sont pas
+rattachés : le catalogue n'en dit pas les dégâts.
+
+Sa barre **Points de vie** dit sa Santé du livre (5/5 pour l'Agent du LAPD), et suit chaque coup,
+qu'il vienne de la console, de « Calculer » ou d'un clic sur la jauge Santé. Une jauge que le livre
+ne lui donne pas (le Sang-froid) n'est pas affichée.
+
+### « Attaquer » — l'adversaire lance, le coup part sur sa cible
+
+Sur la carte d'un adversaire, **Attaquer** (à côté de **Fiche**) ouvre sa fiche **sur son jet**, la
+cible de la carte en tête (« Agent du LAPD en uniforme 1 attaque Rachel ») :
+
+1. **Le jet est prérempli** : celui de son arme — **Vigueur + Corps à corps** avec une arme de
+   combat rapproché (la Matraque), **Agilité + Armes à feu** sinon — ou, dès sa deuxième attaque,
+   celle qu'il a lancée la dernière fois. Tout se change avant de lancer.
+2. **Lancer** : deux dés (ou trois), forçage compris, comme sur la fiche d'un personnage.
+3. **Appliquer à Rachel** paraît sous le résultat : l'**arme** (lue au catalogue, ses dégâts
+   remplis ; le Blaster propose ses munitions), les **dégâts** calculés en clair (« arme 2 + 2
+   succès − 1 = 3 »), le bouton **Protection de Rachel : 2D8** qui lance sa protection et retire
+   ses réussites, puis **Appliquer 2 à Rachel**. Un résultat ne s'applique qu'une fois.
+
+Le coup passe par le même chemin que la console : sur un PJ, sa Santé de fiche descend.
+
+![« Attaquer » sur l'Agent du LAPD : Rachel ciblée, Vigueur + Corps à corps proposé pour la Matraque de policier, un D10 et un D8](captures/jeu-blade-runner-attaquer.jpg)
 
 ---
 

@@ -129,6 +129,26 @@ Si une conséquence durable a été choisie, une aide réussie de difficulté 2 
 sans remettre la cible en jeu. Sans effet durable, suivez la tâche de récupération à
 4 + qualité de l'atout qui l'a vaincue. Il ne s'agit jamais de soins en points de vie.
 
+### Faire attaquer un PNJ depuis Combat-OS (19/11/2026)
+
+Sur la carte d'un PNJ qui vise un personnage, **Attaquer** ouvre la fenêtre « Fiche » sur son
+test, la cible rappelée en tête (« Soldat Harkonnen attaque Duncan »).
+
+- Le test proposé est **Combat + le principe le plus haut** de sa fiche. Un PNJ mineur n'a
+  qu'une valeur de principe, ajoutée à chaque test, sans maxime (livre, p. 327) : posez-la dans
+  un des cinq principes de sa fiche. Sans principe chiffré, rien n'est proposé : composez.
+- **PNJ ennemi** est coché d'emblée pour un adversaire hostile : ses achats et dépenses se font
+  en Menace (p. 240).
+- Après un test réussi, **Appliquer cette attaque réussie** s'ouvre avec la cible de la carte
+  déjà choisie ; le reste se règle comme ci-dessus.
+- Si le PNJ a conservé l'initiative, la difficulté +1 de la reprise s'applique à son test.
+- Un PNJ n'a pas de Détermination : il la remplace par 3 Menace (p. 240). La case « Un dé vaut
+  1 » lit la Détermination de sa fiche ; dépensez plutôt les 3 Menace au bandeau.
+
+Dune n'a pas de points de vie : ni « Calculer » ni console de dégâts sur la carte.
+
+![« Attaquer » sur le Soldat Harkonnen : test réussi, « Appliquer cette attaque réussie » ouvert sur Duncan, cible de la carte](captures/jeu-dune-attaquer.jpg)
+
 ## Le plateau de zones et la Maison
 
 ![Le plateau d'intrigue du meneur](captures/jeu-dune-plateau.jpg)

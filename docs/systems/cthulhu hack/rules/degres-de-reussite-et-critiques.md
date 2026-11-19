@@ -30,7 +30,7 @@ Enfin, lors de l'exposition aux températures extrêmes, un échec critique doub
 - Réussite critique : un naturel sur le dé à vingt faces (section « Dégâts »).
 - Effet de la réussite critique : double le résultat du dé de dégâts de l'investigateur (section « Dégâts »).
 - Échec critique : vingt naturel sur le dé à vingt faces (section « Dégâts »).
-- Effet de l'échec critique : double les dégâts de l'adversaire subis par l'investigateur, après application de l'Armure et du Couvert (section « Dégâts »).
+- Effet de l'échec critique : l'investigateur subit deux fois les dégâts de l'adversaire ; l'Armure et le Couvert se retirent ensuite, normalement (section « Dégâts », p. 48 ; ordre tranché par le meneur le 2026-11-19).
 - Résultat de Ressource favorable (« Oui, et ») : résultat de trois ou plus sur le dé de Ressource (section « Investigation »).
 - Résultat de Ressource défaillant (« Oui, mais ») : résultat de un ou deux sur le dé de Ressource, provoquant le déclin d'un niveau du dé et une complication (section « Ressources » et section « Investigation »).
 - Échec critique de température : double la valeur du Compteur de froid ou de chaud (section « Températures extrêmes »).

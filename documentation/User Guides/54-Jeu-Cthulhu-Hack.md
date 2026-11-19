@@ -1,6 +1,6 @@
 # 🐙 Jeu — Cthulhu Hack
 
-> **Pilote décrit :** « Cthulhu Hack » **1.1.0**, exporté le 2026-10-23, corrigé contre le livre français fourni par David et essayé par David le 23/10/2026. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Cthulhu Hack » **1.2.0**, exporté le 2026-11-19 (`Export Dirvers/corriges/Cthulhu-Hack-1.2.0.gmos-driver`), corrigé contre le livre français fourni par David ; le 1.1.0 du 23/10 a été essayé par David le 23/10/2026 ; le 1.2.0 y ajoute le **bestiaire du livre** (22 adversaires, p. 54-62). Réimportez-le avec **Remplacer** : aucun identifiant ne change. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Deux gestes : la **Sauvegarde**, un d20 sous la caractéristique, et les **dés d'usure**, des
 ressources qui sont des dés et qui s'épuisent. Autour d'eux : la **Fortune**, la **Folie
@@ -116,6 +116,39 @@ un déclin ; une réparation reste une modification explicite du dé et des PA.
   la carte part d'eux ; leur maximum est la valeur par défaut du champ PV de la fiche.
 - La fiche HTML de Cthulhu Hack se relie à son personnage GM-OS : voir
   [Fiche de personnage HTML](./63-Fiche-de-personnage-HTML.md).
+
+### Les adversaires du livre — 19/11/2026
+
+Dans Combat-OS, **Fabriquer des adversaires → Livre** propose les **22 adversaires** du livre
+(p. 54-62) : les ennemis communs (Gros bras, Garde, Caïd, Commando, Sorcier…) et ceux du Mythe
+(Byakhee, Goule, Profond, Shoggoth…). Posé au combat, un adversaire entre avec ses **Points de
+Vie** sur sa carte (le Garde : 14/14) ; ses notes rappellent ses Dés de Vie, ses Points d'Armure,
+son **Malus au toucher** et ses attaques **à dégâts fixes**, telles que le livre les écrit —
+« Revolver (4), Matraque (2) ×2 ». Le meneur ne lance jamais de dé : un investigateur qui rate sa
+Sauvegarde subit ces dégâts, moins son Armure ; sur un **20 naturel**, deux fois les dégâts, puis
+l'Armure (Revolver 4 contre 1 PA : 7).
+
+Les profils à échelle (Mort-vivant, Profond) entrent au plus faible de leur fourchette, la règle
+complète dans leurs notes ; le Mi-Go n'a pas de Malus au toucher dans le livre. Dans la Forge, l'éditeur du bestiaire
+montre ces attaques avec leurs colonnes **Dégâts** et **×**.
+
+**« Riposte »** — sur la carte d'un adversaire, à côté de **Fiche**. Quand un investigateur rate sa
+Sauvegarde, vise-le avec l'adversaire (sa **Cible**), puis **Riposte** : la fenêtre s'ouvre sur
+« Garde 1 riposte contre Harvey ». Choisis l'**attaque** (celles du livre ; un adversaire fabriqué
+fait saisir ses dégâts) ; l'**Armure** de l'investigateur est déjà lue sur sa fiche (les PA de son
+Matériel) — ajoute le Couvert à la main ; coche **20 naturel** si sa Sauvegarde l'a donné. Le calcul
+se lit : « 4, − Armure 1 = 3 », ou « 4 × 2 (20 naturel) = 8, − Armure 1 = 7 ». **Appliquer 3 à
+Harvey** retire les PV de sa fiche et le dit au journal ; une riposte ne s'applique qu'une fois. Une
+attaque qui compte plusieurs fois par round (« Matraque (2) ×2 ») le rappelle : une riposte par
+Sauvegarde ratée.
+
+![« Riposte » du Garde contre Harvey : Revolver (4), Armure de Harvey 1 lue sur sa fiche, « 4, − Armure 1 = 3 », appliqués](captures/jeu-cthulhu-hack-riposte.jpg)
+
+**L'Armure des adversaires** — dans l'autre sens, quand un investigateur touche un adversaire du
+livre, ses **Points d'Armure se retirent** des dégâts (p. 51 : la goule à 1 PA perd 5 sur un 6),
+que le coup passe par **Calculer** ou par les boutons **Dégâts** de la carte. Le journal le dit :
+« 6 − Armure 1 ». Un soin n'est jamais réduit ; un adversaire fabriqué, sans Armure au bestiaire,
+prend le coup entier.
 
 ---
 
