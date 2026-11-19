@@ -24,7 +24,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import AdmZip from 'adm-zip';
 
-const source = process.argv[2] ?? 'output/campagnes-tests/cthulhu-hack/Cthulhu-Hack-1.1.0.gmos-driver';
+// 19/11/2026 — corrigé : la première version partait de la copie de recette du 25/10, sans le
+// catalogue (57 objets) ni l'identité visuelle que David avait ajoutés depuis ; le 1.2.0 livré les
+// perdait. On part de l'export de David du 11/11, et on refuse une source sans catalogue.
+const source = process.argv[2] ?? 'Export Dirvers/CH_driver_gmos_1794393275061.gmos-driver';
 const sortie = process.argv[3] ?? 'Export Dirvers/corriges/Cthulhu-Hack-1.2.0.gmos-driver';
 const zip = new AdmZip(source), entree = zip.getEntry('state.json');
 if (!entree) throw new Error('Archive sans pilote JSON.');
@@ -32,6 +35,7 @@ const exporte = JSON.parse(entree.getData().toString('utf8')), d = exporte.gameD
 if (!d || !t || d.id !== 'custom-1774643419710' || t.id !== 'tpl-1774643419711') throw new Error('Le pilote source ne correspond pas à Cthulhu Hack.');
 if (d.version !== '1.1.0') throw new Error(`Ce script part du pilote 1.1.0, pas de la version ${d.version}.`);
 if (d.bestiaire?.creatures?.length) throw new Error('Le pilote a déjà un bestiaire : rien à ajouter.');
+if (!d.catalogue?.objets?.length) throw new Error('Source sans catalogue : ce n’est pas le pilote installé de David (export du 11/11, 57 objets).');
 if (!t.sections.some(s => s.fields.some(f => f.id === 'hp'))) throw new Error('Champ « hp » absent de la fiche.');
 
 const LIVRE = 'Cthulhu Hack — réédition';

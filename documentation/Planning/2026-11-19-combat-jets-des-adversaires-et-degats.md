@@ -846,6 +846,16 @@ serait perdu au coup suivant. **Corriger 1 et 3 avant T7.**
       - **Réimports** (selon [AGENTS.md](../../AGENTS.md), « Pilotes à réimporter ») : Blade
         Runner 2.1.0 et Cthulhu Hack 1.2.0, déjà réimportés par David le 19/11 ; Alien 1.11.0 et
         Dune 2.0.0 inchangés par le chantier : **rien d'autre à réimporter**.
+      - ⛔ **Corrigé le 19/11 au soir — Cthulhu Hack 1.2.0 à réimporter de nouveau.** Trouvé en
+        recensant les catalogues pour le chantier suivant (Loot-OS) : le script de T15 partait de
+        la copie de recette du 25/10 (`output/campagnes-tests/cthulhu-hack/…1.1.0`), pas de
+        l'export de David du 11/11. Le 1.2.0 livré, puis réimporté avec « Remplacer », **perdait
+        le catalogue (57 objets) et l'identité visuelle** ; la fiche et le reste étaient
+        identiques. `ajouter_le_bestiaire.mjs` part désormais de l'export du 11/11 et refuse une
+        source sans catalogue ; le 1.2.0 est régénéré (seuls `version` et `bestiaire` diffèrent
+        de l'export), contrôles repassés (`verifier_bestiaire.mjs`, `valider_les_quatre_pilotes.mjs`).
+        Blade Runner 2.1.0 vérifié de la même façon : sain. **Leçon** : comparer le pilote livré à
+        l'export installé, clé par clé, avant de le livrer.
       - **Constaté en relisant, hors chantier** (§ 1 bis du registre) : sur la carte de Combat-OS,
         une jauge `gauge` ignore son maximum (`CombatCard.tsx:805-809` ne lit le maximum que d'un
         champ `number`) : la Détermination de Dune (max 3) s'affiche « 0/10 », et un PNJ, qui n'en
