@@ -81,6 +81,12 @@ Chaque campagne est pilotée par un **Driver**. Ce "pilote" définit :
     montrera. Une image au format **4:1** est conseillée : seule sa bande centrale est visible, sous
     un voile qui garde le titre et les boutons lisibles.
 
+**Le pilote de chaque personnage, dans le roster** *(depuis le 2026-11-20)* : sous le badge de sa
+campagne, la carte d'un personnage dit **« Pilote : RuneQuest 2.3.0 »** — le jeu qu'il déclare,
+sinon celui de sa fiche, sinon celui de sa campagne ; jamais celui de la campagne ouverte. C'est
+le même pilote que sa fiche et sa tablette utilisent. « Aucun pilote trouvé » signale un
+personnage dont le jeu n'est plus installé.
+
 ---
 
 ## 🎭 Personas & IA Oracle

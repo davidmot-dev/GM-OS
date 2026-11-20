@@ -8,7 +8,8 @@ import type { PlayerCharacter, Campaign, Player } from '../useSessionOSStore';
 import { leVerrouDeLAncienJoueur } from '../logic/transfertDePersonnage';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { gmToast } from '../../../stores/useToastStore';
-import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2, Camera } from 'lucide-react';
+import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2, Camera, Cpu } from 'lucide-react';
+import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
 import { useImageStore } from '../../image/useImageStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { EcartDeJeuDuPersonnage } from './EcartDeJeuDuPersonnage';
@@ -291,6 +292,15 @@ const CharacterCard: React.FC<{
     const { t } = useTranslation(['modules']);
     const linkedCampaign = campaigns.find(c => c.id === character.campaignId);
     /*
+      **Le pilote du personnage** — demandé par David le 20/11/2026 : « je voudrais que
+      dans le Roster joueur je vois sur quel Drivers est lié un personnage ». La règle
+      est celle de la fiche et de la tablette (`piloteDuPersonnage`) : le jeu que le
+      personnage déclare, sinon celui de sa fiche, sinon celui de sa campagne — jamais
+      la campagne ouverte, pour ne pas afficher un jeu qui n'est pas le sien.
+    */
+    const customGameDrivers = useSessionOSStore(s => s.customGameDrivers);
+    const pilote = piloteDuPersonnage(character, campaigns, customGameDrivers);
+    /*
       **`null` sans jauge, et la barre ne se dessine pas.** Ce calcul rendait
       `NaN` pour un personnage d'Alien, dont la santé n'est pas comptée en
       points — et une barre vide se lit comme un mourant.
@@ -321,6 +331,13 @@ const CharacterCard: React.FC<{
                             {linkedCampaign.name}
                         </span>
                     )}
+                    <p data-pilote-du-personnage={pilote?.id ?? ''} title={pilote ? `${t('modules:session.characters.driver_label')} : ${pilote.name}` : undefined}
+                        className={`mt-1.5 flex items-center gap-1.5 truncate text-ui-10 ${pilote ? 'text-app-muted' : 'italic text-app-subtle'}`}>
+                        <Cpu size={11} className="shrink-0" />
+                        {pilote
+                            ? <><span className="font-black uppercase tracking-wider">{t('modules:session.characters.driver_label')}</span><span className="truncate text-app-text">{pilote.name}{pilote.version ? ` ${pilote.version}` : ''}</span></>
+                            : t('modules:session.characters.no_driver')}
+                    </p>
                 </div>
                 <button
                     onClick={(e) => {

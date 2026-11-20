@@ -3275,6 +3275,8 @@
       "sheet_placeholder": "Full character sheet coming soon",
       "transfer_title": "Transfer to another player",
       "transfer_placeholder": "Transfer to…",
+      "driver_label": "Driver",
+      "no_driver": "No driver found",
       "transfer_confirm": "Transfer {{name}} from {{de}} to {{vers}}?\n\nThe character keeps its sheet, notes, inventory, place in the session and the cards it holds.",
       "transfer_done": "{{name}} now belongs to {{vers}}.",
       "transfer_still_connected": "{{de}}’s tablet still holds {{name}}: that player must press “Leave” before {{vers}} can take it.",
