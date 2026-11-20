@@ -2,8 +2,8 @@
 
 > Demande de David (19/11) : « je voudrais faire le lien entre les équipements qui sont définis
 > dans un drivers et loot-os afin de pouvoir constituer des tables de loot plus facilement ».
-> État : **livré, à essayer par David** — T1 à T8 faits le 19/11 ; reste l'essai à l'écran
-> (C8). Registre § 264.
+> État : **clos — essayé et validé par David le 20/11** (« ok ca fonctionne bien :-) ») ; T1 à
+> T8 faits le 19/11, C8 vérifié à l'écran. Registre § 264.
 > Suite annoncée du chantier du catalogue (§ 203, [plan du 02/11](2026-11-02-catalogue-d-equipement.md)) :
 > « Ensuite, hors de ce chantier : Loot-OS qui distribue un objet du catalogue ».
 

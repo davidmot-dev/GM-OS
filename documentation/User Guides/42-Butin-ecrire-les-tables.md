@@ -56,9 +56,10 @@ qui ne déclare rien se lit, il ne verse pas — et il vous le dit.
 
 ### Le type `catalogue` : les tables faites depuis l'équipement du jeu (19/11/2026)
 
-Quand le pilote a un **catalogue d'équipement** (Forge › Règles › Équipement : Alien, Delta Green,
-Blade Runner, Cthulhu Hack, COC, Barbarians, Vampire), deux boutons apparaissent dans la section
-des tables de butin :
+Quand le pilote a un **catalogue d'équipement** (section Équipement de l'éditeur du pilote : Alien,
+Delta Green, Blade Runner, Cthulhu Hack, COC, Barbarians, Vampire), deux boutons apparaissent dans
+la section **« Trésors »** de l'éditeur du pilote — depuis le cockpit : **Modèles de fiches** ›
+le pilote › **Éditer le moteur** › **Trésors** (ou « Configurer le pilote » dans les modules du jeu) :
 
 - **« Nouvelle table depuis le catalogue »**, à côté de « Créer une table » : cochez des objets,
   ou toute une catégorie avec « Toute la catégorie », puis **« Créer la table »**. La table porte
