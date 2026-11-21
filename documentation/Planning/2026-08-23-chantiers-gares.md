@@ -438,6 +438,15 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**20/11/2026 — Une question de la médiathèque remplace la fenêtre qui l'a ouverte.** Trouvé en
+corrigeant le § 266 : `useModalStore` n'a **qu'une place** (`type`). Ouverte depuis « Modifier la
+campagne » (ou un autre formulaire de `ModalProvider`), la médiathèque qui pose une question
+(renommer un dossier ou une identité, supprimer un média, purger) fait `showConfirm` / `showPrompt` :
+`type` passe de `custom` à `confirm`, **le formulaire est démonté et ses modifications non
+enregistrées sont perdues**. Lu dans le code (`useModalStore.ts:32-80`, `MediaBrowser.tsx:195-214,
+732, 849`), pas encore reproduit à l'écran. **Non traité** : il faudrait une pile de fenêtres, à
+proposer à David. En attendant : choisir l'image sans renommer ni supprimer depuis ce formulaire.
+
 **19/11/2026 — Une jauge `gauge` de la carte de combat ignore son maximum.** Trouvé en relisant les
 captures finales du § 263 (T19) : sur la carte du Soldat Harkonnen, « Détermination 0/10 », alors
 que le champ du pilote Dune est une `gauge` de maximum 3. `CombatCard.tsx:805-809` part de 10 et ne
@@ -14872,6 +14881,7 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 - **Réimport** : David a réimporté Blade Runner 2.1.0 et Cthulhu Hack 1.2.0 le 19/11 (« j'ai réimporter blade runner et cthulhu hack »).
 - **T18 fait le 19/11** (« Fermé », redemandé après la compaction) : **« Attaquer » sur un PNJ de Dune** — lu d'abord au livre (PDF = imprimée + 7) : un PNJ mineur a une seule valeur de principe ajoutée au seuil, sans maxime (p. 327) ; les PNJ ennemis paient en Menace et remplacent la Détermination par 3 Menace (p. 240). `jetDuCombattantPossible` s'ouvre à `jet.dune` ; attaque proposée Combat + le principe le plus haut (`attaqueParDefaut`) ; « PNJ ennemi » coché d'emblée et cible de la carte transmise à « Appliquer cette attaque réussie » (`PanneauDeJet.duneDuCombattant` → `SuitesDune` → `AttaqueDune.cibleInitiale`) ; la reprise de l'initiative reconnaît aussi un PNJ ; pas d'« Appliquer à » (pas de PV). Essais `JetDuCombattant.dune.test.tsx` (4) ; 215 fichiers, 2 220 essais ; `tsc -b` ; eslint ; build ; e2e Dune (« Combat + Domination », cible Duncan, capture relue). Non fait, dit : la case « Un dé vaut 1 » lit la Détermination de la fiche, un PNJ la paie 3 Menace au bandeau. **Dune complet.** Reste : T19.
 - **T19 fait le 19/11** (« fait T19 », sans toucher `src/`) : **validation finale des quatre pilotes** par `outils/combat/valider_les_quatre_pilotes.mjs` — Blade Runner 2.1.0, Cthulhu Hack 1.2.0 et Dune 2.0.0 sans constat, Alien 1.11.0 sans erreur (34 avertissements de catalogue déjà consignés, valeurs imprimées en texte) ; un jet du livre préparé par pilote (`preparerLeJet` : 2D8 ; 7 + 1 D6 ; 1d20 sous 12 ; 2d20 sous 12) ; bestiaires de Blade Runner et Cthulhu Hack recontrôlés. **Captures finales** `combatDesAdversaires` sur les quatre jeux avec les pilotes livrés, constats et images relus ; quatre captures entrées aux manuels (`jeu-blade-runner-attaquer`, `jeu-alien-attaquer-creature`, `jeu-cthulhu-hack-riposte`, `jeu-dune-attaquer`). L'e2e reçoit un délai de fermeture de 90 s et cadre la riposte. **Rien d'autre à réimporter** : Blade Runner et Cthulhu Hack l'ont été le 19/11, Alien et Dune sont inchangés. Constaté en relisant, hors chantier : la jauge Détermination « 0/10 » de la carte (§ 1 bis). Spécification, synthèse et manuels à jour. **Chantier livré, à essayer par David.**
+- **Recette écrite le 21/11** (David : « fais moi un plan détaillé des gestes à faire pour tester ») : [2026-11-21-recette-combat-os-263.md](2026-11-21-recette-combat-os-263.md), une liste à cocher en 30 gestes : préparation, Blade Runner, Alien (créature et humain), Cthulhu Hack (riposte et Armure), Dune, et rien d'autre ne bouge.
 - ⛔ **Corrigé le 19/11 au soir : Cthulhu Hack 1.2.0 à réimporter de nouveau (Remplacer).** Le script de T15 partait de la copie de recette du 25/10 au lieu de l'export de David du 11/11 : le 1.2.0 réimporté **avait perdu le catalogue (57 objets) et l'identité visuelle**. Script corrigé (part de l'export, refuse une source sans catalogue), pilote régénéré : seuls `version` et `bestiaire` diffèrent de l'export ; contrôles repassés. Blade Runner 2.1.0 vérifié : sain.
 
 ### 264 · Loot-OS et le catalogue d'équipement du pilote — 19/11/2026
@@ -14893,12 +14903,58 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 - **Demande de David** (capture du roster à l'appui) : « je voudrais faire une petite adaptation, je voudrais que dans le Roster joueur je vois sur quel Drivers est lié un personnage ».
 - **Fait le 20/11** (« Fermé », demandé avant d'écrire) : sous le badge de campagne, chaque carte de `CharacterGrid` dit « Pilote : <nom> <version> » (« Aucun pilote trouvé » sinon). Règle réutilisée, pas réécrite : `piloteDuPersonnage` (jeu déclaré, sinon celui de la fiche, sinon celui de la campagne du personnage — jamais la campagne ouverte), la même que la fiche et la tablette. Clés `session.characters.driver_label` / `no_driver` (fr, en). Guide 10 (cockpit) complété.
 - **Vérifié** : `CharacterGrid.pilote.test.tsx` (3 : jeu déclaré prioritaire et version, jeu de la campagne, aucun pilote) et `CharacterGrid.table.test.tsx` ; `npx vitest run --maxWorkers=4 src/modules/session` (213 fichiers, 1 878 essais) ; essai des guides ; `npx tsc -b` ; eslint. Pas de capture : **à voir à l'écran par David**.
+- **Validé par David le 21/11** : « les deux gestes sont validés et fonctionne bien ». Clos.
+
+### 266 · La médiathèque s'ouvrait sous la fenêtre de campagne — 20/11/2026
+
+- **Signalé par David** (capture de « Modifier la campagne » › Ambiance) : « quand j'essaie de modifier l'image de la campagne rien ne se passe ».
+- **Cause** : le clic ouvrait bien la médiathèque, mais au niveau `z-[100]`, **sous** la fenêtre de `ModalProvider` (`z-[150]`) — invisible, et Échap la refermait. Même défaut pour toutes les fenêtres de `ModalProvider` qui l'ouvrent : nouvelle campagne, joueur, personnage, PNJ, dossier d'un favori.
+- **Fait le 20/11** (« non », GM-OS ne tournait pas, demandé avant d'écrire) : l'ordre vit dans `src/components/niveauxDesSurcouches.ts` — fenêtre 150 < médiathèque 160 < questions 170 (`gmAlert`, `gmConfirm`, `gmPrompt`, montées pour que « Supprimer ce média ? » reste au-dessus de la médiathèque partout). `MediaBrowser.tsx` et `ModalProvider.tsx` lisent ces constantes.
+- **Vérifié** : `niveauxDesSurcouches.test.tsx` (6 : l'ordre, la médiathèque rendue à son niveau, les trois questions, une fenêtre) ; `npx vitest run --maxWorkers=4 src/components …` (38 fichiers, 303 essais) ; `npx tsc -b` ; eslint. **À voir à l'écran par David.**
+- **Reste, constaté en chemin** : une question de la médiathèque remplace le formulaire qui l'a ouverte (§ 1 bis, 20/11).
+- **Validé par David le 21/11** : « les deux gestes sont validés et fonctionne bien ». Clos ; le reste ci-dessus demeure au § 1 bis.
+
+### 267 · Combat-OS — le jet des adversaires pour les autres jeux — 20/11/2026
+
+- **Demande de David** : « est-ce que le module combat os a été revu pour tous les drivers ? », puis « fait un plan ». Suite du § 263, qui n'ouvre « Attaquer » / « Riposte » qu'à Blade Runner, Alien, Dune et Cthulhu Hack.
+- **Spécifié le 20/11** : [spécification](2026-11-20-combat-jet-des-adversaires-autres-jeux.md). Décisions de David : les quatre lots, soit **quinze jeux** (Within hors champ) ; « Attaquer » ajouté sur la carte de Vampire ; bestiaires hors champ ; un jeu à la fois. Chaque jeu commence par un export frais de son pilote.
+- **Piège trouvé en écrivant le plan** : `coupAAppliquer` donne à tout jet compté en réussites la règle de Year Zero (« arme + succès − 1 »), fausse hors de Blade Runner et d'Alien. T0 la déclare par jeu avant d'en ouvrir un seul ; un jeu sans règle demande le montant.
+- **Recommandé** : essayer le § 263 avant T0, qui s'appuie sur lui.
+- **Garé le 21/11** : David, « note le plan on va l'exécuter plus tard ». Rien n'est commencé ; on reprend à T0 quand il le demande, après « GM-OS tourne-t-il ? ».
+
+### 268 · Transformer un PNJ en personnage joueur, et l'inverse — 21/11/2026
+
+- **Demande de David** : « je voudrais pouvoir transformer un PNJ en Personnage Joueur, et vice-versa. Peux-tu prévoir les transformation et les gestes permettant de faire cela ? »
+- **Spécifié le 21/11** : [spécification](2026-11-21-pnj-en-pj-et-retour.md) — 8 critères, 10 tâches. Décisions de David :
+  - **déplacer**, et non copier : le personnage garde son identifiant, comme pour le transfert entre joueurs du 14/09 ;
+  - les gestes sur la **fiche PNJ** et dans le **roster** ;
+  - les données sans équivalent **gardées en réserve** et rendues au retour ;
+  - un PJ tenu par une tablette **se transforme, et l'écran le dit**.
+- **Lu dans le code** : le bouton « Changer le type : PNJ, Monstre, Joueur » de la fiche PNJ ne change qu'une étiquette (`NpcDetail.tsx:369-383`). Le personnage n'entre chez aucun joueur. Le chantier le retire du cycle (C7).
+- **Fait le 21/11** (« ok commence », puis « non » à « GM-OS tourne-t-il ? ») : T1 à T10.
+  - **Logique pure** : `session/logic/transformationDuPersonnage.ts`. Même identifiant ; réserve
+    `reserveDeTransformation` (`types/transformation.types.ts`) ; relations et scènes de la
+    trame réécrites ; refus rendus par référence.
+  - **Magasins** : deux actions du magasin de séance, en une seule écriture. Dans Combat-OS,
+    `changerLeGenreDuCombattant`, qui change le genre et le camp sans renvoyer la santé ; la
+    règle du camp, `campDuRole`, est extraite de l'invocation des rencontres.
+  - **Écran** : « Faire un personnage joueur… » sur la fiche PNJ, « Faire un PNJ… » dans le
+    roster ; confirmations dépliées sous le bouton.
+  - **Suites** : les cartes tenues reviennent au meneur. La tablette affiche « n'est plus un
+    personnage joueur ». « Joueur » est retiré du bouton de type.
+- **Vérifié** : 367 fichiers et 3 171 essais (session, combat, composants, archive, textes,
+  magasins, types) ; `tsc -b` ; eslint ; guides ; build ; e2e `transformationDuPersonnage` (2,
+  images relues). Guides 10 et 20 à jour.
+- **Validé par David le 21/11** : « ca marche, commit et pousse ». Clos.
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 201 | **Le pilote de chaque personnage dans le roster des joueurs** | § 265 ; 🟠 livré le 20/11 | Ouvrir le roster des joueurs : « Pilote : … » sous la campagne de chaque personnage | Rien — essai de David attendu |
+| 204 | **Transformer un PNJ en personnage joueur, et l'inverse** | § 268 ; 🟢 livré le 21/11, validé par David le jour même — T1 à T10, 3 171 essais, e2e des deux gestes | Aucun — clos | Rien |
+| 203 | **Combat-OS — le jet des adversaires pour quinze autres jeux** | § 267 ; spécifié le 20/11, ⏸ garé le 21/11 à la demande de David, pas commencé — T0 (règle des dégâts par jeu), puis T1 à T15 un jeu à la fois, T16 livraison | T0, après « GM-OS tourne-t-il ? » | L'essai du § 263, recommandé avant T0 |
+| 202 | **La médiathèque s'ouvrait sous la fenêtre de campagne** | § 266 ; 🟢 corrigé le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
+| 201 | **Le pilote de chaque personnage dans le roster des joueurs** | § 265 ; 🟢 livré le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 200 | **Loot-OS et le catalogue du pilote — tables de butin depuis l'équipement** | § 264 ; 🟢 **validé par David le 20/11** (« ok ca fonctionne bien :-) ») — T1 à T8 : ligne « Objet du catalogue » résolue au tirage ; « Nouvelle table depuis le catalogue » et « Ajouter depuis le catalogue » dans l'éditeur du pilote (Trésors) ; « Depuis le catalogue » en séance ; export vérifié ; guides 41-42 | Rien — chantier clos | Rien |
 | 199 | **Combat-OS — jet des adversaires et dégâts (Blade Runner, Dune, Alien, Cthulhu Hack)** | § 263 ; 🟠 **livré le 19/11, à essayer par David** — T0 à T22 faits, T19 : quatre pilotes validés, captures finales relues, rien d'autre à réimporter. Détail : T0 à T4 faits le 19/11 (« Calculer » ne coche que la cible, essayé par David ; « Dernier jet » ne prend plus des succès pour des dégâts ; logique de l’attaque d’un adversaire ; jauges de la carte visibles ; audit, puis T21 / T22 : « Calculer » passe par la fiche d’un PJ, la console tient `hp`, « Calculer » et console masqués pour Dune ; T5 : la porte « Attaquer », visible jeu par jeu à partir de T9 ; T6 : dernière attaque retenue ; T7 : « Appliquer à [cible] » — lot 2 complet ; T8 : pilote Blade Runner 2.1.0, bestiaire relié ; T9 : « Attaquer » pour Blade Runner ; T20 : santé des créatures alignée — Blade Runner complet ; T10 à T12 : « Attaquer » une créature ou un humain d'Alien, coup préparé sur la cible — Alien complet ; T13 : bestiaire de Cthulhu Hack relu au livre ; T14 à T17 : pilote Cthulhu Hack 1.2.0, « Riposte », Armure des adversaires — Cthulhu Hack complet ; Blade Runner 2.1.0 et Cthulhu Hack 1.2.0 réimportés par David le 19/11 ; T18 : « Attaquer » un PNJ de Dune, attaque Dune sur la cible — Dune complet) | ~~Réimporter de nouveau `corriges/Cthulhu-Hack-1.2.0.gmos-driver`~~ (**réimporté par David le 19/11**, catalogue rétabli) ; l'essai de David : Agent du LAPD « Attaquer » Rachel ; un Rôdeur puis un humain d'Alien ; « Riposte » d'un Garde de Cthulhu Hack, puis « Calculer » sur lui ; « Attaquer » un Soldat Harkonnen | Rien — essai de David attendu |
 | 198 | **Vampire V5 — pilote 2.2.0, bestiaire et équipement** | 🟢 § 262 ; 23 créatures conformes rendues jouables (Santé du livre, groupements nommés), catalogue de 30 objets, corpus rectifié (p. 370) — 17/11 | Réimporter `Vampire-2.2.0` avec « Remplacer » ; poser deux lieutenants de police au combat, puis « Fiche » → « Lancer un test » | Rien — essayé par David le 18/11 |
