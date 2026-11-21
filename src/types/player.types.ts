@@ -148,6 +148,8 @@ export interface PlayerCharacter {
         showInventory: boolean;
         showRelations: boolean;
     };
+    /** Ce qu'il avait comme PNJ, s'il en a été un (§ 268) — `transformation.types.ts`. */
+    reserveDeTransformation?: import('./transformation.types').ReserveDeTransformation;
 }
 
 // ─────────────────────────────────────────────

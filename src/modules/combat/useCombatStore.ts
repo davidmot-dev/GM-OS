@@ -38,6 +38,7 @@ import { actionsDuRound, lancerDegenesis, reserveDeDegenesis } from '../dice/sys
 import { faceDuD10 } from '../dice/systemes/argyropee';
 import { malusDeSante } from '../dice/systemes/coc';
 import { finDeTourCoc, porterImpactCoc, lireCibleCoc, nouvelleInitiativeCoc } from './coc';
+import { combattantAuNouveauGenre } from './logic/genreDuCombattant';
 import { lireProfilCoc, ROLES_COC } from '../dice/systemes/profilsDeCoc';
 import { bonusAvantageCoc } from '../dice/systemes/avantagesDeCoc';
 import { malusDefensePsychismeCoc } from '../dice/systemes/psychismeDeCoc';
@@ -659,6 +660,12 @@ interface CombatState {
      * `derniereAttaque` ; n'appelle pas `syncCombatantToSession` : rien ne part vers la fiche.
      */
     retenirLAttaque: (combatantId: string, attaque: NonNullable<Combatant['derniereAttaque']>) => void;
+    /**
+     * Le personnage de ce combattant vient de devenir PJ, ou PNJ (§ 268) : son genre, son lien et
+     * son camp suivent (`logic/genreDuCombattant.ts`). N'appelle pas `syncCombatantToSession` : la
+     * santé n'a pas changé, rien ne repart vers la fiche.
+     */
+    changerLeGenreDuCombattant: (personnageId: string, versPersonnage: boolean, role?: import('../../types/entity.types').Entity['role']) => void;
     
     // Snapshot System
     /** Restaure l'état du combat à partir d'un snapshot de session */
@@ -1791,6 +1798,14 @@ export const useCombatStore = create<CombatState>()(
                 combatants: state.combatants.map(c => c.id === combatantId
                     ? { ...c, derniereAttaque: { champs: { ...attaque.champs }, libelle: attaque.libelle } } : c),
             })),
+
+            changerLeGenreDuCombattant: (personnageId, versPersonnage, role) => {
+                const avant = get().combatants;
+                const apres = avant.map(c => combattantAuNouveauGenre(c, personnageId, versPersonnage, role));
+                if (apres.every((c, i) => c === avant[i])) return;
+                set({ combatants: apres });
+                get().broadcastSync();
+            },
 
             setTarget: (combatantId, targetId) => {
                 set((state) => ({

@@ -150,6 +150,32 @@ personnage qui change de propriétaire, et non une copie.
 
 La liste est grisée quand il n'y a qu'un seul joueur : il n'y a personne vers qui transférer.
 
+### Faire d'un personnage joueur un PNJ, et l'inverse
+
+*Depuis le 21/11/2026 (registre § 268).* Un joueur quitte la table, un personnage se retire ou passe
+à l'ennemi : sous « Transférer vers… », le bouton **« Faire un PNJ… »** ouvre une confirmation.
+Choisissez **son rôle** (allié par défaut, ou celui qu'il avait s'il a déjà été PNJ), lisez ce qui
+va changer, puis **Transformer**. Le personnage quitte le roster du joueur et rejoint la **galerie
+des PNJ de sa campagne**, montré aux joueurs et marqué « rencontré » : ils le connaissent.
+
+Dans l'autre sens, un PNJ qui rejoint le groupe devient le personnage d'un joueur par **« Faire un
+personnage joueur… »**, sur sa fiche (voir le guide [NPC-OS](20-NPC-OS-les-personnages.md)).
+
+**C'est le même personnage qui change de liste, pas une copie**, comme pour le transfert entre
+joueurs. Sa fiche, sa santé, ses relations, son image, sa place dans la séance du soir et dans les
+scènes de la trame le suivent. S'il est sur le plateau de Combat-OS, sa carte change de camp.
+
+**Rien ne se perd à l'aller-retour.** Ce qu'un PNJ ne porte pas (le Sac à dos, la fiche HTML
+reliée, les notes du joueur) est **gardé en réserve** sur le personnage, et revient s'il redevient
+personnage joueur. Dans l'autre sens, sa voix, son rôle et sa CA de PNJ l'attendent.
+
+- **Les cartes qu'il tient** (Deck-OS) reviennent au meneur : un PNJ ne tient pas de main. La
+  confirmation le dit.
+- **Un personnage sans campagne** ne peut pas devenir PNJ : liez-le d'abord à une campagne.
+- ⚠️ **Si une tablette le tient encore**, la confirmation le dit et la transformation a lieu quand
+  même. La tablette affiche alors *« Ce personnage n'est plus un personnage joueur »*, au lieu
+  d'une fiche vide ; le joueur en choisit un autre.
+
 ### Un personnage qui ne joue pas le jeu de sa campagne
 
 Un personnage garde **son propre jeu**, choisi à sa création : c'est lui qui décide de sa fiche, de

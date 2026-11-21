@@ -25,6 +25,7 @@ import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator } from 'lucide-react';
 import { estUneFicheDeVoyageur } from '../logic/ficheDeVoyageur';
 import { PanneauHautReveVoyageur } from './PanneauHautReveVoyageur';
+import { FaireUnPersonnageJoueur } from './TransformationDuPersonnage';
 
 const ROLE_COLORS = {
     ally: 'bg-etat-succes/10 text-etat-succes border-etat-succes/20 hover:bg-etat-succes/20',
@@ -368,10 +369,17 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     */}
                     <button
                         onClick={() => {
-                            const types = ['npc', 'monster', 'pc'] as const;
+                            /*
+                              **« Joueur » a quitté le cycle le 21/11/2026 (§ 268).** Il ne
+                              changeait qu'une étiquette : le PNJ n'entrait chez aucun
+                              joueur, aucune tablette ne pouvait le prendre. Le vrai geste
+                              est « Faire un personnage joueur… », plus bas. Un PNJ déjà
+                              marqué « Joueur » garde son étiquette jusqu'au prochain clic,
+                              qui le remet sur « PNJ ».
+                            */
+                            const types = ['npc', 'monster'] as const;
                             const rang = types.indexOf(selectedNpc.type as typeof types[number]);
-                            // Un type inconnu repart sur « PNJ » plutôt que
-                            // de bloquer le cycle : -1 + 1 = 0.
+                            // Un type inconnu, ou « Joueur », repart sur « PNJ » : -1 + 1 = 0.
                             updateEntity(selectedNpc.id, { type: types[(rang + 1) % types.length] });
                         }}
                         className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-app-border bg-app-surface text-app-muted hover:text-accent hover:border-accent/40 transition-all"
@@ -479,6 +487,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     <button onClick={() => useImageStore.getState().projectEntity(selectedNpc)} className="flex items-center justify-center gap-2 bg-accent text-app-on-accent font-black px-6 py-3 rounded-xl text-xs uppercase tracking-widest transition-all shadow-glow-accent"><Monitor size={16}/>{t('modules:session.npc_detail.actions.project')}</button>
                     <button onClick={handleAddToCombat} className="flex items-center justify-center gap-2 bg-app-surface hover:bg-app-surface-2 text-app-text font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-widest transition-all border border-app-border"><Swords size={16}/>{t('modules:session.npc_detail.actions.combat')}</button>
                     <button onClick={handleSendToMap} className="flex items-center justify-center gap-2 bg-app-surface border border-app-border text-app-text hover:border-accent/50 hover:text-accent font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-widest transition-all"><MapPin size={16}/>{t('modules:session.npc_detail.actions.map')}</button>
+                    {/* § 268 (21/11/2026) : le PNJ rejoint le roster d'un joueur. */}
+                    <FaireUnPersonnageJoueur entite={selectedNpc} />
                 </div>
             )}
 

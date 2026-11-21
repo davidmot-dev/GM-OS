@@ -6,6 +6,7 @@ import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import type { PlayerCharacter, Campaign, Player } from '../useSessionOSStore';
 import { leVerrouDeLAncienJoueur } from '../logic/transfertDePersonnage';
+import { FaireUnPnj } from './TransformationDuPersonnage';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2, Camera, Cpu } from 'lucide-react';
@@ -502,6 +503,8 @@ const CharacterCard: React.FC<{
                     </select>
                     <ChevronDown size={12} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-app-text/20 pointer-events-none" />
                 </div>
+                {/* § 268 (21/11/2026) : le PJ rejoint les PNJ de sa campagne. */}
+                <FaireUnPnj joueurId={playerId} personnage={character} />
             </div>
         </div>
     );

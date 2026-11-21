@@ -1628,6 +1628,31 @@
     }
   },
   "session": {
+    "transformation": {
+      "vers_pj": "Faire un personnage joueur…",
+      "vers_pj_titre": "Faire de {{name}} un personnage joueur",
+      "vers_pj_joueur": "Le joueur qui le jouera",
+      "vers_pj_explication": "{{name}} quitte la galerie des PNJ et rejoint le roster du joueur choisi, avec sa fiche, sa santé et ses relations. Ce qui n'existe que pour un PNJ (voix, rôle, CA) est gardé, et reviendra s'il redevient PNJ.",
+      "vers_pj_rencontres": "Les rencontres préparées qui l'envoient ne l'enverront plus : {{noms}}.",
+      "vers_pj_sans_joueur": "Aucun joueur pour le recevoir : ajoutez d'abord un joueur dans le roster.",
+      "vers_pj_fait": "{{name}} est maintenant un personnage de {{joueur}}.",
+      "vers_pnj": "Faire un PNJ…",
+      "vers_pnj_titre": "Faire de {{name}} un PNJ",
+      "vers_pnj_role": "Son rôle",
+      "vers_pnj_explication": "{{name}} quitte le roster de {{joueur}} et rejoint les PNJ de sa campagne, visible des joueurs. Son Sac à dos, sa fiche HTML et les notes du joueur sont gardés, et reviendront s'il redevient personnage joueur.",
+      "vers_pnj_cartes": "Les cartes qu'il tient ({{count}}) reviennent au meneur.",
+      "vers_pnj_fait": "{{name}} est maintenant un PNJ de la campagne.",
+      "vers_pnj_tablette": "Une tablette tient encore {{name}} : elle affichera qu'il n'est plus un personnage joueur.",
+      "confirmer": "Transformer",
+      "annuler": "Annuler",
+      "refus": {
+        "introuvable": "{{name}} est introuvable : rien n'a changé.",
+        "joueur-introuvable": "Ce joueur est introuvable : rien n'a changé.",
+        "sans-campagne": "{{name}} n'appartient à aucune campagne : liez-le d'abord à une campagne.",
+        "deja-present": "Un personnage du même identifiant existe déjà de l'autre côté : rien n'a changé."
+      },
+      "plus_un_pj": "Ce personnage n'est plus un personnage joueur : le meneur l'a fait passer parmi les PNJ. Choisissez un autre personnage."
+    },
     "audio_master": {
       "focus_ducking": "Tamisage",
       "focus_ducking_hint": "À quel niveau le Focus baisse l'ambiance, la musique et les bruitages. Plus bas, plus votre voix passe devant."
@@ -2266,7 +2291,7 @@
         "map": "Carte",
         "project": "Projeter"
       },
-      "change_type": "Changer le type : PNJ, Monstre, Joueur",
+      "change_type": "Changer le type : PNJ ou Monstre",
       "voice_gen": "Sa voix",
       "voice_gen_tooltip": "Proposer des réglages de voix pour ce PNJ, d'après ses notes et ses traits — puis les enregistrer sur sa fiche",
       "voice_recall": "Reposer",

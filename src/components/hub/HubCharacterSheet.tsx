@@ -1,4 +1,5 @@
 import React, { useState, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChevronLeft, Package, BookOpen, PenTool, Shield, Layout, FileText, Users2, Dices } from 'lucide-react';
 import { pointsDeVieApres } from '../../modules/combat/logic/SanteDuCombattant';
 import EtatDeSante from '../../modules/combat/components/EtatDeSante';
@@ -65,7 +66,24 @@ const HubCharacterSheet: React.FC<HubCharacterSheetProps> = ({ onClose, demandeA
 
     const playerWithChar = players.find(p => p.characters.some(c => c.id === characterId));
     const character = playerWithChar?.characters.find(c => c.id === characterId);
+    const devenuPnj = useSessionOSStore(s => !!characterId && s.entities.some(e => e.id === characterId));
+    const { t } = useTranslation();
 
+    /*
+      **Le personnage tenu est devenu un PNJ** (§ 268, 21/11/2026) : le meneur l'a
+      transformé alors que cette tablette le tenait encore (décision Q4 : on
+      transforme, et on le dit). Sans ce message, la fiche disparaissait sans un
+      mot. On ne le dit que si le personnage est bien parmi les PNJ : un
+      personnage introuvable au démarrage, avant la première synchronisation,
+      garde l'écran vide d'avant.
+    */
+    if ((!character || !playerWithChar) && devenuPnj) {
+        return (
+            <div role="status" className="m-6 rounded-xl border border-etat-alerte/40 bg-app-surface p-6 text-center text-app-text">
+                {t('modules:session.transformation.plus_un_pj')}
+            </div>
+        );
+    }
     if (!character || !playerWithChar) return null;
 
     return (

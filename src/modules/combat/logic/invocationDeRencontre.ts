@@ -152,6 +152,14 @@ export function varianteDeLaCreature(jeuId: string, bestiaire: BestiaireDuJeu, c
 }
 
 /**
+ * **Le camp d'un PNJ au combat, d'après son rôle.** Partagée avec la
+ * transformation d'un PJ en PNJ (§ 268), qui change le camp d'un combattant déjà
+ * sur le plateau : une seule règle pour les deux.
+ */
+export const campDuRole = (role: Entity['role'] | undefined): 'ally' | 'enemy' | 'neutral' =>
+    role === 'ally' ? 'ally' : (role === 'hostile' || role === 'boss') ? 'enemy' : 'neutral';
+
+/**
  * **Un PNJ de la campagne, tel qu'il entre au combat.** Le camp suit son rôle,
  * sauf quand la rencontre en décide autrement.
  */
@@ -163,8 +171,7 @@ export function combattantDeLEntite(entite: Entity, faction?: CampDeRencontre): 
         hpMax: entite.maxHp,
         avatar: entite.avatar,
         isPlayer: false,
-        faction: faction ?? (entite.role === 'ally' ? 'ally'
-            : (entite.role === 'hostile' || entite.role === 'boss') ? 'enemy' : 'neutral'),
+        faction: faction ?? campDuRole(entite.role),
         sourceEntityId: entite.id,
         statuses: [],
         roleplayingNotes: entite.roleplayingNotes,

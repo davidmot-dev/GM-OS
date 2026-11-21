@@ -1628,6 +1628,31 @@
     }
   },
   "session": {
+    "transformation": {
+      "vers_pj": "Make a player character…",
+      "vers_pj_titre": "Make {{name}} a player character",
+      "vers_pj_joueur": "The player who will play them",
+      "vers_pj_explication": "{{name}} leaves the NPC gallery and joins the chosen player's roster, with their sheet, health and relations. What only exists for an NPC (voice, role, AC) is kept, and comes back if they become an NPC again.",
+      "vers_pj_rencontres": "The prepared encounters that send them will no longer do so: {{noms}}.",
+      "vers_pj_sans_joueur": "No player to receive them: add a player to the roster first.",
+      "vers_pj_fait": "{{name}} is now a character of {{joueur}}.",
+      "vers_pnj": "Make an NPC…",
+      "vers_pnj_titre": "Make {{name}} an NPC",
+      "vers_pnj_role": "Their role",
+      "vers_pnj_explication": "{{name}} leaves {{joueur}}'s roster and joins their campaign's NPCs, visible to the players. Their backpack, HTML sheet and player notes are kept, and come back if they become a player character again.",
+      "vers_pnj_cartes": "The cards they hold ({{count}}) go back to the GM.",
+      "vers_pnj_fait": "{{name}} is now an NPC of the campaign.",
+      "vers_pnj_tablette": "A tablet still holds {{name}}: it will show that they are no longer a player character.",
+      "confirmer": "Transform",
+      "annuler": "Cancel",
+      "refus": {
+        "introuvable": "{{name}} cannot be found: nothing changed.",
+        "joueur-introuvable": "This player cannot be found: nothing changed.",
+        "sans-campagne": "{{name}} belongs to no campaign: link them to a campaign first.",
+        "deja-present": "A character with the same identifier already exists on the other side: nothing changed."
+      },
+      "plus_un_pj": "This character is no longer a player character: the GM moved them among the NPCs. Choose another character."
+    },
     "audio_master": {
       "focus_ducking": "Ducking",
       "focus_ducking_hint": "How far Focus lowers ambience, music and sound effects. Lower means your voice cuts through more."
@@ -2266,7 +2291,7 @@
         "map": "Map",
         "project": "Project"
       },
-      "change_type": "Change the type: NPC, Monster, Player",
+      "change_type": "Change the type: NPC or Monster",
       "voice_gen": "Its voice",
       "voice_gen_tooltip": "Propose voice settings for this NPC from its notes and traits, then save them on its sheet",
       "voice_recall": "Recall",

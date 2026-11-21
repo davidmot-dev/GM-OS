@@ -44,6 +44,7 @@ import { laSantePasseSousZero, marquerSousZero, santeSousZero, seuilDInconscienc
 import { alignerSanteDG, conserverSuiviDG } from '../logic/santeDeltaGreen';
 import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
 import { transfererLePersonnage } from '../logic/transfertDePersonnage';
+import { transformerEnPersonnage, transformerEnPnj, type EtatDesPersonnages, type ResultatDeTransformation } from '../logic/transformationDuPersonnage';
 import { tousLesPilotes } from './tousLesPilotes';
 import type { GameDriver } from '../../../types/drivers';
 import type { Campaign } from '../../../types/campaign.types';
@@ -181,6 +182,14 @@ export interface EntitySliceActions {
         versJoueurId: string,
         personnageId: string,
     ) => import('../logic/transfertDePersonnage').RefusDeTransfert | null;
+    /**
+     * **Un PNJ devient le personnage du joueur choisi** (§ 268, 21/11/2026) —
+     * même identifiant, relations et scènes réécrites, en une seule écriture.
+     * Rend le motif du refus, ou `null`. La règle : `logic/transformationDuPersonnage.ts`.
+     */
+    transformerEnPersonnage: (entiteId: string, joueurId: string) => import('../logic/transformationDuPersonnage').RefusDeTransformation | null;
+    /** **Un PJ devient un PNJ de sa campagne**, au rôle choisi (§ 268). Même contrat. */
+    transformerEnPnj: (joueurId: string, personnageId: string, role: Entity['role']) => import('../logic/transformationDuPersonnage').RefusDeTransformation | null;
     linkCharacterToCampaign: (playerId: string, characterId: string, campaignId: string | null, templateId?: string) => void;
     updateCharacterHP: (playerId: string, characterId: string, hp: number) => void;
     updateCharacterMaxHP: (playerId: string, characterId: string, maxHp: number) => void;
@@ -501,6 +510,35 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
         );
         if (refus === null) set({ players: joueurs });
         return refus;
+    },
+
+    /*
+      **Une seule écriture pour les entités, les joueurs et les scènes** (§ 268) :
+      une sauvegarde ne doit jamais surprendre le personnage dans les deux
+      listes, ou dans aucune. Les scènes appartiennent à la tranche de la trame,
+      du même magasin : `get()` les porte, son type ne connaît que celle-ci.
+    */
+    transformerEnPersonnage: (entiteId, joueurId) => {
+        const etat = get() as unknown as EtatDesPersonnages & { campaigns?: Campaign[]; customGameDrivers?: GameDriver[] };
+        const entite = etat.entities.find(e => e.id === entiteId);
+        const pilote = entite ? piloteDuPersonnage(entite, etat.campaigns ?? [], etat.customGameDrivers ?? []) : null;
+        const resultat: ResultatDeTransformation = transformerEnPersonnage(
+            { entities: etat.entities, players: etat.players, scenes: etat.scenes ?? [] },
+            entiteId, joueurId, { systemId: pilote?.id, templateIdDuJeu: pilote?.templateId },
+        );
+        // `scenes` passe avec le reste : le type de `set` ne connaît que cette tranche, le magasin les trois.
+        if (resultat.refus === null) set(resultat.etat as Partial<EntitySlice>);
+        return resultat.refus;
+    },
+
+    transformerEnPnj: (joueurId, personnageId, role) => {
+        const etat = get() as unknown as EtatDesPersonnages;
+        const resultat: ResultatDeTransformation = transformerEnPnj(
+            { entities: etat.entities, players: etat.players, scenes: etat.scenes ?? [] },
+            joueurId, personnageId, { role, maintenant: Date.now() },
+        );
+        if (resultat.refus === null) set(resultat.etat as Partial<EntitySlice>);
+        return resultat.refus;
     },
 
     linkCharacterToCampaign: (playerId, characterId, campaignId, templateId) =>

@@ -117,6 +117,18 @@ galerie ou la fiche) le marque aussi rencontré, sans le montrer aux tablettes *
 neutre en neutre, un hostile ou un boss en ennemi. *Jusqu'au 2026-10-12, la fiche l'envoyait
 toujours en ennemi, la galerie selon son rôle.*
 
+**Faire un personnage joueur…** *(depuis le 21/11/2026, registre § 268)* : un PNJ rejoint le
+groupe. La confirmation propose d'abord les joueurs qui jouent déjà dans la campagne. Elle dit ce
+qui va changer, et nomme les **rencontres préparées** qui l'envoyaient : elles ne l'enverront plus.
+**Transformer** le fait passer dans le roster du joueur choisi, avec sa fiche, sa santé, ses
+relations et son image ; s'il est sur le plateau de Combat-OS, sa carte passe dans le camp des
+joueurs. Sa voix, son rôle et sa CA sont **gardés en réserve** et reviennent s'il redevient PNJ.
+Le geste inverse, **« Faire un PNJ… »**, est sur sa carte dans le roster (guide
+[Session-OS](10-Session-OS-le-cockpit.md)).
+
+> Le bouton du type, en tête de fiche, ne propose plus que **PNJ** ou **Monstre**. Il proposait
+> aussi « Joueur », mais ne changeait qu'une étiquette : le PNJ n'entrait chez aucun joueur.
+
 
 - **Préservation du Contexte** : Si vous accédez à la galerie via un lien direct (ex: depuis le Social Nexus), l'OS vous affiche immédiatement la fiche détaillée demandée.
 - **Navigation Fluide** : Le bouton "Retour à la Galerie" vous permet de revenir instantanément à la liste complète tout en gardant vos filtres de recherche.

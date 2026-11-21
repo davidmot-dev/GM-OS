@@ -132,4 +132,6 @@ export interface Entity {
      * comme avant.
      */
     voiceProfile?: import('../modules/voice/types').ProfilVocal;
+    /** Ce qu'il avait comme personnage joueur, s'il en a été un (§ 268) — `transformation.types.ts`. */
+    reserveDeTransformation?: import('./transformation.types').ReserveDeTransformation;
 }
