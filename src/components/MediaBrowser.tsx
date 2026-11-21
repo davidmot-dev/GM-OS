@@ -19,6 +19,7 @@ import { MediaItemThumbnail } from '../modules/image/components/MediaItemThumbna
 import { FullScreenPreview } from '../modules/image/components/FullScreenPreview';
 import { TacticalDetailPanel } from '../modules/image/components/TacticalDetailPanel';
 import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
+import { NIVEAU_DE_LA_MEDIATHEQUE } from './niveauxDesSurcouches';
 import { Etiquette } from './socle';
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
@@ -406,7 +407,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
       compacte » et l'échantillonnage du son sont des inventions du dessin.
     */
     return createPortal(
-        <div className="fixed inset-0 z-[100] flex flex-col gap-3 bg-app-bg p-4 font-sans text-app-text animate-in fade-in duration-300">
+        <div className={`fixed inset-0 ${NIVEAU_DE_LA_MEDIATHEQUE} flex flex-col gap-3 bg-app-bg p-4 font-sans text-app-text animate-in fade-in duration-300`}>
             {previewItem && (
                 <FullScreenPreview
                     media={previewItem}

@@ -38,6 +38,7 @@ import FenetreDesGestesDesHeros, { type GesteDesHeros } from '../modules/table/F
 import EditeurDIdentiteVisuelle, { type CibleDeLIdentite } from '../modules/ai/components/EditeurDIdentiteVisuelle';
 import { CadreDeSurcouche, BoutonPrincipal, BoutonSecondaire } from './socle/CadreDeSurcouche';
 import { CoinsOrnes } from './socle/Ornement';
+import { NIVEAU_DE_LA_FENETRE, NIVEAU_DES_QUESTIONS } from './niveauxDesSurcouches';
 
 // Chaque ouverture porte sa saisie ; une nouvelle valeur initiale la remonte.
 const SaisieDuPrompt: React.FC = () => {
@@ -45,7 +46,7 @@ const SaisieDuPrompt: React.FC = () => {
     const { t } = useTranslation(['common']);
     const [inputValue, setInputValue] = useState(() => typeof defaultValue === 'string' ? defaultValue : '');
     return (
-        <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+        <div role="dialog" aria-modal="true" className={`fixed inset-0 ${NIVEAU_DES_QUESTIONS} flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200`}>
             <CadreDeSurcouche
                 titre={t('common:prompt_title')}
                 icone={<Edit3 size={18} />}
@@ -120,7 +121,7 @@ const ModalProvider: React.FC = () => {
     return (
         <>
             {type === 'alert' && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                <div role="dialog" aria-modal="true" className={`fixed inset-0 ${NIVEAU_DES_QUESTIONS} flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200`}>
                     {/*
                       Même piège que celui du bouton d'annulation ci-dessous,
                       et corrigé en même temps : aucun appelant ne passe
@@ -142,7 +143,7 @@ const ModalProvider: React.FC = () => {
             )}
 
             {type === 'confirm' && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                <div role="dialog" aria-modal="true" className={`fixed inset-0 ${NIVEAU_DES_QUESTIONS} flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200`}>
                     {/*
                       **`onCancel || closeModal` : ou l'un, ou l'autre — jamais les deux.**
 
@@ -181,7 +182,7 @@ const ModalProvider: React.FC = () => {
             {type === 'prompt' && <SaisieDuPrompt key={typeof defaultValue === 'string' ? defaultValue : ''} />}
 
             {type === 'custom' && (
-                <div role="dialog" aria-modal="true" className={`fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/80 backdrop-blur-md animate-in fade-in duration-300 ${
+                <div role="dialog" aria-modal="true" className={`fixed inset-0 ${NIVEAU_DE_LA_FENETRE} flex items-center justify-center bg-app-bg/80 backdrop-blur-md animate-in fade-in duration-300 ${
                     customVariant === 'campaign-add' || customVariant === 'campaign-edit' ? 'p-0' : 'p-4'
                 }`}>
                     <div data-cadre-de-surcouche="" className={`relative bg-app-surface border border-app-border overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col ${
