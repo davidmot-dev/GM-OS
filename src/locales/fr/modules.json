@@ -234,6 +234,8 @@
       "attack_tooltip": "Ouvrir la fiche de ce combattant sur son jet, la cible de la carte en tête",
       "riposte": "Riposte",
       "riposte_tooltip": "Appliquer une attaque de cet adversaire au PJ ciblé : ses dégâts fixes, moins son Armure",
+      "affront": "Affronter",
+      "affront_tooltip": "Affrontement de Pénombre : encaisser une attaque, appliquer une action adverse, dissonance et opéra harmonique — le Psycholune ne lance pas",
       "status_add": "Lancer une altération d'état",
       "status_remove": "Dissiper l'effet {{name}}",
       "delete": "Supprimer du combat",

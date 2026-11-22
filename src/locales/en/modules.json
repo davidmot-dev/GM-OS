@@ -234,6 +234,8 @@
       "attack_tooltip": "Open this combatant's sheet on its roll, with the card's target on top",
       "riposte": "Riposte",
       "riposte_tooltip": "Apply one of this adversary's attacks to the targeted PC: its fixed damage, minus their Armour",
+      "affront": "Confront",
+      "affront_tooltip": "Pénombre confrontation: take an attack, apply an adverse action, dissonance and harmonic opera — the Psycholune never rolls",
       "status_add": "Add status effect",
       "status_remove": "Remove effect {{name}}",
       "delete": "Remove from combat",

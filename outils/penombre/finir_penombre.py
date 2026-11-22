@@ -27,6 +27,12 @@
 # porte la taille de la réserve — 10, 5 ou 0 selon les timbres du groupe (p. 24, 102) — et lui sert
 # de plafond (`maxSur`) ; `jet.penombre.tailleCollegiale` la nomme.
 #
+# 2.2.0 (22/11/2026, registre § 267, T17 ; David : relier le bestiaire, « Oui, relier ») : la colonne
+# « Résilience » du bestiaire remplit `conscience_max`, la formule de santé de départ : un adversaire
+# posé depuis le bestiaire naît à sa résilience (Antrustion 15, Mandigo 20, p. 41, 364), et son
+# maximum reste celui du livre quand il prend des coups. La santé suivie se nomme « Conscience /
+# résilience » : jetons d'une Éminence grise, résilience d'un adversaire.
+#
 # Usage : python -I -X utf8 outils/penombre/finir_penombre.py <export forgé> <sortie .gmos-driver> [correspondance.json]
 import json, os, sys, zipfile
 
@@ -154,14 +160,18 @@ pilote['tactical']['ranges'] = {
 combat = pilote['combat']
 combat['santeDeDepart'] = 'conscience_max'
 combat['statsToTrack'] = [
-    {'fieldId': 'conscience', 'label': 'Jetons conscience', 'isMainHP': True, 'isResource': True, 'max': 'conscience_max'},
+    {'fieldId': 'conscience', 'label': 'Conscience / résilience', 'isMainHP': True, 'isResource': True, 'max': 'conscience_max'},
     {'fieldId': 'jetons_actifs', 'label': 'Jetons actifs', 'isMainHP': False, 'isResource': True, 'max': 'conscience'},
 ]
 pilote['ui_config']['gauges'] = [
-    {'fieldId': 'conscience', 'label': 'Jetons conscience', 'color': '#ef4444', 'style': 'segmented'},
+    {'fieldId': 'conscience', 'label': 'Conscience / résilience', 'color': '#ef4444', 'style': 'segmented'},
     {'fieldId': 'jetons_actifs', 'label': 'Jetons actifs', 'color': '#10b981', 'style': 'segmented'},
 ]
-pilote['version'] = '2.1.0'
+# 2.2.0 : la résilience du bestiaire donne la santé de départ d'un adversaire (`santeDeDepart`).
+for colonne in (pilote.get('bestiaire') or {}).get('colonnes', []):
+    if colonne.get('id') == 'resilience':
+        colonne['champ'] = 'conscience_max'
+pilote['version'] = '2.2.0'
 
 champs = {f['id'] for s in etat['sheetTemplate']['sections'] for f in s['fields']}
 p = jet['penombre']
@@ -191,4 +201,4 @@ if sortie_correspondance:
         }, f, ensure_ascii=False, indent=2)
         f.write('\n')
 
-print(f"Pilote {pilote['name']} 2.1.0 : {len(champs)} champs, {len(correspondance)} clés de la fiche → {sortie}")
+print(f"Pilote {pilote['name']} 2.2.0 : {len(champs)} champs, {len(correspondance)} clés de la fiche → {sortie}")

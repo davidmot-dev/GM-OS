@@ -585,11 +585,12 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         aLaTable={regime.aLaTable}
                         icone={<Swords size={14} />}
                         onClick={() => gmCustom('fiche-combattant', { combatantId: combatant.id, ouvrirSur: 'jet' })}
-                        title={t(activeDriver?.jet?.cthulhuHack ? 'combat.card.riposte_tooltip' : 'combat.card.attack_tooltip')}
+                        title={t(activeDriver?.jet?.cthulhuHack ? 'combat.card.riposte_tooltip' : activeDriver?.jet?.penombre ? 'combat.card.affront_tooltip' : 'combat.card.attack_tooltip')}
                         data-attaquer
                     >
                         {/* Cthulhu Hack (§ 263, T16) : le même bouton s'appelle « Riposte » — le meneur n'y lance pas. */}
-                        {t(activeDriver?.jet?.cthulhuHack ? 'combat.card.riposte' : 'combat.card.attack')}
+                        {/* Pénombre (§ 267, T17) : « Affronter » — le Psycholune ne lance pas non plus. */}
+                        {t(activeDriver?.jet?.cthulhuHack ? 'combat.card.riposte' : activeDriver?.jet?.penombre ? 'combat.card.affront' : 'combat.card.attack')}
                     </Bouton>}
                     {calculateurDisponible(activeDriver) && <Bouton
                         variante="accent"

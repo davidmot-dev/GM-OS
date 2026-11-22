@@ -14,7 +14,8 @@ import { archetypeParId } from '../logic/archetypes';
 import { estUneFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
 import { SanteDuCombattantVoyageur } from './SanteDuCombattantVoyageur';
 import { JetDuCombattant } from './JetDuCombattant';
-import { attaqueDeCreaturePossible, cibleDeLAttaque, jetDuCombattantPossible, ripostePossible } from '../logic/jetDuCombattant';
+import { affrontementPossible, attaqueDeCreaturePossible, cibleDeLAttaque, jetDuCombattantPossible, ripostePossible } from '../logic/jetDuCombattant';
+import { AffrontementDePenombre } from './AffrontementDePenombre';
 import { AttaqueDeCreature } from './AttaqueDeCreature';
 import { RiposteDeCthulhuHack } from './RiposteDeCthulhuHack';
 import { armesDeLAdversaire, armesDeLaFicheAlien, attaqueParDefaut } from '../logic/attaqueDeLAdversaire';
@@ -185,7 +186,10 @@ export const FicheDuCombattant: React.FC = () => {
                 « Attaquer » (§ 263, T5) ouvre la même fenêtre sur ce jet, la cible de la carte en tête. */}
             {/* Alien (§ 263, T10) : une créature n'a pas d'attributs humains — « Attaquer » tire son attaque au D6. */}
             {/* Cthulhu Hack (§ 263, T16) : le meneur ne lance pas — « Riposte » applique les dégâts fixes. */}
-            {ouvrirSur === 'jet' && driver && ripostePossible(combattant, driver) ? (
+            {/* Pénombre (§ 267, T17) : le Psycholune ne lance pas — « Affronter » : résilience, action adverse, dissonance, opéra. */}
+            {ouvrirSur === 'jet' && driver && affrontementPossible(combattant, driver) ? (
+                <AffrontementDePenombre combattant={combattant} cible={cible} driver={driver} />
+            ) : ouvrirSur === 'jet' && driver && ripostePossible(combattant, driver) ? (
                 <RiposteDeCthulhuHack combattant={combattant} cible={cible} driver={driver} />
             ) : ouvrirSur === 'jet' && attaqueDeCreaturePossible(combattant, driver, valeurs) ? (
                 <AttaqueDeCreature combattant={combattant} valeurs={valeurs} cible={cible} />
