@@ -49,6 +49,7 @@
 | NOC 2.0.0 | générique (réserve) | non | 0 | 0 | |
 | Rêve de Dragon 2.0.0 | générique (d100) | non | 0 | 0 | combat en phases |
 | Within 1.0.0 | aucune | non | 0 | 0 | pilote à reprendre (🔴) |
+| Pénombre 2.0.0 (ajouté le 22/11) | `jet.penombre` | oui | 0 (six adversaires au corpus) | 0 | **le Psycholune ne lance jamais** : l'action adverse réussit d'office, les Éminences grises lancent contre l'adversité (p. 40-45) — une « Riposte », pas « Attaquer » |
 
 ⚠️ Les exports datent de dates diverses : un bestiaire ou un catalogue versé depuis n'y figure
 pas (Argyropée). **À recouper avec les pilotes installés chez David avant de coder** (export
@@ -116,6 +117,8 @@ frais des jeux retenus).
 - Q5 (non posée, réglée par la méthode) · les exports du dépôt ne sont pas toujours les pilotes
   installés (Argyropée) → **chaque tâche de jeu commence par un export frais demandé à David**.
   On ne code pas sur un export douteux.
+
+- 22/11 — David, en validant le pilote Pénombre 2.0.0 (registre § 270) : « consigne les affrontements dans la révision de combat-os pour les drivers » → **Pénombre entre au plan, seizième jeu (T17)**, après le lot 4. Ses affrontements ne suivent pas le jet d'adversaire des autres : voir T17.
 
 ## Le comment
 
@@ -239,7 +242,38 @@ le demande (Rêve de Dragon, RuneQuest) :
 - [ ] T14 · NOC — jet générique, Destin · C1 à C5, C7 · src/ ⛔ · à essayer par David
 - [ ] T15 · Rêve de Dragon — jet générique d100 et combat en phases · C1 à C5, C7 · src/ ⛔ · à
       essayer par David
-- [ ] T16 · Livraison — script de validation sur les quinze pilotes, e2e complet, captures,
+- [ ] T17 · Pénombre — les affrontements du livre (p. 40-45), ajoutés le 22/11 · C1 à C5, C7 · src/ ⛔ ·
+      à essayer par David. Ce qui diffère des autres jeux :
+      - **aucun jet du Psycholune** : comme la « Riposte » de Cthulhu Hack, le bouton de la carte de
+        l'adversaire ouvre le jet d'une Éminence grise (`jet.penombre`) avec l'**adversité** pour
+        difficulté (attaque, défense, feinte qui le vise) ; un effet magique garde sa propre difficulté
+        (p. 44) ;
+      - **adversité et résilience** : adversité = nombre d'informations de la description, résilience =
+        5 × ce nombre ; une attaque réussie, même de justesse, retire **1 point de résilience par succès**
+        (conséquence « attaque », p. 41, 44) ; une conséquence qui ôte une information baisse l'adversité ;
+      - **actions adverses** : une par adversaire et par tour, **réussie d'office** ; par défaut une cible
+        perd autant de jetons conscience que l'adversité, ou toutes la moitié arrondie au supérieur ;
+        moitié de perte contre un effet (tour perdu, succès en moins, élément désavantageux…) ; sacrifice
+        de résilience pour doubler (p. 42). La carte propose les actions de l'adversaire et applique la
+        perte aux jetons des cibles (`perdreDesJetons` du module de Pénombre, les inactifs d'abord) ;
+      - **défense** : une Éminence grise qui a réservé une action ; chaque succès annule la perte d'un
+        jeton, une autre conséquence coûte autant de succès que l'adversité (p. 44) ; **riposte** : +1
+        succès à la cible d'une attaque adverse qui réussit (p. 45) ;
+      - **dissonance** : jetons de dissonance (fable 1, mythe 2, muse 3) ; à 0 de résilience, action de
+        dissonance gratuite, résilience remise au maximum, un jeton en moins ; contamination par la peste
+        sur une action de clé de difficulté 1 ratée (p. 43) ; **opéra harmonique** contre la résilience
+        actuelle (p. 45) ;
+      - **ordre du tour** : les Éminences grises d'abord, dans l'ordre de leur choix, deux actions
+        chacune ; puis les adversaires ; défaite quand toutes sont épuisées (p. 40, 45) ;
+      - **bestiaire** : les six profils du corpus (`bestiaire-et-adversaires.md`, Antrustion p. 41, Férale
+        p. 347, Harpelle p. 348, le trio p. 360, Verizon p. 362, Mandigo p. 364) — « Remplir depuis le
+        corpus » les lit (colonnes Adversité, Résilience, Dissonance) ; la décision Q3 (bestiaires hors
+        champ) est à reposer à David pour ce jeu. Le pilote 2.1.0 (22/11) porte déjà ces six adversaires ;
+        `controlerLePilote` avertit qu'aucune colonne ne remplit la santé : la **résilience** doit devenir
+        la santé d'un adversaire posé au combat, sans passer par la conscience des Éminences grises ;
+      Essais : ceux du module de Pénombre (résilience, actions adverses), un essai de la carte, et l'e2e
+      `combatDesAdversaires.spec.ts`.
+- [ ] T16 · Livraison — script de validation sur les seize pilotes, e2e complet, captures,
       registre et synthèse · couvre C6, C7 · essai : le script, `combatDesAdversaires.spec.ts`
 
 ## Analyse

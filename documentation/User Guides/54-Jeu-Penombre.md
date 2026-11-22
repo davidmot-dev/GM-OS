@@ -1,8 +1,9 @@
 # 🎭 Jeu — Pénombre
 
 > **Pilote décrit :** « Pénombre », forgé par David, exporté le 2026-11-22, **fini le
-> 2026-11-22**, version 2.0.0 (`Export Dirvers/corriges/Penombre_driver_gmos_2.0.0.gmos-driver`,
-> construit par `outils/penombre/finir_penombre.py`). Thème `penombre`, fiche standard HTML,
+> 2026-11-22**, version 2.1.0 (`Export Dirvers/corriges/Penombre_driver_gmos_2.1.0.gmos-driver`,
+> construit par `outils/penombre/finir_penombre.py` ; la 2.1.0 ajoute le recompte de la réserve
+> collégiale et garde le bestiaire et l'identité visuelle de l'export de David). Thème `penombre`, fiche standard HTML,
 > bannière et identité visuelle livrés le même jour par GM-OS Studio. Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
@@ -99,10 +100,20 @@ inactifs d'abord (p. 24). Combat-OS suit les jetons restants comme santé.
 
 ![La réserve collégiale au bandeau](captures/jeu-penombre-reserves.jpg)
 
-La **réserve collégiale** est une ressource de table de 10 jetons, posée au bandeau et que les
-joueurs peuvent manipuler. Elle ne se perd jamais. Quand un timbre change, il faut la recompter à
-la main : 10 si toutes les Éminences grises sont harmonieuses, 5 si une est fausse, aucun si une
-est dissonante (p. 24) ; la variante « réserve héroïque » se règle en changeant son maximum.
+La **réserve collégiale** est une ressource de table, posée au bandeau et que les joueurs peuvent
+manipuler. Elle ne se perd jamais. Sa **taille** suit les timbres du groupe : 10 jetons si toutes
+les Éminences grises sont harmonieuses, 5 si une est fausse, aucun si une est dissonante (p. 24,
+102). Une seconde ressource, hors du bandeau, porte cette taille et sert de plafond.
+
+**Le recompte** (pilote 2.1.0) se fait chez le meneur :
+
+- **de lui-même**, quand « Cocher la partition » change le timbre d'une Éminence grise ;
+- **par le bouton** « Recompter la réserve collégiale » de l'étape « Préparer », qui dit la taille
+  actuelle et celle que demandent les timbres des fiches de la campagne — pour un timbre changé à
+  la main, ou par une merveille lancée sur une tablette.
+
+La réserve gagne ou perd l'écart de taille : les jetons déjà dépensés restent dépensés (le livre
+ne dit pas ce qu'ils deviennent). La variante « réserve héroïque » n'est pas gérée.
 
 ## La fiche HTML
 
@@ -116,8 +127,9 @@ fiche HTML qu'après « Sauvegarder ».
 
 ## Ce qui n'est pas dans le pilote
 
-- Les **affrontements** (p. 40-45) : adversité, résilience et actions adverses se jouent avec
-  Combat-OS et le bestiaire ; le tableau des six adversaires du livre est dans le corpus.
-- Le **recompte automatique** de la réserve collégiale d'après les timbres de tout le groupe.
+- Les **affrontements** (p. 40-45) : adversité, résilience et actions adverses ne sont pas encore
+  dans Combat-OS ; ils sont consignés dans la révision de Combat-OS (registre § 267, tâche T17).
+  Le bestiaire porte les six adversaires du livre, mais un adversaire posé au combat n'y reçoit pas
+  encore sa résilience.
 - Les **complications** se notent à la main sur la fiche, à la place d'une dépense ou d'une perte
   (p. 25).

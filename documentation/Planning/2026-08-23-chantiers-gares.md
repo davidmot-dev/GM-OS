@@ -14920,6 +14920,7 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 - **Spécifié le 20/11** : [spécification](2026-11-20-combat-jet-des-adversaires-autres-jeux.md). Décisions de David : les quatre lots, soit **quinze jeux** (Within hors champ) ; « Attaquer » ajouté sur la carte de Vampire ; bestiaires hors champ ; un jeu à la fois. Chaque jeu commence par un export frais de son pilote.
 - **Piège trouvé en écrivant le plan** : `coupAAppliquer` donne à tout jet compté en réussites la règle de Year Zero (« arme + succès − 1 »), fausse hors de Blade Runner et d'Alien. T0 la déclare par jeu avant d'en ouvrir un seul ; un jeu sans règle demande le montant.
 - **Recommandé** : essayer le § 263 avant T0, qui s'appuie sur lui.
+- **Pénombre ajouté le 22/11** (David : « consigne les affrontements dans la révision de combat-os pour les drivers ») : seizième jeu, tâche **T17**. Le Psycholune n'y lance jamais : l'action adverse réussit d'office, les Éminences grises lancent contre l'adversité, chaque succès d'attaque retire 1 point de résilience, dissonance et opéra harmonique (p. 40-45).
 - **Garé le 21/11** : David, « note le plan on va l'exécuter plus tard ». Rien n'est commencé ; on reprend à T0 quand il le demande, après « GM-OS tourne-t-il ? ».
 
 ### 268 · Transformer un PNJ en personnage joueur, et l'inverse — 21/11/2026
@@ -15003,17 +15004,38 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 - **Vérifié** : `npx tsc -b` ; dés et panneau (132 fichiers, 1 597 essais) ; corpus
   (`corpusDerivable`, `declarationDuCorpus`, 183) ; correspondances, fiches et manuel (236) ;
   lint des fichiers touchés ; e2e des captures.
-- **Reste** : l'essai de David (réimporter avec **Remplacer**) ; le recompte automatique de la
-  réserve collégiale d'après les timbres du groupe ; les affrontements dans Combat-OS.
+- **Validé par David le 22/11** : « tout est testé c'est bon ».
+- **Reste** : le recompte automatique de la réserve collégiale d'après les timbres du groupe
+  (demandé le 22/11) ; les affrontements, consignés au § 267 (T17).
+
+### 271 · Pénombre — le recompte de la réserve collégiale, pilote 2.1.0 — 22/11/2026
+
+- **La demande** : David, après avoir validé la 2.0.0 (« tout est testé c'est bon ») : « fais le
+  recompter la réserve collégiale ». Réponses du jour : **seul après une merveille, et un bouton** ;
+  **la règle de base** (10, 5 ou 0, p. 24) ; GM-OS fermé avant d'écrire.
+- **Livré** : `timbresDuGroupe` et `recompterLaReserveCollegiale` (module de Pénombre, 4 essais) —
+  la taille suit le pire timbre, la réserve gagne ou perd l'écart, les jetons dépensés le restent ;
+  au panneau, chez le meneur seulement (la tablette ne tient pas toutes les fiches) : recompte
+  automatique quand « Cocher la partition » change le timbre, et une ligne « Réserve collégiale de N
+  jetons ; les timbres du groupe en demandent M » avec le bouton (3 essais). Pilote **2.1.0** :
+  ressource `taille_reserve_collegiale` hors du bandeau, plafond (`maxSur`) de la réserve.
+- **L'export frais de David (16 h 52)** portait déjà le bestiaire (les six adversaires du corpus,
+  valeurs justes) et l'identité visuelle : la 2.1.0 les garde. `controlerLePilote` rend **un
+  avertissement** : aucune colonne du bestiaire ne remplit la santé. Laissé exprès — la résilience
+  n'est pas la conscience ; c'est le travail de T17 (§ 267).
+- **Vérifié** : `npx tsc -b`, lint, dés et panneau (132 fichiers, 1 606 essais).
+- **Validé par David le 22/11** : « c'est bon c'est testé ».
+- **Reste** : la variante héroïque, non gérée ; les affrontements (§ 267, T17).
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
-| 206 | **Pénombre — pilote 2.0.0, corpus relu, fiche reliée** | § 270 ; 🟠 livré le 22/11 — `jet.penombre`, jetons et réserve collégiale, corpus 19/19, fiche au moteur 28, zéro constat ; essai de David attendu | Réimporter `Export Dirvers/corriges/Penombre_driver_gmos_2.0.0.gmos-driver` avec Remplacer, puis un jet, une dépense, la fiche du jeu | Rien |
+| 207 | **Pénombre — recompte de la réserve collégiale, pilote 2.1.0** | § 271 ; 🟢 livré le 22/11, validé par David le jour même — seul après une merveille, et un bouton ; bestiaire de David gardé ; un avertissement laissé pour T17 | Aucun — clos | Rien |
+| 206 | **Pénombre — pilote 2.0.0, corpus relu, fiche reliée** | § 270 ; 🟢 livré le 22/11, validé par David le jour même — `jet.penombre`, jetons et réserve collégiale, corpus 19/19, fiche au moteur 28 ; affrontements consignés au § 267 (T17) | Aucun — le recompte est au § 271 | Rien |
 | 205 | **Socle commun BRP — corpus relu contre le livre** | § 269 ; 🟢 relu 17/17 le 21/11, pilote abandonné à la demande de David | Retirer le pilote par la corbeille (pas la gomme) | Rien |
 | 204 | **Transformer un PNJ en personnage joueur, et l'inverse** | § 268 ; 🟢 livré le 21/11, validé par David le jour même — T1 à T10, 3 171 essais, e2e des deux gestes | Aucun — clos | Rien |
-| 203 | **Combat-OS — le jet des adversaires pour quinze autres jeux** | § 267 ; spécifié le 20/11, ⏸ garé le 21/11 à la demande de David, pas commencé — T0 (règle des dégâts par jeu), puis T1 à T15 un jeu à la fois, T16 livraison | T0, après « GM-OS tourne-t-il ? » | L'essai du § 263, recommandé avant T0 |
+| 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11, Pénombre ajouté le 22/11 (T17), ⏸ garé le 21/11 à la demande de David, pas commencé — T0 (règle des dégâts par jeu), puis T1 à T15 un jeu à la fois, T16 livraison | T0, après « GM-OS tourne-t-il ? » | L'essai du § 263, recommandé avant T0 |
 | 202 | **La médiathèque s'ouvrait sous la fenêtre de campagne** | § 266 ; 🟢 corrigé le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 201 | **Le pilote de chaque personnage dans le roster des joueurs** | § 265 ; 🟢 livré le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 200 | **Loot-OS et le catalogue du pilote — tables de butin depuis l'équipement** | § 264 ; 🟢 **validé par David le 20/11** (« ok ca fonctionne bien :-) ») — T1 à T8 : ligne « Objet du catalogue » résolue au tirage ; « Nouvelle table depuis le catalogue » et « Ajouter depuis le catalogue » dans l'éditeur du pilote (Trésors) ; « Depuis le catalogue » en séance ; export vérifié ; guides 41-42 | Rien — chantier clos | Rien |
