@@ -38,6 +38,8 @@ export const CLES_RESERVEES_DE_LA_FICHE: ReadonlySet<string> = new Set([
     '__deltaGreen', '__shadowrun', '__shadowrunMatrice', '__shadowrunDerogations',
     '__cocSuivi', '__cocProfil', '__cocAvantages', '__cocPsychisme',
     '__franchissements',
+    // Pénombre (§ 267, T17, 22/11/2026) : la dissonance et l'opéra d'un adversaire en affrontement.
+    '_gmos_affrontement_penombre',
 ]);
 
 /** Une clé réservée : celles de la liste, et toute la famille `__rdd…` de Rêve de Dragon. */
