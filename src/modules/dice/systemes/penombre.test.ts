@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
     appliquerLaMerveille, composerLaReserveDePenombre, depenserDesJetons, difficulteDeLEffet, etatDeLaConscience,
     facesDuDeHarmonique, harmoniqueNommee, lancerPenombre, lireLaConscience, lireLeTimbre, perdreDesJetons,
-    reactiverUnJeton, relancerPenombre, succesDuDe, tailleDeLaReserveCollegiale, type RegleDePenombre,
+    reactiverUnJeton, recompterLaReserveCollegiale, relancerPenombre, succesDuDe, tailleDeLaReserveCollegiale,
+    timbresDuGroupe, type RegleDePenombre,
 } from './penombre';
 
 /** Les exemples du livre de base (pages imprimées = PDF), 22/11/2026. */
@@ -188,6 +189,32 @@ describe('Pénombre — la merveille et le timbre (p. 36-37, 102)', () => {
     });
     it('lit le timbre de la fiche, et celui de la fiche HTML', () => {
         expect(['Harmonieux', 'faux', 'false', 'dissonant', '', 'harmonious'].map(lireLeTimbre)).toEqual(['harmonieux', 'faux', 'faux', 'dissonant', 'harmonieux', 'harmonieux']);
+    });
+});
+
+describe('Pénombre — le recompte de la réserve collégiale (p. 24, 102)', () => {
+    const fiches = [
+        { id: 'lancine', sheetData: { timbre: 'Harmonieux' } },
+        { id: 'nimbe', sheetData: { timbre: 'Harmonieux' } },
+        { id: 'elegie', sheetData: { timbre: 'Faux' } },
+    ];
+    it('lit les timbres du groupe, celui qui vient de changer en priorité', () => {
+        expect(timbresDuGroupe(REGLE, fiches)).toEqual(['harmonieux', 'harmonieux', 'faux']);
+        expect(timbresDuGroupe(REGLE, fiches, { id: 'elegie', timbre: 'harmonieux' })).toEqual(['harmonieux', 'harmonieux', 'harmonieux']);
+        expect(timbresDuGroupe({ ...REGLE, timbre: undefined }, fiches)).toEqual([]);
+    });
+    it('une Éminence grise devient fausse : de 10 à 5, les jetons dépensés restent dépensés', () => {
+        expect(recompterLaReserveCollegiale({ valeur: 8, taille: 10 }, ['harmonieux', 'faux'])).toEqual({ valeur: 3, taille: 5, change: true });
+        expect(recompterLaReserveCollegiale({ valeur: 2, taille: 10 }, ['faux'])).toEqual({ valeur: 0, taille: 5, change: true });
+    });
+    it('dissonante : plus de réserve ; redevenue harmonieuse : la réserve revient', () => {
+        expect(recompterLaReserveCollegiale({ valeur: 4, taille: 5 }, ['dissonant', 'harmonieux'])).toEqual({ valeur: 0, taille: 0, change: true });
+        expect(recompterLaReserveCollegiale({ valeur: 0, taille: 0 }, ['harmonieux', 'harmonieux'])).toEqual({ valeur: 10, taille: 10, change: true });
+        expect(recompterLaReserveCollegiale({ valeur: 3, taille: 5 }, ['harmonieux'])).toEqual({ valeur: 8, taille: 10, change: true });
+    });
+    it('rien ne change quand la taille est déjà juste, ni sans fiche', () => {
+        expect(recompterLaReserveCollegiale({ valeur: 6, taille: 10 }, ['harmonieux'])).toEqual({ valeur: 6, taille: 10, change: false });
+        expect(recompterLaReserveCollegiale({ valeur: 6, taille: 10 }, [])).toEqual({ valeur: 6, taille: 10, change: false });
     });
 });
 

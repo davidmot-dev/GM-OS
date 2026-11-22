@@ -82,7 +82,8 @@ import { lireSymbaroum, sansCritiqueDeBase, type NatureDuTest } from '../../../d
 import { PreparationBarbarians, SuitesBarbarians } from './BarbariansAuJet';
 import { PreparationPenombre, SuitesPenombre, type FaitsDePenombre } from './PenombreAuJet';
 import { CHOIX_DE_PENOMBRE, LIBELLES_DES_ISSUES, appliquerLaMerveille, depenserDesJetons, lancerPenombre, lireLaConscience, lireLeTimbre,
-    perdreDesJetons, reactiverUnJeton, relancerPenombre, type ChoixDePenombre, type Conscience, type IssueDePenombre, type JetDePenombre } from '../../../dice/systemes/penombre';
+    perdreDesJetons, reactiverUnJeton, recompterLaReserveCollegiale, relancerPenombre, tailleDeLaReserveCollegiale, timbresDuGroupe,
+    type ChoixDePenombre, type Conscience, type IssueDePenombre, type JetDePenombre, type Timbre } from '../../../dice/systemes/penombre';
 import { CHOIX_DE_BARBARIANS, appliquerLeGeste, heroismeDeLaFiche, lancerBarbarians, modificateursDeBarbarians, soldeDesDes,
     LIBELLES_DE_BARBARIANS, type ChoixDeBarbarians, type GesteDeBarbarians, type JetDeBarbarians } from '../../../dice/systemes/barbarians';
 import { JourneeArgyropee, MagieArgyropee, OppositionArgyropee, PreparationArgyropee, SuitesArgyropee, type CompetenceDArgyropee } from './ArgyropeeAuJet';
@@ -849,6 +850,35 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** Pénombre : les jetons actifs de la réserve collégiale ; `undefined` si la campagne n'en tient pas (p. 24). */
     const collegialePenombre = reglePenombre?.reserveCollegiale && monnaie?.ressourcesDeTable.some(r => r.id === reglePenombre.reserveCollegiale)
         ? Math.max(0, Number(etatDesReserves[reglePenombre.reserveCollegiale]) || 0) : undefined;
+    /*
+      Pénombre : la taille de la réserve collégiale (10, 5 ou 0) et son recompte d'après les timbres
+      du groupe (p. 24, 102) — 22/11/2026, David : « fais le recompter la réserve collégiale ».
+      Seulement chez le meneur : la tablette d'un joueur ne tient pas forcément toutes les fiches.
+    */
+    const fichesPenombre = useMemo(
+        () => (reglePenombre && campaignId ? joueursDuGroupe.flatMap(j => j.characters).filter(c => c.campaignId === campaignId) : []),
+        [reglePenombre, campaignId, joueursDuGroupe],
+    );
+    const taillePenombre = reglePenombre?.tailleCollegiale && monnaie?.ressourcesDeTable.some(r => r.id === reglePenombre.tailleCollegiale)
+        ? Math.max(0, Number(etatDesReserves[reglePenombre.tailleCollegiale]) || 0) : undefined;
+    const peutRecompterPenombre = !pourLesJoueurs && !!reglePenombre?.reserveCollegiale && collegialePenombre !== undefined
+        && taillePenombre !== undefined && fichesPenombre.length > 0;
+    /** Recompte ; `remplace` : le timbre que ce personnage vient de prendre. Rend ce qui a changé, ou `null`. */
+    const recompterPenombre = (remplace?: Timbre): string | null => {
+        if (!peutRecompterPenombre || !reglePenombre?.reserveCollegiale || !reglePenombre.tailleCollegiale) return null;
+        const timbres = timbresDuGroupe(reglePenombre, fichesPenombre, remplace && personnageId ? { id: personnageId, timbre: remplace } : undefined);
+        const apres = recompterLaReserveCollegiale({ valeur: collegialePenombre!, taille: taillePenombre! }, timbres);
+        if (!apres.change) return null;
+        const motif = `Recompte de la réserve collégiale (${timbres.join(', ')})`;
+        const dTaille = apres.taille - taillePenombre!;
+        const dValeur = apres.valeur - collegialePenombre!;
+        // La taille est le plafond de la réserve : l'élever avant, l'abaisser après.
+        if (dTaille > 0) mouvoir(reglePenombre.tailleCollegiale, dTaille, motif);
+        if (dValeur) mouvoir(reglePenombre.reserveCollegiale, dValeur, motif);
+        if (dTaille < 0) mouvoir(reglePenombre.tailleCollegiale, dTaille, motif);
+        return `Réserve collégiale recomptée : taille ${taillePenombre} → ${apres.taille}, jetons actifs ${collegialePenombre} → ${apres.valeur} (p. 24).`;
+    };
+    const tailleAttenduePenombre = peutRecompterPenombre && reglePenombre ? tailleDeLaReserveCollegiale(timbresDuGroupe(reglePenombre, fichesPenombre)) : undefined;
     /** Pénombre : les atouts qu'on peut payer en plus — un niveau, et pas l'atout gratuit (p. 31). */
     const atoutsPenombre = reglePenombre
         ? reglePenombre.atouts.flatMap(a => {
@@ -2232,7 +2262,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         });
         if (effet.partitionComplete) ecrireLaConsciencePenombre(effet.apres.conscience);
         noterPenombre({ merveille: true });
-        redire(`${penombreDuLancer.titre} · merveille`, { total: 0, modifier: 0, rolls: [], totalDisplay: effet.texte.join(' ') });
+        // Le timbre a changé : la réserve collégiale se recompte d'elle-même chez le meneur (p. 36, 102).
+        const recompte = effet.apres.timbre !== timbrePenombre
+            ? recompterPenombre(effet.apres.timbre) ?? (pourLesJoueurs ? 'Le meneur recompte la réserve collégiale.' : null)
+            : null;
+        const texte = effet.texte.filter(l => !(recompte && l.startsWith('Le timbre a changé : recompter')));
+        redire(`${penombreDuLancer.titre} · merveille`, { total: 0, modifier: 0, rolls: [], totalDisplay: [...texte, ...(recompte ? [recompte] : [])].join(' ') });
     };
     /** Les succès manquent : réussite mitigée, prolongation ou échec, au choix du Psycholune (p. 32-33). */
     const choisirLIssuePenombre = (issue: IssueDePenombre) => {
@@ -3339,7 +3374,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     )}
                     {reglePenombre && (
                         <PreparationPenombre choix={choixPenombre} setChoix={setChoixPenombre} reserve={jet.penombre}
-                            atouts={atoutsPenombre} conscience={consciencePenombre} collegiale={collegialePenombre} />
+                            atouts={atoutsPenombre} conscience={consciencePenombre} collegiale={collegialePenombre}
+                            recompte={peutRecompterPenombre && taillePenombre !== undefined && tailleAttenduePenombre !== undefined ? {
+                                taille: taillePenombre, attendue: tailleAttenduePenombre,
+                                recompter: () => {
+                                    const dit = recompterPenombre();
+                                    if (dit) redire('Pénombre · réserve collégiale', { total: 0, modifier: 0, rolls: [], totalDisplay: dit });
+                                },
+                            } : undefined} />
                     )}
                     {regleArgyropee && (
                         <PreparationArgyropee choix={choixArgyropee} setChoix={setChoixArgyropee} seuil={jet.seuil} metiers={metiersArgyropee}

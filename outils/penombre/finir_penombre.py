@@ -22,6 +22,11 @@
 # - portées : les trois espaces du livre (p. 27) ; leur +2 et +5 ne valent que pour la magie (p. 30) ;
 # - version 2.0.0.
 #
+# 2.1.0 (22/11/2026, David : « fais le recompter la réserve collégiale », seul après une merveille et
+# par un bouton, règle de base) : une ressource de table hors du bandeau, `taille_reserve_collegiale`,
+# porte la taille de la réserve — 10, 5 ou 0 selon les timbres du groupe (p. 24, 102) — et lui sert
+# de plafond (`maxSur`) ; `jet.penombre.tailleCollegiale` la nomme.
+#
 # Usage : python -I -X utf8 outils/penombre/finir_penombre.py <export forgé> <sortie .gmos-driver> [correspondance.json]
 import json, os, sys, zipfile
 
@@ -126,13 +131,18 @@ jet['penombre'] = {
     'timbre': 'timbre',
     'partition': {'cle': 'partition_cle', 'notes': [f'partition_note{i}' for i in range(1, 5)]},
     'reserveCollegiale': 'reserve_collegiale',
+    'tailleCollegiale': 'taille_reserve_collegiale',
     'peste': 'peste',
 }
 pilote['dice'] = {'defaultDice': '1d8', 'logic': 'count-success', 'engine': 'pool'}
 
 pilote['ressourcesDeTable'] = [{
     'id': 'reserve_collegiale', 'label': 'Réserve collégiale', 'proprietaire': 'joueurs',
-    'depart': 10, 'min': 0, 'max': 10, 'visibleAuxJoueurs': True, 'manipulableParLesJoueurs': True,
+    'depart': 10, 'min': 0, 'max': 10, 'maxSur': 'taille_reserve_collegiale',
+    'visibleAuxJoueurs': True, 'manipulableParLesJoueurs': True,
+}, {
+    'id': 'taille_reserve_collegiale', 'label': 'Taille de la réserve collégiale', 'proprietaire': 'joueurs',
+    'depart': 10, 'min': 0, 'max': 10, 'horsDuBandeau': True, 'visibleAuxJoueurs': True, 'manipulableParLesJoueurs': False,
 }]
 
 pilote['tactical']['ranges'] = {
@@ -151,7 +161,7 @@ pilote['ui_config']['gauges'] = [
     {'fieldId': 'conscience', 'label': 'Jetons conscience', 'color': '#ef4444', 'style': 'segmented'},
     {'fieldId': 'jetons_actifs', 'label': 'Jetons actifs', 'color': '#10b981', 'style': 'segmented'},
 ]
-pilote['version'] = '2.0.0'
+pilote['version'] = '2.1.0'
 
 champs = {f['id'] for s in etat['sheetTemplate']['sections'] for f in s['fields']}
 p = jet['penombre']
@@ -181,4 +191,4 @@ if sortie_correspondance:
         }, f, ensure_ascii=False, indent=2)
         f.write('\n')
 
-print(f"Pilote {pilote['name']} 2.0.0 : {len(champs)} champs, {len(correspondance)} clés de la fiche → {sortie}")
+print(f"Pilote {pilote['name']} 2.1.0 : {len(champs)} champs, {len(correspondance)} clés de la fiche → {sortie}")

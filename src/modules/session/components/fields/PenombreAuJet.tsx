@@ -30,7 +30,12 @@ export const PreparationPenombre: React.FC<{
     conscience: Conscience | null;
     /** Les jetons actifs de la réserve collégiale ; `undefined` : la campagne n'en a pas. */
     collegiale?: number;
-}> = ({ choix, setChoix, reserve, atouts, conscience, collegiale }) => {
+    /**
+     * Le recompte de la réserve collégiale, chez le meneur : sa taille, celle que demandent les timbres
+     * du groupe (10, 5 ou 0, p. 24), et le geste. Absent sur la tablette.
+     */
+    recompte?: { taille: number; attendue: number; recompter: () => void };
+}> = ({ choix, setChoix, reserve, atouts, conscience, collegiale, recompte }) => {
     const magie = choix.magie;
     const regler = (maj: Partial<EffetMagiqueDePenombre>) => setChoix(c => ({ ...c, magie: { ...(c.magie ?? EFFET_PAR_DEFAUT), ...maj } }));
     const valeursDeLEchelle: number[] = DIFFICULTES_DE_PENOMBRE.map(d => d.valeur);
@@ -127,6 +132,18 @@ export const PreparationPenombre: React.FC<{
                     la réserve collégiale{collegiale !== undefined ? ` (${collegiale})` : ''}
                 </label>
             </div>
+            {recompte && (
+                <div className="flex flex-wrap items-center gap-2" data-recompte-penombre>
+                    <span className={recompte.attendue !== recompte.taille ? 'text-etat-danger' : 'text-app-text/60'}>
+                        Réserve collégiale de {recompte.taille} jeton{recompte.taille > 1 ? 's' : ''}
+                        {recompte.attendue !== recompte.taille
+                            ? ` ; les timbres du groupe en demandent ${recompte.attendue} (10, 5 ou 0, p. 24).`
+                            : ', conforme aux timbres du groupe.'}
+                    </span>
+                    <button type="button" className={bouton} disabled={recompte.attendue === recompte.taille}
+                        onClick={recompte.recompter}>Recompter la réserve collégiale</button>
+                </div>
+            )}
             {reserve && (
                 <span data-composition-penombre className="text-app-text/60">
                     {reserve.des.length ? decrireLesDes(reserve) : 'Aucun dé'} ; difficulté {reserve.difficulte}

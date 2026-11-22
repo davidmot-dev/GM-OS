@@ -9,6 +9,9 @@ import { DiceEngine } from '../../../dice/DiceEngine';
 import type { DescripteurDeJet } from '../../../dice/DescripteurDeJet';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
 import type { DiceConfig } from '../../../../types/drivers';
+import type { RessourceDeTable } from '../../../table/RessourcesDeTable';
+import { useSessionOSStore } from '../../useSessionOSStore';
+import { useRessourcesDeTableStore } from '../../../table/useRessourcesDeTableStore';
 
 /**
  * **Le jet de Pénombre au panneau** (22/11/2026) : le jet du pilote 2.0.0, sur les exemples du
@@ -29,6 +32,7 @@ const JET: DescripteurDeJet = {
         conscience: { restants: 'conscience', actifs: 'jetons_actifs', max: 'conscience_max' },
         timbre: 'timbre',
         partition: { cle: 'partition_cle', notes: ['partition_note1', 'partition_note2', 'partition_note3', 'partition_note4'] },
+        reserveCollegiale: 'reserve_collegiale', tailleCollegiale: 'taille_reserve_collegiale',
     },
 };
 const DICE = { defaultDice: '1d20', logic: 'count-success', engine: 'pool' } as unknown as DiceConfig;
@@ -146,5 +150,65 @@ describe('le jet de Pénombre au panneau', () => {
         monter({ ...LANCINE, jetons_actifs: 0 }, 'ame');
         fireEvent.click(screen.getByLabelText('Tenter des merveilles'));
         expect((screen.getByText('Lancer', { exact: true }) as HTMLButtonElement).disabled).toBe(true);
+    });
+});
+
+/** Le recompte de la réserve collégiale chez le meneur (22/11/2026, p. 24, 102). */
+describe('la réserve collégiale de Pénombre se recompte', () => {
+    const RESSOURCES: RessourceDeTable[] = [
+        { id: 'reserve_collegiale', label: 'Réserve collégiale', proprietaire: 'joueurs', depart: 10, min: 0, max: 10, maxSur: 'taille_reserve_collegiale' },
+        { id: 'taille_reserve_collegiale', label: 'Taille de la réserve collégiale', proprietaire: 'joueurs', depart: 10, min: 0, max: 10, horsDuBandeau: true },
+    ];
+    const initialSession = useSessionOSStore.getState();
+    const groupe = (timbreDElegie: string) => useSessionOSStore.setState({
+        players: [{ id: 'j', realName: 'Table', avatarUrl: '', isOnline: false, characters: [
+            { id: 'lancine', name: 'Lancine', portraitUrl: '', campaignId: 'c-pen', sheetData: { timbre: 'Harmonieux' } },
+            { id: 'elegie', name: 'Élégie', portraitUrl: '', campaignId: 'c-pen', sheetData: { timbre: timbreDElegie } },
+            { id: 'ailleurs', name: 'Autre', portraitUrl: '', campaignId: 'autre', sheetData: { timbre: 'Dissonant' } },
+        ] }],
+    } as never);
+    const valeur = (id: string) => useRessourcesDeTableStore.getState().valeur('c-pen', RESSOURCES, id);
+    const monterAuMeneur = (valeurs: Record<string, unknown>, harmonique: string) => {
+        const ecrire = vi.fn();
+        render(<PanneauDeJet descripteur={JET} dice={DICE} template={FICHE} valeurs={valeurs} ecrireSurLaFiche={ecrire}
+            campaignId="c-pen" ressourcesDeTable={RESSOURCES} personnageId="lancine" />);
+        fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: harmonique } });
+        return ecrire;
+    };
+    beforeEach(() => useRessourcesDeTableStore.setState({ reserves: {} }));
+    afterEach(() => useSessionOSStore.setState(initialSession, true));
+
+    it('Élégie est fausse : le bouton ramène la réserve à 5, les jetons dépensés restent dépensés', () => {
+        groupe('Faux');
+        useRessourcesDeTableStore.setState({ reserves: { 'c-pen': { reserve_collegiale: 8, taille_reserve_collegiale: 10 } } });
+        monterAuMeneur(LANCINE, 'ame');
+        expect(screen.getByText(/les timbres du groupe en demandent 5/)).toBeTruthy();
+        fireEvent.click(screen.getByText('Recompter la réserve collégiale'));
+        expect(valeur('taille_reserve_collegiale')).toBe(5);
+        expect(valeur('reserve_collegiale')).toBe(3);
+        expect(screen.getByText(/conforme aux timbres du groupe/)).toBeTruthy();
+    });
+
+    it('Élégie redevient harmonieuse : la réserve remonte à 10', () => {
+        groupe('Harmonieux');
+        useRessourcesDeTableStore.setState({ reserves: { 'c-pen': { reserve_collegiale: 2, taille_reserve_collegiale: 5 } } });
+        monterAuMeneur(LANCINE, 'ame');
+        fireEvent.click(screen.getByText('Recompter la réserve collégiale'));
+        expect(valeur('taille_reserve_collegiale')).toBe(10);
+        expect(valeur('reserve_collegiale')).toBe(7);
+    });
+
+    it('une merveille qui rend Lancine fausse recompte d’elle-même (p. 36, 102)', () => {
+        groupe('Harmonieux');
+        const toutesNotes = { ...LANCINE, partition_note1: true, partition_note2: true, partition_note3: true, partition_note4: true };
+        const ecrire = monterAuMeneur(toutesNotes, 'esprit');
+        fireEvent.click(screen.getByLabelText('Tenter des merveilles'));
+        faces(20);
+        lancer();
+        fireEvent.click(screen.getByText('Cocher la partition'));
+        expect(ecrire).toHaveBeenCalledWith(expect.objectContaining({ timbre: 'Faux' }));
+        expect(valeur('taille_reserve_collegiale')).toBe(5);
+        // Le D20 s'est payé sur la conscience : la réserve était pleine, elle perd l'écart de taille.
+        expect(valeur('reserve_collegiale')).toBe(5);
     });
 });

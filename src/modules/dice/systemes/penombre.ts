@@ -51,6 +51,11 @@ export interface RegleDePenombre {
     partition?: { cle: string; notes: string[] };
     /** L'identifiant de la réserve collégiale parmi les ressources de table (p. 24). */
     reserveCollegiale?: string;
+    /**
+     * L'identifiant de la ressource de table, hors du bandeau, qui porte la **taille** de la réserve
+     * collégiale — 10, 5 ou 0 selon les timbres du groupe — et lui sert de plafond (`maxSur`).
+     */
+    tailleCollegiale?: string;
     /** Le champ du nom de la peste : rempli, l'Éminence grise est pestiférée (p. 103). */
     peste?: string;
 }
@@ -514,4 +519,34 @@ export function tailleDeLaReserveCollegiale(timbres: readonly Timbre[], heroique
     if (heroique) return timbres.reduce((s, t) => s + (t === 'harmonieux' ? 2 : t === 'faux' ? 1 : 0), 0);
     if (timbres.includes('dissonant')) return 0;
     return timbres.includes('faux') ? 5 : 10;
+}
+
+/**
+ * Les timbres des Éminences grises du groupe, lus sur leurs fiches ; celle qui vient de changer
+ * passe par `remplace` (son écriture n'est peut-être pas encore revenue au magasin).
+ */
+export function timbresDuGroupe(
+    regle: RegleDePenombre,
+    fiches: readonly { id: string; sheetData?: Record<string, unknown> }[],
+    remplace?: { id: string; timbre: Timbre },
+): Timbre[] {
+    if (!regle.timbre) return [];
+    return fiches.map(f => (remplace && f.id === remplace.id ? remplace.timbre : lireLeTimbre(f.sheetData?.[regle.timbre!])));
+}
+
+/**
+ * **Recompter la réserve collégiale** — 22/11/2026, à la demande de David (« fais le recompter la
+ * réserve collégiale », réponse : seul après une merveille, et un bouton). Quand un timbre change, la
+ * réserve « est composée à tout moment » de 10, 5 ou 0 jetons (p. 24, 102). Le livre ne dit pas ce
+ * que deviennent les jetons déjà dépensés : on garde leur nombre, la réserve gagne ou perd l'écart de
+ * taille, bornée de 0 à la nouvelle taille. Un groupe sans fiche ne change rien.
+ */
+export function recompterLaReserveCollegiale(
+    avant: { valeur: number; taille: number },
+    timbres: readonly Timbre[],
+): { valeur: number; taille: number; change: boolean } {
+    if (timbres.length === 0) return { ...avant, change: false };
+    const taille = tailleDeLaReserveCollegiale(timbres);
+    const valeur = Math.min(taille, Math.max(0, avant.valeur + taille - avant.taille));
+    return { valeur, taille, change: taille !== avant.taille || valeur !== avant.valeur };
 }
