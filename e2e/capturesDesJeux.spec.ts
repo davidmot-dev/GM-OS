@@ -203,6 +203,23 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         scenes: c => scenesDeBarbarians(c),
     },
     {
+        // Pénombre (2026-11-22) : Lancine, fée noire, l'exemple du livre — âme D8 et un atout de niveau 2 (p. 31).
+        corpusId: 'penombre', slug: 'penombre', personnage: 'Lancine',
+        sheetData: {
+            nom: 'Lancine', peuple: 'Fée noire', cle: 'Âme', gamme: 'Mélusine', ton: 'Cassandre',
+            ame: 'D8', esprit: 'D12', etincelle: 'D10', nature: 'D6', nuit: 'D4',
+            atout1: 'N’aie pas peur, que pourrais-je te faire ?', atout1_niveau: 2,
+            atout2: 'Toutes les fées ne sont pas fragiles', atout2_niveau: 2,
+            atout3: 'Mémoire des textes et des anecdotes', atout3_niveau: 3, atout4: 'J’ai les yeux partout', atout4_niveau: 3,
+            magie1: 'Geste', magie1_harmonique: 'Âme', magie1_prerequis: 'Réciter un texte', magie1_niveau: 3,
+            pouvoir1: 'Accouchement', pouvoir1_type: 'Naissance',
+            conscience_max: 7, conscience: 7, jetons_actifs: 6, timbre: 'Harmonieux',
+        },
+        composantes: ['ame', 'atout1_niveau'],
+        reserves: { reserve_collegiale: 10 },
+        scenes: c => scenesDePenombre(c),
+    },
+    {
         // Argyropée (2026-11-08) : Vanille, l'exemple du livre 2 — Serrurerie 3, Malandrin +2 (p. 45).
         corpusId: 'argyropee', slug: 'argyropee', personnage: 'Vanille',
         sheetData: {
@@ -1383,6 +1400,46 @@ async function scenesDeBarbarians(c: ContexteDeScene): Promise<void> {
     await expect(ficheHtml.locator('[data-key="weapons.0.damage"]')).toHaveValue('d6+3');
     await f.waitForTimeout(1_000);
     await photographier(f.locator('body'), 'jeu-barbarians-fiche');
+}
+
+/**
+ * **Pénombre** (2026-11-22) : un effet magique de geste préparé — D20 merveilleux, niveau 3 sur une
+ * cible lointaine —, ses suites (succès dé par dé, relance, issues), puis la fiche HTML reliée.
+ */
+async function scenesDePenombre(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await panneau.locator('select').nth(0).selectOption('ame');
+    await panneau.locator('select').nth(1).selectOption('atout3_niveau');
+    await panneau.getByLabel('Tenter des merveilles').check();
+    await panneau.getByLabel('Effet magique').check();
+    await panneau.getByLabel('Niveau de l\'effet', { exact: true }).fill('3');
+    await panneau.getByLabel('Niveau de maîtrise', { exact: true }).fill('3');
+    await panneau.getByLabel('Distance', { exact: true }).selectOption('lointain');
+    const preparation = panneau.locator('[data-preparation-penombre]');
+    await expect(preparation.locator('[data-composition-penombre]')).toContainText('1D20 + 3D6 ; difficulté 5 ; 2 jetons');
+    await photographier(preparation, 'jeu-penombre-preparation');
+    const fenetre = await gmos.application.browserWindow(f);
+    await fenetre.evaluate(w => w.setContentSize(1440, 1800));
+    await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    const suites = panneau.locator('[data-suites-penombre]');
+    await expect(suites).toBeVisible();
+    await expect(suites.locator('[data-des-penombre]')).toContainText('D20 merveilleux');
+    await photographier(panneau, 'jeu-penombre-suites');
+    await fenetre.evaluate(w => w.setContentSize(1440, 900));
+
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });
+    await creerLaFiche.click();
+    const ficheHtml = f.frameLocator('iframe').first();
+    await expect(ficheHtml.locator('[data-key="identity.name"]')).toHaveValue('Lancine', { timeout: 30_000 });
+    await expect(ficheHtml.locator('[data-key="harmonics.soul"]')).toHaveValue('D8');
+    await expect(ficheHtml.locator('[data-key="assets.0.description"]')).toHaveValue('N’aie pas peur, que pourrais-je te faire ?');
+    await f.waitForTimeout(1_000);
+    await photographier(f.locator('body'), 'jeu-penombre-fiche');
 }
 
 /**

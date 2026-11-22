@@ -80,6 +80,9 @@ import {
 } from './SymbaroumAuJet';
 import { lireSymbaroum, sansCritiqueDeBase, type NatureDuTest } from '../../../dice/systemes/symbaroumRegles';
 import { PreparationBarbarians, SuitesBarbarians } from './BarbariansAuJet';
+import { PreparationPenombre, SuitesPenombre, type FaitsDePenombre } from './PenombreAuJet';
+import { CHOIX_DE_PENOMBRE, LIBELLES_DES_ISSUES, appliquerLaMerveille, depenserDesJetons, lancerPenombre, lireLaConscience, lireLeTimbre,
+    perdreDesJetons, reactiverUnJeton, relancerPenombre, type ChoixDePenombre, type Conscience, type IssueDePenombre, type JetDePenombre } from '../../../dice/systemes/penombre';
 import { CHOIX_DE_BARBARIANS, appliquerLeGeste, heroismeDeLaFiche, lancerBarbarians, modificateursDeBarbarians, soldeDesDes,
     LIBELLES_DE_BARBARIANS, type ChoixDeBarbarians, type GesteDeBarbarians, type JetDeBarbarians } from '../../../dice/systemes/barbarians';
 import { JourneeArgyropee, MagieArgyropee, OppositionArgyropee, PreparationArgyropee, SuitesArgyropee, type CompetenceDArgyropee } from './ArgyropeeAuJet';
@@ -520,6 +523,30 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const heroismeBarbarians = regleBarbarians?.heroisme ? heroismeDeLaFiche(valeursBarbarians[regleBarbarians.heroisme]) : undefined;
 
     /**
+     * **Pénombre** (22/11/2026) : la difficulté, les atouts payés, le D20 merveilleux, l'effet
+     * magique et qui paie ; ce que le dernier lancer savait, pour relancer et ne rien appliquer
+     * deux fois ; les jetons conscience, la partition et le timbre, écrits par les cartes.
+     */
+    const reglePenombre = descripteur.penombre;
+    const [choixPenombre, setChoixPenombre] = useState<ChoixDePenombre>(CHOIX_DE_PENOMBRE);
+    const [penombreDuLancer, setPenombreDuLancer] = useState<{ titre: string; compte: number; payeur: ChoixDePenombre['payeur']; faits: FaitsDePenombre } | null>(null);
+    const [ecritsPenombre, setEcritsPenombre] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const valeursPenombre = useMemo(() => ({ ...valeurs,
+        ...(ecritsPenombre.base === valeurs && ecritsPenombre.personnageId === personnageId ? ecritsPenombre.maj : {}),
+    }), [valeurs, ecritsPenombre, personnageId]);
+    const ecrirePenombre = (maj: Record<string, unknown>) => {
+        setEcritsPenombre(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche?.(maj);
+    };
+    const consciencePenombre = reglePenombre ? lireLaConscience(reglePenombre, valeursPenombre) : null;
+    const ecrireLaConsciencePenombre = (c: Conscience) => {
+        const champs = reglePenombre?.conscience;
+        if (champs) ecrirePenombre({ [champs.restants]: c.restants, [champs.actifs]: c.actifs, [champs.max]: c.max });
+    };
+    const timbrePenombre = lireLeTimbre(reglePenombre?.timbre ? valeursPenombre[reglePenombre.timbre] : undefined);
+    const pestifereePenombre = !!reglePenombre?.peste && String(valeursPenombre[reglePenombre.peste] ?? '').trim() !== '';
+
+    /**
      * **Argyropée** (2026-11-08) : le métier choisi au jet, le modificateur du Conteur,
      * l'entraide ; ce que le dernier lancer savait, pour titrer la dépense de Panache ;
      * le Panache écrit par la carte, relu sans attendre la fiche.
@@ -819,6 +846,18 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [bonusDuLancer, setBonusDuLancer] = useState(0);
     const [choixDesApports, setChoixDesApports] = useState<Record<string, string>>({});
     const etatDesReserves = monnaie ? etatDe(monnaie.campaignId, monnaie.ressourcesDeTable) : {};
+    /** Pénombre : les jetons actifs de la réserve collégiale ; `undefined` si la campagne n'en tient pas (p. 24). */
+    const collegialePenombre = reglePenombre?.reserveCollegiale && monnaie?.ressourcesDeTable.some(r => r.id === reglePenombre.reserveCollegiale)
+        ? Math.max(0, Number(etatDesReserves[reglePenombre.reserveCollegiale]) || 0) : undefined;
+    /** Pénombre : les atouts qu'on peut payer en plus — un niveau, et pas l'atout gratuit (p. 31). */
+    const atoutsPenombre = reglePenombre
+        ? reglePenombre.atouts.flatMap(a => {
+            const niveau = Math.min(3, Math.max(0, Math.trunc(Number(valeursPenombre[a.niveau])) || 0));
+            if (niveau <= 0 || (reglePenombre.composanteAtout && choix[reglePenombre.composanteAtout] === a.niveau)) return [];
+            const nom = a.libelle ? String(valeursPenombre[a.libelle] ?? '').trim() : '';
+            return [{ champ: a.niveau, label: nom || template.sections.flatMap(s => s.fields).find(f => f.id === a.niveau)?.label || a.niveau, niveau }];
+        })
+        : [];
     /*
       **Une réserve qui ne sert qu'à certains jets** (`si`, Nephilim, 2026-10-18) :
       la Stase au lancer d'un sort, l'Effet Mnémos à un test de Vécu. Écartée du
@@ -900,9 +939,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const jet = useMemo(
         () => {
             const prepare = preparerLeJet(
-            descripteur, regleDune ? valeursDune : descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : regleNephilim ? valeursNephilim : regleRuneQuest ? valeursRuneQuest : regleVampire ? valeursVampire : valeurs,
+            descripteur, regleDune ? valeursDune : descripteur.cthulhuHack ? valeursCH : suitesAlien ? valeursAlien : regleNephilim ? valeursNephilim : regleRuneQuest ? valeursRuneQuest : regleVampire ? valeursVampire : reglePenombre ? valeursPenombre : valeurs,
             {
                 ...(regleVampire ? { vampire: choixVampire } : {}),
+                ...(reglePenombre ? { penombre: choixPenombre } : {}),
                 ...(regleNephilim ? { nephilim: { ...choixNephilim, lieu: lieuN, conjonction: conjonctionN, intensite: intensiteN, seuilRK: seuilRKN } } : {}),
                 ...(regleRuneQuest ? { runequest: choixRuneQuest } : {}),
                 ...(regleDegenesis ? { degenesis: {
@@ -963,7 +1003,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [stimulationDuJet, desDuPotentiel, desDAideDegenesis, aideVersDegenesis, maniabiliteDegenesis, etatDegenesis, bonusDegenesis, descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleVampire, choixVampire, valeursVampire, regleShadowrun, choixShadowrunDuJet, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
+        [stimulationDuJet, desDuPotentiel, desDAideDegenesis, aideVersDegenesis, maniabiliteDegenesis, etatDegenesis, bonusDegenesis, descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleVampire, choixVampire, valeursVampire, reglePenombre, choixPenombre, valeursPenombre, regleShadowrun, choixShadowrunDuJet, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
     );
 
     /*
@@ -1148,6 +1188,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const pret = composantesARetenir.every(c => c.facultative || choix[c.id]) && jet.avertissements.length === 0
         && !(suitesAlien && resultat?.rolls.some(d => d.source === 'gear' && d.val === 1) && !paniqueJouee)
         && !(suitesAlien && jet.nombreDeDes + jet.desSecondaires === 0);
+    /** Pénombre : la réserve collégiale choisie ne couvre pas les jetons du lancer. */
+    const bloquePenombre = !!jet.penombre && jet.penombre.cout > 0 && jet.penombre.payeur === 'collegiale'
+        && (collegialePenombre ?? 0) < jet.penombre.cout;
     const briseAlien = !!combatAlien && !!suitesAlien && (synthetiqueAlien ? systemeArrete(etatCombatAlien)
         : etatCombatAlien.mort || Number(valeursAlien[combatAlien.sante]) <= 0);
 
@@ -1504,7 +1547,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const soldeBarbarians = soldeDesDes(choixBarbarians.bonus, choixBarbarians.malus);
         const modificateursBarbarians = modificateursDeBarbarians(jet.seuil, choixBarbarians);
         const metierArgyropee = bonusDuMetierChoisi(metiersArgyropee, choixArgyropee.metier);
-        const brutDuMoteur = regleBarbarians
+        const brutDuMoteur = reglePenombre && jet.penombre
+            // Pénombre : chaque dé à sa taille, un succès par tranche de 4 (p. 31).
+            ? lancerPenombre(jet.penombre, faces => DiceEngine.roll(faces))
+            : regleBarbarians
             ? lancerBarbarians(soldeBarbarians, modificateursBarbarians, () => DiceEngine.roll(6), regleBarbarians.cible ?? 9)
             // Argyropée : 1d10 lu de 0 à 9 + compétence + métier, sur des paliers fixes (p. 44).
             : regleArgyropee
@@ -1638,6 +1684,29 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 titre: `${choixBarbarians.reaction ? 'Réaction : ' : ''}${jet.composantes.map(c => c.label).join(' + ')}${reglage ? ` · ${reglage}` : ''}`,
                 compte: (d?.compte ?? 0) + 1, pointAccorde: false,
             }));
+        }
+        /*
+          Pénombre (22/11/2026) : les jetons de la constitution de la réserve se dépensent au
+          lancer — atouts en plus, D20 merveilleux, action collégiale, effet magique (p. 29, 31).
+          Les réglages d'une seule action se décochent ; la difficulté et le payeur restent.
+        */
+        if (reglePenombre && jet.penombre) {
+            const r = jet.penombre;
+            if (r.cout > 0) {
+                const motif = `${r.titre} : ${r.detailDuCout.join(', ')}`;
+                if (r.payeur === 'collegiale' && reglePenombre.reserveCollegiale) {
+                    dits.push(...mouvoir(reglePenombre.reserveCollegiale, -r.cout, motif).avertissements,
+                        `${r.cout} jeton${r.cout > 1 ? 's' : ''} collégia${r.cout > 1 ? 'ux' : 'l'} dépensé${r.cout > 1 ? 's' : ''}`);
+                } else if (consciencePenombre) {
+                    const apres = depenserDesJetons(consciencePenombre, r.cout);
+                    if (apres) {
+                        ecrireLaConsciencePenombre(apres);
+                        dits.push(`Conscience : ${consciencePenombre.actifs} → ${apres.actifs} jeton${apres.actifs > 1 ? 's' : ''} actif${apres.actifs > 1 ? 's' : ''} (${r.detailDuCout.join(', ')})`);
+                    }
+                }
+            }
+            setPenombreDuLancer(d => ({ titre: r.titre, compte: (d?.compte ?? 0) + 1, payeur: r.payeur, faits: {} }));
+            setChoixPenombre(c => ({ ...c, atoutsEnPlus: [], merveilles: false, collegiale: false, magie: null, succesEnPlus: 0, avantages: 0, desavantages: 0 }));
         }
         let oppositionADire: { titre: string; res: RollResult } | null = null;
         if (regleArgyropee) {
@@ -1793,6 +1862,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 .map(c => `${c.nom} (p. ${c.page}, ${c.deBonus ? 'dé bonus' : `+${c.bonus}`}, coût 0, ce test)`)].join(' · ')
             : regleArgyropee && jet.composantes.length > 0
             ? titreArgyropee()
+            // Pénombre : « Âme D8 + Je connais mon métier 2 · effet magique 3 ».
+            : jet.penombre
+            ? jet.penombre.titre
             : jet.composantes.length > 0
             ? jet.composantes.map(c => c.label).join(' + ')
             // Shadowrun : « Armes à distance + Agilité (11 dés, 7 de risque) », la compétence par son libellé.
@@ -2094,6 +2166,101 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         if (cout && regleBarbarians.heroisme) ecrireBarbarians({ [regleBarbarians.heroisme]: heroismeBarbarians! - cout });
         setResultat(apres);
         redire(`${barbariansDuLancer.titre} · ${LIBELLES_DE_BARBARIANS[apres.barbarians.bilan]}${cout ? ' (1 point d’héroïsme)' : ''}`, apres);
+    };
+    /**
+     * **Pénombre, après le lancer** (22/11/2026) : chaque geste se paie ou s'écrit une fois.
+     * Un jeton se dépense sur la conscience ou sur la réserve collégiale (p. 24) ; une perte ne
+     * touche jamais la réserve collégiale (p. 24, 33).
+     */
+    const payerPenombre = (n: number, payeur: ChoixDePenombre['payeur'], motif: string): boolean => {
+        if (n <= 0) return true;
+        if (payeur === 'collegiale') {
+            if (!reglePenombre?.reserveCollegiale || collegialePenombre === undefined || collegialePenombre < n) return false;
+            mouvoir(reglePenombre.reserveCollegiale, -n, motif);
+            return true;
+        }
+        const apres = consciencePenombre ? depenserDesJetons(consciencePenombre, n) : null;
+        if (!apres) return false;
+        ecrireLaConsciencePenombre(apres);
+        return true;
+    };
+    const jetPenombre = (resultat as JetDePenombre | null)?.penombre ? resultat as JetDePenombre : null;
+    const noterPenombre = (faits: FaitsDePenombre) => setPenombreDuLancer(d => d && { ...d, faits: { ...d.faits, ...faits } });
+    /** Relancer tout ou partie des dés, pour 1 jeton ; les conséquences déjà obtenues restent (p. 31, 34). */
+    const relancerPenombreAuPanneau = (rangs: number[]) => {
+        if (!jetPenombre || !penombreDuLancer || rangs.length === 0) return;
+        if (!payerPenombre(1, penombreDuLancer.payeur, `${penombreDuLancer.titre} : relance`)) return;
+        const apres = relancerPenombre(jetPenombre, rangs, faces => DiceEngine.roll(faces));
+        setResultat(apres);
+        redire(`${penombreDuLancer.titre} · relance (1 jeton)`, apres);
+    };
+    /** La fausse note fait perdre 1 jeton, les inactifs d'abord (p. 24, 34). */
+    const perdreLaFausseNotePenombre = () => {
+        if (!jetPenombre || !penombreDuLancer || penombreDuLancer.faits.fausseNote || !consciencePenombre) return;
+        const apres = perdreDesJetons(consciencePenombre, 1);
+        ecrireLaConsciencePenombre(apres);
+        noterPenombre({ fausseNote: true });
+        redire(`${penombreDuLancer.titre} · fausse note`, { total: 0, modifier: 0, rolls: [], totalDisplay: `1 jeton perdu : ${consciencePenombre.restants} → ${apres.restants} (p. 34).` });
+    };
+    /** L'envolée réactive un jeton dépensé, conscience ou collégial (p. 34, 46) ; pas collégial pour une dissonante (p. 103). */
+    const reactiverPenombre = (ou: 'conscience' | 'collegiale') => {
+        if (!jetPenombre || !penombreDuLancer || penombreDuLancer.faits.envolee) return;
+        if (ou === 'collegiale') {
+            if (!reglePenombre?.reserveCollegiale || collegialePenombre === undefined || timbrePenombre === 'dissonant') return;
+            mouvoir(reglePenombre.reserveCollegiale, 1, `${penombreDuLancer.titre} : envolée`);
+        } else {
+            if (!consciencePenombre || consciencePenombre.actifs >= consciencePenombre.restants) return;
+            ecrireLaConsciencePenombre(reactiverUnJeton(consciencePenombre));
+        }
+        noterPenombre({ envolee: true });
+        redire(`${penombreDuLancer.titre} · envolée`, { total: 0, modifier: 0, rolls: [], totalDisplay: `1 jeton ${ou === 'collegiale' ? 'collégial' : 'conscience'} réactivé (p. 34).` });
+    };
+    /** La merveille coche la partition et change peut-être le timbre (p. 36-37). */
+    const appliquerLaMerveillePenombre = () => {
+        if (!jetPenombre || !penombreDuLancer || penombreDuLancer.faits.merveille || !reglePenombre?.partition || !consciencePenombre) return;
+        const part = reglePenombre.partition;
+        const effet = appliquerLaMerveille({
+            cle: valeursPenombre[part.cle] === true,
+            notes: part.notes.map(n => valeursPenombre[n] === true),
+            timbre: timbrePenombre,
+            conscience: consciencePenombre,
+        }, jetPenombre.penombre.estLaCle);
+        ecrirePenombre({
+            [part.cle]: effet.apres.cle,
+            ...Object.fromEntries(part.notes.map((n, i) => [n, effet.apres.notes[i]])),
+            ...(reglePenombre.timbre ? { [reglePenombre.timbre]: { harmonieux: 'Harmonieux', faux: 'Faux', dissonant: 'Dissonant' }[effet.apres.timbre] } : {}),
+        });
+        if (effet.partitionComplete) ecrireLaConsciencePenombre(effet.apres.conscience);
+        noterPenombre({ merveille: true });
+        redire(`${penombreDuLancer.titre} · merveille`, { total: 0, modifier: 0, rolls: [], totalDisplay: effet.texte.join(' ') });
+    };
+    /** Les succès manquent : réussite mitigée, prolongation ou échec, au choix du Psycholune (p. 32-33). */
+    const choisirLIssuePenombre = (issue: IssueDePenombre) => {
+        if (!jetPenombre || !penombreDuLancer || penombreDuLancer.faits.issue || jetPenombre.penombre.reussite) return;
+        const manquants = jetPenombre.penombre.manquants;
+        let detail = '';
+        if (issue === 'mitigee') {
+            if (!payerPenombre(manquants, penombreDuLancer.payeur, `${penombreDuLancer.titre} : réussite mitigée`)) return;
+            detail = `${manquants} jeton${manquants > 1 ? 's' : ''} dépensé${manquants > 1 ? 's' : ''}`;
+        } else if (issue === 'prolongation') {
+            if (!consciencePenombre) return;
+            const apres = perdreDesJetons(consciencePenombre, manquants);
+            ecrireLaConsciencePenombre(apres);
+            // La difficulté de la nouvelle action est le nombre de succès manquants (p. 33).
+            setChoixPenombre(c => ({ ...c, difficulte: manquants, avantages: 0, desavantages: 0 }));
+            detail = `conscience ${consciencePenombre.restants} → ${apres.restants} ; nouvelle action, difficulté ${manquants}`;
+        }
+        const libelle = LIBELLES_DES_ISSUES[issue];
+        const apres: JetDePenombre = {
+            ...jetPenombre,
+            tagSuccess: issue === 'mitigee',
+            degre: issue === 'mitigee' ? 'reussite-normale' : 'echec-normal',
+            totalDisplay: `${libelle} — ${jetPenombre.penombre.succes} succès pour une difficulté de ${jetPenombre.penombre.difficulte}${detail ? ` ; ${detail}` : ''}`,
+            penombre: { ...jetPenombre.penombre, libelle },
+        };
+        setResultat(apres);
+        noterPenombre({ issue });
+        redire(`${penombreDuLancer.titre} · ${libelle.toLowerCase()}`, apres);
     };
     /** Faveur divine : 1 point d'héroïsme, tous les dés relancés, le second jet gardé (p. 58). */
     const faveurDivineBarbarians = () => {
@@ -2627,7 +2794,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const barbariansDuResultat = (resultat as JetDeBarbarians | null)?.barbarians;
     const cocDuResultat = (resultat as JetDeCoc | null)?.coc;
     const argyropeeDuResultat = (resultat as JetDArgyropee | null)?.argyropee;
-    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat && !barbariansDuResultat && !argyropeeDuResultat && !cocDuResultat
+    const penombreDuResultat = (resultat as JetDePenombre | null)?.penombre;
+    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat && !barbariansDuResultat && !argyropeeDuResultat && !cocDuResultat && !penombreDuResultat
         && (jet.desEchelonnes.length > 0 || jet.nombreDeDes + jet.desSecondaires > 1);
     const v = verdict(reussites, regleDune && duneDuLancer ? duneDuLancer.difficulte : jet.reussitesRequises);
     // Un dé écarté n'a rien déclenché : le compter ici annoncerait une
@@ -2645,7 +2813,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       si le jeu y a quelque chose : une difficulté, des réserves où puiser, la
       préparation d'Alien… — une étape vide numérotée mentirait sur l'ordre.
     */
-    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleArgyropee || !!regleCoc || !!regleRuneQuest || !!regleDegenesis || !!regleVampire || !!regleShadowrun || disponiblesPerso.length > 0
+    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!reglePenombre || !!regleArgyropee || !!regleCoc || !!regleRuneQuest || !!regleDegenesis || !!regleVampire || !!regleShadowrun || disponiblesPerso.length > 0
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
         || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable
@@ -2662,10 +2830,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const degenesisDuResultat = (resultat as JetDeDegenesis | null)?.degenesis;
     const vampireDuResultat = (resultat as JetDeVampire | null)?.vampire;
     const shadowrunDuResultat = (resultat as JetDeShadowrun | null)?.shadowrun;
-    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || argyropeeDuResultat || runequestDuResultat || degenesisDuResultat || vampireDuResultat || shadowrunDuResultat || cocDuResultat)
-        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, Argyropée p. 44, RuneQuest p. 142, Degenesis p. 19, Vampire p. 120 et 207, COC p. 58), et non le degré générique du moteur.
+    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || argyropeeDuResultat || runequestDuResultat || degenesisDuResultat || vampireDuResultat || shadowrunDuResultat || cocDuResultat || penombreDuResultat)
+        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, Argyropée p. 44, RuneQuest p. 142, Degenesis p. 19, Vampire p. 120 et 207, COC p. 58, Pénombre p. 32-33), et non le degré générique du moteur.
         ? <span className={'font-black uppercase tracking-widest ' + (resultat.tagSuccess ? 'text-etat-succes' : 'text-etat-danger')}>
-            {gardeDuResultat?.libelle ?? argyropeeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? vampireDuResultat?.libelle ?? shadowrunDuResultat?.libelle ?? cocDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
+            {penombreDuResultat?.libelle ?? gardeDuResultat?.libelle ?? argyropeeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? vampireDuResultat?.libelle ?? shadowrunDuResultat?.libelle ?? cocDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
         </span>
         : resultat && !paniqueEnAttente
         && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
@@ -2760,7 +2928,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {/* Le seuil, décomposé — on doit voir d'où il sort. Un jeu à
                             réserve pure n'en compose aucun : on ne montre pas un « Seuil 0 »
                             qui se lirait comme une mesure. */}
-                        {((descripteur.seuil ?? []).length > 0 || descripteur.cible) && (
+                        {/* Pénombre : l'harmonique et l'atout ne composent aucun seuil (« 8 + 2 » se lirait comme une somme). */}
+                        {((descripteur.seuil ?? []).length > 0 || descripteur.cible) && !reglePenombre && (
                             <div className="flex items-baseline gap-2 text-xs">
                                 <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">
                                     {/* COC : la valeur s'ajoute au d20 (« bonus après 1D20 + » de la feuille), ce n'est pas un seuil. */}
@@ -3168,6 +3337,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {regleBarbarians && (
                         <PreparationBarbarians choix={choixBarbarians} setChoix={setChoixBarbarians} seuil={jet.seuil} />
                     )}
+                    {reglePenombre && (
+                        <PreparationPenombre choix={choixPenombre} setChoix={setChoixPenombre} reserve={jet.penombre}
+                            atouts={atoutsPenombre} conscience={consciencePenombre} collegiale={collegialePenombre} />
+                    )}
                     {regleArgyropee && (
                         <PreparationArgyropee choix={choixArgyropee} setChoix={setChoixArgyropee} seuil={jet.seuil} metiers={metiersArgyropee}
                             competences={competencesArgyropee} opposition={bilanOppositionArgyropee && !bilanOppositionArgyropee.issue ? bilanOppositionArgyropee : null}
@@ -3419,7 +3592,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système.
                         Pas chez Crimes : le Potentiel dit le nombre de dés, rien ne s'y ajoute ;
                         ni chez Barbarians, dont les dés de bonus et de malus se règlent à l'étape 2. */}
-                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleArgyropee || regleCoc || regleRuneQuest || regleDegenesis || regleVampire || regleShadowrun ? 'hidden' : ''}`}>
+                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || reglePenombre || regleArgyropee || regleCoc || regleRuneQuest || regleDegenesis || regleVampire || regleShadowrun ? 'hidden' : ''}`}>
                         <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                         <button
                             onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -3568,7 +3741,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         <button
                             onClick={lancer}
-                            disabled={!pret || briseAlien || (!!suiteDuDestin && suiteDuDestin.personnageId === personnageId) || (!!regleDune && (suiviDune.bafoues.includes(principeDune) || (!!duneDuLancer && !duneDuLancer.bilan.clos)))}
+                            disabled={!pret || briseAlien || bloquePenombre || (!!suiteDuDestin && suiteDuDestin.personnageId === personnageId) || (!!regleDune && (suiviDune.bafoues.includes(principeDune) || (!!duneDuLancer && !duneDuLancer.bilan.clos)))}
                             className={`w-full sm:w-auto min-h-[44px] px-10 py-3 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all ${
                                 !pret
                                     ? 'bg-app-text/5 text-app-text/20 cursor-not-allowed'
@@ -3747,7 +3920,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             le mur n° 4, il y est réellement versé. */}
                         {/* Degenesis n'a pas de monnaie à nourrir : ses succès en trop ne valent rien hors des actions complexes. */}
                         {/* Vampire : l'excédent est la marge, dite avec les suites du jet (p. 121). */}
-                        {v.excedent > 0 && !regleJetAlien && !gardeDuResultat && !degenesisDuResultat && !vampireDuResultat && !shadowrunDuResultat && (
+                        {/* Pénombre : les succès se lisent tous dans les suites, pour les conséquences techniques (p. 34) ; pas d'« excédent ». */}
+                        {v.excedent > 0 && !regleJetAlien && !gardeDuResultat && !degenesisDuResultat && !vampireDuResultat && !shadowrunDuResultat && !penombreDuResultat && (
                             <span className="text-etat-alerte/80 font-mono">
                                 +{v.excedent}{monnaie && jet.cout.ressource ? ` ${nomDe(jet.cout.ressource)}` : ' excédent'}
                             </span>
@@ -3891,6 +4065,16 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             <SuitesBarbarians key={barbariansDuLancer.compte} jet={resultat as JetDeBarbarians} reaction={barbariansDuLancer.reaction}
                                 heroisme={ecrireSurLaFiche ? heroismeBarbarians : undefined} pointAccorde={barbariansDuLancer.pointAccorde}
                                 geste={gesteBarbarians} faveurDivine={faveurDivineBarbarians} accorderUnPoint={accorderUnPointBarbarians} />
+                        )}
+                        {reglePenombre && penombreDuLancer && jetPenombre && (
+                            <SuitesPenombre key={penombreDuLancer.compte} jet={jetPenombre} faits={penombreDuLancer.faits}
+                                conscience={consciencePenombre} collegiale={collegialePenombre} payeur={penombreDuLancer.payeur}
+                                timbre={timbrePenombre} pestiferee={pestifereePenombre}
+                                relancer={ecrireSurLaFiche || penombreDuLancer.payeur === 'collegiale' ? relancerPenombreAuPanneau : undefined}
+                                perdreLaFausseNote={ecrireSurLaFiche ? perdreLaFausseNotePenombre : undefined}
+                                reactiver={reactiverPenombre}
+                                appliquerLaMerveille={ecrireSurLaFiche && reglePenombre.partition ? appliquerLaMerveillePenombre : undefined}
+                                choisirLIssue={choisirLIssuePenombre} />
                         )}
                         {regleArgyropee && argyropeeDuLancer && argyropeeDuResultat && (
                             <SuitesArgyropee key={argyropeeDuLancer.compte} jet={resultat as JetDArgyropee}

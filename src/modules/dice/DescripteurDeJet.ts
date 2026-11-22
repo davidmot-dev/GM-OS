@@ -29,6 +29,7 @@ import { CHOIX_DE_RUNEQUEST, calculerRuneQuest, type CalculDeRuneQuest, type Cho
 import { ajustementsDuJet, lireLEtat } from './systemes/progressionDeRuneQuest';
 import { reserveDeDegenesis, type ChoixDeDegenesis, type ReserveDeDegenesis } from './systemes/degenesis';
 import { affaiblissementDuGroupement, reserveDeVampire, type ChoixDeVampire, type ReserveDeVampire } from './systemes/vampire';
+import { composerLaReserveDePenombre } from './systemes/penombre';
 import { desDeRisqueConseilles, reserveDeShadowrun, rrBornee, type ChoixDeShadowrun, type ReserveDeShadowrun } from './systemes/shadowrun';
 import { lireSuiviShadowrun } from './systemes/suiviDeShadowrun';
 import { lireMatriceShadowrun, preparerMatriceShadowrun } from './systemes/matriceDeShadowrun';
@@ -530,6 +531,13 @@ export interface DescripteurDeJet {
      */
     barbarians?: import('./systemes/barbarians').RegleDeBarbarians;
     /**
+     * **Pénombre** — 22/11/2026 (`systemes/penombre.ts`) : le dé de l'harmonique retenue (D4 à
+     * D12, lu sur la fiche) ou le D20 merveilleux, plus autant de D6 que le niveau d'un atout ;
+     * chaque dé donne un succès par tranche de 4, comparés à la difficulté (p. 31). Les
+     * composantes du seuil désignent l'harmonique et l'atout : elles ne s'additionnent pas.
+     */
+    penombre?: import('./systemes/penombre').RegleDePenombre;
+    /**
      * **Argyropée** — 2026-11-08 (`systemes/argyropee.ts`) : un d10 lu de 0 à 9,
      * additionné à la compétence et au bonus du métier choisi au jet, lu sur cinq
      * paliers fixes (0 ou moins, 1-7, 8-9, 10-14, 15+) ; modificateur ±5, entraide,
@@ -652,6 +660,8 @@ export interface ChoixDuJoueur {
     degenesis?: Partial<ChoixDeDegenesis>;
     /** Ce que le panneau règle pour Vampire (`DescripteurDeJet.vampire`) : spécialité, dés du conteur, jet de jauge. */
     vampire?: Partial<ChoixDeVampire>;
+    /** Ce que le panneau règle pour Pénombre (`DescripteurDeJet.penombre`) : difficulté, atouts payés, merveilles, magie. */
+    penombre?: Partial<import('./systemes/penombre').ChoixDePenombre>;
     /** Ce que le panneau règle pour Shadowrun (`DescripteurDeJet.shadowrun`) : risque, RR, avantage, spécialisation. */
     shadowrun?: Partial<ChoixDeShadowrun>;
     /** La valeur de l'adversaire, quand le jet s'oppose à lui. Absente : pas d'opposition. */
@@ -766,6 +776,8 @@ export interface JetPrepare {
     degenesis?: ReserveDeDegenesis;
     /** Le groupement de Vampire et ses dés de Soif (`DescripteurDeJet.vampire`). */
     vampire?: ReserveDeVampire;
+    /** La réserve de Pénombre : dé harmonique ou merveilleux, D6 des atouts, difficulté et coût en jetons. */
+    penombre?: import('./systemes/penombre').ReserveDePenombre;
     /** Shadowrun : la réserve, ses dés de risque, la RR, l'avantage et la RR lue sur la ligne de la compétence. */
     shadowrun?: ReserveDeShadowrun & { rrDeLaCompetence?: number };
     nombreDeDes: number;
@@ -1209,7 +1221,17 @@ export function preparerLeJet(
       qu'on croit que la correction a échoué.* Le contrôle du pilote demande
       quand même le retrait du champ mort.
     */
-    const additionnees = additionner(descripteur.desEchelonnes ? [] : descripteur.seuil ?? []);
+    /*
+      **Pénombre** (22/11/2026) : l'harmonique et l'atout se choisissent comme une composante du
+      seuil, mais un dé harmonique vaut « D8 », pas un nombre, et rien ne s'additionne (p. 31).
+      Sans ce détour, chaque harmonique crierait « ce n'est pas un nombre » et le bouton resterait gris.
+    */
+    const penombre = descripteur.penombre
+        ? composerLaReserveDePenombre(descripteur.penombre, valeursDeLaFiche, choix.champs, choix.penombre,
+            Object.fromEntries((sections ?? []).flatMap(s => s.fields).map(f => [f.id, f.label])))
+        : undefined;
+    if (penombre) { avertissements.push(...penombre.avertissements); remarques.push(...penombre.remarques); }
+    const additionnees = additionner(descripteur.desEchelonnes || penombre ? [] : descripteur.seuil ?? []);
     let seuil = additionnees.total;
     if (descripteur.cthulhuHack) {
         const effet = modificateursCH(descripteur.cthulhuHack, valeursDeLaFiche, additionnees.retenues[0]?.champ);
@@ -1219,6 +1241,11 @@ export function preparerLeJet(
         if (effet.indisponible) avertissements.push('Cette conséquence empêche cette action : attendre son terme.');
     }
     let composantes = additionnees.retenues;
+    // Pénombre : le dé harmonique par son nombre de faces, chaque atout par son niveau, pour les dire.
+    if (penombre) composantes = [
+        ...(penombre.harmonique ? [{ label: penombre.harmonique.label, champ: penombre.harmonique.champ, valeur: penombre.harmonique.faces }] : []),
+        ...penombre.atouts.map(a => ({ label: a.label, champ: a.champ, valeur: a.niveau })),
+    ];
     let explicationDuSeuil: string | undefined;
     let echelle: EchelleDuJet | undefined;
     let nephilim: JetDeNephilim | undefined;
@@ -1681,6 +1708,7 @@ export function preparerLeJet(
         ...(degenesis ? { degenesis } : {}),
         ...(vampire ? { vampire } : {}),
         ...(shadowrun ? { shadowrun } : {}),
+        ...(penombre ? { penombre } : {}),
         echelle,
         /*
           Quand les dés sont échelonnés, c'est leur nombre qui fait foi : ils ne
@@ -1728,7 +1756,8 @@ export function preparerLeJet(
         // NOC compare aussi un niveau à la difficulté : sa difficulté n'est pas un compte de réussites.
         // Barbarians compare une somme à 9, COC un d20 + caractéristique à la difficulté : une réussite ou aucune.
         // Argyropée lit une somme sur des paliers fixes (p. 44) : de même.
-        reussitesRequises: oppositionSR ? succesAdversesShadowrun(oppositionSR) : matriceSR?.seuil ?? (descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians || descripteur.argyropee || descripteur.coc ? 1 : bornes ? difficulte : 1),
+        // Pénombre : la difficulté est un nombre de succès, éléments avantageux et effet magique compris (p. 30).
+        reussitesRequises: penombre ? penombre.difficulte : oppositionSR ? succesAdversesShadowrun(oppositionSR) : matriceSR?.seuil ?? (descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians || descripteur.argyropee || descripteur.coc ? 1 : bornes ? difficulte : 1),
         /*
           Une poignée échelonnée n'a pas UNE taille. On rend celle du plus gros
           dé, pour que les écrans qui écrivent « 2d10 » disent quelque chose de

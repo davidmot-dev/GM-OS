@@ -142,9 +142,10 @@ describe('les gabarits intégrés du moteur', () => {
             // 19 : la fiche de Barbarians of Lemuria (2026-10-27) ; 20 : celle de RuneQuest ; 21 : celle de Degenesis (2026-10-30) ;
             // 22 : celle de COC 2 (2026-10-31) ; 23 : celle de Shadowrun : Anarchy 2.0 (2026-10-31) ;
             // 24 : celle de Torg Eternity (2026-11-07) ; 25 : celle d'Argyropée (2026-11-08) ;
-            // 26 : la fiche d'Agent de Delta Green (2026-11-12) ; 27 : celle de Vampire : la Mascarade V5 (2026-11-17).
-            version: 27,
-            ids: ['alien-v2-normalise', 'argyropee-fr', 'barbarian-of-lemuria-fr', 'blade-runner-fr', 'coc2-fr', 'crimes-fr', 'cthulhu-hack', 'degenesis-fr', 'delta-green-agent-fr', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'runequest-fr', 'shadowrun-anarchy2-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr', 'torg-eternity-fr', 'vampire-v5-fr'],
+            // 26 : la fiche d'Agent de Delta Green (2026-11-12) ; 27 : celle de Vampire : la Mascarade V5 (2026-11-17) ;
+            // 28 : la fiche standard de Pénombre (2026-11-22).
+            version: 28,
+            ids: ['alien-v2-normalise', 'argyropee-fr', 'barbarian-of-lemuria-fr', 'blade-runner-fr', 'coc2-fr', 'crimes-fr', 'cthulhu-hack', 'degenesis-fr', 'delta-green-agent-fr', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'penombre-standard-fr', 'reve-de-dragon-voyageur-fr', 'runequest-fr', 'shadowrun-anarchy2-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr', 'torg-eternity-fr', 'vampire-v5-fr'],
         });
     });
 });

@@ -1,0 +1,288 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "penombre-standard-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Pénombre (pilote 2.0.0, outils/penombre/finir_penombre.py) et le gabarit penombre-standard-fr livré le 2026-11-22. Les champs du pilote reprennent un à un les clés de la fiche ; seul le timbre traduit ses valeurs. Les jetons actifs n'ont pas de case sur la fiche imprimée : ils restent dans GM-OS.",
+  "champs": [
+    {
+      "gmos": "atout1",
+      "fiche": "assets.0.description"
+    },
+    {
+      "gmos": "atout1_niveau",
+      "fiche": "assets.0.rank"
+    },
+    {
+      "gmos": "atout2",
+      "fiche": "assets.1.description"
+    },
+    {
+      "gmos": "atout2_niveau",
+      "fiche": "assets.1.rank"
+    },
+    {
+      "gmos": "atout3",
+      "fiche": "assets.2.description"
+    },
+    {
+      "gmos": "atout3_niveau",
+      "fiche": "assets.2.rank"
+    },
+    {
+      "gmos": "atout4",
+      "fiche": "assets.3.description"
+    },
+    {
+      "gmos": "atout4_niveau",
+      "fiche": "assets.3.rank"
+    },
+    {
+      "gmos": "atout5",
+      "fiche": "assets.4.description"
+    },
+    {
+      "gmos": "atout5_niveau",
+      "fiche": "assets.4.rank"
+    },
+    {
+      "gmos": "atout6",
+      "fiche": "assets.5.description"
+    },
+    {
+      "gmos": "atout6_niveau",
+      "fiche": "assets.5.rank"
+    },
+    {
+      "gmos": "atout7",
+      "fiche": "assets.6.description"
+    },
+    {
+      "gmos": "atout7_niveau",
+      "fiche": "assets.6.rank"
+    },
+    {
+      "gmos": "atout8",
+      "fiche": "assets.7.description"
+    },
+    {
+      "gmos": "atout8_niveau",
+      "fiche": "assets.7.rank"
+    },
+    {
+      "gmos": "atout9",
+      "fiche": "assets.8.description"
+    },
+    {
+      "gmos": "atout9_niveau",
+      "fiche": "assets.8.rank"
+    },
+    {
+      "gmos": "magie1",
+      "fiche": "magic.0.name"
+    },
+    {
+      "gmos": "magie1_harmonique",
+      "fiche": "magic.0.harmonic"
+    },
+    {
+      "gmos": "magie1_prerequis",
+      "fiche": "magic.0.prerequisite"
+    },
+    {
+      "gmos": "magie1_niveau",
+      "fiche": "magic.0.level"
+    },
+    {
+      "gmos": "magie2",
+      "fiche": "magic.1.name"
+    },
+    {
+      "gmos": "magie2_harmonique",
+      "fiche": "magic.1.harmonic"
+    },
+    {
+      "gmos": "magie2_prerequis",
+      "fiche": "magic.1.prerequisite"
+    },
+    {
+      "gmos": "magie2_niveau",
+      "fiche": "magic.1.level"
+    },
+    {
+      "gmos": "pouvoir1",
+      "fiche": "powers.0.description"
+    },
+    {
+      "gmos": "pouvoir1_type",
+      "fiche": "powers.0.type"
+    },
+    {
+      "gmos": "pouvoir1_utilise",
+      "fiche": "powers.0.used"
+    },
+    {
+      "gmos": "pouvoir2",
+      "fiche": "powers.1.description"
+    },
+    {
+      "gmos": "pouvoir2_type",
+      "fiche": "powers.1.type"
+    },
+    {
+      "gmos": "pouvoir2_utilise",
+      "fiche": "powers.1.used"
+    },
+    {
+      "gmos": "pouvoir3",
+      "fiche": "powers.2.description"
+    },
+    {
+      "gmos": "pouvoir3_type",
+      "fiche": "powers.2.type"
+    },
+    {
+      "gmos": "pouvoir3_utilise",
+      "fiche": "powers.2.used"
+    },
+    {
+      "gmos": "pouvoir4",
+      "fiche": "powers.3.description"
+    },
+    {
+      "gmos": "pouvoir4_type",
+      "fiche": "powers.3.type"
+    },
+    {
+      "gmos": "pouvoir4_utilise",
+      "fiche": "powers.3.used"
+    },
+    {
+      "gmos": "complication1",
+      "fiche": "complications.0.description"
+    },
+    {
+      "gmos": "complication1_cases",
+      "fiche": "complications.0.severity"
+    },
+    {
+      "gmos": "complication2",
+      "fiche": "complications.1.description"
+    },
+    {
+      "gmos": "complication2_cases",
+      "fiche": "complications.1.severity"
+    },
+    {
+      "gmos": "complication3",
+      "fiche": "complications.2.description"
+    },
+    {
+      "gmos": "complication3_cases",
+      "fiche": "complications.2.severity"
+    },
+    {
+      "gmos": "complication4",
+      "fiche": "complications.3.description"
+    },
+    {
+      "gmos": "complication4_cases",
+      "fiche": "complications.3.severity"
+    },
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "peuple",
+      "fiche": "identity.people"
+    },
+    {
+      "gmos": "cle",
+      "fiche": "identity.key"
+    },
+    {
+      "gmos": "gamme",
+      "fiche": "identity.scale"
+    },
+    {
+      "gmos": "ton",
+      "fiche": "identity.tone"
+    },
+    {
+      "gmos": "ame",
+      "fiche": "harmonics.soul"
+    },
+    {
+      "gmos": "esprit",
+      "fiche": "harmonics.mind"
+    },
+    {
+      "gmos": "etincelle",
+      "fiche": "harmonics.spark"
+    },
+    {
+      "gmos": "nature",
+      "fiche": "harmonics.nature"
+    },
+    {
+      "gmos": "nuit",
+      "fiche": "harmonics.night"
+    },
+    {
+      "gmos": "conscience_max",
+      "fiche": "consciousness.max"
+    },
+    {
+      "gmos": "conscience",
+      "fiche": "consciousness.current"
+    },
+    {
+      "gmos": "timbre",
+      "fiche": "timbre.state",
+      "valeurs": {
+        "harmonious": "Harmonieux",
+        "false": "Faux",
+        "dissonant": "Dissonant"
+      }
+    },
+    {
+      "gmos": "partition_cle",
+      "fiche": "partition.key"
+    },
+    {
+      "gmos": "partition_note1",
+      "fiche": "partition.notes.0.marked"
+    },
+    {
+      "gmos": "partition_note2",
+      "fiche": "partition.notes.1.marked"
+    },
+    {
+      "gmos": "partition_note3",
+      "fiche": "partition.notes.2.marked"
+    },
+    {
+      "gmos": "partition_note4",
+      "fiche": "partition.notes.3.marked"
+    },
+    {
+      "gmos": "peste",
+      "fiche": "plague.name"
+    },
+    {
+      "gmos": "peste_description",
+      "fiche": "plague.description"
+    },
+    {
+      "gmos": "potentiel_atouts",
+      "fiche": "potential.assets"
+    },
+    {
+      "gmos": "potentiel_magie",
+      "fiche": "potential.magic"
+    },
+    {
+      "gmos": "potentiel_pouvoirs",
+      "fiche": "potential.powers"
+    }
+  ]
+}
