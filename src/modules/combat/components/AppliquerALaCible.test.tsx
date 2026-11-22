@@ -11,7 +11,9 @@ import { useCombatStore } from '../useCombatStore';
 
 const pv = (current: number, max: number) => ({ type: 'hp' as const, data: { current, max }, state: 'healthy' as never, badges: [] });
 const reserve = (n: number) => ({ total: n, successes: n, compte: 'reussites' as const });
-const PILOTE = { combat: { damageTypes: ['physique'] } } as never;
+// Un jeu à la règle de Year Zero (§ 267, T0 : la règle vient du jeu, ici Blade Runner).
+const PILOTE = { jet: { bladeRunner: {}, desEchelonnes: { composantes: [] } }, combat: { damageTypes: ['physique'] } } as never;
+const AUTRE_JEU = { jet: { shadowrun: {} }, combat: { damageTypes: ['physique'] } } as never;
 
 beforeEach(() => {
     useCombatStore.getState().reset();
@@ -48,6 +50,14 @@ describe('« Appliquer à [cible] »', () => {
         render(<AppliquerALaCible cible={cultiste()} resultat={reserve(0)} driver={PILOTE} />);
         expect(document.querySelector('[data-coup-nul]')!.textContent).toContain('Rien à appliquer à Cultiste');
         expect(screen.queryByRole('button', { name: /Appliquer/ })).toBeNull();
+    });
+
+    it('§ 267, T0 : un jet en réussites d’un jeu sans la règle de Year Zero demande le montant', () => {
+        render(<AppliquerALaCible cible={cultiste()} resultat={reserve(3)} driver={AUTRE_JEU} />);
+        expect(screen.queryByLabelText('Dégâts de l’arme')).toBeNull();
+        fireEvent.change(screen.getByLabelText('Dégâts'), { target: { value: '4' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Appliquer 4 à Cultiste' }));
+        expect(cultiste().hp).toBe(8);
     });
 
     it('un autre jet : le montant se saisit', () => {

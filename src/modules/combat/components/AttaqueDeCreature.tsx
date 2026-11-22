@@ -136,7 +136,8 @@ export const AttaqueDeCreature: React.FC<{
                         <p data-attaque-perforante className="text-etat-alerte">Perforante : le coup se prépare perce-armure (la Protection de la cible compte pour moitié).</p>
                     )}
                     {jet && cible && (
-                        <AppliquerALaCible key={tiree.tirage} cible={cible} resultat={jet} driver={driver} perforant={reserve.perforant}
+                        // § 267, T0 : une créature d'Alien fait « dégâts de base + un par réussite supplémentaire ».
+                        <AppliquerALaCible key={tiree.tirage} cible={cible} resultat={jet} driver={driver} perforant={reserve.perforant} regle="arme-plus-succes"
                             armes={reserve.degats !== undefined ? [{ libelle: tiree.nom, degats: reserve.degats }] : []} />
                     )}
                 </div>

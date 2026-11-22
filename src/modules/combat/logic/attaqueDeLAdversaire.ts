@@ -250,14 +250,20 @@ export interface CoupAAppliquer {
 }
 
 /**
- * **Le coup qu'un jet d'adversaire inflige à sa cible** (T7, C2, C4). Un jet à réserve (Year Zero :
- * `compte: 'reussites'`) vaut les dégâts de l'arme plus un par succès au-delà du premier
- * (`degatsDuCoup`) ; aucun succès, le coup manque. Un autre jet ne dit pas ses dégâts : le meneur
- * les saisit. Dans les deux cas, la protection de la cible se retire ensuite (le jet de protection
- * de Blade Runner, l'armure d'Alien), sans descendre sous zéro.
+ * **Le coup qu'un jet d'adversaire inflige à sa cible** (T7, C2, C4). Dans un jeu qui déclare la
+ * règle de Year Zero (`regle: 'arme-plus-succes'`, Blade Runner et Alien), un jet à réserve
+ * (`compte: 'reussites'`) vaut les dégâts de l'arme plus un par succès au-delà du premier
+ * (`degatsDuCoup`) ; aucun succès, le coup manque. Partout ailleurs le jet ne dit pas ses dégâts : le
+ * meneur les saisit. Dans les deux cas, la protection de la cible se retire ensuite (le jet de
+ * protection de Blade Runner, l'armure d'Alien), sans descendre sous zéro.
+ *
+ * **§ 267, T0 (22/11/2026)** : la règle vient du jeu (`regleDesDegats`), plus du seul compte en
+ * réussites — un jet de Vampire ou de Shadowrun recevait sinon des dégâts de Year Zero, faux.
  */
 export function coupAAppliquer(params: {
     resultat: { total: number; successes?: number; compte?: 'reussites' };
+    /** La règle des dégâts du jeu (`regleDesDegats`) ; absente, le montant se saisit. */
+    regle?: 'arme-plus-succes' | 'porte-du-jeu' | 'montant';
     degatsDeLArme?: number;
     montantSaisi?: number;
     protection?: number;
@@ -268,7 +274,7 @@ export function coupAAppliquer(params: {
         ? { montant: Math.max(0, brut - protection), calcul: `${debut}, − protection ${protection} = ${Math.max(0, brut - protection)}` }
         : { montant: brut, calcul: debut };
 
-    if (resultat.compte === 'reussites') {
+    if (params.regle === 'arme-plus-succes' && resultat.compte === 'reussites') {
         const reussites = resultat.successes ?? resultat.total;
         if (!(reussites >= 1)) return { montant: 0, calcul: 'aucun succès : le coup manque', raison: 'rate' };
         const coup = degatsDuCoup(degatsDeLArme, reussites);

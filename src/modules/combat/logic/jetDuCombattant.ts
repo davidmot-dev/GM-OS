@@ -4,6 +4,73 @@ import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
 
 /**
+ * **Ce que vaut le coup d'un adversaire, selon le jeu** — registre § 267, T0 (22/11/2026), à la
+ * demande de David (« Commence »). Le § 263 donnait à **tout** jet compté en réussites la règle de
+ * Year Zero, « arme + succès − 1 » : juste pour Blade Runner et Alien, faux ailleurs (Vampire : marge
+ * + arme ; Shadowrun : VD + succès nets ; Degenesis : arme + déclencheurs). Chaque jeu la déclare ici :
+ *
+ * - `arme-plus-succes` : les dégâts de l'arme plus un par succès au-delà du premier (Year Zero) ;
+ * - `porte-du-jeu` : le coup s'applique par le geste propre au jeu (Dune : la tâche de défaite ;
+ *   Cthulhu Hack : la riposte), jamais par « Appliquer à [cible] » ;
+ * - `montant` : le jeu ne dit pas encore ses dégâts, le meneur saisit le montant. C'est la règle
+ *   de tout jeu absent de la table : on ne devine pas les dégâts d'un jeu.
+ */
+export type RegleDesDegatsDuJeu = 'arme-plus-succes' | 'porte-du-jeu' | 'montant';
+
+/** Un jeu ouvert au combat des adversaires : comment le reconnaître, son geste, ses dégâts. */
+export interface JeuDuCombat {
+    jeu: string;
+    /** Le pilote est-il celui de ce jeu ? Lu sur sa mécanique de jet, pas sur son nom. */
+    reconnaitre: (driver: Pick<GameDriver, 'jet'> & Partial<Pick<GameDriver, 'combat'>>) => boolean;
+    /**
+     * Le geste de la carte : `attaquer` ouvre le jet de l'adversaire sur sa cible ; `riposte`, le
+     * coup d'un adversaire qui ne lance pas (le meneur n'y lance jamais) ; `fiche`, le jet seulement
+     * depuis « Fiche », sans bouton sur la carte.
+     */
+    geste: 'attaquer' | 'riposte' | 'fiche' | 'affrontement';
+    degats: RegleDesDegatsDuJeu;
+}
+
+/**
+ * **La table des jeux ouverts** (§ 267, T0). Elle remplace la chaîne de booléens qui s'allongeait à
+ * chaque jeu ; un jeu s'y ajoute quand son jet d'adversaire et ses dégâts sont vérifiés au livre.
+ */
+export const JEUX_DU_COMBAT: readonly JeuDuCombat[] = [
+    // § 263, T10 et T12 : un xénomorphe tire son attaque au D6 (`combat.alien` suffit) ; un humain
+    // ou un synthétique lance son jet, quand le pilote déclare aussi `jet.alien`.
+    { jeu: 'Alien', reconnaitre: d => !!d.combat?.alien, geste: 'attaquer', degats: 'arme-plus-succes' },
+    // § 263, T9 : les dés échelonnés de Blade Runner, « RÉUSSITES MULTIPLES ».
+    { jeu: 'Blade Runner', reconnaitre: d => !!d.jet?.bladeRunner && !!d.jet.desEchelonnes, geste: 'attaquer', degats: 'arme-plus-succes' },
+    // § 263, T18 : pas de points de vie, l'attaque réussie s'applique par la tâche de défaite.
+    { jeu: 'Dune', reconnaitre: d => !!d.jet?.dune, geste: 'attaquer', degats: 'porte-du-jeu' },
+    // § 263, T16 : le meneur ne lance jamais (livre, p. 45-48).
+    { jeu: 'Cthulhu Hack', reconnaitre: d => !!d.jet?.cthulhuHack, geste: 'riposte', degats: 'porte-du-jeu' },
+    // 17/11 : le jet d'un adversaire depuis « Fiche » ; « Attaquer » et ses dégâts viendront en T1.
+    { jeu: 'Vampire', reconnaitre: d => !!d.jet?.vampire, geste: 'fiche', degats: 'montant' },
+    /*
+      § 267, T17 (22/11) : le Psycholune ne lance jamais (p. 40-45). « Affronter » ouvre
+      `AffrontementDePenombre` : l'attaque d'une Éminence grise retire sa résilience, l'action adverse
+      réussit d'office et coûte des jetons, la dissonance et l'opéra harmonique.
+    */
+    { jeu: 'Pénombre', reconnaitre: d => !!d.jet?.penombre, geste: 'affrontement', degats: 'porte-du-jeu' },
+];
+
+/** Le jeu du pilote dans la table, ou `null` : un jeu qui n'est pas ouvert au combat des adversaires. */
+export function jeuDuCombat(
+    driver: (Pick<GameDriver, 'jet'> & Partial<Pick<GameDriver, 'combat'>>) | null | undefined,
+): JeuDuCombat | null {
+    if (!driver) return null;
+    return JEUX_DU_COMBAT.find(j => j.reconnaitre(driver)) ?? null;
+}
+
+/** La règle des dégâts du pilote ; `montant` pour un jeu absent de la table. */
+export function regleDesDegats(
+    driver: (Pick<GameDriver, 'jet'> & Partial<Pick<GameDriver, 'combat'>>) | null | undefined,
+): RegleDesDegatsDuJeu {
+    return jeuDuCombat(driver)?.degats ?? 'montant';
+}
+
+/**
  * **Qui peut lancer un test depuis la fiche d'un combattant** (`components/JetDuCombattant.tsx`,
  * 17/11/2026). Réservé aux adversaires d'un pilote Vampire : un joueur lance depuis sa fiche ou sa
  * tablette, et les autres jeux ont leur propre geste (COC : « Lancer un test » de `PanneauDeCoc`).
@@ -16,6 +83,7 @@ export function jetDuCombattantPossible(
     valeurs: Record<string, unknown> = {},
 ): boolean {
     if (combattant.isPlayer || !gabarit) return false;
+    const jeu = jeuDuCombat(driver);
     /*
       **Alien** (registre § 263, T12, 19/11/2026) : un humain ou un synthétique, pas un xénomorphe
       (il tire son attaque au D6, T10). Vérifié avant de l'ouvrir : le panneau lit ses armes sur sa
@@ -23,23 +91,23 @@ export function jetDuCombattantPossible(
       sa fiche (zéro sans valeur) ; la Panique, les munitions et le suivi du jet s'écrivent par
       `ecrireLaFicheDuCombattant`. Le coup qu'il porte se prépare sur la cible (`CoupAlien`).
     */
-    if (driver?.jet?.alien && driver.combat?.alien) return !lireLeCombatAlien(valeurs).xenomorphe;
+    if (jeu?.jeu === 'Alien') return !!driver?.jet?.alien && !lireLeCombatAlien(valeurs).xenomorphe;
     /*
       **Blade Runner** (registre § 263, T9, 19/11/2026), vérifié avant de l'ouvrir : le panneau
       n'offre le souvenir clé que si la fiche en porte un (jamais un adversaire du livre) ; le
       forçage paie sa Santé ou son Sang-froid par `ecrireLaFicheDuCombattant`, qui déplace aussi ses
       points de vie (T20) ; le suivi des blessures ne s'écrit que sur un geste. Les adversaires du
       livre portent leurs attributs et compétences sur leur fiche depuis le pilote 2.1.0 (T8).
-    */
-    const bladeRunner = !!driver?.jet?.bladeRunner && !!driver.jet.desEchelonnes;
-    /*
+
       **Dune** (registre § 263, T18, 19/11/2026), vérifié avant de l'ouvrir : le seuil d'un PNJ est sa
       compétence plus sa valeur de principe, sans maxime (PNJ mineur, livre p. 327) — le panneau
       compose les deux depuis sa fiche ; « PNJ ennemi » y est coché d'emblée (Menace, p. 240) ; la
       Détermination et le suivi Dune s'écrivent par `ecrireLaFicheDuCombattant`. Dune n'a pas de
       points de vie : une attaque réussie s'applique par `AttaqueDune` (tâche de défaite).
+
+      Un jeu à « Riposte » ou à affrontement n'a pas de jet d'adversaire : le meneur n'y lance pas.
     */
-    return !!driver?.jet?.vampire || bladeRunner || !!driver?.jet?.dune;
+    return !!jeu && jeu.geste !== 'riposte' && jeu.geste !== 'affrontement';
 }
 
 /**
@@ -59,9 +127,20 @@ export function attaqueSurLaCarte(
     gabarit: SheetTemplate | null,
     valeurs: Record<string, unknown> = {},
 ): boolean {
-    if (driver?.jet?.vampire) return false;
+    if (jeuDuCombat(driver)?.geste === 'fiche') return false;
     return jetDuCombattantPossible(combattant, driver, gabarit, valeurs) || attaqueDeCreaturePossible(combattant, driver, valeurs)
-        || ripostePossible(combattant, driver);
+        || ripostePossible(combattant, driver) || affrontementPossible(combattant, driver);
+}
+
+/**
+ * **L'affrontement d'un adversaire de Pénombre** (registre § 267, T17, 22/11/2026) : le bouton de la
+ * carte s'appelle « Affronter » et ouvre `AffrontementDePenombre`.
+ */
+export function affrontementPossible(
+    combattant: Pick<Combatant, 'isPlayer'>,
+    driver: (Pick<GameDriver, 'jet'> & Partial<Pick<GameDriver, 'combat'>>) | null | undefined,
+): boolean {
+    return !combattant.isPlayer && jeuDuCombat(driver)?.geste === 'affrontement';
 }
 
 /**
@@ -71,9 +150,9 @@ export function attaqueSurLaCarte(
  */
 export function ripostePossible(
     combattant: Pick<Combatant, 'isPlayer'>,
-    driver: Pick<GameDriver, 'jet'> | null | undefined,
+    driver: (Pick<GameDriver, 'jet'> & Partial<Pick<GameDriver, 'combat'>>) | null | undefined,
 ): boolean {
-    return !combattant.isPlayer && !!driver?.jet?.cthulhuHack;
+    return !combattant.isPlayer && jeuDuCombat(driver)?.geste === 'riposte';
 }
 
 /**

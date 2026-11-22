@@ -4,6 +4,7 @@ import { useCombatStore } from '../useCombatStore';
 import { useDiceStore } from '../../../stores/useDiceStore';
 import { DiceEngine, type RollResult } from '../../dice/DiceEngine';
 import { coupAAppliquer, preparerLeCoupAlien, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
+import { regleDesDegats, type RegleDesDegatsDuJeu } from '../logic/jetDuCombattant';
 import { CLE_COMBAT_ALIEN, lireLeCombatAlien, type ArmureAlien } from '../../dice/systemes/combatAlien';
 import { estUnAndroide } from '../../dice/systemes/paniqueAlien';
 import { ecrireLaFicheDuCombattant, valeursDuCombattant } from '../ficheDesCombattants';
@@ -34,7 +35,12 @@ export const AppliquerALaCible: React.FC<{
     protectionDeLaCible?: ProtectionLue | null;
     /** T12 : l'attaque est perforante (une attaque de créature qui le dit) — perce-armure chez Alien. */
     perforant?: boolean;
-}> = ({ cible, resultat, driver, armes = [], protectionDeLaCible, perforant = false }) => {
+    /**
+     * § 267, T0 : la règle des dégâts, quand l'appelant la connaît mieux que le pilote actif — l'attaque
+     * d'une créature d'Alien (`AttaqueDeCreature`) est toujours « arme + succès − 1 ». Sinon, celle du jeu.
+     */
+    regle?: RegleDesDegatsDuJeu;
+}> = ({ cible, resultat, driver, armes = [], protectionDeLaCible, perforant = false, regle: regleImposee }) => {
     /*
       **Alien (T12)** : le coup ne s'applique pas d'un trait. Il se prépare sur la carte de la cible,
       où sa Protection se lance puis les dégâts restants s'appliquent (`SanteAlien`) : la protection
@@ -64,8 +70,10 @@ export const AppliquerALaCible: React.FC<{
     const [appliquePour, setAppliquePour] = useState<{ resultat: object; montant: number } | null>(null);
 
     const nombre = (s: string) => (s.trim() === '' ? undefined : Number(s));
-    const coup = coupAAppliquer({ resultat, degatsDeLArme: nombre(arme), montantSaisi: nombre(saisi), protection: regleAlien ? 0 : nombre(protection) });
-    const reserve = resultat.compte === 'reussites';
+    // § 267, T0 : la règle des dégâts vient du jeu ; « arme + succès − 1 » seulement là où il la déclare.
+    const regle = regleImposee ?? regleDesDegats(driver);
+    const coup = coupAAppliquer({ resultat, regle, degatsDeLArme: nombre(arme), montantSaisi: nombre(saisi), protection: regleAlien ? 0 : nombre(protection) });
+    const reserve = regle === 'arme-plus-succes' && resultat.compte === 'reussites';
     const deja = appliquePour?.resultat === resultat ? appliquePour : null;
     const [refus, setRefus] = useState<string | null>(null);
 

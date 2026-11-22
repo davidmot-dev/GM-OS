@@ -92,23 +92,29 @@ describe('les dégâts d’un coup au jet à réserve (C2)', () => {
 
 describe('le coup à appliquer à la cible (T7)', () => {
     const reserve = (n: number) => ({ total: n, successes: n, compte: 'reussites' as const });
+    const yz = 'arme-plus-succes' as const;
 
-    it('jet à réserve : arme + succès − 1, puis la protection', () => {
-        expect(coupAAppliquer({ resultat: reserve(3), degatsDeLArme: 2 })).toEqual({ montant: 4, calcul: 'arme 2 + 3 succès − 1 = 4' });
-        expect(coupAAppliquer({ resultat: reserve(3), degatsDeLArme: 2, protection: 1 }))
+    it('jet à réserve de Year Zero : arme + succès − 1, puis la protection', () => {
+        expect(coupAAppliquer({ resultat: reserve(3), regle: yz, degatsDeLArme: 2 })).toEqual({ montant: 4, calcul: 'arme 2 + 3 succès − 1 = 4' });
+        expect(coupAAppliquer({ resultat: reserve(3), regle: yz, degatsDeLArme: 2, protection: 1 }))
             .toEqual({ montant: 3, calcul: 'arme 2 + 3 succès − 1 = 4, − protection 1 = 3' });
     });
 
     it('la protection ne fait jamais descendre sous zéro', () => {
-        expect(coupAAppliquer({ resultat: reserve(1), degatsDeLArme: 1, protection: 3 }).montant).toBe(0);
+        expect(coupAAppliquer({ resultat: reserve(1), regle: yz, degatsDeLArme: 1, protection: 3 }).montant).toBe(0);
     });
 
     it('aucun succès : le coup manque', () => {
-        expect(coupAAppliquer({ resultat: reserve(0), degatsDeLArme: 3 })).toMatchObject({ montant: 0, raison: 'rate' });
+        expect(coupAAppliquer({ resultat: reserve(0), regle: yz, degatsDeLArme: 3 })).toMatchObject({ montant: 0, raison: 'rate' });
     });
 
     it('arme inconnue : rien à envoyer, et on dit ce qui manque', () => {
-        expect(coupAAppliquer({ resultat: reserve(2) })).toMatchObject({ montant: null, raison: 'arme-inconnue' });
+        expect(coupAAppliquer({ resultat: reserve(2), regle: yz })).toMatchObject({ montant: null, raison: 'arme-inconnue' });
+    });
+
+    it('§ 267, T0 : un jet en réussites d’un autre jeu ne reçoit pas la règle de Year Zero, le montant se saisit', () => {
+        expect(coupAAppliquer({ resultat: reserve(3), degatsDeLArme: 2 })).toMatchObject({ montant: null, raison: 'montant-a-saisir' });
+        expect(coupAAppliquer({ resultat: reserve(3), regle: 'montant', montantSaisi: 6, protection: 1 }).montant).toBe(5);
     });
 
     it('un autre jet ne dit pas ses dégâts : le montant saisi, moins la protection', () => {
