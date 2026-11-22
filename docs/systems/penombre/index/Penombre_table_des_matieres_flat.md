@@ -1,0 +1,84 @@
+# Table des matières — Pénombre
+
+- I — Sous les branches du Souffre-jour — Prologue
+- À propos de Pénombre — 8
+- Jouer à Pénombre — 9
+- Jouer dans Les Royaumes crépusculaires — 11
+- Jouer des éminences grises — 15
+- La dissonance — 18
+- II — Les règles du collège — Système de jeu
+- Représenter les personnages des joueurs : la feuille d’Éminence grise — 22
+- Gérer les ressources des Éminences grises : les jetons — 24
+- Évaluer le temps et l’espace — 26
+- Développer une histoire : les actions des Éminences grises — 28
+- Surprendre : les pouvoirs — 38
+- Donner une autre dimension aux oppositions : les affrontements — 40
+- Vivre et mourir : la santé des Éminences grises — 46
+- III — Les Éminences grises — Création et évolution de personnages
+- Une nécessaire harmonie : création du groupe — 50
+- Devenir une Éminence grise en six jours : création des personnages — 52
+- Les peuples — 60
+- Les magies — 76
+- Les royaumes — 88
+- Les organisations — 96
+- Pouvoirs de gammes — 99
+- Pouvoirs de tons — 99
+- Pouvoirs de clés — 100
+- Changer : évolution des personnages — 102
+- IV — Quelques agents — Personnages prêts à jouer
+- Acrymone, ogresse de l’éclipse — 106
+- Élégie, danseuse du clair-obscur — 108
+- Nimbé, fils de Lorgol — 111
+- Lancine, poétesse féerique — 114
+- Nigma, citadin de la Romance — 116
+- Sargon, rempart minotaure — 118
+- V — Les cahiers gris des peuples — Contexte et ressources
+- De l’harmonie des peuples mortels — 122
+- Les aubérons (centaures, nains et gnomes) — 124
+- Les grangousiers (ogres, humains et géants) — 133
+- Les mélusines (banshees, fées noires et sirènes) — 142
+- Les horlas (minotaures, méduses et satyres) — 151
+- Les diamantins (opalins de la Romance, âmes accouchées et danseurs affranchis) — 160
+- VI — Les cahiers gris des royaumes — Contexte et ressources
+- L’Harmonde selon les mortels — 172
+- Les trois grandes religions — 175
+- Abyme — 178
+- Autour de la mer des Tristes (Urguemand, Janrénie, Province liturgique) — 182
+- Sur les terres de Minuit (Communes princières, Lyphane, Parages) — 194
+- Sous la chaleur de Midi (empire de Keshe, Enclave boucanière, Marche modéhenne, République mercenaire, Terres veuves) — 206
+- Aux confins de l’Harmonde (Cornes, Automne, Bokkor) — 226
+- VII — Les cahiers gris des magies — Contexte et ressources
+- La magie — 240
+- Les magies naturelles (brigue, élémentalisme, magie des saisons) — 242
+- Les arts anciens (accord, décorum, geste) — 248
+- Les magies cryptogrammiques (éclipsisme, jornisme, obscurantisme) — 254
+- Les arts noirs (conjuration, onyxium, prisme) — 262
+- VIII — Les cahiers gris des organisations — Contexte et ressources
+- L’Acier — 270
+- Le Clergé obscur — 272
+- Le Cryptogramme-magicien — 274
+- L’Équerre — 280
+- Les Luciniens — 282
+- Les passeurs — 284
+- IX — Les cahiers gris du Souffre-jour — Contexte et ressources
+- Du collège du Souffre-jour — 291
+- Des arbres d’ombre — 292
+- La vie sous le crépuscule — 295
+- Visiter le collège — 298
+- Les habitants du collège — 300
+- Le jeu d’influence du Souffre-jour — 310
+- X — Vivre des aventures en Harmonde — Conseils et scénarios
+- Jouer en harmonie — 318
+- Jouer collégial — 320
+- Jouer héroïque — 321
+- Jouer merveilleux — 324
+- Jouer des intrigues — 326
+- Jouer des missions — 329
+- Jouer et évoluer — 332
+- Jouer les sujets sensibles — 333
+- Scénario – Échos mélodiques — 340
+- Scénario – Plénitude — 351
+- XI — Un dernier verre avec Arlequin — Appendices
+- Termes harmondiens — 368
+- Termes techniques — 372
+- Ressources — 373

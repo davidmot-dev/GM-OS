@@ -1,0 +1,75 @@
+# Index alphabétique du sommaire — Pénombre
+
+Index de repérage construit à partir des 71 entrées paginées du sommaire fourni. Les intitulés et numéros imprimés sont conservés. Ce document ne reproduit pas un index éditorial et ne constitue pas un index exhaustif du livre.
+
+- À propos de Pénombre — 8
+- Abyme — 178
+- Acrymone, ogresse de l’éclipse — 106
+- Autour de la mer des Tristes (Urguemand, Janrénie, Province liturgique) — 182
+- Aux confins de l’Harmonde (Cornes, Automne, Bokkor) — 226
+- Changer : évolution des personnages — 102
+- De l’harmonie des peuples mortels — 122
+- Des arbres d’ombre — 292
+- Développer une histoire : les actions des Éminences grises — 28
+- Devenir une Éminence grise en six jours : création des personnages — 52
+- Donner une autre dimension aux oppositions : les affrontements — 40
+- Du collège du Souffre-jour — 291
+- Élégie, danseuse du clair-obscur — 108
+- Évaluer le temps et l’espace — 26
+- Gérer les ressources des Éminences grises : les jetons — 24
+- Jouer à Pénombre — 9
+- Jouer collégial — 320
+- Jouer dans Les Royaumes crépusculaires — 11
+- Jouer des éminences grises — 15
+- Jouer des intrigues — 326
+- Jouer des missions — 329
+- Jouer en harmonie — 318
+- Jouer et évoluer — 332
+- Jouer héroïque — 321
+- Jouer les sujets sensibles — 333
+- Jouer merveilleux — 324
+- La dissonance — 18
+- La magie — 240
+- La vie sous le crépuscule — 295
+- Lancine, poétesse féerique — 114
+- Le Clergé obscur — 272
+- Le Cryptogramme-magicien — 274
+- Le jeu d’influence du Souffre-jour — 310
+- Les arts anciens (accord, décorum, geste) — 248
+- Les arts noirs (conjuration, onyxium, prisme) — 262
+- Les aubérons (centaures, nains et gnomes) — 124
+- Les diamantins (opalins de la Romance, âmes accouchées et danseurs affranchis) — 160
+- Les grangousiers (ogres, humains et géants) — 133
+- Les habitants du collège — 300
+- Les horlas (minotaures, méduses et satyres) — 151
+- Les Luciniens — 282
+- Les magies — 76
+- Les magies cryptogrammiques (éclipsisme, jornisme, obscurantisme) — 254
+- Les magies naturelles (brigue, élémentalisme, magie des saisons) — 242
+- Les mélusines (banshees, fées noires et sirènes) — 142
+- Les organisations — 96
+- Les passeurs — 284
+- Les peuples — 60
+- Les royaumes — 88
+- Les trois grandes religions — 175
+- L’Acier — 270
+- L’Équerre — 280
+- L’Harmonde selon les mortels — 172
+- Nigma, citadin de la Romance — 116
+- Nimbé, fils de Lorgol — 111
+- Pouvoirs de clés — 100
+- Pouvoirs de gammes — 99
+- Pouvoirs de tons — 99
+- Représenter les personnages des joueurs : la feuille d’Éminence grise — 22
+- Ressources — 373
+- Sargon, rempart minotaure — 118
+- Scénario – Échos mélodiques — 340
+- Scénario – Plénitude — 351
+- Sous la chaleur de Midi (empire de Keshe, Enclave boucanière, Marche modéhenne, République mercenaire, Terres veuves) — 206
+- Sur les terres de Minuit (Communes princières, Lyphane, Parages) — 194
+- Surprendre : les pouvoirs — 38
+- Termes harmondiens — 368
+- Termes techniques — 372
+- Une nécessaire harmonie : création du groupe — 50
+- Visiter le collège — 298
+- Vivre et mourir : la santé des Éminences grises — 46
