@@ -1,0 +1,45 @@
+{
+  "zip": "Penombre-GM-OS-Studio-theme-fiche-banniere-identite.zip",
+  "octets": 8943996,
+  "fichiers": 54,
+  "empreintesVerifiees": 53,
+  "sha256": "25d9373972880b2739e5a97d967a9002864c88f0acb79553f63a8134f868470a",
+  "ficheTests": 29,
+  "themeErreurs": 0,
+  "themeAvertissements": 0,
+  "ficheErreurs": 0,
+  "ficheAvertissements": 2,
+  "banniere": {
+    "date": "2026-11-22",
+    "sourceDimensions": [
+      2172,
+      724
+    ],
+    "recadrage": [
+      0,
+      90,
+      2172,
+      633
+    ],
+    "dimensions": [
+      2400,
+      600
+    ],
+    "octets": 268793,
+    "ratio": 4,
+    "agrandissement": 1.1049723756906078,
+    "accordDavid": "22/11/2026 : Oui, livrer en 2400 × 600 px",
+    "sha256": "bf919d06b8b4e30032135e9c2c6cdab2039723bbca9a02504005139e91035a09",
+    "simulationEntete": [
+      [
+        1188,
+        54
+      ],
+      [
+        390,
+        54
+      ]
+    ],
+    "captureGMOS": false
+  }
+}

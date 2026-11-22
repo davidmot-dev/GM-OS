@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-22",
+  "relecteur": "Codex, contrôle visuel IA",
+  "fiche": [
+    "fiche-vierge.png",
+    "fiche-remplie.png",
+    "fiche-remplie-zones.png",
+    "fiche-impression.png"
+  ],
+  "theme": "apercu-theme.png",
+  "banniere": "apercu-banniere.png",
+  "constats": [
+    "Fond PDF fidèle après passage à PDFium ; cercles des harmoniques clairs.",
+    "Champs sur les zones imprimées, rappels de règles préservés.",
+    "Thème lisible, ornements et icônes examinés à petite taille.",
+    "Bannière et en-têtes examinés ; bords sombres, pas de texte parasite."
+  ],
+  "electron": "Non exécuté",
+  "tablettePhysique": "Non exécuté"
+}

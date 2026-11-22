@@ -1,0 +1,72 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {pathToFileURL} from 'node:url';
+import {createHash} from 'node:crypto';
+import {chromium} from '@playwright/test';
+const out='output/studio/penombre/2026-11-22';fs.mkdirSync(out,{recursive:true});
+for(const[type,arg]of [['theme','penombre'],['fiche','Pénombre']]){
+ const r=execFileSync(process.execPath,[`scripts/${type}-valider.mjs`,arg,'--json'],{encoding:'utf8'});fs.writeFileSync(`${out}/validation-${type}.json`,r);
+ fs.writeFileSync(`${out}/validation-${type}.md`,execFileSync(process.execPath,[`scripts/${type}-valider.mjs`,arg],{encoding:'utf8'}));
+ const j=JSON.parse(r);assert.equal((Array.isArray(j)?j[0]:j).accepte,true);
+}
+const fichier=path.resolve('docs/fiches/Pénombre/Penombre-fiche-standard-interactive.html');
+const id='penombre-standard-fr',erreurs=[],reseau=[],checks=[];
+const ok=(nom,condition=true)=>{assert(condition,nom);checks.push(nom);};
+const b=await chromium.launch({channel:'msedge',headless:true});
+const c=await b.newContext({viewport:{width:1440,height:1120},acceptDownloads:true});await c.setOffline(true);
+await c.route(/^https?:/,r=>{reseau.push(r.request().url());return r.abort();});
+const page=await c.newPage();page.on('pageerror',e=>erreurs.push(e.message));
+const field=k=>page.locator(`[data-key="${k}"]`),hot=(k,n)=>page.locator(`[data-key="${k}"][data-value="${n}"]`);
+const pause=()=>page.waitForTimeout(220);
+const zoom=async n=>{await page.locator('#zoom').fill(String(n));await page.locator('#zoom').dispatchEvent('change');};
+const shot=async n=>{await page.locator('.page-wrap').screenshot({path:`${out}/${n}.png`});};
+const exp=async()=>{const[d]=await Promise.all([page.waitForEvent('download'),page.locator('#export').click()]);return JSON.parse(fs.readFileSync(await d.path(),'utf8'));};
+const imp=async doc=>{await page.locator('#file').setInputFiles({name:'recette.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(doc))});await pause();};
+try{
+ await page.goto(pathToFileURL(fichier).href);await field('identity.name').waitFor();
+ const manifest=await page.evaluate(()=>JSON.parse(document.getElementById('character-sheet-template').textContent));
+ const fields=manifest.template.pages[0].fields,keys=[...new Set(fields.map(f=>f.key))];
+ ok('Une page paysage avec 106 champs et 69 clés',manifest.template.pages.length===1&&fields.length===106&&keys.length===69);
+ ok('Fond autonome identique au rendu source',Buffer.from(manifest.template.pages[0].backgroundData.split(',')[1],'base64').equals(fs.readFileSync(`${out}/fiche-source.png`)));
+ ok('Tous les contrôles sont présents',await page.locator('.pen-field').count()===106);
+ ok('Saisies initiales vides',await page.locator('input.pen-field:not([type=checkbox]),textarea.pen-field').evaluateAll(els=>els.every(e=>e.value==='')));
+ await zoom(150);await shot('fiche-vierge');await page.locator('#zones').click();await shot('fiche-zones');await page.locator('#zones').click();
+ await field('identity.name').fill('Lysandre de contrôle');await field('harmonics.night').fill('D8');await field('potential.magic').fill('2');
+ await field('plague.name').fill('Essai fictif');await field('plague.description').fill('Description de contrôle.\nAucune peste jouée.');
+ await field('magic.0.name').fill('Accord');await field('magic.0.harmonic').fill('Âme');await field('magic.0.prerequisite').fill('Texte libre');await field('magic.0.level').fill('3');
+ await hot('assets.0.rank',3).click();ok('Atout cumulatif à trois dés',await page.locator('[data-key="assets.0.rank"].active').count()===3);
+ await hot('assets.0.rank',3).click();ok('Second clic efface la piste',await page.locator('[data-key="assets.0.rank"].active').count()===0);
+ await hot('assets.0.rank',2).click();
+ await hot('timbre.state','harmonious').click();await hot('timbre.state','dissonant').click();ok('Timbre exclusif',await page.locator('[data-key="timbre.state"].active').count()===1);
+ await field('partition.key').check();await field('partition.notes.2.marked').check();ok('Partition à marques indépendantes',await page.locator('[data-key^="partition."]:checked').count()===2);
+ await field('powers.0.used').check();ok('Usage des pouvoirs indépendant',await field('powers.1.used').isChecked()===false);
+ await hot('consciousness.current',7).click();await field('consciousness.max').fill('9');
+ ok('Conscience et maximum indépendants',await page.locator('[data-key="consciousness.current"].active').count()===7&&await field('consciousness.max').inputValue()==='9');
+ await field('complications.0.description').fill('Séquelle fictive');await hot('complications.0.severity',2).click();ok('Complication de sévérité deux',await page.locator('[data-key="complications.0.severity"].active').count()===2);
+ await pause();const doc=await exp();ok('Export JSON lié au modèle',doc.sheet===id&&doc.data['timbre.state']==='dissonant');
+ await page.reload();await field('identity.name').waitFor();ok('Sauvegarde restaurée après rechargement',await field('identity.name').inputValue()==='Lysandre de contrôle'&&await field('partition.notes.2.marked').isChecked());
+ page.once('dialog',d=>d.dismiss());await page.locator('#reset').click();ok('Annulation de la réinitialisation préserve les valeurs',await field('identity.name').inputValue()==='Lysandre de contrôle');
+ page.once('dialog',d=>d.accept());await page.locator('#reset').click();ok('Réinitialisation confirmée',await field('identity.name').inputValue()==='');
+ await imp(doc);ok('Réimport restaure valeurs et pistes',await field('identity.name').inputValue()==='Lysandre de contrôle'&&await page.locator('[data-key="consciousness.current"].active').count()===7);
+ await imp({...doc,sheet:'autre-modele'});ok('JSON d’un autre modèle refusé',/Import refusé/.test(await page.locator('#status').innerText()));
+ await imp({...doc,data:{...doc.data,'potential.magic':'texte'}});ok('Nombre invalide refusé',/Import refusé/.test(await page.locator('#status').innerText()));
+ // Toutes les clés passent par un vrai aller-retour ; données fictives uniquement.
+ const definitions=new Map(fields.map(f=>[f.key,f]));const data={};
+ for(const[k,f]of definitions)data[k]=f.type==='number'?2:f.type==='checkbox'?true:f.type==='hotspot'?f.value:'Exemple';
+ Object.assign(data,{'identity.name':'Lysandre','identity.people':'Humain — essai','identity.key':'Exemple','identity.scale':'Exemple','identity.tone':'Exemple','plague.name':'Peste fictive','plague.description':'Description et symptômes de contrôle.\nAucun effet de règle automatique.','assets.0.description':'Sens de l’observation','assets.3.description':'Réseau de contacts','magic.0.name':'Accord','magic.0.harmonic':'Âme','magic.0.prerequisite':'Prérequis saisi manuellement','complications.0.description':'Séquelle fictive'});
+ for(const k of ['night','soul','nature','mind','spark'])data[`harmonics.${k}`]='D8';
+ page.once('dialog',d=>d.accept());await imp({...doc,data});const roundtrip=await exp();assert.deepEqual(roundtrip.data,data);ok('Aller-retour intégral des 69 clés');
+ await zoom(150);await shot('fiche-remplie');await page.locator('#zones').click();await shot('fiche-remplie-zones');await page.locator('#zones').click();
+ for(const n of [20,400]){await zoom(n);ok(`Zoom ${n}%`,Number(await page.locator('#zoom').inputValue())===n);}
+ await page.keyboard.press('Control+0');const initial=Number(await page.locator('#zoom').inputValue());await page.keyboard.press('Control++');ok('Raccourci Ctrl++',Number(await page.locator('#zoom').inputValue())===initial+10);await page.keyboard.press('Control+-');ok('Raccourci Ctrl+-',Number(await page.locator('#zoom').inputValue())===initial);
+ await page.locator('#viewport').hover();await page.keyboard.down('Control');await page.mouse.wheel(0,-100);await page.keyboard.up('Control');await pause();ok('Ctrl+molette',Number(await page.locator('#zoom').inputValue())===initial+10);
+ await page.emulateMedia({media:'print'});ok('Barre masquée à l’impression',!await page.locator('.toolbar').isVisible());
+ const size=await page.locator('.page-wrap').evaluate(e=>({w:e.getBoundingClientRect().width,h:e.getBoundingClientRect().height}));ok('Format d’impression paysage natif',Math.abs(size.w-793.701*4/3)<1&&Math.abs(size.h-612.283*4/3)<1);
+ await shot('fiche-impression');await page.emulateMedia({media:'screen'});
+ const mobile=await b.newContext({viewport:{width:768,height:1024},isMobile:true,hasTouch:true});await mobile.setOffline(true);const tab=await mobile.newPage();tab.on('pageerror',e=>erreurs.push(e.message));await tab.goto(pathToFileURL(fichier).href);await tab.locator('[data-key="timbre.state"][data-value="harmonious"]').tap();ok('Saisie tactile en émulation 768 px',await tab.locator('[data-key="timbre.state"].active').count()===1);await tab.screenshot({path:`out/tablette.png`.replace('out/',out+'/')});await mobile.close();
+ ok('Aucune erreur JavaScript',erreurs.length===0);ok('Aucune requête réseau',reseau.length===0);
+ fs.writeFileSync(`${out}/verification-fiche.json`,JSON.stringify({date:'2026-11-22',templateId:id,htmlSha256:createHash('sha256').update(fs.readFileSync(fichier)).digest('hex'),tests:checks.length,reussis:checks.length,checks,erreurs,reseau,navigateur:'Edge headless hors ligne',portee:'Fiche autonome ; pas de parcours Electron ni tablette physique'},null,2)+'\n');
+ console.log(JSON.stringify({tests:checks.length,reussis:checks.length,erreurs,reseau}));
+}finally{await b.close();}

@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-22",
+  "sourceDimensions": [
+    2172,
+    724
+  ],
+  "recadrage": [
+    0,
+    90,
+    2172,
+    633
+  ],
+  "dimensions": [
+    2400,
+    600
+  ],
+  "octets": 268793,
+  "ratio": 4,
+  "agrandissement": 1.1049723756906078,
+  "accordDavid": "22/11/2026 : Oui, livrer en 2400 × 600 px",
+  "sha256": "bf919d06b8b4e30032135e9c2c6cdab2039723bbca9a02504005139e91035a09",
+  "simulationEntete": [
+    [
+      1188,
+      54
+    ],
+    [
+      390,
+      54
+    ]
+  ],
+  "captureGMOS": false
+}

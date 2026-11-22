@@ -1,0 +1,43 @@
+/* Pénombre — papier ancien, encre et bois d'ombre. Contrat GM-OS v1.7. */
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+:root[data-theme="penombre"] {
+  color-scheme: light;
+  --rpg-bg: #efe5ce;
+  --rpg-surface: #f8efdc;
+  --rpg-surface-2: #e6dac0;
+  --rpg-text: #2c302a;
+  --rpg-muted: #5c6054;
+  --rpg-accent: #80502e;
+  --rpg-accent-contrast: #fff8e7;
+  --rpg-border: #8a7e61;
+  --rpg-border-soft: rgba(94, 86, 65, 0.25);
+  --rpg-success: #42664a;
+  --rpg-danger: #9b2559;
+  --rpg-warning: #787800;
+  --rpg-info: #355d96;
+  --rpg-font-display: "IM Fell English SC", Georgia, serif;
+  --rpg-font-body: Georgia, "Times New Roman", serif;
+  --rpg-font-mono: Consolas, "Courier New", monospace;
+  --rpg-title-tracking: 0.015em;
+  --rpg-kicker-tracking: 0.08em;
+  --rpg-title-transform: none;
+  --rpg-radius-sm: 2px;
+  --rpg-radius-md: 3px;
+  --rpg-radius-lg: 4px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 2px 4px rgba(46, 37, 23, 0.13);
+  --rpg-elevation-2: 0 10px 24px rgba(35, 30, 22, 0.24);
+  --rpg-elevation-3: 0 20px 52px rgba(24, 30, 28, 0.34);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(248, 239, 220, 0.95);
+  --rpg-glass-border: rgba(128, 80, 46, 0.35);
+  --rpg-glass-blur: 0px;
+  --rpg-frame-bg: #253736;
+  --rpg-frame-text: #eee4cd;
+  --rpg-frame-accent: #dab56f;
+  --rpg-texture-bg: url('matieres/velin.svg');
+  --rpg-texture-panel: url('matieres/velin.svg');
+  --rpg-texture-opacity: 0.06;
+}

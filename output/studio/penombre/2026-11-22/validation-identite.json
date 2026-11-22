@@ -1,0 +1,16 @@
+{
+  "valid": true,
+  "values": {
+    "STYLE": {
+      "text": "richly layered traditional fantasy painting, visible brushwork, fine canvas grain, Renaissance and baroque ornament, muted teal and umber palette, restrained antique gold, smoky crimson accents, warm and cool chiaroscuro, soft atmospheric depth, aged surfaces, intricate engraved details, poetic theatrical mood",
+      "words": 40,
+      "max": 60
+    },
+    "AVOID": {
+      "text": "photorealism, cartoon, manga, glossy 3D, neon saturation, flat lighting, readable text, watermarks",
+      "words": 12,
+      "max": 15
+    }
+  },
+  "errors": []
+}
