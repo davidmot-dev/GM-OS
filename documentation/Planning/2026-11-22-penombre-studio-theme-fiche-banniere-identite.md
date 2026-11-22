@@ -4,9 +4,9 @@ Demande de David le 22 novembre 2026 : « fais-moi le thème, la fiche de person
 
 ## Livraison
 
-[ZIP complet](../../output/studio/penombre/2026-11-22/Penombre-GM-OS-Studio-theme-fiche-banniere-identite.zip) — 8 943 996 octets, 54 fichiers, 53 empreintes internes vérifiées.
+[ZIP complet](../../output/studio/penombre/2026-11-22/Penombre-GM-OS-Studio-theme-fiche-banniere-identite.zip) — 8 943 988 octets, 54 fichiers, 53 empreintes internes vérifiées.
 
-SHA-256 : `25d9373972880b2739e5a97d967a9002864c88f0acb79553f63a8134f868470a`.
+SHA-256 : `110df60cd748e4542ca57c9acde414f4d9267c8461b3f8dd0e9d5bcf3a4f8f83`.
 
 - [Thème](../../docs/systems/penombre/theme/theme.css), son intention, trois ornements, quinze icônes et une matière SVG dans le même dossier. Vélin chaud, brun-rouge et cadre vert d’ombre, relief mat. Police de titre approchée par IM Fell English SC, repli Georgia ; aucune prétention à reproduire le lettrage exact du livre.
 - [Fiche standard interactive](../../docs/fiches/Pénombre/Penombre-fiche-standard-interactive.html), une page paysage, 106 zones, 69 clés ; nouveau modèle `penombre-standard-fr`. PDF séparé « Feuille de personnage standard WEB.pdf » choisi. La feuille collégiale n’est pas ajoutée à cette fiche PJ. Fond embarqué fidèle, aucun portrait ou calcul de règle inventé.
@@ -32,3 +32,9 @@ Guide, invites, rapports et aperçus : `output/studio/penombre/2026-11-22/`. Sou
 Le thème complet est déjà rangé sous `docs/systems/penombre/theme/`. L’activation, le choix de la bannière, le collage STYLE/AVOID et le raccordement du modèle au pilote restent des étapes dans GM-OS, décrites dans le guide. La Conscience est une piste de quantité ; ses faces de jetons ne sont pas modélisées. Niveaux, potentiels et maximum restent manuels.
 
 Aucun fichier `src/` ou `electron/` touché, aucune donnée utilisateur, aucun service réseau lancé, aucun commit. Le registre partagé est modifié par un autre travail et a été laissé intact. Les index et le corpus Pénombre préexistants sont inchangés ; aucun pilote amélioré, donc aucune mise à jour de la synthèse des pilotes.
+
+## Demande de commit et push
+
+David a demandé « commit et pousse » le 22/11 : sommaire/index dans `34da25f0`, quatre ateliers dans `6f9936b1`. Le hook avant envoi a relevé deux erreurs de lint dans les anciens tests de recette de cette conversation : import inutilisé `physiqueActuel` dans Crimes, variable locale constante dans Star Trek. Corrigées sans changer le comportement ; ces anciens fichiers non suivis restent hors des commits Pénombre.
+
+L’essai global des thèmes a ensuite relevé Consolas, absent de sa liste de polices système. Le thème et son générateur utilisent désormais Courier New pour les chiffres ; les titres et le rendu de la fiche restent inchangés. Les 123 tests ciblés de `electron/themesDesJeux.test.ts` passent après cette correction. ZIP remis en cohérence, empreinte actualisée ci-dessus. Aucun contrôle de push désactivé.
