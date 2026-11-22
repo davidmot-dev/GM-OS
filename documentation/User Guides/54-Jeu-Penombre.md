@@ -1,9 +1,10 @@
 # 🎭 Jeu — Pénombre
 
 > **Pilote décrit :** « Pénombre », forgé par David, exporté le 2026-11-22, **fini le
-> 2026-11-22**, version 2.1.0 (`Export Dirvers/corriges/Penombre_driver_gmos_2.1.0.gmos-driver`,
+> 2026-11-22**, version 2.2.0 (`Export Dirvers/corriges/Penombre_driver_gmos_2.2.0.gmos-driver`,
 > construit par `outils/penombre/finir_penombre.py` ; la 2.1.0 ajoute le recompte de la réserve
-> collégiale et garde le bestiaire et l'identité visuelle de l'export de David). Thème `penombre`, fiche standard HTML,
+> collégiale, la 2.2.0 relie la résilience du bestiaire à la santé d'un adversaire ; toutes deux
+> gardent le bestiaire et l'identité visuelle de l'export de David). Thème `penombre`, fiche standard HTML,
 > bannière et identité visuelle livrés le même jour par GM-OS Studio. Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
@@ -115,6 +116,32 @@ les Éminences grises sont harmonieuses, 5 si une est fausse, aucun si une est d
 La réserve gagne ou perd l'écart de taille : les jetons déjà dépensés restent dépensés (le livre
 ne dit pas ce qu'ils deviennent). La variante « réserve héroïque » n'est pas gérée.
 
+## Les affrontements dans Combat-OS
+
+Le Psycholune ne lance jamais (p. 40-45). Sur la carte d'un adversaire, le bouton s'appelle
+**« Affronter »** ; il ouvre la fiche du combattant sur quatre gestes :
+
+- **Le profil** : adversité (la difficulté des Éminences grises contre lui), résilience et jetons de
+  dissonance, lus au bestiaire pour un adversaire posé depuis « Livre ». Un adversaire fabriqué fait
+  saisir son adversité. Posé depuis le bestiaire, il naît à sa résilience — Antrustion 15, Mandigo
+  20 (pilote 2.2.0) ; sa jauge s'appelle « Conscience / résilience ».
+- **Encaisser une attaque** : une Éminence grise a réussi son attaque contre l'adversité, même de
+  justesse (elle lance depuis sa fiche ou sa tablette) ; ses succès se saisissent et retirent autant
+  de résilience (p. 44).
+- **Action adverse**, réussie d'office (p. 42) : choisir l'action du livre — sa perte et ses cibles
+  se préremplissent quand l'effet les chiffre —, ou l'action calibrée par défaut : la cible perd
+  autant de jetons que l'adversité, ou toutes les Éminences grises la moitié arrondie au supérieur.
+  « Annulés par une défense » retire un jeton par succès d'une défense (p. 44). Les jetons inactifs
+  partent d'abord (p. 24) ; une complication peut remplacer la perte, à noter sur la fiche (p. 25).
+- **Dissonance** : à 0 de résilience, tant qu'il reste des jetons de dissonance, « Jouer la
+  dissonance » remet la résilience au maximum et retire un jeton ; ses actions de dissonance sont
+  rappelées (p. 43). Sans jeton, l'adversaire est vaincu.
+- **Opéra harmonique** : sa difficulté est la résilience actuelle ; « Opéra réussi » annule la
+  dissonance, « La dissonance revient » la rétablit quand l'effet cesse (p. 45).
+
+La riposte d'une Éminence grise (+1 succès) et une modification se reportent dans « Succès ajoutés »
+de son panneau de jet.
+
 ## La fiche HTML
 
 ![La fiche standard de Lancine, remplie depuis GM-OS](captures/jeu-penombre-fiche.jpg)
@@ -127,9 +154,7 @@ fiche HTML qu'après « Sauvegarder ».
 
 ## Ce qui n'est pas dans le pilote
 
-- Les **affrontements** (p. 40-45) : adversité, résilience et actions adverses ne sont pas encore
-  dans Combat-OS ; ils sont consignés dans la révision de Combat-OS (registre § 267, tâche T17).
-  Le bestiaire porte les six adversaires du livre, mais un adversaire posé au combat n'y reçoit pas
-  encore sa résilience.
+- Les **conséquences techniques** d'une réussite (invocation d'allié, protection, soin, soutien,
+  p. 34) se règlent à la main ; l'ordre du tour (les Éminences grises d'abord, p. 40) aussi.
 - Les **complications** se notent à la main sur la fiche, à la place d'une dépense ou d'une perte
   (p. 25).

@@ -120,6 +120,9 @@ frais des jeux retenus).
 
 - 22/11 — David, en validant le pilote Pénombre 2.0.0 (registre § 270) : « consigne les affrontements dans la révision de combat-os pour les drivers » → **Pénombre entre au plan, seizième jeu (T17)**, après le lot 4. Ses affrontements ne suivent pas le jet d'adversaire des autres : voir T17.
 
+- 22/11 — David : « oui mets pénombre avant le lot 1 et la recette 263 est faite » → ordre : T0, **T17 (Pénombre)**,
+  puis les lots 1 à 4 et T16. L'écart de l'analyse (§ 263 à essayer avant T0) est levé.
+
 ## Le comment
 
 ### Ce qui se réutilise (lu le 20/11)
@@ -214,10 +217,14 @@ le demande (Rêve de Dragon, RuneQuest) :
    étape e2e et capture relue.
 6. Manuel 54 et 53, synthèse des pilotes, registre. **À essayer par David** (C8).
 
-- [ ] T0 · La table des jeux ouverts et la règle des dégâts par jeu ; un jeu sans règle demande le
+- [x] T0 · La table des jeux ouverts et la règle des dégâts par jeu ; un jeu sans règle demande le
       montant — `jetDuCombattant.ts`, `attaqueDeLAdversaire.ts`, `AppliquerALaCible.tsx` ·
       couvre C4, C6 · essai : `jetDuCombattant.test.ts`, `attaqueDeLAdversaire.test.ts` (les
       quatre jeux du § 263 inchangés, un jeu inconnu demande le montant) · touche src/ ⛔
+      **Fait le 22/11** : `JEUX_DU_COMBAT`, `jeuDuCombat`, `regleDesDegats` (`jetDuCombattant.ts`) ;
+      `coupAAppliquer` reçoit la règle ; « arme + succès − 1 » pour Alien et Blade Runner seulement
+      (l'attaque d'une créature d'Alien la déclare elle-même) ; Vampire reste « Fiche » sans bouton.
+      Vérifié : `npx tsc -b`, lint, Combat-OS 87 fichiers / 667 essais (dont `jetDuCombattant.test.ts`, nouveau).
 - [ ] T1 · Vampire — « Attaquer » sur la carte ; dégâts : marge + arme (à relire au livre), pistes
       de Vampire · couvre C1 à C5, C7 · touche src/ ⛔ · à essayer par David
 - [ ] T2 · COC — le jet de l'adversaire et l'encaissement de COC (`applyDamage` le connaît) ;
@@ -242,7 +249,7 @@ le demande (Rêve de Dragon, RuneQuest) :
 - [ ] T14 · NOC — jet générique, Destin · C1 à C5, C7 · src/ ⛔ · à essayer par David
 - [ ] T15 · Rêve de Dragon — jet générique d100 et combat en phases · C1 à C5, C7 · src/ ⛔ · à
       essayer par David
-- [ ] T17 · Pénombre — les affrontements du livre (p. 40-45), ajoutés le 22/11 · C1 à C5, C7 · src/ ⛔ ·
+- [x] T17 · Pénombre — les affrontements du livre (p. 40-45), ajoutés le 22/11 · C1 à C5, C7 · src/ ⛔ ·
       à essayer par David. Ce qui diffère des autres jeux :
       - **aucun jet du Psycholune** : comme la « Riposte » de Cthulhu Hack, le bouton de la carte de
         l'adversaire ouvre le jet d'une Éminence grise (`jet.penombre`) avec l'**adversité** pour
@@ -273,6 +280,14 @@ le demande (Rêve de Dragon, RuneQuest) :
         la santé d'un adversaire posé au combat, sans passer par la conscience des Éminences grises ;
       Essais : ceux du module de Pénombre (résilience, actions adverses), un essai de la carte, et l'e2e
       `combatDesAdversaires.spec.ts`.
+      **Fait le 22/11** — décisions de David du jour : **relier le bestiaire** (Q3 levée pour Pénombre) ;
+      **les quatre gestes** (encaisser, action adverse, dissonance, opéra). Livré : `affrontementDePenombre.ts`
+      (profil, perte par défaut, lecture d'une action, chute et dissonance ; 11 essais), `AffrontementDePenombre.tsx`
+      ouvert par « Affronter » (`affrontementPossible`, geste `affrontement` dans `JEUX_DU_COMBAT` ; 7 essais, dont
+      Antrustion posé depuis le bestiaire à 15 / 15) ; pilote **2.2.0** : la colonne « Résilience » remplit
+      `conscience_max`, la santé de départ — `controlerLePilote` sans constat. Libellés fr/en. Vérifié : `npx tsc -b`,
+      lint, Combat-OS 93 fichiers / 716 essais, traductions et manuel. Reste : l'essai de David (C8) ; captures et
+      e2e avec T16.
 - [ ] T16 · Livraison — script de validation sur les seize pilotes, e2e complet, captures,
       registre et synthèse · couvre C6, C7 · essai : le script, `combatDesAdversaires.spec.ts`
 
