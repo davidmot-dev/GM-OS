@@ -14947,10 +14947,71 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
   images relues). Guides 10 et 20 à jour.
 - **Validé par David le 21/11** : « ca marche, commit et pousse ». Clos.
 
+### 269 · Le socle commun BRP — corpus relu, pilote abandonné — 21/11/2026
+
+- **La demande** : David a forgé un pilote « socle commun » pour le BRP (« tu peux vérifier ? »).
+  Contrôle : `controlerLePilote` rend 1 erreur et 3 avertissements, et `preparerLeJet` montre
+  que **tout réussit** (deux d10 comparés chacun à la compétence, zéro réussite exigée). David
+  ne jouera pas de partie BRP : **le pilote est abandonné**, seul le corpus sert (comblement des
+  jeux de la famille par la Forge). À retirer par la **corbeille**, pas la gomme, qui met le
+  corpus en quarantaine (`electron/groupesDuCorpus.ts:92-117`, cases cochées d'office).
+- **Fait** : `corpus.json` déclare `moteur: brp` et `langue: fr`. La fiche née d'une consigne de
+  forge (« C'est système générique en anglais. Prend cela en compte. ») devient
+  `les-niveaux-de-puissance.md`. **Relu 17/17** contre le livre (BRP 1.05, PDF = imprimée + 5,
+  tables lues en image) : seize fiches corrigées (dont la fiche réécrite), une conforme à une
+  précision près (initiative) ; le brouillon « Monnaie de table » est conforme, inchangé.
+- **Les erreurs du carnet** : APP au lieu de CHA (édition 1.05) ; création par points à 80
+  au lieu de 24 ; un jet de CON × 5 inventé après une blessure majeure ; la mort sur le coup par
+  dégâts massifs, les énergies opposées qui s'annulent, le double échec « bloqué », les
+  décombres qui ralentissent, se rouler au sol pour s'éteindre — six règles absentes du livre ;
+  « lead » traduit par « meneur » ; « minimum 1 point de dégât » quand le livre dit l'inverse.
+- **Le livre se contredit**, et les fiches le disent : arrondi des degrés (normal p. 110,
+  supérieur p. 126) ; maladresse (« 99 ou 00 » au glossaire p. 4, 1/20 des chances d'échec
+  p. 109-110) ; folie (1/5 de la SAN en une heure p. 24, la moitié de la SAN de départ en
+  cinq minutes p. 218) ; plafond de la SAN (99 p. 24, la SAN de départ p. 219).
+- **Vérifié** : `corpusDerivable`, `familleDuCorpus`, `declarationDuCorpus` (188 essais) ; le
+  groupe « Dés et composition du jet » tient à 2 caractères près, note raccourcie.
+
+### 270 · Pénombre — pilote fini, corpus relu, fiche reliée — 22/11/2026
+
+- **La demande** : « Pénombre, peux-tu vérifier et aussi proposer les améliorations » (skill
+  `finir-un-pilote`), puis « oui je joue à Pénombre, fais tout dans l'ordre ». Contrôle : thème
+  accepté 0/0, fiche HTML acceptée (deux avertissements d'une fiche neuve) ; le pilote forgé
+  écrivait « 1d harmonique + 1-3d atout », que le moteur ne lit pas — **2 000 lancers simulés,
+  dés vides et total NaN** —, débitait une ressource `reserve_jetons` jamais déclarée, et
+  déclenchait incident et envolée sur un « critique » d20.
+- **Corpus relu 19/19** contre le livre de base (pages imprimées = PDF, décalage 0 vérifié sur
+  « Voir p. 34 ») : dix-sept fiches corrigées, deux conformes (initiative, opéra). Erreurs du
+  carnet : la merveille « apporte 5 succès » (le 20 vaut 5 par la table) — d'où la suite fausse du
+  pilote ; « pas de troisième atout » (les dépenses sont cumulables, p. 24) ; la perte d'une
+  prolongation collégiale « par participant » (un total, p. 33) ; la peste « purifiée sous un
+  souffre-jour » ou par l'opéra (suspendue seulement, guérie par une quête, p. 47, 103) ; le
+  timbre dissonant quand on était « harmonieux » (quand la clé était déjà cochée, p. 36) ;
+  difficultés de poursuite « 15 à 20 » inventées ; Mandigo « sans adversité » (4 et 20, p. 364) ;
+  « quatre » adversaires (six) ; des caractères chinois dans « dé à十二 faces ».
+- **Livré** : `src/modules/dice/systemes/penombre.ts` (réserve, lancer, relance, jetons à trois
+  états, merveille, réserve collégiale, difficulté magique ; 23 essais sur les exemples du livre),
+  `jet.penombre` dans `preparerLeJet` (l'harmonique « D8 » et l'atout ne s'additionnent pas),
+  `PenombreAuJet.tsx` (préparation et suites) et le panneau (7 essais) ; pilote **2.0.0** par
+  `outils/penombre/finir_penombre.py` (identifiants gardés, 70 champs, 69 clés de la fiche HTML,
+  réserve collégiale `reserve_collegiale`, trois espaces) : `controlerLePilote` **zéro constat** ;
+  fiche au moteur **28** (`outils/penombre/integrer_au_moteur.mjs`) et
+  `docs/systems/penombre/fiche/correspondance.json` (timbre traduit) : `fiche:valider` 0/0 ;
+  manuel 53 et page `54-Jeu-Penombre.md`, six captures relues (e2e `--grep "Pénombre"`).
+- **Vu à l'écran et corrigé** : « Seuil 0 = 8 + 2 » sous Composer et « +5 excédent » au
+  résultat, masqués pour Pénombre.
+- **Vérifié** : `npx tsc -b` ; dés et panneau (132 fichiers, 1 597 essais) ; corpus
+  (`corpusDerivable`, `declarationDuCorpus`, 183) ; correspondances, fiches et manuel (236) ;
+  lint des fichiers touchés ; e2e des captures.
+- **Reste** : l'essai de David (réimporter avec **Remplacer**) ; le recompte automatique de la
+  réserve collégiale d'après les timbres du groupe ; les affrontements dans Combat-OS.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 206 | **Pénombre — pilote 2.0.0, corpus relu, fiche reliée** | § 270 ; 🟠 livré le 22/11 — `jet.penombre`, jetons et réserve collégiale, corpus 19/19, fiche au moteur 28, zéro constat ; essai de David attendu | Réimporter `Export Dirvers/corriges/Penombre_driver_gmos_2.0.0.gmos-driver` avec Remplacer, puis un jet, une dépense, la fiche du jeu | Rien |
+| 205 | **Socle commun BRP — corpus relu contre le livre** | § 269 ; 🟢 relu 17/17 le 21/11, pilote abandonné à la demande de David | Retirer le pilote par la corbeille (pas la gomme) | Rien |
 | 204 | **Transformer un PNJ en personnage joueur, et l'inverse** | § 268 ; 🟢 livré le 21/11, validé par David le jour même — T1 à T10, 3 171 essais, e2e des deux gestes | Aucun — clos | Rien |
 | 203 | **Combat-OS — le jet des adversaires pour quinze autres jeux** | § 267 ; spécifié le 20/11, ⏸ garé le 21/11 à la demande de David, pas commencé — T0 (règle des dégâts par jeu), puis T1 à T15 un jeu à la fois, T16 livraison | T0, après « GM-OS tourne-t-il ? » | L'essai du § 263, recommandé avant T0 |
 | 202 | **La médiathèque s'ouvrait sous la fenêtre de campagne** | § 266 ; 🟢 corrigé le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
