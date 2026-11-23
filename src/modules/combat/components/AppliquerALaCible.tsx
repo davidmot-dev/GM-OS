@@ -27,7 +27,8 @@ import type { GameDriver } from '../../../types/drivers';
 export const AppliquerALaCible: React.FC<{
     cible: Pick<Combatant, 'id' | 'name'>;
     /** Le résultat affiché par le panneau ; chaque jet ou forçage en est un nouvel objet. */
-    resultat: Pick<RollResult, 'total' | 'successes' | 'compte'> & { vampire?: { marge?: number }; barbarians?: { bilan?: string } };
+    resultat: Pick<RollResult, 'total' | 'successes' | 'compte'> & { vampire?: { marge?: number }; barbarians?: { bilan?: string };
+        shadowrun?: { nets?: number; reussi?: boolean } };
     driver: Pick<GameDriver, 'combat' | 'jet'> | null | undefined;
     /** T9 : les armes que le catalogue connaît pour cet adversaire ; la première est proposée. */
     armes?: readonly ArmeProposee[];
@@ -77,6 +78,8 @@ export const AppliquerALaCible: React.FC<{
     const regle = regleImposee ?? regleDesDegats(driver);
     // § 267, T1 : Vampire — la marge plus le bonus de l'arme ; l'armure change le type, elle ne retire rien (p. 126).
     const margeEtArme = regle === 'marge-plus-arme';
+    // § 267, T10 : Shadowrun — la VD de l'arme + succès nets ; l'armure est dans les seuils de la cible (p. 66-68).
+    const vdEtNets = regle === 'vd-plus-nets';
     /*
       **Barbarians of Lemuria (§ 267, T4, 23/11/2026)** : le dé de l'arme (d3, d6M, d6, d6B) plus la
       Vigueur, ou sa moitié à distance et à mains nues ; +6 pour un Coup dévastateur, offert sur un succès
@@ -104,11 +107,12 @@ export const AppliquerALaCible: React.FC<{
     };
     const coup = coupAAppliquer({
         resultat, regle, degatsDeLArme: nombre(arme), marge: resultat.vampire?.marge,
+        touche: resultat.shadowrun?.reussi, nets: resultat.shadowrun?.nets,
         montantSaisi: deDeLArme ? lances?.total : nombre(saisi),
-        protection: regleAlien || margeEtArme ? 0 : nombre(protection),
+        protection: regleAlien || margeEtArme || vdEtNets ? 0 : nombre(protection),
     });
     const reserve = regle === 'arme-plus-succes' && resultat.compte === 'reussites';
-    const parLArme = reserve || margeEtArme;
+    const parLArme = reserve || margeEtArme || vdEtNets;
     const deja = appliquePour?.resultat === resultat ? appliquePour : null;
     const appliquer = () => {
         if (coup.montant === null || coup.montant <= 0 || deja) return;
@@ -189,6 +193,10 @@ export const AppliquerALaCible: React.FC<{
                             </button>
                         )}
                     </>
+                ) : vdEtNets ? (
+                    <label className="flex items-center gap-1" title="La VD de base de l’arme ou du sort, lue sur la fiche de l’attaquant (p. 66-67).">VD de l’arme
+                        <input aria-label="VD de l’arme" className={champ} type="number" min={0} value={arme} onChange={e => setArme(e.target.value)} />
+                    </label>
                 ) : margeEtArme ? (
                     <label className="flex items-center gap-1" title="De +0 (improvisée, pieu) à +4 (à feu lourde, mêlée imposante), p. 304.">Bonus de l’arme
                         <input aria-label="Bonus de l’arme" className={champ} type="number" min={0} value={arme} onChange={e => setArme(e.target.value)} />
@@ -202,13 +210,13 @@ export const AppliquerALaCible: React.FC<{
                         <input aria-label="Dégâts" className={champ} type="number" min={0} value={saisi} onChange={e => setSaisi(e.target.value)} />
                     </label>
                 )}
-                {!regleAlien && !margeEtArme && (
+                {!regleAlien && !margeEtArme && !vdEtNets && (
                     <label className="flex items-center gap-1" title="Ce que la protection de la cible retire : le jet de protection de Blade Runner.">
                         Protection retirée
                         <input aria-label="Protection retirée" className={champ} type="number" min={0} value={protection} onChange={e => setProtection(e.target.value)} />
                     </label>
                 )}
-                {!regleAlien && !margeEtArme && protectionDeLaCible && (
+                {!regleAlien && !margeEtArme && !vdEtNets && protectionDeLaCible && (
                     <button type="button" onClick={lancerLaProtection} data-lancer-la-protection
                         title="À chaque coup subi : chaque réussite retire un point de dégâts. Pas contre les dégâts d’un forçage."
                         className="flex items-center gap-1 rounded border border-app-border/60 px-2 py-0.5 hover:border-accent/50 hover:text-accent">
@@ -230,6 +238,12 @@ export const AppliquerALaCible: React.FC<{
                     Le type : sur un mortel, lames, balles et feu font des aggravés, les coups contondants des superficiels ; sur un vampire,
                     les armes courantes font des superficiels divisés par deux, le feu, le soleil et les crocs des aggravés. Chaque point
                     d’armure change un aggravé de lame ou de balle en superficiel (p. 126, 304).
+                </p>
+            )}
+            {vdEtNets && (
+                <p data-vd-de-shadowrun className="text-app-muted">
+                    La VD finale se compare aux seuils de {cible.name} selon le type : physique (armure principale), armure secondaire,
+                    sans armure ou mental. Il faut les dépasser, et l’attaque ne fait qu’une blessure (p. 68).
                 </p>
             )}
             {deDeLArme && lances && (

@@ -3,6 +3,7 @@ import { equipementsAlien, type RegleDesJetsAlien } from '../../dice/systemes/je
 import type { ArmureAlien, CombatAlien } from '../../dice/systemes/combatAlien';
 import { entreesDesLignes } from '../../dice/systemes/xenomorphesAlien';
 import type { RegleDuCombatDeDegenesis } from '../../dice/systemes/combatDeDegenesis';
+import type { RegleDeRuneQuest } from '../../dice/systemes/runequest';
 import { ajouterALaFormule, degatsNets, lireLaFormule, valeurFixe, type FormuleDeDes, type RegleDeSymbaroum } from '../../dice/systemes/symbaroumRegles';
 
 /*
@@ -150,7 +151,8 @@ export function armesDeLaFicheAlien(
  */
 export function attaqueParDefaut(
     pilote: { jet?: { bladeRunner?: unknown; alien?: { competence: string }; dune?: { competences: string[]; principes: string[] }; vampire?: unknown;
-        coc?: { dommages?: { armes: readonly { attaque: string; nom: string }[] } }; deltaGreen?: unknown; barbarians?: unknown; starTrek?: unknown; argyropee?: unknown; degenesis?: { combat?: RegleDuCombatDeDegenesis } } } | null | undefined,
+        coc?: { dommages?: { armes: readonly { attaque: string; nom: string }[] } }; deltaGreen?: unknown; barbarians?: unknown; starTrek?: unknown; argyropee?: unknown; degenesis?: { combat?: RegleDuCombatDeDegenesis };
+        runequest?: Pick<RegleDeRuneQuest, 'armes'>; shadowrun?: unknown } } | null | undefined,
     armes: readonly ArmeProposee[],
     valeurs: Record<string, unknown>,
 ): Record<string, string> | null {
@@ -162,6 +164,10 @@ export function attaqueParDefaut(
     if (pilote?.jet?.argyropee) return attaqueDArgyropee(valeurs).champs;
     // Degenesis (§ 267, T8) : Physique + Corps à corps, ou Agilité + Armes à projectiles (p. 102).
     if (pilote?.jet?.degenesis) return attaqueDeDegenesis(pilote.jet.degenesis.combat, valeurs)?.champs ?? null;
+    // RuneQuest (§ 267, T9) : le score de la première arme chiffrée de la feuille.
+    if (pilote?.jet?.runequest) return attaqueDeRuneQuest(pilote.jet.runequest, valeurs)?.champs ?? null;
+    // Shadowrun : Anarchy (§ 267, T10) : la compétence de l'arme + Agilité (p. 66-67).
+    if (pilote?.jet?.shadowrun) return attaqueDeShadowrun(valeurs)?.champs ?? null;
     // Delta Green (§ 267, T3) : la compétence de la première arme nommée, sinon le combat à mains nues.
     if (pilote?.jet?.deltaGreen) return attaqueDeDeltaGreen(valeurs)?.champs ?? null;
     /*
@@ -319,6 +325,54 @@ export function attaqueDeDegenesis(regle: RegleDuCombatDeDegenesis | undefined, 
         champs: distance ? { attribut: 'agilite', competence: tir! } : { attribut: 'physique', competence: melee },
         ...(arme ? { arme: arme.nom } : {}),
     };
+}
+
+/**
+ * **L'attaque proposée à un adversaire de RuneQuest** (§ 267, T9, 23/11/2026) : la première arme de la
+ * feuille qui a un score chiffré et un nom ou des dégâts — mêlée, tir, puis bouclier, dans l'ordre du
+ * pilote. Son score est l'aptitude lancée ; le panneau en prépare les dégâts. Sans arme, rien : le
+ * meneur compose.
+ */
+export function attaqueDeRuneQuest(regle: Pick<RegleDeRuneQuest, 'armes'> | undefined, valeurs: Record<string, unknown>): { champs: Record<string, string> } | null {
+    const rempli = (champ?: string) => !!champ && String(valeurs[champ] ?? '').trim() !== '';
+    const chiffre = (champ: string) => { const v = Number(valeurs[champ]); return rempli(champ) && Number.isFinite(v) && v > 0; };
+    const arme = (regle?.armes ?? []).find(a => chiffre(a.score) && (rempli(a.nom) || rempli(a.degats)));
+    return arme ? { champs: { aptitude: arme.score } } : null;
+}
+
+/*
+  **Shadowrun : Anarchy 2.0** (§ 267, T10, 23/11/2026). Le livre, pages imprimées : le tir oppose Arme à
+  distance + Agilité à Athlétisme + Agilité, et touche si l'attaquant a au moins autant de succès (p. 66) ;
+  la mêlée oppose Combat rapproché + Agilité des deux côtés (p. 67). « La VD subie par la cible est égale à
+  la VD de l'arme […] à laquelle on ajoute les succès nets » (p. 66, 67) ; la VD finale se compare ensuite
+  aux seuils de la cible, armure comprise (p. 68 ; exemple p. 72 : VD 5 + 3 nets = 8 contre 6/9/12).
+  La fiche écrit l'arme en texte libre — nom et « type » (« VD 5 ») — : la VD s'y lit.
+*/
+const MELEE_DE_SHADOWRUN = /lame|couteau|[ée]p[ée]e|hache|matraque|batte|poing|griffe|mains nues|tonfa|katana|machette|dague|combat rapproch|contact/i;
+
+/** Les armes de la fiche de Shadowrun : `arme_1` à `arme_4`, leur VD lue dans le nom ou le type. */
+export function armesDeShadowrun(valeurs: Record<string, unknown>): (ArmeProposee & { melee: boolean })[] {
+    return [1, 2, 3, 4].flatMap(i => {
+        const nom = String(valeurs[`arme_${i}`] ?? '').trim();
+        const genre = String(valeurs[`arme_${i}_type`] ?? '').trim();
+        const lu = /\bVD\s*:?\s*(\d+)/i.exec(`${nom} ${genre}`)?.[1] ?? /^\s*(\d+)\s*$/.exec(genre)?.[1];
+        if (!nom && lu === undefined) return [];
+        return [{ libelle: nom || `Arme ${i}`, degats: lu === undefined ? NaN : Number(lu), melee: MELEE_DE_SHADOWRUN.test(`${nom} ${genre}`) }];
+    });
+}
+
+/**
+ * **L'attaque proposée à un adversaire de Shadowrun** : la compétence de tir (« Armes à distance… ») ou
+ * Combat rapproché selon sa première arme, toujours avec l'Agilité (p. 66-67) ; `epreuve`, l'opposition
+ * que le panneau prépare. Sans arme, Combat rapproché s'il figure sur la fiche ; sinon, rien.
+ */
+export function attaqueDeShadowrun(valeurs: Record<string, unknown>): { champs: Record<string, string>; epreuve: 'tir' | 'melee' } | null {
+    const arme = armesDeShadowrun(valeurs)[0];
+    const melee = !arme || arme.melee;
+    const motif = melee ? /combat rapproch/i : /armes? (à|a) distance|armes? de (jet|trait)|armes? (à|a) feu/i;
+    const i = Array.from({ length: 11 }, (_, n) => n + 1).find(n => motif.test(String(valeurs[`competence_${n}_nom`] ?? '')));
+    if (!arme && i === undefined) return null;
+    return { champs: { ...(i !== undefined ? { competence: `competence_${i}` } : {}), attribut: 'agilite' }, epreuve: melee ? 'melee' : 'tir' };
 }
 
 /** Une arme de la fiche d'Argyropée : son nom, sa formule de dégâts, la compétence qui l'emploie. */
@@ -570,10 +624,13 @@ export interface CoupAAppliquer {
 export function coupAAppliquer(params: {
     resultat: { total: number; successes?: number; compte?: 'reussites' };
     /** La règle des dégâts du jeu (`regleDesDegats`) ; absente, le montant se saisit. */
-    regle?: 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'porte-du-jeu' | 'montant';
+    regle?: 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'vd-plus-nets' | 'porte-du-jeu' | 'montant';
     degatsDeLArme?: number;
     /** Vampire : la marge de réussites du jet (`JetDeVampire.vampire.marge`), 0 sur un échec. */
     marge?: number;
+    /** Shadowrun : le jet touche-t-il (`JetDeShadowrun.shadowrun.reussi`), et ses succès nets. */
+    touche?: boolean;
+    nets?: number;
     montantSaisi?: number;
     protection?: number;
 }): CoupAAppliquer {
@@ -592,6 +649,20 @@ export function coupAAppliquer(params: {
         }
         const bonus = Math.trunc(degatsDeLArme);
         return { montant: marge + bonus, calcul: `marge ${marge} + arme ${bonus} = ${marge + bonus}` };
+    }
+    /*
+      **Shadowrun : Anarchy (§ 267, T10)** : VD de l'arme + succès nets (p. 66-67). Rien ne se retire ici :
+      l'armure est dans les seuils de la cible, que son moniteur compare à la VD finale (p. 68).
+    */
+    if (params.regle === 'vd-plus-nets') {
+        if (!params.touche) return { montant: 0, calcul: 'l’attaque ne touche pas : pas de dommages', raison: 'rate' };
+        const nets = Number.isFinite(params.nets) ? Math.max(0, Math.trunc(params.nets!)) : 0;
+        const succes = `${nets} succès net${nets > 1 ? 's' : ''}`;
+        if (degatsDeLArme === undefined || !Number.isFinite(degatsDeLArme) || degatsDeLArme < 0) {
+            return { montant: null, calcul: `VD de l’arme + ${succes}`, raison: 'arme-inconnue' };
+        }
+        const vd = Math.trunc(degatsDeLArme);
+        return { montant: vd + nets, calcul: `VD ${vd} + ${succes} = VD ${vd + nets}, contre les seuils de la cible` };
     }
     const protection = Number.isFinite(params.protection) ? Math.max(0, Math.trunc(params.protection!)) : 0;
     const moins = (brut: number, debut: string): CoupAAppliquer => protection > 0

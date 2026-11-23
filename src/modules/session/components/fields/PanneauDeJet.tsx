@@ -116,6 +116,7 @@ import { CHOIX_DE_SHADOWRUN, lancerShadowrun, type ChoixDeShadowrun, type JetDeS
 import { PreparationShadowrun, SuitesShadowrun } from './ShadowrunAuJet';
 import { MatriceShadowrun } from './CartesShadowrun';
 import { OppositionAuJetShadowrun } from './OperationsShadowrun';
+import { OPPOSITION_SHADOWRUN } from '../../../dice/systemes/oppositionDeShadowrun';
 import { executerTableShadowrun } from '../../logic/operationsDeShadowrun';
 import { appliquerDrainShadowrun, ajouterBlessureShadowrun, ecrireSuiviShadowrun, positionShadowrun } from '../../../dice/systemes/suiviDeShadowrun';
 import { lireMatriceShadowrun, ecrireMatriceShadowrun, consequenceMatriceShadowrun, effetsModeShadowrun } from '../../../dice/systemes/matriceDeShadowrun';
@@ -260,12 +261,23 @@ interface PanneauDeJetProps {
      * champ du nom de son arme, choisie d'emblée. Lu au montage seulement.
      */
     degenesisDuCombattant?: { arme?: string };
+    /**
+     * **L'attaque d'un adversaire de RuneQuest** (§ 267, T9, 23/11/2026), ouverte par « Attaquer » :
+     * `cible`, l'identifiant du combattant que vise la carte — « Porter le coup » s'ouvre sur lui, et
+     * non sur la cible du combattant dont c'est le rang. Lu au montage du coup seulement.
+     */
+    runequestDuCombattant?: { cible?: string };
+    /**
+     * **L'attaque d'un adversaire de Shadowrun : Anarchy** (§ 267, T10, 23/11/2026), ouverte par « Attaquer » :
+     * l'épreuve opposée préparée d'emblée — tir (p. 66) ou mêlée (p. 67), l'adversaire initiateur. Lu au montage.
+     */
+    shadowrunDuCombattant?: { epreuve: 'tir' | 'melee' };
 }
 
 const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false, personnageId,
     ecrireSurLaFiche, objetsPortes, compositionInitiale, demandeId, nomDuPersonnage, surLeLancer, surLeResultat, equipementAlienInitial,
-    duneDuCombattant, cocDuCombattant, starTrekDuCombattant, degenesisDuCombattant,
+    duneDuCombattant, cocDuCombattant, starTrekDuCombattant, degenesisDuCombattant, runequestDuCombattant, shadowrunDuCombattant,
 }) => {
     const avecLaDemande = joindreLaDemande(demandeId);
     /**
@@ -748,7 +760,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [suiteShadowrun, setSuiteShadowrun] = useState<{ id: string; drain: boolean; matrice?: ChoixDeShadowrun['matrice'];
         mode?: Parameters<typeof effetsModeShadowrun>[0]; complication: JetDeShadowrun['shadowrun']['complication']; reussi: boolean; appliquee?: boolean;
         preparation?: { succes: number; tempsLimite: boolean }; creditee?: boolean }>();
-    const [choixShadowrunBrut, setChoixShadowrunBrut] = useState<ChoixDeShadowrun & { pour?: string }>(CHOIX_DE_SHADOWRUN);
+    const [choixShadowrunBrut, setChoixShadowrunBrut] = useState<ChoixDeShadowrun & { pour?: string }>(() => shadowrunDuCombattant
+        ? { ...CHOIX_DE_SHADOWRUN, opposition: { ...OPPOSITION_SHADOWRUN, epreuve: shadowrunDuCombattant.epreuve } } : CHOIX_DE_SHADOWRUN);
     const anarchyShadowrun = regleShadowrun?.anarchy && ecrireSurLaFiche ? Math.max(0, Math.trunc(Number(valeurs[regleShadowrun.anarchy]) || 0)) : undefined;
     const [anarchyApres, setAnarchyApres] = useState<number | null>(null);
     // La RR et le risque réglés valent pour UNE compétence : une autre ramène sa RR et le risque d'une action normale.
@@ -4070,6 +4083,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {regleRuneQuest && runequestDuLancer && runequestDuResultat && (
                             <SuitesRuneQuest key={runequestDuLancer.compte} jet={resultat as JetDeRuneQuest} calcul={runequestDuLancer.calcul}
                                 regle={regleRuneQuest} d20={() => DiceEngine.roll(20)} porterLeCoup={!pourLesJoueurs}
+                                {...(runequestDuCombattant?.cible ? { cibleDuCoup: runequestDuCombattant.cible } : {})}
                                 valeurs={valeursRuneQuest} de={faces => DiceEngine.roll(faces)}
                                 ecrire={ecrireSurLaFiche ? ecrireRuneQuest : undefined} sections={template.sections}
                                 augmenter={bonus => setChoixRuneQuest(c => ({ ...c, augmentation: bonus }))}

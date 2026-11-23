@@ -33,6 +33,8 @@ import { estHorsDeCombat, santeDeDepart, valeurDuChamp, santeAlignee, santePrinc
 import { armureDeLAdversaire } from './logic/attaqueDeLAdversaire';
 import { coupSurLAdversaire, estUnAdversaireAutonome } from './logic/adversairesDeDegenesis';
 import { degatsDeVampireSelonLeJeu } from './logic/pistesDeVampire';
+import { moniteurSelonLeJeu, positionDuMoniteur } from './logic/moniteurDeShadowrun';
+import { capacitesShadowrun } from '../dice/systemes/suiviDeShadowrun';
 import { DiceEngine } from '../dice/DiceEngine';
 import { actionsDuRound, lancerDegenesis, reserveDeDegenesis } from '../dice/systemes/degenesis';
 import { faceDuD10 } from '../dice/systemes/argyropee';
@@ -92,7 +94,7 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
 function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'asc' | 'desc'; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien;
     initiativeEnReserve?: GameDriver['combat']['initiativeEnReserve']; pistesDeSante?: GameDriver['combat']['pistesDeSante'];
     statsToTrack?: GameDriver['combat']['statsToTrack'];
-    encaissement?: GameDriver['combat']['encaissement'] }; jet?: { coc?: { des?: 'd20' | '3d6'; heroisme?: boolean }; argyropee?: { sante?: string }; deltaGreen?: { sante?: string };
+    encaissement?: GameDriver['combat']['encaissement']; moniteurDEtat?: GameDriver['combat']['moniteurDEtat'] }; jet?: { coc?: { des?: 'd20' | '3d6'; heroisme?: boolean }; argyropee?: { sante?: string }; deltaGreen?: { sante?: string };
         vampire?: import('../dice/systemes/vampire').RegleDeVampire } } | undefined {
     try {
         return (window as unknown as {
@@ -1654,6 +1656,37 @@ export const useCombatStore = create<CombatState>()(
                   superficielles puis ses Traumatismes, le « mental » va à son Égo, et sa santé perd ce
                   que les pistes retiennent. Non préparé, le coup reste en PV, et on le dit.
                 */
+                /*
+                  **Shadowrun : Anarchy — l'adversaire sans fiche, à son moniteur d'état** (§ 267, T10, 23/11/2026).
+                  Le manuel le promettait (« la valeur des Dégâts est la VD finale ») ; un PJ ou un PNJ de campagne
+                  y passait par `handleApplyImpact`, mais un adversaire posé sur le plateau prenait la VD en cases :
+                  une VD 8 en cochait huit. Il passe maintenant par la même règle — la VD contre ses seuils, une
+                  seule blessure (p. 68) —, et ses cases suivent la pire blessure.
+                */
+                const moniteur = piloteActif()?.combat?.moniteurDEtat;
+                if (moniteur?.mecanique === 'shadowrun') {
+                    const comptes = new Set<string>();
+                    for (const c of get().combatants.filter(x => targetIds.includes(x.id) && estUnAdversaireAutonome(x))) {
+                        const r = moniteurSelonLeJeu(moniteur, c.sheetData, { value: Math.abs(amount), isRecovery: amount < 0, type });
+                        if (!r) continue;
+                        const fiche = { ...c.sheetData, ...r.fiche };
+                        const compte = (champ: string) => Math.max(0, Math.trunc(Number(fiche[champ]) || 0));
+                        const position = positionDuMoniteur(
+                            { legeres: compte(moniteur.legeres), graves: compte(moniteur.graves), incapacitantes: compte(moniteur.incapacitantes) },
+                            capacitesShadowrun(moniteur, fiche));
+                        const healthSystem = c.healthSystem && r.impact.value !== 0
+                            ? HealthInterpreter.calculateNextState(c.healthSystem, { value: r.impact.value, isRecovery: !!r.impact.isRecovery })
+                            : c.healthSystem;
+                        get().updateCombatant(c.id, { healthSystem, sheetData: { ...fiche, ...(moniteur.sante ? { [moniteur.sante]: position } : {}) } });
+                        get().noterUnCoup(c.id, r.impact);
+                        useJournalStore.getState().addEvent({ type: 'COMBAT', title: `${c.name} — ${amount < 0 ? 'soins' : 'dommages'}`, content: r.texte });
+                        gmToast(`${c.name} — ${r.texte}`, 'info');
+                        comptes.add(c.id);
+                    }
+                    targetIds = targetIds.filter(id => !comptes.has(id));
+                    if (targetIds.length === 0) { get().broadcastSync(); return; }
+                }
+
                 const regleDesPistes = piloteActif()?.combat?.pistesDeSante;
                 const pistesPour: Record<string, { montant: number; fiche: Record<string, number>; texte: string }> = {};
                 if (regleDesPistes) for (const c of get().combatants.filter(x => targetIds.includes(x.id) && estUnAdversaireAutonome(x))) {

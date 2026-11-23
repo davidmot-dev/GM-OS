@@ -3,7 +3,7 @@ import PanneauDeJet from '../../session/components/PanneauJetDeFiche';
 import { AppliquerALaCible } from './AppliquerALaCible';
 import { DegatsDArgyropee } from './DegatsDArgyropee';
 import type { RollResult } from '../../dice/DiceEngine';
-import { armesDeBarbarians, armesDArgyropee, attaqueDeDegenesis, attaqueDeDeltaGreen, attaqueDeStarTrek, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
+import { armesDeBarbarians, armesDArgyropee, armesDeShadowrun, attaqueDeDegenesis, attaqueDeDeltaGreen, attaqueDeShadowrun, attaqueDeStarTrek, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
 import DommagesDeltaGreen from './DommagesDeltaGreen';
 import type { ProtectionLue } from '../logic/protectionDeLaCible';
 import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
@@ -97,6 +97,10 @@ export const JetDuCombattant: React.FC<{
     const armeDG = regleDG ? attaqueDeDeltaGreen(valeurs)?.arme : undefined;
     const [tirageDG, setTirageDG] = useState(0);
     const suivre = suivreLeResultat ? (r: RollResult) => { setDernierResultat(r); setTirageDG(n => n + 1); } : undefined;
+    // § 267, T10 : Shadowrun — les armes de la fiche de l'attaquant (leur VD) et l'opposition préparée (p. 66-67).
+    const shadowrun = driver.jet?.shadowrun && auPremierPlan && cible ? attaqueDeShadowrun(valeurs) : null;
+    const armesDuCoup = driver.jet?.shadowrun && !armes?.length
+        ? armesDeShadowrun(valeurs).filter(a => Number.isFinite(a.degats)).map(({ melee: _melee, ...a }) => a) : armes;
 
     return (
         <details data-jet-du-combattant {...(auPremierPlan ? { 'data-ouvert-sur-le-jet': '' } : {})}
@@ -139,6 +143,9 @@ export const JetDuCombattant: React.FC<{
                     {...(driver.jet?.degenesis?.combat && auPremierPlan && cible ? { degenesisDuCombattant: {
                         arme: attaqueDeDegenesis(driver.jet.degenesis.combat, valeurs)?.arme,
                     } } : {})}
+                    // § 267, T9 : RuneQuest — « Porter le coup » vise la cible de la carte, pas celle du rang en cours.
+                    {...(driver.jet?.runequest && auPremierPlan && cible ? { runequestDuCombattant: { cible: cible.id } } : {})}
+                    {...(shadowrun ? { shadowrunDuCombattant: { epreuve: shadowrun.epreuve } } : {})}
                     // La réserve de table, pour Star Trek seul : ailleurs, le surplus d'un adversaire irait à l'Impulsion des joueurs.
                     {...(attaqueST && cible && driver.ressourcesDeTable?.length ? { ressourcesDeTable: driver.ressourcesDeTable } : {})}
                     {...(attaqueST && cible ? { starTrekDuCombattant: {
@@ -147,7 +154,7 @@ export const JetDuCombattant: React.FC<{
                     } } : {})} />
             </div>
             {suivreLeResultat && cible && dernierResultat && !parSaPorte && <AppliquerALaCible cible={cible} resultat={dernierResultat} driver={driver}
-                armes={armes} protectionDeLaCible={protectionDeLaCible}
+                armes={armesDuCoup} protectionDeLaCible={protectionDeLaCible}
                 {...(driver.jet?.barbarians ? { barbarians: { armes: armesDeBarbarians(valeurs), vigueur: Number(valeurs.vigueur ?? 0) || 0 } } : {})} />}
             {/* § 267, T7 : Argyropée — les dégâts de l'arme, la parade et la protection X/Y de la cible (p. 48-52). */}
             {suivreLeResultat && cible && dernierResultat && driver.jet?.argyropee && (

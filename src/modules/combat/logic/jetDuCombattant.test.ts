@@ -20,7 +20,8 @@ const BLADE_RUNNER = pilote({ bladeRunner: {}, desEchelonnes: { composantes: [] 
 const DUNE = pilote({ dune: { competences: ['combat'], principes: [] } });
 const CTHULHU_HACK = pilote({ cthulhuHack: {} });
 const VAMPIRE = pilote({ vampire: {} });
-const SHADOWRUN = pilote({ shadowrun: {} });
+// Un jeu que la table ne connaît pas (Shadowrun l'était jusqu'à T10, 23/11).
+const INCONNU = pilote({ jeuInconnu: {} });
 const PENOMBRE = pilote({ penombre: {} });
 const COC = pilote({ coc: {} });
 const DELTA_GREEN = pilote({ deltaGreen: {} });
@@ -29,10 +30,12 @@ const STAR_TREK = pilote({ starTrek: {} });
 const SYMBAROUM = pilote({ symbaroum: {} });
 const ARGYROPEE = pilote({ argyropee: {} });
 const DEGENESIS = pilote({ degenesis: { combat: {} } });
+const RUNEQUEST = pilote({ runequest: {} });
+const SHADOWRUN = pilote({ shadowrun: {} });
 
 describe('la table des jeux du combat (§ 267, T0)', () => {
     it('chaque jeu du § 263 garde son geste et sa règle de dégâts', () => {
-        expect([ALIEN, BLADE_RUNNER, DUNE, CTHULHU_HACK, VAMPIRE, PENOMBRE, COC, DELTA_GREEN, BARBARIANS, STAR_TREK, SYMBAROUM, ARGYROPEE, DEGENESIS].map(d => {
+        expect([ALIEN, BLADE_RUNNER, DUNE, CTHULHU_HACK, VAMPIRE, PENOMBRE, COC, DELTA_GREEN, BARBARIANS, STAR_TREK, SYMBAROUM, ARGYROPEE, DEGENESIS, RUNEQUEST, SHADOWRUN].map(d => {
             const j = jeuDuCombat(d);
             return j && `${j.jeu} · ${j.geste} · ${j.degats}`;
         })).toEqual([
@@ -49,6 +52,8 @@ describe('la table des jeux du combat (§ 267, T0)', () => {
             'Symbaroum · riposte · porte-du-jeu',
             'Argyropée · attaquer · porte-du-jeu',
             'Degenesis · attaquer · porte-du-jeu',
+            'RuneQuest · attaquer · porte-du-jeu',
+            'Shadowrun : Anarchy · attaquer · vd-plus-nets',
         ]);
     });
 
@@ -70,7 +75,7 @@ describe('la table des jeux du combat (§ 267, T0)', () => {
     });
 
     it('un jeu absent de la table : pas de jeu, et le montant se saisit', () => {
-        for (const d of [SHADOWRUN, null, undefined]) {
+        for (const d of [INCONNU, null, undefined]) {
             expect(jeuDuCombat(d)).toBeNull();
             expect(regleDesDegats(d)).toBe('montant');
         }
@@ -85,8 +90,8 @@ describe('la table des jeux du combat (§ 267, T0)', () => {
         // § 267, T1 : Vampire gagne « Attaquer » (décision Q2 du 20/11), son jet reste dans « Fiche ».
         expect(attaqueSurLaCarte(ADVERSAIRE, VAMPIRE, GABARIT)).toBe(true);
         expect(jetDuCombattantPossible(ADVERSAIRE, VAMPIRE, GABARIT)).toBe(true);
-        expect(attaqueSurLaCarte(ADVERSAIRE, SHADOWRUN, GABARIT)).toBe(false);
-        expect(jetDuCombattantPossible(ADVERSAIRE, SHADOWRUN, GABARIT)).toBe(false);
+        expect(attaqueSurLaCarte(ADVERSAIRE, INCONNU, GABARIT)).toBe(false);
+        expect(jetDuCombattantPossible(ADVERSAIRE, INCONNU, GABARIT)).toBe(false);
     });
 
     it('jamais pour un personnage de joueur, ni sans gabarit', () => {

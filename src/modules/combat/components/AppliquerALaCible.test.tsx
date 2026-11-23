@@ -14,7 +14,8 @@ const pv = (current: number, max: number) => ({ type: 'hp' as const, data: { cur
 const reserve = (n: number) => ({ total: n, successes: n, compte: 'reussites' as const });
 // Un jeu à la règle de Year Zero (§ 267, T0 : la règle vient du jeu, ici Blade Runner).
 const PILOTE = { jet: { bladeRunner: {}, desEchelonnes: { composantes: [] } }, combat: { damageTypes: ['physique'] } } as never;
-const AUTRE_JEU = { jet: { shadowrun: {} }, combat: { damageTypes: ['physique'] } } as never;
+// Un jeu que la table ne connaît pas (Shadowrun l'était jusqu'à T10, 23/11).
+const AUTRE_JEU = { jet: { jeuInconnu: {} }, combat: { damageTypes: ['physique'] } } as never;
 const VAMPIRE = { jet: { vampire: {} }, combat: { damageTypes: ['Superficiels', 'Aggravés'] } } as never;
 const BARBARIANS = { jet: { barbarians: {} }, combat: {} } as never;
 

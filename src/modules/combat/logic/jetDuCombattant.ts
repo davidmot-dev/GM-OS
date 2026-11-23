@@ -17,7 +17,7 @@ import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
  * - `montant` : le jeu ne dit pas encore ses dégâts, le meneur saisit le montant. C'est la règle
  *   de tout jeu absent de la table : on ne devine pas les dégâts d'un jeu.
  */
-export type RegleDesDegatsDuJeu = 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'porte-du-jeu' | 'montant';
+export type RegleDesDegatsDuJeu = 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'vd-plus-nets' | 'porte-du-jeu' | 'montant';
 
 /** Un jeu ouvert au combat des adversaires : comment le reconnaître, son geste, ses dégâts. */
 export interface JeuDuCombat {
@@ -93,6 +93,16 @@ export const JEUX_DU_COMBAT: readonly JeuDuCombat[] = [
       défense passive ou active de la cible, l'armure, les pistes de santé (p. 102-106).
     */
     { jeu: 'Degenesis', reconnaitre: d => !!d.jet?.degenesis?.combat, geste: 'attaquer', degats: 'porte-du-jeu' },
+    /*
+      § 267, T9 (23/11) : RuneQuest — les suites du jet mènent déjà au coup : dégâts de l'arme, défense,
+      localisation, puis « Porter le coup » par l'armure et la zone (`porterUnCoupLocalise`, p. 146-148).
+    */
+    { jeu: 'RuneQuest', reconnaitre: d => !!d.jet?.runequest, geste: 'attaquer', degats: 'porte-du-jeu' },
+    /*
+      § 267, T10 (23/11) : Shadowrun : Anarchy — VD de l'arme + succès nets (p. 66-67), appliquée avec son
+      type : le moniteur de la cible la compare à ses seuils (`moniteurSelonLeJeu`, p. 68).
+    */
+    { jeu: 'Shadowrun : Anarchy', reconnaitre: d => !!d.jet?.shadowrun, geste: 'attaquer', degats: 'vd-plus-nets' },
     /*
       § 267, T17 (22/11) : le Psycholune ne lance jamais (p. 40-45). « Affronter » ouvre
       `AffrontementDePenombre` : l'attaque d'une Éminence grise retire sa résilience, l'action adverse

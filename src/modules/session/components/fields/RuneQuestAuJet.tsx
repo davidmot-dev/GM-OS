@@ -130,6 +130,11 @@ export const SuitesRuneQuest: React.FC<{
     consigner: (ligne: string) => void;
     /** Au meneur seulement : porter le coup localisé à un combattant (`porterUnCoupLocalise`). */
     porterLeCoup?: boolean;
+    /**
+     * La cible du coup, quand l'attaque part de la carte d'un adversaire (§ 267, T9, 23/11/2026) ;
+     * absente, celle du combattant dont c'est le tour.
+     */
+    cibleDuCoup?: string;
     /** La fiche du lanceur : ses armes et son bonus aux dégâts (RQ-A3). */
     valeurs?: Record<string, unknown>;
     /** Lance un dé, pour les dégâts. */
@@ -141,7 +146,7 @@ export const SuitesRuneQuest: React.FC<{
     ecrire?: (maj: Record<string, unknown>) => void;
     /** Les sections de la fiche, pour nommer les aptitudes. */
     sections?: SheetSection[];
-}> = ({ jet, calcul, regle, d20, augmenter, retenter, consigner, porterLeCoup = false, valeurs = {}, de = d20, ecrire, sections = [] }) => {
+}> = ({ jet, calcul, regle, d20, augmenter, retenter, consigner, porterLeCoup = false, cibleDuCoup, valeurs = {}, de = d20, ecrire, sections = [] }) => {
     const [deAdverse, setDeAdverse] = useState('');
     const [issue, setIssue] = useState<string | null>(null);
     const [localisation, setLocalisation] = useState<string | null>(null);
@@ -194,7 +199,7 @@ export const SuitesRuneQuest: React.FC<{
                 <button type="button" className={bouton} onClick={localiser} title="1D20 sur la table des localisations (p. 146).">Localiser le coup (1D20)</button>
                 {localisation && <span data-localisation-runequest className="font-bold">{localisation}</span>}
             </div>
-            {porterLeCoup && zoneTouchee && <PorterLeCoup key={`${zoneTouchee}-${degats?.cle ?? 0}`} zone={zoneTouchee} regle={regle} degats={degats ?? undefined} />}
+            {porterLeCoup && zoneTouchee && <PorterLeCoup key={`${zoneTouchee}-${degats?.cle ?? 0}`} zone={zoneTouchee} regle={regle} degats={degats ?? undefined} cibleInitiale={cibleDuCoup} />}
             {ecrire && regle.magie && (
                 <MagieAuJet regle={regle} valeurs={valeurs} champ={calcul.champ} niveau={niveau} ecrire={ecrire} consigner={consigner} />
             )}
@@ -365,12 +370,13 @@ const DegatsRuneQuest: React.FC<{
  * le tour, l'attaquant d'ordinaire. Les dégâts saisis passent par l'armure, la zone et
  * le total, par la même porte que la carte du combattant.
  */
-const PorterLeCoup: React.FC<{ zone: Localisation; regle: RegleDeRuneQuest; degats?: DegatsPrets }> = ({ zone: tiree, regle, degats }) => {
+const PorterLeCoup: React.FC<{ zone: Localisation; regle: RegleDeRuneQuest; degats?: DegatsPrets; cibleInitiale?: string }> = ({ zone: tiree, regle, degats, cibleInitiale }) => {
     const combattants = useCombatStore(s => s.combatants);
     const cibleDuTour = useCombatStore(s => s.combatants[s.currentTurnIdx]?.targetId ?? '');
     // Lu sans abonnement : le pilote ne change pas pendant le coup, et un objet neuf ferait boucler React.
     const champsDesZones = useSessionOSStore.getState().getActiveDriver()?.combat?.coupsLocalises?.zones;
-    const [cible, setCible] = useState(cibleDuTour);
+    // § 267, T9 : ouvert depuis la carte d'un adversaire, le coup vise la cible de la carte.
+    const [cible, setCible] = useState(cibleInitiale ?? cibleDuTour);
     // Les dégâts lancés arrivent tout prêts ; une parade peut envoyer l'excédent à une zone adjacente (p. 199).
     const [zone, setZone] = useState<Localisation>(tiree);
     const [points, setPoints] = useState(degats ? String(degats.passent) : '');
