@@ -447,8 +447,9 @@ le demande (Rêve de Dragon, RuneQuest) :
         chaque export de `Export Dirvers/`, `controlerLePilote` sans erreur (avertissements connus comptés :
         Alien 34, COC 8, Barbarians 1, Crimes 1, Pénombre 1), la table de Combat-OS (geste, règle de dégâts),
         l'attaque proposée sur le cas témoin des essais et un vrai jet `preparerLeJet` sans avertissement. **20 jeux
-        OK** ; Within et `brp-srd` (BRP SRD 1.0.0, nouveau, **une erreur `dice.logic`** au contrôle, hors chantier)
-        restent hors de la table (C6).
+        OK** ; Within et `brp-srd` restent hors de la table (C6). BRP SRD 1.0.0 (une erreur `dice.logic`, douze
+        compétences additionnées, pas de degrés) : **pilote effacé par David le 23/11** — « c'est un système générique,
+        il n'y a pas de fiche HTML » ; le corpus `docs/systems/brp-srd/` (relu 17/17) reste.
       - `e2e/combatDesAdversaires.spec.ts` : seize scènes de plus (les jeux du § 267), une étape commune — carte,
         « Attaquer » / « Riposte » / « Affronter », ce que la fenêtre propose, fiche, captures. `npm run build` puis
         l'e2e : **20 passés** ; constats relus (bouton, cible de la carte, attaque proposée, ND de Torg,
@@ -460,6 +461,12 @@ le demande (Rêve de Dragon, RuneQuest) :
       - Vérifié aussi : `npx tsc -b`, lint, Combat-OS 103 fichiers / 783 essais, manuel. Captures du manuel des jeux
         (`capturesDesJeux.spec.ts`) non refaites : l'attaque des adversaires n'y figure pas. Reste : l'essai de
         David (C8), jeu par jeu.
+      - **Suites, le 23/11** (David : « Fini ce qui peut être corrigé ») : **Dune** — ouvert depuis Combat-OS, le jet
+        d'un PNJ ennemi ne recevait pas la réserve de table : ses dépenses en Menace étaient masquées, « Terminer le
+        test » désactivé dès qu'il restait de l'Impulsion, le reliquat perdu (livre, p. 240) ; la réserve lui est
+        transmise (un PNJ allié non : son surplus irait aux joueurs) — essai `JetDuCombattant.dune.test.tsx`
+        (reliquat 1 → Menace 1). **Shadowrun** — l'essai « une blessure grave impose le désavantage » lançait des dés
+        au hasard, et deux 1 de risque rendaient de l'Anarchy : dés fixés. 236 fichiers / 2 393 essais.
 
 ## Analyse
 

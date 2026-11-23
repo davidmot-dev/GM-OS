@@ -14978,10 +14978,12 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
   rendait pas son résultat à Combat-OS. 4 293 essais. Essai de David attendu. **Les quinze jeux sont faits ;
   reste T16.**
 - **T16 fait le 23/11 (livraison)** : `outils/combat/valider_les_pilotes_du_combat.mjs` — 20 jeux sans erreur, table,
-  attaque et jet vérifiés ; Within et BRP SRD hors table (BRP SRD 1.0.0, nouveau : une erreur `dice.logic` au
-  contrôle, hors chantier). `e2e/combatDesAdversaires.spec.ts` étendu aux seize jeux : 20 passés, constats et
+  attaque et jet vérifiés ; Within et BRP SRD hors table (BRP SRD 1.0.0 : pilote effacé par David le 23/11, système
+  générique sans fiche HTML ; le corpus `brp-srd` reste). `e2e/combatDesAdversaires.spec.ts` étendu aux seize jeux : 20 passés, constats et
   captures relus. Défaut trouvé par l'e2e et corrigé : la carte d'un Voyageur n'avait pas « Attaquer ».
-  **Le chantier est livré ; reste l'essai de David, jeu par jeu (C8).**
+  **Le chantier est livré ; reste l'essai de David, jeu par jeu (C8).** Suites du même jour : le PNJ ennemi de Dune
+  reçoit la réserve de table depuis Combat-OS (sa Menace et son reliquat se perdaient, « Terminer le test » bloqué) ;
+  un essai de Shadowrun aux dés aléatoires fixé.
 
 ### 268 · Transformer un PNJ en personnage joueur, et l'inverse — 21/11/2026
 
