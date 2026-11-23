@@ -299,8 +299,17 @@ le demande (Rêve de Dragon, RuneQuest) :
       Vérifié : `npx tsc -b`, lint, 193 fichiers / 1 861 essais, dont `JetDuCombattant.argyropee.test.tsx`
       (9 + 2 = 11 ; dague 4 − bouclier 2 − gilet 1 = 1 ; 2/4 → 2/3 et 1/5 → 1/4 ; parade). Reste : l'essai de
       David (C8).
-- [ ] T8 · Degenesis — pistes de santé à la porte des dégâts · C1 à C5, C7 · src/ ⛔ · à essayer
+- [x] T8 · Degenesis — pistes de santé à la porte des dégâts · C1 à C5, C7 · src/ ⛔ · à essayer
       par David
+      **Fait le 23/11** : la porte existait — `AttaqueDegenesis` (DEG-A2) mène du test aux pistes de santé.
+      Constaté : ouverte depuis Combat-OS, elle ne reconnaissait pas l'adversaire (recherche par PJ ou PNJ de
+      campagne seulement), donc visait le premier combattant venu et ne comptait pas son action. Corrigé : le
+      panneau reconnaît aussi le combattant par son identifiant ; `degenesisDuCombattant.arme` choisit l'arme ;
+      `attaqueDeDegenesis` propose Physique + Corps à corps, ou Agilité + Armes à projectiles pour une arme à
+      portée (p. 102) ; `JEUX_DU_COMBAT` — Degenesis, « Attaquer », `porte-du-jeu`. Pilote 2.3.0 inchangé
+      (export du 21/11). Vérifié : `npx tsc -b`, lint, 229 fichiers / 2 368 essais (combat, panneaux, dés), dont
+      `JetDuCombattant.degenesis.test.tsx` (la cible de la carte reprise malgré un leurre placé avant). Reste :
+      l'essai de David (C8).
 - [ ] T9 · RuneQuest — sa carte lit le magasin (étape 3 d'abord) ; coups localisés · C1 à C5, C7
       · src/ ⛔ · à essayer par David
 - [ ] T10 · Shadowrun Anarchy — moniteur d'état · C1 à C5, C7 · src/ ⛔ · à essayer par David

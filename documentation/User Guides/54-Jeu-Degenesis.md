@@ -165,6 +165,15 @@ Au résultat d'un jet de **Corps à corps, Lutte ou Armes à projectiles**, pour
 - **« Porter le coup »** envoie le net aux pistes de la cible — une seule fois, sans que l'armure
   soit retirée de nouveau.
 
+### Un adversaire attaque depuis Combat-OS — 23/11/2026
+
+Sur la carte d'un adversaire, **Attaquer** ouvre son test contre la cible de la carte : **Physique + Corps à
+corps**, ou **Agilité + Armes à projectiles** quand sa première arme porte une portée (p. 102) ; son arme est
+choisie d'emblée, sa maniabilité comprise. Au résultat, le bloc « Attaque » ci-dessus s'ouvre **sur la cible
+de la carte**, avec l'adversaire pour assaillant : sa défense, ses dégâts, son armure et « Porter le coup »,
+comme pour un personnage. Une défense active retire l'action au défenseur ; l'attaque, elle, compte dans le
+round de l'adversaire.
+
 ## La santé : deux pistes
 
 ![Falberg après 14 dégâts : 12 Blessures superficielles, 2 Traumatismes, santé 5 / 19](captures/jeu-degenesis-sante.jpg)
