@@ -180,8 +180,12 @@ export const JetDuCombattant: React.FC<{
                     // § 267, T14 : NOC — le camp du Rouage décide du Fiel ; la réserve de table lui est donc transmise.
                     {...(attaqueNoc ? { nocDuCombattant: { camp: combattant.faction === 'enemy' ? 'hostile' : 'allie' } } : {})}
                     {...(attaqueNoc && driver.ressourcesDeTable?.length ? { ressourcesDeTable: driver.ressourcesDeTable } : {})}
-                    // La réserve de table, pour Star Trek seul : ailleurs, le surplus d'un adversaire irait à l'Impulsion des joueurs.
+                    // La réserve de table, pour Star Trek : ailleurs, le surplus d'un adversaire irait à l'Impulsion des joueurs.
                     {...(attaqueST && cible && driver.ressourcesDeTable?.length ? { ressourcesDeTable: driver.ressourcesDeTable } : {})}
+                    // Dune (23/11/2026) : un PNJ ennemi paie en Menace et y verse son reliquat (livre, p. 240). Sans la réserve
+                    // de table, le panneau masquait ses dépenses, désactivait « Terminer le test » dès qu'il restait de
+                    // l'Impulsion, et le reliquat se perdait. Un PNJ allié n'y a pas accès : son surplus irait aux joueurs.
+                    {...(dune && combattant.faction === 'enemy' && driver.ressourcesDeTable?.length ? { ressourcesDeTable: driver.ressourcesDeTable } : {})}
                     {...(attaqueST && cible ? { starTrekDuCombattant: {
                         ennemi: combattant.faction === 'enemy', nature: attaqueST.nature, cible: cible.id,
                         ...(attaqueST.gravite ? { gravite: attaqueST.gravite } : {}),

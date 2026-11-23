@@ -9,6 +9,8 @@ import { attaqueSurLaCarte, jetDuCombattantPossible } from '../logic/jetDuCombat
 import { attaqueParDefaut } from '../logic/attaqueDeLAdversaire';
 import { DiceEngine } from '../../dice/DiceEngine';
 import { useCombatStore } from '../useCombatStore';
+import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { useRessourcesDeTableStore } from '../../table/useRessourcesDeTableStore';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { Combatant } from '../types';
@@ -55,6 +57,21 @@ describe('« Attaquer » pour Dune (T18)', () => {
         const cible = screen.getByLabelText('Cible de l’attaque Dune') as HTMLSelectElement;
         expect(cible.value).toBe('duncan');
         expect(document.querySelector('[data-appliquer-a-la-cible]')).toBeNull();
+    });
+
+    it('23/11 : le PNJ ennemi verse son reliquat à la Menace — « Terminer le test » n’est plus bloqué faute de réserve', () => {
+        useSessionOSStore.setState({ campaigns: [{ id: 'c', name: 'Arrakis', system: 'dune', activeLocationIds: [] }] } as never);
+        useRessourcesDeTableStore.setState({ reserves: { c: { menace: 0, impulsion: 0 } } } as never);
+        render(<JetDuCombattant combattant={soldat} driver={DUNE} gabarit={FICHE} valeurs={SOLDAT_FICHE} auPremierPlan campaignId="c"
+            cible={duncan} attaqueProposee={attaqueParDefaut(DUNE, [], SOLDAT_FICHE)} />);
+        // Deux réussites contre une difficulté de 1 : un point d'Impulsion en reliquat.
+        de.mockImplementation(() => 3);
+        fireEvent.click(screen.getByText('Lancer', { exact: true }));
+        const terminer = screen.getByRole('button', { name: 'Terminer le test et conserver le reliquat' }) as HTMLButtonElement;
+        expect(terminer.disabled).toBe(false);
+        fireEvent.click(terminer);
+        expect(useRessourcesDeTableStore.getState().reserves.c?.menace).toBe(1);
+        expect(useRessourcesDeTableStore.getState().reserves.c?.impulsion ?? 0).toBe(0);
     });
 
     it('ouvert par « Fiche » (sans cible), l’attaque Dune reste à choisir', () => {

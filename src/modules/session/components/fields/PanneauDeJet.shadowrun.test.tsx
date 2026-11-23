@@ -129,6 +129,9 @@ describe('le test de Shadowrun au panneau', () => {
         expect(composition()).toContain('succès sur 6 seulement (blessure grave)');
         fireEvent.click(screen.getByLabelText(/1 point d'Anarchy : avantage/));
         expect(composition()).toContain("succès sur 5 ou 6 (point d'Anarchy, blessure grave)");
+        // Des dés fixés, sans 1 : au hasard, deux 1 de risque faisaient une complication qui rendait de l'Anarchy
+        // (3 − 1 + 1 = 3), et l'essai échouait de temps en temps (constaté le 23/11).
+        faces();
         lancer();
         expect(ecrire).toHaveBeenCalledWith({ anarchy: 2 });
     });
