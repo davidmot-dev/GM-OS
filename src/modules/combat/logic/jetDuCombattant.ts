@@ -84,6 +84,11 @@ export const JEUX_DU_COMBAT: readonly JeuDuCombat[] = [
     */
     { jeu: 'Symbaroum', reconnaitre: d => !!d.jet?.symbaroum, geste: 'riposte', degats: 'porte-du-jeu' },
     /*
+      § 267, T7 (23/11) : Argyropée — l'attaque est un test simple, sans opposition (p. 48) ; ses dégâts se
+      lancent dans sa carte, la protection X/Y de la cible absorbe et s'use (p. 49, 52).
+    */
+    { jeu: 'Argyropée', reconnaitre: d => !!d.jet?.argyropee, geste: 'attaquer', degats: 'porte-du-jeu' },
+    /*
       § 267, T17 (22/11) : le Psycholune ne lance jamais (p. 40-45). « Affronter » ouvre
       `AffrontementDePenombre` : l'attaque d'une Éminence grise retire sa résilience, l'action adverse
       réussit d'office et coûte des jetons, la dissonance et l'opéra harmonique.

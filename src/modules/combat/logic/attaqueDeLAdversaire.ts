@@ -149,7 +149,7 @@ export function armesDeLaFicheAlien(
  */
 export function attaqueParDefaut(
     pilote: { jet?: { bladeRunner?: unknown; alien?: { competence: string }; dune?: { competences: string[]; principes: string[] }; vampire?: unknown;
-        coc?: { dommages?: { armes: readonly { attaque: string; nom: string }[] } }; deltaGreen?: unknown; barbarians?: unknown; starTrek?: unknown } } | null | undefined,
+        coc?: { dommages?: { armes: readonly { attaque: string; nom: string }[] } }; deltaGreen?: unknown; barbarians?: unknown; starTrek?: unknown; argyropee?: unknown } } | null | undefined,
     armes: readonly ArmeProposee[],
     valeurs: Record<string, unknown>,
 ): Record<string, string> | null {
@@ -157,6 +157,8 @@ export function attaqueParDefaut(
     if (pilote?.jet?.barbarians) return attaqueDeBarbarians(valeurs);
     // Star Trek (§ 267, T5) : Maîtrise ou Audace, + Sécurité (p. 290).
     if (pilote?.jet?.starTrek) return attaqueDeStarTrek(valeurs).champs;
+    // Argyropée (§ 267, T7) : Combat rapproché, Combat à distance ou Rixe, selon l'arme (p. 48).
+    if (pilote?.jet?.argyropee) return attaqueDArgyropee(valeurs).champs;
     // Delta Green (§ 267, T3) : la compétence de la première arme nommée, sinon le combat à mains nues.
     if (pilote?.jet?.deltaGreen) return attaqueDeDeltaGreen(valeurs)?.champs ?? null;
     /*
@@ -296,6 +298,75 @@ export function attaqueDeDeltaGreen(valeurs: Record<string, unknown>): { champs:
         }
     }
     return Number(valeurs.combat_a_mains_nues) > 0 ? { champs: { competence: 'combat_a_mains_nues' } } : null;
+}
+
+/** Une arme de la fiche d'Argyropée : son nom, sa formule de dégâts, la compétence qui l'emploie. */
+export interface ArmeDArgyropee { index: number; libelle: string; formule: string; competence: 'combat_rapproche' | 'combat_a_distance' | 'rixe' }
+
+const A_DISTANCE_ARGYROPEE = /\barc\b|arbal|arquebus|mousquet|pistolet|fusil|fronde|javel|couteau de lancer/i;
+const A_MAINS_NUES = /poing|pied|mains? nues?|tabouret|tesson|improvis|bouteille|chaise|pot de/i;
+
+/**
+ * **Les armes d'un adversaire d'Argyropée** (§ 267, T7, 23/11/2026), lues sur les cinq lignes « Arme » de sa
+ * fiche. La compétence suit le livre (p. 48) : une arme de jet, de trait ou à feu, Combat à distance — au
+ * meneur de passer au Combat rapproché à moins de 3 mètres ; les poings, les pieds et l'improvisé, Rixe ;
+ * le reste, Combat rapproché. Sans dégâts écrits, l'improvisé fait 1d4 (p. 48).
+ */
+export function armesDArgyropee(valeurs: Record<string, unknown>): ArmeDArgyropee[] {
+    const armes: ArmeDArgyropee[] = [];
+    for (let i = 1; i <= 5; i++) {
+        const libelle = String(valeurs[`arme${i}_nom`] ?? '').trim();
+        if (!libelle) continue;
+        const rixe = A_MAINS_NUES.test(libelle);
+        const ecrit = String(valeurs[`arme${i}_degats`] ?? '').trim();
+        const formule = lireLaFormule(ecrit) ? ecrit : rixe ? '1d4' : '';
+        if (!formule) continue;
+        armes.push({ index: i, libelle, formule, competence: rixe ? 'rixe' : A_DISTANCE_ARGYROPEE.test(libelle) ? 'combat_a_distance' : 'combat_rapproche' });
+    }
+    return armes;
+}
+
+/** **L'attaque proposée à un adversaire d'Argyropée** (§ 267, T7) : la compétence de sa première arme ; sans arme, la Rixe (p. 48). */
+export function attaqueDArgyropee(valeurs: Record<string, unknown>): { champs: Record<string, string>; arme?: ArmeDArgyropee } {
+    const arme = armesDArgyropee(valeurs)[0];
+    return { champs: { competence: arme?.competence ?? 'rixe' }, ...(arme ? { arme } : {}) };
+}
+
+/** Une pièce de protection d'Argyropée, « X/Y » sur la fiche : X absorbé par coup, Y de résistance restante (p. 52). */
+export interface PieceDArgyropee { index: number; nom: string; x: number; y: number; bouclier: boolean }
+
+/** Les protections de la fiche qui portent un « X/Y » ; le casque, sans valeur, ne protège pas des dégâts (p. 52). */
+export function protectionsDArgyropee(valeurs: Record<string, unknown>): PieceDArgyropee[] {
+    const pieces: PieceDArgyropee[] = [];
+    for (let i = 1; i <= 3; i++) {
+        const m = /^\s*(\d+)\s*\/\s*(\d+)\s*$/.exec(String(valeurs[`protection${i}_valeur`] ?? ''));
+        if (!m) continue;
+        const nom = String(valeurs[`protection${i}_nom`] ?? '').trim() || `Protection ${i}`;
+        pieces.push({ index: i, nom, x: Number(m[1]), y: Number(m[2]), bouclier: /bouclier|rondache|targe|pavois|écu\b/i.test(nom) });
+    }
+    return pieces;
+}
+
+/**
+ * **Un coup reçu à travers la protection d'Argyropée** (§ 267, T7 ; p. 52). Le bouclier absorbe d'abord, puis
+ * l'armure ce qui reste ; chaque pièce atteinte perd 1 de résistance Y, quel que soit le dé ; à 0 elle est
+ * hors d'usage et n'absorbe plus. Les dégâts qui ne sont pas d'une arme solide (feu, acide…) passent X mais
+ * usent Y ; un coup de poing ou de pied n'use jamais Y. `usures` : les pièces à réécrire, avec leur Y.
+ */
+export function coupDArgyropee(degats: number, pieces: readonly PieceDArgyropee[], options: { solide: boolean; naturel: boolean }) {
+    let reste = Math.max(0, Math.trunc(degats));
+    const usures: { index: number; x: number; y: number; nom: string }[] = [];
+    const morceaux: string[] = [];
+    for (const p of [...pieces].filter(p => p.y > 0).sort((a, b) => Number(b.bouclier) - Number(a.bouclier))) {
+        const atteinte = p.bouclier || reste > 0 || usures.length === 0;
+        if (!atteinte) break;
+        const absorbe = options.solide ? Math.min(reste, p.x) : 0;
+        reste -= absorbe;
+        if (absorbe) morceaux.push(`− ${p.nom} ${absorbe}`);
+        if (!options.naturel) usures.push({ index: p.index, x: p.x, y: p.y - 1, nom: p.nom });
+        if (reste <= 0) break;
+    }
+    return { nets: reste, usures, calcul: morceaux.join(' ') };
 }
 
 /** Une arme d'un PNJ de Symbaroum : son nom, ses dégâts écrits, et la valeur fixe qu'il inflige. */

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import PanneauDeJet from '../../session/components/PanneauJetDeFiche';
 import { AppliquerALaCible } from './AppliquerALaCible';
+import { DegatsDArgyropee } from './DegatsDArgyropee';
 import type { RollResult } from '../../dice/DiceEngine';
-import { armesDeBarbarians, attaqueDeDeltaGreen, attaqueDeStarTrek, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
+import { armesDeBarbarians, armesDArgyropee, attaqueDeDeltaGreen, attaqueDeStarTrek, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
 import DommagesDeltaGreen from './DommagesDeltaGreen';
 import type { ProtectionLue } from '../logic/protectionDeLaCible';
 import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
@@ -144,6 +145,11 @@ export const JetDuCombattant: React.FC<{
             {suivreLeResultat && cible && dernierResultat && !parSaPorte && <AppliquerALaCible cible={cible} resultat={dernierResultat} driver={driver}
                 armes={armes} protectionDeLaCible={protectionDeLaCible}
                 {...(driver.jet?.barbarians ? { barbarians: { armes: armesDeBarbarians(valeurs), vigueur: Number(valeurs.vigueur ?? 0) || 0 } } : {})} />}
+            {/* § 267, T7 : Argyropée — les dégâts de l'arme, la parade et la protection X/Y de la cible (p. 48-52). */}
+            {suivreLeResultat && cible && dernierResultat && driver.jet?.argyropee && (
+                <DegatsDArgyropee key={tirageDG} cibleId={cible.id} armes={armesDArgyropee(valeurs)} reussie={!!dernierResultat.tagSuccess}
+                    critique={(dernierResultat as { argyropee?: { bilan?: string } }).argyropee?.bilan === 'reussite-critique'} />
+            )}
             {suivreLeResultat && cible && dernierResultat && regleDG && (
                 <div className="mt-3" data-degats-apres-l-attaque>
                     <DommagesDeltaGreen key={tirageDG} attaquant={combattant} regle={regleDG} ouverte armeInitiale={armeDG}
