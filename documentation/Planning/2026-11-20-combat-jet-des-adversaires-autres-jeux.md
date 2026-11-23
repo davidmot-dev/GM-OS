@@ -225,13 +225,46 @@ le demande (Rêve de Dragon, RuneQuest) :
       `coupAAppliquer` reçoit la règle ; « arme + succès − 1 » pour Alien et Blade Runner seulement
       (l'attaque d'une créature d'Alien la déclare elle-même) ; Vampire reste « Fiche » sans bouton.
       Vérifié : `npx tsc -b`, lint, Combat-OS 87 fichiers / 667 essais (dont `jetDuCombattant.test.ts`, nouveau).
-- [ ] T1 · Vampire — « Attaquer » sur la carte ; dégâts : marge + arme (à relire au livre), pistes
+- [x] T1 · Vampire — « Attaquer » sur la carte ; dégâts : marge + arme (à relire au livre), pistes
       de Vampire · couvre C1 à C5, C7 · touche src/ ⛔ · à essayer par David
-- [ ] T2 · COC — le jet de l'adversaire et l'encaissement de COC (`applyDamage` le connaît) ;
+      **Fait le 23/11** (T17 validé par David avant, « c'est testé ») : règle `marge-plus-arme` dans la table —
+      « la marge de réussites […] plus le score de dégâts de l'arme » (livre, p. 126 ; table des armes p. 303-304) ;
+      l'armure ne retire rien, elle change un aggravé de lame ou de balle en superficiel (p. 304). Pilote 2.2.0
+      inchangé (David : toujours installé) : armes du catalogue (`armesDuCatalogue`, les armes à feu d'abord pour
+      un tir), attaque proposée (`attaqueDeVampire` : le meilleur groupement d'attaque, sinon Dextérité + Armes à
+      feu, Force + Mêlée ou Bagarre) ; « Appliquer à [cible] » : arme, bonus, type, rappel des types. Vérifié :
+      `npx tsc -b`, lint, Combat-OS 90 fichiers / 721 essais (dont « Attaquer » de bout en bout : marge 2 + arme 3
+      = 5), manuel. Reste : l'essai de David (C8).
+- [x] T2 · COC — le jet de l'adversaire et l'encaissement de COC (`applyDamage` le connaît) ;
       voisinage avec `PanneauDeCoc` à vérifier · C1 à C5, C7 · src/ ⛔ · à essayer par David
-- [ ] T3 · Delta Green — d100, 52 armes, létalité · C1 à C5, C7 · src/ ⛔ · à essayer par David
-- [ ] T4 · Barbarians of Lemuria — jet à somme (`jet.barbarians`), 23 armes · C1 à C5, C7 ·
+      **Fait le 23/11** : `JEUX_DU_COMBAT` — COC, « Attaquer », règle `porte-du-jeu` : le jet s'ouvre depuis la
+      carte (le même que « Lancer un test » de `PanneauDeCoc`), la cible de la carte choisie d'emblée comme
+      Défenseur (`DefenseCibleCoc`, sa DEF fait la difficulté, p. 58) et comme cible des DM (`DommagesCoc` : dés
+      de l'arme, RD, échelle de santé) — `cleCocDuCombattant` traduit la cible en `pc:`/`npc:`/`combatant:` ;
+      attaque proposée : la première arme nommée, sinon ATC ou ATD, si la fiche porte la valeur. Pas de
+      « Appliquer à [cible] » pour les jeux à porte propre (Dune, COC). Pilote 2.2.0 inchangé (export du 21/11).
+      Vérifié : `npx tsc -b`, lint, 121 fichiers / 960 essais (Combat-OS, panneau, `CartesCoc.cible.test.tsx`
+      nouveau). Reste : l'essai de David (C8).
+- [x] T3 · Delta Green — d100, 52 armes, létalité · C1 à C5, C7 · src/ ⛔ · à essayer par David
+      **Fait le 23/11** : `JEUX_DU_COMBAT` — Delta Green, « Attaquer », `porte-du-jeu` : le test de la compétence
+      de la première arme nommée (`attaqueDeDeltaGreen`, sinon Combat à mains nues) ; après le test, la carte
+      `DommagesDeltaGreen` (létalité ou dés, critique, protection, couvert ; p. 44, 52, 57-60) suit sous le panneau,
+      l'arme, la réussite et le critique (01 ou double réussi) repris du test. Pilote 2.1.0 inchangé (export du
+      21/11). Vérifié : `npx tsc -b`, lint, Combat-OS 91 fichiers / 730 essais (dont
+      `JetDuCombattant.deltaGreen.test.tsx` : un 11 sous 50 critique, un 87 qui ne coche rien). Reste : l'essai de
+      David (C8).
+- [x] T4 · Barbarians of Lemuria — jet à somme (`jet.barbarians`), 23 armes · C1 à C5, C7 ·
       src/ ⛔ · à essayer par David
+      **Fait le 23/11** : `JEUX_DU_COMBAT` — Barbarians, « Attaquer », règle neuve `de-de-l-arme` ; attaque
+      proposée Vigueur + Mêlée, ou Agilité + Tir pour une arme de jet (`attaqueDeBarbarians`) ; sur un jet
+      réussi, « Appliquer à » lance le dé de l'arme (`lancerLesDegatsDeBarbarians` : d3, d6M, d6, d6B, bonus,
+      « x2 ») plus la Vigueur ou sa moitié, +6 au Coup dévastateur d'un succès héroïque, moins l'armure
+      (p. 49-53, 56-60, 62-63, 108, 133). Constaté au livre : les PNJ écrivent leur Vigueur dans le bonus
+      (« d6B+2 »), les créatures n'en ajoutent pas — la case « Ajouter la Vigueur » se décoche pour une
+      formule à bonus. Le bestiaire reste non relié (Q3) : Vigueur et dé se saisissent pour une créature.
+      Pilote 2.0.0 inchangé (export du 21/11). Vérifié : `npx tsc -b`, lint, Combat-OS 92 fichiers /
+      721 essais (dont `JetDuCombattant.barbarians.test.tsx` : 4 + 3 + 3 = 10 touche, hache 8). Reste :
+      l'essai de David (C8).
 - [ ] T5 · Star Trek — 2d20 comme Dune (Menace des PNJ) · C1 à C5, C7 · src/ ⛔ · à essayer par
       David
 - [ ] T6 · Symbaroum — confirmer au livre que le meneur ne lance pas ; si oui « Riposte » sur le

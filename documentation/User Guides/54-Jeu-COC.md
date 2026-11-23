@@ -313,6 +313,14 @@ Une bande agit avec une attaque et un mouvement par tour ; la table gère leur c
 
 ![Une touche contre la bande : un membre, aucun jet de DM](captures/jeu-coc-bande.jpg)
 
+**« Attaquer » depuis la carte** (registre § 267, T2, 23/11/2026) : sur la carte d'un adversaire qui
+vise une cible, le bouton ouvre sa fiche sur le même jet que « Lancer un test pour … », au premier
+plan. L'attaque est proposée — la première arme nommée sur sa fiche, sinon l'attaque au contact ou à
+distance, si la fiche porte la valeur (un PNJ dont le profil n'est pas confirmé se compose à la main).
+La cible de la carte est choisie d'emblée comme **Défenseur** (« Utiliser DEF … » en fait la
+difficulté, p. 58) et, après une attaque réussie, comme **cible des DM** : les dés de l'arme, la RD
+et l'échelle de santé suivent le chemin habituel. Le bouton « Fiche » ouvre aussi ce jet, sans cible.
+
 ## La fiche du personnage
 
 ![La fiche HTML de COC 2, remplie depuis GM-OS](captures/jeu-coc-fiche.jpg)

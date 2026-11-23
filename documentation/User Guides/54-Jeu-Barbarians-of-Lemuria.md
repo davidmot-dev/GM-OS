@@ -88,6 +88,30 @@ les rivaux et les coriaces mais avant la piétaille, un échec critique en derni
 premier round. Combat-OS, lui, range les combattants par Esprit + Initiative, du plus haut au plus
 bas ; le meneur ajuste selon les jets.
 
+## Attaquer avec un adversaire dans Combat-OS — 23/11/2026
+
+Sur la carte d'un adversaire, **Attaquer** ouvre son jet contre la cible de la carte : **Vigueur +
+Mêlée**, ou **Agilité + Tir** quand sa première arme est une arme de jet ou de tir (arc, arbalète,
+fronde, javelot, couteaux de lancer), lancés contre 9 comme tout jet d'action (p. 62).
+
+Si l'attaque touche, **Appliquer à [cible]** propose les armes de la fiche de l'attaquant (lignes
+« Arme » et « Dégâts ») :
+
+- **Dé de l'arme** : d3, d6M (deux d6, le pire), d6, d6B (deux d6, le meilleur), avec son bonus
+  écrit, et « x2 » à « x4 » pour les grandes créatures (p. 49-53, 108). Il se corrige à la main.
+- **Ajouter la Vigueur** : cochée pour une arme sans bonus écrit. Les PNJ du livre écrivent déjà
+  leur Vigueur dans le bonus (le barbare tribal, Vigueur 2 : « d6B+2 », p. 133) et les créatures
+  n'en ajoutent pas (p. 108) : la case se décoche d'elle-même pour une formule à bonus.
+- **Moitié (distance, mains nues)** : la moitié de la Vigueur, arrondie à l'inférieur (p. 62).
+- **Coup dévastateur (+6)** : offert seulement sur un succès héroïque ou légendaire (p. 56-60).
+- **Lancer les dégâts** dit le calcul (« d6B (2, 6 → 6) + Vigueur 2 = 8 »), puis **Protection
+  retirée** reçoit l'armure de la cible — légère d6−3 ou 1, moyenne d6−2 ou 2, lourde d6−1 ou 3,
+  +1 avec un casque (p. 63) — et **Appliquer** retire le reste de la Vitalité.
+
+Une attaque manquée ne propose rien. **Limite** : le bestiaire du pilote n'est pas relié à la fiche
+(ses colonnes n'ont pas de champ) : un adversaire tiré du bestiaire arrive sans Vigueur ni arme, et
+le meneur saisit son dé (sa colonne « Dégâts » ou « Armes ») et sa Vigueur dans la carte.
+
 ## La fiche du personnage
 
 ![La fiche HTML de Barbarians of Lemuria, remplie depuis GM-OS](captures/jeu-barbarians-fiche.jpg)
@@ -111,8 +135,9 @@ dans les Paramètres. Accepté par le validateur sans erreur ni avertissement.
 
 ## Ce qui reste à la table
 
-- **Les dégâts** : catégorie de l'arme (d3, d6M, d6, d6B) plus la Vigueur ou sa moitié, moins
-  l'armure (p. 62-63). La fiche porte les dégâts de chaque arme ; ils se lancent au pupitre.
+- **Les dégâts d'un héros** : catégorie de l'arme (d3, d6M, d6, d6B) plus la Vigueur ou sa moitié,
+  moins l'armure (p. 62-63). La fiche porte les dégâts de chaque arme ; ils se lancent au pupitre.
+  Ceux d'un adversaire se lancent dans Combat-OS (ci-dessus).
 - **La magie** : charmes et cercles, conditions d'incantation, points de pouvoir (p. 148-154) ;
   le jet se fait au panneau, Esprit + Sorcier, à la difficulté du cercle.
 - **La foi et l'alchimie** : les points de foi donnent un dé de bonus ou de malus sans jet

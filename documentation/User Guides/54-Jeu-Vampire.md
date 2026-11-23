@@ -157,6 +157,21 @@ objets surnaturels. La valeur de dégâts s'ajoute à la marge du jet (p. 303) ;
 seule au combat** — chaque point change un aggravé d'arme tranchante ou perforante en superficiel
 (p. 304) : choisir le type du coup en conséquence.
 
+**« Attaquer »** (registre § 267, T1, 22/11/2026) : sur la carte d'un adversaire qui vise une cible,
+le bouton ouvre ce même panneau au premier plan, la cible en tête et l'attaque proposée — son meilleur
+groupement d'attaque (« Armes à feu 5 » du lieutenant), sinon Dextérité + Armes à feu, Force + Mêlée
+ou Force + Bagarre. Après le jet, **« Appliquer à [cible] »** :
+
+- l'**arme**, prise au catalogue du pilote (les armes à feu d'abord pour un tir), donne son **bonus**,
+  de +0 à +4 ; il se corrige à la main ;
+- le coup vaut **la marge de réussites plus le bonus** (p. 126, 303) : « marge 2 + arme 3 = 5 » ;
+  sans marge, rien ne porte ;
+- le **type** se choisit : sur un mortel, lames, balles et feu en aggravés, coups contondants en
+  superficiels ; sur un vampire, armes courantes en superficiels (divisés par deux), feu, soleil et
+  crocs en aggravés. L'armure ne retire rien : chaque point change un aggravé de lame ou de balle en
+  superficiel (p. 126, 304) ;
+- le coup s'inscrit case par case sur la Santé de la cible, comme un dégât saisi à la main.
+
 ## La fiche, les jauges et le combat
 
 ![La fiche HTML de Nadia, reliée à sa fiche GM-OS](captures/jeu-vampire-fiche.jpg)

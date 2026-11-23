@@ -14928,7 +14928,17 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 - **T17 fait le 22/11 (Pénombre)** : « Affronter » sur la carte d'un adversaire — encaisser une attaque
   (succès → résilience), action adverse réussie d'office (adversité, ou sa moitié pour toutes, défense,
   inactifs d'abord), dissonance, opéra harmonique ; bestiaire relié (décision de David), pilote Pénombre
-  **2.2.0** : la résilience donne la santé d'un adversaire posé. 716 essais de Combat-OS. Essai de David attendu. Rien n'est commencé ; on reprend à T0 quand il le demande, après « GM-OS tourne-t-il ? ».
+  **2.2.0** : la résilience donne la santé d'un adversaire posé. 716 essais de Combat-OS. **Validé par David le 23/11.**
+- **T1 fait le 23/11 (Vampire)** : « Attaquer » sur la carte (décision Q2), le coup vaut la marge plus le bonus de
+  l'arme (p. 126, 303-304), armes du catalogue, attaque proposée d'après les groupements ; l'armure change le type,
+  elle ne retire rien (p. 304). Pilote 2.2.0 inchangé. 721 essais de Combat-OS. Essai de David attendu.
+- **T2 fait le 23/11 (COC)** : « Attaquer » ouvre le jet de COC depuis la carte, la cible choisie d'emblée comme
+  Défenseur (sa DEF, p. 58) et comme cible des DM ; les dommages restent ceux de COC. 960 essais. Essai de David attendu.
+- **T3 fait le 23/11 (Delta Green)** : « Attaquer » ouvre le test de la compétence de l'arme ; sa carte de dégâts suit,
+  l'arme, la réussite et le critique repris du test. 730 essais de Combat-OS. Essai de David attendu.
+- **T4 fait le 23/11 (Barbarians of Lemuria)** : « Attaquer » ouvre Vigueur + Mêlée (Agilité + Tir pour une arme
+  de jet) ; touché, le dé de l'arme se lance dans « Appliquer à », Vigueur ou sa moitié, Coup dévastateur sur un
+  succès héroïque, armure retirée. Bestiaire toujours non relié (Q3). 721 essais. Essai de David attendu.
 
 ### 268 · Transformer un PNJ en personnage joueur, et l'inverse — 21/11/2026
 
@@ -15042,7 +15052,7 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 | 206 | **Pénombre — pilote 2.0.0, corpus relu, fiche reliée** | § 270 ; 🟢 livré le 22/11, validé par David le jour même — `jet.penombre`, jetons et réserve collégiale, corpus 19/19, fiche au moteur 28 ; affrontements consignés au § 267 (T17) | Aucun — le recompte est au § 271 | Rien |
 | 205 | **Socle commun BRP — corpus relu contre le livre** | § 269 ; 🟢 relu 17/17 le 21/11, pilote abandonné à la demande de David | Retirer le pilote par la corbeille (pas la gomme) | Rien |
 | 204 | **Transformer un PNJ en personnage joueur, et l'inverse** | § 268 ; 🟢 livré le 21/11, validé par David le jour même — T1 à T10, 3 171 essais, e2e des deux gestes | Aucun — clos | Rien |
-| 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11, Pénombre ajouté le 22/11 (T17), repris le 22/11 — **T0 et T17 (Pénombre) faits** ; ensuite T1 à T15 un jeu à la fois, T16 livraison | Essayer « Affronter » (réimporter Pénombre 2.2.0 avec Remplacer), puis T1 Vampire sur un export frais | Rien |
+| 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11, repris le 22/11 — **T0 et T17 (Pénombre) faits et validés ; T1 (Vampire), T2 (COC), T3 (Delta Green) et T4 (Barbarians) faits le 23/11** ; ensuite T5 à T15 un jeu à la fois, T16 livraison | Essayer « Attaquer » sur un adversaire de Vampire, de COC, de Delta Green et de Barbarians, puis T5 Star Trek sur un export frais | Rien |
 | 202 | **La médiathèque s'ouvrait sous la fenêtre de campagne** | § 266 ; 🟢 corrigé le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 201 | **Le pilote de chaque personnage dans le roster des joueurs** | § 265 ; 🟢 livré le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 200 | **Loot-OS et le catalogue du pilote — tables de butin depuis l'équipement** | § 264 ; 🟢 **validé par David le 20/11** (« ok ca fonctionne bien :-) ») — T1 à T8 : ligne « Objet du catalogue » résolue au tirage ; « Nouvelle table depuis le catalogue » et « Ajouter depuis le catalogue » dans l'éditeur du pilote (Trésors) ; « Depuis le catalogue » en séance ; export vérifié ; guides 41-42 | Rien — chantier clos | Rien |

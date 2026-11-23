@@ -117,6 +117,15 @@ violence et à l’impuissance sont deux cases.
 
 ![Létalité 15 % : 80, la grenade ne tue pas ; 8 + 10 = 18 dégâts, moins 10 de protection : 8, et le garde tombe à 2 PV](captures/jeu-delta-green-combat-letalite.jpg)
 
+- **« Attaquer »** (registre § 267, T3, 23/11/2026) : sur la carte d’un adversaire qui vise une cible,
+  le bouton ouvre sa fiche sur le test, au premier plan, la cible en tête. L’attaque est proposée :
+  la compétence de la **première arme nommée** sur sa fiche (« Armes à feu » d’un Glock), sinon
+  « Combat à mains nues ». Après le test, la carte **arme, dégâts et complications** suit sous le
+  panneau, déjà réglée : l’arme de l’attaque, la cible de la carte, « Attaque réussie » et
+  « Réussite critique » cochés d’après le test (01 ou un double réussi, p. 44). Il reste à confirmer
+  la cible humaine, la protection et le couvert, puis à lancer. C’est la même carte que celle du
+  combattant : n’appliquer le coup que depuis l’une des deux.
+
 ## La fiche du personnage
 
 La fiche d’Agent HTML (`docs/fiches/Delta Green/delta-green-fiche-agent-interactive.html`, deux
