@@ -86,9 +86,9 @@ describe('Lancer un test pour un adversaire de Vampire', () => {
   ouverte sur le jet »).
 */
 describe('« Attaquer » : la règle du bouton et la cible', () => {
-    it('jamais pour Vampire (C10 : la carte d’un jeu hors du chantier ne bouge pas), ni pour un PJ', () => {
+    it('Vampire a « Attaquer » depuis le § 267, T1 (décision Q2 de David, 20/11 : C10 levé pour lui) ; jamais pour un PJ', () => {
         expect(jetDuCombattantPossible(combattant, PILOTE, FICHE), 'Vampire garde son jet dans « Fiche »').toBe(true);
-        expect(attaqueSurLaCarte(combattant, PILOTE, FICHE)).toBe(false);
+        expect(attaqueSurLaCarte(combattant, PILOTE, FICHE)).toBe(true);
         expect(attaqueSurLaCarte({ isPlayer: true }, { jet: {} } as GameDriver, FICHE)).toBe(false);
         expect(attaqueSurLaCarte(combattant, { jet: {} } as GameDriver, FICHE), 'aucun jet d’adversaire déclaré').toBe(false);
     });
@@ -154,6 +154,19 @@ describe('« Attaquer » : la règle du bouton et la cible', () => {
         de.mockImplementation(() => 9);
         fireEvent.click(screen.getByText('Lancer', { exact: true }));
         expect(document.querySelector('[data-appliquer-a-la-cible="rachel"]')).toBeTruthy();
+    });
+
+    it('§ 267, T1 : « Attaquer » propose « Armes à feu 5 », puis la marge plus l’arme — 2 + 3 = 5 (p. 126, 303)', () => {
+        useCombatStore.setState({ combatants: [combattant] });
+        const armes = [{ libelle: 'À feu moyenne (pistolet 9 mm)', degats: 3 }];
+        render(<JetDuCombattant combattant={combattant} driver={PILOTE} gabarit={FICHE} valeurs={LIEUTENANT}
+            cible={{ id: 'rachel', name: 'Rachel' }} auPremierPlan armes={armes} attaqueProposee={{ attribut: 'groupement_4' }} />);
+        expect(document.querySelector('[data-attaque-par-defaut]')!.textContent).toContain('Armes à feu');
+        // Cinq dés à 9 contre la difficulté 3 : cinq réussites, marge 2.
+        de.mockImplementation(() => 9);
+        fireEvent.click(screen.getByText('Lancer', { exact: true }));
+        expect(document.querySelector('[data-calcul-du-coup]')!.textContent).toBe('marge 2 + arme 3 = 5');
+        expect(screen.getByRole('button', { name: 'Appliquer 5 à Rachel' })).toBeTruthy();
     });
 
     it('T7 : ouvert par « Fiche », jamais de « Appliquer à »', () => {

@@ -12,10 +12,12 @@ import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
  * - `arme-plus-succes` : les dégâts de l'arme plus un par succès au-delà du premier (Year Zero) ;
  * - `porte-du-jeu` : le coup s'applique par le geste propre au jeu (Dune : la tâche de défaite ;
  *   Cthulhu Hack : la riposte), jamais par « Appliquer à [cible] » ;
+ * - `marge-plus-arme` : la marge de réussites plus le bonus de l'arme (Vampire V5, p. 126, 303) ;
+ * - `de-de-l-arme` : le dé de l'arme lancé, plus la Vigueur ou sa moitié (Barbarians of Lemuria, p. 62-63) ;
  * - `montant` : le jeu ne dit pas encore ses dégâts, le meneur saisit le montant. C'est la règle
  *   de tout jeu absent de la table : on ne devine pas les dégâts d'un jeu.
  */
-export type RegleDesDegatsDuJeu = 'arme-plus-succes' | 'porte-du-jeu' | 'montant';
+export type RegleDesDegatsDuJeu = 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'porte-du-jeu' | 'montant';
 
 /** Un jeu ouvert au combat des adversaires : comment le reconnaître, son geste, ses dégâts. */
 export interface JeuDuCombat {
@@ -45,8 +47,30 @@ export const JEUX_DU_COMBAT: readonly JeuDuCombat[] = [
     { jeu: 'Dune', reconnaitre: d => !!d.jet?.dune, geste: 'attaquer', degats: 'porte-du-jeu' },
     // § 263, T16 : le meneur ne lance jamais (livre, p. 45-48).
     { jeu: 'Cthulhu Hack', reconnaitre: d => !!d.jet?.cthulhuHack, geste: 'riposte', degats: 'porte-du-jeu' },
-    // 17/11 : le jet d'un adversaire depuis « Fiche » ; « Attaquer » et ses dégâts viendront en T1.
-    { jeu: 'Vampire', reconnaitre: d => !!d.jet?.vampire, geste: 'fiche', degats: 'montant' },
+    /*
+      § 267, T1 (22/11) : « Attaquer » sur la carte (décision Q2 de David du 20/11) ; le vainqueur
+      inflige sa marge plus le bonus de l'arme, de +0 à +4 (p. 126, 303). Le jet d'un adversaire depuis
+      « Fiche » existait depuis le 17/11.
+    */
+    { jeu: 'Vampire', reconnaitre: d => !!d.jet?.vampire, geste: 'attaquer', degats: 'marge-plus-arme' },
+    /*
+      § 267, T2 (23/11) : COC a son panneau (`PanneauDeCoc`) et ses dommages (`DommagesCoc` : dés de l'arme,
+      RD, échelle de santé) ; « Attaquer » ouvre le même jet depuis la carte, la cible choisie d'emblée comme
+      défenseur et comme cible des DM. Les dégâts passent par la porte du jeu, pas par « Appliquer à ».
+    */
+    { jeu: 'COC', reconnaitre: d => !!d.jet?.coc, geste: 'attaquer', degats: 'porte-du-jeu' },
+    /*
+      § 267, T3 (23/11) : Delta Green a sa carte de dégâts (`DommagesDeltaGreen` : létalité ou dés de
+      l'arme, critique doublé, protection, couvert ; p. 44, 52, 57-60). « Attaquer » ouvre le jet de la
+      compétence de l'arme ; après le jet, cette même carte suit, l'arme, la cible et le critique réglés.
+    */
+    { jeu: 'Delta Green', reconnaitre: d => !!d.jet?.deltaGreen, geste: 'attaquer', degats: 'porte-du-jeu' },
+    /*
+      § 267, T4 (23/11) : Barbarians of Lemuria — le jet à somme contre 9 (`jet.barbarians`), puis le dé de
+      l'arme (d3, d6M, d6, d6B) plus la Vigueur, ou sa moitié à distance et à mains nues, moins l'armure ;
+      +6 pour un Coup dévastateur sur un succès héroïque (p. 49-53, 56-60, 62-63).
+    */
+    { jeu: 'Barbarians of Lemuria', reconnaitre: d => !!d.jet?.barbarians, geste: 'attaquer', degats: 'de-de-l-arme' },
     /*
       § 267, T17 (22/11) : le Psycholune ne lance jamais (p. 40-45). « Affronter » ouvre
       `AffrontementDePenombre` : l'attaque d'une Éminence grise retire sa résilience, l'action adverse
@@ -61,6 +85,16 @@ export function jeuDuCombat(
 ): JeuDuCombat | null {
     if (!driver) return null;
     return JEUX_DU_COMBAT.find(j => j.reconnaitre(driver)) ?? null;
+}
+
+/**
+ * **La cible COC d'un combattant** (§ 267, T2) : la clé du menu de `useSourcesCoc` — `pc:` pour un
+ * combattant tiré d'un PJ, `npc:` pour un PNJ de la campagne, `combatant:` pour un combattant du plateau.
+ */
+export function cleCocDuCombattant(c: Pick<Combatant, 'id'> & Partial<Pick<Combatant, 'sourcePlayerId' | 'sourceEntityId'>>): string {
+    if (c.sourcePlayerId) return `pc:${c.sourcePlayerId}`;
+    if (c.sourceEntityId) return `npc:${c.sourceEntityId}`;
+    return `combatant:${c.id}`;
 }
 
 /** La règle des dégâts du pilote ; `montant` pour un jeu absent de la table. */

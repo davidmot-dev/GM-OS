@@ -18,7 +18,7 @@ import { affrontementPossible, attaqueDeCreaturePossible, cibleDeLAttaque, jetDu
 import { AffrontementDePenombre } from './AffrontementDePenombre';
 import { AttaqueDeCreature } from './AttaqueDeCreature';
 import { RiposteDeCthulhuHack } from './RiposteDeCthulhuHack';
-import { armesDeLAdversaire, armesDeLaFicheAlien, attaqueParDefaut } from '../logic/attaqueDeLAdversaire';
+import { armesDeLAdversaire, armesDeLaFicheAlien, armesDuCatalogue, attaqueDeVampire, attaqueParDefaut } from '../logic/attaqueDeLAdversaire';
 import { protectionLue } from '../logic/protectionDeLaCible';
 import { valeursDuCombattant } from '../ficheDesCombattants';
 
@@ -73,8 +73,11 @@ export const FicheDuCombattant: React.FC = () => {
     // « Attaquer » (§ 263, T5) : la cible de la carte, seulement quand la fenêtre s'ouvre sur le jet.
     const cible = ouvrirSur === 'jet' ? cibleDeLAttaque(combattant, combatants) : null;
     // T9 : les armes que le catalogue connaît pour cet adversaire du livre ; T12 : celles de sa fiche chez Alien.
+    // § 267, T1 : Vampire propose tout son catalogue, rangé selon l'attaque (les armes à feu d'abord pour un tir).
     const armes = ouvrirSur === 'jet' && driver
-        ? (driver.jet?.alien ? armesDeLaFicheAlien(driver, valeurs) : armesDeLAdversaire(driver, combattant.origineDuLivre?.creatureId))
+        ? (driver.jet?.alien ? armesDeLaFicheAlien(driver, valeurs)
+            : driver.jet?.vampire ? armesDuCatalogue(driver, attaqueDeVampire(valeurs)?.tir ?? false)
+            : armesDeLAdversaire(driver, combattant.origineDuLivre?.creatureId))
         : undefined;
     const sante = decrireLaSante(combattant);
     const origine2 = origineOuDefaut(combattant.origineFabriquee);

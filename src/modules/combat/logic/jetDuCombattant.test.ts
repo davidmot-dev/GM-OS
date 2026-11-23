@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { affrontementPossible, attaqueSurLaCarte, jetDuCombattantPossible, jeuDuCombat, regleDesDegats, ripostePossible } from './jetDuCombattant';
+import { affrontementPossible, attaqueSurLaCarte, cleCocDuCombattant, jetDuCombattantPossible, jeuDuCombat, regleDesDegats, ripostePossible } from './jetDuCombattant';
 import { CLE_COMBAT_ALIEN, lireLeCombatAlien } from '../../dice/systemes/combatAlien';
 import { xenoViergeAlien } from '../../dice/systemes/xenomorphesAlien';
 import type { GameDriver } from '../../../types/drivers';
@@ -22,10 +22,13 @@ const CTHULHU_HACK = pilote({ cthulhuHack: {} });
 const VAMPIRE = pilote({ vampire: {} });
 const SHADOWRUN = pilote({ shadowrun: {} });
 const PENOMBRE = pilote({ penombre: {} });
+const COC = pilote({ coc: {} });
+const DELTA_GREEN = pilote({ deltaGreen: {} });
+const BARBARIANS = pilote({ barbarians: {} });
 
 describe('la table des jeux du combat (§ 267, T0)', () => {
     it('chaque jeu du § 263 garde son geste et sa règle de dégâts', () => {
-        expect([ALIEN, BLADE_RUNNER, DUNE, CTHULHU_HACK, VAMPIRE, PENOMBRE].map(d => {
+        expect([ALIEN, BLADE_RUNNER, DUNE, CTHULHU_HACK, VAMPIRE, PENOMBRE, COC, DELTA_GREEN, BARBARIANS].map(d => {
             const j = jeuDuCombat(d);
             return j && `${j.jeu} · ${j.geste} · ${j.degats}`;
         })).toEqual([
@@ -33,8 +36,11 @@ describe('la table des jeux du combat (§ 267, T0)', () => {
             'Blade Runner · attaquer · arme-plus-succes',
             'Dune · attaquer · porte-du-jeu',
             'Cthulhu Hack · riposte · porte-du-jeu',
-            'Vampire · fiche · montant',
+            'Vampire · attaquer · marge-plus-arme',
             'Pénombre · affrontement · porte-du-jeu',
+            'COC · attaquer · porte-du-jeu',
+            'Delta Green · attaquer · porte-du-jeu',
+            'Barbarians of Lemuria · attaquer · de-de-l-arme',
         ]);
     });
 
@@ -45,6 +51,14 @@ describe('la table des jeux du combat (§ 267, T0)', () => {
         expect(jetDuCombattantPossible(ADVERSAIRE, PENOMBRE, GABARIT)).toBe(false);
         expect(ripostePossible(ADVERSAIRE, PENOMBRE)).toBe(false);
         expect(affrontementPossible(ADVERSAIRE, CTHULHU_HACK)).toBe(false);
+    });
+
+    it('T2 : COC — « Attaquer » ouvre son jet ; la cible de la carte se traduit dans le menu de COC', () => {
+        expect(attaqueSurLaCarte(ADVERSAIRE, COC, GABARIT)).toBe(true);
+        expect(jetDuCombattantPossible(ADVERSAIRE, COC, GABARIT)).toBe(true);
+        expect(cleCocDuCombattant({ id: 'c1', sourcePlayerId: 'pj1' })).toBe('pc:pj1');
+        expect(cleCocDuCombattant({ id: 'c1', sourceEntityId: 'pnj1' })).toBe('npc:pnj1');
+        expect(cleCocDuCombattant({ id: 'c1' })).toBe('combatant:c1');
     });
 
     it('un jeu absent de la table : pas de jeu, et le montant se saisit', () => {
@@ -60,7 +74,8 @@ describe('la table des jeux du combat (§ 267, T0)', () => {
         expect(attaqueSurLaCarte(ADVERSAIRE, CTHULHU_HACK, GABARIT)).toBe(true);
         expect(ripostePossible(ADVERSAIRE, CTHULHU_HACK)).toBe(true);
         expect(jetDuCombattantPossible(ADVERSAIRE, CTHULHU_HACK, GABARIT)).toBe(false);
-        expect(attaqueSurLaCarte(ADVERSAIRE, VAMPIRE, GABARIT)).toBe(false);
+        // § 267, T1 : Vampire gagne « Attaquer » (décision Q2 du 20/11), son jet reste dans « Fiche ».
+        expect(attaqueSurLaCarte(ADVERSAIRE, VAMPIRE, GABARIT)).toBe(true);
         expect(jetDuCombattantPossible(ADVERSAIRE, VAMPIRE, GABARIT)).toBe(true);
         expect(attaqueSurLaCarte(ADVERSAIRE, SHADOWRUN, GABARIT)).toBe(false);
         expect(jetDuCombattantPossible(ADVERSAIRE, SHADOWRUN, GABARIT)).toBe(false);

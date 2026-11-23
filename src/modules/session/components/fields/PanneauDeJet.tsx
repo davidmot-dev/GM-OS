@@ -243,12 +243,18 @@ interface PanneauDeJetProps {
      * celle de la carte, reprise par « Appliquer cette attaque réussie ». Lus au montage seulement.
      */
     duneDuCombattant?: { ennemi?: boolean; cible?: string };
+    /**
+     * **L'attaque d'un adversaire de COC** (§ 267, T2, 23/11/2026), ouverte par « Attaquer » : `cible`, la
+     * cible de la carte au format de `useSourcesCoc` (`pc:…`, `npc:…`, `combatant:…`), choisie d'emblée
+     * comme défenseur (sa DEF fait la difficulté, p. 58) et comme cible des DM. Lue au montage seulement.
+     */
+    cocDuCombattant?: { cible?: string };
 }
 
 const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false, personnageId,
     ecrireSurLaFiche, objetsPortes, compositionInitiale, demandeId, nomDuPersonnage, surLeLancer, surLeResultat, equipementAlienInitial,
-    duneDuCombattant,
+    duneDuCombattant, cocDuCombattant,
 }) => {
     const avecLaDemande = joindreLaDemande(demandeId);
     /**
@@ -3397,7 +3403,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         <MagieArgyropee sorts={sortsArgyropee} double={doubleHumeurArgyropee} panache={panacheArgyropee}
                             combat={Math.max(0, nombreArgyropee(magieDuPilote.combat))} exprimer={exprimerUnSortArgyropee} finDuCombat={finDuCombatArgyropee} />
                     )}
-                    {regleCoc?.suivi && attaqueCoc && <DefenseCibleCoc choisir={defense => setChoixCoc(c => ({ ...c, difficulte: defense }))} />}
+                    {regleCoc?.suivi && attaqueCoc && <DefenseCibleCoc choisir={defense => setChoixCoc(c => ({ ...c, difficulte: defense }))} cleInitiale={cocDuCombattant?.cible} />}
                     {regleCoc?.heroisme && regleCoc.evolution && <HeroismeCoc regle={regleCoc} valeurs={valeursCoc} ecrire={ecrireCoc} consigner={texte => redire(`${nomCoc} · héroïsme COC`, { total: 0, modifier: 0, rolls: [], totalDisplay: texte })} />}
                     {regleCoc?.psychisme && <PsychismeCoc regle={regleCoc} valeurs={valeursCoc} ecrire={ecrireCoc} joueur={pourLesJoueurs} consigner={texte => redire(`${nomCoc} · psychisme COC`, { total: 0, modifier: 0, rolls: [], totalDisplay: texte })} />}
                     {regleCoc?.voies && <CapacitesCoc regle={regleCoc} valeurs={valeursCoc} ecrire={ecrireCoc} consigner={() => {}} choix={choixCoc} setChoix={setChoixCoc} champ={champCoc} />}
@@ -4101,7 +4107,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         {regleCoc?.dommages && cocDuLancer?.attaque && cocDuResultat?.bilan.startsWith('reussite') && (
                             <DommagesCoc key={`dm-${cocDuLancer.compte}`} regle={regleCoc} valeurs={cocDuLancer.valeurs} personnageId={personnageId}
-                                attaque={cocDuLancer.champ} critique={cocDuResultat.bilan === 'reussite-critique'} />
+                                attaque={cocDuLancer.champ} critique={cocDuResultat.bilan === 'reussite-critique'} cleInitiale={cocDuCombattant?.cible} />
                         )}
                         {regleBarbarians && barbariansDuLancer && barbariansDuResultat && (
                             <SuitesBarbarians key={barbariansDuLancer.compte} jet={resultat as JetDeBarbarians} reaction={barbariansDuLancer.reaction}

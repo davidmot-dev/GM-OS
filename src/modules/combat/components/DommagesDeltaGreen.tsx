@@ -14,16 +14,25 @@ function poserPV(cible: Combatant, champ: string, pv: number): void {
     useCombatStore.getState().updateCombatant(cible.id, { hp: pv, healthSystem: HealthInterpreter.calculateNextState(sante, { value: 0 }) });
 }
 
-/** P. 44, 52, 57–60 : les sept armes de la fiche, lues sur leur porteur. */
-export default function DommagesDeltaGreen({ attaquant, regle }: { attaquant: Combatant; regle: RegleDeDeltaGreen }) {
+/**
+ * P. 44, 52, 57–60 : les sept armes de la fiche, lues sur leur porteur.
+ *
+ * **Après « Attaquer »** (§ 267, T3, 23/11/2026) : la carte suit le jet de l'adversaire, l'arme de
+ * l'attaque choisie, la réussite et le critique repris du jet (`armeInitiale`, `reussie`, `critiqueDuJet`),
+ * ouverte. Sur la carte du combattant, sans eux, elle reste telle qu'avant : tout à cocher.
+ */
+export default function DommagesDeltaGreen({ attaquant, regle, armeInitiale, reussie, critiqueDuJet, ouverte }: {
+    attaquant: Combatant; regle: RegleDeDeltaGreen;
+    armeInitiale?: string; reussie?: boolean; critiqueDuJet?: boolean; ouverte?: boolean;
+}) {
     const combattants = useCombatStore(s => s.combatants);
-    const [arme, setArme] = useState('1');
+    const [arme, setArme] = useState(armeInitiale ?? '1');
     const [cibleId, setCible] = useState(attaquant.targetId ?? '');
-    const [critique, setCritique] = useState(false);
+    const [critique, setCritique] = useState(!!critiqueDuJet);
     const [humaine, setHumaine] = useState(false);
     const [couvert, setCouvert] = useState(false);
     const [protection, setProtection] = useState(0);
-    const [confirme, setConfirme] = useState(false);
+    const [confirme, setConfirme] = useState(!!reussie);
     const [fait, setFait] = useState(false);
     const verrou = useRef(false);
     const [texte, setTexte] = useState('');
@@ -38,7 +47,7 @@ export default function DommagesDeltaGreen({ attaquant, regle }: { attaquant: Co
     const cible = combattants.find(c => c.id === cibleId);
     const classe = 'rounded border border-app-border bg-app-bg px-2 py-1 text-app-text';
     const noter = (ligne: string) => { setTexte(ligne); consignerLeJet({ titre: `${attaquant.name} · ${nom || 'combat'}`, totalDisplay: ligne }); };
-    return <details className="border-t border-app-border pt-2 text-sm space-y-2" data-combat-delta-green>
+    return <details className="border-t border-app-border pt-2 text-sm space-y-2" data-combat-delta-green open={ouverte}>
         <summary className="cursor-pointer font-bold">Delta Green : arme, dégâts et complications</summary>
         <label className="flex flex-wrap gap-2">Arme <select className={classe} aria-label="Arme Delta Green" value={arme} onChange={e => setArme(e.target.value)}>
             {Array.from({ length: 7 }, (_, i) => String(i + 1)).map(i => <option key={i} value={i}>{String(valeurs[`arme${i}`] || `Arme ${i}`)}</option>)}

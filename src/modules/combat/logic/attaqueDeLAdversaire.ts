@@ -147,10 +147,28 @@ export function armesDeLaFicheAlien(
  * meneur peut toujours changer ; la composition est relue contre la fiche avant d'être proposée.
  */
 export function attaqueParDefaut(
-    pilote: { jet?: { bladeRunner?: unknown; alien?: { competence: string }; dune?: { competences: string[]; principes: string[] } } } | null | undefined,
+    pilote: { jet?: { bladeRunner?: unknown; alien?: { competence: string }; dune?: { competences: string[]; principes: string[] }; vampire?: unknown;
+        coc?: { dommages?: { armes: readonly { attaque: string; nom: string }[] } }; deltaGreen?: unknown; barbarians?: unknown } } | null | undefined,
     armes: readonly ArmeProposee[],
     valeurs: Record<string, unknown>,
 ): Record<string, string> | null {
+    // Barbarians of Lemuria (§ 267, T4) : Vigueur + Mêlée, ou Agilité + Tir pour une arme de jet.
+    if (pilote?.jet?.barbarians) return attaqueDeBarbarians(valeurs);
+    // Delta Green (§ 267, T3) : la compétence de la première arme nommée, sinon le combat à mains nues.
+    if (pilote?.jet?.deltaGreen) return attaqueDeDeltaGreen(valeurs)?.champs ?? null;
+    /*
+      COC (§ 267, T2) : l'attaque de la première arme nommée sur la fiche, sinon l'attaque au contact —
+      seulement si la fiche porte la valeur : un PNJ sans profil préparé se compose à la main (p. 110-111).
+    */
+    const coc = pilote?.jet?.coc;
+    if (coc) {
+        const porte = (champ: string) => valeurs[champ] !== undefined && String(valeurs[champ]).trim() !== '';
+        const arme = coc.dommages?.armes.find(a => String(valeurs[a.nom] ?? '').trim() !== '' && porte(a.attaque));
+        const champ = arme?.attaque ?? (porte('attaque_au_contact') ? 'attaque_au_contact' : porte('attaque_a_distance') ? 'attaque_a_distance' : null);
+        return champ ? { caracteristique: champ } : null;
+    }
+    // Vampire (§ 267, T1) : le groupement d'attaque d'un antagoniste, ou attribut + compétence.
+    if (pilote?.jet?.vampire) return attaqueDeVampire(valeurs)?.champs ?? null;
     /*
       Dune (T18) : Combat, plus le principe le plus haut de la fiche. Un PNJ mineur n'a qu'une valeur
       de principe, qui s'ajoute à chaque test (livre, p. 327) : c'est elle. Sans principe chiffré,
@@ -220,6 +238,136 @@ export function armesDeLAdversaire(
 }
 
 /**
+ * **Les armes du catalogue de Vampire** (§ 267, T1, 22/11/2026) : les 18 armes du pilote 2.2.0 et leur
+ * « Valeur de dégâts », « +2 » (p. 303-304). Le bestiaire de Vampire ne donne pas d'armes à ses
+ * adversaires : toutes sont proposées, rangées selon l'attaque — les armes à feu d'abord pour un tir.
+ */
+export function armesDuCatalogue(
+    pilote: { catalogue?: { objets?: readonly ObjetDuCatalogue[] } } | null | undefined,
+    tir = false,
+): ArmeProposee[] {
+    const armes = (pilote?.catalogue?.objets ?? []).flatMap(o => {
+        if (o.famille !== 'arme') return [];
+        const brut = String(o.valeurs?.['valeur-de-degats'] ?? o.valeurs?.degats ?? '').trim();
+        const d = Number(brut.replace('+', ''));
+        return brut !== '' && Number.isFinite(d) ? [{ libelle: o.nom, degats: d, ...(o.categorie ? { categorie: o.categorie } : {}) }] : [];
+    });
+    const aFeu = (a: ArmeProposee) => /à feu|a feu/i.test(a.libelle);
+    return [...armes.filter(a => aFeu(a) === tir), ...armes.filter(a => aFeu(a) !== tir)];
+}
+
+/**
+ * **L'attaque proposée à un adversaire de Vampire** (§ 267, T1) : son meilleur groupement d'attaque
+ * (« Armes à feu 5 », « Mêlée », « Bagarre » — antagonistes simplifiés, p. 370), sinon Dextérité + Armes à
+ * feu, Force + Mêlée ou Force + Bagarre, s'il a la compétence. `null` : rien d'offensif sur sa fiche.
+ */
+export function attaqueDeVampire(valeurs: Record<string, unknown>): { champs: Record<string, string>; tir: boolean } | null {
+    const sansAccents = (t: string) => t.normalize('NFD').replace(/\p{Mn}/gu, '').toLowerCase();
+    const groupements = Array.from({ length: 9 }, (_, i) => i + 1).flatMap(i => {
+        const nom = sansAccents(String(valeurs[`groupement_${i}_nom`] ?? ''));
+        const v = Number(valeurs[`groupement_${i}`]);
+        if (!(v > 0)) return [];
+        const tir = /armes? a feu|\btir\b/.test(nom);
+        return tir || /melee|bagarre|combat|griffe|crocs/.test(nom) ? [{ champ: `groupement_${i}`, v, tir }] : [];
+    }).sort((a, b) => b.v - a.v);
+    if (groupements[0]) return { champs: { attribut: groupements[0].champ }, tir: groupements[0].tir };
+    const a = (champ: string) => Number(valeurs[champ]) > 0;
+    if (a('armes_a_feu')) return { champs: { attribut: 'dexterite', competence: 'armes_a_feu' }, tir: true };
+    if (a('melee')) return { champs: { attribut: 'force', competence: 'melee' }, tir: false };
+    if (a('bagarre')) return { champs: { attribut: 'force', competence: 'bagarre' }, tir: false };
+    return null;
+}
+
+/**
+ * **L'attaque proposée à un adversaire de Delta Green** (§ 267, T3, 23/11/2026) : la compétence de la
+ * première arme nommée sur sa fiche (`armeN_competence`, « Armes à feu »), et le numéro de cette arme
+ * pour la carte de dégâts ; sans arme, « Combat à mains nues » s'il le pratique. `null` : rien à proposer.
+ */
+export function attaqueDeDeltaGreen(valeurs: Record<string, unknown>): { champs: Record<string, string>; arme?: string } | null {
+    const identifiant = (t: string) => t.normalize('NFD').replace(/\p{Mn}/gu, '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    for (let i = 1; i <= 7; i++) {
+        const nom = String(valeurs[`arme${i}`] ?? '').trim();
+        const competence = identifiant(String(valeurs[`arme${i}_competence`] ?? ''));
+        if (nom && competence && valeurs[competence] !== undefined && String(valeurs[competence]).trim() !== '') {
+            return { champs: { competence }, arme: String(i) };
+        }
+    }
+    return Number(valeurs.combat_a_mains_nues) > 0 ? { champs: { competence: 'combat_a_mains_nues' } } : null;
+}
+
+/** Une arme de Barbarians of Lemuria : son nom, ses dégâts écrits (« d6B », « d6+3 »), à distance ou non. */
+export interface ArmeDeBarbarians { libelle: string; formule: string; distance: boolean }
+
+const FORMULE_BARBARIANS = /\bd(3|6)\s*([bm])?\s*([+-]\s*\d+)?\s*(?:[x×]\s*(\d+))?\s*$/i;
+const A_DISTANCE = /\barc\b|arbal|fronde|javel|jet|lancer|sarbacane/i;
+
+/**
+ * **Les armes d'un adversaire de Barbarians** (§ 267, T4, 23/11/2026) : les quatre lignes « Arme » et
+ * « Dégâts » de sa fiche, puis un champ « armes » écrit comme la colonne du bestiaire (« Arc long de
+ * Tyrus d6, Coutelas d6M+1 »), si une fiche le porte — le bestiaire n'est pas relié à la fiche (Q3).
+ * Une arme de jet ou de tir est « à distance ».
+ */
+export function armesDeBarbarians(valeurs: Record<string, unknown>): ArmeDeBarbarians[] {
+    const armes: ArmeDeBarbarians[] = [];
+    for (let i = 1; i <= 4; i++) {
+        const libelle = String(valeurs[`arme${i}`] ?? '').trim();
+        const formule = String(valeurs[`arme${i}_degats`] ?? '').trim();
+        if (libelle && FORMULE_BARBARIANS.test(formule)) armes.push({ libelle, formule, distance: A_DISTANCE.test(libelle) });
+    }
+    for (const morceau of String(valeurs.armes ?? '').split(',')) {
+        const m = FORMULE_BARBARIANS.exec(morceau.trim());
+        if (!m) continue;
+        const libelle = morceau.trim().slice(0, m.index).trim();
+        if (libelle) armes.push({ libelle, formule: morceau.trim().slice(m.index).trim(), distance: A_DISTANCE.test(libelle) });
+    }
+    return armes;
+}
+
+/**
+ * **L'attaque proposée à un adversaire de Barbarians** (§ 267, T4) : Agilité + Tir pour une première arme
+ * de jet ou de tir, Vigueur + Mêlée sinon (p. 62) ; sans arme, l'aptitude la plus haute de sa fiche.
+ */
+export function attaqueDeBarbarians(valeurs: Record<string, unknown>): Record<string, string> | null {
+    const melee = { attribut: 'vigueur', action: 'melee' };
+    const tir = { attribut: 'agilite', action: 'tir' };
+    const premiere = armesDeBarbarians(valeurs)[0];
+    if (premiere) return premiere.distance ? tir : melee;
+    const n = (c: string) => (valeurs[c] === undefined || String(valeurs[c]).trim() === '' ? null : Number(valeurs[c]));
+    if (n('melee') === null && n('tir') === null) return null;
+    return (n('tir') ?? -9) > (n('melee') ?? -9) ? tir : melee;
+}
+
+/**
+ * **Les dégâts d'un coup de Barbarians** (§ 267, T4) : le dé de l'arme — d3 ; d6 ; d6B, deux d6 dont on
+ * garde le meilleur ; d6M, le pire —, son bonus écrit, plus la Vigueur en mêlée ou sa moitié arrondie
+ * à l'inférieur à distance et à mains nues, plus 6 pour un Coup dévastateur (p. 49-53, 56-60, 62-63).
+ * Les PNJ du livre écrivent leur Vigueur dans le bonus (le barbare tribal, Vigueur 2 : « d6B+2 »,
+ * p. 133) et les créatures n'y ajoutent rien, leur « x2 » multipliant le dé (p. 108) : l'appelant
+ * décide d'ajouter la Vigueur ou non. `de` rend un d6. `null` : une formule que le livre ne connaît pas.
+ */
+export function lancerLesDegatsDeBarbarians(
+    formule: string, options: { vigueur: number; moitie: boolean; ajouterLaVigueur: boolean; devastateur: boolean }, de: () => number,
+): { total: number; calcul: string } | null {
+    const m = FORMULE_BARBARIANS.exec(formule.trim());
+    if (!m) return null;
+    let base: number; let detail: string;
+    if (m[1] === '3') { const d = de(); base = Math.ceil(d / 2); detail = `d3 (${base})`; }
+    else if (m[2]) {
+        const a = de(), b = de();
+        base = m[2].toLowerCase() === 'b' ? Math.max(a, b) : Math.min(a, b);
+        detail = `d6${m[2].toUpperCase()} (${a}, ${b} → ${base})`;
+    } else { base = de(); detail = `d6 (${base})`; }
+    const ecrit = m[3] ? Number(m[3].replace(/\s+/g, '')) : 0;
+    const fois = m[4] ? Math.max(1, Number(m[4])) : 1;
+    const vigueur = options.ajouterLaVigueur ? (options.moitie ? Math.floor(options.vigueur / 2) : options.vigueur) : 0;
+    const total = Math.max(0, (base + ecrit) * fois + vigueur + (options.devastateur ? 6 : 0));
+    const morceaux = [detail, ecrit ? `${ecrit > 0 ? '+' : '−'} ${Math.abs(ecrit)}` : '', fois > 1 ? `× ${fois}` : '',
+        options.ajouterLaVigueur && vigueur ? `${vigueur > 0 ? '+' : '−'} ${options.moitie ? 'moitié de la ' : ''}Vigueur ${Math.abs(vigueur)}` : '',
+        options.devastateur ? '+ 6 Coup dévastateur' : ''].filter(Boolean);
+    return { total, calcul: `${morceaux.join(' ')} = ${total}` };
+}
+
+/**
  * **Le coup d'Alien préparé sur la cible** (T12, 19/11/2026). Alien n'applique pas un coup d'un
  * trait : la cible lance d'abord sa Protection (des D6, la moitié contre un perce-armure), puis les
  * dégâts restants s'appliquent (`SanteAlien`, « Préparer ce coup » → « Lancer la Protection » →
@@ -263,17 +411,45 @@ export interface CoupAAppliquer {
 export function coupAAppliquer(params: {
     resultat: { total: number; successes?: number; compte?: 'reussites' };
     /** La règle des dégâts du jeu (`regleDesDegats`) ; absente, le montant se saisit. */
-    regle?: 'arme-plus-succes' | 'porte-du-jeu' | 'montant';
+    regle?: 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'porte-du-jeu' | 'montant';
     degatsDeLArme?: number;
+    /** Vampire : la marge de réussites du jet (`JetDeVampire.vampire.marge`), 0 sur un échec. */
+    marge?: number;
     montantSaisi?: number;
     protection?: number;
 }): CoupAAppliquer {
     const { resultat, degatsDeLArme, montantSaisi } = params;
+    /*
+      **Vampire V5 (§ 267, T1, 22/11/2026)** : « le vainqueur inflige des dégâts égaux à sa marge de
+      réussites, plus le bonus d'arme » (p. 126, 303). L'armure ne retire rien : elle change un dégât
+      aggravé de lame ou de balle en superficiel — c'est le type choisi à l'application, que
+      l'encaissement de Vampire divise ou non (`pistesDeVampire.ts`).
+    */
+    if (params.regle === 'marge-plus-arme') {
+        const marge = Number.isFinite(params.marge) ? Math.trunc(params.marge!) : 0;
+        if (marge < 1) return { montant: 0, calcul: 'aucune marge : le coup ne porte pas', raison: 'rate' };
+        if (degatsDeLArme === undefined || !Number.isFinite(degatsDeLArme) || degatsDeLArme < 0) {
+            return { montant: null, calcul: `marge ${marge} + bonus de l’arme`, raison: 'arme-inconnue' };
+        }
+        const bonus = Math.trunc(degatsDeLArme);
+        return { montant: marge + bonus, calcul: `marge ${marge} + arme ${bonus} = ${marge + bonus}` };
+    }
     const protection = Number.isFinite(params.protection) ? Math.max(0, Math.trunc(params.protection!)) : 0;
     const moins = (brut: number, debut: string): CoupAAppliquer => protection > 0
         ? { montant: Math.max(0, brut - protection), calcul: `${debut}, − protection ${protection} = ${Math.max(0, brut - protection)}` }
         : { montant: brut, calcul: debut };
 
+    /*
+      **Barbarians of Lemuria (§ 267, T4, 23/11/2026)** : un jet d'attaque raté ne blesse pas ; réussi, le
+      dé de l'arme se lance à part (`lancerLesDegatsDeBarbarians`) et son total arrive en montant saisi,
+      dont l'armure de la cible se retire (p. 62-63).
+    */
+    if (params.regle === 'de-de-l-arme' && !((resultat.successes ?? 0) >= 1)) {
+        return { montant: 0, calcul: 'attaque manquée : pas de dégâts', raison: 'rate' };
+    }
+    if (params.regle === 'de-de-l-arme' && (montantSaisi === undefined || !Number.isFinite(montantSaisi))) {
+        return { montant: null, calcul: 'lancer les dégâts de l’arme', raison: 'arme-inconnue' };
+    }
     if (params.regle === 'arme-plus-succes' && resultat.compte === 'reussites') {
         const reussites = resultat.successes ?? resultat.total;
         if (!(reussites >= 1)) return { montant: 0, calcul: 'aucun succès : le coup manque', raison: 'rate' };

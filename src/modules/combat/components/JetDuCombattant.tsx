@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import PanneauDeJet from '../../session/components/PanneauJetDeFiche';
 import { AppliquerALaCible } from './AppliquerALaCible';
 import type { RollResult } from '../../dice/DiceEngine';
-import type { ArmeProposee } from '../logic/attaqueDeLAdversaire';
+import { armesDeBarbarians, attaqueDeDeltaGreen, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
+import DommagesDeltaGreen from './DommagesDeltaGreen';
 import type { ProtectionLue } from '../logic/protectionDeLaCible';
 import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
 import { useCombatStore } from '../useCombatStore';
 import { champsProposes, composantesARetenir, compositionValable } from '../../dice/demandeDeJet';
-import { libelleDeLAttaque } from '../logic/jetDuCombattant';
+import { cleCocDuCombattant, libelleDeLAttaque, regleDesDegats } from '../logic/jetDuCombattant';
 import type { Combatant } from '../types';
 import type { GameDriver } from '../../../types/drivers';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
@@ -40,7 +41,7 @@ export const JetDuCombattant: React.FC<{
      * La cible de la carte (§ 263, T5) : dite en tête du jet, pour que le meneur sache qui il
      * attaque sans revenir au plateau. Le coup lui sera appliqué en un geste en T7.
      */
-    cible?: Pick<Combatant, 'id' | 'name'> | null;
+    cible?: (Pick<Combatant, 'id' | 'name'> & Partial<Pick<Combatant, 'sourcePlayerId' | 'sourceEntityId'>>) | null;
     /** Ouverte par « Attaquer » : le jet passe au premier plan, et l'attaque se retient (T6). */
     auPremierPlan?: boolean;
     /** T9 : les armes du catalogue et la protection de la cible, pour « Appliquer à [cible] ». */
@@ -85,7 +86,14 @@ export const JetDuCombattant: React.FC<{
       s'applique dans les suites du test (`AttaqueDune`), la cible de la carte déjà choisie.
     */
     const dune = !!driver.jet?.dune;
+    // § 267, T0 à T3 : un jeu dont le coup passe par sa propre porte (Dune, COC, Delta Green) n'a pas « Appliquer à [cible] ».
+    const parSaPorte = regleDesDegats(driver) === 'porte-du-jeu';
     const suivreLeResultat = auPremierPlan && cible && !dune ? setDernierResultat : undefined;
+    // T3 : Delta Green enchaîne sur sa carte de dégâts, l'arme de l'attaque proposée choisie.
+    const regleDG = driver.jet?.deltaGreen;
+    const armeDG = regleDG ? attaqueDeDeltaGreen(valeurs)?.arme : undefined;
+    const [tirageDG, setTirageDG] = useState(0);
+    const suivre = suivreLeResultat ? (r: RollResult) => { setDernierResultat(r); setTirageDG(n => n + 1); } : undefined;
 
     return (
         <details data-jet-du-combattant {...(auPremierPlan ? { 'data-ouvert-sur-le-jet': '' } : {})}
@@ -119,11 +127,20 @@ export const JetDuCombattant: React.FC<{
                     // T12 : l'arme proposée est aussi celle du panneau (Alien : le tir l'exige).
                     {...(auPremierPlan && armes?.[0]?.id !== undefined ? { equipementAlienInitial: armes[0].id } : {})}
                     {...(retenir ? { surLeLancer: retenir } : {})}
-                    {...(suivreLeResultat ? { surLeResultat: suivreLeResultat } : {})}
-                    {...(dune ? { duneDuCombattant: { ennemi: combattant.faction === 'enemy', ...(auPremierPlan && cible ? { cible: cible.id } : {}) } } : {})} />
+                    {...(suivre ? { surLeResultat: suivre } : {})}
+                    {...(dune ? { duneDuCombattant: { ennemi: combattant.faction === 'enemy', ...(auPremierPlan && cible ? { cible: cible.id } : {}) } } : {})}
+                    // § 267, T2 : la cible de la carte, défenseur et cible des DM de COC.
+                    {...(driver.jet?.coc && auPremierPlan && cible ? { cocDuCombattant: { cible: cleCocDuCombattant(cible) } } : {})} />
             </div>
-            {suivreLeResultat && cible && dernierResultat && <AppliquerALaCible cible={cible} resultat={dernierResultat} driver={driver}
-                armes={armes} protectionDeLaCible={protectionDeLaCible} />}
+            {suivreLeResultat && cible && dernierResultat && !parSaPorte && <AppliquerALaCible cible={cible} resultat={dernierResultat} driver={driver}
+                armes={armes} protectionDeLaCible={protectionDeLaCible}
+                {...(driver.jet?.barbarians ? { barbarians: { armes: armesDeBarbarians(valeurs), vigueur: Number(valeurs.vigueur ?? 0) || 0 } } : {})} />}
+            {suivreLeResultat && cible && dernierResultat && regleDG && (
+                <div className="mt-3" data-degats-apres-l-attaque>
+                    <DommagesDeltaGreen key={tirageDG} attaquant={combattant} regle={regleDG} ouverte armeInitiale={armeDG}
+                        reussie={!!dernierResultat.tagSuccess} critiqueDuJet={dernierResultat.degre === 'reussite-particuliere'} />
+                </div>
+            )}
         </details>
     );
 };

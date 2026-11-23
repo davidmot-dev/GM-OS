@@ -65,3 +65,21 @@ describe('les dégâts Delta Green depuis une carte du combat', () => {
         expect(useCombatStore.getState().combatants[0].sheetData?.arme1_enrayee).toBe(3);
     });
 });
+
+/** § 267, T3 (23/11/2026) : après « Attaquer », la carte suit le jet, réglée d'avance. */
+describe('Delta Green : la carte de dégâts après le jet d’attaque', () => {
+    it('l’arme de l’attaque, la réussite et le critique repris du jet, ouverte', () => {
+        const avecDeuxArmes = { ...attaquant, sheetData: { ...attaquant.sheetData, arme2: 'Glock 17', arme2_degats: '1D10' } };
+        useCombatStore.setState({ combatants: [avecDeuxArmes, cible] });
+        const { container } = render(<DommagesDeltaGreen attaquant={avecDeuxArmes} regle={{ sante: 'PV' }} armeInitiale="2" reussie critiqueDuJet ouverte />);
+        expect((screen.getByLabelText('Arme Delta Green') as HTMLSelectElement).value).toBe('2');
+        expect((screen.getByRole('checkbox', { name: 'Attaque réussie confirmée' }) as HTMLInputElement).checked).toBe(true);
+        expect((screen.getByRole('checkbox', { name: /Réussite critique/ }) as HTMLInputElement).checked).toBe(true);
+        expect((container.querySelector('[data-combat-delta-green]') as HTMLDetailsElement).open).toBe(true);
+    });
+    it('sans réglage (la carte du combattant), rien n’est coché d’avance', () => {
+        render(<DommagesDeltaGreen attaquant={attaquant} regle={{ sante: 'PV' }} />);
+        expect((screen.getByRole('checkbox', { name: 'Attaque réussie confirmée' }) as HTMLInputElement).checked).toBe(false);
+        expect((screen.getByLabelText('Arme Delta Green') as HTMLSelectElement).value).toBe('1');
+    });
+});

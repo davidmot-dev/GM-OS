@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { DiceEngine } from '../../dice/DiceEngine';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { AppliquerALaCible } from './AppliquerALaCible';
 import { useCombatStore } from '../useCombatStore';
@@ -14,6 +15,8 @@ const reserve = (n: number) => ({ total: n, successes: n, compte: 'reussites' as
 // Un jeu à la règle de Year Zero (§ 267, T0 : la règle vient du jeu, ici Blade Runner).
 const PILOTE = { jet: { bladeRunner: {}, desEchelonnes: { composantes: [] } }, combat: { damageTypes: ['physique'] } } as never;
 const AUTRE_JEU = { jet: { shadowrun: {} }, combat: { damageTypes: ['physique'] } } as never;
+const VAMPIRE = { jet: { vampire: {} }, combat: { damageTypes: ['Superficiels', 'Aggravés'] } } as never;
+const BARBARIANS = { jet: { barbarians: {} }, combat: {} } as never;
 
 beforeEach(() => {
     useCombatStore.getState().reset();
@@ -60,10 +63,52 @@ describe('« Appliquer à [cible] »', () => {
         expect(cultiste().hp).toBe(8);
     });
 
+    it('§ 267, T1 : Vampire — marge 2 + pistolet 9 mm (+3) = 5, le type choisi, sans armure retirée (p. 126, 303)', () => {
+        const armes = [{ libelle: 'Improvisée, pieu', degats: 0 }, { libelle: 'À feu moyenne (pistolet 9 mm)', degats: 3 }];
+        render(<AppliquerALaCible cible={cultiste()} resultat={{ total: 4, successes: 4, vampire: { marge: 2 } }} driver={VAMPIRE} armes={armes} />);
+        expect(screen.queryByLabelText('Protection retirée')).toBeNull();
+        expect(document.querySelector('[data-types-de-vampire]')).toBeTruthy();
+        expect(document.querySelector('[data-calcul-du-coup]')!.textContent).toBe('marge 2 + arme 0 = 2');
+        fireEvent.change(screen.getByLabelText('Arme'), { target: { value: 'À feu moyenne (pistolet 9 mm)' } });
+        expect((screen.getByLabelText('Bonus de l’arme') as HTMLInputElement).value).toBe('3');
+        fireEvent.change(screen.getByLabelText('Type de dégâts'), { target: { value: 'Aggravés' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Appliquer 5 à Cultiste' }));
+        expect(cultiste().hp).toBe(7);
+    });
+
+    it('§ 267, T1 : Vampire — un jet sans marge ne porte pas', () => {
+        render(<AppliquerALaCible cible={cultiste()} resultat={{ total: 1, successes: 1, vampire: { marge: 0 } }} driver={VAMPIRE} />);
+        expect(document.querySelector('[data-coup-nul]')!.textContent).toContain('Rien à appliquer à Cultiste');
+    });
+
     it('un autre jet : le montant se saisit', () => {
         render(<AppliquerALaCible cible={cultiste()} resultat={{ total: 14 }} driver={PILOTE} />);
         fireEvent.change(screen.getByLabelText('Dégâts'), { target: { value: '5' } });
         fireEvent.click(screen.getByRole('button', { name: 'Appliquer 5 à Cultiste' }));
         expect(cultiste().hp).toBe(7);
+    });
+
+    it('§ 267, T4 : Barbarians — hache d6B + Vigueur 2, moins l’armure 1 ; le Coup dévastateur offert sur un succès héroïque', () => {
+        const de = vi.spyOn(DiceEngine, 'roll').mockReturnValueOnce(3).mockReturnValueOnce(5);
+        try {
+            render(<AppliquerALaCible cible={cultiste()} driver={BARBARIANS}
+                resultat={{ total: 12, successes: 1, barbarians: { bilan: 'succes-heroique' } }}
+                barbarians={{ armes: [{ libelle: 'Hache', formule: 'd6B', distance: false }], vigueur: 2 }} />);
+            expect((screen.getByLabelText('Dé de l’arme') as HTMLInputElement).value).toBe('d6B');
+            fireEvent.click(screen.getByRole('checkbox', { name: /Coup dévastateur/ }));
+            fireEvent.change(screen.getByLabelText('Protection retirée'), { target: { value: '1' } });
+            fireEvent.click(screen.getByText('Lancer les dégâts'));
+            expect(document.querySelector('[data-degats-lances-bol]')!.textContent).toContain('d6B (3, 5 → 5) + Vigueur 2 + 6 Coup dévastateur = 13');
+            fireEvent.click(screen.getByText('Appliquer 12 à Cultiste'));
+            expect(cultiste().hp).toBe(0);
+        } finally { de.mockRestore(); }
+    });
+
+    it('§ 267, T4 : Barbarians — une attaque manquée ne lance rien', () => {
+        render(<AppliquerALaCible cible={cultiste()} driver={BARBARIANS} resultat={{ total: 6, successes: 0, barbarians: { bilan: 'echec' } }}
+            barbarians={{ armes: [], vigueur: 1 }} />);
+        expect(screen.queryByText('Lancer les dégâts')).toBeNull();
+        expect(screen.queryByRole('checkbox', { name: /Coup dévastateur/ })).toBeNull();
+        expect(document.querySelector('[data-coup-nul]')).toBeTruthy();
     });
 });

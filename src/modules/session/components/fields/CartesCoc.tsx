@@ -14,8 +14,9 @@ export const boutonCoc = 'rounded-md border border-app-border px-2 py-1 text-xs 
 export const champCoc = 'rounded-md border border-app-border bg-app-bg px-2 py-1 text-xs max-w-full';
 const nouveau = () => crypto.randomUUID();
 /** Les valeurs fraîches sont relues à chaque confirmation, sur la source du personnage. */
-export function DefenseCibleCoc({ choisir }: { choisir: (defense: number) => void }) {
-    const sources = useSourcesCoc(), [cle, setCle] = useState('');
+/** `cleInitiale` : la cible de la carte de combat, quand « Attaquer » ouvre le jet (§ 267, T2, 23/11/2026). */
+export function DefenseCibleCoc({ choisir, cleInitiale }: { choisir: (defense: number) => void; cleInitiale?: string }) {
+    const sources = useSourcesCoc(), [cle, setCle] = useState(cleInitiale ?? '');
     const source = sources.find(s => s.cle === cle), c = source && lireCibleCoc(source.cible);
     const base = c ? Number(c.fiche[c.regle.suivi!.defense]) || 0 : 0;
     const malus = c ? malusDeSante(Number(c.fiche[c.regle.sante!]) || 0, c.regle.des, lireProfilCoc(c.fiche)) : 0;
@@ -89,12 +90,14 @@ export function SanteCoc({ cible, desactive = false }: { cible: CibleCoc; desact
         {message && <p role="status">{message}</p>}
     </fieldset>;
 }
-export function DommagesCoc({ regle, valeurs, attaque, critique, personnageId }: { regle: RegleDeCoc; valeurs: Record<string, unknown>; attaque?: string; critique: boolean; personnageId?: string }) {
+export function DommagesCoc({ regle, valeurs, attaque, critique, personnageId, cleInitiale }: { regle: RegleDeCoc; valeurs: Record<string, unknown>; attaque?: string; critique: boolean; personnageId?: string;
+    /** La cible de la carte de combat, quand « Attaquer » ouvre le jet (§ 267, T2, 23/11/2026). */
+    cleInitiale?: string }) {
     const sources = useSourcesCoc(), arme = regle.dommages?.armes.find(a => a.attaque === attaque);
     const [formule, setFormule] = useState(String(arme ? valeurs[arme.dm] ?? '' : ''));
     const [type, setType] = useState<TypeArmeCoc | ''>(String(arme ? valeurs[arme.type] ?? '' : '') as TypeArmeCoc | '');
     const [bonus, setBonus] = useState(String(arme ? valeurs[arme.critique] ?? '' : ''));
-    const [cible, setCible] = useState(''), [resultat, setResultat] = useState<ReturnType<typeof lancerDommagesCoc>>(), [message, setMessage] = useState('');
+    const [cible, setCible] = useState(cleInitiale ?? ''), [resultat, setResultat] = useState<ReturnType<typeof lancerDommagesCoc>>(), [message, setMessage] = useState('');
     const [id] = useState(nouveau), [applique, setApplique] = useState(false);
     const source = sources.find(s => s.cible.id === personnageId), acteur = source && lireCibleCoc(source.cible);
     const bonusHeros = regle.heroisme && acteur ? bonusAvantageCoc(acteur.fiche, 'dm-infliges') : 0;
