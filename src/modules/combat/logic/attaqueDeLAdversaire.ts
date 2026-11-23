@@ -4,6 +4,7 @@ import type { ArmureAlien, CombatAlien } from '../../dice/systemes/combatAlien';
 import { entreesDesLignes } from '../../dice/systemes/xenomorphesAlien';
 import type { RegleDuCombatDeDegenesis } from '../../dice/systemes/combatDeDegenesis';
 import type { RegleDeRuneQuest } from '../../dice/systemes/runequest';
+import { attaqueDeNephilim } from './dommagesDeNephilim';
 import { ajouterALaFormule, degatsNets, lireLaFormule, valeurFixe, type FormuleDeDes, type RegleDeSymbaroum } from '../../dice/systemes/symbaroumRegles';
 
 /*
@@ -152,7 +153,7 @@ export function armesDeLaFicheAlien(
 export function attaqueParDefaut(
     pilote: { jet?: { bladeRunner?: unknown; alien?: { competence: string }; dune?: { competences: string[]; principes: string[] }; vampire?: unknown;
         coc?: { dommages?: { armes: readonly { attaque: string; nom: string }[] } }; deltaGreen?: unknown; barbarians?: unknown; starTrek?: unknown; argyropee?: unknown; degenesis?: { combat?: RegleDuCombatDeDegenesis };
-        runequest?: Pick<RegleDeRuneQuest, 'armes'>; shadowrun?: unknown } } | null | undefined,
+        runequest?: Pick<RegleDeRuneQuest, 'armes'>; shadowrun?: unknown; nephilim?: unknown; torg?: unknown } } | null | undefined,
     armes: readonly ArmeProposee[],
     valeurs: Record<string, unknown>,
 ): Record<string, string> | null {
@@ -168,6 +169,10 @@ export function attaqueParDefaut(
     if (pilote?.jet?.runequest) return attaqueDeRuneQuest(pilote.jet.runequest, valeurs)?.champs ?? null;
     // Shadowrun : Anarchy (§ 267, T10) : la compétence de l'arme + Agilité (p. 66-67).
     if (pilote?.jet?.shadowrun) return attaqueDeShadowrun(valeurs)?.champs ?? null;
+    // Nephilim (§ 267, T11) : la Menace d'un PNJ tient lieu de Vécu (p. 117) ; sinon le meneur choisit.
+    if (pilote?.jet?.nephilim) return attaqueDeNephilim(valeurs);
+    // Torg (§ 267, T12) : Dextérité + la compétence de l'arme (p. 79, 115).
+    if (pilote?.jet?.torg) return attaqueDeTorg(valeurs).champs;
     // Delta Green (§ 267, T3) : la compétence de la première arme nommée, sinon le combat à mains nues.
     if (pilote?.jet?.deltaGreen) return attaqueDeDeltaGreen(valeurs)?.champs ?? null;
     /*
@@ -373,6 +378,79 @@ export function attaqueDeShadowrun(valeurs: Record<string, unknown>): { champs: 
     const i = Array.from({ length: 11 }, (_, n) => n + 1).find(n => motif.test(String(valeurs[`competence_${n}_nom`] ?? '')));
     if (!arme && i === undefined) return null;
     return { champs: { ...(i !== undefined ? { competence: `competence_${i}` } : {}), attribut: 'agilite' }, epreuve: melee ? 'melee' : 'tir' };
+}
+
+/*
+  **Torg Eternity** (§ 267, T12, 23/11/2026), livre de règles, pages imprimées (PDF = imprimée + 2). Une
+  attaque physique se fait avec Armes à énergie, à feu, lourdes, de mêlée, de jet ou Combat à mains nues,
+  toutes sous la Dextérité (p. 79). Le ND est l'Esquive du défenseur à distance ; au corps à corps, son
+  Armes de mêlée s'il tient une arme appropriée, sinon son Combat à mains nues (p. 115). Un Succès
+  Supérieur ajoute un Dé Bonus aux dommages, un Spectaculaire deux ; un 6 vaut 5 et se relance (p. 115).
+  Les dommages : valeur fixe d'une arme à feu, Force + valeur d'une arme de mêlée, Force à mains nues
+  (p. 116) — `applyDamage` les compare ensuite à la Résistance (Table des Dommages, p. 116).
+  La fiche du pilote 2.0.0 écrit ses armes en texte libre (`armes`) : l'arme s'y devine par son nom.
+*/
+const TIR_DE_TORG: readonly { competence: string; motif: RegExp }[] = [
+    { competence: 'armes_lourdes', motif: /lance-roquettes?|bazooka|mitrailleuse lourde|canon|mortier/i },
+    { competence: 'armes_energie', motif: /laser|blaster|[àa] [ée]nergie|plasma|rayon/i },
+    { competence: 'armes_feu', motif: /pistolet|fusil|revolver|mitraillette|carabine|arme [àa] feu|\d+\s?mm\b|calibre/i },
+    { competence: 'armes_jet', motif: /\barc\b|arbal[èe]te|javelot|grenade|shuriken|de lancer|fronde/i },
+];
+const MELEE_DE_TORG = /[ée]p[ée]e|sabre|couteau|dague|hache|masse|matraque|\blance\b|marteau|gourdin|b[âa]ton|katana|machette|rapi[èe]re|fl[ée]au/i;
+
+export interface AttaqueDeTorg {
+    champs: Record<string, string>;
+    aDistance: boolean;
+    /** La valeur de dommages lue dans le texte de l'arme, ou la Force à mains nues. */
+    degats?: number;
+}
+
+/**
+ * **L'attaque proposée à un adversaire de Torg** : la Dextérité et la compétence de son arme ; sans la
+ * compétence sur sa fiche, le test se fait sur l'attribut seul (non entraîné). Sans arme reconnue, Combat à
+ * mains nues, pour sa Force en dommages.
+ */
+export function attaqueDeTorg(valeurs: Record<string, unknown>): AttaqueDeTorg {
+    const texte = String(valeurs.armes ?? '');
+    const tir = TIR_DE_TORG.find(t => t.motif.test(texte));
+    const melee = !tir && MELEE_DE_TORG.test(texte);
+    const competence = tir?.competence ?? (melee ? 'armes_melee' : 'combat_mains_nues');
+    const force = Number(valeurs.force) || 0;
+    // « Force +2 (10) », comme les profils du livre (p. 88), ou « dommages 14 ».
+    const f = /(?:\bFOR|Force)\s*\+\s*(\d+)(?:\s*\((\d+)\))?/i.exec(texte);
+    const d = /dommages?\s*:?\s*(\d+)/i.exec(texte);
+    const degats = f ? (f[2] ? Number(f[2]) : force + Number(f[1])) : d ? Number(d[1]) : !tir && !melee && force > 0 ? force : undefined;
+    return {
+        champs: { attribut: 'dexterite', ...(Number(valeurs[competence]) > 0 ? { competence } : {}) },
+        aDistance: !!tir, ...(degats !== undefined ? { degats } : {}),
+    };
+}
+
+/** Le ND de l'attaque : la défense de la cible (p. 115), lue sur sa fiche ; `undefined` si elle n'y est pas. */
+export function ndDeTorg(attaque: Pick<AttaqueDeTorg, 'aDistance'>, cible: Record<string, unknown>): { nd: number; libelle: string } | undefined {
+    const [champ, libelle] = attaque.aDistance ? ['esquive_def', 'Esquive']
+        : MELEE_DE_TORG.test(String(cible.armes ?? '')) ? ['melee_def', 'Armes de mêlée'] : ['mains_nues_def', 'Combat à mains nues'];
+    const nd = Number(cible[champ]);
+    return nd > 0 ? { nd, libelle } : undefined;
+}
+
+/** Les Dés Bonus d'un succès : un pour un Supérieur, deux pour un Spectaculaire (p. 115). */
+export function desBonusDeTorg(degre: string | undefined): number {
+    return degre === 'reussite-particuliere' ? 2 : degre === 'reussite-significative' ? 1 : 0;
+}
+
+/** Lancer les Dés Bonus : un d6 chacun, un 6 vaut 5 et se relance, autant de fois qu'il revient (p. 115). */
+export function lancerLesDesBonus(nombre: number, d6: () => number): { total: number; detail: string } {
+    let total = 0;
+    const des: string[] = [];
+    for (let i = 0; i < nombre; i++) {
+        let v = d6();
+        const chaine: number[] = [];
+        while (v === 6) { chaine.push(5); total += 5; v = d6(); }
+        chaine.push(v); total += v;
+        des.push(chaine.join('+'));
+    }
+    return { total, detail: des.join(', ') };
 }
 
 /** Une arme de la fiche d'Argyropée : son nom, sa formule de dégâts, la compétence qui l'emploie. */
@@ -607,7 +685,7 @@ export interface CoupAAppliquer {
     /** Le calcul, en mots — « arme 2 + 3 succès − 1 = 4, − protection 1 = 3 ». */
     calcul: string;
     /** Ce qui manque ou ce qui s'est passé, quand `montant` ne vaut rien d'utile. */
-    raison?: 'rate' | 'arme-inconnue' | 'montant-a-saisir';
+    raison?: 'rate' | 'arme-inconnue' | 'montant-a-saisir' | 'des-bonus-a-lancer';
 }
 
 /**
@@ -624,13 +702,16 @@ export interface CoupAAppliquer {
 export function coupAAppliquer(params: {
     resultat: { total: number; successes?: number; compte?: 'reussites' };
     /** La règle des dégâts du jeu (`regleDesDegats`) ; absente, le montant se saisit. */
-    regle?: 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'vd-plus-nets' | 'porte-du-jeu' | 'montant';
+    regle?: 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'vd-plus-nets' | 'arme-plus-des-bonus' | 'porte-du-jeu' | 'montant';
     degatsDeLArme?: number;
     /** Vampire : la marge de réussites du jet (`JetDeVampire.vampire.marge`), 0 sur un échec. */
     marge?: number;
     /** Shadowrun : le jet touche-t-il (`JetDeShadowrun.shadowrun.reussi`), et ses succès nets. */
     touche?: boolean;
     nets?: number;
+    /** Torg : les Dés Bonus du succès, et leur total une fois lancés. */
+    desBonus?: number;
+    bonusLance?: number;
     montantSaisi?: number;
     protection?: number;
 }): CoupAAppliquer {
@@ -654,6 +735,24 @@ export function coupAAppliquer(params: {
       **Shadowrun : Anarchy (§ 267, T10)** : VD de l'arme + succès nets (p. 66-67). Rien ne se retire ici :
       l'armure est dans les seuils de la cible, que son moniteur compare à la VD finale (p. 68).
     */
+    /*
+      **Torg Eternity (§ 267, T12)** : la valeur de dommages de l'arme, plus les Dés Bonus d'un succès Supérieur
+      ou Spectaculaire (p. 115-116). Rien ne se retire ici : `applyDamage` compare le total à la Résistance.
+    */
+    if (params.regle === 'arme-plus-des-bonus') {
+        if (!params.touche) return { montant: 0, calcul: 'l’attaque n’atteint pas le ND : pas de dommages', raison: 'rate' };
+        const n = Math.max(0, Math.trunc(params.desBonus ?? 0));
+        const db = n ? ` + ${n} Dé${n > 1 ? 's' : ''} Bonus` : '';
+        if (degatsDeLArme === undefined || !Number.isFinite(degatsDeLArme) || degatsDeLArme < 0) {
+            return { montant: null, calcul: `dommages de l’arme${db}`, raison: 'arme-inconnue' };
+        }
+        const arme = Math.trunc(degatsDeLArme);
+        if (n && (params.bonusLance === undefined || !Number.isFinite(params.bonusLance))) {
+            return { montant: null, calcul: `arme ${arme}${db} à lancer`, raison: 'des-bonus-a-lancer' };
+        }
+        const bonus = n ? Math.trunc(params.bonusLance!) : 0;
+        return { montant: arme + bonus, calcul: `arme ${arme}${n ? `${db} (${bonus})` : ''} = ${arme + bonus} dommages, contre la Résistance de la cible` };
+    }
     if (params.regle === 'vd-plus-nets') {
         if (!params.touche) return { montant: 0, calcul: 'l’attaque ne touche pas : pas de dommages', raison: 'rate' };
         const nets = Number.isFinite(params.nets) ? Math.max(0, Math.trunc(params.nets!)) : 0;

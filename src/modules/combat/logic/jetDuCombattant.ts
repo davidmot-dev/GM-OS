@@ -17,7 +17,7 @@ import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
  * - `montant` : le jeu ne dit pas encore ses dégâts, le meneur saisit le montant. C'est la règle
  *   de tout jeu absent de la table : on ne devine pas les dégâts d'un jeu.
  */
-export type RegleDesDegatsDuJeu = 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'vd-plus-nets' | 'porte-du-jeu' | 'montant';
+export type RegleDesDegatsDuJeu = 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'vd-plus-nets' | 'arme-plus-des-bonus' | 'porte-du-jeu' | 'montant';
 
 /** Un jeu ouvert au combat des adversaires : comment le reconnaître, son geste, ses dégâts. */
 export interface JeuDuCombat {
@@ -103,6 +103,17 @@ export const JEUX_DU_COMBAT: readonly JeuDuCombat[] = [
       type : le moniteur de la cible la compare à ses seuils (`moniteurSelonLeJeu`, p. 68).
     */
     { jeu: 'Shadowrun : Anarchy', reconnaitre: d => !!d.jet?.shadowrun, geste: 'attaquer', degats: 'vd-plus-nets' },
+    /*
+      § 267, T11 (23/11) : Nephilim — les degrés de dommages (arme, Ka-Feu, protection, critique, Défense,
+      p. 103, 129-136) se calculent sous le panneau (`DommagesDeNephilim`), et la cible choisit comment elle
+      les absorbe, case ou Conséquences (p. 136) : le coup ne passe pas par `applyDamage`.
+    */
+    { jeu: 'Nephilim', reconnaitre: d => !!d.jet?.nephilim, geste: 'attaquer', degats: 'porte-du-jeu' },
+    /*
+      § 267, T12 (23/11) : Torg Eternity — le ND est la défense de la cible ; les dommages, l'arme plus les Dés
+      Bonus (p. 115-116), qu'`applyDamage` compare à la Résistance (`combat.dommages`).
+    */
+    { jeu: 'Torg Eternity', reconnaitre: d => !!d.jet?.torg, geste: 'attaquer', degats: 'arme-plus-des-bonus' },
     /*
       § 267, T17 (22/11) : le Psycholune ne lance jamais (p. 40-45). « Affronter » ouvre
       `AffrontementDePenombre` : l'attaque d'une Éminence grise retire sa résilience, l'action adverse

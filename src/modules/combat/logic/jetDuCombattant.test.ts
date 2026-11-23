@@ -32,10 +32,12 @@ const ARGYROPEE = pilote({ argyropee: {} });
 const DEGENESIS = pilote({ degenesis: { combat: {} } });
 const RUNEQUEST = pilote({ runequest: {} });
 const SHADOWRUN = pilote({ shadowrun: {} });
+const NEPHILIM = pilote({ nephilim: {} });
+const TORG = pilote({ torg: {} });
 
 describe('la table des jeux du combat (§ 267, T0)', () => {
     it('chaque jeu du § 263 garde son geste et sa règle de dégâts', () => {
-        expect([ALIEN, BLADE_RUNNER, DUNE, CTHULHU_HACK, VAMPIRE, PENOMBRE, COC, DELTA_GREEN, BARBARIANS, STAR_TREK, SYMBAROUM, ARGYROPEE, DEGENESIS, RUNEQUEST, SHADOWRUN].map(d => {
+        expect([ALIEN, BLADE_RUNNER, DUNE, CTHULHU_HACK, VAMPIRE, PENOMBRE, COC, DELTA_GREEN, BARBARIANS, STAR_TREK, SYMBAROUM, ARGYROPEE, DEGENESIS, RUNEQUEST, SHADOWRUN, NEPHILIM, TORG].map(d => {
             const j = jeuDuCombat(d);
             return j && `${j.jeu} · ${j.geste} · ${j.degats}`;
         })).toEqual([
@@ -54,6 +56,8 @@ describe('la table des jeux du combat (§ 267, T0)', () => {
             'Degenesis · attaquer · porte-du-jeu',
             'RuneQuest · attaquer · porte-du-jeu',
             'Shadowrun : Anarchy · attaquer · vd-plus-nets',
+            'Nephilim · attaquer · porte-du-jeu',
+            'Torg Eternity · attaquer · arme-plus-des-bonus',
         ]);
     });
 

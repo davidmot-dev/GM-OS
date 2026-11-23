@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import PanneauDeJet from '../../session/components/PanneauJetDeFiche';
 import { AppliquerALaCible } from './AppliquerALaCible';
 import { DegatsDArgyropee } from './DegatsDArgyropee';
+import { DommagesDeNephilim } from './DommagesDeNephilim';
 import type { RollResult } from '../../dice/DiceEngine';
-import { armesDeBarbarians, armesDArgyropee, armesDeShadowrun, attaqueDeDegenesis, attaqueDeDeltaGreen, attaqueDeShadowrun, attaqueDeStarTrek, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
+import { armesDeBarbarians, armesDArgyropee, armesDeShadowrun, attaqueDeDegenesis, attaqueDeDeltaGreen, attaqueDeShadowrun, attaqueDeStarTrek, attaqueDeTorg, ndDeTorg, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
 import DommagesDeltaGreen from './DommagesDeltaGreen';
 import type { ProtectionLue } from '../logic/protectionDeLaCible';
-import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
+import { ecrireLaFicheDuCombattant, valeursDuCombattant } from '../ficheDesCombattants';
 import { useCombatStore } from '../useCombatStore';
 import { champsProposes, composantesARetenir, compositionValable } from '../../dice/demandeDeJet';
 import { cleCocDuCombattant, libelleDeLAttaque, regleDesDegats } from '../logic/jetDuCombattant';
@@ -76,7 +77,15 @@ export const JetDuCombattant: React.FC<{
         ? compositionValable({ champs: completer(attaqueProposee) }, driver.jet, gabarit.sections, valeurs) : null;
     // § 267, T5 : Star Trek — la nature de l'attaque règle la difficulté (1 au contact, 2 à distance, p. 290).
     const attaqueST = driver.jet?.starTrek && auPremierPlan && cible ? attaqueDeStarTrek(valeurs) : null;
-    const initiale = (proposee ?? parDefaut) && attaqueST ? { ...(proposee ?? parDefaut)!, difficulte: attaqueST.difficulte } : proposee ?? parDefaut;
+    /*
+      § 267, T12 : Torg — le ND est la défense de la cible, lue sur sa fiche : Esquive à distance, Armes de
+      mêlée ou Combat à mains nues au contact (p. 115).
+    */
+    const attaqueTorg = driver.jet?.torg && auPremierPlan && cible ? attaqueDeTorg(valeurs) : null;
+    const porteurDeLaCible = attaqueTorg && cible ? useCombatStore.getState().combatants.find(c => c.id === cible.id) : undefined;
+    const ndTorg = attaqueTorg && porteurDeLaCible ? ndDeTorg(attaqueTorg, valeursDuCombattant(porteurDeLaCible)) : undefined;
+    const initiale = (proposee ?? parDefaut) && attaqueST ? { ...(proposee ?? parDefaut)!, difficulte: attaqueST.difficulte }
+        : (proposee ?? parDefaut) && ndTorg ? { ...(proposee ?? parDefaut)!, difficulte: ndTorg.nd } : proposee ?? parDefaut;
     const retenir = auPremierPlan
         ? ({ champs }: { champs: Record<string, string> }) => useCombatStore.getState().retenirLAttaque(combattant.id, {
             champs, libelle: libelleDeLAttaque(champs, gabarit, valeurs),
@@ -99,7 +108,9 @@ export const JetDuCombattant: React.FC<{
     const suivre = suivreLeResultat ? (r: RollResult) => { setDernierResultat(r); setTirageDG(n => n + 1); } : undefined;
     // § 267, T10 : Shadowrun — les armes de la fiche de l'attaquant (leur VD) et l'opposition préparée (p. 66-67).
     const shadowrun = driver.jet?.shadowrun && auPremierPlan && cible ? attaqueDeShadowrun(valeurs) : null;
-    const armesDuCoup = driver.jet?.shadowrun && !armes?.length
+    const armesDuCoup = attaqueTorg && !armes?.length
+        ? (attaqueTorg.degats !== undefined ? [{ libelle: String(valeurs.armes ?? '').split(/[\n;]/)[0].trim() || 'Mains nues', degats: attaqueTorg.degats }] : [])
+        : driver.jet?.shadowrun && !armes?.length
         ? armesDeShadowrun(valeurs).filter(a => Number.isFinite(a.degats)).map(({ melee: _melee, ...a }) => a) : armes;
 
     return (
@@ -118,6 +129,11 @@ export const JetDuCombattant: React.FC<{
                     {proposee
                         ? <>Dernière attaque, proposée : <span className="font-black text-app-text">{retenue.libelle}</span></>
                         : <>La dernière attaque ({retenue.libelle}) ne se lit plus sur cette fiche : à recomposer.</>}
+                </p>
+            )}
+            {ndTorg && cible && (
+                <p data-nd-de-torg className="pt-1 text-ui-11 text-app-muted">
+                    ND : <span className="font-black text-app-text">{ndTorg.libelle} de {cible.name}, {ndTorg.nd}</span> (p. 115).
                 </p>
             )}
             {parDefaut && (
@@ -160,6 +176,11 @@ export const JetDuCombattant: React.FC<{
             {suivreLeResultat && cible && dernierResultat && driver.jet?.argyropee && (
                 <DegatsDArgyropee key={tirageDG} cibleId={cible.id} armes={armesDArgyropee(valeurs)} reussie={!!dernierResultat.tagSuccess}
                     critique={(dernierResultat as { argyropee?: { bilan?: string } }).argyropee?.bilan === 'reussite-critique'} />
+            )}
+            {/* § 267, T11 : Nephilim — les degrés de dommages, puis la cible choisit comment les absorber (p. 129-136). */}
+            {suivreLeResultat && cible && dernierResultat && driver.jet?.nephilim && (
+                <DommagesDeNephilim key={tirageDG} cibleId={cible.id} regle={driver.jet.nephilim} valeursDeLAttaquant={valeurs}
+                    reussie={!!dernierResultat.tagSuccess} critique={dernierResultat.degre === 'reussite-particuliere'} />
             )}
             {suivreLeResultat && cible && dernierResultat && regleDG && (
                 <div className="mt-3" data-degats-apres-l-attaque>
