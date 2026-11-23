@@ -275,7 +275,8 @@ reste celle du suivi de santé R2 : **Préparer la fin du round de santé** sur 
 
 ### Un adversaire attaque depuis Combat-OS — 23/11/2026
 
-Sur la carte d'un adversaire, **Attaquer** ouvre son test contre la cible de la carte : la **caractéristique
+Sur la carte d'un adversaire, **Attaquer** — à côté de « Encaisser / soins RdD » — ouvre son test contre la
+cible de la carte : la **caractéristique
 dérivée** (Mêlée, Tir ou Lancer) et la **compétence** de sa première arme de la fiche — le panneau du Voyageur
 si son suivi de fatigue est actif, sinon le panneau commun. Après une réussite, sous le panneau :
 

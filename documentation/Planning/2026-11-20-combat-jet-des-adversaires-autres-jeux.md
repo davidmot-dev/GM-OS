@@ -3,7 +3,7 @@
 > Demande de David (20/11) : « est-ce que le module combat os a été revu pour tous les drivers ? »,
 > puis, après la réponse (quatre jeux seulement ont « Attaquer » ou « Riposte » sur la carte) :
 > « fait un plan ».
-> État : **spécifié, pas commencé — garé le 21/11** (David : « note le plan on va l'exécuter plus tard ») — périmètre tranché le 20/11 ; premier geste quand David le demandera : T0. Registre § 267.
+> État : **livré le 23/11, à essayer par David** — T0 à T17 faits, T16 (validation de 20 jeux, e2e de 20 jeux) compris ; reste C8, l'essai à l'écran, jeu par jeu. Spécifié le 20/11, garé le 21/11, repris le 22/11. Registre § 267.
 > Suite du § 263 ([spécification](2026-11-19-combat-jets-des-adversaires-et-degats.md)), dont ce
 > chantier reprend les règles : D2 (la fenêtre « Fiche » ouverte sur le jet, aucun écran neuf),
 > C9 (un seul écrivain de la santé), C10 (rien ne bouge sur la carte d'un jeu non visé).
@@ -439,8 +439,27 @@ le demande (Rêve de Dragon, RuneQuest) :
       `conscience_max`, la santé de départ — `controlerLePilote` sans constat. Libellés fr/en. Vérifié : `npx tsc -b`,
       lint, Combat-OS 93 fichiers / 716 essais, traductions et manuel. Reste : l'essai de David (C8) ; captures et
       e2e avec T16.
-- [ ] T16 · Livraison — script de validation sur les seize pilotes, e2e complet, captures,
+- [x] T16 · Livraison — script de validation sur les seize pilotes, e2e complet, captures,
       registre et synthèse · couvre C6, C7 · essai : le script, `combatDesAdversaires.spec.ts`
+
+      **Fait le 23/11** :
+      - `outils/combat/valider_les_pilotes_du_combat.mjs` (nouveau, après `valider_les_quatre_pilotes.mjs`) : pour
+        chaque export de `Export Dirvers/`, `controlerLePilote` sans erreur (avertissements connus comptés :
+        Alien 34, COC 8, Barbarians 1, Crimes 1, Pénombre 1), la table de Combat-OS (geste, règle de dégâts),
+        l'attaque proposée sur le cas témoin des essais et un vrai jet `preparerLeJet` sans avertissement. **20 jeux
+        OK** ; Within et `brp-srd` (BRP SRD 1.0.0, nouveau, **une erreur `dice.logic`** au contrôle, hors chantier)
+        restent hors de la table (C6).
+      - `e2e/combatDesAdversaires.spec.ts` : seize scènes de plus (les jeux du § 267), une étape commune — carte,
+        « Attaquer » / « Riposte » / « Affronter », ce que la fenêtre propose, fiche, captures. `npm run build` puis
+        l'e2e : **20 passés** ; constats relus (bouton, cible de la carte, attaque proposée, ND de Torg,
+        affrontement de Pénombre, riposte de Symbaroum) ; captures relues (Pénombre, Rêve de Dragon, NOC…).
+      - **Défaut trouvé par l'e2e et corrigé** : la carte d'un Voyageur (Rêve de Dragon) remplaçait la rangée des
+        gestes par « Encaisser / soins RdD » — **pas de bouton « Attaquer »**, T15 n'avait pas de porte à l'écran.
+        `CombatCard.tsx` : « Attaquer » ajouté à cette rangée. Les essais unitaires de T15 montaient le panneau sans
+        passer par la carte.
+      - Vérifié aussi : `npx tsc -b`, lint, Combat-OS 103 fichiers / 783 essais, manuel. Captures du manuel des jeux
+        (`capturesDesJeux.spec.ts`) non refaites : l'attaque des adversaires n'y figure pas. Reste : l'essai de
+        David (C8), jeu par jeu.
 
 ## Analyse
 

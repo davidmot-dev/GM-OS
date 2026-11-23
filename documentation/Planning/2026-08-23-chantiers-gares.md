@@ -14977,6 +14977,11 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
   (p. 125-129) ouvre l'encaissement de la cible, rempli. Défaut corrigé en chemin : le panneau du Voyageur ne
   rendait pas son résultat à Combat-OS. 4 293 essais. Essai de David attendu. **Les quinze jeux sont faits ;
   reste T16.**
+- **T16 fait le 23/11 (livraison)** : `outils/combat/valider_les_pilotes_du_combat.mjs` — 20 jeux sans erreur, table,
+  attaque et jet vérifiés ; Within et BRP SRD hors table (BRP SRD 1.0.0, nouveau : une erreur `dice.logic` au
+  contrôle, hors chantier). `e2e/combatDesAdversaires.spec.ts` étendu aux seize jeux : 20 passés, constats et
+  captures relus. Défaut trouvé par l'e2e et corrigé : la carte d'un Voyageur n'avait pas « Attaquer ».
+  **Le chantier est livré ; reste l'essai de David, jeu par jeu (C8).**
 
 ### 268 · Transformer un PNJ en personnage joueur, et l'inverse — 21/11/2026
 
@@ -15090,7 +15095,7 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 | 206 | **Pénombre — pilote 2.0.0, corpus relu, fiche reliée** | § 270 ; 🟢 livré le 22/11, validé par David le jour même — `jet.penombre`, jetons et réserve collégiale, corpus 19/19, fiche au moteur 28 ; affrontements consignés au § 267 (T17) | Aucun — le recompte est au § 271 | Rien |
 | 205 | **Socle commun BRP — corpus relu contre le livre** | § 269 ; 🟢 relu 17/17 le 21/11, pilote abandonné à la demande de David | Retirer le pilote par la corbeille (pas la gomme) | Rien |
 | 204 | **Transformer un PNJ en personnage joueur, et l'inverse** | § 268 ; 🟢 livré le 21/11, validé par David le jour même — T1 à T10, 3 171 essais, e2e des deux gestes | Aucun — clos | Rien |
-| 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11, repris le 22/11 — **T0 et T17 (Pénombre) faits et validés ; T1 à T15 (les quinze jeux) faits le 23/11** ; reste T16, la livraison (script de validation, e2e complet, captures) | Essayer « Attaquer » ou « Riposte » sur un adversaire de chacun des quinze jeux, puis T16 | Rien |
+| 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11 — **livré le 23/11** : T0 à T17 faits (T17 Pénombre validé) ; T16, script de validation (20 jeux OK) et e2e (20 passés) | Essayer « Attaquer », « Riposte » ou « Affronter » sur un adversaire de chacun des seize jeux (C8) | Rien |
 | 202 | **La médiathèque s'ouvrait sous la fenêtre de campagne** | § 266 ; 🟢 corrigé le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 201 | **Le pilote de chaque personnage dans le roster des joueurs** | § 265 ; 🟢 livré le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 200 | **Loot-OS et le catalogue du pilote — tables de butin depuis l'équipement** | § 264 ; 🟢 **validé par David le 20/11** (« ok ca fonctionne bien :-) ») — T1 à T8 : ligne « Objet du catalogue » résolue au tirage ; « Nouvelle table depuis le catalogue » et « Ajouter depuis le catalogue » dans l'éditeur du pilote (Trésors) ; « Depuis le catalogue » en séance ; export vérifié ; guides 41-42 | Rien — chantier clos | Rien |
