@@ -2,6 +2,7 @@ import type { BestiaireDuJeu, LigneDAttaque, ObjetDuCatalogue } from '../../../t
 import { equipementsAlien, type RegleDesJetsAlien } from '../../dice/systemes/jetsAlien';
 import type { ArmureAlien, CombatAlien } from '../../dice/systemes/combatAlien';
 import { entreesDesLignes } from '../../dice/systemes/xenomorphesAlien';
+import type { RegleDuCombatDeDegenesis } from '../../dice/systemes/combatDeDegenesis';
 import { ajouterALaFormule, degatsNets, lireLaFormule, valeurFixe, type FormuleDeDes, type RegleDeSymbaroum } from '../../dice/systemes/symbaroumRegles';
 
 /*
@@ -149,7 +150,7 @@ export function armesDeLaFicheAlien(
  */
 export function attaqueParDefaut(
     pilote: { jet?: { bladeRunner?: unknown; alien?: { competence: string }; dune?: { competences: string[]; principes: string[] }; vampire?: unknown;
-        coc?: { dommages?: { armes: readonly { attaque: string; nom: string }[] } }; deltaGreen?: unknown; barbarians?: unknown; starTrek?: unknown; argyropee?: unknown } } | null | undefined,
+        coc?: { dommages?: { armes: readonly { attaque: string; nom: string }[] } }; deltaGreen?: unknown; barbarians?: unknown; starTrek?: unknown; argyropee?: unknown; degenesis?: { combat?: RegleDuCombatDeDegenesis } } } | null | undefined,
     armes: readonly ArmeProposee[],
     valeurs: Record<string, unknown>,
 ): Record<string, string> | null {
@@ -159,6 +160,8 @@ export function attaqueParDefaut(
     if (pilote?.jet?.starTrek) return attaqueDeStarTrek(valeurs).champs;
     // Argyropée (§ 267, T7) : Combat rapproché, Combat à distance ou Rixe, selon l'arme (p. 48).
     if (pilote?.jet?.argyropee) return attaqueDArgyropee(valeurs).champs;
+    // Degenesis (§ 267, T8) : Physique + Corps à corps, ou Agilité + Armes à projectiles (p. 102).
+    if (pilote?.jet?.degenesis) return attaqueDeDegenesis(pilote.jet.degenesis.combat, valeurs)?.champs ?? null;
     // Delta Green (§ 267, T3) : la compétence de la première arme nommée, sinon le combat à mains nues.
     if (pilote?.jet?.deltaGreen) return attaqueDeDeltaGreen(valeurs)?.champs ?? null;
     /*
@@ -298,6 +301,24 @@ export function attaqueDeDeltaGreen(valeurs: Record<string, unknown>): { champs:
         }
     }
     return Number(valeurs.combat_a_mains_nues) > 0 ? { champs: { competence: 'combat_a_mains_nues' } } : null;
+}
+
+/**
+ * **L'attaque proposée à un adversaire de Degenesis** (§ 267, T8, 23/11/2026) : sa première arme nommée ; une
+ * portée écrite en fait une arme de tir — Agilité + Armes à projectiles —, sinon Physique + Corps à corps
+ * (p. 102). Sans arme, Physique + Corps à corps. `arme` : le champ de son nom, que le panneau choisit d'emblée.
+ */
+export function attaqueDeDegenesis(regle: RegleDuCombatDeDegenesis | undefined, valeurs: Record<string, unknown>): { champs: Record<string, string>; arme?: string } | null {
+    if (!regle) return null;
+    const arme = regle.armes.find(a => String(valeurs[a.nom] ?? '').trim());
+    const tir = regle.aDistance?.[0];
+    const melee = regle.attaques.find(c => !regle.aDistance?.includes(c) && c !== 'lutte') ?? regle.attaques[0];
+    const distance = !!arme && !!tir && /\d/.test(String(valeurs[`${arme.nom}_portee`] ?? ''));
+    if (!melee && !distance) return null;
+    return {
+        champs: distance ? { attribut: 'agilite', competence: tir! } : { attribut: 'physique', competence: melee },
+        ...(arme ? { arme: arme.nom } : {}),
+    };
 }
 
 /** Une arme de la fiche d'Argyropée : son nom, sa formule de dégâts, la compétence qui l'emploie. */

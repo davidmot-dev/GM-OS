@@ -28,10 +28,11 @@ const BARBARIANS = pilote({ barbarians: {} });
 const STAR_TREK = pilote({ starTrek: {} });
 const SYMBAROUM = pilote({ symbaroum: {} });
 const ARGYROPEE = pilote({ argyropee: {} });
+const DEGENESIS = pilote({ degenesis: { combat: {} } });
 
 describe('la table des jeux du combat (§ 267, T0)', () => {
     it('chaque jeu du § 263 garde son geste et sa règle de dégâts', () => {
-        expect([ALIEN, BLADE_RUNNER, DUNE, CTHULHU_HACK, VAMPIRE, PENOMBRE, COC, DELTA_GREEN, BARBARIANS, STAR_TREK, SYMBAROUM, ARGYROPEE].map(d => {
+        expect([ALIEN, BLADE_RUNNER, DUNE, CTHULHU_HACK, VAMPIRE, PENOMBRE, COC, DELTA_GREEN, BARBARIANS, STAR_TREK, SYMBAROUM, ARGYROPEE, DEGENESIS].map(d => {
             const j = jeuDuCombat(d);
             return j && `${j.jeu} · ${j.geste} · ${j.degats}`;
         })).toEqual([
@@ -47,6 +48,7 @@ describe('la table des jeux du combat (§ 267, T0)', () => {
             'Star Trek · attaquer · porte-du-jeu',
             'Symbaroum · riposte · porte-du-jeu',
             'Argyropée · attaquer · porte-du-jeu',
+            'Degenesis · attaquer · porte-du-jeu',
         ]);
     });
 

@@ -255,12 +255,17 @@ interface PanneauDeJetProps {
      * cochée d'emblée ; `cible` et `gravite`, la blessure à porter. Lus au montage seulement.
      */
     starTrekDuCombattant?: { ennemi?: boolean; nature?: 'melee' | 'distance'; cible?: string; gravite?: number };
+    /**
+     * **L'attaque d'un adversaire de Degenesis** (§ 267, T8, 23/11/2026), ouverte par « Attaquer » : `arme`, le
+     * champ du nom de son arme, choisie d'emblée. Lu au montage seulement.
+     */
+    degenesisDuCombattant?: { arme?: string };
 }
 
 const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false, personnageId,
     ecrireSurLaFiche, objetsPortes, compositionInitiale, demandeId, nomDuPersonnage, surLeLancer, surLeResultat, equipementAlienInitial,
-    duneDuCombattant, cocDuCombattant, starTrekDuCombattant,
+    duneDuCombattant, cocDuCombattant, starTrekDuCombattant, degenesisDuCombattant,
 }) => {
     const avecLaDemande = joindreLaDemande(demandeId);
     /**
@@ -667,12 +672,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const roundDegenesis = useRoundDeDegenesisStore(s => s.round);
     const etatsDegenesis = useRoundDeDegenesisStore(s => s.etats);
     const combattantDegenesis = regleDegenesis && personnageId
-        ? combattantsDuPlateau.find(c => c.sourcePlayerId === personnageId || c.sourceEntityId === personnageId) : undefined;
+        // § 267, T8 : un adversaire ouvert depuis Combat-OS porte son propre identifiant de combattant.
+        ? combattantsDuPlateau.find(c => c.sourcePlayerId === personnageId || c.sourceEntityId === personnageId || c.id === personnageId) : undefined;
     const etatDegenesis = combattantDegenesis && roundDegenesis !== null && roundDegenesis === roundDuPlateau ? etatsDegenesis[combattantDegenesis.id] : undefined;
     const [actionDegenesis, setActionDegenesis] = useState(true);
     const actionDuRoundDegenesis = !!etatDegenesis && actionDegenesis && actionsRestantes(etatDegenesis) > 0;
     const bonusDegenesis = actionDuRoundDegenesis ? bonusDeLaProchaineAction(etatDegenesis) : 0;
-    const [armeDegenesis, setArmeDegenesis] = useState('');
+    const [armeDegenesis, setArmeDegenesis] = useState(degenesisDuCombattant?.arme ?? '');
     const maniabiliteDegenesis = maniabiliteDe(valeurs, combatDegenesis?.armes.find(a => a.nom === armeDegenesis));
     const [attaqueDegenesis, setAttaqueDegenesis] = useState<AttaqueLancee | null>(null);
     /*

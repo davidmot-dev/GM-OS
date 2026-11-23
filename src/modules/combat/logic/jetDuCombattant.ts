@@ -89,6 +89,11 @@ export const JEUX_DU_COMBAT: readonly JeuDuCombat[] = [
     */
     { jeu: 'Argyropée', reconnaitre: d => !!d.jet?.argyropee, geste: 'attaquer', degats: 'porte-du-jeu' },
     /*
+      § 267, T8 (23/11) : Degenesis — l'attaque du panneau (`AttaqueDegenesis`) mène déjà jusqu'aux dégâts : la
+      défense passive ou active de la cible, l'armure, les pistes de santé (p. 102-106).
+    */
+    { jeu: 'Degenesis', reconnaitre: d => !!d.jet?.degenesis?.combat, geste: 'attaquer', degats: 'porte-du-jeu' },
+    /*
       § 267, T17 (22/11) : le Psycholune ne lance jamais (p. 40-45). « Affronter » ouvre
       `AffrontementDePenombre` : l'attaque d'une Éminence grise retire sa résilience, l'action adverse
       réussit d'office et coûte des jetons, la dissonance et l'opéra harmonique.

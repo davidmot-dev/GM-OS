@@ -3,7 +3,7 @@ import PanneauDeJet from '../../session/components/PanneauJetDeFiche';
 import { AppliquerALaCible } from './AppliquerALaCible';
 import { DegatsDArgyropee } from './DegatsDArgyropee';
 import type { RollResult } from '../../dice/DiceEngine';
-import { armesDeBarbarians, armesDArgyropee, attaqueDeDeltaGreen, attaqueDeStarTrek, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
+import { armesDeBarbarians, armesDArgyropee, attaqueDeDegenesis, attaqueDeDeltaGreen, attaqueDeStarTrek, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
 import DommagesDeltaGreen from './DommagesDeltaGreen';
 import type { ProtectionLue } from '../logic/protectionDeLaCible';
 import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
@@ -135,6 +135,10 @@ export const JetDuCombattant: React.FC<{
                     // § 267, T2 : la cible de la carte, défenseur et cible des DM de COC.
                     {...(driver.jet?.coc && auPremierPlan && cible ? { cocDuCombattant: { cible: cleCocDuCombattant(cible) } } : {})}
                     // § 267, T5 : la tâche d'un PNJ de Star Trek, payée en Menace, et la cible de la blessure.
+                    // § 267, T8 : Degenesis — l'arme de l'adversaire choisie d'emblée ; sa carte d'attaque vise sa cible.
+                    {...(driver.jet?.degenesis?.combat && auPremierPlan && cible ? { degenesisDuCombattant: {
+                        arme: attaqueDeDegenesis(driver.jet.degenesis.combat, valeurs)?.arme,
+                    } } : {})}
                     // La réserve de table, pour Star Trek seul : ailleurs, le surplus d'un adversaire irait à l'Impulsion des joueurs.
                     {...(attaqueST && cible && driver.ressourcesDeTable?.length ? { ressourcesDeTable: driver.ressourcesDeTable } : {})}
                     {...(attaqueST && cible ? { starTrekDuCombattant: {
