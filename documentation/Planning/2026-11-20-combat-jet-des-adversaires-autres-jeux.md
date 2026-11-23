@@ -288,7 +288,17 @@ le demande (Rêve de Dragon, RuneQuest) :
       (export du 21/11). Vérifié : `npx tsc -b`, lint, 192 fichiers / 1 856 essais, dont
       `RiposteDeSymbaroum.test.tsx` (Défense 11 + 10 − 12 = 9 ; épée 4 − cuir 3 = 1 ; 20 optionnel = 7). Reste :
       l'essai de David (C8).
-- [ ] T7 · Argyropée · C1 à C5, C7 · src/ ⛔ · à essayer par David
+- [x] T7 · Argyropée · C1 à C5, C7 · src/ ⛔ · à essayer par David
+      **Fait le 23/11** : export — celui du dépôt est le 2.1.0 du 08/11, et le registre dit le pilote inchangé
+      depuis (§ 245, 12/11) ; le bestiaire n'entre pas en jeu (Q3) : jet inchangé, export retenu. Relu au livre :
+      l'attaque est un test simple, sans opposition (p. 48) ; la parade déclarée donne un test d'Agilité qui
+      annule (p. 49) ; critique, deux fois le dé ou une manœuvre (p. 49) ; X/Y, bouclier d'abord, Y −1 par coup,
+      pas pour les poings (p. 52). `JEUX_DU_COMBAT` — Argyropée, « Attaquer », `porte-du-jeu` ;
+      `attaqueDArgyropee`/`armesDArgyropee` (compétence d'après l'arme), `protectionsDArgyropee`, `coupDArgyropee` ;
+      carte `DegatsDArgyropee` sous le panneau → `applyDamage([cible])` et l'usure sur la fiche de la cible.
+      Vérifié : `npx tsc -b`, lint, 193 fichiers / 1 861 essais, dont `JetDuCombattant.argyropee.test.tsx`
+      (9 + 2 = 11 ; dague 4 − bouclier 2 − gilet 1 = 1 ; 2/4 → 2/3 et 1/5 → 1/4 ; parade). Reste : l'essai de
+      David (C8).
 - [ ] T8 · Degenesis — pistes de santé à la porte des dégâts · C1 à C5, C7 · src/ ⛔ · à essayer
       par David
 - [ ] T9 · RuneQuest — sa carte lit le magasin (étape 3 d'abord) ; coups localisés · C1 à C5, C7

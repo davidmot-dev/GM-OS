@@ -138,6 +138,25 @@ du personnage. Le Panache dépensé sur une manche relève son compte.
   l'inconscient hors de combat, jamais mort : la mort se décide à la main. Le réveil (test
   d'Endurance morale au tour suivant) se joue au panneau de jet.
 
+### Un adversaire attaque dans Combat-OS — 23/11/2026
+
+Sur la carte d'un adversaire, **Attaquer** ouvre son test contre la cible de la carte, avec la compétence
+de sa première arme : **Combat à distance** pour une arme de jet, de trait ou à feu (arc, arbalète,
+arquebuse, pistolet…) — au Conteur de passer au Combat rapproché à 3 mètres ou moins —, **Rixe** pour les
+poings, les pieds et l'improvisé, **Combat rapproché** sinon ; sans arme, la Rixe (p. 48). Le test se lance
+avec les valeurs de sa fiche ; toute réussite, même partielle, touche.
+
+Sous le panneau, la carte des dégâts :
+
+- l'**arme** et son dé (1d4 l'improvisé par défaut) ; sur une **réussite critique**, « deux fois le dé »
+  est coché — à décocher si l'attaquant préfère une manœuvre gratuite (p. 49) ;
+- **« [cible] pare »** : si elle avait déclaré une parade et réussi son test d'Agilité, la blessure est
+  annulée (p. 49) ;
+- **Arme solide** : décochée pour le feu, le froid, l'acide — la protection n'absorbe rien mais s'use ;
+- **Lancer**, puis **Appliquer** : la protection X/Y de la fiche de la cible absorbe, **bouclier d'abord**,
+  puis l'armure s'il reste des dégâts ; chaque pièce atteinte perd 1 de Y, écrit sur sa fiche, et à 0 elle
+  est hors d'usage ; un coup de poing ou de pied ne l'use pas (p. 52). Le reste ôte des points de santé.
+
 ## La fiche du personnage
 
 ![La fiche HTML d'Argyropée, remplie depuis GM-OS](captures/jeu-argyropee-fiche.jpg)

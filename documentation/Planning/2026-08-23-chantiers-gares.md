@@ -14946,6 +14946,9 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 - **T6 fait le 23/11 (Symbaroum)** : confirmé au livre, le meneur ne lance pas (p. 178) → « Riposte » : la Défense
   du PJ contre la Précision du PNJ (p. 164), puis ses dégâts fixes moins la protection lancée (p. 167, 178).
   1 856 essais. Essai de David attendu.
+- **T7 fait le 23/11 (Argyropée)** : « Attaquer » ouvre le test simple de la compétence de l'arme (p. 48) ; la carte
+  des dégâts lance le dé, gère critique et parade (p. 49), et la protection X/Y de la cible, bouclier d'abord,
+  usée d'un point par pièce atteinte (p. 52). 1 861 essais. Essai de David attendu.
 
 ### 268 · Transformer un PNJ en personnage joueur, et l'inverse — 21/11/2026
 
@@ -15059,7 +15062,7 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 | 206 | **Pénombre — pilote 2.0.0, corpus relu, fiche reliée** | § 270 ; 🟢 livré le 22/11, validé par David le jour même — `jet.penombre`, jetons et réserve collégiale, corpus 19/19, fiche au moteur 28 ; affrontements consignés au § 267 (T17) | Aucun — le recompte est au § 271 | Rien |
 | 205 | **Socle commun BRP — corpus relu contre le livre** | § 269 ; 🟢 relu 17/17 le 21/11, pilote abandonné à la demande de David | Retirer le pilote par la corbeille (pas la gomme) | Rien |
 | 204 | **Transformer un PNJ en personnage joueur, et l'inverse** | § 268 ; 🟢 livré le 21/11, validé par David le jour même — T1 à T10, 3 171 essais, e2e des deux gestes | Aucun — clos | Rien |
-| 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11, repris le 22/11 — **T0 et T17 (Pénombre) faits et validés ; T1 à T6 (Vampire, COC, Delta Green, Barbarians, Star Trek, Symbaroum) faits le 23/11** ; ensuite T7 à T15 un jeu à la fois, T16 livraison | Essayer « Attaquer » ou « Riposte » sur un adversaire de chacun des six jeux, puis T7 Argyropée sur un export frais (celui du dépôt date du 09/11) | Rien |
+| 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11, repris le 22/11 — **T0 et T17 (Pénombre) faits et validés ; T1 à T7 (Vampire, COC, Delta Green, Barbarians, Star Trek, Symbaroum, Argyropée) faits le 23/11** ; ensuite T8 à T15 un jeu à la fois, T16 livraison | Essayer « Attaquer » ou « Riposte » sur un adversaire de chacun des sept jeux, puis T8 Degenesis sur un export frais | Rien |
 | 202 | **La médiathèque s'ouvrait sous la fenêtre de campagne** | § 266 ; 🟢 corrigé le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 201 | **Le pilote de chaque personnage dans le roster des joueurs** | § 265 ; 🟢 livré le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 200 | **Loot-OS et le catalogue du pilote — tables de butin depuis l'équipement** | § 264 ; 🟢 **validé par David le 20/11** (« ok ca fonctionne bien :-) ») — T1 à T8 : ligne « Objet du catalogue » résolue au tirage ; « Nouvelle table depuis le catalogue » et « Ajouter depuis le catalogue » dans l'éditeur du pilote (Trésors) ; « Depuis le catalogue » en séance ; export vérifié ; guides 41-42 | Rien — chantier clos | Rien |
