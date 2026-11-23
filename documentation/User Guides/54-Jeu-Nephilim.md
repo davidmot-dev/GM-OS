@@ -258,6 +258,30 @@ d'un élément s'acquiert par un Effet Mnémos permanent, pas ici.
 
 ---
 
+### Un adversaire attaque depuis Combat-OS — 23/11/2026
+
+Sur la carte d'un adversaire, **Attaquer** ouvre son test contre la cible de la carte. Un PNJ humain a
+souvent un seul **degré de Menace**, qui remplace n'importe quel Vécu dans ses actions de combat (p. 117) :
+la fiche n'ayant pas de champ Menace, **un Vécu nommé « Menace »** en tient lieu et se propose d'office ;
+sinon, choisir le Vécu approprié (p. 126).
+
+Sous le panneau, la carte des **dommages** (pages imprimées du livre 0, *Quintessence*) :
+
+- l'**arme** de la table des armes courantes et son degré (p. 132) ; pour la mêlée, le jet et les mains nues,
+  le **bonus du Ka-Feu** de l'attaquant (+1 à partir de 5, +2 à partir de 10, p. 103) ; pour une arme à feu,
+  la **munition**, la **cadence** et le **bout portant** (+6) (p. 131-132) ;
+- la **Défense** de la cible (p. 129) : réflexe −1 ; parer, bloquer ou défense élaborée réussis −2 ; esquive
+  réussie, aucun dommage ; désarmer ou contre-attaquer ratés, +2 ;
+- la **protection** de la cible, à saisir (cuir 1-2, gilet 2-3, militaire 3-4, p. 133) : une arme de 2 degrés
+  ou plus inflige tout de même 1 degré (p. 136) ; la **Rafale** (+5) et la Rafale contrôlée (+2) ne s'ajoutent
+  qu'après la protection, et la **marge au-delà de 10** ajoute un degré par point (p. 133) ;
+- le **critique** double le total, après la protection (p. 134, 136) — coché d'office sur un double réussi.
+
+Puis **la cible choisit** comment elle absorbe les degrés : la carte propose les façons permises sur sa
+fiche — une case de valeur suffisante, ou des Conséquences et une case pour le reste (p. 136) — et l'option
+cliquée s'écrit sur sa fiche. Rien n'absorbe : hors de combat (p. 136-137), ou un degré de Chute pour des
+dommages magiques (p. 138), à porter sur la fiche.
+
 ## La fiche de personnage
 
 La fiche GM-OS reprend **exactement les clés de la fiche HTML** « Nephilim Légende — fiche de

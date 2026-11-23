@@ -146,6 +146,15 @@ part de quel coup retirer.
   | **−** / **+** | Un point à la main — hors combat, on récupère **1 Choc par minute** |
 
   « Soins » ne touche pas au Choc : il décoche les Blessures.
+- **Un adversaire attaque depuis Combat-OS** (23/11/2026). Sur sa carte, **Attaquer** ouvre son test contre
+  la cible de la carte : **Dextérité** + la compétence de son arme, devinée dans le texte de ses armes —
+  Armes à feu, à énergie, lourdes, de jet, de mêlée, ou Combat à mains nues (p. 79) ; sans la compétence
+  sur sa fiche, le test se fait sur l'attribut seul. Le **ND** est déjà la défense de la cible : son
+  **Esquive** à distance ; au contact, son **Armes de mêlée** si elle tient une arme, sinon son **Combat à
+  mains nues** (p. 115) — la carte le dit. Après le jet, **Appliquer à [cible]** propose les **dommages de
+  l'arme** (lus dans « dommages 13 » ou « Force +2 (10) », la Force à mains nues, sinon à saisir) ; un
+  **Succès Supérieur** ajoute un **Dé Bonus**, un **Spectaculaire** deux — « Lancer 1 Dé Bonus », un 6 vaut
+  5 et se relance (p. 115). Le total part à la Résistance de la cible, par la Table des Dommages (p. 116).
 - **« Soins »** décoche les Blessures sans passer par la table.
 - **Distances** en mètres, de « au corps à corps » à « Portée Longue ».
 

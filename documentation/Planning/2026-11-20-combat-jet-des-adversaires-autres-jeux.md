@@ -335,9 +335,34 @@ le demande (Rêve de Dragon, RuneQuest) :
       ses cases à la pire blessure. Vérifié : `npx tsc -b`, lint, 404 fichiers / 3 954 essais (combat, séance,
       dés, manuel), dont `JetDuCombattant.shadowrun.test.tsx` (9 succès contre 3 : VD 5 + 6 = 11, une grave à
       l'ork 6/9/12, moniteur 3). Reste : l'essai de David (C8).
-- [ ] T11 · Nephilim — cases de santé · C1 à C5, C7 · src/ ⛔ · à essayer par David
-- [ ] T12 · Torg Eternity — `applyDamage` connaît ses dommages ; pas de carte au panneau · C1 à
+- [x] T11 · Nephilim — cases de santé · C1 à C5, C7 · src/ ⛔ · à essayer par David
+      **Fait le 23/11** : export du 21/11, pilote 2.0.0 inchangé. Relu au livre 0 *Quintessence* (PDF = imprimée
+      + 1 ; le corpus `degats-et-types-de-degats.md` est `relu: false`) : Menace d'un PNJ pour tout Vécu de combat
+      (p. 117) ; bonus de Ka-Feu (p. 103) ; attaque par un Vécu approprié (p. 126) ; Défenses (p. 129) ;
+      projectiles non esquivables (p. 130) ; bout portant (p. 131) ; table des armes et munitions (p. 132) ;
+      Rafale après la protection, marge au-delà de 10, armures (p. 133) ; protection, degré minimal, critique
+      **après** la protection (p. 134, 136 — le corpus disait avant) ; absorption au choix de la cible (p. 136).
+      Étape 3 : le panneau écrit sur la fiche du lanceur, ce qui convient à un adversaire. `JEUX_DU_COMBAT` —
+      Nephilim, « Attaquer », `porte-du-jeu` ; `dommagesDeNephilim.ts` (calcul pur, `attaqueDeNephilim`) ;
+      carte `DommagesDeNephilim` sous le panneau, qui propose `optionsDEncaissement` sur la fiche de la cible et
+      écrit l'option retenue par `ecrireLaFicheDuCombattant`. Constaté : la fiche du pilote n'a **ni champ
+      Menace, ni armes, ni protection** — un Vécu nommé « Menace » en tient lieu, l'arme vient de la table du
+      livre, la protection se saisit ; ajouter ces champs demanderait un pilote 2.1.0. Vérifié : `npx tsc -b`,
+      lint, 232 fichiers / 2 378 essais (combat, panneaux, dés, manuel), dont `JetDuCombattant.nephilim.test.tsx`
+      (exemples p. 132 : 6 et 13 ; épée 2 + Ka-Feu 1 = 3, case de 3 cochée). Reste : l'essai de David (C8).
+- [x] T12 · Torg Eternity — `applyDamage` connaît ses dommages ; pas de carte au panneau · C1 à
       C5, C7 · src/ ⛔ · à essayer par David
+      **Fait le 23/11** : export du 21/11, pilote 2.0.0 inchangé (ni catalogue ni bestiaire : la fiche écrit ses
+      armes en texte libre). Relu au livre (PDF = imprimée + 2) : compétences d'attaque sous la Dextérité (p. 79) ;
+      ND = Esquive à distance, Armes de mêlée ou Combat à mains nues au contact, Dés Bonus d'un Supérieur (1) ou
+      d'un Spectaculaire (2), un 6 vaut 5 et se relance (p. 115) ; dommages fixes, Force + valeur ou Force, puis
+      Table des Dommages (p. 116) ; profil « Force +2 (10) » (p. 88). Étape 3 : le panneau convient (Possibilités,
+      Blessures et « Un de plus ! » restent des gestes du meneur). `JEUX_DU_COMBAT` — Torg, « Attaquer », règle
+      neuve `arme-plus-des-bonus` ; `attaqueDeTorg`, `ndDeTorg` (le ND posé d'emblée, dit sur la carte),
+      `desBonusDeTorg`, `lancerLesDesBonus` ; « Appliquer à » → `applyDamage`, qui connaissait déjà la Table des
+      Dommages. Vérifié : `npx tsc -b`, lint, 233 fichiers / 2 382 essais (combat, panneaux, dés, manuel), dont
+      `JetDuCombattant.torg.test.tsx` (13 contre Résistance 10 : 2 Choc ; Supérieur, 13 + 8 = 21 : 2 Blessures,
+      4 Choc). Reste : l'essai de David (C8).
 - [ ] T13 · Crimes — jet générique · C1 à C5, C7 · src/ ⛔ · à essayer par David
 - [ ] T14 · NOC — jet générique, Destin · C1 à C5, C7 · src/ ⛔ · à essayer par David
 - [ ] T15 · Rêve de Dragon — jet générique d100 et combat en phases · C1 à C5, C7 · src/ ⛔ · à

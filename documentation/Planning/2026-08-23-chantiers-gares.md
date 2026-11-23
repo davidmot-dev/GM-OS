@@ -14959,6 +14959,13 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
   (tir ou mêlée, p. 66-67) ; « Appliquer à » propose VD de l'arme + succès nets, que le moniteur de la cible
   compare à ses seuils (p. 68). Défaut corrigé en chemin : un adversaire autonome prenait la VD en cases. 3 954
   essais. Essai de David attendu.
+- **T11 fait le 23/11 (Nephilim)** : « Attaquer » propose la Menace (un Vécu de ce nom, p. 117) ; la carte des
+  dommages compte arme, Ka-Feu, munition, cadence, Défense, protection et critique (p. 103, 129-136), puis la
+  cible choisit case ou Conséquences sur sa fiche (p. 136). La fiche n'a ni Menace, ni armes, ni protection :
+  pilote 2.1.0 à envisager. 2 378 essais. Essai de David attendu.
+- **T12 fait le 23/11 (Torg)** : « Attaquer » lance Dextérité + la compétence de l'arme, le ND posé sur la
+  défense de la cible (p. 115) ; « Appliquer à » ajoute les Dés Bonus d'un Supérieur ou d'un Spectaculaire,
+  puis la Table des Dommages (p. 116). 2 382 essais. Essai de David attendu.
 
 ### 268 · Transformer un PNJ en personnage joueur, et l'inverse — 21/11/2026
 
@@ -15072,7 +15079,7 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 | 206 | **Pénombre — pilote 2.0.0, corpus relu, fiche reliée** | § 270 ; 🟢 livré le 22/11, validé par David le jour même — `jet.penombre`, jetons et réserve collégiale, corpus 19/19, fiche au moteur 28 ; affrontements consignés au § 267 (T17) | Aucun — le recompte est au § 271 | Rien |
 | 205 | **Socle commun BRP — corpus relu contre le livre** | § 269 ; 🟢 relu 17/17 le 21/11, pilote abandonné à la demande de David | Retirer le pilote par la corbeille (pas la gomme) | Rien |
 | 204 | **Transformer un PNJ en personnage joueur, et l'inverse** | § 268 ; 🟢 livré le 21/11, validé par David le jour même — T1 à T10, 3 171 essais, e2e des deux gestes | Aucun — clos | Rien |
-| 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11, repris le 22/11 — **T0 et T17 (Pénombre) faits et validés ; T1 à T10 (Vampire, COC, Delta Green, Barbarians, Star Trek, Symbaroum, Argyropée, Degenesis, RuneQuest, Shadowrun Anarchy) faits le 23/11** ; ensuite T11 à T15 un jeu à la fois, T16 livraison | Essayer « Attaquer » ou « Riposte » sur un adversaire de chacun des dix jeux, puis T11 Nephilim sur un export frais | Rien |
+| 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11, repris le 22/11 — **T0 et T17 (Pénombre) faits et validés ; T1 à T12 (Vampire, COC, Delta Green, Barbarians, Star Trek, Symbaroum, Argyropée, Degenesis, RuneQuest, Shadowrun Anarchy, Nephilim, Torg) faits le 23/11** ; ensuite T13 à T15 un jeu à la fois, T16 livraison | Essayer « Attaquer » ou « Riposte » sur un adversaire de chacun des douze jeux, puis T13 Crimes sur un export frais | Rien |
 | 202 | **La médiathèque s'ouvrait sous la fenêtre de campagne** | § 266 ; 🟢 corrigé le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 201 | **Le pilote de chaque personnage dans le roster des joueurs** | § 265 ; 🟢 livré le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 200 | **Loot-OS et le catalogue du pilote — tables de butin depuis l'équipement** | § 264 ; 🟢 **validé par David le 20/11** (« ok ca fonctionne bien :-) ») — T1 à T8 : ligne « Objet du catalogue » résolue au tirage ; « Nouvelle table depuis le catalogue » et « Ajouter depuis le catalogue » dans l'éditeur du pilote (Trésors) ; « Depuis le catalogue » en séance ; export vérifié ; guides 41-42 | Rien — chantier clos | Rien |
