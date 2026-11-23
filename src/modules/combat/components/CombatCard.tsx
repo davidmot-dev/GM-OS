@@ -39,7 +39,7 @@ import { etatDuPhysique, physiqueActuel } from '../../dice/systemes/potentielGar
 import { DefaiteDune } from './ConflitDune';
 import DommagesDeltaGreen from './DommagesDeltaGreen';
 import { calculateurDisponible, ciblesDuCalculateur, majDeLaConsole } from '../logic/calculateurDeDegats';
-import { attaqueSurLaCarte } from '../logic/jetDuCombattant';
+import { attaqueSurLaCarte, jeuDuCombat } from '../logic/jetDuCombattant';
 import { armureDeLAdversaire } from '../logic/attaqueDeLAdversaire';
 
 const PRESET_STATUSES = [
@@ -585,12 +585,12 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         aLaTable={regime.aLaTable}
                         icone={<Swords size={14} />}
                         onClick={() => gmCustom('fiche-combattant', { combatantId: combatant.id, ouvrirSur: 'jet' })}
-                        title={t(activeDriver?.jet?.cthulhuHack ? 'combat.card.riposte_tooltip' : activeDriver?.jet?.penombre ? 'combat.card.affront_tooltip' : 'combat.card.attack_tooltip')}
+                        title={t(jeuDuCombat(activeDriver)?.geste === 'riposte' ? 'combat.card.riposte_tooltip' : activeDriver?.jet?.penombre ? 'combat.card.affront_tooltip' : 'combat.card.attack_tooltip')}
                         data-attaquer
                     >
-                        {/* Cthulhu Hack (§ 263, T16) : le même bouton s'appelle « Riposte » — le meneur n'y lance pas. */}
+                        {/* Cthulhu Hack (§ 263, T16) et Symbaroum (§ 267, T6) : le même bouton s'appelle « Riposte » — le meneur n'y lance pas. */}
                         {/* Pénombre (§ 267, T17) : « Affronter » — le Psycholune ne lance pas non plus. */}
-                        {t(activeDriver?.jet?.cthulhuHack ? 'combat.card.riposte' : activeDriver?.jet?.penombre ? 'combat.card.affront' : 'combat.card.attack')}
+                        {t(jeuDuCombat(activeDriver)?.geste === 'riposte' ? 'combat.card.riposte' : activeDriver?.jet?.penombre ? 'combat.card.affront' : 'combat.card.attack')}
                     </Bouton>}
                     {calculateurDisponible(activeDriver) && <Bouton
                         variante="accent"

@@ -72,6 +72,18 @@ export const JEUX_DU_COMBAT: readonly JeuDuCombat[] = [
     */
     { jeu: 'Barbarians of Lemuria', reconnaitre: d => !!d.jet?.barbarians, geste: 'attaquer', degats: 'de-de-l-arme' },
     /*
+      § 267, T5 (23/11) : Star Trek Adventures — la tâche d'attaque en 2d20 (`jet.starTrek`), payée en Menace
+      par un PNJ (p. 255, 265) ; pas de points de vie : la blessure se porte sur la cible depuis les suites
+      de la tâche, évitée par le Stress ou encaissée (p. 290-292).
+    */
+    { jeu: 'Star Trek', reconnaitre: d => !!d.jet?.starTrek, geste: 'attaquer', degats: 'porte-du-jeu' },
+    /*
+      § 267, T6 (23/11) : Symbaroum — le meneur ne lance jamais (p. 178) : « Riposte », comme Cthulhu Hack. Le
+      joueur teste la Défense de son PJ contre la Précision du PNJ ; raté, les dégâts fixes moins la protection
+      qu'il lance (p. 164, 167, 178).
+    */
+    { jeu: 'Symbaroum', reconnaitre: d => !!d.jet?.symbaroum, geste: 'riposte', degats: 'porte-du-jeu' },
+    /*
       § 267, T17 (22/11) : le Psycholune ne lance jamais (p. 40-45). « Affronter » ouvre
       `AffrontementDePenombre` : l'attaque d'une Éminence grise retire sa résilience, l'action adverse
       réussit d'office et coûte des jetons, la dissonance et l'opéra harmonique.

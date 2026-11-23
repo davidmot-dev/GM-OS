@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DiceEngine, type RollResult } from '../../../dice/DiceEngine';
+import { BlessureStarTrekSurLaCible } from '../../../combat/components/BlessureStarTrekSurLaCible';
 import {
     INFLUENCES_NEGATIVES, INFLUENCES_POSITIVES, NIVEAUX_DE_REPUTATION, RAPPELS_DU_CONFLIT, REPOS,
     augmenterLaGravite, bloquerUnAttribut, controleDeCreation, coutDeLaReputation, coutDesAssistants, etatDesBlessures, etatDuStress,
@@ -173,12 +174,22 @@ export const SuitesStarTrek: React.FC<{
     mouvoir: (ressource: 'impulsion' | 'menace', delta: number, motif: string) => void;
     ecrireDetermination: (apres: number) => void;
     consigner: Consigner;
-}> = ({ resultat, des, complication, difficulte, choix, determination, meneur, remplacer, mitiger, mouvoir, ecrireDetermination, consigner }) => {
+    /**
+     * § 267, T5 (23/11/2026) : la tâche d'un PNJ ennemi, ouverte par « Attaquer » dans Combat-OS. Il dépense la
+     * Menace là où un PJ en ajouterait : une complication s'annule pour 2 Menace, une attaque létale en coûte 1,
+     * la gravité se paie en Menace (p. 255, 264-265, 290).
+     */
+    ennemi?: boolean;
+    /** § 267, T5 : la cible de la carte ; la blessure s'y porte d'un geste. */
+    cible?: { id: string; regle: RegleDeStarTrek };
+    /** § 267, T5 : la gravité lue sur la ligne d'arme du PNJ. */
+    graviteInitiale?: number;
+}> = ({ resultat, des, complication, difficulte, choix, determination, meneur, remplacer, mitiger, mouvoir, ecrireDetermination, consigner, ennemi = false, cible, graviteInitiale }) => {
     const [annulees, setAnnulees] = useState(0);
     const [choisis, setChoisis] = useState<number[]>([]);
     const [vise, setVise] = useState(false);
     const [inspire, setInspire] = useState(false);
-    const [gravite, setGravite] = useState('3');
+    const [gravite, setGravite] = useState(String(graviteInitiale ?? 3));
     const [puissante, setPuissante] = useState(false);
     const [plus, setPlus] = useState(0);
     const [letale, setLetale] = useState(false);
@@ -197,9 +208,15 @@ export const SuitesStarTrek: React.FC<{
             {complications - annulees > 0 && (
                 <div className="flex flex-wrap items-center gap-2">
                     <span>{complications - annulees} complication{complications - annulees > 1 ? 's' : ''} à jouer après la tâche (p. 258).</span>
-                    <button type="button" className={bouton} onClick={() => { mouvoir('menace', 2, 'Complication repoussée'); setAnnulees(a => a + 1); consigner('Complication repoussée', '+2 Menace : le souci devient un problème pour plus tard (p. 258).'); }}>
-                        Repousser une complication (+2 Menace)
-                    </button>
+                    {ennemi ? (
+                        <button type="button" className={bouton} onClick={() => { mouvoir('menace', -2, 'Complication du PNJ annulée'); setAnnulees(a => a + 1); consigner('Complication du PNJ annulée', '−2 Menace : un PNJ annule une complication qu’il subit (p. 265).'); }}>
+                            Annuler une complication du PNJ (−2 Menace)
+                        </button>
+                    ) : (
+                        <button type="button" className={bouton} onClick={() => { mouvoir('menace', 2, 'Complication repoussée'); setAnnulees(a => a + 1); consigner('Complication repoussée', '+2 Menace : le souci devient un problème pour plus tard (p. 258).'); }}>
+                            Repousser une complication (+2 Menace)
+                        </button>
+                    )}
                 </div>
             )}
             {!reussi && meneur && (
@@ -211,8 +228,10 @@ export const SuitesStarTrek: React.FC<{
             {opposition && !opposition.reussi && (
                 <div className="flex flex-wrap items-center gap-2" data-opposition-star-trek>
                     <span>Le réactif gagne {opposition.impulsionDuReactif} Impulsion, à dépenser aussitôt ; un PNJ la change en Menace (p. 256, 265).</span>
-                    {meneur && opposition.impulsionDuReactif > 0 && (
-                        <button type="button" className={bouton} onClick={() => mouvoir('menace', opposition.impulsionDuReactif, 'Impulsion du réactif (PNJ)')}>PNJ : +{opposition.impulsionDuReactif} Menace</button>
+                    {meneur && opposition.impulsionDuReactif > 0 && (ennemi
+                        // § 267, T5 : l'attaquant est le PNJ, le réactif est le PJ : son Impulsion va au groupe.
+                        ? <button type="button" className={bouton} onClick={() => mouvoir('impulsion', opposition.impulsionDuReactif, 'Impulsion du réactif (PJ)')}>PJ : +{opposition.impulsionDuReactif} Impulsion</button>
+                        : <button type="button" className={bouton} onClick={() => mouvoir('menace', opposition.impulsionDuReactif, 'Impulsion du réactif (PNJ)')}>PNJ : +{opposition.impulsionDuReactif} Menace</button>
                     )}
                 </div>
             )}
@@ -251,13 +270,17 @@ export const SuitesStarTrek: React.FC<{
                                 {[0, 1, 2].map(k => <option key={k} value={k}>+{k}</option>)}
                             </select>
                         </label>
-                        {g.cout > 0 && <button type="button" className={bouton} disabled={payee} onClick={() => { mouvoir('impulsion', -g.cout, `Gravité +${g.plus}`); setPayee(true); }}>{payee ? 'Payé' : `Payer ${g.cout} Impulsion`}</button>}
+                        {g.cout > 0 && <button type="button" className={bouton} disabled={payee} onClick={() => { mouvoir(ennemi ? 'menace' : 'impulsion', -g.cout, `Gravité +${g.plus}`); setPayee(true); }}>{payee ? 'Payé' : `Payer ${g.cout} ${ennemi ? 'Menace' : 'Impulsion'}`}</button>}
                         <label className="flex items-center gap-1"><input type="checkbox" checked={letale} onChange={e => setLetale(e.target.checked)} />Létale</label>
-                        {letale && <button type="button" className={bouton} disabled={escalade} onClick={() => { mouvoir('menace', 1, 'Escalade : attaque létale'); setEscalade(true); }}>{escalade ? 'Escalade notée' : '+1 Menace (escalade)'}</button>}
+                        {letale && <button type="button" className={bouton} disabled={escalade} onClick={() => { mouvoir('menace', ennemi ? -1 : 1, ennemi ? 'Attaque létale d’un PNJ' : 'Escalade : attaque létale'); setEscalade(true); }}>
+                            {escalade ? 'Escalade notée' : ennemi ? '−1 Menace (attaque létale d’un PNJ, p. 265)' : '+1 Menace (escalade)'}</button>}
                     </div>
                     <p className="font-mono">
                         Gravité {nombre(gravite, 1) + g.plus}, {letale ? 'létale' : 'étourdissante'} : la cible évite en prenant autant de Stress, sinon elle est blessée et vaincue ; sa Protection retire un point par point, jamais sous 1 (p. 292).
                     </p>
+                    {cible && meneur && (
+                        <BlessureStarTrekSurLaCible regle={cible.regle} cibleId={cible.id} gravite={nombre(gravite, 1) + g.plus} letale={letale} consigner={consigner} />
+                    )}
                 </div>
             )}
             {attaque && choix.opposition && opposition?.reussi === false && (

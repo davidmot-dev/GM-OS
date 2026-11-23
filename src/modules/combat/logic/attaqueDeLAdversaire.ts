@@ -2,6 +2,7 @@ import type { BestiaireDuJeu, LigneDAttaque, ObjetDuCatalogue } from '../../../t
 import { equipementsAlien, type RegleDesJetsAlien } from '../../dice/systemes/jetsAlien';
 import type { ArmureAlien, CombatAlien } from '../../dice/systemes/combatAlien';
 import { entreesDesLignes } from '../../dice/systemes/xenomorphesAlien';
+import { ajouterALaFormule, degatsNets, lireLaFormule, valeurFixe, type FormuleDeDes, type RegleDeSymbaroum } from '../../dice/systemes/symbaroumRegles';
 
 /*
   L'attaque d'un adversaire, en logique pure — chantier § 263 du registre, T3 (19/11/2026),
@@ -148,12 +149,14 @@ export function armesDeLaFicheAlien(
  */
 export function attaqueParDefaut(
     pilote: { jet?: { bladeRunner?: unknown; alien?: { competence: string }; dune?: { competences: string[]; principes: string[] }; vampire?: unknown;
-        coc?: { dommages?: { armes: readonly { attaque: string; nom: string }[] } }; deltaGreen?: unknown; barbarians?: unknown } } | null | undefined,
+        coc?: { dommages?: { armes: readonly { attaque: string; nom: string }[] } }; deltaGreen?: unknown; barbarians?: unknown; starTrek?: unknown } } | null | undefined,
     armes: readonly ArmeProposee[],
     valeurs: Record<string, unknown>,
 ): Record<string, string> | null {
     // Barbarians of Lemuria (§ 267, T4) : Vigueur + Mêlée, ou Agilité + Tir pour une arme de jet.
     if (pilote?.jet?.barbarians) return attaqueDeBarbarians(valeurs);
+    // Star Trek (§ 267, T5) : Maîtrise ou Audace, + Sécurité (p. 290).
+    if (pilote?.jet?.starTrek) return attaqueDeStarTrek(valeurs).champs;
     // Delta Green (§ 267, T3) : la compétence de la première arme nommée, sinon le combat à mains nues.
     if (pilote?.jet?.deltaGreen) return attaqueDeDeltaGreen(valeurs)?.champs ?? null;
     /*
@@ -293,6 +296,70 @@ export function attaqueDeDeltaGreen(valeurs: Record<string, unknown>): { champs:
         }
     }
     return Number(valeurs.combat_a_mains_nues) > 0 ? { champs: { competence: 'combat_a_mains_nues' } } : null;
+}
+
+/** Une arme d'un PNJ de Symbaroum : son nom, ses dégâts écrits, et la valeur fixe qu'il inflige. */
+export interface AttaqueDeSymbaroum { libelle: string; formule: string; fixes: number }
+
+/**
+ * **Les attaques d'un PNJ de Symbaroum** (§ 267, T6, 23/11/2026), lues sur sa fiche : chaque arme et ses
+ * dégâts. Un PNJ ne lance pas : il inflige la **valeur fixe** de la formule, la moitié de la plus haute face
+ * de chaque dé (« 1D8 » vaut 4, p. 178) ; un nombre écrit fait foi. La qualité Éventreur ajoute 1 (p. 156).
+ */
+export function attaquesDeSymbaroum(regle: RegleDeSymbaroum | undefined, valeurs: Record<string, unknown>): AttaqueDeSymbaroum[] {
+    return (regle?.armes ?? []).flatMap(a => {
+        const libelle = String(valeurs[a.nom] ?? '').trim();
+        const ecrit = String(valeurs[a.degats] ?? '').trim();
+        const f = lireLaFormule(ecrit);
+        if (!libelle || !f) return [];
+        const eventreur = /[ée]ventreur/i.test(`${a.qualites ? String(valeurs[a.qualites] ?? '') : ''} ${ecrit}`);
+        return [{ libelle, formule: f.texte, fixes: valeurFixe(f) + (eventreur ? 1 : 0) }];
+    });
+}
+
+/** [Défense ← Précision] : la Défense du PJ, modifiée de 10 moins la Précision du PNJ (p. 164, 174). */
+export const defenseContreLePNJ = (defense: number, precisionDuPNJ: number) => Math.trunc(defense) + 10 - Math.trunc(precisionDuPNJ);
+
+/**
+ * **La protection qu'un PJ de Symbaroum lance** (§ 267, T6) : les formules de ses armures, additionnées
+ * (« 1D6 » pour une armure moyenne). `formule` nulle : rien de lisible sur sa fiche.
+ */
+export function protectionDeSymbaroum(regle: RegleDeSymbaroum | undefined, valeurs: Record<string, unknown>): { formule: FormuleDeDes | null; libelle: string } {
+    let formule: FormuleDeDes | null = null;
+    const noms: string[] = [];
+    for (const a of regle?.armures ?? []) {
+        const ecrit = String(valeurs[a.protection] ?? '').trim();
+        if (!lireLaFormule(ecrit)) continue;
+        formule = ajouterALaFormule(formule, ecrit);
+        noms.push(`${String(valeurs[a.nom] ?? '').trim() || 'Armure'} ${ecrit}`);
+    }
+    return { formule, libelle: noms.join(', ') };
+}
+
+/** Les dégâts d'une riposte de Symbaroum : fixes, +3 sur un 20 en Défense (option, p. 184), moins la protection lancée (p. 167). */
+export const riposteDeSymbaroum = (fixes: number, protection: number, echecCritique: boolean) =>
+    degatsNets(Math.max(0, Math.trunc(fixes)) + (echecCritique ? 3 : 0), Math.max(0, Math.trunc(protection)));
+
+/**
+ * **L'attaque proposée à un PNJ de Star Trek** (§ 267, T5, 23/11/2026) : à distance, Maîtrise + Sécurité,
+ * difficulté 2 ; au corps à corps, Audace + Sécurité, difficulté 1 (p. 290). La nature se lit dans le champ
+ * « attaques » de sa fiche — une arme à distance (phaseur, disrupteur, fusil, pistolet) l'emporte, puisque
+ * le PNJ s'en sert d'abord ; une arme de contact seule fait le corps à corps ; rien d'écrit, le phaseur.
+ * La gravité, quand la ligne de l'arme la porte (« Phaseur de type 2 (Distance, 3, …) »), se propose.
+ */
+export function attaqueDeStarTrek(valeurs: Record<string, unknown>): {
+    champs: Record<string, string>; nature: 'melee' | 'distance'; difficulte: number; gravite?: number;
+} {
+    const texte = String(valeurs.attaques ?? '');
+    const distance = /phas|disrupt|fusil|pistolet|distance|tir\b/i.test(texte)
+        || !/m[êe]l[ée]e|corps à corps|mains nues|poing|lame|couteau|bat.?leth|[ée]p[ée]e|dague|lirpa/i.test(texte);
+    const motif = distance ? /distance\s*[,;:]\s*(\d)/i : /(?:m[êe]l[ée]e|corps à corps)\s*[,;:]\s*(\d)/i;
+    const g = motif.exec(texte);
+    return {
+        champs: { attribut: distance ? 'maitrise' : 'audace', fonction: 'securite' },
+        nature: distance ? 'distance' : 'melee', difficulte: distance ? 2 : 1,
+        ...(g ? { gravite: Number(g[1]) } : {}),
+    };
 }
 
 /** Une arme de Barbarians of Lemuria : son nom, ses dégâts écrits (« d6B », « d6+3 »), à distance ou non. */

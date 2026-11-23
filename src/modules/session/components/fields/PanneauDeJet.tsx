@@ -249,12 +249,18 @@ interface PanneauDeJetProps {
      * comme défenseur (sa DEF fait la difficulté, p. 58) et comme cible des DM. Lue au montage seulement.
      */
     cocDuCombattant?: { cible?: string };
+    /**
+     * **L'attaque d'un PNJ de Star Trek** (§ 267, T5, 23/11/2026), ouverte par « Attaquer » : `ennemi`, il
+     * achète ses dés et paie ses dépenses en Menace (p. 255, 265) ; `nature`, corps à corps ou distance,
+     * cochée d'emblée ; `cible` et `gravite`, la blessure à porter. Lus au montage seulement.
+     */
+    starTrekDuCombattant?: { ennemi?: boolean; nature?: 'melee' | 'distance'; cible?: string; gravite?: number };
 }
 
 const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false, personnageId,
     ecrireSurLaFiche, objetsPortes, compositionInitiale, demandeId, nomDuPersonnage, surLeLancer, surLeResultat, equipementAlienInitial,
-    duneDuCombattant, cocDuCombattant,
+    duneDuCombattant, cocDuCombattant, starTrekDuCombattant,
 }) => {
     const avecLaDemande = joindreLaDemande(demandeId);
     /**
@@ -790,7 +796,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     // Un adversaire de Combat-OS (§ 263, T18) est lui-même le combattant : son identifiant est `personnageId`.
     const acteurDune = acteursDune.find(c => (c.sourcePlayerId === personnageId || (!!duneDuCombattant && c.id === personnageId)) && personnageId);
     const difficulteDeRepriseDune = regleDune && acteurDune?.id === tourDune?.dernierAgissant ? tourDune?.difficulteDune ?? 0 : 0;
-    const [choixStarTrek, setChoixStarTrek] = useState<ChoixStarTrek>(CHOIX_STAR_TREK);
+    const [choixStarTrek, setChoixStarTrek] = useState<ChoixStarTrek>(() => (starTrekDuCombattant?.nature ? { ...CHOIX_STAR_TREK, nature: starTrekDuCombattant.nature } : CHOIX_STAR_TREK));
     const [starTrekDuLancer, setStarTrekDuLancer] = useState<{ des: DeDuJet[]; complication: number; difficulte: number; choix: ChoixStarTrek; compte: number } | null>(null);
     const [ecritsStarTrek, setEcritsStarTrek] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
     const valeursStarTrek = useMemo(() => ({ ...valeurs,
@@ -1017,6 +1023,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             );
             if (regleDune) return { ...prepare, ...(choixDune.ennemi ? { cout: { ...prepare.cout, ressource: 'menace' } } : {}),
                 reussitesRequises: (choixDune.opposition ? difficulteDune(choixDune.opposition) : prepare.reussitesRequises) + difficulteDeRepriseDune };
+            // § 267, T5 : un PNJ de Star Trek achète ses dés en Menace, et son Impulsion non dépensée y retourne (p. 255, 265).
+            if (regleStarTrek && starTrekDuCombattant?.ennemi) return { ...prepare, cout: { ...prepare.cout, ressource: 'menace' } };
             if (!suitesAlien) return prepare;
             const stress = estUnAndroide(suitesAlien, valeursAlien) ? 0 : prepare.desSecondaires;
             const effet = lireLaPaniqueAlien(valeursAlien).effet;
@@ -1039,7 +1047,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
             return { ...prepare, desSecondaires: stress };
         },
-        [stimulationDuJet, desDuPotentiel, desDAideDegenesis, aideVersDegenesis, maniabiliteDegenesis, etatDegenesis, bonusDegenesis, descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleVampire, choixVampire, valeursVampire, reglePenombre, choixPenombre, valeursPenombre, regleShadowrun, choixShadowrunDuJet, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune],
+        [stimulationDuJet, desDuPotentiel, desDAideDegenesis, aideVersDegenesis, maniabiliteDegenesis, etatDegenesis, bonusDegenesis, descripteur, valeurs, valeursCH, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateurDuSeuil, valeurAdverse, avantageTactique, specialisationDeLaGarde, depassementAnnonce, modificateurDeLaGarde, seuilDeBaseImpose, actionHermetique, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien, bonusDEquipement, objetsDuBonus, regleNephilim, valeursNephilim, choixNephilim, lieuN, conjonctionN, intensiteN, seuilRKN, regleRuneQuest, choixRuneQuest, valeursRuneQuest, regleDegenesis, choixDegenesis, egoDegenesis, regleVampire, choixVampire, valeursVampire, reglePenombre, choixPenombre, valeursPenombre, regleShadowrun, choixShadowrunDuJet, anarchyShadowrun, soutienDuJet, souvenirRetenu, regleDune, choixDune.opposition, choixDune.ennemi, difficulteDeRepriseDune, valeursDune, regleStarTrek, starTrekDuCombattant?.ennemi],
     );
 
     /*
@@ -4029,6 +4037,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             <SuitesStarTrek key={starTrekDuLancer.compte} resultat={resultat} des={starTrekDuLancer.des}
                                 complication={starTrekDuLancer.complication} difficulte={starTrekDuLancer.difficulte} choix={starTrekDuLancer.choix}
                                 determination={determinationStarTrek} meneur={!pourLesJoueurs}
+                                ennemi={!!starTrekDuCombattant?.ennemi} graviteInitiale={starTrekDuCombattant?.gravite}
+                                {...(starTrekDuCombattant?.cible ? { cible: { id: starTrekDuCombattant.cible, regle: regleStarTrek } } : {})}
                                 remplacer={(des, motif) => {
                                     const nouveau = resultatDeStarTrek(des, starTrekDuLancer.complication, starTrekDuLancer.difficulte);
                                     // L'Impulsion déjà versée suit le nouveau compte (p. 253 : le nouveau jet remplace l'ancien).

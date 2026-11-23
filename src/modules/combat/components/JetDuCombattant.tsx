@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PanneauDeJet from '../../session/components/PanneauJetDeFiche';
 import { AppliquerALaCible } from './AppliquerALaCible';
 import type { RollResult } from '../../dice/DiceEngine';
-import { armesDeBarbarians, attaqueDeDeltaGreen, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
+import { armesDeBarbarians, attaqueDeDeltaGreen, attaqueDeStarTrek, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
 import DommagesDeltaGreen from './DommagesDeltaGreen';
 import type { ProtectionLue } from '../logic/protectionDeLaCible';
 import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
@@ -73,7 +73,9 @@ export const JetDuCombattant: React.FC<{
     ]);
     const parDefaut = auPremierPlan && !retenue && attaqueProposee
         ? compositionValable({ champs: completer(attaqueProposee) }, driver.jet, gabarit.sections, valeurs) : null;
-    const initiale = proposee ?? parDefaut;
+    // § 267, T5 : Star Trek — la nature de l'attaque règle la difficulté (1 au contact, 2 à distance, p. 290).
+    const attaqueST = driver.jet?.starTrek && auPremierPlan && cible ? attaqueDeStarTrek(valeurs) : null;
+    const initiale = (proposee ?? parDefaut) && attaqueST ? { ...(proposee ?? parDefaut)!, difficulte: attaqueST.difficulte } : proposee ?? parDefaut;
     const retenir = auPremierPlan
         ? ({ champs }: { champs: Record<string, string> }) => useCombatStore.getState().retenirLAttaque(combattant.id, {
             champs, libelle: libelleDeLAttaque(champs, gabarit, valeurs),
@@ -130,7 +132,14 @@ export const JetDuCombattant: React.FC<{
                     {...(suivre ? { surLeResultat: suivre } : {})}
                     {...(dune ? { duneDuCombattant: { ennemi: combattant.faction === 'enemy', ...(auPremierPlan && cible ? { cible: cible.id } : {}) } } : {})}
                     // § 267, T2 : la cible de la carte, défenseur et cible des DM de COC.
-                    {...(driver.jet?.coc && auPremierPlan && cible ? { cocDuCombattant: { cible: cleCocDuCombattant(cible) } } : {})} />
+                    {...(driver.jet?.coc && auPremierPlan && cible ? { cocDuCombattant: { cible: cleCocDuCombattant(cible) } } : {})}
+                    // § 267, T5 : la tâche d'un PNJ de Star Trek, payée en Menace, et la cible de la blessure.
+                    // La réserve de table, pour Star Trek seul : ailleurs, le surplus d'un adversaire irait à l'Impulsion des joueurs.
+                    {...(attaqueST && cible && driver.ressourcesDeTable?.length ? { ressourcesDeTable: driver.ressourcesDeTable } : {})}
+                    {...(attaqueST && cible ? { starTrekDuCombattant: {
+                        ennemi: combattant.faction === 'enemy', nature: attaqueST.nature, cible: cible.id,
+                        ...(attaqueST.gravite ? { gravite: attaqueST.gravite } : {}),
+                    } } : {})} />
             </div>
             {suivreLeResultat && cible && dernierResultat && !parSaPorte && <AppliquerALaCible cible={cible} resultat={dernierResultat} driver={driver}
                 armes={armes} protectionDeLaCible={protectionDeLaCible}

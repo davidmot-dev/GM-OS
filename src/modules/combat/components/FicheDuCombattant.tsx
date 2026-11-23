@@ -18,6 +18,7 @@ import { affrontementPossible, attaqueDeCreaturePossible, cibleDeLAttaque, jetDu
 import { AffrontementDePenombre } from './AffrontementDePenombre';
 import { AttaqueDeCreature } from './AttaqueDeCreature';
 import { RiposteDeCthulhuHack } from './RiposteDeCthulhuHack';
+import { RiposteDeSymbaroum } from './RiposteDeSymbaroum';
 import { armesDeLAdversaire, armesDeLaFicheAlien, armesDuCatalogue, attaqueDeVampire, attaqueParDefaut } from '../logic/attaqueDeLAdversaire';
 import { protectionLue } from '../logic/protectionDeLaCible';
 import { valeursDuCombattant } from '../ficheDesCombattants';
@@ -193,7 +194,10 @@ export const FicheDuCombattant: React.FC = () => {
             {ouvrirSur === 'jet' && driver && affrontementPossible(combattant, driver) ? (
                 <AffrontementDePenombre combattant={combattant} cible={cible} driver={driver} />
             ) : ouvrirSur === 'jet' && driver && ripostePossible(combattant, driver) ? (
-                <RiposteDeCthulhuHack combattant={combattant} cible={cible} driver={driver} />
+                // § 267, T6 : Symbaroum riposte aussi — la Défense du PJ, puis les dégâts fixes du PNJ.
+                driver.jet?.symbaroum
+                    ? <RiposteDeSymbaroum combattant={combattant} cible={cible} driver={driver} />
+                    : <RiposteDeCthulhuHack combattant={combattant} cible={cible} driver={driver} />
             ) : ouvrirSur === 'jet' && attaqueDeCreaturePossible(combattant, driver, valeurs) ? (
                 <AttaqueDeCreature combattant={combattant} valeurs={valeurs} cible={cible} />
             ) : driver && gabarit && jetDuCombattantPossible(combattant, driver, gabarit, valeurs) ? (
