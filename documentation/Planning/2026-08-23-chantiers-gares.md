@@ -14966,6 +14966,17 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 - **T12 fait le 23/11 (Torg)** : « Attaquer » lance Dextérité + la compétence de l'arme, le ND posé sur la
   défense de la cible (p. 115) ; « Appliquer à » ajoute les Dés Bonus d'un Supérieur ou d'un Spectaculaire,
   puis la Table des Dommages (p. 116). 2 382 essais. Essai de David attendu.
+- **T13 fait le 23/11 (Crimes)** : « Attaquer » lance Physique GARDE Combat ; l'attaque du panneau (C6) s'ouvre
+  sur la cible de la carte, l'arme nommée dans l'équipement choisie, jusqu'à « Infliger ». 2 384 essais. Essai de
+  David attendu.
+- **T14 fait le 23/11 (NOC)** : « Attaquer » lance Combat + Action ; les 1 d'un Rouage hostile retirent du Fiel
+  (p. 231) — défaut corrigé en chemin : ouvert depuis Combat-OS, le panneau ne touchait jamais le Fiel et
+  proposait la Cabale ; « Appliquer à » : arme de la table (p. 250) + Précision − Constitution − Armure (p. 252).
+  2 639 essais. Essai de David attendu.
+- **T15 fait le 23/11 (Rêve de Dragon)** : « Attaquer » lance la dérivée et la compétence de l'arme ; le +dom total
+  (p. 125-129) ouvre l'encaissement de la cible, rempli. Défaut corrigé en chemin : le panneau du Voyageur ne
+  rendait pas son résultat à Combat-OS. 4 293 essais. Essai de David attendu. **Les quinze jeux sont faits ;
+  reste T16.**
 
 ### 268 · Transformer un PNJ en personnage joueur, et l'inverse — 21/11/2026
 
@@ -15079,7 +15090,7 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 | 206 | **Pénombre — pilote 2.0.0, corpus relu, fiche reliée** | § 270 ; 🟢 livré le 22/11, validé par David le jour même — `jet.penombre`, jetons et réserve collégiale, corpus 19/19, fiche au moteur 28 ; affrontements consignés au § 267 (T17) | Aucun — le recompte est au § 271 | Rien |
 | 205 | **Socle commun BRP — corpus relu contre le livre** | § 269 ; 🟢 relu 17/17 le 21/11, pilote abandonné à la demande de David | Retirer le pilote par la corbeille (pas la gomme) | Rien |
 | 204 | **Transformer un PNJ en personnage joueur, et l'inverse** | § 268 ; 🟢 livré le 21/11, validé par David le jour même — T1 à T10, 3 171 essais, e2e des deux gestes | Aucun — clos | Rien |
-| 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11, repris le 22/11 — **T0 et T17 (Pénombre) faits et validés ; T1 à T12 (Vampire, COC, Delta Green, Barbarians, Star Trek, Symbaroum, Argyropée, Degenesis, RuneQuest, Shadowrun Anarchy, Nephilim, Torg) faits le 23/11** ; ensuite T13 à T15 un jeu à la fois, T16 livraison | Essayer « Attaquer » ou « Riposte » sur un adversaire de chacun des douze jeux, puis T13 Crimes sur un export frais | Rien |
+| 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11, repris le 22/11 — **T0 et T17 (Pénombre) faits et validés ; T1 à T15 (les quinze jeux) faits le 23/11** ; reste T16, la livraison (script de validation, e2e complet, captures) | Essayer « Attaquer » ou « Riposte » sur un adversaire de chacun des quinze jeux, puis T16 | Rien |
 | 202 | **La médiathèque s'ouvrait sous la fenêtre de campagne** | § 266 ; 🟢 corrigé le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 201 | **Le pilote de chaque personnage dans le roster des joueurs** | § 265 ; 🟢 livré le 20/11, validé par David le 21/11 | Aucun — clos | Rien |
 | 200 | **Loot-OS et le catalogue du pilote — tables de butin depuis l'équipement** | § 264 ; 🟢 **validé par David le 20/11** (« ok ca fonctionne bien :-) ») — T1 à T8 : ligne « Objet du catalogue » résolue au tirage ; « Nouvelle table depuis le catalogue » et « Ajouter depuis le catalogue » dans l'éditeur du pilote (Trésors) ; « Depuis le catalogue » en séance ; export vérifié ; guides 41-42 | Rien — chantier clos | Rien |

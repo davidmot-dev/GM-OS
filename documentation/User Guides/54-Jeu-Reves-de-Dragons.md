@@ -273,6 +273,23 @@ particulière (force, finesse, rapidité — jamais la rapidité avec une arme l
 nues, et additionne la **difficulté d'un tir** (portée, taille, activité de la cible). La phase 7
 reste celle du suivi de santé R2 : **Préparer la fin du round de santé** sur chaque blessé.
 
+### Un adversaire attaque depuis Combat-OS — 23/11/2026
+
+Sur la carte d'un adversaire, **Attaquer** ouvre son test contre la cible de la carte : la **caractéristique
+dérivée** (Mêlée, Tir ou Lancer) et la **compétence** de sa première arme de la fiche — le panneau du Voyageur
+si son suivi de fatigue est actif, sinon le panneau commun. Après une réussite, sous le panneau :
+
+- l'**arme** et son **+dom**, lu sur sa ligne de combat (« +1 » ; « (+0) », entre parenthèses : la table des
+  Coups non mortels, p. 128) ;
+- le **+dom total**, dit en entier : en **mêlée**, l'arme + le +dom personnel, sans limite, et la **condition**
+  (surprise +10, demi-surprise +1, charge +2, feinte +1) ; au **tir**, l'arme seule ; au **lancer**, l'arme + le
+  +dom personnel sans dépasser le double de l'arme (p. 128-129) ; **Particulière en force** ajoute +5 si la
+  défense est manquée — cochée d'office sur une particulière, et toujours en force au tir et au lancer
+  (p. 125-126) ;
+- puis le **suivi de santé de la cible** s'ouvre sur **Encaisser une agression**, +dom, protection (la meilleure
+  de ses armures) et coups non mortels remplis : il tire les 2d10, lit la table et écrit sa fiche, comme depuis
+  sa carte. Une cible qui n'a pas repris sa fiche ou activé ses suivis le demande d'abord.
+
 ### Valeurs de référence
 
 - **Santé :** points de vie, dont le **maximum vaut la moyenne de Taille et Constitution,

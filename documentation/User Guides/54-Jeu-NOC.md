@@ -131,6 +131,22 @@ Au panneau de jet, la section **« Puiser dans la Cabale »** offre cinq apports
 - **Types de dégâts :** Choc, Perforant, Tranchant, Multiple, Quantique, Énergie noire, Chutes,
   Brûlures, Asphyxie, Poisons.
 
+### Un Rouage attaque depuis Combat-OS — 23/11/2026
+
+Sur la carte d'un Rouage, **Attaquer** ouvre son test contre la cible de la carte (livre de base, pages
+imprimées) :
+
+- **Combat**, Domaine **Action** ; le niveau requis part de **1** au contact et de **0** pour une arme à
+  distance — à corriger selon la portée : −1 à bout portant, 1 à 10 m, 2 à 20 m, plus le couvert (p. 250-251) ;
+- **le Fiel suit le camp** (p. 231) : chaque 1 d'un **Rouage hostile** **retire** une goutte ; si le Fiel est
+  vide, le panneau dit qu'un Héros désigné par la Loi gagne 1 point de Singularité, à lui donner. Un Rouage
+  **allié** verse sa goutte comme un Héros. **La Cabale n'est pas proposée** : elle appartient aux Héros ;
+- **Appliquer à [cible]** : l'arme de son champ « Armes », lue dans la table du livre (couteau, sabre,
+  revolver… ; à défaut les mains nues), ses dégâts calculés sur sa Constitution au contact (p. 250) ; la
+  **Précision** — un point par niveau de marge qu'on y met (p. 232) ; puis **moins la Constitution et l'Armure**
+  de la cible, lues sur sa fiche (p. 252). Le **trait** de l'arme compte : Tranchant au moins 1, Perforant au
+  moins 2 contre une cible sans armure ; Choc ne blesse pas (p. 251). Le reste coche les dix cases.
+
 ---
 
 ## Le moment de calme, les effets du Fiel, le Vécu — 2026-10-16

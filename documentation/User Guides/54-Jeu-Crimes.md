@@ -309,6 +309,14 @@ Combat-OS calcule l'initiative comme le livre : **Physique + Combat − angoisse
 coup qui touche, le panneau rappelle la règle narrative : « celui qui a blessé l'autre aura
 l'initiative de l'assaut suivant ». L'ordre se change à la main.
 
+### Un adversaire attaque depuis Combat-OS — 23/11/2026
+
+Sur la carte d'un adversaire, **Attaquer** ouvre son test contre la cible de la carte : **Physique GARDE
+Combat**. L'attaque ci-dessus est déjà réglée : la **cible** est celle de la carte, et l'**arme** celle que
+son équipement nomme en toutes lettres — la première nommée (« Revolver Galand ; un rasoir » donne le
+Galand). Une arme que l'équipement ne nomme pas exactement (« un revolver ») n'est pas devinée : la
+choisir dans le menu. Saisir les réussites adverses, lancer, puis **« Infliger à [cible] »**.
+
 Sur la **carte de combat**, un combattant qui a une fiche montre son **Physique actuel** (« hors
 de combat » à 0, « blessure grave » sous −1) ; sur sa fiche, le Physique actuel remplace les points
 de vie.

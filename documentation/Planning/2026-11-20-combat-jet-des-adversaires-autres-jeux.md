@@ -363,10 +363,43 @@ le demande (Rêve de Dragon, RuneQuest) :
       Dommages. Vérifié : `npx tsc -b`, lint, 233 fichiers / 2 382 essais (combat, panneaux, dés, manuel), dont
       `JetDuCombattant.torg.test.tsx` (13 contre Résistance 10 : 2 Choc ; Supérieur, 13 + 8 = 21 : 2 Blessures,
       4 Choc). Reste : l'essai de David (C8).
-- [ ] T13 · Crimes — jet générique · C1 à C5, C7 · src/ ⛔ · à essayer par David
-- [ ] T14 · NOC — jet générique, Destin · C1 à C5, C7 · src/ ⛔ · à essayer par David
-- [ ] T15 · Rêve de Dragon — jet générique d100 et combat en phases · C1 à C5, C7 · src/ ⛔ · à
+- [x] T13 · Crimes — jet générique · C1 à C5, C7 · src/ ⛔ · à essayer par David
+      **Fait le 23/11** : export du 21/11, pilote 1.0.0 inchangé. La porte existait — l'attaque du panneau (C6, livre
+      p. 344-395) mène du jet aux marques sur la fiche de la cible (« Infliger »). Étape 3 : le panneau lit les
+      atteintes, l'angoisse et les munitions sur la fiche du lanceur, ce qui convient à un adversaire.
+      `JEUX_DU_COMBAT` — Crimes, « Attaquer », `porte-du-jeu` ; `attaqueDeCrimes` (Physique GARDE Combat, l'arme
+      nommée la première dans l'équipement) ; `crimesDuCombattant` pose la cible de la carte et l'arme dans les
+      réglages de l'attaque. Vérifié : `npx tsc -b`, lint, 234 fichiers / 2 384 essais (combat, panneaux, dés,
+      manuel), dont `JetDuCombattant.crimes.test.tsx` (un leurre placé avant ; 2 + 5 − 3 = 4 blessures infligées).
+      Reste : l'essai de David (C8).
+- [x] T14 · NOC — jet générique, Destin · C1 à C5, C7 · src/ ⛔ · à essayer par David
+      **Fait le 23/11** : export du 21/11, pilote 2.0.0 inchangé. Relu au livre de base (PDF = imprimée + 2) :
+      Rouages allié et hostile et le Fiel (p. 231) ; Précision (p. 232) ; table des armes et niveaux requis
+      (p. 250) ; Attaquer, Parer, Esquiver (p. 249-251) ; traits (p. 251) ; Blessures = arme − Constitution −
+      Armure (p. 252). Étape 3 — deux défauts : ouvert depuis Combat-OS, le panneau **ne recevait pas la réserve
+      de table** (le Fiel ne bougeait jamais, en silence) et aurait versé le Fiel d'un Rouage hostile comme celui
+      d'un Héros ; il proposait aussi la Cabale. Corrigé : `nocDuCombattant.camp` (hostile : −1 par 1, Singularité
+      dite si le Fiel est vide ; allié : +1), la réserve de table transmise pour NOC, la Cabale retirée. Règle
+      neuve `arme-moins-constitution` ; `ARMES_DE_NOC`, `armesDeNoc`, `attaqueDeNoc` ; « Appliquer à » lit la
+      Constitution et l'Armure de la cible. Vérifié : `npx tsc -b`, lint, 254 fichiers / 2 639 essais (combat,
+      panneaux, dés, table, manuel), dont `JetDuCombattant.noc.test.tsx` (Fiel 2 → 1 ; Fiel vide → Singularité ;
+      allié 0 → 1 ; couteau 3 − 1 = 2, Tranchant). Reste : l'essai de David (C8).
+- [x] T15 · Rêve de Dragon — jet générique d100 et combat en phases · C1 à C5, C7 · src/ ⛔ · à
       essayer par David
+      **Fait le 23/11** : export du 21/11, pilote 2.0.0 inchangé. Relu au livre 2.3.1 (PDF = imprimée + 1) :
+      particulière en mêlée — force +5 si la défense est manquée, obligatoire à difficulté 0 (p. 125) ; en tir et
+      lancer, toujours en force (p. 126) ; dommages 2d10 + (+dom total) − protection, Coups non mortels pour un
+      +dom entre parenthèses, tir = arme seule, lancer = arme + personnel au plus le double (p. 128) ; conditions
+      et mêlée = arme + personnel + conditions (p. 129) ; exemple du Groin, +1 + 5 + 10 = +16 (p. 128). Étape 3 —
+      défaut : le **panneau du Voyageur** (fiche au suivi de fatigue actif) ne rendait ni l'attaque retenue ni
+      le résultat (`surLeLancer`, `surLeResultat` absents) : rien ne pouvait suivre le jet d'un tel adversaire.
+      Corrigé. Le round en phases (`PanneauDesPhases`) reste tel quel. `JEUX_DU_COMBAT` — Rêve de Dragon,
+      « Attaquer », `porte-du-jeu` ; `dommagesDuVoyageur.ts` (`armesDOffense`, `attaqueDuVoyageur`, `domTotal`,
+      `protectionDuVoyageur`) ; carte `DommagesDuVoyageur`, qui ouvre le suivi de santé **de la cible**
+      (`SanteDuCombattantVoyageur`, `encaissementPropose`) ; l'écrivain reste `proposerEncaissement`. Vérifié :
+      `npx tsc -b`, lint, 438 fichiers / 4 293 essais (combat, séance, dés, table, tablette, manuel) — un essai
+      de Shadowrun instable sous la charge, passé seul deux fois —, dont `JetDuCombattant.reveDeDragon.test.tsx`.
+      Reste : l'essai de David (C8).
 - [x] T17 · Pénombre — les affrontements du livre (p. 40-45), ajoutés le 22/11 · C1 à C5, C7 · src/ ⛔ ·
       à essayer par David. Ce qui diffère des autres jeux :
       - **aucun jet du Psycholune** : comme la « Riposte » de Cthulhu Hack, le bouton de la carte de
