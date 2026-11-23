@@ -34,10 +34,13 @@ const RUNEQUEST = pilote({ runequest: {} });
 const SHADOWRUN = pilote({ shadowrun: {} });
 const NEPHILIM = pilote({ nephilim: {} });
 const TORG = pilote({ torg: {} });
+const CRIMES = pilote({ garde: { armes: 'crimes' } });
+const NOC = pilote({ destin: { fiel: 'Fiel' } });
+const REVE_DE_DRAGON = pilote({ cible: { mecanique: 'reves-de-dragons' } });
 
 describe('la table des jeux du combat (§ 267, T0)', () => {
     it('chaque jeu du § 263 garde son geste et sa règle de dégâts', () => {
-        expect([ALIEN, BLADE_RUNNER, DUNE, CTHULHU_HACK, VAMPIRE, PENOMBRE, COC, DELTA_GREEN, BARBARIANS, STAR_TREK, SYMBAROUM, ARGYROPEE, DEGENESIS, RUNEQUEST, SHADOWRUN, NEPHILIM, TORG].map(d => {
+        expect([ALIEN, BLADE_RUNNER, DUNE, CTHULHU_HACK, VAMPIRE, PENOMBRE, COC, DELTA_GREEN, BARBARIANS, STAR_TREK, SYMBAROUM, ARGYROPEE, DEGENESIS, RUNEQUEST, SHADOWRUN, NEPHILIM, TORG, CRIMES, NOC, REVE_DE_DRAGON].map(d => {
             const j = jeuDuCombat(d);
             return j && `${j.jeu} · ${j.geste} · ${j.degats}`;
         })).toEqual([
@@ -58,6 +61,9 @@ describe('la table des jeux du combat (§ 267, T0)', () => {
             'Shadowrun : Anarchy · attaquer · vd-plus-nets',
             'Nephilim · attaquer · porte-du-jeu',
             'Torg Eternity · attaquer · arme-plus-des-bonus',
+            'Crimes · attaquer · porte-du-jeu',
+            'NOC · attaquer · arme-moins-constitution',
+            'Rêve de Dragon · attaquer · porte-du-jeu',
         ]);
     });
 

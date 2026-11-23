@@ -41,9 +41,11 @@ export const AppliquerALaCible: React.FC<{
      * d'une créature d'Alien (`AttaqueDeCreature`) est toujours « arme + succès − 1 ». Sinon, celle du jeu.
      */
     regle?: RegleDesDegatsDuJeu;
+    /** § 267, T14 : NOC — la Constitution et l'Armure de la cible, lues sur sa fiche (p. 252). */
+    noc?: { constitution: number; armure: number };
     /** § 267, T4 : les armes et la Vigueur de l'attaquant de Barbarians of Lemuria, lues sur sa fiche. */
     barbarians?: { armes: readonly ArmeDeBarbarians[]; vigueur: number };
-}> = ({ cible, resultat, driver, armes = [], protectionDeLaCible, perforant = false, regle: regleImposee, barbarians }) => {
+}> = ({ cible, resultat, driver, armes = [], protectionDeLaCible, perforant = false, regle: regleImposee, barbarians, noc }) => {
     const [refus, setRefus] = useState<string | null>(null);
     /*
       **Alien (T12)** : le coup ne s'applique pas d'un trait. Il se prépare sur la carte de la cible,
@@ -70,7 +72,9 @@ export const AppliquerALaCible: React.FC<{
         });
     };
     const types = typesDeDegats(driver as GameDriver | null | undefined);
-    const [type, setType] = useState(types[0] ?? '');
+    // § 267, T14 : NOC — le trait vient de l'arme (« sans trait » possible) : Choc ne doit pas être choisi d'office.
+    const traitDeLArme = (a?: ArmeProposee) => (a?.categorie && types.includes(a.categorie) ? a.categorie : '');
+    const [type, setType] = useState((regleImposee ?? regleDesDegats(driver)) === 'arme-moins-constitution' ? traitDeLArme(armes[0]) : types[0] ?? '');
     const [appliquePour, setAppliquePour] = useState<{ resultat: object; montant: number } | null>(null);
 
     const nombre = (s: string) => (s.trim() === '' ? undefined : Number(s));
@@ -82,6 +86,9 @@ export const AppliquerALaCible: React.FC<{
     const vdEtNets = regle === 'vd-plus-nets';
     // § 267, T12 : Torg — l'arme plus les Dés Bonus d'un succès Supérieur ou Spectaculaire (p. 115-116).
     const armeEtDB = regle === 'arme-plus-des-bonus';
+    // § 267, T14 : NOC — l'arme, la Précision, moins la Constitution et l'Armure de la cible (p. 232, 252).
+    const armeMoinsConstitution = regle === 'arme-moins-constitution';
+    const [precision, setPrecision] = useState('0');
     const desBonus = armeEtDB ? desBonusDeTorg(resultat.degre) : 0;
     const [bonusLances, setBonusLances] = useState<{ pour: object; total: number; detail: string } | null>(null);
     const bonusDuJet = bonusLances?.pour === resultat ? bonusLances : null;
@@ -114,11 +121,12 @@ export const AppliquerALaCible: React.FC<{
         resultat, regle, degatsDeLArme: nombre(arme), marge: resultat.vampire?.marge,
         touche: armeEtDB ? !!resultat.tagSuccess : resultat.shadowrun?.reussi, nets: resultat.shadowrun?.nets,
         desBonus, bonusLance: bonusDuJet?.total,
+        ...(armeMoinsConstitution ? { touche: !!resultat.tagSuccess, precision: nombre(precision), constitution: noc?.constitution, armure: noc?.armure, trait: type } : {}),
         montantSaisi: deDeLArme ? lances?.total : nombre(saisi),
-        protection: regleAlien || margeEtArme || vdEtNets || armeEtDB ? 0 : nombre(protection),
+        protection: regleAlien || margeEtArme || vdEtNets || armeEtDB || armeMoinsConstitution ? 0 : nombre(protection),
     });
     const reserve = regle === 'arme-plus-succes' && resultat.compte === 'reussites';
-    const parLArme = reserve || margeEtArme || vdEtNets || armeEtDB;
+    const parLArme = reserve || margeEtArme || vdEtNets || armeEtDB || armeMoinsConstitution;
     const deja = appliquePour?.resultat === resultat ? appliquePour : null;
     const appliquer = () => {
         if (coup.montant === null || coup.montant <= 0 || deja) return;
@@ -155,6 +163,7 @@ export const AppliquerALaCible: React.FC<{
                                 setArmeChoisie(e.target.value);
                                 const a = armes.find(x => x.libelle === e.target.value);
                                 if (a) setArme(String(a.degats));
+                                if (a && armeMoinsConstitution) setType(traitDeLArme(a));
                             }}>
                             {armes.map(a => <option key={a.libelle} value={a.libelle}>{a.libelle} ({a.degats})</option>)}
                         </select>
@@ -199,6 +208,15 @@ export const AppliquerALaCible: React.FC<{
                             </button>
                         )}
                     </>
+                ) : armeMoinsConstitution ? (
+                    <>
+                        <label className="flex items-center gap-1" title="Constitution + N au contact, une valeur fixe à distance (p. 250).">Dégâts de l’arme
+                            <input aria-label="Dégâts de l’arme" className={champ} type="number" value={arme} onChange={e => setArme(e.target.value)} />
+                        </label>
+                        <label className="flex items-center gap-1" title="Chaque niveau de marge de réussite mis en Précision ajoute 1 point de Blessures (p. 232).">Précision
+                            <input aria-label="Précision" className={champ} type="number" min={0} value={precision} onChange={e => setPrecision(e.target.value)} />
+                        </label>
+                    </>
                 ) : armeEtDB ? (
                     <>
                         <label className="flex items-center gap-1" title="Arme à feu : valeur fixe ; arme de mêlée : Force + valeur ; mains nues : Force (p. 116).">Dommages de l’arme
@@ -228,13 +246,13 @@ export const AppliquerALaCible: React.FC<{
                         <input aria-label="Dégâts" className={champ} type="number" min={0} value={saisi} onChange={e => setSaisi(e.target.value)} />
                     </label>
                 )}
-                {!regleAlien && !margeEtArme && !vdEtNets && !armeEtDB && (
+                {!regleAlien && !margeEtArme && !vdEtNets && !armeEtDB && !armeMoinsConstitution && (
                     <label className="flex items-center gap-1" title="Ce que la protection de la cible retire : le jet de protection de Blade Runner.">
                         Protection retirée
                         <input aria-label="Protection retirée" className={champ} type="number" min={0} value={protection} onChange={e => setProtection(e.target.value)} />
                     </label>
                 )}
-                {!regleAlien && !margeEtArme && !vdEtNets && !armeEtDB && protectionDeLaCible && (
+                {!regleAlien && !margeEtArme && !vdEtNets && !armeEtDB && !armeMoinsConstitution && protectionDeLaCible && (
                     <button type="button" onClick={lancerLaProtection} data-lancer-la-protection
                         title="À chaque coup subi : chaque réussite retire un point de dégâts. Pas contre les dégâts d’un forçage."
                         className="flex items-center gap-1 rounded border border-app-border/60 px-2 py-0.5 hover:border-accent/50 hover:text-accent">
@@ -245,6 +263,7 @@ export const AppliquerALaCible: React.FC<{
                 {!regleAlien && types.length > 1 && (
                     <label className="flex items-center gap-1">Type
                         <select aria-label="Type de dégâts" className="rounded border border-app-border bg-app-bg px-1 py-0.5" value={type} onChange={e => setType(e.target.value)}>
+                            {armeMoinsConstitution && <option value="">— sans trait —</option>}
                             {types.map(t => <option key={t} value={t}>{t}</option>)}
                         </select>
                     </label>
@@ -256,6 +275,12 @@ export const AppliquerALaCible: React.FC<{
                     Le type : sur un mortel, lames, balles et feu font des aggravés, les coups contondants des superficiels ; sur un vampire,
                     les armes courantes font des superficiels divisés par deux, le feu, le soleil et les crocs des aggravés. Chaque point
                     d’armure change un aggravé de lame ou de balle en superficiel (p. 126, 304).
+                </p>
+            )}
+            {armeMoinsConstitution && (
+                <p data-blessures-de-noc className="text-app-muted">
+                    Constitution {noc?.constitution ?? 0} et Armure {noc?.armure ?? 0} de {cible.name}, lues sur sa fiche (p. 252) ; Tranchant,
+                    au moins 1, Perforant au moins 2 contre une cible sans armure ; Choc ne blesse pas (p. 251).
                 </p>
             )}
             {armeEtDB && (

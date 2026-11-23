@@ -8,12 +8,14 @@ import { CLEFS_DE_SOINS, etatsDeSanteVoyageur, finaliserMajSante, initialiserSan
     proposerSoins, proposerTempsSante, type DonneesDeSante, type GraviteVoyageur, type PropositionSante } from '../logic/santeDuVoyageur';
 
 /** Les dés sont tirés à la demande. Aucun effet de lecture ne dépense ni ne soigne. */
-export function PanneauSanteVoyageur({donnees, appliquer, avantOperation, roundCombat}: {
+export function PanneauSanteVoyageur({donnees, appliquer, avantOperation, roundCombat, encaissementPropose}: {
     donnees: DonneesDeSante; appliquer: (maj: DonneesDeSante) => void; avantOperation?: () => boolean; roundCombat?: number;
+    /** § 267, T15 : le coup d'un adversaire, venu de « Attaquer » — l'encaissement s'ouvre, rempli. */
+    encaissementPropose?: { dommages: number; protection: number; nonMortel: boolean };
 }) {
     const {t} = useTranslation(['modules','common']);
-    const [dommages,setDommages] = useState('0'), [protection,setProtection] = useState('0');
-    const [nonMortel,setNonMortel] = useState(false), [heroisme,setHeroisme] = useState(false);
+    const [dommages,setDommages] = useState(String(encaissementPropose?.dommages ?? 0)), [protection,setProtection] = useState(String(encaissementPropose?.protection ?? 0));
+    const [nonMortel,setNonMortel] = useState(!!encaissementPropose?.nonMortel), [heroisme,setHeroisme] = useState(false);
     const [localisation,setLocalisation] = useState('');
     const [desDeTable,setDesDeTable] = useState('');
     const [existantes,setExistantes] = useState<Record<GraviteVoyageur,string>>({legere:'0',grave:'0',critique:'0'});
@@ -85,7 +87,7 @@ export function PanneauSanteVoyageur({donnees, appliquer, avantOperation, roundC
                 <span>Jet de vie requis : blessure {b.gravite} {b.localisation}.</span>
                 <button type="button" className={classe} onClick={() => proposer(id => proposerJetVie(donnees,b.id,tirer,id))}>Tirer le jet de vie</button>
             </div>)}
-            <details>
+            <details open={!!encaissementPropose}>
                 <summary className="cursor-pointer font-bold">Encaisser une agression</summary>
                 <div className="flex flex-wrap gap-3 items-end my-3">
                     <label className="text-sm flex flex-col gap-1">Bonus aux dommages

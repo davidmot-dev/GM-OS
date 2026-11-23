@@ -17,7 +17,7 @@ import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
  * - `montant` : le jeu ne dit pas encore ses dégâts, le meneur saisit le montant. C'est la règle
  *   de tout jeu absent de la table : on ne devine pas les dégâts d'un jeu.
  */
-export type RegleDesDegatsDuJeu = 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'vd-plus-nets' | 'arme-plus-des-bonus' | 'porte-du-jeu' | 'montant';
+export type RegleDesDegatsDuJeu = 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'vd-plus-nets' | 'arme-plus-des-bonus' | 'arme-moins-constitution' | 'porte-du-jeu' | 'montant';
 
 /** Un jeu ouvert au combat des adversaires : comment le reconnaître, son geste, ses dégâts. */
 export interface JeuDuCombat {
@@ -114,6 +114,21 @@ export const JEUX_DU_COMBAT: readonly JeuDuCombat[] = [
       Bonus (p. 115-116), qu'`applyDamage` compare à la Résistance (`combat.dommages`).
     */
     { jeu: 'Torg Eternity', reconnaitre: d => !!d.jet?.torg, geste: 'attaquer', degats: 'arme-plus-des-bonus' },
+    /*
+      § 267, T13 (23/11) : Crimes — l'attaque du panneau (C6) mène déjà jusqu'aux marques : arme, opposition,
+      Physique de la cible, protection, puis « Infliger » sur sa fiche (p. 344-395).
+    */
+    { jeu: 'Crimes', reconnaitre: d => !!d.jet?.garde?.armes, geste: 'attaquer', degats: 'porte-du-jeu' },
+    /*
+      § 267, T14 (23/11) : NOC — le Talent Combat (p. 251) ; les dégâts de l'arme moins la Constitution et l'Armure
+      de la cible (p. 252), aux dix cases par `applyDamage`. Les 1 d'un Rouage hostile retirent du Fiel (p. 231).
+    */
+    { jeu: 'NOC', reconnaitre: d => !!d.jet?.destin?.fiel, geste: 'attaquer', degats: 'arme-moins-constitution' },
+    /*
+      § 267, T15 (23/11) : Rêve de Dragon — le +dom total (arme, personnel, particulière en force, condition,
+      p. 125-129) part au suivi de santé de la cible, qui tire 2d10 + +dom − protection et lit la table (p. 128).
+    */
+    { jeu: 'Rêve de Dragon', reconnaitre: d => d.jet?.cible?.mecanique === 'reves-de-dragons', geste: 'attaquer', degats: 'porte-du-jeu' },
     /*
       § 267, T17 (22/11) : le Psycholune ne lance jamais (p. 40-45). « Affronter » ouvre
       `AffrontementDePenombre` : l'attaque d'une Éminence grise retire sa résilience, l'action adverse

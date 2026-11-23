@@ -20,7 +20,7 @@ import { BoutonDemanderA, DemandesEnCours, InterrupteurJetCache } from './fields
 /** Panneau spécialisé R1 ; le panneau commun est en cours de travail Nephilim.
  * Les calculs, dés, degrés et transport des résultats restent ceux du socle.
  */
-export function PanneauJetVoyageur({descripteur, dice, template, valeurs, personnageId, pourLesJoueurs = false,ecrireSurLaFiche,campaignId,compositionInitiale,demandeId,nomDuPersonnage}: {
+export function PanneauJetVoyageur({descripteur, dice, template, valeurs, personnageId, pourLesJoueurs = false,ecrireSurLaFiche,campaignId,compositionInitiale,demandeId,nomDuPersonnage,surLeLancer,surLeResultat}: {
     descripteur: DescripteurDeJet; dice: DiceConfig; template: SheetTemplate; valeurs: Record<string, unknown>;
     personnageId: string; pourLesJoueurs?: boolean;
     ecrireSurLaFiche?: (maj:Record<string,unknown>) => void;
@@ -31,6 +31,13 @@ export function PanneauJetVoyageur({descripteur, dice, template, valeurs, person
     demandeId?: string;
     /** Chez le meneur : « Demander à (personnage) » et ses demandes (T7, 11/11). */
     nomDuPersonnage?: string;
+    /**
+     * § 267, T15 (23/11/2026) : les mêmes rappels que le panneau commun — l'attaque retenue et le résultat
+     * affiché, pour la carte d'un adversaire ouverte par « Attaquer ». Sans eux, ce panneau ne disait rien
+     * à Combat-OS : l'encaissement de la cible ne pouvait pas suivre.
+     */
+    surLeLancer?: (composition: { champs: Record<string, string> }) => void;
+    surLeResultat?: (resultat: RollResult) => void;
 }) {
     const avecLaDemande = joindreLaDemande(demandeId);
     /** Le jet caché, chez le meneur seulement (T7) : marqué au journal, au pupitre, nulle part ailleurs. */
@@ -137,6 +144,8 @@ export function PanneauJetVoyageur({descripteur, dice, template, valeurs, person
                 const action=degre ? {id,titre,caracteristique:caracChoisie,competence,nature,valeur:Number(valeurs[caracChoisie]),ajustement,de:brut.total,degre,
                     perceptionActive,sonne:!!sante?.sonne&&(nature==='action'||nature==='ethylisme'),offensif,moralEngage:bonusMoral===1} : undefined;
                 setDernier({id, resultat, seuil: jet.seuil, titre,action,empreinte:JSON.stringify(valeurs),appel:appelMoral,desespoir:deDesespoir.trim()?Number(deDesespoir):undefined});
+                surLeLancer?.({champs});
+                surLeResultat?.(resultat);
                 if(appelMoral&&action&&ecrireSurLaFiche)op.proposer(operation=>enregistrerAction(valeurs,action,true,deDesespoir.trim()?Number(deDesespoir):undefined,operation));
                 if (pourLesJoueurs) window.dispatchEvent(new CustomEvent('fiche:resultat', avecLaDemande({detail: {
                     characterId: personnageId, titre, total: resultat.total, modifier: resultat.modifier,

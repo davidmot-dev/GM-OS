@@ -5,6 +5,7 @@ import { entreesDesLignes } from '../../dice/systemes/xenomorphesAlien';
 import type { RegleDuCombatDeDegenesis } from '../../dice/systemes/combatDeDegenesis';
 import type { RegleDeRuneQuest } from '../../dice/systemes/runequest';
 import { attaqueDeNephilim } from './dommagesDeNephilim';
+import { ARMES_DE_CRIMES } from '../../dice/systemes/armesDeCrimes';
 import { ajouterALaFormule, degatsNets, lireLaFormule, valeurFixe, type FormuleDeDes, type RegleDeSymbaroum } from '../../dice/systemes/symbaroumRegles';
 
 /*
@@ -153,7 +154,7 @@ export function armesDeLaFicheAlien(
 export function attaqueParDefaut(
     pilote: { jet?: { bladeRunner?: unknown; alien?: { competence: string }; dune?: { competences: string[]; principes: string[] }; vampire?: unknown;
         coc?: { dommages?: { armes: readonly { attaque: string; nom: string }[] } }; deltaGreen?: unknown; barbarians?: unknown; starTrek?: unknown; argyropee?: unknown; degenesis?: { combat?: RegleDuCombatDeDegenesis };
-        runequest?: Pick<RegleDeRuneQuest, 'armes'>; shadowrun?: unknown; nephilim?: unknown; torg?: unknown } } | null | undefined,
+        runequest?: Pick<RegleDeRuneQuest, 'armes'>; shadowrun?: unknown; nephilim?: unknown; torg?: unknown; garde?: { armes?: unknown }; destin?: { fiel?: string } } } | null | undefined,
     armes: readonly ArmeProposee[],
     valeurs: Record<string, unknown>,
 ): Record<string, string> | null {
@@ -173,6 +174,10 @@ export function attaqueParDefaut(
     if (pilote?.jet?.nephilim) return attaqueDeNephilim(valeurs);
     // Torg (§ 267, T12) : Dextérité + la compétence de l'arme (p. 79, 115).
     if (pilote?.jet?.torg) return attaqueDeTorg(valeurs).champs;
+    // Crimes (§ 267, T13) : Physique GARDE Combat.
+    if (pilote?.jet?.garde?.armes) return attaqueDeCrimes(valeurs).champs;
+    // NOC (§ 267, T14) : le Talent Combat (p. 251).
+    if (pilote?.jet?.destin?.fiel) return attaqueDeNoc(valeurs)?.champs ?? null;
     // Delta Green (§ 267, T3) : la compétence de la première arme nommée, sinon le combat à mains nues.
     if (pilote?.jet?.deltaGreen) return attaqueDeDeltaGreen(valeurs)?.champs ?? null;
     /*
@@ -453,6 +458,82 @@ export function lancerLesDesBonus(nombre: number, d6: () => number): { total: nu
     return { total, detail: des.join(', ') };
 }
 
+/**
+ * **L'attaque proposée à un adversaire de Crimes** (§ 267, T13, 23/11/2026) : Physique GARDE Combat, et
+ * l'arme des tableaux du livre (p. 344-346) que son équipement nomme en toutes lettres. Une arme que
+ * l'équipement ne nomme pas exactement n'est pas devinée : le meneur la choisit dans l'attaque du panneau.
+ */
+export function attaqueDeCrimes(valeurs: Record<string, unknown>): { champs: Record<string, string>; arme?: string } {
+    const simple = (t: string) => t.normalize('NFD').replace(/\p{Mn}/gu, '').replace(/[’']/g, ' ').toLowerCase();
+    const equipement = simple(String(valeurs.equipement ?? ''));
+    // L'arme nommée la première dans l'équipement, et non la première des tableaux : « Revolver Galand ; un rasoir ».
+    const arme = ARMES_DE_CRIMES
+        .map(a => ({ a, ou: equipement ? equipement.indexOf(simple(a.nom)) : -1 }))
+        .filter(x => x.ou >= 0)
+        .sort((x, y) => x.ou - y.ou)[0]?.a;
+    return { champs: { potentiel: 'physique', competence: 'combat' }, ...(arme ? { arme: arme.id } : {}) };
+}
+
+/*
+  **NOC** (§ 267, T14, 23/11/2026), livre de base, pages imprimées (PDF = imprimée + 2). « Attaquer : le
+  personnage confronte son Talent Combat » au niveau requis — −1 à bout portant, 0 à 5 m, 1 au corps-à-corps
+  ou à 10 m, 2 à 20 m (p. 250-251). La table des armes (p. 250) : Constitution + N au contact, une valeur fixe
+  à distance, et un trait. La cible subit les dégâts de l'arme moins sa Constitution et son Armure (p. 252) ;
+  chaque niveau de marge mis en Précision ajoute 1 (p. 232) ; Tranchant, au moins 1 contre une cible sans
+  armure, Perforant au moins 2 ; Choc ne blesse pas (p. 251).
+*/
+export const ARMES_DE_NOC: readonly { nom: string; base: number; constitution: boolean; trait: string; distance: boolean }[] = [
+    { nom: 'Revolver gros calibre', base: 4, constitution: false, trait: 'Perforant', distance: true },
+    { nom: 'Revolver', base: 3, constitution: false, trait: 'Perforant', distance: true },
+    { nom: 'Mitraillette', base: 4, constitution: false, trait: 'Perforant', distance: true },
+    { nom: 'Mitrailleuse', base: 4, constitution: false, trait: 'Perforant', distance: true },
+    { nom: 'Pistolet quantique', base: 2, constitution: false, trait: 'Quantique', distance: true },
+    { nom: 'Carabine quantique', base: 3, constitution: false, trait: 'Quantique', distance: true },
+    { nom: 'Fusil', base: 4, constitution: false, trait: '', distance: true },
+    { nom: 'Arbalète', base: 3, constitution: false, trait: 'Perforant', distance: true },
+    { nom: 'Arc', base: 2, constitution: false, trait: 'Perforant', distance: true },
+    { nom: 'Grenade', base: 5, constitution: false, trait: 'Multiple', distance: true },
+    { nom: 'Lance-flammes', base: 3, constitution: false, trait: 'Multiple', distance: true },
+    { nom: 'Matraque', base: 2, constitution: true, trait: '', distance: false },
+    { nom: 'Bâton', base: 2, constitution: true, trait: '', distance: false },
+    { nom: 'Couteau', base: 2, constitution: true, trait: 'Tranchant', distance: false },
+    { nom: 'Sabre', base: 3, constitution: true, trait: 'Tranchant', distance: false },
+    { nom: 'Hache', base: 4, constitution: true, trait: 'Tranchant', distance: false },
+    { nom: 'Mains nues', base: 1, constitution: true, trait: '', distance: false },
+];
+
+/**
+ * **Les armes d'un Rouage de NOC** : celles de la table que son champ « armes » nomme, dans l'ordre où il les
+ * nomme, leurs dégâts calculés sur sa Constitution ; à défaut, les mains nues.
+ */
+export function armesDeNoc(valeurs: Record<string, unknown>): (ArmeProposee & { trait: string; distance: boolean })[] {
+    const simple = (t: string) => t.normalize('NFD').replace(/\p{Mn}/gu, '').toLowerCase();
+    let texte = simple(String(valeurs.armes ?? ''));
+    const constitution = Math.trunc(Number(valeurs.constitution) || 0);
+    const trouvees: { ou: number; arme: (typeof ARMES_DE_NOC)[number] }[] = [];
+    // Les noms longs d'abord, effacés une fois lus : « revolver gros calibre » n'est pas aussi un « revolver ».
+    for (const a of ARMES_DE_NOC) {
+        // Un mot entier : « arc » n'est pas dans « parc ».
+        const ou = texte.search(new RegExp(`\\b${simple(a.nom).replace(/[-]/g, '\\-')}\\b`));
+        if (ou < 0) continue;
+        trouvees.push({ ou, arme: a });
+        texte = texte.slice(0, ou) + ' '.repeat(a.nom.length) + texte.slice(ou + a.nom.length);
+    }
+    const liste = trouvees.sort((x, y) => x.ou - y.ou).map(t => t.arme);
+    return (liste.length ? liste : ARMES_DE_NOC.filter(a => a.nom === 'Mains nues')).map(a => ({
+        libelle: a.constitution ? `${a.nom} (Constitution ${constitution} + ${a.base})` : a.nom,
+        degats: a.constitution ? constitution + a.base : a.base, trait: a.trait, distance: a.distance,
+        ...(a.trait ? { categorie: a.trait } : {}),
+    }));
+}
+
+/** L'attaque proposée à un Rouage de NOC : le Talent Combat et le Domaine Action, et son niveau requis par défaut. */
+export function attaqueDeNoc(valeurs: Record<string, unknown>): { champs: Record<string, string>; difficulte: number } | null {
+    if (valeurs.combat === undefined || String(valeurs.combat).trim() === '') return null;
+    // 1 au corps-à-corps ou à moyenne portée, 0 à courte portée (p. 250) ; la Loi corrige selon la distance.
+    return { champs: { talent: 'combat', domaine: 'action' }, difficulte: armesDeNoc(valeurs)[0]?.distance ? 0 : 1 };
+}
+
 /** Une arme de la fiche d'Argyropée : son nom, sa formule de dégâts, la compétence qui l'emploie. */
 export interface ArmeDArgyropee { index: number; libelle: string; formule: string; competence: 'combat_rapproche' | 'combat_a_distance' | 'rixe' }
 
@@ -702,7 +783,7 @@ export interface CoupAAppliquer {
 export function coupAAppliquer(params: {
     resultat: { total: number; successes?: number; compte?: 'reussites' };
     /** La règle des dégâts du jeu (`regleDesDegats`) ; absente, le montant se saisit. */
-    regle?: 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'vd-plus-nets' | 'arme-plus-des-bonus' | 'porte-du-jeu' | 'montant';
+    regle?: 'arme-plus-succes' | 'marge-plus-arme' | 'de-de-l-arme' | 'vd-plus-nets' | 'arme-plus-des-bonus' | 'arme-moins-constitution' | 'porte-du-jeu' | 'montant';
     degatsDeLArme?: number;
     /** Vampire : la marge de réussites du jet (`JetDeVampire.vampire.marge`), 0 sur un échec. */
     marge?: number;
@@ -712,6 +793,11 @@ export function coupAAppliquer(params: {
     /** Torg : les Dés Bonus du succès, et leur total une fois lancés. */
     desBonus?: number;
     bonusLance?: number;
+    /** NOC : les niveaux de marge mis en Précision, la Constitution et l'Armure de la cible, le trait de l'arme. */
+    precision?: number;
+    constitution?: number;
+    armure?: number;
+    trait?: string;
     montantSaisi?: number;
     protection?: number;
 }): CoupAAppliquer {
@@ -739,6 +825,30 @@ export function coupAAppliquer(params: {
       **Torg Eternity (§ 267, T12)** : la valeur de dommages de l'arme, plus les Dés Bonus d'un succès Supérieur
       ou Spectaculaire (p. 115-116). Rien ne se retire ici : `applyDamage` compare le total à la Résistance.
     */
+    /*
+      **NOC (§ 267, T14)** : les dégâts de l'arme, plus la Précision, moins la Constitution et l'Armure de la
+      cible ; une Constitution négative majore d'autant (p. 252). Tranchant, au moins 1 ; Perforant, au moins 2,
+      contre une cible sans armure ; Choc ne blesse pas (p. 251). Le reste va aux dix cases par `applyDamage`.
+    */
+    if (params.regle === 'arme-moins-constitution') {
+        if (!params.touche) return { montant: 0, calcul: 'le niveau requis n’est pas atteint : pas de dommages', raison: 'rate' };
+        if (/^choc$/i.test(params.trait ?? '')) {
+            return { montant: 0, calcul: 'Choc : pas de Blessures — la cible compare sa Constitution aux dégâts de l’arme (p. 251)', raison: 'rate' };
+        }
+        if (degatsDeLArme === undefined || !Number.isFinite(degatsDeLArme)) {
+            return { montant: null, calcul: 'dégâts de l’arme − Constitution − Armure', raison: 'arme-inconnue' };
+        }
+        const arme = Math.trunc(degatsDeLArme);
+        const precision = Math.max(0, Math.trunc(params.precision ?? 0));
+        const constitution = Math.trunc(params.constitution ?? 0);
+        const armure = Math.max(0, Math.trunc(params.armure ?? 0));
+        const brut = arme + precision - constitution - armure;
+        const minimum = armure === 0 ? (/perforant/i.test(params.trait ?? '') ? 2 : /tranchant/i.test(params.trait ?? '') ? 1 : 0) : 0;
+        const montant = Math.max(0, minimum, brut);
+        const calcul = `arme ${arme}${precision ? ` + Précision ${precision}` : ''} − Constitution ${constitution} − Armure ${armure} = ${brut}`
+            + (montant > brut && minimum ? `, au moins ${minimum} (${params.trait}, cible sans armure)` : '');
+        return { montant, calcul };
+    }
     if (params.regle === 'arme-plus-des-bonus') {
         if (!params.touche) return { montant: 0, calcul: 'l’attaque n’atteint pas le ND : pas de dommages', raison: 'rate' };
         const n = Math.max(0, Math.trunc(params.desBonus ?? 0));

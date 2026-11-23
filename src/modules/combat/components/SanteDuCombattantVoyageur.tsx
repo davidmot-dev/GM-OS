@@ -10,8 +10,10 @@ import { CLE_REPRISE, lireFicheDeVoyageur } from '../../session/logic/ficheDeVoy
 import { projeterSanteVoyageur } from '../../session/logic/santeDuVoyageur';
 
 /** Une opération écrit tout le bloc de santé chez son porteur : PJ, PNJ ou plateau. */
-export function SanteDuCombattantVoyageur({combattant,fiche,donnees}: {
+export function SanteDuCombattantVoyageur({combattant,fiche,donnees,encaissementPropose}: {
     combattant: Combatant; fiche: SheetTemplate; donnees: Record<string,unknown>;
+    /** § 267, T15 : le coup d'un adversaire, venu de « Attaquer ». */
+    encaissementPropose?: { dommages: number; protection: number; nonMortel: boolean };
 }) {
     const round = useCombatStore(s => s.round);
     const appliquer = (maj:Record<string,unknown>) => {
@@ -35,7 +37,7 @@ export function SanteDuCombattantVoyageur({combattant,fiche,donnees}: {
     const valeurs = lireFicheDeVoyageur(fiche,donnees).valeurs;
     return <div className="space-y-3">
         <PanneauFatigueVoyageur donnees={valeurs} appliquer={appliquer} />
-        <PanneauSanteVoyageur donnees={valeurs} appliquer={appliquer} roundCombat={round} />
+        <PanneauSanteVoyageur donnees={valeurs} appliquer={appliquer} roundCombat={round} {...(encaissementPropose ? { encaissementPropose } : {})} />
         {/* Le Haut-Rêve en combat (2026-10-24) : un PNJ ou un adversaire haut-rêvant, comme un PJ. */}
         <PanneauHautReveVoyageur donnees={valeurs} appliquer={appliquer} />
     </div>;

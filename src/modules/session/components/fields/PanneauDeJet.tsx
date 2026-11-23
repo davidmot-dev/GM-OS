@@ -272,12 +272,24 @@ interface PanneauDeJetProps {
      * l'épreuve opposée préparée d'emblée — tir (p. 66) ou mêlée (p. 67), l'adversaire initiateur. Lu au montage.
      */
     shadowrunDuCombattant?: { epreuve: 'tir' | 'melee' };
+    /**
+     * **L'attaque d'un adversaire de Crimes** (§ 267, T13, 23/11/2026), ouverte par « Attaquer » : la cible de
+     * la carte et l'arme reconnue sur sa fiche, posées dans l'attaque du panneau (C6). Lu au montage.
+     */
+    crimesDuCombattant?: { cible: string; arme?: string };
+    /**
+     * **Le jet d'un Rouage de NOC** (§ 267, T14, 23/11/2026), ouvert depuis Combat-OS : « Lorsqu'un Rouage hostile
+     * obtient un 1 sur un dé de destin, la jauge de Fiel du groupe diminue de 1. Si cette réserve est vide, l'un des
+     * Héros, désigné par la Loi, gagne 1 point de Singularité » ; un Rouage allié la fait monter (p. 231). La Cabale
+     * appartient aux Héros : ses apports ne se proposent pas.
+     */
+    nocDuCombattant?: { camp: 'hostile' | 'allie' };
 }
 
 const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false, personnageId,
     ecrireSurLaFiche, objetsPortes, compositionInitiale, demandeId, nomDuPersonnage, surLeLancer, surLeResultat, equipementAlienInitial,
-    duneDuCombattant, cocDuCombattant, starTrekDuCombattant, degenesisDuCombattant, runequestDuCombattant, shadowrunDuCombattant,
+    duneDuCombattant, cocDuCombattant, starTrekDuCombattant, degenesisDuCombattant, runequestDuCombattant, shadowrunDuCombattant, crimesDuCombattant, nocDuCombattant,
 }) => {
     const avecLaDemande = joindreLaDemande(demandeId);
     /**
@@ -449,7 +461,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** Les dés gardés que le journal connaît : une garde changée ensuite se consigne à la demande. */
     const [gardeAuJournal, setGardeAuJournal] = useState('');
     /** L'attaque de Crimes (C6) : l'arme, la portée, l'opposition, la cible ; et ce qui a été infligé. */
-    const [reglagesDAttaque, setReglagesDAttaque] = useState<ReglagesDAttaque>(REGLAGES_D_ATTAQUE);
+    const [reglagesDAttaque, setReglagesDAttaque] = useState<ReglagesDAttaque>(() => crimesDuCombattant
+        ? { ...REGLAGES_D_ATTAQUE, cible: crimesDuCombattant.cible, ...(crimesDuCombattant.arme ? { arme: crimesDuCombattant.arme } : {}) }
+        : REGLAGES_D_ATTAQUE);
     const [attaqueInfligee, setAttaqueInfligee] = useState<string | null>(null);
     /** Les circonstances qui déplacent le seuil du jet gardé (Crimes, C0.1). */
     const [circonstances, setCirconstances] = useState<Circonstances>(CIRCONSTANCES);
@@ -872,7 +886,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const ficheDeGroupe = campagne
         ? tousLesPilotes(pilotesPerso).find(d => d.id === campagne.system)?.ficheDeGroupe
         : undefined;
-    const apports = descripteur.desEchelonnes ? [] : (ficheDeGroupe?.apports ?? []);
+    const apports = descripteur.desEchelonnes || nocDuCombattant ? [] : (ficheDeGroupe?.apports ?? []);
     const [engages, setEngages] = useState<Record<string, number>>({});
     /** Le bonus que le groupe a donné au dernier lancer — dit à côté des réussites. */
     const [bonusDuLancer, setBonusDuLancer] = useState(0);
@@ -1502,6 +1516,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             const nombre = desLances + desPerso + desDuGroupe;
             const payes = new Map<ApportDisponible, number>();
             let fielVerse = 0;
+            // § 267, T14 : un Rouage hostile retire autant de gouttes, tant que le Fiel en a (p. 231).
+            let fielRetire = 0;
             const reglerDestin = (rolls: RollResult['rolls']) => {
                 const verdict = resoudreLeDestin(niveauDuDestin, difficulte, rolls.map(r => Number(r.val)), annulePerso + annuleDuGroupe);
                 let aPayer = verdict.annules;
@@ -1512,7 +1528,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     if (cumul > avant) depenser([{ ...d, reste: d.reste - avant }], porteur, () => cumul - avant);
                     payes.set(d, cumul);
                 }
-                if (destin.fiel && verdict.fiel > fielVerse) {
+                if (destin.fiel && verdict.fiel > fielVerse && nocDuCombattant?.camp === 'hostile') {
+                    const uns = verdict.fiel - fielVerse;
+                    const retirees = Math.min(uns, Math.max(0, (etatDesReserves[destin.fiel] ?? 0) - fielRetire));
+                    if (retirees > 0) dits.push(...mouvoir(destin.fiel, -retirees, `${enTete}, 1 d'un Rouage hostile`).avertissements,
+                        `Rouage hostile : Fiel −${retirees} (p. 231).`);
+                    if (uns > retirees) dits.push(`Fiel vide : un Héros désigné par la Loi gagne ${uns - retirees} point${uns - retirees > 1 ? 's' : ''} de Singularité (p. 231).`);
+                    fielRetire += retirees;
+                    fielVerse = verdict.fiel;
+                } else if (destin.fiel && verdict.fiel > fielVerse) {
                     dits.push(...mouvoir(destin.fiel, verdict.fiel - fielVerse, `${enTete}, gouttes de Fiel`).avertissements);
                     fielVerse = verdict.fiel;
                 }

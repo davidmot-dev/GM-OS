@@ -3,8 +3,10 @@ import PanneauDeJet from '../../session/components/PanneauJetDeFiche';
 import { AppliquerALaCible } from './AppliquerALaCible';
 import { DegatsDArgyropee } from './DegatsDArgyropee';
 import { DommagesDeNephilim } from './DommagesDeNephilim';
+import { DommagesDuVoyageur } from './DommagesDuVoyageur';
+import { attaqueDuVoyageur } from '../logic/dommagesDuVoyageur';
 import type { RollResult } from '../../dice/DiceEngine';
-import { armesDeBarbarians, armesDArgyropee, armesDeShadowrun, attaqueDeDegenesis, attaqueDeDeltaGreen, attaqueDeShadowrun, attaqueDeStarTrek, attaqueDeTorg, ndDeTorg, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
+import { armesDeBarbarians, armesDArgyropee, armesDeNoc, armesDeShadowrun, attaqueDeCrimes, attaqueDeNoc, attaqueDeDegenesis, attaqueDeDeltaGreen, attaqueDeShadowrun, attaqueDeStarTrek, attaqueDeTorg, ndDeTorg, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
 import DommagesDeltaGreen from './DommagesDeltaGreen';
 import type { ProtectionLue } from '../logic/protectionDeLaCible';
 import { ecrireLaFicheDuCombattant, valeursDuCombattant } from '../ficheDesCombattants';
@@ -73,8 +75,11 @@ export const JetDuCombattant: React.FC<{
             return possibles.length === 1 ? [[c.id, possibles[0].id]] : [];
         }),
     ]);
-    const parDefaut = auPremierPlan && !retenue && attaqueProposee
-        ? compositionValable({ champs: completer(attaqueProposee) }, driver.jet, gabarit.sections, valeurs) : null;
+    // § 267, T15 : Rêve de Dragon — l'arme se lit sur la fiche du Voyageur (son gabarit), que la carte connaît ici.
+    const reveDeDragon = driver.jet?.cible?.mecanique === 'reves-de-dragons';
+    const attaqueDeDepart = attaqueProposee ?? (reveDeDragon && auPremierPlan ? attaqueDuVoyageur(valeurs, gabarit) : null);
+    const parDefaut = auPremierPlan && !retenue && attaqueDeDepart
+        ? compositionValable({ champs: completer(attaqueDeDepart) }, driver.jet, gabarit.sections, valeurs) : null;
     // § 267, T5 : Star Trek — la nature de l'attaque règle la difficulté (1 au contact, 2 à distance, p. 290).
     const attaqueST = driver.jet?.starTrek && auPremierPlan && cible ? attaqueDeStarTrek(valeurs) : null;
     /*
@@ -84,7 +89,12 @@ export const JetDuCombattant: React.FC<{
     const attaqueTorg = driver.jet?.torg && auPremierPlan && cible ? attaqueDeTorg(valeurs) : null;
     const porteurDeLaCible = attaqueTorg && cible ? useCombatStore.getState().combatants.find(c => c.id === cible.id) : undefined;
     const ndTorg = attaqueTorg && porteurDeLaCible ? ndDeTorg(attaqueTorg, valeursDuCombattant(porteurDeLaCible)) : undefined;
+    // § 267, T14 : NOC — le niveau requis par défaut (1 au contact, 0 à courte portée, p. 250).
+    const attaqueNoc = driver.jet?.destin?.fiel && auPremierPlan && cible ? attaqueDeNoc(valeurs) : null;
+    const porteurNoc = attaqueNoc && cible ? useCombatStore.getState().combatants.find(c => c.id === cible.id) : undefined;
+    const ficheNoc = porteurNoc ? valeursDuCombattant(porteurNoc) : undefined;
     const initiale = (proposee ?? parDefaut) && attaqueST ? { ...(proposee ?? parDefaut)!, difficulte: attaqueST.difficulte }
+        : !proposee && parDefaut && attaqueNoc ? { ...parDefaut, difficulte: attaqueNoc.difficulte }
         : (proposee ?? parDefaut) && ndTorg ? { ...(proposee ?? parDefaut)!, difficulte: ndTorg.nd } : proposee ?? parDefaut;
     const retenir = auPremierPlan
         ? ({ champs }: { champs: Record<string, string> }) => useCombatStore.getState().retenirLAttaque(combattant.id, {
@@ -108,7 +118,8 @@ export const JetDuCombattant: React.FC<{
     const suivre = suivreLeResultat ? (r: RollResult) => { setDernierResultat(r); setTirageDG(n => n + 1); } : undefined;
     // § 267, T10 : Shadowrun — les armes de la fiche de l'attaquant (leur VD) et l'opposition préparée (p. 66-67).
     const shadowrun = driver.jet?.shadowrun && auPremierPlan && cible ? attaqueDeShadowrun(valeurs) : null;
-    const armesDuCoup = attaqueTorg && !armes?.length
+    const armesDuCoup = attaqueNoc && !armes?.length ? armesDeNoc(valeurs).map(({ trait: _t, distance: _d, ...a }) => a)
+        : attaqueTorg && !armes?.length
         ? (attaqueTorg.degats !== undefined ? [{ libelle: String(valeurs.armes ?? '').split(/[\n;]/)[0].trim() || 'Mains nues', degats: attaqueTorg.degats }] : [])
         : driver.jet?.shadowrun && !armes?.length
         ? armesDeShadowrun(valeurs).filter(a => Number.isFinite(a.degats)).map(({ melee: _melee, ...a }) => a) : armes;
@@ -138,7 +149,7 @@ export const JetDuCombattant: React.FC<{
             )}
             {parDefaut && (
                 <p data-attaque-par-defaut className="pt-1 text-ui-11 text-app-muted">
-                    Attaque proposée : <span className="font-black text-app-text">{libelleDeLAttaque(attaqueProposee ?? {}, gabarit, valeurs)}</span>
+                    Attaque proposée : <span className="font-black text-app-text">{libelleDeLAttaque(attaqueDeDepart ?? {}, gabarit, valeurs)}</span>
                     {armes?.[0] ? ` (${armes[0].libelle})` : ''}
                 </p>
             )}
@@ -162,6 +173,13 @@ export const JetDuCombattant: React.FC<{
                     // § 267, T9 : RuneQuest — « Porter le coup » vise la cible de la carte, pas celle du rang en cours.
                     {...(driver.jet?.runequest && auPremierPlan && cible ? { runequestDuCombattant: { cible: cible.id } } : {})}
                     {...(shadowrun ? { shadowrunDuCombattant: { epreuve: shadowrun.epreuve } } : {})}
+                    // § 267, T13 : Crimes — la cible de la carte et l'arme reconnue, dans l'attaque du panneau.
+                    {...(driver.jet?.garde?.armes && auPremierPlan && cible ? { crimesDuCombattant: {
+                        cible: cible.id, ...(attaqueDeCrimes(valeurs).arme ? { arme: attaqueDeCrimes(valeurs).arme } : {}),
+                    } } : {})}
+                    // § 267, T14 : NOC — le camp du Rouage décide du Fiel ; la réserve de table lui est donc transmise.
+                    {...(attaqueNoc ? { nocDuCombattant: { camp: combattant.faction === 'enemy' ? 'hostile' : 'allie' } } : {})}
+                    {...(attaqueNoc && driver.ressourcesDeTable?.length ? { ressourcesDeTable: driver.ressourcesDeTable } : {})}
                     // La réserve de table, pour Star Trek seul : ailleurs, le surplus d'un adversaire irait à l'Impulsion des joueurs.
                     {...(attaqueST && cible && driver.ressourcesDeTable?.length ? { ressourcesDeTable: driver.ressourcesDeTable } : {})}
                     {...(attaqueST && cible ? { starTrekDuCombattant: {
@@ -171,7 +189,8 @@ export const JetDuCombattant: React.FC<{
             </div>
             {suivreLeResultat && cible && dernierResultat && !parSaPorte && <AppliquerALaCible cible={cible} resultat={dernierResultat} driver={driver}
                 armes={armesDuCoup} protectionDeLaCible={protectionDeLaCible}
-                {...(driver.jet?.barbarians ? { barbarians: { armes: armesDeBarbarians(valeurs), vigueur: Number(valeurs.vigueur ?? 0) || 0 } } : {})} />}
+                {...(driver.jet?.barbarians ? { barbarians: { armes: armesDeBarbarians(valeurs), vigueur: Number(valeurs.vigueur ?? 0) || 0 } } : {})}
+                {...(ficheNoc ? { noc: { constitution: Math.trunc(Number(ficheNoc.constitution) || 0), armure: Math.trunc(Number(ficheNoc.armure) || 0) } } : {})} />}
             {/* § 267, T7 : Argyropée — les dégâts de l'arme, la parade et la protection X/Y de la cible (p. 48-52). */}
             {suivreLeResultat && cible && dernierResultat && driver.jet?.argyropee && (
                 <DegatsDArgyropee key={tirageDG} cibleId={cible.id} armes={armesDArgyropee(valeurs)} reussie={!!dernierResultat.tagSuccess}
@@ -181,6 +200,11 @@ export const JetDuCombattant: React.FC<{
             {suivreLeResultat && cible && dernierResultat && driver.jet?.nephilim && (
                 <DommagesDeNephilim key={tirageDG} cibleId={cible.id} regle={driver.jet.nephilim} valeursDeLAttaquant={valeurs}
                     reussie={!!dernierResultat.tagSuccess} critique={dernierResultat.degre === 'reussite-particuliere'} />
+            )}
+            {/* § 267, T15 : Rêve de Dragon — le +dom total, puis l'encaissement de la cible (p. 125-129). */}
+            {suivreLeResultat && cible && dernierResultat && reveDeDragon && (
+                <DommagesDuVoyageur key={tirageDG} cibleId={cible.id} gabarit={gabarit} valeursDeLAttaquant={valeurs}
+                    reussie={!!dernierResultat.tagSuccess} particuliere={dernierResultat.degre === 'reussite-particuliere'} />
             )}
             {suivreLeResultat && cible && dernierResultat && regleDG && (
                 <div className="mt-3" data-degats-apres-l-attaque>
