@@ -41,6 +41,17 @@ const ROLE_ICONS = {
     boss: Skull,
 };
 
+/*
+  **Un rôle ou un type hors du modèle se lit « neutre » et « PNJ »** — 23/11/2026, campagne « À la claire
+  fontaine » : un ancien générateur de campagne avait écrit une ville en entité (« Narsis », type
+  `location`, rôle `city`). `ROLE_ICONS.city` valait `undefined`, et ouvrir sa fiche faisait tomber tout le
+  tableau de bord (« Element type is invalid »). Rien n'est réécrit sur l'entité : seul l'affichage se replie,
+  comme le font déjà les boutons de cycle (un rôle inconnu repart sur le premier).
+*/
+type RoleConnu = keyof typeof ROLE_ICONS;
+const roleAffiche = (role: unknown): RoleConnu => (typeof role === 'string' && role in ROLE_ICONS ? role as RoleConnu : 'neutral');
+const typeAffiche = (type: unknown): 'npc' | 'monster' | 'pc' => (type === 'monster' || type === 'pc' ? type : 'npc');
+
 // --- Sub-components ---
 /**
  * La jauge d'un PNJ — **la même que celle des personnages**.
@@ -387,7 +398,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     >
                         {selectedNpc.type === 'monster' ? <Skull size={14} /> : <Users size={14} />}
                         <span className="text-ui-10 font-black uppercase tracking-widest">
-                            {t(`modules:session.forms.types.${selectedNpc.type || 'npc'}`)}
+                            {t(`modules:session.forms.types.${typeAffiche(selectedNpc.type)}`)}
                         </span>
                     </button>
                     <button
@@ -396,11 +407,11 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             const nextRole = roles[(roles.indexOf(selectedNpc.role || 'neutral') + 1) % roles.length];
                             updateEntity(selectedNpc.id, { role: nextRole });
                         }}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${ROLE_COLORS[selectedNpc.role || 'neutral']}`}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${ROLE_COLORS[roleAffiche(selectedNpc.role)]}`}
                         title={t('common:actions.edit')}
                     >
-                        {React.createElement(ROLE_ICONS[selectedNpc.role || 'neutral'], { size: 14 })}
-                        <span className="text-ui-10 font-black uppercase tracking-widest">{ROLE_LABELS[selectedNpc.role as keyof typeof ROLE_LABELS || 'neutral']}</span>
+                        {React.createElement(ROLE_ICONS[roleAffiche(selectedNpc.role)], { size: 14 })}
+                        <span className="text-ui-10 font-black uppercase tracking-widest">{ROLE_LABELS[roleAffiche(selectedNpc.role)]}</span>
                     </button>
                     <button
                         onClick={() => updateEntity(selectedNpc.id, { status: mort ? 'alive' : 'dead' })}

@@ -52,6 +52,14 @@ describe('le type d’un PNJ', () => {
         expect(typeDeMarta()).toBe('npc');
     });
 
+    it('23/11 : une entité au rôle et au type hors du modèle (une ville écrite en PNJ) s’ouvre, lue « neutre » et « PNJ »', () => {
+        // « À la claire fontaine » : « Narsis », type `location`, rôle `city` — sa fiche faisait tomber le tableau de bord.
+        useSessionOSStore.setState({ entities: [{ ...pnj('location'), role: 'city' }] } as never);
+        render(<NpcDetail />);
+        expect(leBoutonDeType().textContent).toMatch(/PNJ/i);
+        expect(screen.getByText(/Neutre/i)).toBeTruthy();
+    });
+
     it('la fiche porte le vrai geste, « Faire un personnage joueur… »', () => {
         useSessionOSStore.setState({ entities: [pnj('npc')] } as never);
         render(<NpcDetail />);
