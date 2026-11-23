@@ -127,6 +127,29 @@ La carte, sous le panneau de jet :
   (intervention de Maîtrise + Médecine, difficulté égale à la gravité, +1 si elle n'a pas été traitée,
   autant d'heures). « Fin de l'étourdissement » efface les blessures étourdissantes.
 
+### Un PNJ attaque dans Combat-OS — 23/11/2026
+
+Sur la carte d'un adversaire, **Attaquer** ouvre la tâche d'attaque du livre contre la cible de la carte
+(p. 290) : **à distance**, Maîtrise + Sécurité, difficulté 2, quand la ligne « Attaques » de sa fiche nomme
+une arme de tir (phaseur, disrupteur, fusil, pistolet) ou ne dit rien ; **au corps à corps**, Audace +
+Sécurité, difficulté 1, quand elle ne nomme qu'une arme de contact. La gravité écrite sur la ligne de l'arme
+(« Disrupteur (Distance, 3, …) ») se propose dans « Gravité de l'arme ».
+
+Un **PNJ ennemi paie en Menace** ce qu'un PJ paierait en Impulsion, et la dépense là où un PJ en ajoute
+(p. 255, 264-265) :
+
+- ses dés achetés et ses assistants au-delà du premier se paient en Menace ; ses réussites de trop vont
+  à la Menace, pas à l'Impulsion du groupe ;
+- **Annuler une complication du PNJ** : −2 Menace (au lieu de « Repousser », +2) ;
+- l'**attaque létale** coûte 1 Menace (au lieu de l'escalade, +1) ; augmenter la gravité se paie en Menace ;
+- en opposition, si le PJ l'emporte, c'est lui qui gagne l'Impulsion.
+
+Touché, le bloc **Sur [cible]** porte la blessure sur la fiche de la cible (p. 292) : **Éviter : +N Stress**,
+tant que sa jauge peut tout prendre, ou **Encaisser** — le nom du trait, Perforant au besoin, la Protection
+retirée, jamais sous 1 ; la cible est alors vaincue. Pour une cible PNJ, seul l'encaissement est proposé, avec
+le rappel du livre : un PNJ mineur est vaincu d'office, un notable évite pour autant de Menace que la gravité,
+une fois par scène, un majeur sans limite (p. 291).
+
 ### La Réputation de fin de mission — au meneur
 
 ![La Réputation : les influences cochées, le jet, la Gloire](captures/jeu-star-trek-reputation.jpg)

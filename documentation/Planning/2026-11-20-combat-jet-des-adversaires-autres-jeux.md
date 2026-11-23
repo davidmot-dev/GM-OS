@@ -265,10 +265,29 @@ le demande (Rêve de Dragon, RuneQuest) :
       Pilote 2.0.0 inchangé (export du 21/11). Vérifié : `npx tsc -b`, lint, Combat-OS 92 fichiers /
       721 essais (dont `JetDuCombattant.barbarians.test.tsx` : 4 + 3 + 3 = 10 touche, hache 8). Reste :
       l'essai de David (C8).
-- [ ] T5 · Star Trek — 2d20 comme Dune (Menace des PNJ) · C1 à C5, C7 · src/ ⛔ · à essayer par
+- [x] T5 · Star Trek — 2d20 comme Dune (Menace des PNJ) · C1 à C5, C7 · src/ ⛔ · à essayer par
       David
-- [ ] T6 · Symbaroum — confirmer au livre que le meneur ne lance pas ; si oui « Riposte » sur le
+      **Fait le 23/11** : `JEUX_DU_COMBAT` — Star Trek, « Attaquer », `porte-du-jeu` ; `attaqueDeStarTrek` lit la
+      ligne « attaques » (une arme de tir l'emporte : Maîtrise + Sécurité, difficulté 2 ; une arme de contact seule :
+      Audace + Sécurité, difficulté 1 ; gravité reprise, p. 290). Le panneau reçoit `starTrekDuCombattant` : nature
+      cochée, PNJ ennemi payé en Menace (dés, assistants, surplus ; complication annulée −2 ; attaque létale −1 ;
+      gravité en Menace ; p. 255, 264-265). Les suites de la tâche portent la blessure sur la cible
+      (`BlessureStarTrekSurLaCible` : éviter par le Stress ou encaisser, Protection, p. 291-292). **Constaté** :
+      Combat-OS ne passait pas la réserve de table au panneau — la Menace d'un adversaire ne bougeait pas ; elle
+      passe désormais, pour Star Trek seul. Pilote 2.0.0 inchangé (export du 21/11). Vérifié : `npx tsc -b`, lint,
+      190 fichiers / 1 821 essais (Combat-OS, panneaux de jet, règles), dont `JetDuCombattant.starTrek.test.tsx`
+      (Stress 4 → 7, Brûlure 3 − 1 = 2 létale, Menace 5 → 7 → 6). Reste : l'essai de David (C8).
+- [x] T6 · Symbaroum — confirmer au livre que le meneur ne lance pas ; si oui « Riposte » sur le
       modèle de Cthulhu Hack · C1 à C5, C7 · src/ ⛔ · à essayer par David
+      **Fait le 23/11** : confirmé au livre — le meneur ne lance jamais (p. 178), la Défense se teste
+      [Défense ← Précision] (p. 164, 167), un PNJ inflige la moitié de la plus haute face (p. 178), le joueur lance
+      sa protection ; option : un 20 en Défense fait +3 (p. 184). `JEUX_DU_COMBAT` — Symbaroum, « Riposte »,
+      `porte-du-jeu` ; `RiposteDeSymbaroum` (attaques de la fiche du PNJ à valeur fixe, Éventreur +1, seuil de
+      Défense, 1D20, protection lancée, Résistance à la douleur dite) → `applyDamage([cible])`. Le libellé du
+      bouton suit le geste de la table (`jeuDuCombat`), plus le seul Cthulhu Hack. Pilote 2.0.0 inchangé
+      (export du 21/11). Vérifié : `npx tsc -b`, lint, 192 fichiers / 1 856 essais, dont
+      `RiposteDeSymbaroum.test.tsx` (Défense 11 + 10 − 12 = 9 ; épée 4 − cuir 3 = 1 ; 20 optionnel = 7). Reste :
+      l'essai de David (C8).
 - [ ] T7 · Argyropée · C1 à C5, C7 · src/ ⛔ · à essayer par David
 - [ ] T8 · Degenesis — pistes de santé à la porte des dégâts · C1 à C5, C7 · src/ ⛔ · à essayer
       par David

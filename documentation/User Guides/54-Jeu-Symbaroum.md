@@ -131,6 +131,25 @@ reste de l'**Endurance** et l'écrit sur la fiche :
 L'échec critique en Défense optionnel ajoute **+3**. À **0**, le personnage s'effondre, **mourant** ;
 avec la **Mort subite**, un coup qui atteignait sa douleur le tue (p. 183).
 
+### « Riposte » : un PNJ attaque depuis Combat-OS — 23/11/2026
+
+Le meneur ne lance jamais (p. 178). Sur la carte d'un adversaire, le bouton s'appelle **Riposte**, comme
+pour Cthulhu Hack, et ouvre l'attaque du PNJ contre la cible de la carte :
+
+1. **L'attaque** : les armes de la fiche du PNJ, chacune avec sa **valeur fixe** — la moitié de la plus
+   haute face, 1D8 vaut 4, 1D10 vaut 5 (p. 178) ; Éventreur +1 (p. 156). Sans arme lisible, les dégâts
+   fixes se saisissent.
+2. **La Défense** : [Défense ← Précision], soit la Défense du PJ + 10 − la Précision du PNJ (p. 164, 174) ;
+   le seuil est affiché. Le joueur lance son 1D20 (ou le bouton le lance pour lui) : au seuil ou dessous,
+   le coup est évité.
+3. **Touché** : le bouton lance la **protection** de ses armures (« Lancer 1D4 »), ou elle se saisit ; le
+   calcul se dit (« Dégâts 4, − protection 3 = 1 »), avec la Résistance à la douleur quand le coup
+   l'atteint (p. 164). **Appliquer** retire le reste de l'Endurance, une fois.
+
+Avec la règle optionnelle « Attaques parfaites » retenue par la campagne (p. 184), un **20** en Défense
+ajoute 3 dégâts, un **1** donne une attaque gratuite au PJ. La Riposte porte des dégâts **physiques** ;
+pour l'acide, le poison ou un Attribut, et pour la Mort subite, passer par « Encaisser » ci-dessus.
+
 ### Relancer, critiques
 
 Avec les options de la table, sous le résultat : **« Refaire ce jet »** contre **1 Expérience**
