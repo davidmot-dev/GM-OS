@@ -517,7 +517,23 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             {/* ── 2. Sa santé, puis les gestes : dégâts, soins, fiche, calculer ── */}
             {estUneFicheDeVoyageur(ficheLue.gabarit) ? <div className="p-3 space-y-2">
                 <p className="text-sm">{String((combatant.healthSystem?.data.rdd as {libelle?:string} | undefined)?.libelle ?? 'Santé RdD')} · {combatant.hp}/{combatant.hpMax}</p>
-                <Bouton aLaTable={regime.aLaTable} onClick={() => gmCustom('fiche-combattant',{combatantId:combatant.id})}>Encaisser / soins RdD</Bouton>
+                <div className="flex flex-wrap gap-2">
+                    <Bouton aLaTable={regime.aLaTable} onClick={() => gmCustom('fiche-combattant',{combatantId:combatant.id})}>Encaisser / soins RdD</Bouton>
+                    {/*
+                      § 267, T16 (23/11/2026) : cette branche remplaçait toute la rangée des gestes, et « Attaquer » avec
+                      elle — le coup d'un adversaire de Rêve de Dragon (T15) n'avait pas de porte. « Encaisser / soins »
+                      ouvre déjà la fiche du combattant ; « Attaquer » l'ouvre sur le jet, la cible en tête.
+                    */}
+                    {attaqueSurLaCarte(combatant, activeDriver, ficheLue.gabarit ?? null, ficheLue.valeurs) && <Bouton
+                        aLaTable={regime.aLaTable}
+                        icone={<Swords size={14} />}
+                        onClick={() => gmCustom('fiche-combattant', { combatantId: combatant.id, ouvrirSur: 'jet' })}
+                        title={t('combat.card.attack_tooltip')}
+                        data-attaquer
+                    >
+                        {t('combat.card.attack')}
+                    </Bouton>}
+                </div>
             </div> : <HealthManager
                 id={combatant.isPlayer ? combatant.sourcePlayerId! : combatant.sourceEntityId!}
                 type={combatant.isPlayer ? 'pc' : 'npc'}

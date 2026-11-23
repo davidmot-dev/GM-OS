@@ -52,7 +52,47 @@ const SCENES: Scene[] = [
     // Le Garde du livre (p. 55) depuis le pilote 1.2.0 (§ 263, T15) ; le « Cultiste » d'avant n'était pas un profil du livre.
     { corpusId: 'cthulhu hack', slug: 'cthulhu-hack', pj: 'Harvey', creature: 'garde',
         sheetData: { force: 12, dexterite: 11, constitution: 10, hp: 9, materiel_1: 'D6', materiel_1_nom: 'Manteau de cuir', materiel_1_pa: 1 } },
+    /*
+      § 267, T16 (23/11/2026) : les seize jeux de la révision — un adversaire posé à la main, avec les valeurs
+      des essais `JetDuCombattant.<jeu>.test.tsx`, qui vise le PJ. L'étape commune photographie sa carte, ouvre
+      « Attaquer » (« Riposte », « Affronter ») et relève ce que la fenêtre propose.
+    */
+    { corpusId: 'vampire', slug: 'vampire', pj: 'Ilse', sheetData: {},
+        adversaire: { name: 'Lieutenant', hp: 7, sheetData: { groupement_1_nom: 'Armes à feu', groupement_1: 5 } } },
+    { corpusId: 'penombre', slug: 'penombre', pj: 'Aurèle', sheetData: {},
+        adversaire: { name: 'Ombre du Psycholune', hp: 10, sheetData: {} } },
+    { corpusId: 'coc', slug: 'coc', pj: 'Eliot', sheetData: {},
+        adversaire: { name: 'Gangster', hp: 12, sheetData: { attaque_au_contact: 50 } } },
+    { corpusId: 'delta-green', slug: 'delta-green', pj: 'Daryl', sheetData: { PV: 10 },
+        adversaire: { name: 'Garde', hp: 10, sheetData: { PV: 10, DEX: 12, armes_a_feu: 50, combat_a_mains_nues: 40, arme1: 'Glock 17', arme1_competence: 'Armes à feu', arme1_degats: '1D10' } } },
+    { corpusId: 'barbarian', slug: 'barbarians', pj: 'Krom', sheetData: {},
+        adversaire: { name: 'Pillard', hp: 10, sheetData: { vigueur: 2, agilite: 0, melee: 1, tir: 0, arme1: 'Hache', arme1_degats: 'd6B' } } },
+    { corpusId: 'star-trek', slug: 'star-trek', pj: 'Kirk', sheetData: {},
+        adversaire: { name: 'Garde romulien', hp: 5, sheetData: { maitrise: 10, audace: 9, securite: 3, attaques: 'Disrupteur (Distance, 3, Polyvalente)' } } },
+    { corpusId: 'symbaroum', slug: 'symbaroum', pj: 'Ylva', sheetData: {},
+        adversaire: { name: 'Brigand', hp: 10, sheetData: {} } },
+    { corpusId: 'argyropee', slug: 'argyropee', pj: 'Vanille', sheetData: { points_de_sante: 6, protection1_nom: 'Gilet renforcé', protection1_valeur: '1/5' },
+        adversaire: { name: 'Ruffian', hp: 6, sheetData: { combat_rapproche: 2, rixe: 1, arme1_nom: 'Dague', arme1_degats: '1d4' } } },
+    { corpusId: 'degenesis', slug: 'degenesis', pj: 'Ezra', sheetData: { sante: 12, agilite: 2, mobilite: 1 },
+        adversaire: { name: 'Pillard', hp: 10, sheetData: { physique: 3, agilite: 2, corps_a_corps: 2, force: 1, armes_a_projectiles: 1, arme1: 'Machette', arme1_degats: '4+F/2', arme1_maniabilite: '0' } } },
+    { corpusId: 'runequest', slug: 'runequest', pj: 'Vasana', sheetData: { pv_poitrine: 5 },
+        adversaire: { name: 'Broo', hp: 12, sheetData: { con: 12, arme1: 60, arme1_nom: 'Hache', arme1_degats: '1D8+2', bonus_degats: '+1D4' } } },
+    { corpusId: 'shadowrun-anarchy', slug: 'shadowrun', pj: 'Iron', sheetData: { force: 4, seuil_principale_legere: 6, seuil_principale_grave: 9, seuil_principale_incapacitante: 12 },
+        adversaire: { name: 'Ganger', hp: 4, sheetData: { force: 3, agilite: 4, competence_2_nom: 'Armes à distance (pistolets)', competence_2: 5, arme_1: 'Ares Predator VI', arme_1_type: 'VD 5' } } },
+    { corpusId: 'nephilim', slug: 'nephilim', pj: 'Cicerack', sheetData: { ka_earth: 3 },
+        adversaire: { name: 'Templier', hp: 6, sheetData: { pastlives_0_name: 'Menace', pastlives_0_degree: 8, ka_fire: 5 } } },
+    { corpusId: 'torg', slug: 'torg', pj: 'Héros', sheetData: { esquive_def: 11, melee_def: 10, mains_nues_def: 9, resistance: 10, esprit: 9 },
+        adversaire: { name: 'Garde', hp: 4, sheetData: { dexterite: 8, force: 8, armes_feu: 3, armes: 'Pistolet 9mm, dommages 13' } } },
+    { corpusId: 'crime', slug: 'crimes', pj: 'Surineur', sheetData: { physique: 3 },
+        adversaire: { name: 'Apache', hp: 4, sheetData: { physique: 4, combat: 2, equipement: 'Revolver Galand' } } },
+    { corpusId: 'noc', slug: 'noc', pj: 'Ilya', sheetData: { constitution: 1, armure: 0 },
+        adversaire: { name: 'Garde noir', hp: 10, sheetData: { combat: 2, action: 2, constitution: 1, armes: 'Couteau' } } },
+    { corpusId: 'reves de dragons', slug: 'reve-de-dragon', pj: 'Nitouche', sheetData: {},
+        adversaire: { name: 'Groin', hp: 10, sheetData: { melee: 12, corps_a_corps: 2, dague_melee: 3, combat_1_damage: '+1' } } },
 ];
+
+/** Les quatre jeux du § 263, que leurs étapes propres suivent pas à pas ; les autres prennent l'étape commune. */
+const JEUX_DU_263 = ['blade-runner', 'alien', 'dune', 'cthulhu hack'];
 
 interface Pilote { gameDriver: { id: string; name: string; corpusId?: string; templateId: string }; sheetTemplate?: { id: string } }
 
@@ -187,6 +227,9 @@ for (const { s, pilote } of JEUX) {
         if (s.corpusId === 'dune') {
             await expect(carte.getByRole('button', { name: 'CALCULER', exact: true })).toHaveCount(0);
             constat.calculerDepuisLaCarte = 'masqué pour Dune';
+        } else if (!JEUX_DU_263.includes(s.corpusId)) {
+            // § 267, T16 : « Calculer » n'est pas le sujet de la révision ; on relève seulement s'il paraît.
+            constat.calculerSurLaCarte = await carte.getByRole('button', { name: 'CALCULER', exact: true }).count() > 0;
         } else {
             await carte.getByRole('button', { name: 'CALCULER', exact: true }).click();
             constat.calculerDepuisLaCarte = await lireLeCalculateur();
@@ -212,7 +255,9 @@ for (const { s, pilote } of JEUX) {
         if (constat.attaquer) {
             await attaquer.click();
             await expect(f.locator('[data-ouvert-sur-le-jet]')).toBeVisible({ timeout: 10_000 });
-            constat.cibleDeLAttaque = await f.locator('[data-cible-de-l-attaque]').textContent();
+            // Pénombre (§ 267, T17) : « Affronter » a sa propre fenêtre, sans la ligne « Cible : … » du jet.
+            constat.cibleDeLAttaque = await f.locator('[data-cible-de-l-attaque]').count() > 0
+                ? await f.locator('[data-cible-de-l-attaque]').first().textContent() : null;
             // Alien (§ 263, T10) : une créature tire son attaque au D6.
             const tirer = f.getByRole('button', { name: /Tirer l’attaque/ });
             if (await tirer.count() > 0) {
@@ -229,7 +274,8 @@ for (const { s, pilote } of JEUX) {
                 }
             }
             // Cthulhu Hack (§ 263, T16) : « Riposte » — dégâts fixes moins l'Armure du PJ, appliqués à sa fiche.
-            if (await f.locator('[data-riposte]').count() > 0) {
+            // § 267, T16 : la riposte de Symbaroum a sa propre carte ; cette étape reste celle de Cthulhu Hack.
+            if (s.corpusId === 'cthulhu hack' && await f.locator('[data-riposte]').count() > 0) {
                 constat.riposteCalcul = await f.locator('[data-calcul-de-la-riposte]').textContent();
                 const appliquer = f.locator('[data-riposte]').getByRole('button', { name: /^Appliquer/ });
                 if (await appliquer.count() > 0) {
@@ -263,6 +309,17 @@ for (const { s, pilote } of JEUX) {
                 constat.appliquerALaCibleDune = await d.locator('[data-appliquer-a-la-cible]').count();
                 if (await cible.count() > 0) await d.locator('[data-attaque-dune]').scrollIntoViewIfNeeded();
             }
+            // § 267, T16 : ce que la fenêtre propose aux seize jeux de la révision — l'attaque, le jet, la porte des dégâts.
+            if (!JEUX_DU_263.includes(s.corpusId)) {
+                const d = f.locator('[role="dialog"]').last();
+                // Sans attendre : un élément absent se dit « null », il ne fait pas patienter l'essai.
+                const texte = async (l: Locator) => (await l.count() > 0 ? (await l.first().textContent())?.trim() ?? null : null);
+                constat.libelleDuBouton = await texte(attaquer);
+                constat.attaqueProposee = await texte(d.locator('[data-attaque-par-defaut]'));
+                constat.jetDuCombattant = await d.locator('[data-jet-du-combattant]').count() > 0;
+                constat.riposteOuAffrontement = await d.locator('[data-riposte], [data-affrontement-penombre]').count() > 0;
+                constat.ndDeTorg = await texte(d.locator('[data-nd-de-torg]'));
+            }
             await photographier(f.locator('[role="dialog"]').last().locator(':scope > div').first(), `${s.slug}-attaquer`);
             await fermerLaSurcouche();
         }
@@ -277,10 +334,14 @@ for (const { s, pilote } of JEUX) {
                 return { avant, apres };
             }, adversaire.id);
         }
-        constat.santeDeLaCarte = (await carte.locator('[title^="Points de Vie"], [title^="PV"]').first().getAttribute('title').catch(() => null));
+        // Sans attendre : une carte sans info-bulle de PV (cases, pistes) ne fait pas patienter 30 s.
+        const santeDeLaCarte = carte.locator('[title^="Points de Vie"], [title^="PV"]');
+        constat.santeDeLaCarte = await santeDeLaCarte.count() > 0 ? await santeDeLaCarte.first().getAttribute('title') : null;
 
         // La fenêtre « Fiche » de l'adversaire : y a-t-il un jet ?
-        await carte.getByRole('button', { name: 'Fiche', exact: true }).click();
+        // Rêve de Dragon : la carte d'un Voyageur ouvre la même fiche par « Encaisser / soins RdD ».
+        const fiche = carte.getByRole('button', { name: 'Fiche', exact: true });
+        await (await fiche.count() > 0 ? fiche : carte.getByRole('button', { name: /Encaisser \/ soins RdD/i })).click();
         await expect(f.getByText('Fiche du combattant').first()).toBeVisible({ timeout: 10_000 });
         constat.jetDansLaFiche = await f.locator('[data-jet-du-combattant]').count() > 0;
         await photographier(f.locator('[role="dialog"]').last().locator(':scope > div').first(), `${s.slug}-fiche-adversaire`);
