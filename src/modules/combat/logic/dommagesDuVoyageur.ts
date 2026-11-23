@@ -45,9 +45,20 @@ export function armesDOffense(valeurs: Record<string, unknown>, fiche: SheetTemp
     });
 }
 
-/** L'attaque proposée : la caractéristique dérivée et la compétence de la première arme offensive. */
+/**
+ * **L'arme que le PNJ porte vraiment** — 23/11/2026, les PNJ remplis d'« À la claire fontaine ». La fiche a
+ * sept emplacements de combat, et un PNJ n'en remplit qu'un ou deux (« Gourdin niv+2 +dom+1 », p. 32) :
+ * le premier emplacement, vide, était proposé à niveau 0 et sans +dom. On prend d'abord une arme dont le
+ * +dom est écrit, puis une dont le niveau est saisi, et le premier emplacement seulement à défaut.
+ */
+export function armeParDefaut<T extends ArmeDuVoyageur & { dom?: number }>(armes: readonly T[], valeurs: Record<string, unknown>): T | undefined {
+    const saisi = (v: unknown) => v !== undefined && v !== null && String(v).trim() !== '';
+    return armes.find(a => a.dom !== undefined) ?? armes.find(a => saisi(valeurs[a.cle])) ?? armes[0];
+}
+
+/** L'attaque proposée : la caractéristique dérivée et la compétence de l'arme que le PNJ porte (`armeParDefaut`). */
 export function attaqueDuVoyageur(valeurs: Record<string, unknown>, fiche: SheetTemplate): Record<string, string> | null {
-    const arme = armesDuVoyageur(valeurs, fiche)[0];
+    const arme = armeParDefaut(armesDOffense(valeurs, fiche), valeurs);
     return arme ? { caracteristique: arme.categorie, competences_gen: arme.cle } : null;
 }
 

@@ -21,7 +21,8 @@ export interface ArmeDuVoyageur {
 export function familleDeLArme(nom: string): ArmeDuVoyageur['categorie'] | null {
     const n = nom.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
     if (/esquive|bouclier/.test(n)) return null;
-    if (/\barc\b|arbalete|fronde/.test(n)) return 'tir';
+    // La sarbacane des Mangerêve (« À la claire fontaine », p. 53) est une arme de tir (23/11/2026).
+    if (/\barc\b|arbalete|fronde|sarbacane/.test(n)) return 'tir';
     if (/jet|javelot|javeline|fouet|lancer/.test(n)) return 'lancer';
     return 'melee';
 }

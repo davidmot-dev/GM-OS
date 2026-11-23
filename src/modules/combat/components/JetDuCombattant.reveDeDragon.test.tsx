@@ -68,6 +68,15 @@ describe('Rêve de Dragon : l’arme, le +dom total et la protection (T15)', () 
         expect(protectionDuVoyageur(NITOUCHE)).toBe(2);
     });
 
+    it('23/11 : l’arme proposée est celle que le PNJ porte, pas le premier emplacement vide ; la sarbacane est un tir', () => {
+        // Gouaillar (« À la claire fontaine », p. 32) : « Gourdin niv+2 init 09 +dom+1 », dans le quatrième emplacement.
+        const GOUAILLAR = { melee: 10, dague_jet: 2, combat_3_name: 'Gourdin', combat_3_initiative: 9, combat_3_damage: 1 };
+        expect(attaqueDuVoyageur(GOUAILLAR, FICHE)).toEqual({ caracteristique: 'melee', competences_gen: 'dague_jet' });
+        // Sans +dom écrit, une arme dont le niveau est saisi passe avant les emplacements vides.
+        expect(attaqueDuVoyageur({ epee_1m: 3 }, FICHE)).toEqual({ caracteristique: 'melee', competences_gen: 'epee_1m' });
+        expect(armesDOffense({ combat_3_name: 'Sarbacane', dague_jet: 4, combat_3_damage: 2 }, FICHE).find(a => a.cle === 'dague_jet')?.categorie).toBe('tir');
+    });
+
     it('le +dom total : mêlée sans limite et conditions ; tir, l’arme seule ; lancer, au plus le double de l’arme (p. 128-129)', () => {
         // L'exemple du livre : dague +1, particulière en force +5, complète surprise +10 = +16 (p. 128) — ici sans +dom personnel.
         expect(domTotal({ categorie: 'melee', domArme: 1, domPersonnel: 0, enForce: true, condition: 'surprise' }).total).toBe(16);

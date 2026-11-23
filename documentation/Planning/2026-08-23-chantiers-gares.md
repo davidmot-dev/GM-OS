@@ -14983,7 +14983,9 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
   captures relus. Défaut trouvé par l'e2e et corrigé : la carte d'un Voyageur n'avait pas « Attaquer ».
   **Le chantier est livré ; reste l'essai de David, jeu par jeu (C8).** Suites du même jour : le PNJ ennemi de Dune
   reçoit la réserve de table depuis Combat-OS (sa Menace et son reliquat se perdaient, « Terminer le test » bloqué) ;
-  un essai de Shadowrun aux dés aléatoires fixé.
+  un essai de Shadowrun aux dés aléatoires fixé. Encore le 23/11, en remplissant les PNJ d'« À la claire fontaine »
+  (Rêve de Dragon) : « Attaquer » proposait le premier emplacement de combat de la fiche, vide (niveau 0, sans +dom),
+  au lieu de l'arme du PNJ — `armeParDefaut` prend d'abord l'arme au +dom écrit ; la sarbacane est une arme de tir.
 
 ### 268 · Transformer un PNJ en personnage joueur, et l'inverse — 21/11/2026
 

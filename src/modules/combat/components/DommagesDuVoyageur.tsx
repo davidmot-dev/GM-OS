@@ -4,7 +4,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { ficheDuCombattant } from '../logic/ficheDuCombattant';
 import { estUneFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
-import { CONDITIONS_DU_VOYAGEUR, armesDOffense, domTotal, protectionDuVoyageur, type ConditionDuVoyageur } from '../logic/dommagesDuVoyageur';
+import { CONDITIONS_DU_VOYAGEUR, armeParDefaut, armesDOffense, domTotal, protectionDuVoyageur, type ConditionDuVoyageur } from '../logic/dommagesDuVoyageur';
 import { SanteDuCombattantVoyageur } from './SanteDuCombattantVoyageur';
 
 /**
@@ -28,7 +28,8 @@ export const DommagesDuVoyageur: React.FC<{
     const entities = useSessionOSStore(s => s.entities);
     const customSheetTemplates = useSessionOSStore(s => s.customSheetTemplates);
     const armes = armesDOffense(valeursDeLAttaquant, gabarit);
-    const [cle, setCle] = useState(armes[0]?.cle ?? '');
+    // La même arme que l'attaque proposée : celle que le PNJ porte, pas le premier emplacement vide.
+    const [cle, setCle] = useState(armeParDefaut(armes, valeursDeLAttaquant)?.cle ?? '');
     const arme = armes.find(a => a.cle === cle) ?? armes[0];
     const [dom, setDom] = useState(arme?.dom !== undefined ? String(arme.dom) : '');
     const [enForce, setEnForce] = useState(particuliere);
