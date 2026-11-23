@@ -131,6 +131,24 @@ les restrictions des premiers soins ; pour choisir la case et la méthode, ouvri
 **Blessures, drain et cohérence** dans **Lancer un test**. Le seuil d'un soin monte d'un succès à
 Essence 4 ou moins, de deux à 2 ou moins (p. 60).
 
+### Un adversaire attaque depuis Combat-OS — 23/11/2026
+
+Sur la carte d'un adversaire, **Attaquer** ouvre son test contre la cible de la carte : la compétence de sa
+première arme — « Armes à distance… » pour une arme à feu, **Combat rapproché** pour une lame, un poing, une
+matraque — plus l'**Agilité** ; l'épreuve opposée est préparée, **Tir** (p. 66) ou **Mêlée** (p. 67), avec
+l'adversaire pour initiateur. Saisir les succès de la défense (Athlétisme + Agilité au tir) ou choisir un
+second rôle, puis lancer.
+
+Sous le panneau, **Appliquer à [cible]** propose la **VD de l'arme**, lue sur la fiche (« VD 5 » dans le nom
+ou le type de l'arme), **plus les succès nets** — « VD 5 + 3 succès nets = VD 8 » (p. 66-67). Rien ne se
+retire : l'armure est dans les seuils de la cible. Choisir le **type** (physique, armure secondaire, sans
+armure, mental), puis appliquer : le moniteur de la cible compare la VD à ses seuils et coche **une**
+blessure (p. 68 ; l'exemple de la p. 72 donne une légère à l'ork aux seuils 6/9/12). Un tir qui ne touche
+pas n'applique rien.
+
+**Corrigé le même jour** : un adversaire posé sur le plateau sans fiche de campagne prenait la VD **en cases**
+— une VD 8 en cochait huit. Il passe maintenant par son moniteur d'état, comme un personnage.
+
 ## Drain et soins — SR-A1
 
 ![Une blessure de drain refuse les premiers soins et garde son malus jusqu’à la prochaine narration](captures/jeu-shadowrun-drain.jpg)

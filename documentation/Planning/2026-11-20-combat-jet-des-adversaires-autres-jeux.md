@@ -310,9 +310,31 @@ le demande (Rêve de Dragon, RuneQuest) :
       (export du 21/11). Vérifié : `npx tsc -b`, lint, 229 fichiers / 2 368 essais (combat, panneaux, dés), dont
       `JetDuCombattant.degenesis.test.tsx` (la cible de la carte reprise malgré un leurre placé avant). Reste :
       l'essai de David (C8).
-- [ ] T9 · RuneQuest — sa carte lit le magasin (étape 3 d'abord) ; coups localisés · C1 à C5, C7
+- [x] T9 · RuneQuest — sa carte lit le magasin (étape 3 d'abord) ; coups localisés · C1 à C5, C7
       · src/ ⛔ · à essayer par David
-- [ ] T10 · Shadowrun Anarchy — moniteur d'état · C1 à C5, C7 · src/ ⛔ · à essayer par David
+      **Fait le 23/11** : export du 21/11, pilote 2.3.0 inchangé. Étape 3 — ce que le panneau suppose d'un
+      personnage : les suites (`SuitesRuneQuest`) lisent `useCombatStore` pour « Porter le coup », dont la cible
+      par défaut est celle du combattant **dont c'est le rang** ; ouverte depuis la carte d'un adversaire hors de
+      son rang, elle visait donc un autre. Corrigé : `runequestDuCombattant.cible` → `cibleDuCoup` → la cible de
+      la carte. Le reste convient à un adversaire (dégâts, défense, localisation ; magie et inspiration écrivent
+      sa fiche par `ecrireLaFicheDuCombattant`). `attaqueDeRuneQuest` : le score de la première arme chiffrée ;
+      `JEUX_DU_COMBAT` — RuneQuest, « Attaquer », `porte-du-jeu` (`porterUnCoupLocalise`, p. 146-148). Vérifié :
+      `npx tsc -b`, lint, 230 fichiers / 2 370 essais (combat, panneaux, dés, manuel), dont
+      `JetDuCombattant.runequest.test.tsx` (le combattant du rang vise l'attaquant : le coup va pourtant à la
+      cible de la carte). Reste : l'essai de David (C8).
+- [x] T10 · Shadowrun Anarchy — moniteur d'état · C1 à C5, C7 · src/ ⛔ · à essayer par David
+      **Fait le 23/11** : export du 21/11, pilote 2.2.0 inchangé. Relu au livre (PDF = imprimée + 2) : tir, Arme à
+      distance + Agilité contre Athlétisme + Agilité, touché à égalité (p. 66) ; mêlée, Combat rapproché + Agilité des
+      deux côtés (p. 67) ; « VD de l'arme + succès nets » (p. 66, 67) ; exemple VD 5 + 3 = 8 contre 6/9/12 (p. 72).
+      Étape 3 : le panneau convient à un adversaire (l'Anarchy d'une fiche d'adversaire se lit sur elle ; la
+      Planification refuse un personnage inconnu sans rien écrire). `JEUX_DU_COMBAT` — Shadowrun, « Attaquer »,
+      règle neuve `vd-plus-nets` (`coupAAppliquer` : rien sans toucher, VD + nets, aucune protection retirée) ;
+      `armesDeShadowrun` (VD lue dans le nom ou le type), `attaqueDeShadowrun` (compétence de l'arme + Agilité,
+      épreuve tir ou mêlée) ; `shadowrunDuCombattant.epreuve` prépare l'opposition au panneau. Défaut trouvé et
+      corrigé : `applyDamage` donnait à un adversaire autonome la VD en cases ; il passe par `moniteurSelonLeJeu`,
+      ses cases à la pire blessure. Vérifié : `npx tsc -b`, lint, 404 fichiers / 3 954 essais (combat, séance,
+      dés, manuel), dont `JetDuCombattant.shadowrun.test.tsx` (9 succès contre 3 : VD 5 + 6 = 11, une grave à
+      l'ork 6/9/12, moniteur 3). Reste : l'essai de David (C8).
 - [ ] T11 · Nephilim — cases de santé · C1 à C5, C7 · src/ ⛔ · à essayer par David
 - [ ] T12 · Torg Eternity — `applyDamage` connaît ses dommages ; pas de carte au panneau · C1 à
       C5, C7 · src/ ⛔ · à essayer par David

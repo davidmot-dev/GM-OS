@@ -343,6 +343,14 @@ combattant reste en fin de plateau. Le meneur décide : **Reporter** l'action au
 37 RA font trois rounds complets et un effet au RA 1 du quatrième. **Round suivant** garde les
 intentions et efface les délais.
 
+### Un adversaire attaque depuis Combat-OS — 23/11/2026
+
+Sur la carte d'un adversaire, **Attaquer** ouvre son test contre la cible de la carte, avec le score de sa
+**première arme chiffrée** (mêlée, puis tir, puis bouclier, dans l'ordre de la feuille). Après le jet, les
+suites sont celles d'un personnage : les dégâts de l'arme et la défense, « Localiser le coup (1D20) », puis
+**« Porter le coup », ouvert sur la cible de la carte** — et non sur celle du combattant dont c'est le rang —
+par l'armure et la zone. Sans arme chiffrée, rien n'est proposé : le meneur compose le jet.
+
 ### Les coups localisés
 
 ![La carte de Vasana : 8 au bras gauche, 2 d'armure — 6 retenus, le double ; 6 PV sur 12](captures/jeu-runequest-coups-localises.jpg)
