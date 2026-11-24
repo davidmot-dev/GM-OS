@@ -119,3 +119,24 @@ describe('l’indice révélé à un seul personnage', () => {
         expect(pour()).toEqual(['pub', 'prive']);
     });
 });
+
+/** **CRI-A01 — la loyauté des contacts de Crimes reste au meneur** (24/11/2026, livre p. 430). */
+describe('les contacts de Crimes', () => {
+    const fiche = { contacts_0_name: 'Goron', contacts_0_rating: 3, contacts_0_appels: 1, contacts_0_influence: 2,
+        contacts_7_rating: 1, physique: 5 };
+    const charge = { session: { players: [{ id: 'p-1', characters: [{ id: 'jet', sheetData: fiche }] }], entities: [{ id: 'pnj', sheetData: fiche }] } };
+    it('la loyauté et les appels ne partent pas ; le nom, l’influence et le reste de la fiche, si', () => {
+        const avant = structuredClone(charge);
+        for (const lecteur of [undefined, 'jet', null]) {
+            const c = caviarderPourLesJoueurs(charge, lecteur);
+            for (const sheet of [c.session.players[0].characters[0].sheetData, c.session.entities[0].sheetData]) {
+                expect(sheet).not.toHaveProperty('contacts_0_rating');
+                expect(sheet).not.toHaveProperty('contacts_0_appels');
+                expect(sheet).not.toHaveProperty('contacts_7_rating');
+                expect(sheet).toMatchObject({ contacts_0_name: 'Goron', contacts_0_influence: 2, physique: 5 });
+            }
+        }
+        // La copie du meneur n'est pas touchée.
+        expect(charge).toEqual(avant);
+    });
+});

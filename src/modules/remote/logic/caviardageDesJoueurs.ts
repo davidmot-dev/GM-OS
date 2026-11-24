@@ -38,6 +38,21 @@ const MASQUES = new Set(['gmSecretInfo', 'roleplayingNotes']);
 const VIDES = new Set(['gmNotes', 'notesDuMeneur', 'gmSecrets']);
 /** Ce qui ne part pas du tout, à la racine de la charge. */
 const RETIRES_A_LA_RACINE = new Set(['messages', 'lectureDuMeneur']);
+/**
+ * **Ce qui ne part pas du tout, à toute profondeur** — CRI-A01, 24/11/2026 (David : « fais le 1 »).
+ * La loyauté des contacts de Crimes et ses appels du scénario : « Variation de leur loyauté — ce
+ * point relève de la gestion du meneur pour que les PJ n'en soient pas conscients » (livre p. 430).
+ * Le panneau des contacts ne s'affichait déjà qu'au meneur (`ContactsEtFortune`), mais les valeurs
+ * étaient déposées sur chaque tablette avec la fiche. Le nom et l'influence du contact restent :
+ * le joueur sait qui il connaît.
+ *
+ * La clé est **retirée**, pas vidée : une fiche renvoyée par la tablette se fusionne à celle du
+ * meneur (`sessionActions.updateCharacterSheetData`), une clé absente n'y efface rien. Ces clés
+ * sont celles du pilote Crimes (`jet.garde.contacts`, fiche HTML `contacts.N.rating`) ; aucun autre
+ * pilote exporté ne les porte (relevé du 24/11). Un jeu dont la loyauté serait publique sous le
+ * même nom demanderait de lire la déclaration du pilote, que la charge ne transporte pas.
+ */
+const RETIRES_PARTOUT = /^contacts_\d+_(rating|appels)$/;
 
 export const MASQUE = '•••••';
 
@@ -46,7 +61,7 @@ function caviarder(valeur: unknown): unknown {
     if (!valeur || typeof valeur !== 'object') return valeur;
     const prototype = Object.getPrototypeOf(valeur);
     if (prototype !== Object.prototype && prototype !== null) return valeur;
-    return Object.fromEntries(Object.entries(valeur).map(([cle, v]) => [
+    return Object.fromEntries(Object.entries(valeur).filter(([cle]) => !RETIRES_PARTOUT.test(cle)).map(([cle, v]) => [
         cle,
         MASQUES.has(cle) && typeof v === 'string' ? MASQUE
             : VIDES.has(cle) && typeof v === 'string' ? ''
