@@ -1,0 +1,560 @@
+[
+  {
+    "id": "CRI-1",
+    "mecanique": "composition",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.384–385 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "JET-01"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-2",
+    "mecanique": "sans-competence",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.411 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "JET-02"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-3",
+    "mecanique": "specialisation",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.324–325,385 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "JET-03"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-4",
+    "mecanique": "hermetique",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.323–325 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "JET-04"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-5",
+    "mecanique": "bilans",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.385,409 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "JET-05",
+      "JET-06",
+      "JET-07",
+      "JET-08",
+      "JET-09"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-6",
+    "mecanique": "garde-choisie",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.385 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "JET-10"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-7",
+    "mecanique": "circonstances",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.389–390 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "JET-11"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-8",
+    "mecanique": "angoisse-visee",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.412 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "JET-12"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-9",
+    "mecanique": "depassement",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.385,407,409 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "JET-13"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-10",
+    "mecanique": "nevrose-du-jet",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.409 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "JET-14"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-11",
+    "mecanique": "chevauchement",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.395–396 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COR-01"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-12",
+    "mecanique": "potentiel-actuel",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.395 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COR-02"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-13",
+    "mecanique": "incapacite",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.395 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COR-03"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-14",
+    "mecanique": "blessure-grave",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.393,396 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COR-04"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-15",
+    "mecanique": "fin-scene",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.395–396 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COR-05"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-16",
+    "mecanique": "bonne-nuit",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.395–396 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COR-06"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-17",
+    "mecanique": "soin",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.396 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COR-07"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-18",
+    "mecanique": "angoisse-nevrose",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.411 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "PSY-01"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-19",
+    "mecanique": "frustration",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.409 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "PSY-02"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-20",
+    "mecanique": "seuil-nevrose",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.409,411 ; corpus crime relu le 23/10/2026 ; Crimes 2 — Manuel de l’Enquêteur, p.418 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "PSY-03",
+      "PSY-04"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-21",
+    "mecanique": "test-psychotique",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.410 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "PSY-05"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-22",
+    "mecanique": "psycho-seuils",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.410 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "PSY-06"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-23",
+    "mecanique": "innocence",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.414–416 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "PSY-07"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-24",
+    "mecanique": "styles",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.436–437 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "ENQ-01"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-25",
+    "mecanique": "indices-seuils",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.438–440 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "ENQ-02"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-26",
+    "mecanique": "revelation-privee",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.438–440 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "ENQ-03"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-27",
+    "mecanique": "partage",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.438–440 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "ENQ-04"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-28",
+    "mecanique": "hypotheses",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.437–438 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "ENQ-05"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-29",
+    "mecanique": "nouvelle-affaire",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.352,436 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "ENQ-06"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-30",
+    "mecanique": "indices-evidents",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.384,436 ; corpus crime relu le 23/10/2026",
+    "support": "manuel",
+    "casIds": [
+      "ENQ-07"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-31",
+    "mecanique": "initiative",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.388–393 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COM-01"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-32",
+    "mecanique": "opposition",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.385,390 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COM-02"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-33",
+    "mecanique": "opposition-option",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.385 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COM-03"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-34",
+    "mecanique": "dommages",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.344,393 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COM-04"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-35",
+    "mecanique": "manoeuvres",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.391–394 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COM-05"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-36",
+    "mecanique": "portee",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.389 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COM-06"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-37",
+    "mecanique": "munitions",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.345–346,390 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COM-07"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-38",
+    "mecanique": "incidents",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.389–390 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COM-08"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-39",
+    "mecanique": "cloture",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.390–396 ; manuel GM-OS ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "COM-09"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-40",
+    "mecanique": "contact",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.430 ; corpus crime relu le 23/10/2026 ; Crimes 2 — Manuel de l’Enquêteur, p.429–431 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "SOC-01",
+      "SOC-02"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-41",
+    "mecanique": "fortune",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.431 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "SOC-03",
+      "SOC-04"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-42",
+    "mecanique": "temperament",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.328,334 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "CRE-01"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-43",
+    "mecanique": "budget-creation",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.324 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "CRE-02"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-44",
+    "mecanique": "developpement",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.404–405 ; corpus crime relu le 23/10/2026 ; Crimes 2 — Manuel de l’Enquêteur, p.405 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "CRE-03",
+      "CRE-05"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-45",
+    "mecanique": "developpement-refus",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.405 ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "CRE-04"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-46",
+    "mecanique": "fiche-html",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.323–325 ; manuel GM-OS ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "POR-01"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-47",
+    "mecanique": "persistance",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.395 ; Nexus GM-OS ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "POR-02"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-48",
+    "mecanique": "restauration-locale",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, Manuel GM-OS ; ETATS-DE-REFERENCE ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "POR-03"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-49",
+    "mecanique": "droits-secrets",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, Manuel GM-OS ; caviardageDesJoueurs ; corpus crime relu le 23/10/2026",
+    "support": "natif",
+    "casIds": [
+      "POR-04"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  },
+  {
+    "id": "CRI-50",
+    "mecanique": "modules-limites",
+    "source": "Crimes 2 — Manuel de l’Enquêteur, p.366,410,431,437,442–443 ; corpus crime relu le 23/10/2026",
+    "support": "manuel",
+    "casIds": [
+      "POR-05"
+    ],
+    "archive": "01-Crimes-Les-Heures-rayees.gmos",
+    "limite": "Cas humains NON TESTÉS ; fonctions pures, import Nexus en mémoire et contrôles applicatifs ont des rapports distincts. Les actions collectives ne sont jamais des resets locaux."
+  }
+]

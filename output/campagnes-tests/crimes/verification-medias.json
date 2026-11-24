@@ -1,0 +1,182 @@
+{
+  "archiveSha256": "c0af90ecc55ebf57da14d9b5601bd3ab90ba97f0f645a1bd01cd3eeded8c231c",
+  "imagesDecodees": 43,
+  "imagesRendues": 43,
+  "navigateur": "Edge Chromium hors ligne",
+  "audio": "Aucun son préparé",
+  "capturesRelues": false,
+  "captures": [
+    {
+      "fichier": "captures/01-banniere.jpg.jpg",
+      "sha256": "728ce3333e5d308b10cc11ad6ca1a669dedebb6bc16e9b4829d04b6a28277c47"
+    },
+    {
+      "fichier": "captures/02-bonus-1.svg.jpg",
+      "sha256": "0b1dddd14bbffae55c710ef2fa5602a80498b44cc2ac764ccc070a7ecd8f99ef"
+    },
+    {
+      "fichier": "captures/03-bonus-10.svg.jpg",
+      "sha256": "29583af7ec054f548ad6ff6a2beada3bfbb850231543700cbadddf76b8f74f39"
+    },
+    {
+      "fichier": "captures/04-bonus-11.svg.jpg",
+      "sha256": "4f9bc9d615338746e4ce6b4944015b5d02c005934190a364495941c992967235"
+    },
+    {
+      "fichier": "captures/05-bonus-12.svg.jpg",
+      "sha256": "615eb401cbee12d99764c71d92375752c2a5c6fab2d2a6329c27d0c33f552a4b"
+    },
+    {
+      "fichier": "captures/06-bonus-2.svg.jpg",
+      "sha256": "f40b0706153a4312f786d33645661d2837ec3f23aea52867cc46e287e118c887"
+    },
+    {
+      "fichier": "captures/07-bonus-3.svg.jpg",
+      "sha256": "46edbe111e0aafdfbf9630c2aacb0c8f9567d42748e8821091058158426f169b"
+    },
+    {
+      "fichier": "captures/08-bonus-4.svg.jpg",
+      "sha256": "d64820153807eb00f40b35defccf8d3186a8b6bbb7f2d62462e615ff7705894a"
+    },
+    {
+      "fichier": "captures/09-bonus-5.svg.jpg",
+      "sha256": "167559388b51878cc426fc4389c4567f0649702f1ae247da99fcc0bbfabaef5e"
+    },
+    {
+      "fichier": "captures/10-bonus-6.svg.jpg",
+      "sha256": "03eb05479bfd4a2197b30a0db274f94a0d2a69e631297cb2bd3350e7aa637025"
+    },
+    {
+      "fichier": "captures/11-bonus-7.svg.jpg",
+      "sha256": "89ad8bef4b43654e86aefb825322efa949eb4ca7ff34a80b2f482a08fdd7f832"
+    },
+    {
+      "fichier": "captures/12-bonus-8.svg.jpg",
+      "sha256": "550fc0de806c011ea93b7328a465dc7515f067106d8c11010b181450dbb3e299"
+    },
+    {
+      "fichier": "captures/13-bonus-9.svg.jpg",
+      "sha256": "8a5b858d5c5fc11df3edd491ff51c939f503d77116b57598b5853fdb7a244772"
+    },
+    {
+      "fichier": "captures/14-cartouche-breant.svg.jpg",
+      "sha256": "f5952ea2553b99ebf5466526d0eb72aede6a9952171d09bf881f87feb3af1b52"
+    },
+    {
+      "fichier": "captures/15-cartouche-corps.svg.jpg",
+      "sha256": "278629c1b40ed5b095d14418fd56576af56cffdc813cd76f20ca08bdc34b041d"
+    },
+    {
+      "fichier": "captures/16-cartouche-esprit.svg.jpg",
+      "sha256": "081b48aaa4a675f1faec24f64849be83649f2d84ba51375fc6a7f51c34796411"
+    },
+    {
+      "fichier": "captures/17-cartouche-faure.svg.jpg",
+      "sha256": "848762ee0e0e35503907823be9643e351699f0bbdbf0f0fa5c111bc6eeddd335"
+    },
+    {
+      "fichier": "captures/18-cartouche-jet.svg.jpg",
+      "sha256": "bd9f8c089b6cba8787ca0c380f3acd45caf70268daccd9da3386161407355507"
+    },
+    {
+      "fichier": "captures/19-cartouche-soria.svg.jpg",
+      "sha256": "2cfbed81d2f45272e55f24a33bba856ab5342c367a82fb2a5a8541752650722c"
+    },
+    {
+      "fichier": "captures/20-piece-1.svg.jpg",
+      "sha256": "2fdb41a5c800594d8bdde7aa1159536c27607779947db9862f353f794d857a4a"
+    },
+    {
+      "fichier": "captures/21-piece-10.svg.jpg",
+      "sha256": "4776ee8f6d9669750e68dd7e681925fbe3980a3cec174a5f190a1fa20a65b8b4"
+    },
+    {
+      "fichier": "captures/22-piece-11.svg.jpg",
+      "sha256": "5f9b8c8eeec5432ea0545c887ab844ccab88caf8508034ca2a07bee97f6ffa05"
+    },
+    {
+      "fichier": "captures/23-piece-12.svg.jpg",
+      "sha256": "d66c1d850a39cf973958f81658580eb5192bccc493d3f89b40ec17275cd9fbd1"
+    },
+    {
+      "fichier": "captures/24-piece-2.svg.jpg",
+      "sha256": "e00266ea3f950a76e1576ee54cc8866c6b511cc931dcc600aba4d7bc73419d61"
+    },
+    {
+      "fichier": "captures/25-piece-3.svg.jpg",
+      "sha256": "e544a5cbc32d23452407b8a0e8bd9f3aab34ce32ce63d07b5c2af7dd2f09fa55"
+    },
+    {
+      "fichier": "captures/26-piece-4.svg.jpg",
+      "sha256": "b277a61d35b138d5d7131d2013648ed7c1979699e0b1b992d5cba78d0edf74ff"
+    },
+    {
+      "fichier": "captures/27-piece-5.svg.jpg",
+      "sha256": "64256cc2b9ff2c3c8ef690eabb8bda659f54e587db55142bef980c6d274d1fce"
+    },
+    {
+      "fichier": "captures/28-piece-6.svg.jpg",
+      "sha256": "9f4ad06944f8167de77703f40f08b9dc5e85d8df4c2aa57042bd9e0085d4dfac"
+    },
+    {
+      "fichier": "captures/29-piece-7.svg.jpg",
+      "sha256": "9cb474eddcfdbe0d6be0066570793f0bfbebf5d8b5f79cf7dadc4afb0e46870c"
+    },
+    {
+      "fichier": "captures/30-piece-8.svg.jpg",
+      "sha256": "086bb0921ca2ea87a34845650f29510fb3dc40a29c4acf05b3454a40d3985567"
+    },
+    {
+      "fichier": "captures/31-piece-9.svg.jpg",
+      "sha256": "870efd09c3d564dc26739ae2139f73210c2e74c6d8e28eb55db57149e7797c96"
+    },
+    {
+      "fichier": "captures/32-plan-cafe.svg.jpg",
+      "sha256": "a43c6e88e141dc71e90a74c7a30229c0a9bfe4fb9f7ad367a640290c3251ea74"
+    },
+    {
+      "fichier": "captures/33-plan-cite.svg.jpg",
+      "sha256": "9ba49fd743ab06a601d1bb0f5ede665751d6527eb11328f4cf1ae0381338296c"
+    },
+    {
+      "fichier": "captures/34-plan-compagnie.svg.jpg",
+      "sha256": "2f4e7786fb643ed408592fbb217854864293fbba24fc83c23336e61b7b1d2b5d"
+    },
+    {
+      "fichier": "captures/35-plan-dispensaire.svg.jpg",
+      "sha256": "866f8aa007336b4859e895650b0d075d286c8cbc27db6cea7c19c55415fcdedc"
+    },
+    {
+      "fichier": "captures/36-plan-greffe.svg.jpg",
+      "sha256": "fa811f40a89f63228755c91fe20a2ee7349cae5895a76507144ac208a3423ee5"
+    },
+    {
+      "fichier": "captures/37-plan-imprimerie.svg.jpg",
+      "sha256": "2ccf8f8b4fd59bb913efb940abdf1cff062c36aeb95938cdaa6a990aef3048ab"
+    },
+    {
+      "fichier": "captures/38-plan-observatoire.svg.jpg",
+      "sha256": "786a981a1738faca6b42367cdde319f6635ac0b223eb251e098c72bc2f6e3b33"
+    },
+    {
+      "fichier": "captures/39-plan-quais.svg.jpg",
+      "sha256": "ad825b20af562e08f4270a35795a73a14538d56b82524da2f3c72fd4cf6d21cb"
+    },
+    {
+      "fichier": "captures/40-plan-station.svg.jpg",
+      "sha256": "19d0eb4fbf74670141cf6e858de9372ddbdb0262a82221f1afdb9254d6130ca4"
+    },
+    {
+      "fichier": "captures/41-plan-viaduc.svg.jpg",
+      "sha256": "5c6a3f1b188235b9ceeb251bbebea0cc0a392d6dc5cc56e4ee34a73a88982acc"
+    },
+    {
+      "fichier": "captures/42-recette-prive.svg.jpg",
+      "sha256": "98c4a9e24969e9912a887ae5e07a89fa4fbffd39349570e7b207a0ef95a9ceb7"
+    },
+    {
+      "fichier": "captures/43-recette-public.svg.jpg",
+      "sha256": "e0f8fd74762e529ab89c92b6ddc7cdc4d844101ec5f637834d26745a571e8e55"
+    }
+  ]
+}

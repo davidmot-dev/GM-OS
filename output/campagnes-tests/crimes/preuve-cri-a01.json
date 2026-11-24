@@ -1,0 +1,9 @@
+{
+  "archiveSha256": "c0af90ecc55ebf57da14d9b5601bd3ab90ba97f0f645a1bd01cd3eeded8c231c",
+  "controle": "caviardage pur, pas de transport réseau exécuté",
+  "attendu": "contacts_0_rating et contacts_0_appels absents de sheetData joueur",
+  "observe": {
+    "contacts_0_rating": 3,
+    "contacts_0_appels": 0
+  }
+}

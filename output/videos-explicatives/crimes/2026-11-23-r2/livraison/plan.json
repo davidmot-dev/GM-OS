@@ -1,0 +1,615 @@
+{
+  "schemaVersion": 2,
+  "titre": "Crimes 2 — enquêter et agir dans GM-OS",
+  "jeu": "Crimes 2 — Manuel de l’Enquêteur",
+  "date": "2026-11-23",
+  "profilRythme": "dynamique-demande-David-2026-11-19",
+  "demandeRythme": "Préférence persistante de David : textes à l’écran sans voix ; « Accélère un peu les vidéos ». Même rythme que les films Alien et Nephilim, sans accélération des gestes.",
+  "pilote": {
+    "fichier": "C:\\Projet_David\\GM-OS-v5\\Export Dirvers\\Crime_driver_gmos_1794393223784.gmos-driver",
+    "sha256": "8d32197eb33726d333aa2ceeb51dc303d854809933ce7abe4db2dfb63d03ace5",
+    "id": "custom-1792441893774",
+    "version": "1.0.0"
+  },
+  "campagne": {
+    "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\Crimes-Heures-Rayees-TOURNAGE.gmos",
+    "sha256": "3bec70978c27bf8b206c8e54ed45a68f3fe027994dc643b2bbf80dcd6197fbbd",
+    "id": "recette-crimes-heures-20261120-campagne-complete",
+    "nom": "TOURNAGE CRIMES — Les Heures rayées",
+    "type": "test"
+  },
+  "moduleExterne": {
+    "present": false,
+    "raison": "Catalogue courant : aucun module Crimes indépendant. Enquête, psychologie et combat sont des outils natifs."
+  },
+  "presentation": {
+    "mode": "texte",
+    "langue": "fr-FR"
+  },
+  "lecture": {
+    "motsParMinute": 125,
+    "caracteresParSeconde": 14,
+    "minimumMs": 5000,
+    "installationMs": 800,
+    "margeMs": 1200,
+    "caracteresParLigne": 46,
+    "lignesMaximum": 3
+  },
+  "rythme": {
+    "avantGesteMs": 1000,
+    "stabilisationResultatMs": 700,
+    "apresResultatMs": 2500
+  },
+  "chapitres": [
+    {
+      "id": "reperes",
+      "titre": "Campagne et copies de recette"
+    },
+    {
+      "id": "specificites",
+      "titre": "Fiche, Potentiels et atteintes"
+    },
+    {
+      "id": "jet",
+      "titre": "Garder ses dés et se dépasser"
+    },
+    {
+      "id": "sante",
+      "titre": "Atteintes et récupération"
+    },
+    {
+      "id": "psychologie",
+      "titre": "Angoisse et test psychotique"
+    },
+    {
+      "id": "enquete",
+      "titre": "Découvrir, révéler et partager"
+    },
+    {
+      "id": "combat",
+      "titre": "Un échange complet dans Combat-OS"
+    },
+    {
+      "id": "suivi",
+      "titre": "Contacts, fortune et progression"
+    },
+    {
+      "id": "bilan",
+      "titre": "Recharger et reprendre"
+    }
+  ],
+  "sequences": [
+    {
+      "id": "reperes",
+      "chapitre": "reperes",
+      "intention": "Présenter le cockpit.",
+      "avant": "Crimes 2, pilote 1.0.0. Les Heures rayées est notre campagne de test.",
+      "geste": "Présenter le cockpit.",
+      "apres": "Dés préparés et profils RECETTE annoncés. Les héros de l’affaire restent intacts.",
+      "attendu": "Dés préparés et profils RECETTE annoncés. Les héros de l’affaire restent intacts.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "fiche-html",
+      "chapitre": "specificites",
+      "intention": "Ouvrir la fiche HTML de Gabriel.",
+      "avant": "La fiche du jeu conserve ses rubriques et ses pistes.",
+      "geste": "Ouvrir la fiche HTML de Gabriel.",
+      "apres": "Fiche réelle, liée à Gabriel Bréant. Vue d’ensemble : zoomer pour lire les petits libellés.",
+      "attendu": "Fiche réelle, liée à Gabriel Bréant. Vue d’ensemble : zoomer pour lire les petits libellés.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "fiche-jet",
+      "chapitre": "specificites",
+      "intention": "Ouvrir son onglet Lancer un test.",
+      "avant": "Pour essayer les mécanismes, utilisons le profil JET.",
+      "geste": "Ouvrir son onglet Lancer un test.",
+      "apres": "Physique 5, Mental 4, Social 3. Fatigue, épuisement et blessures réduisent les Potentiels.",
+      "attendu": "Physique 5, Mental 4, Social 3. Fatigue, épuisement et blessures réduisent les Potentiels.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "composer",
+      "chapitre": "jet",
+      "intention": "Choisir Physique et Sport.",
+      "avant": "Le Potentiel donne les d10 ; la Compétence fixe la garde.",
+      "geste": "Choisir Physique et Sport.",
+      "apres": "Physique 5 : cinq d10. Sport 2 : deux gardés, au seuil de 8.",
+      "attendu": "Physique 5 : cinq d10. Sport 2 : deux gardés, au seuil de 8.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "mitigee",
+      "chapitre": "jet",
+      "intention": "Lancer et lire la garde.",
+      "avant": "Exemple préparé : 1, 3, 4, 9 et 10.",
+      "geste": "Lancer et lire la garde.",
+      "apres": "Le 1 est imposé. Garder 1 et 10 donne une réussite mitigée.",
+      "attendu": "Le 1 est imposé. Garder 1 et 10 donne une réussite mitigée.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "nevrose-mitigee",
+      "chapitre": "jet",
+      "intention": "Confirmer la suite puis regarder la jauge.",
+      "avant": "Une réussite écartée fait proposer un point de Névrose.",
+      "geste": "Confirmer la suite puis regarder la jauge.",
+      "apres": "Névrose 0 devient 1. Le résultat du jet et ses conséquences sont deux étapes.",
+      "attendu": "Névrose 0 devient 1. Le résultat du jet et ses conséquences sont deux étapes.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "garde-choisie",
+      "chapitre": "jet",
+      "intention": "Lancer un nouvel exemple puis garder 3 et 4.",
+      "avant": "On peut garder de mauvais dés pour échouer volontairement.",
+      "geste": "Lancer un nouvel exemple puis garder 3 et 4.",
+      "apres": "La garde choisie devient un échec. Consigner confirme ce choix ; les 1 resteraient imposés.",
+      "attendu": "La garde choisie devient un échec. Consigner confirme ce choix ; les 1 resteraient imposés.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "nevrose-garde",
+      "chapitre": "jet",
+      "intention": "Noter la Névrose de la garde confirmée.",
+      "avant": "Cet échec et les réussites rejetées proposent deux points.",
+      "geste": "Noter la Névrose de la garde confirmée.",
+      "apres": "Névrose 1 devient 3. Choisir sa garde ne dispense pas de ses conséquences.",
+      "attendu": "Névrose 1 devient 3. Choisir sa garde ne dispense pas de ses conséquences.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "preparer-depassement",
+      "chapitre": "jet",
+      "intention": "L’engager avant le prochain lancer.",
+      "avant": "Une passion ou conviction doit justifier le dépassement.",
+      "geste": "L’engager avant le prochain lancer.",
+      "apres": "Le choix est annoncé avant les dés. Il ne donne pas un bonus gratuit.",
+      "attendu": "Le choix est annoncé avant les dés. Il ne donne pas un bonus gratuit.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "depassement",
+      "chapitre": "jet",
+      "intention": "Lancer puis garder une réussite de plus.",
+      "avant": "Exemple préparé : une réussite utile reste hors de la garde.",
+      "geste": "Lancer puis garder une réussite de plus.",
+      "apres": "Une fatigue est inscrite sur le Physique. Un seul dépassement est permis par scène.",
+      "attendu": "Une fatigue est inscrite sur le Physique. Un seul dépassement est permis par scène.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "nevrose-depassement",
+      "chapitre": "jet",
+      "intention": "Confirmer le point de Névrose proposé.",
+      "avant": "Après le dépassement, une réussite reste encore écartée.",
+      "geste": "Confirmer le point de Névrose proposé.",
+      "apres": "Névrose 3 devient 4. La fatigue déjà payée reste présente sur le Physique.",
+      "attendu": "Névrose 3 devient 4. La fatigue déjà payée reste présente sur le Physique.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "atteintes",
+      "chapitre": "sante",
+      "intention": "Ajouter épuisement, blessure, puis deux marques distinctes.",
+      "avant": "Une marque plus grave remplace d’abord une marque moindre.",
+      "geste": "Ajouter épuisement, blessure, puis deux marques distinctes.",
+      "apres": "Une fatigue, un épuisement, une blessure : Physique actuel 2, base 5 conservée.",
+      "attendu": "Une fatigue, un épuisement, une blessure : Physique actuel 2, base 5 conservée.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/sante-et-blessures.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "bonne-nuit",
+      "chapitre": "sante",
+      "intention": "Prévisualiser puis confirmer la récupération.",
+      "avant": "Bonne nuit présente les changements avant de les appliquer.",
+      "geste": "Prévisualiser puis confirmer la récupération.",
+      "apres": "Fatigue et un épuisement disparaissent. La blessure reste ; ce geste concerne le groupe.",
+      "attendu": "Fatigue et un épuisement disparaissent. La blessure reste ; ce geste concerne le groupe.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/sante-et-blessures.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "soigner",
+      "chapitre": "sante",
+      "intention": "Soigner la blessure du profil JET.",
+      "avant": "Pour poursuivre l’exercice, le meneur accorde le soin.",
+      "geste": "Soigner la blessure du profil JET.",
+      "apres": "Le Physique retrouve 5. Ce clic ne décide pas à lui seul des conditions de soin.",
+      "attendu": "Le Physique retrouve 5. Ce clic ne décide pas à lui seul des conditions de soin.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/sante-et-blessures.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "angoisse",
+      "chapitre": "psychologie",
+      "intention": "Ajouter un point d’Angoisse.",
+      "avant": "L’ambiance angoissante touche aussi la Névrose.",
+      "geste": "Ajouter un point d’Angoisse.",
+      "apres": "Angoisse et Névrose montent ensemble. Les seuils et états de folie restent à interpréter.",
+      "attendu": "Angoisse et Névrose montent ensemble. Les seuils et états de folie restent à interpréter.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/la-decompensation-nevrotique.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "test-psychotique",
+      "chapitre": "psychologie",
+      "intention": "Choisir GARDE 1 et lancer un échec préparé.",
+      "avant": "Le test psychotique utilise le Mental actuel.",
+      "geste": "Choisir GARDE 1 et lancer un échec préparé.",
+      "apres": "Le seuil vaut Psychose + Angoisse. Aucun dépassement ; un état de folie est proposé.",
+      "attendu": "Le seuil vaut Psychose + Angoisse. Aucun dépassement ; un état de folie est proposé.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/la-decompensation-nevrotique.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "psychose",
+      "chapitre": "psychologie",
+      "intention": "Noter le point de Psychose.",
+      "avant": "Le résultat propose une suite, le meneur la confirme.",
+      "geste": "Noter le point de Psychose.",
+      "apres": "La Psychose augmente d’un. Le choix et la description de l’état de folie restent au meneur.",
+      "attendu": "La Psychose augmente d’un. Le choix et la description de l’état de folie restent au meneur.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/la-decompensation-nevrotique.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "dossier",
+      "chapitre": "enquete",
+      "intention": "Ouvrir les Indices de la campagne.",
+      "avant": "Les points d’enquête s’accumulent ; ils ne se dépensent pas.",
+      "geste": "Ouvrir les Indices de la campagne.",
+      "apres": "Le dossier affiche les styles possédés et les indices à portée.",
+      "attendu": "Le dossier affiche les styles possédés et les indices à portée.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/le-systeme-des-points-d-enquete-et-des-5-styles-d-enqueteur.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "seuil",
+      "chapitre": "enquete",
+      "intention": "Ajouter un point de Limier.",
+      "avant": "Le profil JET possède Limier et commence à deux points.",
+      "geste": "Ajouter un point de Limier.",
+      "apres": "Limier 3 atteint le seuil de la pièce RECETTE. L’indice reste caché tant qu’on ne le révèle pas.",
+      "attendu": "Limier 3 atteint le seuil de la pièce RECETTE. L’indice reste caché tant qu’on ne le révèle pas.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/le-systeme-des-points-d-enquete-et-des-5-styles-d-enqueteur.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "reveler",
+      "chapitre": "enquete",
+      "intention": "Révéler la pièce au profil JET seulement.",
+      "avant": "Révéler à un enquêteur est distinct du partage public.",
+      "geste": "Révéler la pièce au profil JET seulement.",
+      "apres": "L’indice est connu de JET ; son gain porte Limier à 4. Contrôle MJ, sans transport tablette.",
+      "attendu": "L’indice est connu de JET ; son gain porte Limier à 4. Contrôle MJ, sans transport tablette.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/le-systeme-des-points-d-enquete-et-des-5-styles-d-enqueteur.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "partager",
+      "chapitre": "enquete",
+      "intention": "Partager la seule pièce RECETTE à la table.",
+      "avant": "Quand l’enquêteur en parle, le meneur peut partager.",
+      "geste": "Partager la seule pièce RECETTE à la table.",
+      "apres": "La pièce devient publique. Aucun point n’est dépensé pour ce partage.",
+      "attendu": "La pièce devient publique. Aucun point n’est dépensé pour ce partage.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/le-systeme-des-points-d-enquete-et-des-5-styles-d-enqueteur.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "hypothese",
+      "chapitre": "enquete",
+      "intention": "Noter une hypothèse RECETTE.",
+      "avant": "Une hypothèse garde la piste de raisonnement de la table.",
+      "geste": "Noter une hypothèse RECETTE.",
+      "apres": "L’hypothèse est enregistrée. Elle ne devient pas un fait de l’affaire.",
+      "attendu": "L’hypothèse est enregistrée. Elle ne devient pas un fait de l’affaire.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/le-systeme-des-points-d-enquete-et-des-5-styles-d-enqueteur.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "rencontre",
+      "chapitre": "combat",
+      "intention": "Invoquer Opposant et choisir le profil CORPS.",
+      "avant": "Deux tireurs de recette vont échanger à dix mètres.",
+      "geste": "Invoquer Opposant et choisir le profil CORPS.",
+      "apres": "Copies préparées : Physique 5 chacun, Combat 2, Deprez contre Galand. Aucun héros engagé.",
+      "attendu": "Copies préparées : Physique 5 chacun, Combat 2, Deprez contre Galand. Aucun héros engagé.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/degats-et-types-de-degats.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "cibles",
+      "chapitre": "combat",
+      "intention": "Choisir les cibles réciproques.",
+      "avant": "Chaque carte doit désigner sa cible avant l’attaque.",
+      "geste": "Choisir les cibles réciproques.",
+      "apres": "Le plateau connaît qui vise qui. Pas de jet d’esquive opposé dans cet exemple de tirs.",
+      "attendu": "Le plateau connaît qui vise qui. Pas de jet d’esquive opposé dans cet exemple de tirs.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/degats-et-types-de-degats.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "initiative",
+      "chapitre": "combat",
+      "intention": "Utiliser Jet Système.",
+      "avant": "Sans surprise, le score tranche l’ordre des tirs.",
+      "geste": "Utiliser Jet Système.",
+      "apres": "CORPS : 5 + 2 − 1 = 6. Opposant : 5 + 2 − 2 = 5. Aucun d20 d’initiative.",
+      "attendu": "CORPS : 5 + 2 − 1 = 6. Opposant : 5 + 2 − 2 = 5. Aucun d20 d’initiative.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/degats-et-types-de-degats.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "preparer-tir",
+      "chapitre": "combat",
+      "intention": "Ouvrir le test de CORPS et régler son tir.",
+      "avant": "Le Deprez porte à trente mètres ; ici, la cible est à dix.",
+      "geste": "Ouvrir le test de CORPS et régler son tir.",
+      "apres": "Cible Opposant, opposition 0, protection 0. Le tir est dans la portée utile.",
+      "attendu": "Cible Opposant, opposition 0, protection 0. Le tir est dans la portée utile.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/degats-et-types-de-degats.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "tir-pj",
+      "chapitre": "combat",
+      "intention": "Lancer le tir au Deprez.",
+      "avant": "Exemple préparé : deux réussites sont gardées.",
+      "geste": "Lancer le tir au Deprez.",
+      "apres": "2 succès + dégâts fixes 5 − Physique 5 − protection 0 = 2 blessures.",
+      "attendu": "2 succès + dégâts fixes 5 − Physique 5 − protection 0 = 2 blessures.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/degats-et-types-de-degats.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "munitions",
+      "chapitre": "combat",
+      "intention": "Retirer une munition du Deprez.",
+      "avant": "Les munitions sont une règle optionnelle, suivie par clic.",
+      "geste": "Retirer une munition du Deprez.",
+      "apres": "Six devient cinq. Le rechargement demande deux assauts ; nous ne l’effectuons pas pendant cet échange.",
+      "attendu": "Six devient cinq. Le rechargement demande deux assauts ; nous ne l’effectuons pas pendant cet échange.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/degats-et-types-de-degats.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "infliger-pj",
+      "chapitre": "combat",
+      "intention": "Infliger les deux blessures à Opposant.",
+      "avant": "Le résultat ne blesse pas la cible sans confirmation.",
+      "geste": "Infliger les deux blessures à Opposant.",
+      "apres": "Le plateau affiche son Physique actuel à 3. La base reste 5.",
+      "attendu": "Le plateau affiche son Physique actuel à 3. La base reste 5.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/degats-et-types-de-degats.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "tour-adverse",
+      "chapitre": "combat",
+      "intention": "Passer son tour et ouvrir Attaquer.",
+      "avant": "Opposant répond avec son arme nommée dans l’équipement.",
+      "geste": "Passer son tour et ouvrir Attaquer.",
+      "apres": "Le Galand et la cible CORPS sont repris. Les blessures réduisent sa réserve à trois d10.",
+      "attendu": "Le Galand et la cible CORPS sont repris. Les blessures réduisent sa réserve à trois d10.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/degats-et-types-de-degats.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "tir-adverse",
+      "chapitre": "combat",
+      "intention": "Lancer le tir au Galand.",
+      "avant": "Exemple préparé : deux réussites sur trois dés.",
+      "geste": "Lancer le tir au Galand.",
+      "apres": "2 + dégâts fixes 5 − Physique 5 = 2 blessures. Aucun jet de dégâts séparé.",
+      "attendu": "2 + dégâts fixes 5 − Physique 5 = 2 blessures. Aucun jet de dégâts séparé.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/degats-et-types-de-degats.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "infliger-adverse",
+      "chapitre": "combat",
+      "intention": "Infliger le coup, retirer une munition et retrouver le plateau.",
+      "avant": "Vérifions la conséquence sur le personnage lié et la munition adverse.",
+      "geste": "Infliger le coup, retirer une munition et retrouver le plateau.",
+      "apres": "CORPS : deux blessures, Physique actuel 3. Opposant : cinq munitions restantes.",
+      "attendu": "CORPS : deux blessures, Physique actuel 3. Opposant : cinq munitions restantes.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/degats-et-types-de-degats.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "suite-cloture",
+      "chapitre": "combat",
+      "intention": "Ouvrir le round suivant puis consigner la fin.",
+      "avant": "L’assaut suivant dépend aussi du récit et des blessures.",
+      "geste": "Ouvrir le round suivant puis consigner la fin.",
+      "apres": "Le bilan est enregistré. Reset Combat vide le plateau après confirmation ; les blessures restent.",
+      "attendu": "Le bilan est enregistré. Reset Combat vide le plateau après confirmation ; les blessures restent.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/degats-et-types-de-degats.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "contact",
+      "chapitre": "suivi",
+      "intention": "Faire un appel au contact fictif de JET.",
+      "avant": "Un appel réduit la loyauté actuelle, sans changer sa base.",
+      "geste": "Faire un appel au contact fictif de JET.",
+      "apres": "Loyauté 3/3 devient 2/3. Confidentialité non garantie : le filtre conserve encore ces champs.",
+      "attendu": "Loyauté 3/3 devient 2/3. Confidentialité non garantie : le filtre conserve encore ces champs.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "fortune",
+      "chapitre": "suivi",
+      "intention": "Noter une rétribution.",
+      "avant": "La piste de fortune est proche de son seuil.",
+      "geste": "Noter une rétribution.",
+      "apres": "Niveau 2, piste 9 devient niveau 3, piste 5. Seuil 10 : choix du pilote, pas chiffre du livre.",
+      "attendu": "Niveau 2, piste 9 devient niveau 3, piste 5. Seuil 10 : choix du pilote, pas chiffre du livre.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "progression",
+      "chapitre": "suivi",
+      "intention": "Dépenser pour faire passer Mental de 4 à 5.",
+      "avant": "Une amélioration doit être justifiée dans l’histoire.",
+      "geste": "Dépenser pour faire passer Mental de 4 à 5.",
+      "apres": "Coût cinq points : développement 6 devient 1. Aucun gain automatique par séance.",
+      "attendu": "Coût cinq points : développement 6 devient 1. Aucun gain automatique par séance.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 2000
+    },
+    {
+      "id": "recharger",
+      "chapitre": "bilan",
+      "intention": "Recharger puis rouvrir la fiche de CORPS.",
+      "avant": "Rechargeons réellement la fenêtre pour vérifier les écritures.",
+      "geste": "Recharger puis rouvrir la fiche de CORPS.",
+      "apres": "Les deux blessures sont conservées. Les valeurs de JET et les héros sont également comparés.",
+      "attendu": "Les deux blessures sont conservées. Les valeurs de JET et les héros sont également comparés.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 0
+    },
+    {
+      "id": "bilan",
+      "chapitre": "bilan",
+      "intention": "Revenir au cockpit et retrouver la campagne.",
+      "avant": "Le pilote utilise les outils natifs de GM-OS.",
+      "geste": "Revenir au cockpit et retrouver la campagne.",
+      "apres": "Aucun module Crimes externe. Rivalités de styles, fortune commune et fiction restent au meneur.",
+      "attendu": "Aucun module Crimes externe. Rivalités de styles, fortune commune et fiction restent au meneur.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Crimes.md",
+        "docs/systems/crime/rules/resolution-des-jets.md"
+      ],
+      "lectureSupplementaireMs": 0
+    }
+  ]
+}

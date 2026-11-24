@@ -1,0 +1,9 @@
+{
+  "archiveSha256": "c0af90ecc55ebf57da14d9b5601bd3ab90ba97f0f645a1bd01cd3eeded8c231c",
+  "rapportSha256": "6add3280b4d07a65ffb6e840cbad31e4e9c07e4e62ea80a5a13a3e165076889f",
+  "codeVitest": 1,
+  "total": 133,
+  "reussis": 132,
+  "echecs": 1,
+  "anomalie": "CRI-A01 : conformité du caviardage des loyautés en échec, assertion conservée"
+}

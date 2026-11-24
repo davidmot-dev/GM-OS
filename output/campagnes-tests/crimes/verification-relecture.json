@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-20",
+  "archiveSha256": "c0af90ecc55ebf57da14d9b5601bd3ab90ba97f0f645a1bd01cd3eeded8c231c",
+  "rendusExaminees": true,
+  "imagesDecodeesEtRendues": 43,
+  "planchesRelues": 11,
+  "narrationRelue": true,
+  "typeRelecture": "Revue IA du scénario, des textes et des rendus. Aucun essai humain attribué à David.",
+  "narration": {
+    "seancesJouables": 12,
+    "scenesNarratives": 36,
+    "actesNarratifs": 4,
+    "ateliersHorsFiction": 8,
+    "finsAlternatives": 4,
+    "pointsExamines": [
+      "Chaque séance : ouverture, trois situations, voies alternatives, réactions, issues et transition.",
+      "Trois arcs de personnages liés aux sources et aux garanties, sans sacrifice imposé.",
+      "Douze pièces essentielles sans seuil ; détails supplémentaires à seuils alternatifs progressifs.",
+      "Démarches4et5 réordonnables ; pas de scène déjà achevée ni de résultat présumé.",
+      "Pas de lien obligatoire vers un atelier ; profils de recette distincts.",
+      "Restauration locale documentée ; gestes collectifs et remplacement de campagne distingués."
+    ]
+  },
+  "medias": "Dix plans schématiques sans échelle, cartouches de personnages et aides de lecture de pièces, bannière existante. Pas de portrait illustré, fac-similé historique ou son annoncé.",
+  "limites": [
+    "CRI-A01 : confidentialité des loyautés en échec dans le filtre pur.",
+    "Import Electron, rechargement réel, tablettes et partie : NON EXÉCUTÉS."
+  ]
+}

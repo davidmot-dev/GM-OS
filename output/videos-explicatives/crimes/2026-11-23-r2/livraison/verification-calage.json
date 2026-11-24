@@ -1,0 +1,13 @@
+{
+  "execute": true,
+  "type": "Revue IA des images source",
+  "decalageMs": 960,
+  "resolutionMs": 40,
+  "imagesExaminees": [
+    "calage/mire-0.jpg",
+    "calage/01-reperes.jpg",
+    "calage/20-reveler.jpg",
+    "calage/38-bilan.jpg"
+  ],
+  "constat": "Mire entière et interface complète. États de début/milieu/fin cohérents avec les gestes ; pas de dérive visible dans ces contrôles."
+}

@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "3bec70978c27bf8b206c8e54ed45a68f3fe027994dc643b2bbf80dcd6197fbbd",
+  "videoSha256": "a49aaac4413d3f200df7135cd3e4600050ffe6744d8302943817e3be57b2b829",
+  "testsCibles": 34,
+  "sequencesNormales": 38,
+  "cartes": 76,
+  "chapitres": 9,
+  "etatsAttendus": {
+    "nevrose": 5,
+    "psychose": 3,
+    "angoisse": 3,
+    "compteur_limier": 4,
+    "mental": 5,
+    "points_de_developpement": 1,
+    "fortune": 3,
+    "fortune_piste": 5,
+    "contacts_0_rating": 3,
+    "contacts_0_appels": 1,
+    "fatigue_physique": 0,
+    "epuisement_physique": 0,
+    "blessures_physique": 0
+  },
+  "tireurs": {
+    "physiqueDeBase": 5,
+    "blessures": 2,
+    "physiqueActuel": 3,
+    "munitions": 5
+  },
+  "indicesPartages": true,
+  "plateauVide": true,
+  "empreintesConformes": true,
+  "confidentialiteContacts": "DÉFAUT CRI-A01 REPRODUIT par le filtre pur, pas de transport exécuté",
+  "visionnageHumainContinu": "NON EXÉCUTÉ"
+}

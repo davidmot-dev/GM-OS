@@ -1,0 +1,7 @@
+[
+  {
+    "gravite": "avertissement",
+    "ou": "combat.statsToTrack",
+    "message": "La santé part de « physique », mais aucun champ de la fiche n'en porte la valeur courante (« isMainHP ») : les coups du combat ne s’écrivent pas sur la fiche. Marquer le champ de santé actuelle comme jauge principale."
+  }
+]

@@ -1,0 +1,228 @@
+{
+  "dateFixe": "2026-11-20T12:00:00.000Z",
+  "generateur": "crimes.mjs v1",
+  "gmosVersion": "6.5.0",
+  "node": "v24.13.1",
+  "campagne": {
+    "fichier": "01-Crimes-Les-Heures-rayees.gmos",
+    "sha256": "c0af90ecc55ebf57da14d9b5601bd3ab90ba97f0f645a1bd01cd3eeded8c231c"
+  },
+  "pilote": {
+    "source": "Export Dirvers/Crime_driver_gmos_1794393223784.gmos-driver",
+    "id": "custom-1792441893774",
+    "version": "1.0.0",
+    "sha256": "27e4ab98583885770fca16cd3a37b522f389b28abc5e1a97101454ec67005920"
+  },
+  "gabarit": {
+    "id": "tpl-1792441893774",
+    "champs": 231
+  },
+  "joueurs": [
+    {
+      "id": "p-1",
+      "realName": "Thomas D."
+    },
+    {
+      "id": "p-2",
+      "realName": "Marie C."
+    },
+    {
+      "id": "p-3",
+      "realName": "Lucas R."
+    }
+  ],
+  "releveJoueurs": {
+    "fichier": "outils/campagnes-de-recette/cthulhu-hack-joueurs.json",
+    "sha256": "0032dc5a6bec43dbf515ade46ce461b71858a2a5e2cb81bb27f1380d95d912fa"
+  },
+  "sources": [
+    {
+      "fichier": "outils/campagnes-de-recette/crimes.mjs",
+      "sha256": "a7657abae9cea312e098a456b0559f2b966112b0fdbfbf8c317786f319acf3e6"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/crimes-scenario.mjs",
+      "sha256": "cec2f829598533bea9ec0ac475201414f759302b35bb31499832ac7a36c8e8c3"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/crimes-recette.mjs",
+      "sha256": "026d17491522a011e9ca4aeaa9a67e552a39af2571c662b888e12094e19032fa"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/charger-typescript.mjs",
+      "sha256": "0ce4d1d77e4017e39147f3eb7948e3934a3cd27ec128563754af8931d72782c2"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/archives-de-recette.mjs",
+      "sha256": "93a6fd79a4234574e2dabd2d8330e2c8c5f617df3152bbb038916040a94f18ec"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/cthulhu-hack-joueurs.json",
+      "sha256": "0032dc5a6bec43dbf515ade46ce461b71858a2a5e2cb81bb27f1380d95d912fa"
+    }
+  ],
+  "sourcesRegles": [
+    {
+      "fichier": "docs/systems/crime/rules/composition-de-la-fiche-de-personnage.md",
+      "sha256": "0bb4994738f838ef52a6f8db606d586e329a69e3dd2ab0e409740b56f5271fa4"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/degats-et-types-de-degats.md",
+      "sha256": "51cdd794ddbd16aec72eb519654a53d889d24e6bba9dee8660370b6671b78257"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/degres-de-reussite-et-critiques.md",
+      "sha256": "9a16c1371cb0f1c4ab2bfece93cf347d3a1315d66df55e04b3e40122bc9e55de"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/distances-et-portees.md",
+      "sha256": "f68ea9370798422476b5bdf8941f205f1ce890ae24909c01b0de95eef95308ff"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/environnement-et-dangers.md",
+      "sha256": "7d86307cee0133675f2e6dc9e6e23a99bc9880a49f33af079ff04af2dbfe8edc"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/etats-et-conditions.md",
+      "sha256": "7ea9f0f53b183e63d5ca0dcef32132d822fed75cc61576d3f709be7dcb9b235d"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/initiative-et-deroulement-du-tour.md",
+      "sha256": "029fccc244435ab5cb52351cca87f59588208f8f7356c1967e240b97a4fb0eab"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/inventaire-des-mecaniques.md",
+      "sha256": "27851a6e25b22529bd1dfe4f07aa8744a328379fda67b98ac5b6daf8c705e254"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/jauges-et-ressources-individuelles.md",
+      "sha256": "7c12d8a5a7ce8339083854f996a8ec89412545a2c4ee94670bc645e996a9dd8e"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/jets-opposes-aide-et-cooperation.md",
+      "sha256": "d7b42d4c976d49732212e8bd421f5a0c070fab2915349ed33f205e1d702da852"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/la-decheance.md",
+      "sha256": "d54e040960a576cf3762ff546437fbe8a46a992822d6479ea099d51c5daf2ac5"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/la-decompensation-nevrotique.md",
+      "sha256": "b29c30739b0c664a73a927197471d02251e0e5906a998027c3dc9fbe8b8efe27"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/la-mecanique-des-passions-et-du-depassement.md",
+      "sha256": "feae33d6d648d85e0c952bbb93ac28820bfff8ce30098bd9cb5c14a44f38febd"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/le-systeme-des-points-d-enquete-et-des-5-styles-d-enqueteur.md",
+      "sha256": "59fad2fa5453ac1e6438eafff2cdf5dcfcb4f63a72284933a39afc4c89dff0bf"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/monnaie-de-table.md",
+      "sha256": "5632838821a66602afd9d7a58fb75c9b8f81bbee5039b1c7499e431f17c7b079"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/poursuites.md",
+      "sha256": "ab9ed679efc463d1e3c6dd4255699c41f0d7a45c03b053cbc1a49f675945843d"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/resolution-des-jets.md",
+      "sha256": "20486087f1454d458fcf76b2af5a8be716560e1ffe43fb9e3d508efe3e3968cc"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/sante-et-blessures.md",
+      "sha256": "fefee5730bb5b500aeb8506efb9f5239c5844a0ccd02f4cf2e7b9f3f6e552fa8"
+    },
+    {
+      "fichier": "docs/systems/crime/rules/ton-registre-et-ambiance.md",
+      "sha256": "b0798d25951eb820700a33084ae3797fee284dccd3157b8a392fd63cd5586042"
+    }
+  ],
+  "sourcesTechniques": [
+    {
+      "fichier": "src/modules/dice/systemes/potentielGarde.ts",
+      "sha256": "a43326b2bf0c221d3460de28c67ea4fb5ceb7582a98850f5b0c48d66de0a8910"
+    },
+    {
+      "fichier": "src/modules/dice/systemes/armesDeCrimes.ts",
+      "sha256": "edac06e28673bacfeb538e5c6a4a083608978a481f60fa497c3d804de272dc5f"
+    },
+    {
+      "fichier": "src/modules/dice/systemes/psychologieDeCrimes.ts",
+      "sha256": "580ecf403864d00d47b4785da7915a7dabaffdd8f09aeaaf5c0c73ebb586cd81"
+    },
+    {
+      "fichier": "src/modules/dice/systemes/contactsEtFortuneDeCrimes.ts",
+      "sha256": "3bc646fc93b6df30dfef0ddea792963edc650c208d51cd60804bc198b682e76d"
+    },
+    {
+      "fichier": "src/modules/dice/systemes/creationDeCrimes.ts",
+      "sha256": "defc03d9dde9acdf460b0983b81690c30197a47f744c5b974b91dda0fc6f1558"
+    },
+    {
+      "fichier": "src/modules/dice/DescripteurDeJet.ts",
+      "sha256": "fcd37781b663b847a9e9ca7d97ed537f875cbd78483365285722d72ef0039cae"
+    },
+    {
+      "fichier": "src/modules/session/logic/pointsDEnquete.ts",
+      "sha256": "998f34886b849e58da1616eecedad2e1ce05244a2f78fa1e69d230f79a5d26ce"
+    },
+    {
+      "fichier": "src/modules/system/archive/nexus.types.ts",
+      "sha256": "3df1e4d908110a12c5d9a47b903b1087b5e9d2e270c3e61be95b0242a4b8f1bd"
+    },
+    {
+      "fichier": "docs/systems/crime/fiche/correspondance.json",
+      "sha256": "601ed4fee94af183b266026c7c2356117ff13634f93a1b8893ed3ea071744f94"
+    },
+    {
+      "fichier": "docs/fiches/Crimes/crimes-fiche-personnage-interactive.html",
+      "sha256": "5273ea2b74f22fff3db927bb6ff3401823b39bf145857c1651df7ec8e881498b"
+    }
+  ],
+  "corpus": {
+    "fiches": 19,
+    "relu": true,
+    "dateRelecture": "2026-10-23",
+    "limite": "Corpus relu utilisé ; aucune nouvelle relecture intégrale du PDF revendiquée."
+  },
+  "modules": {
+    "corpusId": "crime",
+    "implicite": true,
+    "references": [],
+    "modules": [],
+    "erreurs": []
+  },
+  "seances": 12,
+  "scenes": 44,
+  "ateliers": 8,
+  "pjPrincipaux": 3,
+  "pjRecette": 3,
+  "pnj": 15,
+  "indices": 26,
+  "medias": 43,
+  "cas": 58,
+  "sourcesControles": [
+    {
+      "fichier": "outils/campagnes-de-recette/crimes.test.ts",
+      "sha256": "f260ccc79410273599471accc2179043571b51a5c80281a93288b6d71a2d1b1a"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/vitest-crimes.config.mts",
+      "sha256": "694e56c5aa7bcbd2fb178298f4a5f0c7fbbefbccf73d8bb0f8937ef77534945f"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/crimes-executer-tests.mjs",
+      "sha256": "aeda5f164a5d450c114ea13c05ce43dd18b1c86448ec7d774d0e399d1a366295"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/crimes-verifier.mjs",
+      "sha256": "9d5fcaa404a47e9806083fcf026c6c8652bdabcf87c1b62917a4e9c0072220f4"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/crimes-livrer.mjs",
+      "sha256": "813a8406505517f8de952cc972659c3d1690f70431848e1bd3606d03d0d9d6a1"
+    }
+  ]
+}

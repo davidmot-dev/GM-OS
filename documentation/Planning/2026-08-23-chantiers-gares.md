@@ -438,6 +438,20 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**23/11/2026 — Crimes, CRI-A01 : les loyautés de contacts restent dans la charge joueur.**
+Constat du lot de campagne du 20/11 retrouvé par le contrôle pur de la vidéo du 23/11 :
+`caviarderPourLesJoueurs` garde `contacts_0_rating` et `contacts_0_appels` (valeurs fictives 3 et 0),
+alors que ces informations relèvent du meneur (livre p. 430). **Pas de transport Hub essayé, pas
+de correctif applicatif dans le film** ; confidentialité non validée. Source et résultat dans
+`output/videos-explicatives/crimes/2026-11-23-r2/verification-import.json` ; assertion négative
+historique conservée dans le lot [Les Heures rayées](2026-11-20-campagne-test-crimes.md).
+
+**23/11/2026 — Crimes : barre générique PV encore pleine après les blessures.** Vue dans les
+résultats 29 et 32 du [film final](../../output/videos-explicatives/crimes/2026-11-23-r2/livraison/Crimes-2-GM-OS-1.0.0.mp4) :
+la carte conserve « PV 5/5 », alors que le badge Physique actuel indique correctement 3 et que
+la fiche porte deux blessures. Les conséquences et leur persistance sont vérifiées ; cette
+barre ne les suit pas. Limite signalée dans la notice, aucun correctif applicatif tenté.
+
 **20/11/2026 — Une question de la médiathèque remplace la fenêtre qui l'a ouverte.** Trouvé en
 corrigeant le § 266 : `useModalStore` n'a **qu'une place** (`type`). Ouverte depuis « Modifier la
 campagne » (ou un autre formulaire de `ModalProvider`), la médiathèque qui pose une question
@@ -15091,10 +15105,37 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
 - **Validé par David le 22/11** : « c'est bon c'est testé ».
 - **Reste** : la variante héroïque, non gérée ; les affrontements (§ 267, T17).
 
+### 272 · Crimes 2 — vidéo explicative sur Les Heures rayées — 23/11/2026
+
+**Demande de David :** « GM-OS Vidéos explicatives — Crimes ». Textes français sans voix,
+rythme plus vif conservé, aucun geste accéléré. Aucun changement du produit ou du pilote.
+
+**Livré : MP4 r2 de 16 min 47 s.** [Film](../../output/videos-explicatives/crimes/2026-11-23-r2/livraison/Crimes-2-GM-OS-1.0.0.mp4),
+[notice et limites](../../output/videos-explicatives/crimes/2026-11-23-r2/livraison/LIRE-MOI.md),
+[note de livraison](2026-11-23-video-explicative-crimes.md) et [reprise](2026-11-23-etat-et-reprise-video-crimes.md).
+Trente-huit séquences, soixante-seize cartes et neuf chapitres : fiche HTML, garde/dépassement,
+atteintes/récupération, psychologie, dossier d’enquête, échange complet PJ/PNJ, contacts,
+fortune, progression et rechargement réel. Build fixé et 34 contrôles ciblés passés ; répétition
+complète et prise normale réussies. La revue du premier montage a fait ajouter les trois confirmations de Névrose,
+désormais vérifiées 0→1→3→4, en plus de la fatigue. Le brouillon r1 reste conservé et non livré.
+MP4 final décodé intégralement, calage vérifié, 76 cartes et 38 résultats relus en images par
+l’IA, six vues détaillées ; pas de visionnage humain continu. SRT, transcription, neuf chapitres,
+copie de campagne et pilote exact joints. Empreintes de 21 fichiers, 33 sources et 947 fichiers
+du build contrôlées ; film SHA-256 `a49aaac4413d3f200df7135cd3e4600050ffe6744d8302943817e3be57b2b829`.
+
+Pilote Crimes 1.0.0 et copie de recette autorisée ; trois héros conservés, gestes sur les seuls
+profils synthétiques. Dépense de munition et deux blessures à chaque tireur, initiative 6/5,
+tirs à dix mètres. Aucune mêlée opposée ou tablette prétendue. Aucun module Crimes indépendant.
+Le défaut de confidentialité CRI-A01 est annoncé, pas corrigé ; la barre PV générique encore
+pleine est signalée dans la notice, le Physique actuel et les marques font foi. Le pilote n’est pas marqué testé
+par David. Instance, sauvegardes/corpus/coffre jetables et ports 4100/4101 déjà autorisés ;
+aucune donnée personnelle, installation, publication ou commande git d’écriture.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 208 | **Crimes 2 — vidéo explicative complète** | § 272 ; 🟢 MP4 16 min 47 s livré le 23/11 ; 38 séquences, 76 cartes relues en images, 34 tests ciblés ; Névrose confirmée et limites CRI-A01/PV consignées | Ouvrir le MP4 et ses chapitres ; confort humain restant à juger | Rien pour la livraison ; aucun essai attribué à David |
 | 207 | **Pénombre — recompte de la réserve collégiale, pilote 2.1.0** | § 271 ; 🟢 livré le 22/11, validé par David le jour même — seul après une merveille, et un bouton ; bestiaire de David gardé ; un avertissement laissé pour T17 | Aucun — clos | Rien |
 | 206 | **Pénombre — pilote 2.0.0, corpus relu, fiche reliée** | § 270 ; 🟢 livré le 22/11, validé par David le jour même — `jet.penombre`, jetons et réserve collégiale, corpus 19/19, fiche au moteur 28 ; affrontements consignés au § 267 (T17) | Aucun — le recompte est au § 271 | Rien |
 | 205 | **Socle commun BRP — corpus relu contre le livre** | § 269 ; 🟢 relu 17/17 le 21/11, pilote abandonné à la demande de David | Retirer le pilote par la corbeille (pas la gomme) | Rien |

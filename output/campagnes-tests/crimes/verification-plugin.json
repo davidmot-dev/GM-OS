@@ -1,0 +1,5 @@
+{
+  "archiveSha256": "c0af90ecc55ebf57da14d9b5601bd3ab90ba97f0f645a1bd01cd3eeded8c231c",
+  "outil": "gmos_bundle.py verify — contrôle structurel partiel",
+  "sortie": "{\r\n  \"valid\": true,\r\n  \"errors\": [],\r\n  \"limits\": [\r\n    \"Structure Nexus v1 partielle ; règles, satellites, médias décodés, import GM-OS, tablettes et matériel non vérifiés par cet outil.\"\r\n  ],\r\n  \"sha256\": \"c0af90ecc55ebf57da14d9b5601bd3ab90ba97f0f645a1bd01cd3eeded8c231c\",\r\n  \"campaignId\": \"recette-crimes-heures-20261120-campagne-complete\",\r\n  \"players\": 3,\r\n  \"characters\": 6,\r\n  \"assets\": 43\r\n}\r\n"
+}

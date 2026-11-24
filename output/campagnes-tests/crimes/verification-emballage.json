@@ -1,0 +1,16 @@
+{
+  "zip": "Crimes-Les-Heures-rayees-Campagne-de-test.zip",
+  "sha256": "c8d7003958836e3498f11d7128588f26f9f276167f8271f7871a213de1874153",
+  "octets": 3962552,
+  "campagnes": 1,
+  "fichiers": 91,
+  "empreintesVerifiees": 90,
+  "archive": {
+    "fichier": "01-Crimes-Les-Heures-rayees.gmos",
+    "sha256": "c0af90ecc55ebf57da14d9b5601bd3ab90ba97f0f645a1bd01cd3eeded8c231c"
+  },
+  "recetteHumaine": "NON TESTÉ",
+  "echecsConformite": [
+    "CRI-A01"
+  ]
+}

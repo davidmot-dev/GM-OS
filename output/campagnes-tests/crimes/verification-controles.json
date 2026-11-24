@@ -1,0 +1,13 @@
+{
+  "archiveSha256": "c0af90ecc55ebf57da14d9b5601bd3ab90ba97f0f645a1bd01cd3eeded8c231c",
+  "total": 133,
+  "reussis": 132,
+  "echecs": 1,
+  "echecsConnus": [
+    "Crimes — archive livrée, règles et portabilité en mémoire [CRI-A01] la loyauté du contact réservée au MJ doit être absente de la charge joueur"
+  ],
+  "import": "Nexus réel en mémoire et sauvegarde validée, pas import Electron",
+  "recetteHumaine": "NON TESTÉ",
+  "electron": "NON EXÉCUTÉ",
+  "hub": "NON EXÉCUTÉ"
+}

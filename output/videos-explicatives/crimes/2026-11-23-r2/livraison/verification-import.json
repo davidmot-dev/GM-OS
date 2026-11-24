@@ -1,0 +1,30 @@
+{
+  "nexus": true,
+  "sauvegardeValidee": true,
+  "version": "1.0.0",
+  "pilote": "custom-1792441893774",
+  "gabarit": "tpl-1792441893774",
+  "champs": 231,
+  "personnages": 6,
+  "pnj": 15,
+  "medias": 43,
+  "modules": {
+    "corpusId": "crime",
+    "implicite": true,
+    "references": [],
+    "modules": [],
+    "erreurs": []
+  },
+  "adaptations": "Valeurs de démonstration sur JET, CORPS et Opposant seulement ; héros inchangés. Deux tirs à 10 m sans opposition, armes Deprez/Galand et munitions 6. JET : sport2, pratique1, Fortune9, développement6, Limier2. Névrose initiale JET 0 pour montrer les confirmations 0→1→3→4 ; les autres états de l’atelier historique ne définissent pas cette copie de tournage.",
+  "calculs": {
+    "attaque": "2 succès − 0 + 5 (Revolver Deprez) − 5 (Physique) − 0 (protection) = 2",
+    "reponse": "2 succès − 0 + 5 (Revolver Galand) − 5 (Physique) − 0 (protection) = 2"
+  },
+  "confidentialiteContacts": {
+    "loyauteEncorePresente": true,
+    "appelsEncorePresents": true,
+    "portee": "Filtre pur, pas de transport Hub ; reprise du constat historique CRI-A01, sans correctif applicatif."
+  },
+  "donneesPersonnellesLues": false,
+  "nevroseInitialeJET": 0
+}

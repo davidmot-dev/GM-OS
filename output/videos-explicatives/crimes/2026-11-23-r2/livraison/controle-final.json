@@ -1,0 +1,30 @@
+{
+  "revision": "2026-11-23-r2",
+  "videoSha256": "a49aaac4413d3f200df7135cd3e4600050ffe6744d8302943817e3be57b2b829",
+  "imagesFinalesRelues": true,
+  "cartesControlees": 76,
+  "resultatsControles": 38,
+  "planchesCartesRelues": 13,
+  "planchesResultatsRelues": 10,
+  "imagesDetailleesRelues": [
+    "06-nevrose-mitigee.jpg",
+    "08-nevrose-garde.jpg",
+    "11-nevrose-depassement.jpg",
+    "27-tir-pj.jpg",
+    "31-tir-adverse.jpg",
+    "37-recharger.jpg"
+  ],
+  "methode": "Revue IA des images extraites du MP4 final : toutes les cartes et tous les résultats, puis six images détaillées. Mire et résultats bruts début/milieu/fin examinés séparément avant validation du calage.",
+  "suitesNevrose": "Confirmations visibles 0→1→3→4 ; fatigue de dépassement payée séparément. Angoisse +1 porte ensuite Névrose à 5.",
+  "combat": "Deux tirs natifs à dix mètres, deux blessures chacun, munitions 6→5 chacune ; Physique actuel 3, conservé après rechargement réel.",
+  "texteCoupeObserve": false,
+  "visionnageHumainContinu": false,
+  "confortHumainCertifie": false,
+  "validationDavid": false,
+  "limites": [
+    "CRI-A01 : loyauté et appels conservés dans le filtre joueur ; aucun transport Hub testé.",
+    "Barre générique PV 5/5 encore visible au combat : lire les marques et le badge Physique actuel pour Crimes.",
+    "Fiche HTML en vue d’ensemble ; petits libellés à lire en plein écran.",
+    "Aucun visionnage humain continu ; le calcul des durées ne certifie pas le confort humain."
+  ]
+}

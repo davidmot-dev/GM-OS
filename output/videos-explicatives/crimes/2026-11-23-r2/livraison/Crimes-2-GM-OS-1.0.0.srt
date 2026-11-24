@@ -1,0 +1,387 @@
+1
+00:00:00,000 --> 00:00:07,767
+Crimes 2, pilote 1.0.0. Les Heures rayées est
+notre campagne de test.
+
+2
+00:00:10,041 --> 00:00:17,841
+Dés préparés et profils RECETTE annoncés. Les
+héros de l’affaire restent intacts.
+
+3
+00:00:20,320 --> 00:00:27,325
+La fiche du jeu conserve ses rubriques et ses
+pistes.
+
+4
+00:00:47,530 --> 00:00:56,741
+Fiche réelle, liée à Gabriel Bréant. Vue
+d’ensemble : zoomer pour lire les petits
+libellés.
+
+5
+00:00:59,280 --> 00:01:06,289
+Pour essayer les mécanismes, utilisons le
+profil JET.
+
+6
+00:01:17,374 --> 00:01:25,812
+Physique 5, Mental 4, Social 3. Fatigue,
+épuisement et blessures réduisent les
+Potentiels.
+
+7
+00:01:28,280 --> 00:01:37,575
+Le Potentiel donne les d10 ; la Compétence
+fixe la garde.
+
+8
+00:01:41,349 --> 00:01:52,074
+Physique 5 : cinq d10. Sport 2 : deux gardés,
+au seuil de 8.
+
+9
+00:01:54,560 --> 00:02:03,574
+Exemple préparé : 1, 3, 4, 9 et 10.
+
+10
+00:02:06,634 --> 00:02:16,401
+Le 1 est imposé. Garder 1 et 10 donne une
+réussite mitigée.
+
+11
+00:02:18,880 --> 00:02:27,888
+Une réussite écartée fait proposer un point de
+Névrose.
+
+12
+00:02:31,802 --> 00:02:42,529
+Névrose 0 devient 1. Le résultat du jet et ses
+conséquences sont deux étapes.
+
+13
+00:02:45,040 --> 00:02:52,046
+On peut garder de mauvais dés pour échouer
+volontairement.
+
+14
+00:02:58,759 --> 00:03:07,962
+La garde choisie devient un échec. Consigner
+confirme ce choix ; les 1 resteraient imposés.
+
+15
+00:03:10,440 --> 00:03:19,453
+Cet échec et les réussites rejetées proposent
+deux points.
+
+16
+00:03:23,381 --> 00:03:33,638
+Névrose 1 devient 3. Choisir sa garde ne
+dispense pas de ses conséquences.
+
+17
+00:03:36,120 --> 00:03:43,132
+Une passion ou conviction doit justifier le
+dépassement.
+
+18
+00:03:46,595 --> 00:03:55,321
+Le choix est annoncé avant les dés. Il ne
+donne pas un bonus gratuit.
+
+19
+00:03:57,800 --> 00:04:07,093
+Exemple préparé : une réussite utile reste
+hors de la garde.
+
+20
+00:04:11,408 --> 00:04:22,135
+Une fatigue est inscrite sur le Physique. Un
+seul dépassement est permis par scène.
+
+21
+00:04:24,600 --> 00:04:33,605
+Après le dépassement, une réussite reste
+encore écartée.
+
+22
+00:04:37,456 --> 00:04:47,705
+Névrose 3 devient 4. La fatigue déjà payée
+reste présente sur le Physique.
+
+23
+00:04:50,240 --> 00:04:59,247
+Une marque plus grave remplace d’abord une
+marque moindre.
+
+24
+00:05:06,437 --> 00:05:16,680
+Une fatigue, un épuisement, une blessure :
+Physique actuel 2, base 5 conservée.
+
+25
+00:05:19,200 --> 00:05:26,210
+Bonne nuit présente les changements avant de
+les appliquer.
+
+26
+00:05:31,957 --> 00:05:40,682
+Fatigue et un épuisement disparaissent. La
+blessure reste ; ce geste concerne le groupe.
+
+27
+00:05:43,200 --> 00:05:50,207
+Pour poursuivre l’exercice, le meneur accorde
+le soin.
+
+28
+00:05:58,005 --> 00:06:07,691
+Le Physique retrouve 5. Ce clic ne décide pas
+à lui seul des conditions de soin.
+
+29
+00:06:10,200 --> 00:06:17,204
+L’ambiance angoissante touche aussi la
+Névrose.
+
+30
+00:06:21,840 --> 00:06:30,578
+Angoisse et Névrose montent ensemble. Les
+seuils et états de folie restent à
+interpréter.
+
+31
+00:06:33,120 --> 00:06:42,133
+Le test psychotique utilise le Mental actuel.
+
+32
+00:06:45,885 --> 00:06:57,087
+Le seuil vaut Psychose + Angoisse. Aucun
+dépassement ; un état de folie est proposé.
+
+33
+00:06:59,600 --> 00:07:06,615
+Le résultat propose une suite, le meneur la
+confirme.
+
+34
+00:07:09,575 --> 00:07:19,259
+La Psychose augmente d’un. Le choix et la
+description de l’état de folie restent au
+meneur.
+
+35
+00:07:21,760 --> 00:07:28,772
+Les points d’enquête s’accumulent ; ils ne se
+dépensent pas.
+
+36
+00:07:35,651 --> 00:07:42,936
+Le dossier affiche les styles possédés et les
+indices à portée.
+
+37
+00:07:45,440 --> 00:07:54,457
+Le profil JET possède Limier et commence à
+deux points.
+
+38
+00:07:57,752 --> 00:08:10,402
+Limier 3 atteint le seuil de la pièce RECETTE.
+L’indice reste caché tant qu’on ne le révèle
+pas.
+
+39
+00:08:12,880 --> 00:08:21,887
+Révéler à un enquêteur est distinct du partage
+public.
+
+40
+00:08:25,119 --> 00:08:37,294
+L’indice est connu de JET ; son gain porte
+Limier à 4. Contrôle MJ, sans transport
+tablette.
+
+41
+00:08:39,800 --> 00:08:46,808
+Quand l’enquêteur en parle, le meneur peut
+partager.
+
+42
+00:08:49,366 --> 00:08:56,652
+La pièce devient publique. Aucun point n’est
+dépensé pour ce partage.
+
+43
+00:08:59,200 --> 00:09:06,204
+Une hypothèse garde la piste de raisonnement
+de la table.
+
+44
+00:09:13,161 --> 00:09:20,457
+L’hypothèse est enregistrée. Elle ne devient
+pas un fait de l’affaire.
+
+45
+00:09:23,000 --> 00:09:30,008
+Deux tireurs de recette vont échanger à dix
+mètres.
+
+46
+00:09:38,841 --> 00:09:47,564
+Copies préparées : Physique 5 chacun, Combat
+2, Deprez contre Galand. Aucun héros engagé.
+
+47
+00:09:50,080 --> 00:09:57,095
+Chaque carte doit désigner sa cible avant
+l’attaque.
+
+48
+00:10:02,907 --> 00:10:12,592
+Le plateau connaît qui vise qui. Pas de jet
+d’esquive opposé dans cet exemple de tirs.
+
+49
+00:10:15,080 --> 00:10:24,089
+Sans surprise, le score tranche l’ordre des
+tirs.
+
+50
+00:10:27,579 --> 00:10:41,664
+CORPS : 5 + 2 − 1 = 6. Opposant : 5 + 2 − 2 =
+5. Aucun d20 d’initiative.
+
+51
+00:10:44,200 --> 00:10:52,444
+Le Deprez porte à trente mètres ; ici, la
+cible est à dix.
+
+52
+00:11:07,761 --> 00:11:16,008
+Cible Opposant, opposition 0, protection 0. Le
+tir est dans la portée utile.
+
+53
+00:11:18,520 --> 00:11:27,530
+Exemple préparé : deux réussites sont gardées.
+
+54
+00:11:30,559 --> 00:11:41,766
+2 succès + dégâts fixes 5 − Physique 5 −
+protection 0 = 2 blessures.
+
+55
+00:11:44,240 --> 00:11:53,253
+Les munitions sont une règle optionnelle,
+suivie par clic.
+
+56
+00:11:56,262 --> 00:12:07,947
+Six devient cinq. Le rechargement demande deux
+assauts ; nous ne l’effectuons pas pendant cet
+échange.
+
+57
+00:12:10,480 --> 00:12:19,496
+Le résultat ne blesse pas la cible sans
+confirmation.
+
+58
+00:12:23,638 --> 00:12:33,400
+Le plateau affiche son Physique actuel à 3. La
+base reste 5.
+
+59
+00:12:35,880 --> 00:12:42,882
+Opposant répond avec son arme nommée dans
+l’équipement.
+
+60
+00:12:51,191 --> 00:13:00,878
+Le Galand et la cible CORPS sont repris. Les
+blessures réduisent sa réserve à trois d10.
+
+61
+00:13:03,360 --> 00:13:12,374
+Exemple préparé : deux réussites sur trois
+dés.
+
+62
+00:13:15,974 --> 00:13:27,656
+2 + dégâts fixes 5 − Physique 5 = 2 blessures.
+Aucun jet de dégâts séparé.
+
+63
+00:13:30,160 --> 00:13:39,452
+Vérifions la conséquence sur le personnage lié
+et la munition adverse.
+
+64
+00:13:44,405 --> 00:13:54,174
+CORPS : deux blessures, Physique actuel 3.
+Opposant : cinq munitions restantes.
+
+65
+00:13:56,680 --> 00:14:03,681
+L’assaut suivant dépend aussi du récit et des
+blessures.
+
+66
+00:14:10,258 --> 00:14:19,468
+Le bilan est enregistré. Reset Combat vide le
+plateau après confirmation ; les blessures
+restent.
+
+67
+00:14:22,000 --> 00:14:31,001
+Un appel réduit la loyauté actuelle, sans
+changer sa base.
+
+68
+00:14:41,709 --> 00:14:52,441
+Loyauté 3/3 devient 2/3. Confidentialité non
+garantie : le filtre conserve encore ces
+champs.
+
+69
+00:14:54,920 --> 00:15:03,930
+La piste de fortune est proche de son seuil.
+
+70
+00:15:06,957 --> 00:15:20,089
+Niveau 2, piste 9 devient niveau 3, piste 5.
+Seuil 10 : choix du pilote, pas chiffre du
+livre.
+
+71
+00:15:22,600 --> 00:15:31,601
+Une amélioration doit être justifiée dans
+l’histoire.
+
+72
+00:15:37,106 --> 00:15:47,354
+Coût cinq points : développement 6 devient 1.
+Aucun gain automatique par séance.
+
+73
+00:15:49,840 --> 00:15:56,853
+Rechargeons réellement la fenêtre pour
+vérifier les écritures.
+
+74
+00:16:12,554 --> 00:16:21,761
+Les deux blessures sont conservées. Les
+valeurs de JET et les héros sont également
+comparés.
+
+75
+00:16:24,280 --> 00:16:31,284
+Le pilote utilise les outils natifs de GM-OS.
+
+76
+00:16:35,289 --> 00:16:44,078
+Aucun module Crimes externe. Rivalités de
+styles, fortune commune et fiction restent au
+meneur.
+

@@ -1,0 +1,391 @@
+{
+  "profilRythme": "dynamique-demande-David-2026-11-19",
+  "demandeRythme": "Préférence persistante de David : textes à l’écran sans voix ; « Accélère un peu les vidéos ». Même rythme que les films Alien et Nephilim, sans accélération des gestes.",
+  "titre": "Crimes 2 — enquêter et agir dans GM-OS",
+  "mode": "texte",
+  "voix": false,
+  "pisteAudio": false,
+  "planSha256": "c9e999b5e28dbcae53cc0609623e58cf8f552e35fc35079a2f80845fb1e309a7",
+  "lectureSha256": "164fc1c74a66c78d4705691f6dd1f8fc793ba7948d8ec066e9f6ec14d7f927ab",
+  "prisesSha256": "f78b02f81a065a355eab3e886089764c17bf7961740f9ebde8b86c9b6c1d2212",
+  "videoSha256": "a49aaac4413d3f200df7135cd3e4600050ffe6744d8302943817e3be57b2b829",
+  "dureeSecondes": 1006.6,
+  "decodageIntegral": true,
+  "acceleration": false,
+  "chapitres": [
+    {
+      "id": "reperes",
+      "titre": "Campagne et copies de recette",
+      "debutMs": 0,
+      "finMs": 20320
+    },
+    {
+      "id": "specificites",
+      "titre": "Fiche, Potentiels et atteintes",
+      "debutMs": 20320,
+      "finMs": 88280
+    },
+    {
+      "id": "jet",
+      "titre": "Garder ses dés et se dépasser",
+      "debutMs": 88280,
+      "finMs": 290240
+    },
+    {
+      "id": "sante",
+      "titre": "Atteintes et récupération",
+      "debutMs": 290240,
+      "finMs": 370200
+    },
+    {
+      "id": "psychologie",
+      "titre": "Angoisse et test psychotique",
+      "debutMs": 370200,
+      "finMs": 441760
+    },
+    {
+      "id": "enquete",
+      "titre": "Découvrir, révéler et partager",
+      "debutMs": 441760,
+      "finMs": 563000
+    },
+    {
+      "id": "combat",
+      "titre": "Un échange complet dans Combat-OS",
+      "debutMs": 563000,
+      "finMs": 862000
+    },
+    {
+      "id": "suivi",
+      "titre": "Contacts, fortune et progression",
+      "debutMs": 862000,
+      "finMs": 949840
+    },
+    {
+      "id": "bilan",
+      "titre": "Recharger et reprendre",
+      "debutMs": 949840,
+      "finMs": 1006600
+    }
+  ],
+  "segments": [
+    {
+      "id": "reperes",
+      "fichier": "segments/000.mp4",
+      "dureeMs": 20320,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Campagne de test et accès natifs visibles."
+    },
+    {
+      "id": "fiche-html",
+      "fichier": "segments/001.mp4",
+      "dureeMs": 38960,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Fiche HTML réelle créée et liée au héros sans changer ses valeurs."
+    },
+    {
+      "id": "fiche-jet",
+      "fichier": "segments/002.mp4",
+      "dureeMs": 29000,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "JET sélectionné ; les héros restent hors des essais."
+    },
+    {
+      "id": "composer",
+      "fichier": "segments/003.mp4",
+      "dureeMs": 26280,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Physique5, Sport2, seuil8."
+    },
+    {
+      "id": "mitigee",
+      "fichier": "segments/004.mp4",
+      "dureeMs": 24320,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Garde1et10, bilan mitigé calculé au moteur."
+    },
+    {
+      "id": "nevrose-mitigee",
+      "fichier": "segments/005.mp4",
+      "dureeMs": 26160,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Suite du résultat confirmée : Névrose0→1, réussite écartée."
+    },
+    {
+      "id": "garde-choisie",
+      "fichier": "segments/006.mp4",
+      "dureeMs": 25400,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "3et4 choisis, échec confirmé."
+    },
+    {
+      "id": "nevrose-garde",
+      "fichier": "segments/007.mp4",
+      "dureeMs": 25680,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Garde volontaire confirmée puis conséquences : Névrose1→3."
+    },
+    {
+      "id": "preparer-depassement",
+      "fichier": "segments/008.mp4",
+      "dureeMs": 21680,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Dépassement engagé avant le lancer."
+    },
+    {
+      "id": "depassement",
+      "fichier": "segments/009.mp4",
+      "dureeMs": 26800,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Une réussite ajoutée, fatiguePhysique1 et verrou de scène vérifiés."
+    },
+    {
+      "id": "nevrose-depassement",
+      "fichier": "segments/010.mp4",
+      "dureeMs": 25640,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Névrose3→4 et fatiguePhysique1 conservée."
+    },
+    {
+      "id": "atteintes",
+      "fichier": "segments/011.mp4",
+      "dureeMs": 28960,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Trois marques, Physique de base5 conservé, actuel2."
+    },
+    {
+      "id": "bonne-nuit",
+      "fichier": "segments/012.mp4",
+      "dureeMs": 24000,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Prévisualisation puis application de Bonne nuit ; blessure gardée."
+    },
+    {
+      "id": "soigner",
+      "fichier": "segments/013.mp4",
+      "dureeMs": 27000,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Soin manuel accordé, dernière blessure retirée."
+    },
+    {
+      "id": "angoisse",
+      "fichier": "segments/014.mp4",
+      "dureeMs": 22920,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Angoisse et Névrose montent ensemble, comparaison avant/après."
+    },
+    {
+      "id": "test-psychotique",
+      "fichier": "segments/015.mp4",
+      "dureeMs": 26480,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "TestMental GARDE1 échoue au seuil natif Psychose+Angoisse."
+    },
+    {
+      "id": "psychose",
+      "fichier": "segments/016.mp4",
+      "dureeMs": 22160,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Psychose+1 explicitement confirmée."
+    },
+    {
+      "id": "dossier",
+      "fichier": "segments/017.mp4",
+      "dureeMs": 23680,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Dossier réel de la campagne, tableau des styles."
+    },
+    {
+      "id": "seuil",
+      "fichier": "segments/018.mp4",
+      "dureeMs": 27440,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "PièceRECETTE à portée, pas encore révélée."
+    },
+    {
+      "id": "reveler",
+      "fichier": "segments/019.mp4",
+      "dureeMs": 26920,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Connu du seulJET dans étatMJ, Limier4 ; aucune tablette prétendue."
+    },
+    {
+      "id": "partager",
+      "fichier": "segments/020.mp4",
+      "dureeMs": 19400,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Pièce partagée, points4 conservés."
+    },
+    {
+      "id": "hypothese",
+      "fichier": "segments/021.mp4",
+      "dureeMs": 23800,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Hypothèse fictive enregistrée par le formulaire réel."
+    },
+    {
+      "id": "rencontre",
+      "fichier": "segments/022.mp4",
+      "dureeMs": 27080,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "CORPS et Opposant réellement invoqués depuis la rencontre de recette."
+    },
+    {
+      "id": "cibles",
+      "fichier": "segments/023.mp4",
+      "dureeMs": 25000,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Cibles réciproques choisies dans les menus natifs."
+    },
+    {
+      "id": "initiative",
+      "fichier": "segments/024.mp4",
+      "dureeMs": 29120,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Scores natifs6et5, aucun dé d’initiative."
+    },
+    {
+      "id": "preparer-tir",
+      "fichier": "segments/025.mp4",
+      "dureeMs": 34320,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Deprez, dix mètres, cibleOpposant, opposition0 et protection0."
+    },
+    {
+      "id": "tir-pj",
+      "fichier": "segments/026.mp4",
+      "dureeMs": 25720,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Deux réussites, calcul2+5−5=2 affiché."
+    },
+    {
+      "id": "munitions",
+      "fichier": "segments/027.mp4",
+      "dureeMs": 26240,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Munition du tir précédent retirée explicitement, six→cinq, sans nouveau lancer."
+    },
+    {
+      "id": "infliger-pj",
+      "fichier": "segments/028.mp4",
+      "dureeMs": 25400,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Deux blessures écrites sur PNJ lié, Physiqueactuel3 au plateau."
+    },
+    {
+      "id": "tour-adverse",
+      "fichier": "segments/029.mp4",
+      "dureeMs": 27480,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Attaquer PNJ ouvre le Galand sur la cibleCORPS, réserve trois dés."
+    },
+    {
+      "id": "tir-adverse",
+      "fichier": "segments/030.mp4",
+      "dureeMs": 26800,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Jet adverse natif, deux réussites et deux blessures calculées."
+    },
+    {
+      "id": "infliger-adverse",
+      "fichier": "segments/031.mp4",
+      "dureeMs": 26520,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "CORPS lié reçoit deux blessures ; Physiqueactuel3 ; munitionadverse6→5."
+    },
+    {
+      "id": "suite-cloture",
+      "fichier": "segments/032.mp4",
+      "dureeMs": 25320,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Round2 puis bilan consigné, plateau vidé avec confirmation, blessures conservées."
+    },
+    {
+      "id": "contact",
+      "fichier": "segments/033.mp4",
+      "dureeMs": 32920,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Loyauté actuelle2, base3 conservée ; défaut de caviardage annoncé dans les textes."
+    },
+    {
+      "id": "fortune",
+      "fichier": "segments/034.mp4",
+      "dureeMs": 27680,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Fortune2/9 devient3/5, seuil10 du pilote."
+    },
+    {
+      "id": "progression",
+      "fichier": "segments/035.mp4",
+      "dureeMs": 27240,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Mental4→5, développement6→1, coût réellement écrit."
+    },
+    {
+      "id": "recharger",
+      "fichier": "segments/036.mp4",
+      "dureeMs": 34440,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "Rechargement réel de fenêtre ; six fiches identiques, blessuresCORPS2 gardées."
+    },
+    {
+      "id": "bilan",
+      "fichier": "segments/037.mp4",
+      "dureeMs": 22320,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\crimes\\2026-11-23-r2\\prises-r1\\page@80abce9f5d5d162159aaf18e1868ded4.webm",
+      "sourceSha256": "adaabccdefbbac2c9315956638e62b3ae22564774d29c293249e56f19853b40f",
+      "observation": "État final de la campagne de tournage conservé, aucun module externe annoncé."
+    }
+  ],
+  "cartes": 76,
+  "lecture": {
+    "motsParMinute": 125,
+    "caracteresParSeconde": 14,
+    "minimumMs": 5000,
+    "installationMs": 800,
+    "margeMs": 1200,
+    "caracteresParLigne": 46,
+    "lignesMaximum": 3
+  },
+  "pisteTextesParDefaut": false,
+  "visionnage": "NON EXÉCUTÉ",
+  "confortLectureHumain": "NON ÉVALUÉ — relire toutes les cartes et augmenter leurs durées si nécessaire.",
+  "note": "Calcul et minimums de lecture contrôlés ; ceci ne remplace pas la relecture du film final."
+}
