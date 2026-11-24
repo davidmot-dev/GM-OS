@@ -445,12 +445,14 @@ alors que ces informations relèvent du meneur (livre p. 430). **Pas de transpor
 de correctif applicatif dans le film** ; confidentialité non validée. Source et résultat dans
 `output/videos-explicatives/crimes/2026-11-23-r2/verification-import.json` ; assertion négative
 historique conservée dans le lot [Les Heures rayées](2026-11-20-campagne-test-crimes.md).
+✅ **Corrigé le 24/11/2026 (§ 273)** : `caviarderPourLesJoueurs` retire `contacts_N_rating` et `contacts_N_appels` à toute profondeur (p. 430 relue : « ce point relève de la gestion du meneur ») ; le nom et l'influence restent. La recette Crimes passe sans échec (135/135) et ses deux scripts n'attendent plus d'échec ; les preuves du 20/11 sont gardées. Transport Hub non essayé.
 
 **23/11/2026 — Crimes : barre générique PV encore pleine après les blessures.** Vue dans les
 résultats 29 et 32 du [film final](../../output/videos-explicatives/crimes/2026-11-23-r2/livraison/Crimes-2-GM-OS-1.0.0.mp4) :
 la carte conserve « PV 5/5 », alors que le badge Physique actuel indique correctement 3 et que
 la fiche porte deux blessures. Les conséquences et leur persistance sont vérifiées ; cette
 barre ne les suit pas. Limite signalée dans la notice, aucun correctif applicatif tenté.
+✅ **Corrigé le 24/11/2026 (§ 273)** : la barre de la carte suit le Physique actuel, en lecture seule (`santeDesAtteintes`) ; Crimes n'a plus ni console Dégâts / Soins ni « Calculer ».
 
 **20/11/2026 — Une question de la médiathèque remplace la fenêtre qui l'a ouverte.** Trouvé en
 corrigeant le § 266 : `useModalStore` n'a **qu'une place** (`type`). Ouverte depuis « Modifier la
@@ -460,6 +462,7 @@ campagne » (ou un autre formulaire de `ModalProvider`), la médiathèque qui po
 enregistrées sont perdues**. Lu dans le code (`useModalStore.ts:32-80`, `MediaBrowser.tsx:195-214,
 732, 849`), pas encore reproduit à l'écran. **Non traité** : il faudrait une pile de fenêtres, à
 proposer à David. En attendant : choisir l'image sans renommer ni supprimer depuis ce formulaire.
+✅ **Corrigé le 24/11/2026 (§ 273)** : les questions de la médiathèque se posent par-dessus la fenêtre (`gmConfirmParDessus`, `gmPromptParDessus`), le formulaire reste monté avec sa saisie. Les autres fenêtres gardent leur comportement (une question les referme).
 
 **19/11/2026 — Une jauge `gauge` de la carte de combat ignore son maximum.** Trouvé en relisant les
 captures finales du § 263 (T19) : sur la carte du Soldat Harkonnen, « Détermination 0/10 », alors
@@ -468,6 +471,7 @@ lit le maximum du champ que pour un type `number` ; `maximumDeLaJauge` ne le tro
 Un PJ de Dune verrait donc lui aussi « /10 ». Pour un PNJ, la jauge ne devrait même pas paraître :
 il n'a pas de Détermination et la remplace par 3 Menace (livre p. 240). **Non traité** : hors du
 chantier, à proposer à David (lire `max` d'une `gauge` ; masquer la Détermination d'un PNJ).
+✅ **Corrigé le 24/11/2026 (§ 273)** : le `max` déclaré du champ fait foi (« Détermination 1/3 ») ; la jauge n'apparaît plus sur la carte d'un PNJ de Dune (p. 240).
 
 **19/11/2026 — La couleur `primary` n'existe pas : des remplissages invisibles.** Trouvé pendant le
 § 263 (captures de Combat-OS) : `tailwind.config.js` ne définit que `accent`, et le CSS construit ne
@@ -477,6 +481,7 @@ combat (jauges sans couleur déclarée, `statsToTrack`, chiffres des jauges, sur
 **corrigée le 19/11** avec l'accord de David (« Oui »), `primary` → `accent`, essai
 `combat/components/jaugeSansCouleur.test.tsx` (trois styles). **Reste, non traité** :
 `music/components/HistoryPanel.tsx:42` et `:54` (même correctif probable, hors du § 263).
+✅ **`HistoryPanel` corrigé le 24/11/2026 (§ 273)** : plus aucune classe `primary` dans `src/`.
 
 **17/11/2026 — Vampire V5 : cinq cases de Santé génériques au lieu du maximum du personnage (VAM-A01).**
 Constaté pendant la fabrication de la campagne de recette (§ 260). Le pilote 2.0.0 déclare
@@ -493,6 +498,7 @@ désavantage : seuls les 6 réussissent ; l’avantage payé l’annule » : un 
 suite complète, alors que le fichier passe trois fois sur trois seul, et passait dans les deux suites
 précédentes du jour. Probablement un délai sous charge. Sans lien avec le chantier de la Fire (§ 256) ;
 **aucun code modifié**.
+✅ **Corrigé le 23/11/2026 (§ 267)** : l'essai lançait des dés aléatoires ; ses faces sont fixées.
 
 **15/11/2026 — ⛔ La sauvegarde automatique ne se relit plus : restauration et répétition refusées.**
 `npm run repetition` a refusé la semence `gmos-auto-2026-11-15T16-25-25-095.json` : « Sauvegarde illisible —
@@ -509,6 +515,7 @@ inconnue reste refusée ; garde `src/types/clesReserveesDeLaFiche.test.ts` qui r
 réservé du code et échoue si l'une manque. Preuve : la répétition relancée a semé la sauvegarde de 16 h 25
 (« Instance de répétition semée »). ⚠️ `entitySlice.ts` garde encore deux listes à lui des clés à conserver
 (lignes 284 et 629), sans Dune ni RuneQuest : non touchées, à examiner.
+✅ **Les deux listes d'`entitySlice.ts` examinées le 24/11/2026 (§ 273)** : aucune perte constatée (tous les écrivains partent de la fiche existante), mais Dune, RuneQuest, Symbaroum, Star Trek, Degenesis, Blade Runner et Pénombre n'étaient protégés nulle part. Remplacées par `suivisConserves`, qui lit les mêmes clés réservées que la sauvegarde.
 
 **15/11/2026 — Les couleurs translucides manquent sur les navigateurs Chromium < 111.** Essai de la
 Fire HD 8 (§ 256) : sous Silk 108, le Hub démarre et se connecte, mais « Quitter la session » devient
@@ -552,6 +559,7 @@ navigation vers `library` revient au cockpit. `useLayoutManager.ts` calcule enco
 `IndicateurDeRegime.tsx`. Hors chantier Torg, aucun correctif de ce comportement appliqué.
 La recette termine sa séance fictive avant le réimport. Reproduire puis raccorder le
 régime utilisé par le classement des vues à celui que le bandeau annonce.
+✅ **Corrigé le 24/11/2026 (§ 273)** : `useLayoutManager` lit le forçage pour le classement des vues, dans les deux sens (« Table (forcé) » hors séance écarte aussi les écrans d'atelier) ; la disposition se range toujours selon le vrai moment de jeu.
 
 **07/11/2026 — Blade Runner : deux constats du clip, hors correction vidéo.**
 
@@ -572,6 +580,7 @@ régime utilisé par le classement des vues à celui que le bandeau annonce.
 
 Aucun correctif applicatif dans ce lot : les jets, coûts et échanges du clip sont vérifiés.
 Demander l’arrêt de GM-OS avant toute modification de src/ ou electron/.
+✅ **Les deux sont traités** : `_gmos_blade_runner` est une clé réservée depuis le 15/11 (`CLES_RESERVEES_DE_LA_FICHE`) ; le compteur générique suit la Santé écrite sur la fiche depuis le 24/11 (§ 273, `hpQuiSuitLaFiche`).
 
 
 **06/11/2026 — Degenesis : le calculateur générique du combat ne répartit pas le coup du PJ.**
@@ -594,6 +603,7 @@ assertions sur la fiche, mais le cockpit affiche toujours **10/10**. [Capture co
 en vérifiant fiche → cockpit et cockpit/combat → fiche, sans réappliquer les dégâts.
 Le film final reste sur la fiche pour Corruption et fin de scène. Aucun correctif applicatif
 dans ce lot vidéo ; demander l’arrêt de GM-OS avant une modification source.
+✅ **Corrigé le 24/11/2026 (§ 273)** : `hp` suit l'Endurance écrite sur la fiche (`hpQuiSuitLaFiche`, les deux chemins d'écriture) ; le cockpit avec.
 
 **06/11/2026 — Dune : métadonnées refusées par la validation générale.** La préparation du
 clip Dune reproduit `DonneesDeFicheSchema.safeParse({_gmos_dune: {version:1, aventure:'…'}})` :
@@ -604,6 +614,7 @@ avant d’entrer dans le magasin. [Constat reproductible](../../output/clips/dun
 Le lot vidéo utilise une semence scalaire, puis prépare les métadonnées des seuls personnages
 fictifs après chargement ; il ne démontre pas un import/rechargement de campagne Dune.
 Aucun correctif applicatif dans le clip ; demander l’arrêt de GM-OS avant une modification source.
+✅ **Corrigé le 15/11/2026** : `_gmos_dune` est une clé réservée (`CLES_RESERVEES_DE_LA_FICHE`, garde `clesReserveesDeLaFiche.test.ts`).
 
 **06/11/2026 — Crimes : aperçu des dégâts recalculé après le coup.** Pendant le tournage
 `e2e/clipCrimes.spec.ts`, canne-épée, deux réussites, Physique attaquant5/cible5 et protection2 :
@@ -614,6 +625,7 @@ Physique courant et affiche alors **4 blessures** au-dessus du reçu de2. **Déf
 à corriger séparément**, sans refaire le coup ni toucher aux deux marques déjà portées.
 Le clip montre le calcul avant application puis le plateau avec le Physique3 confirmé.
 Aucun correctif applicatif dans ce lot vidéo ; demander l’arrêt de GM-OS avant de modifier la source.
+✅ **Corrigé le 24/11/2026 (§ 273)** : une fois infligé, l'aperçu garde le Physique de la cible d'avant le coup ; il reste le calcul appliqué.
 
 **GM-05 — corrigé et validé par David le 01/11/2026 (§ 200).** Le filtre commun vide désormais
 les secrets de séance ; quatre tests applicatifs passent sur douze Hub (initial/différentiel/
@@ -15033,7 +15045,7 @@ modules du jeu pour les joueurs, servir d'écran de table comme l'Ulanzi.
   que **tout réussit** (deux d10 comparés chacun à la compétence, zéro réussite exigée). David
   ne jouera pas de partie BRP : **le pilote est abandonné**, seul le corpus sert (comblement des
   jeux de la famille par la Forge). À retirer par la **corbeille**, pas la gomme, qui met le
-  corpus en quarantaine (`electron/groupesDuCorpus.ts:92-117`, cases cochées d'office).
+  corpus en quarantaine (`electron/groupesDuCorpus.ts:92-117`, cases cochées d'office). **Fait par David le 23/11** (« J'ai effacé le Drivers ») ; le corpus `brp-srd` est resté en place (vérifié le 24/11).
 - **Fait** : `corpus.json` déclare `moteur: brp` et `langue: fr`. La fiche née d'une consigne de
   forge (« C'est système générique en anglais. Prend cela en compte. ») devient
   `les-niveaux-de-puissance.md`. **Relu 17/17** contre le livre (BRP 1.05, PDF = imprimée + 5,
@@ -15131,14 +15143,49 @@ pleine est signalée dans la notice, le Physique actuel et les marques font foi.
 par David. Instance, sauvegardes/corpus/coffre jetables et ports 4100/4101 déjà autorisés ;
 aucune donnée personnelle, installation, publication ou commande git d’écriture.
 
+### 273 · Neuf constats du § 1 bis traités — 24/11/2026
+
+- **Demande de David** : « Que reste t'il a faire a part les tests ? », puis « fais le 1, puis le 4
+  et le 5 », « fais le 2,3 et 6 », « fais le 1, le 2 et le 3 », « fais les rangements ». Chaque lot
+  après « GM-OS tourne-t-il ? » (« Fermé », port 5173 et Electron vérifiés).
+- **Crimes** :
+  - CRI-A01 : la loyauté et les appels des contacts ne partent plus vers les tablettes
+    (`caviardageDesJoueurs.ts`, livre p. 430) ;
+  - la barre de la carte de combat suit le Physique actuel, en lecture seule ; ni console ni
+    « Calculer » (`santeDesAtteintes`, `calculateurDisponible`, `HealthManager.santeImposee`) ;
+  - après « Infliger », l'aperçu garde le Physique d'avant le coup (`AttaqueDeCrimes.tsx`).
+- **Dune** : la jauge lit le `max` de son champ (Détermination /3) et disparaît de la carte d'un PNJ
+  (p. 240) — `CombatCard.tsx`.
+- **Symbaroum, Blade Runner, Alien** : `hp` suit la santé principale écrite sur la fiche
+  (`hpQuiSuitLaFiche`), donc le cockpit aussi.
+- **Tous les jeux** :
+  - les questions de la médiathèque se posent par-dessus « Modifier la campagne » sans démonter le
+    formulaire (`QuestionParDessus` dans `useModalStore.ts`) ;
+  - « Atelier (forcé) » libère les écrans d'atelier en séance, et « Table (forcé) » les écarte hors
+    séance (`useLayoutManager.ts`) ;
+  - les suivis cachés de toutes les clés réservées survivent à une écriture qui les ignore
+    (`suivisConserves`) ;
+  - `primary` → `accent` dans `HistoryPanel.tsx`.
+- **Rangements** : lot Crimes de Codex commité à part (`bae2cfd4`) ; la recette Crimes n'attend plus
+  l'échec CRI-A01 (135/135, preuves du 20/11 gardées) ; § 1 bis, ligne 205 (BRP), synthèse des
+  pilotes, manuels 54-Jeu-Crimes et 10 (cockpit).
+- **Vérifié** : onze essais nouveaux ou étendus ; 6 889 essais (session, combat, composants,
+  magasins, dés, remote, fiches, table, electron), `tsc -b`, eslint, manuel des jeux, guides. Ni
+  build ni e2e.
+- **Reste** : l'essai de David à l'écran (une attaque de Crimes jusqu'à « Infliger », un combat de
+  Dune avec PJ et PNJ, l'Endurance de Symbaroum et le cockpit, la médiathèque depuis « Modifier la
+  campagne », « Atelier » en séance) ; Degenesis (« Calculer » sur un PJ) reste au § 1 bis, à
+  reproduire.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 209 | **Neuf constats du § 1 bis traités** | § 273 ; 🟠 livré le 24/11 — CRI-A01, barre et aperçu de Crimes, Détermination de Dune, cockpit, médiathèque, régime forcé, suivis cachés, `primary` ; 6 889 essais | Une attaque de Crimes jusqu'à « Infliger » ; l'Endurance de Symbaroum et le cockpit ; la médiathèque depuis « Modifier la campagne » | Essai de David |
 | 208 | **Crimes 2 — vidéo explicative complète** | § 272 ; 🟢 MP4 16 min 47 s livré le 23/11 ; 38 séquences, 76 cartes relues en images, 34 tests ciblés ; Névrose confirmée et limites CRI-A01/PV consignées | Ouvrir le MP4 et ses chapitres ; confort humain restant à juger | Rien pour la livraison ; aucun essai attribué à David |
 | 207 | **Pénombre — recompte de la réserve collégiale, pilote 2.1.0** | § 271 ; 🟢 livré le 22/11, validé par David le jour même — seul après une merveille, et un bouton ; bestiaire de David gardé ; un avertissement laissé pour T17 | Aucun — clos | Rien |
 | 206 | **Pénombre — pilote 2.0.0, corpus relu, fiche reliée** | § 270 ; 🟢 livré le 22/11, validé par David le jour même — `jet.penombre`, jetons et réserve collégiale, corpus 19/19, fiche au moteur 28 ; affrontements consignés au § 267 (T17) | Aucun — le recompte est au § 271 | Rien |
-| 205 | **Socle commun BRP — corpus relu contre le livre** | § 269 ; 🟢 relu 17/17 le 21/11, pilote abandonné à la demande de David | Retirer le pilote par la corbeille (pas la gomme) | Rien |
+| 205 | **Socle commun BRP — corpus relu contre le livre** | § 269 ; 🟢 relu 17/17 le 21/11, pilote abandonné à la demande de David | Aucun — pilote effacé par David le 23/11, corpus en place | Rien |
 | 204 | **Transformer un PNJ en personnage joueur, et l'inverse** | § 268 ; 🟢 livré le 21/11, validé par David le jour même — T1 à T10, 3 171 essais, e2e des deux gestes | Aucun — clos | Rien |
 | 203 | **Combat-OS — le jet des adversaires pour seize autres jeux** | § 267 ; spécifié le 20/11 — **livré le 23/11** : T0 à T17 faits (T17 Pénombre validé) ; T16, script de validation (20 jeux OK) et e2e (20 passés) | Essayer « Attaquer », « Riposte » ou « Affronter » sur un adversaire de chacun des seize jeux (C8) | Rien |
 | 202 | **La médiathèque s'ouvrait sous la fenêtre de campagne** | § 266 ; 🟢 corrigé le 20/11, validé par David le 21/11 | Aucun — clos | Rien |

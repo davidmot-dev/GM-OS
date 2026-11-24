@@ -138,6 +138,11 @@ teste avec la valeur **actuelle**. Trois marques la font baisser :
   psychotique). La mort n'est **jamais automatique** : à −2, le livre en fait une consigne au meneur —
   « implacable » pour une conduite idiote ou suicidaire, « logique » pour une blessure trop lourde,
   « évitée » après une action audacieuse et calculée (p. 393). L'outil ne tue personne.
+- Sur la **carte de Combat-OS** (24/11/2026), la barre de santé est celle du **Physique actuel** :
+  « Physique 3/5 » après deux marques, et non plus une barre « PV » pleine que rien ne touchait. Elle
+  se lit sans se saisir. Crimes n'a pas de points de vie, et la carte n'a donc ni console Dégâts /
+  Soins ni bouton « Calculer » : les marques se posent par **Fiche → Attaquer** (« Infliger à … ») ou
+  sur la fiche.
 - Sur la **fiche du jeu** (HTML), trois petits compteurs — Fatigue, Épuisement, Blessures — sont
   ajoutés sous chaque rangée de Potentiel, et reliés aux mêmes champs.
 

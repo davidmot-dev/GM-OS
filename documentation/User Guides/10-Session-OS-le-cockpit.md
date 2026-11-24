@@ -412,7 +412,10 @@ forcé un régime, un bouton **Auto** rend la main à la séance.
 > **Trois façons de sortir du régime table**, selon ce que vous faites :
 >
 > - **Le bouton « Atelier »** de la barre du haut : pour un instant, sans toucher à la séance. C'est
->   la porte à prendre quand vous voulez juste éditer quelque chose au milieu d'une partie.
+>   la porte à prendre quand vous voulez juste éditer quelque chose au milieu d'une partie. Depuis
+>   le 24/11/2026, les écrans d'atelier (Bibliothèque, Forge, éditeurs) s'y ouvrent vraiment : ils
+>   vous ramenaient au cockpit malgré le bandeau. À l'inverse, **Table (forcé)** hors séance écarte
+>   ces écrans, comme une séance ouverte. **Auto** rend la main au vrai moment de jeu.
 > - **Mettre la séance en pause** : une séance en pause n'est pas une séance en cours. Le régime
 >   repasse en atelier **et** les plafonds de temps de l'IA se lèvent — c'est la porte des vraies
 >   interruptions, le café, la fin de soirée.

@@ -34,6 +34,8 @@ Saint-Aubin-sur-Lisse, ville industrielle fictive, automne 1898 : des personnes 
 
 ## CRI-A01 — constat à intégrer au registre quand il sera libre
 
+> ✅ **Corrigé le 24/11/2026** (registre § 273, Claude Code) : la loyauté et les appels ne partent plus vers les joueurs. La suite liée passe 135/135 ; `crimes-executer-tests.mjs` et `crimes-verifier.mjs` n'attendent plus d'échec. Les preuves ci-dessous et l'archive livrée datent d'avant la correction et sont gardées telles quelles ; le cas POR-04 est à reprendre.
+
 Le caviardage pur conserve `contacts_0_rating` et `contacts_0_appels` dans la charge joueur (valeurs fictives 3 et 0), alors que Contacts est présenté comme réservé au MJ, livre p. 430. `preuve-cri-a01.json` et l’assertion négative sont liés à l’archive. L’émetteur et le serveur appellent ce filtre ; **transport réseau et écran de tablette non exécutés ici**. La confidentialité des loyautés n’est pas validée. Aucun correctif applicatif glissé dans cette campagne.
 
 Le contrôle de Forge émet aussi un avertissement générique `combat.statsToTrack` / `isMainHP`, conservé dans `verification-pilote.json`. Le chemin spécifique Crimes lit les Potentiels et leurs marques ; ses tests passent. Ne pas transformer ce warning en défaut d’écriture observé ni le masquer en modifiant le pilote.
