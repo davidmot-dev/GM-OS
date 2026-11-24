@@ -25,19 +25,16 @@ import { degatsDeVampireSelonLeJeu } from '../../combat/logic/pistesDeVampire';
 import { encaissementSelonLeJeu } from '../../combat/logic/encaissementDeCoc';
 import { moniteurSelonLeJeu } from '../../combat/logic/moniteurDeShadowrun';
 import { CLE_SUIVI_SHADOWRUN, lireSuiviShadowrun } from '../../dice/systemes/suiviDeShadowrun';
-import { CLE_MATRICE_SHADOWRUN } from '../../dice/systemes/matriceDeShadowrun';
 import { cosmsDesIds, idsDesCosmsCourants, loiEnVigueur } from '../logic/cosmsCourants';
 import { champDeSantePrincipale, maximumDeLaJauge, santeAlignee, santePrincipaleDeLaFiche, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import { santePrincipaleDuPersonnage } from '../logic/santePrincipale';
-import { CLE_PANIQUE_ALIEN, arreterLaPaniqueAlien, changerLeStressAlien } from '../../dice/systemes/paniqueAlien';
-import { CLE_JET_ALIEN } from '../../dice/systemes/jetsAlien';
+import { arreterLaPaniqueAlien, changerLeStressAlien } from '../../dice/systemes/paniqueAlien';
 import { CLE_CTHULHU_HACK, lireCH, signalerImpactCH, usureArmureCH } from '../../dice/systemes/cthulhuHack';
 import { CLE_COMBAT_ALIEN, demanderUnCritique, lireLeCombatAlien, santeHumaineParDefaut, suitLaSanteAlien } from '../../dice/systemes/combatAlien';
 import { estUnAndroide } from '../../dice/systemes/paniqueAlien';
 import { immuniteSynthetique, projeterLaSanteSynthetique } from '../../dice/systemes/synthetiquesAlien';
 import { apresImpactXeno, projeterSanteXeno } from '../../dice/systemes/xenomorphesAlien';
-import { CLE_PROGRESSION_ALIEN } from '../../dice/systemes/progressionAlien';
-import { CLE_SURVIE_ALIEN, refusDeRecuperationAlien } from '../../dice/systemes/survieAlien';
+import { refusDeRecuperationAlien } from '../../dice/systemes/survieAlien';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
 import { laSantePasseSousZero, marquerSousZero, santeSousZero, seuilDInconscience } from '../logic/santeSousZero';
@@ -46,6 +43,7 @@ import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
 import { transfererLePersonnage } from '../logic/transfertDePersonnage';
 import { transformerEnPersonnage, transformerEnPnj, type EtatDesPersonnages, type ResultatDeTransformation } from '../logic/transformationDuPersonnage';
 import { tousLesPilotes } from './tousLesPilotes';
+import { estCleReserveeDeLaFiche } from '../../../types/donneesDeFiche';
 import type { GameDriver } from '../../../types/drivers';
 import type { Campaign } from '../../../types/campaign.types';
 import type {
@@ -89,6 +87,49 @@ const plateauDeCombat = () => (window as unknown as {
  * rien à accorder — on rend le système existant tel quel plutôt que d'y écrire
  * des `undefined`, ce qui produirait un état calculé sur `NaN`.
  */
+/**
+ * **Les suivis cachés d'une fiche survivent à une écriture qui les ignore** — 24/11/2026 (§ 1 bis du
+ * 15/11, David : « fais le 6 »). `updateEntity` et `updateCharacter` gardaient chacun leur liste de clés
+ * à ne pas perdre quand une fiche entière arrive sans elles (une ancienne fiche HTML) : Alien,
+ * Shadowrun et COC, et la liste des PNJ n'avait ni la Panique ni Cthulhu Hack. Dune, RuneQuest,
+ * Symbaroum, Star Trek, Degenesis, Blade Runner, Pénombre et les franchissements n'étaient protégés
+ * nulle part. Aucun écrivain d'aujourd'hui ne remplace la fiche entière (relu le 24/11 : tous partent
+ * de la fiche existante) : c'est le garde-fou qui était inégal, pas une perte constatée.
+ *
+ * Une seule règle désormais, celle du lecteur de sauvegarde : toute clé réservée
+ * (`estCleReserveeDeLaFiche`, gardée par `clesReserveesDeLaFiche.test.ts`) que l'écriture ne nomme pas
+ * est reprise de la fiche d'avant. Aucun écrivain ne retire une clé réservée en l'omettant (relu le
+ * même jour) ; pour l'effacer, on l'écrit à `undefined`.
+ */
+export function suivisConserves(avant: Record<string, unknown> | undefined, prochain: Record<string, unknown> | undefined): Record<string, unknown> {
+    if (!avant || !prochain) return {};
+    return Object.fromEntries(Object.entries(avant).filter(([cle, v]) => v && estCleReserveeDeLaFiche(cle) && !Object.hasOwn(prochain, cle)));
+}
+
+/**
+ * **Les points de vie suivent la santé principale que la fiche porte** — 24/11/2026 (§ 1 bis des 06 et
+ * 07/11, David : « fais le 2 »). La règle du 16/10 allait dans un seul sens : un coup sur la santé
+ * réécrivait la fiche (`updateCharacterHP`), mais une écriture de la fiche ne touchait jamais `hp`. Le
+ * cockpit, qui lit `pc.hp / pc.maxHp`, restait à 10/10 quand l'Endurance de Symbaroum tombait à 3, et à
+ * 8/8 quand la Santé de Blade Runner passait à 7 par un forçage.
+ *
+ * Quand une écriture change le champ de santé principale (`isMainHP`), `hp` et `maxHp` en sont relus
+ * (`santePrincipaleDeLaFiche`, le maximum gardé à défaut d'une formule). Rien ne change si l'écriture
+ * fixe elle-même `hp` (elle sait ce qu'elle fait), ni pour Cthulhu Hack et Rêve de Dragon, qui ont déjà
+ * leur propre alignement.
+ */
+export function hpQuiSuitLaFiche(
+    avant: Pick<PlayerCharacter, 'sheetData'>,
+    apres: Pick<PlayerCharacter, 'sheetData' | 'maxHp'>,
+    pilote: GameDriver | null | undefined,
+): { hp: number; maxHp: number } | null {
+    if (!pilote || pilote.jet?.cthulhuHack || apres.sheetData?.__rddSante231) return null;
+    const champ = champDeSantePrincipale(pilote);
+    if (!champ || apres.sheetData?.[champ] === avant.sheetData?.[champ]) return null;
+    const principale = santePrincipaleDeLaFiche(pilote, apres.sheetData, apres.maxHp);
+    return principale ? { hp: principale.courant, maxHp: principale.max } : null;
+}
+
 export function syncHealthSystem(currentHp: number | undefined, maxHp: number | undefined, existingHealth?: HealthSystem): HealthSystem | undefined {
     if (typeof currentHp !== 'number' || typeof maxHp !== 'number' || maxHp <= 0) {
         return existingHealth;
@@ -291,7 +332,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
         set((state) => ({
             entities: state.entities.map((e) => {
                 if (e.id !== id) return e;
-                const conserves=Object.fromEntries([CLE_COMBAT_ALIEN,CLE_SURVIE_ALIEN,CLE_SUIVI_SHADOWRUN,CLE_MATRICE_SHADOWRUN,'__shadowrunDerogations','__cocSuivi','__cocProfil','__cocAvantages','__cocPsychisme'].filter(cle=>e.sheetData?.[cle]&&updates.sheetData&&!Object.hasOwn(updates.sheetData,cle)).map(cle=>[cle,e.sheetData![cle]]));
+                const conserves=suivisConserves(e.sheetData,updates.sheetData);
                 const sheetData = updates.sheetData ? {...updates.sheetData,...conserves,...conserverSuiviDG(e.sheetData, updates.sheetData)}:undefined;
                 const base = { ...e, ...updates, ...(sheetData ? {sheetData} : {}) };
                 const newEntity = base.sheetData?.__rddSante231 ? actualiserPersonnageDeVoyageur(base,
@@ -665,14 +706,19 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                                 if (c.id !== characterId) return c;
                                 // Une fiche HTML ancienne ne connaît pas le suivi de Panique :
                                 // son écriture ne doit effacer ni les reçus ni les demandes.
-                                const suivis = Object.fromEntries([CLE_PANIQUE_ALIEN, CLE_JET_ALIEN, CLE_COMBAT_ALIEN, CLE_SURVIE_ALIEN, CLE_PROGRESSION_ALIEN, CLE_CTHULHU_HACK, CLE_SUIVI_SHADOWRUN, CLE_MATRICE_SHADOWRUN, '__shadowrunDerogations', '__cocSuivi', '__cocProfil', '__cocAvantages', '__cocPsychisme']
-                                    .filter(cle => c.sheetData?.[cle] && updates.sheetData && !Object.hasOwn(updates.sheetData, cle))
-                                    .map(cle => [cle, c.sheetData![cle]]));
+                                const suivis = suivisConserves(c.sheetData, updates.sheetData);
                                 const sheetData = updates.sheetData ? { ...updates.sheetData, ...suivis, ...conserverSuiviDG(c.sheetData, updates.sheetData) } : undefined;
                                 const updated = actualiserPersonnageDeVoyageur({ ...c, ...updates, ...(sheetData ? { sheetData } : {}) },
                                     (get() as unknown as { customSheetTemplates?: SheetTemplate[] }).customSheetTemplates ?? [], c);
                                 // La date de la dernière écriture des données — l'arbitre face à la fiche (`pousseeVersLaFiche.ts`).
                                 if (toucheLesDonnees(updates) && updates.donneesModifieesLe === undefined) updated.donneesModifieesLe = Date.now();
+
+                                // La santé principale écrite sur la fiche emporte `hp` (24/11/2026, `hpQuiSuitLaFiche`).
+                                if (updates.hp === undefined && updates.sheetData) {
+                                    const lieu = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
+                                    const suit = hpQuiSuitLaFiche(c, updated, piloteDuPersonnage(updated, lieu.campaigns ?? [], lieu.customGameDrivers ?? [], lieu.activeCampaignId));
+                                    if (suit) Object.assign(updated, suit);
+                                }
 
                                 // Auto-sync HealthSystem
                                 const currentVal = updated.hp;
@@ -726,6 +772,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                               if (c.id !== characterId) return c;
                               const updated = actualiserPersonnageDeVoyageur({ ...c, sheetData: { ...c.sheetData, [fieldId]: value }, donneesModifieesLe: Date.now() },
                                   (get() as unknown as { customSheetTemplates?: SheetTemplate[] }).customSheetTemplates ?? [], c);
+                              // Le même alignement qu'`updateCharacter` (24/11/2026) : la santé principale emporte `hp`.
+                              const suit = hpQuiSuitLaFiche(c, updated, pilote);
+                              if (suit) Object.assign(updated, suit);
                               if (updated.hp !== c.hp || updated.maxHp !== c.maxHp || updated.sheetData?.__rddSante231) updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {}, syncHealthSystem(updated.hp, updated.maxHp, updated.healthSystem));
                               return updated;
                           }),
