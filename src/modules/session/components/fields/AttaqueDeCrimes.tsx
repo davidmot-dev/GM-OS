@@ -134,8 +134,14 @@ export const IssueDeLAttaque: React.FC<{
     atteintes?: Atteintes;
     /** Le meneur seul inflige : une tablette n'écrit pas la fiche d'un autre. */
     peutInfliger: boolean;
-    infligee: string | null;
-    onInfligee: (ligne: string) => void;
+    /**
+     * Le coup infligé : sa ligne, et le Physique de la cible **d'avant** le coup. 24/11/2026 (§ 1 bis du
+     * 06/11, David : « fais le 1 ») : l'aperçu se recalculait sur le Physique déjà blessé — deux
+     * blessures infligées, la cible tombait de 5 à 3 et l'aperçu affichait « 4 blessures » au-dessus
+     * du reçu de 2. Une fois infligé, le calcul reste celui qui a été appliqué.
+     */
+    infligee: { ligne: string; physiqueCible?: number } | null;
+    onInfligee: (ligne: string, physiqueCible?: number) => void;
     /** Le degré de maîtrise de l'attaquant (la compétence) : la feinte s'y limite. */
     maitrise?: number;
     /**
@@ -147,7 +153,7 @@ export const IssueDeLAttaque: React.FC<{
     const { combattant, valeurs } = useFicheDeLaCible(reglages.cible);
     const arme = ARMES_DE_CRIMES.find(a => a.id === reglages.arme) as ArmeDeCrimes | undefined;
     if (!arme) return null;
-    const physiqueLu = physiqueActuel(atteintes, valeurs);
+    const physiqueLu = infligee ? infligee.physiqueCible : physiqueActuel(atteintes, valeurs);
     const issue = resoudreLAttaque({
         arme, reussites: resultat.garde.reussites, adverses: entier(reglages.adverses),
         physiqueAttaquant, physiqueCible: physiqueLu ?? entier(reglages.physiqueCible), protection: entier(reglages.protection),
@@ -171,7 +177,7 @@ export const IssueDeLAttaque: React.FC<{
         for (let i = 0; i < issue.degats; i++) m = poserUneAtteinte(m, issue.atteinte);
         ecrireLaFicheDuCombattant(combattant, { [marques.fatigue]: m.fatigue, [marques.epuisement]: m.epuisement, [marques.blessures]: m.blessures });
         const actuel = potentielActuel(Number(valeurs[potentiel]) || 0, m);
-        onInfligee(`${nom} : +${issue.degats} ${atteinte}${issue.degats > 1 ? 's' : ''} (${arme.nom}) → Physique actuel ${actuel}`);
+        onInfligee(`${nom} : +${issue.degats} ${atteinte}${issue.degats > 1 ? 's' : ''} (${arme.nom}) → Physique actuel ${actuel}`, physiqueLu);
     };
 
     return (
@@ -188,7 +194,7 @@ export const IssueDeLAttaque: React.FC<{
                             Infliger à {nom}
                         </button>
                     )}
-                    {infligee && <span className="font-mono text-etat-danger">{infligee}</span>}
+                    {infligee && <span className="font-mono text-etat-danger">{infligee.ligne}</span>}
                     {/* L'initiative narrative (p. 388) : Combat-OS garde son ordre, le meneur le change s'il le veut. */}
                     <span className="basis-full text-app-text/60" data-initiative-suivante>
                         Il aura l'initiative de l'assaut suivant : « celui qui a blessé l'autre » (p. 388).

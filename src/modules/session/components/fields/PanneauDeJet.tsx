@@ -464,7 +464,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [reglagesDAttaque, setReglagesDAttaque] = useState<ReglagesDAttaque>(() => crimesDuCombattant
         ? { ...REGLAGES_D_ATTAQUE, cible: crimesDuCombattant.cible, ...(crimesDuCombattant.arme ? { arme: crimesDuCombattant.arme } : {}) }
         : REGLAGES_D_ATTAQUE);
-    const [attaqueInfligee, setAttaqueInfligee] = useState<string | null>(null);
+    const [attaqueInfligee, setAttaqueInfligee] = useState<{ ligne: string; physiqueCible?: number } | null>(null);
     /** Les circonstances qui déplacent le seuil du jet gardé (Crimes, C0.1). */
     const [circonstances, setCirconstances] = useState<Circonstances>(CIRCONSTANCES);
     const [seuilDeBaseImpose, setSeuilDeBaseImpose] = useState(false);
@@ -4255,8 +4255,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                     },
                                 } : {})}
                                 infligee={attaqueInfligee}
-                                onInfligee={ligne => {
-                                    setAttaqueInfligee(ligne);
+                                onInfligee={(ligne, physiqueCible) => {
+                                    setAttaqueInfligee({ ligne, physiqueCible });
                                     setMouvements(m => [...m, ligne]);
                                     redire('Attaque', { total: 0, modifier: 0, rolls: [], totalDisplay: ligne });
                                 }} />

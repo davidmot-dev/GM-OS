@@ -257,6 +257,24 @@ describe('l’attaque de Crimes', () => {
             totalDisplay: 'Le surineur : +5 blessures (Canne-épée) → Physique actuel -2' }));
     });
 
+    it('24/11 : une fois infligé, l’aperçu reste le calcul appliqué, pas celui du Physique déjà blessé', () => {
+        // Cette fois, la fiche s'écrit vraiment : c'est ce qui faisait recalculer l'aperçu (§ 1 bis du 06/11).
+        updateCharacterSheetData.mockImplementation((_j: string, id: string, champ: string, valeur: unknown) => useSessionOSStore.setState(s => ({
+            players: s.players.map(p => ({ ...p, characters: p.characters.map(c => c.id === id ? { ...c, sheetData: { ...c.sheetData, [champ]: valeur } } : c) })),
+        })));
+        monterC6();
+        faces(9, 3, 2, 2);
+        lancer();
+        const avant = document.querySelector('[data-issue-de-l-attaque]')!.textContent;
+        fireEvent.click(screen.getByText('Infliger à Le surineur'));
+        expect(useSessionOSStore.getState().players[0].characters[0].sheetData).toMatchObject({ blessures_physique: 5 });
+        expect(screen.getByText('Touché : 5 blessures')).toBeTruthy();
+        // Le reçu, ici et dans les mouvements du jet.
+        expect(screen.getAllByText('Le surineur : +5 blessures (Canne-épée) → Physique actuel -2').length).toBeGreaterThan(0);
+        // Le calcul affiché est celui d'avant le coup, au caractère près (le bouton seul a laissé place au reçu).
+        expect(document.querySelector('[data-issue-de-l-attaque]')!.textContent).toContain(avant!.split('Infliger à')[0]);
+    });
+
     it('en opposition, à égalité, pas de blessure ; une arme à feu hors de portée se dit', () => {
         const prep = monterC6();
         fireEvent.change(prep.querySelector('[data-adverses]') as HTMLElement, { target: { value: '1' } });
