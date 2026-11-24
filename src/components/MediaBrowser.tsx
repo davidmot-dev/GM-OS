@@ -9,7 +9,8 @@ import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check,
 import { usagesDesMedias } from '../services/proprietairesDesMedias';
 import { filtreDeSelection } from '../stores/typesDeMedia';
 import { importerPlusieursMedias } from './media/importerPlusieursMedias';
-import { gmPrompt, gmConfirm } from '../stores/useModalStore';
+// Par-dessus, pas à la place : ouverte depuis « Modifier la campagne », la médiathèque démontait le formulaire en posant sa question (24/11/2026, `QuestionParDessus`).
+import { gmPromptParDessus as gmPrompt, gmConfirmParDessus as gmConfirm } from '../stores/useModalStore';
 import { gmToast } from '../stores/useToastStore';
 import { mediasRestituables, restaurerLesMedias } from '../modules/session/logic/MiroirDesMedias';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';

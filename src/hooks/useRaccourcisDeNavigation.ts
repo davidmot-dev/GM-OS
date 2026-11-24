@@ -60,7 +60,7 @@ export function useRaccourcisDeNavigation(estLaFenetreDuMJ: boolean) {
               boîte qu'on ouvre et referme de la même touche.
             */
             const modale = useModalStore.getState();
-            if (modale.type !== null) return;
+            if (modale.type !== null || modale.question) return;
 
             /*
               **`Ctrl+H` mène à l'aide, et ramène d'où l'on vient.**

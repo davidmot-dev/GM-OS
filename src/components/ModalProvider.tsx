@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useModalStore } from '../stores/useModalStore';
+import { useModalStore, type QuestionParDessus } from '../stores/useModalStore';
 import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
 import { useTranslation } from 'react-i18next';
 import {
@@ -41,8 +41,11 @@ import { CoinsOrnes } from './socle/Ornement';
 import { NIVEAU_DE_LA_FENETRE, NIVEAU_DES_QUESTIONS } from './niveauxDesSurcouches';
 
 // Chaque ouverture porte sa saisie ; une nouvelle valeur initiale la remonte.
-const SaisieDuPrompt: React.FC = () => {
-    const { message, defaultValue, onPromptConfirm, confirmLabel, cancelLabel, closeModal } = useModalStore();
+// Lue dans le magasin (`gmPrompt`), ou passée par la question posée par-dessus une fenêtre (24/11/2026).
+const SaisieDuPrompt: React.FC<{ question?: QuestionParDessus; fermer?: () => void }> = ({ question, fermer }) => {
+    const duMagasin = useModalStore();
+    const { message, defaultValue, onPromptConfirm, confirmLabel, cancelLabel } = question ?? duMagasin;
+    const closeModal = fermer ?? duMagasin.closeModal;
     const { t } = useTranslation(['common']);
     const [inputValue, setInputValue] = useState(() => typeof defaultValue === 'string' ? defaultValue : '');
     return (
@@ -81,11 +84,42 @@ const SaisieDuPrompt: React.FC = () => {
     );
 };
 
+/**
+ * **La question posée par-dessus une fenêtre** (`gmConfirmParDessus`, `gmPromptParDessus`, 24/11/2026) :
+ * mêmes boutons et même ordre que `confirm` et `prompt` ci-dessous, mais elle ne ferme qu'elle-même —
+ * la fenêtre de dessous reste montée, et sa saisie avec. Échap a sa propre inscription : posée la
+ * dernière, la question est au sommet de la pile, au-dessus de la médiathèque qui l'a posée.
+ */
+const QuestionAuDessus: React.FC<{ question: QuestionParDessus }> = ({ question }) => {
+    const fermerLaQuestion = useModalStore(s => s.fermerLaQuestion);
+    const { t } = useTranslation(['common']);
+    const annuler = () => { fermerLaQuestion(); question.onCancel?.(); };
+    useFermetureParEchap(true, question.type === 'confirm' ? annuler : fermerLaQuestion, 'question par-dessus');
+    if (question.type === 'prompt') return <SaisieDuPrompt question={question} fermer={fermerLaQuestion} />;
+    return (
+        <div role="dialog" aria-modal="true" data-question-par-dessus className={`fixed inset-0 ${NIVEAU_DES_QUESTIONS} flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200`}>
+            <CadreDeSurcouche
+                titre={t('common:confirmation')}
+                icone={<HelpCircle size={18} />}
+                tonIcone="alerte"
+                onFermer={annuler}
+                libelleFermer={t('common:close_window')}
+                pied={<>
+                    <BoutonSecondaire autoFocus onClick={annuler}>{question.cancelLabel || t('common:cancel')}</BoutonSecondaire>
+                    <BoutonPrincipal ton="alerte" onClick={() => { question.onConfirm?.(); fermerLaQuestion(); }}>{question.confirmLabel || t('common:confirm')}</BoutonPrincipal>
+                </>}
+            >
+                <p className="px-5 py-4 leading-relaxed text-app-text">{question.message}</p>
+            </CadreDeSurcouche>
+        </div>
+    );
+};
+
 const ModalProvider: React.FC = () => {
     const {
         type, message, onConfirm, onCancel,
         defaultValue, confirmLabel, cancelLabel, customVariant,
-        isNetworkModalOpen, closeModal
+        isNetworkModalOpen, closeModal, question
     } = useModalStore();
 
     const { t } = useTranslation(['common']);
@@ -116,7 +150,7 @@ const ModalProvider: React.FC = () => {
     };
     useFermetureParEchap(!!type, fermerParEchap, `boîte ${type ?? ''}`.trim());
 
-    if (!type && !isNetworkModalOpen) return null;
+    if (!type && !isNetworkModalOpen && !question) return null;
 
     return (
         <>
@@ -358,6 +392,9 @@ const ModalProvider: React.FC = () => {
               morceau chargé à la demande de ce fichier, donc le Hub s'ouvre
               tout de suite. Trouvé le 2026-09-04.
             */}
+
+            {/* Après la fenêtre : la question se peint au-dessus, et la fenêtre reste montée dessous. */}
+            {question && <QuestionAuDessus key={`${question.type}-${question.message}`} question={question} />}
 
             <NetworkQRCodeModal />
         </>

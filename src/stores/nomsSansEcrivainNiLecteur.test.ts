@@ -121,6 +121,7 @@ const TOLERES: Record<string, string> = {
     'terminerLaFiche': 'appelée par une autre action du même magasin (useImageStore)',
     'removePing': 'appelée par le minuteur de son propre magasin (useMapStore)',
     'showAlert': 'appelée par le raccourci `gmAlert`, dans le même fichier',
+    'poserParDessus': 'appelée par les raccourcis `gmConfirmParDessus` et `gmPromptParDessus`, dans le même fichier (24/11/2026)',
     'allumeeLe': "l'instant d'allumage d'une piste, lu par le tri du repli lumineux (useAmbientStore)",
     'imagePrecedente': "le décor qui revient quand une fiche s'en va — écrit et relu dans useImageStore",
     'fogRegistry': 'le cache de brouillard par carte, écrit et relu dans useMapStore',
