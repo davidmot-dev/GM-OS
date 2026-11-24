@@ -39,7 +39,9 @@ const HistoryPanel: React.FC = () => {
             {/* Console Logs Section (Right) */}
             <div className="flex flex-col min-h-0 border-l border-app-text/5 pl-6">
                 <div className="flex items-center gap-2 mb-4 text-app-muted">
-                    <div className="size-6 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                    {/* `primary` n'existe pas dans GM-OS : l'icône et les filets du journal étaient sans couleur.
+                        L'accent du thème le remplace (§ 1 bis du 19/11, fait le 24/11 : « fais le 5 »). */}
+                    <div className="size-6 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
                         <Terminal size={14} />
                     </div>
                     <h3 className="text-ui-10 font-bold uppercase tracking-widest">System Interface Log</h3>
@@ -50,8 +52,8 @@ const HistoryPanel: React.FC = () => {
                         <p className="text-app-subtle italic">Engine initializing...</p>
                     ) : (
                         consoleLogs.map((log, i) => (
-                            <div key={i} className="text-app-subtle flex items-start gap-2 py-0.5 border-l-2 border-primary/20 pl-2 hover:bg-app-text/[0.02] transition-colors rounded-sm">
-                                <span className="text-primary/40 shrink-0">
+                            <div key={i} className="text-app-subtle flex items-start gap-2 py-0.5 border-l-2 border-accent/20 pl-2 hover:bg-app-text/[0.02] transition-colors rounded-sm">
+                                <span className="text-accent/40 shrink-0">
                                     <Clock size={10} className="inline mr-1" />
                                 </span>
                                 <span className="break-all">{log.replace(/^\[.*?\]\s*/, '')}</span>
