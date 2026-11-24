@@ -50,6 +50,16 @@ export function useLayoutManager() {
 
     const sessions = useSessionOSStore(e => e.sessions);
     const moment = momentDeJeu(sessions);
+    /*
+      **Le régime que le bandeau annonce, pour le classement des vues** — 24/11/2026 (§ 1 bis du 07/11,
+      David : « fais le 3 »). « Atelier (forcé) » s'affichait, mais une navigation vers la Bibliothèque
+      revenait au cockpit : ce crochet lisait `momentDeJeu` seul, quand le bandeau
+      (`IndicateurDeRegime`) et `useRegimeDInterface` lisent d'abord le forçage du meneur. Le forçage
+      ne va pas plus loin que l'écran (décision de David du 09/09) : il décide des vues permises, pas
+      du casier où se range la disposition, qui reste celui du vrai moment de jeu.
+    */
+    const surcharge = useSessionStore(s => s.surchargeDuRegime);
+    const momentDeLEcran = surcharge ?? moment;
     const currentView = useSessionOSStore(e => e.currentView);
     const setCurrentView = useSessionOSStore(e => e.setCurrentView);
 
@@ -104,9 +114,9 @@ export function useLayoutManager() {
       parfaitement lisible en préparation.
     */
     useEffect(() => {
-        if (moment !== 'partie' || vueConvientAu(moment, currentView)) return;
+        if (momentDeLEcran !== 'partie' || vueConvientAu(momentDeLEcran, currentView)) return;
         setCurrentView(vueDeRepli());
-    }, [moment, currentView, setCurrentView]);
+    }, [momentDeLEcran, currentView, setCurrentView]);
 
     // 2. Auto-save lors des changements de layout
     useEffect(() => {
