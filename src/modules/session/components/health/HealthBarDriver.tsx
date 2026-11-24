@@ -7,6 +7,10 @@ interface HealthBarDriverProps {
   onMaxChange?: (val: number) => void;
   lastDamageType?: string;
   isHealing?: boolean;
+  /** Le nom de la jauge — « PV » à défaut ; Crimes : « Physique » (24/11/2026). */
+  libelle?: string;
+  /** Les chiffres se lisent sans se saisir : la valeur vient d'ailleurs (les marques de Crimes). */
+  lectureSeule?: boolean;
 }
 
 /**
@@ -19,7 +23,9 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({
     onCurrentChange, 
     onMaxChange, 
     lastDamageType, 
-    isHealing 
+    isHealing,
+    libelle = 'PV',
+    lectureSeule = false,
 }) => {
   const percentage = Math.max(0, Math.min(100, (current / max) * 100));
   
@@ -54,11 +60,12 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({
     <div className="w-full min-h-8 flex flex-col justify-center gap-1 px-1 relative group/hp">
         {/* PV Labels */}
         <div className="flex justify-between items-end px-0.5">
-            <span className="text-ui-10 font-display font-black text-app-text/40 uppercase tracking-tighter">PV</span>
+            <span className="text-ui-10 font-display font-black text-app-text/40 uppercase tracking-tighter">{libelle}</span>
             <div className={`flex items-baseline gap-1 font-display font-black tracking-tight ${percentage <= 25 ? 'text-etat-danger' : 'text-app-text/80'}`}>
                 <input 
                     type="number" 
                     value={current}
+                    readOnly={lectureSeule}
                     onChange={(e) => onCurrentChange?.(parseInt(e.target.value) || 0)}
                     className="w-8 bg-transparent text-right outline-none focus:text-accent transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-0 border-none"
                     title="Actuel"
@@ -67,6 +74,7 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({
                 <input 
                     type="number" 
                     value={max}
+                    readOnly={lectureSeule}
                     onChange={(e) => onMaxChange?.(parseInt(e.target.value) || 1)}
                     className="w-8 bg-transparent text-left opacity-30 focus:opacity-100 outline-none focus:text-accent transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-0 border-none text-ui-10"
                     title="Max"

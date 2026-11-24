@@ -1,6 +1,8 @@
 import { seuilAtteint } from '../../session/logic/HealthInterpreter';
 import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
 import { bornerLesPointsDeVie, estInconscient, laSantePasseSousZero, santeSousZero, seuilDInconscience, motDeLaSanteSousZero } from '../../session/logic/santeSousZero';
+import { physiqueActuel } from '../../dice/systemes/potentielGarde';
+import type { HealthSystem } from '../../../types/entity.types';
 
 /**
  * Une seule réponse à « comment va ce combattant ».
@@ -591,4 +593,28 @@ export function champDeSantePrincipale(
     const combat = pilote?.combat;
     if (!combat || (combat.defaultHealthType && combat.defaultHealthType !== 'hp')) return null;
     return combat.statsToTrack?.find(s => s.isMainHP)?.fieldId ?? null;
+}
+
+/**
+ * **La barre de santé d'un jeu à atteintes** — Crimes, 24/11/2026 (§ 1 bis du 23/11, David : « fais le
+ * 2 »). Crimes n'a pas de points de vie : on y perd du Physique, une marque à la fois (fatigue,
+ * épuisement, blessures, p. 395-396). La carte montrait pourtant la barre générique « PV 5/5 », née
+ * de la santé de départ du pilote et qu'aucune blessure ne touchait, à côté du badge « Physique 3 »,
+ * juste. La barre suit désormais le Physique actuel sur sa valeur de fiche, en lecture seule : les
+ * marques s'écrivent par l'attaque du panneau, pas par une console de points de vie.
+ *
+ * `null` : le jeu n'a pas d'atteintes, ou la fiche ne porte pas le Potentiel.
+ */
+export function santeDesAtteintes(
+    atteintes: Parameters<typeof physiqueActuel>[0],
+    valeurs: Record<string, unknown>,
+): HealthSystem | null {
+    if (!atteintes) return null;
+    const actuel = physiqueActuel(atteintes, valeurs);
+    if (actuel === undefined) return null;
+    const max = Math.max(1, Number(valeurs[atteintes.incapacite ?? 'physique']) || 0);
+    const pct = (actuel / max) * 100;
+    // Hors de combat à 0, jamais « mort » : la mort est au meneur (p. 393).
+    const state: HealthSystem['state'] = actuel <= 0 ? 'critical' : pct <= 25 ? 'critical' : pct <= 50 ? 'wounded' : pct < 100 ? 'scratched' : 'healthy';
+    return { type: 'hp', data: { current: actuel, max }, state, badges: [] };
 }

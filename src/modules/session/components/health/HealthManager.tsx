@@ -86,9 +86,16 @@ interface HealthManagerProps {
    * console pour Dune ») : le jeu n'a pas de points de vie, on y est vaincu.
    */
   sansConsole?: boolean;
+  /**
+   * **La santé que le jeu impose, en lecture seule** — Crimes, 24/11/2026 : la barre suit le
+   * Physique actuel (valeur moins marques, `santeDesAtteintes`) au lieu d'une santé en points de vie
+   * que rien ne touchait. Elle l'emporte sur tout le reste, ne se clique ni ne se saisit : ce qui
+   * la fait bouger s'écrit ailleurs (`pourquoi`, dit au survol).
+   */
+  santeImposee?: { sante: HealthSystem; libelle: string; pourquoi: string } | null;
 }
 
-export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialHealthSystem, onHealthChange, onApplyImpact, cibleDesCoups, disposition = 'bloc', actionsDeCarte, sansConsole = false }) => {
+export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialHealthSystem, onHealthChange, onApplyImpact, cibleDesCoups, disposition = 'bloc', actionsDeCarte, sansConsole = false, santeImposee = null }) => {
   const { 
     players, 
     entities, 
@@ -218,6 +225,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
   };
   const principale = !internalHealth ? principaleDuPorteur() : null;
   health = santeAlignee(health, principale) ?? health;
+  if (santeImposee) health = santeImposee.sante;
 
   // NOTE: We don't return null if the bearer is missing, to allow standalone combatants.
   // if (!porteur) return null; // Removed to fix standalone bug
@@ -385,13 +393,14 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
   const enTete = (
       <div className="flex justify-between items-center px-2">
           <button
-            onClick={handleCycleEngine}
+            onClick={santeImposee ? undefined : handleCycleEngine}
+            disabled={!!santeImposee}
             className="flex items-center gap-2 opacity-40 hover:opacity-100 transition-all cursor-pointer group/engine"
             title="Changer de moteur"
           >
             <Settings2 size={10} className="group-hover/engine:rotate-90 transition-transform duration-500" />
             <span className="text-ui-10 font-black uppercase tracking-[0.2em]">
-              {health.type === 'hp' && 'Points de Vie'}
+              {health.type === 'hp' && (santeImposee?.libelle ?? 'Points de Vie')}
               {health.type === 'clocks' && 'Horloges'}
               {health.type === 'anatomy' && 'Anatomie'}
               {health.type === 'wounds' && 'Blessures'}
@@ -435,18 +444,20 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
 
   const visuel = (
         <div
-            className="flex-1 px-1 h-full flex flex-col justify-center min-w-0 cursor-pointer"
-            onClick={() => triggerImpact(false)}
+            className={`flex-1 px-1 h-full flex flex-col justify-center min-w-0 ${santeImposee ? "" : "cursor-pointer"}`}
+            onClick={() => { if (!santeImposee) triggerImpact(false); }}
             onContextMenu={(e) => {
                 e.preventDefault();
-                triggerImpact(true);
+                if (!santeImposee) triggerImpact(true);
             }}
-            title={cibleDesCoups
+            title={santeImposee ? santeImposee.pourquoi : cibleDesCoups
                 ? `Clic : dégâts sur ${porteur?.name ?? 'ce personnage'} · Clic droit : soins — la barre ne suit PAS la cible`
                 : 'Clic gauche : dégâts | Clic droit : soins'}
         >
             {health.type === 'hp' && (
                 <HealthBarDriver
+                    libelle={santeImposee?.libelle}
+                    lectureSeule={!!santeImposee}
                     current={nombreOuRepli(health.data.current, nombreOuRepli(porteur?.hp, 0))}
                     max={nombreOuRepli(health.data.max, nombreOuRepli(porteur?.maxHp, 10))}
                     onCurrentChange={(val) => {

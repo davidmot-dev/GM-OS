@@ -6,7 +6,7 @@ import { Select } from '../../../components/common/Select';
 import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore, type Entity } from '../../session/useSessionOSStore';
 import { HealthManager } from '../../session/components/health/HealthManager';
-import { estHorsDeCombat, santeAffichee, maximumDeLaJauge, champDeSantePrincipale } from '../logic/SanteDuCombattant';
+import { estHorsDeCombat, santeAffichee, maximumDeLaJauge, champDeSantePrincipale, santeDesAtteintes } from '../logic/SanteDuCombattant';
 import type { HealthSystem } from '../../session/useSessionOSStore';
 import { Bouton, Icone } from '../../../components/socle';
 import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
@@ -330,6 +330,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
     */
     const atteintesDuJeu = activeDriver?.jet?.garde?.atteintes;
     const physiqueDuCombattant = atteintesDuJeu ? physiqueActuel(atteintesDuJeu, ficheLue.valeurs) : undefined;
+    // La barre suit le même Physique que le badge, plus une santé en points de vie (24/11/2026).
+    const santeDuPhysique = santeDesAtteintes(atteintesDuJeu, ficheLue.valeurs);
 
     return (
         <article
@@ -558,8 +560,10 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     return true;
                 }}
                 disposition="carte"
-                // Dune n'a pas de points de vie : ni console ni « Calculer » (§ 263, 19/11/2026).
+                // Dune n'a pas de points de vie : ni console ni « Calculer » (§ 263, 19/11/2026). Crimes non plus (24/11).
                 sansConsole={!calculateurDisponible(activeDriver)}
+                santeImposee={santeDuPhysique ? { sante: santeDuPhysique, libelle: 'Physique',
+                    pourquoi: 'Physique actuel : la valeur moins la fatigue, l’épuisement et les blessures. Les marques s’écrivent par l’attaque (Fiche → Attaquer) ou sur la fiche.' } : null}
                 /*
                   **Les boutons Dégâts / Soins de cette ligne partent sur la
                   cible** (décision de David, 2026-08-29) : Tom vise Henri,
@@ -680,19 +684,30 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         /* § 263, T20 : une figure du livre n'a pas les jauges que le livre ne lui donne pas
                            (le Sang-froid d'un adversaire de Blade Runner s'affichait « 0/10 »). */
                         if (combatant.origineDuLivre && (sheetValRaw === undefined || sheetValRaw === '')) return null;
+                        /* Dune : « les personnages non joueurs n'utilisent pas de Détermination », le
+                           meneur dépense 3 Menace à la place (livre p. 240) — la jauge n'a rien à dire
+                           sur la carte d'un PNJ (§ 1 bis du 19/11, fait le 24/11 : « fais le 4 »). */
+                        if (!combatant.isPlayer && gaugeConfig.fieldId === activeDriver?.jet?.dune?.determination) return null;
                         const ressource = deDeRessource(gaugeConfig.fieldId, gaugeConfig.label, sheetValRaw);
                         if (ressource) return ressource;
                         const val = typeof sheetValRaw === 'number'? sheetValRaw : parseInt(String(sheetValRaw || 0), 10);
-                        
+
                         // Attempt to find max from template, default to 10
                         let max = 10;
-                        const fieldDef = sourceTemplate?.sections.flatMap(s => s.fields).find((f: { id: string; type: string; defaultValue?: string | number | boolean }) => f.id === gaugeConfig.fieldId);
-                        if (fieldDef && fieldDef.type === 'number' && fieldDef.defaultValue) {
-                            max = Number(fieldDef.defaultValue);
+                        const fieldDef = sourceTemplate?.sections.flatMap(s => s.fields).find((f: { id: string; type: string; defaultValue?: string | number | boolean; max?: number }) => f.id === gaugeConfig.fieldId);
+                        /* Le maximum que le champ déclare fait foi : la Détermination de Dune est une
+                           `gauge` de maximum 3, et la carte disait « 0/10 » (§ 1 bis, 19/11/2026). */
+                        const maxDuChamp = Number(fieldDef?.max);
+                        if (Number.isFinite(maxDuChamp) && maxDuChamp > 0) {
+                            max = Math.max(maxDuChamp, val > 0 ? val : 0);
+                        } else {
+                            if (fieldDef && fieldDef.type === 'number' && fieldDef.defaultValue) {
+                                max = Number(fieldDef.defaultValue);
+                            }
+                            // If it's something like Sanity or Stress, the max might be known, but 10 is a safe UI default for grids
+                            // We take the max of 10 or the current value if it exceeds 10
+                            max = Math.max(max, val > 0 ? val : 10);
                         }
-                        // If it's something like Sanity or Stress, the max might be known, but 10 is a safe UI default for grids
-                        // We take the max of 10 or the current value if it exceeds 10
-                        max = Math.max(max, val > 0 ? val : 10);
                         // Le maximum que le pilote déclare l'emporte : le Choc de Torg plafonne à l'Esprit.
                         max = maximumDeLaJauge(gaugeConfig.fieldId, activeDriver?.combat?.statsToTrack, sheetData) ?? max;
 

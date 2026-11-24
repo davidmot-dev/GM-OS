@@ -35,9 +35,13 @@ export function degatsDuDernierJet(jet: Pick<RollResult, 'total' | 'compte'> | n
  * **« Calculer » n'existe pas pour Dune** (19/11/2026, David : « masque pour Dune »). Dune n'a pas
  * de points de vie : on y est vaincu (`DefaiteDune`), et le calculateur ne faisait que remplir une
  * horloge du plateau que les règles ne connaissent pas (audit T4, défaut 6).
+ *
+ * **Ni pour Crimes** (24/11/2026, § 1 bis du 23/11) : on n'y perd pas de points de vie mais du
+ * Physique, une marque à la fois, et l'attaque du panneau les écrit déjà (C6). La console et
+ * « Calculer » écrivaient des points de vie que rien ne lisait (`santeDesAtteintes`).
  */
-export function calculateurDisponible(pilote: { jet?: { dune?: unknown } } | null | undefined): boolean {
-    return !pilote?.jet?.dune;
+export function calculateurDisponible(pilote: { jet?: { dune?: unknown; garde?: { atteintes?: unknown } } } | null | undefined): boolean {
+    return !pilote?.jet?.dune && !pilote?.jet?.garde?.atteintes;
 }
 
 /**
