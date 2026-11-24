@@ -4,8 +4,7 @@ import fs from 'node:fs';import path from 'node:path';import assert from 'node:a
 import {empreinte} from './archives-de-recette.mjs';
 const r=path.resolve('output/campagnes-tests/crimes'),j=n=>JSON.parse(fs.readFileSync(path.join(r,n),'utf8')),e=(n,x)=>fs.writeFileSync(path.join(r,n),typeof x==='string'?x:JSON.stringify(x,null,2)+'\n');
 const pr=j('provenance.json'),archive=pr.campagne;assert.equal(empreinte(fs.readFileSync(path.join(r,archive.fichier))),archive.sha256);
-const tests=j('verification-vitest.json');const echecs=tests.testResults.flatMap(f=>f.assertionResults).filter(x=>x.status==='failed');assert.equal(echecs.length,0,echecs.map(x=>x.fullName).join('
-'));
+const tests=j('verification-vitest.json');const echecs=tests.testResults.flatMap(f=>f.assertionResults).filter(x=>x.status==='failed');assert.equal(echecs.length,0,echecs.map(x=>x.fullName).join('\n'));
 const portable='C:/Users/david/.codex/plugins/cache/created-by-me-remote/gmos-campagnes-tests/0.2.0/skills/campagnes-de-test/scripts/gmos_bundle.py';
 const python='C:/Users/david/AppData/Local/Python/bin/python.exe';
 const verification=execFileSync(python,['-I','-X','utf8','-B',portable,'verify',path.join(r,archive.fichier)],{encoding:'utf8'});e('verification-plugin.json',{archiveSha256:archive.sha256,outil:'gmos_bundle.py verify — contrôle structurel partiel',sortie:verification});
