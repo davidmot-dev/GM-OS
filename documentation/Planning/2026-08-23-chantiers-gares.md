@@ -550,6 +550,7 @@ aux seuls principaux pour la fiction et réserve ces gestes collectifs aux ateli
 Une éventuelle sélection des destinataires relève d’un chantier séparé ; aucun code
 applicatif modifié dans cette création de données. Le sous-ensemble de cinq images du
 Destin est une autre limite, explicitement documentée, pas un motif de fabriquer des cartes.
+✅ **Corrigé le 24/11/2026 (§ 274)** : pendant une séance en cours, les distributions ne servent que les PJ ajoutés à la séance (`sessionEntityIds`, règle de la Table du 11/11) ; les autres sont nommés, leur main intacte ; sans séance, toute la campagne.
 
 **07/11/2026 — Forcer Atelier ne libère pas la Bibliothèque pendant une séance active.**
 
@@ -593,6 +594,7 @@ et le PJ passe par la réduction générique des PV. **Raccord à examiner sépa
 réappliquer le coup : couvrir PJ/PNJ liés et adversaires autonomes, dégâts/soins/mental, depuis
 le calculateur et le panneau de santé. Le clip utilise les commandes de santé natives de la carte.
 Aucun correctif applicatif dans ce lot ; demander l’arrêt de GM-OS avant une modification source.
+✅ **Réglé depuis le 19/11 (§ 263, T21), prouvé le 24/11 (§ 274)** : « Calculer » sur un PJ passe par `handleApplyImpact`, qui répartit le coup sur les pistes ; essai `calculerUnPjDeDegenesis.test.ts`.
 
 **06/11/2026 — Symbaroum : jauge du cockpit restée à la santé de départ.** Sur le profil
 fictif du clip, `hp/maxHp=10/10` et `endurance_actuelle/endurance=10/10` au départ. Les boutons
@@ -15177,10 +15179,51 @@ aucune donnée personnelle, installation, publication ou commande git d’écrit
   campagne », « Atelier » en séance) ; Degenesis (« Calculer » sur un PJ) reste au § 1 bis, à
   reproduire.
 
+### 274 · Degenesis prouvé, distributions de Torg, § 199 soldé — 24/11/2026
+
+- **Demande de David** : « fait 4,5,6 » (la liste du § 273 : Degenesis, Torg, analyse des quatre
+  pilotes), après « GM-OS tourne-t-il ? » (« Fermé », port 5173 et Electron vérifiés).
+- **Degenesis** : le constat du 06/11 était réglé depuis T21 (§ 263, 19/11) — « Calculer » sur un PJ
+  passe par `handleApplyImpact` et ses pistes. L'essai qui le prouve manquait :
+  `combat/calculerUnPjDeDegenesis.test.ts` (coup physique sur les deux pistes, mental à l'Égo).
+- **Torg** : pendant une séance en cours, Fin de scène, Fin d'Acte et Cartes de Cosm ne servent que
+  les PJ ajoutés à la séance (`mainsDeLaCampagne`, `personnagesDeLaSeance`) ; le message nomme les
+  autres, dont la main n'est pas touchée ; sans séance, ou sans PJ ajouté, toute la campagne.
+  Essai `cartesDuDestin.test.ts` (+2) ; page 54-Jeu-Torg. La recette Torg du 08/11 (sans séance en
+  cours) garde ses neuf mains ; deux de ses essais échouent pour des causes antérieures : 80 faces
+  Destin depuis le 09/11 (`5ac2b2de`), empreintes de trois sources modifiées depuis.
+- **§ 199** : les 27 lots du plan sont tous cochés, livrés et validés (01/11 au 05/11) ; la ligne 135
+  et la synthèse le disent.
+- **Vérifié** : 3 116 essais (session, combat, Deck-OS, table, magasins, manuel des jeux, guides),
+  `tsc -b`, eslint ; recette Torg relancée (son fichier de preuve remis à l'identique). Ni build ni e2e.
+- **Reste** : l'essai de David — une séance Torg avec un PJ hors séance, puis « Fin de scène ».
+
+### 275 · Delta Green finalisé — corpus relu 18/18, catalogue refait depuis le livre — 24/11/2026
+
+- **Demande de David** : « finalise Delta Green ». Restaient, d'après la synthèse et le § 249 : la
+  relecture du corpus (1/18) et le catalogue d'équipement.
+- **Corpus** : les 17 fiches restantes relues contre le *Manuel de l'Agent* (NAS, copie de travail
+  effacée ; PDF = imprimée + 1), treize corrigées en profondeur, quatre conformes à une précision ou un ajout près ; empreintes
+  laissées intactes (fiches « corrigées »). Le détail est en pied de chaque fiche et dans la synthèse.
+  Une erreur de ma part corrigée en chemin : la règle optionnelle « Autres coups critiques » (p. 52),
+  d'abord retirée parce que l'encadré porte un autre titre, est rétablie.
+- **Catalogue** : la fiche `equipement-et-materiel.md` générée inventait la plupart de ses tableaux ;
+  retranscrite des p. 84-103. `outils/delta-green/catalogue_depuis_le_livre.mjs` refait le catalogue
+  par `remplirDepuisLesFiches` sur un catalogue vide (138 objets au lieu de 195, objets ajoutés à la
+  main gardés : aucun), pilote 2.2.0 dans `Export Dirvers/corriges/`, mêmes identifiants, fiche et
+  jet inchangés ; `controlerLePilote` : 0 erreur, 7 avertissements (valeurs du livre non numériques).
+  Aucune mécanique ne lisait les anciennes colonnes (`capacite`, `vitesse-maximale`).
+- **Vérifié** : `corpusDerivable` (budget de l'invite tenu après deux resserrements), 995 essais de
+  la Forge, du manuel et des groupes du corpus ; manuel 54-Jeu-Delta-Green à jour.
+- **Reste** : l'essai de David — réimporter `Delta-Green-2.2.0` avec « Remplacer », ouvrir le
+  catalogue, prendre un objet. Les cases et la recette du § 248 décrivent encore la 2.0.1.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 211 | **Delta Green finalisé** | § 275 ; 🟠 livré le 24/11 — corpus relu 18/18, catalogue refait depuis le livre (138 objets), pilote 2.2.0 | Réimporter `corriges/Delta-Green-2.2.0` avec « Remplacer », ouvrir le catalogue | Essai de David |
+| 210 | **Degenesis prouvé, distributions de Torg, § 199 soldé** | § 274 ; 🟠 livré le 24/11 — essai Degenesis écrit, distributions de Torg limitées à la séance, § 199 relu : rien à choisir | Une séance Torg avec un PJ hors séance, puis « Fin de scène » | Essai de David |
 | 209 | **Neuf constats du § 1 bis traités** | § 273 ; 🟠 livré le 24/11 — CRI-A01, barre et aperçu de Crimes, Détermination de Dune, cockpit, médiathèque, régime forcé, suivis cachés, `primary` ; 6 889 essais | Une attaque de Crimes jusqu'à « Infliger » ; l'Endurance de Symbaroum et le cockpit ; la médiathèque depuis « Modifier la campagne » | Essai de David |
 | 208 | **Crimes 2 — vidéo explicative complète** | § 272 ; 🟢 MP4 16 min 47 s livré le 23/11 ; 38 séquences, 76 cartes relues en images, 34 tests ciblés ; Névrose confirmée et limites CRI-A01/PV consignées | Ouvrir le MP4 et ses chapitres ; confort humain restant à juger | Rien pour la livraison ; aucun essai attribué à David |
 | 207 | **Pénombre — recompte de la réserve collégiale, pilote 2.1.0** | § 271 ; 🟢 livré le 22/11, validé par David le jour même — seul après une merveille, et un bouton ; bestiaire de David gardé ; un avertissement laissé pour T17 | Aucun — clos | Rien |
@@ -15205,10 +15248,10 @@ aucune donnée personnelle, installation, publication ou commande git d’écrit
 | 188 | **Alien — Marines coloniaux dans le pilote (A12)** | 🟠 § 252 ; pilote 1.10.0 (SM, Statut, Grade, Événements de terrain) et cinq tables Table-OS du supplément — 14/11 | Réimporter `corriges/Alien-1.11.0.gmos-driver` (contient A12) avec Remplacer, tirer une table de terrain | Essai de David |
 | 187 | **Alien — corpus relu en entier** | 🟢 § 251 ; 27 fiches relues (22 + 2 + 1 corrigées), plus aucune `relu: false` hors archive — 14/11 | Rien | Rien |
 | 186 | **Alien — détecteur orientable et mouvement des pions** | 🟠 § 250, A11 ; module 0.5.0 réalisé et vérifié — 14/11 ; 242 tests, 7 parcours, six captures | T9 : essayer le cap partagé et l'immobilité dans la campagne | Essai physique de David ; aucun pilote à réimporter |
-| 185 | **Delta Green — les cinq suites du pilote 2.1.0** | 🟢 § 249 ; SAN/rupture/accoutumance, 2 PV, létalité/critiques, opposition/expérience, vocabulaire et boutons validés par David — 13/11 | Rien pour les fonctions livrées | Relecture du corpus à part : 1/18 relue ; catalogue à instruire |
+| 185 | **Delta Green — les cinq suites du pilote 2.1.0** | 🟢 § 249 ; SAN/rupture/accoutumance, 2 PV, létalité/critiques, opposition/expérience, vocabulaire et boutons validés par David — 13/11 | Rien pour les fonctions livrées | Corpus relu 18/18 et catalogue refait le 24/11 (§ 275) |
 | 184 | **Delta Green — campagne de recette** | 🟠 § 248 ; Les dossiers de la pluie, 12 séances, 5 ateliers et 36 cas préparés ; 59 essais automatiques réussis — 12/11 | Vérifier le pilote 2.0.1 puis importer l’unique `.gmos` en Tel quel | Import natif et recette de David ; corpus non relu |
 | 183 | **Delta Green — pilote 2.0.1 puis 2.1.0** | 🟢 § 247 et § 249 ; jet, compétences, santé et fiche reliée, suites complétées ; validation globale de David le 13/11 | Rien ; la 2.1.0 remplace la 2.0.1 | Rien pour ces fonctions |
-| 182 | **Delta Green — préparation GM-OS Studio** | 🟠 § 246 ; index, sommaire, thème, bannière, identité et fiche de deux pages construits et vérifiés —12/11 | Ouvrir la fiche HTML et choisir la bannière dans le pilote | Essai visuel de David ; compétences du pilote à nommer avant raccordement |
+| 182 | **Delta Green — préparation GM-OS Studio** | 🟠 § 246 ; index, sommaire, thème, bannière, identité et fiche de deux pages construits et vérifiés —12/11 | Ouvrir la fiche HTML et choisir la bannière dans le pilote | Essai visuel de David ; compétences nommées et fiche reliée le 12/11 (§ 247) |
 | 181 | **Argyropée — écarts de combat corrigés** | 🟢 § 245 ; sous zéro inconscient (−1) et non mort, d10 d'initiative lu de 0 à 9 ; pilote inchangé —12/11 ; **validé par David le 12/11** | Rien | Rien |
 | 180 | **Rappel d'un jet dû par une jauge (GM Codex, lot 2)** | 🟢 § 244 ; « Au bout, rappeler », Fait / Écarter sur la carte de la jauge, au cockpit et sur la carte 5 s ; à la Table, seulement les personnages qui jouent — **validés par David le 11/11** | Rien ; lot 3 **mis de côté** par David (11/11) | Rien |
 | 179 | **Jets demandés et jets cachés (GM Codex, lot 1)** | 🟢 § 243 ; demande, bannière, jet caché, résultat en messagerie et carte 5 s, Centre de liaison — **validés par David le 11/11, tablette physique comprise** | Rien ; la capture de la bannière au guide 61 | Rien |
@@ -15255,7 +15298,7 @@ aucune donnée personnelle, installation, publication ou commande git d’écrit
 | 138 | **RuneQuest — recette 2.1.0** | § 202 ; RQ-A1 livré et validé par David, 96 tests, E2E et trois Hub passent, 78 cas — 01/11 | RQ-A1 coché ; commit et push demandés | Aucun pour RQ-A1 ; historique 2.0.0 conservé |
 | 137 | **RuneQuest — PV de cible** | § 201 ; RQ-A2 livré et validé par David — 01/11 ; 89 tests, lint, build et E2E passent | RQ-A2 coché ; suite RQ-A1 au § 202 | Aucun pour ce correctif |
 | 136 | **GM-05 — secrets de séance** | § 200 ; corrigé et validé par David — 01/11 ; 70 tests et quatre E2E, douze Hub sans fuite | NP-C1 coché ; suite RQ-A2 | Aucun pour ce correctif ; anciens rapports conservés |
-| 135 | **Analyse des quatre nouveaux pilotes** | § 199 ; synthèse actualisée, 24 propositions et trois sujets communs ; 177 tests ciblés passent — 01/11 | GM-05/RQ-A2/RQ-A1 validés ; choisir un lot restant | Autres propositions à choisir ; analyse initiale conservée |
+| 135 | **Analyse des quatre nouveaux pilotes** | § 199 ; synthèse actualisée, 24 propositions et trois sujets communs ; 177 tests ciblés passent — 01/11 | Aucun — les 27 lots du plan sont livrés et validés (01/11 au 05/11), relu le 24/11 (§ 274) | Rien ; analyse initiale conservée |
 | 134 | **Campagnes de recette — Shadowrun Anarchy** | § 198 ; mission et deux laboratoires, 22 PJ, 64 cas humains ; 72 tests, trois imports et Hub éprouvés — 01/11 | Importer 01-La-Derniere-Couleur.gmos puis suivre le cahier | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
 | 133 | **Shadowrun : Anarchy 2.0 fini — pilote 2.0.0** | § 197 ; corpus relu 19/19 (16 corrigées), réserve compétence + attribut à 5+, dés de risque doublés et complications, RR de la ligne, avantage borné, Anarchy (avantage, relance, gains) ; moniteur d'état contre les seuils de la fiche, aggravation ; fiche HTML au moteur 23 reliée (120/121) — 01/11 | Réimporter `corriges/SR_Anarchy_driver_gmos_finir` avec Remplacer ; un test à dés de risque et sa relance, une VD dans Combat-OS, la Fiche du jeu | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
 | 132 | **Shadowrun Anarchy — quatre ateliers Studio** | § 196 ; thème 0/0, fiche une page/121 clés, bannière 2400 × 600 ; identité révisée cyberpunk saturé 43/14 mots ; 51 tests, contrôles hors ligne — 31/10 | Suivre LIRE-MOI du lot Studio et prendre l’identité révisée dans output/identites/shadowrun-anarchy | Fonctions livrées validées globalement par David le 01/11 ; historique conservé, extensions séparées |
