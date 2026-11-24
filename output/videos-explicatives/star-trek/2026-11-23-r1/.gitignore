@@ -1,0 +1,13 @@
+# Intermédiaires et captures conservés localement ; le MP4 final est dans livraison/.
+/montage-r1/
+/prises-r1/
+/reperage-r*/
+/repetition-r*/
+/resultats-reperage/
+/textes-r1/
+/prises-r2/*
+!/prises-r2/prises.json
+!/prises-r2/calage/
+/prises-r2/calage/*
+!/prises-r2/calage/verification-visuelle.json
+!/prises-r2/calage/releve.json

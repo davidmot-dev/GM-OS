@@ -1,0 +1,5 @@
+# Les empreintes de livraison portent sur les octets exacts, y compris les fins de ligne.
+* -text whitespace=cr-at-eol
+# Le dernier bloc SRT et la transcription générée gardent leur séparateur final signé.
+livraison/*.srt whitespace=cr-at-eol,-blank-at-eof
+livraison/transcription.md whitespace=cr-at-eol,-blank-at-eof

@@ -1,0 +1,3802 @@
+{
+  "fichiers": [
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\Export Dirvers\\Star Trek_driver_gmos_1794393318614.gmos-driver",
+      "sha256": "2bad6225c15bc20e31402dfa62d3a185df224bcd88a9c40ea7ffe1a48f460e40"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\Star-Trek-Nacre-TOURNAGE.gmos",
+      "sha256": "1d7f519954d661b062f17a0d100d71df9f73c0c29e9554e1dfeb199af5bca21d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\documentation\\User Guides\\54-Jeu-Star-Trek.md",
+      "sha256": "044e5e2c97ead2ea2d789f20ecf65bc1bfb23a186ddc279ee53688aa1710e897"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\dice\\systemes\\starTrekRegles.ts",
+      "sha256": "79f276799565b35764eaf63d0275728ba05281712f09b0e715943d6ad97c7bb6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\src\\modules\\combat\\logic\\attaqueDeLAdversaire.ts",
+      "sha256": "76e47f109ae8d197926067c25b8bd6aa31e0ae7489e982646f84cf24440d7b91"
+    }
+  ],
+  "build": [
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\__vite-browser-external-DYxpcVy9-BIHI7g3E.js",
+      "sha256": "82507b0bb9ac4affaeb17c40968d830cbd6d14a2ffa04d8994faf1a78e58e1b5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\activity-B7AsVTB0.js",
+      "sha256": "dfc46bd9433d3445ed919d65a346e4becd59109e51fe1567e10e97a4afad64d5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\AideDashboard-W5Wac2Z9.js",
+      "sha256": "98baf4438337b033c5cbf0273c4fdc0c129c2ed1d0af96b3da1fd9dd3ffa81f0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\AIPromptOverlay-rQaPzMn5.js",
+      "sha256": "95e663753e5764553162fbbd5d4a8a8de2d371c21eb70c907abb5594e4dc4eef"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\AmbianceLayer-dS2YIi45.js",
+      "sha256": "485f9b038af8f3c6a85ef09a82fa8b5d2c2f05e0bfd3d1c9804bb3a02648717a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\AmbientDashboard-BKerLSAZ.js",
+      "sha256": "2d42dc931478eba6442ab99dc903dc033e59d6c19f34e0b52f26aa59e78fefd9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\AppareilDeTable-C_JeT9zH.js",
+      "sha256": "04b969fa59817e6464a9e81f6fb9ea13027ddba7d9bb17b00d06f4949d05c57b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\archive-sXzP7KP-.js",
+      "sha256": "4734fbcf57cec4d7ba83c14ac79bdbcbf9a78d94a4590ce42b65567b835495fd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\armesDuVoyageur-hTCRO80E.js",
+      "sha256": "e62d91c09d4aacb34873f07e1c8715c02c3ca282f90c94f731bb059daf0941cb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\arrow-left-CY4SQ-gD.js",
+      "sha256": "70af9d5a609a6dcf8dc3f9e400844dda2e17b1a9f3e7008a830630a01426c95d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\arrow-right-C5uGqEkV.js",
+      "sha256": "0005e486efe92aab25f51a2ae3519a329561af87437d6be232fb26898958f744"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\audio-lines-DLdrEg4z.js",
+      "sha256": "9d2f2561d87604d4cb734b15465020edfc4374939726638ac4e2caf7f0785727"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\AudioRouter-CNGYSjZK.js",
+      "sha256": "cf4f5b3b35508485d4617593a551a4fa7a8d491f8a22bf2831bf5301b0ff40de"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773871774471.jpg",
+      "sha256": "d6fe3642c57931bb55729028e015bd28ed27a58fb07436cec20af1ac5f9be245"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773871984620.jpg",
+      "sha256": "d6fe3642c57931bb55729028e015bd28ed27a58fb07436cec20af1ac5f9be245"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773871998648.jpg",
+      "sha256": "d6fe3642c57931bb55729028e015bd28ed27a58fb07436cec20af1ac5f9be245"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773872495873.jpg",
+      "sha256": "d6fe3642c57931bb55729028e015bd28ed27a58fb07436cec20af1ac5f9be245"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773872577941.jpg",
+      "sha256": "d6fe3642c57931bb55729028e015bd28ed27a58fb07436cec20af1ac5f9be245"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773872980985.jpg",
+      "sha256": "d6fe3642c57931bb55729028e015bd28ed27a58fb07436cec20af1ac5f9be245"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773873395401.jpg",
+      "sha256": "e10b1cbfc335284344f69576d4dbd7a4dd389d09ff1ad712b75a9b073df87fb9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773873440864.jpg",
+      "sha256": "9bd67bdbef9d437dde81297cea4aaae7728e051223e1260ca86e22c7e9828744"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773873484376.jpg",
+      "sha256": "7043f5e23297babc9cd54e51c04db7086412dcaebe9f868321f267e2efaef80a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773873733031.jpg",
+      "sha256": "d6fe3642c57931bb55729028e015bd28ed27a58fb07436cec20af1ac5f9be245"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773873821522.jpg",
+      "sha256": "d6fe3642c57931bb55729028e015bd28ed27a58fb07436cec20af1ac5f9be245"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\avatars\\npc\\ai_gen_1773874001020.jpg",
+      "sha256": "d6fe3642c57931bb55729028e015bd28ed27a58fb07436cec20af1ac5f9be245"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ban-DufUftRI.js",
+      "sha256": "b6bfd6e779ae7af6650e4e3164394c010db8aa045625cf8cc1735bfda441cefc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\battlemapsDeLaScene-BG-p5ngB.js",
+      "sha256": "cc0842c7cfcfde27719d1df44f0410fcfe2ac37ea1b685887e8301111ceb9cc5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\bell-BXQLk2oA.js",
+      "sha256": "2c4566572462ce7fce920b0e61764efb5aa443a303960645cf382eda6110bba0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\boucleDeLaVideo-CNO-akWj.js",
+      "sha256": "150bd4d73dd982be50f5d8b32d8117e5fdc60bd0c0d8fe2cee3d833258de9d81"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\Bouton-CFhIveHA.js",
+      "sha256": "9acd3699d0018b77af34170eed2b8ed501644172ff477d277d1cbfd536ef8a3f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\BoutonsDuRappel-C8JeMDNE.js",
+      "sha256": "73bd9a7ff2a50e855ab3bfcb65d4994a37f38035cc2953122b080d372d99c380"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\BrainstormOverlay-BgghHNJi.js",
+      "sha256": "4aafb17d26c6839c1155c90b2b46b698c7f552b6ae2638f1116abc0c7e72695d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\browser-fUn3uFnv.js",
+      "sha256": "d033f53365e5cfb8e1a1baedc70b214a70c8ab37a50caea1f2b1fa12e55118a7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\bug-CTAAH9W3.js",
+      "sha256": "dcac2e1b85eb885a6d8ca4deb5d021fef816771ea295696267d6dc5fccace027"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\calendar-f5cXI-uZ.js",
+      "sha256": "aa4641569ad1c7a18f042dadf075b239cef9520ccdbe0705697573797cadee50"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\CampaignForm-Dtfa0dU2.js",
+      "sha256": "caa5d361298bf3eefaece42e52587d1ebca0dba9888b98723370ff4d6ac71ceb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\canalJoueur-BYzVyIDN.js",
+      "sha256": "f22debe81f7a45d68d88dc2e700335313f0f527e1cdd13a61bcd888af0100fda"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\cast-CBPcqXmW.js",
+      "sha256": "e2e6a3834d6a9c9d3533a88e397eaa8b7547872ea94da970a680d768e7eec218"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\catalogueDesEffets-DhZ0nekD.js",
+      "sha256": "7819a62d7fa319aa0b71be64dd0dc45aa8d9298708f3d4eba3366fe632473880"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\check-CJ8ITGUx.js",
+      "sha256": "7e42700484706099e5b0cc21fe51c1dc3daebf0930981b7674e7e954af2293c4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\chevron-down-GRKpKvcp.js",
+      "sha256": "6675b6a1d7ccd18c29534c3a1ca0f036960ee8ab9f96bbeff2c04fd74298073a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\chevron-left-DRglOHOk.js",
+      "sha256": "4c3e9ae668fee8af75a7e573ae4593290d4b55b8e1dbed359af837404630432b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\chevron-up-B3ZgrnZi.js",
+      "sha256": "2d04ee2c8aa68696fdbb547b2ae0c3b7d0cbf8e3a1c9e85acaaa16c68d5275d5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\circle-alert-CDFWfEi2.js",
+      "sha256": "befce198bd819aa8b924d27c5d4f5b7796961d6c904becd7dc4dfbeb2d76249a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\circle-BVD8p4jT.js",
+      "sha256": "e2d8b71ece0a78ca041e69de05ba53dd4a9a7b25c3b9a1f8b1911be4120f4362"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\circle-check-CVlVxPkm.js",
+      "sha256": "3e96076c585002bd66a7081b729c12dc5fb486a18da11c667ae1ea3f9fba1691"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\circle-stop-D919WPt_.js",
+      "sha256": "9bc4c1956b2664363fec5285c43400d0c8cd8326a2772eb5da6faf4ffac0479b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\circle-x-COiGGXWi.js",
+      "sha256": "f7be20f157e8c294938264544a6743b3124d4c31b655cd443bb12fbe98a6d679"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\clapperboard-Dpztvcmo.js",
+      "sha256": "ffb4b390bdea08e6ff11a41bb6139f67807b7178e802bd472c59d543cc62d91e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ClockDashboard-BkUPp9y8.js",
+      "sha256": "6fa8031b2745cdd917f0b7dcff87d2d1e24e571381525e540b31b8869a9b4a19"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\cloud-DCNlzA41.js",
+      "sha256": "76ab0e13a1ed2057866a0caa52d79085bda787fa161d733e499d535549d0a70a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\cloud-rain-CduAGwGC.js",
+      "sha256": "77c126c5f8ba5abee53aa8a4b2e77fba5f33cfd38f8d13045875d196001943e6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\cloud-snow-DUpCQsw3.js",
+      "sha256": "77e1be617a7fd429783b0409e6c1f43a45a52e008828258606432982a86067df"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\CombatDashboard-DPCZXBQP.js",
+      "sha256": "d87fa71f85b012c0ba6da921f941ffab51e93bc9427f718f4526bfd6a40d6901"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\copy-X5O1R5nq.js",
+      "sha256": "22c4828517bd2a24202077d92b15a0d39a8d84e676b1624a0565b30df729d5e6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\couleursDePastille-COd7-5JN.js",
+      "sha256": "a5045df795f047eb347bee96d0210d803743bf727119f166425001f3aa0b119a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\crosshair-B_xFSMvg.js",
+      "sha256": "3fc5d777e0747c1faf15d5ec75cab47a583af8be8a9351267484e823cb658162"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\database-BURXr-ID.js",
+      "sha256": "39f657afe65aa051bb360fe9bd35a0cbdce6de8c12e504ad36838bf5e56cb72c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\DebugDashboard-BVBqVnTZ.js",
+      "sha256": "40fcf38c71c66736208afd093f3c6b48eff7cbed3565859b97e561e5c5b1af4c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\1.jpg",
+      "sha256": "6a3cb7bf5b2657d815553ac024d2e45f83f47d99dd081aa5d3056e0af192b9a5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\10.jpg",
+      "sha256": "73ed72c9dddcae026a5e21006f9b1c875850a047edd32377f2fd1daa45bea093"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\100.jpg",
+      "sha256": "65faf24ad37d0a04e664e82d0af6c2706cdba967cfbed086c577759d8bdf1a3c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\101.jpg",
+      "sha256": "79ca975f07cb86a69aeb0e2a45445663f9b657c10eec742343b0331364979dd2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\102.jpg",
+      "sha256": "b8a27702ad2513af5ab8944e844366a1833de89ec678a59cc738b03900bb820c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\103.jpg",
+      "sha256": "508cdc2482de544f74d0f59c0cd6c05414ba299237d8b9353aef41e4660527cb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\104.jpg",
+      "sha256": "a8df0071afe20fe4a8696abdb4a6bb1c940f4a49cec799231ddf729db900a206"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\105.jpg",
+      "sha256": "fc32beaac6c2f8bffa3d336bcb332b5f3bfa9b42fcb2f84326314b25d24b1085"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\106.jpg",
+      "sha256": "4aadcc231fbb2304d8b1d71ace04688fde67da48a790766064c85e8b54f2b00b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\107.jpg",
+      "sha256": "3ae8f7b96bfe5be1c884186e2157ad03ed26d69335170586926eea4cc6a8b030"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\108.jpg",
+      "sha256": "b3531a4ae1ca91fe1a0dc5a1989bfc6916de8714dae7ab2662c84bd601d7da44"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\109.jpg",
+      "sha256": "3bc36d7ac25df2f21b8d3159bcd814487a6e95084e7569b23d4f346edc855d47"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\11.jpg",
+      "sha256": "91b91ad2fb48f9b2c433cf6c7b202b222f4848d77b7a90b076fd0d0b26d71fbf"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\110.jpg",
+      "sha256": "566f4865706e7c077e2a2f36551eeb3158f1ae2a6960d407360ddc9ee1e69edf"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\112.jpg",
+      "sha256": "f0d61173d001159a43c096a8aea521c7b697d33a0f2c617dee62abb9e683207c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\113.jpg",
+      "sha256": "444b40ec2096579e81867f66325512d6b7ae8d7d1474ab9d94f64e4556d82c13"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\114.jpg",
+      "sha256": "9cf64f80f99b86a667d5da0b6ef703912c0a646406f01a55c4e849323a457955"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\115.jpg",
+      "sha256": "79e9fa7740ae15e4703fa9a75741960d3eada50c1da94401e2eb333d084a6089"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\116.jpg",
+      "sha256": "687990a42ca76b9d7ef0d2a96833f8697b7891be028ac71f13cf1e49fe0e9316"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\117.jpg",
+      "sha256": "33718182ca1746f9fa04c674767e21dd5ba4c36c361b6900884e0d5f47340101"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\118.jpg",
+      "sha256": "195068f27aad9a946d1bfe10c428b0d5eb1ceb7a36211bef819582094b444bf5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\119.jpg",
+      "sha256": "af007e9b04c8e00133df4953cbdcd5dd62d4f0bafc4a595b49e7a0f826f43135"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\12.jpg",
+      "sha256": "b922bffa0ec4c8fb6d59a4d192112a56527b5f456979994743a94d6273b1f802"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\120.jpg",
+      "sha256": "cf962bca4b44f65ea9532a63c3c9b4ffe6805832f2ce2bfdba539d728e895518"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\121.jpg",
+      "sha256": "2ce2578af344cda0b83ea4a34bc57034ba94750c4bf13b0f4c814eac82b20463"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\122.jpg",
+      "sha256": "f8c812a661ba6b1b31df4cbacc1469bf0d80b5b113498a0756077ceeac8a7c3a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\123.jpg",
+      "sha256": "4341651e96f59c7e2a9c04659768f1725b7a8cbbe4b90a2a3a3bc5509908267a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\124.jpg",
+      "sha256": "9f3c3330b079f7ed9b0c607bbd413ba3c8442dd55b5443e2d399ba0ee7ad833c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\125.jpg",
+      "sha256": "69e9b58df78e62c984522373eeedab42e31dee3c697d5bb01b13ea5da879f190"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\126.jpg",
+      "sha256": "f56d2f1ad6408857990ceb60f4c5fa7ee224a517eec5f8dbe28032d02c1a4766"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\127.jpg",
+      "sha256": "65f57057bf16e0ed026831b62d664ed34e3099d804eeaffd7248b187a75f5649"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\128.jpg",
+      "sha256": "d8c560599c036a1b4a3ced5496cc4c47cc5c49bf6021512d6f589981deadeded"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\129.jpg",
+      "sha256": "1c336fb0385cce56a22f3fbbd63b3c50ecce2f90c9fd6b9a2065543ab4821228"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\13.jpg",
+      "sha256": "93506502034b5d0e3648bb718b2135d963467a6929ea27bb8d58b6a01ad276cf"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\130.jpg",
+      "sha256": "7ae249303e7da4b77a35bb541b01b0f5faf6bc346ce1fb9b481a0cee18895f95"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\131.jpg",
+      "sha256": "82645c9fb8f68fbfd0b8884887a2b5f7e259d61f30483166b1a196f95640c12b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\132.jpg",
+      "sha256": "246e7c1c549b9fc49fd272aac16a8d0320f2ecc0334f3d004197e66ed257f262"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\133.jpg",
+      "sha256": "c8aee9ce1f47ad166f8d970f71969bd56fdff06539356a3071fb296af0089002"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\134.jpg",
+      "sha256": "223b3752eb7fdaad7a3deb33d33968e0612d9eaa6087bd0fd2b871223fb421da"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\135.jpg",
+      "sha256": "9a36c61cb0396c269ffc85f3293d971310e8fe96d0f30b019cf7ada9dce52415"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\136.jpg",
+      "sha256": "8ac8170885807de19a45e5b3a0409101f6f7a087fa2430d7b2058469a00feff2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\137.jpg",
+      "sha256": "4c00cb4df73f9b8a340487f6c160611e0ca3e4416d5e35806c22177c654b2ece"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\138.jpg",
+      "sha256": "6d43df3ae29201221d89833576d757005e18ec5dd901077f91c5dc00710e28ad"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\139.jpg",
+      "sha256": "70bee3b33bee94c22797ddf75d360e24f141a6ca0e325e39bb60cb525ae71f80"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\14.jpg",
+      "sha256": "09647cec5e9dbe616a4b6b33dafd2b941e6dd978f362544bbff059d5a464c85d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\140.jpg",
+      "sha256": "c444270ee818d669d50f2a0029115514508c2fcb083db6fe3494ae57ecf19984"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\141.jpg",
+      "sha256": "3450867382db77b9f94a9c2a1b5236db68a92af7b184225642efbc8d80ff3ee7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\142.jpg",
+      "sha256": "c92d8fd0daa7a9e0af6ca478e6cae611bef935c479ef2763f6bb14677aa0ef90"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\143.jpg",
+      "sha256": "d75273992a4c573b594a34b303215dad5232de12bb9908b92783f3ed3df3ccaf"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\144.jpg",
+      "sha256": "d6274264c38aca84b8dd0c95007a7e5557b0e41b87ccf4a9c55b6f0b88a7737b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\145.jpg",
+      "sha256": "e6f0ff4fde09b06c7a4f8a618832be4ad4c661e7f8dfa7284ad605f5dedcdceb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\146.jpg",
+      "sha256": "0966a0400b7ed07a5788fb51e0e09df1b400d4c64e6ec749a1e0018c5529c675"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\147.jpg",
+      "sha256": "4fa1ba1ec81872387ea9836e57b80460c950423e755bb87947dda4e9cbfbe42a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\148.jpg",
+      "sha256": "df89ecdaf2f7de58f53b7532c2b8155c33545adc9db0bd26077757d9b6a239b4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\149.jpg",
+      "sha256": "bdbb5c0ba473b029d8b823ad27f857de0bace4eb6758db4097d080edcb0eb692"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\15.jpg",
+      "sha256": "dc206844cda459d4075dfed31a854b0bf8d686ac9ea22f0480cfa2170057b256"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\150.jpg",
+      "sha256": "1b0c4f378fe8936beb026c1020ff9ae955655eb29ca8eab9ca94bfe7b282eaff"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\151.jpg",
+      "sha256": "19f2c8ebb7f8e2675e7881f05029137494633d601219d7d9fbc3df3ab892c610"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\152.jpg",
+      "sha256": "64ae74d292e7da6152d212d3e3d93116c6b4313721375ac9d603df6373374758"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\153.jpg",
+      "sha256": "c593122eee1611c0a7e79a3e8457d3b668c3b7fa9194cd756e468eb66b694d69"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\154.jpg",
+      "sha256": "1b2c8dbe24cf0c51e65da0fae0b9a3be29f6daff1e3100405d76205049904967"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\155.jpg",
+      "sha256": "589354d9f342c2b29ca06e54637348ea24103c1ba2cc30b3b3db2660139722bd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\156.jpg",
+      "sha256": "a6eb90009e4aed31caa035bcfa49587f4e5ce0162364e722cf34275b77a91193"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\157.jpg",
+      "sha256": "12a8350e43d5e0264c216b0cd65620db73ecfdac7a61961e45437564629ae187"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\158.jpg",
+      "sha256": "44096adcc966ba2d86d51e5f791bcdaf79256a56237ec485dbaa818f7e224891"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\159.jpg",
+      "sha256": "f0920a9fa0b5052de00a7edb5a3ef840920ea79def660028f085f21673b46a2e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\16.jpg",
+      "sha256": "ac4e24b342fdb81db0c091f3608b182054e55b51bd29ef1a1086c3e8b4d05636"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\160.jpg",
+      "sha256": "c5bda7928bc5d991f5f5a66086f4c102252f4f440d1dbb502399429af1b17210"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\161.jpg",
+      "sha256": "a3ea1c2d8b889c5a8c98146ce0e9ee506af8d657a9c8357e15a27ab98f6d3d66"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\162.jpg",
+      "sha256": "ea43e483f90c1ddbc07cf7395e6ac326673021ef4ea0c8bf3e9ebb504b44df06"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\163.jpg",
+      "sha256": "c721cb9563013187f874030775d33341a2c1ffd444d9413291ff07c97f60c34d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\164.jpg",
+      "sha256": "9119f9f00a985b1c0637d02fcc5347c0ff953913f8fd221410e435ee45d69776"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\165.jpg",
+      "sha256": "d1e8f0f45edd725b44cdcfbc2f7bfadb165acfc17df50cf722d2755a0a093e6a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\166.jpg",
+      "sha256": "5af1b232ccb252a458cde43c2779999a0489ba9226729933fcb664807311d76c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\167.jpg",
+      "sha256": "41d64aa8ac1c28769cd102d873700e2a7c92a335b64645d78631cb762c75937f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\168.jpg",
+      "sha256": "6a75438f6f2101b3f93649f2863eb3ec177b02b5b42653ee7034fceed9226192"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\169.jpg",
+      "sha256": "5972e2d2a5d26b3dda5c588db4fc0fda4df0d2d4719e43eeaafb3fd896f5b19f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\17.jpg",
+      "sha256": "2334272fe127abe084daa3bc3281573daa6f34599cdd97edcdba686f588fe8d9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\170.jpg",
+      "sha256": "56a7aabb2dac510ff65e3bd2ce87794f45c90cd7f107aef972e9254207b5697b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\171.jpg",
+      "sha256": "a6558ad630c5d01cccdee04c15b493c2c445a323978b8e4ade21ec583c3100d7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\172.jpg",
+      "sha256": "7c7dd683f9d9b955c3fa44116fc28019aeee8fa3f8bf5161c8d166bc51e1b60d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\173.jpg",
+      "sha256": "b282445abca502ee9b0feaa76d432abf92a4a509bf659916a93b3e855cf56ec5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\174.jpg",
+      "sha256": "7c1da464859ed786ac34dadc28f05ba8ddd07a5a7f82a2ba95b7760f059dbbfb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\175.jpg",
+      "sha256": "5b929a61e4403489d8068758569af59e72df59e222eb69bf7d43ea144c984f6f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\176.jpg",
+      "sha256": "1b5aa21083546d626ef82749ad7929cdd15470c617ca40ee6465fafaaebc1624"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\177.jpg",
+      "sha256": "ecb7a1fcec196d3c03304aced8a7ca568f42a281429a25651cf93021f8d55924"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\178.jpg",
+      "sha256": "c5c119c3b4af4918f290c0c94e24fa9de2fcce7cfba2208ae41279a1b346e788"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\179.jpg",
+      "sha256": "748a2b0332a405854b2c638a5ac0a234310ea7a386249b93afd87b9dc89fdb4a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\18.jpg",
+      "sha256": "03d85403c3221016769f35e749c3eedad98609088e6b0406c4bf75a00de3d966"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\180.jpg",
+      "sha256": "5f78a4dcbac0f391705cde1629242a93b99718a5cae6fd553eb8364475988dbf"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\181.jpg",
+      "sha256": "46623dcf003d8ee8c252dd88978644f88a732d7b1558a8ac080e37b32248a3c2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\182.jpg",
+      "sha256": "257cbbe43c06f10ac061a61d186d572d00bc7a7f7dbc4e7417de0f18a6228cde"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\183.jpg",
+      "sha256": "52abd5878eb42fe0b20816013d766fa2becee53923d72eddf93005dad834642f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\184.jpg",
+      "sha256": "bdbfc03b8ca9cfc1f43ee6f051d0b8a408b4b9bdc1a8aa8d3c9a8a2572e872ae"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\185.jpg",
+      "sha256": "ca0af4cf1be2b8a0514bbc537b7ae3d871f9f55616133e3168eec7371d869664"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\186.jpg",
+      "sha256": "7b24f3ac9f1fa4b7ff75c986bbbca4e4f85da52592bbd3f79eb0cb86306d3836"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\187.jpg",
+      "sha256": "5000e635235ba1feb48f023a87ae000742761c9fc9e95eeabbfe316c45a83fb5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\188.jpg",
+      "sha256": "780c483739ff1b926e67afd67fb7b70a2b6a7264ea72323d258449317df7b1dd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\189.jpg",
+      "sha256": "f467185fd4495a3435abd9c67911e5eadfa52f2e3c836a4aac311402f0129149"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\19.jpg",
+      "sha256": "5a63362e5e8d68b7973cb50eedc6390d390da8924f09fd4e023a65ef2f51ebf8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\190.jpg",
+      "sha256": "b05bb4435de6845ee2d1694670a783e4b82bf562efad80b91ab8b5bce45a5f9e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\191.jpg",
+      "sha256": "5f48f0fb85672cfb8322555ee833bd7d083c5e38b303bcc1dfb6df52cf0b2050"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\192.jpg",
+      "sha256": "7c5a7fe38afaffdbdcafabc97eeaa59103d0c60aefb08820806c0f39503493b7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\193.jpg",
+      "sha256": "61cc4247f1e54405c9603fa159ac17cce81af1f97d7b851aaa7a645b1d4c77e8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\194.jpg",
+      "sha256": "537db88a1264201abf8482e1c8cecf66c2b515a90af3ae2ddb552fed0a68516d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\195.jpg",
+      "sha256": "19e9505473c4dc2b067e4ccc779cc97f1b163dbb322d50d39a6ed9fea5e0dc0e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\196.jpg",
+      "sha256": "3ffeb6587bb2fb6f6d4a8935a92c31d43064fc97ffd45b14fdfed9387dad85f8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\197.jpg",
+      "sha256": "75048957dbbad6d83400c94b6f54122837c3895cd8fbe2882e2f9d972e93b172"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\198.jpg",
+      "sha256": "bb459930ce6a7da9e32d802d22f23962beb5d591819096019b3dc5c217d6deca"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\199.jpg",
+      "sha256": "3d527744bfed779c439894875266ef3f370dbc68d70a251bcdabfeebc0757381"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\2.jpg",
+      "sha256": "6977fb1eb3fd49968f37d34f4d9a9aade46de4bb7f0770fb097809acea73b388"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\20.jpg",
+      "sha256": "60cb9c6402f86888d65195fa370f582bcfec613d32c31ae2778225839bc39944"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\200.jpg",
+      "sha256": "4332d99ac487d91a5712c9e89dfed174c3d1b91463a4b58f56ff06568b166992"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\21.jpg",
+      "sha256": "ee8d3de8f75020ae5c122ddc1ece9028d39cf192f559ef8a5c54562e8fef1505"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\22.jpg",
+      "sha256": "05337a9b03b553d157e4c9231c24e23f84ea180ccddf3c1423aac65c8bcce1e8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\23.jpg",
+      "sha256": "a823b55bfb20d1988e930da5d40c5e8650052eafe6b64cfe606dff1e1027d15c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\24.jpg",
+      "sha256": "bfdb93f41142d6451424dcb4e9cd41239bb6eab74221484fba9cd7c77350a44b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\25.jpg",
+      "sha256": "9498af8abc260cac25f008f4adb2beae26e1bc24f2ff6f0927bee6803df22d47"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\26.jpg",
+      "sha256": "9d6850edfaeaf5ea58cafa425c7384b38e55d2fc05666e0004a05f7f0aaaa26e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\27.jpg",
+      "sha256": "185241dbf2035d0e28721930c733699acc6e441943455b1b2f31862eefe92ad1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\28.jpg",
+      "sha256": "a2bd97b6d35a20d3ced53758fc08a07c738a0a846c7b86cccdf87e01328b94b6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\29.jpg",
+      "sha256": "3f784d85945f8a55282887e29c533b35d1f290651b1c5f865dfd994d1f53e86a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\3.jpg",
+      "sha256": "1bc9f20b7e91a3a88ee80e762f33230a09d598a6b72e6374352d48b33bdb237f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\30.jpg",
+      "sha256": "8a85b3bcd3ca24b37b5cdc7d0438eb260934882c30df82e269b6a9ef959d645d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\31.jpg",
+      "sha256": "ee0c4fd448ee7cff40edf17f4b2bc6a8c202041075f0f663558a0b56a24731f0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\32.jpg",
+      "sha256": "843a99421094f0148d282f34a75a42ee88f9ddda0b2cf1beef09f34d9dbc9a74"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\33.jpg",
+      "sha256": "1e25e5a64a4268a7b256ddce41c7ef019d35b5b209ad8d3536a65d4e48a8eb71"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\34.jpg",
+      "sha256": "8ac2f6eaf60b4f60c32cb0efc4a57ca57cf73c55741008c554df5fc8659a28b5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\35.jpg",
+      "sha256": "a0e9d1f27bf3efc8b35829ab4aed7eb4212adf052fa5b4e0af5fe24573740354"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\36.jpg",
+      "sha256": "50a9bd363c6afe73cac688ba16d3843e04ae5e6740d471300582981c9cd08354"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\37.jpg",
+      "sha256": "dcc10f5b677e3e933a951fc097f8115cdcc501468d43ec569c680c2f2129d25b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\38.jpg",
+      "sha256": "a6895051bdb9d6f316da6ee705cc7906df12a69a4be10ed7f21b7e81ede151f6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\39.jpg",
+      "sha256": "4fb5d7068c8313b732a66dfd148922af41af68855864c3a830be463b39cd3d5f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\4.jpg",
+      "sha256": "ace01f98db14a9cd7c7a7cb48a0781bfa191139bbe0eb6dcaa2bb4e625c10d33"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\40.jpg",
+      "sha256": "c75b2596fc640333049d7f41bf2e08c8973e08304cf179cb18ed3b833c676aa6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\41.jpg",
+      "sha256": "6f06428958022dee3405bb7aba73772c48f1d369b1b1576a67225be32dae6bf1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\42.jpg",
+      "sha256": "f5204de3ded3c6d2213e1a9f2b69daa8de180847f4e5c584ff9a74be7ce1bbe4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\43.jpg",
+      "sha256": "8ed24a3f23f5bcc42a2597e01ba7462c263cbeead1ff4c572d17e9138c2724f5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\44.jpg",
+      "sha256": "a8884aae1e34839e9eb1d655d25912b88dd106303f957f0bdaa1f455f1d82e42"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\45.jpg",
+      "sha256": "ff56410e18bd4360cb346dff2de111a66bca14c44d33aba49ccfeefc86297f48"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\46.jpg",
+      "sha256": "77b2cbda7797af5a36fc9dbdc4ce8c57e4e5a6aeb1934a599cdb961d1db15506"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\47.jpg",
+      "sha256": "77b983799c3f35293189ec819b19b8daaf6ff07039086e5eaac306de02aa7e0f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\48.jpg",
+      "sha256": "4a9f585db5e3c403f5e1c0b8891a9659f84501d54429e7a5aade7e1833edc798"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\49.jpg",
+      "sha256": "7548cf2fc8b2423791b4e87f54a3d6ea1da9ee0846958b311bb5cea5eb3fe0d3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\5.jpg",
+      "sha256": "363e80d91f252fad1e6fc63d2905e7e68c93b4e975408bce106bb0a72b523903"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\50.jpg",
+      "sha256": "a2f50587edca7a5974e81d9119847cd8ffa98a5a265ea5cd38c8595d553bcd88"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\51.jpg",
+      "sha256": "9cd3265c9e7ce4876b98e5ce050e9bf3c1c66fb1dec5fcd647f966f7dd1136e6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\52.jpg",
+      "sha256": "bbb0c2dfc72849290c8e41fdf67e94d23dbd6e0492b05182572992792d6996f9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\53.jpg",
+      "sha256": "b070a89e57d60836dc0560b0cb3688b81bcb7d495bc7e1445a0c7b906bf7f3b7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\54.jpg",
+      "sha256": "219219869e820af84932a0550a65d26417175b1a94ad1df76931158826c5990f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\55.jpg",
+      "sha256": "2f9180414a689afb5f2b757acbfceecc3c08894889d516c2659cd72529e23468"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\56.jpg",
+      "sha256": "6a9c2b357fed54e2ee67f57621017bd6deb8a1771fb341e6060a02e5fdfa6167"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\57.jpg",
+      "sha256": "5411799233dfe08765cb6be9f2f763b4fc1de953bdc2c901d40ecf7fe3c04ca8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\58.jpg",
+      "sha256": "1a442e6e3be9776e28191909043da64f1dd88b00f3f95d2b4b4d8f36261ed21f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\59.jpg",
+      "sha256": "c858f6962f9b923521f68a4029e613fe6e90c8f3c952cb5d2bec3314e401e317"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\6.jpg",
+      "sha256": "36f7dce7edc8e93369665683d899e40311e0ced21cd9165465748b4b1735d218"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\60.jpg",
+      "sha256": "852fa97fe13473aa7bc355950fb8a9cc7fcaf15501ce1a95a7cc1a1b4ad71c83"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\61.jpg",
+      "sha256": "898f0e80a47d040fb0aead2369c447bb57e4256d4f6a5e411b639623c8e441c7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\62.jpg",
+      "sha256": "0466e787f954dc998b304f3cc8be6a2603320c55937b56f6676a84f59076dec0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\63.jpg",
+      "sha256": "96e797a46253a3686942e7f367590b399b8fccb78c74319135c612730aa73795"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\64.jpg",
+      "sha256": "83cf8ed1c9ad162dd71d0c4293e50ca80177e43a9f4c071966915051113d3029"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\65.jpg",
+      "sha256": "72a472f9c2c425bd618d61f1a4327495b861dacf9ffbcf64e7bfb56d8ea5103e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\66.jpg",
+      "sha256": "8fa56aa3e8cb2696bc2a676d0a6c39fae6cd4a95ad04d8b19042687027b24b39"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\67.jpg",
+      "sha256": "7935aa5ede5e9aae4ad8e3cd101a8a4a0217d7a81c7df3782f181426028f3155"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\68.jpg",
+      "sha256": "d84ccb7de03863d143b02610bb6cd1475f67fb7d5dc621e90ed8d325d3850457"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\69.jpg",
+      "sha256": "3001a6ad4123192cb0badbca2f0743fb256c60283ab93089b6b85c042ac94257"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\7.jpg",
+      "sha256": "423b502727dc0cd16dbe49e1ea3e0dbb05541e6bbdf6104c100ed6e661d42e09"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\70.jpg",
+      "sha256": "637a3d612043818364917d4428cd5a6cc39aa6df4db66f1a2f667ff835b6e90d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\71.jpg",
+      "sha256": "e01ecb5c6cdfc1314229f327e6682f4d99512db490913f1d8c5e334306cbabc9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\72.jpg",
+      "sha256": "e47f39651dee8e088503407c96dcd355d2eab049a1f31a1895da6e1149301bd6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\73.jpg",
+      "sha256": "f33a3c4df695fc28129642e74bc5534792d93bb0815445657f35718745cda867"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\74.jpg",
+      "sha256": "71aba93407c08b252d91c57a61345db7daff9a0c4edfb19c7c0981d76d15ea85"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\75.jpg",
+      "sha256": "dbb0df7ded1d2de2d76507869d17eefc3fb79364ade12f6d67dd0dfec1b6a2c3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\76.jpg",
+      "sha256": "004c11da2d0ac771f061dd29bb3252ef30358ed91bf775e236b1f77b78562767"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\77.jpg",
+      "sha256": "09418daa3e56f273ad70888f67b573c328bc06b813e823b1955ea01933c10c44"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\78.jpg",
+      "sha256": "0e1d3e743e82f210c8ddb4e6bc079844161ee772be3ad2f5c1898904d496582a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\79.jpg",
+      "sha256": "1b1efca2c152996c51d0f0b14cffdd8db67a809fd8a47684716c9cda1bc2b27a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\8.jpg",
+      "sha256": "992e6ed1b63b2c4fdf0c5eba7e907c5a55a23d7b6d24633e195cd58af1822951"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\80.jpg",
+      "sha256": "62c29a5ad84788d7f0897a14111e439f2510fcfff34e2779f8e49e605a55b21c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\81.jpg",
+      "sha256": "4de39b3e76f3ed67eca50b8e9e34a918f71ebd5d15f71c2b5f041cf51cae7f1e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\82.jpg",
+      "sha256": "8a7fe2f7dcfe7d2eed30731a99637ceeb12f32c724da100450571d92d057bc7f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\83.jpg",
+      "sha256": "acbfb107283fc21c255925ce8b1e978f9614a936ca622c5ba861bf8c753abe56"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\84.jpg",
+      "sha256": "cf80d787aded5ab29c78224c5d2c38c90a62a0e52764ec8ce6ba7156dddc40a3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\85.jpg",
+      "sha256": "79b0119e0a293570bc85ab885af815a333247774ad1b5d2dce8f304d876067a6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\86.jpg",
+      "sha256": "416d15c3a12dd58dbeea6d08fc265a1e9e317bb9bf2285620863f8b754b41f74"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\87.jpg",
+      "sha256": "e8f43f1ee3d85b51b20a32877748b8f3c10212e282a4548e50f7b61ea84d660c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\88.jpg",
+      "sha256": "fd917746f8b992ec5e26332ec28e29eaca3dfcecec1900e707774a04633f405b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\89.jpg",
+      "sha256": "46175ae09ffdb657ae368b0d585042c126a461c5b2b48ed47714b005cf853723"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\9.jpg",
+      "sha256": "b9a214814578fa10f5901a5a95f033d74ab58f129a70488982a54a63cd021af3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\91.jpg",
+      "sha256": "6b774838f2303add16853c867702232751ea9fccb82b7c7ecaa89cbce5c48e16"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\92.jpg",
+      "sha256": "3c8eab31d984c636e40b32b09909da4b5738f12dc64d9cff5514e761c0e6b953"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\93.jpg",
+      "sha256": "9b37e1bd7236b9f4b41c00cc67c03ab0ea065979ae824ef92e09edf6645281dc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\94.jpg",
+      "sha256": "ab45ff0498978c5c007219dfd40bdfd2f97c2373e55dcb585f25f471b319c22c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\95.jpg",
+      "sha256": "fafc46110902ca546e2bf5c1895f52c41e3f817f71de75fc70eb24490ccc3495"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\96.jpg",
+      "sha256": "da5fe8762b29aa3450fabe9be86b0cca27205fbddbb03aa4d6fcbfff61d36c9e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\97.jpg",
+      "sha256": "0a5ba7c9564c8973ba42cb538e122946e834bb062c4fd799ae2ffa4bbe816bc0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\98.jpg",
+      "sha256": "6af610c4ebf4627696a10aaee58ea61d4c11fb419247472a8290b96ef09742a0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\99.jpg",
+      "sha256": "16ccc874f77d18f1ff7b915231e53df05c1147b6da6cc28bcb600451d74d66dd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\action\\back.jpg",
+      "sha256": "7f1b6ec087a7a62c15b00b8943427880174be477309de86c6f6d03bf89dad282"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\0.jpg",
+      "sha256": "388ac46c1e8f44636d82b605920a21fb69797e915bd439aaef2a00f4b1737025"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\1.jpg",
+      "sha256": "c28b513bb64c2875f913e6c77ac35bb142e37540c322948f715aab10d7f66224"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\10.jpg",
+      "sha256": "3e762ff68ce531e80fade0e7e53f590acf23a07b803289cb9e10c40e389f2256"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\11.jpg",
+      "sha256": "0d26e4a240931398686222f8ebce007870079ea26c78477ab96d5ba2dc81f6d7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\12.jpg",
+      "sha256": "969da6f3b1baf4e1516cdb64d66ff4fa44a80eaa85ba86b540ad4f865dd2ff74"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\13.jpg",
+      "sha256": "c7d63e57713c0218f9c90cf8bd68831b0c625163771c99be19356db8bd1afe6a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\14.jpg",
+      "sha256": "cb677e919ebd137121dae7899c8bb3a5a74a2c1869afb8b7136f60db669cf467"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\15.jpg",
+      "sha256": "dcc293f67f00335880299d02780a6bc094a5fb08bb33463ec768251ad25838d0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\16.jpg",
+      "sha256": "b76db9ebac88dc251906ba5370c797137edacfc62b3f3f51e4883793f67ad890"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\17.jpg",
+      "sha256": "02f1fc556ab1076d3fb913352593e407832f0cdbbe4c159a08ede2812aa8a91d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\18.jpg",
+      "sha256": "2712ea0ab4c2bde5f93ff163b291a820d3bd685919cc12dd13ddb78a1a879de4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\19.jpg",
+      "sha256": "29dae0286fec65776e8b82a7580277179c9b6e5d064d150eec0cd96f0c3e3db2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\2.jpg",
+      "sha256": "85550f216d16377945d2c4c1a07bbbc448ecbfb4986b404f4d6a575158574acd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\20.jpg",
+      "sha256": "a3d4551542693a5ea451f05a0adbeeaaa70d6795e5ba6620b299ad6b0fcc4076"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\21.jpg",
+      "sha256": "5f5f21e674b116e6827c9e626be6b4b08c56fce812c69134b9fd05058926636b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\22.jpg",
+      "sha256": "4e15a7719c63b74ff63479086cc5dcae4c11aa2d583861aef63822c2bb4ddc88"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\23.jpg",
+      "sha256": "a7725b00e902f8b36173fb26923048c3049d567984766e9cfa7ab760a47bc4fd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\24.jpg",
+      "sha256": "3f2a7357ce7993938505ce9be86745046082246f9f79e31ffb86146cbaa67f95"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\25.jpg",
+      "sha256": "0f671120a5149aab8018a45f9756b8d6ed5be6e64744e0e47985caac2287bd40"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\26.jpg",
+      "sha256": "762d6229c7d69dc7a0e05aaad260e92f3915ff0d9b53da710a6c235a9a624246"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\27.jpg",
+      "sha256": "5980fdb8bfab6cd7d4a62aa87fa4b6cfd987434084dd1a0b476639bcb771527f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\28.jpg",
+      "sha256": "7fd82a7b71d3be527a44c088dc41d5c813c894f2a015b13c6087ce998f0e50aa"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\29.jpg",
+      "sha256": "1f196bad6ce314f838558fcc82b143e28c5c7e321499f20ea8958c81770ff348"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\3.jpg",
+      "sha256": "d76bee31753001fb229d7b6bc861cfadcfed7e6a7ac929eaa84297ba55762c2f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\30.jpg",
+      "sha256": "2820e817c7107c22db715ecb8e7279f92ed32bbcd42a1133560bc46d28f45d87"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\31.jpg",
+      "sha256": "dc48b3c8133bd942a778c91b522d88abe3919e6db35a7f4799f925461d3541bb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\32.jpg",
+      "sha256": "c2431c59f04abda33d2154aae854a5df346a5e0d217c99e640314fc5897563af"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\33.jpg",
+      "sha256": "dcd626b88195cd58d38a9c76b0f1c60932ce9ca6ff6822a20ab393a2f84ed12f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\34.jpg",
+      "sha256": "d76f5996ff1cc836c350bf924849ea4dc9e54d67e660445fcdb02240f2565fde"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\35.jpg",
+      "sha256": "fdf002ca6982196c4eca8964fd9beea8e829a933699eedc6420d1b923d2d537d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\36.jpg",
+      "sha256": "c96b7344647d3193c679499e707947f549c4b16068ca41cb27021da07fb609a4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\37.jpg",
+      "sha256": "ca7ed4e94da063e24adee0f69ec912e13106c28a488f5f7e36fa0f4aeacfbc6d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\38.jpg",
+      "sha256": "98c193ee52af21f645ebe7f9356bbae39a060446effbbf4ac2faf2bc3762375d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\39.jpg",
+      "sha256": "854f3235132102066e83983696e43cbf1a827d2fc4897086c1d0ca6a8e234311"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\4.jpg",
+      "sha256": "2a87b8c46ecf94bbec2ed564f904872fb83662b153c1781ff2c09db2c6495a66"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\40.jpg",
+      "sha256": "7f4385f48345d7589712119c3e1e966cdc1d7226feb315d8fbbaed9c044d40ec"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\41.jpg",
+      "sha256": "ef2051b6bebe83add8da79125789d3d433cb5e33124a080c917005b52eeaa869"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\42.jpg",
+      "sha256": "a9c46229c7eafe7a2e805f0a9667f1822b4691a0da2fbe712dd4e5b43bc94831"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\43.jpg",
+      "sha256": "af45c25a8b6b9723140db65f7504963e99b32a2bae1450ad9aab9dbb1fd3e131"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\44.jpg",
+      "sha256": "0633acd71406f18f9878085d2c2c2395efe23e2a6d186ddd9191273cad57f24e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\45.jpg",
+      "sha256": "0de4b5177c0b844ed8847fda76aad26698dbcdc65070fb789a89b94c18a56359"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\46.jpg",
+      "sha256": "887ea6ab587fb8b3635588dfeb7c45d33c6363a85bb057fa2dac743579fb84a7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\47.jpg",
+      "sha256": "06f016f629afbf574c41bf9ebdded88eb6ac794be720e07dc0f97cfd1d26684d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\48.jpg",
+      "sha256": "cd16c12dfbf99b4f115fee555b245ad265252d29e787af1a46c6731bebf62c4b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\49.jpg",
+      "sha256": "c2d3fb063f0aafc34070dfa3b44076af7df446baef249aa8ce5087714c0c64a5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\5.jpg",
+      "sha256": "aa3af3ab608d11ff858b665406138f3f8ac69c0fbe7dff7ae285d967df7d12cb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\50.jpg",
+      "sha256": "3da1b3bd3fe2783c580e6d686d0f39b43e31cc162e54b950d0645677c822b3cc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\51.jpg",
+      "sha256": "47d75464e6cd083b034b8b8a0cebdefce7c3d41faf4f67f08ab15f816a254b59"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\52.jpg",
+      "sha256": "0748ca66e87e72abd8cf7a4f17a1eea80c5318674b6e01c141878fe9f3cfe905"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\53.jpg",
+      "sha256": "eade93dd54772336702e043fdbb9ed4e4675711379db7d73bd3fd6102ed2c164"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\54.jpg",
+      "sha256": "0597ab147fe9e30d21732c2edadb985efe78c9c6a9cbba37409e844687214d21"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\6.jpg",
+      "sha256": "6643854f26a5d85e3b60637d79c1338e8b61366d35e8747ad93de729f5050292"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\7.jpg",
+      "sha256": "5927b93ed4ae5b8c12336dc2543642dfa6ed27735ca09e076e6dfac070bb6578"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\8.jpg",
+      "sha256": "45e267b72c6120a146b5ba5696d7dd6cac9a594ad9d81e35898ffd0b27a466fe"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\9.jpg",
+      "sha256": "d393bd2c8ee7349ac24e2d723475fd532f3569f3518fc49a9c9f257b6f012fb6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Aysle_objets-magiques\\back.jpg",
+      "sha256": "18f7606f33ad55e43394898286c7dd13f14b3d0414b271575d116df63b44b82c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm\\0.jpg",
+      "sha256": "47b13340522228ee33e6635381b14a3b9ed6bcce528eaf88e0e82633b99c7448"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm\\1.jpg",
+      "sha256": "a30629020a81796266c927d1a9c526aa41a3bbb3625f88b9fb00d60d506b85d8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm\\2.jpg",
+      "sha256": "96ff3d335bba0602447e05b0a46c5a4f17744b784762b2d71803f5fc9662161d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm\\3.jpg",
+      "sha256": "cfdc2aa8d5596d15a3258338ce8bdd8ecc0a9c0ba81ca5e1dfde688ee4e540ad"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm\\4.jpg",
+      "sha256": "f289a1aedbd647e346d75a55902863647ae5ac6128b0d22c2df740252e20475b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm\\5.jpg",
+      "sha256": "d2fa636a61d1e46233cfb12341cd0322e5e46011f8ba698fbb991d7645db5d6d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm\\6.jpg",
+      "sha256": "c4cb7581aba13e0939b919d5597ef31e65155c2b3681ffdb39adb24fd0be2876"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm\\7.jpg",
+      "sha256": "d9f404444b431c550b6f5f8f7e79c82fbcc0c5183ecc4ea70c7019a36643e7ba"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm\\8.jpg",
+      "sha256": "9ef11c4e0d24d5fd58072b76763dcf445fbd9313a2e80a17fb2d2770ea272937"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm\\9.jpg",
+      "sha256": "4618bb70af21b832d2f028955e54a7bac7360dfd6a34763005009cf41d080ffe"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm\\back.jpg",
+      "sha256": "e3b2922236f49952cabaf6df34aabd31778c0f3bd265aa274b036344a5cb2b20"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\1.jpg",
+      "sha256": "e8e0b42e50798dfb7756b8030f6586521c4e780e8620ba176b87d9904f5ad19d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\10.jpg",
+      "sha256": "1d911ca1123fddefa047dfc600604ef224992d91e13362138f38ba90ba77f3a6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\11.jpg",
+      "sha256": "4988029474d04cae07d247be2ec2de51353ee8265a7791d691e1ffc46a274721"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\12.jpg",
+      "sha256": "e019d23e8cb5101000d86bd2cd0e0220d530336273fd2662f1d1f5faa12fb34b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\13.jpg",
+      "sha256": "93999fba1337fb7967dd9467883ab731f3973abea0b2dcc925c2f63f29047986"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\14.jpg",
+      "sha256": "dd2acef70400f15bd0cd721313086f439811a118fe4f36430dd5b06358d03342"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\15.jpg",
+      "sha256": "8094abeced07c5fa5a86697fa33c8fc5cf58390a298e7b60cf319d5bec7b9b92"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\16.jpg",
+      "sha256": "48e90bbc9a29cb732f34c30e471b9eeefe65349556e465c2cb35989b8fb735ed"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\17.jpg",
+      "sha256": "a9fc55909f47029ddb48b88a1b01889fe34a03ba7af52990d0ff13b86017456b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\18.jpg",
+      "sha256": "ad0b04328f22ace0e4e760348562e1362b683c7e861c9fc60089a69e59073183"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\19.jpg",
+      "sha256": "5f944c912c0f561893502dbb8d9d87330d5f670f59d981c64ec43d7d19359ac6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\2.jpg",
+      "sha256": "f5f6edac607625c522b5d8a40a2a686bb6f60722cf59a25f5d114e55eed1b894"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\20.jpg",
+      "sha256": "4f7705adf8a7af6b51be2701846c488b1587370e3c57c1a70a78b05476bd3dc7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\3.jpg",
+      "sha256": "3296f590768b40302ce12d469349dcd537abdbc7415401b7a4253e531b8454a6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\4.jpg",
+      "sha256": "4c8a34067efb4effa09cafa7b72a5c5621508009df81ff27233200598bf55b24"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\5.jpg",
+      "sha256": "1847ba3e836b1dd1db2290b4b45bc7f31b607050e35309f57e2d0bce0bfa34a4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\6.jpg",
+      "sha256": "a57cf6b4a216384af52269d1f0085ab309a6e395440bbc7749fed249d643ded9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\7.jpg",
+      "sha256": "ce0d814152abba0ee4088e81f8c6d55b734cb099f8959453c824c4d71e0e1dd1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\8.jpg",
+      "sha256": "a6c912be8fba611556c2298c6fcc3a664b47b58361c487072e8acd6a6c48062a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\9.jpg",
+      "sha256": "25da8bdc121cce1b2072a396fe35d2a221b6b69f76805c13d572959c67deae30"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-aysle\\back.jpg",
+      "sha256": "9e5b6c3b0e2018013247ba2cae28969b1a8eb76e8e485ac3fe144dbe4cd761e8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\1.jpg",
+      "sha256": "9258b8c03018ca09e9e7f916342bbd005e09527d0b31befb26a2a86e1a11f5c7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\10.jpg",
+      "sha256": "6d135235d4d638494e9a91bf08ebcba0342216171b1c1f2a5e1253a901364d87"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\11.jpg",
+      "sha256": "428c52e9fa38f44ac38f58cdb491aecc110e15816a95085cf30aadd93d6e0dcd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\12.jpg",
+      "sha256": "8133ce69cfee20d4fa84ddb2b81fdf438c0af840dc0e40b5e02371e600e29fa1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\13.jpg",
+      "sha256": "021c8bfaeaecd5a0e3302118d676dabefeace235182c23361ddca2fa5f61fb0c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\14.jpg",
+      "sha256": "29cf9cd9595e43258242a04ea06486d0694b10d65b5803f9c41972574ae82b60"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\15.jpg",
+      "sha256": "55c8f5534c44ac9ae2805ab04b66112daf725b36ad346e5a529eea0a00151969"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\16.jpg",
+      "sha256": "c98195e4f73f90da71d378bbae94db7d0c1991921918baa333703ae072526da0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\17.jpg",
+      "sha256": "a782bdc1031ccdaecd2cb82233cae49c1295f108e6d073598a7709a5cd93ebd0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\18.jpg",
+      "sha256": "977b4370d483dfe529eab05551b5fb4d949ae900bef53e60bd90caae6318a4b2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\19.jpg",
+      "sha256": "c4eee70da388354a77f6782fb99e1a1b0bc349cdd5293f2977a9626a138eab9d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\2.jpg",
+      "sha256": "25aff0203f591eb33ad167d6d95646ccbefe5b01b3b9408e4d76a3e0e959666a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\20.jpg",
+      "sha256": "81aa7ca9044f9e6601c56c8ebc0f68c13a38cfc1a4b661f6fbb426a049f2c6e2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\3.jpg",
+      "sha256": "caecc4fa0404cfc66d921c790f6fcede748ea1a1e4463e98a24e67dbba3471cd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\4.jpg",
+      "sha256": "a639454fe56f78d1dde10478f0c4cc823987dff5f9da478117b0f0733a198123"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\5.jpg",
+      "sha256": "338beacc65a033565b31c700ae09f15b077002465ea1fe36087752f09012dcac"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\6.jpg",
+      "sha256": "5661a3b008e4b84f40031bf9c67b21980949c1339b693f0b69ee00ef9c73d13a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\7.jpg",
+      "sha256": "48413718c085b40c1d8fefb574e5388f184561eae7f4d84e7a4c3c9d3f113aab"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\8.jpg",
+      "sha256": "a43944167f40663168ff7d029d2e1b17191001a1d9bc6f336f7e7f564f40ddcc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\9.jpg",
+      "sha256": "0471f012755dbfddb438ce5326a31f1f3bc150cf5694d7323a06dd21a90922fe"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-cyberpapaute\\back.jpg",
+      "sha256": "f143365267e0b62b53a2f021698e1c2821967d61f6b1d13ff1a46f8046b93190"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\01.jpg",
+      "sha256": "01bbe2f6cb8dc4d35e82eda59533c2ff46c705bc6d5ae2778547fc6ad2dc305b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\02.jpg",
+      "sha256": "140da8e49b11825127ce5377faf6f8af4e7f2309d841038fd05b72c7c7f70054"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\03.jpg",
+      "sha256": "c8dc102ced2d15d97390f875438a2de14962bc04d1c8b1706a3e1146e3a4c329"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\04.jpg",
+      "sha256": "56cc652a069214d5eefda35149f014bee2e9326b89c553ef7b08026dd563c5fd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\05.jpg",
+      "sha256": "d9d1eb5b8b15ab3b76a4799089248f2d9b77a22ee1de6d24762a5e5414ab77ec"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\06.jpg",
+      "sha256": "30fa3af8e729ce390ae4d8f6ee0a995923766816db67d1fbf9a608e173cbf866"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\07.jpg",
+      "sha256": "4b0d7a89845dc16e778112997e9eaf6cb9f3b1b75beb6fce89fd06d9310bad45"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\08.jpg",
+      "sha256": "caa562b27aef389062b181f2c07ef56f199f07e4c3bea569233591d256ced419"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\09.jpg",
+      "sha256": "9e56d68da0d893d59cb4dd097f0f8eb7bb018ca9bc1d5b7cb667138360e46b2b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\10.jpg",
+      "sha256": "8ab679cdc18349f1c00becf63671cdb909aac72ed61e0211e8609bdcaa11cca6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\11.jpg",
+      "sha256": "8315a8ae9b05579445315edf09987ee7fae81a07eaaaf8c20ffe67bf0973d4df"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\12.jpg",
+      "sha256": "07901367f16ac72f0e958ba45c7709d081505dda281e3ae99c075181619be20d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\13.jpg",
+      "sha256": "f02f0c9b7b0bacf13f471cf058fa82dd939d1de44bdec0fb611eab93a4f4ea74"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\14.jpg",
+      "sha256": "f3f5656fb6a24688ae1918a2394b8bfd58d4b76babe4555b87c9af91b2b8838c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\15.jpg",
+      "sha256": "d864a5e65fc47064bfd58229d33ccd5c11ad3405aa760b262a5e7cc8b2de40f3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\16.jpg",
+      "sha256": "f44eafefec743dfe67a33dc3b9bda31efc86834fa86a2907c3105628acda92c4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\17.jpg",
+      "sha256": "30d5a9fe114aeb05b908decb02b2315a2c0b98dc483535bc4963b4d373986d87"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\18.jpg",
+      "sha256": "141b2bb87946c8b6e4301f6fa73ad0a37de4fcfa7bde1e788c7cc9ba4e8953f0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\19.jpg",
+      "sha256": "10eb06735979cd4dbe2414e412bdb1533c1c63f86d82ff01a71f480554fb295b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\20.jpg",
+      "sha256": "ee8dc58de3d51d9a630274ac308d5c38317bf6356f597e1d37dd6a9e3ec78e3e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-empire-du-nil\\back.jpg",
+      "sha256": "e31953e157da6aa6c889d426d536c10bd22bf3b65545a894711f78444a9e4fb8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-orrorsh\\0.jpg",
+      "sha256": "c91f0c5ceb9eeae39a4db96022b629816a8f78deaf2cc73d4033f950f85a5c64"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-orrorsh\\1.jpg",
+      "sha256": "085cf27d2a73da8d2084db4660784bc73fa89becf585e67298c94dde8599bde7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-orrorsh\\2.jpg",
+      "sha256": "8508c2ff5550e8dc374fb1501efc9e50a10d81a1616e17a33d4409578c839fee"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-orrorsh\\3.jpg",
+      "sha256": "bca5da08a5cf36faa82e70e0f122f804371f2f175963e6132d44cd2cca6419d6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-orrorsh\\4.jpg",
+      "sha256": "7cfbd7f9c2b9d03b904722cd84dc8c28e3b447ef4ff73ecb3f605ebf0424494b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-orrorsh\\5.jpg",
+      "sha256": "c5a7c033ee73d5720224058369ffcc2c560fe5a90b8693bc88a6a8b681a7ce3a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-orrorsh\\6.jpg",
+      "sha256": "b5988fa7a79ad3b242a0770c38150388f12fd7c0d45d82836bd7afaa7e324cb2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-orrorsh\\7.jpg",
+      "sha256": "a64e20a4f863d82b2495458a012f99bb3ce9e5e8ee3a8d2ae4d09f7966a50e35"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-orrorsh\\8.jpg",
+      "sha256": "7922ab336245aac1326b40a43f8536b73c9b6f92d930edcb118a1f81552bed55"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-orrorsh\\9.jpg",
+      "sha256": "8c0a82d243c09d2b4a6705e9d28e7424df2578989c5aee0898fc9553d8b07a50"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-orrorsh\\back.jpg",
+      "sha256": "4cccf9cd31f6785225a68a0cc84b81fdf6d97e7a3fa49773736047cb07e77c39"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-pan-pacifica\\0.jpg",
+      "sha256": "1af01aab2982fd8ea060611f8efaf023220f8aa3988de48145c1b57ffb4ff2e3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-pan-pacifica\\1.jpg",
+      "sha256": "0cc840a14e98f1df919847f0e48884a0f2d428f40098a232a7cee781b7b67a78"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-pan-pacifica\\2.jpg",
+      "sha256": "22809232ea1ce5ac86e428ead43354637ceebb3e838cb3342e802deb0546c8c8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-pan-pacifica\\3.jpg",
+      "sha256": "17ea52c7263fc60ab298ca9d3669c8b5156ea763ffbebbfe75599d57c28624be"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-pan-pacifica\\4.jpg",
+      "sha256": "db0204271d48f6610492bdd1af5610940822ea23e6c5524810e57087667233dc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-pan-pacifica\\5.jpg",
+      "sha256": "71774638acf4782465a369370c520ad545d0bed51d7d3887cbbaff9365d0c047"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-pan-pacifica\\6.jpg",
+      "sha256": "50dd7f8a2955a764d37e6e273f0a3de9880ecd64a6667e6f5830f3437b19865c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-pan-pacifica\\7.jpg",
+      "sha256": "b4bac96020d1b16718ef9de769bbf7253c0261e55e8e89b7682d67fdc93331c2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-pan-pacifica\\8.jpg",
+      "sha256": "8a2cbcf71bd5fbea561f37a26057b69eaf13f8c29912ac632df92e9983c09733"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-pan-pacifica\\9.jpg",
+      "sha256": "f0229cfd9a44abf7677681edb6b48bdc2d8eb08710ee929651b103e949ff74db"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-pan-pacifica\\back.jpg",
+      "sha256": "70822ed1f89f1180b061d84fd64ed770f92e9c9be271846d1bae1eb6ad608ef0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-prime\\1.jpg",
+      "sha256": "a30629020a81796266c927d1a9c526aa41a3bbb3625f88b9fb00d60d506b85d8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-prime\\10.jpg",
+      "sha256": "47b13340522228ee33e6635381b14a3b9ed6bcce528eaf88e0e82633b99c7448"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-prime\\2.jpg",
+      "sha256": "96ff3d335bba0602447e05b0a46c5a4f17744b784762b2d71803f5fc9662161d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-prime\\3.jpg",
+      "sha256": "cfdc2aa8d5596d15a3258338ce8bdd8ecc0a9c0ba81ca5e1dfde688ee4e540ad"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-prime\\4.jpg",
+      "sha256": "f289a1aedbd647e346d75a55902863647ae5ac6128b0d22c2df740252e20475b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-prime\\5.jpg",
+      "sha256": "d2fa636a61d1e46233cfb12341cd0322e5e46011f8ba698fbb991d7645db5d6d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-prime\\6.jpg",
+      "sha256": "c4cb7581aba13e0939b919d5597ef31e65155c2b3681ffdb39adb24fd0be2876"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-prime\\7.jpg",
+      "sha256": "d9f404444b431c550b6f5f8f7e79c82fbcc0c5183ecc4ea70c7019a36643e7ba"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-prime\\8.jpg",
+      "sha256": "9ef11c4e0d24d5fd58072b76763dcf445fbd9313a2e80a17fb2d2770ea272937"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-prime\\9.jpg",
+      "sha256": "4618bb70af21b832d2f028955e54a7bac7360dfd6a34763005009cf41d080ffe"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-prime\\back.jpg",
+      "sha256": "e3b2922236f49952cabaf6df34aabd31778c0f3bd265aa274b036344a5cb2b20"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\1.jpg",
+      "sha256": "efab1c449d0566509b7c39735b51eb350b18e84a23ce964fab4933a7322fe8b5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\10.jpg",
+      "sha256": "08ecbd785b66eaf81441d070eb8a1c51bf362f26331b149f0e1a82430589651f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\11.jpg",
+      "sha256": "ed2660d5a41ee7aaf414f6ff86a5c08da391bc60d82844c9cf23423110b1c783"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\12.jpg",
+      "sha256": "e1118f90ce2b0ec091ebbbc57011b616df1f8afcda68346556a4d103661bc0c6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\13.jpg",
+      "sha256": "1a519365872218009518d8f121b579e69c69ffcff03841d26f29793fad126e3d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\14.jpg",
+      "sha256": "632eda0e88402176a839225b70460a0d39c2bc65fc6a706dbf2178811c3fb0fd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\15.jpg",
+      "sha256": "ee93f116ad9d8885e4658cdb61c48a944718063345c3f208a3249da414f385f1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\16.jpg",
+      "sha256": "ad33dcba98eead640434316c876d138473d1f65156d629ab268c7eb2445b52bd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\17.jpg",
+      "sha256": "976548fe204bb1b965807e3743b2a9d8a886b6fccbc31a5c21a69a9e24bbf50a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\18.jpg",
+      "sha256": "d4cc4e391517ba20a06bdbd94f450cd85111c127bb466c8dcd3c5b13b6bc7e7b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\19.jpg",
+      "sha256": "cf97cc33dc2e9033c749b2e516a9c987de7c7d5981bff4f4b235e56f7fbca452"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\2.jpg",
+      "sha256": "ae262c4033d41c76176bda04effbc49993a683c15a6b1e00c997d569180e7d8b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\20.jpg",
+      "sha256": "d96a79f7ba84ef1176fddb93f149193575917cf2dc18641103c9971f40fc2d2a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\3.jpg",
+      "sha256": "e8a8e37ca9a7c865a7c13aa50efdbcd42c8909c64d3c9d3ed6cb4b1186148900"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\4.jpg",
+      "sha256": "421c6ed16cea56c9fad6e932d43f2361ee6e400f2716643a9a9ccbfba459c3ff"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\5.jpg",
+      "sha256": "253e8f944f4ca55188d25d84e978ef7a602d546c7d2c49b7f825efee644e0567"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\6.jpg",
+      "sha256": "a36e4432fe9ea125329374845596aea0e4f0f294ee0b31f63dc22c4ee00bb3fa"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\7.jpg",
+      "sha256": "26c1ce95a028aabc1cb1dac7b0839aa053bf1ee6718b403e440a57afae8fe829"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\8.jpg",
+      "sha256": "684752ff43cc60a6c50550d28c207385bb2cfb9f8b2b24b11674485fe0b02201"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\9.jpg",
+      "sha256": "2a98852495f31a74d2ace24046479c1727d86a7bf7b82de9dd0f092e80519584"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-terre-vivante\\back.jpg",
+      "sha256": "5ab6f626b85fe8167e497a4197849af9eacd87191edb65e47586845976bbc0cc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-tharkold\\0.jpg",
+      "sha256": "62319d2d20b69f02caa0b8469ff489abbf13aec7d24bc3ec0cb3529fcb0a4347"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-tharkold\\1.jpg",
+      "sha256": "3fa1a502f7d9688cc0a10fa420781c2479ef0ec54dd588361674a69f8559630e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-tharkold\\2.jpg",
+      "sha256": "ea7aca777b5ee8175c6038624bf1fca36b0d233eb667dce68a8003a48745b2bd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-tharkold\\3.jpg",
+      "sha256": "2e22c169d6b09b2ba0b97153a99360c648ee23b7a3202af0d7a36d0365f3ce08"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-tharkold\\4.jpg",
+      "sha256": "8f6261287f1c0ae012c93fe7ec79c8fc354cdcbbbcff5313df5e9a3dc07c2421"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-tharkold\\5.jpg",
+      "sha256": "d5cfdfb9c82d115f3dce8c0d4d7f9fad12e956f0d680e2c0cba397fb93b0b6fd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-tharkold\\6.jpg",
+      "sha256": "5970c352f9e77e9b2fc4001f3711f7ea614d14a2288d28b7d6d3c047d470f9a1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-tharkold\\7.jpg",
+      "sha256": "de2e21443150d961822298c75d27f39869793e0289d9b1e41674cc0ce8220f5d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-tharkold\\8.jpg",
+      "sha256": "0c7a324b37b0e52115a68022029c8b71fa8fab6112df71ea985b1b8081dea4d8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-tharkold\\9.jpg",
+      "sha256": "7c4335bf0bd897824bb4520f7f2d3e22dd4f2d739b86d66381b71f65f3b3a942"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\cosm-tharkold\\back.jpg",
+      "sha256": "58216c8bb8a1ac58258f067d2ea641e20db8f46ce648bb3593b0ceb4d3aa1970"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\0.jpg",
+      "sha256": "3767091747f39cd09e7ace92a272ff6dfe3ac14259d9d99048b6d0fa732ddf40"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\1.jpg",
+      "sha256": "d2be36726480947d5c6d9bf038c2200363b54b61c5b26277f791bf86c9151399"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\10.jpg",
+      "sha256": "f5c50be695556a5227df7c1f7f929198b3a7ea0a7e460fb723be3c1b07a2a0cc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\11.jpg",
+      "sha256": "10147d1e841befcb9e6bdcb857a48ae22eef591efe7296fe800c45bc30e2b05b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\12.jpg",
+      "sha256": "2d1b2a007c8abe795d9e07d63846b9209cf746b38a80403a8525d3dc2ae67e5f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\13.jpg",
+      "sha256": "d5353f0e61f0487a7453890f5aa43409f96aecc4144a192badb5ef89c44978aa"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\14.jpg",
+      "sha256": "401e2e82ae1dea501bcd7cfc3b901ee3d1094d2e06dacbb2573e937e681e5451"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\15.jpg",
+      "sha256": "ff410e76f41d89c3bf45ef1d74f9e59d3ed204263d879fff7599dacd6e820468"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\16.jpg",
+      "sha256": "c52f27a4e1b896762935c75204cdbb88f49c01751347517cc97b80f2a2a54458"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\17.jpg",
+      "sha256": "003516ffc72ed0047577cfaac34990b7289448242272fc81c4dfe93966a627cf"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\18.jpg",
+      "sha256": "4b93810d97fe1b01d75322f616696f6fe6d24b49e30133898e756ed17f2e81d4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\19.jpg",
+      "sha256": "3acf5e501443cf53e6a73f88e2c1440f74bafeda090f1e9daca85cd2c152402c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\2.jpg",
+      "sha256": "537429287fcf0eca5c256f9c80b28ac72f5714f9d22b44a545cbccb22863e54a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\20.jpg",
+      "sha256": "1b15ca7caa49ebba6520f6b5c28911f68859801a521597fbb9ad5c692b853f74"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\21.jpg",
+      "sha256": "c4d3f3042768d5f5f8948656435a1d77944265c352509c03992cb32624324d12"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\22.jpg",
+      "sha256": "082fa10218c5a71430b373bf5d918e5673c50684786c8daadb63386553a2efc0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\23.jpg",
+      "sha256": "216773fba56a6c56a90e9c4b63dac29e7e54780a0a930e50c82661f22e4b4a3b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\24.jpg",
+      "sha256": "ee43845992c979d848e2c3e22493773117f9b242e62a9e1fbf2761d19bfdacd2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\25.jpg",
+      "sha256": "7a8955a8890236f0d54c0c2aad900d35d7175a241d608fd84e65cde6eab3046a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\26.jpg",
+      "sha256": "3346cae974d79cf63077e89ec8f0c458a3fa1f61a14e088e65afa8e68e72f2d2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\27.jpg",
+      "sha256": "90b84d78fe26fa27c08cd328ad5950a8f534f51f6aad8239e7a920bff421c3fc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\28.jpg",
+      "sha256": "f455d99ad8eda3026ea3781e22d3948bf8726e336a85f4eed9ec58dfaae007e5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\29.jpg",
+      "sha256": "1bd2b44763ff997731682aa74a83c7c6b169a5f5bc942920d983c5aed65ac27e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\3.jpg",
+      "sha256": "02ba11670c2942b96cee8680b1c5126a7f5e0f9ffb16764923ba00b037065a5e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\30.jpg",
+      "sha256": "1b087a8f73ea909ee1b0796c319805cd5a2261e3bfca2cd634200c39d8d9458d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\31.jpg",
+      "sha256": "51777aff6288a4ac98416462507be39954d0341da8a34b6b72a49076ecd1ccab"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\32.jpg",
+      "sha256": "8a923bee400dd038e4569b2f24d0395cd3849ece410a5fa37fc78323e91e6a64"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\33.jpg",
+      "sha256": "f20109453e615619531a8a0a89f2d62e45124ae0f7a42b53d4fa057d0a33ca42"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\34.jpg",
+      "sha256": "4d72192177f1df56eafce7ad4ae169e4fdf894486ac992e00cbffcba1326fd50"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\35.jpg",
+      "sha256": "9cf4e3c83558807f53cb68897b34ef0d7bfd18afc5dc7cde5a14edd5a45e341f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\36.jpg",
+      "sha256": "bd146cfcd7c5c525b236f54af324eec139d2cf7ab7dbe7cc6a08d36c315c42c9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\37.jpg",
+      "sha256": "d82f8142de8f8cf870fbeba761d86acdf4ed77f634acc7658b29cb378e08041f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\38.jpg",
+      "sha256": "74d81db9f35478a3b9bd65f21f2d7abd877fac794c5212954553cbe0de000011"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\39.jpg",
+      "sha256": "a255b5b6d886e94abfe4729fef9c4d2592151c6b2e01e6791d1c9c60e15ce784"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\4.jpg",
+      "sha256": "31d8cdbd7536fbf8920ccbfc63c03a81235259870abcddeabab6137099166973"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\40.jpg",
+      "sha256": "e276aaea4e141f8cf6c9dd55f49cbd04d663ad4e2872c0385fd67aeae21ba111"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\41.jpg",
+      "sha256": "334154ea2314a3f177603eba24f16e39a0af4219af1dd416c52f8123ed9c30f3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\42.jpg",
+      "sha256": "b18758d5f8262167c95b406f7ef90c04f47854dafec22b186649d1f061760ecd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\43.jpg",
+      "sha256": "a1ec13ec115e53b6ffb508c3873d71d2d03bd87b4b00ea4abc6d54d8c7897d1b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\44.jpg",
+      "sha256": "4db7151db1ea8d7bd98ae2c810474a60fd5e4b2d4607610ee60ce41418d1471e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\45.jpg",
+      "sha256": "ceccdca5c9dd0ccf3d88ae26eed255f1a1973d5803d49bdd2f6bfe6ab17ed7b9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\46.jpg",
+      "sha256": "bd02b11200abaf3db8d2706abe3272aaa37bffe420a069f142d85bf2fd68aa4f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\47.jpg",
+      "sha256": "c68318296643c70c7770778b750af518ba9b6835355a16f0b7b834e963857fca"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\48.jpg",
+      "sha256": "33191856d513953d6a6d530bf2e9996a6183fdd48a6e904e1b46715fbe4b0f6f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\49.jpg",
+      "sha256": "de5f2d36193a94401e1ca7eb136ec0693a879f525393283dc8d657ca09f46581"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\5.jpg",
+      "sha256": "2db076745a5ce19cccc36aade8e8cfc20f6f25182236673cb29a0f0abdf968ba"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\50.jpg",
+      "sha256": "0c52d3a9c08092ca8b567c7099934e3807cd5a582c6ffc183cd7df9a452c1b7d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\51.jpg",
+      "sha256": "9b1f4fb8357b782de62b25c7403a6345a43e577defa424d108bff87fd65cf2fc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\52.jpg",
+      "sha256": "2dc916c729d2b9233cc3d97f4da3bf2659a5a769cdb916765f28a289fccd5007"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\53.jpg",
+      "sha256": "5a55b20158820bd0eb80c08ecbf428331643e96dde5bcc5f243e1429f3afe94c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\54.jpg",
+      "sha256": "e53d999b0d0711d71cdf75b05b0deafb2d0036b8a85ea7110238a434a9c242f2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\6.jpg",
+      "sha256": "577e0ecb1cd718b00485428b2cd9e9ea2dc6357c6d5cd601e94963bc4f05f3b7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\7.jpg",
+      "sha256": "435c6b2b96232cb9550b1dd09f43114b9d1fce4d95929dd0d4bf012080d3297d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\8.jpg",
+      "sha256": "516305e1e52f726f2267fd9d9d367bd0bbf6ab8ad73eb514bf1dc76a8aba9651"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\9.jpg",
+      "sha256": "97635729eafc42bfcd40d453ebfec341f4f7b88fdbe682b7b8757570fee63a56"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\Cyberpapaute_cyberware\\back.jpg",
+      "sha256": "20251f67c69001aa6d371fe9c61627b9b47b6c747fa693f438dd84fdd54bcde5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\back.jpg",
+      "sha256": "3ecce73014a2cc06c37fa0015b0cc1560670a7da699fa8a50e3835172c779422"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_01.jpg",
+      "sha256": "9257c59d2d487ab8cfa5fb8556adf7a9a8c90d4d70807298b48baa14be21d109"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_02.jpg",
+      "sha256": "1059f7f759adcd304983e79a4da7681b8f5195396aca81dee1bbf4ac2bdcde51"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_03.jpg",
+      "sha256": "fa6dd31e8eefbde9918716ac586c39fbf034c5e4de2b34d6a81d2b994001b621"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_04.jpg",
+      "sha256": "c2d68953e49e431fbbdcdb68a73382b179109d4388c8da6fa4ad6c6f70d69211"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_05.jpg",
+      "sha256": "ba1c4e30b31372654efca2a0d41fbc14e2e3b5c3da69041bc35410c305d5b5e6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_06.jpg",
+      "sha256": "6de434b3063712b894d048eb108b87e909047ece4b14a86d57350ba901e3ec8b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_07.jpg",
+      "sha256": "53d2708dcae9a1897bd3769f0d029d9300a35391155d46ba98bde08f72318a98"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_08.jpg",
+      "sha256": "89f76d1bb47a8124ff1075dccde04c43057c0b330d943117be4d5f0abf313494"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_09.jpg",
+      "sha256": "a31b3efd718a4cfc68e137ac04d58ca8536ff540dd96a8a52f8332309002fa01"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_10.jpg",
+      "sha256": "03b66dcc4e1bce73166bf33ef399161b6bd6efa5b2b8031bebc71a949752dd1c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_11.jpg",
+      "sha256": "807095c3aaf4bcab3515d7e6441c08855fbf19eb42fff9002c9b3cb2d5def036"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_12.jpg",
+      "sha256": "16ff1fcd554db4f6fbc29ac04979b9f4d6d2e73e80ef6755a52abbb14f983771"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_13.jpg",
+      "sha256": "ca7cf7e9719fc976a3da3ab07f733a8927d0ca807dc648176ebccb9e8941b643"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_14.jpg",
+      "sha256": "440890893f58fafa9a7f5d6bf11eaa7b0272206780eeccedfa2ffc2054600a48"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_15.jpg",
+      "sha256": "10d44a63b6c9852f7a7d4429784cd89f0c9740b5eef9bdb271505474f4fca92c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_16.jpg",
+      "sha256": "e68499cfa3a6d43c90afed952006a4f5a128ea0c2157895b010c492bba31b7bf"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_17.jpg",
+      "sha256": "b47fca56b97ab6d94969caba9756bae1795cc6bb3897debe5a255d1d0ef95762"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_18.jpg",
+      "sha256": "91b1f6d884d1e8a5b0fab7c35938680e441629930fcd3b07f00bdbb803ffcc6d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_19.jpg",
+      "sha256": "aa5a41039f5bb5fb97eb58f8bde3d086c22d218f2a342e21138292b82969a4c4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_20.jpg",
+      "sha256": "2dd96eb37d1eb0e37bbd912d57be355aa19b3ed18419f663e155220e9de8c24f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_21.jpg",
+      "sha256": "432e9836bf34b738ecd0aa511f0c8173f38f280aac496103a78ef909fac39c73"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_22.jpg",
+      "sha256": "0ab58b8c052c6e79780b59477f62e095d079b3fe38d7c914d7f1d742abb27d48"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_23.jpg",
+      "sha256": "adbe8ce05d005457a9367037e3a8cf20dc6ad8a617a9c41abee8de7f7e1c8988"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_24.jpg",
+      "sha256": "5ce7e83dd3e48702e2ac43eda2465297013fb4d7c496a0233206aaf46993128a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_25.jpg",
+      "sha256": "1b7844d0ee0365274c5b4974c4106b014e1600008df345f1e590edb274c516b2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_26.jpg",
+      "sha256": "0590fd292527270cf68ec329088f7b26dc4f49be811304abc809907499686710"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_27.jpg",
+      "sha256": "2b38951d5a8ad43c4b9bc5f7a29d7c55b754137204ee55a9a7c03f6cc9fb95c1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_28.jpg",
+      "sha256": "b3fe699348087db61065980a40591fe073ae58efe07636fdf6063e0afa0977ab"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_29.jpg",
+      "sha256": "e79d4f0d9af32b21d242a23cc82c91a926afc508ce2918ae802a78d4ef2117d2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_30.jpg",
+      "sha256": "16e894a022b8b722c38c4ab36a1d25f4d9e492d7c327ff18a5ca724e77499673"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_31.jpg",
+      "sha256": "891e203eaab2631d47df7c517ed0b26b2b889e70e90aed131c01e3a66c7405dd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_32.jpg",
+      "sha256": "77a7887d925d091077f5af1b3d1b10644e564faeaf0c2d4b0900ddff496fb192"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_33.jpg",
+      "sha256": "1c8edc3ca95340164a40b4627f0d7689347de1427693ee033f860b6f8580875e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_34.jpg",
+      "sha256": "5883ab7d21748f60c07ee37c28636790754018cde367a786b785226d363e2ab9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_35.jpg",
+      "sha256": "d596ee8137e4b57607e2ea424b50c7ae150bc89600986f78381f041d8ea08f9c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_36.jpg",
+      "sha256": "ad12a5fd12175cbabd538f60f0c6bd43e47c91e06dfc2aa6f5ebfe70cc9d73a1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_37.jpg",
+      "sha256": "47022510c6a5f9906acb2f1875a122174f3f4d2c1d6f721d0e7f3e1efb5d6646"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_38.jpg",
+      "sha256": "c509ec7b04116c5600fd782137f25fa9b053480c17c43a5150dc0255b02b47a5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_39.jpg",
+      "sha256": "0727b77974b59cd267948155882f4649d50a819f82cd725a19405030646659ce"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_40.jpg",
+      "sha256": "1ef5143076c43f6c935f6a04fd7ce858eec89a16649df6b84109bf82db8a12ce"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_41.jpg",
+      "sha256": "336a9b74e2bb5575e1dde54a11f8b8a170182fdcec573bf734b600d76ef1295f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_42.jpg",
+      "sha256": "3b6c8e59bf624dcb2e4c839a55f3df70573eab950ab11c7fd30c820a4649bc7c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_43.jpg",
+      "sha256": "302ef48abeff139efc11f7444f0b1d9c41256cd484a19dab0d7e88dbd70be9e6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_44.jpg",
+      "sha256": "52b6a63f90ebb746d47151bd628745d643b43f7612225a6f50a1b1cb70e03e41"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_45.jpg",
+      "sha256": "46404d3ee7828a79f02344652b26827aa6e465f82bb2ad67fa03461c8cacb7d6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_46.jpg",
+      "sha256": "8419fd44e822063dc750e0a3614b2e6b35363f1e1b43ef01d9a96e0fca7b4a23"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_47.jpg",
+      "sha256": "8f906dd8b1ffebce3341d1fa209bbbfce1fcd32c16daf855168b32f1b08d2370"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_48.jpg",
+      "sha256": "f525f1e52e4e9e1efd5202553b97c252718583bb73010ab2b75836d73b17fbe8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_49.jpg",
+      "sha256": "0df102b8b267d315f12283021507f938f131c5c0d4882d0f3bfc674cfce67f43"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_50.jpg",
+      "sha256": "99f9f899a242a00ce65fb9626f2aa3649dbfa27ff86365000765c08187f1173d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_51.jpg",
+      "sha256": "980b3ccfd6dfe713b5c8cf6074b23a31af5529e26983cdc51ffd1b327493929b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_52.jpg",
+      "sha256": "d6de142e53760b5cd31a195fbfdbd018abb1d49f4d2e52a2e0db737b4a960e6f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_53.jpg",
+      "sha256": "6a7f38e0326a932fcc8035ced30e27b49fd265e39cfda2ecbda677fc9d1e7022"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_54.jpg",
+      "sha256": "fa959d901de79a15ca9e5d08880d7e1bee27b49499d9eba7d06bddebab67eab6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_55.jpg",
+      "sha256": "a516a534f1b2cf40a98e14cf72a2b1e07c4eab5cb9cda28b98e9a580d8304dea"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_56.jpg",
+      "sha256": "6876b9570f9a518db04a9a08d23f1e424886cfb77f02e1869e6358eca0dc256f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_57.jpg",
+      "sha256": "31cab96034cf5ea3523dfec460c4a57eb96b2661c45dfa8b0d2a71b1dbd683d4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_58.jpg",
+      "sha256": "76d784b149bec0f4e7e7cb390d8955e650ab0c950bdd6a95b2edeeb16b49e563"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_59.jpg",
+      "sha256": "8b7f2067242c843bf9df14eead6f11f54aa516bc11b0ce52e693d78fb26fdc37"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_60.jpg",
+      "sha256": "9270407320ac93bf036409748972b7bfa5e6cfc6308a15330f569c8bc1b8b958"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_61.jpg",
+      "sha256": "a901027c096d966a599cef0146a83c7f36ff6277954681df088eb5e13b74b3f2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_62.jpg",
+      "sha256": "cffecea26624802a8142cfa22e83bfd7be4d491f6fe14493f1f26717f233f55c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_63.jpg",
+      "sha256": "51a8a9f595c05316e4ef5f10821a1d7882e3f1e983b3036e10017af5b90892ef"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_64.jpg",
+      "sha256": "d3d10618d026ee8aa78ada2d2f27f39853c5123af9fd2e9ae99690ecd378d06b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_65.jpg",
+      "sha256": "0ce7aedf64e2d066656882311fad71c2d9ac48eeae06b4fb9cf2024e20278363"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_66.jpg",
+      "sha256": "7c507f9ecfaf4f913d808663ca207dc0d80e594f7b20ccd292910bbd5a12e468"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_67.jpg",
+      "sha256": "723e7650990ed1f3a37b59cf23471d591aee204240979672c8f7385948ed3450"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_68.jpg",
+      "sha256": "f6651e4180c74e842abf27e04a4369522cbf42ea471e43fe669c220b6bc725ce"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_69.jpg",
+      "sha256": "90833ab8936476a2b67c157c6a21d846adf640bf887ff899c8e8f3e73be7f2a2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_70.jpg",
+      "sha256": "88d78009a7a726f8a136452bf70dc262bd8827f1bab3d47ff525f37b72fce168"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_71.jpg",
+      "sha256": "92f04475c80bb6609bd0f3a9c9e826555a56033b16ac3d34bbc66ed28f5aa558"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_72.jpg",
+      "sha256": "846093d669ace830bd499cc04c9ec51894a0b47ec8ddb852903364d065a790ae"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_73.jpg",
+      "sha256": "aaadf79f9fa75767cd0e50020cde048658b24e22b812df7d6a54e8e2a7e18440"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_74.jpg",
+      "sha256": "10c89a66a99d2251fe420e4fb20064a6b9d1447f91b96472dc538a229f34eaf7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_75.jpg",
+      "sha256": "eb1f52ef09d1059cbc2b7669c4f879d634d0df966dc5732a12e936eea09a0cf6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_76.jpg",
+      "sha256": "18a8ba1bddbef607af90f055e0a4c9f477af84a34d4602250cab35ce14306f1e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_77.jpg",
+      "sha256": "d7be84f1aa86d522c154307d341c1481efd5471aaf9adfd4bea4c99dfbd55bf5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_78.jpg",
+      "sha256": "4249f76de5cb11201b565db069ba1595805f158d6ba43425d2ab6e7b47529111"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_79.jpg",
+      "sha256": "e3f1dd3e5fdf08acda96753b53796e7ed139e3dc2110524cd1843b88c8b5bb70"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\destin\\card_80.jpg",
+      "sha256": "5c6ad967d4492eec68a85a19743efcb2e4c52d6b38acfa88c3aaa3a4ddb3bc4c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\01.jpg",
+      "sha256": "30daba387c481100c6db4c30b8c3f928cc5998904bb15e280813cfd703c479c6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\02.jpg",
+      "sha256": "5a212f21daa62d94e7b424d2b699765af6a4b27636d5abdcdc6cabcd78842925"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\03.jpg",
+      "sha256": "63ab83d6da86e2a025fa15ab25bd879229788113c0f7356defe342a680d43e67"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\04.jpg",
+      "sha256": "779d8de745581428e526657ad740ac4fd38c70c910774af1d7bc9d3fc722f3cb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\05.jpg",
+      "sha256": "05700b8d41f2db0c968a6b257d8acd65abefcaeab38abb4694561a5fd8643a5c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\06.jpg",
+      "sha256": "5c6df249a1759d1589d470546ccf0f5c61de4c81e71cd95f6c9275a8778cb740"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\07.jpg",
+      "sha256": "5c783c173908d56ae5dc2e760a9f6a104915ac072a6c55e4cf01751192efd6cb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\08.jpg",
+      "sha256": "8a6281f3a8b023a6916e70bd632190bda8952969e3249d67f667051ecdda70ab"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\09.jpg",
+      "sha256": "6b7a3e6c5244763b13f90c6cf3ff845d99ed097102398de6b853927165761050"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\10.jpg",
+      "sha256": "fcd42f9fe3468821d975f9e02cb539ef2b4ebe8594d8cda0695839570fb5b158"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\11.jpg",
+      "sha256": "f74fbc73a43ed35f4b47912e45901646561b661a9fc5ffff875fedfcb5667a1d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\12.jpg",
+      "sha256": "2e51257e74d44fe89099df9f9813197990aa924680c6432d8962e9136b5420ec"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\13.jpg",
+      "sha256": "ff16968c6016faccba03e6c163c1451ed1b570f5ae9eff9d650cf2df7be54733"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\14.jpg",
+      "sha256": "1479cfed8f2193d5c9e61a146e9d3214ec1fc411fd7ec4c957be28cd0818cd09"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\15.jpg",
+      "sha256": "0d51326f85cdf6d9509b3fa8cba64e1d2c0aa0b244a094c5ae714df40d8af1bc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\16.jpg",
+      "sha256": "46db1d69ec425061926932c179684579d812d227d9c5173341bdc2322269cba2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\17.jpg",
+      "sha256": "bfe3309354188abda4bdfa2a52c5f9de2924214fa10b1678fa1055227eabf5ab"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\18.jpg",
+      "sha256": "8d97e8402cce4340a761c642045fc0c855141aedc35a0b8be8a3358dde12c8fb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\19.jpg",
+      "sha256": "f3a658927cbc4239a943365b419d2137ef888fbff96485ab6ae1907e011e67af"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\20.jpg",
+      "sha256": "d33aba1b14d1119b53673759e6300bbb2884d53f62d027bc151918873d91c4a9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\21.jpg",
+      "sha256": "9f23df4bf43eee81e0f485584292ba64b0a405ce668b9a6f2270384e8cd00dc2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\22.jpg",
+      "sha256": "a8a357ffeee318947d29f1effb6f4b28299f785c8ca19ca544bfef5238a33555"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\23.jpg",
+      "sha256": "9a5eaf29f9a9fa9a1f756a15069044b66a8e01a2f03612d141c85e1e5ffb88c1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\24.jpg",
+      "sha256": "08bb352c8c5e66a61636cd4238a96b153691159a2b58a88971eea45560b59970"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\25.jpg",
+      "sha256": "e47c3d11e71f332df3edf529b8d7a58366f438a18fa26b621cb0b8e5023085ee"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\26.jpg",
+      "sha256": "bbd001bb08d120b199250456eb1b642a67a52b22be7fd2d1e7bf0b070a3eb467"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\27.jpg",
+      "sha256": "7cc697de152b147cefe83f9670581a423bb0c4b8d44401b1a9922489533e3907"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\28.jpg",
+      "sha256": "cb89b95cee23673e65b8789bf328ad8d288ce90f032eedc06a0d69518d6020c2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\29.jpg",
+      "sha256": "768db8db2ff62c26f1d5058666f35a89231e1186fb40c24c707eed69c6da2f17"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\30.jpg",
+      "sha256": "018004ee8a6f3420101a0937b085fb5c0ce9da346f9369b7a61e44e4a87f8d31"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back.jpg",
+      "sha256": "d819c991819ac81e6b59186cbbbf9ebc832a7aa9bd34f55c20a55b32c4e7804e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_01.jpg",
+      "sha256": "1edb0f9883d0206ae626e7559efaf48633dbbe0cdf284fe46bfe0ba4cfe6a193"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_02.jpg",
+      "sha256": "eceaa7723cc930b94595a9c0fe7d298ea26a91f796df8a5e5084191c6df854cc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_03.jpg",
+      "sha256": "84b009902e6014b16bf266df521cddc689ee4227943c9952f90031a75c55354d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_04.jpg",
+      "sha256": "7d76507cb759ea7ff8ec5e2b96c42ec908695be59fea37bc9717f6bd7c8ce226"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_05.jpg",
+      "sha256": "0e55dd7381047930fd0a6893fadbeaeca945e28718829d00c345071716608690"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_06.jpg",
+      "sha256": "fd1d58eaad63cc9e0003eca6c6df8882f4cff94c09766492f0a107c71e7468d7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_07.jpg",
+      "sha256": "fa1542a7cd46b3c0c6a61b869c45c772272d557c4e1f8748eca578232e7372d7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_08.jpg",
+      "sha256": "30781b3390c84966ea8e7a90ed74ebeabf1b5a452aabf844a50bc8dd02288ff4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_09.jpg",
+      "sha256": "5e5564f12da4b09e4e8681c54250242d22b12933b9a3f525ce9aa6b4cc837543"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_10.jpg",
+      "sha256": "4f3e6135041ed3b95575a7659f20999da7be612ad61b73139c514f9e5f1df825"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_11.jpg",
+      "sha256": "2ff2ce779696b3da6e347caeef2d42802b7e715a3d51d2c80ae7f879d2538d57"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_12.jpg",
+      "sha256": "cf56be30f59e913adba2e48a9941f4d495d2ec835069a8cbbbd186b39858bd58"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_13.jpg",
+      "sha256": "c4ed96619cfede978211e440bec1efdc1a11647d7ec85423c53d50e219376e77"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_14.jpg",
+      "sha256": "4afaa172059186705ec0d92d95d7b153102ebb1113500ba33483cc0b7cd7b4f6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_15.jpg",
+      "sha256": "17fdbcd917525807014f4e2e6b0d7a2efabde2f95e22f0f5c8874d5b9c92c96d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_16.jpg",
+      "sha256": "deef50d22cf4051f363e695ac0eba3ba2579c98c436e8779c7fc45d92936cd14"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_17.jpg",
+      "sha256": "840d99b9ea0c8fdf10ca8adc1b354a36da5ab98cdc88a0c46d0b9512dcd94d73"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_18.jpg",
+      "sha256": "7177315c5f9bb3a08fef598bbb3e7f5b1e04c4f11058487071f1e12d65c820f5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_19.jpg",
+      "sha256": "22af1404077b73f9412460eac4d4d9d964b0c0366b2e5f1c94238ff38fe5e38b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_20.jpg",
+      "sha256": "4606b661975f215b4dd39ca5c12a01327fa2567b6a0dbe260dc4eb8add85477b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_21.jpg",
+      "sha256": "1a150cdcba59fe1ed23c7ef8ca228e844798de74802e41b171107be47a568c96"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_22.jpg",
+      "sha256": "8e1ab23764a1bae883de824ab1ab4a248f689ee1ca0b6f6e5388058420b071e6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_23.jpg",
+      "sha256": "b9dcc72668b034e1ca1edb86233ae3ff3a4e696ffefca6064158b9caba7242ac"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_24.jpg",
+      "sha256": "13c20fc35f6dad5c8be620e94946d937433bd7b2ae768daf7157fec6d2a8893c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_25.jpg",
+      "sha256": "35313aabcc1b125485575dc6319d5bad5d2c48d8cade4fb677d5ae85cc7a00bf"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_26.jpg",
+      "sha256": "5128c1e982959c3a62d535d019fe2a148cff584b02eafaee4b8daebeb5f59340"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_27.jpg",
+      "sha256": "2e8acec928dbbde3192fa468eeb8d234f1ccb83fd69561b76fe8daa8113acb99"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_28.jpg",
+      "sha256": "d55f33426fd51b0d844056b5ba8c13565c0383b85fa56cd1b19e9a83c741bea6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_29.jpg",
+      "sha256": "67ae281821fce519e628d8f0133a65fff4d45a083403a2421cfc9cdb7b8f8de5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\deck\\back_30.jpg",
+      "sha256": "9e316389723a580aff0b1ab0588cdc63ce6491a5a487281fdc49383727cd2038"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\instructions\\recto.jpg",
+      "sha256": "d819c991819ac81e6b59186cbbbf9ebc832a7aa9bd34f55c20a55b32c4e7804e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-aysle\\instructions\\verso.jpg",
+      "sha256": "4c0cda909fed828a9ed717ab850882d56d2efa4615b0d9239617ffa62713e817"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\01.jpg",
+      "sha256": "d5a9e736c71e0bbe6ed2952650e08433418d7d4c3112835b8356821c425d9222"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\02.jpg",
+      "sha256": "7a145e69dfcdb4433a75bdfd17a9296c85a82d491da94c99532e523b46a9cd87"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\03.jpg",
+      "sha256": "7af4627d80b4467767434a4e6ff5be2c325de48825ca794f4cc831c8a29ac97b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\04.jpg",
+      "sha256": "d1bf01be7fb64dfc9edcd297546b4a0cada2f19d2684296a57d33ddcd963bfe6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\05.jpg",
+      "sha256": "a661376ab680d918fedc76ea228019cf776c49694a3129a9c395ce926946fb41"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\06.jpg",
+      "sha256": "c2a9034e342c3068f67e12c64d1b7ccd4f4c835edaf81d5c29cd336bda85d4b6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\07.jpg",
+      "sha256": "bd8f92809fb381dd61a4c46e0f45ceb7330bc241152d086924bb59256e43e26a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\08.jpg",
+      "sha256": "a5e7178f915d30b42330ff896be9eca51c10dc643edc69fe039f4a1791c39c0e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\09.jpg",
+      "sha256": "c49013b0ee4662c7120ba72315236c45b0d70deab29e5ade58ef0c7bdf52e16d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\10.jpg",
+      "sha256": "1bc4dbe530bf69e720d36ef1ead0638555b9295d1892f3af77ec5ece66bc86d7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\11.jpg",
+      "sha256": "be28d0c5eb9fd4464f62bd7c3875d86c440a3876f1a5d6ff02f73344250b0399"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\12.jpg",
+      "sha256": "ce033a6063eb70810af374434247396bae573b1e2af8422c147cdeca5944ea0a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\13.jpg",
+      "sha256": "984e79a632d07999023e8d0b0f8d520bb60382fa6ef50a118e75f4530f49c476"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\14.jpg",
+      "sha256": "6cfc7256ca663e52ca1e6e07eabbf58ec3a5daa5af3aa4cc1f6121e57d5c50dc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\15.jpg",
+      "sha256": "a5ba8fc50735f4887d95b53d7d5f7c15cf23cd970f5b4355ef4dc184da50366a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\16.jpg",
+      "sha256": "1dfc7bf3e46a2a16c9a14ca442ee5ce79bfbb3454e998fa13c12fee00e56b555"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\17.jpg",
+      "sha256": "8fe3dbedf25052dfb5b273363398648cfc34077b30c68a8a91e049144ee174a0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\18.jpg",
+      "sha256": "975a244ec8254e1e16ffc8dc517e92c05e091a148ebdd7f39e21fffc08a98b86"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\19.jpg",
+      "sha256": "b787c26432c78ecb80faacb005cf04989cbf58373487ca8a2ac75d0fddb3f039"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\20.jpg",
+      "sha256": "55e77364ad5d7b6dddb7596438c2b8f2560fb77a150980156c7afd39af21a876"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\21.jpg",
+      "sha256": "f806498ccb2940af4ed9b0354245f34b4e2d784367afd89e6432fd225f4f3944"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\22.jpg",
+      "sha256": "4bf55f0d068bebc48cb42f81e19dd76fa2b5a938661eea397958f4f37a1f02c7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\23.jpg",
+      "sha256": "77215883b2f32075938256a8bcd13a3e7bd6de6b982f66ea03139b33376ad3ee"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\24.jpg",
+      "sha256": "d869b9e125c5e2408ea1889a0f3b40ac9a15b8d997e6999d711b748c6b5197bc"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\25.jpg",
+      "sha256": "1eda9a5c776cfdead0d31563558b905767cd20f764e4453d1d2e3defffe28d31"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\26.jpg",
+      "sha256": "9b5ae21a8b0a2d73073c1dddefbe9fd1732ad86b3335ee02fd24c73ee7b5dcee"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\27.jpg",
+      "sha256": "d4f63ee5d9497c7a148379a91f89090025eb2970065b5d4554fc24b3130b5fb4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\28.jpg",
+      "sha256": "130d81be7e399cb47bd002ecf5d487411f621df8d6a66c62473064f2a7d02b42"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\29.jpg",
+      "sha256": "0990a158bead8720eb2619513039cdf2bb29682087d3229e69e20c1267511e96"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\30.jpg",
+      "sha256": "a08b14ac6035b042ba9a92b353659339413587e003bd4b1411eefe78f0ef207c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back.jpg",
+      "sha256": "52a4ff972088db5490c0c3019e3a49c37b030effd4b00b591bdde3926ec3bf07"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_01.jpg",
+      "sha256": "18e4880a34c0e43e5c298b92cc2775922d1fa568ce6c94bc3cd00a3a2b8b1130"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_02.jpg",
+      "sha256": "5588f93b686d4fd59dc66f70d1f088e623a016a375a884cb8ac68020944db13e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_03.jpg",
+      "sha256": "a78088e9ec589060078dac567c26373fc122af6671fb4de534d11eede3977d71"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_04.jpg",
+      "sha256": "e2ef42dfaf3d2212b22f32eb784b8c409c45572efe49b640b72326bfcc01cf64"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_05.jpg",
+      "sha256": "77b38dbfbc12404782941a10ca8a114c2d99ee8aa09eb64d512401c95656190f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_06.jpg",
+      "sha256": "7f29d8444fb1697395f266cd791f0a11e81e3cf1b4a57f1869db8db2ef104910"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_07.jpg",
+      "sha256": "f093b9d66e6909695474fc22c0d8700463b7fb5b1c8234bbf19a4fc13cf2d9f2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_08.jpg",
+      "sha256": "4b8f9d952c28fe9c4eb2af5531e99a10c0822af07b7ca02511916ef5491a3db6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_09.jpg",
+      "sha256": "9ef37e1a852396fc185457d7dae9b9b6c2faa1c6e174508730c5b4abc6c1b901"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_10.jpg",
+      "sha256": "a235036b7c884f2dbc2a593e973c6a8228fbe733d3f27a9380dfe3a0442dea9e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_11.jpg",
+      "sha256": "d44f843e763172da4fc5bb71ed27d9424116ea02be1fdd8962e792d435a35801"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_12.jpg",
+      "sha256": "c50365a8452415d19ba9131e718eae460171dfa9e158bd54d5677493dadab421"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_13.jpg",
+      "sha256": "ecdcdd7f2e546974060f94551ee0eddf4749e860de3c13d58b5af8b6c2873e71"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_14.jpg",
+      "sha256": "fae91526c60fbdea5c8ff3f91047f276b84b16b3376b912f667c4f624bf82767"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_15.jpg",
+      "sha256": "a6ef4473c659cd18f5400948873c53e6e31d7b27caa04a296ba67be58a6b58eb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_16.jpg",
+      "sha256": "8a43ad33bacbf46e08592372b56e22dc7ddd5067f706f31845cf9da717bf6934"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_17.jpg",
+      "sha256": "193fe8178c47fea1a0315a3a74c6876647d725990c60a6509b0e0316af791936"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_18.jpg",
+      "sha256": "59d5823366b29707a3e9f129ce6bae67e2ee00759a9758f9664470bd41c02768"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_19.jpg",
+      "sha256": "b4e0bcaef5242c67bfc94ec48d53fbbebbee9172ea2028d1967244991223bc62"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_20.jpg",
+      "sha256": "934c7bb9f0d14f42df7d8c5e8dad4cdb45400c3562985ca6bbb4a3630ba77a4e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_21.jpg",
+      "sha256": "64a2518f5b7176da87ff980830e09347dd08cb2abf54b8ce4c02a94a54d3ed59"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_22.jpg",
+      "sha256": "fea81cf484d3cd16d18d8509d9454d9e218cc7ac0aa206dc4debc6a73dbd3dfb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_23.jpg",
+      "sha256": "3e4290ffa0c5a10a82f22e501a846839d43911f92f1c81a6a7615bfaabc5747a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_24.jpg",
+      "sha256": "98393bb07c1fa2efe6ca4da688b55cfad105aec7db00e4057d2bcffdf06c2b82"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_25.jpg",
+      "sha256": "f510561d111da4087eb594317d7a01cd86cc7419400eb975a1c7f43b18f83c08"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_26.jpg",
+      "sha256": "77076fbdd8d076e9203a53d688331a797ddbab41efe5cc4ca268d2cc0676d7fe"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_27.jpg",
+      "sha256": "71caa8242bb65e5b8d22e23508c589e761dde9f424716ae1034033abfd53da1b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_28.jpg",
+      "sha256": "a8a1d110599166b7a176c4305f3b610b17aa8b1652c4b924a789a081ff6b58b6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_29.jpg",
+      "sha256": "43d3a288b697cbff9891ad678abbe77d73dc820580c6e9e4f76c7102cf35cc77"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\deck\\back_30.jpg",
+      "sha256": "19585d5e25121d6383cdbbb019d5e9fef1dc9e90309310c17c6576ba30688214"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\instructions\\recto.jpg",
+      "sha256": "52a4ff972088db5490c0c3019e3a49c37b030effd4b00b591bdde3926ec3bf07"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\decks\\torg\\menaces-cyberpapaute\\instructions\\verso.jpg",
+      "sha256": "a1cace85da80259677db91c2d25a957c3cec5d917e9db2b296f55911c438e55a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\dessinerUnTrace-DieKDxbw.js",
+      "sha256": "28c0148553e79c06c93715257de0bafd3afb43fd366666666236c81d042d3f08"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\DiceBoard-DdyD3HsY.js",
+      "sha256": "62f083737bcfaf77d3de32f9a5be63ef7c758e3bc6d314f64b4901515c04c131"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\DiceUIUtils-eBSjzKdx.js",
+      "sha256": "47d2d2b69b2c7ee675de0f8d39886b68ea85eb5d648de586801ba937afb122ec"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\earth-ssJYvlpo.js",
+      "sha256": "448f9e3c85bba65bb9fb28850d0c3646bbb6510ab528db9675afaf32f76606d2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\EcranDeLaSceneEnCours-CaTRaeKY.js",
+      "sha256": "62e36a0c347853bae892d4d9c343850cbaf6913a09785a6e3ec95f82689a77bb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\EcranDeTable-C8dZWXmH.js",
+      "sha256": "e45b6ffc4ef6d27eb05c4f15d413ec33dbf5cdd6df17613de1bb88712e033204"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ecrireLesHeros-bWQLdSYq.js",
+      "sha256": "73b89979f9138a3c9d45ff1132a44ff032738a26190f2f84035c3110129313c4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\elk-worker.min-r_yRvuMO.js",
+      "sha256": "e4f5c51c6f2fd564bb64e52e81c4a85a316ef2f24f8b90e1db5eb886c765b030"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ellipsis-C3NVWuoA.js",
+      "sha256": "33cc3eff3e94a155b26f4239d9ce08fb75337252db7c3b6a1225620b2b7e4049"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\EnTeteDeModule-CgOQiifz.js",
+      "sha256": "964af4729a1a840b372d5c852631093686eff6b0c7f6a14badcddcec4cb7021e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\eraser-hu3_Qn29.js",
+      "sha256": "fcf00f53d848d3000e8d4985c136fa704b371a3abafe16445b70c025302aafe3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\Etiquette-Dnk4WuCc.js",
+      "sha256": "8cf27b4ec536d79442be7a22b53a41a7854eb6d55f347f88c5799394981ee286"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\EtiquetteDuDegre-DQEtZU4P.js",
+      "sha256": "c878dd046194d20e45d5bc1648a6c401b42878ffe572ef89cbcac8d83856ff70"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\external-link-DWXrtP2j.js",
+      "sha256": "178999751a787db15082896bbd316fd67fcafbd1b7d57e857827efbd80d86cc5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\eye-off-_Qguc5Si.js",
+      "sha256": "fb2543e80b0542b79728ac5e555dc3e2859ef6d98a0d2bfb866845779c786c86"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\FavoriteDashboard-DOgZ37nJ.js",
+      "sha256": "4bc5fac79b17946ec661b2e7224ce5a99f428c80a73f44455eef7a6311cba051"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\FavoriteFullDossier-D0w645Iw.js",
+      "sha256": "ab4059c671cc4a819e4ebc10800d5721ef8e7fc9db9fbefe60a9068e9f5ba43b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\FicheDeCarteDAction-ZJNHDV7d.js",
+      "sha256": "db0257ced342682fa4283283a37c480c3a5effc11417ce6f3841afa6e1e5f38a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\fichesSupplantees-QNoQeRDy.js",
+      "sha256": "af4420937c24ac50ed2f6831f9c240a3df64c8227151e4e14a00c77e8643cdac"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\file-text-cZdO7J-0.js",
+      "sha256": "e2fb5a3c9ad748c8de949037079ce6a49f9d1ab56c5813ab6be69c5610126302"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\file-up-CIHENRX6.js",
+      "sha256": "8eec4a6479b4bc9d3a199cc8ed98a20fa8711850bbcf302c86eeef1d977c4599"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\film-DHa0SFRo.js",
+      "sha256": "71fc6ff18403ea3cd1ef9bc0c8bb1b1fdd034463463353017202d05914397206"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\flame-Z-xnQmJN.js",
+      "sha256": "ac3748e6058c83e329945abbcdcc03172e55a47666e813f2b660e066744f0589"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\folder-BB3NzrA4.js",
+      "sha256": "36cbe5a1f501ee80927f5d84ce2e450712b9c18092676edd4f7f64546796a118"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\FondProjete-CkP8ZE9e.js",
+      "sha256": "169ecd7ddfc58ce84b49f25ccfaaab971e5ea7c805b5c92664e243efac409c9a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\footprints-DPOGdQAk.js",
+      "sha256": "b47fd47ddeaa58318f9320bc30c0c80689371a9f7c173763c308f78f1204e935"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ForgeOS-C3t3nzwp.js",
+      "sha256": "99a7adb3af2aedd08d5fc4057ed72233d95b4914be2c4c5340aa1c54ada5e213"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\funnel-BROSANeH.js",
+      "sha256": "75bd7fd25d97cdac2138ccb207ae5a1fbc716a7ac815e4c25d5b79d79851c540"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\GabaritDeModule-u0nwahgg.js",
+      "sha256": "a211c9ca8d05057875d1bfe139b1476a0b96a0b455db4e58c99ac8a317bd7aa2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\gauge-oyLN9vDU.js",
+      "sha256": "5642dd04ee3c0818bfe8e9377ab44459db31d474978879d37293de0eb35b976f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ghost-DaEZNI65.js",
+      "sha256": "310d00c60ffb918aeb5702566a7c0c32fbeabc7dc93f8ceb0445f21e8b31ba05"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\GlobalKeybinds-K2WYfGrX.js",
+      "sha256": "be67fa79f03087b9c8cdc548d3309a0c6fbcf6a9994788318715f1e7debb0527"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\grip-vertical-BYQkJp0f.js",
+      "sha256": "bbe69543ba144d4d380e527f3f9caba726957bacd36ac993b794ed51a6f076ed"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\hautReve-CBwpwjPZ.js",
+      "sha256": "0aba16eab327798ae5b24be1b4d56847ed580192e629e1ab0a7e7ce075e66fae"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\HealthManager-CKwzMFdm.js",
+      "sha256": "52a01e287ab0483a857f7e3599d354929f8719a2dd646e27715fc06fd3dcbeea"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\heart-pulse-ZDIBQAjN.js",
+      "sha256": "499133425211bb98bd20dbc155eb196adf8bc37b7da855d9aba94abe44155b5a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\HorsDePortee-cY26NBat.js",
+      "sha256": "3349ca4e12f599652df69231d71c0c9988278bdd5830d74729412857e1814348"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\hourglass-DSjKJEEc.js",
+      "sha256": "6556d0b0ee362b8584ef852a5b3a7de4fd17cbe86fde310ff9a1a9726539c505"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ImageDashboard-LdSEeirT.js",
+      "sha256": "3208233889d4a5762b04200447bba4a21c92e5a7ee7381bb1aafb3e039f121f1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\images-Crk-fJSw.js",
+      "sha256": "c66191f1b590fc9cdb2884430628d967ff4452e6361b38c61687590fcff599d5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ImageService-Dvz1v0No.js",
+      "sha256": "a700f2eddded24795edcb312b58b6e24ed0b0601190cdf24922a18d373200f98"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\index-Bsn59SDS.js",
+      "sha256": "1af6abeb6cd0e2f55c1b6b4d236502978225f9f1a6d4afb76a5c877dd08f6c10"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\index-DvAMRG5F.css",
+      "sha256": "0d06a234103b8c0d2a174fec31d7e9cffbcb1aad1e1ee6b74c6f63ddf8e19e87"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\index-DvbFAI74.js",
+      "sha256": "54f02a2816049b30f45491e95eb2514e61d737180eaf54924ea4c95ca7203788"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\info-C-D2vqKD.js",
+      "sha256": "5f8d51a92f7696f473a9613471f05c12d039eb0469044601b092e958cf1e92c9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\JournalDashboard-ZrhOh8Ze.js",
+      "sha256": "ceda60f22376b4b6c4821d588d0e2b5df83f92f3fe1d0f4e3f85a886c507ded7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\keyboard-B-t7mB6m.js",
+      "sha256": "c26b18062575354d43585a44ac43695877195250530186859dc766c454468da9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\langueDeForge-CXyNMqNq.js",
+      "sha256": "738045566c0e537028cffc5eb23122cd881892b281d431da9afe3083da932c71"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\layers-B5Jgm_L9.js",
+      "sha256": "32d54faf4c7b18d939edf069b9da4d04b3d6e50414dfaf7d99adc4acc8e8bb55"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\layout-grid-2_PCWAJn.js",
+      "sha256": "cc37f8e09c40e8ff9bf111d666eaf22f411b855cd10548c5534fdcbf4b532a93"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\LightDashboard-Ma60Hdhf.js",
+      "sha256": "57e2ddff8ba6859398b7fa719ae77b138ba6ea8193d26abbb28c04072894755c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\lignesDeRencontre-Bq6Ubyqu.js",
+      "sha256": "ed7cc913f105c783e694e1244b44e97848938b157aa74990496ece3fe68be355"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\link-2-ELywouaS.js",
+      "sha256": "9b5488e0d2ec4c297eed989432633dc45aa059e1fe7599c6502c191664552667"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\link-Bju_Eq8a.js",
+      "sha256": "4804e0cc5183a34759b54100164e05927ced15d5b13d099daa71d36b00dd8e95"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\list-checks-CueXXk-t.js",
+      "sha256": "d7dbb1bce27844feee6faa7f30f1af468d65101146e8831cf88cdc85e2e6d68f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\list-ordered-DYkRq4BL.js",
+      "sha256": "6ad4cc0b36489503fc7f73bab8db2519581fb30cbcc95967000b365f8ffeff23"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\LivreALaPage-BYtPYPOI.js",
+      "sha256": "8e10476546e6560c62f6de5663408b6c834b70df8c25a14a3b027dd58b27e490"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\lock-CddGHYft.js",
+      "sha256": "ff40f0709c31f353503d02b1f07f05ed3c59ca40b001f4b602f3a90d7467d66d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\lock-open-Duwn8Z5e.js",
+      "sha256": "82a893342a81e22a33407cc40d1e40c63b847f9a859d847cf063a82693c5de87"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\LoisDuCosm-BfqtXNpO.js",
+      "sha256": "9b5da5d59a214802cddfd520ea0054741c4d68c2a38fd2f48fe3e75b16a5a133"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\LoupeDeLecture-CH_ble9u.js",
+      "sha256": "83f9f894453e04fd47a6ac1be91d062cce0d900bbf10ec0b2e721ada8659339d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\MapDashboard-DUUbvsOB.js",
+      "sha256": "de3fb75d5b83beb1a73c710eb61cc587a22723e4c3d1d226470617b35a558f0e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\MediaBrowser-Dy0zQBkJ.js",
+      "sha256": "7b1362a6f3b55baa6feab91d4f71e6a7b9115af5986f86a5614758c2b3c0eb68"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\MenuDesEcrans-BaPz1Lh9.js",
+      "sha256": "8957d557b5538c57fcccead53b012f6d2c68b292c63a2ea9fd053877840d2a66"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\message-square-CGA8zBdN.js",
+      "sha256": "401c11823673b76dd461185215326fd92c13cecb1aa5bd455cf0f71dcfa48589"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\MessageAlertOverlay-PCOQ6v-u.js",
+      "sha256": "5af4ef3a1d3a2572864c4544ad8ef1830eab5d5d79d113f1d7abe5b743115809"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\messageDException-DpUW38e0.js",
+      "sha256": "446e49145b7eebd3f7f9cdaa66fbd3352f2d1cbd031e5133cf286bdc74b72d58"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\minus-CWIewAk_.js",
+      "sha256": "5c07957a77112d9717bc3305aeda0bdfb413f8f4325f36f07f13dc8b3694c6be"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ModalProvider-CO8_TKnS.js",
+      "sha256": "6d8f5be1d4109b875fde3acfe50175ffc7857f16e9de2782f0ebbc76fc8917cb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\monitor-BDd2SBlO.js",
+      "sha256": "fc0585294ff474713e133d4a2c4e1b419f18bfffc4acab02a947eb429da63d2f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\monitor-smartphone-CC5UvpFe.js",
+      "sha256": "1cc11597beb746f8ec3a7303ac3758748fa34e6352cbdb24a8c4ce9b2d7cd54f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\moon-B_PEQJcs.js",
+      "sha256": "6384a8583b51f5498ff9d505c8b3e9295b07db52fb6432d7292e96ed08201619"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\MusicDashboard-tUcMzDOa.js",
+      "sha256": "1471d480b5bc8e66bb28805d92af2e07400cf4bebe096c61e2278cf90562d4b4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\NarrativeClock-Czm0Hsu4.js",
+      "sha256": "b8f17b8dd3aecbefb83e526550dabea7f820ae4cd45060a3259cc93ae1c9dd15"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\network-kMAQ74DF.js",
+      "sha256": "b6d0971c846b84b27b58ab231a4931735f2fb4869c649c5f8cad7336d12160c8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\nocturne-CMjMRf_U.js",
+      "sha256": "0b82527b85cc776eb920e460f065376d4f69c065fa74962b3a277856564f1398"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\nostromo-autodestruction-BMYqyFkF.webm",
+      "sha256": "fcc123591f5144b044d7789bab0a93f951e492db7ccb4a7226f9e3953478cd5f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\NPCDashboard-ChuL0i6B.js",
+      "sha256": "224d7cb2406a3b63ddbb964064ee812ee1e44f89db1f99ca85d1c0bcb88dda1f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ObsidianExportService-DPoBhPVU.js",
+      "sha256": "6cc9d5caec558f01c4f039bae9df7b8496d43cd6627d5a56d8b7daee46373a45"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ObsidianPanel-e4LAfr_1.js",
+      "sha256": "76459e9238b7a5c9d0a7013f253d70ee178919205dc27fbb2f78c210cebb157f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\organiserLaTrame-Bjtlyofd.js",
+      "sha256": "a5a235b145c15bcef9067230df981059bbbb61a93bced83b757fe607b1010fb6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\Ornement-C0_C5K5g.js",
+      "sha256": "2226c1f65db967603d493f0172cdb3f9e2bcdd259d080f26eee7a955e45ab5df"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ouvertureDeLaForge-CYkrkaoa.js",
+      "sha256": "05c26cc5546db10b635fb3987a67db99486e35334fbbf13be6af441fa944f81c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\package-2kgVAFAp.js",
+      "sha256": "47a8c2bcbfc1fe1b5641ed6ee1a4ddb8c4d09ddf7415d53a86e77cf6b32caa76"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\Panneau-DfkA4a2-.js",
+      "sha256": "91e1ba23bb5001a5687036bb931f1b4993d99964c2886a686cb31fc169c7912b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\PanneauDeJet-BQBMLY6s.js",
+      "sha256": "c4ae3884329c647b0f815a616cbe5038cde655e0bb02d1f36f8aa979bc63b304"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\PanneauDesModulesMJ-BUwhwPHG.js",
+      "sha256": "de265d1d4e84ab7f37a2c8fa4cf565ada1cefe4c2eb4fe31309cc23d82e52a7b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\PanneauDesRessources-eNNhENaD.js",
+      "sha256": "ba3a286e632464471d9d39c49abc6b8fb5319cf505ff0691641306ee8878da32"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\PanneauRepriseVoyageur-CCqIdTvl.js",
+      "sha256": "fbce4fa76539862b9db13f25fd39b3c5dbdc7d2480e0f660749813aa8bfc5eb0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\pause-xkLQgoLi.js",
+      "sha256": "43ef6447563cec79ae69ae524a54144bff5e26ad7cc5ad9619687a836d0d8e5e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\pdf-WLgSwHwh.js",
+      "sha256": "6bb712dd774816db63697c84bc45a2bec722f0906629398dbfcea78a579cb4f2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\pdf.worker.min-DCGKxesd.js",
+      "sha256": "1bbb78b6512baa698576f48921a4dd7bc37530bcd61f62932160a7192fadc9c5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\pdf.worker.min-qwK7q_zL.mjs",
+      "sha256": "dbcae78a691b3c501508f74b774c6066a57a14a76cefdc9e25ad86b651bb75d5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\pen-Dd-LFvAW.js",
+      "sha256": "64aaa87d66fa7a900c66b26a8b563037e2afc63ad9985df82596105b38d6afb5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\pencil-Bi1eGkWm.js",
+      "sha256": "d69f6fc1d96ee530fc683e2c73a1e6d3e437fe49df843c92c321ecf5b95315c6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\pilotageDuLecteurYouTube-DN1jJY91.js",
+      "sha256": "7da4f83d890a05de98fa2f41c99f7d5535db806242b90d184845b1f2dc6b7940"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\play-Hvec1Om8.js",
+      "sha256": "716821327f4965f1c96e55aeccc30195ce3f84569466c9fa618753a49af80706"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\PlayerHub-U-Yoqc-Z.js",
+      "sha256": "b5f58c06e1f3d2addd05c7edbf06c9e0be6cf85fd17050c61f8882243f2a28e5"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\playlistsDeLaCampagne-CTWZWE19.js",
+      "sha256": "615cf727fc58d49391b6ddd40b05b0890fe9272cc8eb7f51a382dca7681cedda"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\plus-Dl9gQSSa.js",
+      "sha256": "0cffb09d2e876bd52ccbad3c3e7410129b9d66dc14e718d1fa6d18a99e52f1ce"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\prereglages-vues-Om0ja_5Q.js",
+      "sha256": "d0afd0b5e07cff034725c99c73a8b409323a1ed7e147c884dfdb481aca24a941"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\projectionDeLaCarte-BnZWk9Iy.js",
+      "sha256": "3ef96d0ff9ab722944e7841af2d4e58f655b910d41c2b59ff5d1c1f111ff96e1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ProjectorView-BoxQn8xV.js",
+      "sha256": "504070d3b02fac7fd6b07f345fa07d10a5ab54475b73d70c4a9fc40e0213adaa"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\propositionDeButinIA-CHEHmPnJ.js",
+      "sha256": "73f2033a6ec20ea16911bd2e9320a734d50b011220cc174e3562dfa1b54a6ef0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\PupitreTMR-CqmR00kh.js",
+      "sha256": "523847aa25625ff65728d99173bab98bc996ff67ca8326cb21e92d9511e29274"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\radio-P1Qaga4O.js",
+      "sha256": "cb19b6a65fa227c273f9249136b9fbfae3b5f5f3bc620ab0068862eae82e7465"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\refresh-ccw-DbYCBtIX.js",
+      "sha256": "c4d366130c6b4c3292e5f9d77f5f7f8f6496ed2b657714f2ba7c98aace97a7a6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\RemoteControl-D6wXB8tn.js",
+      "sha256": "27fe972dc5bd3a2b41eb2f77fcc5b3ca3f2be2d268a751206d7e9d952d97af74"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\reprise-yoiSLkEf.js",
+      "sha256": "cef0758a308693611d7071c2fe911697b58801767b01e879c914098f63dd935f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ResolvedImage-Cd0LQSOU.js",
+      "sha256": "677da0ab20e5a8af68019e54ab817e4d43281ea4b7e09dce344eb36f898e2eaa"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\rocket-7RXAPv_t.js",
+      "sha256": "9e32647dfaa3fffcbc9ac0fd09c7c0decca6d5a98bdc71cc5a7f397fe1b3e0c8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\rotate-ccw-B8poElfz.js",
+      "sha256": "3797a2123e33e072ce0391448984ccb1bdc037b60a998dffaefd32104235ff89"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\rotate-cw-Bw6W8FB_.js",
+      "sha256": "df2442834ff97c644239929988673999cc376df0ef14f44f637ccf198abba2fa"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\scissors-D7RBy1PF.js",
+      "sha256": "0b9fee898b655dec4d9e73edc0a1f1fbf079db9c7e51eb481f1e1f7fd90cc0cf"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\scroll-text-BkFUMkaP.js",
+      "sha256": "e032875d5455a7f940d2288d1e70c034a4ce0746357cc2a0e91faab654f4ac55"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\search-DGW0ymMf.js",
+      "sha256": "31211f9fbd11c6bf632c25277f8739896141d1aeb1572b57c2fe42b6db87d6ee"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\SessionDashboard-DIVedWcG.css",
+      "sha256": "13826bdd590b31511c7e9b455a68ba3f04cba003ccc19c7554974a80b95fa547"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\SessionDashboard-OZ3V8y63.js",
+      "sha256": "cd830b1f306ee7ad7f3e0d238065ad22dac81c65fb1c20b71406ac0834134690"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\shapes-BqRUW-ms.js",
+      "sha256": "11ea5eac9f530d79e3516887a287aa2ba8b708653645c030b13e8998dd0fcc4d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\share-2-2HY4Cg2f.js",
+      "sha256": "4d86495c5d995ca5998feed48e404e159443be164e0224890be895a3ed1aedcb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\shield-BlyEPYOu.js",
+      "sha256": "ed9f45c3d46a262fee6b103379bb0e6b8d23535c76f3a8c29c9ac81a1ec027d9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\skip-back-DF_cFMHu.js",
+      "sha256": "6dbee8711afe6ad22cd199d279fc1de35081e3147d8d563ccdea16c92c3550e2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\skip-forward-CLGlezQt.js",
+      "sha256": "2e03a4d5156da682bf9735e3c8ad5df410161f0d008483744355dee3d8420f4e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\skull-BbVMVH_0.js",
+      "sha256": "dc5d7147b9bcdb43e89b9d68006c0adba2c7bbb6f61010bf0b1c2d1fbabcc549"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sliders-horizontal-BdMSrkVe.js",
+      "sha256": "aefc531c1f540c21c8edaec37133ca6efe9c0f42ae05ffadd7c08416a933c732"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sortable.esm-Bf8AiwQ_.js",
+      "sha256": "8a790295cde5fa2b987a1feedec6b22808c4741160fe50b02fd7cc1d66c9b0ea"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\SoundController-CGqXZ7SI.js",
+      "sha256": "f6a2439de047421e302e74241113b03e525e9502f75eece043aec5747d4bc6c8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\SoundDashboard-D-Vca1K9.js",
+      "sha256": "fe58e4b123e4475a9e687ddfa259a090afac7a1a7e361796b72e9ef3a1fdd5e3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sounds\\tactical\\Fire Punch.mp3",
+      "sha256": "085779a97dbd671a8cafde055e3369271a4354da267d3e3b78975cc5a6702f3f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sounds\\tactical\\ice_shatter.mp3",
+      "sha256": "ed228621485b2253f0ce49f4dd78bc2b7a3df67fc11fd7e83ad7c7916a4b7363"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sounds\\tactical\\proximity_alarm.mp3",
+      "sha256": "4bf0f530971319a835b3cd8111f6b0dda30cd39993a8273a5835dbe409c86ec9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sounds\\tactical\\Shimmer Chimes.mp3",
+      "sha256": "47e59bd8795fedf37d8569d6e30d2ef7bb6c2e70b50461aa9c6790d665d1b4e9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sounds\\tactical\\Streak Bonus Chime.mp3",
+      "sha256": "46704e1cef3bd79ebe195b4f4df6b429f4f4f2d0013ef3f0f3b7961b1ec47efe"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sounds\\tactical\\target_lock.mp3",
+      "sha256": "8134609b2230ea267e44472a5ba1b030d62f46fe8f308079cb32f237f2b2e2c3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sounds\\tactical\\Tension Sourde.mp3",
+      "sha256": "b4c71ea35d6030e70cf57a024c014fca3984fa7a42b9c44d6555fc6e662ad139"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sounds\\tactical\\Tension Sourde.wav",
+      "sha256": "9593adeac6bfb7a9c066fec87e932410ffb768cd16dda19d0969872caa59cff9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sounds\\tactical\\thunder_crack.mp3",
+      "sha256": "4d7a0a93e96eaeb92a29ccfba5bd59999066039b8ed9e2601966d3c3d8e4ad93"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\SpotlightSearch-Cd8KOmF6.js",
+      "sha256": "3139dd00a3d9c560365f347ccde0b2b8578d502dde8392a047080f2f215c5c83"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\square-djH1OPez.js",
+      "sha256": "c616a08ad7ed2240533efa4b25af2f8b41027fb7824cbe5fec0b91f9fc3b5e46"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\suitesDuJetDeFiche-onzpPyMo.js",
+      "sha256": "15385f1cb65c3131b44dc6f095990e18bd2de61f358d84941a7f1e8eed4441fd"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\SuiviBladeRunner-DPazVJCI.js",
+      "sha256": "fe4ee233f29b3c2bb82c882ad703faeb39cd84ea638479cf401c3ec3bfbb567c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sun-Bvg7aYAU.js",
+      "sha256": "20790d742da117f873a8527f26c5947574c4c5ec09a19fbbf3c6e7e8a81e9a9a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\sunrise-n1lhMxHt.js",
+      "sha256": "336889b88e364671f3a23ee5aabc02d47efcf266ec5cf9d396c26f453ea4976e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\swords-CTnCrxVq.js",
+      "sha256": "79f8995b9066f5c1800cb4e1970be965f9978653fb4f9456c4663fc8abf2ff1c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\TableDashboard-BTPEOnB2.js",
+      "sha256": "d73e3563b6568846020bc5efb973971d1af198febec81edd4f31745bb4329880"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\TabletHub-CHNRtuX_.js",
+      "sha256": "b47c5b5579a5238672d56f1da777db9cf20c179db29c851f7d5d77402fca7e1d"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\TacticalNarrativeService-BqGhk-NV.js",
+      "sha256": "543a80889efcb9c7ac2df295a6fadb0b815471f739bc7fed03888b384dfdd790"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\target-iwaITjoB.js",
+      "sha256": "eb194ff6af79e4ca2d61ce5f858a5605d93a3f1dc9f17e382b0b10c548267420"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\TexteMarkdown-Bewj-JAJ.js",
+      "sha256": "46fb7a260c4195cc6539f08cfe6ed7380c10d957cf14db166613c3e4421f525e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\timer-37lL_Lc4.js",
+      "sha256": "b39b2a6be1bb323aabceb89cfe4466e5c33240e575bfc6970aaf3f0d3dff4d38"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\TitreProjete-D9Z3GltM.js",
+      "sha256": "f42745bd6b87907cdc5beaa4db4b616720d3961aa1c72475b7670f7d392b22fb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\ToastProvider-CveiLPF3.js",
+      "sha256": "a93e73d25054fd17b5f3a0c55374a4d454b96afd91160dc4afc2e33503025788"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\trash-2-CQkH_86W.js",
+      "sha256": "4c8f1ad37e458288598baf741708f301f0edf223f6e350e02f79a9addb67ec5e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\tuilesDeLaCampagne-CRW2O_Xs.js",
+      "sha256": "d4dae9415d95008956514d40e4bf52f6e0e0056c46f88b8810713ba7e3d93309"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\unlink-DYRX9J_q.js",
+      "sha256": "f8e59fa17d12cd7a0275478eea3dabfa0d56e80229fcb13407e146460fd1f9c7"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\upload-Cs2cjcqh.js",
+      "sha256": "4923c4b552d17fbf3747b272f157a0419545b45d6def9d54df0c818b654fecce"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useBrainstormStore-BgDhDM5M.js",
+      "sha256": "89e1f388389b4cd1f6d2876e8b5a2f4a556524d7fa578e6674921af905c4fee9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useClientStore-Bm_jmDO9.js",
+      "sha256": "850bd9d4d74b5e921e955020babea07ca4e049480c8848ab23abe204970e283a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useClientStore-DF6EbG-A.css",
+      "sha256": "8a113983684b0f7a5dc04ca9d22665e84d687002d60b1c2df58b1ae789636111"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useCosmsCourants-Ba_FaTii.js",
+      "sha256": "ee305b32cfe78703fac60be48229003f0a1a02545eddf7028663dd3510fed06c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useCurseurLisse-BnR8i0It.js",
+      "sha256": "401941169e701027015386f09f00f359231f27531094d61b463431b4db6bad23"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useFermetureParEchap-CX2a9Nj4.js",
+      "sha256": "fbcbaf9cbbeef564c07ad5732e6d7009064118eca04284c8e572af439afcbe72"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useKeyboardControls-Bt-fFzM0.js",
+      "sha256": "e0bdad20201d4a9c086564ed79f5c6c253ebc2857ebf1be1ac622b2ea42af7de"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useLightKeyboardControls-BM8_0Jo3.js",
+      "sha256": "2b082a4dad06bdbff431f050a22ecde16db63dce25c89bb18f96f5a87d1b90f2"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useMediaUrl-SmyxEQ_h.js",
+      "sha256": "88ee9adad175939035fff9fdd3d02866e1d2f23be83b544e6b66c0ee3ae12312"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useMusicKeyboardControls-C9wgj8CP.js",
+      "sha256": "c1f5135ab4f07e299c3f1ed329adaceb15daa03af3dfa6ec5f4418978efc07e0"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useNarrativeGenerator-CeeLXCPS.js",
+      "sha256": "f1e942fc4319afddf1d349cfef33f290261517c3137e70f8cccdfbd41836d109"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\usePerformanceControl-P16fo0Bv.js",
+      "sha256": "2bd9afd8566e1a7b9f273ffc442ff737f1543bd5be7d3c62dfcfe985681f63a8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\usePleinEcranAuToucher-BWHj9IyZ.js",
+      "sha256": "dde8af931a0590e7a93829d228ef6411500101657d8f6540973f97e9a7f44654"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\user-O7v_AQNz.js",
+      "sha256": "fd0628d5c4fc13162a5462927dc28de8b6cb4a9591c8de334aebd201df0eee67"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\user-round-BqfIJuTh.js",
+      "sha256": "d261d87ed73529bb147259f17e441dccc2fec5be4b6c1e59bcefd5ad08d25829"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useRegimeDInterface-H4DYBkqs.js",
+      "sha256": "b031e403392e83c390040ca71e74a57299ca89a148a6d5a739fab8dbb8ec1164"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\useTuilesVisibles-Br77WrjD.js",
+      "sha256": "239249c12b2d6f2a577df9d3249de031204b5601aa02e19be8f8e5f901e1b349"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\virtual_pwa-register-DrK7Esya.js",
+      "sha256": "a370d0303a5f684befd73a4be2beca11e2d210a09e6e0bdc7f10ca27c62e104c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\vocabulaireDuButin-D1aUiBem.js",
+      "sha256": "3bdf9cd440cdcba9ee1b61103478b7a64c98857554e8c0f685740042314bd003"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\VoiceDashboard-CIm3JD6o.js",
+      "sha256": "1aee2dd58c8fcbbd90762f2064e7c4a411f2d81231903314f252f6b873f74621"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\vues-B95yROOV.js",
+      "sha256": "4bcc5b06a85c11cc6f053611d8e673630354d5386b48fa966117a6e6bee9e106"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\vues-CZyJ4ZFe.js",
+      "sha256": "0d359c43dc7c8ad0c979d691b42df78ba76b7e94528b0251e860b549bdf83cd6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\vues-DSN69poo.js",
+      "sha256": "652e7b99aebeaafa63caf690a85c1d48445d11dcc7b6215268ff41d2e9f564ee"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\VuesCombatSpatial-BP8aBRjk.css",
+      "sha256": "bb7b0596c4abfc28f4cd1092da2356f09ec5bf5abec1a1d2d65b885b4447d151"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\VuesCombatSpatial-DKPBnIH9.js",
+      "sha256": "9b59d1ef4755f446e79cf8f981a1b4b6cbf2b38e81856898b001c97387785653"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\VuesDune-Ygpxk8dj.js",
+      "sha256": "881853eeeae31c30f96048cbe6e1ca6e03606a7dc8a5dfa466d12abe1846993c"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\vuesDuRegistre-Bg8GbXC_.css",
+      "sha256": "3eb72259d0a96dfcc91c11111e5eaa48a1ab6f7aed27c1fa0c1121f7cef997ac"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\vuesDuRegistre-CGOrMj5a.js",
+      "sha256": "3cf9cc6441781923828a1c1180ad4286baa9c67ca65d70096003b2a7a9675717"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\VuesOperations-ClYRM2s3.css",
+      "sha256": "711e3ffd6d11a3578766b087278e19d04eb6248180d96465cafe95d8f3569e6f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\VuesOperations-D1FrrYfF.js",
+      "sha256": "ae43e351a70f00d1f41f4f970bdb01d2104923dc7ecbe7042e475da0b139260b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\VuesTMR-naVaIw04.js",
+      "sha256": "da303123269d41b030cf87c14902cb668dc9b47e1b8cd0c9789142a538cfc98e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\VuesTMR-u6rCB1nn.css",
+      "sha256": "5cb463d8989683745914dd2ddd6fe1d2cec099d7c06dfd3a66f15701f9f9dd70"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\waves-BNGJ_LJc.js",
+      "sha256": "640f3dc24b83f9607aadb66cc98b918e8579df4137039bc0be80850390274b96"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\WebDashboard-Ct4uqlYO.js",
+      "sha256": "4958cc18ef758f6178280f83c9d1215a505a680e6abee7b9d05c73db8edd8706"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\WhiteboardDashboard-BXuSJkI1.js",
+      "sha256": "7565cfb36ef3bb1d27c6149e05c2f870421b3dcc7f9496765da52e356dcdc66a"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\WhiteboardToolbar-BZ3KRmDy.js",
+      "sha256": "6fd18c501cb3ffec01209c4f091e4923713beef5f3ce9d29b39be1759e99ce2e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\wifi-off-XgqtHQnU.js",
+      "sha256": "17662bfa524172755938727dbcd2a579c597323c1497b60edf59b4a3c2761dd6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\workbox-window.prod.es5-BBnX5xw4.js",
+      "sha256": "cadd21be4a88598a4dec91a26a025df0a5790ff6baec54a884e401c3f5c95557"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\x--OvEa3n3.js",
+      "sha256": "34e3483dd17d9a9817d0c0e21954ab85371f985f6b806be46376e289e8ac95b9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\assets\\youtube-DQADGPvM.js",
+      "sha256": "d989a2620e0508a1b44f879a2d77271be0f29cf2648c1ccbb6aee87189a58300"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\audio\\debruitage-processor.js",
+      "sha256": "710509a378a25b78ffeb40b59f4dca4273410bf0d7dca4256c19dc522eedc5e8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\audio\\debruitage.js",
+      "sha256": "9b911695f4159e8a69f56362f94cc4828d8c4135cca8f630c40b045a6a71531b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\audio\\rnnoise.wasm",
+      "sha256": "b3b67c9eae8f0791aad468c708659e0850bb37b0fb9c8a8666f2d7b0b6869bc4"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\audio\\sonie-processor.js",
+      "sha256": "ed379b9355adf7a310fef827fbb324c32952ffb448b3141a69796a1708c8b34f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\audio\\sonie.d.ts",
+      "sha256": "46a1697a4385a06ea16190fb4ab52dfb1b051f58ef1f81b1df98af0285bfc032"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\audio\\sonie.js",
+      "sha256": "7258d8060a73af6f84dd7a91df8bfb96434ab9b0cc14c67224acefdf91b9141b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\audio\\transposition.d.ts",
+      "sha256": "29618770042989458977fff8758c79527dab5b5ee961f7eb9f372b98ed08b0c3"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\audio\\transposition.js",
+      "sha256": "1cccbc24fd28d1927ad0823261a6e255e57c120bca07fe529c35d24b67c8c7cb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\audio\\voice-processor.js",
+      "sha256": "5439168a4fae32bea34ef176b8fd7ebf8ecaed3999fea12b5dbe841482e68346"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\icons\\D100b.png",
+      "sha256": "99002e3baeacb1867af53cb9658186713541bfe5620f24c80e2287034cb17d68"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\icons\\D100c.png",
+      "sha256": "2de0463693ffcd02e2f8846e36e7f853ae6be7263f7e88a77aa3a17905eb2f67"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\icons\\D10b.png",
+      "sha256": "b981dae9309c7b0e1b99d16d6d7614727479b6ac543704b83d0b48d1ae5f15b1"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\icons\\D12b.png",
+      "sha256": "a43fdf8efe28397e15f45cb3332be3530c9f0dca49ce84a12a29348e4d685324"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\icons\\D20b.png",
+      "sha256": "1dbabbd70accd2ddb299b6f9f81582a34492e1253efa973abf583d987f21bb91"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\icons\\D4b.png",
+      "sha256": "eb6f9effef9b42467dbc7afb68de66636954efe120a6387ec00efb46dc36b7f9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\icons\\D6b.png",
+      "sha256": "8e585ba1d255ad489011753648f8a8a0d22ef3d78fb6493a791f5cf77887dd7e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\icons\\D8b.png",
+      "sha256": "335873caa19651b016898464b9d6e341217c1caf2af44383ecf6450e33c1a021"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\index.html",
+      "sha256": "e973d6a9f7d15dd52152d5b10b4d72b8c7d64c0b0973032b2dec048bfc9a201b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\manifest.webmanifest",
+      "sha256": "7238318f8319a10f00719d9fc5633576533c4d1a08d71754e55be3c3316b40db"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\sw.js",
+      "sha256": "a0283ffbfcc1c71b8b4cae74cea5e17d42e0fb98c25d4738f99049232a17dba8"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\tablet-hub-icon-192x192.png",
+      "sha256": "870f2f6d6a028eaf5ed069a1d1cbceca5253b448d04ee8839d5f529b12662d53"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\tablet-hub-icon-512x512.png",
+      "sha256": "1432bd405c447218ecf703d2d0a2113fe9dfc557c221ef29298cb4e50ccb21a9"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\ulanzi\\gmosvk1.gif",
+      "sha256": "efb19adbe8c0f2920bf45843d64c92dde71fa3dd5ee0cd0a705d7191b22f294e"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\ulanzi\\gmosvk2.gif",
+      "sha256": "cfcace17ca768590351339ce7ac48816e11e31e184773b2e624061bfb6a32418"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\ulanzi\\gmosvk3.gif",
+      "sha256": "578358e5ae506970934eb670fba5df8be6518de23c78ba501345beabe29124f6"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\ulanzi\\gmosvk4.gif",
+      "sha256": "f0257755a350c7febe491f4e1ca28b2417f33ecd3e252075022d73a44319337b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\ulanzi\\gmosvk5.gif",
+      "sha256": "8573adbebdda5da5c8baf500de646807654452af096c349227ae7ae655788b9b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\ulanzi\\gmosvk6.gif",
+      "sha256": "6c9280f01263d8f8d792796baed7af923bd681c53ce76b4e6f2cd7c1bc62e749"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\vite.svg",
+      "sha256": "4a748afd443918bb16591c834c401dae33e87861ab5dbad0811c3a3b4a9214fb"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist\\workbox-abeb32eb.js",
+      "sha256": "0e233ad26e783cbcff92534dd4768acec2ad6827a53a0246bcc682c391c2644b"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist-electron\\main.js",
+      "sha256": "b74d355ddbfcc215fad9ec02f3ecbf347f9c8fe32ab2be127d7ae5015834381f"
+    },
+    {
+      "fichier": "C:\\Projet_David\\GM-OS-v5\\dist-electron\\preload.mjs",
+      "sha256": "24ae16bd77279b1d957a35ea9ef734d1f8b0d3cf7479e6b6d521484e4c0c4ab4"
+    }
+  ]
+}

@@ -1,0 +1,249 @@
+1
+00:00:00,000 --> 00:00:10,228
+Star Trek Adventures 2e, pilote 2.0.0.
+Campagne de test : Les Voix de Nacre.
+
+2
+00:00:12,410 --> 00:00:22,643
+Profils RECETTE et dés préparés. Les héros de
+la mission restent hors des essais.
+
+3
+00:00:25,120 --> 00:00:33,629
+Le profil JET sert à essayer les règles.
+
+4
+00:00:39,326 --> 00:00:49,266
+Attributs, fonctions et ressources du vrai
+pilote. Aucun talent interprété depuis son
+nom.
+
+5
+00:00:51,760 --> 00:01:00,268
+Les réserves ne voyagent pas dans cette
+archive.
+
+6
+00:01:05,585 --> 00:01:18,219
+Impulsion 0, Menace 6 : départ choisi pour cet
+atelier. Les profils RECETTE ne sont pas des
+héros présents.
+
+7
+00:01:20,760 --> 00:01:29,271
+Une tâche combine un attribut et une fonction.
+
+8
+00:01:33,508 --> 00:01:45,662
+10 + 4 : seuil 14. Spécialisation : un dé de 1
+à 4 compte double. Difficulté 1.
+
+9
+00:01:48,160 --> 00:01:56,662
+Exemple préparé : les d20 donnent 4 et 14.
+
+10
+00:01:59,626 --> 00:02:08,897
+Trois réussites contre difficulté 1 : deux
+Impulsions vont à la réserve.
+
+11
+00:02:11,440 --> 00:02:21,193
+Un troisième d20 coûte un point. On peut
+choisir de payer en Menace.
+
+12
+00:02:24,507 --> 00:02:34,258
+Le coût sera prélevé au lancer. Ici, on
+conserve les deux Impulsions disponibles.
+
+13
+00:02:36,760 --> 00:02:45,270
+Exemple préparé : 4, 14 et 20.
+
+14
+00:02:49,078 --> 00:03:01,713
+Un dé acheté : +1 Menace ; complication
+repoussée : +2. La réussite demeure, avec deux
+Impulsions de plus.
+
+15
+00:03:04,240 --> 00:03:12,754
+Un idéal aligné permet une Occasion parfaite.
+
+16
+00:03:18,197 --> 00:03:31,304
+Un dé vaut 1. La Détermination de JET passe de
+1 à 0. Les noms d’idéaux ne suffisent pas
+seuls.
+
+17
+00:03:33,800 --> 00:03:42,313
+Éviter une blessure prend du Stress égal à sa
+gravité.
+
+18
+00:03:46,049 --> 00:03:59,158
+JET passe de Stress 0 à 2 sur 8. Le choix
+suppose que la jauge peut absorber toute la
+gravité.
+
+19
+00:04:01,680 --> 00:04:10,181
+Un Répit permet de récupérer quatre points de
+Stress.
+
+20
+00:04:12,720 --> 00:04:23,433
+Stress 2 revient à 0. Les conditions du répit
+restent à accorder par le meneur.
+
+21
+00:04:25,920 --> 00:04:34,434
+CORPS et un opposant synthétique vont échanger
+des tirs.
+
+22
+00:04:42,244 --> 00:04:51,993
+Deux participants de test. Les dossiers
+narratifs ne sont pas des adversaires
+chiffrés.
+
+23
+00:04:54,480 --> 00:05:03,741
+Star Trek alterne les camps. Rien ne se tire
+pour trier l’initiative.
+
+24
+00:05:12,093 --> 00:05:22,796
+Le meneur donne la première action au camp
+joueur. Garder la main demanderait deux
+Impulsions.
+
+25
+00:05:25,320 --> 00:05:33,830
+CORPS tire à distance : Maîtrise + Sécurité,
+difficulté 2.
+
+26
+00:05:44,987 --> 00:05:55,701
+18 et 19 dépassent le seuil 12. Le tir échoue
+; aucune blessure n’est appliquée.
+
+27
+00:05:58,240 --> 00:06:06,743
+L’adversaire répond au phaseur, en mode
+paralysie.
+
+28
+00:06:12,120 --> 00:06:24,264
+La cible CORPS et le tir à distance sont
+repris. La gravité 2 sera renseignée après le
+lancer.
+
+29
+00:06:26,800 --> 00:06:35,307
+Exemple préparé : deux 3 sous le seuil 12.
+
+30
+00:06:39,287 --> 00:06:48,582
+Deux réussites contre difficulté 2. Le
+résultat propose la conséquence sur CORPS.
+
+31
+00:06:51,120 --> 00:06:59,627
+CORPS choisit d’éviter la blessure par le
+Stress.
+
+32
+00:07:03,007 --> 00:07:17,073
+Stress de CORPS : 0 devient 2 sur 8. Le clic
+met à jour sa fiche liée, sans réserve de PV
+inventée.
+
+33
+00:07:19,560 --> 00:07:28,068
+La suite du conflit dépend du récit et des
+conséquences.
+
+34
+00:07:32,089 --> 00:07:42,797
+L’échange est clos. La fin de combat ne soigne
+pas automatiquement le Stress de CORPS.
+
+35
+00:07:45,280 --> 00:07:53,796
+LCARS prépare sept consoles et transmet les
+intentions.
+
+36
+00:07:59,895 --> 00:08:11,087
+Préparer un poste et ouvrir son accès sont
+deux gestes distincts. Aucun transport joueur
+montré ici.
+
+37
+00:08:13,560 --> 00:08:22,061
+Le pupitre peut publier une situation
+d’alerte.
+
+38
+00:08:27,206 --> 00:08:39,358
+La passerelle du meneur change d’état. Aucun
+jet, soin ou tir automatique ; aucun son
+ajouté au film.
+
+39
+00:08:41,880 --> 00:08:50,391
+Opérations tient les vaisseaux et les tâches
+de la mission.
+
+40
+00:08:56,500 --> 00:09:08,172
+Méridienne, Sillage et une cible spatiale de
+recette. Les impacts se reportent après
+résolution à la table.
+
+41
+00:09:10,720 --> 00:09:19,230
+Tâche RECETTE : Fonction 4, obstacle 1.
+
+42
+00:09:23,001 --> 00:09:36,117
+Quatre moins un : trois coches sur huit. Le
+module suit l’avancée ; ce clic ne lance pas
+la tâche.
+
+43
+00:09:38,600 --> 00:09:47,107
+Un défi suit des tâches clés et des
+intervalles.
+
+44
+00:09:50,867 --> 00:10:02,064
+Six intervalles deviennent quatre. Les coûts
+indiqués par le module ne débitent pas les
+réserves globales.
+
+45
+00:10:04,560 --> 00:10:13,066
+Rechargeons réellement la fenêtre pour
+vérifier les données.
+
+46
+00:10:24,094 --> 00:10:34,798
+Les trois coches et les quatre intervalles
+sont conservés. Les fiches des héros sont
+comparées.
+
+47
+00:10:37,280 --> 00:10:47,033
+Jets, ressources et combat sont natifs ; LCARS
+et Opérations sont des modules.
+
+48
+00:10:50,543 --> 00:11:01,268
+Règles détaillées et appareils restent à
+éprouver. Aucun essai humain ni transport
+tablette certifié.
+

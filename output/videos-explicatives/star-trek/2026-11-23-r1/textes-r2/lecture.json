@@ -1,0 +1,762 @@
+{
+  "schemaVersion": 2,
+  "mode": "texte",
+  "langue": "fr-FR",
+  "planFichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\plan.json",
+  "planSha256": "ac000c79e49aff9815724f621bc8796a63c586ac849b1fc09048a2822b95eeda",
+  "reglage": {
+    "motsParMinute": 125,
+    "caracteresParSeconde": 14,
+    "minimumMs": 5000,
+    "installationMs": 800,
+    "margeMs": 1200,
+    "caracteresParLigne": 46,
+    "lignesMaximum": 3
+  },
+  "sequences": [
+    {
+      "id": "reperes",
+      "avant": {
+        "texte": "Star Trek Adventures 2e, pilote 2.0.0. Campagne de test : Les Voix de Nacre.",
+        "cartes": [
+          {
+            "texte": "Star Trek Adventures 2e, pilote 2.0.0.\nCampagne de test : Les Voix de Nacre.",
+            "mots": 14,
+            "caracteres": 76,
+            "lectureMs": 6720,
+            "dureeMs": 10220,
+            "id": "reperes-avant-1"
+          }
+        ],
+        "dureeMs": 10220
+      },
+      "apres": {
+        "texte": "Profils RECETTE et dés préparés. Les héros de la mission restent hors des essais.",
+        "cartes": [
+          {
+            "texte": "Profils RECETTE et dés préparés. Les héros de\nla mission restent hors des essais.",
+            "mots": 14,
+            "caracteres": 81,
+            "lectureMs": 6720,
+            "dureeMs": 10220,
+            "id": "reperes-apres-1"
+          }
+        ],
+        "dureeMs": 10220
+      }
+    },
+    {
+      "id": "fiche",
+      "avant": {
+        "texte": "Le profil JET sert à essayer les règles.",
+        "cartes": [
+          {
+            "texte": "Le profil JET sert à essayer les règles.",
+            "mots": 8,
+            "caracteres": 40,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "fiche-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Attributs, fonctions et ressources du vrai pilote. Aucun talent interprété depuis son nom.",
+        "cartes": [
+          {
+            "texte": "Attributs, fonctions et ressources du vrai\npilote. Aucun talent interprété depuis son\nnom.",
+            "mots": 13,
+            "caracteres": 90,
+            "lectureMs": 6429,
+            "dureeMs": 9929,
+            "id": "fiche-apres-1"
+          }
+        ],
+        "dureeMs": 9929
+      }
+    },
+    {
+      "id": "reserves",
+      "avant": {
+        "texte": "Les réserves ne voyagent pas dans cette archive.",
+        "cartes": [
+          {
+            "texte": "Les réserves ne voyagent pas dans cette\narchive.",
+            "mots": 8,
+            "caracteres": 48,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "reserves-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Impulsion 0, Menace 6 : départ choisi pour cet atelier. Les profils RECETTE ne sont pas des héros présents.",
+        "cartes": [
+          {
+            "texte": "Impulsion 0, Menace 6 : départ choisi pour cet\natelier. Les profils RECETTE ne sont pas des\nhéros présents.",
+            "mots": 19,
+            "caracteres": 107,
+            "lectureMs": 9120,
+            "dureeMs": 12620,
+            "id": "reserves-apres-1"
+          }
+        ],
+        "dureeMs": 12620
+      }
+    },
+    {
+      "id": "composer",
+      "avant": {
+        "texte": "Une tâche combine un attribut et une fonction.",
+        "cartes": [
+          {
+            "texte": "Une tâche combine un attribut et une fonction.",
+            "mots": 8,
+            "caracteres": 46,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "composer-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "10 + 4 : seuil 14. Spécialisation : un dé de 1 à 4 compte double. Difficulté 1.",
+        "cartes": [
+          {
+            "texte": "10 + 4 : seuil 14. Spécialisation : un dé de 1\nà 4 compte double. Difficulté 1.",
+            "mots": 18,
+            "caracteres": 79,
+            "lectureMs": 8640,
+            "dureeMs": 12140,
+            "id": "composer-apres-1"
+          }
+        ],
+        "dureeMs": 12140
+      }
+    },
+    {
+      "id": "jet",
+      "avant": {
+        "texte": "Exemple préparé : les d20 donnent 4 et 14.",
+        "cartes": [
+          {
+            "texte": "Exemple préparé : les d20 donnent 4 et 14.",
+            "mots": 9,
+            "caracteres": 42,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "jet-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Trois réussites contre difficulté 1 : deux Impulsions vont à la réserve.",
+        "cartes": [
+          {
+            "texte": "Trois réussites contre difficulté 1 : deux\nImpulsions vont à la réserve.",
+            "mots": 12,
+            "caracteres": 72,
+            "lectureMs": 5760,
+            "dureeMs": 9260,
+            "id": "jet-apres-1"
+          }
+        ],
+        "dureeMs": 9260
+      }
+    },
+    {
+      "id": "achat",
+      "avant": {
+        "texte": "Un troisième d20 coûte un point. On peut choisir de payer en Menace.",
+        "cartes": [
+          {
+            "texte": "Un troisième d20 coûte un point. On peut\nchoisir de payer en Menace.",
+            "mots": 13,
+            "caracteres": 68,
+            "lectureMs": 6240,
+            "dureeMs": 9740,
+            "id": "achat-avant-1"
+          }
+        ],
+        "dureeMs": 9740
+      },
+      "apres": {
+        "texte": "Le coût sera prélevé au lancer. Ici, on conserve les deux Impulsions disponibles.",
+        "cartes": [
+          {
+            "texte": "Le coût sera prélevé au lancer. Ici, on\nconserve les deux Impulsions disponibles.",
+            "mots": 13,
+            "caracteres": 81,
+            "lectureMs": 6240,
+            "dureeMs": 9740,
+            "id": "achat-apres-1"
+          }
+        ],
+        "dureeMs": 9740
+      }
+    },
+    {
+      "id": "complication",
+      "avant": {
+        "texte": "Exemple préparé : 4, 14 et 20.",
+        "cartes": [
+          {
+            "texte": "Exemple préparé : 4, 14 et 20.",
+            "mots": 7,
+            "caracteres": 30,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "complication-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Un dé acheté : +1 Menace ; complication repoussée : +2. La réussite demeure, avec deux Impulsions de plus.",
+        "cartes": [
+          {
+            "texte": "Un dé acheté : +1 Menace ; complication\nrepoussée : +2. La réussite demeure, avec deux\nImpulsions de plus.",
+            "mots": 19,
+            "caracteres": 106,
+            "lectureMs": 9120,
+            "dureeMs": 12620,
+            "id": "complication-apres-1"
+          }
+        ],
+        "dureeMs": 12620
+      }
+    },
+    {
+      "id": "determination",
+      "avant": {
+        "texte": "Un idéal aligné permet une Occasion parfaite.",
+        "cartes": [
+          {
+            "texte": "Un idéal aligné permet une Occasion parfaite.",
+            "mots": 7,
+            "caracteres": 45,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "determination-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Un dé vaut 1. La Détermination de JET passe de 1 à 0. Les noms d’idéaux ne suffisent pas seuls.",
+        "cartes": [
+          {
+            "texte": "Un dé vaut 1. La Détermination de JET passe de\n1 à 0. Les noms d’idéaux ne suffisent pas\nseuls.",
+            "mots": 20,
+            "caracteres": 95,
+            "lectureMs": 9600,
+            "dureeMs": 13100,
+            "id": "determination-apres-1"
+          }
+        ],
+        "dureeMs": 13100
+      }
+    },
+    {
+      "id": "stress",
+      "avant": {
+        "texte": "Éviter une blessure prend du Stress égal à sa gravité.",
+        "cartes": [
+          {
+            "texte": "Éviter une blessure prend du Stress égal à sa\ngravité.",
+            "mots": 10,
+            "caracteres": 54,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "stress-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "JET passe de Stress 0 à 2 sur 8. Le choix suppose que la jauge peut absorber toute la gravité.",
+        "cartes": [
+          {
+            "texte": "JET passe de Stress 0 à 2 sur 8. Le choix\nsuppose que la jauge peut absorber toute la\ngravité.",
+            "mots": 20,
+            "caracteres": 94,
+            "lectureMs": 9600,
+            "dureeMs": 13100,
+            "id": "stress-apres-1"
+          }
+        ],
+        "dureeMs": 13100
+      }
+    },
+    {
+      "id": "repit",
+      "avant": {
+        "texte": "Un Répit permet de récupérer quatre points de Stress.",
+        "cartes": [
+          {
+            "texte": "Un Répit permet de récupérer quatre points de\nStress.",
+            "mots": 9,
+            "caracteres": 53,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "repit-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Stress 2 revient à 0. Les conditions du répit restent à accorder par le meneur.",
+        "cartes": [
+          {
+            "texte": "Stress 2 revient à 0. Les conditions du répit\nrestent à accorder par le meneur.",
+            "mots": 15,
+            "caracteres": 79,
+            "lectureMs": 7200,
+            "dureeMs": 10700,
+            "id": "repit-apres-1"
+          }
+        ],
+        "dureeMs": 10700
+      }
+    },
+    {
+      "id": "rencontre",
+      "avant": {
+        "texte": "CORPS et un opposant synthétique vont échanger des tirs.",
+        "cartes": [
+          {
+            "texte": "CORPS et un opposant synthétique vont échanger\ndes tirs.",
+            "mots": 9,
+            "caracteres": 56,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "rencontre-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Deux participants de test. Les dossiers narratifs ne sont pas des adversaires chiffrés.",
+        "cartes": [
+          {
+            "texte": "Deux participants de test. Les dossiers\nnarratifs ne sont pas des adversaires\nchiffrés.",
+            "mots": 13,
+            "caracteres": 87,
+            "lectureMs": 6240,
+            "dureeMs": 9740,
+            "id": "rencontre-apres-1"
+          }
+        ],
+        "dureeMs": 9740
+      }
+    },
+    {
+      "id": "cibles",
+      "avant": {
+        "texte": "Star Trek alterne les camps. Rien ne se tire pour trier l’initiative.",
+        "cartes": [
+          {
+            "texte": "Star Trek alterne les camps. Rien ne se tire\npour trier l’initiative.",
+            "mots": 12,
+            "caracteres": 69,
+            "lectureMs": 5760,
+            "dureeMs": 9260,
+            "id": "cibles-avant-1"
+          }
+        ],
+        "dureeMs": 9260
+      },
+      "apres": {
+        "texte": "Le meneur donne la première action au camp joueur. Garder la main demanderait deux Impulsions.",
+        "cartes": [
+          {
+            "texte": "Le meneur donne la première action au camp\njoueur. Garder la main demanderait deux\nImpulsions.",
+            "mots": 15,
+            "caracteres": 94,
+            "lectureMs": 7200,
+            "dureeMs": 10700,
+            "id": "cibles-apres-1"
+          }
+        ],
+        "dureeMs": 10700
+      }
+    },
+    {
+      "id": "attaque-pj",
+      "avant": {
+        "texte": "CORPS tire à distance : Maîtrise + Sécurité, difficulté 2.",
+        "cartes": [
+          {
+            "texte": "CORPS tire à distance : Maîtrise + Sécurité,\ndifficulté 2.",
+            "mots": 10,
+            "caracteres": 58,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "attaque-pj-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "18 et 19 dépassent le seuil 12. Le tir échoue ; aucune blessure n’est appliquée.",
+        "cartes": [
+          {
+            "texte": "18 et 19 dépassent le seuil 12. Le tir échoue\n; aucune blessure n’est appliquée.",
+            "mots": 15,
+            "caracteres": 80,
+            "lectureMs": 7200,
+            "dureeMs": 10700,
+            "id": "attaque-pj-apres-1"
+          }
+        ],
+        "dureeMs": 10700
+      }
+    },
+    {
+      "id": "attaque-adverse",
+      "avant": {
+        "texte": "L’adversaire répond au phaseur, en mode paralysie.",
+        "cartes": [
+          {
+            "texte": "L’adversaire répond au phaseur, en mode\nparalysie.",
+            "mots": 7,
+            "caracteres": 50,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "attaque-adverse-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "La cible CORPS et le tir à distance sont repris. La gravité 2 sera renseignée après le lancer.",
+        "cartes": [
+          {
+            "texte": "La cible CORPS et le tir à distance sont\nrepris. La gravité 2 sera renseignée après le\nlancer.",
+            "mots": 18,
+            "caracteres": 94,
+            "lectureMs": 8640,
+            "dureeMs": 12140,
+            "id": "attaque-adverse-apres-1"
+          }
+        ],
+        "dureeMs": 12140
+      }
+    },
+    {
+      "id": "riposte",
+      "avant": {
+        "texte": "Exemple préparé : deux 3 sous le seuil 12.",
+        "cartes": [
+          {
+            "texte": "Exemple préparé : deux 3 sous le seuil 12.",
+            "mots": 9,
+            "caracteres": 42,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "riposte-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Deux réussites contre difficulté 2. Le résultat propose la conséquence sur CORPS.",
+        "cartes": [
+          {
+            "texte": "Deux réussites contre difficulté 2. Le\nrésultat propose la conséquence sur CORPS.",
+            "mots": 12,
+            "caracteres": 81,
+            "lectureMs": 5786,
+            "dureeMs": 9286,
+            "id": "riposte-apres-1"
+          }
+        ],
+        "dureeMs": 9286
+      }
+    },
+    {
+      "id": "consequence",
+      "avant": {
+        "texte": "CORPS choisit d’éviter la blessure par le Stress.",
+        "cartes": [
+          {
+            "texte": "CORPS choisit d’éviter la blessure par le\nStress.",
+            "mots": 8,
+            "caracteres": 49,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "consequence-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Stress de CORPS : 0 devient 2 sur 8. Le clic met à jour sa fiche liée, sans réserve de PV inventée.",
+        "cartes": [
+          {
+            "texte": "Stress de CORPS : 0 devient 2 sur 8. Le clic\nmet à jour sa fiche liée, sans réserve de PV\ninventée.",
+            "mots": 22,
+            "caracteres": 99,
+            "lectureMs": 10560,
+            "dureeMs": 14060,
+            "id": "consequence-apres-1"
+          }
+        ],
+        "dureeMs": 14060
+      }
+    },
+    {
+      "id": "cloture",
+      "avant": {
+        "texte": "La suite du conflit dépend du récit et des conséquences.",
+        "cartes": [
+          {
+            "texte": "La suite du conflit dépend du récit et des\nconséquences.",
+            "mots": 10,
+            "caracteres": 56,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "cloture-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "L’échange est clos. La fin de combat ne soigne pas automatiquement le Stress de CORPS.",
+        "cartes": [
+          {
+            "texte": "L’échange est clos. La fin de combat ne soigne\npas automatiquement le Stress de CORPS.",
+            "mots": 15,
+            "caracteres": 86,
+            "lectureMs": 7200,
+            "dureeMs": 10700,
+            "id": "cloture-apres-1"
+          }
+        ],
+        "dureeMs": 10700
+      }
+    },
+    {
+      "id": "lcars",
+      "avant": {
+        "texte": "LCARS prépare sept consoles et transmet les intentions.",
+        "cartes": [
+          {
+            "texte": "LCARS prépare sept consoles et transmet les\nintentions.",
+            "mots": 8,
+            "caracteres": 55,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "lcars-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Préparer un poste et ouvrir son accès sont deux gestes distincts. Aucun transport joueur montré ici.",
+        "cartes": [
+          {
+            "texte": "Préparer un poste et ouvrir son accès sont\ndeux gestes distincts. Aucun transport joueur\nmontré ici.",
+            "mots": 16,
+            "caracteres": 100,
+            "lectureMs": 7680,
+            "dureeMs": 11180,
+            "id": "lcars-apres-1"
+          }
+        ],
+        "dureeMs": 11180
+      }
+    },
+    {
+      "id": "alerte",
+      "avant": {
+        "texte": "Le pupitre peut publier une situation d’alerte.",
+        "cartes": [
+          {
+            "texte": "Le pupitre peut publier une situation\nd’alerte.",
+            "mots": 7,
+            "caracteres": 47,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "alerte-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "La passerelle du meneur change d’état. Aucun jet, soin ou tir automatique ; aucun son ajouté au film.",
+        "cartes": [
+          {
+            "texte": "La passerelle du meneur change d’état. Aucun\njet, soin ou tir automatique ; aucun son\najouté au film.",
+            "mots": 18,
+            "caracteres": 101,
+            "lectureMs": 8640,
+            "dureeMs": 12140,
+            "id": "alerte-apres-1"
+          }
+        ],
+        "dureeMs": 12140
+      }
+    },
+    {
+      "id": "operations",
+      "avant": {
+        "texte": "Opérations tient les vaisseaux et les tâches de la mission.",
+        "cartes": [
+          {
+            "texte": "Opérations tient les vaisseaux et les tâches\nde la mission.",
+            "mots": 10,
+            "caracteres": 59,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "operations-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Méridienne, Sillage et une cible spatiale de recette. Les impacts se reportent après résolution à la table.",
+        "cartes": [
+          {
+            "texte": "Méridienne, Sillage et une cible spatiale de\nrecette. Les impacts se reportent après\nrésolution à la table.",
+            "mots": 17,
+            "caracteres": 107,
+            "lectureMs": 8160,
+            "dureeMs": 11660,
+            "id": "operations-apres-1"
+          }
+        ],
+        "dureeMs": 11660
+      }
+    },
+    {
+      "id": "effort",
+      "avant": {
+        "texte": "Tâche RECETTE : Fonction 4, obstacle 1.",
+        "cartes": [
+          {
+            "texte": "Tâche RECETTE : Fonction 4, obstacle 1.",
+            "mots": 7,
+            "caracteres": 39,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "effort-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Quatre moins un : trois coches sur huit. Le module suit l’avancée ; ce clic ne lance pas la tâche.",
+        "cartes": [
+          {
+            "texte": "Quatre moins un : trois coches sur huit. Le\nmodule suit l’avancée ; ce clic ne lance pas\nla tâche.",
+            "mots": 20,
+            "caracteres": 98,
+            "lectureMs": 9600,
+            "dureeMs": 13100,
+            "id": "effort-apres-1"
+          }
+        ],
+        "dureeMs": 13100
+      }
+    },
+    {
+      "id": "defi",
+      "avant": {
+        "texte": "Un défi suit des tâches clés et des intervalles.",
+        "cartes": [
+          {
+            "texte": "Un défi suit des tâches clés et des\nintervalles.",
+            "mots": 9,
+            "caracteres": 48,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "defi-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Six intervalles deviennent quatre. Les coûts indiqués par le module ne débitent pas les réserves globales.",
+        "cartes": [
+          {
+            "texte": "Six intervalles deviennent quatre. Les coûts\nindiqués par le module ne débitent pas les\nréserves globales.",
+            "mots": 16,
+            "caracteres": 106,
+            "lectureMs": 7680,
+            "dureeMs": 11180,
+            "id": "defi-apres-1"
+          }
+        ],
+        "dureeMs": 11180
+      }
+    },
+    {
+      "id": "recharger",
+      "avant": {
+        "texte": "Rechargeons réellement la fenêtre pour vérifier les données.",
+        "cartes": [
+          {
+            "texte": "Rechargeons réellement la fenêtre pour\nvérifier les données.",
+            "mots": 8,
+            "caracteres": 60,
+            "lectureMs": 5000,
+            "dureeMs": 8500,
+            "id": "recharger-avant-1"
+          }
+        ],
+        "dureeMs": 8500
+      },
+      "apres": {
+        "texte": "Les trois coches et les quatre intervalles sont conservés. Les fiches des héros sont comparées.",
+        "cartes": [
+          {
+            "texte": "Les trois coches et les quatre intervalles\nsont conservés. Les fiches des héros sont\ncomparées.",
+            "mots": 15,
+            "caracteres": 95,
+            "lectureMs": 7200,
+            "dureeMs": 10700,
+            "id": "recharger-apres-1"
+          }
+        ],
+        "dureeMs": 10700
+      }
+    },
+    {
+      "id": "bilan",
+      "avant": {
+        "texte": "Jets, ressources et combat sont natifs ; LCARS et Opérations sont des modules.",
+        "cartes": [
+          {
+            "texte": "Jets, ressources et combat sont natifs ; LCARS\net Opérations sont des modules.",
+            "mots": 13,
+            "caracteres": 78,
+            "lectureMs": 6240,
+            "dureeMs": 9740,
+            "id": "bilan-avant-1"
+          }
+        ],
+        "dureeMs": 9740
+      },
+      "apres": {
+        "texte": "Règles détaillées et appareils restent à éprouver. Aucun essai humain ni transport tablette certifié.",
+        "cartes": [
+          {
+            "texte": "Règles détaillées et appareils restent à\néprouver. Aucun essai humain ni transport\ntablette certifié.",
+            "mots": 14,
+            "caracteres": 101,
+            "lectureMs": 7215,
+            "dureeMs": 10715,
+            "id": "bilan-apres-1"
+          }
+        ],
+        "dureeMs": 10715
+      }
+    }
+  ]
+}

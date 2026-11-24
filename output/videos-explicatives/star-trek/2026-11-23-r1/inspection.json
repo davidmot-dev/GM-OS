@@ -1,0 +1,128 @@
+{
+  "controle": "Relevé structurel partiel ; règles et moteur à vérifier.",
+  "pilote": {
+    "fichier": "C:\\Projet_David\\GM-OS-v5\\Export Dirvers\\Star Trek_driver_gmos_1794393318614.gmos-driver",
+    "sha256": "2bad6225c15bc20e31402dfa62d3a185df224bcd88a9c40ea7ffe1a48f460e40",
+    "id": "custom-1787403136277",
+    "version": "2.0.0",
+    "nom": "Star Trek",
+    "corpusId": "star-trek",
+    "jet": {
+      "seuil": [
+        {
+          "id": "attribut",
+          "label": "Attribut",
+          "sectionId": "attributs"
+        },
+        {
+          "id": "fonction",
+          "label": "Fonction",
+          "sectionId": "fonctions",
+          "sectionsSupplementaires": [
+            "jauges"
+          ],
+          "motif": "^(commandement|navigation|ingenierie|securite|medecine|science|reputation)$"
+        }
+      ],
+      "reserve": {
+        "base": 2,
+        "max": 5,
+        "faces": 20,
+        "cout": [
+          1,
+          2,
+          3
+        ],
+        "ressource": "impulsion"
+      },
+      "sens": "sous-ou-egal",
+      "critique": 1,
+      "complication": 20,
+      "difficulte": {
+        "min": 0,
+        "max": 5,
+        "defaut": 1
+      },
+      "specialisation": {
+        "label": "Spécialisation",
+        "composante": "fonction"
+      },
+      "starTrek": {
+        "attributs": [
+          "maitrise",
+          "forme",
+          "presence",
+          "audace",
+          "intuition",
+          "raison"
+        ],
+        "fonctions": [
+          "commandement",
+          "navigation",
+          "ingenierie",
+          "securite",
+          "medecine",
+          "science"
+        ],
+        "forme": "forme",
+        "stress": {
+          "courant": "stress",
+          "maximum": "stress_max"
+        },
+        "protection": "resistance",
+        "determination": "determination",
+        "reputation": "reputation"
+      }
+    },
+    "combat": {
+      "initiativeFormula": "",
+      "initiativeSort": "desc",
+      "defaultHealthType": "wounds",
+      "statsToTrack": [
+        {
+          "fieldId": "stress",
+          "label": "Stress",
+          "isMainHP": false,
+          "isResource": true,
+          "max": "forme"
+        },
+        {
+          "fieldId": "determination",
+          "label": "Détermination",
+          "isResource": true
+        },
+        {
+          "fieldId": "reputation",
+          "label": "Réputation",
+          "isResource": true
+        }
+      ],
+      "initiative": {
+        "mode": "alternance",
+        "coutDeRetention": {
+          "montant": 2,
+          "ressource": "impulsion"
+        },
+        "activationsConsecutivesMax": 2
+      }
+    }
+  },
+  "gabarit": {
+    "id": "tpl-1787403136278",
+    "champs": 36
+  },
+  "campagne": {
+    "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\campagnes-tests\\star-trek\\01-Star-Trek-Les-Voix-de-Nacre.gmos",
+    "sha256": "1d7f519954d661b062f17a0d100d71df9f73c0c29e9554e1dfeb199af5bca21d",
+    "id": "recette-st-nacre-20261121-campagne-complete",
+    "nom": "RECETTE STAR TREK — Les Voix de Nacre",
+    "comptes": {
+      "players": 3,
+      "entities": 12,
+      "actes": 5,
+      "scenes": 46,
+      "sessions": 12,
+      "atlasMaps": 10
+    }
+  }
+}

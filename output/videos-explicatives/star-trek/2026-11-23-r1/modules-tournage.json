@@ -1,0 +1,478 @@
+{
+  "version": 1,
+  "campagnes": {
+    "recette-st-nacre-20261121-campagne-complete": {
+      "star-trek-lcars": {
+        "versionDonnees": 2,
+        "donnees": {
+          "version": 2,
+          "revision": 19,
+          "vaisseau": {
+            "nom": "USS Méridienne",
+            "immatriculation": "NCC-78194 — fiction"
+          },
+          "situation": "Mission de secours à Nacre. Définir les directives et ouvrir les accès seulement au début de la séance.",
+          "alerte": {
+            "niveau": "normal",
+            "texte": "",
+            "fin": null,
+            "sequence": 0
+          },
+          "effetsActifs": false,
+          "diffusionSonore": null,
+          "officiers": [
+            {
+              "id": "recette-st-nacre-20261121-pj-elia",
+              "nom": "Élia Marin",
+              "postes": [
+                "commandement",
+                "communications",
+                "tactique"
+              ],
+              "affectation": 1,
+              "scan": null
+            },
+            {
+              "id": "recette-st-nacre-20261121-pj-nira",
+              "nom": "Nira Sol",
+              "postes": [
+                "science",
+                "medecine"
+              ],
+              "affectation": 1,
+              "scan": null
+            },
+            {
+              "id": "recette-st-nacre-20261121-pj-tomas",
+              "nom": "Tomas Reyes",
+              "postes": [
+                "ingenierie",
+                "navigation"
+              ],
+              "affectation": 1,
+              "scan": null
+            },
+            {
+              "id": "recette-st-nacre-20261121-pj-pont",
+              "nom": "[RECETTE] PONT",
+              "postes": [
+                "commandement",
+                "science",
+                "ingenierie",
+                "communications",
+                "navigation",
+                "tactique",
+                "medecine"
+              ],
+              "affectation": 1,
+              "scan": null
+            }
+          ],
+          "cibles": [
+            {
+              "id": "recette-st-nacre-20261121-lcars-commandement",
+              "poste": "commandement",
+              "libelle": "Mission de Nacre",
+              "description": "Secours, enquête et communication limitée.",
+              "rapportPrepare": "SECRET_MJ_ST_NACRE : Distinguer observations et hypothèses ; aucune décision morale présumée.",
+              "visible": true,
+              "etat": "en-cours"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-recette-commandement",
+              "poste": "commandement",
+              "libelle": "[RECETTE] Commandement",
+              "description": "Cible synthétique hors fiction, à révéler seulement pour l’atelier.",
+              "rapportPrepare": "FICTIF_ST_RAPPORT_PRIVE — résultat de recette à arbitrer.",
+              "visible": false,
+              "etat": "en-cours"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-science",
+              "poste": "science",
+              "libelle": "Échos de la navette",
+              "description": "Deux images de capteurs ont la même horloge.",
+              "rapportPrepare": "SECRET_MJ_ST_NACRE : Comparer aux observations optiques avant de conclure à une duplication.",
+              "visible": true,
+              "etat": "inconnu"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-recette-science",
+              "poste": "science",
+              "libelle": "[RECETTE] Science",
+              "description": "Cible synthétique hors fiction, à révéler seulement pour l’atelier.",
+              "rapportPrepare": "FICTIF_ST_RAPPORT_PRIVE — résultat de recette à arbitrer.",
+              "visible": false,
+              "etat": "inconnu"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-ingenierie",
+              "poste": "ingenierie",
+              "libelle": "Ligne médicale",
+              "description": "Le service tourne sur des circuits séparables.",
+              "rapportPrepare": "SECRET_MJ_ST_NACRE : Le by-pass protège un débit réduit ; la dérivation n’exige pas de transférer la voix.",
+              "visible": true,
+              "etat": "nominal"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-recette-ingenierie",
+              "poste": "ingenierie",
+              "libelle": "[RECETTE] Ingénierie",
+              "description": "Cible synthétique hors fiction, à révéler seulement pour l’atelier.",
+              "rapportPrepare": "FICTIF_ST_RAPPORT_PRIVE — résultat de recette à arbitrer.",
+              "visible": false,
+              "etat": "nominal"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-communications",
+              "poste": "communications",
+              "libelle": "Canal d’essai",
+              "description": "Un canal à faible débit peut recevoir un message simple.",
+              "rapportPrepare": "SECRET_MJ_ST_NACRE : Les silences et réponses doivent être datés et conservés avec leurs limites.",
+              "visible": true,
+              "etat": "ouvert"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-recette-communications",
+              "poste": "communications",
+              "libelle": "[RECETTE] Communications",
+              "description": "Cible synthétique hors fiction, à révéler seulement pour l’atelier.",
+              "rapportPrepare": "FICTIF_ST_RAPPORT_PRIVE — résultat de recette à arbitrer.",
+              "visible": false,
+              "etat": "ouvert"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-navigation",
+              "poste": "navigation",
+              "libelle": "Approche de l’abri",
+              "description": "Balise de maintenance et relevé optique sont disponibles.",
+              "rapportPrepare": "SECRET_MJ_ST_NACRE : La vraie navette se trouve à l’abri ; la seconde image n’est pas une seconde coque confirmée.",
+              "visible": true,
+              "etat": "disponible"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-recette-navigation",
+              "poste": "navigation",
+              "libelle": "[RECETTE] Navigation",
+              "description": "Cible synthétique hors fiction, à révéler seulement pour l’atelier.",
+              "rapportPrepare": "FICTIF_ST_RAPPORT_PRIVE — résultat de recette à arbitrer.",
+              "visible": false,
+              "etat": "disponible"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-tactique",
+              "poste": "tactique",
+              "libelle": "Contact Sillage",
+              "description": "Un vaisseau indépendant demande une identification.",
+              "rapportPrepare": "SECRET_MJ_ST_NACRE : Aucune hostilité n’est confirmée ; faire comparer les horloges et les listes de personnes.",
+              "visible": true,
+              "etat": "inconnu"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-recette-tactique",
+              "poste": "tactique",
+              "libelle": "[RECETTE] Tactique / sécurité",
+              "description": "Cible synthétique hors fiction, à révéler seulement pour l’atelier.",
+              "rapportPrepare": "FICTIF_ST_RAPPORT_PRIVE — résultat de recette à arbitrer.",
+              "visible": false,
+              "etat": "inconnu"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-medecine",
+              "poste": "medecine",
+              "libelle": "Poste de secours",
+              "description": "Une médecin locale tient une chronologie.",
+              "rapportPrepare": "SECRET_MJ_ST_NACRE : Les premiers symptômes précèdent l’arrivée du vaisseau ; le carnet ne démontre pas une contamination.",
+              "visible": true,
+              "etat": "stable"
+            },
+            {
+              "id": "recette-st-nacre-20261121-lcars-recette-medecine",
+              "poste": "medecine",
+              "libelle": "[RECETTE] Médecine",
+              "description": "Cible synthétique hors fiction, à révéler seulement pour l’atelier.",
+              "rapportPrepare": "FICTIF_ST_RAPPORT_PRIVE — résultat de recette à arbitrer.",
+              "visible": false,
+              "etat": "stable"
+            }
+          ],
+          "demandes": [],
+          "publications": [],
+          "ordres": [],
+          "prereglages": []
+        }
+      },
+      "star-trek-operations": {
+        "versionDonnees": 1,
+        "donnees": {
+          "version": 1,
+          "system": "star-trek",
+          "revision": 10,
+          "vaisseaux": [
+            {
+              "boucliers": 18,
+              "bouclierLeves": true,
+              "armementEngage": false,
+              "energie": true,
+              "secoue": null,
+              "breches": [],
+              "detruit": false,
+              "noyau": null,
+              "id": "recette-st-nacre-20261121-vaisseau-meridienne",
+              "nom": "USS Méridienne — profil original",
+              "camp": "joueurs",
+              "envergure": 5,
+              "bonusResistance": 0,
+              "bonusBoucliers": 0,
+              "qualiteEquipage": null,
+              "systemes": {
+                "communications": 9,
+                "ordinateurs": 10,
+                "moteurs": 10,
+                "detecteurs": 10,
+                "structure": 10,
+                "armement": 10
+              },
+              "fonctions": {
+                "commandement": 3,
+                "navigation": 3,
+                "ingenierie": 3,
+                "securite": 3,
+                "medecine": 2,
+                "science": 3
+              },
+              "armes": [
+                {
+                  "id": "recette-st-nacre-20261121-arme-meridienne-energie",
+                  "nom": "Énergie — profil choisi",
+                  "type": "energie",
+                  "degats": 4,
+                  "portee": "moyenne",
+                  "qualites": []
+                }
+              ]
+            },
+            {
+              "boucliers": 14,
+              "bouclierLeves": true,
+              "armementEngage": false,
+              "energie": true,
+              "secoue": null,
+              "breches": [],
+              "detruit": false,
+              "noyau": null,
+              "id": "recette-st-nacre-20261121-vaisseau-sillage",
+              "nom": "Sillage — profil original",
+              "camp": "adverse",
+              "envergure": 4,
+              "bonusResistance": 0,
+              "bonusBoucliers": 0,
+              "qualiteEquipage": "competent",
+              "systemes": {
+                "communications": 9,
+                "ordinateurs": 10,
+                "moteurs": 10,
+                "detecteurs": 10,
+                "structure": 8,
+                "armement": 10
+              },
+              "fonctions": {
+                "commandement": 3,
+                "navigation": 3,
+                "ingenierie": 3,
+                "securite": 2,
+                "medecine": 2,
+                "science": 3
+              },
+              "armes": [
+                {
+                  "id": "recette-st-nacre-20261121-arme-sillage-energie",
+                  "nom": "Énergie — profil choisi",
+                  "type": "energie",
+                  "degats": 4,
+                  "portee": "moyenne",
+                  "qualites": []
+                }
+              ]
+            },
+            {
+              "boucliers": 18,
+              "bouclierLeves": true,
+              "armementEngage": false,
+              "energie": true,
+              "secoue": null,
+              "breches": [],
+              "detruit": false,
+              "noyau": null,
+              "id": "recette-st-nacre-20261121-vaisseau-recette",
+              "nom": "[RECETTE] Cible spatiale",
+              "camp": "adverse",
+              "envergure": 5,
+              "bonusResistance": 0,
+              "bonusBoucliers": 0,
+              "qualiteEquipage": "competent",
+              "systemes": {
+                "communications": 9,
+                "ordinateurs": 10,
+                "moteurs": 10,
+                "detecteurs": 10,
+                "structure": 10,
+                "armement": 10
+              },
+              "fonctions": {
+                "commandement": 3,
+                "navigation": 3,
+                "ingenierie": 3,
+                "securite": 3,
+                "medecine": 2,
+                "science": 3
+              },
+              "armes": [
+                {
+                  "id": "recette-st-nacre-20261121-arme-recette-energie",
+                  "nom": "Énergie — profil choisi",
+                  "type": "energie",
+                  "degats": 4,
+                  "portee": "moyenne",
+                  "qualites": []
+                }
+              ]
+            }
+          ],
+          "taches": [
+            {
+              "coches": 0,
+              "avancees": [
+                6,
+                9
+              ],
+              "visible": false,
+              "impact": 0,
+              "obstacle": 1,
+              "difficulte": 2,
+              "id": "recette-st-nacre-20261121-tache-protocole",
+              "nom": "Nacre — protocole de réponse",
+              "genre": "etendue",
+              "jauge": 12
+            },
+            {
+              "coches": 0,
+              "avancees": [
+                5,
+                8
+              ],
+              "visible": false,
+              "impact": 0,
+              "obstacle": 1,
+              "difficulte": 2,
+              "id": "recette-st-nacre-20261121-tache-bypass",
+              "nom": "Nacre — dérivation des soins",
+              "genre": "etendue",
+              "jauge": 10
+            },
+            {
+              "coches": 0,
+              "avancees": [
+                6,
+                9
+              ],
+              "visible": false,
+              "impact": 2,
+              "obstacle": 0,
+              "difficulte": 0,
+              "id": "recette-st-nacre-20261121-tache-convergence",
+              "nom": "Nacre — convergence de phase",
+              "genre": "consequence",
+              "jauge": 12
+            },
+            {
+              "coches": 0,
+              "avancees": [
+                4,
+                6
+              ],
+              "visible": false,
+              "impact": 0,
+              "obstacle": 1,
+              "difficulte": 2,
+              "id": "recette-st-nacre-20261121-tache-recette-effort",
+              "nom": "[RECETTE] Effort",
+              "genre": "etendue",
+              "jauge": 8
+            },
+            {
+              "coches": 0,
+              "avancees": [
+                4,
+                6
+              ],
+              "visible": false,
+              "impact": 2,
+              "obstacle": 0,
+              "difficulte": 0,
+              "id": "recette-st-nacre-20261121-tache-recette-consequence",
+              "nom": "[RECETTE] Achoppement",
+              "genre": "consequence",
+              "jauge": 8
+            }
+          ],
+          "defis": [
+            {
+              "taches": [
+                {
+                  "id": "recette-st-nacre-20261121-cle-evacuation-0",
+                  "nom": "Sécuriser la voie",
+                  "faite": false
+                },
+                {
+                  "id": "recette-st-nacre-20261121-cle-evacuation-1",
+                  "nom": "Stabiliser les personnes",
+                  "faite": false
+                },
+                {
+                  "id": "recette-st-nacre-20261121-cle-evacuation-2",
+                  "nom": "Confirmer le passage",
+                  "faite": false
+                }
+              ],
+              "intervalles": {
+                "total": 8,
+                "restants": 8
+              },
+              "visible": false,
+              "id": "recette-st-nacre-20261121-defi-evacuation",
+              "nom": "Nacre — évacuation annoncée"
+            },
+            {
+              "taches": [
+                {
+                  "id": "recette-st-nacre-20261121-cle-recette-0",
+                  "nom": "Sécuriser la voie",
+                  "faite": false
+                },
+                {
+                  "id": "recette-st-nacre-20261121-cle-recette-1",
+                  "nom": "Stabiliser les personnes",
+                  "faite": false
+                },
+                {
+                  "id": "recette-st-nacre-20261121-cle-recette-2",
+                  "nom": "Confirmer le passage",
+                  "faite": false
+                }
+              ],
+              "intervalles": {
+                "total": 6,
+                "restants": 6
+              },
+              "visible": false,
+              "id": "recette-st-nacre-20261121-defi-recette",
+              "nom": "[RECETTE] Défi"
+            }
+          ],
+          "journal": []
+        }
+      }
+    }
+  }
+}

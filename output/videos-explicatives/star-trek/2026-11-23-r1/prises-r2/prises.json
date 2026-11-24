@@ -1,0 +1,612 @@
+{
+  "schemaVersion": 2,
+  "mode": "texte",
+  "planSha256": "ac000c79e49aff9815724f621bc8796a63c586ac849b1fc09048a2822b95eeda",
+  "lectureSha256": "71df783258d3bdb4b5e950c3e79485fb01f8a279bf6ed412b220539b78203692",
+  "modeRapide": false,
+  "calageVerifie": true,
+  "decalageMs": null,
+  "note": "Mire et résultats 01,16,24 examinés : source corrigée, décalage 7800 ms, résolution 40 ms.",
+  "sequences": [
+    {
+      "id": "reperes",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 2010,
+      "finMs": 27161,
+      "debutActionMs": 13251,
+      "finActionMs": 13719,
+      "affichagesAvant": [
+        {
+          "carteId": "reperes-avant-1",
+          "debutMs": 2010,
+          "finMs": 12238
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "reperes-apres-1",
+          "debutMs": 14420,
+          "finMs": 24653
+        }
+      ],
+      "observation": "Campagne Nacre visible.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "fiche",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 27244,
+      "finMs": 53895,
+      "debutActionMs": 36766,
+      "finActionMs": 40736,
+      "affichagesAvant": [
+        {
+          "carteId": "fiche-avant-1",
+          "debutMs": 27244,
+          "finMs": 35753
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "fiche-apres-1",
+          "debutMs": 41450,
+          "finMs": 51390
+        }
+      ],
+      "observation": "Fiche JET et panneau réel.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "reserves",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 53998,
+      "finMs": 82973,
+      "debutActionMs": 63517,
+      "finActionMs": 67119,
+      "affichagesAvant": [
+        {
+          "carteId": "reserves-avant-1",
+          "debutMs": 53998,
+          "finMs": 62506
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "reserves-apres-1",
+          "debutMs": 67823,
+          "finMs": 80457
+        }
+      ],
+      "observation": "Menace préparée à6.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "composer",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 83056,
+      "finMs": 110473,
+      "debutActionMs": 92580,
+      "finActionMs": 95089,
+      "affichagesAvant": [
+        {
+          "carteId": "composer-avant-1",
+          "debutMs": 83056,
+          "finMs": 91567
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "composer-apres-1",
+          "debutMs": 95804,
+          "finMs": 107958
+        }
+      ],
+      "observation": "Raison10 Science4 difficulté1 spécialisation active.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "jet",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 110557,
+      "finMs": 133808,
+      "debutActionMs": 120069,
+      "finActionMs": 121320,
+      "affichagesAvant": [
+        {
+          "carteId": "jet-avant-1",
+          "debutMs": 110557,
+          "finMs": 119059
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "jet-apres-1",
+          "debutMs": 122023,
+          "finMs": 131294
+        }
+      ],
+      "observation": "4et14,3réussites,Impulsion2.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "achat",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 133895,
+      "finMs": 159221,
+      "debutActionMs": 144660,
+      "finActionMs": 146254,
+      "affichagesAvant": [
+        {
+          "carteId": "achat-avant-1",
+          "debutMs": 133895,
+          "finMs": 143648
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "achat-apres-1",
+          "debutMs": 146962,
+          "finMs": 156713
+        }
+      ],
+      "observation": "Troisième dé payé en Menace choisi.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "complication",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 159304,
+      "finMs": 186766,
+      "debutActionMs": 168825,
+      "finActionMs": 170912,
+      "affichagesAvant": [
+        {
+          "carteId": "complication-avant-1",
+          "debutMs": 159304,
+          "finMs": 167814
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "complication-apres-1",
+          "debutMs": 171622,
+          "finMs": 184257
+        }
+      ],
+      "observation": "Menace6→7→9 ; Impulsion2→4.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "determination",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 186853,
+      "finMs": 216433,
+      "debutActionMs": 196371,
+      "finActionMs": 200099,
+      "affichagesAvant": [
+        {
+          "carteId": "determination-avant-1",
+          "debutMs": 186853,
+          "finMs": 195367
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "determination-apres-1",
+          "debutMs": 200810,
+          "finMs": 213917
+        }
+      ],
+      "observation": "Détermination1→0.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "stress",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 216517,
+      "finMs": 244377,
+      "debutActionMs": 226036,
+      "finActionMs": 228051,
+      "affichagesAvant": [
+        {
+          "carteId": "stress-avant-1",
+          "debutMs": 216517,
+          "finMs": 225030
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "stress-apres-1",
+          "debutMs": 228766,
+          "finMs": 241875
+        }
+      ],
+      "observation": "StressJET0→2.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "repit",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 244459,
+      "finMs": 268724,
+      "debutActionMs": 253974,
+      "finActionMs": 254790,
+      "affichagesAvant": [
+        {
+          "carteId": "repit-avant-1",
+          "debutMs": 244459,
+          "finMs": 252960
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "repit-apres-1",
+          "debutMs": 255499,
+          "finMs": 266212
+        }
+      ],
+      "observation": "Répit : Stress0.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "rencontre",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 268808,
+      "finMs": 297382,
+      "debutActionMs": 278332,
+      "finActionMs": 284428,
+      "affichagesAvant": [
+        {
+          "carteId": "rencontre-avant-1",
+          "debutMs": 268808,
+          "finMs": 277322
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "rencontre-apres-1",
+          "debutMs": 285132,
+          "finMs": 294881
+        }
+      ],
+      "observation": "CORPS et Opposant invoqués.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "cibles",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 297507,
+      "finMs": 328338,
+      "debutActionMs": 307774,
+      "finActionMs": 314405,
+      "affichagesAvant": [
+        {
+          "carteId": "cibles-avant-1",
+          "debutMs": 297507,
+          "finMs": 306768
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "cibles-apres-1",
+          "debutMs": 315120,
+          "finMs": 325823
+        }
+      ],
+      "observation": "Cibles réciproques et campjoueur ouvert.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "attaque-pj",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 328796,
+      "finMs": 361680,
+      "debutActionMs": 338312,
+      "finActionMs": 347754,
+      "affichagesAvant": [
+        {
+          "carteId": "attaque-pj-avant-1",
+          "debutMs": 328796,
+          "finMs": 337306
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "attaque-pj-apres-1",
+          "debutMs": 348463,
+          "finMs": 359177
+        }
+      ],
+      "observation": "TirPJéchoué18/19.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "attaque-adverse",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 361781,
+      "finMs": 390308,
+      "debutActionMs": 371297,
+      "finActionMs": 374959,
+      "affichagesAvant": [
+        {
+          "carteId": "attaque-adverse-avant-1",
+          "debutMs": 361781,
+          "finMs": 370284
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "attaque-adverse-apres-1",
+          "debutMs": 375661,
+          "finMs": 387805
+        }
+      ],
+      "observation": "Attaqueadverseouverte ; gravitéàrégleraprèslerésultat.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "riposte",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 390421,
+      "finMs": 414709,
+      "debutActionMs": 399928,
+      "finActionMs": 402205,
+      "affichagesAvant": [
+        {
+          "carteId": "riposte-avant-1",
+          "debutMs": 390421,
+          "finMs": 398928
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "riposte-apres-1",
+          "debutMs": 402908,
+          "finMs": 412203
+        }
+      ],
+      "observation": "Deuxréussites,gravité2nonlétale.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "consequence",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 414844,
+      "finMs": 443299,
+      "debutActionMs": 424354,
+      "finActionMs": 426030,
+      "affichagesAvant": [
+        {
+          "carteId": "consequence-avant-1",
+          "debutMs": 414844,
+          "finMs": 423351
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "consequence-apres-1",
+          "debutMs": 426731,
+          "finMs": 440797
+        }
+      ],
+      "observation": "CORPSStress0→2.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "cloture",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 443453,
+      "finMs": 469197,
+      "debutActionMs": 452971,
+      "finActionMs": 455280,
+      "affichagesAvant": [
+        {
+          "carteId": "cloture-avant-1",
+          "debutMs": 443453,
+          "finMs": 451961
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "cloture-apres-1",
+          "debutMs": 455982,
+          "finMs": 466690
+        }
+      ],
+      "observation": "Conflitclos,Stressconservé.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "lcars",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 469282,
+      "finMs": 497592,
+      "debutActionMs": 478814,
+      "finActionMs": 483184,
+      "affichagesAvant": [
+        {
+          "carteId": "lcars-avant-1",
+          "debutMs": 469282,
+          "finMs": 477798
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "lcars-apres-1",
+          "debutMs": 483897,
+          "finMs": 495089
+        }
+      ],
+      "observation": "LCARSpréparé,accèsjoueursfermés.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "alerte",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 497675,
+      "finMs": 525989,
+      "debutActionMs": 507191,
+      "finActionMs": 510608,
+      "affichagesAvant": [
+        {
+          "carteId": "alerte-avant-1",
+          "debutMs": 497675,
+          "finMs": 506176
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "alerte-apres-1",
+          "debutMs": 511321,
+          "finMs": 523473
+        }
+      ],
+      "observation": "AlertejaunevisibleauMJ.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "operations",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 526074,
+      "finMs": 554881,
+      "debutActionMs": 535600,
+      "finActionMs": 539987,
+      "affichagesAvant": [
+        {
+          "carteId": "operations-avant-1",
+          "debutMs": 526074,
+          "finMs": 534585
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "operations-apres-1",
+          "debutMs": 540694,
+          "finMs": 552366
+        }
+      ],
+      "observation": "Vaisseauxchargés.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "effort",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 554967,
+      "finMs": 582866,
+      "debutActionMs": 564492,
+      "finActionMs": 566532,
+      "affichagesAvant": [
+        {
+          "carteId": "effort-avant-1",
+          "debutMs": 554967,
+          "finMs": 563477
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "effort-apres-1",
+          "debutMs": 567248,
+          "finMs": 580364
+        }
+      ],
+      "observation": "Effort3coches.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "defi",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 582966,
+      "finMs": 608934,
+      "debutActionMs": 592487,
+      "finActionMs": 594519,
+      "affichagesAvant": [
+        {
+          "carteId": "defi-avant-1",
+          "debutMs": 582966,
+          "finMs": 591473
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "defi-apres-1",
+          "debutMs": 595233,
+          "finMs": 606430
+        }
+      ],
+      "observation": "Défi4/6intervalles.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "recharger",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 609019,
+      "finMs": 641764,
+      "debutActionMs": 618534,
+      "finActionMs": 627849,
+      "affichagesAvant": [
+        {
+          "carteId": "recharger-avant-1",
+          "debutMs": 609019,
+          "finMs": 617525
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "recharger-apres-1",
+          "debutMs": 628553,
+          "finMs": 639257
+        }
+      ],
+      "observation": "Rechargementréel,fichesetavancéesconservées.",
+      "verifiee": true,
+      "decalageMs": 7800
+    },
+    {
+      "id": "bilan",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "debutMs": 641846,
+      "finMs": 668342,
+      "debutActionMs": 652609,
+      "finActionMs": 654406,
+      "affichagesAvant": [
+        {
+          "carteId": "bilan-avant-1",
+          "debutMs": 641846,
+          "finMs": 651599
+        }
+      ],
+      "affichagesApres": [
+        {
+          "carteId": "bilan-apres-1",
+          "debutMs": 655109,
+          "finMs": 665834
+        }
+      ],
+      "observation": "Étatfinalconservé.",
+      "verifiee": true,
+      "decalageMs": 7800
+    }
+  ]
+}

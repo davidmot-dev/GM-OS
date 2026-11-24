@@ -1,0 +1,11 @@
+{
+  "execute": true,
+  "images": [
+    "mire-0.jpg",
+    "01-reperes.jpg",
+    "16-consequence.jpg",
+    "24-bilan.jpg"
+  ],
+  "decalageMs": 7800,
+  "resolutionMs": 40
+}

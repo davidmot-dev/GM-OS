@@ -1,0 +1,188 @@
+{
+  "sources": [
+    {
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "mireImages": [
+        [
+          195,
+          245
+        ]
+      ],
+      "decalageMs": 7800,
+      "resolutionMs": 40,
+      "toleranceRGB": 10,
+      "zonePx": "8x8@100,100"
+    }
+  ],
+  "preuves": [
+    {
+      "sequence": "reperes",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 22.619,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\01-reperes.jpg",
+      "observation": "Campagne Nacre visible."
+    },
+    {
+      "sequence": "fiche",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 49.636,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\02-fiche.jpg",
+      "observation": "Fiche JET et panneau réel."
+    },
+    {
+      "sequence": "reserves",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 76.019,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\03-reserves.jpg",
+      "observation": "Menace préparée à6."
+    },
+    {
+      "sequence": "composer",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 103.989,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\04-composer.jpg",
+      "observation": "Raison10 Science4 difficulté1 spécialisation active."
+    },
+    {
+      "sequence": "jet",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 130.22,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\05-jet.jpg",
+      "observation": "4et14,3réussites,Impulsion2."
+    },
+    {
+      "sequence": "achat",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 155.154,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\06-achat.jpg",
+      "observation": "Troisième dé payé en Menace choisi."
+    },
+    {
+      "sequence": "complication",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 179.812,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\07-complication.jpg",
+      "observation": "Menace6→7→9 ; Impulsion2→4."
+    },
+    {
+      "sequence": "determination",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 208.999,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\08-determination.jpg",
+      "observation": "Détermination1→0."
+    },
+    {
+      "sequence": "stress",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 236.951,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\09-stress.jpg",
+      "observation": "StressJET0→2."
+    },
+    {
+      "sequence": "repit",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 263.69,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\10-repit.jpg",
+      "observation": "Répit : Stress0."
+    },
+    {
+      "sequence": "rencontre",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 293.328,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\11-rencontre.jpg",
+      "observation": "CORPS et Opposant invoqués."
+    },
+    {
+      "sequence": "cibles",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 323.305,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\12-cibles.jpg",
+      "observation": "Cibles réciproques et campjoueur ouvert."
+    },
+    {
+      "sequence": "attaque-pj",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 356.654,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\13-attaque-pj.jpg",
+      "observation": "TirPJéchoué18/19."
+    },
+    {
+      "sequence": "attaque-adverse",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 383.859,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\14-attaque-adverse.jpg",
+      "observation": "Attaqueadverseouverte ; gravitéàrégleraprèslerésultat."
+    },
+    {
+      "sequence": "riposte",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 411.105,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\15-riposte.jpg",
+      "observation": "Deuxréussites,gravité2nonlétale."
+    },
+    {
+      "sequence": "consequence",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 434.93,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\16-consequence.jpg",
+      "observation": "CORPSStress0→2."
+    },
+    {
+      "sequence": "cloture",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 464.18,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\17-cloture.jpg",
+      "observation": "Conflitclos,Stressconservé."
+    },
+    {
+      "sequence": "lcars",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 492.084,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\18-lcars.jpg",
+      "observation": "LCARSpréparé,accèsjoueursfermés."
+    },
+    {
+      "sequence": "alerte",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 519.508,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\19-alerte.jpg",
+      "observation": "AlertejaunevisibleauMJ."
+    },
+    {
+      "sequence": "operations",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 548.887,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\20-operations.jpg",
+      "observation": "Vaisseauxchargés."
+    },
+    {
+      "sequence": "effort",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 575.432,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\21-effort.jpg",
+      "observation": "Effort3coches."
+    },
+    {
+      "sequence": "defi",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 603.419,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\22-defi.jpg",
+      "observation": "Défi4/6intervalles."
+    },
+    {
+      "sequence": "recharger",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 636.749,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\23-recharger.jpg",
+      "observation": "Rechargementréel,fichesetavancéesconservées."
+    },
+    {
+      "sequence": "bilan",
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "secondes": 663.306,
+      "image": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\calage\\24-bilan.jpg",
+      "observation": "Étatfinalconservé."
+    }
+  ],
+  "controleVisuelExecute": false
+}

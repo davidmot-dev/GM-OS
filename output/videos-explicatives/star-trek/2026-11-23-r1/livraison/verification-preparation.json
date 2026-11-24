@@ -1,0 +1,12 @@
+{
+  "nexus": true,
+  "sauvegardeValidee": true,
+  "modulesValides": true,
+  "medias": 43,
+  "pilote": "custom-1787403136277",
+  "version": "2.0.0",
+  "gabarit": "tpl-1787403136278",
+  "personnages": 6,
+  "pnj": 12,
+  "limite": "Import en mémoire ; chargement Electron et service de modules restent à essayer."
+}

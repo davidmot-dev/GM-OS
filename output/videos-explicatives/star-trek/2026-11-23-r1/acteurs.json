@@ -1,0 +1,35 @@
+{
+  "campagne": "recette-st-nacre-20261121-campagne-complete",
+  "jet": {
+    "pj": "recette-st-nacre-20261121-pj-jet",
+    "joueur": "p-1",
+    "nom": "[RECETTE] JET"
+  },
+  "corps": {
+    "pj": "recette-st-nacre-20261121-pj-corps",
+    "joueur": "p-2",
+    "nom": "[RECETTE] CORPS"
+  },
+  "ennemi": {
+    "id": "recette-st-nacre-20261121-pnj-recette",
+    "nom": "[RECETTE] Opposant physique"
+  },
+  "heros": [
+    {
+      "id": "recette-st-nacre-20261121-pj-elia",
+      "nom": "Élia Marin"
+    },
+    {
+      "id": "recette-st-nacre-20261121-pj-nira",
+      "nom": "Nira Sol"
+    },
+    {
+      "id": "recette-st-nacre-20261121-pj-tomas",
+      "nom": "Tomas Reyes"
+    }
+  ],
+  "modules": [
+    "star-trek-lcars",
+    "star-trek-operations"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "imagesFinalesRelues": true,
+  "cartesControlees": 48,
+  "resultatsControles": 24,
+  "planchesCartes": 8,
+  "planchesResultats": 6,
+  "detailRelu": "16-consequence.jpg",
+  "videoSha256": "13133054a29de48eb9ed150310d3d72d2ac9ef9bed2a6399bcb2016833c79722",
+  "methode": "Revue IA des images du MP4 final : toutes les cartes et tous les résultats, puis conséquence adverse en pleine résolution. Mire et résultats bruts 01/16/24 relus pour le calage.",
+  "visionnageHumainContinu": false,
+  "confortHumainCertifie": false,
+  "validationDavid": false,
+  "etatsFinauxControles": true,
+  "empreintesConformes": true
+}

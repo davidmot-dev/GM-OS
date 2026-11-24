@@ -1,0 +1,387 @@
+{
+  "schemaVersion": 2,
+  "titre": "Star Trek Adventures 2e dans GM-OS",
+  "jeu": "Star Trek Adventures, deuxième édition",
+  "date": "2026-11-23",
+  "profilRythme": "dynamique-demande-David-2026-11-19",
+  "demandeRythme": "Textes sans voix, rythme plus vif demandé par David, gestes réels sans accélération.",
+  "pilote": {
+    "fichier": "C:\\Projet_David\\GM-OS-v5\\Export Dirvers\\Star Trek_driver_gmos_1794393318614.gmos-driver",
+    "sha256": "2bad6225c15bc20e31402dfa62d3a185df224bcd88a9c40ea7ffe1a48f460e40",
+    "id": "custom-1787403136277",
+    "version": "2.0.0"
+  },
+  "campagne": {
+    "fichier": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\Star-Trek-Nacre-TOURNAGE.gmos",
+    "sha256": "1d7f519954d661b062f17a0d100d71df9f73c0c29e9554e1dfeb199af5bca21d",
+    "id": "recette-st-nacre-20261121-campagne-complete",
+    "nom": "RECETTE STAR TREK — Les Voix de Nacre",
+    "type": "test"
+  },
+  "moduleExterne": {
+    "present": true,
+    "raison": "LCARS 0.5.0 et Opérations 1.0.0, instances de la campagne de test."
+  },
+  "presentation": {
+    "mode": "texte",
+    "langue": "fr-FR"
+  },
+  "lecture": {
+    "motsParMinute": 125,
+    "caracteresParSeconde": 14,
+    "minimumMs": 5000,
+    "installationMs": 800,
+    "margeMs": 1200,
+    "caracteresParLigne": 46,
+    "lignesMaximum": 3
+  },
+  "rythme": {
+    "avantGesteMs": 1000,
+    "stabilisationResultatMs": 700,
+    "apresResultatMs": 2500
+  },
+  "chapitres": [
+    {
+      "id": "reperes",
+      "titre": "Campagne et profils de test"
+    },
+    {
+      "id": "specificites",
+      "titre": "Fiche et ressources du système"
+    },
+    {
+      "id": "jet",
+      "titre": "Tâche 2d20 et ressources"
+    },
+    {
+      "id": "sante",
+      "titre": "Détermination, Stress et récupération"
+    },
+    {
+      "id": "combat",
+      "titre": "Un échange dans Combat-OS"
+    },
+    {
+      "id": "module",
+      "titre": "LCARS et Opérations"
+    },
+    {
+      "id": "bilan",
+      "titre": "Persistance et limites"
+    }
+  ],
+  "sequences": [
+    {
+      "id": "reperes",
+      "chapitre": "reperes",
+      "intention": "Présenter la campagne.",
+      "avant": "Star Trek Adventures 2e, pilote 2.0.0. Campagne de test : Les Voix de Nacre.",
+      "geste": "Présenter la campagne.",
+      "apres": "Profils RECETTE et dés préparés. Les héros de la mission restent hors des essais.",
+      "attendu": "Profils RECETTE et dés préparés. Les héros de la mission restent hors des essais.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "fiche",
+      "chapitre": "specificites",
+      "intention": "Ouvrir Lancer un test.",
+      "avant": "Le profil JET sert à essayer les règles.",
+      "geste": "Ouvrir Lancer un test.",
+      "apres": "Attributs, fonctions et ressources du vrai pilote. Aucun talent interprété depuis son nom.",
+      "attendu": "Attributs, fonctions et ressources du vrai pilote. Aucun talent interprété depuis son nom.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "reserves",
+      "chapitre": "jet",
+      "intention": "Préparer la Menace pour trois héros présents.",
+      "avant": "Les réserves ne voyagent pas dans cette archive.",
+      "geste": "Préparer la Menace pour trois héros présents.",
+      "apres": "Impulsion 0, Menace 6 : départ choisi pour cet atelier. Les profils RECETTE ne sont pas des héros présents.",
+      "attendu": "Impulsion 0, Menace 6 : départ choisi pour cet atelier. Les profils RECETTE ne sont pas des héros présents.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "composer",
+      "chapitre": "jet",
+      "intention": "Choisir Raison et Science, avec spécialisation.",
+      "avant": "Une tâche combine un attribut et une fonction.",
+      "geste": "Choisir Raison et Science, avec spécialisation.",
+      "apres": "10 + 4 : seuil 14. Spécialisation : un dé de 1 à 4 compte double. Difficulté 1.",
+      "attendu": "10 + 4 : seuil 14. Spécialisation : un dé de 1 à 4 compte double. Difficulté 1.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "jet",
+      "chapitre": "jet",
+      "intention": "Lancer la tâche.",
+      "avant": "Exemple préparé : les d20 donnent 4 et 14.",
+      "geste": "Lancer la tâche.",
+      "apres": "Trois réussites contre difficulté 1 : deux Impulsions vont à la réserve.",
+      "attendu": "Trois réussites contre difficulté 1 : deux Impulsions vont à la réserve.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "achat",
+      "chapitre": "jet",
+      "intention": "Acheter un dé payé en Menace.",
+      "avant": "Un troisième d20 coûte un point. On peut choisir de payer en Menace.",
+      "geste": "Acheter un dé payé en Menace.",
+      "apres": "Le coût sera prélevé au lancer. Ici, on conserve les deux Impulsions disponibles.",
+      "attendu": "Le coût sera prélevé au lancer. Ici, on conserve les deux Impulsions disponibles.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "complication",
+      "chapitre": "jet",
+      "intention": "Lancer puis repousser la complication.",
+      "avant": "Exemple préparé : 4, 14 et 20.",
+      "geste": "Lancer puis repousser la complication.",
+      "apres": "Un dé acheté : +1 Menace ; complication repoussée : +2. La réussite demeure, avec deux Impulsions de plus.",
+      "attendu": "Un dé acheté : +1 Menace ; complication repoussée : +2. La réussite demeure, avec deux Impulsions de plus.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "determination",
+      "chapitre": "sante",
+      "intention": "Engager l’idéal et l’Occasion parfaite, puis lancer.",
+      "avant": "Un idéal aligné permet une Occasion parfaite.",
+      "geste": "Engager l’idéal et l’Occasion parfaite, puis lancer.",
+      "apres": "Un dé vaut 1. La Détermination de JET passe de 1 à 0. Les noms d’idéaux ne suffisent pas seuls.",
+      "attendu": "Un dé vaut 1. La Détermination de JET passe de 1 à 0. Les noms d’idéaux ne suffisent pas seuls.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "stress",
+      "chapitre": "sante",
+      "intention": "Éviter une blessure de gravité 2.",
+      "avant": "Éviter une blessure prend du Stress égal à sa gravité.",
+      "geste": "Éviter une blessure de gravité 2.",
+      "apres": "JET passe de Stress 0 à 2 sur 8. Le choix suppose que la jauge peut absorber toute la gravité.",
+      "attendu": "JET passe de Stress 0 à 2 sur 8. Le choix suppose que la jauge peut absorber toute la gravité.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "repit",
+      "chapitre": "sante",
+      "intention": "Appliquer Répit sur le seul profil de recette.",
+      "avant": "Un Répit permet de récupérer quatre points de Stress.",
+      "geste": "Appliquer Répit sur le seul profil de recette.",
+      "apres": "Stress 2 revient à 0. Les conditions du répit restent à accorder par le meneur.",
+      "attendu": "Stress 2 revient à 0. Les conditions du répit restent à accorder par le meneur.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "rencontre",
+      "chapitre": "combat",
+      "intention": "Invoquer la rencontre RECETTE et ajouter CORPS.",
+      "avant": "CORPS et un opposant synthétique vont échanger des tirs.",
+      "geste": "Invoquer la rencontre RECETTE et ajouter CORPS.",
+      "apres": "Deux participants de test. Les dossiers narratifs ne sont pas des adversaires chiffrés.",
+      "attendu": "Deux participants de test. Les dossiers narratifs ne sont pas des adversaires chiffrés.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "cibles",
+      "chapitre": "combat",
+      "intention": "Choisir les cibles et ouvrir sur les joueurs.",
+      "avant": "Star Trek alterne les camps. Rien ne se tire pour trier l’initiative.",
+      "geste": "Choisir les cibles et ouvrir sur les joueurs.",
+      "apres": "Le meneur donne la première action au camp joueur. Garder la main demanderait deux Impulsions.",
+      "attendu": "Le meneur donne la première action au camp joueur. Garder la main demanderait deux Impulsions.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "attaque-pj",
+      "chapitre": "combat",
+      "intention": "Lancer un échec préparé.",
+      "avant": "CORPS tire à distance : Maîtrise + Sécurité, difficulté 2.",
+      "geste": "Lancer un échec préparé.",
+      "apres": "18 et 19 dépassent le seuil 12. Le tir échoue ; aucune blessure n’est appliquée.",
+      "attendu": "18 et 19 dépassent le seuil 12. Le tir échoue ; aucune blessure n’est appliquée.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "attaque-adverse",
+      "chapitre": "combat",
+      "intention": "Ouvrir son attaque sur CORPS.",
+      "avant": "L’adversaire répond au phaseur, en mode paralysie.",
+      "geste": "Ouvrir son attaque sur CORPS.",
+      "apres": "La cible CORPS et le tir à distance sont repris. La gravité 2 sera renseignée après le lancer.",
+      "attendu": "La cible CORPS et le tir à distance sont repris. La gravité 2 sera renseignée après le lancer.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "riposte",
+      "chapitre": "combat",
+      "intention": "Lancer le tir adverse.",
+      "avant": "Exemple préparé : deux 3 sous le seuil 12.",
+      "geste": "Lancer le tir adverse.",
+      "apres": "Deux réussites contre difficulté 2. Le résultat propose la conséquence sur CORPS.",
+      "attendu": "Deux réussites contre difficulté 2. Le résultat propose la conséquence sur CORPS.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "consequence",
+      "chapitre": "combat",
+      "intention": "Appliquer Éviter : +2 Stress.",
+      "avant": "CORPS choisit d’éviter la blessure par le Stress.",
+      "geste": "Appliquer Éviter : +2 Stress.",
+      "apres": "Stress de CORPS : 0 devient 2 sur 8. Le clic met à jour sa fiche liée, sans réserve de PV inventée.",
+      "attendu": "Stress de CORPS : 0 devient 2 sur 8. Le clic met à jour sa fiche liée, sans réserve de PV inventée.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "cloture",
+      "chapitre": "combat",
+      "intention": "Revenir au plateau et consigner la fin.",
+      "avant": "La suite du conflit dépend du récit et des conséquences.",
+      "geste": "Revenir au plateau et consigner la fin.",
+      "apres": "L’échange est clos. La fin de combat ne soigne pas automatiquement le Stress de CORPS.",
+      "attendu": "L’échange est clos. La fin de combat ne soigne pas automatiquement le Stress de CORPS.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "lcars",
+      "chapitre": "module",
+      "intention": "Ouvrir le pupitre et lire les affectations.",
+      "avant": "LCARS prépare sept consoles et transmet les intentions.",
+      "geste": "Ouvrir le pupitre et lire les affectations.",
+      "apres": "Préparer un poste et ouvrir son accès sont deux gestes distincts. Aucun transport joueur montré ici.",
+      "attendu": "Préparer un poste et ouvrir son accès sont deux gestes distincts. Aucun transport joueur montré ici.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "alerte",
+      "chapitre": "module",
+      "intention": "Publier une alerte jaune de recette.",
+      "avant": "Le pupitre peut publier une situation d’alerte.",
+      "geste": "Publier une alerte jaune de recette.",
+      "apres": "La passerelle du meneur change d’état. Aucun jet, soin ou tir automatique ; aucun son ajouté au film.",
+      "attendu": "La passerelle du meneur change d’état. Aucun jet, soin ou tir automatique ; aucun son ajouté au film.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "operations",
+      "chapitre": "module",
+      "intention": "Ouvrir le pupitre des opérations.",
+      "avant": "Opérations tient les vaisseaux et les tâches de la mission.",
+      "geste": "Ouvrir le pupitre des opérations.",
+      "apres": "Méridienne, Sillage et une cible spatiale de recette. Les impacts se reportent après résolution à la table.",
+      "attendu": "Méridienne, Sillage et une cible spatiale de recette. Les impacts se reportent après résolution à la table.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "effort",
+      "chapitre": "module",
+      "intention": "Cocher l’impact d’une tâche réussie.",
+      "avant": "Tâche RECETTE : Fonction 4, obstacle 1.",
+      "geste": "Cocher l’impact d’une tâche réussie.",
+      "apres": "Quatre moins un : trois coches sur huit. Le module suit l’avancée ; ce clic ne lance pas la tâche.",
+      "attendu": "Quatre moins un : trois coches sur huit. Le module suit l’avancée ; ce clic ne lance pas la tâche.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "defi",
+      "chapitre": "module",
+      "intention": "Cocher une tâche RECETTE puis consommer deux intervalles.",
+      "avant": "Un défi suit des tâches clés et des intervalles.",
+      "geste": "Cocher une tâche RECETTE puis consommer deux intervalles.",
+      "apres": "Six intervalles deviennent quatre. Les coûts indiqués par le module ne débitent pas les réserves globales.",
+      "attendu": "Six intervalles deviennent quatre. Les coûts indiqués par le module ne débitent pas les réserves globales.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "recharger",
+      "chapitre": "bilan",
+      "intention": "Recharger puis retrouver les opérations.",
+      "avant": "Rechargeons réellement la fenêtre pour vérifier les données.",
+      "geste": "Recharger puis retrouver les opérations.",
+      "apres": "Les trois coches et les quatre intervalles sont conservés. Les fiches des héros sont comparées.",
+      "attendu": "Les trois coches et les quatre intervalles sont conservés. Les fiches des héros sont comparées.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    },
+    {
+      "id": "bilan",
+      "chapitre": "bilan",
+      "intention": "Revenir à la campagne.",
+      "avant": "Jets, ressources et combat sont natifs ; LCARS et Opérations sont des modules.",
+      "geste": "Revenir à la campagne.",
+      "apres": "Règles détaillées et appareils restent à éprouver. Aucun essai humain ni transport tablette certifié.",
+      "attendu": "Règles détaillées et appareils restent à éprouver. Aucun essai humain ni transport tablette certifié.",
+      "sources": [
+        "documentation/User Guides/54-Jeu-Star-Trek.md"
+      ],
+      "lectureSupplementaireMs": 1500
+    }
+  ]
+}

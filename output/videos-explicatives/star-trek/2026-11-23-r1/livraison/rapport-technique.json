@@ -1,0 +1,267 @@
+{
+  "profilRythme": "dynamique-demande-David-2026-11-19",
+  "demandeRythme": "Textes sans voix, rythme plus vif demandé par David, gestes réels sans accélération.",
+  "titre": "Star Trek Adventures 2e dans GM-OS",
+  "mode": "texte",
+  "voix": false,
+  "pisteAudio": false,
+  "planSha256": "ac000c79e49aff9815724f621bc8796a63c586ac849b1fc09048a2822b95eeda",
+  "lectureSha256": "71df783258d3bdb4b5e950c3e79485fb01f8a279bf6ed412b220539b78203692",
+  "prisesSha256": "82cba5ce34e601bbdbed1eaba345687c4e03f3fd59cc2ec8d62dcddb4ca08255",
+  "videoSha256": "13133054a29de48eb9ed150310d3d72d2ac9ef9bed2a6399bcb2016833c79722",
+  "dureeSecondes": 663.76,
+  "decodageIntegral": true,
+  "acceleration": false,
+  "chapitres": [
+    {
+      "id": "reperes",
+      "titre": "Campagne et profils de test",
+      "debutMs": 0,
+      "finMs": 25120
+    },
+    {
+      "id": "specificites",
+      "titre": "Fiche et ressources du système",
+      "debutMs": 25120,
+      "finMs": 51760
+    },
+    {
+      "id": "jet",
+      "titre": "Tâche 2d20 et ressources",
+      "debutMs": 51760,
+      "finMs": 184240
+    },
+    {
+      "id": "sante",
+      "titre": "Détermination, Stress et récupération",
+      "debutMs": 184240,
+      "finMs": 265920
+    },
+    {
+      "id": "combat",
+      "titre": "Un échange dans Combat-OS",
+      "debutMs": 265920,
+      "finMs": 465280
+    },
+    {
+      "id": "module",
+      "titre": "LCARS et Opérations",
+      "debutMs": 465280,
+      "finMs": 604560
+    },
+    {
+      "id": "bilan",
+      "titre": "Persistance et limites",
+      "debutMs": 604560,
+      "finMs": 663760
+    }
+  ],
+  "segments": [
+    {
+      "id": "reperes",
+      "fichier": "segments/000.mp4",
+      "dureeMs": 25120,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Campagne Nacre visible."
+    },
+    {
+      "id": "fiche",
+      "fichier": "segments/001.mp4",
+      "dureeMs": 26640,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Fiche JET et panneau réel."
+    },
+    {
+      "id": "reserves",
+      "fichier": "segments/002.mp4",
+      "dureeMs": 29000,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Menace préparée à6."
+    },
+    {
+      "id": "composer",
+      "fichier": "segments/003.mp4",
+      "dureeMs": 27400,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Raison10 Science4 difficulté1 spécialisation active."
+    },
+    {
+      "id": "jet",
+      "fichier": "segments/004.mp4",
+      "dureeMs": 23280,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "4et14,3réussites,Impulsion2."
+    },
+    {
+      "id": "achat",
+      "fichier": "segments/005.mp4",
+      "dureeMs": 25320,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Troisième dé payé en Menace choisi."
+    },
+    {
+      "id": "complication",
+      "fichier": "segments/006.mp4",
+      "dureeMs": 27480,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Menace6→7→9 ; Impulsion2→4."
+    },
+    {
+      "id": "determination",
+      "fichier": "segments/007.mp4",
+      "dureeMs": 29560,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Détermination1→0."
+    },
+    {
+      "id": "stress",
+      "fichier": "segments/008.mp4",
+      "dureeMs": 27880,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "StressJET0→2."
+    },
+    {
+      "id": "repit",
+      "fichier": "segments/009.mp4",
+      "dureeMs": 24240,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Répit : Stress0."
+    },
+    {
+      "id": "rencontre",
+      "fichier": "segments/010.mp4",
+      "dureeMs": 28560,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "CORPS et Opposant invoqués."
+    },
+    {
+      "id": "cibles",
+      "fichier": "segments/011.mp4",
+      "dureeMs": 30840,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Cibles réciproques et campjoueur ouvert."
+    },
+    {
+      "id": "attaque-pj",
+      "fichier": "segments/012.mp4",
+      "dureeMs": 32920,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "TirPJéchoué18/19."
+    },
+    {
+      "id": "attaque-adverse",
+      "fichier": "segments/013.mp4",
+      "dureeMs": 28560,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Attaqueadverseouverte ; gravitéàrégleraprèslerésultat."
+    },
+    {
+      "id": "riposte",
+      "fichier": "segments/014.mp4",
+      "dureeMs": 24320,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Deuxréussites,gravité2nonlétale."
+    },
+    {
+      "id": "consequence",
+      "fichier": "segments/015.mp4",
+      "dureeMs": 28440,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "CORPSStress0→2."
+    },
+    {
+      "id": "cloture",
+      "fichier": "segments/016.mp4",
+      "dureeMs": 25720,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Conflitclos,Stressconservé."
+    },
+    {
+      "id": "lcars",
+      "fichier": "segments/017.mp4",
+      "dureeMs": 28280,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "LCARSpréparé,accèsjoueursfermés."
+    },
+    {
+      "id": "alerte",
+      "fichier": "segments/018.mp4",
+      "dureeMs": 28320,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "AlertejaunevisibleauMJ."
+    },
+    {
+      "id": "operations",
+      "fichier": "segments/019.mp4",
+      "dureeMs": 28840,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Vaisseauxchargés."
+    },
+    {
+      "id": "effort",
+      "fichier": "segments/020.mp4",
+      "dureeMs": 27880,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Effort3coches."
+    },
+    {
+      "id": "defi",
+      "fichier": "segments/021.mp4",
+      "dureeMs": 25960,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Défi4/6intervalles."
+    },
+    {
+      "id": "recharger",
+      "fichier": "segments/022.mp4",
+      "dureeMs": 32720,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Rechargementréel,fichesetavancéesconservées."
+    },
+    {
+      "id": "bilan",
+      "fichier": "segments/023.mp4",
+      "dureeMs": 26480,
+      "source": "C:\\Projet_David\\GM-OS-v5\\output\\videos-explicatives\\star-trek\\2026-11-23-r1\\prises-r2\\page@c7a5a12f0fd7937e8569f35a6689f488.webm",
+      "sourceSha256": "373cd153e7b82bf1953fc5d45de63e364e0d9ea206654a19438d332db8247227",
+      "observation": "Étatfinalconservé."
+    }
+  ],
+  "cartes": 48,
+  "lecture": {
+    "motsParMinute": 125,
+    "caracteresParSeconde": 14,
+    "minimumMs": 5000,
+    "installationMs": 800,
+    "margeMs": 1200,
+    "caracteresParLigne": 46,
+    "lignesMaximum": 3
+  },
+  "pisteTextesParDefaut": false,
+  "visionnage": "NON EXÉCUTÉ",
+  "confortLectureHumain": "NON ÉVALUÉ — relire toutes les cartes et augmenter leurs durées si nécessaire.",
+  "note": "Calcul et minimums de lecture contrôlés ; ceci ne remplace pas la relecture du film final."
+}
