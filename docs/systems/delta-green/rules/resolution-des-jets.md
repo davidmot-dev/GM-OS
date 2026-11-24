@@ -7,7 +7,7 @@ sources: "dgmanuel_de_lagent_signets.pdf"
 sections: "« Utilisation des compétences » ; « Résoudre un test sans les dés » ; « Résoudre un test avec les dés » ; « Absence de compétence » ; « Utiliser une caractéristique » ; « Bonus et malus » ; « Qui lance les dés? » ; « Réussite et échec » ; « Réussite critique » ; « Réussite » ; « Échec » ; « Échec critique » ; « Jet de Chance » ; « Durée d'action »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 40d033b6
 ---
 
@@ -64,12 +64,10 @@ Si l'action est difficile, imprévisible et lourde de conséquences, l'Officier 
 Le joueur lance alors 1D100 et le compare aux chances modifiées ; l'Officier Traitant lit l'un des quatre résultats (voir « Degrés de réussite et critiques »). Sur un échec, le joueur coche la case de la compétence testée (hors Inconcevable) pour l'améliorer à la fin de la partie.
 
 ## Cas limites
-- Échec sans lancer les dés: quand une action automatique sans jet échoue parce que l'Agent n'a pas le score minimal requis, le joueur coche tout de même la case d'amélioration de la compétence (section « Description détaillée: compétences »).
-- Cumul de compétences complémentaires: l'Officier Traitant peut autoriser un Agent disposant de deux compétences cohérentes à 40 % à obtenir sans jet un indice qui en réclamait 60 % dans une seule discipline (section « Résoudre un test sans les dés »).
+- Sous le seuil, sans jet: à 40 % quand le fait demande 60 %, l'Agent trouve quelques indices, moins qu'un Agent à 60 %; deux compétences appropriées à 40 % peuvent ensemble atteindre un indice à 60 % (section « Résoudre un test sans les dés »).
 - Actions de groupe et aide: quand plusieurs Agents agissent ensemble, la table utilise la meilleure compétence si le nombre facilite la tâche, la pire si le nombre constitue une gêne, ou un jet individuel par joueur si l'issue de chacun importe (section « Qui lance les dés? »).
-- Jets secrets: l'Officier Traitant peut lancer les dés en secret pour certaines compétences de perception ou d'investigation afin que le joueur ignore si son Agent a réussi ou non (section « Description détaillée: compétences »).
 
 ## Non couvert
 Les règles ne prévoient aucun mécanisme de relance (points de destin, forcer le jet) ni de procédure formalisée pour retenter immédiatement une action après un échec standard.
 
-*Resserrée le 2026-11-12 (budget de la Forge) : les résultats renvoient à « Degrés ». Non relue en entier.*
+*Resserrée le 2026-11-12 (budget de la Forge). Relu le 2026-11-24 contre le livre (PDF = imprimée + 1) ; retiré : case cochée sans jet et jets secrets, absents ; corrigé : indices sous le seuil (p. 18, 42-44).*

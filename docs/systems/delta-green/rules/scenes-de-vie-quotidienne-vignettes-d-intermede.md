@@ -7,7 +7,7 @@ sources: "dgmanuel_de_lagent_signets.pdf"
 sections: "« Vie quotidienne » ; « Ce qui a changé » ; « Activités personnelles » ; « Assumer ses responsabilités » ; « Retour à la nature » ; « Établir une nouvelle Attache » ; « Effectuer une thérapie »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 48a86586
 ---
 
@@ -29,9 +29,12 @@ Activités personnelles
 - Assumer ses responsabilités: test de SAN. Réussite: +1D6 à une Attache hors Delta Green (max CHA). Réussite critique: +1D6 à l'Attache et +1 SAN. Échec: +1 à l'Attache. Échec critique: -1D4 à l'Attache et -1 SAN (section « Assumer ses responsabilités »).
 - Retour à la nature: -1 à une Attache. Test de SAN. Réussite: +1D4 SAN (4 sur critique, max POU x 5). Échec: +1 SAN. Échec critique: -1D4 SAN (section « Retour à la nature »).
 - Établir une nouvelle Attache: test de CHA x 5. Réussite: Attache créée à CHA / 2 (arrondi au supérieur); -1 à une autre Attache (section « Établir une nouvelle Attache »).
-- Effectuer une thérapie: -1 à une Attache. Test de Psychothérapie ou Chance. Réussite: +1D4 SAN (4 sur critique, max POU x 5). Échec: +1 SAN. Échec critique: -1D4 SAN (section « Effectuer une thérapie »).
-- Améliorer des compétences: -1 à une Attache. Test sous la compétence. Échec: +3D6 % (max 99 %) (section « Activités personnelles »).
-- Étudier l’inconcevable: -1D4 à une Attache (section « Activités personnelles »).
+- Effectuer une thérapie: -1 à une Attache. Test de Chance, ou de Psychothérapie du psychologue. Si l'Agent dit la vérité (le psychologue peut ne pas le croire: Chance à -20 %, ou perdre lui-même de la SAN): réussite +1D6 SAN (6 sur critique), échec +1, échec critique -1. S'il ment: réussite +1D4 (4 sur critique), échec 0, échec critique -1. Jamais au-delà de POU x 5. Une réussite critique guérit un trouble (noté « guéri », pas effacé; un test de SAN raté au trouble suivant le fait revenir) et crée une Attache au psychologue égale à CHA / 2 (ou +1D4 si elle existe) (section « Effectuer une thérapie »).
+- Améliorer des compétences ou des caractéristiques: deux au choix (deux compétences, deux caractéristiques, ou une de chaque); test sous la compétence ou la caractéristique × 5; échec: +3D6 % (max 99 %) ou +1 point (max 18); -1 à une Attache par amélioration (section « Améliorer des compétences ou des caractéristiques »).
+- Motivation personnelle: test de SAN; réussite +1 SAN (1D4 sur critique) et -1 à une Attache; échec critique -1 SAN (section « Motivation personnelle »).
+- Entraînement spécial: obtenir un entraînement spécial (p. 30); -1 à une Attache (section « Entraînement spécial »).
+- Suivre l’affaire: -1 à une Attache; l'Officier Traitant fait en secret un test de Criminologie ou d'Occultisme (réussite, une preuve; échec critique, un faux indice dangereux); l'Agent gagne 1D6-3 SAN, une perte disant une obsession (section « Suivre l’affaire »).
+- Étudier l’inconcevable: améliore la compétence Inconcevable; -1D4 à une Attache choisie (section « Étudier l’inconcevable »).
 
 ## À la table
 À la fin d'une opération, l'Officier Traitant ouvre la phase d'intermède (section « Vie quotidienne »). Les joueurs résolvent leurs vignettes l'un après l'autre:
@@ -42,9 +45,12 @@ Activités personnelles
 4. Narration de clôture: en deux ou trois phrases, le joueur et l'Officier Traitant mettent en scène l'issue de la vignette, soulignant la distance émotionnelle grandissante entre l'Agent et ses proches.
 
 ## Cas limites
-- Temps de repos court: si le répit entre deux missions est inférieur à plusieurs mois, l'Officier Traitant peut interdire certaines activités longues comme les thérapies ou l'entraînement intensif (section « Vie quotidienne »).
-- Attaches brisées: si toutes les Attaches civiles d'un Agent tombent à zéro, il ne peut plus subir d'érosion sur ses proches; en contrepartie, il ne peut plus choisir « Assumer ses responsabilités » tant qu'il n'a pas réussi à établir une nouvelle Attache (section « Établir une nouvelle Attache »).
-- Soigner un trouble: une thérapie réussie permet de canaliser un trouble psychique mais ne l'efface jamais définitivement de la fiche (section « Effectuer une thérapie »).
+- Combien de vignettes: l'Officier Traitant décide s'il en joue et quand; une longue pause peut en valoir deux, ou une seule où « le temps file » (section « Vie quotidienne »).
+- Sans Attache hors Delta Green: les dégâts qui ne visent que ces Attaches n'ont aucun effet; « Assumer ses responsabilités » n'a alors rien à préserver tant qu'une nouvelle Attache n'est pas établie (section « Activités personnelles »).
+- Soigner un trouble: seule une réussite critique de la thérapie guérit un trouble; il reste noté « guéri » sur la fiche et peut revenir avec le trouble suivant (section « Effectuer une thérapie »).
+- Licenciement: un test de CHA (ou de Persuasion ou Bureaucratie dans les cas extrêmes) pour le limiter; renvoyé, l'Agent perd 0/1 SAN et teste son CHA pour chaque Attache, Delta Green comprise, sous peine de -1D4 (-20 % pour un collègue) (section « Licenciement »).
 
 ## Non couvert
 Les sources ne précisent pas si plusieurs Agents peuvent participer ensemble à une même vignette de vie quotidienne durant l'intermède.
+
+*Relu le 2026-11-24 contre le livre (PDF = imprimée + 1) ; corrigé : thérapie (vérité ou mensonge, guérison sur critique), amélioration (deux, échec = gain, +1 caractéristique) ; ajouté : motivation, entraînement spécial, suivre l'affaire, licenciement ; retiré : interdiction des activités longues (p. 78-80).*

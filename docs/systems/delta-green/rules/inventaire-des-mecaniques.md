@@ -7,7 +7,7 @@ sujets_traites: 14 sur 16
 hors_categories: 4
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 ---
 
 # Inventaire des mécaniques
@@ -36,6 +36,8 @@ relu: false
 ### Hors catégories
 
 * **Projection du traumatisme sur les Attaches & Érosion des relations:** Pour amortir ou annuler une perte de Santé Mentale, un Agent peut dépenser un dé à quatre faces de points de Volonté pour réduire la perte de Santé Mentale d'autant, mais il doit obligatoirement retrancher ce même montant au score chiffré de l'une de ses Attaches humaines. Cette mécanique traduit la dégradation inéluctable de la vie personnelle de l'Agent sous l'effet du mensonge et de l'horreur.
-* **Accoutumance (Violence et Impuissance):** Un Agent qui subit trois pertes de Santé Mentale consécutives face à la Violence ou à l'Impuissance sans perdre la raison y devient accoutumé (réussite automatique de tous les futurs tests de Santé Mentale de cette catégorie). En contrepartie, il subit une mutilation permanente de ses attributs: perte définitive d'un dé à six faces en Charisme (abaissant d'autant toutes ses Attaches) pour la Violence, ou d'un dé à six faces en Pouvoir pour l'Impuissance (l'accoutumance est impossible face à l'Inconcevable).
-* **Scènes de Vie Quotidienne (Vignettes d'Intermède):** Entre deux missions, les joueurs doivent obligatoirement mettre en scène une phase de vie civile où chaque Agent choisit une seule activité personnelle (assumer ses responsabilités, s'isoler, suivre une thérapie, étudier l'Inconcevable, s'entraîner ou mener des investigations clandestines). La majorité de ces actions réduit de manière irréversible le score des Attaches de l'Agent afin de refléter la rupture progressive avec ses proches.
+* **Accoutumance (Violence et Impuissance):** Un Agent qui subit trois pertes de Santé Mentale consécutives face à la Violence ou à l'Impuissance sans perdre la raison y devient accoutumé (réussite automatique des futurs tests de Santé Mentale de cette catégorie, qui coûtent encore la perte d'une réussite). En contrepartie, il subit une mutilation permanente de ses attributs: perte définitive d'un dé à six faces en Charisme (abaissant d'autant toutes ses Attaches) pour la Violence, ou d'un dé à six faces en Pouvoir pour l'Impuissance (l'accoutumance est impossible face à l'Inconcevable).
+* **Scènes de Vie Quotidienne (Vignettes d'Intermède):** Entre deux missions, si l'Officier Traitant le décide, les joueurs mettent en scène une phase de vie civile où chaque Agent choisit une seule activité personnelle (assumer ses responsabilités, s'isoler, suivre une thérapie, étudier l'Inconcevable, s'entraîner ou mener des investigations clandestines). La majorité de ces actions réduit le score des Attaches de l'Agent afin de refléter la rupture progressive avec ses proches.
 * **Remplacement des Motivations par des Troubles Psychiques:** Chaque fois que le score de Santé Mentale atteint le Seuil de Rupture, l'Agent développe un trouble mental permanent et doit barrer l'une de ses motivations personnelles pour y inscrire sa névrose à la place.
+
+*Relu le 2026-11-24 contre le livre (PDF = imprimée + 1) ; conforme pour l'essentiel ; corrigé : accoutumance (perte de réussite), vignettes à la discrétion de l'Officier Traitant (p. 73-74, 78).*

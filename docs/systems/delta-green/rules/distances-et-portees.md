@@ -7,7 +7,7 @@ sources: "dgmanuel_de_lagent_signets.pdf"
 sections: "« Modificateurs de combat » ; « Mouvement » ; « Rayon de mortalité » ; « Armes à feu » ; « Armes lourdes » ; « Modes de tir » ; « Esquiver les attaques à distance »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: f12b767d
 ---
 
@@ -16,7 +16,7 @@ empreinte: f12b767d
 ## Règle
 Les distances et portées s'expriment en mètres (sections « Modificateurs de combat », « Armes à feu »).
 
-Chaque arme à distance possède une portée de base (section « Armes à feu »). La distance entre le tireur et la cible influe sur le jet d'attaque selon trois paliers: le tir à bout portant confère un bonus, tandis que tirer au-delà de la portée de base impose des malus progressifs jusqu'au quintuple de celle-ci, au-delà duquel aucun tir n'est permis (section « Modificateurs de combat »).
+Chaque arme à distance possède une portée de base (section « Armes à feu »). La distance entre le tireur et la cible influe sur le jet d'attaque selon trois paliers: le tir à bout portant confère un bonus, tandis que tirer au-delà de la portée de base impose des malus progressifs jusqu'au quintuple de celle-ci ; le livre ne chiffre rien au-delà, c'est à l'Officier Traitant (section « Modificateurs de combat »).
 
 En combat, un personnage peut parcourir une courte distance en réalisant une autre action, ou consacrer son action unique au Mouvement pour franchir une distance selon trois allures (section « Mouvement »).
 
@@ -28,11 +28,11 @@ Modificateurs de portée au tir (section « Modificateurs de combat »):
 - Portée de base: aucun modificateur.
 - Longue portée (de la portée de base à son double): malus de -20 %.
 - Très longue portée (du double au quintuple de la portée de base): malus de -40 %.
-- Au-delà du quintuple de la portée de base: tir impossible.
+- Au-delà du quintuple: aucune valeur dans le livre; l'Officier Traitant tranche.
 
 Échelle ordonnée des déplacements par tour (section « Mouvement »):
-1. Sprint: 30 mètres (test de Dextérité multipliée par cinq si risque de chute).
-2. Course: 20 mètres (test de Dextérité multipliée par cinq si risque de chute).
+1. Sprint: 30 mètres (test de DEX × 5 parfois exigé; un échec fait tomber, et l'Agent passe un tour à se relever).
+2. Course: 20 mètres (même test de DEX × 5).
 3. Pas de course: 10 mètres.
 4. Déplacement combiné: environ 3 mètres (avec une autre action).
 
@@ -43,9 +43,12 @@ Modificateurs de portée au tir (section « Modificateurs de combat »):
 - 50 mètres: mortier lourd, missile antichar.
 - 20 mètres: explosif ANFO.
 - 10 mètres: grenade, roquette, EEI.
-- 3 mètres: mitrailleuse, arrosage long.
+- 25 mètres: mortier léger.
+- 3 mètres: mitrailleuse légère ou lourde, arrosage long.
 - 2 mètres: arrosage court, bloc de C4.
+- 2 mètres: aussi le lance-flammes militaire.
 - 1 mètre: rafale longue, lance-flammes portable.
+- Un EEI plus dangereux (gilet explosif): 20 mètres.
 
 ## À la table
 Quand un combat s'engage, l'Officier Traitant décrit le théâtre des opérations et estime les distances en mètres séparant les protagonistes des abris et des menaces (section « Le tour »).
@@ -58,8 +61,10 @@ Lorsqu'une arme explosive ou une rafale longue est déclenchée, l'Officier Trai
 
 ## Cas limites
 - Couvert et distance d'esquive: une attaque par arme à feu ne peut être évitée par la compétence Esquive que si l'Agent dispose d'un couvert accessible à portée de déplacement (environ 3 mètres) afin d'y plonger immédiatement au cours du même tour (section « Esquiver les attaques à distance »).
-- Visée et réduction de distance apparente: passer son tour complet à viser une cible avec une arme à distance confère un bonus de +20 % au tir du tour suivant, ce qui compense exactement le malus d'un tir à longue portée (section « Viser »).
-- Armes de jet: la portée d'une grenade lancée à la main ou d'un objet contondant dépend directement de la Force physique du personnage multipliée par un coefficient en mètres (section « Armes lourdes »).
+- Visée: sacrifier un tour à viser donne +20 % à l'attaque du tour suivant, de quoi compenser la longue portée; le bonus est perdu après ce tour, ou si l'Agent subit des dégâts avant d'attaquer (section « Viser »).
+- Armes de jet: un couteau ou une grenade se lancent avec Athlétisme, la grenade exige en plus un entraînement spécial (p. 30); le livre ne donne pas de formule de portée liée à la Force (section « Armes de jet »).
 
 ## Non couvert
 Les sources n'utilisent aucune grille de combat quadrillée, case par case ou hexagones, et ne fournissent pas de règles pour l'encombrement spatial exact des grands véhicules en combat urbain en dehors des portées et des rayons d'explosion en mètres.
+
+*Relu le 2026-11-24 contre le livre (PDF = imprimée + 1) ; retiré : « tir impossible au-delà du quintuple » et la portée des armes de jet par la FOR, absents du livre ; ajouté : chute au sprint, perte du bonus de visée, mortier léger 25 m, lance-flammes militaire, gilet explosif 20 m (p. 50-57, 98-99).*

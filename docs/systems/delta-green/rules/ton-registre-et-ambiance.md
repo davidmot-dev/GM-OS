@@ -7,7 +7,7 @@ sources: "dgmanuel_de_lagent_signets.pdf"
 sections: "« Vue d’ensemble » ; « Le Monde de Delta Green » ; « Qu’est-ce que Delta Green? » ; « Briefing opérationnel » ; « Les fondamentaux » ; « Enquête et incertitude » ; « Suspense et horreur » ; « Violence et choix moraux » ; « Compréhension et santé mentale » ; « Garder les secrets » ; « Conséquences personnelles et professionnelles » ; « Comment interpréter un Agent » ; « Respectez l’atmosphère »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: a333a173
 ---
 
@@ -31,9 +31,8 @@ Les joueurs doivent préserver le suspense, accueillir l'humour cynique sans tou
   1. Mettre fin à l’incursion.
   2. S’exposer au minimum.
   3. Sauver des vies.
-  4. Tout maquiller pour éviter la propagation.
+  4. Tout maquiller afin d’éviter que d’autres y soient exposés.
   5. Ne jamais révéler l’existence de Delta Green.
-- Cloisonnement: 5 ou 6 agents connus au plus pour un vétéran (section « Qu’est-ce que Delta Green? »).
 - Motivations: 5 au maximum par Agent (section « Derniers détails »).
 - Scènes privées: quelques minutes par vignette (section « Vie quotidienne »).
 - Valeurs chiffrées: aucun modificateur mécanique direct; le ton relève de l'interprétation (section « Respectez l’atmosphère »).
@@ -51,3 +50,5 @@ L'humour a sa place autour de la table, mais sous la forme d'un humour noir, cyn
 
 ## Non couvert
 Les sources ne prévoient pas de mécaniques de règles formelles de sécurité émotionnelle (comme des cartes X ou des lignes et voiles codifiées), confiant la gestion des thèmes extrêmes à l'accord tacite et à la maturité des participants.
+
+*Relu le 2026-11-24 contre le livre (PDF = imprimée + 1) ; conforme ; retiré : un cloisonnement chiffré, absent du livre (p. 6-11).*

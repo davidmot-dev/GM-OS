@@ -7,7 +7,7 @@ sources: "dgmanuel_de_lagent_signets.pdf"
 sections: "« Autres menaces » ; « Poison et maladie » ; « Chute » ; « Impact » ; « Suffocation » ; « Feu » ; « Froid »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: e540d40a
 ---
 
@@ -28,24 +28,25 @@ Périls physiques et éléments (sections « Chute », « Impact », « Suffocat
   - Hospitalisation: +20 % au test de CON.
   - Test réussi (poison): dégâts divisés par deux (1 PV si critique; doublés si échec critique).
   - Test réussi (maladie): dégâts divisés par deux et guérison (aucun PV si critique; doublés si échec critique).
-  - Antidote après effet: létalité et dégâts divisés par deux.
+  - Antidote ou antibiotique: un test de Médecine ou de Pharmacologie juste avant la prise d'effet neutralise entièrement l'affection; après la prise d'effet, létalité et dégâts divisés par deux.
+  - Sous l'effet d'une maladie, l'Agent ne récupère pas de PV; une maladie persistante (SIDA) ne fait que reculer, et revient sur un test de CON × 5 raté quand l'Agent perd plus de la moitié de ses PV ou subit un autre poison ou une autre maladie.
 - Chute (section « Chute »):
   - 1 à 3 m: 1D6 dégâts (2D6 si incontrôlée).
-  - Dès 3 m: létalité de 1 % par mètre.
+  - Au-delà de 3 m: létalité de 1 % par mètre.
   - Survie: test de CON multipliée par cinq contre l'étourdissement.
 - Impact (section « Impact »): létalité de 10 % par tranche de 40 km/h (doublée contre un mur).
 - Suffocation (section « Suffocation »):
   - Apnée: CON multipliée par cinq en tours.
-  - Asphyxie: test de CON multipliée par cinq par tour (1 dégât si réussi, 1D6 si raté).
+  - Asphyxie: test de CON multipliée par cinq par tour (1 dégât si réussi, 1D6 si raté), sans protection; sans avoir pu respirer avant, les dégâts commencent aussitôt et durent jusqu'à un test de Premiers secours qui dégage les voies respiratoires.
 - Échelle ordonnée du feu par tour (du pire au moindre) (section « Feu »):
   1. Majeure (feu de joie): létalité 10 %.
   2. Forte (feu de camp): 2D6 dégâts.
   3. Modérée (torche): 1D6 dégâts.
   4. Mineure (bougie): 1 dégât.
-  - Embrasement: test de Dextérité multipliée par cinq raté (demi-dégâts).
+  - Embrasement: après des dégâts d'intensité modérée, forte ou majeure, test de DEX × 5; raté, la victime prend feu et subit la moitié des dégâts chaque tour jusqu'à extinction. Un incendie fait aussi suffoquer.
 - Froid (section « Froid »):
   - Tolérance: CON en minutes (nu), CON multipliée par cinq en minutes (semi-équipé), CON en heures (équipement polaire).
-  - Hypothermie: test de CON multipliée par cinq toutes les 5 minutes (échec: -1 en CON). À 1 en CON: 1D8 dégâts toutes les 5 minutes.
+  - Hypothermie: test de CON multipliée par cinq toutes les 5 minutes (échec: -1 en CON). À 1 en CON, l'Agent ne peut plus bouger et subit 1D8 dégâts toutes les 5 minutes.
   - Réchauffement: 1 point de CON par minute.
 
 ## À la table
@@ -59,7 +60,9 @@ Quand un Agent affronte un péril environnemental, l'Officier Traitant applique 
 ## Cas limites
 - Équipement et froid extrême: des vêtements polaires complets permettent de résister sans test pendant un nombre d'heures égal à la Constitution avant que l'hypothermie ne débute (section « Froid »).
 - Soins et neutralisation des toxines: administrer un antivenin ou un antidote après l'apparition des premiers symptômes divise par deux la létalité résiduelle et les dégâts futurs du poison (section « Poison et maladie »).
-- Impact de véhicule avec obstacle fixe: percuter un mur ou un camion de face double la létalité de l'impact par rapport à une collision contre un obstacle déformable (section « Impact »).
+- Impact contre un mur: s'écraser contre un mur sans pouvoir amortir le choc double la létalité de l'impact; un survivant teste sa CON × 5 contre l'étourdissement; un accident de véhicule suit la section « Véhicules » (section « Impact »).
 
 ## Non couvert
 Les sources ne fournissent pas de règles détaillées pour l'exposition aux radiations ionisantes, la décompression brutale en haute altitude ou la privation prolongée de nourriture et d'eau.
+
+*Relu le 2026-11-24 contre le livre (PDF = imprimée + 1) ; corrigé : chute au-delà de 3 m, impact contre un mur ; ajouté : antidote avant la prise d'effet, pas de récupération sous maladie, maladie persistante, suffocation sans inspiration, embrasement et incendie, immobilité à CON 1 (p. 60-63).*

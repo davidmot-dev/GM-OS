@@ -7,7 +7,7 @@ sources: "dgmanuel_de_lagent_signets.pdf"
 sections: "« Le tour » ; « Une action par tour » ; « Viser » ; « Attaque » ; « Attaque précise » ; « Désarmement » ; « Esquive » ; « Dégagement » ; « Riposte » ; « Mouvement » ; « Immobilisation » ; « Attente » ; « Autre » ; « Jets de défense » ; « Esquiver et riposter » ; « Se défendre après avoir attaqué » ; « Attaques surprises »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 50470c94
 ---
 
@@ -45,6 +45,8 @@ Attaquer en mêlée bloque aussi les assauts de contact suivants (section « Se 
   - Cible impuissante: mort en 1 tour sans jet.
   - Cible surprise: +20 % et critique automatique.
 - Cible immobilisée: +20 % au contact (section « Immobilisation »).
+- Modificateurs à l'attaque (section « Modificateurs à l'attaque »): seulement en circonstances extraordinaires; les bonus se cumulent jusqu'à +40 % au plus, les malus sans limite; 01 touche toujours, 00 manque toujours.
+- Attaques précises optionnelles (si l'Officier Traitant l'accepte): Étourdir −20 %, Égratigner −40 % (moitié des dégâts), Tir à la tête −40 % (compte comme un coup critique).
 
 ## À la table
 Au début de chaque tour, l'Officier Traitant énumère les valeurs de Dextérité (DEX) de tous les participants par ordre décroissant (section « Le tour »). Quand son score de DEX est appelé, le joueur annonce et résout l'unique action de son Agent pour le tour (section « Une action par tour »).
@@ -58,8 +60,11 @@ Un combattant peut aussi choisir l'Attente pour différer son action et s'insér
 ## Cas limites
 - Égalités d'initiative: si deux personnages partagent le même score de DEX, leurs actions se déroulent simultanément, à moins que l'Officier Traitant ne définisse un moyen de les départager (section « Le tour »).
 - Intervenir avant autrui: l'action Attente permet d'agir juste avant le tour d'un tiers, mais interdit d'attendre qu'un adversaire déclare son action pour tenter d'intervenir avant sa résolution (section « Attente »).
-- Cibles multiples et Létalité: faire feu avec une arme automatique ou explosive capable de frapper plusieurs cibles ou de déclencher un Rayon de Mortalité ne constitue toujours qu'une seule et unique action pour le tour (section « Une action par tour »).
+- Cibles multiples et Létalité: une arme qui touche plusieurs cibles, ou la même plusieurs fois, ne fait qu'une action et un jet ; une arme semi-automatique tire jusqu'à trois fois pour un seul jet d'attaque et un seul jet de dégâts ; un jet de Chance dit, en cas de doute, si le tireur est à court de munitions (sections « Attaque », « Une action par tour »).
+- Tirer dans une foule: sans attaque précise, c'est un autre membre de la foule qui écope (section « Tirer dans une foule »).
 - Esquive des tirs: Esquive ne protège contre les armes à feu que si l'Agent a un abri à portée de mouvement et l'utilise pour plonger à couvert au même tour (section « Esquiver les attaques à distance »).
 
 ## Non couvert
 Les sources ne prévoient pas de règle d'action préparée conditionnelle (« je tire s'il franchit la porte ») en dehors de l'insertion manuelle via l'action Attente avant le début du tour d'un autre protagoniste.
+
+*Relu le 2026-11-24 contre le livre (PDF = imprimée + 1) ; conforme pour l'essentiel ; ajouté : plafond des bonus, 01 et 00, attaques précises optionnelles, tirs semi-automatiques et munitions, tir dans une foule (p. 50-53).*

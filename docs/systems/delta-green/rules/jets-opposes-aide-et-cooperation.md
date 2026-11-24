@@ -7,7 +7,7 @@ sources: "dgmanuel_de_lagent_signets.pdf"
 sections: "« Tests en opposition » ; « Qui lance les dés? » ; « Poursuite » ; « Jets de défense » ; « Esquive » ; « Riposter »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: fc9c031a
 ---
 
@@ -29,7 +29,7 @@ Concernant l'aide et les actions collectives, l'Officier Traitant applique la r�
   2. Réussite ordinaire avec le résultat sur les dés le plus élevé (surpasse une réussite ordinaire plus faible ou un échec).
   3. Échec avec le résultat sur les dés le plus faible (l'emporte en cas de double échec si l'Officier Traitant l'autorise).
   4. Échec avec le résultat sur les dés le plus élevé (perdant en cas de double échec).
-  5. Échec critique (défaite automatique avec répercussions catastrophiques).
+  5. Échec critique (un échec, avec ses répercussions; en poursuite, deux défaites).
 - Modificateurs d'aide et d'avantages en poursuite (section « Poursuite »):
   - +20 %: coordination des poursuivants (contact radio, champ de vision partagé) ou net avantage de vitesse.
   - +40 %: avantage écrasant de coordination, d'appui ou de positionnement.
@@ -59,3 +59,5 @@ Pour une tâche de groupe (section « Qui lance les dés? »), l'Officier Traita
 
 ## Non couvert
 Les règles ne précisent aucun départage en cas d'égalité numérique exacte entre deux réussites identiques, ni de règle générique pour prêter main-forte à un allié sur une action technique ponctuelle.
+
+*Relu le 2026-11-24 contre le livre (PDF = imprimée + 1) ; conforme ; corrigé : l'échec critique en opposition (p. 43-46, 166).*

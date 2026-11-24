@@ -1,8 +1,8 @@
 # 🟩 Jeu — Delta Green
 
-> **Pilote décrit :** « Delta Green », forgé par David, exporté le 2026-11-12, version **2.1.0** du
-> 2026-11-13 (`Export Dirvers/corriges/Delta-Green-2.1.0.gmos-driver`, construit par
-> `outils/delta-green/finir_delta_green.mjs`). Thème `delta-green` et fiche d’Agent HTML
+> **Pilote décrit :** « Delta Green », forgé par David, exporté le 2026-11-12, version **2.2.0** du
+> 2026-11-24 (`Export Dirvers/corriges/Delta-Green-2.2.0.gmos-driver`, construit par
+> `outils/delta-green/finir_delta_green.mjs` puis `outils/delta-green/catalogue_depuis_le_livre.mjs`). Thème `delta-green` et fiche d’Agent HTML
 > `delta-green-agent-fr` préparés le même jour. Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
@@ -15,9 +15,8 @@ jauges ; la fiche d’Agent HTML (formulaire DD 315) est reliée champ par champ
 > Règles lues dans le *Manuel de l’Agent* (édition française) le 2026-11-12 : pages imprimées 18,
 > 29, 43-44, 50 et 53 (page du PDF = page imprimée + 1 ; chemin dans
 > `docs/systems/delta-green/livres.json`). Les dix-huit fiches du corpus
-> `docs/systems/delta-green/rules/` ne sont **pas encore relues** en entier. Au 13/11 : une fiche
-> relue sur dix-huit (accoutumance). Les suites ci-dessous ont été vérifiées directement contre
-> les pages 29, 44–45, 52, 57–59 et 66–74 du livre.
+> `docs/systems/delta-green/rules/` sont **relues contre le livre** (24/11) ; les suites ci-dessous
+> ont été vérifiées directement contre les pages 29, 44–45, 52, 57–59 et 66–74.
 
 **Réimporter le pilote avec « Remplacer ».** Le pilote forgé portait un critique sur 1 et une
 complication sur 20, des valeurs de d20 : sur le d100, **aucun double ne comptait**. Sa fiche
@@ -185,6 +184,17 @@ sur la tablette et dans les cartes de résultat.
 
 La projection sur une Attache et la répression d’une crise, les effets détaillés du trouble choisi,
 les protections des cibles massives ou transcendantes, les soins et les autres règles non décrites
-restent à la table. Le catalogue d’équipement et la relecture intégrale du corpus restent à faire.
+restent à la table.
 
-*Mis à jour le 2026-11-13 ; pilote 2.1.0, perte directe de SAN et boutons validés par David : « ok c’est bon tout est testé ». Captures de l’application réelle (`e2e/capturesDesJeux.spec.ts`, pilote 2.1.0, profil jetable).*
+## Le catalogue d’équipement (2.2.0)
+
+Le pilote 2.2.0 porte **138 objets transcrits du livre** (p. 96-102) : 54 armes (corps à corps,
+gaz, grenades étourdissantes, électrochocs, armes à feu, armes lourdes, explosifs, artillerie),
+6 protections, 21 véhicules et 57 objets de matériel, chacun avec sa **catégorie de dépense**
+(Courant, Ordinaire, Important, Substantiel, Considérable) et sa page. Ils se prennent depuis
+l’inventaire ou une table de butin (« Depuis le catalogue »). Les services (transports, logement,
+faux papiers, requêtes officielles) restent dans le corpus, pas au catalogue. Le catalogue de la
+2.1.0 venait d’une fiche générée en partie inventée : armes, coûts et véhicules faux. Le
+réimport avec « Remplacer » le remplace entièrement.
+
+*Mis à jour le 2026-11-24 : corpus relu 18/18, catalogue 2.2.0 refait depuis le livre. Le 2026-11-13 : pilote 2.1.0, perte directe de SAN et boutons validés par David : « ok c’est bon tout est testé ». Captures de l’application réelle (`e2e/capturesDesJeux.spec.ts`, pilote 2.1.0, profil jetable).*

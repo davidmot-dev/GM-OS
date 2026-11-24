@@ -7,18 +7,18 @@ sources: "dgmanuel_de_lagent_signets.pdf"
 sections: "« Dégâts » ; « Valeur de létalité » ; « Rayon de mortalité » ; « Protection au combat » ; « Fragile » ; « Exposé » ; « Protégé » ; « Massif » ; « Transcendant » ; « Armes perforantes »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 34fa630f
 ---
 
 # Dégâts et types de dégâts
 
 ## Règle
-Chaque arme ou péril inflige une perte de Points de vie déterminée en dés ou par une valeur de létalité en pourcentage (section « Dégâts »). Les coups à mains nues sont modifiés par la Force (section « Dégâts »).
+Chaque arme ou péril inflige une perte de Points de vie déterminée en dés ou par une valeur de létalité en pourcentage (section « Dégâts »). Les attaques à mains nues sont modifiées par la Force, sans descendre sous 0 (section « Dégâts »).
 
 Les armes lourdes, automatiques et explosifs utilisent la létalité (section « Valeur de létalité »). Si le test de létalité réussit, une cible humaine tombe à 0 Point de vie. S'il échoue, on additionne les deux dés de pourcentage (le zéro valant 10) et on retranche cette somme aux Points de vie (section « Valeur de létalité »). Un rayon de mortalité applique ce test à toute personne dans la zone ciblée (section « Rayon de mortalité »).
 
-Les protections soustraient leur valeur aux dégâts ordinaires (section « Protection au combat »). L'armure ne bloque pas un test de létalité réussi, mais un couvert solide le fait échouer automatiquement tout en absorbant les dégâts chiffrés (sections « Protégé », « Protection au combat »). Les armes perforantes réduisent la protection ennemie (section « Armes perforantes »).
+Les protections soustraient leur valeur aux dégâts ordinaires (section « Protection au combat »). L'armure ne bloque pas un test de létalité réussi, mais un couvert solide le fait échouer automatiquement tout en absorbant les dégâts chiffrés (sections « Protégé », « Protection au combat »). Les armes perforantes réduisent la protection ennemie ; celle d'un explosif ne vaut que pour sa cible, pas pour les victimes du rayon de mortalité (section « Armes perforantes »). Un test de létalité n'a ni réussite ni échec critique ; une réussite critique au jet d'attaque double la létalité et, si le test échoue, les dégâts (section « Valeur de létalité »).
 
 ## Valeurs
 - Bonus aux dégâts de Force (du meilleur au pire) (section « Dégâts »):
@@ -32,16 +32,16 @@ Les protections soustraient leur valeur aux dégâts ordinaires (section « Prot
   2. Massif: subit les attaques de létalité sous forme de perte de Points de vie égale au score de létalité.
   3. Protégé: soustrait l'armure ou l'abri aux dégâts ordinaires.
   4. Exposé: dégâts normaux sans protection.
-  5. Fragile: mort à 0 Point de vie au moindre dégât direct.
+  5. Fragile: tombe à 0 Point de vie à la moindre quantité de dégâts d'une attaque délibérée (un humain sans défense).
 - Échelle ordonnée d'armures et couverts (du meilleur au pire) (section « Protection au combat »):
-  - Blindage de char moderne: 25.
-  - Blindage lourd de véhicule: 20.
-  - Mur renforcé, sacs de sable: 15.
-  - Tenue de démineur, blindage léger: 10.
-  - Tenue pare-balles intégrale, mur: 5.
-  - Gilet renforcé: 4.
-  - Gilet pare-balles: 3.
-  - Casque en kevlar: +1.
+  - Blindage de tank lourd: 25.
+  - Blindage lourd de véhicule ou de tank léger: 20.
+  - Mur renforcé, roche épaisse ou sacs de sable; blindage intermédiaire de véhicule: 15.
+  - Tenue de démineur; mur épais, béton ou roche peu épaisse; blindage léger de véhicule: 10.
+  - Tenue pare-balles intégrale (soldats, SWAT), mur ou porte épaisse, véhicule en couvert improvisé: 5.
+  - Gilet pare-balles renforcé (policiers en uniforme): 4.
+  - Gilet pare-balles (peut être dissimulé): 3.
+  - Casque en kevlar: +1, ajouté aux autres protections.
 - Perforation (section « Armes perforantes »):
   - Perforant lourd: -10 de protection ou plus.
   - Perforant standard: -5 de protection.
@@ -51,12 +51,14 @@ Lorsqu'une attaque frappe sa cible, l'assaillant lance immédiatement la formule
 
 Si l'arme utilise une valeur de létalité (comme une rafale d'arme automatique, un fusil-mitrailleur, une grenade, une roquette ou une explosion), l'assaillant effectue un jet sous le pourcentage de létalité de l'arme. Si le test est inférieur ou égal à ce pourcentage, la cible humaine non abritée est immédiatement tuée et tombe à 0 Point de vie. Si le test de létalité échoue, le jet n'est pas nul pour autant: le joueur additionne la valeur faciale de chacun des deux dés de pourcentage (un zéro comptant pour dix) pour infliger cette somme sous forme de perte directe de Points de vie, amoindrie par l'armure.
 
-Quand un explosif détonne dans un espace, l'Officier Traitant applique son Rayon de mortalité à chaque individu présent dans la zone, chacun subissant individuellement le test de létalité.
+Quand une attaque à rayon de mortalité réussit, chaque personnage dans le rayon subit son propre test de létalité. Manquée, elle ne blesse personne mais peut encore neutraliser; l'Officier Traitant juge des dégâts collatéraux. Pour qui préfère les dés, 3 % de létalité valent 1D6 (35 % = 12D6).
 
 ## Cas limites
-- Échec critique sur test de létalité: si le jet de dés de pourcentage indique un double supérieur au score de létalité, les dégâts minimaux appliqués aux Points de vie ne sont pas annulés (section « Valeur de létalité »).
+- Critique et létalité: le test de létalité ne connaît ni réussite ni échec critique; seule la réussite critique du jet d'attaque compte, et elle double la valeur de létalité ainsi que la somme des dés si le test échoue (section « Valeur de létalité »).
 - Cible sous abri face à la létalité: un personnage retranché derrière une protection rigide (mur, sac de sable, véhicule) ne peut pas être tué sur le coup par un test de létalité; le jet de létalité est automatiquement considéré comme ayant échoué, et les dés additionnés doivent d'abord percer l'armure du couvert (sections « Protégé », « Valeur de létalité »).
 - Port de plusieurs protections: si un personnage cumule plusieurs couches (comme un gilet pare-balles et un casque tactique), les valeurs d'armure s'additionnent face aux dégâts compatibles (section « Protection au combat »).
 
 ## Non couvert
 Les sources ne détaillent pas de types de dégâts élémentaires distincts (énergie, acide, électricité) ayant des mécaniques de résistance ou d'immunité dédiées en dehors du feu et des protections balistiques génériques.
+
+*Relu le 2026-11-24 contre le livre (PDF = imprimée + 1) ; corrigé : létalité sans critique propre (la réussite critique de l'attaque double), échelle des protections, Fragile ; ajouté : minimum 0 aux mains nues, perforant et rayon de mortalité, équivalence 3 % = 1D6 (p. 55-60).*

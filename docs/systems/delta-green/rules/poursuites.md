@@ -7,7 +7,7 @@ sources: "dgmanuel_de_lagent_signets.pdf"
 sections: "« Poursuite » ; « Quelles compétences choisir » ; « Aide et avantages » ; « Prendre l’ascendant » ; « Combat et poursuite » ; « Vitesse » ; « Collision »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 6d5a50e7
 ---
 
@@ -52,7 +52,7 @@ Au début d'une poursuite (section « Poursuite »), l'Officier Traitant annonce
 
 À chaque manche:
 1. Les participants appliquent les modificateurs de situation (vitesse du véhicule, liaison radio ou soutien tactique) (sections « Aide et avantages », « Vitesse »).
-2. Un passager ou un complice peut choisir d'effectuer une action d'appui Prendre l’ascendant (section « Prendre l’ascendant »): en réussissant un test d'Orientation, de Vigilance ou de Science (navigation), il confère un bonus de +20 % (+40 % si réussite critique) au pilote lors de son prochain test.
+2. Au lieu de son jet de poursuite, le poursuivant ou la proie peut Prendre l’ascendant (section « Prendre l’ascendant ») par un jet adapté (Vigilance, Orientation, Discrétion, Survie ou Tactique): s'il l'emporte, son camp ne marque pas de victoire mais gagne +20 % (+40 % sur une réussite critique) à son prochain jet de poursuite; ses échecs et échecs critiques comptent normalement. Un passager peut tirer avant les jets de poursuite (chaque manche vaut un tour de combat).
 3. Le poursuivant et le fuyard effectuent leur test en opposition. Le vainqueur de la manche marque une victoire qui annule une victoire adverse ou augmente son avance. Une réussite critique accorde deux victoires d'un coup. Un double échec donne la victoire au résultat chiffré le plus faible.
 4. Dès qu'un camp atteint deux victoires d'avance (trois dans une situation particulièrement incertaine), la poursuite prend fin: le fuyard s'évapore dans la nature ou le poursuivant intercepte sa cible.
 
@@ -60,7 +60,10 @@ En cas d'échec critique, la manche se solde par deux défaites et l'Officier Tr
 
 ## Cas limites
 - Attaque en cours de poursuite: les passagers d'un véhicule peuvent tirer ou agir sans gêner la poursuite, mais si le conducteur ou un fuyant à pied décide d'attaquer ou d'user d'une arme au lieu de piloter ou sprinter, il concède d'office le test d'opposition de la manche (section « Combat et poursuite »).
-- Chute ou tonneau: lors d'une collision à vive allure causée par un échec critique ou une manœuvre forcée, les occupants subissent les dégâts de létalité liés au tonnage et à la vitesse du véhicule (section « Collision »).
+- Collision: la Létalité se lit sur les PV du véhicule et frappe le véhicule ; ses passagers subissent 1D6 (bélier) ou 2D6 (véhicule percuté), divisés par deux avec ceinture ou airbag (section « Collision »).
+- Avion à réaction: vitesse « spéciale », il distance tout véhicule qui n'en est pas un ; un avion de chasse distance aussi les autres avions à réaction (section « Vitesse »).
 
 ## Non couvert
 Les sources ne précisent pas la gestion des bifurcations à choix multiples où la proie sème un poursuivant sans test de dés immédiat, ni le suivi cartographique précis d'un réseau urbain complexe.
+
+*Relu le 2026-11-24 contre le livre (PDF = imprimée + 1) ; corrigé : Prendre l'ascendant (au lieu du jet, par le poursuivant ou la proie, compétences du livre), passagers d'une collision ; ajouté : avions à réaction (p. 45-46, 95).*

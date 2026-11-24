@@ -7,7 +7,7 @@ sources: "dgmanuel_de_lagent_signets.pdf"
 sections: "« Réussite et échec » ; « Réussite critique » ; « Réussite » ; « Échec » ; « Échec critique » ; « Jets d'attaque » ; « Réussite et échec critique » ; « Tests en opposition » ; « Poursuite » ; « Prendre l’ascendant » ; « Indications pour les pertes de SAN » ; « Guérison » ; « Réanimation » ; « Stabilisation » ; « Traitement » ; « Poison et maladie » ; « Chute » ; « Activités personnelles » ; « Assumer ses responsabilités » ; « Motivation personnelle » ; « Suivre l’affaire » ; « Poursuites judiciaires » ; « Camelote »"
 genere_par: notebooklm
 gabarit: v3
-relu: false
+relu: true
 empreinte: 0f600704
 ---
 
@@ -28,7 +28,7 @@ Un test de compétence ou de caractéristique n'a que quatre résultats, du meil
   - Combat : dégâts doublés (1D10 devient 2D10) ; létalité doublée, et dégâts doublés si le test de létalité échoue (sections « Réussite et échec critique », « Valeur de létalité »).
   - Poursuite : deux victoires ; Prendre l'ascendant : +40 % au prochain jet au lieu de +20 % (sections « Poursuite », « Prendre l'ascendant »).
   - Test de SAN : perte minimale (1 point sur 1D4) (section « Indications pour les pertes de SAN »).
-  - Premiers secours, Chirurgie, Médecine : PV récupérés doublés (2D4 au lieu de 1D4) (sections « Réanimation », « Stabilisation », « Traitement »).
+  - Premiers secours, Chirurgie, Médecine : PV récupérés doublés (2D4 au lieu de 1D4) ; repos (CON × 5) : 1D4 PV au lieu de 1 (sections « Réanimation », « Stabilisation », « Traitement », « Récupération »).
   - Assumer ses responsabilités : +1 SAN en plus de l'Attache +1D6 ; Motivation personnelle : 1D4 SAN au lieu de 1.
 - Options d'un échec critique, au choix de l'Officier Traitant (section « Échec critique ») :
   - Fatigue physique : −1D6 PV, ou −1D4 temporaire en FOR, CON ou DEX.
@@ -37,17 +37,18 @@ Un test de compétence ou de caractéristique n'a que quatre résultats, du meil
   - Épuisement : l'Agent devient épuisé.
   - Distraction : −20 % au prochain test.
   - Confusion : une erreur grave, des informations erronées.
-- Autres effets d'un échec critique : arme à feu enrayée (1D4 tours de réparation) ; poursuite : deux défaites (accident ou calamité) ; test de SAN : perte maximale (20 sur 1D20) ; Premiers secours ou Traitement : 1D4 dégâts au patient ; poison ou maladie : dégâts doublés ; Assumer ses responsabilités : Attache −1D4 et −1 SAN ; Motivation personnelle : −1 SAN.
+- Autres effets d'un échec critique : au combat, au choix de l'Officier Traitant, l'arme à feu s'enraye (1D4 tours pour la remettre en état), l'arme tombe (un tour pour la ramasser), l'assaillant touche un ami, un passant ou lui-même, ou il trébuche et tombe ; poursuite : deux défaites (accident ou calamité) ; test de SAN : perte maximale (20 sur 1D20) ; Premiers secours ou Traitement : 1D4 dégâts au patient ; poison ou maladie : dégâts doublés ; Assumer ses responsabilités : Attache −1D4 et −1 SAN ; Motivation personnelle : −1 SAN.
 
 ## À la table
 Le joueur lance le D100 et regarde d'abord le 01, le 00 et les doubles. Une réussite critique double l'effet, réduit le temps de moitié ou révèle un indice inattendu ; en combat, l'assaillant double ses dégâts ou sa létalité. Un échec, critique ou non, coche la case d'amélioration de la compétence. Sur un échec critique, l'Officier Traitant choisit une option de la liste, ou une conséquence de la scène (arme enrayée, tir fratricide, accident, chute).
 
 ## Cas limites
-- Variantes des coups critiques : au lieu de doubler les dégâts, l'assaillant peut infliger des dégâts normaux et étourdir, désarmer, mettre à terre ou attaquer une seconde fois (section « Variantes des coups critiques »).
-- Opposition : une réussite critique surpasse une réussite ; entre deux critiques, le résultat le plus élevé l'emporte (section « Tests en opposition »).
-- Armes automatiques et lourdes : l'échec critique peut vider le chargeur ou détruire l'arme (section « Réussite et échec critique »).
+- Règle optionnelle « Autres coups critiques » : si l'Officier Traitant l'accepte, un critique inflige des dégâts normaux mais étourdit, désarme, met à terre, devient un coup précis ou permet une deuxième attaque (p. 52).
+- Opposition : une réussite critique surpasse une réussite ; sinon, entre deux réussites, le résultat le plus élevé l'emporte (section « Tests en opposition »).
+- Échec et prix : l'Officier Traitant peut laisser réussir un échec au prix de complications (section « Échec »).
+- Jet de Chance : 50 % ; une réussite ou un échec critique y dit une chance ou une malchance incroyable (section « Jet de Chance »).
 
 ## Non couvert
 Rien sur des chances au-delà de 100 % : bonus et malus ne les portent jamais au-delà de 99 % (section « Bonus et malus »).
 
-*Resserrée le 2026-11-12 (budget de la Forge) ; ajouté : Bourde, Épuisement, Confusion (p. 44) ; « Non couvert » corrigé (99 %, p. 43). Non relue en entier.*
+*Relu le 2026-11-24 contre le livre (PDF = imprimée + 1) ; retiré : chargeur vidé, absent ; corrigé : échecs critiques du combat, autres coups critiques (option) ; ajouté : récupération, jet de Chance (p. 43-45, 52, 56, 93).*
