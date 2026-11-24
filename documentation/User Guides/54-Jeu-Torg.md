@@ -218,6 +218,11 @@ GM-OS ne les joue pas à votre place, il tient les mains. Dans Deck-OS, marquez 
 | **Fin de scène** | votre lecteur | Chaque héros de la campagne **complète sa main à 4**. Qui en a plus doit défausser l'excédent : GM-OS le dit, il ne choisit pas pour lui |
 | **Fin d'Acte** | votre lecteur | Chacun défausse toute sa main, Réserve comprise, et en tire une nouvelle ; les Moments critiques reviennent |
 
+**Seulement ceux qui jouent** (24/11/2026). Pendant une séance en cours, la Fin de scène, la Fin
+d'Acte et la distribution des Cartes de Cosm ne servent que les héros **ajoutés à la séance** (le
+bouton de leur carte, comme à la Table). Le message nomme les autres (« Hors séance, rien distribué : … ») ;
+leur main n'est pas touchée. Sans séance, ou si aucun héros n'y est ajouté, toute la campagne reçoit.
+
 **L'Action approuvée.** Quand la carte d'Action du round en nomme une, la carte de combat de
 chaque héros montre un bouton par action :
 

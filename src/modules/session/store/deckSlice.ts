@@ -46,6 +46,7 @@ import {
     cartesDeCosmAuChangement, cartesDeCosmDuDebutDActe, jouerUneCarteDeCosm, paquetsDeCosm, paquetsDesCosmsCourants,
     type DistributionDeCosm,
 } from '../logic/cartesDeCosm';
+import { personnagesDeLaSeance } from '../logic/personnagesALaTable';
 
 export interface DeckSliceState {
     decks: DeckManifest[];
@@ -183,6 +184,7 @@ type MagasinEntier = {
     activeCampaignId?: string | null;
     campaigns?: { id: string; cosmsParDefaut?: string[] }[];
     scenes?: Scene[];
+    sessions?: { status?: string; campaignId?: string | null; sessionEntityIds?: string[] }[];
     getActiveDriver?: () => GameDriver | null | undefined;
 };
 
@@ -216,18 +218,35 @@ function direLaDistribution(magasin: unknown, d: DistributionDeCosm, decks: read
 const nomDuPersonnage = (magasin: unknown, id: string) =>
     ((magasin as MagasinEntier).players ?? []).flatMap(p => p.characters ?? []).find(c => c.id === id)?.name ?? 'Un personnage';
 
-/** Les personnages de la campagne ouverte, et la taille de main du jeu (4 par défaut). */
-function mainsDeLaCampagne(magasin: unknown): { porteurs: string[]; taille: number } {
+/**
+ * Les personnages qui reçoivent des cartes, et la taille de main du jeu (4 par défaut).
+ *
+ * **Seulement ceux qui jouent la séance** — 24/11/2026 (§ 1 bis du 08/11, David : « fait 5 »). Toute la
+ * campagne recevait : la recette de Torg, trois principaux et six personnages d'atelier, distribuait
+ * neuf mains (36 cartes, 45 sous Héroïsme) en Fin d'Acte. La règle est celle de la Table du 11/11
+ * (`personnagesDeLaSeance`) : pendant une séance en cours, les personnages qui y sont ajoutés
+ * (`sessionEntityIds`). Sans séance, ou si aucun personnage de la campagne n'y est ajouté, toute la
+ * campagne, comme avant — une distribution qui ne donne rien à personne aurait l'air cassée.
+ * `horsSeance` nomme ceux qu'on laisse de côté, pour que le message le dise.
+ */
+function mainsDeLaCampagne(magasin: unknown): { porteurs: string[]; taille: number; horsSeance: string[] } {
     const m = magasin as MagasinEntier;
-    const porteurs = (m.players ?? []).flatMap(p => p.characters ?? [])
-        .filter(c => c.campaignId === m.activeCampaignId)
-        .map(c => c.id);
+    const deLaCampagne = (m.players ?? []).flatMap(p => p.characters ?? [])
+        .filter(c => c.campaignId === m.activeCampaignId);
+    const seance = (m.sessions ?? []).find(s => s.status === 'active' && String(s.campaignId) === String(m.activeCampaignId));
+    const { visibles } = personnagesDeLaSeance(deLaCampagne, seance);
+    const retenus = seance && visibles.length > 0 ? visibles : deLaCampagne;
+    const porteurs = retenus.map(c => c.id);
+    const horsSeance = deLaCampagne.filter(c => !porteurs.includes(c.id)).map(c => c.name);
     // La Loi de l'Héroïsme (Empire du Nil) porte la main à cinq cartes.
     const pilote = m.getActiveDriver?.();
     const campagne = (m.campaigns ?? []).find(c => c.id === m.activeCampaignId);
     const cosms = cosmsDesIds(pilote?.cosms, idsDesCosmsCourants(campagne, m.scenes ?? []));
-    return { porteurs, taille: tailleDeLaMain(pilote?.cartesDuDestin?.taille ?? 4, cosms) };
+    return { porteurs, taille: tailleDeLaMain(pilote?.cartesDuDestin?.taille ?? 4, cosms), horsSeance };
 }
+
+/** « Hors séance, rien distribué : … » — vide quand toute la campagne a reçu. Leur main n'est pas touchée. */
+const direHorsSeance = (horsSeance: string[]) => horsSeance.length ? ` Hors séance, rien distribué : ${horsSeance.join(', ')}.` : '';
 
 /** Le bilan en une phrase : qui a pioché, qui a trop de cartes, ce qui a manqué. */
 function direLeBilan(magasin: unknown, bilan: BilanDesMains, taille: number): string {
@@ -262,13 +281,14 @@ function distribuerLesCartesDeCosm(
             : `Aucun paquet marqué « Paquet de Cosm » pour ${cosms.map(c => c.nom).join(' ou ')}.`, 'warning');
         return;
     }
+    const mains = mainsDeLaCampagne(magasin);
     const contexte = {
-        paquets, etats: magasin.deckStates, porteurs: mainsDeLaCampagne(magasin).porteurs,
+        paquets, etats: magasin.deckStates, porteurs: mains.porteurs,
         courants, choix, melanger: DeckInterpreter.shuffle,
     };
     const d = debutDActe ? cartesDeCosmDuDebutDActe(contexte) : cartesDeCosmAuChangement(contexte);
     set(store => ({ deckStates: { ...store.deckStates, ...d.etats } }));
-    gmToast(`${debutDActe ? 'Début d’Acte' : 'Changement de cosm'} — Cartes de Cosm. ${direLaDistribution(magasin, d, paquets)}.`, 'info');
+    gmToast(`${debutDActe ? 'Début d’Acte' : 'Changement de cosm'} — Cartes de Cosm. ${direLaDistribution(magasin, d, paquets)}.${direHorsSeance(mains.horsSeance)}`, 'info');
 }
 
 export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
@@ -748,20 +768,20 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
     completerLesMainsDuDestin: (deckId) => {
         const etat = get().deckStates[deckId];
         if (!etat) return;
-        const { porteurs, taille } = mainsDeLaCampagne(get());
+        const { porteurs, taille, horsSeance } = mainsDeLaCampagne(get());
         const bilan = completerLesMains(etat, porteurs, taille, DeckInterpreter.shuffle);
         get().appliquerAuPaquet(deckId, () => ({ ...bilan.etat, torgUsagesScene: [] }));
-        gmToast(direLeBilan(get(), bilan, taille), 'info');
+        gmToast(direLeBilan(get(), bilan, taille) + direHorsSeance(horsSeance), 'info');
     },
 
     nouvellesMainsDuDestin: (deckId) => {
         const etat = get().deckStates[deckId];
         const deck = get().decks.find(d => d.id === deckId);
         if (!etat || !deck) return;
-        const { porteurs, taille } = mainsDeLaCampagne(get());
+        const { porteurs, taille, horsSeance } = mainsDeLaCampagne(get());
         const bilan = nouvellesMains(etat, porteurs, taille, deck.useDiscard, DeckInterpreter.shuffle);
         get().appliquerAuPaquet(deckId, () => ({ ...bilan.etat, torgUsagesScene: [], torgUsagesActe: [], torgUsagesCombat: [], torgChoix: {} }));
-        gmToast(`Fin d’Acte — nouvelles mains. ${direLeBilan(get(), bilan, taille)}`, 'info');
+        gmToast(`Fin d’Acte — nouvelles mains. ${direLeBilan(get(), bilan, taille)}${direHorsSeance(horsSeance)}`, 'info');
     },
 
     piocherUneCarteDuDestin: (deckId, characterId) => {

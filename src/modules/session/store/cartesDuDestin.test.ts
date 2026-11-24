@@ -82,3 +82,29 @@ describe('les gestes du meneur', () => {
         expect(carte(1)).toMatchObject({ porteur: 'teo', face: 'revelee' });
     });
 });
+
+/** **Seulement ceux qui jouent la séance** (24/11/2026, § 1 bis du 08/11) : les distributions suivent la règle de la Table. */
+describe('la distribution pendant une séance', () => {
+    const compte = (p: string) => mains().filter(c => c.porteur === p).length;
+    it('séance en cours avec Mara seule : Teo, hors séance, ne pioche pas et garde sa main — et le message le dit', async () => {
+        const { useToastStore } = await import('../../../stores/useToastStore');
+        useSessionOSStore.setState({ sessions: [{ id: 's', campaignId: 'c', status: 'active', sessionEntityIds: ['mara'] }] } as never);
+        useSessionOSStore.getState().completerLesMainsDuDestin('destin');
+        expect(compte('mara')).toBe(3);
+        expect(compte('teo')).toBe(1);
+        expect(useToastStore.getState().toasts.at(-1)?.message).toContain('Hors séance, rien distribué : Teo.');
+        // Fin d'Acte : la main de Mara est refaite ; celle de Teo, absent, n'est pas touchée.
+        useSessionOSStore.getState().nouvellesMainsDuDestin('destin');
+        expect(compte('mara')).toBe(3);
+        expect(compte('teo')).toBe(1);
+    });
+
+    it('séance sans personnage ajouté, ou séance close : toute la campagne, comme avant', () => {
+        useSessionOSStore.setState({ sessions: [{ id: 's', campaignId: 'c', status: 'active', sessionEntityIds: [] }] } as never);
+        useSessionOSStore.getState().completerLesMainsDuDestin('destin');
+        expect([compte('mara'), compte('teo')]).toEqual([3, 3]);
+        useSessionOSStore.setState({ deckStates: { destin: etat() }, sessions: [{ id: 's', campaignId: 'c', status: 'completed', sessionEntityIds: ['mara'] }] } as never);
+        useSessionOSStore.getState().completerLesMainsDuDestin('destin');
+        expect([compte('mara'), compte('teo')]).toEqual([3, 3]);
+    });
+});
