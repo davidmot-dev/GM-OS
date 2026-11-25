@@ -68,3 +68,22 @@ tableau de bord de l'Ulanzi, « Fire » en client de 960 × 600 en rôle `hub`.
 | `essai-t14-3-accueil-code-demande.png` | Après l'Écran de table : appairage oublié, « Code du meneur demandé », « Rôle actuel » sur l'Écran |
 | `essai-t14-4-code-faux.png` | « Code incorrect. Encore 2 essais. » ; le pavé tient en 600 px, « Retour aux rôles » compris (resserré après une première capture) |
 | `essai-t14-5-aide-au-mj.png` | Le bon code : l'Aide au MJ appairée, « Changer de rôle » en bas de la colonne |
+
+## Essai complet sur la vraie Fire (T15, 25/11)
+
+Instance jetable de GM-OS (`dist/`, port 4100, campagne Alien fictive, code `4821`), la vraie Fire en
+Firefox 143 tenue en **portrait** (800 × 1280), gestes par ADB, captures d'écran de l'appareil.
+
+| Fichier | Ce qu'il montre |
+| --- | --- |
+| `essai-t15-1-combat-tour-decale.png` | C2 : « Suivant » a fait avancer le poste au Rôdeur caché — mais la Fire surligne Wilson (**défaut 1**) |
+| `essai-t15-2-jet-et-verdict.png` | C3 : jet lancé depuis la Fire, verdict « Réussite » — 9 dés pour 3 demandés (**défaut 2**, le Seuil lu comme équipement) |
+| `essai-t15-3-m314-oriente-et-scan.png` | C6 : M314 à la table, cap 15° tourné sur la Fire, scan du poste reçu (1 écho, Énergie 4) |
+| `essai-t15-4-ecran-de-table-suit-le-poste.png` | C10 : jauge 9/10 et Wilson actif, changés au poste sans geste sur la Fire |
+| `essai-t15-5-dernier-role-rouvert.png` | C11 : Firefox arrêté de force puis rouvert sur l'accueil → l'Écran de table revient seul |
+| `essai-t15-6-code-faux.png` | T14 sur l'appareil : « Code incorrect. Encore 2 essais. » |
+| `essai-t15-7-vieux-jet-reaffiche.png` | Bon code → Aide au MJ, mais le jet d'un quart d'heure plus tôt réapparaît (**défaut 4**) |
+| `essai-t15-8-portrait-sans-changer-de-role.png` | En portrait, barre du bas : pas de « Changer de rôle » (**défaut 3**) |
+| `essai-t15-9-corrige-pas-de-vieux-jet.png` | Après correction et build : l'Aide au MJ s'ouvre sans ressortir le vieux jet ; « R1 · Rôdeur secret » |
+| `essai-t15-10-corrige-cache-et-changer-de-role.png` | Le Rôdeur surligné, marqué « Caché aux joueurs » ; en portrait, « Changer de rôle » en haut |
+| `essai-t15-11-corrige-trois-des.png` | Mode « Year Zero Engine » adopté seul : 3 dés demandés, 3 dés de base lancés |

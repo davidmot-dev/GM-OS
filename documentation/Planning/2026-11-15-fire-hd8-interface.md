@@ -407,7 +407,37 @@ captures ADB du 15/11 comme point de départ ; David choisit le dessin **avant**
       bon code → Aide au MJ appairée, accueil → dernier rôle), captures `essai-t14-*.png` relues ;
       `outils/fire/preparer-la-fire.ps1` ouvre l'accueil par défaut ; guide 64.
 - [ ] T15 · Essai complet sur la Fire avec une campagne (Alien) : C2, C3, C6, C10, C11 ; manuel
-      (`documentation/User Guides/`, page des tablettes) — **à essayer par David**.
+      (`documentation/User Guides/`, page des tablettes) — **à essayer par David**. **Mené le
+      25/11 sur la vraie Fire** (David : « Fait t15 », puis « fire est branché ») : instance jetable de
+      GM-OS (`dist/`, port 4100, campagne Alien fictive, code 4821), Firefox 143 en portrait,
+      gestes par ADB, captures `visuels/…/essai-t15-*.png`. Résultats :
+      C2 ✅ « Suivant » sur la Fire fait avancer le tour au poste ; C3 ✅ le jet part de la Fire, le
+      poste l'enregistre, la Fire montre le verdict ; C6 ✅ M314 ouvert à la table : la rotation de la
+      Fire arrive au poste (cap 15°), le scan du poste arrive à la Fire ; C10 ✅ jauge 6 → 9 et tour
+      changés au poste, l'écran suit sans geste (combattant caché rendu « ? ») ; C11 ✅ Firefox arrêté
+      de force puis rouvert sur l'accueil : l'Écran de table revient seul, et la Fire reste allumée
+      sur secteur (`stay_on_while_plugged_in` = 3) ; T14 ✅ sur l'appareil : rôle public → « Code du
+      meneur demandé », code faux → « Encore 2 essais », bon code → Aide au MJ appairée.
+      **Quatre défauts trouvés, corrigés le jour même** (David : « non », GM-OS fermé ; registre
+      § 1 bis), puis revérifiés sur la Fire après `npm run build` (captures `essai-t15-9` à `-11`) :
+      les cachés sont retirés pour la table par `caviarderPourLesJoueurs`, qui recalcule l'indice
+      (`-1` quand un caché joue) — voie complète **et** voie rapide ; l'Aide au MJ les montre, marqués
+      « Caché aux joueurs » (recommandation de Claude, David n'a pas tranché) ; le pavé de dés adopte
+      le mode du jeu dès l'ouverture et n'envoie de dés d'équipement que sous « Dés Equip. (E) » ;
+      « Changer de rôle » passe dans la barre d'état sous 900 px ; `useDernierJet` n'amorce qu'à la
+      première synchronisation. Essais : `caviardageDesJoueurs.test.ts` (+3),
+      `useDernierJet.test.ts` (+2), `RemoteDicePad.test.tsx` (nouveau, 3), `ligneDEtat.test.tsx`
+      (+1) ; 44 fichiers de `src/modules/remote` et du Hub, 385 essais ; `tsc -b`, `eslint`.
+      **À vérifier** : la Fire s'est endormie pendant l'essai alors que `mStayOn=true` et USB
+      alimenté (éteinte au bouton ?). Les défauts constatés : (1) l'Aide au MJ surligne
+      le mauvais combattant quand un combattant caché le précède — la liste envoyée retire les cachés
+      mais garde l'indice du tour de la liste complète (`useNexusSynchronizer.ts:326` et `:434`) ;
+      la tablette des joueurs (`HubCombatTracker`) lit le même indice ; (2) « Lancer Système » d'un jeu
+      Year Zero envoie le **Seuil** (6 par défaut) comme dés d'équipement : 3 dés demandés, 9 lancés
+      (`RemoteDicePad.tsx:163`) ; (3) en portrait (moins de 900 px), « Changer de rôle » n'existe pas
+      sur l'Aide au MJ : il n'est que dans la colonne de gauche (`RemoteControl.tsx:276`) ;
+      (4) rouvrir l'Aide au MJ réaffiche le dernier jet comme neuf : `useDernierJet` amorce avant que
+      la première synchronisation soit arrivée.
 
 ## Analyse
 

@@ -438,6 +438,25 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
+**25/11/2026 — Fire HD 8, essai T15 (§ 256) : quatre défauts des tablettes, vus sur la vraie
+Fire.** Détail et captures dans la [spécification](2026-11-15-fire-hd8-interface.md) (T15) et
+`visuels/fire-hd8-2026-11-15/essai-t15-*.png`. Les critères C2, C3, C6, C10, C11 passent.
+✅ **Les quatre corrigés le 25/11** (David : « non », GM-OS fermé) et revérifiés sur la Fire après
+build — détail dans la spécification, T15. Reste à vérifier : la Fire endormie pendant l'essai
+malgré `mStayOn=true` sur USB. Les défauts constatés :
+1. **Combattant actif décalé** sur l'Aide au MJ (et la tablette des joueurs) quand un combattant
+   caché précède : `useNexusSynchronizer.ts:326` retire les cachés, `:434` garde l'indice de la
+   liste complète. La voie rapide (`segment 'combat'`, `:91`) envoie, elle, la liste **avec** les
+   cachés, sans filtre (le caviardage ne touche pas au combat) ; le Hub ne les masque qu'à
+   l'affichage. L'écran de table, lui, est juste (`ordreDuTourPourLaTable`).
+2. **« Lancer Système » Year Zero** sur la télécommande : `gearCount: threshold`
+   (`RemoteDicePad.tsx:163`) — le Seuil (6 par défaut, libellé « Seuil (Target) » car les libellés
+   suivent le mode manuel) devient six dés d'équipement.
+3. **Pas de « Changer de rôle » en portrait** sur l'Aide au MJ (`RemoteControl.tsx:276`, colonne
+   cachée sous 900 px).
+4. **Le dernier jet ressurgit** à l'ouverture de l'Aide au MJ : `useDernierJet` amorce sur
+   `undefined`, avant la première synchronisation.
+
 **23/11/2026 — Crimes, CRI-A01 : les loyautés de contacts restent dans la charge joueur.**
 Constat du lot de campagne du 20/11 retrouvé par le contrôle pur de la vidéo du 23/11 :
 `caviarderPourLesJoueurs` garde `contacts_0_rating` et `contacts_0_appels` (valeurs fictives 3 et 0),

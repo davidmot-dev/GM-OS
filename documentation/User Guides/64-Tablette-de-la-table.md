@@ -199,7 +199,17 @@ l'instant sur l'[Ulanzi](./76-Afficheur-de-table-Ulanzi.md).
 | Pas de bip | Bips non activés, ou volume trop bas | **Activer les bips ici** ; montez le Volume du pupitre et celui de la tablette |
 | La tablette s'éteint | Sur batterie, ou chargeur USB du PC | Chargeur secteur ; `preparer-la-fire.ps1` |
 
+### Bon à savoir (essai sur la Fire du 25/11)
+
+- **Combat, sur l'Aide au MJ** : vous voyez aussi les combattants cachés, marqués **« Caché aux
+  joueurs »**. Les tablettes des joueurs et l'écran de table ne les reçoivent pas ; quand c'est un
+  caché qui joue, elles ne montrent personne d'actif (« ? » sur l'écran de table).
+- **Dés, jeu Year Zero (Alien…)** : le pavé prend seul le mode « Year Zero Engine » ; la seconde
+  case compte les **Dés Equip. (E)**, à 0 au départ.
+- **Tablette tenue en portrait** : « Changer de rôle » est en haut, à côté du point de liaison.
+- **Si la Fire s'endort sur le câble USB du PC**, branchez-la sur un chargeur secteur.
+
 ---
 
-*Accueil des rôles et code du meneur ajoutés le 2026-11-24 (T14). Chantier : registre des chantiers, § 256 et § 276 ; spécification
+*Accueil des rôles et code du meneur ajoutés le 2026-11-24 (T14) ; essai complet sur la Fire le 2026-11-25 (T15). Chantier : registre des chantiers, § 256 et § 276 ; spécification
 `documentation/Planning/2026-11-15-fire-hd8-interface.md`.*
