@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Gauge, Moon, Sun } from 'lucide-react';
 import { CadreDeTablette } from './socle/CadreDeTablette';
 import { usePleinEcranAuToucher } from '../hooks/usePleinEcranAuToucher';
+import { BoutonChangerDeRole } from './BoutonChangerDeRole';
 import { useEcranDeTable } from '../modules/ulanzi/useEcranDeTable';
 import { enMinutesSecondes } from '../modules/ulanzi/widgets/minuteur';
 import { lireLeTemps, type TuileDeLEcran } from '../modules/ulanzi/ecranDeTable';
@@ -172,6 +173,8 @@ const EcranDeTable: React.FC = () => {
                 <span aria-hidden className={`h-2 w-2 rounded-full ${connexion === 'connecte' ? 'bg-accent' : 'bg-app-text/30'}`} />
                 GM-OS · Écran de table
                 {!pleinEcran && <span className="ml-auto normal-case tracking-normal">Touche l’écran pour le plein écran</span>}
+                {/* Discret (maquette 5) : l'accueil des rôles, T14 du 24/11/2026. */}
+                <BoutonChangerDeRole className={pleinEcran ? 'ml-auto' : ''} />
             </header>
             {tuiles.length > 0 ? (
                 <main className={`grid flex-1 min-h-0 gap-3 ${GRILLES[tuiles.length] ?? 'grid-cols-3'} auto-rows-fr`}>

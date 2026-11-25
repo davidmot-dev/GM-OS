@@ -24,6 +24,7 @@ import LobbyMonitor from './settings/LobbyMonitor';
 import { useObsidianStore } from '../modules/session/useObsidianStore';
 import VerrouDeLaSouris from './settings/VerrouDeLaSouris';
 import PupitreDuBas from './settings/PupitreDuBas';
+import CodeDuMeneur from './settings/CodeDuMeneur';
 import RaccourcisDeNavigation from './settings/RaccourcisDeNavigation';
 import ReglageDesBoutons from '../modules/ulanzi/components/ReglageDesBoutons';
 import { QRCodeSVG } from 'qrcode.react';
@@ -709,6 +710,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                             {t('settings:remote.revoke_pairings')}
                                         </button>
                                         <PupitreDuBas />
+                                        <CodeDuMeneur />
                                     </div>
 
                                     <div className="p-4 rounded-xl bg-app-text/5 border border-app-text/5 flex items-center justify-between">

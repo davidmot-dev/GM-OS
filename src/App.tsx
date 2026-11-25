@@ -46,6 +46,8 @@ const RemoteControl = lazy(() => import('./modules/remote/RemoteControl'));
 /* La Fire HD 8 en appareil de table (15/11/2026, § 256). */
 const AppareilDeTable = lazy(() => import('./components/AppareilDeTable'));
 const EcranDeTable = lazy(() => import('./components/EcranDeTable'));
+/* Son accueil à trois rôles et le code du meneur (24/11/2026, § 256, T14). */
+const AccueilDeLaTablette = lazy(() => import('./components/AccueilDeLaTablette'));
 const SessionDashboard = lazy(() => import('./modules/session/SessionDashboard'));
 const ForgeOS = lazy(() => import('./modules/forge/ForgeOS'));
 const DiceBoard = lazy(() => import('./modules/dice/DiceBoard'));
@@ -343,6 +345,7 @@ function App() {
   const isRemoteView = searchParams.get('window') === 'remote' || pathname.includes('/remote');
   const isAppareilDeTableView = searchParams.get('window') === 'appareil-de-table';
   const isEcranDeTableView = searchParams.get('window') === 'ecran-de-table';
+  const isAccueilDeLaTabletteView = searchParams.get('window') === 'accueil-tablette';
 
   /*
     ⛔ **L'ÉCRAN BLOQUÉ DU 2026-09-12, ET IL NE DISAIT QUE TROIS MOTS.**
@@ -383,6 +386,8 @@ function App() {
         <ErrorBoundary moduleName="Appareil de table"><AppareilDeTable /></ErrorBoundary>
       ) : isEcranDeTableView ? (
         <ErrorBoundary moduleName="Écran de table"><EcranDeTable /></ErrorBoundary>
+      ) : isAccueilDeLaTabletteView ? (
+        <ErrorBoundary moduleName="Accueil de la tablette"><AccueilDeLaTablette /></ErrorBoundary>
       ) : isProjectorView ? (
         <ErrorBoundary moduleName="Projector View"><ProjectorView /></ErrorBoundary>
       ) : isHubView ? (

@@ -550,6 +550,9 @@ contextBridge.exposeInMainWorld('appBridge', {
         // Secret partagé permettant à un appareil de réclamer un rôle privilégié.
         getSecret: (): Promise<string> => ipcRenderer.invoke('pairing:get-secret'),
         rotate: (): Promise<string> => ipcRenderer.invoke('pairing:rotate'),
+        // Le code du meneur de la tablette de la table (§ 256, T14) : réglé ici, comparé par le SyncServer.
+        etatDuCode: (): Promise<{ regle: boolean }> => ipcRenderer.invoke('verrou:etat'),
+        reglerLeCode: (code: string | null): Promise<{ ok: boolean; regle: boolean }> => ipcRenderer.invoke('verrou:regler', code),
     },
     /**
      * **Le pupitre de l'écran du bas** — la télécommande du meneur sur la dalle

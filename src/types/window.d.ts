@@ -266,6 +266,9 @@ declare global {
         pairing?: {
             getSecret: () => Promise<string>;
             rotate: () => Promise<string>;
+            /** Le code du meneur de la tablette de la table (§ 256, T14). */
+            etatDuCode?: () => Promise<{ regle: boolean }>;
+            reglerLeCode?: (code: string | null) => Promise<{ ok: boolean; regle: boolean }>;
         };
         /** La télécommande du meneur sur l'écran du bas du Zenbook Duo (2026-09-25). */
         pupitre?: {

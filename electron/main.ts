@@ -75,6 +75,7 @@ import { OllamaService } from './OllamaService'
 import { SyncServer } from './SyncServer'
 import { mediaAccess } from './MediaAccess'
 import { registerPairingHandlers, pairingManager } from './PairingManager'
+import { registerVerrouHandlers } from './verrouDuMeneur'
 import { registerPupitreHandlers } from './pupitreDuBas'
 import { garderLesVuesWeb } from './navigateurIntegre'
 import { shouldRejectUnauthorized } from './netTrust'
@@ -146,6 +147,8 @@ registerSecurityHandlers();
 OllamaService.registerHandlers();
 // Register pairing secret handlers (QR d'appairage des rôles privilégiés)
 registerPairingHandlers();
+// Le code du meneur de la tablette de la table (Fire HD 8, § 256, T14)
+registerVerrouHandlers();
 
 // Register gmos protocol as privileged
 protocol.registerSchemesAsPrivileged([

@@ -30,6 +30,8 @@ import RemoteMessenger from './components/RemoteMessenger';
 import { RemoteModule } from './components/RemoteModule';
 import { RemoteModulesDuJeu } from './components/RemoteModulesDuJeu';
 import RemoteTables from './components/RemoteTables';
+import { BoutonChangerDeRole } from '../../components/BoutonChangerDeRole';
+import { lireRoleMemorise } from '../tablette/roleDeLaTablette';
 import { useDernierJet } from './hooks/useDernierJet';
 
 /**
@@ -270,6 +272,8 @@ const RemoteControl: React.FC = () => {
                     )}
                 </div>
                 {boutonsDOnglet(true)}
+                {/* La tablette de la table (§ 256, T14) : seulement si elle est passée par l'accueil des rôles. */}
+                {lireRoleMemorise() && <BoutonChangerDeRole className="mt-auto text-[13px]" />}
             </nav>
 
             <div className="flex-1 flex flex-col min-w-0 relative">

@@ -55,3 +55,17 @@ export function clearPairingToken(): void {
         /* rien à faire */
     }
 }
+
+/**
+ * Range le secret rendu par le serveur quand la tablette de la table donne le bon code du meneur
+ * (§ 256, T14, `verrou:ouvrir`) : comme s'il venait du QR, sans repasser par l'URL.
+ */
+export function enregistrerPairingToken(token: string): boolean {
+    if (typeof window === 'undefined' || !token) return false;
+    try {
+        window.localStorage.setItem(STORAGE_KEY, token);
+        return true;
+    } catch {
+        return false;
+    }
+}

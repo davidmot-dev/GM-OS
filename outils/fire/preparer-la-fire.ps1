@@ -27,8 +27,9 @@
 param(
     # Adresse du poste GM-OS vue depuis la tablette (IP:port du SyncServer), par exemple 192.168.0.211:3001.
     [string]$Adresse,
-    # Chemin ouvert dans Firefox avec -Adresse (« ?window=tablet » pour le Hub d'un joueur).
-    [string]$Chemin = '/?window=tablet',
+    # Chemin ouvert dans Firefox avec -Adresse. Par défaut l'accueil des rôles (§ 256, T14, 24/11/2026) :
+    # il rouvre le dernier rôle de la tablette. « /?window=tablet » pour le Hub d'un joueur.
+    [string]$Chemin = '/?window=accueil-tablette',
     # Remet les réglages d'usine au lieu de préparer la tablette.
     [switch]$Retablir
 )

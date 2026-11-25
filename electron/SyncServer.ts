@@ -19,6 +19,7 @@ import { filtrerAstrologieDistante } from '../src/modules/session/logic/astrolog
 import { caviarderPourLesJoueurs } from '../src/modules/remote/logic/caviardageDesJoueurs';
 import { mediaAccess } from './MediaAccess';
 import { pairingManager } from './PairingManager';
+import { verrouDuMeneur, LimiteurDEssais } from './verrouDuMeneur';
 import { evaluateAction, isPrivilegedRole, retirerCeQuiRevientAuMeneur } from './actionPolicy';
 import { auditDenied } from './auditLog';
 import { lecteurDuRole, messagePourLeLecteur, sansLesChampsDuMeneur, type MessageAchemine } from './destinatairesDesMessages';
@@ -469,6 +470,8 @@ export class SyncServer {
                 
                 if (data.type === 'remote:register') {
                     this.handleRegister(ws, data.payload);
+                } else if (data.type === 'verrou:etat' || data.type === 'verrou:ouvrir') {
+                    this.repondreAuVerrou(ws, data);
                 } else if (data.type === 'remote:ping') {
                     ws.send(JSON.stringify({ type: 'remote:pong', payload: data.payload }));
                 } else if (typeof data.type === 'string' && data.type.startsWith('modules:mj:')) {
@@ -500,6 +503,32 @@ export class SyncServer {
                 void this.diffuserLesModules();
             }
         });
+    }
+
+    /** Trois essais par adresse, puis une attente qui double (`verrouDuMeneur.ts`). */
+    private readonly essaisDuVerrou = new LimiteurDEssais();
+
+    /**
+     * **Le verrou de la tablette de la table** — § 256, T14 (24/11/2026). La tablette qui quitte un
+     * rôle public a oublié son secret d'appairage ; le code du meneur, comparé ici, le lui rend. Le
+     * code ne quitte jamais le poste ; un essai faux est compté par adresse et journalisé.
+     */
+    private repondreAuVerrou(ws: ExtendedWebSocket, data: MessageRecu) {
+        const repondre = (payload: Record<string, unknown>) => ws.send(JSON.stringify({ type: data.type, payload }));
+        if (data.type === 'verrou:etat') { repondre({ codeRegle: verrouDuMeneur.estRegle() }); return; }
+        const cle = ws.remoteAddress ?? 'inconnue';
+        if (!verrouDuMeneur.estRegle()) { repondre({ ok: false, raison: 'aucun-code' }); return; }
+        const attente = this.essaisDuVerrou.attente(cle);
+        if (attente > 0) { repondre({ ok: false, raison: 'bloque', attenteMs: attente }); return; }
+        const code = objetSimple(data.payload) ? data.payload.code : undefined;
+        if (verrouDuMeneur.verifier(code)) {
+            this.essaisDuVerrou.reussite(cle);
+            repondre({ ok: true, token: pairingManager.getSecret() });
+            return;
+        }
+        const { restants, attenteMs } = this.essaisDuVerrou.echec(cle);
+        auditDenied(`Code du meneur faux depuis ${cle}${attenteMs ? ` : attente de ${Math.round(attenteMs / 60_000)} min` : ''}`);
+        repondre(attenteMs ? { ok: false, raison: 'bloque', attenteMs } : { ok: false, raison: 'faux', restants });
     }
 
     private handleRegister(ws: ExtendedWebSocket, payload: unknown) {

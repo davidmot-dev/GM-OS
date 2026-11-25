@@ -3,6 +3,7 @@ import { CadreDeTablette } from './socle/CadreDeTablette';
 import { usePleinEcranAuToucher } from '../hooks/usePleinEcranAuToucher';
 import { VueDeModule } from '../modules/modulesDuJeu/vuesDuRegistre';
 import { useAppareilDeTable } from '../modules/modulesDuJeu/useAppareilDeTable';
+import { BoutonChangerDeRole } from './BoutonChangerDeRole';
 
 /**
  * **L'appareil de table** (`?window=appareil-de-table`) — Fire HD 8, registre § 256, T11.
@@ -39,6 +40,8 @@ const AppareilDeTable: React.FC = () => {
                         ))}
                     </nav>
                 ) : <span className="mx-auto font-bold text-app-text">{ouvert?.libelle ?? ''}</span>}
+                {/* L'accueil des rôles (T14, 24/11/2026) : le bouton qu'attendait la maquette. */}
+                <BoutonChangerDeRole />
             </header>
 
             <main className="flex-1 min-h-0 overflow-auto">
