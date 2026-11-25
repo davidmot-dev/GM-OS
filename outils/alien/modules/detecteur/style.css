@@ -42,3 +42,28 @@
 .gmos-detecteur select:focus-visible { outline:2px solid #b8e2c4; outline-offset:3px; }
 @media (max-width:760px) { .gmos-detecteur .detecteur-orientation button { min-height:48px; } }
 .gmos-detecteur strong,.gmos-detecteur li,.gmos-detecteur figcaption { overflow-wrap:anywhere; }
+/* La vue joueur (25/11/2026) : titre, radar, commandes en portrait ; en paysage, le radar à gauche, à la
+   hauteur de l'écran, et le reste à droite — la tablette de la table (960 × 600) sans défilement. */
+.gmos-detecteur .detecteur-joueur { display:grid; grid-template-areas:"entete" "radar" "cote"; gap:16px; }
+.gmos-detecteur .detecteur-joueur > header { grid-area:entete; margin:0; }
+.gmos-detecteur .detecteur-joueur-radar { grid-area:radar; min-width:0; }
+.gmos-detecteur .detecteur-joueur-cote { grid-area:cote; min-width:0; }
+@media (orientation:landscape) and (min-width:700px) {
+  .gmos-detecteur.detecteur-vue-joueur { max-width:none; padding:16px; }
+  .gmos-detecteur .detecteur-joueur { grid-template-columns:auto minmax(260px,1fr); grid-template-rows:auto 1fr; grid-template-areas:"radar entete" "radar cote"; align-items:start; column-gap:20px; row-gap:10px; }
+  .gmos-detecteur .detecteur-joueur-radar .detecteur-ecran { width:min(58vw, calc(100dvh - 190px)); min-width:240px; max-width:none; margin:0; }
+  /* Le nom du module est déjà dans le bandeau de l'hôte : en paysage, la place va aux commandes. */
+  .gmos-detecteur .detecteur-joueur { grid-template-areas:"radar cote" "radar cote"; }
+  .gmos-detecteur .detecteur-joueur > header { display:none; }
+  /* Si les commandes débordent encore (beaucoup de zones à l'écho), elles défilent seules : le radar reste. */
+  .gmos-detecteur .detecteur-joueur-cote { max-height:calc(100dvh - 120px); overflow-y:auto; padding-right:4px; }
+  .gmos-detecteur .detecteur-joueur-cote .detecteur-reglages { margin:0 0 12px; }
+  .gmos-detecteur .detecteur-joueur-cote .detecteur-orientation { padding:12px; }
+  .gmos-detecteur .detecteur-joueur-cote .detecteur-orientation h3 { margin-bottom:6px; }
+  .gmos-detecteur .detecteur-joueur-cote .detecteur-orientation p { margin-bottom:6px; }
+  .gmos-detecteur .detecteur-joueur-cote .detecteur-orientation > p:not(:last-child) { display:none; }
+  .gmos-detecteur .detecteur-joueur-cote .detecteur-son { margin:0 0 12px; flex-direction:row; align-items:center; }
+  .gmos-detecteur .detecteur-joueur-cote .detecteur-son button { flex-shrink:0; white-space:nowrap; }
+  .gmos-detecteur .detecteur-joueur-cote h3 { margin-bottom:6px; }
+  .gmos-detecteur .detecteur-joueur-cote ul { margin:0; padding-left:18px; }
+}

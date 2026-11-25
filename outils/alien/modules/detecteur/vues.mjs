@@ -126,11 +126,24 @@ function Son({ tracker: t, horloge }) {
 }
 function Instrument({ vue, children, horloge, envoyer, occupe }) {
   const reduit = useMouvementsReduits();
-  return h('section', { className: 'gmos-detecteur' },
-    h('header', null, h('p', { className: 'detecteur-sur-titre' }, 'INSTRUMENT PORTATIF · MODÈLE M314'),
-      h('h2', null, 'Détecteur de mouvement'), h('p', null, vue.lectureDiscrete ? 'M314 · échos du dernier scan de jeu.' : 'Signal scénarisé · aucune distance physique mesurée.')),
-    h('div', { className: children ? 'detecteur-grille' : '' }, h('div', null, h(Radar, { vue, reduit, horloge }),
-      h(Orientation,{vue,envoyer,occupe}),h(Son, { tracker: vue.tracker, horloge }),vue.lectureDiscrete&&h(LectureDiscrete,{lecture:vue.lectureDiscrete})), children));
+  const entete = h('header', null, h('p', { className: 'detecteur-sur-titre' }, 'INSTRUMENT PORTATIF · MODÈLE M314'),
+    h('h2', null, 'Détecteur de mouvement'), h('p', null, vue.lectureDiscrete ? 'M314 · échos du dernier scan de jeu.' : 'Signal scénarisé · aucune distance physique mesurée.'));
+  const commandes = [h(Orientation,{key:'orientation',vue,envoyer,occupe}),h(Son, { key:'son',tracker: vue.tracker, horloge }),vue.lectureDiscrete&&h(LectureDiscrete,{key:'lecture',lecture:vue.lectureDiscrete})];
+  /*
+    **La vue joueur en paysage : le radar à gauche, les commandes à droite** — 25/11/2026, David :
+    « Corrige le m314 ». Sur la tablette de la table (Fire HD 8, 960 × 600, registre § 256), tout
+    s'empilait : il fallait faire défiler pour voir le radar. En portrait, rien ne change ; en paysage,
+    une grille (`style.css`, `.detecteur-joueur`) met le radar à la hauteur de l'écran, comme la
+    maquette validée le 15/11. Le pupitre du meneur garde sa disposition.
+  */
+  if (!children) {
+    return h('section', { className: 'gmos-detecteur detecteur-vue-joueur' },
+      h('div', { className: 'detecteur-joueur' }, entete,
+        h('div', { className: 'detecteur-joueur-radar' }, h(Radar, { vue, reduit, horloge })),
+        h('div', { className: 'detecteur-joueur-cote' }, ...commandes)));
+  }
+  return h('section', { className: 'gmos-detecteur' }, entete,
+    h('div', { className: 'detecteur-grille' }, h('div', null, h(Radar, { vue, reduit, horloge }), ...commandes), children));
 }
 export function VueJoueur({ vue, horloge, envoyerCommande }) {
   const {envoyer,occupe,erreur}=useCommandesDetecteur(envoyerCommande);
