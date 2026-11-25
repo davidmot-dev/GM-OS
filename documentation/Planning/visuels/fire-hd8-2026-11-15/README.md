@@ -44,6 +44,7 @@ HTTP/WebSocket de 960 × 600 sans pont Electron.
 | `essai-t11-2-m314-oriente-par-la-table.png` | Désignée « joueur qui oriente », la table tourne le M314 : cap 15°, lu au poste du meneur |
 
 ⚠️ En paysage, la vue joueur du M314 s'empile : le radar ne tient pas sans défiler. La maquette prévoyait
+✅ Corrigé le 25/11 : deux colonnes en paysage, comme la maquette (`essai-m314-paysage.png`, même e2e).
 le radar à gauche et l'orientation à droite ; ce dessin appartient au module (`outils/alien/modules/detecteur/`).
 
 ## Essai de l'écran de table (T12-T13, 15/11)
@@ -55,3 +56,15 @@ tableau de bord de l'Ulanzi, « Fire » en client de 960 × 600 en rôle `hub`.
 | --- | --- |
 | `essai-t13-1-ordre-et-jauge.png` | « Ordre du tour » (Wilson actif, Tour 3, le rôdeur caché sauté) et « Air restant » 6/10 ; la jauge secrète n'apparaît pas |
 | `essai-t13-2-quatre-tuiles-impact.png` | Après « un peu plat » puis « plus impactante » : relief, lueurs à la teinte du thème, jauge critique (9/10) en rouge battant, minuteur sous la minute qui bat, chiffres calés sur la tuile |
+
+## Essai de l'accueil des rôles et du code du meneur (T14, 24/11)
+
+`e2e/accueilDeLaTablette.spec.ts` : profil jetable, code `4821` réglé au poste par son pont, « Fire » en client de
+960 × 600 sans pont Electron, appairée comme par le QR.
+
+| Fichier | Ce qu'il montre |
+| --- | --- |
+| `essai-t14-1-accueil-appairee.png` | L'accueil appairé : trois rôles, pas de code demandé tant que la tablette garde son appairage |
+| `essai-t14-3-accueil-code-demande.png` | Après l'Écran de table : appairage oublié, « Code du meneur demandé », « Rôle actuel » sur l'Écran |
+| `essai-t14-4-code-faux.png` | « Code incorrect. Encore 2 essais. » ; le pavé tient en 600 px, « Retour aux rôles » compris (resserré après une première capture) |
+| `essai-t14-5-aide-au-mj.png` | Le bon code : l'Aide au MJ appairée, « Changer de rôle » en bas de la colonne |

@@ -358,6 +358,10 @@ captures ADB du 15/11 comme point de départ ; David choisit le dessin **avant**
       n'a pas pu y être ouvert, la répétition n'ayant pas le pilote Alien (import manuel raté
       par David). ⚠️ **Reste** : en paysage, la vue joueur du M314 s'empile (radar à faire défiler) ;
       la maquette mettait le radar à gauche — dessin du module, à reprendre à part.
+      ✅ **Corrigé le 25/11** (David : « Corrige le m314 ») : la vue joueur passe en deux colonnes en
+      paysage (radar à gauche, à la hauteur de l'écran ; orientation, bips et mode discret à droite,
+      qui défilent seuls si besoin) ; portrait et pupitre du meneur inchangés. e2e `appareilDeTable.spec.ts`
+      repassé, capture `essai-m314-paysage.png`.
 - [x] T12 · Sélection de l'écran de table (magasin, librairie, tableau de bord de l'Ulanzi), widget
       « Ordre du tour », widgets composés dans le flux `hub` — couvre C9, C10 · touche src/ ⛔ · **fait
       le 15/11** : `src/modules/ulanzi/ecranDeTable.ts` (pur : `CATALOGUE_DE_L_ECRAN` = ordre du tour,
@@ -387,7 +391,21 @@ captures ADB du 15/11 comme point de départ ; David choisit le dessin **avant**
       rôles (écran, appareil de table, télécommande), vérifié sur la Fire. David : *« ok c'est bon »*.
 - [ ] T14 · Accueil des rôles, rôle mémorisé, code à quatre chiffres (réglage au PC, comparaison au
       serveur) — couvre C11, C12 · essai : test du composant (stockage indisponible compris), test du
-      serveur (code faux, essais limités), e2e · touche src/ et electron/ ⛔ · **à essayer par David**.
+      serveur (code faux, essais limités), e2e · touche src/ et electron/ ⛔ · **à essayer par David** ·
+      **codé le 24/11** (David : « Fais t14 gm-os est fermé ») : `AccueilDeLaTablette.tsx`
+      (`?window=accueil-tablette`, maquettes 1 et 2), `roleDeLaTablette.ts` (rôle mémorisé sous
+      `try/catch`, `sync=` gardé), `useVerrouDuMeneur.ts`, `BoutonChangerDeRole.tsx` dans les trois
+      rôles (télécommande : seulement après l'accueil), `settings/CodeDuMeneur.tsx` (Paramètres ›
+      Télécommande), `electron/verrouDuMeneur.ts` (scrypt et sel, fichier à part de `pairing.json`,
+      trois essais puis attente qui double, par adresse), `SyncServer` (`verrou:etat`,
+      `verrou:ouvrir`). **Écart à la lettre du plan, pour tenir la décision Q6** : la tablette
+      **oublie son secret d'appairage** en rôle public (si un code est réglé) et le bon code le lui
+      rend ; un simple écran de code n'aurait rien protégé, `?window=remote` tapé à la main suffisait.
+      Essais : `verrouDuMeneur.test.ts` (3), `SyncServer.verrou.test.ts` (3),
+      `AccueilDeLaTablette.test.tsx` (8) ; e2e `accueilDeLaTablette.spec.ts` réussi (appairée,
+      Écran de table → secret oublié, adresse de la télécommande → « Non appairée », code faux compté,
+      bon code → Aide au MJ appairée, accueil → dernier rôle), captures `essai-t14-*.png` relues ;
+      `outils/fire/preparer-la-fire.ps1` ouvre l'accueil par défaut ; guide 64.
 - [ ] T15 · Essai complet sur la Fire avec une campagne (Alien) : C2, C3, C6, C10, C11 ; manuel
       (`documentation/User Guides/`, page des tablettes) — **à essayer par David**.
 

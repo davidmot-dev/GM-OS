@@ -15218,10 +15218,46 @@ aucune donnée personnelle, installation, publication ou commande git d’écrit
 - **Reste** : l'essai de David — réimporter `Delta-Green-2.2.0` avec « Remplacer », ouvrir le
   catalogue, prendre un objet. Les cases et la recette du § 248 décrivent encore la 2.0.1.
 
+### 276 · La tablette de la table — accueil des rôles et code du meneur (T14) — 24/11/2026
+
+- **Demande de David** : « Fais t14 gm-os est fermé » (port 5173 et Electron vérifiés, puis revérifiés
+  à la reprise du 25/11).
+- **Fait** : l'accueil à trois rôles (`?window=accueil-tablette`, maquettes du 15/11), le dernier rôle
+  rouvert au démarrage (C11), « Changer de rôle » dans les trois rôles, le code du meneur réglé dans
+  les Paramètres et comparé par le serveur (C12) — détail dans la tâche T14 de la
+  [spécification](2026-11-15-fire-hd8-interface.md).
+- **Écart au plan, pour tenir Q6** : la tablette oublie son secret d'appairage en passant dans un
+  rôle public (si un code est réglé), et le bon code le lui rend. Le code ne quitte jamais le poste ;
+  trois essais par adresse, puis une attente qui double. Sans code, rien n'est oublié, et l'accueil
+  le dit.
+- **Défaut évité en chemin** : en `npm run dev`, les adresses des rôles perdaient `sync=`, seul
+  moyen pour la tablette de trouver le serveur — gardé.
+- **Vérifié** : 14 essais neufs, 3 001 essais (composants, télécommande, modules, Ulanzi, magasins,
+  electron), `tsc -b`, eslint, build ; e2e `accueilDeLaTablette.spec.ts` réussi et captures relues
+  (le pavé du code a été resserré pour tenir en 600 px).
+- **Reste** : l'essai de David sur la vraie Fire (régler le code, appairer, passer en Écran de table,
+  revenir par le code) ; puis T15, l'essai complet en séance.
+
+### 277 · Le M314 en paysage sur la tablette de la table — 25/11/2026
+
+- **Demande de David** : « Corrige le m314 » (le reste du § 256 : en paysage, la vue joueur s'empilait
+  et le radar demandait de défiler). GM-OS fermé, vérifié.
+- **Fait** : `outils/alien/modules/detecteur/vues.mjs` et `style.css` — la vue joueur a sa grille ; en
+  paysage dès 700 px de large, le radar à gauche, à la hauteur de l'écran, l'orientation, les bips et
+  le mode discret à droite (le titre, déjà dans le bandeau de l'hôte, s'efface ; la colonne défile
+  seule si elle déborde). Portrait et pupitre du meneur inchangés. Aussi valable sur la tablette
+  d'un joueur tenue en paysage.
+- **Vérifié** : 95 essais (modules du jeu, appareil de table, modules d'Alien), eslint, build ; e2e
+  `appareilDeTable.spec.ts` réussi à 960 × 600, captures relues (une première version débordait en
+  bas, resserrée) ; guide 64 et sa capture.
+- **Reste** : l'essai de David sur la Fire.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 213 | **Le M314 en paysage** | § 277 ; 🟠 corrigé le 25/11 — radar à gauche, commandes à droite, sans défilement à 960 × 600 ; e2e réussi | Ouvrir le M314 « à la table » sur la Fire | Essai de David |
+| 212 | **Tablette de la table — accueil et code du meneur (T14)** | § 276 ; 🟠 livré le 24/11 — accueil à trois rôles, dernier rôle rouvert, « Changer de rôle », code comparé par le serveur ; e2e réussi | Paramètres › Télécommande : régler le code ; sur la Fire, Écran de table puis retour à l'Aide au MJ par le code | Essai de David |
 | 211 | **Delta Green finalisé** | § 275 ; 🟠 livré le 24/11 — corpus relu 18/18, catalogue refait depuis le livre (138 objets), pilote 2.2.0 | Réimporter `corriges/Delta-Green-2.2.0` avec « Remplacer », ouvrir le catalogue | Essai de David |
 | 210 | **Degenesis prouvé, distributions de Torg, § 199 soldé** | § 274 ; 🟠 livré le 24/11 — essai Degenesis écrit, distributions de Torg limitées à la séance, § 199 relu : rien à choisir | Une séance Torg avec un PJ hors séance, puis « Fin de scène » | Essai de David |
 | 209 | **Neuf constats du § 1 bis traités** | § 273 ; 🟠 livré le 24/11 — CRI-A01, barre et aperçu de Crimes, Détermination de Dune, cockpit, médiathèque, régime forcé, suivis cachés, `primary` ; 6 889 essais | Une attaque de Crimes jusqu'à « Infliger » ; l'Endurance de Symbaroum et le cockpit ; la médiathèque depuis « Modifier la campagne » | Essai de David |
@@ -15241,7 +15277,7 @@ aucune donnée personnelle, installation, publication ou commande git d’écrit
 | 195 | **Vampire V5 — pilote 2.0.0** | 🟢 § 259 ; jet à dés de Soif, Volonté et Exaltation, fiche du livre, fiche HTML reliée, corpus relu 24/24 — 17/11 | Réimporter `Vampire-2.0.0` avec « Remplacer » ; essayer un jet, la Volonté et la fiche du jeu | Rien — essayé par David le 18/11 |
 | 194 | **Vampire V5 — quatre ateliers visuels** | 🟢 § 258 ; thème, bannière, fiche / X et identité livrés le 17/11, contrôlés localement | Essayer les fichiers ; sélectionner la bannière et l'identité dans le pilote | Rien — essayé par David le 18/11 |
 | 193 | **Vampire V5 — index et table des matières** | 🟢 § 257 ; documents livrés le 16/11 : 174 + 552 entrées, six pages vérifiées visuellement | Poursuivre la Forge avec les deux Markdown de `docs/systems/vampire/index/` | Rien — essayé par David le 18/11 |
-| 192 | **La Fire HD 8 comme interface de GM-OS** | 🟠 § 256 ; spécifié le 15/11, T1 à T2 faites (Firefox 143 retenu, Fire préparée), T3 : maquettes validées, T4 à T7 : onglet Tables essayé sur la Fire, T8 à T11 : appareil de table, T12-T13 : écran de table, validé par David — 15/11 | T14 (accueil des rôles et code) | Rien |
+| 192 | **La Fire HD 8 comme interface de GM-OS** | 🟠 § 256 ; spécifié le 15/11, T1 à T2 faites (Firefox 143 retenu, Fire préparée), T3 : maquettes validées, T4 à T7 : onglet Tables essayé sur la Fire, T8 à T11 : appareil de table, T12-T13 : écran de table, validé par David — 15/11 | T14 fait le 24/11 (§ 276), à essayer ; puis T15 (essai complet en séance) | Rien |
 | 191 | **Alien — vidéo des trois modules, détail du M314** | 🟢 § 255 ; MP4 2 min 57, pilote 1.11.0, cap partagé et immobilité filmés — 15/11 | Ouvrir le MP4 | Rien pour la vidéo ; essai physique A11 distinct |
 | 190 | **Alien — *Building Better Worlds* dans le pilote (A13)** | 🟢 § 254 ; pilote 1.11.0 (Prospecteur, Artiste, 53 objets au catalogue) et 23 tables Table-OS — 15/11 ; **validé par David le 15/11** | Rien ; la colonie est un chantier à spécifier | Rien |
 | 189 | **Alien — *Building Better Worlds* relu** | 🟢 § 253 ; seize fiches forgées par David et relues le 15/11, toutes corrigées, tables du livre ajoutées | Rien ; l'étape 2 est faite (§ 254) | Rien |

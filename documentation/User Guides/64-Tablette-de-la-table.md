@@ -31,33 +31,48 @@ navigateur récent fait l'affaire. C'est une page web : rien à installer dans G
    Écran allumé tant qu'elle est branchée, Wi-Fi jamais en veille, épinglage d'écran disponible.
    `-Retablir` remet les réglages d'usine.
 4. **Une adresse fixe pour le PC.** Réservez son adresse (ici `192.168.0.211`) dans les réglages de
-   votre box : si elle change, les raccourcis de la tablette ne mènent plus nulle part.
+   votre box : si elle change, le raccourci de la tablette ne mène plus nulle part.
 5. **Le volume de la tablette au maximum** : les bips du M314 passent par son haut-parleur.
 
 ---
 
-## 🔀 Les trois adresses, et changer de rôle
+## 🔀 L'accueil des rôles, et le code du meneur
 
-Avec GM-OS lancé normalement (port **3001**) :
+*Nouveau le 2026-11-24.* Une seule adresse, avec GM-OS lancé normalement (port **3001**) :
 
-| Rôle | Adresse |
-| --- | --- |
-| Aide au MJ | `http://192.168.0.211:3001/?window=remote` |
-| Appareil de table | `http://192.168.0.211:3001/?window=appareil-de-table` |
-| Écran de table | `http://192.168.0.211:3001/?window=ecran-de-table` |
+`http://192.168.0.211:3001/?window=accueil-tablette`
+
+**Faites-en le raccourci de la tablette** : ouvrez-la dans Firefox, puis menu ⋮ › **Ajouter à
+l'écran d'accueil**. Le script de préparation l'ouvre déjà par défaut.
+
+![L'accueil de la tablette : Aide au MJ (code du meneur demandé), Appareil de table, Écran de table (rôle actuel)](captures/tablette-de-la-table-accueil.jpg)
+
+- **Au démarrage, la tablette rouvre son dernier rôle** sans passer par cet écran.
+- **« Changer de rôle »**, en haut à droite de l'Appareil et de l'Écran de table et en bas de la
+  colonne de l'Aide au MJ, ramène à ces trois cartes.
 
 > ⚠️ En `npm run dev`, le port n'est pas le même (et une tablette s'y recharge seule à la moindre
 > coupure). Les soirs de séance, lancez GM-OS normalement.
 
-**Faites-en trois raccourcis** : ouvrez chaque adresse dans Firefox, puis menu ⋮ › **Ajouter à
-l'écran d'accueil**.
+### 🔒 Le code du meneur
 
-**Changer de rôle** : sortez du plein écran (voir ci-dessous), revenez à l'accueil d'Android (bouton
-rond) et touchez un autre raccourci.
+Pour que les joueurs ne tombent pas sur vos secrets en touchant « Changer de rôle » :
 
-> 🔜 **À venir** : un écran d'accueil à trois boutons, un bouton « Changer de rôle » dans chaque écran,
-> la tablette qui rouvre son dernier rôle, et un **code à quatre chiffres** pour revenir à l'Aide au MJ
-> — pour que les joueurs ne tombent pas sur vos secrets.
+1. **Réglez un code à quatre chiffres** au poste : **Paramètres › Télécommande**, sous le QR code
+   d'appairage, encadré **« Code du meneur — tablette de la table »**. Il ne s'affiche plus une fois
+   enregistré ; **Changer** et **Retirer** sont à côté.
+2. **Appairez la tablette une fois** par le QR code de la télécommande, comme une tablette du meneur.
+3. Quand la tablette passe en **Appareil de table** ou en **Écran de table**, elle **oublie son
+   appairage**. Pour revenir à l'**Aide au MJ**, elle demande le code :
+
+![Le code du meneur : quatre cases, un pavé numérique, « Code incorrect. Encore 2 essais. »](captures/tablette-de-la-table-code.jpg)
+
+- Le code reste sur votre PC : c'est GM-OS qui le compare, la tablette ne le connaît jamais. Le bon
+  code lui rend son appairage.
+- **Trois essais**, puis cinq minutes d'attente, puis dix, et ainsi de suite.
+- Taper l'adresse de la télécommande à la main ne sert à rien : la tablette reste « Non appairée ».
+- **Sans code réglé**, la tablette garde son appairage et revient à l'Aide au MJ sans rien demander ;
+  l'accueil le rappelle en bas de l'écran.
 
 ### 🖥️ Plein écran
 
@@ -104,6 +119,11 @@ détecteur M314 d'Alien** sait la servir ; les autres modules le disent dans leu
    cochez **La table** (la case n'apparaît que pour les modules qui la servent).
 4. Le M314 s'affiche sur la tablette, sous un bandeau « Appareil de table · Ouvert par le meneur ».
    Décochez : il disparaît.
+
+![Le M314 sur la tablette en paysage : le radar à gauche, l'orientation, les bips et le mode discret à droite](captures/tablette-de-la-table-m314.jpg)
+
+En paysage (depuis le 2026-11-25), le radar occupe la gauche à la hauteur de l'écran, et
+l'orientation, les bips et le mode discret la droite : rien à faire défiler.
 
 > 🔒 Une seule tablette peut être l'appareil de table. Une seconde affiche « Une autre tablette sert
 > déjà d'appareil de table ».
@@ -181,5 +201,5 @@ l'instant sur l'[Ulanzi](./76-Afficheur-de-table-Ulanzi.md).
 
 ---
 
-*Chantier : registre des chantiers, § 256 ; spécification
+*Accueil des rôles et code du meneur ajoutés le 2026-11-24 (T14). Chantier : registre des chantiers, § 256 et § 276 ; spécification
 `documentation/Planning/2026-11-15-fire-hd8-interface.md`.*
