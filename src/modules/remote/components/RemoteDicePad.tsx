@@ -63,7 +63,12 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
     const [diceModifier, setDiceModifier] = useState(0);
     const [diceMode, setDiceMode] = useState<string>('standard');
     const [isManualMode, setIsManualMode] = useState(false);
-    const [prevSystemEngine, setPrevSystemEngine] = useState<string | undefined>(activeDiceConfig?.engine);
+    /*
+      Vide au départ, exprès (essai T15 sur la Fire, 25/11/2026) : amorcé sur le moteur présent, le
+      pavé ouvert sur une campagne Alien n'adoptait jamais le mode du jeu — il restait « Standard »,
+      et son « Seuil » (6) partait comme six dés d'équipement de « Lancer Système ».
+    */
+    const [prevSystemEngine, setPrevSystemEngine] = useState<string | undefined>(undefined);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     useFermetureParEchap(isMenuOpen, () => setIsMenuOpen(false), 'Mode de lancer');
     const modeMenuRef = useRef<HTMLDivElement>(null);
@@ -113,6 +118,8 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
             const supportedMode = DICE_MODES.find(m => m.id === systemMode || (systemMode === 'year-zero' && m.id === 'yze'));
             if (supportedMode && supportedMode.id !== diceMode) {
                 setDiceMode(supportedMode.id);
+                // La case devient « Dés Equip. (E) » : aucun dé d'équipement tant qu'on n'en demande pas.
+                if (supportedMode.id === 'yze') setThreshold(0);
             }
         }
     }
@@ -160,7 +167,8 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
         } : {};
         onRoll({
             count: diceCount,
-            gearCount: threshold,
+            // La case ne compte des dés d'équipement que lorsqu'elle en porte le nom (essai T15).
+            gearCount: diceMode === 'yze' ? threshold : 0,
             modifier: diceModifier,
             mode: estEchelonne ? 'yze-echelonne' : modeId,
             target: threshold,

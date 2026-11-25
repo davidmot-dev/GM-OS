@@ -140,3 +140,30 @@ describe('les contacts de Crimes', () => {
         expect(charge).toEqual(avant);
     });
 });
+
+/** **Le combat vu par la table** — essai T15 sur la Fire (25/11/2026) : sans les cachés, avec le bon actif. */
+describe('le combat de la table', () => {
+    const combattants = [
+        { id: 'nel', name: 'Nel Varga', isPlayer: true, statuses: [] },
+        { id: 'rodeur', name: 'Rôdeur', isPlayer: false, statuses: [{ name: 'Caché' }] },
+        { id: 'wilson', name: 'Wilson', isPlayer: true, statuses: [] },
+    ];
+    const vu = (currentTurnIdx: number) => caviarderPourLesJoueurs({ combat: { combatants: combattants, currentTurnIdx, round: 1 } }).combat;
+
+    it('retire le caché et garde le combattant actif sous le même nom', () => {
+        expect(vu(2).combatants.map(c => c.id)).toEqual(['nel', 'wilson']);
+        expect(vu(2).combatants[vu(2).currentTurnIdx].name).toBe('Wilson');
+        expect(vu(0).currentTurnIdx).toBe(0);
+    });
+
+    it('quand le caché joue, la table ne voit personne d’actif', () => {
+        expect(vu(1).currentTurnIdx).toBe(-1);
+    });
+
+    it('la voie rapide, sans indice ni liste, passe sans se briser ; la copie du meneur reste entière', () => {
+        expect(caviarderPourLesJoueurs({ combat: { round: 2 } }).combat).toEqual({ round: 2 });
+        expect(caviarderPourLesJoueurs({ combat: { combatants: [], currentTurnIdx: 0 } }).combat).toEqual({ combatants: [], currentTurnIdx: 0 });
+        vu(1);
+        expect(combattants).toHaveLength(3);
+    });
+});

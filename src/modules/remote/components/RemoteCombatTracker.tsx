@@ -5,6 +5,7 @@ import { Etiquette } from '../../../components/socle/Etiquette';
 import { ChevronRight, Shield } from 'lucide-react';
 import { type RemoteCombatant } from '../types/remote.types';
 import { woundLabel } from '../../session/logic/HealthInterpreter';
+import { estCacheAuxJoueurs } from '../logic/caviardageDesJoueurs';
 
 /**
  * **Le suivi de combat, densifié le 2026-09-05.**
@@ -66,7 +67,11 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                                     <div className={`w-[44px] h-[44px] shrink-0 rounded-full flex items-center justify-center font-black text-[14px] tabular-nums transition-colors ${isActive ? 'bg-accent text-app-on-accent' : 'bg-app-text/10'}`}>{c.init}</div>
                                     <div className="flex flex-col min-w-0">
                                         <span className={`font-bold text-[16px] break-words [overflow-wrap:anywhere] transition-colors ${isActive ? 'text-accent' : 'text-app-text'}`}>{c.name}</span>
-                                        <span className="text-[14px] uppercase text-app-muted">{c.isPlayer ? 'Joueur' : 'Ennemi'}</span>
+                                        <span className="text-[14px] uppercase text-app-muted">
+                                            {c.isPlayer ? 'Joueur' : 'Ennemi'}
+                                            {/* Vu du meneur seul : la table ne le reçoit pas (essai T15, 25/11/2026). */}
+                                            {estCacheAuxJoueurs(c) && <span data-cache-aux-joueurs className="ml-2 text-etat-alerte">· Caché aux joueurs</span>}
+                                        </span>
                                     </div>
                                 </div>
                                 <div className="flex w-full items-center justify-end gap-3">

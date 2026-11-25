@@ -27,6 +27,11 @@ const poser = (props: Partial<React.ComponentProps<typeof RemoteStatusBar>> = {}
     );
 
 describe('ce qui joue', () => {
+    it('porte « Changer de rôle » quand la télécommande le lui confie (Fire en portrait, essai T15)', () => {
+        poser({ changerDeRole: <a href="/?window=accueil-tablette&choisir=1">Changer de rôle</a> });
+        expect(screen.getByText('Changer de rôle')).toBeTruthy();
+    });
+
     it('nomme le morceau en cours', () => {
         poser({ lecture: { musique: 'Marche funèbre', ambiance: null, pistesDAmbiance: 0 } });
         expect(screen.getByText('Marche funèbre')).toBeTruthy();

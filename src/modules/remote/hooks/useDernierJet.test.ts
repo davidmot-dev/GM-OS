@@ -68,6 +68,27 @@ describe('ce qu’on montre', () => {
         expect(result.current.jet?.id).toBe('c');
     });
 
+    it('ne ressort pas le vieux jet quand il arrive APRÈS le premier rendu (essai T15 sur la Fire)', () => {
+        /* Rouvrir l'Aide au MJ : rien de reçu au premier rendu, puis la synchronisation apporte le
+           jet d'il y a un quart d'heure. Il ne doit pas passer pour neuf. */
+        const { result, rerender } = renderHook(({ j }: { j: RollRecord | null | undefined }) => useDernierJet(j), {
+            initialProps: { j: undefined as RollRecord | null | undefined },
+        });
+        rerender({ j: jet('vieux') });
+        expect(result.current.jet).toBeNull();
+        rerender({ j: jet('neuf') });
+        expect(result.current.jet?.id).toBe('neuf');
+    });
+
+    it('après une première synchronisation sans jet, le premier jet est neuf', () => {
+        const { result, rerender } = renderHook(({ j }: { j: RollRecord | null | undefined }) => useDernierJet(j), {
+            initialProps: { j: undefined as RollRecord | null | undefined },
+        });
+        rerender({ j: null });
+        rerender({ j: jet('premier') });
+        expect(result.current.jet?.id).toBe('premier');
+    });
+
     it('supporte l’absence de jet', () => {
         const { result } = renderHook(() => useDernierJet(undefined));
         expect(result.current.jet).toBeNull();

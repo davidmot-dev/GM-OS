@@ -69,6 +69,36 @@ function caviarder(valeur: unknown): unknown {
     ]));
 }
 
+/** Les statuts qui cachent un combattant aux joueurs — la liste de `ecranDeTable.ts` et de `HubCombatTracker`. */
+const STATUTS_QUI_CACHENT = ['invisible', 'invisibilité', 'caché', 'hidden'];
+
+interface CombattantLu { isPlayer?: boolean; statuses?: { name?: unknown }[] }
+
+/** Un PNJ marqué invisible ou caché : le meneur le voit, la table non. */
+export const estCacheAuxJoueurs = (c: CombattantLu): boolean =>
+    !c?.isPlayer && !!c?.statuses?.some(s => typeof s?.name === 'string' && STATUTS_QUI_CACHENT.includes(s.name.toLowerCase()));
+
+/**
+ * **Le combat vu par la table : sans les cachés, et avec le bon combattant actif** — essai T15 sur la
+ * Fire, 25/11/2026 (registre § 1 bis). Le filtre vivait dans la synchronisation complète, qui retirait
+ * les cachés mais gardait l'indice du tour **de la liste complète** : un rôdeur caché avant Wilson, et
+ * la tablette surlignait Wilson quand le rôdeur jouait. La voie rapide (`segment 'combat'`), elle,
+ * partait sans aucun filtre. L'indice est recalculé dans la liste filtrée ; quand c'est un caché qui
+ * joue, il vaut `-1` : la table ne voit personne d'actif, comme l'écran de table montre « ? ».
+ */
+function combatPourLesJoueurs(combat: unknown): unknown {
+    if (!combat || typeof combat !== 'object') return combat;
+    const { combatants, currentTurnIdx } = combat as { combatants?: unknown; currentTurnIdx?: unknown };
+    if (!Array.isArray(combatants)) return combat;
+    const visibles = combatants.filter(c => !estCacheAuxJoueurs(c as CombattantLu));
+    const suite: Record<string, unknown> = { ...combat, combatants: visibles };
+    if (typeof currentTurnIdx === 'number') {
+        const actif = combatants[currentTurnIdx];
+        suite.currentTurnIdx = actif === undefined ? currentTurnIdx : visibles.indexOf(actif);
+    }
+    return suite;
+}
+
 /**
  * `lecteur` : le personnage de la tablette qui recevra la charge — un indice
  * qu'il connaît seul lui parvient (Crimes, C5). Absent, à l'émission : les
@@ -86,6 +116,8 @@ export function caviarderPourLesJoueurs<T>(charge: T, lecteur?: string | null): 
     if (notes && typeof notes === 'object' && typeof notes.private === 'string') {
         racine.notes = { ...notes, private: MASQUE };
     }
+
+    if ('combat' in racine) racine.combat = combatPourLesJoueurs(racine.combat);
 
     const session = racine.session as { sessions?: unknown; clues?: unknown } | undefined;
     if (session && typeof session === 'object') {

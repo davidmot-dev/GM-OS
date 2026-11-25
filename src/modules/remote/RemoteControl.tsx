@@ -286,6 +286,8 @@ const RemoteControl: React.FC = () => {
                     messagesNonLus={isPaired ? messagesNonLus : 0}
                     onVoirLesMessages={() => setActiveTab('messages')}
                     onStopAll={() => sendAction('remote:sound:stop-all', {})}
+                    /* Sous 900 px, la colonne de gauche disparaît : le bouton passe en haut (essai T15, Fire en portrait). */
+                    changerDeRole={lireRoleMemorise() ? <BoutonChangerDeRole className="min-[900px]:hidden shrink-0 text-[13px]" /> : undefined}
                 />
 
                 {/*

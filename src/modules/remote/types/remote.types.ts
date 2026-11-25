@@ -33,6 +33,8 @@ export interface RemoteCombatant {
     init: number;
     isPlayer: boolean;
     healthSystem?: HealthSystem;
+    /** Les statuts du combattant : « Caché » le marque sur l'Aide au MJ (essai T15, 25/11/2026). */
+    statuses?: { name: string }[];
 }
 
 import type { RemoteReglagesAudio } from '../reglagesAudio';

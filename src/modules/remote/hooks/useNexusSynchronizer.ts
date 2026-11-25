@@ -320,10 +320,16 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             };
 
             // 3. COMBAT & ENTITIES
-            const resolvedCombatants = (await Promise.all(combatStore.combatants.map(async (c) => ({
+            /*
+              Tous les combattants, cachés compris : l'Aide au MJ les montre au meneur. Les cachés
+              sont retirés pour la table par `caviarderPourLesJoueurs`, qui recalcule aussi
+              l'indice du tour — le filtre d'ici le laissait sur la liste complète (essai T15 sur
+              la Fire, 25/11/2026).
+            */
+            const resolvedCombatants = await Promise.all(combatStore.combatants.map(async (c) => ({
                 id: c.id, name: c.name, hp: c.hp, hpMax: c.hpMax, init: c.init, isPlayer: c.isPlayer, faction: c.faction,
                 healthSystem: c.healthSystem, avatar: await resolveToSendableUrl(c.avatar || ''), statuses: c.statuses
-            })))).filter(c => c.isPlayer || !c.statuses?.some(s => ['invisible', 'caché', 'hidden'].includes(s.name.toLowerCase())));
+            })));
 
             // 4. SESSION & NOTES
             const activeSession = sessions.find(s => s.status === 'active' && String(s.campaignId) === String(currentCampaignId));

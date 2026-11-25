@@ -34,16 +34,25 @@ export function useDernierJet(jetDuMeneur: RollRecord | null | undefined): {
       séance n'a pas à ressortir un jet vieux d'une heure — d'où l'amorçage sur
       le jet présent, quel qu'il soit.
     */
-    const [ecarte, setEcarte] = useState<string | null>(() => jetDuMeneur?.id ?? null);
+    /*
+      `undefined` : pas encore amorcé. **L'amorce attend la première synchronisation** (essai T15 sur la
+      Fire, 25/11/2026) : au premier rendu, la tablette n'a encore rien reçu (`jetDuMeneur` vaut
+      `undefined`) ; amorcée sur ce vide, elle prenait le jet du meneur arrivé une seconde plus tard
+      pour un jet neuf, et rouvrir l'Aide au MJ ressortait un résultat vieux d'un quart d'heure.
+    */
+    const [ecarte, setEcarte] = useState<string | null | undefined>(() =>
+        jetDuMeneur === undefined ? undefined : jetDuMeneur?.id ?? null);
+    const amorce = ecarte === undefined && jetDuMeneur !== undefined ? jetDuMeneur?.id ?? null : ecarte;
+    if (amorce !== ecarte) setEcarte(amorce);
 
     useEffect(() => {
-        if (!jetDuMeneur || jetDuMeneur.id === ecarte) return;
+        if (!jetDuMeneur || amorce === undefined || jetDuMeneur.id === amorce) return;
 
         const minuterie = setTimeout(() => setEcarte(jetDuMeneur.id), DUREE_DU_RESULTAT_MS);
         return () => clearTimeout(minuterie);
-    }, [jetDuMeneur, ecarte]);
+    }, [jetDuMeneur, amorce]);
 
-    const montre = jetDuMeneur && jetDuMeneur.id !== ecarte ? jetDuMeneur : null;
+    const montre = jetDuMeneur && amorce !== undefined && jetDuMeneur.id !== amorce ? jetDuMeneur : null;
 
     return {
         jet: montre,

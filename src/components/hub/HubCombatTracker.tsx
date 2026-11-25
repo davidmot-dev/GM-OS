@@ -38,7 +38,8 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
             <div className="flex items-center justify-between mb-4 border-b border-app-border/40 pb-4">
                 <div className="flex flex-col">
                     <h1 className="text-app-text text-xl font-bold tracking-tight">Initiative</h1>
-                    <p className="text-etat-danger text-xs font-bold uppercase">Round {round} • Tour {currentTurnIdx + 1}</p>
+                    {/* `-1` : un combattant caché joue, la table ne sait pas qui (essai T15, 25/11/2026). */}
+                    <p className="text-etat-danger text-xs font-bold uppercase">Round {round}{currentTurnIdx >= 0 && ` • Tour ${currentTurnIdx + 1}`}</p>
                 </div>
             </div>
 

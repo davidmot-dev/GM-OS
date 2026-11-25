@@ -28,6 +28,8 @@ interface RemoteStatusBarProps {
     messagesNonLus?: number;
     onVoirLesMessages?: () => void;
     onStopAll: () => void;
+    /** « Changer de rôle » quand la colonne de gauche est cachée (essai T15 sur la Fire, 25/11/2026). */
+    changerDeRole?: React.ReactNode;
 }
 
 /** `mm:ss`, en chiffres à chasse fixe pour que la ligne ne tressaute pas. */
@@ -41,7 +43,7 @@ function enMinutes(secondes: number): string {
 const APPUI_LONG_MS = 700;
 
 const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
-    status, isPaired, lecture, combat, minuteur, messagesNonLus, onVoirLesMessages, onStopAll,
+    status, isPaired, lecture, combat, minuteur, messagesNonLus, onVoirLesMessages, onStopAll, changerDeRole,
 }) => {
     const [progression, setProgression] = useState(0);
     const debutRef = useRef<number | null>(null);
@@ -152,6 +154,8 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                     </span>
                 )}
             </div>
+
+            {changerDeRole}
 
             {/*
               **Les messages non lus se signalent ici** — demandé par David le
