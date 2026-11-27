@@ -15327,10 +15327,49 @@ aucune donnée personnelle, installation, publication ou commande git d’écrit
   `outils/campagnes-de-recette/traveller*.mjs`, `traveller.test.ts`,
   `output/campagnes-tests/traveller/`. Commit demandé par David le 27/11 après livraison.
 
+### 280 · Traveller — les chiffres de la fiche HTML lisibles — 27/11/2026
+
+- **Demande de David** : « vérifier le lien avec la fiche HTML pour Traveller, j'ai l'impression que
+  les caractéristiques ne se lient pas ».
+- **Constat** : le lien marchait — GM-OS écrivait FOR, DEX… dans `attributes.*.value`, et l'e2e lisait
+  bien 10 dans la case DEX. Mais **rien ne s'affichait** : cases de 20 px (caractéristique), 16 px (MD)
+  et 8,3 px (niveau de compétence), 4 px de marge du moteur de chaque côté et les flèches du champ
+  nombre de Chromium. Les vingt autres gabarits masquent ces flèches, pas `traveller-fr`. La capture
+  du manuel du 26/11 montrait déjà les hexagones vides : relue sans le voir.
+- **Corrigé** : `outils/traveller/chiffres_lisibles.mjs` (rejouable) ajoute la règle au gabarit dans la
+  fiche livrée et dans le moteur, **`BUILTIN_VERSION` 29 → 30** ; même règle dans `construire-fiche.py`.
+  Aucun code applicatif modifié.
+- **Vérifié** : rendu avant/après (Edge, valeurs de Kathya) ; `electron/correspondanceDesFiches.test.ts`
+  — attente portée à 30 avec `traveller-fr` (**elle échouait depuis le § 278**), fiche Traveller ajoutée
+  à la garde « gabarit intégré = fiche livrée », garde propre aux chiffres ; essais des fiches (142),
+  `fiche:valider` 0/0, `tsc -b`, lint ; e2e des captures Traveller, `jeu-traveller-fiche.jpg` refaite et
+  relue (6, 10, 7, 9, 8, 5 visibles).
+- **Vu en passant, non corrigé** : un nombre à deux chiffres rogné sur Crimes (atteintes, « 12 » lu « 1 »)
+  et Star Trek (« Résistance »).
+- **Essayé par David le 27/11** : « les tests sont concluants ».
+
+### 281 · Crimes, Dune et Star Trek — les chiffres des fiches HTML lisibles — 27/11/2026
+
+- **Demande de David** : « Corrige aussi Crimes et Star Trek » (vus en passant au § 280).
+- **Constat**, par une mesure de chaque champ nombre des 23 gabarits (valeur 12, puis 8) : Crimes
+  26/69 cases rognées (« 12 » lu « 1 » sur les atteintes, compteurs de compétence vides), Star Trek
+  13/14 (Attributs, Disciplines, Résistance), **Dune PJ 12/12, même un seul chiffre** — même cause,
+  ajouté. `appearance:textfield`, que portaient Crimes et Dune, ne retire pas les flèches dans Chromium.
+- **Corrigé** : `outils/fiches/masquer_les_fleches.mjs` (rejouable) — règle `::-webkit-inner-spin-button`
+  dans les gabarits du moteur et les fiches livrées (Crimes, Dune PJ et Maison, Star Trek, dont la page
+  autonome a reçu la forme générale), **`BUILTIN_VERSION` 30 → 31** ; CSS sources de Crimes et Dune.
+- **Vérifié** : nouvelle mesure, 0 case rognée sauf les 17 compteurs de Crimes à deux chiffres (rond
+  imprimé de 9,6 px : un chiffre seulement, et il tient) ; rendus relus ; garde générale ajoutée à
+  `correspondanceDesFiches.test.ts` (case nombre < 25 px ⇒ flèches masquées) ; essais des fiches (181),
+  `fiche:valider` des quatre fiches (Star Trek : ses deux avertissements d'avant), `tsc -b`, lint.
+- **Essayé par David le 27/11** : « les tests sont concluants ».
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 217 | **Crimes, Dune, Star Trek — chiffres des fiches HTML lisibles** | § 281 ; 🟢 corrigé et essayé par David le 27/11 — flèches masquées, moteur 31, garde générale | — | — |
+| 216 | **Traveller — chiffres de la fiche HTML lisibles** | § 280 ; 🟢 corrigé et essayé par David le 27/11 — flèches masquées, moteur 30, capture refaite | — | — |
 | 215 | **Traveller — La Part des absents, campagne de recette** | § 279 ; 🟠 préparée le 27/11 — une campagne, douze séances, dix ateliers, 62 cas humains vierges ; 121 contrôles ciblés réussis, médias et ZIP relus | Importer l'unique `.gmos` en instance jetable autorisée ; JET-01, SAN-01, FIC-01, PER-01 | Essais Electron, Hub et David non exécutés |
 | 214 | **Traveller — pilote 2.0.0, corpus relu, fiche reliée** | § 278 ; 🟠 livré le 26/11 — `jet.traveller`, report des dégâts END → FOR/DEX, corpus 21/21, fiche au moteur 29 ; e2e réussi | Réimporter `corriges/Traveller-2.0.0` avec « Remplacer » ; un test de Kathya, un coup de 10, la fiche du jeu | Essai de David |
 | 213 | **Le M314 en paysage** | § 277 ; 🟠 corrigé le 25/11 — radar à gauche, commandes à droite, sans défilement à 960 × 600 ; e2e réussi | Ouvrir le M314 « à la table » sur la Fire | Essai de David |

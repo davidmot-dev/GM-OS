@@ -143,9 +143,10 @@ describe('les gabarits intégrés du moteur', () => {
             // 22 : celle de COC 2 (2026-10-31) ; 23 : celle de Shadowrun : Anarchy 2.0 (2026-10-31) ;
             // 24 : celle de Torg Eternity (2026-11-07) ; 25 : celle d'Argyropée (2026-11-08) ;
             // 26 : la fiche d'Agent de Delta Green (2026-11-12) ; 27 : celle de Vampire : la Mascarade V5 (2026-11-17) ;
-            // 28 : la fiche standard de Pénombre (2026-11-22).
-            version: 28,
-            ids: ['alien-v2-normalise', 'argyropee-fr', 'barbarian-of-lemuria-fr', 'blade-runner-fr', 'coc2-fr', 'crimes-fr', 'cthulhu-hack', 'degenesis-fr', 'delta-green-agent-fr', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'penombre-standard-fr', 'reve-de-dragon-voyageur-fr', 'runequest-fr', 'shadowrun-anarchy2-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr', 'torg-eternity-fr', 'vampire-v5-fr'],
+            // 28 : la fiche standard de Pénombre (2026-11-22) ; 29 : celle de Traveller (2026-11-26) ;
+            // 30 : Traveller, les chiffres lisibles (2026-11-27) ; 31 : Crimes, Dune et Star Trek, les flèches masquées.
+            version: 31,
+            ids: ['alien-v2-normalise', 'argyropee-fr', 'barbarian-of-lemuria-fr', 'blade-runner-fr', 'coc2-fr', 'crimes-fr', 'cthulhu-hack', 'degenesis-fr', 'delta-green-agent-fr', 'dune-maison-fr', 'dune-pj-fr', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'penombre-standard-fr', 'reve-de-dragon-voyageur-fr', 'runequest-fr', 'shadowrun-anarchy2-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr', 'torg-eternity-fr', 'traveller-fr', 'vampire-v5-fr'],
         });
     });
 });
@@ -167,12 +168,43 @@ it.each([
     'docs/fiches/Shadowrun Anarchy/shadowrun-anarchy2-fiche-personnage-interactive.html',
     // Vampire : la Mascarade V5 (17/11).
     'docs/fiches/Vampire/vampire-v5-fiche-personnage-interactive.html',
+    // Traveller (27/11) : les chiffres lisibles, dans la fiche livrée comme dans le moteur.
+    'docs/fiches/Traveller/traveller-fiche-personnage-interactive.html',
 ])('%s : le gabarit intégré reprend la fiche livrée, CSS et largeurs comprises', (chemin) => {
     const fiche = fs.readFileSync(path.join(RACINE, chemin), 'utf8');
     const manifeste = JSON.parse(fiche.match(/<script\b[^>]*\bid="character-sheet-template"[^>]*>([\s\S]*?)<\/script>/)![1]);
     const { _builtin, ...integre } = MOTEURS.find(g => g.id === manifeste.template.id)! as GabaritDuMoteur & { _builtin?: boolean };
     expect(_builtin).toBe(true);
     expect(integre).toEqual(manifeste.template);
+});
+
+/**
+ * **Une case liée qui n'affiche rien** — trouvé par David le 2026-11-27 : « les caractéristiques
+ * ne se lient pas ». Elles se liaient : la valeur était dans la case, mais une case de 8 à 20 px,
+ * avec la marge du moteur et les flèches du champ nombre, n'avait plus de place pour le chiffre.
+ * L'e2e lisait la valeur et passait ; seule l'image le montrait.
+ */
+describe('les chiffres des fiches', () => {
+    it('Traveller masque les flèches des champs nombre, et ses cases étroites n’ont pas de marge', () => {
+        const gabarit = MOTEURS.find(g => g.id === 'traveller-fr') as GabaritDuMoteur & { customCss: string };
+        expect(gabarit.customCss).toContain('input[type=number]::-webkit-inner-spin-button');
+        expect(gabarit.customCss).toContain('.sheet[data-template="traveller-fr"] .attribute-value,.sheet[data-template="traveller-fr"] .modifier{padding:0;}');
+        expect(gabarit.customCss).toMatch(/\.skill-level\{[^}]*padding:0/);
+    });
+
+    /*
+      La même cause sur trois autres gabarits (David, 27/11 : « Corrige aussi Crimes et Star
+      Trek ») : « 12 » lu « 1 » sur les atteintes de Crimes, un « 8 » coupé en deux sur Star Trek et
+      Dune. Crimes et Dune portaient `appearance:textfield`, qui ne retire pas les flèches dans
+      Chromium. D'où la garde générale : une case nombre de moins de 25 px vise la flèche elle-même.
+    */
+    it('tout gabarit à cases nombre étroites masque les flèches elles-mêmes', () => {
+        const sansRegle = MOTEURS
+            .filter(g => champsDu(g).some(c => c.type === 'number' && Number((c as ChampDuGabarit & { w?: number }).w) < 25))
+            .filter(g => !String((g as GabaritDuMoteur & { customCss?: string }).customCss ?? '').includes('::-webkit-inner-spin-button'))
+            .map(g => g.id);
+        expect(sansRegle).toEqual([]);
+    });
 });
 
 /**

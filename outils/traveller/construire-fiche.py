@@ -136,6 +136,12 @@ custom_css='.sheet[data-template="traveller-fr"] .field{font-family:Arial,sans-s
 manifest=dict(format='character-sheet-studio-html',formatVersion=1,template=dict(id='traveller-fr',name='Traveller — fiche de personnage française',system='Traveller',accent='#080b26',schemaVersion=2,customCss=custom_css,pages=pages))
 template=Path(__file__).with_name('fiche-autonome.html').read_text(encoding='utf-8')
 custom_css += ' .sheet[data-template="traveller-fr"] .replace-label::placeholder{color:transparent;}'
+# 2026-11-27 (Claude Code) : sans flèches de champ nombre ni marge, les chiffres des cases de 8 à 20 px
+# disparaissaient (caractéristiques, MD, niveaux de compétence). Même règle que chiffres_lisibles.mjs.
+_T = '.sheet[data-template="traveller-fr"]'
+custom_css += (f' {_T} input[type=number]{{appearance:textfield;-moz-appearance:textfield;}}'
+               f' {_T} input[type=number]::-webkit-inner-spin-button,{_T} input[type=number]::-webkit-outer-spin-button{{-webkit-appearance:none;margin:0;}}'
+               f' {_T} .attribute-value,{_T} .modifier{{padding:0;}}')
 manifest['template']['customCss']=custom_css
 html=template.replace('@@MANIFEST@@',json.dumps(manifest,ensure_ascii=False,separators=(',',':')).replace('</',r'<\/')).replace('@@CUSTOM_CSS@@',custom_css)
 OUT.mkdir(parents=True,exist_ok=True);DELIVERY.mkdir(parents=True,exist_ok=True)

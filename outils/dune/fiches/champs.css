@@ -11,3 +11,5 @@
 .sheet[data-template="__TEMPLATE__"] .dune-portrait img{width:100%;height:100%;object-fit:contain;display:block}
 .sheet[data-template="__TEMPLATE__"].zones .dune-field{outline:.5px solid #276a9299;background-color:#8acdf02b}
 .sheet[data-template="__TEMPLATE__"].zones .dune-portrait{outline:1px dashed #94684b}
+/* 2026-11-27 (Claude Code) : appearance:textfield ne retire pas les flèches dans Chromium ; elles coupaient les chiffres des cases de 18 px. Même règle que outils/fiches/masquer_les_fleches.mjs. */
+.sheet[data-template="__TEMPLATE__"] input[type=number]::-webkit-inner-spin-button,.sheet[data-template="__TEMPLATE__"] input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}

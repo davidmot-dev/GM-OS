@@ -94,7 +94,8 @@ Une créature du bestiaire n'a que ses **PdV** (p. 81) : la colonne PDV du besti
 
 ![La fiche de Kathya, remplie depuis GM-OS](captures/jeu-traveller-fiche.jpg)
 
-La fiche (`traveller-fr`, deux pages paysage) est intégrée au moteur de fiches (version 29) et
+La fiche (`traveller-fr`, deux pages paysage) est intégrée au moteur de fiches (version 30 : les
+chiffres des caractéristiques, des MD et des compétences s'y lisent depuis le 2026-11-27) et
 reliée par `docs/systems/traveller/fiche/correspondance.json` : 328 clés une à une. Restent à la
 fiche : le portrait, et le nom et l'espèce de la page 2, qu'elle recopie seule. Le total physique,
 les niveaux sans blessure et le choix de l'excédent n'ont pas de case imprimée : ils restent dans
