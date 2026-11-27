@@ -1,7 +1,7 @@
 # 🚀 Jeu — Traveller
 
 > **Pilote décrit :** « Traveller », forgé par David, exporté le 2026-11-26, **fini le
-> 2026-11-26**, version 2.0.0 (`Export Dirvers/corriges/Traveller-2.0.0.gmos-driver`, construit par
+> 2026-11-26**, essayé par David le 2026-11-27, version 2.0.0 (`Export Dirvers/corriges/Traveller-2.0.0.gmos-driver`, construit par
 > `outils/traveller/finir_traveller.py`, contrôlé par `outils/traveller/verifier_pilote.mjs`).
 > Thème `traveller`, fiche de personnage HTML, bannière et identité visuelle livrés le même jour par
 > GM-OS Studio. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).

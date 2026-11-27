@@ -98,6 +98,8 @@ y compris les tablettes, pour les gestes exposés sur plusieurs écrans.
 | 23/10/2026 | Claude Code | C0 livré : 19 fiches relues et corrigées, trace dans `2026-10-23-relecture-corpus-crimes.md` (§ 160). |
 | 23/10/2026 | David | « J'ai relu ce rapport, c'est bien » : C0 validé ; les corrections proposées sont reportées dans la synthèse des pilotes (C0.1 à C0.4) ; « je voudrais finir complètement Crime aujourd'hui ». |
 | 24/11/2026 | Claude Code | Trois correctifs (registre général § 273) : CRI-A01, loyauté et appels des contacts hors de la charge joueur (p. 430) ; barre de Combat-OS sur le Physique actuel, sans console ni « Calculer » ; aperçu de l'attaque figé après « Infliger ». Recette « Les Heures rayées » 135/135. Essai de David attendu. |
+| 27/11/2026 | Claude Code | Fiche HTML : les flèches du champ nombre cachaient les chiffres (« 12 » lu « 1 » sur les atteintes, compteurs de compétence vides) ; règle `::-webkit-inner-spin-button` ajoutée, moteur de fiches 31 (registre général § 281, `d31d6838`). Le compteur, rond imprimé de 9,6 px, ne tient qu'un chiffre. |
+| 27/11/2026 | David | « les tests sont concluants » : correctif essayé. |
 
 Avant une reprise, vérifier l'export courant et les acquis depuis cet audit. Appliquer
 AGENTS.md, notamment la question « GM-OS tourne-t-il ? » avant toute édition de `src/`

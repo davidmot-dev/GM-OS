@@ -6,6 +6,9 @@ Demande de David du 27/11/2026 : « Traveller », via **GM-OS Campagnes de test*
 
 **LOT PRÉPARÉ**, sans recette humaine ni import dans la fenêtre Electron.
 
+**Testé par David le 27/11/2026** : « la campagne de test aussi est testée » (registre général § 279).
+Les limites ci-dessous décrivent l'état à la livraison.
+
 - [ZIP complet](../../output/campagnes-tests/traveller/Traveller-La-Part-des-Absents-Campagne-de-test.zip), contenant **un seul `.gmos`** et le pilote 2.0.0 séparé.
 - [Campagne à importer](../../output/campagnes-tests/traveller/01-Traveller-La-Part-des-Absents.gmos).
 - [Guide d’import](../../output/campagnes-tests/traveller/LIRE-MOI.md), [campagne du meneur](../../output/campagnes-tests/traveller/CAMPAGNE-DU-MENEUR.md), [62 cas](../../output/campagnes-tests/traveller/CAHIER-DE-RECETTE.md), [états de référence](../../output/campagnes-tests/traveller/ETATS-DE-REFERENCE.md).
