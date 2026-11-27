@@ -1,0 +1,38 @@
+{
+  "archiveSha256": "cea275bada5294581da97f31d9bdbc76d1a1907ff60fd23dca2d9167c3cc0689",
+  "date": "2026-11-27",
+  "rendusExaminees": true,
+  "narrationRelue": true,
+  "planches": [
+    {
+      "fichier": "captures/planche-aides.jpg",
+      "sha256": "f1b4acf562d17ec4a54903d42758a3d75ab09083f392b4844cb94b10c297def0"
+    },
+    {
+      "fichier": "captures/planche-banniere.jpg",
+      "sha256": "db9670d40f57869def13d5f13e0a6ac4362fb51fb4a34eef61155974fee3dec0"
+    },
+    {
+      "fichier": "captures/planche-cartouches.jpg",
+      "sha256": "fa2ff17c408175a360fe127a1c3bc36d802f64fba10a49ce95e1d0863b3a4859"
+    },
+    {
+      "fichier": "captures/planche-pieces-1.jpg",
+      "sha256": "cd36285223efaf88c48941a97c864134310d6d4efe7a0b22192d85514ac7a012"
+    },
+    {
+      "fichier": "captures/planche-pieces-2.jpg",
+      "sha256": "c78daccf62d24217cb9fab3004ea189a76f9fb1217b6b2cf3223c3ca1602d7a8"
+    },
+    {
+      "fichier": "captures/planche-plans.jpg",
+      "sha256": "4b20cbbf539057b577e3225abb6e56b5728517470d917a83a9609831e08d91ca"
+    }
+  ],
+  "rendusComplets": [
+    "captures/aide-saut.jpg",
+    "captures/plan-relais.jpg",
+    "captures/aide-route.jpg"
+  ],
+  "perimetre": "Relecture IA de la fiction originale, des deux ordres de visite, des quatre fins et des rendus des 47 images. Aucun visionnage dans Electron, aucune ecoute humaine des WAV ni partie humaine."
+}

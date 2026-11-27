@@ -1,0 +1,369 @@
+{
+  "schemaVersion": 1,
+  "bundleType": "campaign",
+  "bundleId": "recette-trv-sel-20261127-campagne-complete-v1",
+  "campaignId": "recette-trv-sel-20261127-campagne-complete",
+  "campaignName": "RECETTE TRAVELLER — La Part des absents",
+  "exportedAt": "2026-11-27T12:00:00.000Z",
+  "gmosVersion": "6.5.0",
+  "requiredDriverIds": [
+    "custom-1795725795907"
+  ],
+  "requiredTemplateIds": [
+    "tpl-1795725795907"
+  ],
+  "assetMap": [
+    {
+      "originalRef": "recette-trv-sel-20261127-media-plan-noctule.svg",
+      "relativePath": "assets/images/plan-noctule.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "a4c7b8479b08811024c1fc81f3b980da20ba11c6803abfa66a57765c13bb592a",
+      "sizeBytes": 1607
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-plan-tessere.svg",
+      "relativePath": "assets/images/plan-tessere.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "5104f03d519520e9223d250edba992069b9b5e781f924ceb176be72c296a0746",
+      "sizeBytes": 1625
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-plan-lanterne.svg",
+      "relativePath": "assets/images/plan-lanterne.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "8c3ccae7b21c65ef457c5aaf4d2a21ce7473c4a02326cbd1e0ce4ae241aa07c8",
+      "sizeBytes": 1595
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-plan-archives.svg",
+      "relativePath": "assets/images/plan-archives.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "845f3bf577026298c3fac71af005587b54723a05a63a3e164480e4c295bd56f8",
+      "sizeBytes": 1665
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-plan-vergers.svg",
+      "relativePath": "assets/images/plan-vergers.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "98a4817c06cf3231550afe039a42583d3ef7bf36efe6e0543c022cec21bf9fdb",
+      "sizeBytes": 1564
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-plan-relais.svg",
+      "relativePath": "assets/images/plan-relais.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "42f69945cb050d506327fc05ea4fd8da00b3f93e011cf7cba25af704b1e1823a",
+      "sizeBytes": 1673
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-plan-aube.svg",
+      "relativePath": "assets/images/plan-aube.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "983df4fc37a0132d51c0946bb550c82b40f465d34e7f85486a4b310fac5f883e",
+      "sizeBytes": 1606
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-plan-sillage.svg",
+      "relativePath": "assets/images/plan-sillage.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "949ee8a4406c4599a088e437332c5015d49774a344387265a1e6a7863b85eecf",
+      "sizeBytes": 1629
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-plan-convoi.svg",
+      "relativePath": "assets/images/plan-convoi.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "adce7d9e37d92e508e334b0363e6926848dcb3edf4e3f4f144b7e0118596aaba",
+      "sizeBytes": 1624
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-plan-audience.svg",
+      "relativePath": "assets/images/plan-audience.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "9c2cc50f7596d24d5a89b616a5e608945850d6b2c3f83291e0c5cf40ff4770a0",
+      "sizeBytes": 1630
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-1.svg",
+      "relativePath": "assets/images/piece-1.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "1c16405dfe936c3694140ef9545c66def6a863e08ad00d0c3e88002f7dc33716",
+      "sizeBytes": 846
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-1.svg",
+      "relativePath": "assets/images/bonus-1.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "4a1c10d76345fe5693dc916db9631cd78fea81bba1a45848faf829552f4fbb05",
+      "sizeBytes": 733
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-2.svg",
+      "relativePath": "assets/images/piece-2.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "4b6853a05ab1bbcb5edf012a45be165c23e6663464b21e10797be9d9d34d242e",
+      "sizeBytes": 781
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-2.svg",
+      "relativePath": "assets/images/bonus-2.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "030859775e51f27684f7936178eee62ed4c1a9568cba9246e18b410b9b88ea46",
+      "sizeBytes": 766
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-3.svg",
+      "relativePath": "assets/images/piece-3.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "4967e636e55534cbfd61f661cb0f1835bf619ab5f6fd30af9eaf092f7bc9b231",
+      "sizeBytes": 753
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-3.svg",
+      "relativePath": "assets/images/bonus-3.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "85203c266b104fd81fe9f02858832810a973b99bfcd3ae12dae1e88f6de9a7e6",
+      "sizeBytes": 765
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-4.svg",
+      "relativePath": "assets/images/piece-4.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "72e4d3ca3cfdcab3ee56187c863c234a34ec09045b9817e62fb87f6c52228b3c",
+      "sizeBytes": 776
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-4.svg",
+      "relativePath": "assets/images/bonus-4.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "4fecb9bacbf9ffd033a2f37666c6420ed5f91e7c745bde7614a114bb896b636f",
+      "sizeBytes": 772
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-5.svg",
+      "relativePath": "assets/images/piece-5.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "81cd4c5411f73095678ee58f60291c81dc052162e4282916c4c3f77fb902d664",
+      "sizeBytes": 771
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-5.svg",
+      "relativePath": "assets/images/bonus-5.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "460a95736dba74d380a539abcb983c7824fd643fc7f084e87a3aebfca4bd381c",
+      "sizeBytes": 741
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-6.svg",
+      "relativePath": "assets/images/piece-6.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "6c2ecd9e003d0669912aa9f92649e4c0e42ac64c94b72e5d224c27eb838f50a9",
+      "sizeBytes": 758
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-6.svg",
+      "relativePath": "assets/images/bonus-6.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "d77ae5afdfa6a30abfceaca6b34fbbaab7e893dd4da3b01d2caa6b16e13231e6",
+      "sizeBytes": 731
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-7.svg",
+      "relativePath": "assets/images/piece-7.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "52bd7a58dfe6c59c727c50fd452edb43fe20a16f8783c614eed1764d2e75568a",
+      "sizeBytes": 849
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-7.svg",
+      "relativePath": "assets/images/bonus-7.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "962a4a78f2adef3f874314acd644c4fe815e80afa13bb095d56008938142f5e4",
+      "sizeBytes": 761
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-8.svg",
+      "relativePath": "assets/images/piece-8.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "57251a75a5c2cd30818f020fc1c9ab3d1975bf0c82530f1072c1c369e276f6fc",
+      "sizeBytes": 767
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-8.svg",
+      "relativePath": "assets/images/bonus-8.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "2cb98534330d59a96fb0aff402a98c0f9c15eb9f1e685e7ec5a22e6b6547a8d3",
+      "sizeBytes": 769
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-9.svg",
+      "relativePath": "assets/images/piece-9.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "84028f8a663af1a61eea37cf4c947987390d6c5f2cc2680177773986c87ff550",
+      "sizeBytes": 771
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-9.svg",
+      "relativePath": "assets/images/bonus-9.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "1ffc9caea1775a9b07e4a4071a50a2685a809769acd41c3949066ba130407057",
+      "sizeBytes": 748
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-10.svg",
+      "relativePath": "assets/images/piece-10.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "2c6513754f47ebf2207d3ba0e25fd9b431bfe0e566e5aba507997b04ca3cdb9b",
+      "sizeBytes": 765
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-10.svg",
+      "relativePath": "assets/images/bonus-10.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "b28ff433c15066b48c97f279b4f3a5942d3253112e985a963e48d7ec7d742630",
+      "sizeBytes": 760
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-11.svg",
+      "relativePath": "assets/images/piece-11.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "be4df0ce905d2c7940505f320e7b5c5f39c6923e39309edf6956a30d79657e9b",
+      "sizeBytes": 761
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-11.svg",
+      "relativePath": "assets/images/bonus-11.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "0f774962c16965f9427c233e61d3a37e426d1780768564c80acb4e6a4668197d",
+      "sizeBytes": 783
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-piece-12.svg",
+      "relativePath": "assets/images/piece-12.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "161a0afac9def8a401ac05ae66fb7141afebefbe82a6d472f113b4c9aad786c9",
+      "sizeBytes": 784
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-bonus-12.svg",
+      "relativePath": "assets/images/bonus-12.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "c7b523633817cdc130c8a29116eef979ac6c47086bfb349b95208afeb3815b7e",
+      "sizeBytes": 780
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-cartouche-nora.svg",
+      "relativePath": "assets/images/cartouche-nora.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "f3f5fda93deb1ef3670b9456cf633d41cd38914bd301ccfdb45276c0c117c5fe",
+      "sizeBytes": 1129
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-cartouche-ilan.svg",
+      "relativePath": "assets/images/cartouche-ilan.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "95bae7ff8a8845be637772b6bf3053b7541e1d763a8cc78b48ba290245c263af",
+      "sizeBytes": 1133
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-cartouche-sana.svg",
+      "relativePath": "assets/images/cartouche-sana.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "519465c3c61eb88df627c5707888e53373232277c8324fb136507d98a004c44a",
+      "sizeBytes": 1158
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-cartouche-jet.svg",
+      "relativePath": "assets/images/cartouche-jet.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "f766cbde3759921a9f85c6fb925c01ab974b7b68862dbff4922bd39ab3fe9f0b",
+      "sizeBytes": 767
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-cartouche-corps.svg",
+      "relativePath": "assets/images/cartouche-corps.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "7371475755767d86a22764deafd880ab44f0fefc224528e64677277b9a468d49",
+      "sizeBytes": 769
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-cartouche-psi.svg",
+      "relativePath": "assets/images/cartouche-psi.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "f9b480dd8eabc78b2c51b9e6aa38b3fff911b715a93dc56d1d56474ae3c67f4a",
+      "sizeBytes": 767
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-aide-route.svg",
+      "relativePath": "assets/images/aide-route.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "1a5883d7c5b93b7e1b43395c9ed5c798ed8719c6b067d4012614c9c8418d701e",
+      "sizeBytes": 1402
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-aide-saut.svg",
+      "relativePath": "assets/images/aide-saut.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "c952a67a1f02d6cf72f6aaa93f1e666ef01d1fff411cf0652e5e8172ce286278",
+      "sizeBytes": 1098
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-aide-budget.svg",
+      "relativePath": "assets/images/aide-budget.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "da08eb08714b0df8940ee23dab613e66379d454a4e9d958eb10e197b7e7d8b63",
+      "sizeBytes": 1314
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-aide-postes.svg",
+      "relativePath": "assets/images/aide-postes.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "dfffd6b42fd016b519e68499aaa37d558f154056d3343792a6d1ea7f0e491b71",
+      "sizeBytes": 1193
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-recette-secret.svg",
+      "relativePath": "assets/images/recette-secret.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "c184054533b0ec6b1d782624323c116ec5a0ec81ba5c40ace51f38742aa90a03",
+      "sizeBytes": 661
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-recette-public.svg",
+      "relativePath": "assets/images/recette-public.svg",
+      "mimeType": "image/svg+xml",
+      "checksum": "044c3f5b2c52cf50c410b962c27698626f9d8084d886bf4ad20b5e6e2f310ac1",
+      "sizeBytes": 659
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-banniere.jpg",
+      "relativePath": "assets/images/banniere.jpg",
+      "mimeType": "image/jpeg",
+      "checksum": "f9adbe3f338dbad2e1cb3599a8a5175bb2d1436b5f385ae08ac233ff5cc1bafc",
+      "sizeBytes": 123051
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-signal-quai.wav",
+      "relativePath": "assets/audio/signal-quai.wav",
+      "mimeType": "audio/wav",
+      "checksum": "82574daca8324dcbee3d2c17ade9ffe780173d0fbf84b855c289506fe0525843",
+      "sizeBytes": 176444
+    },
+    {
+      "originalRef": "recette-trv-sel-20261127-media-signal-machine.wav",
+      "relativePath": "assets/audio/signal-machine.wav",
+      "mimeType": "audio/wav",
+      "checksum": "651509394fc0eb71453da97d6f94ae24b0b50d58d4164520a8cb9b5a02d8c38d",
+      "sizeBytes": 176444
+    }
+  ],
+  "stats": {
+    "entityCount": 15,
+    "sessionCount": 12,
+    "atlasMapCount": 10,
+    "wikiEntryCount": 5,
+    "clueCount": 26,
+    "assetCount": 49,
+    "totalSizeBytes": 522698
+  }
+}

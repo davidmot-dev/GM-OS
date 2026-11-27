@@ -1,0 +1,15 @@
+# Anomalies et limites — Traveller
+
+Aucune anomalie applicative nouvelle révélée par les 121 contrôles ciblés exécutés. Cela ne certifie ni l’absence générale de défaut, ni les gestes encore non essayés.
+
+- Les dégâts d’une attaque (dés d’arme + Effet, MD FOR en mêlée, protection et traits) restent un calcul du MJ. Le montant net saisi passe par la porte des dégâts ; ses pertes sur END/FOR/DEX ont été éprouvées en mémoire. L’Auto-pistolet préparé vient du catalogue : NT 5, 10 m, 3D-3, chargeur 15.
+- Les profils humains sont aux valeurs choisies ; pas de parcours de carrière ni de création novice certifiés. Les compétences non formées restent vides, les niveaux formés sont du texte, y compris « 0 ». Les dossiers narratifs sans profil de combat ne sont pas des adversaires à invoquer ; leurs zéros techniques de santé ne veulent pas dire morts.
+- Les procédures de saut, commerce, génération de mondes, dangers, progression et pouvoirs psioniques utilisent les règles du corpus relu et des réglages manuels. Aucune consommation de carburant, munition, PSI ou Crédits n’est promise à l’ouverture d’une scène.
+- Le dossier Noctule 200 t/saut 1 sert d’exemple technique et de support narratif. Il ne certifie pas un modèle publié ou une fiche complète de combat spatial. Si une bataille spatiale facultative est choisie, préparer les caractéristiques complètes avec le livre ; aucune bataille n’est nécessaire pour résoudre l’intrigue.
+- Aucun module compatible Traveller dans le catalogue courant. Les modules Alien, Star Trek, Dune et Rêve de Dragon n’ont pas été utilisés. Les cartes sont des schémas sans échelle ni règle de déplacement ; la Traverse de Sel est un secteur de fiction, pas une position canonique ni une génération de monde certifiée.
+- Point déjà signalé au registre § 278 : maxima des jauges PSI et Rads non déclarés dans le pilote. Les références PSI 8 et Rads 0 de la recette sont explicites ; ne pas lire un maximum générique d’interface comme une règle du livre. Aucun correctif applicatif effectué ici.
+- L’avance collective sous séquestre n’est pas fusionnée au Cash individuel. Les frais ordinaires relèvent du mandant selon le contrat ; tout détour et dépense supplémentaire doit être négocié. Aucun paiement ou gain final déjà enregistré.
+- Les tests d’import Nexus, de sauvegarde et de restauration sont **en mémoire**, avec joueurs et avatars sentinelles fictifs. La sérialisation contrôlée n’est pas un rechargement d’Electron. Les avatars et anciens PJ de David n’ont pas été consultés.
+- GM-05 est revérifié par les projections pures avec marqueurs fictifs ; le transport réel, les droits visibles et les Hub 360/768/1180 restent NON EXÉCUTÉS.
+- Restaurer les seuls champs des profils [RECETTE] ; voir ETATS-DE-REFERENCE.md. **Nexus Remplacer réimporte toute la campagne**, pas un atelier.
+- Les 62 cas humains restent NON TESTÉS. Import Electron, réseau, tablettes physiques, IA/TTS, éclairage, sorties matérielles et écoute humaine des signaux ne sont pas essayés.

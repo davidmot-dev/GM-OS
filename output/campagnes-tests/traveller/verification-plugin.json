@@ -1,0 +1,18 @@
+{
+  "archive": {
+    "fichier": "01-Traveller-La-Part-des-Absents.gmos",
+    "id": "recette-trv-sel-20261127-campagne-complete",
+    "sha256": "cea275bada5294581da97f31d9bdbc76d1a1907ff60fd23dca2d9167c3cc0689"
+  },
+  "controle": "Structure Nexus partielle par gmos_bundle.py ; pas un import Electron",
+  "valid": true,
+  "errors": [],
+  "limits": [
+    "Structure Nexus v1 partielle ; r�gles, satellites, m�dias d�cod�s, import GM-OS, tablettes et mat�riel non v�rifi�s par cet outil."
+  ],
+  "sha256": "cea275bada5294581da97f31d9bdbc76d1a1907ff60fd23dca2d9167c3cc0689",
+  "campaignId": "recette-trv-sel-20261127-campagne-complete",
+  "players": 3,
+  "characters": 6,
+  "assets": 49
+}

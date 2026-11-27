@@ -1,0 +1,234 @@
+{
+  "dateFixe": "2026-11-27T12:00:00.000Z",
+  "generateur": "outils/campagnes-de-recette/traveller.mjs",
+  "pilote": {
+    "fichier": "Export Dirvers/corriges/Traveller-2.0.0.gmos-driver",
+    "id": "custom-1795725795907",
+    "version": "2.0.0",
+    "sha256": "00eeb3f79fd80102024ee5f32d1bf866e5bd4c0d8fa6e89a68cd80097009fbd7"
+  },
+  "gabaritId": "tpl-1795725795907",
+  "campagne": {
+    "fichier": "01-Traveller-La-Part-des-Absents.gmos",
+    "id": "recette-trv-sel-20261127-campagne-complete",
+    "sha256": "cea275bada5294581da97f31d9bdbc76d1a1907ff60fd23dca2d9167c3cc0689"
+  },
+  "cas": 62,
+  "seances": 12,
+  "scenes": 46,
+  "actes": 5,
+  "medias": 49,
+  "modulesCompatibles": [],
+  "joueurs": [
+    {
+      "id": "p-1",
+      "realName": "Thomas D."
+    },
+    {
+      "id": "p-2",
+      "realName": "Marie C."
+    },
+    {
+      "id": "p-3",
+      "realName": "Lucas R."
+    }
+  ],
+  "sourceJoueurs": {
+    "fichier": "outils/campagnes-de-recette/cthulhu-hack-joueurs.json",
+    "sha256": "0032dc5a6bec43dbf515ade46ce461b71858a2a5e2cb81bb27f1380d95d912fa"
+  },
+  "corpus": [
+    {
+      "fichier": "docs/systems/traveller/rules/bestiaire-et-adversaires.md",
+      "sha256": "247e28471feb8faa0043ad815acd463c0a4393e3849df4c8447ee61bc2322b7e",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/composition-de-la-fiche-de-personnage.md",
+      "sha256": "18ba817958438577bf3dc107593dc87126f48bd80e1ad9dc22539292ed081f50",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/degats-et-types-de-degats.md",
+      "sha256": "f8408fdea0970db012c542002c4b910966b7e30a4b2db026d7b8e09a41347d27",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/degres-de-reussite-et-critiques.md",
+      "sha256": "ba1bd5f5357fb7cf1bc21ea63caea455aafa89b33047bd8725b07f23b90e29cc",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/distances-et-portees.md",
+      "sha256": "81140bace29b96f3c51feba495d31f9cac697812571bd23f1db157076ae42880",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/environnement-et-dangers.md",
+      "sha256": "a1cc0368adc8b5724cb663c12e27c83f333b3530b785f0d69d2ad4ccdad1ac03",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/equipement-et-materiel.md",
+      "sha256": "e22d2f5f925196cfabc5ba4f171742f40af13baa512ceefb1ea1b48917f91945",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/etats-et-conditions.md",
+      "sha256": "bcec4b7696434f2d74f8ad327dda9f5c1a01f180e4a1d85290f1e36445d7c86e",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/initiative-et-deroulement-du-tour.md",
+      "sha256": "ccc1f7db7b4f6938a5d8903adcf92fc0b7c3d58d9e800b8a14ffd05371215c06",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/inventaire-des-mecaniques.md",
+      "sha256": "d59313ecbb0d519150c77de9a46d3cc5617701b6d014a898511932667f0db0f8",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/jauges-et-ressources-individuelles.md",
+      "sha256": "8021ce41514d46bde1c74481741f7cba5a0f47d34c20a25bac0b9deda604fbfa",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/jets-opposes-aide-et-cooperation.md",
+      "sha256": "4ffc2efc1dee35536e089eb92bd2914da254c0c1999d8892fa225861fb80d8d1",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/la-creation-procedurale-de-mondes-et-d-univers.md",
+      "sha256": "b766a4ae8226bc409ed30a2822567a4ca67c41b1bafb6c941aac386a77439dda",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/la-gestion-economique-du-vaisseau-et-le-commerce-interstellaire.md",
+      "sha256": "c48624b47b86d482588aa4bac24d81c1ae14a85ae0a649e6e8426e396dfa5c74",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/le-combat-spatial-a-grande-echelle-et-les-abordages.md",
+      "sha256": "8dc68e4037f98129b130eab74aa85db239293e5dd5c30c0b1784a2f3ce4d41ad",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/les-pouvoirs-psioniques.md",
+      "sha256": "95aa7291b3ab8d04ca3f49bde6825791ebaca285a3a20d43359d685b897c4775",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/les-voyages-spatiaux-par-saut-dans-l-espace.md",
+      "sha256": "932ed8e1a3f6ccb8e085d4de3508bed3621cda102b62d42683e8e6db4b2bdb22",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/poursuites.md",
+      "sha256": "09e85b4af95f60dc23eb17736f3cd0f20fd62792bd85540446253d81668be448",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/resolution-des-jets.md",
+      "sha256": "898eb646b0dcd6974af7ffd045ea6a5e9010f6fd58725917e0b5314c50fccb6c",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/sante-et-blessures.md",
+      "sha256": "a7ba30c4e2b84febe46afbe5b1c309545057ac74e016bf6ea257bcd8ecc19d25",
+      "relu": true
+    },
+    {
+      "fichier": "docs/systems/traveller/rules/ton-registre-et-ambiance.md",
+      "sha256": "f380bb2347b68a286581db559f2c208970fd7dbd667b92f11a96abf90a543a11",
+      "relu": true
+    }
+  ],
+  "versionNode": "v24.13.1",
+  "gmosVersion": "6.5.0",
+  "sourcesTechniques": [
+    {
+      "fichier": "src/modules/dice/systemes/traveller.ts",
+      "sha256": "20cc7cd8f0105533c86cc4e945df41c387ac6d6297243e931e14eb91031d102d"
+    },
+    {
+      "fichier": "src/modules/dice/DescripteurDeJet.ts",
+      "sha256": "ca16609a68f91c46153062032a16320b19178d6e9f8d94bbd6460266672f2371"
+    },
+    {
+      "fichier": "src/modules/combat/logic/physiqueDeTraveller.ts",
+      "sha256": "a1d0da23aa10b4d154071457b34bb76683d5f1d55b2f59be5b338cbb8ee1a6cb"
+    },
+    {
+      "fichier": "src/modules/session/logic/jeuDuPersonnage.ts",
+      "sha256": "f57cb3e2f54aca9b0bedfa5d42d782198b5490677e8e3e73e408fe17924f2667"
+    },
+    {
+      "fichier": "src/modules/equipement/equiperLaFiche.ts",
+      "sha256": "a9785c69c6b58eb34b632d76acccd35a1ade1f20bcd9e535f2dbcd723b867857"
+    },
+    {
+      "fichier": "src/modules/system/archive/NexusService.ts",
+      "sha256": "0a18ec24c71cfa782019c0a399b88256248fd89221b95327c207f150a4a79f07"
+    },
+    {
+      "fichier": "src/modules/remote/logic/caviardageDesJoueurs.ts",
+      "sha256": "247889518a113275d948f06bbcc616a3b15e42e2b66f852478fa092892608864"
+    },
+    {
+      "fichier": "src/modules/fiches/correspondanceDeFiche.ts",
+      "sha256": "5afb33ad56665b006ab7157c686de8eb7bd9491f03ff16e52e04d83897a1d532"
+    },
+    {
+      "fichier": "docs/systems/traveller/fiche/correspondance.json",
+      "sha256": "75232dccd4a66f1175ca58120fb8a66b55738d4edfbf0ad24e917fde6535f8ee"
+    },
+    {
+      "fichier": "docs/fiches/Traveller/traveller-fiche-personnage-interactive.html",
+      "sha256": "98740e8fadaf12d14296fcbb7758381358a1bc90915e6f5da8354397b111f329"
+    },
+    {
+      "fichier": "docs/systems/traveller/Traveller Band.jpg",
+      "sha256": "f9adbe3f338dbad2e1cb3599a8a5175bb2d1436b5f385ae08ac233ff5cc1bafc"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/traveller.mjs",
+      "sha256": "fb88ccdbdd50fd641645595acb528167a83f12b4b0f00c5d1b981ab94705185e"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/traveller-recette.mjs",
+      "sha256": "e5c8cb556e6c75e044f1a457d3a420bc01be8bf81e4b889177e110a13ab47c63"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/traveller-scenario.mjs",
+      "sha256": "e33672b76cf325d0a7941e6e91461fe70f8505e65e7673e3980cfea21d0e4688"
+    }
+  ],
+  "recetteHumaine": "NON TESTÉ",
+  "sourcesControles": [
+    {
+      "fichier": "outils/campagnes-de-recette/traveller.test.ts",
+      "sha256": "183c1e94b9f5b0ba33b4b01ae831803fd85f31a9f5723b629ed2765a2fcc2d2c"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/traveller.setup.ts",
+      "sha256": "005a9505aca9562290544c25218d85c1b1fd26174b06d4a0f6677fc1c9207e3f"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/vitest-traveller.config.mts",
+      "sha256": "c8be844794ab728880fc0287058e4c8897e8506cff2be29f58c38cbd6f08e4c7"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/traveller-executer-tests.mjs",
+      "sha256": "43b31cc8a33997f02927bd5a75f062a3a2864683274cb5e7735b4b5de8064744"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/traveller-verifier.mjs",
+      "sha256": "4134b52046b2c626e0aaa200b54cecff8bb534416928a1f3fd93c4fdfa71b108"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/traveller-livrer.mjs",
+      "sha256": "cba5c3b45efa11ccc32d0f468fe892c7a2c5a22a5d42571956721dedadf8fbe1"
+    }
+  ]
+}

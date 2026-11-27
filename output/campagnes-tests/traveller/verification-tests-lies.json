@@ -1,0 +1,27 @@
+{
+  "archiveSha256": "cea275bada5294581da97f31d9bdbc76d1a1907ff60fd23dca2d9167c3cc0689",
+  "rapportSha256": "c2de104b4d314bfb57ef998dd874ddd90b9dd14af5569df4b6f98927fdefe81e",
+  "codeVitest": 0,
+  "total": 121,
+  "reussis": 121,
+  "echecs": 0,
+  "import": "Nexus et sauvegarde en mémoire uniquement ; pas Electron",
+  "sources": [
+    {
+      "fichier": "outils/campagnes-de-recette/traveller.test.ts",
+      "sha256": "183c1e94b9f5b0ba33b4b01ae831803fd85f31a9f5723b629ed2765a2fcc2d2c"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/traveller.setup.ts",
+      "sha256": "005a9505aca9562290544c25218d85c1b1fd26174b06d4a0f6677fc1c9207e3f"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/vitest-traveller.config.mts",
+      "sha256": "c8be844794ab728880fc0287058e4c8897e8506cff2be29f58c38cbd6f08e4c7"
+    },
+    {
+      "fichier": "outils/campagnes-de-recette/traveller-executer-tests.mjs",
+      "sha256": "43b31cc8a33997f02927bd5a75f062a3a2864683274cb5e7735b4b5de8064744"
+    }
+  ]
+}

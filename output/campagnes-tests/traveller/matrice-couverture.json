@@ -1,0 +1,634 @@
+[
+  {
+    "id": "TRV-01",
+    "mecanique": "Composition 2D + MD + compétence",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 9, 58-60",
+    "support": "natif",
+    "casIds": [
+      "JET-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-02",
+    "mecanique": "Compétence vide et niveau zéro",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 58",
+    "support": "natif",
+    "casIds": [
+      "JET-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-03",
+    "mecanique": "Polyvalent",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 69",
+    "support": "natif",
+    "casIds": [
+      "JET-03"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-04",
+    "mecanique": "Spécialités",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 58",
+    "support": "natif",
+    "casIds": [
+      "JET-04"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-05",
+    "mecanique": "Exception Profession",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 69",
+    "support": "natif",
+    "casIds": [
+      "JET-05"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-06",
+    "mecanique": "Choix des champs",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 9, 58 ; contrat du pilote",
+    "support": "natif",
+    "casIds": [
+      "JET-06"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-07",
+    "mecanique": "Compétence libre",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 58 ; fiche du pilote",
+    "support": "natif",
+    "casIds": [
+      "JET-07"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-08",
+    "mecanique": "MD de caractéristique",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 9, 71",
+    "support": "natif",
+    "casIds": [
+      "JET-08"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-09",
+    "mecanique": "Difficultés",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 60",
+    "support": "natif",
+    "casIds": [
+      "EFF-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-10",
+    "mecanique": "Coup de pouce",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 61",
+    "support": "natif",
+    "casIds": [
+      "EFF-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-11",
+    "mecanique": "Coup du sort",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 61",
+    "support": "natif",
+    "casIds": [
+      "EFF-03"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-12",
+    "mecanique": "Annulation des dés",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 61",
+    "support": "manuel",
+    "casIds": [
+      "EFF-04"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-13",
+    "mecanique": "Durée et actions simultanées",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 62",
+    "support": "natif",
+    "casIds": [
+      "EFF-05"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-14",
+    "mecanique": "Effet et chaîne de tâches",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 61, 63",
+    "support": "natif",
+    "casIds": [
+      "EFF-06",
+      "EFF-07",
+      "EFF-08",
+      "EFF-09",
+      "EFF-10",
+      "EFF-11"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-15",
+    "mecanique": "Tests opposés",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 61",
+    "support": "manuel",
+    "casIds": [
+      "EFF-12"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-16",
+    "mecanique": "Dégâts physiques",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 74",
+    "support": "natif",
+    "casIds": [
+      "SAN-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-17",
+    "mecanique": "Choix de l’excédent",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 74",
+    "support": "natif",
+    "casIds": [
+      "SAN-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-18",
+    "mecanique": "Inconscience",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 74, 80",
+    "support": "natif",
+    "casIds": [
+      "SAN-03"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-19",
+    "mecanique": "Mort",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 74",
+    "support": "natif",
+    "casIds": [
+      "SAN-04"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-20",
+    "mecanique": "Arme Incapacitante",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 76",
+    "support": "natif",
+    "casIds": [
+      "SAN-05"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-21",
+    "mecanique": "Soins répartis",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 79",
+    "support": "natif",
+    "casIds": [
+      "SAN-06"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-22",
+    "mecanique": "Plafond des soins",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 79",
+    "support": "natif",
+    "casIds": [
+      "SAN-07"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-23",
+    "mecanique": "Maxima sans blessure",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 9, 74 ; porte des dégâts",
+    "support": "natif",
+    "casIds": [
+      "SAN-08"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-24",
+    "mecanique": "Initiative",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 71",
+    "support": "natif",
+    "casIds": [
+      "COM-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-25",
+    "mecanique": "Attaque et protection",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 74-75",
+    "support": "manuel",
+    "casIds": [
+      "COM-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-26",
+    "mecanique": "Portée et réactions",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 72-74",
+    "support": "manuel",
+    "casIds": [
+      "COM-03"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-27",
+    "mecanique": "Bestiaire à PdV",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 81-86",
+    "support": "natif",
+    "casIds": [
+      "COM-04"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-28",
+    "mecanique": "Actions et temps",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 71-73",
+    "support": "manuel",
+    "casIds": [
+      "COM-05"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-29",
+    "mecanique": "Fiche HTML aller-retour",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), contrat HTML ; correspondance traveller-fr",
+    "support": "natif",
+    "casIds": [
+      "FIC-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-30",
+    "mecanique": "Catalogue et inventaire",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 120-131 ; catalogue du pilote",
+    "support": "natif",
+    "casIds": [
+      "FIC-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-31",
+    "mecanique": "Munitions et masse",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), fiche ; p. 74, 120-131",
+    "support": "manuel",
+    "casIds": [
+      "FIC-03"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-32",
+    "mecanique": "Crédits et dette",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 93 ; fiche",
+    "support": "manuel",
+    "casIds": [
+      "FIC-04"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-33",
+    "mecanique": "Sécurité des autres caractéristiques",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), fiche ; corpus composition-de-la-fiche-de-personnage",
+    "support": "absent",
+    "casIds": [
+      "FIC-05"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-34",
+    "mecanique": "Préparation du saut",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 150-153",
+    "support": "manuel",
+    "casIds": [
+      "SAU-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-35",
+    "mecanique": "Carburant",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 150-153",
+    "support": "manuel",
+    "casIds": [
+      "SAU-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-36",
+    "mecanique": "Risques et dysfonctionnement",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 150-153",
+    "support": "manuel",
+    "casIds": [
+      "SAU-03"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-37",
+    "mecanique": "Temps et isolement",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 150-153",
+    "support": "manuel",
+    "casIds": [
+      "SAU-04"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-38",
+    "mecanique": "Combat spatial",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 160-171",
+    "support": "absent",
+    "casIds": [
+      "SPA-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-39",
+    "mecanique": "Poursuite spatiale",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 160-161",
+    "support": "manuel",
+    "casIds": [
+      "SPA-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-40",
+    "mecanique": "Commerce interstellaire",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 234-241",
+    "support": "manuel",
+    "casIds": [
+      "ECO-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-41",
+    "mecanique": "Courtage",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 234-241",
+    "support": "manuel",
+    "casIds": [
+      "ECO-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-42",
+    "mecanique": "Mondes et loi",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 242-257",
+    "support": "manuel",
+    "casIds": [
+      "ECO-03"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-43",
+    "mecanique": "PSI actuelle",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 224-233",
+    "support": "manuel",
+    "casIds": [
+      "PSI-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-44",
+    "mecanique": "Coût insuffisant",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 225-226",
+    "support": "manuel",
+    "casIds": [
+      "PSI-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-45",
+    "mecanique": "Récupération PSI",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 224",
+    "support": "manuel",
+    "casIds": [
+      "PSI-03"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-46",
+    "mecanique": "Rads et fatigue",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 77-79",
+    "support": "manuel",
+    "casIds": [
+      "DAN-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-47",
+    "mecanique": "Chutes et vide",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 77-79",
+    "support": "manuel",
+    "casIds": [
+      "DAN-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-48",
+    "mecanique": "Étude et formation",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 58 ; corpus composition-de-la-fiche-de-personnage",
+    "support": "manuel",
+    "casIds": [
+      "PRO-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-49",
+    "mecanique": "Relations",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), p. 19-20 ; fiche",
+    "support": "natif",
+    "casIds": [
+      "PRO-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-50",
+    "mecanique": "Import d’une seule campagne",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), contrat Nexus de la version cible",
+    "support": "à vérifier",
+    "casIds": [
+      "IMP-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-51",
+    "mecanique": "Dépendance du pilote",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), contrat Nexus ; pilote 2.0.0",
+    "support": "à vérifier",
+    "casIds": [
+      "IMP-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-52",
+    "mecanique": "Ateliers et fiction",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), contrat campagne complète",
+    "support": "natif",
+    "casIds": [
+      "IMP-03"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-53",
+    "mecanique": "GM-05 secrets de séance",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), caviardageDesJoueurs.ts ; GM-05",
+    "support": "à vérifier",
+    "casIds": [
+      "SEC-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-54",
+    "mecanique": "Partage d’un indice",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), indicesDuLecteur.ts ; Trame",
+    "support": "à vérifier",
+    "casIds": [
+      "SEC-02"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-55",
+    "mecanique": "Restauration locale",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), contrat de recette ; magasin de personnages",
+    "support": "à vérifier",
+    "casIds": [
+      "PER-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-56",
+    "mecanique": "Tablettes et jets",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), contrat Hub ; PanneauDeJet",
+    "support": "à vérifier",
+    "casIds": [
+      "HUB-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  },
+  {
+    "id": "TRV-57",
+    "mecanique": "Médias embarqués",
+    "source": "Livre de règles français v2.2, pages imprimées (PDF = imprimée + 1), format Nexus v1",
+    "support": "à vérifier",
+    "casIds": [
+      "MED-01"
+    ],
+    "archive": "01-Traveller-La-Part-des-Absents.gmos",
+    "limite": "Recette humaine NON TESTÉE. Moteur pur, import en mémoire, application Electron et réseau sont des preuves distinctes."
+  }
+]

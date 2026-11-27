@@ -15306,10 +15306,32 @@ aucune donnée personnelle, installation, publication ou commande git d’écrit
 - **Reste** : l'**essai de David** ; les dégâts d'une attaque dans Combat-OS (dés + Effet −
   armure) ; les maxima des jauges PSI et Rads.
 
+### 279 · Traveller — campagne de recette « La Part des absents » — 27/11/2026
+
+- **Demande de David** : « Traveller », en invoquant GM-OS Campagnes de test.
+- **Livré** : [ZIP](../../output/campagnes-tests/traveller/Traveller-La-Part-des-Absents-Campagne-de-test.zip)
+  avec **un seul `.gmos`**, pilote réel 2.0.0 inchangé, cahier, matrice, CSV vierge et états de
+  référence. Douze séances prévues, 36 scènes narratives et dix ateliers, quatre fins ; trois
+  nouveaux héros reliés aux trois joueurs autorisés et trois profils de recette ; 15 PNJ/cibles,
+  dix lieux, 26 indices, 49 médias. Intrigue originale de fret, secours et fraude ; ateliers hors fiction.
+- **Vérifié** : 121 contrôles ciblés passent, dont jets et porte des dégâts réels, correspondance
+  HTML, injection Nexus en mémoire avec sentinelles conservées, sauvegarde construite validée,
+  restauration locale et GM-05 pur. Structure partielle du plugin acceptée ; 47 images rendues et
+  deux WAV décodés ; six planches et fiction relues. ZIP relu, 40 empreintes de contenu vérifiées.
+- **Limites** : **LOT PRÉPARÉ**, 62 cas humains NON TESTÉS ; Electron, réseau, Hub et matériel non
+  exécutés. Pas de module Traveller compatible ; procédures spatiales/commerce/PSI manuelles,
+  dossier du Noctule non certifié comme fiche de bataille complète. Aucun code applicatif modifié.
+- **Reprendre** : import de l'unique campagne dans une instance jetable autorisée, puis JET-01,
+  SAN-01, FIC-01 et PER-01. Restaurer seulement les champs d'essai, jamais toute la campagne.
+- **Ancres** : [note complète](2026-11-27-campagne-test-traveller.md),
+  `outils/campagnes-de-recette/traveller*.mjs`, `traveller.test.ts`,
+  `output/campagnes-tests/traveller/`. Commit demandé par David le 27/11 après livraison.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 215 | **Traveller — La Part des absents, campagne de recette** | § 279 ; 🟠 préparée le 27/11 — une campagne, douze séances, dix ateliers, 62 cas humains vierges ; 121 contrôles ciblés réussis, médias et ZIP relus | Importer l'unique `.gmos` en instance jetable autorisée ; JET-01, SAN-01, FIC-01, PER-01 | Essais Electron, Hub et David non exécutés |
 | 214 | **Traveller — pilote 2.0.0, corpus relu, fiche reliée** | § 278 ; 🟠 livré le 26/11 — `jet.traveller`, report des dégâts END → FOR/DEX, corpus 21/21, fiche au moteur 29 ; e2e réussi | Réimporter `corriges/Traveller-2.0.0` avec « Remplacer » ; un test de Kathya, un coup de 10, la fiche du jeu | Essai de David |
 | 213 | **Le M314 en paysage** | § 277 ; 🟠 corrigé le 25/11 — radar à gauche, commandes à droite, sans défilement à 960 × 600 ; e2e réussi | Ouvrir le M314 « à la table » sur la Fire | Essai de David |
 | 212 | **Tablette de la table — accueil et code du meneur (T14)** | § 276 ; 🟠 livré le 24/11 — accueil à trois rôles, dernier rôle rouvert, « Changer de rôle », code comparé par le serveur ; e2e réussi | Paramètres › Télécommande : régler le code ; sur la Fire, Écran de table puis retour à l'Aide au MJ par le code | Essai de David |

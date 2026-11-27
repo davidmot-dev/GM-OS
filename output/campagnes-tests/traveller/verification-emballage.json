@@ -1,0 +1,19 @@
+{
+  "zip": "Traveller-La-Part-des-Absents-Campagne-de-test.zip",
+  "sha256": "d10f5e22cec18832aefc4e355ce730f051eecf144af78a1079bc7cab9ebdee36",
+  "octets": 1239451,
+  "campagnes": 1,
+  "fichiers": 41,
+  "empreintesVerifiees": 40,
+  "archive": {
+    "fichier": "01-Traveller-La-Part-des-Absents.gmos",
+    "id": "recette-trv-sel-20261127-campagne-complete",
+    "sha256": "cea275bada5294581da97f31d9bdbc76d1a1907ff60fd23dca2d9167c3cc0689"
+  },
+  "testsAutomatiques": 121,
+  "reussis": 121,
+  "echecs": 0,
+  "recetteHumaine": "NON TESTÉ",
+  "electron": "NON EXÉCUTÉ",
+  "hub": "NON EXÉCUTÉ"
+}

@@ -1,0 +1,1333 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "traveller-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Traveller (pilote 2.0.0, outils/traveller/finir_traveller.py) et le gabarit traveller-fr livré par GM-OS Studio le 2026-11-26. Les champs du pilote reprennent un à un 328 des 331 clés de la fiche : le portrait reste celui de GM-OS, et la page 2 recopie seule le nom et l'espèce. Le total physique, les niveaux sans blessure et le choix de l'excédent des dégâts n'ont pas de case sur la fiche imprimée : ils restent dans GM-OS.",
+  "champs": [
+    {
+      "gmos": "force",
+      "fiche": "attributes.strength.value"
+    },
+    {
+      "gmos": "dexterite",
+      "fiche": "attributes.dexterity.value"
+    },
+    {
+      "gmos": "endurance",
+      "fiche": "attributes.endurance.value"
+    },
+    {
+      "gmos": "intellect",
+      "fiche": "attributes.intellect.value"
+    },
+    {
+      "gmos": "education",
+      "fiche": "attributes.education.value"
+    },
+    {
+      "gmos": "statut_social",
+      "fiche": "attributes.social.value"
+    },
+    {
+      "gmos": "psi",
+      "fiche": "attributes.psionics.value"
+    },
+    {
+      "gmos": "force_md",
+      "fiche": "attributes.strength.modifier"
+    },
+    {
+      "gmos": "dexterite_md",
+      "fiche": "attributes.dexterity.modifier"
+    },
+    {
+      "gmos": "endurance_md",
+      "fiche": "attributes.endurance.modifier"
+    },
+    {
+      "gmos": "intellect_md",
+      "fiche": "attributes.intellect.modifier"
+    },
+    {
+      "gmos": "education_md",
+      "fiche": "attributes.education.modifier"
+    },
+    {
+      "gmos": "statut_social_md",
+      "fiche": "attributes.social.modifier"
+    },
+    {
+      "gmos": "psi_md",
+      "fiche": "attributes.psionics.modifier"
+    },
+    {
+      "gmos": "moral",
+      "fiche": "attributes.morale.value"
+    },
+    {
+      "gmos": "chance",
+      "fiche": "attributes.luck.value"
+    },
+    {
+      "gmos": "sante_mentale",
+      "fiche": "attributes.sanity.value"
+    },
+    {
+      "gmos": "charisme",
+      "fiche": "attributes.charisma.value"
+    },
+    {
+      "gmos": "autre_caracteristique",
+      "fiche": "attributes.other.value"
+    },
+    {
+      "gmos": "moral_md",
+      "fiche": "attributes.morale.modifier"
+    },
+    {
+      "gmos": "chance_md",
+      "fiche": "attributes.luck.modifier"
+    },
+    {
+      "gmos": "sante_mentale_md",
+      "fiche": "attributes.sanity.modifier"
+    },
+    {
+      "gmos": "charisme_md",
+      "fiche": "attributes.charisma.modifier"
+    },
+    {
+      "gmos": "autre_caracteristique_md",
+      "fiche": "attributes.other.modifier"
+    },
+    {
+      "gmos": "autre_caracteristique_nom",
+      "fiche": "attributes.other.label"
+    },
+    {
+      "gmos": "administration",
+      "fiche": "skills.0.level"
+    },
+    {
+      "gmos": "aeronef_1",
+      "fiche": "skills.1.level"
+    },
+    {
+      "gmos": "aeronef_1_specialite",
+      "fiche": "skills.1.specialty"
+    },
+    {
+      "gmos": "aeronef_2",
+      "fiche": "skills.2.level"
+    },
+    {
+      "gmos": "aeronef_2_specialite",
+      "fiche": "skills.2.specialty"
+    },
+    {
+      "gmos": "aeronef_3",
+      "fiche": "skills.3.level"
+    },
+    {
+      "gmos": "aeronef_3_specialite",
+      "fiche": "skills.3.specialty"
+    },
+    {
+      "gmos": "animaux_1",
+      "fiche": "skills.4.level"
+    },
+    {
+      "gmos": "animaux_1_specialite",
+      "fiche": "skills.4.specialty"
+    },
+    {
+      "gmos": "animaux_2",
+      "fiche": "skills.5.level"
+    },
+    {
+      "gmos": "animaux_2_specialite",
+      "fiche": "skills.5.specialty"
+    },
+    {
+      "gmos": "animaux_3",
+      "fiche": "skills.6.level"
+    },
+    {
+      "gmos": "animaux_3_specialite",
+      "fiche": "skills.6.specialty"
+    },
+    {
+      "gmos": "athletisme_1",
+      "fiche": "skills.7.level"
+    },
+    {
+      "gmos": "athletisme_1_specialite",
+      "fiche": "skills.7.specialty"
+    },
+    {
+      "gmos": "athletisme_2",
+      "fiche": "skills.8.level"
+    },
+    {
+      "gmos": "athletisme_2_specialite",
+      "fiche": "skills.8.specialty"
+    },
+    {
+      "gmos": "athletisme_3",
+      "fiche": "skills.9.level"
+    },
+    {
+      "gmos": "athletisme_3_specialite",
+      "fiche": "skills.9.specialty"
+    },
+    {
+      "gmos": "armes_lourdes_1",
+      "fiche": "skills.10.level"
+    },
+    {
+      "gmos": "armes_lourdes_1_specialite",
+      "fiche": "skills.10.specialty"
+    },
+    {
+      "gmos": "armes_lourdes_2",
+      "fiche": "skills.11.level"
+    },
+    {
+      "gmos": "armes_lourdes_2_specialite",
+      "fiche": "skills.11.specialty"
+    },
+    {
+      "gmos": "art_1",
+      "fiche": "skills.12.level"
+    },
+    {
+      "gmos": "art_1_specialite",
+      "fiche": "skills.12.specialty"
+    },
+    {
+      "gmos": "art_2",
+      "fiche": "skills.13.level"
+    },
+    {
+      "gmos": "art_2_specialite",
+      "fiche": "skills.13.specialty"
+    },
+    {
+      "gmos": "art_3",
+      "fiche": "skills.14.level"
+    },
+    {
+      "gmos": "art_3_specialite",
+      "fiche": "skills.14.specialty"
+    },
+    {
+      "gmos": "artilleur_1",
+      "fiche": "skills.15.level"
+    },
+    {
+      "gmos": "artilleur_1_specialite",
+      "fiche": "skills.15.specialty"
+    },
+    {
+      "gmos": "artilleur_2",
+      "fiche": "skills.16.level"
+    },
+    {
+      "gmos": "artilleur_2_specialite",
+      "fiche": "skills.16.specialty"
+    },
+    {
+      "gmos": "astrogation",
+      "fiche": "skills.17.level"
+    },
+    {
+      "gmos": "avocat",
+      "fiche": "skills.18.level"
+    },
+    {
+      "gmos": "combat_arme_1",
+      "fiche": "skills.19.level"
+    },
+    {
+      "gmos": "combat_arme_1_specialite",
+      "fiche": "skills.19.specialty"
+    },
+    {
+      "gmos": "combat_arme_2",
+      "fiche": "skills.20.level"
+    },
+    {
+      "gmos": "combat_arme_2_specialite",
+      "fiche": "skills.20.specialty"
+    },
+    {
+      "gmos": "combat_arme_3",
+      "fiche": "skills.21.level"
+    },
+    {
+      "gmos": "combat_arme_3_specialite",
+      "fiche": "skills.21.specialty"
+    },
+    {
+      "gmos": "combi",
+      "fiche": "skills.22.level"
+    },
+    {
+      "gmos": "conduire_1",
+      "fiche": "skills.23.level"
+    },
+    {
+      "gmos": "conduire_1_specialite",
+      "fiche": "skills.23.specialty"
+    },
+    {
+      "gmos": "conduire_2",
+      "fiche": "skills.24.level"
+    },
+    {
+      "gmos": "conduire_2_specialite",
+      "fiche": "skills.24.specialty"
+    },
+    {
+      "gmos": "courtier",
+      "fiche": "skills.25.level"
+    },
+    {
+      "gmos": "diplomate",
+      "fiche": "skills.26.level"
+    },
+    {
+      "gmos": "duperie",
+      "fiche": "skills.27.level"
+    },
+    {
+      "gmos": "electronique_1",
+      "fiche": "skills.28.level"
+    },
+    {
+      "gmos": "electronique_1_specialite",
+      "fiche": "skills.28.specialty"
+    },
+    {
+      "gmos": "electronique_2",
+      "fiche": "skills.29.level"
+    },
+    {
+      "gmos": "electronique_2_specialite",
+      "fiche": "skills.29.specialty"
+    },
+    {
+      "gmos": "electronique_3",
+      "fiche": "skills.30.level"
+    },
+    {
+      "gmos": "electronique_3_specialite",
+      "fiche": "skills.30.specialty"
+    },
+    {
+      "gmos": "enqueter",
+      "fiche": "skills.31.level"
+    },
+    {
+      "gmos": "explosifs",
+      "fiche": "skills.32.level"
+    },
+    {
+      "gmos": "flambeur",
+      "fiche": "skills.33.level"
+    },
+    {
+      "gmos": "furtivite",
+      "fiche": "skills.34.level"
+    },
+    {
+      "gmos": "ingenieur_1",
+      "fiche": "skills.35.level"
+    },
+    {
+      "gmos": "ingenieur_1_specialite",
+      "fiche": "skills.35.specialty"
+    },
+    {
+      "gmos": "ingenieur_2",
+      "fiche": "skills.36.level"
+    },
+    {
+      "gmos": "ingenieur_2_specialite",
+      "fiche": "skills.36.specialty"
+    },
+    {
+      "gmos": "ingenieur_3",
+      "fiche": "skills.37.level"
+    },
+    {
+      "gmos": "ingenieur_3_specialite",
+      "fiche": "skills.37.specialty"
+    },
+    {
+      "gmos": "intendant",
+      "fiche": "skills.38.level"
+    },
+    {
+      "gmos": "polyvalent",
+      "fiche": "skills.39.level"
+    },
+    {
+      "gmos": "langage_1",
+      "fiche": "skills.40.level"
+    },
+    {
+      "gmos": "langage_1_specialite",
+      "fiche": "skills.40.specialty"
+    },
+    {
+      "gmos": "langage_2",
+      "fiche": "skills.41.level"
+    },
+    {
+      "gmos": "langage_2_specialite",
+      "fiche": "skills.41.specialty"
+    },
+    {
+      "gmos": "langage_3",
+      "fiche": "skills.42.level"
+    },
+    {
+      "gmos": "langage_3_specialite",
+      "fiche": "skills.42.specialty"
+    },
+    {
+      "gmos": "leadership",
+      "fiche": "skills.43.level"
+    },
+    {
+      "gmos": "marin_1",
+      "fiche": "skills.44.level"
+    },
+    {
+      "gmos": "marin_1_specialite",
+      "fiche": "skills.44.specialty"
+    },
+    {
+      "gmos": "marin_2",
+      "fiche": "skills.45.level"
+    },
+    {
+      "gmos": "marin_2_specialite",
+      "fiche": "skills.45.specialty"
+    },
+    {
+      "gmos": "mecanique",
+      "fiche": "skills.46.level"
+    },
+    {
+      "gmos": "medecine",
+      "fiche": "skills.47.level"
+    },
+    {
+      "gmos": "melee_1",
+      "fiche": "skills.48.level"
+    },
+    {
+      "gmos": "melee_1_specialite",
+      "fiche": "skills.48.specialty"
+    },
+    {
+      "gmos": "melee_2",
+      "fiche": "skills.49.level"
+    },
+    {
+      "gmos": "melee_2_specialite",
+      "fiche": "skills.49.specialty"
+    },
+    {
+      "gmos": "mondanites",
+      "fiche": "skills.50.level"
+    },
+    {
+      "gmos": "navigation",
+      "fiche": "skills.51.level"
+    },
+    {
+      "gmos": "persuader",
+      "fiche": "skills.52.level"
+    },
+    {
+      "gmos": "pilote_1",
+      "fiche": "skills.53.level"
+    },
+    {
+      "gmos": "pilote_1_specialite",
+      "fiche": "skills.53.specialty"
+    },
+    {
+      "gmos": "pilote_2",
+      "fiche": "skills.54.level"
+    },
+    {
+      "gmos": "pilote_2_specialite",
+      "fiche": "skills.54.specialty"
+    },
+    {
+      "gmos": "pilote_3",
+      "fiche": "skills.55.level"
+    },
+    {
+      "gmos": "pilote_3_specialite",
+      "fiche": "skills.55.specialty"
+    },
+    {
+      "gmos": "profession_1",
+      "fiche": "skills.56.level"
+    },
+    {
+      "gmos": "profession_1_specialite",
+      "fiche": "skills.56.specialty"
+    },
+    {
+      "gmos": "profession_2",
+      "fiche": "skills.57.level"
+    },
+    {
+      "gmos": "profession_2_specialite",
+      "fiche": "skills.57.specialty"
+    },
+    {
+      "gmos": "profession_3",
+      "fiche": "skills.58.level"
+    },
+    {
+      "gmos": "profession_3_specialite",
+      "fiche": "skills.58.specialty"
+    },
+    {
+      "gmos": "reconnaissance",
+      "fiche": "skills.59.level"
+    },
+    {
+      "gmos": "science_1",
+      "fiche": "skills.60.level"
+    },
+    {
+      "gmos": "science_1_specialite",
+      "fiche": "skills.60.specialty"
+    },
+    {
+      "gmos": "science_2",
+      "fiche": "skills.61.level"
+    },
+    {
+      "gmos": "science_2_specialite",
+      "fiche": "skills.61.specialty"
+    },
+    {
+      "gmos": "science_3",
+      "fiche": "skills.62.level"
+    },
+    {
+      "gmos": "science_3_specialite",
+      "fiche": "skills.62.specialty"
+    },
+    {
+      "gmos": "sens_de_la_rue",
+      "fiche": "skills.63.level"
+    },
+    {
+      "gmos": "survie",
+      "fiche": "skills.64.level"
+    },
+    {
+      "gmos": "tactique_1",
+      "fiche": "skills.65.level"
+    },
+    {
+      "gmos": "tactique_1_specialite",
+      "fiche": "skills.65.specialty"
+    },
+    {
+      "gmos": "tactique_2",
+      "fiche": "skills.66.level"
+    },
+    {
+      "gmos": "tactique_2_specialite",
+      "fiche": "skills.66.specialty"
+    },
+    {
+      "gmos": "competence_libre_1",
+      "fiche": "skills.67.level"
+    },
+    {
+      "gmos": "competence_libre_1_nom",
+      "fiche": "skills.67.name"
+    },
+    {
+      "gmos": "competence_libre_2",
+      "fiche": "skills.68.level"
+    },
+    {
+      "gmos": "competence_libre_2_nom",
+      "fiche": "skills.68.name"
+    },
+    {
+      "gmos": "competence_libre_3",
+      "fiche": "skills.69.level"
+    },
+    {
+      "gmos": "competence_libre_3_nom",
+      "fiche": "skills.69.name"
+    },
+    {
+      "gmos": "competence_libre_4",
+      "fiche": "skills.70.level"
+    },
+    {
+      "gmos": "competence_libre_4_nom",
+      "fiche": "skills.70.name"
+    },
+    {
+      "gmos": "competence_libre_5",
+      "fiche": "skills.71.level"
+    },
+    {
+      "gmos": "competence_libre_5_nom",
+      "fiche": "skills.71.name"
+    },
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "titre",
+      "fiche": "identity.title"
+    },
+    {
+      "gmos": "age",
+      "fiche": "identity.age"
+    },
+    {
+      "gmos": "genre",
+      "fiche": "identity.gender"
+    },
+    {
+      "gmos": "espece",
+      "fiche": "identity.species"
+    },
+    {
+      "gmos": "monde_natal",
+      "fiche": "identity.homeworld"
+    },
+    {
+      "gmos": "traits",
+      "fiche": "identity.traits"
+    },
+    {
+      "gmos": "traits_visage",
+      "fiche": "identity.face"
+    },
+    {
+      "gmos": "rads",
+      "fiche": "identity.rads"
+    },
+    {
+      "gmos": "profil_force",
+      "fiche": "profile.strength"
+    },
+    {
+      "gmos": "profil_dexterite",
+      "fiche": "profile.dexterity"
+    },
+    {
+      "gmos": "profil_endurance",
+      "fiche": "profile.endurance"
+    },
+    {
+      "gmos": "profil_intellect",
+      "fiche": "profile.intellect"
+    },
+    {
+      "gmos": "profil_education",
+      "fiche": "profile.education"
+    },
+    {
+      "gmos": "profil_statut_social",
+      "fiche": "profile.social"
+    },
+    {
+      "gmos": "carriere_1",
+      "fiche": "careers.0.name"
+    },
+    {
+      "gmos": "carriere_1_periodes",
+      "fiche": "careers.0.terms"
+    },
+    {
+      "gmos": "carriere_1_rang",
+      "fiche": "careers.0.rank"
+    },
+    {
+      "gmos": "carriere_2",
+      "fiche": "careers.1.name"
+    },
+    {
+      "gmos": "carriere_2_periodes",
+      "fiche": "careers.1.terms"
+    },
+    {
+      "gmos": "carriere_2_rang",
+      "fiche": "careers.1.rank"
+    },
+    {
+      "gmos": "carriere_3",
+      "fiche": "careers.2.name"
+    },
+    {
+      "gmos": "carriere_3_periodes",
+      "fiche": "careers.2.terms"
+    },
+    {
+      "gmos": "carriere_3_rang",
+      "fiche": "careers.2.rank"
+    },
+    {
+      "gmos": "carriere_4",
+      "fiche": "careers.3.name"
+    },
+    {
+      "gmos": "carriere_4_periodes",
+      "fiche": "careers.3.terms"
+    },
+    {
+      "gmos": "carriere_4_rang",
+      "fiche": "careers.3.rank"
+    },
+    {
+      "gmos": "carriere_5",
+      "fiche": "careers.4.name"
+    },
+    {
+      "gmos": "carriere_5_periodes",
+      "fiche": "careers.4.terms"
+    },
+    {
+      "gmos": "carriere_5_rang",
+      "fiche": "careers.4.rank"
+    },
+    {
+      "gmos": "charges_vaisseau",
+      "fiche": "finances.ship_monthly"
+    },
+    {
+      "gmos": "pension",
+      "fiche": "finances.pension"
+    },
+    {
+      "gmos": "cash",
+      "fiche": "finances.cash"
+    },
+    {
+      "gmos": "dette",
+      "fiche": "finances.debt"
+    },
+    {
+      "gmos": "depenses_base",
+      "fiche": "finances.basic_expenses"
+    },
+    {
+      "gmos": "formation_competence",
+      "fiche": "training.skill"
+    },
+    {
+      "gmos": "formation_semaines",
+      "fiche": "training.weeks"
+    },
+    {
+      "gmos": "formation_complete",
+      "fiche": "training.completed"
+    },
+    {
+      "gmos": "arme_1",
+      "fiche": "weapons.0.name"
+    },
+    {
+      "gmos": "arme_1_nt",
+      "fiche": "weapons.0.tech_level"
+    },
+    {
+      "gmos": "arme_1_portee",
+      "fiche": "weapons.0.range"
+    },
+    {
+      "gmos": "arme_1_degats",
+      "fiche": "weapons.0.damage"
+    },
+    {
+      "gmos": "arme_1_masse",
+      "fiche": "weapons.0.weight"
+    },
+    {
+      "gmos": "arme_1_munitions",
+      "fiche": "weapons.0.ammunition"
+    },
+    {
+      "gmos": "arme_2",
+      "fiche": "weapons.1.name"
+    },
+    {
+      "gmos": "arme_2_nt",
+      "fiche": "weapons.1.tech_level"
+    },
+    {
+      "gmos": "arme_2_portee",
+      "fiche": "weapons.1.range"
+    },
+    {
+      "gmos": "arme_2_degats",
+      "fiche": "weapons.1.damage"
+    },
+    {
+      "gmos": "arme_2_masse",
+      "fiche": "weapons.1.weight"
+    },
+    {
+      "gmos": "arme_2_munitions",
+      "fiche": "weapons.1.ammunition"
+    },
+    {
+      "gmos": "arme_3",
+      "fiche": "weapons.2.name"
+    },
+    {
+      "gmos": "arme_3_nt",
+      "fiche": "weapons.2.tech_level"
+    },
+    {
+      "gmos": "arme_3_portee",
+      "fiche": "weapons.2.range"
+    },
+    {
+      "gmos": "arme_3_degats",
+      "fiche": "weapons.2.damage"
+    },
+    {
+      "gmos": "arme_3_masse",
+      "fiche": "weapons.2.weight"
+    },
+    {
+      "gmos": "arme_3_munitions",
+      "fiche": "weapons.2.ammunition"
+    },
+    {
+      "gmos": "arme_4",
+      "fiche": "weapons.3.name"
+    },
+    {
+      "gmos": "arme_4_nt",
+      "fiche": "weapons.3.tech_level"
+    },
+    {
+      "gmos": "arme_4_portee",
+      "fiche": "weapons.3.range"
+    },
+    {
+      "gmos": "arme_4_degats",
+      "fiche": "weapons.3.damage"
+    },
+    {
+      "gmos": "arme_4_masse",
+      "fiche": "weapons.3.weight"
+    },
+    {
+      "gmos": "arme_4_munitions",
+      "fiche": "weapons.3.ammunition"
+    },
+    {
+      "gmos": "arme_5",
+      "fiche": "weapons.4.name"
+    },
+    {
+      "gmos": "arme_5_nt",
+      "fiche": "weapons.4.tech_level"
+    },
+    {
+      "gmos": "arme_5_portee",
+      "fiche": "weapons.4.range"
+    },
+    {
+      "gmos": "arme_5_degats",
+      "fiche": "weapons.4.damage"
+    },
+    {
+      "gmos": "arme_5_masse",
+      "fiche": "weapons.4.weight"
+    },
+    {
+      "gmos": "arme_5_munitions",
+      "fiche": "weapons.4.ammunition"
+    },
+    {
+      "gmos": "arme_6",
+      "fiche": "weapons.5.name"
+    },
+    {
+      "gmos": "arme_6_nt",
+      "fiche": "weapons.5.tech_level"
+    },
+    {
+      "gmos": "arme_6_portee",
+      "fiche": "weapons.5.range"
+    },
+    {
+      "gmos": "arme_6_degats",
+      "fiche": "weapons.5.damage"
+    },
+    {
+      "gmos": "arme_6_masse",
+      "fiche": "weapons.5.weight"
+    },
+    {
+      "gmos": "arme_6_munitions",
+      "fiche": "weapons.5.ammunition"
+    },
+    {
+      "gmos": "armure_1",
+      "fiche": "armor.0.type"
+    },
+    {
+      "gmos": "armure_1_rad",
+      "fiche": "armor.0.rad"
+    },
+    {
+      "gmos": "armure_1_protection",
+      "fiche": "armor.0.protection"
+    },
+    {
+      "gmos": "armure_1_masse",
+      "fiche": "armor.0.weight"
+    },
+    {
+      "gmos": "armure_1_options",
+      "fiche": "armor.0.options"
+    },
+    {
+      "gmos": "armure_2",
+      "fiche": "armor.1.type"
+    },
+    {
+      "gmos": "armure_2_rad",
+      "fiche": "armor.1.rad"
+    },
+    {
+      "gmos": "armure_2_protection",
+      "fiche": "armor.1.protection"
+    },
+    {
+      "gmos": "armure_2_masse",
+      "fiche": "armor.1.weight"
+    },
+    {
+      "gmos": "armure_2_options",
+      "fiche": "armor.1.options"
+    },
+    {
+      "gmos": "armure_3",
+      "fiche": "armor.2.type"
+    },
+    {
+      "gmos": "armure_3_rad",
+      "fiche": "armor.2.rad"
+    },
+    {
+      "gmos": "armure_3_protection",
+      "fiche": "armor.2.protection"
+    },
+    {
+      "gmos": "armure_3_masse",
+      "fiche": "armor.2.weight"
+    },
+    {
+      "gmos": "armure_3_options",
+      "fiche": "armor.2.options"
+    },
+    {
+      "gmos": "armure_4",
+      "fiche": "armor.3.type"
+    },
+    {
+      "gmos": "armure_4_rad",
+      "fiche": "armor.3.rad"
+    },
+    {
+      "gmos": "armure_4_protection",
+      "fiche": "armor.3.protection"
+    },
+    {
+      "gmos": "armure_4_masse",
+      "fiche": "armor.3.weight"
+    },
+    {
+      "gmos": "armure_4_options",
+      "fiche": "armor.3.options"
+    },
+    {
+      "gmos": "augmentation_1",
+      "fiche": "augmentations.0.type"
+    },
+    {
+      "gmos": "augmentation_1_nt",
+      "fiche": "augmentations.0.tech_level"
+    },
+    {
+      "gmos": "augmentation_1_amelioration",
+      "fiche": "augmentations.0.improvement"
+    },
+    {
+      "gmos": "augmentation_2",
+      "fiche": "augmentations.1.type"
+    },
+    {
+      "gmos": "augmentation_2_nt",
+      "fiche": "augmentations.1.tech_level"
+    },
+    {
+      "gmos": "augmentation_2_amelioration",
+      "fiche": "augmentations.1.improvement"
+    },
+    {
+      "gmos": "augmentation_3",
+      "fiche": "augmentations.2.type"
+    },
+    {
+      "gmos": "augmentation_3_nt",
+      "fiche": "augmentations.2.tech_level"
+    },
+    {
+      "gmos": "augmentation_3_amelioration",
+      "fiche": "augmentations.2.improvement"
+    },
+    {
+      "gmos": "augmentation_4",
+      "fiche": "augmentations.3.type"
+    },
+    {
+      "gmos": "augmentation_4_nt",
+      "fiche": "augmentations.3.tech_level"
+    },
+    {
+      "gmos": "augmentation_4_amelioration",
+      "fiche": "augmentations.3.improvement"
+    },
+    {
+      "gmos": "equipement_1",
+      "fiche": "equipment.left.0.type"
+    },
+    {
+      "gmos": "equipement_1_masse",
+      "fiche": "equipment.left.0.weight"
+    },
+    {
+      "gmos": "equipement_2",
+      "fiche": "equipment.left.1.type"
+    },
+    {
+      "gmos": "equipement_2_masse",
+      "fiche": "equipment.left.1.weight"
+    },
+    {
+      "gmos": "equipement_3",
+      "fiche": "equipment.left.2.type"
+    },
+    {
+      "gmos": "equipement_3_masse",
+      "fiche": "equipment.left.2.weight"
+    },
+    {
+      "gmos": "equipement_4",
+      "fiche": "equipment.left.3.type"
+    },
+    {
+      "gmos": "equipement_4_masse",
+      "fiche": "equipment.left.3.weight"
+    },
+    {
+      "gmos": "equipement_5",
+      "fiche": "equipment.left.4.type"
+    },
+    {
+      "gmos": "equipement_5_masse",
+      "fiche": "equipment.left.4.weight"
+    },
+    {
+      "gmos": "equipement_6",
+      "fiche": "equipment.left.5.type"
+    },
+    {
+      "gmos": "equipement_6_masse",
+      "fiche": "equipment.left.5.weight"
+    },
+    {
+      "gmos": "equipement_7",
+      "fiche": "equipment.left.6.type"
+    },
+    {
+      "gmos": "equipement_7_masse",
+      "fiche": "equipment.left.6.weight"
+    },
+    {
+      "gmos": "equipement_8",
+      "fiche": "equipment.left.7.type"
+    },
+    {
+      "gmos": "equipement_8_masse",
+      "fiche": "equipment.left.7.weight"
+    },
+    {
+      "gmos": "equipement_9",
+      "fiche": "equipment.right.0.type"
+    },
+    {
+      "gmos": "equipement_9_masse",
+      "fiche": "equipment.right.0.weight"
+    },
+    {
+      "gmos": "equipement_10",
+      "fiche": "equipment.right.1.type"
+    },
+    {
+      "gmos": "equipement_10_masse",
+      "fiche": "equipment.right.1.weight"
+    },
+    {
+      "gmos": "equipement_11",
+      "fiche": "equipment.right.2.type"
+    },
+    {
+      "gmos": "equipement_11_masse",
+      "fiche": "equipment.right.2.weight"
+    },
+    {
+      "gmos": "equipement_12",
+      "fiche": "equipment.right.3.type"
+    },
+    {
+      "gmos": "equipement_12_masse",
+      "fiche": "equipment.right.3.weight"
+    },
+    {
+      "gmos": "equipement_13",
+      "fiche": "equipment.right.4.type"
+    },
+    {
+      "gmos": "equipement_13_masse",
+      "fiche": "equipment.right.4.weight"
+    },
+    {
+      "gmos": "equipement_14",
+      "fiche": "equipment.right.5.type"
+    },
+    {
+      "gmos": "equipement_14_masse",
+      "fiche": "equipment.right.5.weight"
+    },
+    {
+      "gmos": "equipement_15",
+      "fiche": "equipment.right.6.type"
+    },
+    {
+      "gmos": "equipement_15_masse",
+      "fiche": "equipment.right.6.weight"
+    },
+    {
+      "gmos": "equipement_16",
+      "fiche": "equipment.right.7.type"
+    },
+    {
+      "gmos": "equipement_16_masse",
+      "fiche": "equipment.right.7.weight"
+    },
+    {
+      "gmos": "masse_totale",
+      "fiche": "equipment.total_weight"
+    },
+    {
+      "gmos": "allie_1",
+      "fiche": "relationships.allies.0.name"
+    },
+    {
+      "gmos": "allie_1_notes",
+      "fiche": "relationships.allies.0.notes"
+    },
+    {
+      "gmos": "allie_2",
+      "fiche": "relationships.allies.1.name"
+    },
+    {
+      "gmos": "allie_2_notes",
+      "fiche": "relationships.allies.1.notes"
+    },
+    {
+      "gmos": "allie_3",
+      "fiche": "relationships.allies.2.name"
+    },
+    {
+      "gmos": "allie_3_notes",
+      "fiche": "relationships.allies.2.notes"
+    },
+    {
+      "gmos": "allie_4",
+      "fiche": "relationships.allies.3.name"
+    },
+    {
+      "gmos": "allie_4_notes",
+      "fiche": "relationships.allies.3.notes"
+    },
+    {
+      "gmos": "contact_1",
+      "fiche": "relationships.contacts.0.name"
+    },
+    {
+      "gmos": "contact_1_notes",
+      "fiche": "relationships.contacts.0.notes"
+    },
+    {
+      "gmos": "contact_2",
+      "fiche": "relationships.contacts.1.name"
+    },
+    {
+      "gmos": "contact_2_notes",
+      "fiche": "relationships.contacts.1.notes"
+    },
+    {
+      "gmos": "contact_3",
+      "fiche": "relationships.contacts.2.name"
+    },
+    {
+      "gmos": "contact_3_notes",
+      "fiche": "relationships.contacts.2.notes"
+    },
+    {
+      "gmos": "contact_4",
+      "fiche": "relationships.contacts.3.name"
+    },
+    {
+      "gmos": "contact_4_notes",
+      "fiche": "relationships.contacts.3.notes"
+    },
+    {
+      "gmos": "rival_1",
+      "fiche": "relationships.rivals.0.name"
+    },
+    {
+      "gmos": "rival_1_notes",
+      "fiche": "relationships.rivals.0.notes"
+    },
+    {
+      "gmos": "rival_2",
+      "fiche": "relationships.rivals.1.name"
+    },
+    {
+      "gmos": "rival_2_notes",
+      "fiche": "relationships.rivals.1.notes"
+    },
+    {
+      "gmos": "rival_3",
+      "fiche": "relationships.rivals.2.name"
+    },
+    {
+      "gmos": "rival_3_notes",
+      "fiche": "relationships.rivals.2.notes"
+    },
+    {
+      "gmos": "rival_4",
+      "fiche": "relationships.rivals.3.name"
+    },
+    {
+      "gmos": "rival_4_notes",
+      "fiche": "relationships.rivals.3.notes"
+    },
+    {
+      "gmos": "ennemi_1",
+      "fiche": "relationships.enemies.0.name"
+    },
+    {
+      "gmos": "ennemi_1_notes",
+      "fiche": "relationships.enemies.0.notes"
+    },
+    {
+      "gmos": "ennemi_2",
+      "fiche": "relationships.enemies.1.name"
+    },
+    {
+      "gmos": "ennemi_2_notes",
+      "fiche": "relationships.enemies.1.notes"
+    },
+    {
+      "gmos": "ennemi_3",
+      "fiche": "relationships.enemies.2.name"
+    },
+    {
+      "gmos": "ennemi_3_notes",
+      "fiche": "relationships.enemies.2.notes"
+    },
+    {
+      "gmos": "ennemi_4",
+      "fiche": "relationships.enemies.3.name"
+    },
+    {
+      "gmos": "ennemi_4_notes",
+      "fiche": "relationships.enemies.3.notes"
+    },
+    {
+      "gmos": "blessure_1",
+      "fiche": "injuries.0.type"
+    },
+    {
+      "gmos": "blessure_1_localisation",
+      "fiche": "injuries.0.location"
+    },
+    {
+      "gmos": "blessure_1_recuperation",
+      "fiche": "injuries.0.recovery"
+    },
+    {
+      "gmos": "blessure_1_notes",
+      "fiche": "injuries.0.notes"
+    },
+    {
+      "gmos": "blessure_2",
+      "fiche": "injuries.1.type"
+    },
+    {
+      "gmos": "blessure_2_localisation",
+      "fiche": "injuries.1.location"
+    },
+    {
+      "gmos": "blessure_2_recuperation",
+      "fiche": "injuries.1.recovery"
+    },
+    {
+      "gmos": "blessure_2_notes",
+      "fiche": "injuries.1.notes"
+    },
+    {
+      "gmos": "passe",
+      "fiche": "background.history"
+    },
+    {
+      "gmos": "contexte",
+      "fiche": "background.context"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "identity.portrait",
+      "pourquoi": "Le portrait de GM-OS est celui du personnage ; la fiche garde le sien."
+    },
+    {
+      "fiche": "summary.name",
+      "pourquoi": "Copie du nom de la page 1, que la fiche fait seule (lecture seule)."
+    },
+    {
+      "fiche": "summary.species",
+      "pourquoi": "Copie de l'espèce de la page 1, que la fiche fait seule (lecture seule)."
+    }
+  ]
+}
