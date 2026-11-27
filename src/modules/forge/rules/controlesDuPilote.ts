@@ -1111,6 +1111,16 @@ export function controlerLePilote(
                 avertir(`combat.physiqueTraveller.${cle}`, `« ${phy[cle]} » n'a pas de maximum (statsToTrack[].max) : un soin ne saura pas jusqu'où rendre les points (p. 79).`);
             }
         }
+        // TRV-A5 (27/11/2026) : la PSI actuelle et la PSI sans dépense (p. 224-225).
+        for (const cle of ['champ', 'maximum'] as const) {
+            const champ = phy.psi?.[cle];
+            if (champ !== undefined && !tousLesChamps.has(champ)) erreur(`combat.physiqueTraveller.psi.${cle}`, `La PSI de Traveller lit « ${champ} », absent de la fiche.`);
+        }
+    }
+    // TRV-A5 (27/11/2026) : la dose de radiations et l'END qu'un seuil cumulé retire (p. 78).
+    const rad = driver.combat?.radiationsTraveller;
+    if (rad) for (const cle of ['champ', 'endurance', 'maximum'] as const) {
+        if (!tousLesChamps.has(rad[cle])) erreur(`combat.radiationsTraveller.${cle}`, `Les radiations de Traveller lisent « ${rad[cle]} », absent de la fiche.`);
     }
     /*
       Argyropée (2026-11-08) : 1d10 lu de 0 à 9 + compétence + bonus du métier choisi,

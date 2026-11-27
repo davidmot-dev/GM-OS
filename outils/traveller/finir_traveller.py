@@ -28,6 +28,13 @@
 #   description (Ablat, Reflec, puissance des ordinateurs) ;
 # - version 2.0.0.
 #
+# 2.1.0 — 2026-11-27, TRV-A5 (David : « Oui, pilote 2.1.0 », « Dose + geste Exposition ») :
+# - la PSI se dépense et revient d'un point par heure ; le MD des pouvoirs suit la PSI actuelle
+#   (p. 224-225). Nouveau champ `psi_max` (« PSI sans dépense »), maximum de la jauge PSI, relevé par
+#   l'alignement comme les maxima physiques (`physiqueTraveller.psi`) ;
+# - les Rads sont une dose cumulée, sans maximum (p. 78) : `combat.radiationsTraveller` — la carte de
+#   combat montre la dose, la conséquence cumulée et le prochain seuil, et offre « Exposition ».
+#
 # Usage : python -I -X utf8 outils/traveller/finir_traveller.py <export forgé> <sortie .gmos-driver> [correspondance.json]
 import json, os, re, sys, unicodedata, zipfile
 
@@ -125,7 +132,7 @@ sections = [
     {'id': 'physique', 'label': 'Blessures et radiations', 'fields': [
         nombre('sante_physique', 'Physique (END + FOR + DEX)', None, 21),
         nombre('endurance_max', 'END sans blessure', None, 7), nombre('force_max', 'FOR sans blessure', None, 7),
-        nombre('dexterite_max', 'DEX sans blessure', None, 7),
+        nombre('dexterite_max', 'DEX sans blessure', None, 7), nombre('psi_max', 'PSI sans dépense', None, 0),
         champ('excedent_degats', 'Excédent des dégâts, l’END à 0', 'select', None, 'Force', options=['Force', 'Dextérité']),
         nombre('rads', 'Rads', 'identity.rads'),
     ]},
@@ -211,14 +218,16 @@ combat['statsToTrack'] = [
     {'fieldId': 'endurance', 'label': 'Endurance', 'isMainHP': False, 'isResource': False, 'max': 'endurance_max'},
     {'fieldId': 'force', 'label': 'Force', 'isMainHP': False, 'isResource': False, 'max': 'force_max'},
     {'fieldId': 'dexterite', 'label': 'Dextérité', 'isMainHP': False, 'isResource': False, 'max': 'dexterite_max'},
-    {'fieldId': 'psi', 'label': 'Psionique', 'isMainHP': False, 'isResource': True},
+    {'fieldId': 'psi', 'label': 'Psionique', 'isMainHP': False, 'isResource': True, 'max': 'psi_max'},
     {'fieldId': 'rads', 'label': 'Rads', 'isMainHP': False, 'isResource': True},
 ]
 combat['physiqueTraveller'] = {
     'mecanique': 'traveller', 'endurance': 'endurance', 'force': 'force', 'dexterite': 'dexterite',
     'excedent': 'excedent_degats', 'md': {id: f'{id}_md' for id in PHYSIQUES},
     'maximum': {id: f'{id}_max' for id in PHYSIQUES},
+    'psi': {'champ': 'psi', 'maximum': 'psi_max'},
 }
+combat['radiationsTraveller'] = {'champ': 'rads', 'endurance': 'endurance', 'maximum': 'endurance_max'}
 pilote['ui_config']['gauges'] = [
     {'fieldId': 'sante_physique', 'label': 'Physique', 'color': '#ef4444', 'style': 'bar'},
     {'fieldId': 'endurance', 'label': 'END', 'color': '#f97316', 'style': 'bar'},
@@ -261,7 +270,7 @@ for objet in (pilote.get('catalogue') or {}).get('objets', []):
     en_nombre(objet, 'protection', r'^\+?(\d+)\s*\(')
     en_nombre(objet, 'processeur-bande-passante', r'^Ordinateur/(\d+)$', False)
 
-pilote['version'] = '2.0.0'
+pilote['version'] = '2.1.0'
 
 # ─── Ce que le pilote lit doit exister ───────────────────────────────────────
 champs = {f['id'] for s in sections for f in s['fields']}
@@ -270,7 +279,8 @@ lus = (t['caracteristiques'] + list(t['md'].values()) + [c['niveau'] for c in t[
        + [c['specialite'] for c in t['competences'] if 'specialite' in c] + [t['polyvalent']]
        + [g['fieldId'] for g in pilote['ui_config']['gauges']] + [s['fieldId'] for s in combat['statsToTrack']]
        + [combat['physiqueTraveller'][c] for c in ('endurance', 'force', 'dexterite', 'excedent')]
-       + list(combat['physiqueTraveller']['md'].values()) + list(combat['physiqueTraveller']['maximum'].values()))
+       + list(combat['physiqueTraveller']['md'].values()) + list(combat['physiqueTraveller']['maximum'].values())
+       + list(combat['physiqueTraveller']['psi'].values()) + list(combat['radiationsTraveller'].values()))
 manquants = sorted({c for c in lus if c not in champs})
 if manquants:
     sys.exit(f'Champs attendus absents de la fiche : {", ".join(manquants)}.')
@@ -294,10 +304,10 @@ if sortie_correspondance:
         json.dump({
             'version': 1,
             'gabaritDeLaFiche': 'traveller-fr',
-            'commentaire': ("Correspondance entre la fiche GM-OS de Traveller (pilote 2.0.0, outils/traveller/finir_traveller.py) "
+            'commentaire': ("Correspondance entre la fiche GM-OS de Traveller (pilote 2.1.0, outils/traveller/finir_traveller.py) "
                             "et le gabarit traveller-fr livré par GM-OS Studio le 2026-11-26. Les champs du pilote reprennent un à un "
                             "328 des 331 clés de la fiche : le portrait reste celui de GM-OS, et la page 2 recopie seule le nom et "
-                            "l'espèce. Le total physique, les niveaux sans blessure et le choix de l'excédent des dégâts n'ont pas "
+                            "l'espèce. Le total physique, les niveaux sans blessure, la PSI sans dépense et le choix de l'excédent des dégâts n'ont pas "
                             "de case sur la fiche imprimée : ils restent dans GM-OS."),
             'champs': correspondance,
             'absents': [
@@ -308,5 +318,5 @@ if sortie_correspondance:
         }, f, ensure_ascii=False, indent=2)
         f.write('\n')
 
-print(f"Pilote {pilote['name']} 2.0.0 : {len(champs)} champs, {len(correspondance)} clés de la fiche, "
+print(f"Pilote {pilote['name']} 2.1.0 : {len(champs)} champs, {len(correspondance)} clés de la fiche, "
       f"{len(lignes)} lignes de compétence → {sortie}")

@@ -2,6 +2,7 @@ import React from 'react';
 import { Save, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool, Plus, Check, X } from 'lucide-react';
 import { etatDuPhysique, physiqueActuel } from '../../dice/systemes/potentielGarde';
 import { fractionDeVie } from '../../combat/logic/SanteDuCombattant';
+import { ficheDeTravellerAlignee } from '../../combat/logic/physiqueDeTraveller';
 import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
 import { plafondDuChamp } from '../logic/plafondDuChamp';
 import { useImageStore } from '../../image/useImageStore';
@@ -185,7 +186,8 @@ const CharacterSheetEditor: React.FC = () => {
         const pj = editor.character;
         if (!pj || !editor.selectedPlayer) return;
         updateCharacter(editor.selectedPlayer.id, pj.id, {
-            sheetData: { ...pj.sheetData, ...releve.aEcrire },
+            // TRV-A3 (27/11/2026) : une valeur venue de la fiche HTML arrive alignée (MD, total, maxima).
+            sheetData: ficheDeTravellerAlignee(piloteDeLaFiche, { ...pj.sheetData, ...releve.aEcrire }),
             // Description, notes : ils vivent sur le personnage, pas dans la fiche.
             ...(releve.narratifAEcrire ?? {}),
             ...(releve.inventoryItems ? { inventoryItems: releve.inventoryItems } : {}),

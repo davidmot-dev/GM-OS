@@ -5,6 +5,7 @@ import { ficheDuCombattant } from './logic/ficheDuCombattant';
 import { champDeSantePrincipale, maximumDeLaJauge, santeDeLaFicheDuCombattant, valeurDuChamp } from './logic/SanteDuCombattant';
 import { ajouterLeChoc } from './logic/dommagesDeTorg';
 import { campDe, type Camp } from './logic/OrdreDuTour';
+import { alignerLaFicheDeTraveller } from './logic/physiqueDeTraveller';
 
 /**
  * **Lire et écrire la fiche d'un combattant, par le chemin de son porteur** —
@@ -32,8 +33,13 @@ export function valeursDuCombattant(c: Combatant): Record<string, unknown> {
     return ficheDuCombattant(c, source(c), [], null).valeurs;
 }
 
-export function ecrireLaFicheDuCombattant(c: Combatant, maj: Record<string, Valeur>): void {
+export function ecrireLaFicheDuCombattant(c: Combatant, majDemandee: Record<string, Valeur>): void {
     const s = useSessionOSStore.getState();
+    /*
+      TRV-A3 (27/11/2026) : un clic sur la jauge de DEX, une END permanente perdue aux radiations —
+      les MD, le total physique et les maxima suivent, comme chez les trois autres écrivains de la fiche.
+    */
+    const maj = { ...majDemandee, ...alignerLaFicheDeTraveller(s.getActiveDriver?.(), { ...valeursDuCombattant(c), ...majDemandee }) };
     if (c.isPlayer && c.sourcePlayerId) {
         const joueur = s.players.find(p => p.characters.some(ch => ch.id === c.sourcePlayerId));
         if (joueur) for (const [champ, v] of Object.entries(maj)) s.updateCharacterSheetData(joueur.id, c.sourcePlayerId, champ, v as string);

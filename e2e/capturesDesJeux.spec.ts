@@ -231,7 +231,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
             mecanique: '1', pilote_1: '0', electronique_1: '1', electronique_1_specialite: 'Ordinateurs', polyvalent: '1',
             carriere_1: 'Marchande', carriere_1_periodes: '3', carriere_1_rang: '2e officier',
             arme_1: 'Auto-pistolet', arme_1_nt: '5', arme_1_portee: '10', arme_1_degats: '3D-3', arme_1_munitions: '15',
-            armure_1: 'Gilet pare-balle', armure_1_protection: '+3', cash: 3200,
+            armure_1: 'Gilet pare-balle', armure_1_protection: '+3', cash: 3200, rads: 95,
         },
         composantes: ['dexterite', 'furtivite'],
         scenes: c => scenesDeTraveller(c),
@@ -1467,6 +1467,22 @@ async function scenesDeTraveller(c: ContexteDeScene): Promise<void> {
     const carte = f.locator('[data-combattant]').first();
     await expect(carte).toBeVisible({ timeout: 15_000 });
     await photographier(carte, 'jeu-traveller-sante');
+
+    // TRV-A4 (27/11/2026) : la Tactique de chaque camp et l'embuscade, avant le jet d'initiative (p. 71).
+    const initiative = f.locator('[data-initiative-traveller]');
+    await expect(initiative).toBeVisible({ timeout: 15_000 });
+    await initiative.getByLabel('Effet de Tactique des Voyageurs').fill('2');
+    await initiative.getByLabel('Camp qui tend l’embuscade').selectOption('voyageurs');
+    await photographier(initiative, 'jeu-traveller-initiative');
+    // TRV-A5 : 95 rads, puis une arme à rayonnement (160) : 255 rads, 2D de dégâts, −1 END permanent (p. 78).
+    const dose = carte.locator('[data-dose-de-radiations]');
+    await expect(dose.locator('[data-dose-rads]')).toContainText('95 rads');
+    await dose.locator('summary').click();
+    await dose.getByLabel('Dose reçue (rads)').fill('160');
+    await dose.getByRole('button', { name: /Exposer/ }).click();
+    await expect(dose.locator('[data-exposition]')).toContainText('2D de dégâts');
+    await expect(dose.locator('[data-dose-rads]')).toContainText('255 rads');
+    await photographier(carte, 'jeu-traveller-radiations');
 
     // TRV-A2 (27/11/2026) : un pirate tire sur Kathya — DEX + Combat Arme, puis les dés du fusil + l'Effet,
     // moins le gilet de Kathya (p. 74-75), appliqués par la porte des dégâts.

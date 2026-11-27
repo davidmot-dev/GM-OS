@@ -1,4 +1,6 @@
 import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { ficheDeTravellerAlignee } from '../../combat/logic/physiqueDeTraveller';
+import { piloteDuPersonnage } from '../../session/logic/piloteDuPersonnage';
 import type { ActionRegistry } from './types';
 import {
     estObjet, estMiseAJourDePersonnage, estNarrationDistante, estFicheDistante,
@@ -62,7 +64,13 @@ const updateCharacterSheetData = (payload: unknown) => {
         ...(updates.inventory !== undefined ? { inventory: updates.inventory } : {}),
         ...(updates.inventoryItems ? { inventoryItems: updates.inventoryItems } : {}),
         // Fusion, jamais remplacement : la fiche ne connaît que les champs de la table.
-        sheetData: { ...perso.sheetData, ...(updates.sheetData ?? {}) },
+        // TRV-A3 (27/11/2026) : une DEX changée sur la tablette arrive avec son MD, son total et son maximum.
+        sheetData: updates.sheetData
+            ? ficheDeTravellerAlignee(
+                piloteDuPersonnage(perso, store.campaigns ?? [], store.customGameDrivers ?? [], store.activeCampaignId),
+                { ...perso.sheetData, ...updates.sheetData },
+            )
+            : { ...perso.sheetData },
     });
 };
 

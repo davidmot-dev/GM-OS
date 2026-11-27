@@ -6,6 +6,7 @@ import { Select } from '../../../components/common/Select';
 import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore, type Entity } from '../../session/useSessionOSStore';
 import { HealthManager } from '../../session/components/health/HealthManager';
+import { DoseDeRadiations } from './DoseDeRadiations';
 import { estHorsDeCombat, santeAffichee, maximumDeLaJauge, champDeSantePrincipale, santeDesAtteintes } from '../logic/SanteDuCombattant';
 import type { HealthSystem } from '../../session/useSessionOSStore';
 import { Bouton, Icone } from '../../../components/socle';
@@ -690,6 +691,11 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         if (!combatant.isPlayer && gaugeConfig.fieldId === activeDriver?.jet?.dune?.determination) return null;
                         const ressource = deDeRessource(gaugeConfig.fieldId, gaugeConfig.label, sheetValRaw);
                         if (ressource) return ressource;
+                        // TRV-A5 (27/11/2026) : les Rads de Traveller sont une dose cumulée, pas une jauge sur 10 (p. 78).
+                        const radiations = activeDriver?.combat?.radiationsTraveller;
+                        if (radiations && gaugeConfig.fieldId === radiations.champ) {
+                            return <DoseDeRadiations key={idx} combattant={combatant} regle={radiations} valeurs={(sheetData ?? {}) as Record<string, unknown>} />;
+                        }
                         const val = typeof sheetValRaw === 'number'? sheetValRaw : parseInt(String(sheetValRaw || 0), 10);
 
                         // Attempt to find max from template, default to 10
@@ -831,6 +837,10 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             .map((stat, idx) => {
                                 const ressource = deDeRessource(stat.fieldId, stat.label, ficheLue.valeurs[stat.fieldId]);
                                 if (ressource) return ressource;
+                                const radiations = activeDriver?.combat?.radiationsTraveller;
+                                if (radiations && stat.fieldId === radiations.champ) {
+                                    return <DoseDeRadiations key={idx} combattant={combatant} regle={radiations} valeurs={ficheLue.valeurs} />;
+                                }
                                 // § 263, T20 : même règle que les jauges du pilote, plus haut.
                                 if (combatant.origineDuLivre && (ficheLue.valeurs[stat.fieldId] === undefined || ficheLue.valeurs[stat.fieldId] === '')) return null;
                                 const val = Number(ficheLue.valeurs[stat.fieldId] ?? 0);

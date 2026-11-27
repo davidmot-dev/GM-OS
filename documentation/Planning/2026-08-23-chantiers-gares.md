@@ -15390,10 +15390,36 @@ aucune donnée personnelle, installation, publication ou commande git d’écrit
 - **Reste** : l'**essai de David** — demander un test préparé à une vraie tablette ; « Attaquer » un
   PNJ ; un test d'attaque d'un Voyageur chez le meneur ; un animal du bestiaire.
 
+### 283 · Traveller — fiche alignée partout (TRV-A3), initiative (TRV-A4), PSI et Rads (TRV-A5) — 27/11/2026
+
+- **Demande de David** : « Commit - pousse, commence TRV-A3 à TRV-A5 ».
+- **Spécifié** : [spécification](2026-11-27-traveller-fiche-initiative-psi-rads.md) — 9 critères, 7 tâches.
+- **Décisions de David (27/11)** : initiative avec Tactique et embuscade ; Rads en dose avec un geste
+  Exposition ; PSI sans dépense, pilote 2.1.0. Règles relues dans le livre : p. 71, 78, 224-225.
+- **Livré le 27/11** (GM-OS fermé, feu vert de David) :
+  - TRV-A3 : `ficheDeTravellerAlignee` chez tous les écrivains de la fiche — tablette (`sessionActions`),
+    fiche HTML du meneur, jauges de la carte (`ecrireLaFicheDuCombattant`), en plus de l'éditeur et de
+    la porte des dégâts ;
+  - TRV-A4 : `initiativeDeTraveller.ts`, `useInitiativeDeTravellerStore`, branche Traveller de
+    `rollAutoInitiative`, fin de l'embuscade au round 2 dans `nextTurn`, carte
+    `PreparationDInitiativeTraveller` ;
+  - TRV-A5 : `radiationsDeTraveller.ts`, `DoseDeRadiations.tsx` sur la carte de combat ; pilote
+    **2.1.0** (`psi_max`, `physiqueTraveller.psi`, `combat.radiationsTraveller`), contrôles du pilote,
+    correspondance régénérée ; `Export Dirvers/corriges/Traveller-2.1.0.gmos-driver`.
+- **Vérifié** : `tsc -b`, lint ; 632 fichiers d'essais de Combat-OS, du dé, de la séance, du réseau,
+  de la Forge, des fiches, de la tablette et d'`electron/` (7 377 essais, manuel compris après sa
+  ligne `radiationsTraveller`) ; `verifier_pilote.mjs` sur le 2.1.0 : zéro constat ; e2e des captures
+  de Traveller (initiative et radiations neuves, santé refaite), relues.
+- **Reste** : l'**essai de David** — réimporter `corriges/Traveller-2.1.0` avec « Remplacer » ; DEX
+  8 → 9 depuis une tablette ; un jet d'initiative avec Tactique et embuscade, puis le round 2 ; une
+  Exposition. La campagne La Part des absents a été préparée sur le 2.0.0 : ses Voyageurs reçoivent
+  leur PSI sans dépense au premier enregistrement.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 219 | **Traveller — TRV-A3 fiche alignée, TRV-A4 initiative, TRV-A5 PSI et Rads** | § 283 ; 🟠 livré le 27/11 — alignement chez tous les écrivains ; initiative DEX/INT, Tactique, embuscade ; PSI sans dépense, dose de Rads et Exposition ; pilote 2.1.0 ; essais et e2e réussis | Réimporter `corriges/Traveller-2.1.0` (« Remplacer ») ; DEX 8 → 9 sur une tablette ; une initiative avec embuscade ; une Exposition | Essai de David |
 | 218 | **Traveller — TRV-A1 jets demandés préparés, TRV-A2 dégâts d'une attaque** | § 282 ; 🟠 livré le 27/11 — préparation transmise à la tablette ; dégâts calculés (arme, Effet, FOR, rafale, armure − AP, DD) pour PNJ, Voyageur et animal ; essais et e2e réussis | Demander un test préparé à une tablette ; « Attaquer » un PNJ ; un animal | Essai de David |
 | 217 | **Crimes, Dune, Star Trek — chiffres des fiches HTML lisibles** | § 281 ; 🟢 corrigé et essayé par David le 27/11 — flèches masquées, moteur 31, garde générale | — | — |
 | 216 | **Traveller — chiffres de la fiche HTML lisibles** | § 280 ; 🟢 corrigé et essayé par David le 27/11 — flèches masquées, moteur 30, capture refaite | — | — |

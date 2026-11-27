@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { alignerLaFicheDeTraveller, excedentVers, physiqueDeTravellerSelonLeJeu, type RegleDuPhysiqueDeTraveller } from './physiqueDeTraveller';
+import { alignerLaFicheDeTraveller, excedentVers, ficheDeTravellerAlignee, physiqueDeTravellerSelonLeJeu, type RegleDuPhysiqueDeTraveller } from './physiqueDeTraveller';
 
 const REGLE: RegleDuPhysiqueDeTraveller = {
     mecanique: 'traveller', endurance: 'endurance', force: 'force', dexterite: 'dexterite', excedent: 'excedent_degats',
@@ -79,5 +79,37 @@ describe('Traveller — la fiche recalculée à l’enregistrement', () => {
 
     it('un autre jeu n’est pas touché', () => {
         expect(alignerLaFicheDeTraveller({ combat: {} }, { force: 9 })).toEqual({});
+    });
+});
+
+/** TRV-A3 et TRV-A5 (27/11/2026) : l'aide commune, et la PSI sans dépense. */
+describe('Traveller — la fiche alignée par tous ses écrivains', () => {
+    const pilote = {
+        jet: { traveller: { md: { dexterite: 'dexterite_md', psi: 'psi_md' } } },
+        combat: {
+            physiqueTraveller: { ...REGLE, maximum: { endurance: 'endurance_max', force: 'force_max', dexterite: 'dexterite_max' }, psi: { champ: 'psi', maximum: 'psi_max' } },
+            statsToTrack: STATS,
+        },
+    };
+
+    it('une DEX passée de 8 à 9 arrive avec son MD, son total et son maximum (C1)', () => {
+        const fiche = ficheDeTravellerAlignee(pilote, voyageur({ dexterite: 9, dexterite_md: 0, endurance_md: 0, force_md: 0, psi: 0, psi_md: -3, psi_max: 0 }));
+        expect(fiche).toMatchObject({ dexterite: 9, dexterite_md: 1, dexterite_max: 9, sante_physique: 22 });
+    });
+
+    it('un blessé garde son maximum (C3)', () => {
+        const fiche = ficheDeTravellerAlignee(pilote, voyageur({ dexterite: 5, dexterite_md: -1, sante_physique: 18, psi: 0, psi_md: -3, psi_max: 0 }));
+        expect(fiche.dexterite_max).toBe(8);
+    });
+
+    it('la PSI dépensée garde son maximum, une PSI saisie au-dessus le relève ; le MD suit la PSI actuelle (C7)', () => {
+        expect(ficheDeTravellerAlignee(pilote, voyageur({ psi: 4, psi_max: 9, psi_md: 1 }))).toMatchObject({ psi: 4, psi_max: 9, psi_md: -1 });
+        expect(ficheDeTravellerAlignee(pilote, voyageur({ psi: 10, psi_md: 1 }))).toMatchObject({ psi_max: 10 });
+    });
+
+    it('sans règle Traveller, la fiche est rendue telle quelle', () => {
+        const fiche = { force: 9 };
+        expect(ficheDeTravellerAlignee({ combat: {} }, fiche)).toBe(fiche);
+        expect(ficheDeTravellerAlignee(null, fiche)).toBe(fiche);
     });
 });

@@ -1,7 +1,8 @@
 # 🚀 Jeu — Traveller
 
 > **Pilote décrit :** « Traveller », forgé par David, exporté le 2026-11-26, **fini le
-> 2026-11-26**, essayé par David le 2026-11-27, version 2.0.0 (`Export Dirvers/corriges/Traveller-2.0.0.gmos-driver`, construit par
+> 2026-11-26**, essayé par David le 2026-11-27 ; **version 2.1.0 du 2026-11-27** (PSI sans dépense,
+> radiations — à réimporter avec « Remplacer ») (`Export Dirvers/corriges/Traveller-2.1.0.gmos-driver`, construit par
 > `outils/traveller/finir_traveller.py`, contrôlé par `outils/traveller/verifier_pilote.mjs`).
 > Thème `traveller`, fiche de personnage HTML, bannière et identité visuelle livrés le même jour par
 > GM-OS Studio. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
@@ -99,7 +100,7 @@ La carte s'ouvre à trois endroits :
 
 ## Les blessures
 
-![La carte de Kathya après un coup de 10 : END 0/7, FOR 3/6, DEX 10/10](captures/jeu-traveller-sante.jpg)
+![La carte de Kathya après un coup de 10 : END 0/7, FOR 3/6, DEX 10/10, et 95 rads](captures/jeu-traveller-sante.jpg)
 
 Un Voyageur n'a pas de points de vie (p. 74). Quand un coup arrive — de Combat-OS ou de la console
 de santé —, GM-OS l'écrit sur la fiche :
@@ -116,8 +117,42 @@ Une arme **Incapacitante** ne touche que l'END et neutralise pour autant de roun
 les niveaux **sans blessure** de la fiche. La jauge **Physique** est le total END + FOR + DEX.
 Une créature du bestiaire n'a que ses **PdV** (p. 81) : la colonne PDV du bestiaire remplit sa santé.
 
-À l'**enregistrement** de la fiche, GM-OS recalcule les MD, le total physique, et relève un niveau
-« sans blessure » qu'une caractéristique saisie dépasse (un personnage qu'on crée ou qui progresse).
+GM-OS recalcule les MD, le total physique, et relève un niveau « sans blessure » qu'une
+caractéristique saisie dépasse (un personnage qu'on crée ou qui progresse) — **d'où que vienne la
+saisie** depuis le 2026-11-27 (TRV-A3) : l'éditeur du meneur, la **tablette** du joueur, la **fiche
+HTML**, un clic sur une jauge de la carte de combat. Un blessé garde ses niveaux sans blessure.
+
+## La PSI et les radiations
+
+![La carte de Kathya après une exposition de 160 rads : 255 rads, 2D de dégâts, −1 END permanent](captures/jeu-traveller-radiations.jpg)
+
+Depuis la version 2.1.0 (TRV-A5, 2026-11-27) :
+
+- la **PSI** se dépense et revient d'un point par heure, trois heures après le dernier pouvoir ; le
+  MD des pouvoirs suit la PSI **actuelle** (p. 224-225). La jauge PSI se lit sur la **PSI sans
+  dépense**, un champ de la fiche GM-OS que la fiche imprimée n'a pas ; elle se relève seule quand
+  la PSI saisie la dépasse. La récupération se rend à la main ;
+- les **Rads** sont une **dose cumulée**, sans maximum (p. 78) : la carte affiche la dose, la
+  conséquence cumulée — −1 à −4 END permanent au-delà de 150, 300, 500 et 800 rads — et le prochain
+  seuil. « **Exposition** » ajoute une dose (une arme à rayonnement : 2D × 20 ; une fuite, une
+  éruption : la table p. 78), rappelle ses conséquences immédiates — de 1D à 8D de dégâts, la nausée
+  au-delà de 50 rads —, lance et applique les dégâts, et, quand un seuil cumulé est franchi, retire
+  l'END permanente de l'END et de son niveau sans blessure. Rien ne s'écrit sans un clic.
+
+## L'initiative
+
+![La préparation de l'initiative : Tactique +2 aux Voyageurs, embuscade](captures/jeu-traveller-initiative.jpg)
+
+Depuis le 2026-11-27 (TRV-A4), « Jet système » dans Combat-OS fait pour chacun le test du livre
+(p. 71) : **2D + le meilleur MD entre DEX et INT**, contre 8 ; l'**Effet** est son Initiative pour
+tout le combat. Avant le jet, la carte « Initiative de Traveller » note :
+
+- l'**Effet du test de Tactique** de chaque camp, ajouté à l'Initiative de tous ses membres ;
+- l'**embuscade** : MD+6 au camp qui surprend, MD−6 à l'autre, **au premier round seulement** —
+  au round 2, GM-OS les retire et refait l'ordre.
+
+Les Voyageurs sont les joueurs et leurs alliés ; un neutre ne reçoit ni l'un ni l'autre. Un animal,
+sans DEX ni INT, fait son test sans MD. Le détail de chaque Initiative part au journal.
 
 ## La fiche HTML
 
@@ -134,8 +169,8 @@ GM-OS. Une saisie GM-OS ne part vers la fiche HTML qu'après « Sauvegarder ».
 
 - Les **munitions** ne se décomptent pas sur la fiche (la rafale rappelle seulement ce qu'elle
   consomme) ; l'**auto complet**, l'**Explosion** et le **Rayonnement** se règlent à la main.
-- L'**initiative** lit 2D + MD DEX − 8 (p. 71) ; un Voyageur qui préfère l'INT, ou l'Effet d'un
-  test de Tactique pour son camp, se règle à la main.
+- L'option « **forces opposées** » (un seul test pour toutes les forces de l'Arbitre, p. 71) n'est
+  pas prévue : chaque adversaire fait son test.
 - Les **portées** sont les Zones de Portée des rencontres (p. 80) ; le MD d'une portée d'arme
   (courte +1, longue −2, extrême −4, p. 74) se règle au jet, dans « Autres MD ».
 - Le **commerce**, le **saut**, la **création de mondes**, les **psioniques** et le **combat

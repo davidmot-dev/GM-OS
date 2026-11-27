@@ -135,6 +135,12 @@ export function alignerLaFicheDeTraveller(
             const max = lire(regle.maximum![c]);
             if (niveaux[i] !== undefined && (max === undefined || max < niveaux[i]!)) maj[regle.maximum![c]] = Math.trunc(niveaux[i]!);
         });
+        // TRV-A5 (27/11/2026) : la PSI sans dépense se relève comme les maxima physiques.
+        if (regle.psi) {
+            const psi = lire(regle.psi.champ);
+            const max = lire(regle.psi.maximum);
+            if (psi !== undefined && (max === undefined || max < psi)) maj[regle.psi.maximum] = Math.trunc(psi);
+        }
         const principale = pilote?.combat?.statsToTrack?.find(s => s.isMainHP)?.fieldId;
         if (principale && niveaux.every(v => v !== undefined)) {
             const total = niveaux.reduce((t, v) => t! + Math.max(0, Math.trunc(v!)), 0)!;
@@ -142,4 +148,19 @@ export function alignerLaFicheDeTraveller(
         }
     }
     return maj;
+}
+
+/**
+ * **La fiche d'un Voyageur, alignée avant d'être écrite** — TRV-A3, 27/11/2026 (spécification
+ * `2026-11-27-traveller-fiche-initiative-psi-rads.md`, C1 à C3). Quatre écrivains touchent la fiche :
+ * l'éditeur du meneur et la porte des dégâts alignaient déjà ; la tablette (`sessionActions`) et la
+ * fiche HTML chez le meneur (`appliquerLeRapprochement`) écrivaient une DEX de 9 avec son ancien MD.
+ * Tous passent désormais ici. Sans règle Traveller, la fiche est rendue telle quelle.
+ */
+export function ficheDeTravellerAlignee<T extends Record<string, unknown>>(
+    pilote: Parameters<typeof alignerLaFicheDeTraveller>[0],
+    fiche: T,
+): T {
+    const alignees = alignerLaFicheDeTraveller(pilote, fiche);
+    return Object.keys(alignees).length ? { ...fiche, ...alignees } : fiche;
 }

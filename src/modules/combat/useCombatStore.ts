@@ -3,6 +3,8 @@ import { persist } from 'zustand/middleware';
 import i18next from 'i18next';
 import { gmToast } from '../../stores/useToastStore';
 import { useJournalStore } from '../journal/useJournalStore';
+import { campDeTraveller, finDeLEmbuscade, initiativeDeTraveller, mdDInitiative } from './logic/initiativeDeTraveller';
+import { useInitiativeDeTravellerStore } from './useInitiativeDeTravellerStore';
 import {
     raconterLeCombat, ajouterUnCoup, estTombe, porteLEtiquetteDeMort, type FaitsDArmes,
 } from './logic/RecitDuCombat';
@@ -97,7 +99,7 @@ function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'a
     physiqueTraveller?: GameDriver['combat']['physiqueTraveller'];
     statsToTrack?: GameDriver['combat']['statsToTrack'];
     encaissement?: GameDriver['combat']['encaissement']; moniteurDEtat?: GameDriver['combat']['moniteurDEtat'] }; jet?: { coc?: { des?: 'd20' | '3d6'; heroisme?: boolean }; argyropee?: { sante?: string }; deltaGreen?: { sante?: string };
-        vampire?: import('../dice/systemes/vampire').RegleDeVampire } } | undefined {
+        vampire?: import('../dice/systemes/vampire').RegleDeVampire; traveller?: unknown } } | undefined {
     try {
         return (window as unknown as {
             useSessionOSStore?: { getState: () => { getActiveDriver?: () => ReturnType<typeof piloteActif> } };
@@ -1179,6 +1181,13 @@ export const useCombatStore = create<CombatState>()(
                   lance pas d'ici : il se joue au panneau de jet, et le score se corrige.
                 */
                 const enReserve = piloteActif()?.combat?.initiativeEnReserve?.mecanique === 'degenesis';
+                /*
+                  **Traveller** (TRV-A4, 27/11/2026) : un test de DEX ou d'INT, le meilleur MD, contre 8 ;
+                  l'Effet est l'Initiative, plus la Tactique du camp et l'embuscade du premier round (p. 71).
+                */
+                const traveller = !!piloteActif()?.jet?.traveller && !cards;
+                const preparationTraveller = traveller ? useInitiativeDeTravellerStore.getState() : null;
+                const initiativesTraveller: string[] = [];
                 const champDesTraumatismes = piloteActif()?.combat?.pistesDeSante?.traumatismes;
                 const actionsDegenesis: string[] = [];
                 // COC (2026-10-31) : l'état de santé retire son malus à l'Init. (p. 71) — Blessé, −5.
@@ -1218,6 +1227,18 @@ export const useCombatStore = create<CombatState>()(
                         } else if (cardPool.length > 0) {
                             if (cardIdx < cardPool.length) rolled = cardPool[cardIdx++];
                             else rolled = Math.floor(Math.random() * (cards || 10)) + 1;
+                        } else if (preparationTraveller) {
+                            const lire = (champ: string) => {
+                                const v = resolver ? resolver(champ, c) : Number(c.sheetData?.[champ]);
+                                return v === undefined || Number.isNaN(v) || (v === 0 && !/_md$/.test(champ)) ? undefined : v;
+                            };
+                            const r = initiativeDeTraveller({
+                                des: [DiceEngine.roll(6), DiceEngine.roll(6)], md: mdDInitiative(lire),
+                                camp: campDeTraveller(c.faction, c.isPlayer), preparation: preparationTraveller,
+                            });
+                            rolled = r.init;
+                            c.bonusDEmbuscade = r.embuscade || undefined;
+                            initiativesTraveller.push(`${c.name} ${r.init} (${r.detail})`);
                         } else if (formula && enReserve) {
                             const va = resolveInitiativeFormula({ formula, combatant: c, resolver, diceMax });
                             const traumatismes = champDesTraumatismes && resolver ? resolver(champDesTraumatismes, c) : 0;
@@ -1267,6 +1288,7 @@ export const useCombatStore = create<CombatState>()(
                         title: 'Combat : Initiative',
                         content: `Round ${state.round} - L'initiative a été tirée pour ${newCombatants.length} combattants.`
                             + (actionsDegenesis.length ? ` Succès de PSY+Réactivité : ${actionsDegenesis.join(', ')}.` : '')
+                            + (initiativesTraveller.length ? ` Effets (DEX ou INT, p. 71) : ${initiativesTraveller.join(' ; ')}.` : '')
                             + (malusCoc.length ? ` État de santé : ${malusCoc.join(', ')}.` : ''),
                         sceneId: state.sceneId ?? undefined,
                         metadata: { round: state.round, count: newCombatants.length }
@@ -1372,6 +1394,12 @@ export const useCombatStore = create<CombatState>()(
                       retirer le doublon, pas l'effet.
                     */
                     
+                    /*
+                      Traveller (TRV-A4, 27/11/2026) : l'embuscade ne vaut que pour le premier round (p. 71).
+                      Au round 2, elle s'en va de l'Initiative et l'ordre se refait sur l'Effet seul.
+                    */
+                    const sansEmbuscade = nextRound === 2 && state.round === 1 ? finDeLEmbuscade(newCombatants) : null;
+                    if (sansEmbuscade) return { currentTurnIdx: 0, round: nextRound, combatants: sansEmbuscade };
                     const newState = { currentTurnIdx: nextIdx, round: nextRound, combatants: newCombatants };
                     return newState;
                 });

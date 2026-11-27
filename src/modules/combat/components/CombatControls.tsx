@@ -19,6 +19,7 @@ import PanneauDesPhases from './PanneauDesPhases';
 import PanneauDesRangsDAction from './PanneauDesRangsDAction';
 import PanneauDuRoundDeDegenesis from './PanneauDuRoundDeDegenesis';
 import LoisDuCosm from '../../session/components/LoisDuCosm';
+import { PreparationDInitiativeTraveller } from './PreparationDInitiativeTraveller';
 import { useCosmsCourants } from '../../session/hooks/useCosmsCourants';
 import { decrireLaSante } from '../logic/SanteDuCombattant';
 import { calculateurDisponible } from '../logic/calculateurDeDegats';
@@ -369,6 +370,8 @@ const CombatControls: React.FC = () => {
                 */}
                 {/* Torg : les Lois du cosm courant, en rappel compact (2026-10-14). */}
                 <LoisDuCosm cosms={cosmsCourants} compact />
+                {/* TRV-A4 (27/11/2026) : Traveller — la Tactique de chaque camp et l'embuscade, avant le jet (p. 71). */}
+                {activeDriver?.jet?.traveller && <PreparationDInitiativeTraveller />}
                 {parPhases ? (
                     <PanneauDesPhases />
                 ) : parRangs ? (

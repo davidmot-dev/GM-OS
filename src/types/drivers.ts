@@ -843,7 +843,20 @@ export interface GameDriver {
             md?: Record<string, string>;
             /** Les champs des niveaux d'avant les blessures : un soin s'y arrête (p. 79). */
             maximum?: { endurance: string; force: string; dexterite: string };
+            /**
+             * **La PSI qui se dépense** (TRV-A5, 27/11/2026) : `champ`, la PSI actuelle, dont le MD
+             * suit le total actuel ; `maximum`, la PSI sans dépense, vers laquelle elle revient d'un
+             * point par heure (p. 224-225). L'alignement relève le maximum qu'une saisie dépasse.
+             */
+            psi?: { champ: string; maximum: string };
         };
+        /**
+         * **Les radiations de Traveller** (TRV-A5, 27/11/2026) : `champ` porte la dose cumulée de rads,
+         * sans maximum ; la carte de combat l'affiche en dose, avec la conséquence cumulée et le
+         * prochain seuil, et offre « Exposition » (table p. 78). Un seuil franchi retire l'END
+         * permanente de `endurance` et de `maximum` ensemble.
+         */
+        radiationsTraveller?: { champ: string; endurance: string; maximum: string };
         /**
          * **L'initiative en réserve** — Degenesis, 2026-10-30 : `initiativeFormula`
          * donne le nombre de d6 (PSY + Réactivité), le score est le nombre de succès

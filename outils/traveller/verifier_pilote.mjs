@@ -3,7 +3,7 @@
 // (preparerLeJet) sur les exemples du livre de règles français v2.2 (pages imprimées ; PDF = imprimée + 1),
 // et fait passer un coup et un soin par la porte des dégâts.
 // Usage : node outils/traveller/verifier_pilote.mjs [chemin.gmos-driver]
-//   sans argument : Export Dirvers/corriges/Traveller-2.0.0.gmos-driver
+//   sans argument : Export Dirvers/corriges/Traveller-2.1.0.gmos-driver
 import '../campagnes-de-recette/charger-typescript.mjs';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
@@ -19,7 +19,7 @@ const { champsProposes } = await import('../../src/modules/dice/demandeDeJet.ts'
 const { resoudreTraveller, modificateursDeTraveller, CHOIX_DE_TRAVELLER } = await import('../../src/modules/dice/systemes/traveller.ts');
 const { physiqueDeTravellerSelonLeJeu, alignerLaFicheDeTraveller } = await import('../../src/modules/combat/logic/physiqueDeTraveller.ts');
 
-const fichier = process.argv[2] ?? 'Export Dirvers/corriges/Traveller-2.0.0.gmos-driver';
+const fichier = process.argv[2] ?? 'Export Dirvers/corriges/Traveller-2.1.0.gmos-driver';
 const { gameDriver: pilote, sheetTemplate: fiche } = JSON.parse(new AdmZip(fichier).readAsText('state.json'));
 const constats = controlerLePilote(pilote, fiche);
 console.log(JSON.stringify({ fichier, version: pilote.version, constats }, null, 2));
@@ -66,6 +66,14 @@ assert.deepEqual([coup.fiche.endurance, coup.fiche.force, coup.fiche.dexterite, 
 const aligne = alignerLaFicheDeTraveller(pilote, { ...voyageur, dexterite: 9, dexterite_max: 9 });
 assert.equal(aligne.dexterite_md, 1);
 assert.equal(aligne.sante_physique, 22);
+// 2.1.0 (TRV-A5, 27/11) : la PSI dépensée garde son maximum, son MD suit la PSI actuelle (p. 224-225) ;
+// les Rads sont une dose sans maximum, l'END permanente se retire de l'END et de son maximum (p. 78).
+const psi = alignerLaFicheDeTraveller(pilote, { ...voyageur, psi: 4, psi_max: 9, psi_md: 1 });
+assert.deepEqual([psi.psi_md, psi.psi_max], [-1, undefined]);
+assert.equal(alignerLaFicheDeTraveller(pilote, { ...voyageur, psi: 10 }).psi_max, 10);
+assert.equal(pilote.combat.statsToTrack.find(s => s.fieldId === 'psi').max, 'psi_max');
+assert.deepEqual(pilote.combat.radiationsTraveller, { champ: 'rads', endurance: 'endurance', maximum: 'endurance_max' });
+assert.ok(!pilote.combat.statsToTrack.find(s => s.fieldId === 'rads').max, 'une dose, pas une jauge');
 // Une créature du bestiaire entre avec ses PdV (p. 81) : la colonne remplit la santé principale.
 assert.equal(pilote.bestiaire.colonnes.find(c => c.id === 'pdv').champ, 'sante_physique');
-console.log('OK : zéro constat ; Kathya, Erik, Morn (p. 59), Effet 2 (p. 61), Polyvalent et spécialités (p. 58, 69), menu, dégâts (p. 74), bestiaire.');
+console.log('OK : zéro constat ; PSI et Rads (2.1.0) ; Kathya, Erik, Morn (p. 59), Effet 2 (p. 61), Polyvalent et spécialités (p. 58, 69), menu, dégâts (p. 74), bestiaire.');

@@ -42,6 +42,30 @@ describe('la fiche reçue de la tablette', () => {
         expect(magasin.players[0].characters[0].sheetData.force).toBe(8);
     });
 
+    it('TRV-A3 (27/11) : la DEX d’un Voyageur changée sur la tablette arrive avec son MD, son total et son maximum', () => {
+        const avant = { players: magasin.players, campaigns: (magasin as Record<string, unknown>).campaigns, customGameDrivers: (magasin as Record<string, unknown>).customGameDrivers };
+        Object.assign(magasin, {
+            players: [{ id: 'joueur', characters: [{ id: 'kathya', systemId: 'trav', sheetData: {
+                endurance: 7, force: 6, dexterite: 8, endurance_max: 7, force_max: 6, dexterite_max: 8,
+                dexterite_md: 0, endurance_md: 0, force_md: 0, sante_physique: 21,
+            } }] }],
+            campaigns: [],
+            customGameDrivers: [{ id: 'trav', name: 'Traveller', templateId: 'tpl-t', jet: { traveller: { md: { dexterite: 'dexterite_md' } } }, combat: {
+                physiqueTraveller: { mecanique: 'traveller', endurance: 'endurance', force: 'force', dexterite: 'dexterite',
+                    maximum: { endurance: 'endurance_max', force: 'force_max', dexterite: 'dexterite_max' } },
+                statsToTrack: [{ fieldId: 'sante_physique', isMainHP: true }],
+            } }],
+        });
+        try {
+            sessionActions['session:update-character-sheet-data']({ playerId: 'joueur', characterId: 'kathya', updates: { sheetData: { dexterite: 9 } } }, contexte);
+            expect(magasin.updateCharacter).toHaveBeenCalledWith('joueur', 'kathya', {
+                sheetData: expect.objectContaining({ dexterite: 9, dexterite_md: 1, dexterite_max: 9, sante_physique: 22 }),
+            });
+        } finally {
+            Object.assign(magasin, avant);
+        }
+    });
+
     it('accepte un inventaire vidé et des textes effacés', () => {
         sessionActions['session:update-character-sheet-data']({
             playerId: 'joueur', characterId: 'nel', updates: { inventoryItems: [], playerNotes: '', inventory: '' },

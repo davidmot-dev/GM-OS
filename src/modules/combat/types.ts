@@ -96,6 +96,11 @@ export interface Combatant {
      */
     origineDuLivre?: { creatureId: string };
     /**
+     * **Traveller : l'embuscade comprise dans `init`** (TRV-A4, 27/11/2026) — MD+6 ou MD−6 « pour le
+     * premier round seulement » (p. 71) ; `nextTurn` le retire au round 2 et refait l'ordre.
+     */
+    bonusDEmbuscade?: number;
+    /**
      * **La dernière attaque de ce combattant** (registre § 263, T6, 19/11/2026 ; décision D4 de
      * David : « Oui, retenue sur le combattant ») : les champs que son jet a composés —
      * `{ attribut: 'agilite', competence: 'armesAFeu' }` — et leur libellé, « Agilité + Armes à
