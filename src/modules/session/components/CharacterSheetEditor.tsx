@@ -362,8 +362,9 @@ const CharacterSheetEditor: React.FC = () => {
                                 if (editor.character && editor.selectedPlayer) {
                                     // Le journal dit « (jet) » pour ce que le jet écrit (H1, 2026-10-22).
                                     const { character, selectedPlayer } = editor;
+                                    // TRV-A6 (27/11/2026) : une PSI dépensée au jet réaligne son MD, comme les autres écrivains (TRV-A3).
                                     avecOrigine('jet', () => updateCharacter(selectedPlayer.id, character.id, {
-                                        sheetData: { ...character.sheetData, ...maj },
+                                        sheetData: ficheDeTravellerAlignee(piloteDeLaFiche, { ...character.sheetData, ...maj }),
                                     }));
                                 }
                             }}

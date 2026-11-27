@@ -69,6 +69,8 @@ export function physiqueDeTravellerSelonLeJeu(
 
     let apres: PhysiqueDeTraveller;
     let texte: string;
+    /** TRV-A6 : ce qu'un coup Incapacitant retire à l'END, retenu pour « Une heure de repos » (p. 76). */
+    let incapacitants = 0;
     if (impact.isRecovery) {
         const soin = soignerTraveller(avant, maximum, impact.value);
         apres = soin;
@@ -77,6 +79,7 @@ export function physiqueDeTravellerSelonLeJeu(
         const points = Math.min(avant.endurance, Math.max(0, Math.trunc(impact.value)));
         const rounds = Math.max(0, Math.trunc(impact.value) - avant.endurance);
         apres = { ...avant, endurance: avant.endurance - points };
+        incapacitants = points;
         texte = `${impact.value} dégâts incapacitants, sur l’END seule (p. 76)`
             + (apres.endurance === 0 ? ` — neutralisé${rounds > 0 ? ` ${rounds} round${rounds > 1 ? 's' : ''}` : ''}, guéri après une heure de repos` : '');
     } else {
@@ -94,6 +97,9 @@ export function physiqueDeTravellerSelonLeJeu(
         ecrire[champs[c]] = apres[c];
         const champMd = regle.md?.[champs[c]];
         if (champMd) ecrire[champMd] = mdDeCaracteristique(apres[c]);
+    }
+    if (incapacitants > 0 && regle.incapacitants) {
+        ecrire[regle.incapacitants] = Math.max(0, Math.trunc(valeurDuChamp(fiche, regle.incapacitants) ?? 0)) + incapacitants;
     }
     const santeApres = total(apres);
     const etat = encaisserTraveller(apres, 0, 'force').etat;

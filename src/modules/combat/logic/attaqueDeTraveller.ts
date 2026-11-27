@@ -26,6 +26,10 @@ export interface ArmeDeTraveller {
     /** Mêlée : le MD de FOR s'ajoute (p. 74). */
     melee: boolean;
     traits: TraitsDeLArme;
+    /** TRV-A6 : le champ « munitions » de la fiche, « 26/30 » ou un nombre seul (décision de David du 27/11). */
+    munitions?: string;
+    /** TRV-A6 : la capacité du chargeur, au catalogue du pilote (p. 74). */
+    chargeur?: number;
 }
 
 const MELEE = /m[êe]l[ée]e|contact|corps\s*à\s*corps/i;
@@ -53,6 +57,8 @@ export function armesDeTraveller(valeurs: Record<string, unknown>, catalogue?: C
         armes.push({
             index: i, libelle, degats, texteDesDegats, melee: MELEE.test(portee),
             traits: lireLesTraits(objet?.valeurs?.traits),
+            munitions: String(valeurs[`arme_${i}_munitions`] ?? '').trim(),
+            ...(Number(objet?.valeurs?.chargeur) > 0 ? { chargeur: Number(objet?.valeurs?.chargeur) } : {}),
         });
     }
     return armes;

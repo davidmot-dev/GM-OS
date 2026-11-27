@@ -1116,6 +1116,10 @@ export function controlerLePilote(
             const champ = phy.psi?.[cle];
             if (champ !== undefined && !tousLesChamps.has(champ)) erreur(`combat.physiqueTraveller.psi.${cle}`, `La PSI de Traveller lit « ${champ} », absent de la fiche.`);
         }
+        // TRV-A6 (27/11/2026) : les dégâts incapacitants que l'heure de repos rend (p. 76).
+        if (phy.incapacitants !== undefined && !tousLesChamps.has(phy.incapacitants)) {
+            erreur('combat.physiqueTraveller.incapacitants', `Les dégâts incapacitants de Traveller s'écrivent dans « ${phy.incapacitants} », absent de la fiche.`);
+        }
     }
     // TRV-A5 (27/11/2026) : la dose de radiations et l'END qu'un seuil cumulé retire (p. 78).
     const rad = driver.combat?.radiationsTraveller;

@@ -15414,11 +15414,39 @@ aucune donnée personnelle, installation, publication ou commande git d’écrit
   8 → 9 depuis une tablette ; un jet d'initiative avec Tactique et embuscade, puis le round 2 ; une
   Exposition. La campagne La Part des absents a été préparée sur le 2.0.0 : ses Voyageurs reçoivent
   leur PSI sans dépense au premier enregistrement.
+### 284 · Traveller — dépenses et durées assistées (TRV-A6) — 27/11/2026
+
+- **Demande de David** : « Commit - pousse, commence TRV-A6 ».
+- **Spécifié** : [spécification](2026-11-27-traveller-depenses-et-durees.md) — 10 critères, 7 tâches.
+- **Décisions de David (27/11)** : « Les cinq » (munitions, coût PSI, récupération, neutralisation,
+  réveil) ; « Écrire « 26/30 » » ; « Heures saisies » ; « Oui, pilote 2.2.0 ». Règles relues dans le
+  livre : p. 74-76, 80, 224-229.
+- **En chemin** : le push de TRV-A3 à A5 a d'abord été refusé — `registreComplet.test.ts` : le
+  magasin de l'initiative de Traveller n'était dans aucun registre de purge ; déclaré hors périmètre
+  (`6807ef06`), push réussi. L'écrivain du panneau de jet de l'éditeur de personnage n'alignait pas la
+  fiche de Traveller (oubli de TRV-A3) : corrigé.
+- **Livré le 27/11** (GM-OS fermé, feu vert de David) :
+  - `depensesDeTraveller.ts` et `pouvoirsPsioniques.ts` (règles pures, table des 27 pouvoirs) ;
+  - `MunitionsDeTraveller.tsx` dans la carte Dégâts (attaque réussie ou manquée, Combat-OS et panneau
+    du meneur), `logic/munitionsDeTraveller.ts` ;
+  - `PsioniqueTraveller.tsx` au panneau de jet ; `RessourcesDeTraveller.tsx` sur la carte de combat
+    (Recharger, Récupérer la PSI, Une heure de repos, Test de réveil) ;
+  - état « Neutralisé » posé par `applyDamage` ; `physiqueTraveller.incapacitants` retenu par la
+    porte ; pilote **2.2.0** (`degats_incapacitants`), contrôles du pilote ;
+    `Export Dirvers/corriges/Traveller-2.2.0.gmos-driver`.
+- **Vérifié** : `tsc -b`, lint ; 471 fichiers d'essais de Combat-OS, du dé, de la séance, du réseau,
+  de la Forge, des purges et d'`electron/` (4 775 essais, manuel compris) ; `verifier_pilote.mjs` sur
+  le 2.2.0 : zéro constat ; e2e des captures de Traveller (120 s désormais), captures relues.
+- **Reste** : l'**essai de David** — réimporter `corriges/Traveller-2.2.0` avec « Remplacer » ; une
+  rafale décomptée puis un rechargement ; une Suggestion télépathique payée ; un coup de bâton
+  incapacitant, puis l'heure de repos. Lecture à confirmer : la PSI revient à partir de la quatrième
+  heure (« un point par heure, à partir de trois heures après », p. 224).
 
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 220 | **Traveller — TRV-A6 dépenses et durées** | § 284 ; 🟠 livré le 27/11 — munitions « 26/30 », pouvoirs PSI, récupération, neutralisation, réveil ; pilote 2.2.0 | Réimporter `corriges/Traveller-2.2.0` avec « Remplacer », puis une rafale, une Suggestion, un bâton incapacitant | Essai de David |
 | 219 | **Traveller — TRV-A3 fiche alignée, TRV-A4 initiative, TRV-A5 PSI et Rads** | § 283 ; 🟠 livré le 27/11 — alignement chez tous les écrivains ; initiative DEX/INT, Tactique, embuscade ; PSI sans dépense, dose de Rads et Exposition ; pilote 2.1.0 ; essais et e2e réussis | Réimporter `corriges/Traveller-2.1.0` (« Remplacer ») ; DEX 8 → 9 sur une tablette ; une initiative avec embuscade ; une Exposition | Essai de David |
 | 218 | **Traveller — TRV-A1 jets demandés préparés, TRV-A2 dégâts d'une attaque** | § 282 ; 🟠 livré le 27/11 — préparation transmise à la tablette ; dégâts calculés (arme, Effet, FOR, rafale, armure − AP, DD) pour PNJ, Voyageur et animal ; essais et e2e réussis | Demander un test préparé à une tablette ; « Attaquer » un PNJ ; un animal | Essai de David |
 | 217 | **Crimes, Dune, Star Trek — chiffres des fiches HTML lisibles** | § 281 ; 🟢 corrigé et essayé par David le 27/11 — flèches masquées, moteur 31, garde générale | — | — |

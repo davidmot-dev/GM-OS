@@ -532,6 +532,8 @@ for (const { mise, pilote } of JEUX) {
         if (['shadowrun-anarchy', 'coc', 'delta-green'].includes(mise.corpusId)) test.setTimeout(120_000);
         // Vampire 2.2.0 (17/11) : le bestiaire au combat et le jet d'un adversaire suivent la fiche HTML.
         if (mise.corpusId === 'vampire') test.setTimeout(120_000);
+        // Traveller joue la santé, l'initiative, les radiations, les dégâts et les munitions (TRV-A6, 27/11).
+        if (mise.corpusId === 'traveller') test.setTimeout(120_000);
         // RuneQuest joue aussi la magie, l'inspiration et les cartes de la fiche depuis RQ-A6 (03/11).
         if (['dune', 'noc', 'runequest', 'degenesis'].includes(mise.corpusId)) test.setTimeout(180_000);
         // Alien et Crimes (C1 à C6) jouent beaucoup de scènes : plus de temps.
@@ -1491,7 +1493,7 @@ async function scenesDeTraveller(c: ContexteDeScene): Promise<void> {
         const kathya = combat.combatants.find(c => c.isPlayer)!;
         combat.addCombatant({ name: 'Pirate', init: 9, isPlayer: false, faction: 'enemy', statuses: [], targetId: kathya.id,
             sheetData: { force: 7, dexterite: 9, endurance: 7, combat_arme_1: '1', combat_arme_1_specialite: 'Armes d’épaule',
-                arme_1: 'Fusil', arme_1_degats: '3D', arme_1_portee: '500 m' } } as never);
+                arme_1: 'Fusil', arme_1_degats: '3D', arme_1_portee: '500 m', arme_1_munitions: '30' } } as never);
     });
     const pirate = f.locator('[data-combattant]').filter({ hasText: 'Pirate' }).first();
     await expect(pirate).toBeVisible({ timeout: 15_000 });
@@ -1508,9 +1510,21 @@ async function scenesDeTraveller(c: ContexteDeScene): Promise<void> {
     await expect(degats).toBeVisible();
     await degats.getByRole('button', { name: /^Lancer 3D/ }).click();
     await expect(degats.locator('[data-calcul-traveller]')).toContainText('(armure)');
+    // TRV-A6 (27/11/2026) : le tir se décompte sur la fiche du pirate, « 30 » devient « 29/30 » (p. 74-76).
+    await expect(degats.locator('[data-munitions-traveller]')).toContainText('Munitions : 30/30');
     await photographierLePanneau(jet, 'jeu-traveller-degats');
     await degats.getByRole('button', { name: /^Appliquer \d+ à Kathya/ }).click();
     await expect(degats.locator('[data-coup-applique]')).toBeVisible();
+    await degats.getByRole('button', { name: 'Décompter 1' }).click();
+    await expect(degats.locator('[data-munitions-decomptees]')).toContainText('30/30 → 29/30');
+    // La carte du pirate propose de recharger (une action mineure, p. 74) ; sa fiche, ouverte par
+    // « Attaquer », se ferme d'abord (Échap, registre des surcouches).
+    await f.keyboard.press('Escape');
+    await expect(jet).toBeHidden({ timeout: 10_000 });
+    const ressources = pirate.locator('[data-ressources-traveller]');
+    await expect(ressources.locator('[data-recharger]')).toContainText('Recharger Fusil (29/30)', { timeout: 10_000 });
+    await ressources.scrollIntoViewIfNeeded();
+    await photographier(pirate, 'jeu-traveller-ressources');
 }
 
 /**

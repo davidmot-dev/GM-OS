@@ -83,6 +83,9 @@ import {
 import { lireSymbaroum, sansCritiqueDeBase, type NatureDuTest } from '../../../dice/systemes/symbaroumRegles';
 import { PreparationBarbarians, SuitesBarbarians } from './BarbariansAuJet';
 import { PreparationTraveller, SuitesTraveller } from './TravellerAuJet';
+import { PsioniqueTraveller } from './PsioniqueTraveller';
+import { talentDeLaCompetence } from '../../../dice/systemes/pouvoirsPsioniques';
+import { useJournalStore } from '../../../journal/useJournalStore';
 import { PreparationPenombre, SuitesPenombre, type FaitsDePenombre } from './PenombreAuJet';
 import { CHOIX_DE_PENOMBRE, LIBELLES_DES_ISSUES, appliquerLaMerveille, depenserDesJetons, lancerPenombre, lireLaConscience, lireLeTimbre,
     perdreDesJetons, reactiverUnJeton, recompterLaReserveCollegiale, relancerPenombre, tailleDeLaReserveCollegiale, timbresDuGroupe,
@@ -583,7 +586,31 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [choixTraveller, setChoixTraveller] = useState<ChoixDeTraveller>(() => compositionInitiale?.traveller
         ? { ...compositionInitiale.traveller }
         : { ...CHOIX_DE_TRAVELLER, difficulte: regleTraveller?.cible ?? 8 });
-    const [travellerDuLancer, setTravellerDuLancer] = useState<{ titre: string; compte: number } | null>(null);
+    const [travellerDuLancer, setTravellerDuLancer] = useState<{ titre: string; compte: number; competence?: string } | null>(null);
+    /*
+      TRV-A6 (27/11/2026, David : « Les cinq ») : ce que les cartes de Traveller écrivent sur la fiche —
+      les munitions d'un tir, la PSI d'un pouvoir —, relu aussitôt par le panneau.
+    */
+    const [ecritsTraveller, setEcritsTraveller] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const valeursTraveller = useMemo(() => ({ ...valeurs,
+        ...(ecritsTraveller.base === valeurs && ecritsTraveller.personnageId === personnageId ? ecritsTraveller.maj : {}),
+    }), [valeurs, ecritsTraveller, personnageId]);
+    const ecrireTraveller = ecrireSurLaFiche ? (maj: Record<string, unknown>) => {
+        setEcritsTraveller(e => ({ base: valeurs, personnageId, maj: { ...(e.base === valeurs && e.personnageId === personnageId ? e.maj : {}), ...maj } }));
+        ecrireSurLaFiche(maj);
+    } : undefined;
+    const champDeLaPsiTraveller = useSessionOSStore(s => s.getActiveDriver())?.combat?.physiqueTraveller?.psi?.champ;
+    /** Un pouvoir payé : la PSI s'écrit ; ce qui passe sous zéro part en dégâts, chez le meneur (p. 225). */
+    const depenserLaPsiTraveller = (psiApres: number, degats: number, texte: string) => {
+        if (!champDeLaPsiTraveller || !ecrireTraveller) return;
+        ecrireTraveller({ [champDeLaPsiTraveller]: psiApres });
+        useJournalStore.getState().addEvent({ type: 'COMBAT', title: `${nomDuPersonnage ?? 'Voyageur'} — PSI`, content: texte });
+        if (degats <= 0 || pourLesJoueurs) return;
+        const combat = useCombatStore.getState();
+        const combattant = combat.combatants.find(c => c.id === personnageId || (!!personnageId && c.sourcePlayerId === personnageId));
+        if (combattant) combat.applyDamage(degats, 'PSI', [combattant.id]);
+        else if (personnageId) useSessionOSStore.getState().handleApplyImpact(personnageId, 'pc', { value: degats, type: 'PSI' });
+    };
 
     /**
      * **Pénombre** (22/11/2026) : la difficulté, les atouts payés, le D20 merveilleux, l'effet
@@ -1804,7 +1831,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 choixTraveller.chaine ? `chaîne ${choixTraveller.chaine > 0 ? '+' : ''}${choixTraveller.chaine}` : '',
                 choixTraveller.autre ? `MD ${choixTraveller.autre > 0 ? '+' : ''}${choixTraveller.autre}` : '',
             ].filter(Boolean).join(', ');
-            setTravellerDuLancer(d => ({ titre: `${jet.composantes.map(c => c.label).join(' + ')} · ${reglage}`, compte: (d?.compte ?? 0) + 1 }));
+            setTravellerDuLancer(d => ({ titre: `${jet.composantes.map(c => c.label).join(' + ')} · ${reglage}`, compte: (d?.compte ?? 0) + 1, competence: choix.competence }));
             // Une chaîne de tâches ne vaut que pour le test suivant : elle se vide après le lancer (p. 63).
             if (choixTraveller.chaine) setChoixTraveller(c => ({ ...c, chaine: 0 }));
         }
@@ -2929,6 +2956,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     */
     const attaqueDeTraveller = !!regleTraveller && !pourLesJoueurs && !surLeResultat
         && regleTraveller.competences.some(c => c.niveau === choix.competence && /^(Mêlée|Combat Arme|Armes lourdes|Artilleur)$/.test(c.domaine));
+    // TRV-A6 : le test porte sur un talent psionique — une ligne libre nommée Télépathie, Clairvoyance… (p. 224).
+    const ligneTraveller = regleTraveller?.competences.find(c => c.niveau === choix.competence);
+    const talentTraveller = ligneTraveller
+        ? talentDeLaCompetence(valeursTraveller[`${ligneTraveller.niveau}_nom`]) ?? talentDeLaCompetence(ligneTraveller.domaine) : null;
+    const psiTraveller = champDeLaPsiTraveller && String(valeursTraveller[champDeLaPsiTraveller] ?? '').trim() !== ''
+        && Number.isFinite(Number(valeursTraveller[champDeLaPsiTraveller])) ? Number(valeursTraveller[champDeLaPsiTraveller]) : undefined;
     const cocDuResultat = (resultat as JetDeCoc | null)?.coc;
     const argyropeeDuResultat = (resultat as JetDArgyropee | null)?.argyropee;
     const penombreDuResultat = (resultat as JetDePenombre | null)?.penombre;
@@ -3473,6 +3506,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     )}
                     {regleTraveller && (
                         <PreparationTraveller choix={choixTraveller} setChoix={setChoixTraveller} mdDeLaFiche={jet.seuil} />
+                    )}
+                    {regleTraveller && talentTraveller && (
+                        <PsioniqueTraveller talent={talentTraveller} psi={psiTraveller}
+                            resultat={travellerDuLancer && travellerDuResultat && travellerDuLancer.competence === choix.competence
+                                ? { effet: travellerDuResultat.effet, compte: travellerDuLancer.compte } : null}
+                            poserLaDifficulte={cible => setChoixTraveller(c => ({ ...c, difficulte: cible }))}
+                            {...(ecrireTraveller && champDeLaPsiTraveller ? { depenser: depenserLaPsiTraveller } : {})} />
                     )}
                     {regleBarbarians && (
                         <PreparationBarbarians choix={choixBarbarians} setChoix={setChoixBarbarians} seuil={jet.seuil} />
@@ -4216,9 +4256,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             <SuitesTraveller key={travellerDuLancer.compte} jet={resultat as JetDeTraveller} titre={travellerDuLancer.titre}
                                 reporter={md => setChoixTraveller(c => ({ ...c, chaine: md }))} />
                         )}
-                        {attaqueDeTraveller && travellerDuLancer && travellerDuResultat && travellerDuResultat.effet >= 0 && (
-                            <DegatsDeTraveller key={`dg-${travellerDuLancer.compte}`} armes={armesDeTraveller(valeurs, catalogueDuPilote)}
-                                effet={travellerDuResultat.effet} reussie mdDeForce={mdDeForceDe(valeurs)}
+                        {/* TRV-A6 : un tir manqué se décompte aussi ; la carte le dit et propose les munitions. */}
+                        {attaqueDeTraveller && travellerDuLancer && travellerDuResultat && (
+                            <DegatsDeTraveller key={`dg-${travellerDuLancer.compte}`} armes={armesDeTraveller(valeursTraveller, catalogueDuPilote)}
+                                effet={travellerDuResultat.effet} reussie={travellerDuResultat.effet >= 0} mdDeForce={mdDeForceDe(valeurs)}
+                                {...(ecrireTraveller ? { ecrireLAttaquant: ecrireTraveller } : {})} {...(nomDuPersonnage ? { nomDeLAttaquant: nomDuPersonnage } : {})}
                                 {...(personnageId ? { attaquantPersonnageId: personnageId } : {})} />
                         )}
                         {regleBarbarians && barbariansDuLancer && barbariansDuResultat && (

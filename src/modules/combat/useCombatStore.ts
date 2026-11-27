@@ -36,6 +36,7 @@ import { armureDeLAdversaire } from './logic/attaqueDeLAdversaire';
 import { coupSurLAdversaire, estUnAdversaireAutonome } from './logic/adversairesDeDegenesis';
 import { degatsDeVampireSelonLeJeu } from './logic/pistesDeVampire';
 import { physiqueDeTravellerSelonLeJeu } from './logic/physiqueDeTraveller';
+import { neutralisation } from '../dice/systemes/depensesDeTraveller';
 import { moniteurSelonLeJeu, positionDuMoniteur } from './logic/moniteurDeShadowrun';
 import { capacitesShadowrun } from '../dice/systemes/suiviDeShadowrun';
 import { DiceEngine } from '../dice/DiceEngine';
@@ -1584,6 +1585,28 @@ export const useCombatStore = create<CombatState>()(
                 get().consignerLOuvertureDuCombat();
 
                 const session = (window as unknown as { useSessionOSStore?: { getState: () => SessionOSState } }).useSessionOSStore?.getState();
+                /*
+                  **Traveller : neutralisé par une arme Incapacitante** (TRV-A6, C6, 27/11/2026 ; David :
+                  « Les cinq »). L'END à 0, la cible ne peut rien faire pendant dégâts − END rounds (p. 76).
+                  L'état se pose ici, sur l'END d'avant le coup, quel que soit le chemin que prend le coup
+                  ensuite (porte de la fiche ou adversaire autonome) ; Combat-OS le décompte à chaque tour.
+                */
+                const regleIncapacitante = piloteActif()?.combat?.physiqueTraveller;
+                if (regleIncapacitante && amount > 0 && /incapacit/i.test(type ?? '')) {
+                    for (const c of get().combatants.filter(x => targetIds.includes(x.id))) {
+                        const fiche = ficheDuCombattant(c);
+                        const end = valeurDuChamp(fiche && Object.keys(fiche).length ? fiche : c.sheetData, regleIncapacitante.endurance);
+                        if (end === undefined) continue;
+                        const n = neutralisation(amount, end);
+                        if (!n.neutralise || n.rounds <= 0) continue;
+                        get().updateCombatant(c.id, { statuses: [
+                            ...c.statuses.filter(st => st.name !== 'Neutralisé'),
+                            { id: `neutralise-${Date.now()}-${c.id}`, name: 'Neutralisé', duration: n.rounds, icon: '💫' },
+                        ] });
+                        useJournalStore.getState().addEvent({ type: 'COMBAT', title: `${c.name} — neutralisé`,
+                            content: `${amount} dégâts incapacitants sur une END de ${end} : neutralisé ${n.rounds} round${n.rounds > 1 ? 's' : ''}, sans aucune action (p. 76) ; guéri après une heure de repos.` });
+                    }
+                }
                 const alien = session?.getActiveDriver?.()?.combat.alien;
                 const transmis = new Set<string>();
                 if (alien && session) for (const c of get().combatants.filter(c => targetIds.includes(c.id))) {

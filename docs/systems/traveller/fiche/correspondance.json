@@ -1,7 +1,7 @@
 {
   "version": 1,
   "gabaritDeLaFiche": "traveller-fr",
-  "commentaire": "Correspondance entre la fiche GM-OS de Traveller (pilote 2.1.0, outils/traveller/finir_traveller.py) et le gabarit traveller-fr livré par GM-OS Studio le 2026-11-26. Les champs du pilote reprennent un à un 328 des 331 clés de la fiche : le portrait reste celui de GM-OS, et la page 2 recopie seule le nom et l'espèce. Le total physique, les niveaux sans blessure, la PSI sans dépense et le choix de l'excédent des dégâts n'ont pas de case sur la fiche imprimée : ils restent dans GM-OS.",
+  "commentaire": "Correspondance entre la fiche GM-OS de Traveller (pilote 2.2.0, outils/traveller/finir_traveller.py) et le gabarit traveller-fr livré par GM-OS Studio le 2026-11-26. Les champs du pilote reprennent un à un 328 des 331 clés de la fiche : le portrait reste celui de GM-OS, et la page 2 recopie seule le nom et l'espèce. Le total physique, les niveaux sans blessure, la PSI sans dépense, les dégâts incapacitants à guérir et le choix de l'excédent des dégâts n'ont pas de case sur la fiche imprimée : ils restent dans GM-OS.",
   "champs": [
     {
       "gmos": "force",

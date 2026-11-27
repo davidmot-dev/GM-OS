@@ -7,6 +7,7 @@ import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore, type Entity } from '../../session/useSessionOSStore';
 import { HealthManager } from '../../session/components/health/HealthManager';
 import { DoseDeRadiations } from './DoseDeRadiations';
+import { RessourcesDeTraveller } from './RessourcesDeTraveller';
 import { estHorsDeCombat, santeAffichee, maximumDeLaJauge, champDeSantePrincipale, santeDesAtteintes } from '../logic/SanteDuCombattant';
 import type { HealthSystem } from '../../session/useSessionOSStore';
 import { Bouton, Icone } from '../../../components/socle';
@@ -627,6 +628,11 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
             {/* À zéro : le Hors Jeu (Cthulhu Hack), Brisé par les dégâts ou par le stress (Blade Runner). */}
             <HorsJeuDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
+            {/* TRV-A6 (27/11/2026) : Traveller — recharger, récupérer la PSI, l'heure de repos, le test de réveil. */}
+            {activeDriver?.jet?.traveller && activeDriver.combat?.physiqueTraveller && (
+                <RessourcesDeTraveller combattant={combatant} regle={activeDriver.combat.physiqueTraveller} valeurs={ficheLue.valeurs}
+                    {...(activeDriver.catalogue ? { catalogue: activeDriver.catalogue } : {})} />
+            )}
             {activeDriver?.jet?.deltaGreen && <div className="mx-3 my-2"><DommagesDeltaGreen attaquant={combatant} regle={activeDriver.jet.deltaGreen} /></div>}
             {/* Blade Runner : la protection se lance à chaque coup subi. */}
             <ProtectionDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />

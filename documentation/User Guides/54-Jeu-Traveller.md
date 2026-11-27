@@ -1,8 +1,8 @@
 # 🚀 Jeu — Traveller
 
 > **Pilote décrit :** « Traveller », forgé par David, exporté le 2026-11-26, **fini le
-> 2026-11-26**, essayé par David le 2026-11-27 ; **version 2.1.0 du 2026-11-27** (PSI sans dépense,
-> radiations — à réimporter avec « Remplacer ») (`Export Dirvers/corriges/Traveller-2.1.0.gmos-driver`, construit par
+> 2026-11-26**, essayé par David le 2026-11-27 ; **version 2.2.0 du 2026-11-27** (PSI sans dépense,
+> radiations, dégâts incapacitants à guérir — à réimporter avec « Remplacer ») (`Export Dirvers/corriges/Traveller-2.2.0.gmos-driver`, construit par
 > `outils/traveller/finir_traveller.py`, contrôlé par `outils/traveller/verifier_pilote.mjs`).
 > Thème `traveller`, fiche de personnage HTML, bannière et identité visuelle livrés le même jour par
 > GM-OS Studio. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
@@ -80,7 +80,7 @@ Depuis le 2026-11-27 (TRV-A2), une attaque réussie ouvre la carte **Dégâts** 
 - **les dés de l'arme**, lus sur la fiche (« 3D-3 », « 1D+2 ») ou, à défaut, au catalogue du pilote,
   qui donne aussi ses **traits** ; une arme **destructrice** (« 1DD ») multiplie ses dés par 10 ;
 - **+ l'Effet** du test, **+ le MD de FOR** en mêlée (« en plus de l'Effet », p. 74) ;
-- **+ le niveau Auto** pour une **rafale**, qui consomme autant de munitions (p. 76) ;
+- **+ le niveau Auto** pour une **rafale** (p. 76) ;
 - **− la protection** de la cible : la meilleure de ses armures, ou le trait « Armure (+X) » d'un
   animal, moins l'**AP** de l'arme ; tout se change avant de lancer ;
 - **au moins 1 point** sur un Effet de 6+ (p. 75).
@@ -88,6 +88,13 @@ Depuis le 2026-11-27 (TRV-A2), une attaque réussie ouvre la carte **Dégâts** 
 « **Appliquer à …** » passe par la porte des blessures ci-dessous ; une arme **Incapacitante** ne
 touche que l'END. Explosion, Rayonnement, Viseur, l'auto complet et la Reflec face aux lasers sont
 **rappelés**, et se règlent à la main.
+
+**Les munitions** (TRV-A6, 2026-11-27) : sous l'attaque, réussie ou manquée, la ligne
+« **Munitions : 30/30 → 26/30** » et **Décompter** : un tir simple prend un coup, une rafale le niveau
+Auto, l'auto complet trois fois le niveau Auto (p. 76). Le champ « munitions » de la fiche s'écrit
+**« restants/capacité »** (« 26/30 ») ; un nombre seul, recopié du livre, vaut un chargeur plein ; vide,
+la capacité vient du catalogue. Chargeur vide : **Recharger** (une action mineure, p. 74). Sans
+capacité lisible, la ligne se tait. Rien ne s'écrit sans clic, et chaque geste a sa ligne au journal.
 
 La carte s'ouvre à trois endroits :
 
@@ -112,8 +119,9 @@ de santé —, GM-OS l'écrit sur la fiche :
    MD+1 cumulatif, p. 80) et le reste frappe la dernière ; les trois à 0, il est **tué**.
 
 Les **MD** des caractéristiques blessées sont recalculés aussitôt (p. 74) : le test suivant les lit.
-Une arme **Incapacitante** ne touche que l'END et neutralise pour autant de rounds que l'excédent
-(p. 76). Un **soin** se répartit également entre les caractéristiques blessées (p. 79), sans dépasser
+Une arme **Incapacitante** ne touche que l'END ; à 0, la carte reçoit l'état **« Neutralisé »** pour
+autant de rounds que l'excédent, décompté à chaque tour (p. 76). Ses dégâts se retiennent dans
+« Dégâts incapacitants à guérir » (version 2.2.0), que **Une heure de repos** rend à l'END. Un **soin** se répartit également entre les caractéristiques blessées (p. 79), sans dépasser
 les niveaux **sans blessure** de la fiche. La jauge **Physique** est le total END + FOR + DEX.
 Une créature du bestiaire n'a que ses **PdV** (p. 81) : la colonne PDV du bestiaire remplit sa santé.
 
@@ -131,13 +139,33 @@ Depuis la version 2.1.0 (TRV-A5, 2026-11-27) :
 - la **PSI** se dépense et revient d'un point par heure, trois heures après le dernier pouvoir ; le
   MD des pouvoirs suit la PSI **actuelle** (p. 224-225). La jauge PSI se lit sur la **PSI sans
   dépense**, un champ de la fiche GM-OS que la fiche imprimée n'a pas ; elle se relève seule quand
-  la PSI saisie la dépasse. La récupération se rend à la main ;
+  la PSI saisie la dépasse ;
 - les **Rads** sont une **dose cumulée**, sans maximum (p. 78) : la carte affiche la dose, la
   conséquence cumulée — −1 à −4 END permanent au-delà de 150, 300, 500 et 800 rads — et le prochain
   seuil. « **Exposition** » ajoute une dose (une arme à rayonnement : 2D × 20 ; une fuite, une
   éruption : la table p. 78), rappelle ses conséquences immédiates — de 1D à 8D de dégâts, la nausée
   au-delà de 50 rads —, lance et applique les dégâts, et, quand un seuil cumulé est franchi, retire
   l'END permanente de l'END et de son niveau sans blessure. Rien ne s'écrit sans un clic.
+
+## Les pouvoirs psioniques et les gestes de la carte
+
+![La carte du pirate après un tir : « Recharger Fusil (29/30) », puis ses jauges et sa dose de rads](captures/jeu-traveller-ressources.jpg)
+
+Depuis le 2026-11-27 (TRV-A6) :
+
+- **un test de talent psionique** — une ligne de compétence libre nommée Télépathie, Clairvoyance,
+  Télékinésie, Conscience ou Téléportation — ouvre la carte **Pouvoir psionique** : les pouvoirs du
+  livre avec leur test, leur portée et leur coût (p. 225-229). Choisir un pouvoir pose sa difficulté
+  sur le test ; la **portée allongée** d'une ou deux Zones double ou quadruple le coût. Le jet se fait
+  avec la PSI comme caractéristique. Après le jet : « **Réussite — dépenser 3 PSI** » ou « **Échec —
+  dépenser 1 PSI** » ; ce qui passe sous zéro part en **dégâts** ; sans point de PSI, la carte refuse
+  la tentative (p. 225). Un coût au choix (Télékinésie, Force augmentée, Robustesse, Régénération) se
+  saisit ;
+- sur la **carte de combat**, quand ils ont un sens : **Recharger** une arme entamée ; **Récupérer la
+  PSI** — le meneur dit les heures écoulées depuis le dernier pouvoir : rien les trois premières
+  heures, puis un point par heure, jusqu'à la PSI sans dépense (p. 224) ; **Une heure de repos**, qui
+  rend les dégâts incapacitants (p. 76) ; **Test de réveil** d'un inconscient : 2D + MD END contre 8,
+  MD+1 par échec, une minute par test (p. 80).
 
 ## L'initiative
 
@@ -167,11 +195,13 @@ GM-OS. Une saisie GM-OS ne part vers la fiche HTML qu'après « Sauvegarder ».
 
 ## Ce qui n'est pas dans le pilote
 
-- Les **munitions** ne se décomptent pas sur la fiche (la rafale rappelle seulement ce qu'elle
-  consomme) ; l'**auto complet**, l'**Explosion** et le **Rayonnement** se règlent à la main.
+- Les **chargeurs de rechange** ne se comptent pas ; les **attaques** de l'auto complet, l'**Explosion**
+  et le **Rayonnement** se règlent à la main (le décompte des munitions de l'auto complet, lui, se fait).
+- Les **médicaments psi** et les **inhibiteurs** (p. 230) se rendent à la main ; le temps ne fait pas
+  revenir la PSI seul : c'est le meneur qui dit les heures.
 - L'option « **forces opposées** » (un seul test pour toutes les forces de l'Arbitre, p. 71) n'est
   pas prévue : chaque adversaire fait son test.
 - Les **portées** sont les Zones de Portée des rencontres (p. 80) ; le MD d'une portée d'arme
   (courte +1, longue −2, extrême −4, p. 74) se règle au jet, dans « Autres MD ».
-- Le **commerce**, le **saut**, la **création de mondes**, les **psioniques** et le **combat
+- Le **commerce**, le **saut**, la **création de mondes** et le **combat
   spatial** vivent dans le corpus et l'Oracle, pas dans des écrans.

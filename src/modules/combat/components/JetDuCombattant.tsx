@@ -220,7 +220,8 @@ export const JetDuCombattant: React.FC<{
                 <DegatsDeTraveller key={tirageDG} cibleId={cible.id} attaquantId={combattant.id} armes={armesTraveller}
                     reussie={!!dernierResultat.tagSuccess}
                     effet={(dernierResultat as { traveller?: { effet?: number } }).traveller?.effet ?? 0}
-                    mdDeForce={mdDeForceDe(valeurs)} />
+                    mdDeForce={mdDeForceDe(valeurs)}
+                    ecrireLAttaquant={maj => ecrireLaFicheDuCombattant(combattant, maj)} nomDeLAttaquant={combattant.name} />
             )}
             {suivreLeResultat && cible && dernierResultat && regleDG && (
                 <div className="mt-3" data-degats-apres-l-attaque>

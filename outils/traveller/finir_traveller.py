@@ -35,6 +35,12 @@
 # - les Rads sont une dose cumulée, sans maximum (p. 78) : `combat.radiationsTraveller` — la carte de
 #   combat montre la dose, la conséquence cumulée et le prochain seuil, et offre « Exposition ».
 #
+# 2.2.0 — 2026-11-27, TRV-A6 (David : « Les cinq », « Oui, pilote 2.2.0 ») :
+# - une arme Incapacitante ne frappe que l'END et ses dégâts guérissent entièrement après une heure
+#   de repos (p. 76) : nouveau champ `degats_incapacitants` (« Dégâts incapacitants à guérir »), sans
+#   case sur la fiche HTML, que la porte des dégâts additionne et que « Une heure de repos » rend
+#   (`physiqueTraveller.incapacitants`). Les munitions s'écrivent « 26/30 » dans le champ existant.
+#
 # Usage : python -I -X utf8 outils/traveller/finir_traveller.py <export forgé> <sortie .gmos-driver> [correspondance.json]
 import json, os, re, sys, unicodedata, zipfile
 
@@ -133,6 +139,7 @@ sections = [
         nombre('sante_physique', 'Physique (END + FOR + DEX)', None, 21),
         nombre('endurance_max', 'END sans blessure', None, 7), nombre('force_max', 'FOR sans blessure', None, 7),
         nombre('dexterite_max', 'DEX sans blessure', None, 7), nombre('psi_max', 'PSI sans dépense', None, 0),
+        nombre('degats_incapacitants', 'Dégâts incapacitants à guérir', None, 0),
         champ('excedent_degats', 'Excédent des dégâts, l’END à 0', 'select', None, 'Force', options=['Force', 'Dextérité']),
         nombre('rads', 'Rads', 'identity.rads'),
     ]},
@@ -226,6 +233,7 @@ combat['physiqueTraveller'] = {
     'excedent': 'excedent_degats', 'md': {id: f'{id}_md' for id in PHYSIQUES},
     'maximum': {id: f'{id}_max' for id in PHYSIQUES},
     'psi': {'champ': 'psi', 'maximum': 'psi_max'},
+    'incapacitants': 'degats_incapacitants',
 }
 combat['radiationsTraveller'] = {'champ': 'rads', 'endurance': 'endurance', 'maximum': 'endurance_max'}
 pilote['ui_config']['gauges'] = [
@@ -270,7 +278,7 @@ for objet in (pilote.get('catalogue') or {}).get('objets', []):
     en_nombre(objet, 'protection', r'^\+?(\d+)\s*\(')
     en_nombre(objet, 'processeur-bande-passante', r'^Ordinateur/(\d+)$', False)
 
-pilote['version'] = '2.1.0'
+pilote['version'] = '2.2.0'
 
 # ─── Ce que le pilote lit doit exister ───────────────────────────────────────
 champs = {f['id'] for s in sections for f in s['fields']}
@@ -278,7 +286,7 @@ t = jet['traveller']
 lus = (t['caracteristiques'] + list(t['md'].values()) + [c['niveau'] for c in t['competences']]
        + [c['specialite'] for c in t['competences'] if 'specialite' in c] + [t['polyvalent']]
        + [g['fieldId'] for g in pilote['ui_config']['gauges']] + [s['fieldId'] for s in combat['statsToTrack']]
-       + [combat['physiqueTraveller'][c] for c in ('endurance', 'force', 'dexterite', 'excedent')]
+       + [combat['physiqueTraveller'][c] for c in ('endurance', 'force', 'dexterite', 'excedent', 'incapacitants')]
        + list(combat['physiqueTraveller']['md'].values()) + list(combat['physiqueTraveller']['maximum'].values())
        + list(combat['physiqueTraveller']['psi'].values()) + list(combat['radiationsTraveller'].values()))
 manquants = sorted({c for c in lus if c not in champs})
@@ -304,10 +312,10 @@ if sortie_correspondance:
         json.dump({
             'version': 1,
             'gabaritDeLaFiche': 'traveller-fr',
-            'commentaire': ("Correspondance entre la fiche GM-OS de Traveller (pilote 2.1.0, outils/traveller/finir_traveller.py) "
+            'commentaire': ("Correspondance entre la fiche GM-OS de Traveller (pilote 2.2.0, outils/traveller/finir_traveller.py) "
                             "et le gabarit traveller-fr livré par GM-OS Studio le 2026-11-26. Les champs du pilote reprennent un à un "
                             "328 des 331 clés de la fiche : le portrait reste celui de GM-OS, et la page 2 recopie seule le nom et "
-                            "l'espèce. Le total physique, les niveaux sans blessure, la PSI sans dépense et le choix de l'excédent des dégâts n'ont pas "
+                            "l'espèce. Le total physique, les niveaux sans blessure, la PSI sans dépense, les dégâts incapacitants à guérir et le choix de l'excédent des dégâts n'ont pas "
                             "de case sur la fiche imprimée : ils restent dans GM-OS."),
             'champs': correspondance,
             'absents': [
@@ -318,5 +326,5 @@ if sortie_correspondance:
         }, f, ensure_ascii=False, indent=2)
         f.write('\n')
 
-print(f"Pilote {pilote['name']} 2.1.0 : {len(champs)} champs, {len(correspondance)} clés de la fiche, "
+print(f"Pilote {pilote['name']} 2.2.0 : {len(champs)} champs, {len(correspondance)} clés de la fiche, "
       f"{len(lignes)} lignes de compétence → {sortie}")

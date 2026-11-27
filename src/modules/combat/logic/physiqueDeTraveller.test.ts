@@ -41,6 +41,11 @@ describe('Traveller — la porte des dégâts (p. 74, 76, 79-81)', () => {
         expect(r.fiche).toMatchObject({ endurance: 0, force: 6, dexterite: 8 });
         expect(r.impact.value).toBe(7);
         expect(r.texte).toContain('neutralisé 3 rounds');
+        // TRV-A6 (27/11/2026) : sans champ déclaré, rien ne se retient ; avec, les points s'ajoutent (p. 76).
+        expect(r.fiche).not.toHaveProperty('degats_incapacitants');
+        const retenus = physiqueDeTravellerSelonLeJeu({ ...REGLE, incapacitants: 'degats_incapacitants' }, voyageur({ degats_incapacitants: 2 }),
+            { value: 10, type: 'Incapacitante' }, STATS)!;
+        expect(retenus.fiche).toMatchObject({ endurance: 0, degats_incapacitants: 9 });
     });
 
     it('un soin se répartit équitablement, sans dépasser les valeurs d’avant les blessures (p. 79)', () => {

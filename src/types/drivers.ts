@@ -849,6 +849,11 @@ export interface GameDriver {
              * point par heure (p. 224-225). L'alignement relève le maximum qu'une saisie dépasse.
              */
             psi?: { champ: string; maximum: string };
+            /**
+             * **Les dégâts incapacitants à guérir** (TRV-A6, 27/11/2026) : le champ où la porte additionne
+             * ce qu'une arme Incapacitante retire à l'END ; « Une heure de repos » les rend (p. 76).
+             */
+            incapacitants?: string;
         };
         /**
          * **Les radiations de Traveller** (TRV-A5, 27/11/2026) : `champ` porte la dose cumulée de rads,

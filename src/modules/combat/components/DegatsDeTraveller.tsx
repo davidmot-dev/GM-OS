@@ -4,6 +4,7 @@ import { useCombatStore } from '../useCombatStore';
 import { DiceEngine } from '../../dice/DiceEngine';
 import { valeursDuCombattant } from '../ficheDesCombattants';
 import { protectionDeTraveller, type ArmeDeTraveller } from '../logic/attaqueDeTraveller';
+import { MunitionsDeTraveller } from './MunitionsDeTraveller';
 import { calculerLesDegats, decrireLesDegats, lancerLesDesDeLArme, lireLesDegats, type DetailDesDegats } from '../../dice/systemes/degatsDeTraveller';
 
 /**
@@ -19,6 +20,9 @@ import { calculerLesDegats, decrireLesDegats, lancerLesDesDeLArme, lireLesDegats
  *
  * Sans `cibleId`, la carte propose de choisir la cible parmi les combattants (le test d'un Voyageur,
  * chez le meneur — C9).
+ *
+ * TRV-A6 (27/11/2026) : avec l'écrivain de la fiche du tireur, la ligne « Munitions » décompte le
+ * tir — manqué aussi, un coup parti est parti (p. 76).
  */
 export const DegatsDeTraveller: React.FC<{
     armes: readonly ArmeDeTraveller[];
@@ -31,7 +35,11 @@ export const DegatsDeTraveller: React.FC<{
     attaquantId?: string;
     /** Le Voyageur qui attaque, chez le meneur : son combattant ne se propose pas comme cible. */
     attaquantPersonnageId?: string;
-}> = ({ armes, effet, reussie, mdDeForce = 0, cibleId, attaquantId, attaquantPersonnageId }) => {
+    /** TRV-A6 : écrit sur la fiche du tireur (les munitions) ; sans lui, rien ne se décompte. */
+    ecrireLAttaquant?: (maj: Record<string, unknown>) => void;
+    /** TRV-A6 : le tireur, pour le journal. */
+    nomDeLAttaquant?: string;
+}> = ({ armes, effet, reussie, mdDeForce = 0, cibleId, attaquantId, attaquantPersonnageId, ecrireLAttaquant, nomDeLAttaquant }) => {
     const combattants = useCombatStore(s => s.combatants);
     const [cibleChoisie, setCibleChoisie] = useState(cibleId ?? '');
     const porteur = combattants.find(c => c.id === (cibleId ?? cibleChoisie));
@@ -46,10 +54,31 @@ export const DegatsDeTraveller: React.FC<{
     const [lances, setLances] = useState<number[] | null>(null);
     const [fait, setFait] = useState<string | null>(null);
 
-    if (!reussie) return <p data-degats-traveller data-coup-nul className="text-ui-11 text-app-muted">Attaque manquée : pas de dégâts.</p>;
+    const munitions = arme && ecrireLAttaquant
+        ? <MunitionsDeTraveller key={arme.index} arme={arme} rafale={rafale} nom={nomDeLAttaquant ?? 'Le tireur'} ecrire={ecrireLAttaquant} />
+        : null;
+    if (!reussie) {
+        return (
+            <div data-degats-traveller data-coup-nul className="space-y-1 text-ui-11 text-app-muted">
+                <p>Attaque manquée : pas de dégâts.</p>
+                {armes.length > 1 && (
+                    <select aria-label="Arme de Traveller" className="rounded border border-app-border bg-app-bg px-1 py-0.5" value={armeChoisie}
+                        onChange={e => setArmeChoisie(Number(e.target.value))}>
+                        {armes.map((a, i) => <option key={`${a.index}-${a.libelle}`} value={i}>{a.libelle}</option>)}
+                    </select>
+                )}
+                {munitions}
+            </div>
+        );
+    }
     const candidates = combattants.filter(c => c.id !== attaquantId && (!attaquantPersonnageId || c.sourcePlayerId !== attaquantPersonnageId));
     if (!cibleId && candidates.length === 0) {
-        return <p data-degats-traveller data-sans-cible className="text-ui-11 text-app-muted">Dégâts : aucun combattant dans Combat-OS à viser.</p>;
+        return (
+            <div data-degats-traveller data-sans-cible className="space-y-1 text-ui-11 text-app-muted">
+                <p>Dégâts : aucun combattant dans Combat-OS à viser.</p>
+                {munitions}
+            </div>
+        );
     }
 
     const degats = lireLesDegats(texte);
@@ -127,6 +156,7 @@ export const DegatsDeTraveller: React.FC<{
                     </label>
                 )}
             </div>
+            {munitions}
             {rappels.length > 0 && <p data-traits-rappeles className="text-app-muted">À régler à la main : {rappels.join(' ; ')}.</p>}
             <div className="flex flex-wrap items-center gap-3">
                 <button type="button" className={bouton} onClick={lancer} disabled={!degats} data-lancer-les-degats-traveller>
