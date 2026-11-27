@@ -1,0 +1,236 @@
+# Index — Traveller — Le livre de règles
+
+- Acheter un vaisseau — 145, 149
+- Action d’évitement (combat de véhicules) — 134
+- Action gratuite — 73
+- Action significative — 72
+- Actions d’abordage — 170
+- Actions mineures — 72, 73
+- Actions prolongées — 73
+- Administration — 64
+- Affectations — 22, 24, 26, 28
+- Âge — 48)
+- Agripper — 75
+- Aides et Contacts — (voir Contacts, Alliés, Rivaux et Ennemis)
+- Alliés — (voir Contacts, Alliés, Rivaux et Ennemis)
+- Amarrage et atterrissage — 148
+- Améliorations — (voir Augmentations)
+- Animaux — 64, 80-86
+- Animaux des mondes Xéno — 82
+- Arbitre — 3
+- Arcs de tir — 135
+- Armes — 74-76, 120-131
+- Armes à énergie (équipement) — 125, 126
+- Armes à projectiles (équipement) — 122, 123, 124
+- Armes de mêlée (équipement) — 120, 121
+- Armes de Véhicules — 138
+- Armes des Vaisseaux — 149, 163, 168, 179
+- Armes destructrices — 75
+- Armes et écrans (vaisseaux) — 179
+- Armures (équipement) — 96-103
+- Art — 64
+- Artilleur — 64-65
+- Astroport — 253, 254
+- Astrogation — 65
+- Athlétisme — 65
+- Atmosphère — 246
+- Attaques de mêlée — 74
+- Augmentations (équipement) — 102-103
+- Avancement — 18
+- Avantages — 19, 46-48
+- Aventures et Campagnes — 4
+- Avocat — 65
+- Bases — 255, 259
+- Bénéfices — (voir Avantages)
+- Blessures — 49
+- Bouclier (psionique) — 226
+- Calculs de voyages — 159
+- Campagnes — (voir Aventures et Campagnes)
+- Capitaine (poste d'équipage) — 160
+- Capteurs (équipement) — 112-113, 117
+- Capteurs (vaisseau) — 155-156, 177
+- Caractéristiques — 9
+- Caractéristiques mentales — 9
+- Caractéristiques physiques — 9
+- Carburant — 152-153
+- Cargaison — 236
+- Carrières — 11-45
+- Chaînes de tâches — 62
+- Chaleur — (voir Température)
+- Changement d'affectation — 20
+- Changer de carrière — 20
+- Charted Space — (voir Espace Reconnu)
+- Chasseurs de primes — (voir Personnages)
+- Citoyen (carrière) — 26
+- Clairvoyance — 227
+- Codes commerciaux — 256-257
+- Codes de voyage — 256
+- Combat — 71-79
+- Combat Arme (compétence) — 65
+- Combat de missiles — 167
+- Combat rapproché — 168
+- Combat spatial — 160-175
+- Combi — 65
+- Commandement (affectation militaire) — 19
+- Commerce — 234-241
+- Commerce spéculatif et contrebande — 237
+- Compétences — 9, 58-70
+- Compétences de base — (voir Formation de base)
+- Compétences générales — 9
+- Conduire — 65
+- Conscience (psionique) — 228
+- Contacts, Alliés, Rivaux et Ennemis — 20
+- Contrebande — (voir Commerce spéculatif)
+- Conventions de jeu — 5
+- Coque (vaisseau) — 172, 174
+- Corps à corps — (voir Mêlée)
+- Coûts de fonctionnement et maintenance — 149
+- Courtiers locaux — 238
+- Coups critiques (combat de véhicules) — 136
+- Coups critiques (combat spatial) — 164
+- Coups de pouce et Coups du sort — 60
+- Création de Mondes et d'Univers — 242-257
+- Création de personnage (en groupe) — 8
+- Création de personnage (résumé) — 8
+- Crédits — 93
+- Criminalité — (voir Niveau de Loi)
+- Dangers environnementaux — 77-79
+- Dégâts — 74, 164
+- Déplacements (véhicules) — 132
+- Descriptions de Carrières — 18
+- Dette médicale — 50
+- Deux armes — 75
+- Détermination des Caractéristiques — 9
+- Difficultés des tâches — 59-60
+- Dimension — 245
+- Diplomate — 66
+- Distances (voyage) — 159
+- Duperie — 66
+- Durées des tâches — 62
+- Éclaireur (carrière) — 28
+- Effet (de jet) — 61
+- Électronique — 66-67
+- Équipage (postes) — 160
+- Équipement — 93-131
+- Équipement de survie — 114-116
+- Espace Reconnu — 3, 243, 245, 254
+- Étape d’attaque (combat spatial) — 162
+- Étape des Actions (combat spatial) — 166
+- Étape de manœuvre (combat spatial) — 161
+- Étapes de Combat spatial — 160
+- Études post-carrière — (voir Formation Post-Carrière)
+- Études pré-carrière — (voir Formation Pré-Carrière)
+- Événements — 18
+- Événements au cours de l’éducation pré-carrière — 17
+- Événements de la vie — 46
+- Explorateur — (voir Éclaireur)
+- Explosifs — 67, 130
+- Flambeur — 67
+- Fonctionnement d’un vaisseau spatial — 145-163
+- Formation de base — 18
+- Formation et compétences — 18
+- Formation Post-Carrière — 52
+- Formation Pré-Carrière — 16
+- Fournitures médicales (équipement) — 110-111
+- Froid — (voir Température)
+- Furtivité — 67
+- Gagner sa vie — 238
+- Gouvernement — 248-249
+- Guérison — 79
+- Guerre Électronique — 167
+- Hydrographie — 247
+- Idées de Campagne — 4
+- Initiative — 71, 161
+- Ingénieur — 67
+- Intendant — 67
+- Interactions sociales — (voir Mondanités, Persuader, Diplomate)
+- Joueuses, joueurs et Voyageurs — 3
+- Kits d’outils — 116
+- Kits scientifiques — 117-119
+- Langage — 67-68
+- Leadership — 68
+- Limites de compétences — 18
+- Loi et Ordre — (voir Niveau de Loi)
+- Marchandises illégales — 239
+- Marin — 68
+- Mêlée — 68
+- Mécanique — 68
+- Médecine — 68
+- Mondanités — 68
+- Montures (armes) — 179
+- Mouvement (personnel) — 73
+- Mouvement (véhicule) — 132
+- Navigation — 68
+- Niveau de Loi — 251-252
+- Niveau de vie — 93
+- Niveau Technologique (NT) — 6-7, 254
+- Noblesse — (voir Statut Social et Noblesse)
+- Opérations atmosphériques — 148
+- Opérations des vaisseaux spatiaux — 145-163
+- Ordinateurs (équipement) — 106-109
+- Ordinateurs de vaisseaux — 156, 176
+- Origines (personnage) — 9
+- Pack de compétences — 50
+- Parts de vaisseaux — 48
+- Passagers — 154, 234-236
+- Passagers passionnants — 236
+- Personnages (non-joueurs) — 86
+- Persuader — 68
+- Pilote — 69
+- Plans (cartes) — 71
+- Points cardinaux galactiques — 243
+- Polyvalent — 69
+- Population — 248
+- Portée (armes) — 74, 135, 162
+- Postes de l’équipage — (voir Équipage)
+- Pouvoirs spéciaux (psionique) — 225
+- Pourquoi voyagez-vous ? — 50
+- Profession — 69
+- Psioniques — 224-233
+- Psioniques et la Loi — 224
+- Puissance (vaisseau) — (voir Énergie)
+- Qualification (carrière) — 18
+- Rangs et bonus — 19
+- Réactions — 73, 164
+- Reconnaissance — 69
+- Règle des Connexions — 19
+- Règle Zéro de Traveller — 4
+- Rencontres — 80-92, 151
+- Rencontres aléatoires — 90-92
+- Réparations (vaisseau) — 155
+- Round de combat — 71
+- Rounds de combat (spatial) — 160
+- Routes et sauts — 245
+- Santé mentale — (voir Dangers environnementaux, Psioniques)
+- Sas (vaisseau) — 148
+- Science — 69
+- Secteurs et Sous-secteurs — 242
+- Sécurité des vaisseaux spatiaux — 157
+- Sens de la rue — 69
+- Spécialités — 58
+- Statut Social et la Noblesse — 11
+- Survie — 18, 70
+- Tactique — 70
+- Talents psioniques — 225
+- Technologie psionique — 230
+- Télékinésie — 227
+- Téléopérations — 67
+- Télépathie — 225-226
+- Température d'un monde — 247
+- Temps de transit — 159
+- Tests (Effectuer les) — 58
+- Tests d’Institut (psionique) — 224
+- Tests de tâches — 58
+- Tests opposés — 61
+- Tirs ciblés (combat spatial) — 164
+- Tourelles et montures fixes — 179
+- Traits des armes — 75-76
+- Université — 16
+- Utilisation de la carrière Psion — 225
+- Vaisseaux anciens — 184
+- Vaisseaux avec Avantages — 48
+- Vaisseaux communs — 184-223
+- Vaisseaux spatiaux (équipement) — 179-182
+- Véhicules — 132-144
+- Vieillissement — 48
+- Voyage par saut — 153
