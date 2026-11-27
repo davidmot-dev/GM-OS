@@ -5,6 +5,7 @@ import { useMediaStore } from '../../../stores/useMediaStore';
 import { resolveSheetTemplate } from '../logic/templateResolver';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { santeDeDepart, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
+import { alignerLaFicheDeTraveller } from '../../combat/logic/physiqueDeTraveller';
 import { estUneFicheDeVoyageur, lireFicheDeVoyageur, CLE_REPRISE } from '../logic/ficheDeVoyageur';
 import { gmToast } from '../../../stores/useToastStore';
 import type { Player, PlayerCharacter } from '../store/types';
@@ -91,10 +92,18 @@ export function useCharacterEditor() {
         }
         // R1 : une seule écriture pour endurance et fatigue, sinon le dernier
         // champ du formulaire écraserait la fatigue ajoutée par le premier.
+        const pilote = getActiveDriver?.();
+        /*
+          Traveller (26/11/2026) : les MD suivent les niveaux des caractéristiques (p. 9), la santé
+          principale le total END + FOR + DEX — les mêmes calculs que la porte des dégâts.
+        */
+        const alignees = alignerLaFicheDeTraveller(pilote, localData);
+        const donnees = Object.keys(alignees).length ? { ...localData, ...alignees } : localData;
+        if (donnees !== localData) setLocalData(donnees);
         if (estUneFicheDeVoyageur(template)) updateCharacter(selectedPlayer.id, character.id, {
-            sheetData: {...character.sheetData, ...localData},
+            sheetData: {...character.sheetData, ...donnees},
         });
-        else for (const [fieldId, value] of Object.entries(localData)) updateCharacterSheetData(selectedPlayer.id, character.id, fieldId, value);
+        else for (const [fieldId, value] of Object.entries(donnees)) updateCharacterSheetData(selectedPlayer.id, character.id, fieldId, value);
         updateCharacterNarrative(selectedPlayer.id, character.id, { description, gmNotes, playerNotes, inventory });
 
         /*
@@ -112,7 +121,6 @@ export function useCharacterEditor() {
           de vie restent ce que le meneur en a fait — on ne lui reprend pas un
           réglage manuel.
         */
-        const pilote = getActiveDriver?.();
         // Le Voyageur est déjà recalculé atomiquement par l'écriture du magasin,
         // avec le gabarit de CE personnage, même si une autre campagne est ouverte.
         const formule = estUneFicheDeVoyageur(template) ? undefined : pilote?.combat?.santeDeDepart;
@@ -120,7 +128,7 @@ export function useCharacterEditor() {
             // Lecture unique : cet écran lisait AVEC la casse quand le combat
             // lisait sans, de sorte que « Taille » y valait undefined et la
             // santé de départ ne s'appliquait jamais depuis la fiche.
-            const nouveauMax = santeDeDepart(formule, champ => valeurDuChamp(localData, champ));
+            const nouveauMax = santeDeDepart(formule, champ => valeurDuChamp(donnees, champ));
             if (nouveauMax !== null && nouveauMax !== character.maxHp) {
                 updateCharacterMaxHP(selectedPlayer.id, character.id, nouveauMax);
                 // Les points courants suivent le plafond quand il monte, et ne

@@ -1076,6 +1076,43 @@ export function controlerLePilote(
         if (bol.heroisme && !tousLesChamps.has(bol.heroisme)) erreur('jet.barbarians.heroisme', `Barbarians lit les points d'héroïsme dans « ${bol.heroisme} », absent de la fiche.`);
     }
     /*
+      Traveller (26/11/2026) : 2D + MD de la caractéristique + niveau de compétence contre le nombre
+      cible (p. 59-61). Le pilote forgé exigeait huit réussites de deux dés : tout échouait.
+    */
+    const tra = driver.jet?.traveller;
+    if (tra) {
+        if (driver.jet?.sens !== 'superieur-ou-egal' || driver.jet?.cible || facesLancees(driver) !== 6) {
+            avertir('jet.traveller', 'Le test de Traveller additionne 2D aux MD (p. 59) : déclarer « reserve » en d6 et « sens: superieur-ou-egal ».');
+        }
+        if (driver.jet?.difficulte) avertir('jet.difficulte', 'Traveller compare une somme au nombre cible : la difficulté en réussites est ignorée, la difficulté de l’Arbitre se règle au jet (p. 60).');
+        if (driver.jet?.modificateurDuSeuil) avertir('jet.modificateurDuSeuil', 'Traveller règle ses MD au jet (p. 60) : ce modificateur est ignoré.');
+        const ids = (driver.jet?.seuil ?? []).map(c => c.id);
+        if (!ids.includes('caracteristique') && !ids.includes('competence')) {
+            erreur('jet.seuil', 'Traveller lit les composantes « caracteristique » et « competence » : aucune n’est déclarée, rien ne se compose.');
+        }
+        const lus: [string, string][] = [
+            ...tra.caracteristiques.map(c => ['jet.traveller.caracteristiques', c] as [string, string]),
+            ...tra.competences.flatMap(c => [['jet.traveller.competences', c.niveau], ...(c.specialite ? [['jet.traveller.competences', c.specialite]] : [])] as [string, string][]),
+            ...Object.values(tra.md ?? {}).map(c => ['jet.traveller.md', c] as [string, string]),
+            ...(tra.polyvalent ? [['jet.traveller.polyvalent', tra.polyvalent] as [string, string]] : []),
+        ];
+        for (const [ou, champ] of lus) if (!tousLesChamps.has(champ)) erreur(ou, `Traveller lit « ${champ} », absent de la fiche.`);
+    }
+    const phy = driver.combat?.physiqueTraveller;
+    if (phy) {
+        if (phy.mecanique !== 'traveller') erreur('combat.physiqueTraveller.mecanique', `« ${String(phy.mecanique)} » n'est pas une règle connue. La seule admise est : traveller.`);
+        for (const cle of ['endurance', 'force', 'dexterite', 'excedent'] as const) {
+            const champ = phy[cle];
+            if (champ !== undefined && !tousLesChamps.has(champ)) erreur(`combat.physiqueTraveller.${cle}`, `Les dégâts de Traveller lisent « ${champ} », absent de la fiche.`);
+        }
+        for (const champ of Object.values(phy.md ?? {})) if (!tousLesChamps.has(champ)) erreur('combat.physiqueTraveller.md', `Les dégâts de Traveller réécrivent le MD dans « ${champ} », absent de la fiche.`);
+        for (const cle of ['endurance', 'force', 'dexterite'] as const) {
+            if (!driver.combat?.statsToTrack?.find(s => s.fieldId === phy[cle])?.max) {
+                avertir(`combat.physiqueTraveller.${cle}`, `« ${phy[cle]} » n'a pas de maximum (statsToTrack[].max) : un soin ne saura pas jusqu'où rendre les points (p. 79).`);
+            }
+        }
+    }
+    /*
       Argyropée (2026-11-08) : 1d10 lu de 0 à 9 + compétence + bonus du métier choisi,
       lu sur des paliers fixes (p. 44). Le pilote forgé comparait le dé seul à la
       compétence et exigeait dix réussites d'un dé : chaque test échouait.

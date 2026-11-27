@@ -33,6 +33,7 @@ import { estHorsDeCombat, santeDeDepart, valeurDuChamp, santeAlignee, santePrinc
 import { armureDeLAdversaire } from './logic/attaqueDeLAdversaire';
 import { coupSurLAdversaire, estUnAdversaireAutonome } from './logic/adversairesDeDegenesis';
 import { degatsDeVampireSelonLeJeu } from './logic/pistesDeVampire';
+import { physiqueDeTravellerSelonLeJeu } from './logic/physiqueDeTraveller';
 import { moniteurSelonLeJeu, positionDuMoniteur } from './logic/moniteurDeShadowrun';
 import { capacitesShadowrun } from '../dice/systemes/suiviDeShadowrun';
 import { DiceEngine } from '../dice/DiceEngine';
@@ -93,6 +94,7 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
 /** Le pilote actif, lu par le global — un import direct fermerait un cycle. */
 function piloteActif(): { combat?: { santeDeDepart?: string; initiativeSort?: 'asc' | 'desc'; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien;
     initiativeEnReserve?: GameDriver['combat']['initiativeEnReserve']; pistesDeSante?: GameDriver['combat']['pistesDeSante'];
+    physiqueTraveller?: GameDriver['combat']['physiqueTraveller'];
     statsToTrack?: GameDriver['combat']['statsToTrack'];
     encaissement?: GameDriver['combat']['encaissement']; moniteurDEtat?: GameDriver['combat']['moniteurDEtat'] }; jet?: { coc?: { des?: 'd20' | '3d6'; heroisme?: boolean }; argyropee?: { sante?: string }; deltaGreen?: { sante?: string };
         vampire?: import('../dice/systemes/vampire').RegleDeVampire } } | undefined {
@@ -1693,6 +1695,16 @@ export const useCombatStore = create<CombatState>()(
                     const r = coupSurLAdversaire(regleDesPistes, piloteActif()?.combat?.statsToTrack, c.sheetData, amount, type);
                     if (r === 'a-preparer') { gmToast(`${c.name} n’est pas préparé pour Degenesis : le coup reste en PV (panneau du round).`, 'warning'); continue; }
                     pistesPour[c.id] = r;
+                }
+                /*
+                  **Traveller : un adversaire autonome qui a END, FOR et DEX** (26/11/2026) : la même règle
+                  que la porte d'un PJ — l'END, puis la FOR ou la DEX, MD recalculés (p. 74). Une créature
+                  du bestiaire n'a que ses PdV (p. 81) : la règle rend `null`, le coup reste en PV.
+                */
+                const regleTraveller = piloteActif()?.combat?.physiqueTraveller;
+                if (regleTraveller) for (const c of get().combatants.filter(x => targetIds.includes(x.id) && estUnAdversaireAutonome(x))) {
+                    const r = physiqueDeTravellerSelonLeJeu(regleTraveller, c.sheetData, { value: Math.abs(amount), isRecovery: amount < 0, type }, piloteActif()?.combat?.statsToTrack);
+                    if (r) pistesPour[c.id] = { montant: r.impact.isRecovery ? -r.impact.value : r.impact.value, fiche: r.fiche, texte: r.texte };
                 }
 
                 const coupsPortes: [string, number][] = [];

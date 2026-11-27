@@ -21,6 +21,7 @@ import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
 import { dommagesDeTorg, ajouterLeChoc, direLesDommages } from '../../combat/logic/dommagesDeTorg';
 import { coupLocaliseSelonLeJeu } from '../../combat/logic/coupsDeRuneQuest';
 import { pistesDeSanteSelonLeJeu } from '../../combat/logic/pistesDeDegenesis';
+import { physiqueDeTravellerSelonLeJeu } from '../../combat/logic/physiqueDeTraveller';
 import { degatsDeVampireSelonLeJeu } from '../../combat/logic/pistesDeVampire';
 import { encaissementSelonLeJeu } from '../../combat/logic/encaissementDeCoc';
 import { moniteurSelonLeJeu } from '../../combat/logic/moniteurDeShadowrun';
@@ -1027,6 +1028,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             // Degenesis (2026-10-30) : Blessures superficielles puis Traumatismes ; l'attaque mentale va à l'Égo.
             const pistes = pistesDeSanteSelonLeJeu(pilote?.combat?.pistesDeSante, fiche, impactSaisi, pilote?.combat?.statsToTrack);
             if (pistes) return pistes;
+            // Traveller (26/11/2026) : l'END, puis la FOR ou la DEX au choix, puis la dernière ; MD recalculés (p. 74).
+            const physique = physiqueDeTravellerSelonLeJeu(pilote?.combat?.physiqueTraveller, fiche, impactSaisi, pilote?.combat?.statsToTrack);
+            if (physique) return physique;
             // Vampire (2026-11-17) : « / » et « X » sur la Santé ou la Volonté, Affaiblissement et torpeur (p. 126-127).
             const vampire = degatsDeVampireSelonLeJeu(pilote, fiche, impactSaisi, pilote?.combat?.statsToTrack);
             if (vampire) return vampire;

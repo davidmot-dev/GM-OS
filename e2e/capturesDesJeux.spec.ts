@@ -220,6 +220,23 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         scenes: c => scenesDePenombre(c),
     },
     {
+        // Traveller (2026-11-26) : Kathya, l'exemple du livre — DEX 10, Furtivité 0 : 2D + 1 contre 8 (p. 59).
+        corpusId: 'traveller', slug: 'traveller', personnage: 'Kathya',
+        sheetData: {
+            nom: 'Kathya', espece: 'Humaine', monde_natal: 'Regina', age: '34', titre: 'Ingénieure du Beowulf',
+            force: 6, dexterite: 10, endurance: 7, intellect: 9, education: 8, statut_social: 5, psi: 0,
+            force_md: 0, dexterite_md: 1, endurance_md: 0, intellect_md: 1, education_md: 0, statut_social_md: -1, psi_md: -3,
+            force_max: 6, dexterite_max: 10, endurance_max: 7, sante_physique: 23, excedent_degats: 'Force',
+            furtivite: '0', ingenieur_1: '2', ingenieur_1_specialite: 'Propulseur-S', ingenieur_2: '1', ingenieur_2_specialite: 'Énergie',
+            mecanique: '1', pilote_1: '0', electronique_1: '1', electronique_1_specialite: 'Ordinateurs', polyvalent: '1',
+            carriere_1: 'Marchande', carriere_1_periodes: '3', carriere_1_rang: '2e officier',
+            arme_1: 'Auto-pistolet', arme_1_nt: '5', arme_1_portee: '10', arme_1_degats: '3D-3', arme_1_munitions: '15',
+            armure_1: 'Gilet pare-balle', armure_1_protection: '+3', cash: 3200,
+        },
+        composantes: ['dexterite', 'furtivite'],
+        scenes: c => scenesDeTraveller(c),
+    },
+    {
         // Argyropée (2026-11-08) : Vanille, l'exemple du livre 2 — Serrurerie 3, Malandrin +2 (p. 45).
         corpusId: 'argyropee', slug: 'argyropee', personnage: 'Vanille',
         sheetData: {
@@ -1400,6 +1417,56 @@ async function scenesDeBarbarians(c: ContexteDeScene): Promise<void> {
     await expect(ficheHtml.locator('[data-key="weapons.0.damage"]')).toHaveValue('d6+3');
     await f.waitForTimeout(1_000);
     await photographier(f.locator('body'), 'jeu-barbarians-fiche');
+}
+
+/**
+ * **Traveller** (2026-11-26) : un test Difficile sous un Coup de pouce — trois dés, les deux
+ * meilleurs —, ses suites (l'Effet et la chaîne de tâches), la fiche HTML reliée, puis un coup de
+ * 10 qui passe de l'END à la FOR sur la carte de Combat-OS (p. 59-63, 74).
+ */
+async function scenesDeTraveller(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    await panneau.locator('select').nth(0).selectOption('dexterite');
+    await panneau.locator('select').nth(1).selectOption('ingenieur_1');
+    await panneau.getByLabel('Difficulté', { exact: true }).selectOption('10');
+    await panneau.getByLabel('Coup de pouce ou Coup du sort', { exact: true }).selectOption('1');
+    const preparation = panneau.locator('[data-preparation-traveller]');
+    await expect(preparation.locator('[data-composition-traveller]')).toContainText('3D, les deux meilleurs + 3');
+    await photographier(preparation, 'jeu-traveller-preparation');
+    await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    const suites = panneau.locator('[data-suites-traveller]');
+    await expect(suites).toBeVisible();
+    await expect(suites.locator('[data-effet-traveller]')).toContainText('Effet');
+    await photographier(panneau, 'jeu-traveller-suites');
+
+    await ongletDeLaFiche(f, 'Fiche du jeu');
+    const creerLaFiche = f.getByRole('button', { name: /Créer une fiche pour/ });
+    await expect(creerLaFiche).toBeEnabled({ timeout: 15_000 });
+    await creerLaFiche.click();
+    const ficheHtml = f.frameLocator('iframe').first();
+    await expect(ficheHtml.locator('[data-key="identity.name"]')).toHaveValue('Kathya', { timeout: 30_000 });
+    await expect(ficheHtml.locator('[data-key="attributes.dexterity.value"]')).toHaveValue('10');
+    await expect(ficheHtml.locator('[data-key="skills.35.specialty"]')).toHaveValue('Propulseur-S');
+    await f.waitForTimeout(1_000);
+    await photographier(f.locator('body'), 'jeu-traveller-fiche');
+
+    // Un coup de 10 : END 7 → 0, puis 3 sur la FOR, choisie par la fiche (p. 74).
+    await f.evaluate(({ id, nom }) => {
+        const combat = (window as unknown as Fenetre).useCombatStore.getState();
+        combat.clearCombatants();
+        combat.addCombatant({ name: nom, init: 0, isPlayer: true, faction: 'player', statuses: [], sourcePlayerId: id });
+        (window as unknown as Fenetre).useSessionOSStore.getState().handleApplyImpact(id, 'pc', { value: 10 });
+    }, { id: personnageDe('traveller'), nom: 'Kathya' });
+    const fiche = await f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState().players
+        .flatMap(p => p.characters).find(p => p.id === id)?.sheetData, personnageDe('traveller'));
+    expect(fiche).toMatchObject({ endurance: 0, force: 3, dexterite: 10, endurance_md: -3, force_md: -1 });
+    await ouvrirLeModule(gmos, 'Combat-OS');
+    const carte = f.locator('[data-combattant]').first();
+    await expect(carte).toBeVisible({ timeout: 15_000 });
+    await photographier(carte, 'jeu-traveller-sante');
 }
 
 /**

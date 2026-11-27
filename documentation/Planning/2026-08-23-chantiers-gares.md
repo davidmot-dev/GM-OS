@@ -15271,10 +15271,46 @@ aucune donnée personnelle, installation, publication ou commande git d’écrit
   bas, resserrée) ; guide 64 et sa capture.
 - **Reste** : l'essai de David sur la Fire.
 
+### 278 · Traveller — pilote fini, corpus relu, fiche reliée — 26/11/2026
+
+- **La demande** : `/finir-un-pilote Traveller` ; réponses du jour : GM-OS fermé, « Tout, dans
+  l'ordre », **report automatique** des dégâts. Livraison de David et de GM-OS Studio du 26/11 :
+  pilote forgé, thème (accepté 0/0), fiche HTML `traveller-fr` (331 champs, acceptée), bannière,
+  identité, corpus de 21 fiches, `livres.json` (décalage + 1, mesuré juste).
+- **Constat** : le pilote forgé comparait chaque d6 à la valeur brute de la caractéristique et
+  exigeait **huit réussites de deux dés** (`controlerLePilote` : erreur) — tout échouait ; les
+  compétences tenaient dans une zone de texte ; la Force était la santé principale ; initiative en
+  phrase ; deux « Portée Extrême ».
+- **Livré** : `src/modules/dice/systemes/traveller.ts` (2D + MD de la table p. 9 + niveau, MD−3
+  réduit par Polyvalent, spécialités à 0 sauf Profession, Coup de pouce/sort, durée, actions
+  simultanées, Effet sur six résultats, chaîne de tâches ; 43 essais sur les exemples du livre),
+  `jet.traveller` dans `preparerLeJet`, `TravellerAuJet.tsx` et le panneau ;
+  `combat.physiqueTraveller` et `combat/logic/physiqueDeTraveller.ts` à la porte des dégâts
+  (`entitySlice`, plateau) — END, puis FOR ou DEX, inconscience, mort, incapacitante, soins répartis,
+  MD réécrits ; l'enregistrement de la fiche recalcule MD et total physique
+  (`useCharacterEditor`) ; contrôles du pilote. Pilote **2.0.0** par
+  `outils/traveller/finir_traveller.py` (identifiants gardés, 333 champs dont 328 clés HTML, niveaux
+  de compétence en **texte** — un champ nombre affiche 0 et ferait de chacun un formé) :
+  `controlerLePilote` **zéro constat** (`verifier_pilote.mjs`) ; fiche au moteur **29**
+  (`integrer_au_moteur.mjs`), correspondance avec trois absents motivés : `fiche:valider` 0/0.
+- **Corpus relu 21/21** contre le livre v2.2 : cinq corrigées — le coup critique d'un véhicule sur
+  Effet 6+ et le cumul de Sévérité des vaisseaux, dits absents (p. 136, 164) ; une « greffe »
+  inventée (p. 80, 229) ; les autres caractéristiques de la feuille et l'ordre du profil
+  universel ; Suggestion à 3 PSI, pas 4 (p. 226) ; seize conformes (bestiaire, armes, tables lues en
+  image).
+- **Manuel** : 53 (jeu, `traveller`, `physiqueTraveller`), page `54-Jeu-Traveller.md`, six captures
+  relues (e2e `--grep "Traveller"`, qui vérifie aussi un coup de 10 sur la fiche).
+- **Vérifié** : `npx tsc -b` ; dés, panneau, combat, fiches, contrôles, séance (328 fichiers, 3 539 essais,
+  tous verts après la ligne du manuel et une note de relecture raccourcie pour le budget d’invite) ; corpus (190) ;
+  manuel (31) ; lint ; e2e des captures.
+- **Reste** : l'**essai de David** ; les dégâts d'une attaque dans Combat-OS (dés + Effet −
+  armure) ; les maxima des jauges PSI et Rads.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 214 | **Traveller — pilote 2.0.0, corpus relu, fiche reliée** | § 278 ; 🟠 livré le 26/11 — `jet.traveller`, report des dégâts END → FOR/DEX, corpus 21/21, fiche au moteur 29 ; e2e réussi | Réimporter `corriges/Traveller-2.0.0` avec « Remplacer » ; un test de Kathya, un coup de 10, la fiche du jeu | Essai de David |
 | 213 | **Le M314 en paysage** | § 277 ; 🟠 corrigé le 25/11 — radar à gauche, commandes à droite, sans défilement à 960 × 600 ; e2e réussi | Ouvrir le M314 « à la table » sur la Fire | Essai de David |
 | 212 | **Tablette de la table — accueil et code du meneur (T14)** | § 276 ; 🟠 livré le 24/11 — accueil à trois rôles, dernier rôle rouvert, « Changer de rôle », code comparé par le serveur ; e2e réussi | Paramètres › Télécommande : régler le code ; sur la Fire, Écran de table puis retour à l'Aide au MJ par le code | Essai de David |
 | 211 | **Delta Green finalisé** | § 275 ; 🟠 livré le 24/11 — corpus relu 18/18, catalogue refait depuis le livre (138 objets), pilote 2.2.0 | Réimporter `corriges/Delta-Green-2.2.0` avec « Remplacer », ouvrir le catalogue | Essai de David |

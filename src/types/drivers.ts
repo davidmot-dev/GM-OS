@@ -825,6 +825,26 @@ export interface GameDriver {
          */
         pistesDeSante?: { mecanique: 'degenesis'; blessures: string; traumatismes: string; ego?: string };
         /**
+         * **Les caractéristiques physiques encaissent** — Traveller, 26/11/2026
+         * (`combat/logic/physiqueDeTraveller.ts`). Pas de points de vie : les dégâts frappent
+         * `endurance`, puis `force` ou `dexterite` selon `excedent` (le choix de la cible, lu sur
+         * sa fiche), puis la dernière ; FOR ou DEX à 0, inconscient ; les trois, tué (p. 74). Une
+         * arme incapacitante ne touche que l'END (p. 76). Les MD de `md` sont recalculés. La santé
+         * principale est leur total. Une créature sans ces trois champs garde ses PdV (p. 81).
+         */
+        physiqueTraveller?: {
+            mecanique: 'traveller';
+            endurance: string;
+            force: string;
+            dexterite: string;
+            /** Le champ du choix « Force » ou « Dextérité » pour l'excédent ; absent, la Force. */
+            excedent?: string;
+            /** Caractéristique → champ de son MD, réécrit après chaque coup. */
+            md?: Record<string, string>;
+            /** Les champs des niveaux d'avant les blessures : un soin s'y arrête (p. 79). */
+            maximum?: { endurance: string; force: string; dexterite: string };
+        };
+        /**
          * **L'initiative en réserve** — Degenesis, 2026-10-30 : `initiativeFormula`
          * donne le nombre de d6 (PSY + Réactivité), le score est le nombre de succès
          * (4+), et chaque paire de 6 donne une action de plus (p. 100-101).

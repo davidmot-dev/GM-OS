@@ -80,12 +80,15 @@ import {
 } from './SymbaroumAuJet';
 import { lireSymbaroum, sansCritiqueDeBase, type NatureDuTest } from '../../../dice/systemes/symbaroumRegles';
 import { PreparationBarbarians, SuitesBarbarians } from './BarbariansAuJet';
+import { PreparationTraveller, SuitesTraveller } from './TravellerAuJet';
 import { PreparationPenombre, SuitesPenombre, type FaitsDePenombre } from './PenombreAuJet';
 import { CHOIX_DE_PENOMBRE, LIBELLES_DES_ISSUES, appliquerLaMerveille, depenserDesJetons, lancerPenombre, lireLaConscience, lireLeTimbre,
     perdreDesJetons, reactiverUnJeton, recompterLaReserveCollegiale, relancerPenombre, tailleDeLaReserveCollegiale, timbresDuGroupe,
     type ChoixDePenombre, type Conscience, type IssueDePenombre, type JetDePenombre, type Timbre } from '../../../dice/systemes/penombre';
 import { CHOIX_DE_BARBARIANS, appliquerLeGeste, heroismeDeLaFiche, lancerBarbarians, modificateursDeBarbarians, soldeDesDes,
     LIBELLES_DE_BARBARIANS, type ChoixDeBarbarians, type GesteDeBarbarians, type JetDeBarbarians } from '../../../dice/systemes/barbarians';
+import { CHOIX_DE_TRAVELLER, DIFFICULTES_DE_TRAVELLER, cibleDeTraveller, lancerTraveller, modificateursDeTraveller,
+    type ChoixDeTraveller, type JetDeTraveller } from '../../../dice/systemes/traveller';
 import { JourneeArgyropee, MagieArgyropee, OppositionArgyropee, PreparationArgyropee, SuitesArgyropee, type CompetenceDArgyropee } from './ArgyropeeAuJet';
 import { CHOIX_D_ARGYROPEE, CHANCES_DE_SILENCIADA, LIBELLES_D_ARGYROPEE, bilanDeLOpposition, bonusDuMetierChoisi, coutDuSort, depenserLePanache,
     doubleHumeur, entierDArgyropee, lancerArgyropee, lancerLAdversaire, magieDuCombatApres, metiersDeLaFiche, obstacleALExuberance,
@@ -565,6 +568,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ecrireSurLaFiche?.(maj);
     };
     const heroismeBarbarians = regleBarbarians?.heroisme ? heroismeDeLaFiche(valeursBarbarians[regleBarbarians.heroisme]) : undefined;
+
+    /**
+     * **Traveller** (26/11/2026) : la difficulté de l'Arbitre, le Coup de pouce ou du sort, la
+     * durée, les actions simultanées, la chaîne de tâches et les autres MD ; le titre du dernier
+     * lancer, pour le dire. Rien ne s'écrit sur la fiche.
+     */
+    const regleTraveller = descripteur.traveller;
+    const [choixTraveller, setChoixTraveller] = useState<ChoixDeTraveller>(() => ({ ...CHOIX_DE_TRAVELLER, difficulte: regleTraveller?.cible ?? 8 }));
+    const [travellerDuLancer, setTravellerDuLancer] = useState<{ titre: string; compte: number } | null>(null);
 
     /**
      * **Pénombre** (22/11/2026) : la difficulté, les atouts payés, le D20 merveilleux, l'effet
@@ -1639,6 +1651,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             ? lancerPenombre(jet.penombre, faces => DiceEngine.roll(faces))
             : regleBarbarians
             ? lancerBarbarians(soldeBarbarians, modificateursBarbarians, () => DiceEngine.roll(6), regleBarbarians.cible ?? 9)
+            // Traveller : 2D (3D sous un Coup de pouce ou du sort) + MD contre le nombre cible (p. 59-61).
+            : regleTraveller
+            ? lancerTraveller(choixTraveller.pouceOuSort, modificateursDeTraveller(jet.seuil, choixTraveller), () => DiceEngine.roll(6), cibleDeTraveller(choixTraveller))
             // Argyropée : 1d10 lu de 0 à 9 + compétence + métier, sur des paliers fixes (p. 44).
             : regleArgyropee
             ? lancerArgyropee(jet.seuil, metierArgyropee, choixArgyropee, () => DiceEngine.roll(10),
@@ -1771,6 +1786,20 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 titre: `${choixBarbarians.reaction ? 'Réaction : ' : ''}${jet.composantes.map(c => c.label).join(' + ')}${reglage ? ` · ${reglage}` : ''}`,
                 compte: (d?.compte ?? 0) + 1, pointAccorde: false,
             }));
+        }
+        if (regleTraveller) {
+            const nom = DIFFICULTES_DE_TRAVELLER.find(d => d.cible === choixTraveller.difficulte)?.label;
+            const reglage = [
+                nom ? `${nom} (${cibleDeTraveller(choixTraveller)}+)` : `${cibleDeTraveller(choixTraveller)}+`,
+                choixTraveller.pouceOuSort > 0 ? 'Coup de pouce' : choixTraveller.pouceOuSort < 0 ? 'Coup du sort' : '',
+                choixTraveller.duree < 0 ? 'plus vite' : choixTraveller.duree > 0 ? 'plus lentement' : '',
+                choixTraveller.tachesSupplementaires ? `${choixTraveller.tachesSupplementaires} action${choixTraveller.tachesSupplementaires > 1 ? 's' : ''} de plus` : '',
+                choixTraveller.chaine ? `chaîne ${choixTraveller.chaine > 0 ? '+' : ''}${choixTraveller.chaine}` : '',
+                choixTraveller.autre ? `MD ${choixTraveller.autre > 0 ? '+' : ''}${choixTraveller.autre}` : '',
+            ].filter(Boolean).join(', ');
+            setTravellerDuLancer(d => ({ titre: `${jet.composantes.map(c => c.label).join(' + ')} · ${reglage}`, compte: (d?.compte ?? 0) + 1 }));
+            // Une chaîne de tâches ne vaut que pour le test suivant : elle se vide après le lancer (p. 63).
+            if (choixTraveller.chaine) setChoixTraveller(c => ({ ...c, chaine: 0 }));
         }
         /*
           Pénombre (22/11/2026) : les jetons de la constitution de la réserve se dépensent au
@@ -2884,10 +2913,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const gardeDuResultat = (resultat as JetGarde | null)?.garde;
     /** Une réserve, qui compte ses réussites — et non un verdict sur un seul dé. */
     const barbariansDuResultat = (resultat as JetDeBarbarians | null)?.barbarians;
+    const travellerDuResultat = (resultat as JetDeTraveller | null)?.traveller;
     const cocDuResultat = (resultat as JetDeCoc | null)?.coc;
     const argyropeeDuResultat = (resultat as JetDArgyropee | null)?.argyropee;
     const penombreDuResultat = (resultat as JetDePenombre | null)?.penombre;
-    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat && !barbariansDuResultat && !argyropeeDuResultat && !cocDuResultat && !penombreDuResultat
+    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin && !gardeDuResultat && !barbariansDuResultat && !travellerDuResultat && !argyropeeDuResultat && !cocDuResultat && !penombreDuResultat
         && (jet.desEchelonnes.length > 0 || jet.nombreDeDes + jet.desSecondaires > 1);
     const v = verdict(reussites, regleDune && duneDuLancer ? duneDuLancer.difficulte : jet.reussitesRequises);
     // Un dé écarté n'a rien déclenché : le compter ici annoncerait une
@@ -2905,7 +2935,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       si le jeu y a quelque chose : une difficulté, des réserves où puiser, la
       préparation d'Alien… — une étape vide numérotée mentirait sur l'ordre.
     */
-    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!reglePenombre || !!regleArgyropee || !!regleCoc || !!regleRuneQuest || !!regleDegenesis || !!regleVampire || !!regleShadowrun || disponiblesPerso.length > 0
+    const aPreparer = !!descripteur.cible || torg || !!destin || !!regleBarbarians || !!regleTraveller || !!reglePenombre || !!regleArgyropee || !!regleCoc || !!regleRuneQuest || !!regleDegenesis || !!regleVampire || !!regleShadowrun || disponiblesPerso.length > 0
         || (apports.length > 0 && !!ficheDeGroupe) || !!regleJetAlien
         || !!(combatAlien && equipementAlien?.proprietes?.munitions)
         || !!descripteur.specialisation || !!(descripteur.difficulte && !descripteur.cible) || !!seuilDeplacable
@@ -2922,10 +2952,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const degenesisDuResultat = (resultat as JetDeDegenesis | null)?.degenesis;
     const vampireDuResultat = (resultat as JetDeVampire | null)?.vampire;
     const shadowrunDuResultat = (resultat as JetDeShadowrun | null)?.shadowrun;
-    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || argyropeeDuResultat || runequestDuResultat || degenesisDuResultat || vampireDuResultat || shadowrunDuResultat || cocDuResultat || penombreDuResultat)
-        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, Argyropée p. 44, RuneQuest p. 142, Degenesis p. 19, Vampire p. 120 et 207, COC p. 58, Pénombre p. 32-33), et non le degré générique du moteur.
+    const verdictDuResultat = resultat && (gardeDuResultat || barbariansDuResultat || travellerDuResultat || argyropeeDuResultat || runequestDuResultat || degenesisDuResultat || vampireDuResultat || shadowrunDuResultat || cocDuResultat || penombreDuResultat)
+        // Le bilan du livre (Crimes p. 385, Barbarians p. 56-59, Traveller p. 61, Argyropée p. 44, RuneQuest p. 142, Degenesis p. 19, Vampire p. 120 et 207, COC p. 58, Pénombre p. 32-33), et non le degré générique du moteur.
         ? <span className={'font-black uppercase tracking-widest ' + (resultat.tagSuccess ? 'text-etat-succes' : 'text-etat-danger')}>
-            {penombreDuResultat?.libelle ?? gardeDuResultat?.libelle ?? argyropeeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? vampireDuResultat?.libelle ?? shadowrunDuResultat?.libelle ?? cocDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
+            {penombreDuResultat?.libelle ?? travellerDuResultat?.libelle ?? gardeDuResultat?.libelle ?? argyropeeDuResultat?.libelle ?? runequestDuResultat?.libelle ?? degenesisDuResultat?.libelle ?? vampireDuResultat?.libelle ?? shadowrunDuResultat?.libelle ?? cocDuResultat?.libelle ?? LIBELLES_DE_BARBARIANS[barbariansDuResultat!.bilan]}
         </span>
         : resultat && !paniqueEnAttente
         && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined)))
@@ -3426,6 +3456,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 { total: 0, modifier: 0, rolls: [], tagSuccess: true, totalDisplay: 'Réussie sans lancer : ni Impulsion ni complication (p. 254).' })}
                         />
                     )}
+                    {regleTraveller && (
+                        <PreparationTraveller choix={choixTraveller} setChoix={setChoixTraveller} mdDeLaFiche={jet.seuil} />
+                    )}
                     {regleBarbarians && (
                         <PreparationBarbarians choix={choixBarbarians} setChoix={setChoixBarbarians} seuil={jet.seuil} />
                     )}
@@ -3691,7 +3724,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système.
                         Pas chez Crimes : le Potentiel dit le nombre de dés, rien ne s'y ajoute ;
                         ni chez Barbarians, dont les dés de bonus et de malus se règlent à l'étape 2. */}
-                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || reglePenombre || regleArgyropee || regleCoc || regleRuneQuest || regleDegenesis || regleVampire || regleShadowrun ? 'hidden' : ''}`}>
+                    <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien || descripteur.garde || regleBarbarians || regleTraveller || reglePenombre || regleArgyropee || regleCoc || regleRuneQuest || regleDegenesis || regleVampire || regleShadowrun ? 'hidden' : ''}`}>
                         <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                         <button
                             onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -4163,6 +4196,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             <DommagesCoc key={`dm-${cocDuLancer.compte}`} regle={regleCoc} valeurs={cocDuLancer.valeurs} personnageId={personnageId}
                                 attaque={cocDuLancer.champ} critique={cocDuResultat.bilan === 'reussite-critique'} cleInitiale={cocDuCombattant?.cible} />
                         )}
+                        {regleTraveller && travellerDuLancer && travellerDuResultat && (
+                            <SuitesTraveller key={travellerDuLancer.compte} jet={resultat as JetDeTraveller} titre={travellerDuLancer.titre}
+                                reporter={md => setChoixTraveller(c => ({ ...c, chaine: md }))} />
+                        )}
                         {regleBarbarians && barbariansDuLancer && barbariansDuResultat && (
                             <SuitesBarbarians key={barbariansDuLancer.compte} jet={resultat as JetDeBarbarians} reaction={barbariansDuLancer.reaction}
                                 heroisme={ecrireSurLaFiche ? heroismeBarbarians : undefined} pointAccorde={barbariansDuLancer.pointAccorde}
@@ -4312,7 +4349,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         {/* Torg ne lance pas sous un seuil : son calcul dit déjà le ND. Une
                             réserve sans seuil (NOC, Alien) affichait « sous 0 ». */}
-                        {!descripteur.tableDeBonus && !destin && !regleBarbarians && !regleArgyropee && !regleCoc && seuilDuLancer > 0 && (
+                        {!descripteur.tableDeBonus && !destin && !regleBarbarians && !regleTraveller && !regleArgyropee && !regleCoc && seuilDuLancer > 0 && (
                             <span className="ml-auto text-app-text/25 font-mono text-ui-10">sous {seuilDuLancer}</span>
                         )}
                     </div>

@@ -30,6 +30,7 @@ import { ajustementsDuJet, lireLEtat } from './systemes/progressionDeRuneQuest';
 import { reserveDeDegenesis, type ChoixDeDegenesis, type ReserveDeDegenesis } from './systemes/degenesis';
 import { affaiblissementDuGroupement, reserveDeVampire, type ChoixDeVampire, type ReserveDeVampire } from './systemes/vampire';
 import { composerLaReserveDePenombre } from './systemes/penombre';
+import { composerLeJetDeTraveller } from './systemes/traveller';
 import { desDeRisqueConseilles, reserveDeShadowrun, rrBornee, type ChoixDeShadowrun, type ReserveDeShadowrun } from './systemes/shadowrun';
 import { lireSuiviShadowrun } from './systemes/suiviDeShadowrun';
 import { lireMatriceShadowrun, preparerMatriceShadowrun } from './systemes/matriceDeShadowrun';
@@ -538,6 +539,14 @@ export interface DescripteurDeJet {
      */
     penombre?: import('./systemes/penombre').RegleDePenombre;
     /**
+     * **Traveller** — 26/11/2026 (`systemes/traveller.ts`) : 2D + MD de la caractéristique (lu sur
+     * son niveau, table p. 9) + niveau de compétence, ou MD−3 sans elle (réduit par Polyvalent), contre
+     * le nombre cible, 8+ pour une tâche Moyenne ; l'Effet lu sur six résultats (p. 58-61). Les
+     * composantes désignent la caractéristique et la compétence : leurs valeurs ne s'additionnent pas
+     * telles quelles. Le panneau ne compte alors aucune réussite par dé.
+     */
+    traveller?: import('./systemes/traveller').RegleDeTraveller;
+    /**
      * **Argyropée** — 2026-11-08 (`systemes/argyropee.ts`) : un d10 lu de 0 à 9,
      * additionné à la compétence et au bonus du métier choisi au jet, lu sur cinq
      * paliers fixes (0 ou moins, 1-7, 8-9, 10-14, 15+) ; modificateur ±5, entraide,
@@ -778,6 +787,8 @@ export interface JetPrepare {
     vampire?: ReserveDeVampire;
     /** La réserve de Pénombre : dé harmonique ou merveilleux, D6 des atouts, difficulté et coût en jetons. */
     penombre?: import('./systemes/penombre').ReserveDePenombre;
+    /** Traveller : d'où vient le MD de la fiche — la caractéristique, la compétence ou sa pénalité. */
+    traveller?: import('./systemes/traveller').CompositionDeTraveller;
     /** Shadowrun : la réserve, ses dés de risque, la RR, l'avantage et la RR lue sur la ligne de la compétence. */
     shadowrun?: ReserveDeShadowrun & { rrDeLaCompetence?: number };
     nombreDeDes: number;
@@ -1231,8 +1242,22 @@ export function preparerLeJet(
             Object.fromEntries((sections ?? []).flatMap(s => s.fields).map(f => [f.id, f.label])))
         : undefined;
     if (penombre) { avertissements.push(...penombre.avertissements); remarques.push(...penombre.remarques); }
-    const additionnees = additionner(descripteur.desEchelonnes || penombre ? [] : descripteur.seuil ?? []);
-    let seuil = additionnees.total;
+    /*
+      **Traveller** (26/11/2026) : la caractéristique compte par son MD, pas par son niveau (table
+      p. 9), et une compétence vide n'est pas une absence mais MD−3 (p. 58). L'addition générique
+      aurait ajouté le 9 d'une DEX et refusé la case vide d'un Voyageur non formé.
+    */
+    const traveller = descripteur.traveller && !descripteur.desEchelonnes && !penombre
+        ? composerLeJetDeTraveller(descripteur.traveller, valeursDeLaFiche, {
+            caracteristique: choix.champs.caracteristique, competence: choix.champs.competence,
+        }, Object.fromEntries((sections ?? []).flatMap(s => s.fields).map(f => [f.id, f.label])))
+        : undefined;
+    if (traveller) { avertissements.push(...traveller.avertissements); remarques.push(...traveller.remarques); }
+    if (traveller && !traveller.caracteristique && !traveller.competence && traveller.avertissements.length === 0) {
+        avertissements.push('Retenir une caractéristique, une compétence, ou les deux.');
+    }
+    const additionnees = additionner(descripteur.desEchelonnes || penombre || traveller ? [] : descripteur.seuil ?? []);
+    let seuil = traveller ? traveller.md : additionnees.total;
     if (descripteur.cthulhuHack) {
         const effet = modificateursCH(descripteur.cthulhuHack, valeursDeLaFiche, additionnees.retenues[0]?.champ);
         seuil -= effet.malus;
@@ -1245,6 +1270,11 @@ export function preparerLeJet(
     if (penombre) composantes = [
         ...(penombre.harmonique ? [{ label: penombre.harmonique.label, champ: penombre.harmonique.champ, valeur: penombre.harmonique.faces }] : []),
         ...penombre.atouts.map(a => ({ label: a.label, champ: a.champ, valeur: a.niveau })),
+    ];
+    // Traveller : chaque composante par le MD qu'elle apporte, pour que « 2D + 1 + 0 » se lise.
+    if (traveller) composantes = [
+        ...(traveller.caracteristique ? [{ label: `MD ${traveller.caracteristique.label}`, champ: traveller.caracteristique.champ, valeur: traveller.caracteristique.md }] : []),
+        ...(traveller.competence ? [{ label: traveller.competence.label, champ: traveller.competence.champ, valeur: traveller.competence.md }] : []),
     ];
     let explicationDuSeuil: string | undefined;
     let echelle: EchelleDuJet | undefined;
@@ -1709,6 +1739,7 @@ export function preparerLeJet(
         ...(vampire ? { vampire } : {}),
         ...(shadowrun ? { shadowrun } : {}),
         ...(penombre ? { penombre } : {}),
+        ...(traveller ? { traveller } : {}),
         echelle,
         /*
           Quand les dés sont échelonnés, c'est leur nombre qui fait foi : ils ne
@@ -1757,7 +1788,8 @@ export function preparerLeJet(
         // Barbarians compare une somme à 9, COC un d20 + caractéristique à la difficulté : une réussite ou aucune.
         // Argyropée lit une somme sur des paliers fixes (p. 44) : de même.
         // Pénombre : la difficulté est un nombre de succès, éléments avantageux et effet magique compris (p. 30).
-        reussitesRequises: penombre ? penombre.difficulte : oppositionSR ? succesAdversesShadowrun(oppositionSR) : matriceSR?.seuil ?? (descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians || descripteur.argyropee || descripteur.coc ? 1 : bornes ? difficulte : 1),
+        // Traveller compare une somme au nombre cible (p. 61) : une réussite ou aucune.
+        reussitesRequises: penombre ? penombre.difficulte : oppositionSR ? succesAdversesShadowrun(oppositionSR) : matriceSR?.seuil ?? (descripteur.cible || descripteur.tableDeBonus || descripteur.destin || descripteur.barbarians || descripteur.traveller || descripteur.argyropee || descripteur.coc ? 1 : bornes ? difficulte : 1),
         /*
           Une poignée échelonnée n'a pas UNE taille. On rend celle du plus gros
           dé, pour que les écrans qui écrivent « 2d10 » disent quelque chose de
