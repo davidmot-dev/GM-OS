@@ -1,0 +1,47 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {pathToFileURL} from 'node:url';
+import {chromium} from '@playwright/test';
+import {execFileSync} from 'node:child_process';
+
+const out=path.resolve('output/gmos-studio/traveller/controles');fs.mkdirSync(out,{recursive:true});
+const file=path.resolve('docs/fiches/Traveller/traveller-fiche-personnage-interactive.html');
+const browser=await chromium.launch({channel:'msedge',headless:true});
+const errors=[],requests=[],checks=[];
+const check=(name)=>checks.push(name);
+try{
+ const context=await browser.newContext({viewport:{width:1440,height:1100},acceptDownloads:true});
+ await context.setOffline(true);
+ const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});
+ await page.goto(pathToFileURL(file).href);await page.locator('.background').first().waitFor();
+ await page.evaluate(()=>localStorage.clear());await page.reload();
+ assert.equal(await page.locator('.field').count(),331);
+ check('331 contrôles HTML, mêmes clés et géométries que le manifeste');
+ assert.equal(await page.evaluate(()=>{const m=JSON.parse(document.getElementById('character-sheet-template').textContent);return m.template.pages.flatMap(p=>p.fields).every(f=>document.querySelector(`[data-key="${f.key}"]`));}),true);
+ await page.locator('#fit').click();await page.locator('.sheet').first().screenshot({path:path.join(out,'fiche-page-1-vierge.png')});
+ await page.locator('#zones').click();await page.locator('.sheet').first().screenshot({path:path.join(out,'fiche-page-1-zones.png')});await page.locator('#zones').click();
+ const field=k=>page.locator(`[data-key="${k}"]`);
+ await field('identity.name').fill('Mira Venn');await field('identity.species').fill('Humaine');await field('attributes.strength.value').fill('9');await field('attributes.strength.modifier').fill('1');
+ await field('skills.0.level').fill('2');await field('skills.1.specialty').fill('Grav');await field('weapons.0.name').fill('Pistolet');await field('weapons.0.damage').fill('3D');await field('equipment.left.0.type').fill('Combi de travail');await field('equipment.left.0.weight').fill('2.5');
+ await page.locator('.sheet').first().screenshot({path:path.join(out,'fiche-page-1-remplie.png')});
+ await page.reload();assert.equal(await field('identity.name').inputValue(),'Mira Venn');assert.equal(await field('skills.0.level').inputValue(),'2');check('Saisie et restauration après rechargement hors ligne');
+ await page.locator('#pageSelect').selectOption('1');assert.equal(await field('summary.name').inputValue(),'Mira Venn');assert.equal(await field('summary.species').inputValue(),'Humaine');
+ await field('background.history').fill('Ancienne mécanicienne de cargo.');await field('relationships.allies.0.name').fill('Jaro');await field('relationships.allies.0.notes').fill('Contact de l’astroport.');await field('profile.strength').fill('9');
+ const chooserPromise=page.waitForEvent('filechooser');await page.locator('.portrait').click();const chooser=await chooserPromise;await chooser.setFiles(path.resolve('tmp/traveller-studio/portrait-test.png'));await page.locator('.portrait img').waitFor();check('Portrait embarqué et copie du nom et de l’espèce entre pages');
+ await page.locator('.sheet').nth(1).screenshot({path:path.join(out,'fiche-page-2-remplie.png')});await page.locator('#zones').click();await page.locator('.sheet').nth(1).screenshot({path:path.join(out,'fiche-page-2-zones.png')});await page.locator('#zones').click();
+ const downloadPromise=page.waitForEvent('download');await page.locator('#export').click();const download=await downloadPromise;const jsonFile=path.join(out,'personnage-de-test.json');await download.saveAs(jsonFile);const exported=JSON.parse(fs.readFileSync(jsonFile,'utf8'));
+ assert.equal(exported.data['identity.name'],'Mira Venn');assert.equal(exported.data['weapons.0.damage'],'3D');assert.ok(exported.data['identity.portrait'].startsWith('data:image/webp;'));check('Export JSON avec nombres, textes, portrait et données des deux pages');
+ page.once('dialog',d=>d.dismiss());await page.locator('#reset').click();assert.equal(await field('background.history').inputValue(),'Ancienne mécanicienne de cargo.');
+ page.once('dialog',d=>d.accept());await page.locator('#reset').click();assert.equal(await field('background.history').inputValue(),'');assert.equal(await page.locator('.portrait img').count(),0);check('Réinitialisation : annulation et confirmation');
+ page.once('dialog',d=>d.accept());await page.locator('#importFile').setInputFiles(jsonFile);await page.waitForFunction(()=>document.getElementById('status').textContent.includes('importé'));assert.equal(await field('background.history').inputValue(),'Ancienne mécanicienne de cargo.');assert.equal(await field('summary.name').inputValue(),'Mira Venn');check('Import JSON restauré et valeurs dérivées recalculées');
+ await page.locator('#importFile').setInputFiles({name:'autre.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({...exported,sheet:'autre-modele'}))});await page.waitForFunction(()=>document.getElementById('status').textContent.includes('Import refusé'));assert.equal(await field('background.history').inputValue(),'Ancienne mécanicienne de cargo.');check('Import d’un autre modèle refusé sans perte de données');
+ await page.keyboard.press('Control+0');const fit=await page.locator('#zoomValue').textContent();await page.keyboard.press('Control+=');assert.notEqual(await page.locator('#zoomValue').textContent(),fit);await page.keyboard.press('Control+0');assert.equal(await page.locator('#zoomValue').textContent(),fit);for(let i=0;i<25;i++)await page.locator('#plus').click();assert.equal(await page.locator('#zoomValue').textContent(),'400 %');for(let i=0;i<50;i++)await page.locator('#minus').click();assert.equal(await page.locator('#zoomValue').textContent(),'20 %');check('Zoom 20–400 %, Ctrl++, Ctrl+0 et Ajuster');
+ await page.locator('#fit').click();await page.emulateMedia({media:'print'});assert.equal(await page.evaluate(()=>[...document.querySelectorAll('.page-wrap')].every(e=>getComputedStyle(e).display!=='none')),true);await page.pdf({path:path.join(out,'impression.pdf'),preferCSSPageSize:true,printBackground:true});check('Impression des deux pages, même lorsque la deuxième est sélectionnée');await page.emulateMedia({media:'screen'});
+ const pdfPages=Number(execFileSync('C:/Users/david/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe',['-I','-c','from pypdf import PdfReader;import sys;print(len(PdfReader(sys.argv[1]).pages))',path.join(out,'impression.pdf')],{encoding:'utf8'}).trim());assert.equal(pdfPages,2);check('PDF imprimé : exactement deux pages A4 paysage');
+ await field('background.history').fill('Ancienne mécanicienne de cargo.');await page.setViewportSize({width:768,height:1024});await page.locator('#fit').click();await page.screenshot({path:path.join(out,'tablette-768.png'),fullPage:true});assert.equal(await page.locator('#pageSelect').isVisible(),true);check('Affichage tablette 768 px');
+ await context.close();
+ const blocked=await browser.newContext({viewport:{width:1180,height:850}});await blocked.setOffline(true);await blocked.addInitScript(()=>{Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Indisponible','SecurityError');}});});const restricted=await blocked.newPage();await restricted.goto(pathToFileURL(file).href);await restricted.locator('[data-key="identity.name"]').fill('Sans stockage');assert.match(await restricted.locator('#status').textContent(),/indisponible/);assert.equal(await restricted.locator('#export').isEnabled(),true);check('Fiche utilisable et export disponible lorsque le stockage local est interdit');await blocked.close();
+ assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);check('Aucune erreur JavaScript ni requête réseau');
+ fs.writeFileSync(path.join(out,'verification-fiche.json'),JSON.stringify({pages:2,champs:331,horsLigne:true,checks,errors,requests,importDansGMOS:false,correspondanceGMOS:false},null,2)+'\n');console.log(JSON.stringify({checks:checks.length,errors,requests},null,2));
+}finally{await browser.close();}

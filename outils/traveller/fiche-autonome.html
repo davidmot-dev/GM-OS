@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Traveller — fiche de personnage</title>
+<script type="application/json" id="character-sheet-template">@@MANIFEST@@</script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#d2d0ca;color:#101528;font:14px Arial,sans-serif}header{position:sticky;top:0;z-index:10;background:#080b26;color:#f5eee0;box-shadow:0 2px 8px #0005;padding:10px 14px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}header strong{font-size:15px;letter-spacing:.08em;margin-right:8px}button,select{font:inherit;padding:7px 10px;border:1px solid #8c8b99;background:#f5f1e8;color:#101528;border-radius:2px;cursor:pointer}button:focus-visible,select:focus-visible{outline:3px solid #e5ac51;outline-offset:2px}button[aria-pressed=true]{background:#e5ac51}#status{font-size:12px;flex:1;min-width:100px}#stage{padding:16px;overflow:auto;min-height:70vh}.page-wrap{position:relative;margin:0 auto 16px}.page-wrap[hidden]{display:none}.sheet{position:relative;transform-origin:top left;background:#eee;box-shadow:0 4px 15px #0004}.background{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.field{position:absolute;display:block;border:0;border-radius:0;outline:0;resize:none;padding:1px 2px;background:transparent;font:9px Arial,sans-serif;color:#101528;min-width:0;line-height:1.2}.field:focus{background:#fffbdcdd;outline:1px solid #8c531a;z-index:2}.field[readonly]{color:#30394b}.field[type=number]{appearance:textfield;-moz-appearance:textfield}.field::-webkit-inner-spin-button,.field::-webkit-outer-spin-button{appearance:none;margin:0}.zones .field{outline:1px solid #aa5419;background:#d8ad5525}.portrait{padding:0;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center}.portrait img{width:100%;height:100%;object-fit:contain}.portrait span{background:#f5f1e8e8;padding:5px;font-size:9px}.portrait img+span{display:none}.portrait:focus-visible{outline:2px solid #8c531a}footer{text-align:center;padding:8px 16px 24px;font-size:12px;color:#50586a}
+@@CUSTOM_CSS@@
+@page{size:A4 landscape;margin:5mm}@media print{body{background:white}header,footer{display:none!important}#stage{padding:0;overflow:visible;min-height:0}.page-wrap,.page-wrap[hidden]{display:block!important;width:264mm!important;height:199.17mm!important;break-after:page;page-break-after:always;margin:0 auto}.page-wrap:last-child{break-after:auto;page-break-after:auto}.sheet{width:100%!important;height:100%!important;transform:none!important;box-shadow:none}.field{outline:none!important;background:transparent!important}.portrait span{display:none}.background{width:100%;height:100%}}
+</style></head><body>
+<header><strong>TRAVELLER</strong><label>Page <select id="pageSelect" aria-label="Page de la fiche"></select></label><button id="minus" aria-label="Réduire le zoom">−</button><output id="zoomValue">100 %</output><button id="plus" aria-label="Augmenter le zoom">+</button><button id="fit">Ajuster</button><button id="zones" aria-pressed="false">Zones</button><button id="export">Exporter JSON</button><button id="import">Importer JSON</button><button id="reset">Réinitialiser</button><button id="print">Imprimer</button><span id="status" role="status" aria-live="polite"></span></header>
+<main id="stage" aria-label="Fiche de personnage Traveller"></main><footer>Deux pages du PDF original remises en paysage. Les MD, le profil universel et les totaux restent à saisir.</footer>
+<input id="importFile" type="file" accept=".json,application/json" hidden><input id="portraitFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+<script>
+'use strict';
+(()=>{
+const manifest=JSON.parse(document.getElementById('character-sheet-template').textContent),template=manifest.template;
+const fields=template.pages.flatMap(p=>p.fields),known=new Map(fields.map(f=>[f.key,f]));
+const storageKey='character-sheet:'+template.id+':v1',elements=new Map(),stage=document.getElementById('stage'),status=document.getElementById('status');
+let data=Object.create(null),zoom=1,currentPage=0,portraitKey=null,storageAvailable=true;
+function message(t){status.textContent=t;}
+function clean(value){
+ if(!value||typeof value!=='object'||Array.isArray(value))throw Error('Les données doivent être un objet.');
+ const next=Object.create(null);
+ for(const [key,val]of Object.entries(value)){
+  const f=known.get(key);if(!f||f.readonly)continue;
+  if(val===null||val==='')continue;
+  if(f.type==='portrait'){if(typeof val!=='string'||!/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(val)||val.length>3000000)throw Error('Portrait non valide ou trop volumineux.');next[key]=val;}
+  else if(f.type==='number'){if(!['string','number'].includes(typeof val)||!Number.isFinite(Number(val)))throw Error('Nombre non valide : '+f.label);next[key]=Number(val);}
+  else{if(typeof val!=='string'||val.length>30000)throw Error('Texte non valide : '+f.label);next[key]=val;}
+ }
+ return next;
+}
+function derive(){for(const f of fields)if(f.derive?.operation==='copy')data[f.key]=data[f.derive.source]??'';}
+function save(){derive();try{localStorage.setItem(storageKey,JSON.stringify(data));storageAvailable=true;message('Sauvegardé sur cet appareil');}catch{storageAvailable=false;message('Stockage local indisponible — utilisez Exporter JSON');}}
+function paint(){derive();for(const f of fields){const el=elements.get(f.key),value=data[f.key]??'';if(f.type==='portrait'){el.replaceChildren();if(value){const img=new Image();img.alt='Portrait du personnage';img.src=value;el.append(img);}const span=document.createElement('span');span.textContent='Choisir un portrait';el.append(span);}else el.value=value;}}
+function setZoom(value){zoom=Math.min(4,Math.max(.2,value));document.getElementById('zoomValue').textContent=Math.round(zoom*100)+' %';for(const [i,page]of template.pages.entries()){const wrap=stage.children[i];wrap.style.width=page.width*zoom+'px';wrap.style.height=page.height*zoom+'px';wrap.firstElementChild.style.transform='scale('+zoom+')';}}
+function fit(){setZoom(Math.min((stage.clientWidth-36)/template.pages[currentPage].width,(window.innerHeight-document.querySelector('header').offsetHeight-70)/template.pages[currentPage].height));}
+function selectPage(i){currentPage=i;for(const [idx,wrap]of [...stage.children].entries())wrap.hidden=idx!==i;document.getElementById('pageSelect').value=String(i);fit();}
+for(const [i,page]of template.pages.entries()){
+ const option=document.createElement('option');option.value=i;option.textContent=(i+1)+' — '+page.label;document.getElementById('pageSelect').append(option);
+ const wrap=document.createElement('section');wrap.className='page-wrap';wrap.setAttribute('aria-label',page.label);
+ const sheet=document.createElement('div');sheet.className='sheet';sheet.dataset.template=template.id;sheet.style.width=page.width+'px';sheet.style.height=page.height+'px';
+ const bg=new Image();bg.className='background';bg.alt='Fond de la fiche — page '+(i+1);bg.src=page.backgroundData;sheet.append(bg);
+ for(const f of page.fields){
+  let el;
+  if(f.type==='portrait'){el=document.createElement('button');el.type='button';el.className='field portrait';el.addEventListener('click',()=>{portraitKey=f.key;document.getElementById('portraitFile').click();});el.addEventListener('contextmenu',e=>{e.preventDefault();if(data[f.key]&&confirm('Retirer le portrait ?')){delete data[f.key];save();paint();}});}
+  else{el=document.createElement(f.type==='textarea'?'textarea':'input');if(el.tagName==='INPUT'){el.type=f.type==='number'?'number':'text';if(f.type==='number')el.step='any';}el.className='field';el.readOnly=!!f.readonly;if(f.placeholder)el.placeholder=f.placeholder;el.addEventListener('input',()=>{data[f.key]=el.type==='number'&&el.value!==''?Number(el.value):el.value;save();for(const derived of fields.filter(d=>d.derive?.source===f.key))elements.get(derived.key).value=data[derived.key]??'';});}
+  if(f.className)el.classList.add(...f.className.split(' '));el.dataset.key=f.key;el.setAttribute('aria-label',f.label);el.title=f.label;
+  Object.assign(el.style,{left:f.x/page.width*100+'%',top:f.y/page.height*100+'%',width:f.w/page.width*100+'%',height:f.h/page.height*100+'%'});
+  sheet.append(el);elements.set(f.key,el);
+ }
+ wrap.append(sheet);stage.append(wrap);
+}
+try{const saved=localStorage.getItem(storageKey);if(saved)data=clean(JSON.parse(saved));message('Sauvegarde locale prête');}catch{storageAvailable=false;message('Stockage indisponible ou sauvegarde illisible — export JSON disponible');}
+paint();selectPage(0);
+document.getElementById('pageSelect').addEventListener('change',e=>selectPage(Number(e.target.value)));
+document.getElementById('minus').onclick=()=>setZoom(zoom/1.15);document.getElementById('plus').onclick=()=>setZoom(zoom*1.15);document.getElementById('fit').onclick=fit;
+document.getElementById('zones').onclick=e=>{const active=stage.classList.toggle('zones');e.currentTarget.setAttribute('aria-pressed',String(active));};
+document.getElementById('export').onclick=()=>{derive();const blob=new Blob([JSON.stringify({format:'interactive-character-sheet',version:1,sheet:template.id,data},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='traveller-personnage.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);message('JSON exporté');};
+document.getElementById('import').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>6000000)throw Error('Fichier trop volumineux.');const incoming=JSON.parse(await file.text());if(incoming.format!=='interactive-character-sheet'||incoming.version!==1||incoming.sheet!==template.id)throw Error('Ce JSON ne correspond pas à cette fiche Traveller.');const next=clean(incoming.data);if(!confirm('Importer ce personnage et remplacer les valeurs affichées ?'))return;data=next;save();paint();message(storageAvailable?'Personnage importé et sauvegardé':'Personnage importé — stockage local indisponible');}catch(err){message('Import refusé : '+err.message);}finally{e.target.value='';}};
+document.getElementById('portraitFile').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>10000000)throw Error('Choisissez une image PNG, JPEG ou WebP de moins de 10 Mo.');const bitmap=await createImageBitmap(file);const ratio=Math.min(1,900/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(bitmap.width*ratio));canvas.height=Math.max(1,Math.round(bitmap.height*ratio));canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();data[portraitKey]=canvas.toDataURL('image/webp',.88);save();paint();message('Portrait enregistré — clic droit pour le retirer');}catch(err){message('Portrait refusé : '+err.message);}finally{e.target.value='';}};
+document.getElementById('reset').onclick=()=>{if(!confirm('Effacer toutes les valeurs et le portrait de cette fiche ?'))return;data=Object.create(null);save();paint();message('Fiche réinitialisée');};
+document.getElementById('print').onclick=()=>window.print();
+window.addEventListener('keydown',e=>{if(!(e.ctrlKey||e.metaKey))return;if(['+','=','-','0'].includes(e.key)){e.preventDefault();if(e.key==='0')fit();else setZoom(e.key==='-'?zoom/1.15:zoom*1.15);}});
+window.addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey){e.preventDefault();setZoom(e.deltaY<0?zoom*1.1:zoom/1.1);}},{passive:false});
+})();
+</script></body></html>
