@@ -97,6 +97,36 @@ export interface ChoixDeTraveller {
 
 export const CHOIX_DE_TRAVELLER: ChoixDeTraveller = { difficulte: 8, pouceOuSort: 0, duree: 0, tachesSupplementaires: 0, chaine: 0, autre: 0 };
 
+/** Au-delà, un réglage ne décrit plus aucun test du livre : la relecture le refuse. */
+const ACTIONS_AU_PLUS = 10;
+const AUTRES_MD_AU_PLUS = 20;
+
+/**
+ * **Relire une préparation venue du réseau** (TRV-A1, 27/11/2026) — la demande de jet du meneur la
+ * porte jusqu'à la tablette. *On ne croit que la forme qu'on attend* : une difficulté du livre
+ * (2+ à 16+, p. 60), un Coup de pouce ou du sort et une durée entre −1 et +1, au plus dix actions
+ * simultanées, une chaîne de −3 à +3 (p. 63) et des autres MD bornés. Une valeur hors de ces bornes
+ * rend `undefined` : la tablette retombe alors sur sa préparation par défaut, sans rien inventer.
+ */
+export function lireLeChoixDeTraveller(v: unknown): ChoixDeTraveller | undefined {
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return undefined;
+    const c = v as Record<string, unknown>;
+    const entierEntre = (x: unknown, min: number, max: number): number | undefined =>
+        typeof x === 'number' && Number.isInteger(x) && x >= min && x <= max ? x : undefined;
+    const difficulte = DIFFICULTES_DE_TRAVELLER.some(d => d.cible === c.difficulte) ? c.difficulte as number : undefined;
+    const pouce = entierEntre(c.pouceOuSort, -1, 1);
+    const duree = entierEntre(c.duree, -1, 1);
+    const taches = entierEntre(c.tachesSupplementaires, 0, ACTIONS_AU_PLUS);
+    const chaine = entierEntre(c.chaine, -3, 3);
+    const autre = entierEntre(c.autre, -AUTRES_MD_AU_PLUS, AUTRES_MD_AU_PLUS);
+    if (difficulte === undefined || pouce === undefined || duree === undefined || taches === undefined
+        || chaine === undefined || autre === undefined) return undefined;
+    return {
+        difficulte, pouceOuSort: pouce as -1 | 0 | 1, duree: duree as -1 | 0 | 1,
+        tachesSupplementaires: taches, chaine, autre,
+    };
+}
+
 /** La cible effective : chaque action supplémentaire monte d'un niveau, soit +2 (p. 60, 62). */
 export function cibleDeTraveller(choix: Pick<ChoixDeTraveller, 'difficulte' | 'tachesSupplementaires'>): number {
     return Math.trunc(choix.difficulte) + 2 * Math.max(0, Math.trunc(choix.tachesSupplementaires) || 0);

@@ -49,6 +49,10 @@ compétences et son équipement.
   ils s'annulent et ne se cumulent pas (p. 61) ; la **durée** — plus vite MD−2, plus lentement MD+2
   (p. 62) ; les **actions simultanées**, qui montent chacune la difficulté d'un niveau (p. 62) ; le MD
   d'une **chaîne de tâches** (p. 63) ; et les **autres MD** des règles : viser, portée, couvert (p. 72).
+- **Demander à un joueur** (depuis le 2026-11-27, TRV-A1) : « Demander à Kathya » envoie la
+  composition **et** la préparation. La tablette s'ouvre sur la même difficulté, le même Coup de
+  pouce ou du sort, la même durée, les mêmes actions, la même chaîne et les mêmes MD ; le joueur peut
+  encore les changer, et c'est lui qui lance.
 
 ## Le résultat
 
@@ -64,9 +68,34 @@ compétences et son équipement.
 | −6 ou moins | Échec exceptionnel | −3 |
 
 « **Reporter au test suivant** » porte le MD de la chaîne au prochain jet ; il se vide après ce
-lancer. Sous une attaque réussie, la carte rappelle les dégâts : les dés de l'arme + l'Effet (+ le MD
-de FOR en mêlée), moins l'armure, et au moins 1 point sur un Effet de 6+ (p. 74-75). **Le montant se
-saisit encore à la main** dans Combat-OS.
+lancer.
+
+## Les dégâts d'une attaque
+
+![Un pirate tire sur Kathya : Effet +0, le fusil fait 8, moins 3 d'armure, 5 dégâts](captures/jeu-traveller-degats.jpg)
+
+Depuis le 2026-11-27 (TRV-A2), une attaque réussie ouvre la carte **Dégâts** (p. 74-76) :
+
+- **les dés de l'arme**, lus sur la fiche (« 3D-3 », « 1D+2 ») ou, à défaut, au catalogue du pilote,
+  qui donne aussi ses **traits** ; une arme **destructrice** (« 1DD ») multiplie ses dés par 10 ;
+- **+ l'Effet** du test, **+ le MD de FOR** en mêlée (« en plus de l'Effet », p. 74) ;
+- **+ le niveau Auto** pour une **rafale**, qui consomme autant de munitions (p. 76) ;
+- **− la protection** de la cible : la meilleure de ses armures, ou le trait « Armure (+X) » d'un
+  animal, moins l'**AP** de l'arme ; tout se change avant de lancer ;
+- **au moins 1 point** sur un Effet de 6+ (p. 75).
+
+« **Appliquer à …** » passe par la porte des blessures ci-dessous ; une arme **Incapacitante** ne
+touche que l'END. Explosion, Rayonnement, Viseur, l'auto complet et la Reflec face aux lasers sont
+**rappelés**, et se règlent à la main.
+
+La carte s'ouvre à trois endroits :
+
+1. **« Attaquer »** sur la carte d'un adversaire, dans Combat-OS : DEX + Combat Arme, ou FOR + Mêlée
+   pour une arme de mêlée, proposés depuis sa première arme ;
+2. **sous le test d'attaque d'un Voyageur, chez le meneur** (Mêlée, Combat Arme, Armes lourdes,
+   Artilleur) : la cible se choisit parmi les combattants. Jamais sur la tablette ;
+3. **l'attaque d'un animal** du bestiaire : 2D + sa Mêlée (naturelles), l'attaque du livre
+   (« Morsure (4D) »), sans MD de FOR ; tout va à ses PdV (p. 81).
 
 ## Les blessures
 
@@ -103,8 +132,8 @@ GM-OS. Une saisie GM-OS ne part vers la fiche HTML qu'après « Sauvegarder ».
 
 ## Ce qui n'est pas dans le pilote
 
-- Les **dégâts d'une attaque** ne se calculent pas encore dans Combat-OS (dés de l'arme + Effet −
-  armure) : le meneur saisit le montant, que la fiche reporte ensuite.
+- Les **munitions** ne se décomptent pas sur la fiche (la rafale rappelle seulement ce qu'elle
+  consomme) ; l'**auto complet**, l'**Explosion** et le **Rayonnement** se règlent à la main.
 - L'**initiative** lit 2D + MD DEX − 8 (p. 71) ; un Voyageur qui préfère l'INT, ou l'Effet d'un
   test de Tactique pour son camp, se règle à la main.
 - Les **portées** sont les Zones de Portée des rencontres (p. 80) ; le MD d'une portée d'arme

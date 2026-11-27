@@ -240,3 +240,37 @@ describe('lireLaDemande — ce qui arrive du réseau', () => {
         expect(lireLaDemande(entree)).toBeNull();
     });
 });
+
+/**
+ * **TRV-A1 — la préparation de Traveller voyage avec la demande** (27/11/2026, spécification
+ * `2026-11-27-traveller-jets-demandes-et-degats.md`, C1, C2 et C4). Sans elle, la tablette retombait
+ * sur Moyenne (8+), sans Coup de pouce ni réglage.
+ */
+describe('TRV-A1 — la préparation Traveller dans la demande', () => {
+    const TRAVELLER = { ...SEUIL, traveller: { caracteristiques: ['attributs'], competences: [] } } as unknown as DescripteurDeJet;
+    const preparation = { difficulte: 10, pouceOuSort: -1 as const, duree: -1 as const, tachesSupplementaires: 1, chaine: 2, autre: -1 };
+    const composition = { champs: { attribut: 'agilite', competence: 'mobilite' }, traveller: preparation };
+
+    it('C1 · la composition valable garde la préparation, et la demande la porte', () => {
+        expect(compositionValable(composition, TRAVELLER, SECTIONS, {})?.traveller).toEqual(preparation);
+        const demande = composerLaDemande({ id: 'd', characterId: 'kathya', emiseLe: 1, descripteur: TRAVELLER, sections: SECTIONS, valeurs: {}, composition });
+        expect(demande?.composition.traveller).toEqual(preparation);
+        expect(lireLaDemande(JSON.parse(JSON.stringify(demande)))).toEqual(demande);
+    });
+
+    it('C2 · une préparation hors des bornes du livre est jetée, la demande reste', () => {
+        for (const faux of [
+            { ...preparation, difficulte: 9 }, { ...preparation, pouceOuSort: 2 }, { ...preparation, duree: -2 },
+            { ...preparation, tachesSupplementaires: 50 }, { ...preparation, chaine: 4 }, { ...preparation, autre: 1.5 },
+            { ...preparation, difficulte: undefined }, 'difficile', [10],
+        ]) {
+            const lu = lireLaDemande({ genre: 'test', id: 'd', characterId: 'k', emiseLe: 1, titre: 't', composition: { champs: composition.champs, traveller: faux } });
+            expect(lu?.genre === 'test' && lu.composition.traveller, JSON.stringify(faux)).toBe(undefined);
+            expect(lu?.genre === 'test' && lu.composition.champs).toEqual(composition.champs);
+        }
+    });
+
+    it('C4 · un autre jeu ne porte pas de préparation Traveller', () => {
+        expect(compositionValable(composition, SEUIL, SECTIONS, {})).not.toHaveProperty('traveller');
+    });
+});

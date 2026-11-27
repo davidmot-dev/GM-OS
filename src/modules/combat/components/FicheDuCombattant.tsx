@@ -17,6 +17,8 @@ import { JetDuCombattant } from './JetDuCombattant';
 import { affrontementPossible, attaqueDeCreaturePossible, cibleDeLAttaque, jetDuCombattantPossible, ripostePossible } from '../logic/jetDuCombattant';
 import { AffrontementDePenombre } from './AffrontementDePenombre';
 import { AttaqueDeCreature } from './AttaqueDeCreature';
+import { AttaqueDAnimalTraveller } from './AttaqueDAnimalTraveller';
+import { animalDeTraveller } from '../logic/attaqueDeTraveller';
 import { RiposteDeCthulhuHack } from './RiposteDeCthulhuHack';
 import { RiposteDeSymbaroum } from './RiposteDeSymbaroum';
 import { armesDeLAdversaire, armesDeLaFicheAlien, armesDuCatalogue, attaqueDeVampire, attaqueParDefaut } from '../logic/attaqueDeLAdversaire';
@@ -75,6 +77,7 @@ export const FicheDuCombattant: React.FC = () => {
     const cible = ouvrirSur === 'jet' ? cibleDeLAttaque(combattant, combatants) : null;
     // T9 : les armes que le catalogue connaît pour cet adversaire du livre ; T12 : celles de sa fiche chez Alien.
     // § 267, T1 : Vampire propose tout son catalogue, rangé selon l'attaque (les armes à feu d'abord pour un tir).
+    const animalTraveller = driver?.jet?.traveller ? animalDeTraveller(combattant, driver.bestiaire) : null;
     const armes = ouvrirSur === 'jet' && driver
         ? (driver.jet?.alien ? armesDeLaFicheAlien(driver, valeurs)
             : driver.jet?.vampire ? armesDuCatalogue(driver, attaqueDeVampire(valeurs)?.tir ?? false)
@@ -200,6 +203,9 @@ export const FicheDuCombattant: React.FC = () => {
                     : <RiposteDeCthulhuHack combattant={combattant} cible={cible} driver={driver} />
             ) : ouvrirSur === 'jet' && attaqueDeCreaturePossible(combattant, driver, valeurs) ? (
                 <AttaqueDeCreature combattant={combattant} valeurs={valeurs} cible={cible} />
+            ) : ouvrirSur === 'jet' && animalTraveller ? (
+                // TRV-A2, T8 (27/11/2026) : un animal de Traveller — 2D + Mêlée (naturelles), son attaque du livre (p. 81).
+                <AttaqueDAnimalTraveller combattant={combattant} animal={animalTraveller} cible={cible} />
             ) : driver && gabarit && jetDuCombattantPossible(combattant, driver, gabarit, valeurs) ? (
                 <JetDuCombattant combattant={combattant} driver={driver} gabarit={gabarit} valeurs={valeurs} campaignId={activeCampaignId}
                     auPremierPlan={ouvrirSur === 'jet'} cible={cible}

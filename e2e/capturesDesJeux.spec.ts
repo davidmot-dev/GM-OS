@@ -1467,6 +1467,34 @@ async function scenesDeTraveller(c: ContexteDeScene): Promise<void> {
     const carte = f.locator('[data-combattant]').first();
     await expect(carte).toBeVisible({ timeout: 15_000 });
     await photographier(carte, 'jeu-traveller-sante');
+
+    // TRV-A2 (27/11/2026) : un pirate tire sur Kathya — DEX + Combat Arme, puis les dés du fusil + l'Effet,
+    // moins le gilet de Kathya (p. 74-75), appliqués par la porte des dégâts.
+    await f.evaluate(() => {
+        const combat = (window as unknown as Fenetre).useCombatStore.getState();
+        const kathya = combat.combatants.find(c => c.isPlayer)!;
+        combat.addCombatant({ name: 'Pirate', init: 9, isPlayer: false, faction: 'enemy', statuses: [], targetId: kathya.id,
+            sheetData: { force: 7, dexterite: 9, endurance: 7, combat_arme_1: '1', combat_arme_1_specialite: 'Armes d’épaule',
+                arme_1: 'Fusil', arme_1_degats: '3D', arme_1_portee: '500 m' } } as never);
+    });
+    const pirate = f.locator('[data-combattant]').filter({ hasText: 'Pirate' }).first();
+    await expect(pirate).toBeVisible({ timeout: 15_000 });
+    await pirate.locator('[data-attaquer]').click();
+    const jet = f.locator('[data-ouvert-sur-le-jet]');
+    await expect(jet).toBeVisible({ timeout: 10_000 });
+    // Le jet peut manquer (2D + 2 contre 8) : on relance jusqu'à toucher.
+    for (let essai = 0; essai < 8; essai++) {
+        await jet.getByRole('button', { name: 'Lancer', exact: true }).click();
+        await expect(jet.locator('[data-degats-traveller]')).toBeVisible();
+        if (await jet.locator('[data-degats-traveller][data-coup-nul]').count() === 0) break;
+    }
+    const degats = jet.locator('[data-degats-traveller]:not([data-coup-nul])');
+    await expect(degats).toBeVisible();
+    await degats.getByRole('button', { name: /^Lancer 3D/ }).click();
+    await expect(degats.locator('[data-calcul-traveller]')).toContainText('(armure)');
+    await photographierLePanneau(jet, 'jeu-traveller-degats');
+    await degats.getByRole('button', { name: /^Appliquer \d+ à Kathya/ }).click();
+    await expect(degats.locator('[data-coup-applique]')).toBeVisible();
 }
 
 /**

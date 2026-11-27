@@ -92,3 +92,54 @@ describe('la composition demandée par le meneur', () => {
         expect(valeurDe(screen.getAllByRole('combobox')[0])).toBe('');
     });
 });
+
+/**
+ * **TRV-A1 — la préparation Traveller arrive avec la demande** (27/11/2026, spécification
+ * `2026-11-27-traveller-jets-demandes-et-degats.md`, C3). Même forme de jet que le pilote 2.0.0.
+ */
+describe('TRV-A1 — la préparation demandée par le meneur, sur Traveller', () => {
+    const DICE_2D6 = { defaultDice: '2d6', logic: 'sum', engine: 'standard' } as unknown as DiceConfig;
+    const FICHE_TRAVELLER = {
+        id: 'tpl-t', name: 'Voyageur', emoji: '🚀',
+        sections: [
+            { id: 'caracteristiques', label: 'Caractéristiques', fields: [{ id: 'dexterite', label: 'Dextérité', type: 'number', defaultValue: 7 }] },
+            { id: 'competences', label: 'Compétences', fields: [{ id: 'furtivite', label: 'Furtivité', type: 'text', defaultValue: '' }] },
+        ],
+    } as unknown as SheetTemplate;
+    const JET_TRAVELLER = {
+        sens: 'superieur-ou-egal',
+        seuil: [
+            { id: 'caracteristique', label: 'Caractéristique', sectionId: 'caracteristiques' },
+            { id: 'competence', label: 'Compétence', sectionId: 'competences', facultative: true },
+        ],
+        reserve: { base: 2, max: 3, faces: 6 },
+        traveller: { caracteristiques: ['dexterite'], competences: [{ niveau: 'furtivite', domaine: 'Furtivité' }], cible: 8 },
+    } as unknown as DescripteurDeJet;
+    const preparation = { difficulte: 10, pouceOuSort: -1 as const, duree: 1 as const, tachesSupplementaires: 0, chaine: 0, autre: 0 };
+
+    it('s’ouvre sur la difficulté, le Coup du sort et la durée du meneur — et le jet en tient compte', () => {
+        render(<PanneauDeJet descripteur={JET_TRAVELLER} dice={DICE_2D6} template={FICHE_TRAVELLER}
+            valeurs={{ dexterite: 10, furtivite: '0' }}
+            compositionInitiale={{ champs: { caracteristique: 'dexterite', competence: 'furtivite' }, traveller: preparation }} />);
+        expect(valeurDe(screen.getByLabelText('Difficulté', { exact: true }))).toBe('10');
+        expect(valeurDe(screen.getByLabelText('Coup de pouce ou Coup du sort', { exact: true }))).toBe('-1');
+        expect(valeurDe(screen.getByLabelText('Durée', { exact: true }))).toBe('1');
+        // DEX 10 (MD +1) et Furtivité 0, plus lentement (+2) : +3. Coup du sort : 6, 6, 1 → 6 + 1 = 7, +3 = 10, contre 10+.
+        let n = 0; de.mockImplementation(() => [6, 6, 1][n++ % 3]);
+        fireEvent.click(screen.getByText('Lancer', { exact: true }));
+        expect(document.body.textContent).toMatch(/Effet \+0/);
+    });
+
+    it('le joueur peut encore changer la difficulté préparée', () => {
+        render(<PanneauDeJet descripteur={JET_TRAVELLER} dice={DICE_2D6} template={FICHE_TRAVELLER}
+            valeurs={{ dexterite: 10, furtivite: '0' }}
+            compositionInitiale={{ champs: { caracteristique: 'dexterite' }, traveller: preparation }} />);
+        fireEvent.change(screen.getByLabelText('Difficulté', { exact: true }), { target: { value: '6' } });
+        expect(valeurDe(screen.getByLabelText('Difficulté', { exact: true }))).toBe('6');
+    });
+
+    it('sans demande, la tablette part de Moyenne (8+)', () => {
+        render(<PanneauDeJet descripteur={JET_TRAVELLER} dice={DICE_2D6} template={FICHE_TRAVELLER} valeurs={{ dexterite: 10 }} />);
+        expect(valeurDe(screen.getByLabelText('Difficulté', { exact: true }))).toBe('8');
+    });
+});

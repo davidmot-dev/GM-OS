@@ -135,6 +135,13 @@ export const JEUX_DU_COMBAT: readonly JeuDuCombat[] = [
       réussit d'office et coûte des jetons, la dissonance et l'opéra harmonique.
     */
     { jeu: 'Pénombre', reconnaitre: d => !!d.jet?.penombre, geste: 'affrontement', degats: 'porte-du-jeu' },
+    /*
+      TRV-A2 (27/11/2026) : Traveller — 2D + MD + compétence contre la difficulté ; une attaque réussie
+      ouvre `DegatsDeTraveller` (dés de l'arme + Effet, FOR en mêlée, armure − AP, minimum 1 sur Effet
+      6+, ×10 en DD, rafale, p. 74-76), appliquée par la porte du § 278. Un animal du bestiaire attaque
+      par `AttaqueDAnimalTraveller` (p. 81).
+    */
+    { jeu: 'Traveller', reconnaitre: d => !!d.jet?.traveller, geste: 'attaquer', degats: 'porte-du-jeu' },
 ];
 
 /** Le jeu du pilote dans la table, ou `null` : un jeu qui n'est pas ouvert au combat des adversaires. */

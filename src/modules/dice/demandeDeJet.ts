@@ -2,6 +2,7 @@ import type { SheetSection } from '../../data/defaultSheetTemplates';
 import { sectionsDeLaComposante, type ComposanteDeJet, type DescripteurDeJet } from './DescripteurDeJet';
 import type { ModificateurDeSauvegarde } from './DiceEngine';
 import { decrireLeJetDuPilote, estUneSauvegarde } from './lectureDuPilote';
+import { lireLeChoixDeTraveller, type ChoixDeTraveller } from './systemes/traveller';
 
 /**
  * **Le meneur demande un jet à un joueur** — repris de GM Codex, plan
@@ -33,6 +34,13 @@ export interface CompositionDemandee {
     ajustementDeDifficulte?: number;
     /** Le modificateur de situation ajouté au seuil. */
     modificateurDuSeuil?: number;
+    /**
+     * **La préparation d'un test de Traveller** (TRV-A1, 27/11/2026) : difficulté, Coup de pouce ou
+     * du sort, durée, actions simultanées, chaîne et autres MD. Sans elle, la tablette retombait sur
+     * Moyenne (8+), sans réglage — le test du joueur n'était pas celui que le meneur avait préparé.
+     * Préremplie, jamais verrouillée : le joueur garde la main (décision de David, 11/11).
+     */
+    traveller?: ChoixDeTraveller;
 }
 
 interface DemandeCommune {
@@ -180,6 +188,9 @@ export function compositionValable(
         ...(composition.difficulte !== undefined ? { difficulte: composition.difficulte } : {}),
         ...(composition.ajustementDeDifficulte !== undefined ? { ajustementDeDifficulte: composition.ajustementDeDifficulte } : {}),
         ...(composition.modificateurDuSeuil !== undefined ? { modificateurDuSeuil: composition.modificateurDuSeuil } : {}),
+        // TRV-A1 : seulement pour un jet de Traveller, et seulement une préparation qui se relit.
+        ...(descripteur?.traveller && lireLeChoixDeTraveller(composition.traveller)
+            ? { traveller: lireLeChoixDeTraveller(composition.traveller)! } : {}),
     };
 }
 
@@ -318,6 +329,7 @@ export function lireLaDemande(v: unknown): DemandeDeJet | null {
     const difficulte = entier(c.difficulte);
     const ajustementDeDifficulte = entier(c.ajustementDeDifficulte);
     const modificateurDuSeuil = entier(c.modificateurDuSeuil);
+    const traveller = lireLeChoixDeTraveller(c.traveller);
     return {
         genre: 'test', id, characterId, emiseLe, titre,
         composition: {
@@ -325,6 +337,7 @@ export function lireLaDemande(v: unknown): DemandeDeJet | null {
             ...(difficulte !== undefined ? { difficulte } : {}),
             ...(ajustementDeDifficulte !== undefined ? { ajustementDeDifficulte } : {}),
             ...(modificateurDuSeuil !== undefined ? { modificateurDuSeuil } : {}),
+            ...(traveller ? { traveller } : {}),
         },
     };
 }

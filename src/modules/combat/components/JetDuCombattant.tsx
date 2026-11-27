@@ -4,6 +4,8 @@ import { AppliquerALaCible } from './AppliquerALaCible';
 import { DegatsDArgyropee } from './DegatsDArgyropee';
 import { DommagesDeNephilim } from './DommagesDeNephilim';
 import { DommagesDuVoyageur } from './DommagesDuVoyageur';
+import { DegatsDeTraveller } from './DegatsDeTraveller';
+import { armesDeTraveller, attaqueDeTraveller, mdDeForceDe } from '../logic/attaqueDeTraveller';
 import { attaqueDuVoyageur } from '../logic/dommagesDuVoyageur';
 import type { RollResult } from '../../dice/DiceEngine';
 import { armesDeBarbarians, armesDArgyropee, armesDeNoc, armesDeShadowrun, attaqueDeCrimes, attaqueDeNoc, attaqueDeDegenesis, attaqueDeDeltaGreen, attaqueDeShadowrun, attaqueDeStarTrek, attaqueDeTorg, ndDeTorg, type ArmeProposee } from '../logic/attaqueDeLAdversaire';
@@ -77,7 +79,10 @@ export const JetDuCombattant: React.FC<{
     ]);
     // § 267, T15 : Rêve de Dragon — l'arme se lit sur la fiche du Voyageur (son gabarit), que la carte connaît ici.
     const reveDeDragon = driver.jet?.cible?.mecanique === 'reves-de-dragons';
-    const attaqueDeDepart = attaqueProposee ?? (reveDeDragon && auPremierPlan ? attaqueDuVoyageur(valeurs, gabarit) : null);
+    // TRV-A2 (27/11/2026) : les armes de la fiche, et le test de la première (FOR + Mêlée, ou DEX + Combat Arme).
+    const armesTraveller = driver.jet?.traveller ? armesDeTraveller(valeurs, driver.catalogue) : [];
+    const attaqueDeDepart = attaqueProposee ?? (reveDeDragon && auPremierPlan ? attaqueDuVoyageur(valeurs, gabarit)
+        : driver.jet?.traveller && auPremierPlan ? attaqueDeTraveller(valeurs, armesTraveller[0]) : null);
     const parDefaut = auPremierPlan && !retenue && attaqueDeDepart
         ? compositionValable({ champs: completer(attaqueDeDepart) }, driver.jet, gabarit.sections, valeurs) : null;
     // § 267, T5 : Star Trek — la nature de l'attaque règle la difficulté (1 au contact, 2 à distance, p. 290).
@@ -209,6 +214,13 @@ export const JetDuCombattant: React.FC<{
             {suivreLeResultat && cible && dernierResultat && reveDeDragon && (
                 <DommagesDuVoyageur key={tirageDG} cibleId={cible.id} gabarit={gabarit} valeursDeLAttaquant={valeurs}
                     reussie={!!dernierResultat.tagSuccess} particuliere={dernierResultat.degre === 'reussite-particuliere'} />
+            )}
+            {/* TRV-A2 (27/11/2026) : Traveller — les dégâts de l'arme, l'Effet, l'armure de la cible (p. 74-76). */}
+            {suivreLeResultat && cible && dernierResultat && driver.jet?.traveller && (
+                <DegatsDeTraveller key={tirageDG} cibleId={cible.id} attaquantId={combattant.id} armes={armesTraveller}
+                    reussie={!!dernierResultat.tagSuccess}
+                    effet={(dernierResultat as { traveller?: { effet?: number } }).traveller?.effet ?? 0}
+                    mdDeForce={mdDeForceDe(valeurs)} />
             )}
             {suivreLeResultat && cible && dernierResultat && regleDG && (
                 <div className="mt-3" data-degats-apres-l-attaque>

@@ -65,6 +65,8 @@ import { loiEnVigueur } from '../../logic/cosmsCourants';
 import { useSessionOSStore } from '../../useSessionOSStore';
 import { useOrdreDuTourStore } from '../../../combat/useOrdreDuTourStore';
 import { useCombatStore } from '../../../combat/useCombatStore';
+import { DegatsDeTraveller } from '../../../combat/components/DegatsDeTraveller';
+import { armesDeTraveller, mdDeForceDe } from '../../../combat/logic/attaqueDeTraveller';
 import { facesDuNiveau } from '../../../dice/desEchelonnes';
 import { dejaUtilise, ecrireLeSuivi, lireLeSuivi } from '../../../dice/systemes/bladeRunner';
 import { seanceOuverteDe } from '../../logic/seanceOuverte';
@@ -482,6 +484,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** Le style d'enquête crédité pour ce jet (Crimes, C5) : une seule fois par lancer. */
     const [enqueteNotee, setEnqueteNotee] = useState<string | null>(null);
     const stylesDEnquete = useSessionOSStore(s => s.getActiveDriver())?.enquete?.styles;
+    // TRV-A2 : les traits des armes, que la fiche imprimée n'a pas, se lisent au catalogue du pilote.
+    const catalogueDuPilote = useSessionOSStore(s => s.getActiveDriver())?.catalogue;
     /** Le dépassement annoncé avant de jeter les dés (Crimes, C3, p. 385). */
     const [depassementAnnonce, setDepassementAnnonce] = useState(false);
     /** Ce que le jet gardé savait au lancer : le Potentiel, ses marques, le dépassement permis. */
@@ -575,7 +579,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * lancer, pour le dire. Rien ne s'écrit sur la fiche.
      */
     const regleTraveller = descripteur.traveller;
-    const [choixTraveller, setChoixTraveller] = useState<ChoixDeTraveller>(() => ({ ...CHOIX_DE_TRAVELLER, difficulte: regleTraveller?.cible ?? 8 }));
+    // TRV-A1 (27/11/2026) : la préparation du meneur, quand le jet a été demandé ; le joueur peut la changer.
+    const [choixTraveller, setChoixTraveller] = useState<ChoixDeTraveller>(() => compositionInitiale?.traveller
+        ? { ...compositionInitiale.traveller }
+        : { ...CHOIX_DE_TRAVELLER, difficulte: regleTraveller?.cible ?? 8 });
     const [travellerDuLancer, setTravellerDuLancer] = useState<{ titre: string; compte: number } | null>(null);
 
     /**
@@ -2914,6 +2921,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     /** Une réserve, qui compte ses réussites — et non un verdict sur un seul dé. */
     const barbariansDuResultat = (resultat as JetDeBarbarians | null)?.barbarians;
     const travellerDuResultat = (resultat as JetDeTraveller | null)?.traveller;
+    /*
+      TRV-A2, C9 (27/11/2026, David : « Adversaires et joueurs ») : sous le test d'attaque d'un Voyageur,
+      chez le meneur, la carte des dégâts — cible choisie parmi les combattants. Un test de combat
+      seulement (Mêlée, Combat Arme, Armes lourdes, Artilleur) ; jamais sur la tablette, où le meneur
+      seul écrit les fiches ; pas dans Combat-OS (`surLeResultat`), qui a déjà la sienne.
+    */
+    const attaqueDeTraveller = !!regleTraveller && !pourLesJoueurs && !surLeResultat
+        && regleTraveller.competences.some(c => c.niveau === choix.competence && /^(Mêlée|Combat Arme|Armes lourdes|Artilleur)$/.test(c.domaine));
     const cocDuResultat = (resultat as JetDeCoc | null)?.coc;
     const argyropeeDuResultat = (resultat as JetDArgyropee | null)?.argyropee;
     const penombreDuResultat = (resultat as JetDePenombre | null)?.penombre;
@@ -3865,7 +3880,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                     descripteur,
                                     sections: template.sections,
                                     valeurs,
-                                    composition: { champs: choix, difficulte, ajustementDeDifficulte, modificateurDuSeuil },
+                                    composition: { champs: choix, difficulte, ajustementDeDifficulte, modificateurDuSeuil,
+                                        ...(regleTraveller ? { traveller: choixTraveller } : {}) },
                                     dice,
                                     modificateur,
                                 })}
@@ -4199,6 +4215,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {regleTraveller && travellerDuLancer && travellerDuResultat && (
                             <SuitesTraveller key={travellerDuLancer.compte} jet={resultat as JetDeTraveller} titre={travellerDuLancer.titre}
                                 reporter={md => setChoixTraveller(c => ({ ...c, chaine: md }))} />
+                        )}
+                        {attaqueDeTraveller && travellerDuLancer && travellerDuResultat && travellerDuResultat.effet >= 0 && (
+                            <DegatsDeTraveller key={`dg-${travellerDuLancer.compte}`} armes={armesDeTraveller(valeurs, catalogueDuPilote)}
+                                effet={travellerDuResultat.effet} reussie mdDeForce={mdDeForceDe(valeurs)}
+                                {...(personnageId ? { attaquantPersonnageId: personnageId } : {})} />
                         )}
                         {regleBarbarians && barbariansDuLancer && barbariansDuResultat && (
                             <SuitesBarbarians key={barbariansDuLancer.compte} jet={resultat as JetDeBarbarians} reaction={barbariansDuLancer.reaction}

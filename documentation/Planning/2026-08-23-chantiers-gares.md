@@ -15366,10 +15366,35 @@ aucune donnée personnelle, installation, publication ou commande git d’écrit
   `fiche:valider` des quatre fiches (Star Trek : ses deux avertissements d'avant), `tsc -b`, lint.
 - **Essayé par David le 27/11** : « les tests sont concluants ».
 
+### 282 · Traveller — jets demandés préparés (TRV-A1) et dégâts d'une attaque (TRV-A2) — 27/11/2026
+
+- **Demande de David** : « commence TRV-A1 et TRR-A2 » (TRV-A2), après la revue de Traveller.
+- **Spécifié** : [spécification](2026-11-27-traveller-jets-demandes-et-degats.md) — 11 critères,
+  9 tâches. TRV-A1 : la demande de jet transporte la préparation Traveller (difficulté, Coup de
+  pouce/sort, durée, actions, chaîne, autres MD), préremplie et modifiable sur la tablette. TRV-A2 :
+  « Attaquer » dans Combat-OS pour les PNJ et les créatures, « Dégâts » sous le test réussi d'un
+  Voyageur chez le meneur ; dés de l'arme + Effet (+ MD FOR en mêlée) − (meilleure armure − AP),
+  minimum 1 sur Effet 6+, ×10 en DD, rafale + Auto ; application par la porte des dégâts du § 278.
+- **Décisions de David (27/11)** : adversaires **et** joueurs ; créatures dans ce lot ; meilleure
+  armure, modifiable ; AP, DD, Incapacitante et rafale. Règles relues dans le livre (p. 74-76).
+- **Livré le 27/11** (GM-OS fermé, feu vert de David) — T1 à T9 :
+  - TRV-A1 : `CompositionDemandee.traveller`, relue bornée (`lireLeChoixDeTraveller`) ; le panneau part
+    de la préparation reçue et l'envoie avec « Demander à » ;
+  - TRV-A2 : `degatsDeTraveller.ts` (calcul pur), `attaqueDeTraveller.ts` (armes, meilleure armure,
+    animaux), `DegatsDeTraveller.tsx` et `AttaqueDAnimalTraveller.tsx` ; Traveller dans
+    `JEUX_DU_COMBAT` ; carte sous le test d'attaque d'un Voyageur chez le meneur ;
+  - règles relues dans le livre : ×10 des armes DD sur les dés obtenus (p. 75), animaux 2D + compétence (p. 81).
+- **Vérifié** : `tsc -b`, lint ; 254 fichiers d'essais du dé, de Combat-OS, du panneau, de la tablette
+  et du manuel (2 574 essais) ; e2e des captures de Traveller (scène « Attaquer » neuve, capture
+  `jeu-traveller-degats.jpg` relue : 8 − 3 = 5 appliqués à Kathya) ; manuel 54.
+- **Reste** : l'**essai de David** — demander un test préparé à une vraie tablette ; « Attaquer » un
+  PNJ ; un test d'attaque d'un Voyageur chez le meneur ; un animal du bestiaire.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
 | --- | --- | --- | --- | --- |
+| 218 | **Traveller — TRV-A1 jets demandés préparés, TRV-A2 dégâts d'une attaque** | § 282 ; 🟠 livré le 27/11 — préparation transmise à la tablette ; dégâts calculés (arme, Effet, FOR, rafale, armure − AP, DD) pour PNJ, Voyageur et animal ; essais et e2e réussis | Demander un test préparé à une tablette ; « Attaquer » un PNJ ; un animal | Essai de David |
 | 217 | **Crimes, Dune, Star Trek — chiffres des fiches HTML lisibles** | § 281 ; 🟢 corrigé et essayé par David le 27/11 — flèches masquées, moteur 31, garde générale | — | — |
 | 216 | **Traveller — chiffres de la fiche HTML lisibles** | § 280 ; 🟢 corrigé et essayé par David le 27/11 — flèches masquées, moteur 30, capture refaite | — | — |
 | 215 | **Traveller — La Part des absents, campagne de recette** | § 279 ; 🟢 préparée et **testée par David le 27/11** — une campagne, douze séances, dix ateliers, 62 cas humains ; 121 contrôles ciblés réussis, médias et ZIP relus | — | — |
