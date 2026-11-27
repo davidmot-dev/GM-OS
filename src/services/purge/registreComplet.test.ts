@@ -113,6 +113,7 @@ const HORS_PERIMETRE: Record<string, string> = {
     useRoundDuVoyageurStore: 'Le round de Rêve de Dragon d’un combat en cours : déclarations et d6, rien à son nom de campagne.',
     useRangsDActionStore: 'Les rangs d’action de RuneQuest d’un combat en cours : déclarations et reports du meneur, rien à son nom de campagne.',
     useRoundDeDegenesisStore: 'Le round de Degenesis d’un combat en cours : Égo déclaré, actions et bonus du round, rien à son nom de campagne.',
+    useInitiativeDeTravellerStore: 'La Tactique et l’embuscade de Traveller d’un combat en cours, déclarées par le meneur avant le jet : rien à son nom de campagne.',
     useJetsLiesDeDegenesisStore: 'Les jets liés de Degenesis en attente : aides, reports de combinaison et actions complexes d’une scène, rien à son nom de campagne.',
     useClockStore: 'Les jauges et calendriers — ils ne portent pas d’identifiant de campagne.',
     useSessionStore: 'L’ancien magasin de session, sans rattachement.',
