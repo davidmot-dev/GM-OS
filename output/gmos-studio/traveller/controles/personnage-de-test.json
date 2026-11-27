@@ -1,0 +1,24 @@
+{
+  "format": "interactive-character-sheet",
+  "version": 1,
+  "sheet": "traveller-fr",
+  "data": {
+    "identity.name": "Mira Venn",
+    "identity.species": "Humaine",
+    "attributes.strength.value": 9,
+    "attributes.strength.modifier": 1,
+    "skills.0.level": 2,
+    "skills.1.specialty": "Grav",
+    "weapons.0.name": "Pistolet",
+    "weapons.0.damage": "3D",
+    "equipment.left.0.type": "Combi de travail",
+    "equipment.left.0.weight": 2.5,
+    "summary.name": "Mira Venn",
+    "summary.species": "Humaine",
+    "background.history": "Ancienne mécanicienne de cargo.",
+    "relationships.allies.0.name": "Jaro",
+    "relationships.allies.0.notes": "Contact de l’astroport.",
+    "profile.strength": "9",
+    "identity.portrait": "data:image/webp;base64,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"
+  }
+}

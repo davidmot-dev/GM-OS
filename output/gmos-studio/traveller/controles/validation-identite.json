@@ -1,0 +1,16 @@
+{
+  "valid": true,
+  "values": {
+    "STYLE": {
+      "text": "painted science fiction illustration, visible digital brushwork, crisp angular silhouettes, functional industrial detail, deep navy and petrol shadows, warm amber and copper highlights, restrained cyan accents, soft atmospheric gradients, directional rim lighting, layered depth, tactile worn surfaces, realistic proportions, adventurous retrofuturist mood",
+      "words": 42,
+      "max": 60
+    },
+    "AVOID": {
+      "text": "photorealism, anime, chibi, glossy plastic, neon overload, flat vector art, readable text, logos",
+      "words": 13,
+      "max": 15
+    }
+  },
+  "errors": []
+}

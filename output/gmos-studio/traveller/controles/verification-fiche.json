@@ -1,0 +1,24 @@
+{
+  "pages": 2,
+  "champs": 331,
+  "horsLigne": true,
+  "checks": [
+    "331 contrôles HTML, mêmes clés et géométries que le manifeste",
+    "Saisie et restauration après rechargement hors ligne",
+    "Portrait embarqué et copie du nom et de l’espèce entre pages",
+    "Export JSON avec nombres, textes, portrait et données des deux pages",
+    "Réinitialisation : annulation et confirmation",
+    "Import JSON restauré et valeurs dérivées recalculées",
+    "Import d’un autre modèle refusé sans perte de données",
+    "Zoom 20–400 %, Ctrl++, Ctrl+0 et Ajuster",
+    "Impression des deux pages, même lorsque la deuxième est sélectionnée",
+    "PDF imprimé : exactement deux pages A4 paysage",
+    "Affichage tablette 768 px",
+    "Fiche utilisable et export disponible lorsque le stockage local est interdit",
+    "Aucune erreur JavaScript ni requête réseau"
+  ],
+  "errors": [],
+  "requests": [],
+  "importDansGMOS": false,
+  "correspondanceGMOS": false
+}

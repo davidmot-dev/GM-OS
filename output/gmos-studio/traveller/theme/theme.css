@@ -1,0 +1,48 @@
+/* Traveller — contrat GM-OS v1.7 ; papier ivoire, cadre bleu nuit, ambre. */
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+:root[data-theme="traveller"] {
+  color-scheme: light;
+  --rpg-bg: #e9e4d7;
+  --rpg-surface: #f5f1e8;
+  --rpg-surface-2: #dedacc;
+  --rpg-text: #101528;
+  --rpg-muted: #50586a;
+  --rpg-accent: #7a4918;
+  --rpg-accent-2: #080b26;
+  --rpg-accent-contrast: #fff8e9;
+  --rpg-border: rgba(8, 11, 38, 0.46);
+  --rpg-border-soft: rgba(8, 11, 38, 0.19);
+  --rpg-paper: #f5f1e8;
+  --rpg-ink: #101528;
+  --rpg-success: #286443;
+  --rpg-danger: #a32b3c;
+  --rpg-warning: #6a8100;
+  --rpg-info: #245e85;
+  --rpg-font-display: "Rajdhani", "Arial Narrow", Arial, sans-serif;
+  --rpg-font-body: "Barlow", Arial, sans-serif;
+  --rpg-font-ui: "Barlow", Arial, sans-serif;
+  --rpg-font-mono: "IBM Plex Mono", "Courier New", monospace;
+  --rpg-title-tracking: 0.08em;
+  --rpg-kicker-tracking: 0.12em;
+  --rpg-title-transform: uppercase;
+  --rpg-radius-sm: 0px;
+  --rpg-radius-md: 0px;
+  --rpg-radius-lg: 0px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+  --rpg-elevation-1: 0 2px 3px rgba(8, 11, 38, 0.12);
+  --rpg-elevation-2: 0 5px 16px rgba(8, 11, 38, 0.18);
+  --rpg-elevation-3: 0 12px 32px rgba(8, 11, 38, 0.24);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(245, 241, 232, 0.95);
+  --rpg-glass-border: rgba(8, 11, 38, 0.28);
+  --rpg-glass-blur: 0px;
+  --rpg-frame-bg: #080b26;
+  --rpg-frame-text: #f5eee0;
+  --rpg-frame-accent: #edbf72;
+  --rpg-texture-bg: url('matieres/papier.svg');
+  --rpg-texture-panel: url('matieres/papier.svg');
+  --rpg-texture-opacity: 0.05;
+}

@@ -1,0 +1,91 @@
+{
+  "source": "docs/Reference/Traveller/livre_de_regles_de_traveller_v2_2_index.pdf",
+  "sha256Source": "7ed3c328aab4841332086bc93fe1750cfa0b9982bdeb1447df1752f844cdee00",
+  "date": "2026-11-26",
+  "sommaireEntrees": 16,
+  "indexEntrees": 234,
+  "indexRenvois": 22,
+  "controle": "Trois pages rendues et relues visuellement ; ordre des quatre colonnes, bornes, renvois et couverture du texte extrait vérifiés.",
+  "particularitesConservees": [
+    "Âge — 48) : parenthèse imprimée dans la source.",
+    "Numéros de page du livre conservés ; pages PDF du document extrait non substituées.",
+    "Intitulés, casse, apostrophes, listes et plages conservés sans correction éditoriale."
+  ],
+  "zones": [
+    {
+      "zone": "sommaire",
+      "pagePDF": 1,
+      "nombre": 16,
+      "premiere": {
+        "intitule": "INTRODUCTION",
+        "reference": "3",
+        "type": "pages"
+      },
+      "derniere": {
+        "intitule": "INDEX",
+        "reference": "258",
+        "type": "pages"
+      }
+    },
+    {
+      "zone": "index-258-gauche",
+      "pagePDF": 2,
+      "nombre": 64,
+      "premiere": {
+        "intitule": "Acheter un vaisseau",
+        "reference": "145, 149",
+        "type": "pages"
+      },
+      "derniere": {
+        "intitule": "Codes commerciaux",
+        "reference": "256-257",
+        "type": "pages"
+      }
+    },
+    {
+      "zone": "index-258-droite",
+      "pagePDF": 2,
+      "nombre": 64,
+      "premiere": {
+        "intitule": "Codes de voyage",
+        "reference": "256",
+        "type": "pages"
+      },
+      "derniere": {
+        "intitule": "Formation de base",
+        "reference": "18",
+        "type": "pages"
+      }
+    },
+    {
+      "zone": "index-259-gauche",
+      "pagePDF": 3,
+      "nombre": 60,
+      "premiere": {
+        "intitule": "Formation et compétences",
+        "reference": "18",
+        "type": "pages"
+      },
+      "derniere": {
+        "intitule": "Psioniques et la Loi",
+        "reference": "224",
+        "type": "pages"
+      }
+    },
+    {
+      "zone": "index-259-droite",
+      "pagePDF": 3,
+      "nombre": 46,
+      "premiere": {
+        "intitule": "Puissance (vaisseau)",
+        "reference": "(voir Énergie)",
+        "type": "renvoi"
+      },
+      "derniere": {
+        "intitule": "Voyage par saut",
+        "reference": "153",
+        "type": "pages"
+      }
+    }
+  ]
+}

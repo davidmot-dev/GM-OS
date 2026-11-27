@@ -1,0 +1,15 @@
+{
+  "archive": "output/gmos-studio/traveller/Traveller-GM-OS-Studio.zip",
+  "octets": 7555036,
+  "sha256": "4d77ca874fa6edf0ec960f2f29d0e5af46f23ea043125e1c0a647e6d291f35f0",
+  "fichiers": 50,
+  "controle": "Archive relue ; chaque entrée comparée à son fichier source par SHA-256.",
+  "relectureVisuelle": {
+    "ficheDeuxPages": true,
+    "zones": true,
+    "impressionDeuxPages": true,
+    "theme": true,
+    "banniereCompleteEtEntetes": true
+  },
+  "integrationGMOS": false
+}

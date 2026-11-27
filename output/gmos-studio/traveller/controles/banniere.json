@@ -1,0 +1,22 @@
+{
+  "outil": "image_gen natif, deux generations",
+  "sourceDimensions": [
+    2172,
+    724
+  ],
+  "sourceRecadree": [
+    2172,
+    543
+  ],
+  "dimensions": [
+    2400,
+    600
+  ],
+  "poidsOctets": 123051,
+  "agrandissementPourcent": 10.5,
+  "accordDavid": "2026-11-26 — « Oui, exporter en 2 400 × 600 »",
+  "methode": "Recadrage centre, puis reechantillonnage Lanczos autorise ; aucun detail supplementaire revendique.",
+  "sourceSha256": "c6c32576e7da64819e0a19af2fb29f15f90cc08e3def1a346e668ae364496baa",
+  "sha256": "f9adbe3f338dbad2e1cb3599a8a5175bb2d1436b5f385ae08ac233ff5cc1bafc",
+  "conformeDimensionsEtPoids": true
+}

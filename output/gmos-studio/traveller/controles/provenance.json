@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-26",
+  "plugin": "GM-OS Studio",
+  "sources": [
+    {
+      "fichier": "docs/Reference/Traveller/livre_de_regles_de_traveller_v2_2_fiche.pdf",
+      "sha256": "1d471803c046fc468bbb770137007e38b1d26ba661db169809d59f077baac38a"
+    },
+    {
+      "fichier": "docs/Reference/Traveller/livre_de_regles_de_traveller_v2_2_HTML.pdf",
+      "sha256": "fbc3520c5009a84110708e8f75cac0ac5fac262a143eb3d60be4c8c71ab7faa6"
+    },
+    {
+      "fichier": "docs/Reference/Traveller/livre_de_regles_de_traveller_v2_2_Images.pdf",
+      "sha256": "6a6a3327166fdba77899e6b89d9380ef5a6433dd42b61f1c6adf0bb679c2ab34"
+    },
+    {
+      "fichier": "docs/Reference/Traveller/livre_de_regles_de_traveller_v2_2_index.pdf",
+      "sha256": "7ed3c328aab4841332086bc93fe1750cfa0b9982bdeb1447df1752f844cdee00"
+    }
+  ],
+  "fiche": {
+    "id": "traveller-fr",
+    "pagesPDFUtiles": [
+      2,
+      3
+    ],
+    "rotation": 90,
+    "pages": 2,
+    "champs": 331
+  },
+  "banniere": {
+    "outil": "image_gen natif, deux generations",
+    "sourceDimensions": [
+      2172,
+      724
+    ],
+    "sourceRecadree": [
+      2172,
+      543
+    ],
+    "dimensions": [
+      2400,
+      600
+    ],
+    "poidsOctets": 123051,
+    "agrandissementPourcent": 10.5,
+    "accordDavid": "2026-11-26 — « Oui, exporter en 2 400 × 600 »",
+    "methode": "Recadrage centre, puis reechantillonnage Lanczos autorise ; aucun detail supplementaire revendique.",
+    "sourceSha256": "c6c32576e7da64819e0a19af2fb29f15f90cc08e3def1a346e668ae364496baa",
+    "sha256": "f9adbe3f338dbad2e1cb3599a8a5175bb2d1436b5f385ae08ac233ff5cc1bafc",
+    "conformeDimensionsEtPoids": true
+  },
+  "theme": {
+    "erreurs": 0,
+    "avertissements": 0,
+    "icones": 15,
+    "ornements": 3
+  },
+  "identite": {
+    "styleMots": 42,
+    "avoidMots": 13
+  },
+  "applicationModifiee": false,
+  "donneesPersonnellesLues": false,
+  "integrationMoteur": false,
+  "correspondance": false
+}
